@@ -255,8 +255,13 @@ class viewer extends object {
 
     public function parseAtTags($str, $itemId, $userid)
     {
+        // test for an email addess, in which case leave it alone...
+        preg_match_all('/\@([\w\-]+\.)+([a-zA-Z0-9_]{1,15}) ?/', $str, $email);
+        if(isset($email[0][0]) && isset($email[2][0])) {
+            $str = str_replace('@', '(at)', $str);
+        }
         $str = stripslashes($str);
-        preg_match_all('/\@([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
+        preg_match_all('/\@([\w\-]+\.)+([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
         $counter = 0;
         foreach ($results[1] as $item)
         {
@@ -271,6 +276,10 @@ class viewer extends object {
     }
 
     public function getAtTagsArr($str) {
+        preg_match_all('/\@([\w\-]+\.)+([a-zA-Z0-9_]{1,15}) ?/', $str, $email);
+        if(isset($email[0][0]) && isset($email[2][0])) {
+            $str = str_replace('@', '(at)', $str);
+        }
         $str = stripslashes($str);
         preg_match_all('/\@([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
 
@@ -278,6 +287,10 @@ class viewer extends object {
     }
 
     public function renderAtTags($str) {
+        preg_match_all('/\@([\w\-]+\.)+([a-zA-Z0-9_]{1,15}) ?/', $str, $email);
+        if(isset($email[0][0]) && isset($email[2][0])) {
+            $str = str_replace('@', '(at)', $str);
+        }
         $str = stripslashes($str);
         preg_match_all('/\@([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
         $counter = 0;

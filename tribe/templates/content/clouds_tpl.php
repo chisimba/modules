@@ -1,7 +1,7 @@
 <?php
 header ( "Content-Type: text/html;charset=utf-8" );
 $cssLayout = $this->newObject ( 'csslayout', 'htmlelements' );
-$cssLayout->setNumColumns ( 2 );
+$cssLayout->setNumColumns ( 3 );
 
 // get the sidebar object
 $this->leftMenu = $this->newObject ( 'usermenu', 'toolbar' );
@@ -10,7 +10,9 @@ $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
 $objImView = $this->getObject ( 'viewer' );
 
 $middleColumn = NULL;
+$middleColumn .= $objImView->renderTopBoxen();
 $leftColumn = NULL;
+$rightColumn = NULL;
 
 // Add in a heading
 $header = new htmlHeading ( );
@@ -26,8 +28,10 @@ if (! $this->objUser->isLoggedIn ()) {
     $leftColumn .= $this->leftMenu->show ();
 }
 
-$leftColumn .= $objImView->renderBoxen();
+$leftColumn .= $objImView->renderLeftBoxen();
+$rightColumn .= $objImView->renderRightBoxen($this->objUser->userid());
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );
+$cssLayout->setLeftColumnContent ( $rightColumn );
 echo $cssLayout->show ();

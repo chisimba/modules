@@ -480,6 +480,7 @@ class tribe extends controller {
                                     $poster = explode('/', $pl['from']);
                                     $poster = $poster[0];
                                     $this->conn->send ( "</end>" );
+                                    die();
                                     break;
 
                                 case 'subscribe':
@@ -499,11 +500,74 @@ class tribe extends controller {
                                     $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_unsubscribed', 'tribe'));
                                     continue;
 
+                                case 'register' :
+                                    // register the user and send a message to say success.
+                                    $objUA = $this->getObject('useradmin_model2', 'security');
+                                    $poster = explode('/', $pl['from']);
+                                    $jid = $poster[0];
+                                    $uname = explode("@", $jid);
+                                    $uname = $uname[0];
+                                    $pass = $uname."_".rand(0, 999);
+                                    $userid = $objUA->generateUserId();
+                                    $objUA->addUser($userid, $uname, $pass, 'mr', $uname, $uname, $jid, 'M', "ZA", '', '', 'useradmin', '1');
+                                    $this->dbUsers->addRecord($userid, $jid);
+                                    log_debug("User $uname has been added with pass $pass");
+                                    $message = $this->objLanguage->languageText("mod_tribe_imregister", "tribe");
+                                    $message .= " ";
+                                    $message .= $this->objLanguage->languageText("mod_tribe_fixdetailssoon", "tribe");
+                                    $message .= " ";
+                                    $message .= $this->objLanguage->languageText("mod_tribe_yourusernameis", "tribe")." ".$uname." ";
+                                    $message .= $this->objLanguage->languageText("mod_tribe_yourpassis", "tribe")." ".$pass;
+
+                                    $this->conn->message($pl['from'],$message);
+                                    continue;
+
                                 case 'NULL' :
                                     continue;
                             }
+
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'creategroup' ) {
+                                // register the group and send a message to say success.
+                                $groupname = $bod[1];
+                                $privacy = 'public';
+                                log_debug("Creating a public group called $groupname");
+                                $result = ereg ("^[A-Za-z0-9]+$", $groupname );
+                                if($result == FALSE) {
+                                    // we have a space or something nasty in the groupname
+                                    $message = $this->objLanguage->languageText("mod_tribe_invalidgroupname", "tribe");
+                                }
+                                $poster = explode('/', $pl['from']);
+                                $jid = $poster[0];
+                                $insarr = array('groupname' => $groupname, 'privacy' => $privacy);
+                                $code = $this->objGroups->addRecord($insarr, $jid);
+                                if($code === 1) {
+                                    //log_debug("only valid users allowed to create groups");
+                                    $message = $this->objLanguage->languageText("mod_tribe_onlyvalidusersgroup", "tribe");
+                                }
+                                elseif($code === 2) {
+                                    //log_debug("A Group by the name $groupname already exists");
+                                    $message = $this->objLanguage->languageText("mod_tribe_groupexists", "tribe");
+                                }
+                                elseif($code === 3) {
+                                    // create a system user so that we don't get a user conflict with groups
+                                    // This is a crappy way of doing it, but best I can come up with for now... Ideas welcome!
+                                    $objUA = $this->getObject('useradmin_model2', 'security');
+                                    $objUA->addUser($objUA->generateUserId(), $groupname, rand(0, 56000), 'mr', $groupname, $groupname, 'fake@tribemodule.chisimba', 'M', "ZA", '', '', 'useradmin', '0');
+                                    $message = $this->objLanguage->languageText("mod_tribe_yourgroup", "tribe")." ".$groupname." ".$this->objLanguage->languageText("mod_tribe_hasbeencreated", "tribe");
+                                }
+                                // send the message
+                                $this->conn->message($pl['from'], $message);
+                            }
+
+                            //mxit to tweet
+                            $bod = explode(":", $pl['body']);
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'tweet' ) {
+                                // tweet the msg as well
+                            }
+
                             // Send a response message
-                            if ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break") {
+
+                            elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break") {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];
@@ -544,7 +608,7 @@ class tribe extends controller {
                                                 $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                             }
                                             else {
-                                                $this->conn->message($pl['from'], "Invalid user!");
+                                                $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                             }
                                         }
                                     }
@@ -555,6 +619,9 @@ class tribe extends controller {
                                     // send a message to the poster
                                     $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                 }
+                            }
+                            else {
+                                // do nothing;
                             }
                             break;
 
