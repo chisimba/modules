@@ -508,16 +508,23 @@ class tribe extends controller {
                                     $uname = explode("@", $jid);
                                     $uname = $uname[0];
                                     $pass = $uname."_".rand(0, 999);
-                                    $userid = $objUA->generateUserId();
-                                    $objUA->addUser($userid, $uname, $pass, 'mr', $uname, $uname, $jid, 'M', "ZA", '', '', 'useradmin', '1');
-                                    $this->dbUsers->addRecord($userid, $jid);
-                                    log_debug("User $uname has been added with pass $pass");
-                                    $message = $this->objLanguage->languageText("mod_tribe_imregister", "tribe");
-                                    $message .= " ";
-                                    $message .= $this->objLanguage->languageText("mod_tribe_fixdetailssoon", "tribe");
-                                    $message .= " ";
-                                    $message .= $this->objLanguage->languageText("mod_tribe_yourusernameis", "tribe")." ".$uname." ";
-                                    $message .= $this->objLanguage->languageText("mod_tribe_yourpassis", "tribe")." ".$pass;
+                                    // lets check and see if the username is available
+                                    $ucheck = $objUA->usernameAvailable($uname);
+                                    if($ucheck) {
+                                        $userid = $objUA->generateUserId();
+                                        $objUA->addUser($userid, $uname, $pass, 'mr', $uname, $uname, $jid, 'M', "ZA", '', '', 'useradmin', '1');
+                                        $this->dbUsers->addRecord($userid, $jid);
+                                        log_debug("User $uname has been added with pass $pass");
+                                        $message = $this->objLanguage->languageText("mod_tribe_imregister", "tribe");
+                                        $message .= " ";
+                                        $message .= $this->objLanguage->languageText("mod_tribe_fixdetailssoon", "tribe");
+                                        $message .= " ";
+                                        $message .= $this->objLanguage->languageText("mod_tribe_yourusernameis", "tribe")." ".$uname." ";
+                                        $message .= $this->objLanguage->languageText("mod_tribe_yourpassis", "tribe")." ".$pass;
+                                    }
+                                    else {
+                                        $message = $this->objLanguage->languageText("mod_tribe_userexists", "tribe");
+                                    }
 
                                     $this->conn->message($pl['from'],$message);
                                     continue;
@@ -567,7 +574,7 @@ class tribe extends controller {
 
                             // Send a response message
 
-                            elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break") {
+                            elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register") {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];

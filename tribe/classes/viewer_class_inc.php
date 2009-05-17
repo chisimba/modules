@@ -446,7 +446,9 @@ class viewer extends object {
         foreach ($replies as $rep) {
             $name = $this->objUser->userName($rep['fromid']);
             $msg = $this->objDBIM->getPostById($rep['msgid']);
-            $repstr .= $name.": ".$msg[0]['msgbody']."<hr />";
+            if(!empty($msg)) {
+                $repstr .= $name.": ".$msg[0]['msgbody']."<hr />";
+            }
         }
         return $repstr;
 
