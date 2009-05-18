@@ -128,6 +128,7 @@ $formTable->endRow();
 $label = new label ('Animal origin: ', 'origin');
 $origin = new textinput('origin');
 //$origin->size = 40;
+$origin->extra = 'letteronly';
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -172,17 +173,13 @@ $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror'
 
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerrorone','ahis'),'letteronly');
 
-$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
-$form->addRule('destination','Animal destination must contain letters only.', 'letteronly');
+$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
+
+//$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
+//$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerrorone','ahis'),'letteronly');
 $form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'required');
-$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserrorone', 'ahis'), 'required');
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserrorone', 'ahis'), 'letteronly');
 
-
-//container-table
-//$topTable = $this->newObject('htmltable', 'htmlelements');
- //$topTable->startRow();
-//$topTable->addCell($formTable->show());
-//$topTable->endRow();
 
 $form->addToForm($formTable->show());
 

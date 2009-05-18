@@ -82,7 +82,7 @@ $GLOBALS['kewl_entry_point_run']) {
 			'origin' => $origin,
 			'destination' => $destination,
 			'remarks' => $remarks
-			));
+			));//echo $sql;
 			if($sql)
 			return true;
 			else
