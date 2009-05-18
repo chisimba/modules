@@ -230,11 +230,12 @@ class eportfolio extends controller
             case 'addparts':
                 $selectedParts = $this->getArrayParam('arrayList');
                 $groupId = $this->getParam('groupId', NULL);
+                if(empty($groupId))
+                $groupId = $this->getSession('groupId', $groupId);
                 $this->setVarByRef('groupId', $groupId);
                 //Get user Groups
                 //$userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
                 $userGroups = $this->objGroupUsers->getUserGroups( $groupId );
-                //var_dump($userGroups);
                 if (empty($selectedParts)) {
                     $this->deleteGroupUsers($userGroups, $groupId);
                 } else {
@@ -243,8 +244,10 @@ class eportfolio extends controller
                     // Get the deleted member ids
                     $delList = array_diff($userGroups, $selectedParts);
                     // Delete these members
-                    foreach($delList as $partPid) {
-                        $this->_objGroupAdmin->deleteGroupUser($partPid['group_id'], $groupId);
+                    if (count($delList) > 0) {
+		            foreach($delList as $partPid) {
+		                $this->_objGroupAdmin->deleteGroupUser($partPid['group_id'], $groupId);
+		            }
                     }
                     // Add these members
                     if (count($addList) > 0) {
@@ -2128,6 +2131,8 @@ class eportfolio extends controller
     //Function for managing eportfolio group items/parts
     public function manageEportfolioViewers($selectedParts, $groupId) 
     {
+        if(empty($groupId))
+            $groupId = $this->getSession('groupId', $groupId);
         // user Pk id
         $userPid = $this->objUser->PKId($this->objUser->userId());
         foreach($selectedParts as $partId) {
@@ -2139,7 +2144,7 @@ class eportfolio extends controller
             } else {
                 $isGroupMember = $this->_objGroupAdmin->isGroupMember($groupId, $partList);
                 if (empty($isGroupMember)) {
-                    $this->_objGroupAdmin->addGroupUser($partList, $groupId);
+                    $addGrpUser = $this->_objGroupAdmin->addGroupUser($partList, $groupId);
                 }
             }
         }
