@@ -63,7 +63,7 @@ $nameInput = new textinput('name',$record['name']);
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_enter'));
 $sButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'location_admin'));
+$backUri = $this->uri(array('action'=>'production_admin'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $objTable = $this->getObject('htmltable','htmlelements');
