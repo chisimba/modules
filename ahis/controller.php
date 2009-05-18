@@ -804,7 +804,7 @@ class ahis extends controller {
                 $this->setVar('data', $data);
                 $this->setVar('searchStr', $searchStr);
                 $this->setVar('success', $this->getParam('success'));
-                $this->setVar('allowEdit', FALSE);
+                $this->setVar('allowEdit', TRUE);
                 return 'admin_overview_tpl.php';
             
             case 'geography_level2_admin':
@@ -1901,8 +1901,8 @@ class ahis extends controller {
              case 'vaccination_insert':
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
-                if ($this->objSurvey->valueExists('name', $name)) {
-                    return $this->nextAction('vaccination_admin', array('success'=>'4'));
+                if ($this->objVaccination->valueExists('name', $name)) {
+                    return $this->nextAction('vaccinationhistory_admin', array('success'=>'4'));
                 }
                 if ($id) {
                     $this->objVaccination->update('id', $id, array('name'=>$name));
@@ -1943,7 +1943,7 @@ class ahis extends controller {
              case 'species_insert':
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
-                if ($this->objSurvey->valueExists('name', $name)) {
+                if ($this->objSpecies->valueExists('name', $name)) {
                     return $this->nextAction('species_admin', array('success'=>'4'));
                 }
                 if ($id) {
