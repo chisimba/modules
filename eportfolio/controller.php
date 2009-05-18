@@ -232,7 +232,9 @@ class eportfolio extends controller
                 $groupId = $this->getParam('groupId', NULL);
                 $this->setVarByRef('groupId', $groupId);
                 //Get user Groups
-                $userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
+                //$userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
+                $userGroups = $this->objGroupUsers->getUserGroups( $groupId );
+                //var_dump($userGroups);
                 if (empty($selectedParts)) {
                     $this->deleteGroupUsers($userGroups, $groupId);
                 } else {
