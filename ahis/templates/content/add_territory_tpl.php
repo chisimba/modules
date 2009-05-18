@@ -127,6 +127,12 @@ $objForm->addRule('latitude_north', $this->objLanguage->languageText('mod_ahis_l
 $objForm->addRule('latitude_south', $this->objLanguage->languageText('mod_ahis_latitudesouthrequired', 'ahis'), 'required');
 $objForm->addRule('longitude_east', $this->objLanguage->languageText('mod_ahis_longitudeeastrequired', 'ahis'), 'required');
 $objForm->addRule('longitude_west', $this->objLanguage->languageText('mod_ahis_longitudewestrequired', 'ahis'), 'required');
+$objForm->addRule('latitude_north', $this->objLanguage->languageText('mod_ahis_latitudenorthrequired', 'ahis'), 'numeric');
+$objForm->addRule('latitude_south', $this->objLanguage->languageText('mod_ahis_latitudesouthrequired', 'ahis'), 'numeric');
+$objForm->addRule('longitude_east', $this->objLanguage->languageText('mod_ahis_longitudeeastrequired', 'ahis'), 'numeric');
+$objForm->addRule('longitude_west', $this->objLanguage->languageText('mod_ahis_longitudewestrequired', 'ahis'), 'numeric');
+
+
 $objForm->addRule('area', $this->objLanguage->languageText('mod_ahis_arearequired', 'ahis'), 'required');
 $objForm->addRule('unit_of_measure', $this->objLanguage->languageText('mod_ahis_unitofmeasurementrequired', 'ahis'), 'required');
 
