@@ -39,6 +39,8 @@ class tribe extends controller {
     public $objGroups;
     public $objMembers;
     public $postJID;
+    public $objModules;
+    public $objTwitterLib;
 
     /**
      *
@@ -483,7 +485,7 @@ class tribe extends controller {
                                     die();
                                     break;
 
-                                case 'subscribe':
+                                /*case 'subscribe':
                                     $poster = explode('/', $pl['from']);
                                     $poster = $poster[0];
                                     //$this->objDbSubs->addRecord($poster);
@@ -498,7 +500,7 @@ class tribe extends controller {
                                     //$this->objDbSubs->inactiveRecord($poster);
                                     // send a message saying that you are now unsubscribed back
                                     $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_unsubscribed', 'tribe'));
-                                    continue;
+                                    continue;*/
 
                                 case 'register' :
                                     // register the user and send a message to say success.
@@ -533,6 +535,8 @@ class tribe extends controller {
                                     continue;
                             }
 
+                            // create a group
+                            $bod = explode(" ", $pl['body']);
                             if(isset($bod[0]) && strtolower($bod[0]) == 'creategroup' ) {
                                 // register the group and send a message to say success.
                                 $groupname = $bod[1];
@@ -564,16 +568,37 @@ class tribe extends controller {
                                 }
                                 // send the message
                                 $this->conn->message($pl['from'], $message);
+                                continue;
                             }
 
-                            //mxit to tweet
+                            // MXit/Jabber to tweet
                             $bod = explode(":", $pl['body']);
                             if(isset($bod[0]) && strtolower($bod[0]) == 'tweet' ) {
                                 // tweet the msg as well
+                                $msg = $bod[1];
+                                if(strlen($msg) >= 140) {
+                                    $message = $this->objLanguage->languageText("mod_tribe_tweetmsg140chars", "tribe").". ".$this->objLanguage->languageText("mod_tribe_yourmsgwas", "tribe").": ".strlen($msg);
+                                    $this->conn->message($pl['from'], $message);
+                                    continue;
+                                }
+                                elseif($this->objTwitterLib) {
+                                    $poster = explode('/', $pl['from']);
+                                    $poster = $poster[0];
+                                    $uid = $this->dbUsers->getUsernamefromJid($poster);
+                                    $this->objTwitterLib->setUid($uid);
+                                    $this->objTwitterLib->updateStatus($msg);
+                                    $message = $this->objLanguage->languageText("mod_tribe_twitterupdated", "tribe");
+                                    $this->conn->message($pl['from'], $message);
+                                    continue;
+                                }
+                                else {
+                                    // twitter module not installed!
+                                    $message = $this->objLanguage->languageText("mod_tribe_twittermodfail", "tribe");
+                                    $this->conn->message($pl['from'], $message);
+                                    continue;
+                                }
                             }
-
                             // Send a response message
-
                             elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register") {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
