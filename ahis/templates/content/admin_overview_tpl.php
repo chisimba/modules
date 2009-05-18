@@ -78,10 +78,17 @@ if (isset($success)) {
     $msg = '';
 }
 
+if(empty($searchStr)){
+if($searchbut == 'Go'){
+$objMsg->setMessage($this->objLanguage->languageText('mod_ahis_search', 'ahis')."<br />");
+$msg = $objMsg->show();
+
+}
+}
 $objSearchStr = new textinput('searchStr',$searchStr);
 $button = new button('search', $this->objLanguage->languageText('word_go'));
 $button->setToSubmit();
-$uri = $this->uri(array('action'=>$action));
+$uri = $this->uri(array('action'=>$action ));
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: document.location='$uri'");
 $search = $this->objLanguage->languageText('word_search').": ".$objSearchStr->show()." ".$button->show()." ".$cButton->show();
 

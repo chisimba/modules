@@ -791,6 +791,8 @@ class ahis extends controller {
             
             case 'geography_level3_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objGeo3->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'geography_level3_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_geo3add','ahis'));
@@ -812,6 +814,8 @@ class ahis extends controller {
                     return 'redirect_tpl.php';
                 }
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objGeo2->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'geography_level2_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_geo2add','ahis'));
@@ -872,6 +876,8 @@ class ahis extends controller {
             
             case 'territory_admin':
 				$searchStr = $this->getParam('searchStr');
+				$searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objTerritory->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'create_territory')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_locationadd','ahis'));
@@ -927,6 +933,8 @@ class ahis extends controller {
             
             case 'employee_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objUser->getAll("WHERE firstname LIKE '%$searchStr%' OR surname LIKE '%$searchStr%' OR username LIKE '%$searchStr%' ORDER BY surname");
                 $this->setVar('searchStr', $searchStr);
                 $this->setVar('data', $data);
@@ -1045,6 +1053,8 @@ class ahis extends controller {
             
             case 'production_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objProduction->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'production_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_productionadd','ahis'));
@@ -1086,6 +1096,8 @@ class ahis extends controller {
             
             case 'title_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objTitle->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'title_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_titleadd','ahis'));
@@ -1127,6 +1139,8 @@ class ahis extends controller {
             
             case 'status_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objStatus->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'status_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_statusadd','ahis'));
@@ -1168,6 +1182,8 @@ class ahis extends controller {
             
             case 'sex_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objSex->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'sex_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_sexadd','ahis'));
@@ -1209,6 +1225,8 @@ class ahis extends controller {
             
             case 'outbreak_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objOutbreak->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'outbreak_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_outbreakadd','ahis'));
@@ -1250,6 +1268,8 @@ class ahis extends controller {
             
             case 'diagnosis_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objDiagnosis->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'diagnosis_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_diagnosisadd','ahis'));
@@ -1291,6 +1311,8 @@ class ahis extends controller {
             
             case 'control_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objControl->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'control_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_controladd','ahis'));
@@ -1332,6 +1354,8 @@ class ahis extends controller {
             
             case 'quality_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objQuality->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'quality_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_qualityadd','ahis'));
@@ -1373,6 +1397,8 @@ class ahis extends controller {
             
             case 'report_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objReport->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'report_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_reportadd','ahis'));
@@ -1423,6 +1449,8 @@ class ahis extends controller {
             
             case 'age_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objAge->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'age_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_ageadd','ahis'));
@@ -1464,6 +1492,8 @@ class ahis extends controller {
             
 			case 'causative_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objCausative->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'causative_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_causativeadd','ahis'));
@@ -1505,6 +1535,8 @@ class ahis extends controller {
             
             case 'role_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objRole->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'role_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_roleadd','ahis'));
@@ -1546,6 +1578,8 @@ class ahis extends controller {
             
             case 'department_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objDepartment->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'department_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_departmentadd','ahis'));
@@ -1587,6 +1621,8 @@ class ahis extends controller {
             
             case 'disease_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objDisease->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'disease_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_diseaseadd','ahis'));
@@ -1627,6 +1663,7 @@ class ahis extends controller {
               
             case 'test_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
                 $data = $this->objTest->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'test_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_testadd','ahis'));
@@ -1639,6 +1676,7 @@ class ahis extends controller {
                 $this->setVar('data', $data);
                 $this->setVar('allowEdit', TRUE);
                 $this->setVar('editAction', 'test_add');
+                $this->setVar('searchbut',$searchbut);
                 $this->setVar('success', $this->getParam('success'));
                 return 'admin_overview_tpl.php';
                 
@@ -1667,6 +1705,8 @@ class ahis extends controller {
              
             case 'testresult_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objTestresult->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'testresult_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_testresultadd','ahis'));
@@ -1706,6 +1746,8 @@ class ahis extends controller {
                  
             case 'sample_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objSample->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'sample_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_sampleadd','ahis'));
@@ -1746,6 +1788,8 @@ class ahis extends controller {
              
             case 'survey_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objSurvey->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'survey_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_surveyadd','ahis'));
@@ -1787,6 +1831,8 @@ class ahis extends controller {
             
             case 'farmingsystem_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objFarmingsystem->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'farmingsystem_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_farmingsystemadd','ahis'));
@@ -1832,6 +1878,8 @@ class ahis extends controller {
             
             case 'vaccinationhistory_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objVaccination->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'vaccination_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_vaccinationadd','ahis'));
@@ -1872,6 +1920,8 @@ class ahis extends controller {
             
             case 'species_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objSpecies->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'species_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_speciesadd','ahis'));
@@ -1912,6 +1962,8 @@ class ahis extends controller {
             
             case 'breed_admin':
                 $searchStr = $this->getParam('searchStr');
+                $searchbut = $this->getParam('search');
+                $this->setVar('searchbut',$searchbut);
                 $data = $this->objBreed->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'breed_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_breedadd','ahis'));

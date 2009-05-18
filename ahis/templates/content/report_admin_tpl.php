@@ -82,7 +82,13 @@ if (isset($success)) {
 } else {
     $msg = '';
 }
+if(empty($searchStr)){
+if($searchbut == 'Go'){
+$objMsg->setMessage($this->objLanguage->languageText('mod_ahis_search', 'ahis')."<br />");
+$msg = $objMsg->show();
 
+}
+}
 $objSearchStr = new textinput('searchStr',$searchStr);
 $button = new button('search', $this->objLanguage->languageText('word_go'));
 $button->setToSubmit();
