@@ -10,6 +10,7 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('mouseoverpopup', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
+$this->_objUser = $this->getObject ( 'user', 'security' );
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objinfoTitles = &$this->getObject('htmlheading', 'htmlelements');
@@ -90,8 +91,12 @@ $objHeading->align = left;
 $objinfoTitles->type = 1;
 $objaddressTitles->type = 1;
 $objcontactTitles->type = 1;
-$hasAccess = $this->objEngine->_objUser->isContextLecturer();
-$hasAccess|= $this->objEngine->_objUser->isAdmin();
+//$hasAccess = $this->objEngine->_objUser->isContextLecturer();
+//$hasAccess|= $this->objEngine->_objUser->isAdmin();
+
+$hasAccess = $this->_objUser->isContextLecturer();
+$hasAccess = $this->_objUser->isAdmin();
+
 $this->setVar('pageSuppressXML', true);
 $link = new link($this->uri(array(
     'module' => 'eportfolio',
@@ -835,8 +840,8 @@ if (!empty($reflectionList)) {
 }
 //End View Reflection
 //View assertions
-$hasAccess = $this->objEngine->_objUser->isContextLecturer();
-$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$hasAccess = $this->_objUser->isContextLecturer();
+$hasAccess|= $this->_objUser->isAdmin();
 //$this->setVar('pageSuppressXML',true);
 if (!$hasAccess) {
     //Language Items
