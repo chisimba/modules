@@ -474,6 +474,69 @@
         }
 
 
+   /**
+    * Method to return the Boxy New User Permissions Form
+    *
+    * @param title The title of the alert box
+    * @param body The message to be displayed in the body of the alert box
+    * @access public
+    */
+        public function getAlertForm($title, $body)
+        {
+            $table = new htmlTable();
+            $table->width = "100%";
+            $table->cellspacing = "0";
+            $table->cellpadding = "10";
+            $table->border = "0";
+            $table->attributes = "align ='center'";
+
+            $tbl = new htmlTable();
+            $tbl->width = "100%";
+            $tbl->cellspacing = "0";
+            $tbl->cellpadding = "10";
+            $tbl->border = "0";
+            $tbl->attributes = "align ='center'";
+
+            $tbl->startRow();
+            $tbl->addCell("$title", '', 'top', null, 'cmsvspacer', 'colspan="2"');
+            $tbl->endRow();
+
+            $tbl->startRow();
+            $tbl->addCell("$body", '', 'top', null, 'cmsvspacer', 'colspan="2"');
+            $tbl->endRow();
+
+            //Ok Button
+            $btnOk = "<input type='button' id='cancel' name='ok' value='Ok' style='width:50px;' onclick='Boxy.get(this).hide(); return false'/>";
+
+            $tbl1 = new htmlTable();                                                
+            $tbl1->width = "100%";
+            $tbl1->cellspacing = "0";
+            $tbl1->cellpadding = "0";
+            $tbl1->border = "0";
+            $tbl1->attributes = "align ='center'";
+
+            $tbl1->startRow();
+            $tbl1->addCell($btnOk, '', '', 'center', '', '','');
+            $tbl1->endRow();
+
+            //Adding All to Container here
+            $table->startRow();
+            $table->addCell($tbl->show()/*.$layer->show()*/.'<div style="padding-bottom:10px"></div>'.$tbl1->show(), '', '', 'center', '', '','');
+            $table->endRow();
+
+            //Stripping New Lines and preparing for boxy input = (Facebook style window)
+            $display = '<form id="frm_add_'.$id.'" class="Form" name="frm_addgrid" action="?module=cmsadmin&action=addedituserpermissions" method="POST">';
+            $display .= str_replace("\n", '',$table->show());
+            $display = str_replace("\n\r", '', $display);
+
+            $display .= $action;
+            $display .= '</form>';
+
+            return $display;
+        }
+
+
+
     }
 
 ?>

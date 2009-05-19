@@ -139,6 +139,27 @@
 
 
         /**
+        * Method to check if the user can edit User specific permissions
+        * Currently only site administrators can edit these
+        * @access public
+        * @param contentid, userid
+        * @return boolean
+        */
+        public function canEditUserPermissions($userId = NULL)
+        {
+
+            if ($userId == NULL){
+                $userId = $this->_objUser->userId();
+            }
+
+            //Admin Can
+            if ($this->_objUser->isAdmin()){
+                return TRUE;
+            }
+            return FALSE;
+        }
+
+        /**
         * Method to check if the user can write to frontpage
         *
         * @access public

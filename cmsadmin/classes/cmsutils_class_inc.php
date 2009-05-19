@@ -12,8 +12,6 @@
  * @category chisimba
  * @copyright AVOIR
  * @license GNU GPL
- * @author Wesley  Nitsckie
- * @author Warren Windvogel
  * @author Charl Mert
  */
 
@@ -125,6 +123,7 @@
         {
             try {
                 $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
+                $this->_objBox = $this->newObject('jqboxy', 'htmlelements');
                 $this->_objUserPerm = $this->newObject('dbuserpermissions', 'cmsadmin');
                 $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
                 $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');
@@ -439,10 +438,24 @@
             $url = $this->uri(array('action' => 'sections'));
             $icnSection = $objIcon->getCleanBlockIcon($url, 'section', $link, 'png', 'icons/cms/');
 
-            //Create front page manager link
-            $link = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
-            $url = $this->uri(array('action' => 'frontpages'), 'cmsadmin');
-            $icnFront = $objIcon->getCleanBlockIcon($url, 'frontpage', $link, 'png', 'icons/cms/');
+            //Frontpage Security
+            if ($this->_objUserPerm->canAddToFrontPage()) {
+                $link = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
+                $url = $this->uri(array('action' => 'frontpages'), 'cmsadmin');
+                $icnFront = $objIcon->getCleanBlockIcon($url, 'frontpage', $link, 'png', 'icons/cms/');
+            } else {
+                $this->_objDisplay = $this->getObject('cmsdisplay', 'cmsadmin');
+
+                $innerHtml = $this->_objDisplay->getAlertForm('', "You don't have rights to edit the front page, <br/> contact your administrator to gain access");
+                $this->_objBox->setHtml($innerHtml);
+                $this->_objBox->setTitle('Notice: Access Denied');
+                $this->_objBox->attachClickEvent('btn_frontpage' . $userPerm['id']);
+
+                $url = '#';
+                $link = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
+                $icnFront = $objIcon->getCleanBlockIconId('btn_frontpage', $url, 'frontpage', $link, 'png', 'icons/cms/');
+    
+            }
 
             // Create archive / trash manager link
             $url = $this->uri(array('action' => 'trashmanager'));
@@ -853,10 +866,13 @@
 
                 case 'permissions':
 
-                //user link
-                $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsusericontext', 'cmsadmin');
-                $url = $this->uri(array('action' => 'permissionsuser'));
-                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'user_med', $link, 'png', 'icons/cms/');
+
+                if ($this->_objUserPerm->canEditUserPermissions()) {
+                    //user link
+                    $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsusericontext', 'cmsadmin');
+                    $url = $this->uri(array('action' => 'permissionsuser'));
+                    $iconList .= $icon_publish->getCleanTextIcon('', $url, 'user_med', $link, 'png', 'icons/cms/');
+                }
 
                 //permissions link
                 $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin'); 
@@ -879,10 +895,12 @@
                 $linkText = $this->objLanguage->languageText('word_new');
                 $iconList .= $icon_publish->getCleanTextIcon('btn_new', $url, 'new', $linkText, 'png', 'icons/cms/');
 
-                //user link
-                $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsusericontext', 'cmsadmin');
-                $url = $this->uri(array('action' => 'permissionsuser'));
-                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'user_med', $link, 'png', 'icons/cms/');
+                if ($this->_objUserPerm->canEditUserPermissions()) {
+                    //user link
+                    $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsusericontext', 'cmsadmin');
+                    $url = $this->uri(array('action' => 'permissionsuser'));
+                    $iconList .= $icon_publish->getCleanTextIcon('', $url, 'user_med', $link, 'png', 'icons/cms/');
+                }
 
                 //permissions link
                 $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin'); 
@@ -973,10 +991,25 @@
                 $linkText = $this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cmsadmin');
                 $iconList = $icon_publish->getCleanTextIcon('', $url, 'section_tool', $linkText, 'png', 'icons/cms/');
 
-                // front page manager
-                $url = $this->uri(array('action' => 'frontpages'), 'cmsadmin');
-                $linkText = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
-                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'frontpage_small', $linkText, 'png', 'icons/cms/');
+                //Frontpage Security
+                if ($this->_objUserPerm->canAddToFrontPage()) {
+                    // front page manager
+                    $url = $this->uri(array('action' => 'frontpages'), 'cmsadmin');
+                    $linkText = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
+                    $iconList .= $icon_publish->getCleanTextIcon('', $url, 'frontpage_small', $linkText, 'png', 'icons/cms/');
+                } else {
+                    $this->_objDisplay = $this->getObject('cmsdisplay', 'cmsadmin');
+
+                    $innerHtml = $this->_objDisplay->getAlertForm('', "You don't have rights to edit the front page, <br/> contact your administrator to gain access");
+                    $this->_objBox->setHtml($innerHtml);
+                    $this->_objBox->setTitle('Notice: Access Denied');
+                    $this->_objBox->attachClickEvent('btn_frontpage' . $userPerm['id']);
+
+                    $url = '#';
+                    $linkText = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
+                    $iconList .= $icon_publish->getCleanTextIcon('btn_frontpage', $url, 'frontpage_small', $linkText, 'png', 'icons/cms/');
+                }
+
 
                 // Cancel	 		
                 $url = "javascript:history.back();";
@@ -1963,10 +1996,15 @@
 			$cmsControlPanel = '
 			<a tabindex="0" href="#cmscontrolpenel" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">Quick Menu</a>
 			<div id="cmscontrolpanelitems" class="hidden">
-			<ul>
-				<li><a href="?module=cmsadmin&amp;action=frontpages">Edit Front Page</a></li>
-				
-				<li><a href="#">Content</a>
+			<ul>';
+
+            //Frontpage Security
+            if ($this->_objUserPerm->canAddToFrontPage()) {
+				$cmsControlPanel .= '<li><a href="?module=cmsadmin&amp;action=frontpages">Edit Front Page</a></li>';
+            }
+
+            $cmsControlPanel .= 
+			'	<li><a href="#">Content</a>
 					<ul>
 						<li><a id="btnaddcontent" href="?module=cmsadmin&amp;action=addcontent">Add a Content Item</a></li>
 					</ul>
@@ -5276,23 +5314,28 @@
 
             $table->endRow();
 
-            // Introduction Area
-            $introInput = $this->newObject('htmlarea', 'htmlelements');
-            $introInput->init('intro', $introInputValue);
-            $introInput->setContent($introInputValue);
-            $introInput->setBasicToolBar();
-            $introInput->height = '200px';
-            $introInput->width = '100%';
 
-            $h3->str = $this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')';
-            $h3->type = 3;
+            //Frontpage Security
+            if ($this->_objUserPerm->canAddToFrontPage()) {
 
-            //add hidden text input
-            $table->row_attributes = '';
-            $table->startRow();
-            //$table->addCell(NULL);
-            $table->addCell('<div id="introdiv"><br />'.$h3->show().$introInput->show().'</div>','','left','left', null, 'colspan="2"');
-            $table->endRow();
+                // Introduction Area
+                $introInput = $this->newObject('htmlarea', 'htmlelements');
+                $introInput->init('intro', $introInputValue);
+                $introInput->setContent($introInputValue);
+                $introInput->setBasicToolBar();
+                $introInput->height = '200px';
+                $introInput->width = '100%';
+
+                $h3->str = $this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')';
+                $h3->type = 3;
+
+                //add hidden text input
+                $table->row_attributes = '';
+                $table->startRow();
+                //$table->addCell(NULL);
+                $table->addCell('<div id="introdiv"><br />'.$h3->show().$introInput->show().'</div>','','left','left', null, 'colspan="2"');
+                $table->endRow();
+            }
 
             //Adding the FCK_EDITOR
 
@@ -5375,7 +5418,7 @@
             //Adding the 250px hieght buffer to make sure the jQuery functions won't overlap existing skins
             //var_dump($is_front); exit;
 
-            if (!$is_front) {
+            if ($this->_objUserPerm->canAddToFrontPage() && !$is_front) {
                 $layer = new layer();
                 $layer->height = '250px';
                 

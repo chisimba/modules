@@ -636,6 +636,12 @@
 
                 // User Specific Permissions
                 case 'permissionsuser':
+
+                    //Security Check
+                    if ($this->_objUserPerm->canEditUserPermissions()) {
+                            return 'cms_nopermissions_tpl.php';
+                    }
+
                     //Boxy New Form
                     $innerHtml = $this->_objDisplay->getAddUserPermissionsForm();
                     $this->_objBox->setHtml($innerHtml);
