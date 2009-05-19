@@ -37,14 +37,14 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
-$msg = '<br />';
+/*$msg = '<br />';
 
 if(($output=='yes')) {
         $objMsg = $this->getObject('timeoutmessage','htmlelements');
         $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_promptyear', 'ahis'));
         $msg = $objMsg->show()."<br />";
 
-}
+}*/
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -129,11 +129,9 @@ $formTable->endRow();
 
 $label_end = new label ('Total doses at end of month: ', 'dosesendofmonth');
 $doses_end = new textinput('dosesendofmonth');
-//$doses_end->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_end->show());
 $formTable->addCell($doses_end->show(),NULL,NULL,'left');
-//$formTable->addCell($datePickerOne->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 $datePickerOne = $this->newObject('datepicker', 'htmlelements');
@@ -147,7 +145,6 @@ $formTable->endRow();
 
 $label_received = new label ('Total doses received in month: ', 'dosesreceived');
 $doses_received= new textinput('dosesreceived');
-//$doses_received->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_received->show());
 $formTable->addCell($doses_received->show(),NULL,NULL,'left');
@@ -155,7 +152,6 @@ $formTable->endRow();
 
 $label_used = new label ('Doses used: ', 'dosesused');
 $doses_used= new textinput('dosesused');
-//$doses_used->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_used->show());
 $formTable->addCell($doses_used->show(),NULL,NULL,'left');
@@ -163,14 +159,11 @@ $formTable->endRow();
 
 $label_wasted = new label ('Doses wasted: ', 'doseswasted');
 $doses_wasted= new textinput('doseswasted');
-//$doses_wasted->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_wasted->show());
 $formTable->addCell($doses_wasted->show(),NULL,NULL,'left');
 $formTable->endRow();
 		
-
-
 $save = new button('animalvaccine_save', 'Save');
 $save->setToSubmit();
 
@@ -194,9 +187,11 @@ $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districter
 
 $form->addRule('doses', $this->objLanguage->languageText('mod_ahis_doseserror','ahis'),'required');
 $form->addRule('doses', $this->objLanguage->languageText('mod_ahis_dosesnumbererror','ahis'),'numeric');
+
 $form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_starterror','ahis'),'required');
 $form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_startnumbererror','ahis'),'numeric');
 
+//$form->addRule('startmonth', $this->objLanguage->languageText('mod_ahis_startnontherror','ahis'),'required');
 //$form->addRule('startmonth', $this->objLanguage->languageText('mod_ahis_startmontherror','ahis'),'datenotfuture');
 
 $form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_enderror','ahis'),'required');
