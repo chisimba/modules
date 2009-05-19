@@ -539,9 +539,15 @@ class tribe extends controller {
                             $bod = explode(" ", $pl['body']);
                             if(isset($bod[0]) && strtolower($bod[0]) == 'creategroup' ) {
                                 // register the group and send a message to say success.
-                                $groupname = $bod[1];
-                                $privacy = 'public';
-                                log_debug("Creating a public group called $groupname");
+                                if(strtolower($bod[1]) == 'private') {
+                                    $groupname = $bod[2];
+                                    $privacy = 'private';
+                                }
+                                else {
+                                    $groupname = $bod[1];
+                                    $privacy = 'public';
+                                }
+                                log_debug("Creating a $privacy group called $groupname");
                                 $result = ereg ("^[A-Za-z0-9]+$", $groupname );
                                 if($result == FALSE) {
                                     // we have a space or something nasty in the groupname
@@ -597,6 +603,43 @@ class tribe extends controller {
                                     $this->conn->message($pl['from'], $message);
                                     continue;
                                 }
+                            }
+
+                            // look up a wikipedia entry
+                            $bod = explode(":", $pl['body']);
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'wikipedia' ) {
+                               $page = $bod[1];
+                               $page = trim($page);
+                               $url = 'http://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles='.$page.'&rvprop=content&format=xml';
+                               $objCurl = $this->getObject('curlwrapper', 'utilities');
+                               $code = $objCurl->exec($url);
+
+                               $xml = simplexml_load_string($code);
+                               if(!is_object($xml)) {
+                                   $message = "error! Please try again later...";
+                                   $this->conn->message($pl['from'], $message);
+                                   continue;
+                               }
+                               else {
+                                   // $xml->error will exist on bad pages (i.e. no page exists)
+                                   if($xml->error) {
+                                       $message = "bad page";
+                                       $this->conn->message($pl['from'], $message);
+                                       continue;
+                                   }
+                                   else {
+                                       $page = $xml->query;
+                                       //log_debug($page);
+                                       if($page->normalized || $page->pages) {
+                                           $text = $page->pages->page->revisions->rev;
+                                           // we need to clean up a little for mobile client. Remove the {{ }} and [[ ]] bits in wiki markup
+                                           $text = preg_replace('/\\{{(.*?)\\}}/', '', $text);
+                                           $text = preg_replace('/\\[(.*?)\\]]/', '', $text);
+                                           $this->conn->message($pl['from'], $text);
+                                           continue;
+                                       }
+                                   }
+                               }
                             }
                             // Send a response message
                             elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register") {

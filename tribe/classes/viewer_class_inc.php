@@ -407,14 +407,18 @@ class viewer extends object {
     public function showLatestGrpsBox($number) {
         $this->objGroups = $this->getObject('dbgroups');
         $this->objGrpMembers = $this->getObject('dbgroupmembers');
-        $arr = $this->objGroups-> getLastPublic($number);
+        $arr = $this->objGroups->getLastAll($number);
         $str = NULL;
         foreach($arr as $grp) {
             $jLink = $this->newObject ( 'link', 'htmlelements' );
             $jLink->href = $this->uri ( array ('action' => 'joingroup', 'groupid' => $grp['id'] ) );
             $jLink->link = $this->objLanguage->languageText ( "mod_tribe_joingroup", "tribe" );
 
-            $str .= $grp['groupname']." ";
+            $gLink = $this->newObject ( 'link', 'htmlelements' );
+            $gLink->href = $this->uri ( array ('action' => 'myhome', 'user' => $grp['groupname'] ) );
+            $gLink->link = $grp['groupname'];
+
+
             // check that the user is not already a member
             if($this->objGrpMembers->isAMember($this->objUser->userId(), $grp['id'])) {
                 $member = TRUE;
@@ -422,8 +426,21 @@ class viewer extends object {
             else {
                 $member = FALSE;
             }
-            if($this->objUser->isLoggedIn() && $member != TRUE) {
+            if($grp['privacy'] == 'public') {
+                $str .= $gLink->show()." ";
+            }
+            elseif($grp['privacy'] == 'private' && $member == TRUE) {
+                $str .= $gLink->show()." ";
+            }
+            else {
+                $str .= $grp['groupname']." ";
+            }
+
+            if($grp['privacy'] == 'public' && $this->objUser->isLoggedIn() && $member != TRUE) {
                 $str .= "(".$grp['privacy'].")"." ".$jLink->show()."<br />";
+            }
+            elseif($grp['privacy'] == 'private' && $this->objUser->isLoggedIn() && $member != TRUE) {
+                $str .= "(".$grp['privacy'].")"." ".'get invited <br />'; //$jLink->show()."<br />";
             }
             elseif($this->objUser->isLoggedIn() && $member == TRUE)  {
                 $remLink = $this->newObject ( 'link', 'htmlelements' );
@@ -629,10 +646,14 @@ class viewer extends object {
         $gform = new form('creategroup', $this->uri(array('action' => 'creategroup')));
         $gform->addRule('groupname', $this->objLanguage->languageText("mod_tribe_phrase_groupnamereq", "tribe") , 'required');
         $gname = new textinput('groupname');
+
         // privacy dropdown
+        $dd = new dropdown('privacy');
+        $dd->addOption('public','Public');
+        $dd->addOption('private','Private');
 
         $gname->size = 30;
-        $gform->addToForm($gname->show());
+        $gform->addToForm($gname->show()."<br />".$dd->show());
         $this->obGButton = new button($this->objLanguage->languageText('word_creatgroup', 'tribe'));
         $this->obGButton->setValue($this->objLanguage->languageText('word_creategroup', 'tribe'));
         $this->obGButton->setToSubmit();

@@ -114,6 +114,14 @@ class dbgroups extends dbTable {
         return $this->getAll("WHERE privacy = 'public' AND status = '1' LIMIT {$number}");
     }
 
+    public function getLastPrivate($number) {
+        return $this->getAll("WHERE privacy = 'private' AND status = '1' LIMIT {$number}");
+    }
+
+    public function getLastAll($number) {
+        return $this->getAll("WHERE status = '1' LIMIT {$number}");
+    }
+
     public function getGroupInfo($groupname) {
         $res = $this->getAll("WHERE groupname = '$groupname'");
         return $res[0];
