@@ -293,13 +293,14 @@ class ahis extends controller {
                 $this->setSession('ps_refNo', $refNo);
                 $this->setSession('ps_remarks', $remarks);
                 
+				$geo2id = $this->getSession('ps_geo2Id');
                 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
-                $this->setVar('arrayLocation', $this->objTerritory->getAll("ORDER BY name"));
+                $this->setVar('arrayLocation', $this->objTerritory->getAll("WHERE geo2id = '$geo2id' ORDER BY name"));
                 $this->setVar('arrayDisease', $this->objDisease->getAll("ORDER BY name"));
                 $this->setVar('arrayCausative', $this->objCausative->getAll("ORDER BY name"));
 				$this->setVar('calendardate', $this->getSession('ps_calendardate'));
                 $this->setVar('refNo', $this->getSession('ps_refNo'));
-                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
+                $this->setVar('geo2Id', $geo2id);
                 $this->setVar('dateVet', $this->getSession('ps_dateVet', date('Y-m-d')));
                 $this->setVar('dateOccurence', $this->getSession('ps_dateOccurence', date('Y-m-d')));
                 $this->setVar('dateDiagnosis', $this->getSession('ps_dateDiagnosis', date('Y-m-d')));
@@ -2336,3 +2337,4 @@ class ahis extends controller {
             return FALSE;
      }
 	}
+?>

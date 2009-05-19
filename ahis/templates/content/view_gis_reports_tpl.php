@@ -269,7 +269,7 @@ function showResults() {
 
 	var la = ge.createLookAt("");
 	la.set(Number(dataJSONObject.results[lastPoint].lat), Number(dataJSONObject.results[lastPoint].long),
-		0, ge.ALTITUDE_RELATIVE_TO_GROUND,0, 0, 10000000);
+		0, ge.ALTITUDE_RELATIVE_TO_GROUND,0, 0, 3000000);
 	ge.getView().setAbstractView(la);
 }
 
