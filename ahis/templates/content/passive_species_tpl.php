@@ -61,12 +61,12 @@ $cButton->setCSS('cancelButton');
 $refNoBox = new textinput('refNo', $refNo, 'text', 15);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 8);
 $yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 4);
-//$yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
+$yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
 
 $geo2Drop = new dropdown('geo2Id');
 $geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
 $geo2Drop->setSelected($geo2Id);
-//$geo2Drop->extra = 'disabled';
+$geo2Drop->extra = 'disabled';
 $geo2Drop->cssClass = "passive_species";
 
 $speciesDrop = new dropdown('speciesId');
