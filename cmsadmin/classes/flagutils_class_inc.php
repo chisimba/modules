@@ -92,7 +92,7 @@
             $subject .= ' ' . $reason['text'];
             
             $siteUrl = $this->_objConf->getsiteRoot();
-
+            
             foreach ($arrEmails as $mail) {
                 $message = 'Dear ' . $mail['name'] . "\na Content item has been flagged";
                 $message .= "\nReason: $reason[text]";

@@ -20,6 +20,10 @@ switch($type){
         echo $this->_objUtils->getAddFlagOptionAddForm();
     break;
 
+    case 'showuserpermaddform':
+        echo $this->_objDisplay->getAddUserPermissionsForm();
+    break;
+
     default:
         echo $this->_objUtils->getFlagOptionsForm();
     break;

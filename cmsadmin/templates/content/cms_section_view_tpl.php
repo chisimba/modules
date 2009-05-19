@@ -250,18 +250,23 @@ if (!empty($pages)) {
         $objLink->link = $pageTitle;
         $viewPageLink = $objLink->show();
 
-        //Icon for toggling front page status
-        if(isset($page['front_id']) && !empty($page['front_id'])) {
-            $objIcon->setIcon('greentick');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
-            $url = array('action' => 'changefpstatus', 'id' => $page['front_id'], 'sectionid' => $sectionId, 'mode' => 'remove');
+        if ($this->_objUserPerm->canAddToFrontPage()) {
+            //Icon for toggling front page status
+            if(isset($page['front_id']) && !empty($page['front_id'])) {
+                $objIcon->setIcon('greentick');
+                $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_confirmremovefromfp', 'cmsadmin');
+                $url = array('action' => 'changefpstatus', 'id' => $page['front_id'], 'sectionid' => $sectionId, 'mode' => 'remove');
+            } else {
+                $objIcon->setIcon('redcross');
+                $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
+                $url = array('action' => 'changefpstatus', 'id' => $pageId, 'sectionid' => $sectionId, 'mode' => 'add');
+            }
+            $frontPageLink = new link($this->uri($url, 'cmsadmin'));
+            $frontPageLink->link = $objIcon->show();
+            $frontPageLink = $frontPageLink->show();
         } else {
-            $objIcon->setIcon('redcross');
-            $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpagetofp', 'cmsadmin');
-            $url = array('action' => 'changefpstatus', 'id' => $pageId, 'sectionid' => $sectionId, 'mode' => 'add');
+            $frontPageLink = '';
         }
-        $frontPageLink = new link($this->uri($url, 'cmsadmin'));
-        $frontPageLink->link = $objIcon->show();
 
         // set up link to view contact details in a popup window
 		$objBlocksLink = new link('#');
@@ -284,7 +289,7 @@ if (!empty($pages)) {
 	    
 		
         if ($isRegistered) {
-            $objPagesTable->addCell('<nobr>'.$objBlocksLinkDisplay.$frontPageLink->show().$viewIcon.$editIcon.$delIcon.'</nobr>', '', '', '', $class);
+            $objPagesTable->addCell('<nobr>'.$objBlocksLinkDisplay.$frontPageLink.$viewIcon.$editIcon.$delIcon.'</nobr>', '', '', '', $class);
         } else {
             $objPagesTable->addCell('<nobr>'.$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
         }

@@ -3,6 +3,29 @@
     width: 100%;
 }
 
+#cms_header_left {
+    float:left; 
+    align: left; 
+    margin:0px; 
+    padding:0px;
+}
+
+#cms_header_right {
+    float:right; 
+    align:right; 
+    margin:0px; 
+    padding:0px;
+}
+
+.clearboth {
+    clear:both; 
+    margin:0px; 
+    padding:0px;
+}
+
+.cms_table_header {
+    padding-left : 3px;
+}
 
 /*Content Page Parameters Tabbed Form Container*/
 #AddContentPageContent {

@@ -125,6 +125,7 @@
         {
             try {
                 $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
+                $this->_objUserPerm = $this->newObject('dbuserpermissions', 'cmsadmin');
                 $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
                 $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');
                 $this->_objFlagEmail =  $this->newObject('dbflagemail', 'cmsadmin');
@@ -852,6 +853,11 @@
 
                 case 'permissions':
 
+                //user link
+                $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsusericontext', 'cmsadmin');
+                $url = $this->uri(array('action' => 'permissionsuser'));
+                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'user_med', $link, 'png', 'icons/cms/');
+
                 //permissions link
                 $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin'); 
                 //$link = "Permissions Manager"; 
@@ -865,6 +871,33 @@
 
                 return '<p style="align:right;">'.$iconList.'</p>';
                 break;
+
+                case 'userpermissions':
+
+                // New
+                $url = '#';
+                $linkText = $this->objLanguage->languageText('word_new');
+                $iconList .= $icon_publish->getCleanTextIcon('btn_new', $url, 'new', $linkText, 'png', 'icons/cms/');
+
+                //user link
+                $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsusericontext', 'cmsadmin');
+                $url = $this->uri(array('action' => 'permissionsuser'));
+                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'user_med', $link, 'png', 'icons/cms/');
+
+                //permissions link
+                $link = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin'); 
+                //$link = "Permissions Manager"; 
+                $url = $this->uri(array('action' => 'permissions'));
+                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'permissions_med', $link, 'png', 'icons/cms/');
+
+                // Cancel           
+                $url = "javascript:history.back();";
+                $linkText = ucwords($this->objLanguage->languageText('word_back'));
+                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'back', $linkText, 'png', 'icons/cms/');
+
+                return '<p style="align:right;">'.$iconList.'</p>';
+                break;
+
 
                 case 'addpermissions':
 
@@ -1494,20 +1527,22 @@
             $objRadio->setBreakSpace('<br/>');
             $objRadio->setSelected($show_content);
 
+            //Frontpage Security
+            if ($this->_objUserPerm->canAddToFrontPage()) {
+                $tbl_basic->startRow();
+                $tbl_basic->addCell($this->objLanguage->languageText('mod_cmsadmin_showonfrontpage', 'cmsadmin').': ');
+                $tbl_basic->addCell($frontPage->show());
+                $tbl_basic->endRow();
 
-            $tbl_basic->startRow();
-            $tbl_basic->addCell($this->objLanguage->languageText('mod_cmsadmin_showonfrontpage', 'cmsadmin').': ');
-            $tbl_basic->addCell($frontPage->show());
-            $tbl_basic->endRow();
+                //Toggle Intro Only vs Full Content
+                $toggleLayer = new layer();
+                $toggleLayer->id = 'toggle_layer_param';
+                $toggleLayer->str = $this->objLanguage->languageText('mod_cmsadmin_toggleintrocontent', 'cmsadmin') . ":<br/>" . $objRadio->show();            
 
-            //Toggle Intro Only vs Full Content
-            $toggleLayer = new layer();
-            $toggleLayer->id = 'toggle_layer_param';
-            $toggleLayer->str = $this->objLanguage->languageText('mod_cmsadmin_toggleintrocontent', 'cmsadmin') . ":<br/>" . $objRadio->show();            
-
-            $tbl_basic->startRow();
-            $tbl_basic->addCell($toggleLayer->show(), '', '', '', '', 'colspan="2"');
-            $tbl_basic->endRow();
+                $tbl_basic->startRow();
+                $tbl_basic->addCell($toggleLayer->show(), '', '', '', '', 'colspan="2"');
+                $tbl_basic->endRow();
+            }
 
             $tbl_basic->startRow();
             if (isset($lbl_author_alias)) {
@@ -1906,8 +1941,9 @@
 			jQuery(function(){
 					jQuery('#cmscontrolpanelmenu').menu({
 						content: jQuery('#cmscontrolpanelmenu').next().html(),
-						crumbDefaultText: '',
-						backLink: true
+                        flyOut: true,
+						backLink: true,
+                        showSpeed: 100
 					});
 				});
 				
@@ -1941,21 +1977,16 @@
 						<li><a href="?module=cmsadmin&amp;action=addsection">Add a Section</a></li>
 					</ul>
 				</li>
-				<li><a href="#">Templates</a>
-					<ul>
-						<li><a href="#">Add Template</a></li>
-					</ul>
+				<li><a href="?module=cmsadmin&amp;action=templates">Templates</a>
 				</li>
-				<li><a href="#">RSS Feeds</a>
-					<ul>
-						<li><a href="#">Add RSS Feed</a></li>
-					</ul>
+				<li><a href="?module=cmsadmin&amp;action=createfeed">RSS Feeds</a>
 				</li>
 				<li><a href="?module=cmsadmin&amp;action=permissions">Permissions</a></li>
 				<li><a href="?module=cmsadmin&amp;action=menustyle">Menu</a></li>
 				<li><a href="?module=cmsadmin&amp;action=filemanager">Upload Files</a></li>
 				<li><a href="?module=shorturl&ref=cmsadmin">Short URLs</a></li>
 				<li><a href="?module=cmsadmin&amp;action=filemanager">Upload Files</a></li>
+                <li><a href="?module=cmsadmin&amp;action=flag">Flag</a></li>
 				<li><a href="?module=sysconfig&action=step2&pmodule_id=cmsadmin">Configuration</a></li>
 				
 			</ul>

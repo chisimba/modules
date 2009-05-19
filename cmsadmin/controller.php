@@ -162,8 +162,12 @@
                 $this->setVar('SUPPRESS_PROTOTYPE', true);
                 $this->setVar('SUPPRESS_JQUERY', false);
                 $this->setVar('JQUERY_VERSION', '1.3.2');			
-			
+                
                 $this->_objJQuery = $this->newObject('jquery', 'htmlelements');
+                
+                $this->_objUserPerm = $this->getObject ('dbuserpermissions', 'cmsadmin');
+                $this->_objDisplay = $this->newObject('cmsdisplay', 'cmsadmin');
+                $this->_objDbUserPermissions = $this->newObject('dbuserpermissions', 'cmsadmin');
                 $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
                 $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');
                 $this->_objFlagEmail =  $this->newObject('dbflagemail', 'cmsadmin');
@@ -308,6 +312,32 @@
 	
 		        //return 'cms_test_tpl.php';
                 return 'cms_main_tpl.php';
+
+                case 'deleteuserperm':
+                    $id = $this->getParam('id');
+                    $this->_objUserPerm->deleteRecord($id);
+
+                return $this->nextAction('permissionsuser', array(NULL), 'cmsadmin');
+
+                case 'addedituserpermissions':
+                    $id = $this->getParam('id');
+                    $userId = $this->getParam('drp_owner');
+                    $canFrontpage = $this->getParam('chk_frontpage');
+
+                    if ($canFrontpage == 'on') {
+                        $canFrontpage = TRUE;
+                    } else {
+                        $canFrontpage = FALSE;
+                    }
+
+                    if ($id == '') {
+                        //Adding a new user to grant/revoke rights to
+                        $this->_objUserPerm->addUserPermission($userId, $canFrontpage);
+                    } else {
+                        //Updating existing rights
+                        $this->_objUserPerm->editUserPermission($id, $userId, $canFrontpage);
+                    }
+                return $this->nextAction('permissionsuser', array(NULL), 'cmsadmin');
 
                 case 'deleteflagemail':
                     $id = $this->getParam('id');
@@ -604,6 +634,17 @@
                 $this->setContentType('text/html');
                 return 'cms_section_json_tpl.php';
 
+                // User Specific Permissions
+                case 'permissionsuser':
+                    //Boxy New Form
+                    $innerHtml = $this->_objDisplay->getAddUserPermissionsForm();
+                    $this->_objBox->setHtml($innerHtml);
+                    $this->_objBox->setTitle('Add User Permission');
+                    $this->_objBox->attachClickEvent('btn_new');
+
+                    $arrUserPermissions = $this->_objDbUserPermissions->getAll();
+                    $this->setVarByRef('arrUserPermissions', $arrUserPermissions);
+                return 'cms_permissions_user_list_tpl.php';
 
                 // Simpler view of the sections list with permissions management at the core
                 case 'permissions':
