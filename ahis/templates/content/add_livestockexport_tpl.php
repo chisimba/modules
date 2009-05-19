@@ -165,18 +165,7 @@ $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror'
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
 
-//$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'numeric');
 
-
-/*if(is_numeric($eggs))
-echo "Pass test";
-else
-echo "Please use only numbers";*/
-
-
-//$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'numeric');
-//$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'numeric');
-//$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'numeric');
 
 $form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'required');
 $form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggsnumbererror','ahis'),'numeric');

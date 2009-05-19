@@ -173,12 +173,13 @@ $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror'
 
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerrorone','ahis'),'letteronly');
 
-//$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
-
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerrorone','ahis'),'letteronly');
-$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'required');
+
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror','ahis'),'required');
 $form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserrorone', 'ahis'), 'letteronly');
+
+
 
 
 $form->addToForm($formTable->show());

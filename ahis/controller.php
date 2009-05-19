@@ -2195,8 +2195,6 @@ class ahis extends controller {
 		$destination = $this->getParam('destination');
 		$remarks = $this->getParam('remarks');
 		
-	
-		
 		$data = $this->objAnimalmovement->addAnimalMovementData($district,$classification,$purpose,$origin,$destination,$remarks);  
 							
 		return $this->nextAction('animal_feedback',array('success'=>'1'));
