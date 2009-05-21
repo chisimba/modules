@@ -83,6 +83,12 @@ class dbmsgs extends dbTable {
         return array_reverse ( $range );
     }
 
+    public function getPublicRange($start, $num) {
+        $range = $this->getAll ( "WHERE tribegroup = '0' ORDER BY datesent ASC LIMIT {$start}, {$num}" );
+        var_dump($range);
+        return array_reverse ( $range );
+    }
+
     public function getUserRange($start, $num, $userid, $groupname = NULL) {
         if($groupname == NULL) {
             $range = $this->getAll ( "WHERE userid = '$userid' ORDER BY datesent ASC LIMIT {$start}, {$num}" );
@@ -99,6 +105,10 @@ class dbmsgs extends dbTable {
 
     public function getGroupRecordCount($groupname) {
         return $this->getRecordCount("WHERE tribegroup = '$groupname'");
+    }
+
+    public function getPublicRecordCount() {
+        return $this->getRecordCount("WHERE tribegroup = ''");
     }
 
     public function appendSitemap($itemid) {

@@ -116,6 +116,7 @@ class tribe extends controller {
                 }
                 $start = $page * 10;
                 $msgs = $this->objDbMsgs->getRange($start, 10);
+
                 $this->setVarByRef ( 'msgs', $msgs );
 
                 header("Content-Type: text/html;charset=utf-8");
@@ -516,7 +517,7 @@ class tribe extends controller {
                                         $userid = $objUA->generateUserId();
                                         $objUA->addUser($userid, $uname, $pass, 'mr', $uname, $uname, $jid, 'M', "ZA", '', '', 'useradmin', '1');
                                         $this->dbUsers->addRecord($userid, $jid);
-                                        log_debug("User $uname has been added with pass $pass");
+                                        //log_debug("User $uname has been added with pass $pass");
                                         $message = $this->objLanguage->languageText("mod_tribe_imregister", "tribe");
                                         $message .= " ";
                                         $message .= $this->objLanguage->languageText("mod_tribe_fixdetailssoon", "tribe");
@@ -610,6 +611,7 @@ class tribe extends controller {
                             if(isset($bod[0]) && strtolower($bod[0]) == 'wikipedia' ) {
                                $page = $bod[1];
                                $page = trim($page);
+                               log_debug("wikipedia request for $page");
                                $url = 'http://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles='.$page.'&rvprop=content&format=xml';
                                $objCurl = $this->getObject('curlwrapper', 'utilities');
                                $code = $objCurl->exec($url);
@@ -641,6 +643,33 @@ class tribe extends controller {
                                    }
                                }
                             }
+
+                            // look up a dictionary definition
+                            $bod = explode(":", $pl['body']);
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'dict' ) {
+                               $word = $bod[1];
+                               $word = trim($word);
+                               log_debug("Dictionary request for $word");
+                               $url = "dict://dict.org/d:($word)";
+                               $objCurl = $this->getObject('curlwrapper', 'utilities');
+                               $data = $objCurl->exec($url);
+                               $str = explode("250 ok", $data);
+
+                               $str[1] = trim($str[1]);
+
+                               if(substr($str[1], 0, 3) == '552') {
+                                   log_debug("no match dude");
+                                   $message = "no matching word definition found! Perhaps check your spelling?";
+                                   $this->conn->message($pl['from'], $message);
+                                   continue;
+                               }
+                               elseif(substr($str[1], 0, 3) == '150') {
+                                   $message = str_replace(substr($str[1], 0, 3), "", $str[1]);
+                                   $this->conn->message($pl['from'], $message);
+                                   continue;
+                               }
+
+                            }
                             // Send a response message
                             elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register") {
                                 // Bang the array into a table to keep a record of it.
@@ -665,6 +694,7 @@ class tribe extends controller {
                                                     $this->conn->message($memberjid, "@".$poster." says: ".$pl['body']);
                                                 }
                                             }
+                                            continue;
                                         }
 
                                         else {
@@ -680,10 +710,10 @@ class tribe extends controller {
                                             if($uid != NULL) {
                                                 $poster = $this->dbUsers->getUsernamefromJid($poster);
                                                 $this->conn->message($uid, "@".$poster." says: ".$pl['body']);
-                                                $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
+                                                //$this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                             }
                                             else {
-                                                $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
+                                                //$this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                             }
                                         }
                                     }
@@ -694,9 +724,11 @@ class tribe extends controller {
                                     // send a message to the poster
                                     $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                 }
+                                continue;
                             }
                             else {
                                 // do nothing;
+                                continue;
                             }
                             break;
 
