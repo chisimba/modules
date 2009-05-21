@@ -966,9 +966,18 @@
 
                 //----------------------- front page section
                 case 'frontpages':
-                $topNav = $this->_objUtils->topNav('frontpage');
-                $this->setVarByRef('topNav',$topNav);
-                $this->setVar('files', $this->_objFrontPage->getFrontPages());
+                    //Frontpage Security
+                    if (!$this->_objUserPerm->canAddToFrontPage()) {
+                        $message = $this->objLanguage->languageText('mod_cmsadmin_nofrontpageaccess', 'cmsadmin');
+                        $this->setVarByRef('message',$message);
+                        $this->setVarByRef('type',$type);
+
+                        return 'cms_nopermissions_tpl.php';
+                    }
+
+                    $topNav = $this->_objUtils->topNav('frontpage');
+                    $this->setVarByRef('topNav',$topNav);
+                    $this->setVar('files', $this->_objFrontPage->getFrontPages());
                 return 'cms_frontpage_manager_tpl.php';
 
                 case 'publishfrontpage':

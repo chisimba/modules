@@ -497,12 +497,13 @@
             $tbl->border = "0";
             $tbl->attributes = "align ='center'";
 
+            $objIcon = $this->getObject('geticon', 'htmlelements');
+            $objIcon->setIcon('errorinfo', 'png', 'icons/cms/');
+            $errIcon = $objIcon->show();
+            
             $tbl->startRow();
-            $tbl->addCell("$title", '', 'top', null, 'cmsvspacer', 'colspan="2"');
-            $tbl->endRow();
-
-            $tbl->startRow();
-            $tbl->addCell("$body", '', 'top', null, 'cmsvspacer', 'colspan="2"');
+            $tbl->addCell($errIcon, '', 'top', null, 'cmsvspacer', 'colspan="2"');
+            $tbl->addCell($body, '270px', 'top', null, 'cmsvspacer', 'colspan="2"');
             $tbl->endRow();
 
             //Ok Button
@@ -521,11 +522,11 @@
 
             //Adding All to Container here
             $table->startRow();
-            $table->addCell($tbl->show()/*.$layer->show()*/.'<div style="padding-bottom:10px"></div>'.$tbl1->show(), '', '', 'center', '', '','');
+            $table->addCell($tbl->show() .$tbl1->show(), '', '', 'center', '', '','');
             $table->endRow();
 
             //Stripping New Lines and preparing for boxy input = (Facebook style window)
-            $display = '<form id="frm_add_'.$id.'" class="Form" name="frm_addgrid" action="?module=cmsadmin&action=addedituserpermissions" method="POST">';
+            $display = '<form id="frm_err" class="Form" name="frm_err" action="#">';
             $display .= str_replace("\n", '',$table->show());
             $display = str_replace("\n\r", '', $display);
 

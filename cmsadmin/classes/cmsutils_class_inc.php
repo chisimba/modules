@@ -446,7 +446,9 @@
             } else {
                 $this->_objDisplay = $this->getObject('cmsdisplay', 'cmsadmin');
 
-                $innerHtml = $this->_objDisplay->getAlertForm('', "You don't have rights to edit the front page, <br/> contact your administrator to gain access");
+                $message = $this->objLanguage->languageText('mod_cmsadmin_nofrontpageaccess', 'cmsadmin');
+
+                $innerHtml = $this->_objDisplay->getAlertForm('', $message);
                 $this->_objBox->setHtml($innerHtml);
                 $this->_objBox->setTitle('Notice: Access Denied');
                 $this->_objBox->attachClickEvent('btn_frontpage' . $userPerm['id']);
@@ -1000,7 +1002,9 @@
                 } else {
                     $this->_objDisplay = $this->getObject('cmsdisplay', 'cmsadmin');
 
-                    $innerHtml = $this->_objDisplay->getAlertForm('', "You don't have rights to edit the front page, <br/> contact your administrator to gain access");
+                    $message = $this->objLanguage->languageText('mod_cmsadmin_nofrontpageaccess', 'cmsadmin');
+
+                    $innerHtml = $this->_objDisplay->getAlertForm('', $message);
                     $this->_objBox->setHtml($innerHtml);
                     $this->_objBox->setTitle('Notice: Access Denied');
                     $this->_objBox->attachClickEvent('btn_frontpage' . $userPerm['id']);
@@ -1144,34 +1148,37 @@
             $frontPage->value = 1;
             $frontPage->extra = 'onclick="doToggle(\'toggle_layer_param\'); doToggle(\'introdiv\')"';
 
-            $script = "
-                <script language='javascript'>
-                    //jQuery standard toggle effect
-            
-                    function doToggle(id, chk) {
-                        chkBox = document.getElementById('input_frontpage');
+            if ($this->_objUserPerm->canAddToFrontPage()) {
+                $script = "
+                    <script language='javascript'>
+                        //jQuery standard toggle effect
+                
+                        function doToggle(id, chk) {
+                            chkBox = document.getElementById('input_frontpage');
 
-                        if (chkBox.checked){
-                            jQuery('#' + id).addClass('toggleShow').show('slow');
-                        } else {
-                            jQuery('#' + id).addClass('toggleShow').hide('slow');
+                            if (chkBox.checked){
+                                jQuery('#' + id).addClass('toggleShow').show('slow');
+                            } else {
+                                jQuery('#' + id).addClass('toggleShow').hide('slow');
+                            }
                         }
-                    }
 
-                    jQuery(document).ready(function(){
-                        jQuery('#toggle_layer_param').addClass('toggleShow').hide();
-                        jQuery('#introdiv').addClass('toggleShow').hide();
+                        jQuery(document).ready(function(){
+                            jQuery('#toggle_layer_param').addClass('toggleShow').hide();
+                            jQuery('#introdiv').addClass('toggleShow').hide();
 
-                        //Adding click event for checkbox in simple parameters tab
-                        /*
-                        jQuery('#input_frontpage').click(function() {
-                            alert('Hello world!');
+                            //Adding click event for checkbox in simple parameters tab
+                            /*
+                            jQuery('#input_frontpage').click(function() {
+                                alert('Hello world!');
+                            });
+                            */
                         });
-                        */
-                    });
-                    </script>";
+                        </script>";
 
-            $this->appendArrayVar('headerParams', $script);
+                
+                $this->appendArrayVar('headerParams', $script);
+            }
 
             $show_content = '0';
             $is_front = FALSE;
@@ -1272,38 +1279,40 @@
             $frontPage->value = 1;
             $frontPage->extra = 'onclick="doToggle(\'toggle_layer_param\'); doToggle(\'introdiv\')"';
 
-            $script = "
-                <script language='javascript'>
-                    //jQuery standard toggle effect
-            
-                    function doToggle(id, chk) {
-                        chkBox = document.getElementById('input_frontpage');
+            if ($this->_objUserPerm->canAddToFrontPage()) {
+                $script = "
+                    <script language='javascript'>
+                        //jQuery standard toggle effect
+                
+                        function doToggle(id, chk) {
+                            chkBox = document.getElementById('input_frontpage');
 
-                        if (chkBox.checked){
-                            jQuery('#' + id).addClass('toggleShow').show('slow');
-                        } else {
-                            jQuery('#' + id).addClass('toggleShow').hide('slow');
-                        }
-                    }
-
-                    jQuery(document).ready(function(){
-                        chkBox = document.getElementById('input_frontpage');
-
-                        if (!chkBox.checked){
-                            jQuery('#toggle_layer_param').addClass('toggleShow').hide();
-                            jQuery('#introdiv').addClass('toggleShow').hide();
+                            if (chkBox.checked){
+                                jQuery('#' + id).addClass('toggleShow').show('slow');
+                            } else {
+                                jQuery('#' + id).addClass('toggleShow').hide('slow');
+                            }
                         }
 
-                        //Adding click event for checkbox in simple parameters tab
-                        /*
-                        jQuery('#input_frontpage').click(function() {
-                            alert('Hello world!');
+                        jQuery(document).ready(function(){
+                            chkBox = document.getElementById('input_frontpage');
+
+                            if (!chkBox.checked){
+                                jQuery('#toggle_layer_param').addClass('toggleShow').hide();
+                                jQuery('#introdiv').addClass('toggleShow').hide();
+                            }
+
+                            //Adding click event for checkbox in simple parameters tab
+                            /*
+                            jQuery('#input_frontpage').click(function() {
+                                alert('Hello world!');
+                            });
+                            */
                         });
-                        */
-                    });
-                    </script>";
+                        </script>";
 
-            $this->appendArrayVar('headerParams', $script);
+                $this->appendArrayVar('headerParams', $script);
+            }
 
             $show_content = '0';
 
@@ -1547,7 +1556,6 @@
             $tbl_basic->addCell($objRadio->show());
             $tbl_basic->endRow();
             */
-
 
             // Radio button to display the full content or only the summary on the front page
             //$lbDisplay = $this->objLanguage->languageText('mod_cmsadmin_displaysummaryorcontent', 'cmsadmin');
@@ -5314,7 +5322,6 @@
 
             $table->endRow();
 
-
             //Frontpage Security
             if ($this->_objUserPerm->canAddToFrontPage()) {
 
@@ -5461,7 +5468,6 @@
 
             $wrapLayer->str = $leftLayer->show().$rightLayer->show();
 
-            
 	        $tableContainer->startRow();
 	        $tableContainer->addCell($pageContent->show(),'', 'top', '', 'AddContentLeft');
 	        $tableContainer->addCell($pageParams->show(),'', 'top', '', 'AddContentRight');
@@ -5471,7 +5477,8 @@
             $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
             $objForm->addRule('title', $errTitle, 'required');
             $objForm->addToForm($tableContainer->show() /*$wrapLayer->show()*/);
-            //$objForm->addToForm($div1->show());
+            $objForm->addToForm('<input type="hidden" name="must_apply" id="must_apply" value="0">');
+
             //add action
             $objForm->addToForm($txt_action);
 

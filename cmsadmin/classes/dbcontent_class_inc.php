@@ -64,6 +64,7 @@
             try {
                 parent::init('tbl_cms_content');
                 $this->table = 'tbl_cms_content';
+                $this->_objUserPerm = $this->newObject('dbuserpermissions', 'cmsadmin');
                 $this->_objSectionGroup = & $this->getObject('dbsectiongroup', 'cmsadmin');
                 $this->_objUser = & $this->getObject('user', 'security');
                 $this->_objSecurity = & $this->getObject('dbsecurity', 'cmsadmin');
@@ -326,44 +327,43 @@
             $fullText = str_ireplace("<br />", " <br /> ", $fullText);
 
             $create_date = $this->now();
-            $newArr = array(
-                          'title' => $title ,
-                          'sectionid' => $sectionId,
-                          'introtext' => addslashes($introText),
-                          'body' => addslashes($fullText),
-                          'access' => $access,
-                          'ordering' => $this->getOrdering($sectionId),
-                          'published' => $published,
-                          'show_title' => $show_title,
-                          'show_author' => $show_author,
-                          'show_date' => $show_date,
-                          'show_pdf' => $show_pdf,
-                          'show_email' => $show_email,
-                          'show_print' => $show_print,
-                          'show_flag' => $show_flag,
-                          'created' => $create_date,
-                          'override_date' => $override_date,
-                          'modified' => $this->now(),
-                          'post_lic' => $ccLicence,
-                          'created' =>$override_date,
-                          'created_by' => $creatorid,
-                          'created_by_alias'=>$created_by,
-                          'checked_out'=> $creatorid,
-                          'checked_out_time'=> $this->now(),
-                          'metakey'=>$metakey,
-                          'metadesc'=>$metadesc,
-                          'start_publish'=>$start_publish,
-                          'end_publish'=>$end_publish
-                          
-            );
 
+            $newArr['title'] = $title;
+            $newArr['sectionid'] = $sectionId;
+            $newArr['introtext'] = addslashes($introText);
+            $newArr['body'] = addslashes($fullText);
+            $newArr['access'] = $access;
+            $newArr['ordering'] = $this->getOrdering($sectionId);
+            $newArr['published'] = $published;
+            $newArr['show_title'] = $show_title;
+            $newArr['show_author'] = $show_author;
+            $newArr['show_date'] = $show_date;
+            $newArr['show_pdf'] = $show_pdf;
+            $newArr['show_email'] = $show_email;
+            $newArr['show_print'] = $show_print;
+            $newArr['show_flag'] = $show_flag;
+            $newArr['created'] = $create_date;
+            $newArr['override_date'] = $override_date;
+            $newArr['modified'] = $this->now();
+            $newArr['post_lic'] = $ccLicence;
+            $newArr['created'] = $override_date;
+            $newArr['created_by'] = $creatorid;
+            $newArr['created_by_alias'] = $created_by;
+            $newArr['checked_out'] = $creatorid;
+            $newArr['checked_out_time'] = $this->now();
+            $newArr['metakey'] = $metakey;
+            $newArr['metadesc'] = $metadesc;
+            $newArr['start_publish'] = $start_publish;
+            $newArr['end_publish'] = $end_publish;
+                          
             $newId = $this->insert($newArr);
             $newArr['id'] = $newId;
             $this->luceneIndex($newArr);
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
 
-            if ($isFrontPage == 1) {
+            //Frontpage Security
+            if ($this->_objUserPerm->canAddToFrontPage() && $isFrontPage == 1) {
                 $this->_objFrontPage->add($newId);
             }
 
