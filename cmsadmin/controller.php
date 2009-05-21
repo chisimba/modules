@@ -638,7 +638,7 @@
                 case 'permissionsuser':
 
                     //Security Check
-                    if ($this->_objUserPerm->canEditUserPermissions()) {
+                    if (!$this->_objUserPerm->canEditUserPermissions()) {
                             return 'cms_nopermissions_tpl.php';
                     }
 
