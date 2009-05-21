@@ -605,9 +605,9 @@ class ahis extends controller {
                 $this->setSession('ps_campName',$campName);
                 $this->setVar('success', $success);
                 $this->setVar('campaign', $this->getSession('ps_campName'));
-                if ($success) {
+                
                     $this->unsetActiveSession();
-                } 
+               
 
                 return $this->nextAction('home'); 
                          
@@ -643,7 +643,7 @@ class ahis extends controller {
                $geo2id = $this->getSession('ps_geo2');
                $data =$this->objActive->getall($this->getSession('ps_campName'));
                $hdata = $this->objNewherd->getherd($data[0]['id']);
-               //print_r($hdata);
+               $this->setVar('prompt',$this->getParam('prompt'));
                $this->setVar('id',$this->getParam('id'));
                $this->setVar('hdata',$hdata);
                $this->setVar('activeid',$data[0]['id']);
@@ -661,12 +661,28 @@ class ahis extends controller {
        
        
             case 'newherd_insert':
+             $alt = $this->getParam('alt');
+             if($alt == 'yes'){
+               return $this->nextAction('active_addherd',array('prompt'=>'conf'));
+              }else{
+                        
+              $div = $this->getParam('next');
 
+              if($div == NULL ){
+              return $this->nextAction('active_addsample');
+              }else{
+              //{
+              ////  return $this->nextAction('active_addsample'); 
+              //}else
+              
+                
                 $id = $this->getParam('id');
                 $this->setSession('ps_activeid',$this->getParam('activeid'));
                 $this->setSession('ps_farm',$this->getParam('farm'));
                 $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
                 $val= $this->objGeo2->getgeo($this->getSession('ps_geo2'));
+
+                //print_r($this->getSession('ps_activeid'));
                 $arrayherd = array();
                 $arrayherd['territory'] = $this->getParam('territory');
                 $arrayherd['geolevel2'] = $val[0]['name'];
@@ -679,14 +695,10 @@ class ahis extends controller {
                 } else {
                   $this->objNewherd->insert($arrayherd);  
                     $code = 1;
-                }             
-              // $div = $this->getParam('next');
-               //print_r($div);
-              // if($div ==$this->objLanguage->languageText('word_finished'))
-              // {
-               // return $this->nextAction('active_addsample');
-               //}else
+                }   
                 return $this->nextAction('active_addherd');
+                }
+                }
                 
             case 'newherd_delete':
                $id = $this->getParam('id');
@@ -714,7 +726,7 @@ class ahis extends controller {
                $newherdid = $this->objNewherd->getherd($this->getSession('ps_activeid'));
                $this->setSession('ps_newherdid',$newherdid[0]['id']);
                $this->setSession('ps_newherd',$newherdid);
-
+               $this->setVar('prompt',$this->getParam('prompt'));
                $datan= $this->objSampledetails->getall();
                $this->setVar('datan',$datan);
                $this->setVar('id',$this->getParam('id'));
@@ -743,6 +755,19 @@ class ahis extends controller {
                return 'active_addsample_tpl.php';
                
            case 'sampleview_insert':
+             $alt = $this->getParam('alt');
+             if($alt == 'yes'){
+               return $this->nextAction('active_addsample',array('prompt'=>'conf'));
+              }else{
+                        
+              $div = $this->getParam('next');
+
+              if($div == NULL ){
+              return $this->nextAction('active_feedback');
+              }else{
+              //{
+              ////  return $this->nextAction('active_addsample'); 
+              //}else
                 $id = $this->getParam('id');
                 $this->setSession('ps_newherdid',$this->getParam('farm'));
                 $arrayherd = array();
@@ -773,8 +798,16 @@ class ahis extends controller {
 
                     $code = 1;
                 } 
-               
-                return $this->nextAction('active_addsample', array('success'=>$code));
+               // $div = $this->getParam('next');
+               //print_r($div);
+              //if($div ==$this->objLanguage->languageText('word_finished'))
+               //{
+               // return $this->nextAction('active_feedback'); 
+              // }else
+              return $this->nextAction('active_addsample');
+                }
+                }
+                
                 
             case 'sampleview_delete':
                $id = $this->getParam('id');

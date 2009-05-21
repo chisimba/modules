@@ -85,11 +85,9 @@ $objHeading->str = $hstr;
 $objHeading->type = 2;
 $objHeading->align = 'center';
 
-$addButton = new button('add', $this->objLanguage->languageText('phrase_addsample'));
+$addButton = new button('next', $this->objLanguage->languageText('phrase_addsample'));
 $addButton->setToSubmit();
 
-$finUri = $this->uri(array('action'=>'active_feedback','success'=>1));
-$finButton = new button('finish', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$finUri'");
 
 
 $backButton = $this->uri(array('action'=>'active_addsample'));
@@ -137,7 +135,7 @@ $reportdateBox->extra ="readonly";
 $farmDrop = new dropdown('farm');
 $farmDrop->addFromDB($newherd, 'farmname', 'id');
 $farmDrop->setSelected($record['newherdid']);
-//print_r($farmDrop);
+//print_r($newherd);
 $speciesDrop = new dropdown('species');
 $speciesDrop->addFromDB($arraySpecies, 'name', 'name');
 $speciesDrop->setSelected($record['species']);
@@ -229,6 +227,7 @@ $objTable->addCell($this->objLanguage->languageText('phrase_dateoftest'), '', ''
 $objTable->addCell($this->objLanguage->languageText('word_action'), '', '', '', 'heading');
 $objTable->endRow();
 
+$count = 0;
 foreach($datan as $line){
 foreach($newherd as $var){
 if($line['newherdid']==$var['id']){
@@ -242,7 +241,7 @@ $objTable->addCell($var['farmingtype']);
 $objTable->addCell($var['territory']);
 $objTable->addCell($line['testtype']);
 $objTable->addCell($line['testdate']);
-
+$count++;
 
 
  $editUrl = $this->uri(array(
@@ -268,6 +267,21 @@ $rep=array(
 'campName'=>$campName,
 
 );
+ if($count == 0){
+$finButton = $this->uri(array('action'=>'sampleview_insert','alt'=> 'yes'));
+$finButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$finButton'");
+
+//$nextButton->setToSubmit();
+}else
+{
+$finButton = $this->uri(array('action'=>'active_feedback'));
+$finButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$finButton'");
+
+}
+
+
+
+
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
@@ -358,18 +372,27 @@ $objTable->addCell($addButton->show());
 $objTable->addCell($finButton->show());
 }$objTable->endRow();
 
+if($prompt == 'conf'){
+echo "<script type=\"text/javascript\">";
+echo "  alert(\"Please add at least one Sample\")";
 
+
+echo "</script>";
+
+}
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
+
+$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq1', 'ahis'), 'required');
+
 //$objForm->addRule('sampleid', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
-$objForm->addRule('sampleid', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
+$objForm->addRule('sampleid', $this->objLanguage->languageText('mod_ahis_valsamp', 'ahis'), 'required');
 //$objForm->addRule('animalid', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
-$objForm->addRule('animalid', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'required');
+$objForm->addRule('animalid', $this->objLanguage->languageText('mod_ahis_valanim', 'ahis'), 'required');
 
 $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
-$objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
-
+$objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'required');
 echo "<hr class='ahis' /><br/>".$this->objLanguage->code2Txt('mod_ahis_addsamplecomment','ahis',$rep)."<br />".
      $this->objLanguage->languageText('mod_ahis_addsamplefinished', 'ahis')."<br />".$objForm->show();
 

@@ -68,11 +68,28 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('layer','htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objConfirm = $this->loadClass('confirm', 'utilities');
+
 $message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 
+$objConfirm = new confirm();
+ $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
+            'action' => 'newherd_delete',
+            'id' => $line['id'],
+        )) , $message);
 
-$nextButton = $this->uri(array('action'=>'active_addsample'));
-$nextButton = new button('finish', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$nextButton'");
+ if($hdata == NULL){
+
+$nextButton = $this->uri(array('action'=>'newherd_insert','alt'=>'yes'));
+$nextButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$nextButton'");
+//$nextButton->setToSubmit();
+}else
+{
+$nextButton = $this->uri(array('action'=>'newherd_insert'));
+$nextButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$nextButton'");
+
+}
+
+
 
 $backButton = $this->uri(array('action'=>'active_addherd'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backButton'");
@@ -237,8 +254,14 @@ $objTable->startRow();
 $objTable->addCell($activeBox->show());
 $objTable->endRow();
 
+if($prompt == 'conf'){
+echo "<script type=\"text/javascript\">";
+echo "  alert(\"Please add at least one Farm\")";
 
 
+echo "</script>";
+
+}
 $objTable->startRow();
 if($id){
 $objTable->addCell($add2Button->show());
@@ -246,7 +269,9 @@ $objTable->addCell($backButton->show());
 }else
 {
 $objTable->addCell($addButton->show());
+
 $objTable->addCell($nextButton->show());
+
 }
 $objTable->endRow();
 
@@ -256,8 +281,12 @@ $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
-$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
-
+//if($hdata == NULL){
+//$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
+//}else
+//{
+$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq1', 'ahis'), 'required');
+//}
 $objLayer = new layer();
 if($id){
 $objLayer->addToStr("<hr class='ahis' />".$this->objLanguage->languageText('mod_ahis_editfarmcomment','ahis')."<br/>".$objForm->show());

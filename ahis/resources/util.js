@@ -72,10 +72,12 @@ function clearPassiveSurveillance() {
     $('input_oStatusId').selectedIndex = 0;
     $('input_qualityId').selectedIndex = 0;
     $('input_remarks').value = '';
+
     resetDate('datePrepared');
     resetDate('dateIBAR');
     resetDate('dateReceived');
     resetDate('dateIsReported');
+    
 }
 
 function clearPassiveOutbreak() {
@@ -121,3 +123,16 @@ function numberVal()
 {
 	alert('Insert numerics only.');	
 }
+
+function confirmation()
+{
+
+var answer = confirm ("Have you finished adding farms")
+if (answer)
+alert (" ")
+else
+alert ("")
+
+}
+}
+

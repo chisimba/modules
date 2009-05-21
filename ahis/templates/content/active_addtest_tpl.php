@@ -66,7 +66,7 @@ $diseaseDrop->setSelected($disease);
 $diseaseDrop->extra = 'disabled';
 
 //$activeBox = new textinput('activeid',$activeid,'hidden');
-$campBox = new textinput('campName',$campName,'hidden');
+$campBox = new textinput('campName',$campName);
 $sensitivityBox = new textinput('sensitivity', $sensitivity);
 $specificityBox = new textinput('specificity', $specificity);
 $campBox->extra ="readonly";
@@ -80,7 +80,7 @@ $objTable->width = NULL;
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').":$tab");
 
-$objTable->addCell($campName);
+$objTable->addCell($campBox->show());
 $objTable->addCell('');
 $objTable->addCell($this->objLanguage->languageText('word_disease').": $tab");
 $objTable->addCell($diseaseDrop->show());
@@ -99,7 +99,7 @@ $objTable->addCell($specificityBox->show());
 //$objTable->addCell($activeBox->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($campBox->show());
+//$objTable->addCell($campBox->show());
 $objTable->addCell('&nbsp;');
 $objTable->endRow();
 
