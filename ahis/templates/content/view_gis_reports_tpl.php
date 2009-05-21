@@ -247,6 +247,8 @@ function showResults() {
 				lastPoint = point;
 			}
 		} else if (document.getElementById("lstCountry").selectedIndex > 0) {
+			//var tmp = dataJSONObject.results[point];
+			//alert(tmp.geolayer3+" "+tmp.year+"/"+tmp.month+" "+tmp.animal+" "+tmp.diseasetype);
 			if (dataJSONObject.results[point].geolayer3 == document.getElementById("lstCountry").options[document.getElementById("lstCountry").selectedIndex].value &&	
 				dataJSONObject.results[point].year == document.getElementById("txtYear1").value &&	
 				dataJSONObject.results[point].month == document.getElementById("txtMonth1").value &&	
@@ -409,7 +411,7 @@ $this->appendArrayVar('bodyOnLoad', "init();");
         <select name="lstCountry" size="1" id="lstCountry" accesskey="C" tabindex="3">
           <option selected>Select one</option>
 		  <?php foreach ($geo3 as $layer) {
-					echo "<option>{$layer['name']}</option>";
+					echo "<option value='{$layer['name']}'>{$layer['name']}</option>";
 				}
 		  ?>
           </select>
@@ -428,7 +430,7 @@ $this->appendArrayVar('bodyOnLoad', "init();");
         <select name="lstAnimal1" size="1" id="lstAnimal1" accesskey="A" tabindex="6">
           <option selected>Select one</option>
 		  <?php foreach ($species as $animal) {
-					echo "<option>{$animal['name']}</option>";
+					echo "<option value='{$animal['name']}'>{$animal['name']}</option>";
 				}
 		  ?>
           </select>
@@ -439,7 +441,7 @@ $this->appendArrayVar('bodyOnLoad', "init();");
         <select name="lstDiseaseType1" size="1" id="lstDiseaseType1" accesskey="D" tabindex="7">
           <option selected>Select one</option>
 		  <?php foreach ($diseases as $dis) {
-					echo "<option>{$dis['name']}</option>";
+					echo "<option value='{$dis['name']}'>{$dis['name']}</option>";
 				}
 		  ?>
         </select>
@@ -457,7 +459,7 @@ $this->appendArrayVar('bodyOnLoad', "init();");
         <select name="lstDistrict" size="1" id="lstDistrict" accesskey="C" tabindex="8">
           <option selected>Select one</option>
 		  <?php foreach ($geo2 as $layer) {
-					echo "<option>{$layer['name']}</option>";
+					echo "<option value='{$layer['name']}'>{$layer['name']}</option>";
 				}
 		  ?>
         </select>
@@ -476,7 +478,7 @@ $this->appendArrayVar('bodyOnLoad', "init();");
         <select name="lstAnimal2" size="1" id="lstAnimal2" accesskey="A" tabindex="11">
           <option selected>Select one</option>
 		  <?php foreach ($species as $animal) {
-					echo "<option>{$animal['name']}</option>";
+					echo "<option value='{$animal['name']}'>{$animal['name']}</option>";
 				}
 		  ?>
         </select>
@@ -487,7 +489,7 @@ $this->appendArrayVar('bodyOnLoad', "init();");
         <select name="lstDiseaseType2" size="1" id="lstDiseaseType2" accesskey="D" tabindex="12">
           <option selected>Select one</option>
 		  <?php foreach ($diseases as $dis) {
-					echo "<option>{$dis['name']}</option>";
+					echo "<option value='{$dis['name']}'>{$dis['name']}</option>";
 				}
 		  ?>
         </select>
