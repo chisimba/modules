@@ -1006,7 +1006,7 @@ class contextcontent extends controller
                 }
                 
                 // Render to PDF
-                $objHtmlDoc->render($htmlSources, TRUE, FALSE, $destination);
+                $objHtmlDoc->render($htmlSources, TRUE, TRUE, $destination);
                 
                 // Check if PDF Exists - Prove that file was successfully created.
                 if (file_exists($destination)) {
