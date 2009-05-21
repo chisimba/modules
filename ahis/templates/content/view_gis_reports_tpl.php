@@ -266,11 +266,19 @@ function showResults() {
 			}
 		}
 	}
+	if (dataJSONObject.results[lastPoint]) {
+		var la = ge.createLookAt("");
+		la.set(Number(dataJSONObject.results[lastPoint].lat), Number(dataJSONObject.results[lastPoint].long),
+			0, ge.ALTITUDE_RELATIVE_TO_GROUND,0, 0, 3000000);
+		ge.getView().setAbstractView(la);
+	} else {
+		document.getElementById("btnSubmit").style.display = "inline";
+		document.getElementById("btnCancel").style.display = "inline";
+		document.getElementById("btnBack").style.display = "none";
+		document.getElementById("btnNew").style.display = "none";
 
-	var la = ge.createLookAt("");
-	la.set(Number(dataJSONObject.results[lastPoint].lat), Number(dataJSONObject.results[lastPoint].long),
-		0, ge.ALTITUDE_RELATIVE_TO_GROUND,0, 0, 3000000);
-	ge.getView().setAbstractView(la);
+		alert("No matching reports found.");
+	}
 }
 
 function doPoint(point) {
