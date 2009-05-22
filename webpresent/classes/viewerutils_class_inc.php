@@ -311,14 +311,15 @@ public function getTagCloudContent($tagCloud){
                 $license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']);
                 '<p>'.$objDisplayLicense->show($license).'</p>';
 
-                $row.=$this->createCell(
+            $row.=$this->createCell(
                     $columnDiv,
                     $filename,
                     $fileLink,
                     $desc,
                     $tagsStr,
                     $uploaderLink->show(),
-                   '<p>'.$objDisplayLicense->show($license).'</p>'
+                   '<p>'.$objDisplayLicense->show($license).'</p>',
+                   $file['id']
             );
 
                 $column++;
