@@ -275,16 +275,18 @@ class viewer extends object
         $button->setToSubmit();
         $features=$this->objLanguage->languageText("mod_webpresent_features", "webpresent");
         $requirements=$this->objLanguage->languageText("mod_webpresent_requirements", "webpresent");
+
         $content='<h2>'.$features.'</h2>';
-        $content.='<ul class="statslist>';
+        $content.='<ul>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_audiovideo", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_deskshare", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_interactivewhiteboard", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_questionmanager", "webpresent").'</li>';
         $content.="</ul>";
-        $content.='<h2>'.$requirements.'</h2>';
-        $content.='<ul class="statslist>';
 
+        $content.='<h2>'.$requirements.'</h2>';
+
+        $content.='<ul>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_workingmic", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_workingspeakers", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_goodinternetspeed", "webpresent").'</li>';
