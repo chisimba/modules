@@ -276,7 +276,7 @@ if (count($slideContent['slideshow']) > 0) {
     $this->appendArrayVar('headerParams', $script_src);
 
 
-   $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $objView->createPresentationForm($file['id'],$agenda));
+   $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $objView->createPresentationForm($file['id'],$agenda,$this->objUser->fullnames()));
 
     $objTabs->width = '95%';
     //then display the tabs
