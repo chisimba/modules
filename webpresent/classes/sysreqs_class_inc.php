@@ -38,6 +38,7 @@ class sysreqs extends object
 
     public function show($id,$agenda,$room,$ispresenter)
     {
+        $this->setSession('javatest','done');
         $str='';
         $str.= '
         <h3>System Requirements Check</h3>
