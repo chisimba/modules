@@ -389,7 +389,7 @@ function doPoint(point) {
 </script>';
 
 $this->appendArrayVar('headerParams', $headers);
-//$this->appendArrayVar('bodyOnLoad', "init();");
+$this->appendArrayVar('bodyOnLoad', "init();");
 
 ?>
 

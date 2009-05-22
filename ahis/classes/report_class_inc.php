@@ -143,6 +143,10 @@ class report extends object {
 														   ORDER BY reportdate");
 				$class = 'odd';
 				foreach ($passiveRecords as $report) {
+					
+					$latitude = "{$report['latdeg']}°{$report['latmin']}'{$report['latdirec']}";
+					$longitude = "{$report['longdeg']}°{$report['longmin']}'{$report['longdirec']}";
+					
 					$objTable->startRow($class);
 					
 					$geo2 = $this->objGeo2->getRow('id', $report['geo2id']);
@@ -163,8 +167,8 @@ class report extends object {
 					$location = $this->objTerritory->getRow('id', $report['locationid']);
 					$objTable->addCell($location['name']);
 					
-					$objTable->addCell($report['latitude']);
-					$objTable->addCell($report['longitude']);
+					$objTable->addCell($latitude);
+					$objTable->addCell($longitude);
 					
 					$species = $this->objSpecies->getRow('id', $report['speciesid']);
 					$objTable->addCell($species['name']);
@@ -251,7 +255,9 @@ class report extends object {
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($passiveRecords as $report) {
-										
+					
+					$latitude = "{$report['latdeg']}°{$report['latmin']}'{$report['latdirec']}";
+					$longitude = "{$report['longdeg']}°{$report['longmin']}'{$report['longdirec']}";										
 					$geo2 = $this->objGeo2->getRow('id', $report['geo2id']);
 					$geo3 = $this->objGeo3->getRow('id', $geo2['geo3id']);
 					$age = $this->objAge->getRow('id', $report['ageid']);
@@ -267,7 +273,7 @@ class report extends object {
 					$row = array($geo3['name'], $report['refno'], $this->objUser->fullname($report['reporterid']),
 								$disease['name'], $report['reporteddate'], $report['vetdate'],
 								$report['investigationdate'], $report['diagnosisdate'], $location['name'],
-								$report['latitude'], $report['longitude'], $species['name'], $age['name'], $sex['name'],
+								$latitude, $longitude, $species['name'], $age['name'], $sex['name'],
 								$production['name'], $control['name'], $basis['name'], $report['susceptible'],
 								$report['newcases'], $report['deaths'], $report['slaughtered'], $report['recovered'],
 								$report['destroyed'], $status['name'], $report['vaccinated'], $report['prophylactic'],

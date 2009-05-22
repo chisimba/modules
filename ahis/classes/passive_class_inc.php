@@ -104,11 +104,20 @@ class passive extends dbtable {
 			
 			$geo2 = $this->objGeo2->getRow('id', $row['geo2id']);
 			
+			$latitude = $row['latdeg'] + ($row['latmin']/60);
+			if ($row['latdirec'] == "S") {
+				$latitude *= -1;
+			}
+			$longitude = $row['longdeg'] + ($row['longmin']/60);
+			if ($row['longdirec'] == "W") {
+				$longitude *= -1;
+			}
+			log_debug("GIS: $latitude - $longitude {$row['latdirec']}{$row['longdirec']}");
 			$results[] = array(
 				'row' 			=> $count,
 				'refno'			=> $row['refno'],
-				'lat'			=> $row['latitude'],
-				'long'			=> $row['longitude'],
+				'lat'			=> $latitude,
+				'long'			=> $longitude,
 				'geolayer3'		=> $this->objGeo3->getName($geo2['geo3id']),
 				'geolayer2'		=> $geo2['name'],
 				'year'			=> date('Y', strtotime($row['reportdate'])),

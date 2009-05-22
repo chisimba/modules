@@ -124,11 +124,6 @@ function numberVal()
 
 function confirmation()
 {
+    alert("Please add at least one Farm");
 
-echo "<script type=\"text/javascript\">";
-echo "  alert(\"Please add at least one Farm\")";
-
-
-echo "</script>";
 }
-

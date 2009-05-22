@@ -306,8 +306,12 @@ class ahis extends controller {
                 $this->setVar('dateDiagnosis', $this->getSession('ps_dateDiagnosis', date('Y-m-d')));
                 $this->setVar('dateInvestigation', $this->getSession('ps_dateInvestigation', date('Y-m-d')));
                 $this->setVar('locationId', $this->getSession('ps_locationId'));
-                $this->setVar('latitude', $this->getSession('ps_latitude'));
-                $this->setVar('longitude', $this->getSession('ps_longitude'));
+                $this->setVar('latitudeDeg', $this->getSession('ps_latdeg'));
+                $this->setVar('latitudeMin', $this->getSession('ps_latmin'));
+                $this->setVar('latDirec', $this->getSession('ps_latdirec'));
+                $this->setVar('longitudeDeg', $this->getSession('ps_longdeg'));
+                $this->setVar('longitudeMin', $this->getSession('ps_longmin'));
+                $this->setVar('longDirec', $this->getSession('ps_longdirec'));
                 $this->setVar('diseaseId', $this->getSession('ps_diseaseId'));
                 $this->setVar('causativeId', $this->getSession('ps_causativeId'));
                 
@@ -319,8 +323,12 @@ class ahis extends controller {
                 $dateDiagnosis = $this->getParam('dateDiagnosis', $this->getSession('ps_dateDiagnosis'));
                 $dateInvestigation = $this->getParam('dateInvestigation', $this->getSession('ps_dateInvestigation'));
                 $locationId = $this->getParam('locationId', $this->getSession('ps_locationId'));
-                $longitude = $this->getParam('longitude', $this->getSession('ps_longitude'));
-                $latitude = $this->getParam('latitude', $this->getSession('ps_latitude'));
+                $longitudeDeg = $this->getParam('longdeg', $this->getSession('ps_longdeg'));
+                $longitudeMin = $this->getParam('longmin', $this->getSession('ps_longmin'));
+                $longitudeDirec = $this->getParam('longdirection', $this->getSession('ps_longdirec'));
+                $latitudeDeg = $this->getParam('latdeg', $this->getSession('ps_latdeg'));
+                $latitudeMin = $this->getParam('latmin', $this->getSession('ps_latmin'));
+                $latitudeDirec = $this->getParam('latdirection', $this->getSession('ps_latdirec'));
                 $diseaseId = $this->getParam('diseaseId', $this->getSession('ps_diseaseId'));
                 $causativeId = $this->getParam('causativeId', $this->getSession('ps_causativeId'));
                 
@@ -328,8 +336,12 @@ class ahis extends controller {
                 $this->setSession('ps_dateOccurence', $dateOccurence);
                 $this->setSession('ps_dateDiagnosis', $dateDiagnosis);
                 $this->setSession('ps_dateInvestigation', $dateInvestigation);
-                $this->setSession('ps_longitude', $longitude);
-                $this->setSession('ps_latitude', $latitude);
+                $this->setSession('ps_longdeg', $longitudeDeg);
+                $this->setSession('ps_longmin', $longitudeMin);
+                $this->setSession('ps_longdirec', $longitudeDirec);
+                $this->setSession('ps_latdeg', $latitudeDeg);
+                $this->setSession('ps_latmin', $latitudeMin);
+                $this->setSession('ps_latdirec', $latitudeDirec);
                 $this->setSession('ps_locationId', $locationId);
                 $this->setSession('ps_diseaseId', $diseaseId);
                 $this->setSession('ps_causativeId', $causativeId);
@@ -408,8 +420,12 @@ class ahis extends controller {
                 $ps_array['occurencedate'] = $this->getSession('ps_dateOccurence', date('Y-m-d'));
                 $ps_array['diagnosisdate'] = $this->getSession('ps_dateDiagnosis', date('Y-m-d'));
                 $ps_array['investigationdate'] = $this->getSession('ps_dateInvestigation', date('Y-m-d'));
-                $ps_array['latitude'] = $this->getSession('ps_latitude');
-                $ps_array['longitude'] = $this->getSession('ps_longitude');
+                $ps_array['latdeg'] = $this->getSession('ps_latdeg');
+                $ps_array['latmin'] = $this->getSession('ps_latmin');
+                $ps_array['latdirec'] = $this->getSession('ps_latdirec');
+                $ps_array['longdeg'] = $this->getSession('ps_longdeg');
+                $ps_array['longmin'] = $this->getSession('ps_longmin');
+                $ps_array['longdirec'] = $this->getSession('ps_longdirec');
                 
                 $ps_array['locationid'] = $this->getSession('ps_locationId');
                 $ps_array['diseaseid'] = $this->getSession('ps_diseaseId');
@@ -2091,8 +2107,12 @@ class ahis extends controller {
         $this->unsetSession('ps_dateDiagnosis');
         $this->unsetSession('ps_dateInvestigation');
         $this->unsetSession('ps_locationId');
-        $this->unsetSession('ps_longitude');
-        $this->unsetSession('ps_latitude');
+        $this->unsetSession('ps_longdeg');
+        $this->unsetSession('ps_latdeg');
+        $this->unsetSession('ps_longmin');
+        $this->unsetSession('ps_latmin');
+        $this->unsetSession('ps_longdirec');
+        $this->unsetSession('ps_latdirec');
         $this->unsetSession('ps_diseaseId');
         $this->unsetSession('ps_causativeId');
         $this->unsetSession('ps_productionId');
