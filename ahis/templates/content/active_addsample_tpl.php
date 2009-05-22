@@ -275,7 +275,7 @@ $finButton = new button('next', $this->objLanguage->languageText('word_finished'
 }else
 {
 $finButton = $this->uri(array('action'=>'active_feedback'));
-$finButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$finButton'");
+//$finButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$finButton'");
 
 }
 
@@ -368,9 +368,32 @@ $objTable->addCell($add2Button->show());
 $objTable->addCell($backButton->show());
 }else
 {
+if($count == 0){
+
 $objTable->addCell($addButton->show());
 $objTable->addCell($finButton->show());
-}$objTable->endRow();
+}else{
+$objTable->addCell($addButton->show()."<input type=\"button\" onclick=\"confirmation()\" value=\"Finished\">");
+echo "<script type=\"text/javascript\">
+
+function confirmation() {
+	var answer = confirm(\"Have you finished adding the samples\")
+	if (answer){
+
+		document.location = \"index.php?module=ahis&action=active_feedback\";
+	}
+	else{
+  
+	}
+}
+//-->
+</script> ";
+
+
+
+}
+}
+$objTable->endRow();
 
 if($prompt == 'conf'){
 echo "<script type=\"text/javascript\">";

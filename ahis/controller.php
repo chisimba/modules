@@ -632,11 +632,13 @@ class ahis extends controller {
                return 'active_herddetails_tpl.php';   
                 
             case 'active_addherd':
-               
+               $value = $this->getParam('alt');
+
                $this->setVar('userList', $this->objAhisUser->getList());
                $geo2id = $this->getSession('ps_geo2');
                $data =$this->objActive->getall($this->getSession('ps_campName'));
                $hdata = $this->objNewherd->getherd($data[0]['id']);
+               $this->setVar('value',$value);
                $this->setVar('prompt',$this->getParam('prompt'));
                $this->setVar('id',$this->getParam('id'));
                $this->setVar('hdata',$hdata);

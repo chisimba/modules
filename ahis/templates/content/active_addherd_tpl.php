@@ -84,8 +84,8 @@ $nextButton = new button('next', $this->objLanguage->languageText('word_finished
 //$nextButton->setToSubmit();
 }else
 {
-$nextButton = $this->uri(array('action'=>'newherd_insert'));
-$nextButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$nextButton'");
+//$nextPage = $this->uri(array('action'=>'active_addsample'));
+//$nextButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript:document.location='$nextButton'");
 
 }
 
@@ -262,16 +262,38 @@ echo "  alert(\"Please add at least one Farm\")";
 echo "</script>";
 
 }
+
 $objTable->startRow();
 if($id){
 $objTable->addCell($add2Button->show());
 $objTable->addCell($backButton->show());
 }else
 {
+if($hdata == NULL){
 $objTable->addCell($addButton->show());
-
 $objTable->addCell($nextButton->show());
+}else{
+$objTable->addCell($addButton->show()."<input type=\"button\" onclick=\"confirmation()\" value=\"Finished\">");
+//$objTable->addCell($nextButton->show());
+$nextPage = $this->uri(array('action'=>'active_addsample'));
+echo "<script type=\"text/javascript\">
 
+function confirmation() {
+	var answer = confirm(\"Have you finished adding the farms\")
+	if (answer){
+
+		document.location = \"index.php?module=ahis&action=active_addsample\";
+	}
+	else{
+  
+	}
+}
+//-->
+</script> ";
+
+
+
+}
 }
 $objTable->endRow();
 
@@ -296,5 +318,6 @@ $objLayer->addToStr("<hr class='ahis' />".$this->objLanguage->code2Txt('mod_ahis
 
 
 echo $objLayer->show();
+
 
 ?>
