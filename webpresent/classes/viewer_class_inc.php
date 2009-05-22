@@ -312,24 +312,7 @@ class viewer extends object
         $table->addCell($objFeatureBox->show($this->objLanguage->languageText("mod_webpresent_presentation", "webpresent"), $content1), '50%', 'top', 'left');
         $table->endRow();
 
-         /*   $table->startRow();
-            $table->addCell($objFeatureBox->show($this->objLanguage->languageText("mod_webpresent_participant", "webpresent"), $content2), '50%', 'top', 'left');
-            $table->endRow();
-            */
-
-        $imgtable->startRow();
-        $imgtable->align="middle";
-        $presentationLink = new link ($this->uri(array('action'=>'willappletrun','actiontype'=>'showpresenterapplet', 'id'=>$id,'agenda'=>$agenda)));
-        $presentationLink->link=   $presenterimage->show();
-        $imgtable->addCell($presentationLink->show());
-        $imgtable->endRow();
-
-        $imgtable->startRow();
-        $joinLink = new link ($this->uri(array('action'=>'willappletrun','actiontype'=>'showaudienceapplet', 'id'=>$id,'agenda'=>$agenda)));
-        $joinLink->link=   $joinimage->show();
-        $imgtable->addCell($joinLink->show());
-
-        $imgtable->endRow();
+       
         $form->addToForm($table->show());
 
 
