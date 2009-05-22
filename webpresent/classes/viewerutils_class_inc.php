@@ -119,7 +119,7 @@ $mostDownloadedStr=$objLanguage->languageText("mod_webpresent_mostdownloaded", "
            </font>
            <p>
            <ul class="statslist">
-           <li>'.$list.'</li>
+           '.$list.'
            </ul>
           </p>
           </div>
