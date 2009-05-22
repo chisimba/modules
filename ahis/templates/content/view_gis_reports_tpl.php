@@ -212,14 +212,57 @@ function failureCallback(errorCode) {
 var dataJSONObject = '.$jsonData.';
 
 function submitQuery() {
+	var now = new Date();
+	
 	if (document.getElementById("txtOutbreakRefNo").value > "") {
 		//alert("Searching by Ref No");
 		showResults();
 	} else if (document.getElementById("lstCountry").selectedIndex > 0) {
 		//alert("Searching by Country");
+		
+		var year = document.getElementById("txtYear1").value;
+		var month = document.getElementById("txtMonth1").value;
+		
+		if (!year || isNaN(year) || year > now.getFullYear()) {
+			alert ("Please enter a valid year");
+			return false;
+		}
+		if (isNaN(month) || month > 12 || month < 1) {
+			alert ("Please enter a valid month (1-12)");
+			return false;
+		}
+		if (document.getElementById("lstAnimal1").selectedIndex == 0) {
+			alert ("Please select the species");
+			return false;
+		}
+		if (document.getElementById("lstDiseaseType1").selectedIndex == 0) {
+			alert ("Please select the disease");
+			return false;
+		}
 		showResults();
 	} else if (document.getElementById("lstDistrict").selectedIndex > 0) {
 		//alert("Searching by District");
+		
+		var year = document.getElementById("txtYear2").value;
+		var month = document.getElementById("txtMonth2").value;
+		
+		if (!year || isNaN(year) || year > now.getFullYear()) {
+			alert ("Please enter a valid year");
+			return false;
+		}
+		if (isNaN(month) || month > 12 || month < 1) {
+			alert ("Please enter a valid month (1-12)");
+			return false;
+		}
+		if (document.getElementById("lstAnimal2").selectedIndex == 0) {
+			alert ("Please select the species");
+			return false;
+		}
+		if (document.getElementById("lstDiseaseType2").selectedIndex == 0) {
+			alert ("Please select the disease");
+			return false;
+		}
+		
 		showResults();
 	} else {
 		alert("Insufficient Criteria");
@@ -247,8 +290,7 @@ function showResults() {
 				lastPoint = point;
 			}
 		} else if (document.getElementById("lstCountry").selectedIndex > 0) {
-			//var tmp = dataJSONObject.results[point];
-			//alert(tmp.geolayer3+" "+tmp.year+"/"+tmp.month+" "+tmp.animal+" "+tmp.diseasetype);
+			
 			if (dataJSONObject.results[point].geolayer3 == document.getElementById("lstCountry").options[document.getElementById("lstCountry").selectedIndex].value &&	
 				dataJSONObject.results[point].year == document.getElementById("txtYear1").value &&	
 				dataJSONObject.results[point].month == document.getElementById("txtMonth1").value &&	
@@ -347,7 +389,7 @@ function doPoint(point) {
 </script>';
 
 $this->appendArrayVar('headerParams', $headers);
-$this->appendArrayVar('bodyOnLoad', "init();");
+//$this->appendArrayVar('bodyOnLoad', "init();");
 
 ?>
 
