@@ -127,7 +127,7 @@ class viewer extends object
     }
     public function showFeaturedFlash($id)
     {
-         $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'. $id .'/' . $id.'.swf';
+        $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'. $id .'/' . $id.'.swf';
         if (file_exists($flashFile)) {
             $flashFile = $this->uri(array('action'=>'getflash', 'id'=>$id));
             //$this->objConfig->getcontentPath().'webpresent/' .$id .'/'. $id.'.swf';
@@ -275,9 +275,21 @@ class viewer extends object
         $button->setToSubmit();
         $features=$this->objLanguage->languageText("mod_webpresent_features", "webpresent");
         $requirements=$this->objLanguage->languageText("mod_webpresent_requirements", "webpresent");
-        $content='<h2>'.$features.'</h2>';
+        $content= '<div id="sidebar" class="c41r">
+                   <div class="statstabs">
+                   <div class="statslistcontainer">';
 
-        $content.="<ul>";
+        $content.='<ul class="paneltabs">
+                   <li><a href="javascript:void(0);" class="selected">Tags</a></li>
+                   </ul>
+                   <ul class="statslist">
+                   <li>'.$features.'</li>
+                 </ul>';
+
+
+
+
+        $content.='<ul class="statslist>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_audiovideo", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_deskshare", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_interactivewhiteboard", "webpresent").'</li>';
@@ -285,12 +297,26 @@ class viewer extends object
         $content.="</ul>";
 
 
-        $content.='<h2>'.$requirements.'</h2>';
-                $content.="<ul>";
-        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_mod_webpresent_workingmic", "webpresent").'</li>';
+        $content.='<ul class="paneltabs">
+                   <li><a href="javascript:void(0);" class="selected">Tags</a></li>
+                   </ul>
+                   <ul class="statslist">
+                   <li>'.$requirements.'</li>
+                 </ul>';
+
+
+        $content.='<ul class="statslist>';
+
+        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_workingmic", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_workingspeakers", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_goodinternetspeed", "webpresent").'</li>';
-                $content.="</ul>";
+        $content.="</ul>";
+
+
+        $content.='
+                   </div>
+                   </div>
+                   </div>';
         $form->addToForm($content);
         $form->addToForm($button->show());
 
@@ -468,7 +494,7 @@ class viewer extends object
 
             $this->objImageResize->setImg($source);
 
-           
+
             $this->objImageResize->resize(300, 300, TRUE);
 
             //$this->objImageResize->show(); // Uncomment for testing purposes
