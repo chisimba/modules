@@ -1994,7 +1994,7 @@ class eportfolio extends controller
         
         // Now create the ACLS
         $this->_objManageGroups->createAcls($userPid, $title);
-    } // End createGroups
+    } // End addGroups
     
     /**
      * Method to add members to the groups for a new eportfolio user
@@ -2136,16 +2136,41 @@ class eportfolio extends controller
         // user Pk id
         $userPid = $this->objUser->PKId($this->objUser->userId());
         foreach($selectedParts as $partId) {
-            $thisId = $this->_objGroupAdmin->getId($partId, $pkField = 'name');
+            //$thisId = $this->_objGroupAdmin->getId($partId, $pkField = 'name');
             $partList = $this->_objGroupAdmin->getId($partId, $pkField = 'name');
             if (empty($partList)) {
-                $partGroupsId = $this->_objGroupAdmin->addGroup($partId, $partId, $userPid);
-                $groupUser = $this->_objGroupAdmin->addGroupUser($partGroupsId, $groupId);
-            } else {
-                $isGroupMember = $this->_objGroupAdmin->isGroupMember($groupId, $partList);
-                if (empty($isGroupMember)) {
-                    $addGrpUser = $this->_objGroupAdmin->addGroupUser($partList, $groupId);
+                $partGroupsId = $this->_objGroupAdmin->addGroup($partId, $partId, $groupId);
+	        // then add them as subGroups of the parent Group.
+	        $data = array(
+	            'group_id' => $groupId,
+	            'subgroup_id' => $partGroupsId
+	        );
+	        $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
+                //$newGroupId = $this->_objGroupAdmin->addGroupUser( $partGroupsId, $groupId );
+		// Now create the ACLS
+        	//$this->_objManageGroups->createAcls($partGroupsId, $groupId);
+                
+            }else{
+            $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
+            $check = 0;
+	    foreach($isSubGroup[0] as $subgrp){
+		if($partId == $subgrp['group_define_name']){
+	            $check = 1;
+		}
+	    }
+	    //If subgroup does not exist, create
+	    if($check==0){
+	        $data = array(
+	            'group_id' => $groupId,
+	            'subgroup_id' => $partList
+	        );
+	        $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
+	    }
+/*
+                if (!$isGroupMember) {
+                    $addGrpUser = $this->_objGroupAdmin->addGroupUser($groupId,$partList);
                 }
+*/
             }
         }
     } //end function
