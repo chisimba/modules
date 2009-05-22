@@ -52,109 +52,102 @@
         }
 
 
-        public function generateJNLP(
-            $type,
-            $fileBase,
-            $appletCodeBase,
-            $supernodeHost,
-            $superNodePort,
-            $username,$fullnames,
-            $isPresenter,
-            $sessionId,
-            $sessionTitle,
-            $userDetails,
-            $userImagePath,
-            $isLoggedIn,
-            $siteRoot,
-            $resourcesPath,
-            $userLevel,
-            $chatLogPath,
-            $filePath,
-            $slideServerId,
-            $mediaServerHost,
-            $audioMICPort,
-            $audioSpeakerPort,
-            $isWebPresent
-           ){
+       public function generateJNLP(
+        $type,
+        $fileBase,
+        $appletCodeBase,
+        $openfireHost,
+        $openfirePort,
+        $openfireHttpBindUrl,
+        $username,
+        $slidesDir,
+        $room,
+        $isPresenter,
+        $presentationId,
+        $presentationName,
+        $webpresent,
+        $fullnames,
+        $email,
+        $siteUrl
+   ){
+//$this->getTinyUrl($siteUrl);
+        $jnlpFile = $fileBase.'/'.$type.'_'.$username.'_realtime_classroom.jnlp';
+        $fh = fopen($jnlpFile, 'w') or die("can't open file");
+        fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>');
+        fwrite($fh,'<jnlp spec="1.0+" ');
+        fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
+        fwrite($fh,     ' href="'.$type.'_'.$username.'_realtime_classroom.jnlp">');
+        fwrite($fh,   '<information>');
+        fwrite($fh,    ' <title>Realtime Communication Tools</title>');
+        fwrite($fh,    ' <vendor>WITS</vendor>');
+        fwrite($fh,    ' <description>Realtime Classroom</description>');
+        fwrite($fh,   ' <homepage href="http://avoir.uwc.ac.za"/>');
+        fwrite($fh,    ' <description kind="short">Realtime Virtual Classroom</description>');
+        fwrite($fh,    ' <icon href="images/logo.png"/> ');
+        fwrite($fh,    ' <icon kind="splash" href="images/splash_realtime.png"/> ');
+        fwrite($fh,    ' <offline-allowed/>');
+        fwrite($fh,   '</information>');
 
-            $jnlpFile = $fileBase.'/'.$type.'_'.$username.'_chisimba_classroom.jnlp';
-            //
-            $fh = fopen($jnlpFile, 'w') or die("can't open file");
-   fwrite($fh, '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
-            fwrite($fh,'<jnlp spec="1.0+" ');
-            fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
-            fwrite($fh,     ' href="'.$type.'_'.$username.'_chisimba_classroom.jnlp">');
-   fwrite($fh, '    <information>');
-   fwrite($fh, '        <title>InstanceLauncher</title>');
-   fwrite($fh, '        <vendor>developer</vendor>');
-   fwrite($fh, '        <homepage href=""/>');
-   fwrite($fh,'        <description>InstanceLauncher</description>');
-   fwrite($fh, '       <description kind="short">InstanceLauncher</description>');
-   fwrite($fh, '   <offline-allowed/>');
-   fwrite($fh, '</information>');
-   fwrite($fh, '<security>');
-   fwrite($fh, '<all-permissions/>');
-   fwrite($fh, '</security>');
-   fwrite($fh, '    <resources>');
-   fwrite($fh, '<j2se version="1.5+"/>');
-   fwrite($fh, '<jar eager="true" href="InstanceLauncher.jar" main="true"/>');
-   fwrite($fh, '    </resources>');
-   fwrite($fh, '    <application-desc main-class="avoir.realtime.launcher.Main">');
-   fwrite($fh,   ' <argument>'.$username.'</argument>');
-   fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
-   fwrite($fh,   ' <argument>'.$slideServerId.'</argument>');
-            fwrite($fh,'    </application-desc>');
-   fwrite($fh,'</jnlp>');
-        fclose($fh);
-        /*    fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>'   fwrite($fh,
-            fwrite($fh,'<jnlp spec="1.0+" ');
-            fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
-            fwrite($fh,     ' href="'.$type.'_'.$username.'_chisimba_classroom.jnlp">');
-            fwrite($fh,   '<information>');
-            fwrite($fh,    ' <title>Realtime Classroom</title>');
-            fwrite($fh,    ' <vendor>AVOIR</vendor>');
-            fwrite($fh,    ' <description>Realtime Classroom</description>');
-            fwrite($fh,   ' <homepage href="http://avoir.uwc.ac.za"/>');
-            fwrite($fh,    ' <description kind="short">Realtime Virtual Classroom</description>');
-            fwrite($fh,    ' <icon href="images/logo.png"/> ');
-            fwrite($fh,    ' <icon kind="splash" href="images/splash_realtime.png"/> ');
-            fwrite($fh,    ' <offline-allowed/>');
-            fwrite($fh,   '</information>');
-            fwrite($fh, '<resources>     ');
-            fwrite($fh,  	'<jar href="realtime-launcher-1.0.2.jar"/>   ');
-            fwrite($fh,	'<j2se version="1.5+"');
-            fwrite($fh,	 '     href="http://java.sun.com/products/autodl/j2se"/>');
-            fwrite($fh,   '</resources>');
-            fwrite($fh,  '<application-desc main-class="avoir.realtime.tcp.launcher.RealtimeLauncher">');
-            fwrite($fh,   ' <argument>'.$supernodeHost.'</argument>');
-            fwrite($fh,   ' <argument>'.$superNodePort.'</argument>');
-            fwrite($fh,   ' <argument>'.$username.'</argument>');
-            fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
-            fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
-            fwrite($fh,   ' <argument>'.$sessionId.'</argument>');
-            fwrite($fh,   ' <argument>'.$sessionTitle.'</argument>');
-            fwrite($fh,   ' <argument>'.$userDetails.'</argument>');
-            fwrite($fh,   ' <argument>'.$userImagePath.'</argument>');
-            fwrite($fh,   ' <argument>'.$isLoggedIn.'</argument>');
-            fwrite($fh,   ' <argument>'.$siteRoot.'</argument>');
-            fwrite($fh,   ' <argument>'.$resourcesPath.'</argument>');
-            fwrite($fh,   ' <argument>'.$userLevel.'</argument>');
-            fwrite($fh,   ' <argument>'.$chatLogPath.'</argument>');
-            fwrite($fh,   ' <argument>'.$filePath.'</argument>');
-            fwrite($fh,   ' <argument>'.$slideServerId.'</argument>');
-            fwrite($fh,   ' <argument>'.$mediaServerHost.'</argument>');
-            fwrite($fh,   ' <argument>'.$audioMICPort.'</argument>');
-            fwrite($fh,   ' <argument>'.$audioSpeakerPort.'</argument>');
-            fwrite($fh,   ' <argument>'.$isWebPresent.'</argument>');
-            fwrite($fh,   '</application-desc>');
-            fwrite($fh,'<security>');
-            fwrite($fh,'  <all-permissions/>');
-            fwrite($fh,'</security> ');
-            fwrite($fh,'</jnlp>');
-            fclose($fh);
-        */
 
+        fwrite($fh, '<resources>');
+        fwrite($fh, 	'<j2se version="1.5+" />');
+        fwrite($fh, 	'<jar href="realtime-xmpp.jar" />');
+        fwrite($fh,     '<jar href="commons-collections-3.1-rt.jar" />');
+        fwrite($fh,      '<jar href="jna-3.0.7.jar" /> ');
+        fwrite($fh,     '<jar href="quartz-all-1.6.0.jar" />');
+        fwrite($fh,     '<jar href="commons-logging-api-rt.jar" />   ');
+        fwrite($fh,     '<jar href="jta-rt.jar " />  ');
+        fwrite($fh,     '<jar href="DJNativeSwing.jar  " />');
+        fwrite($fh,     '<jar href="kunstsoff-rt.jar " />');
+        fwrite($fh,     '<jar href="smack.jar" />');
+        fwrite($fh,     '<jar href="DJNativeSwing-SWT.jar  " />');
+        fwrite($fh,     '<jar href="smackx.jar" />');
+
+        fwrite($fh, '</resources>');
+
+        fwrite($fh,' <resources os="Windows" arch="x86">');
+        fwrite($fh,      '<jar href="swt32-win-x86.jar" />');
+        fwrite($fh, '</resources>');
+
+
+        fwrite($fh, '<resources os="Linux">');
+        fwrite($fh, 	'<jar href="swt-linux-x32.jar" />');
+        fwrite($fh, '</resources>');
+
+
+        fwrite($fh, '<resources os="Mac OS X">');
+        fwrite($fh, '  <j2se version="1.5*" java-vm-args="-XstartOnFirstThread"/>');
+        fwrite($fh, '  <jar href="swt-osx.jar"/>');
+        fwrite($fh, '</resources>');
+        fwrite($fh,  '<application-desc main-class="org.avoir.realtime.gui.main.Main">');
+        fwrite($fh,   ' <argument>'.$openfireHost.'</argument>');
+        fwrite($fh,   ' <argument>'.$openfirePort.'</argument>');
+        fwrite($fh,   ' <argument>'.$openfireHttpBindUrl.'</argument>');
+        fwrite($fh,   ' <argument>'.$room.'</argument>');
+        fwrite($fh,   ' <argument>'.$username.'</argument>');
+
+        if($webpresent == 'true'){
+         fwrite($fh,   ' <argument>'.$slidesDir.'</argument>');
+         fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
+         fwrite($fh,   ' <argument>'.$presentationId.'</argument>');
+         fwrite($fh,   ' <argument>'.$presentationName.'</argument>');
+         fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
+         fwrite($fh,   ' <argument>'.$email.'</argument>');
+         fwrite($fh,   ' <argument>'.$siteUrl.'</argument>');
+        }else{
+         fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
+         fwrite($fh,   ' <argument>'.$email.'</argument>');
+         fwrite($fh,   ' <argument>'.$siteUrl.'</argument>');
         }
+        fwrite($fh,   '</application-desc>');
+        fwrite($fh,'<security>');
+        fwrite($fh,'  <all-permissions/>');
+        fwrite($fh,'</security> ');
+        fwrite($fh,'</jnlp>');
+        fclose($fh);
+
+
+    }
 
         public function generateJNLP1_0_2Beta(
             $type,
