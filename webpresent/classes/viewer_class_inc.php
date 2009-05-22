@@ -267,44 +267,32 @@ class viewer extends object
          */
     public function createPresentationForm($id,$agenda,$room)
     {
-        $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $objIcon = $this->newObject('geticon', 'htmlelements');
-        $objIcon->setIcon('loading_circles');
-
         $form =$this->loadClass('form', 'htmlelements');
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $objInput = $this->loadClass('textinput', 'htmlelements');
-        $objText = $this->loadClass('textarea', 'htmlelements');
         $objButton = $this->loadClass('button', 'htmlelements');
-        $imgtable = $this->newObject('htmltable', 'htmlelements');
-        $imgtable->cellpadding = '4';
 
-        $objInput = new textinput('agendaField', $agenda, '100');
-        $objText = new textarea('participants', $this->objLanguage->languageText("mod_webpresent_emailtip", "webpresent"), 12, '70');
-        $objButton = new button('invite', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
-
-        $table->cellpadding = '4';
-
-
-        $form = new form ('inviteform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda,'room'=>$room,'presenter'=>'yes'),"realtime"));
+        $form = new form ('enterpresentationmodeform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda,'room'=>$room,'presenter'=>'yes'),"realtime"));
         $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
         $button->setToSubmit();
+        $features=$this->objLanguage->languageText("mod_webpresent_features", "webpresent");
+        $requirements=$this->objLanguage->languageText("mod_webpresent_requirements", "webpresent");
+        $content='<h2>'.$features.'</h2>';
 
-        $clientLink = new link ($this->uri(array('action'=>'willappletrun','actiontype'=>'showaudienceapplet', 'id'=>$id,'agenda'=>$agenda)));
-        $clientLink->link =$this->objLanguage->languageText("mod_webpresent_joinlivepresentation", "webpresent");
+        $content.="<ul>";
+        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_audiovideo", "webpresent").'</li>';
+        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_deskshare", "webpresent").'</li>';
+        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_interactivewhiteboard", "webpresent").'</li>';
+        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_questionmanager", "webpresent").'</li>';
+        $content.="</ul>";
 
-        $content1 = '<div id="loading_views" style="display:none; ">'.$objIcon->show().'</div><div id="data_views style="float: left; width=100">'.$table->show().'<br>'.$button->show().'</div>';
 
-        $content2 = '<div id="loading_views" style="display:none;">'.$objIcon->show().'</div><div id="data_views">'.$clientLink->show().'</div>';
-
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $table->width="130";
-        $table->startRow();
-        $table->addCell($objFeatureBox->show($this->objLanguage->languageText("mod_webpresent_presentation", "webpresent"), $content1), '50%', 'top', 'left');
-        $table->endRow();
-
-       
-        $form->addToForm($table->show());
+        $content.='<h2>'.$requirements.'</h2>';
+                $content.="<ul>";
+        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_mod_webpresent_workingmic", "webpresent").'</li>';
+        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_workingspeakers", "webpresent").'</li>';
+        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_goodinternetspeed", "webpresent").'</li>';
+                $content.="</ul>";
+        $form->addToForm($content);
+        $form->addToForm($button->show());
 
 
         return $form->show();
