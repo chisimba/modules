@@ -244,9 +244,6 @@ class realtime extends controller
          * @return String
          */
                         public function generateJNLP($xsessionId,$xsessionTitle,$xroom,$ispresenter){
-                            //$slideServerId=$this->realtimeManager->randomString(32);//'gen19Srv8Nme50';
-                            //$this->realtimeManager->startSlidesServer($slideServerId);
-
                             $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
                             $modPath=$this->objAltConfig->getModulePath();
                             $replacewith="";
@@ -321,13 +318,15 @@ class realtime extends controller
                             $this->setVarByRef('desc', $desc);
                             $this->setVarByRef('sessionId', $this->sessionId);
                             $this->setVarByRef('sessionTitle', $this->sessionTitle);
+                           
                             if($this->getSession('javatest') == 'done'){
-                              return $this->nextAction ( 'showStartLinks', array ('id'=>$this->sessionId,'agenda'=>$this>sessionTitle,'room'=>$this->room,
+                              return $this->nextAction ( 'showStartLinks', array ('id'=>$this->sessionId,'agenda'=>$this->sessionTitle,'room'=>$this->room,
                                      'presenter'=>$this->ispresenter ) );
                             }else{
                             $javaTest = $this->getObject('sysreqs', 'webpresent');
                             $testPage=$javaTest->show($this->sessionId,$this->sessionTitle,$this->room,$this->ispresenter);
                             $this->setVarByRef('content',$testPage);
+                            $this->setSession('javatest','done');
                             }
                             return "dump_tpl.php";
                         }
