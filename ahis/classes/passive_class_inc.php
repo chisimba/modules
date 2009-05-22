@@ -112,7 +112,7 @@ class passive extends dbtable {
 			if ($row['longdirec'] == "W") {
 				$longitude *= -1;
 			}
-			log_debug("GIS: $latitude - $longitude {$row['latdirec']}{$row['longdirec']}");
+			//log_debug("GIS: $latitude  $longitude {$row['latdirec']}{$row['longdirec']}");
 			$results[] = array(
 				'row' 			=> $count,
 				'refno'			=> $row['refno'],
