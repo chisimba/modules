@@ -321,11 +321,14 @@ class realtime extends controller
                             $this->setVarByRef('desc', $desc);
                             $this->setVarByRef('sessionId', $this->sessionId);
                             $this->setVarByRef('sessionTitle', $this->sessionTitle);
-                            //   $this->setVarByRef('content', $this->reqTest.'<a href="'.$appletCodeBase.'/presenter_'.$username.'_realtime_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_realtime_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
+                            if($this->getSession('javatest') == 'done'){
+                              return $this->nextAction ( 'showStartLinks', array ('id'=>$this->sessionId,'agenda'=>$this>sessionTitle,'room'=>$this->room,
+                                     'presenter'=>$this->ispresenter ) );
+                            }else{
                             $javaTest = $this->getObject('sysreqs', 'webpresent');
                             $testPage=$javaTest->show($this->sessionId,$this->sessionTitle,$this->room,$this->ispresenter);
                             $this->setVarByRef('content',$testPage);
-
+                            }
                             return "dump_tpl.php";
                         }
 
