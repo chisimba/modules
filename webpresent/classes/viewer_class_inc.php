@@ -265,21 +265,11 @@ class viewer extends object
          * Added by David Wafula
          * @return <type>
          */
-    public function createPresentationForm($id,$agenda)
+    public function createPresentationForm($id,$agenda,$room)
     {
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('loading_circles');
-
-        $presenterimage=$this->newObject('image','htmlelements');
-        $presenterimage->src='skins/_common/icons/webpresent/startpresentation.png';
-        $presenterimage->width="200";
-        $presenterimage->height="80";
-
-        $joinimage=$this->newObject('image','htmlelements');
-        $joinimage->src='skins/_common/icons/webpresent/joinpresent.png';
-        $joinimage->width="200";
-        $joinimage->height="80";
 
         $form =$this->loadClass('form', 'htmlelements');
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -299,25 +289,13 @@ class viewer extends object
         $table->addCell($this->objLanguage->languageText("mod_webpresent_agenda", "webpresent"));
         $table->endRow();
 
-
-
         $table->startRow();
         $table->addCell($objInput->show());
         $table->endRow();
 
 
-        $table->startRow();
-        //$table->addCell('Participants&nbsp;&nbsp;&nbsp'.$usersLink->show(), '', '', '');
-        $table->addCell($this->objLanguage->languageText("mod_webpresent_participants", "webpresent"), '', '', '');
-        $table->endRow();
 
-        $table->startRow();
-        $table->addCell($objText->show());
-        $table->endRow();
-
-
-
-        $form = new form ('inviteform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda),"realtime"));
+        $form = new form ('inviteform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda,'room'=>$room,'present'=>'yes'),"realtime"));
         $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
         $button->setToSubmit();
 
