@@ -289,7 +289,7 @@ class realtime extends controller
 
                         }
                         public function showClassroom(){
-                            $this->startSlideServer($this->sessionId, $this->sessionTitle);
+
                             $username=$this->objUser->userName();
                             $modPath=$this->objAltConfig->getModulePath();
                             $replacewith="";
@@ -399,32 +399,32 @@ class realtime extends controller
                             $this->setVarByRef('content', $this->reqTest.'<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
                             return "dump_tpl.php";
                         }
- public function showStartLinks(){
-            $this->generateJNLP($this->sessionId, $this->sessionTitle,$this->room,$this->ispresenter);
-            $modPath=$this->objAltConfig->getModulePath();
-            $replacewith="";
-            $docRoot=$_SERVER['DOCUMENT_ROOT'];
-            $appletPath=str_replace($docRoot,$replacewith,$modPath);
-            $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+                        public function showStartLinks(){
+                            $this->generateJNLP($this->sessionId, $this->sessionTitle,$this->room,$this->ispresenter);
+                            $modPath=$this->objAltConfig->getModulePath();
+                            $replacewith="";
+                            $docRoot=$_SERVER['DOCUMENT_ROOT'];
+                            $appletPath=str_replace($docRoot,$replacewith,$modPath);
+                            $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
 
-            $username=$this->objUser->userName();
-            $desc='<li>Add Live interactions to your presentation</li>';
-            $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
-            $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
-            $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$this->sessionId),"webpresent"));
-            $presentationLink->link= $this->sessionId=='default'?"":  $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
+                            $username=$this->objUser->userName();
+                            $desc='<li>Add Live interactions to your presentation</li>';
+                            $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
+                            $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
+                            $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$this->sessionId),"webpresent"));
+                            $presentationLink->link= $this->sessionId=='default'?"":  $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
 
-            $siteRoot=$this->objAltConfig->getSiteRoot();
-            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_START.jpg" width="200" height="80">';
+                            $siteRoot=$this->objAltConfig->getSiteRoot();
+                            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_START.jpg" width="200" height="80">';
 
-            $this->setVarByRef('desc', $desc);
-            $this->setVarByRef('sessionId', $this->sessionId);
-            $this->setVarByRef('sessionTitle', $this->sessionTitle);
-            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_realtime_classroom.jnlp">'.$presenterLink.'</a><br/><br/><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
+                            $this->setVarByRef('desc', $desc);
+                            $this->setVarByRef('sessionId', $this->sessionId);
+                            $this->setVarByRef('sessionTitle', $this->sessionTitle);
+                            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_realtime_classroom.jnlp">'.$presenterLink.'</a><br/><br/><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
 
-             return "dump_tpl.php";
+                            return "dump_tpl.php";
 
-       }
+                        }
                         public function initClassroom($contextCode){
                             $slideServerId=$this->realtimeManager->randomString(32);//'gen19Srv8Nme50';
                             $this->realtimeManager->startSlidesServer($slideServerId);
