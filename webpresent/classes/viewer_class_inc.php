@@ -275,36 +275,14 @@ class viewer extends object
         $button->setToSubmit();
         $features=$this->objLanguage->languageText("mod_webpresent_features", "webpresent");
         $requirements=$this->objLanguage->languageText("mod_webpresent_requirements", "webpresent");
-        $content= '<div id="sidebar" class="c41r">
-                   <div class="statstabs">
-                   <div class="statslistcontainer">';
-
-        $content.='<ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">Tags</a></li>
-                   </ul>
-                   <ul class="statslist">
-                   <li>'.$features.'</li>
-                 </ul>';
-
-
-
-
+        $content='<h2>'.$features.'</h2>';
         $content.='<ul class="statslist>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_audiovideo", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_deskshare", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_interactivewhiteboard", "webpresent").'</li>';
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_questionmanager", "webpresent").'</li>';
         $content.="</ul>";
-
-
-        $content.='<ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">Tags</a></li>
-                   </ul>
-                   <ul class="statslist">
-                   <li>'.$requirements.'</li>
-                 </ul>';
-
-
+        $content.='<h2>'.$requirements.'</h2>';
         $content.='<ul class="statslist>';
 
         $content.="<li>".$this->objLanguage->languageText("mod_webpresent_workingmic", "webpresent").'</li>';
@@ -313,10 +291,6 @@ class viewer extends object
         $content.="</ul>";
 
 
-        $content.='
-                   </div>
-                   </div>
-                   </div>';
         $form->addToForm($content);
         $form->addToForm($button->show());
 
