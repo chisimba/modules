@@ -127,7 +127,7 @@ class viewer extends object
     }
     public function showFeaturedFlash($id)
     {
-        $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'. $id .'/' . $id.'.swf';
+         $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'. $id .'/' . $id.'.swf';
         if (file_exists($flashFile)) {
             $flashFile = $this->uri(array('action'=>'getflash', 'id'=>$id));
             //$this->objConfig->getcontentPath().'webpresent/' .$id .'/'. $id.'.swf';

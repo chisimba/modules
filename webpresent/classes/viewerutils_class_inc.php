@@ -87,13 +87,13 @@ $mostViewedStr=$objLanguage->languageText("mod_webpresent_mostviewed", "webprese
               </ul>
            <div class="tower">
            <font style="font-size:13pt;color:#5e6eb5;">
-           
+
           '.$mostViewedStr.'
-           
+
            </font>
            <p>
            <ul class="statslist">
-           <li>'.$list.'</li>
+           '.$list.'
            </ul>
           </p>
           </div>
@@ -186,7 +186,11 @@ public function getTagCloudContent($tagCloud){
 }
 
     private function createCell($colType,$filename,$thumbNail,$desc,$tags,
-        $uploader,$licence){
+        $uploader,$licence,$id){
+        $objTrim = $this->getObject('trimstr', 'strings');
+        $desc=$objTrim->strTrim($desc,30);
+        $descLink = new link ($this->uri(array('action'=>'view', 'id'=>$id)));
+        $descLink->link = $desc;
         $str='<div class="'.$colType.'">
               <div class="subcl">
               <div class="sectionstats_content">
@@ -196,17 +200,19 @@ public function getTagCloudContent($tagCloud){
               <ul class="statslist">
 
               <li class="sectionstats_first">
-              
+
               '.$thumbNail->show().'
               <h3>
-              <a href="#">'.$desc.'</a>
+             '.$descLink->show().'
               </h3>
-              <div class="clear"></div>
+   <br/><br/></br><br/><br/><br/><br/><br/><br/>
               </li>
+
               <li><strong>Tags: </strong><a  href="#">'.$tags.'</a></li>
               <li><strong>By: </strong>'.$uploader.'</li>
               '.$licence.'
               </ul>
+ <div class="clear"></div>
 
               </div>
               </div>
