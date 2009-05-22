@@ -285,17 +285,8 @@ class viewer extends object
 
         $table->cellpadding = '4';
 
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText("mod_webpresent_agenda", "webpresent"));
-        $table->endRow();
 
-        $table->startRow();
-        $table->addCell($objInput->show());
-        $table->endRow();
-
-
-
-        $form = new form ('inviteform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda,'room'=>$room,'present'=>'yes'),"realtime"));
+        $form = new form ('inviteform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda,'room'=>$room,'presenter'=>'yes'),"realtime"));
         $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
         $button->setToSubmit();
 
