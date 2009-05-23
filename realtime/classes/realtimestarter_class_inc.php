@@ -68,7 +68,8 @@
         $webpresent,
         $fullnames,
         $email,
-        $siteUrl
+        $siteUrl,
+        $passwordrequired
    ){
 //$this->getTinyUrl($siteUrl);
         $jnlpFile = $fileBase.'/'.$type.'_'.$username.'_realtime_classroom.jnlp';
@@ -139,6 +140,7 @@
          fwrite($fh,   ' <argument>'.$email.'</argument>');
          fwrite($fh,   ' <argument>'.$siteUrl.'</argument>');
         }
+        fwrite($fh,   ' <argument>'.$passwordrequired.'</argument>');
         fwrite($fh,   '</application-desc>');
         fwrite($fh,'<security>');
         fwrite($fh,'  <all-permissions/>');
