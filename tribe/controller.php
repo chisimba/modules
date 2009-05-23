@@ -526,7 +526,7 @@ class tribe extends controller {
 
                                     $this->conn->message($pl['from'],$message);
                                     continue;
-                                    
+
                                 case 'joke' :
                                     log_debug("joke request");
                                     $wsdl = "http://interpressfact.net/webservices/getJoke.asmx?WSDL";
@@ -579,6 +579,68 @@ class tribe extends controller {
                                     $message = $this->objLanguage->languageText("mod_tribe_yourgroup", "tribe")." ".$groupname." ".$this->objLanguage->languageText("mod_tribe_hasbeencreated", "tribe");
                                 }
                                 // send the message
+                                $this->conn->message($pl['from'], $message);
+                                continue;
+                            }
+
+                            // join group keyword
+                            $bod = explode(" ", $pl['body']);
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'joingroup' ) {
+                                $poster = explode('/', $pl['from']);
+                                // get the users jid
+                                $jid = $poster[0];
+                                $groupname = $bod[1];
+                                if($this->objGroups->groupExists($groupname)) {
+                                    // get the group id now
+                                    $groupinfo = $this->objGroups->getGroupInfo($groupname);
+                                    $groupid = $groupinfo['id'];
+                                    // get the user id of the user
+                                    $userid = $this->dbUsers->getUserIdfromJid($jid);
+                                    // check if they are a member yet
+                                    if ($this->objMembers->isAMember($userid, $groupid) == FALSE) {
+                                        // check for privacy
+                                        if($groupinfo['privacy'] == 'private') {
+                                            // send out an invite and notify the group creator
+                                        }
+                                        // join the group
+                                        $this->objMembers->addRecord($userid, $groupid, $jid);
+                                        $message = $this->objUser->userName($userid)." ".$this->objLanguage->languageText("mod_tribe_hasjoinedgroup", "tribe")." ".$groupname."!";
+                                        $pl['body'] = $message;
+                                    }
+                                    else {
+                                        $message = $this->objLanguage->languageText("mod_tribe_alreadymemberof", "tribe")." ".$groupname."!"; //"Already a member...";
+                                    }
+                                }
+                                else {
+                                    $message = $this->objLanguage->languageText("mod_tribe_groupnotexist", "tribe")." (".$groupname.")!"; //"Group does not exist!";
+                                }
+
+                                // send the message
+                                $this->conn->message($pl['from'], $message);
+                                continue;
+                            }
+
+                            // leave group keyword
+                            $bod = explode(" ", $pl['body']);
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'leavegroup' ) {
+                                // get the userid from the JID
+                                $poster = explode('/', $pl['from']);
+                                // get the users jid
+                                $jid = $poster[0];
+                                $groupname = $bod[1];
+                                $userid = $this->dbUsers->getUserIdfromJid($jid);
+                                $groupinfo = $this->objGroups->getGroupInfo($groupname);
+                                $groupid = $groupinfo['id'];
+                                if ($this->objMembers->isAMember($userid, $groupid) == TRUE) {
+                                    // do the actual leaving
+                                    $this->objMembers->removePerson($userid, $groupid);
+                                    $message = $this->objLanguage->languageText("mod_tribe_successleftgroup", "tribe"). " ".$groupname;
+                                    $pl['body'] = $message;
+                                }
+                                else {
+                                    $message = $this->objLanguage->languageText("mod_tribe_failleftgroup", "tribe"). " ".$groupname;
+                                }
+
                                 $this->conn->message($pl['from'], $message);
                                 continue;
                             }
@@ -675,7 +737,7 @@ class tribe extends controller {
                                }
 
                             }
-                            
+
                             // Send a response message
                             elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register" && $pl ['body'] != "joke") {
                                 // Bang the array into a table to keep a record of it.

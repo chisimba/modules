@@ -108,6 +108,7 @@ class dbgroupmembers extends dbTable {
     }
 
     public function isAMember($userid, $groupid) {
+        parent::init ( 'tbl_tribe_groupmembers' );
         $count = $this->getRecordCount("WHERE userid = '$userid' AND groupid = '$groupid'");
         if($count > 0) {
             // user is a member

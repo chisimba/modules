@@ -40,6 +40,7 @@ class dbgroups extends dbTable {
         parent::init ( 'tbl_tribe_groups' );
         $this->objUser = $this->getObject('user', 'security');
         $this->objMembers = $this->getObject('dbgroupmembers');
+        $this->dbUsers = $this->getObject('dbusers');
     }
 
     /**
@@ -52,8 +53,14 @@ class dbgroups extends dbTable {
      */
     public function addRecord($insarr, $jid) {
         parent::init ( 'tbl_tribe_groups' );
+        if(!$this->objUser->userId()) {
+            $userid = $this->dbUsers->getUserIdfromJid($jid);
+        }
+        else {
+            $userid = $this->objUser->userId();
+        }
         $insarr['createdat'] = $this->now();
-        $insarr['userid'] = $this->objUser->userId();
+        $insarr['userid'] = $userid;
         $insarr['status'] = 1;
 
         if($this->userExists($jid) === FALSE) {
@@ -67,7 +74,7 @@ class dbgroups extends dbTable {
         else {
             $grpid = $this->insert ( $insarr, 'tbl_tribe_groups' );
             // add the user to the group
-            $this->objMembers->addRecord($this->objUser->userId(), $grpid, $jid);
+            $this->objMembers->addRecord($userid, $grpid, $jid);
             return 3;
         }
     }
