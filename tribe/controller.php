@@ -445,15 +445,11 @@ class tribe extends controller {
 
     public function handleMessages() {
         log_debug("Starting messagehandler");
-
-
         // This is a looooong running task... Lets use the background class to handle it
         //check the connection status
         $status = $this->objBack->isUserConn ();
         //keep the user connection alive even if the browser is closed
         $callback = $this->objBack->keepAlive ();
-
-
         // Now the code is backrounded and cannot be aborted! Be careful now...
         $this->conn->autoSubscribe ();
         try {
@@ -462,7 +458,6 @@ class tribe extends controller {
                 $payloads = $this->conn->processUntil ( array ('message', 'presence', 'end_stream', 'session_start', 'reply' ) );
                 foreach ( $payloads as $event ) {
                     $pl = $event [1];
-
                     switch ($event [0]) {
                         case  'reply':
                             log_debug("reply to message...");
@@ -529,6 +524,16 @@ class tribe extends controller {
                                         $message = $this->objLanguage->languageText("mod_tribe_userexists", "tribe");
                                     }
 
+                                    $this->conn->message($pl['from'],$message);
+                                    continue;
+                                    
+                                case 'joke' :
+                                    log_debug("joke request");
+                                    $wsdl = "http://interpressfact.net/webservices/getJoke.asmx?WSDL";
+                                    $client = new SoapClient($wsdl);
+                                    $response = $client->__soapCall("getJoke", array("Category" => 0));
+                                    $message = $response->getJokeResult;
+                                    // send it back
                                     $this->conn->message($pl['from'],$message);
                                     continue;
 
@@ -670,8 +675,9 @@ class tribe extends controller {
                                }
 
                             }
+                            
                             // Send a response message
-                            elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register") {
+                            elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register" && $pl ['body'] != "joke") {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];
