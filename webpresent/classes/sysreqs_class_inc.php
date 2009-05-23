@@ -36,7 +36,7 @@ class sysreqs extends object
         $this->addJS();
     }
 
-    public function show($id,$agenda,$room,$ispresenter)
+    public function show($id,$agenda,$room,$ispresenter,$passwordrequired)
     {
         
         $str='';
@@ -401,7 +401,7 @@ class sysreqs extends object
      </script>';
         $form =$this->loadClass('form', 'htmlelements');
         $objLanguage=$this->loadClass('language','language');
-        $form = new form ('realtime', $this->uri(array('action'=>'showStartLinks','id'=>$id,'agenda'=>$agenda,'room'=>$room,'presenter'=>$ispresenter),"realtime"));
+        $form = new form ('realtime', $this->uri(array('action'=>'showStartLinks','id'=>$id,'agenda'=>$agenda,'room'=>$room,'presenter'=>$ispresenter,'needpassword'=>$passwordrequired),"realtime"));
         $button = new button ('submitform', 'Continue');
         $button->setToSubmit();
         $str.='<br/>'.$button->show();

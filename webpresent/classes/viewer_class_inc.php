@@ -270,7 +270,9 @@ class viewer extends object
         $form =$this->loadClass('form', 'htmlelements');
         $objButton = $this->loadClass('button', 'htmlelements');
 
-        $form = new form ('enterpresentationmodeform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda,'room'=>$room,'presenter'=>'yes'),"realtime"));
+        $form = new form ('enterpresentationmodeform',
+            $this->uri(array('action'=>'classroom',
+'id'=>$id,'agenda'=>$agenda,'room'=>$room,'presenter'=>'yes','needpassword'=>'no'),"realtime"));
         $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
         $button->setToSubmit();
         $features=$this->objLanguage->languageText("mod_webpresent_features", "webpresent");
