@@ -266,11 +266,11 @@ class realtime extends controller
                             $openfireHttpBindUrl=$objSysConfig->getValue('OPENFIRE_HTTP_BIND', 'realtime');
 
 
-                            //$siteRoot=$this->objAltConfig->getSiteRoot().'?module=realtime&action=classroom&id='.$xsessionId.'&agenda='.$xsessionTitle;
-                            $siteRoot=$_SERVER['HTTP_REFERER'];
-                            if($siteRoot == ''){
-                                $siteRoot=$this->objAltConfig->getSiteRoot().'?module=realtime&action=classroom&id='.$xsessionId.'&agenda=Default&room='.$xroom.'&needpassword='+$passwordrequired;
-                            }
+                            $siteRoot=$this->objAltConfig->getSiteRoot();
+                           // $siteRoot=$_SERVER['HTTP_REFERER'];
+                            //if($siteRoot == ''){
+                              //  $siteRoot=$this->objAltConfig->getSiteRoot().'?module=realtime&action=classroom&id='.$xsessionId.'&agenda=Default&room='.$xroom.'&needpassword='+$passwordrequired;
+                            //}
                             $username=$this->objUser->userName();
                             $fullnames=$this->objUser->fullname();
                             $email=$this->objUser->email();
