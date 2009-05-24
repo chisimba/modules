@@ -41,6 +41,7 @@ class tribe extends controller {
     public $postJID;
     public $objModules;
     public $objTwitterLib;
+    public $objDbSubs;
 
     /**
      *
@@ -69,6 +70,7 @@ class tribe extends controller {
             $this->objAt = $this->getObject('dbatreplies');
             $this->objGroups = $this->getObject('dbgroups');
             $this->objMembers = $this->getObject('dbgroupmembers');
+            $this->objDbSubs = $this->getObject('dbsubs');
 
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
@@ -498,6 +500,8 @@ class tribe extends controller {
                                     $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_unsubscribed', 'tribe'));
                                     continue;*/
 
+                                case 'Register' :
+                                case 'REGISTER' :
                                 case 'register' :
                                     // register the user and send a message to say success.
                                     $objUA = $this->getObject('useradmin_model2', 'security');
@@ -527,14 +531,23 @@ class tribe extends controller {
                                     $this->conn->message($pl['from'],$message);
                                     continue;
 
+                                case 'Joke' :
+                                case 'JOKE' :
                                 case 'joke' :
                                     log_debug("joke request");
                                     $wsdl = "http://interpressfact.net/webservices/getJoke.asmx?WSDL";
-                                    $client = new SoapClient($wsdl);
-                                    $response = $client->__soapCall("getJoke", array("Category" => 0));
-                                    $message = $response->getJokeResult;
-                                    // send it back
-                                    $this->conn->message($pl['from'],$message);
+                                    try {
+                                        $client = new SoapClient($wsdl);
+                                        $response = $client->__soapCall("getJoke", array("Category" => 0));
+                                        $message = $response->getJokeResult;
+                                        // send it back
+                                        $this->conn->message($pl['from'],$message);
+                                    }
+                                    catch (SoapFault $exception) {
+                                        $message = "Joke server error!";
+                                        $this->conn->message($pl['from'],$message);
+                                        continue;
+                                    }
                                     continue;
 
                                 case 'NULL' :
@@ -736,6 +749,53 @@ class tribe extends controller {
                                    continue;
                                }
 
+                            }
+
+                            // subscribe to another user (keyword sub)
+                            $bod = explode(" ", $pl['body']);
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'sub' ) {
+                               // the user we want to subscribe to
+                                $subto = $bod[1];
+                                if(substr($subto, 0, 1) == '@') {
+                                    $subto = str_replace('@', '', $subto);
+                                }
+                                // get the userid from the JID
+                                $poster = explode('/', $pl['from']);
+                                $posterjid = $poster[0];
+                                $fromid = $this->dbUsers->getUserIdfromJid($posterjid);
+                                // get the userid of the person to follow
+                                $followid = $this->objUser->getUserId($subto);
+                                if(!$followid) {
+                                    $message = "No such user!";
+                                    $this->conn->message($pl['from'], $message);
+                                    continue;
+                                }
+                                else {
+                                    //insert the record in the subs table
+                                    $followarr = array('userid' => $fromid, 'followid' => $followid, 'jid' => $posterjid, 'status' => 1);
+                                    $this->objDbSubs->followUser($followarr);
+
+                                    $message = "Successfully subscribed to $subto";
+                                    $this->conn->message($pl['from'], $message);
+                                    continue;
+                                }
+                            }
+
+                            // unsubscribe from another user (keyword sub)
+                            $bod = explode(" ", $pl['body']);
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'unsub' ) {
+                               // the user we want to subscribe to
+                                $subto = $bod[1];
+                                if(substr($subto, 0, 1) == '@') {
+                                    $subto = str_replace('@', '', $subto);
+                                }
+                                // get the userid from the JID
+                                $poster = explode('/', $pl['from']);
+                                $posterjid = $poster[0];
+                                $fromid = $this->dbUsers->getUserIdfromJid($posterjid);
+
+
+                                continue;
                             }
 
                             // Send a response message

@@ -37,43 +37,16 @@ class dbsubs extends dbTable {
         parent::init ( 'tbl_tribe_subs' );
     }
 
-    /**
-     * Private method to insert a record to the popularity contest table as a log.
-     *
-     * This method takes the IP and module_name and inserts the record with a timestamp for temporal analysis.
-     *
-     * @param array $recarr
-     * @return string $id
-     */
-    public function addRecord($jid) {
-        $insarr = array('jid' => $jid, 'status' => 1, 'datesent' => $this->now());
-        if($this->userExists($jid) === FALSE) {
-            return $this->insert ( $insarr, 'tbl_jabberblog_subs' );
-        }
-        else {
-            if($this->userExists($jid) === TRUE) {
-                $person = $this->getAll("WHERE jid = '$jid'");
-                $id = $person[0]['id'];
+    public function followUser($followarr) {
+        $followarr['datesent'] = $this->now();
 
-                return $this->update ( 'id', $id, $insarr, 'tbl_jabberblog_subs' );
-            }
-            else {
-                return FALSE;
-            }
-        }
+        return $this->insert($followarr, 'tbl_tribe_subs');
     }
 
-    public function inactiveRecord($jid) {
-        $actarr = array('jid' => $jid, 'status' => 0, 'datesent' => $this->now());
-        if($this->userExists($jid) === TRUE) {
-            $person = $this->getAll("WHERE jid = '$jid'");
-            $id = $person[0]['id'];
+    public function unfollow($followarr) {
+        $followarr['datesent'] = $this->now();
 
-            return $this->update ( 'id', $id, $actarr, 'tbl_jabberblog_subs' );
-        }
-        else {
-            return FALSE;
-        }
+        return $this->delete('id', $followarr, 'tbl_tribe_subs');
     }
 
     public function userExists($jid) {
@@ -85,12 +58,5 @@ class dbsubs extends dbTable {
         }
     }
 
-    public function getActive() {
-        return $this->getAll("WHERE status = 1");
-    }
-
-    public function getNoSubs() {
-        return count($this->getAll("WHERE status = 1"));
-    }
 }
 ?>
