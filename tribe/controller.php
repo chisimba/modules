@@ -552,6 +552,19 @@ class tribe extends controller {
 
                                 case 'NULL' :
                                     continue;
+
+                                default:
+
+                                    $poster = explode('/', $pl['from']);
+                                    $jid = $poster[0];
+                                    if(!$this->dbUsers->userExists($jid)) {
+                                        $message = $this->objLanguage->languageText("mod_tribe_noreggedmsg", "tribe");
+
+                                        $this->conn->message($pl['from'],$message);
+                                        //$pl['body'] = '';
+                                        continue;
+                                    }
+
                             }
 
                             // create a group
