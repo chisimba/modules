@@ -631,6 +631,64 @@ class getall_Eportfolio extends object
         } //end if
         
     } //end function 
+public function getAffiliation ( $userId ){
+    //Language Items	
+    $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+    // Show the heading
+    $affiliationobjHeading =& $this->getObject('htmlheading','htmlelements');
+    $affiliationobjHeading->type=2;
+    $affiliationobjHeading->str =$this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio');
+
+    $affiliationList = $this->objDbAffiliationList->getByItem($userId);
+    if(!empty($affiliationList)){
+    // Create a table object
+    $affiliationTable =& $this->newObject("htmltable","htmlelements");
+    $affiliationTable->border = 0;
+    $affiliationTable->cellspacing='3';
+    $affiliationTable->width = "30%";
+    // Add the table heading.
+    $affiliationTable->startRow();
+//addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+    $affiliationTable->addCell($affiliationobjHeading->show(), '', '', '', '', 'colspan="6"',Null);
+    $affiliationTable->endRow();
+
+    $affiliationTable->startRow();
+    $affiliationTable->addCell("<b>&nbsp;&nbsp;&nbsp;".$this->objLanguage->languageText("mod_eportfolio_contypes",'eportfolio')."</b>");
+    $affiliationTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_classificationView",'eportfolio')."</b>");
+    $affiliationTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_roleView",'eportfolio')."</b>");
+    $affiliationTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_organisation",'eportfolio')."</b>");
+    $affiliationTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio')."</b>");
+    $affiliationTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_activityfinish",'eportfolio')."</b>");
+    $affiliationTable->endRow();
+    
+    // Step through the list of affiliations
+    $class = NULL;
+    if (!empty($affiliationList)) {
+    	$i = 0;
+    	$affNo = 1;
+    foreach ($affiliationList as $affiliationItem) {
+    // Display each field for affiliations
+	$cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
+        $affiliationTable->startRow();
+        $affiliationTable->addCell($affNo.')&nbsp;&nbsp;&nbsp;'.$cattype[0]['type'], "", NULL, NULL, Null, '');
+        $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, NULL, '');
+        $affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, NULL, '');
+        $affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, NULL, '');
+        $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['start']), "", NULL, NULL, NULL, '');
+        $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']), "", NULL, NULL, NULL, '');
+        $affiliationTable->endRow();
+	$affNo = $affNo + 1;
+    }
+	unset($affiliationItem);
+	} else {
+	    $affiliationTable->startRow();
+	    $affiliationTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
+	    $affiliationTable->endRow();
+	}
+	$affiliationtbl = $affiliationTable->show();
+	return $affiliationtbl;
+}//end if
+}//end function
    public function getViewAffiliation($userId) 
     {
         //Language Items
