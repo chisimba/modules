@@ -2001,39 +2001,135 @@
 
 			$this->appendArrayVar('headerParams', $script);			
 
+            $lblQuickMenu = $this->objLanguage->languageText('mod_cmsadmin_quick_heading', 'cmsadmin');
+            $lblFrontpage = $this->objLanguage->languageText('mod_cmsadmin_quick_frontpage', 'cmsadmin');
+            $lblContent = $this->objLanguage->languageText('mod_cmsadmin_quick_content', 'cmsadmin');
+            $lblSections = $this->objLanguage->languageText('mod_cmsadmin_quick_sections', 'cmsadmin');
+            $lblTemplates = $this->objLanguage->languageText('mod_cmsadmin_quick_templates', 'cmsadmin');
+            $lblFeeds = $this->objLanguage->languageText('mod_cmsadmin_quick_feeds', 'cmsadmin');
+            $lblPermissions = $this->objLanguage->languageText('mod_cmsadmin_quick_permissions', 'cmsadmin');
+            $lblMenu = $this->objLanguage->languageText('mod_cmsadmin_quick_menu', 'cmsadmin');
+            $lblUploadfiles = $this->objLanguage->languageText('mod_cmsadmin_quick_uploadfiles', 'cmsadmin');
+            $lblShorturls = $this->objLanguage->languageText('mod_cmsadmin_quick_shorturls', 'cmsadmin');
+            $lblFlag = $this->objLanguage->languageText('mod_cmsadmin_quick_flag', 'cmsadmin');
+            $lblConfig = $this->objLanguage->languageText('mod_cmsadmin_quick_config', 'cmsadmin');
+            $lblTrash = $this->objLanguage->languageText('mod_cmsadmin_quick_trash', 'cmsadmin');
+
+            $objIcon->extra = '';
+
+            //Frontpage Icon
+            $objIcon->setIcon('frontpage_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblFrontpage;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['frontpage'] = $objIcon->show().'&nbsp;';
+
+            //Content Icon
+            $objIcon->setIcon('add_article_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblContent;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['content'] = $objIcon->show().'&nbsp;';
+            $qIcon['content_src'] = $objIcon->getSrc();
+
+            //Sections Icon
+            $objIcon->setIcon('section_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblSections;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['section'] = $objIcon->show().'&nbsp;';
+            $qIcon['section_src'] = $objIcon->getSrc();
+
+            //Templates Icon
+            $objIcon->setIcon('templates_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblTemplates;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['template'] = $objIcon->show().'&nbsp;';
+
+            //Feeds Icon
+            $objIcon->setIcon('rss_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblFeeds;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['feed'] = $objIcon->show().'&nbsp;';
+
+            //Permissions Icon
+            $objIcon->setIcon('permissions_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblPermissions;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['permission'] = $objIcon->show().'&nbsp;';
+
+            //Menu Icon
+            $objIcon->setIcon('menu2_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblMenu;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['menu'] = $objIcon->show().'&nbsp;';
+
+            //Upload Files Icon
+            $objIcon->setIcon('media_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblUploadfiles;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['filemanager'] = $objIcon->show().'&nbsp;';
+
+            //Short URLs Icon
+            $objIcon->setIcon('shorturl_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblShorturls;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['shorturl'] = $objIcon->show().'&nbsp;';
+
+            //Flag Icon
+            $objIcon->setIcon('flag_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblFlag;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['flag'] = $objIcon->show().'&nbsp;';
+
+            //Config Icon
+            $objIcon->setIcon('config_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblConfig;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['config'] = $objIcon->show().'&nbsp;';
+
+            //Trash Icon
+            $objIcon->setIcon('trash_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblConfig;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['trash'] = $objIcon->show().'&nbsp;';
+
+            //Add Icon
+            $objIcon->setIcon('new_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblConfig;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['add'] = $objIcon->show().'&nbsp;';
+
+
 			$cmsControlPanel = '
-			<a tabindex="0" href="#cmscontrolpenel" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">Quick Menu</a>
+			<a tabindex="0" href="#cmscontrolpenel" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">'.$lblQuickMenu.'</a>
 			<div id="cmscontrolpanelitems" class="hidden">
 			<ul>';
 
             //Frontpage Security
             if ($this->_objUserPerm->canAddToFrontPage()) {
-				$cmsControlPanel .= '<li><a href="?module=cmsadmin&amp;action=frontpages">Edit Front Page</a></li>';
+				$cmsControlPanel .= '<li><a href="?module=cmsadmin&amp;action=frontpages">'.$qIcon['frontpage'].'Edit Front Page</a></li>';
             }
 
             $cmsControlPanel .= 
-			'	<li><a href="#">Content</a>
+			'	<li> <a href="#">'.$qIcon['content'].'Content</a>
 					<ul>
-						<li><a id="btnaddcontent" href="?module=cmsadmin&amp;action=addcontent">Add a Content Item</a></li>
+						<li><a id="btnaddcontent" href="?module=cmsadmin&amp;action=addcontent">'.$qIcon['add'].'Add a Content Item</a></li>
 					</ul>
 				</li>
-				<li><a href="?module=cmsadmin&amp;action=sections">Sections</a>
+				<li><a href="?module=cmsadmin&amp;action=sections">'.$qIcon['section'].'Sections</a>
 					<ul>
 						<li><a href="?module=cmsadmin&amp;action=sections">View Sections</a></li>
-						<li><a href="?module=cmsadmin&amp;action=addsection">Add a Section</a></li>
+						<li><a href="?module=cmsadmin&amp;action=addsection">'.$qIcon['add'].'Add a Section</a></li>
 					</ul>
 				</li>
-				<li><a href="?module=cmsadmin&amp;action=templates">Templates</a>
+				<li><a href="?module=cmsadmin&amp;action=templates">'.$qIcon['template'].'Templates</a>
 				</li>
-				<li><a href="?module=cmsadmin&amp;action=createfeed">RSS Feeds</a>
+				<li><a href="?module=cmsadmin&amp;action=createfeed">'.$qIcon['feed'].'RSS Feeds</a>
 				</li>
-				<li><a href="?module=cmsadmin&amp;action=permissions">Permissions</a></li>
-				<li><a href="?module=cmsadmin&amp;action=menustyle">Menu</a></li>
-				<li><a href="?module=cmsadmin&amp;action=filemanager">Upload Files</a></li>
-				<li><a href="?module=shorturl&ref=cmsadmin">Short URLs</a></li>
-				<li><a href="?module=cmsadmin&amp;action=filemanager">Upload Files</a></li>
-                <li><a href="?module=cmsadmin&amp;action=flag">Flag</a></li>
-				<li><a href="?module=sysconfig&action=step2&pmodule_id=cmsadmin">Configuration</a></li>
+				<li><a href="?module=cmsadmin&amp;action=permissions">'.$qIcon['permission'].'Permissions</a></li>
+				<li><a href="?module=cmsadmin&amp;action=menustyle">'.$qIcon['menu'].'Menu</a></li>
+				<li><a href="?module=cmsadmin&amp;action=filemanager">'.$qIcon['filemanager'].'Upload Files</a></li>
+				<li><a href="?module=shorturl&ref=cmsadmin">'.$qIcon['shorturl'].'Short URLs</a></li>
+                <li><a href="?module=cmsadmin&amp;action=flag">'.$qIcon['flag'].'Flag</a></li>
+				<li><a href="?module=sysconfig&action=step2&pmodule_id=cmsadmin">'.$qIcon['config'].'Configuration</a></li>
 				
 			</ul>
 			</div>

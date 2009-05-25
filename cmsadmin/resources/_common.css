@@ -27,6 +27,12 @@
     padding-left : 3px;
 }
 
+/*Quick Links Icon Styles*/
+.control_icon_images {
+    padding:5px;
+    border: none;
+}
+
 /*Content Page Parameters Tabbed Form Container*/
 #AddContentPageContent {
     min-width: 400px;
