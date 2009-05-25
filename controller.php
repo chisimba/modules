@@ -134,6 +134,8 @@ class realtime extends controller
 
     public $passwordrequired='no';
 
+    public $jnlpId="";
+
     function init()
     {
         $this->objLink= $this->getObject('link', 'htmlelements');
@@ -179,6 +181,7 @@ class realtime extends controller
 
         $this->sessionId="default";
         $this->sessionTitle="Default Session";
+        $this->jnlpId=$this->realtimeManager->randomString(20);
     }
 
         /**
@@ -286,7 +289,8 @@ class realtime extends controller
                             $webpresent=$xsessionId == "default"?"false":"true";
                             $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$openfireHost,
                                 $openfirePort,$openfireHttpBindUrl,$username,$filePath, $xroom,
-                                $ispresenter,$xsessionId,$xsessionTitle,$webpresent,$fullnames,$email,$siteRoot,$passwordrequired);
+                                $ispresenter,$xsessionId,$xsessionTitle,$webpresent,$fullnames,$email,
+                                $siteRoot,$passwordrequired,$this->jnlpId);
 
                         }
                         public function showClassroom(){
@@ -408,6 +412,7 @@ class realtime extends controller
                             $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
 
                             $username=$this->objUser->userName();
+
                             $desc='<li>Add Live interactions to your presentation</li>';
                             $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
                             $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
@@ -420,7 +425,7 @@ class realtime extends controller
                             $this->setVarByRef('desc', $desc);
                             $this->setVarByRef('sessionId', $this->sessionId);
                             $this->setVarByRef('sessionTitle', $this->sessionTitle);
-                            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/avoir_realtime.jnlp">'.$presenterLink.'</a><br/><br/><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
+                            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/avoir_'.$this->jnlpId.'_realtime.jnlp">'.$presenterLink.'</a><br/><br/><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
 
                             return "dump_tpl.php";
 
