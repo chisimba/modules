@@ -114,7 +114,7 @@ class passive extends dbtable {
 			}
 			//log_debug("GIS: $latitude  $longitude {$row['latdirec']}{$row['longdirec']}");
 			$results[] = array(
-				'row' 			=> $count,
+				'row' 			=> "$count",
 				'refno'			=> $row['refno'],
 				'lat'			=> $latitude,
 				'long'			=> $longitude,
