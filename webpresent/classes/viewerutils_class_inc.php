@@ -288,7 +288,7 @@ public function getTagCloudContent($tagCloud){
                 $tagsStr='';
                 if (count($tags) == 0) {
                     $tagsStr .=  '<em>'
-                    . $this->objLanguage->languageText("mod_webpresent_notags", "webpresent")
+                    . $objLanguage->languageText("mod_webpresent_notags", "webpresent")
                     . ' </em>';
                 } else {
                     $divider = '';
