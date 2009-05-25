@@ -80,7 +80,7 @@
         fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>');
         fwrite($fh,'<jnlp spec="1.0+" ');
         fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
-        fwrite($fh,     ' href="'.$type.'_'.$username.'_realtime_classroom.jnlp">');
+        fwrite($fh,     ' href="avoir_realtime.jnlp">');
         fwrite($fh,   '<information>');
         fwrite($fh,    ' <title>Realtime Communication Tools</title>');
         fwrite($fh,    ' <vendor>WITS</vendor>');
