@@ -805,9 +805,12 @@ class tribe extends controller {
                                         $followarr = array('userid' => $fromid, 'followid' => $followid, 'jid' => $posterjid, 'status' => 1);
                                         $this->objDbSubs->followUser($followarr);
 
+                                        // change the body text so that the public timeline is updsated with a status
+                                        $pl['body'] = "@".$this->objUser->userName($fromid)." ".$this->objLanguage->languageText("mod_tribe_isnowconnectedto", "tribe")." @".$this->objUser->userName($followid);
+
                                         $message = $this->objLanguage->languageText("mod_tribe_connectedto", "tribe")." @".$subto;
                                         $this->conn->message($pl['from'], $message);
-                                        continue;
+
                                     }
                                     else {
                                         $message = $this->objLanguage->languageText("mod_tribe_alreadyconnectedto", "tribe")." @".$subto;
@@ -846,17 +849,19 @@ class tribe extends controller {
                                         // delete the record in the subs table
                                         $followarr = array('userid' => $fromid, 'followid' => $followid, 'jid' => $posterjid, 'status' => 1);
                                         $this->objDbSubs->unfollow($followarr);
+                                        $pl['body'] = '';
+                                        $pl['body'] = "@".$this->objUser->userName($fromid)." ".$this->objLanguage->languageText("mod_tribe_isnolongerconnectedto", "tribe")." @".$this->objUser->userName($followid);
 
                                         $message = $this->objLanguage->languageText("mod_tribe_disconnectedfrom", "tribe")." @".$subto;
                                         $this->conn->message($pl['from'], $message);
-                                        continue;
+
                                     }
                                 }
-                                continue;
+
                             }
 
                             // Send a response message
-                            elseif ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register" && $pl ['body'] != "joke") {
+                            elseif ($pl ['body'] != "" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register" && $pl ['body'] != "joke") {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];

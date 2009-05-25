@@ -48,7 +48,7 @@ class dbsubs extends dbTable {
         $followid = $followarr['followid'];
         $userid = $followarr['userid'];
         $rec = $this->getAll("WHERE followid = '$followid' and userid = '$userid'");
-        log_debug("$userid is unfollowing $followid");
+
         return $this->delete('id', $rec[0]['id'], 'tbl_tribe_subs');
     }
 
