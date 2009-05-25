@@ -420,7 +420,7 @@ class realtime extends controller
                             $this->setVarByRef('desc', $desc);
                             $this->setVarByRef('sessionId', $this->sessionId);
                             $this->setVarByRef('sessionTitle', $this->sessionTitle);
-                            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_realtime_classroom.jnlp">'.$presenterLink.'</a><br/><br/><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
+                            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/avoir_realtime.jnlp">'.$presenterLink.'</a><br/><br/><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
 
                             return "dump_tpl.php";
 
