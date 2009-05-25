@@ -773,9 +773,8 @@ class tribe extends controller {
                                $query = trim($word);
                                log_debug("YQL query:  $query");
                                $ret = $this->objYapiOps->executeYQL($query);
-                               log_debug($ret);
-
-                               $message = $ret;
+                               // log_debug($ret);
+                               $message = base64_encode( serialize($ret) );
                                $this->conn->message($pl['from'], $message);
                                continue;
                             }
@@ -912,7 +911,7 @@ class tribe extends controller {
                                     // not an @ tag
                                     $add = $this->objDbMsgs->addRecord ( $pl, NULL);
                                     // send a message to the poster
-                                    $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
+                                    //$this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                 }
                                 continue;
                             }
