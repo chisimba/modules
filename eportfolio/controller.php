@@ -235,18 +235,31 @@ class eportfolio extends controller
                 $this->setVarByRef('groupId', $groupId);
                 //Get user Groups
                 //$userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
-                $userGroups = $this->objGroupUsers->getUserGroups( $groupId );
+                //$userGroups = $this->objGroupUsers->getUserGroups( $groupId );
+		$userGroups = $this->_objGroupAdmin->getSubgroups($groupId);
+		//Get the group_define_name which is similar from the selectedpartId from the userGroups array
+		$group_define_name = array();
+		foreach($userGroups[0] as $userGroup){
+			$group_define_name[] = $userGroup['group_define_name'];		
+		}
+
                 if (empty($selectedParts)) {
-                    $this->deleteGroupUsers($userGroups, $groupId);
+	            foreach($group_define_name as $partPid) {
+	                $grpId = $this->_objGroupAdmin->getId($partPid);
+	                $this->_objGroupAdmin->deleteGroup($grpId);
+	            }
+
                 } else {
                     // Get the added member ids
-                    $addList = array_diff($selectedParts, $userGroups);
+                    $addList = array_diff($selectedParts, $group_define_name);
                     // Get the deleted member ids
-                    $delList = array_diff($userGroups, $selectedParts);
+                    $delList = array_diff($group_define_name, $selectedParts);
                     // Delete these members
                     if (count($delList) > 0) {
 		            foreach($delList as $partPid) {
-		                $this->_objGroupAdmin->deleteGroupUser($partPid['group_id'], $groupId);
+		                $grpId = $this->_objGroupAdmin->getId($partPid);
+		                $this->_objGroupAdmin->deleteGroup($grpId);
+//		                $this->_objGroupAdmin->deleteGroupUser($partPid, $groupId);
 		            }
                     }
                     // Add these members
