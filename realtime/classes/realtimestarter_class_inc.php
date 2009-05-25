@@ -71,7 +71,7 @@
         $siteUrl,
         $passwordrequired
    ){
-
+        $fullname=trim($fullname);
         if($fullnames == ''){
             $fullname='Unknown Name';
         }
