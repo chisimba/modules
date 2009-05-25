@@ -75,7 +75,7 @@
         if($fullnames == ''){
             $fullname='Unknown Name';
         }
-        $jnlpFile = $fileBase.'/'.$type.'_'.$username.'_realtime_classroom.jnlp';
+        $jnlpFile = $fileBase.'/avoir_realtime.jnlp';
         $fh = fopen($jnlpFile, 'w') or die("can't open file");
         fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>');
         fwrite($fh,'<jnlp spec="1.0+" ');
