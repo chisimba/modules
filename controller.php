@@ -272,7 +272,7 @@ class realtime extends controller
                               //  $siteRoot=$this->objAltConfig->getSiteRoot().'?module=realtime&action=classroom&id='.$xsessionId.'&agenda=Default&room='.$xroom.'&needpassword='+$passwordrequired;
                             //}
                             $username=$this->objUser->userName();
-                            $fullnames=$this->objUser->surname().' '.$this->objUser->firstname();
+                            $fullnames=$this->objUser->fullname();
                             $email=$this->objUser->email();
                             $userDetails=$fullnames.' '.$username;
                             $userImagePath='imagepath';//".'.$this->objUser->getSmallUserImage().'"';
