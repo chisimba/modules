@@ -45,8 +45,11 @@ class dbsubs extends dbTable {
 
     public function unfollow($followarr) {
         $followarr['datesent'] = $this->now();
-
-        return $this->delete('id', $followarr, 'tbl_tribe_subs');
+        $followid = $followarr['followid'];
+        $userid = $followarr['userid'];
+        $rec = $this->getAll("WHERE followid = '$followid' and userid = '$userid'");
+        log_debug("$userid is unfollowing $followid");
+        return $this->delete('id', $rec[0]['id'], 'tbl_tribe_subs');
     }
 
     public function userExists($jid) {

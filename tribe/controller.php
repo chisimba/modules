@@ -42,6 +42,7 @@ class tribe extends controller {
     public $objModules;
     public $objTwitterLib;
     public $objDbSubs;
+    public $objYapiOps;
 
     /**
      *
@@ -71,6 +72,7 @@ class tribe extends controller {
             $this->objGroups = $this->getObject('dbgroups');
             $this->objMembers = $this->getObject('dbgroupmembers');
             $this->objDbSubs = $this->getObject('dbsubs');
+            //$this->objYapiOps = $this->getObject('yapiops', 'yapi');
 
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
@@ -764,6 +766,20 @@ class tribe extends controller {
 
                             }
 
+                            // execute yql
+                            $bod = explode(":", $pl['body']);
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'yql' ) {
+                               $query = $bod[1];
+                               $query = trim($word);
+                               log_debug("YQL query:  $query");
+                               $ret = $this->objYapiOps->executeYQL($query);
+                               log_debug($ret);
+
+                               $message = $ret;
+                               $this->conn->message($pl['from'], $message);
+                               continue;
+                            }
+
                             // subscribe to another user (keyword sub)
                             $bod = explode(" ", $pl['body']);
                             if(isset($bod[0]) && strtolower($bod[0]) == 'sub' ) {
@@ -806,8 +822,21 @@ class tribe extends controller {
                                 $poster = explode('/', $pl['from']);
                                 $posterjid = $poster[0];
                                 $fromid = $this->dbUsers->getUserIdfromJid($posterjid);
+                                $followid = $this->objUser->getUserId($subto);
+                                if(!$followid) {
+                                    $message = "No such user!";
+                                    $this->conn->message($pl['from'], $message);
+                                    continue;
+                                }
+                                else {
+                                    // delete the record in the subs table
+                                    $followarr = array('userid' => $fromid, 'followid' => $followid, 'jid' => $posterjid, 'status' => 1);
+                                    $this->objDbSubs->unfollow($followarr);
 
-
+                                    $message = "Successfully unsubscribed from $subto";
+                                    $this->conn->message($pl['from'], $message);
+                                    continue;
+                                }
                                 continue;
                             }
 
