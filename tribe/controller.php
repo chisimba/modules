@@ -782,7 +782,7 @@ class tribe extends controller {
 
                             // subscribe to another user (keyword sub)
                             $bod = explode(" ", $pl['body']);
-                            if(isset($bod[0]) && strtolower($bod[0]) == 'sub' ) {
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'connect' ) {
                                // the user we want to subscribe to
                                 $subto = $bod[1];
                                 if(substr($subto, 0, 1) == '@') {
@@ -795,24 +795,31 @@ class tribe extends controller {
                                 // get the userid of the person to follow
                                 $followid = $this->objUser->getUserId($subto);
                                 if(!$followid) {
-                                    $message = "No such user!";
+                                    $message = $this->objLanguage->languageText("mod_tribe_nosuchuser", "tribe");
                                     $this->conn->message($pl['from'], $message);
                                     continue;
                                 }
                                 else {
-                                    //insert the record in the subs table
-                                    $followarr = array('userid' => $fromid, 'followid' => $followid, 'jid' => $posterjid, 'status' => 1);
-                                    $this->objDbSubs->followUser($followarr);
+                                    if($this->objDbSubs->checkIfFollow($fromid, $followid) == FALSE) {
+                                        //insert the record in the subs table
+                                        $followarr = array('userid' => $fromid, 'followid' => $followid, 'jid' => $posterjid, 'status' => 1);
+                                        $this->objDbSubs->followUser($followarr);
 
-                                    $message = "Successfully subscribed to $subto";
-                                    $this->conn->message($pl['from'], $message);
-                                    continue;
+                                        $message = $this->objLanguage->languageText("mod_tribe_connectedto", "tribe")." @".$subto;
+                                        $this->conn->message($pl['from'], $message);
+                                        continue;
+                                    }
+                                    else {
+                                        $message = $this->objLanguage->languageText("mod_tribe_alreadyconnectedto", "tribe")." @".$subto;
+                                        $this->conn->message($pl['from'], $message);
+                                        continue;
+                                    }
                                 }
                             }
 
                             // unsubscribe from another user (keyword sub)
                             $bod = explode(" ", $pl['body']);
-                            if(isset($bod[0]) && strtolower($bod[0]) == 'unsub' ) {
+                            if(isset($bod[0]) && strtolower($bod[0]) == 'disconnect' ) {
                                // the user we want to subscribe to
                                 $subto = $bod[1];
                                 if(substr($subto, 0, 1) == '@') {
@@ -824,18 +831,26 @@ class tribe extends controller {
                                 $fromid = $this->dbUsers->getUserIdfromJid($posterjid);
                                 $followid = $this->objUser->getUserId($subto);
                                 if(!$followid) {
-                                    $message = "No such user!";
+                                    $message = $this->objLanguage->languageText("mod_tribe_nosuchuser", "tribe");
                                     $this->conn->message($pl['from'], $message);
                                     continue;
                                 }
                                 else {
-                                    // delete the record in the subs table
-                                    $followarr = array('userid' => $fromid, 'followid' => $followid, 'jid' => $posterjid, 'status' => 1);
-                                    $this->objDbSubs->unfollow($followarr);
+                                    // check if we really do follow this person first!
+                                    if($this->objDbSubs->checkIfFollow($fromid, $followid) == FALSE) {
+                                        $message = $this->objLanguage->languageText("mod_tribe_notconnectedto", "tribe")." @".$subto;
+                                        $this->conn->message($pl['from'], $message);
+                                        continue;
+                                    }
+                                    else {
+                                        // delete the record in the subs table
+                                        $followarr = array('userid' => $fromid, 'followid' => $followid, 'jid' => $posterjid, 'status' => 1);
+                                        $this->objDbSubs->unfollow($followarr);
 
-                                    $message = "Successfully unsubscribed from $subto";
-                                    $this->conn->message($pl['from'], $message);
-                                    continue;
+                                        $message = $this->objLanguage->languageText("mod_tribe_disconnectedfrom", "tribe")." @".$subto;
+                                        $this->conn->message($pl['from'], $message);
+                                        continue;
+                                    }
                                 }
                                 continue;
                             }

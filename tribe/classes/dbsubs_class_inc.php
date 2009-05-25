@@ -52,6 +52,16 @@ class dbsubs extends dbTable {
         return $this->delete('id', $rec[0]['id'], 'tbl_tribe_subs');
     }
 
+    public function checkIfFollow($userid, $followid) {
+        $count = $this->getRecordCount("WHERE followid = '$followid' and userid = '$userid'");
+        if($count > 0) {
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
+    }
+
     public function userExists($jid) {
         $count = $this->getRecordCount ( "WHERE jid = '$jid'" );
         if ($count > 0) {
