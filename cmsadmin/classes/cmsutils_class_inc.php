@@ -2097,6 +2097,12 @@
             $objIcon->cssClass = 'control_icon_images';
             $qIcon['add'] = $objIcon->show().'&nbsp;';
 
+            //Add Icon
+            $objIcon->setIcon('eyes_smaller', 'png', 'icons/cms/');
+            $objIcon->title = $lblConfig;
+            $objIcon->cssClass = 'control_icon_images';
+            $qIcon['view'] = $objIcon->show().'&nbsp;';
+
 
 			$cmsControlPanel = '
 			<a tabindex="0" href="#cmscontrolpenel" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">'.$lblQuickMenu.'</a>
@@ -2116,7 +2122,7 @@
 				</li>
 				<li><a href="?module=cmsadmin&amp;action=sections">'.$qIcon['section'].'Sections</a>
 					<ul>
-						<li><a href="?module=cmsadmin&amp;action=sections">View Sections</a></li>
+						<li><a href="?module=cmsadmin&amp;action=sections">'.$qIcon['view'].'View Sections</a></li>
 						<li><a href="?module=cmsadmin&amp;action=addsection">'.$qIcon['add'].'Add a Section</a></li>
 					</ul>
 				</li>
