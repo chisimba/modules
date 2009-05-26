@@ -769,11 +769,11 @@ class tribe extends controller {
                             // execute yql
                             $bod = explode(":", $pl['body']);
                             if(isset($bod[0]) && strtolower($bod[0]) == 'yql' ) {
-                               $query = $bod[1];
-                               $query = trim($word);
+                               $body = implode(":", $bod);
+                               $body = str_replace("yql:", "", $body);
+                               $query = trim($body);
                                log_debug("YQL query:  $query");
                                $ret = $this->objYapiOps->executeYQL($query);
-                               // log_debug($ret);
                                $message = base64_encode( serialize($ret) );
                                $this->conn->message($pl['from'], $message);
                                continue;
