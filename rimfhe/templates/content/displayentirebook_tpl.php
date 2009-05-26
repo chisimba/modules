@@ -49,7 +49,7 @@ $link = new link($this->uri(array('action'=>'Entire Book/Monogragh')));
 $link->link = $objIcon->show();
 
 $addlink = new link($this->uri(array('action'=>'Entire Book/Monogragh')));
-$addlink->link = 'Add New Book/Monogragh';
+$addlink->link = $this->objLanguage->languageText('mod_rimfhe_booktitle', 'rimfhe');
 
 /*
  *End New Stuf
@@ -92,7 +92,7 @@ if(!empty($deleteComment)){
 
 //Set up fields heading
 $table->startHeaderRow();
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_title', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_booktitle', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_isbn', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rimfhe'), 120);
@@ -139,7 +139,9 @@ if ( count($arrDisplayBooks) > 0) {
 	}	
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe' ).'</div>';	
+    $table->startRow();
+	$table->addCell('<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe' ).'</div>',NULL,NULL,NULL,NULL,'colspan="10"');
+	$table->endRow();
 }
 
 echo $table->show();

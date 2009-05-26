@@ -14,7 +14,7 @@ $tablename = 'tbl_rimfhe_staffmember';
 */
 	
 $options = array(
-	'comment' => 'tbl_rimfhe_staffMember',
+	'comment' => 'tbl_rimfhe_staffmember',
 	'collate' => 'utf8_general_ci',
 	'character_set' => 'utf8'
 	);

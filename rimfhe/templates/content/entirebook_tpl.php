@@ -51,7 +51,7 @@ $entireBook->addToForm('<br />');
 
 /* ---------------------- Form Elements--------*/
 //assign laguage objects to variables		
-$bookName = $this->objLanguage->languageText('mod_rimfhe_title', 'rimfhe');
+$bookName = $this->objLanguage->languageText('mod_rimfhe_booktitle', 'rimfhe');
 $isbnNumber= $this->objLanguage->languageText('mod_rimfhe_isbn', 'rimfhe');
 $publisher= $this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe');
 $peerReview= $this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe');
