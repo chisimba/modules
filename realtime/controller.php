@@ -403,6 +403,10 @@ class realtime extends controller
                             $this->setVarByRef('content', $this->reqTest.'<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
                             return "dump_tpl.php";
                         }
+                        /**
+                         * this displays link from which to launch the jnlp file
+                         * @return void
+                         */
                         public function showStartLinks(){
                             $this->generateJNLP($this->sessionId, $this->sessionTitle,$this->room,$this->ispresenter,$this->passwordrequired);
                             $modPath=$this->objAltConfig->getModulePath();
@@ -420,7 +424,7 @@ class realtime extends controller
                             $presentationLink->link= $this->sessionId=='default'?"":  $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
 
                             $siteRoot=$this->objAltConfig->getSiteRoot();
-                            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_START.jpg" width="200" height="80">';
+                            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_ENTER.jpg" width="200" height="80">';
 
                             $this->setVarByRef('desc', $desc);
                             $this->setVarByRef('sessionId', $this->sessionId);
