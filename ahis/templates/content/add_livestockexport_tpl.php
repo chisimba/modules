@@ -1,4 +1,6 @@
 <?php
+
+
 	$this->loadClass('htmltable', 'htmlelements');
 	$this->loadClass('link', 'htmlelements');
 	$this->loadClass('htmlheading', 'htmlelements');
@@ -39,6 +41,8 @@
 	$header->type = 2;
 	$header->str = $title;
 	//echo $header->show();
+	
+	
 	
 	$formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;

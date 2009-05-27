@@ -77,15 +77,7 @@ $formTable->addCell($label_district->show());
 $formTable->addCell($district->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-// vaccine name	
-//$label = new label ('Vaccine name: ', 'vaccinename');
-//$vaccinename = new dropdown('vaccinename');
-//$vaccinename->addFromDB($vaccination, 'name', 'name');
-//$vaccinename->addOption('vibe','vibe');
-//$formTable->startRow();
-//$formTable->addCell($label->show());
-//$formTable->addCell($vaccinename->show(),NULL,NULL,'left');
-//$formTable->endRow();
+
 
 // vaccine name	
 $label = new label ('Vaccine name: ', 'vaccinename');

@@ -127,9 +127,6 @@ $formTable->endRow();
 // animal origin	
 $label = new label ('Animal origin: ', 'origin');
 $origin = new textinput('origin');
-//$origin->size = 40;
-$origin->extra = 'letteronly';
-
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
 $formTable->addCell($origin->show(),NULL,NULL,'left');
@@ -138,26 +135,18 @@ $formTable->endRow();
 // animal destination	
 $label = new label ('Animal destination: ', 'destination');
 $destination = new textinput('destination');
-//$destination->label = 'Must contain only letters of the alphabet.';
-//$form->addRule('destination','Animal destination must contain letters of the alphabet only.', 'letteronly');
-//$destination->size = 40;
-
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
 $formTable->addCell($destination->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 $label_remarks = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_remarks', 'ahis', 'Remarks: '), 'remarks');
-
 $remarks = new textarea('remarks');
 $formTable->startRow();
 $formTable->addCell($label_remarks->show(), NULL,NULL,'right');
 $formTable->addCell($remarks->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$formTable->startRow();
-$formTable->addCell($error, NULL, NULL, NULL, NULL, "colspan=2");
-$formTable->endRow();
 
 $formAction = 'animalmovement_save';  
     $buttonText = 'Save';
@@ -169,8 +158,8 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
 $form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_purposeerror','ahis'),'select');
-$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
 
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerrorone','ahis'),'letteronly');
 
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');

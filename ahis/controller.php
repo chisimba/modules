@@ -142,7 +142,8 @@ class ahis extends controller {
 			$this->objAnimaldeworming = $this->getObject('animaldeworming');
             $this->objAnimalvaccine = $this->getObject('animalvaccine');
                        
-            $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
+            								
+		  $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
                                         'geography_level2_admin', 'prodution_admin', 'territory_admin',
                                         'report_admin', 'quality_admin', 'diagnosis_admin',
@@ -168,8 +169,8 @@ class ahis extends controller {
                                         'sample_delete','species_add','species_insert','species_delete','survey_add',
                                         'survey_insert','survey_delete','farmingsystem_add','farmingsystem_insert',
                                         'farmingsystem_delete','vaccinationhistory_add','vaccinationhistory_insert',
-                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save', 'animalmovement_add', 'livestockimport_add', 'livestockexport_add'
-                                        );
+                                        'vaccinationhistory_delete');
+										
         }
         catch(customException $e) {
         	customException::cleanUp();
@@ -293,25 +294,20 @@ class ahis extends controller {
                 $this->setSession('ps_refNo', $refNo);
                 $this->setSession('ps_remarks', $remarks);
                 
-				$geo2id = $this->getSession('ps_geo2Id');
                 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
-                $this->setVar('arrayLocation', $this->objTerritory->getAll("WHERE geo2id = '$geo2id' ORDER BY name"));
+                $this->setVar('arrayLocation', $this->objTerritory->getAll("ORDER BY name"));
                 $this->setVar('arrayDisease', $this->objDisease->getAll("ORDER BY name"));
                 $this->setVar('arrayCausative', $this->objCausative->getAll("ORDER BY name"));
 				$this->setVar('calendardate', $this->getSession('ps_calendardate'));
                 $this->setVar('refNo', $this->getSession('ps_refNo'));
-                $this->setVar('geo2Id', $geo2id);
+                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
                 $this->setVar('dateVet', $this->getSession('ps_dateVet', date('Y-m-d')));
                 $this->setVar('dateOccurence', $this->getSession('ps_dateOccurence', date('Y-m-d')));
                 $this->setVar('dateDiagnosis', $this->getSession('ps_dateDiagnosis', date('Y-m-d')));
                 $this->setVar('dateInvestigation', $this->getSession('ps_dateInvestigation', date('Y-m-d')));
                 $this->setVar('locationId', $this->getSession('ps_locationId'));
-                $this->setVar('latitudeDeg', $this->getSession('ps_latdeg'));
-                $this->setVar('latitudeMin', $this->getSession('ps_latmin'));
-                $this->setVar('latDirec', $this->getSession('ps_latdirec'));
-                $this->setVar('longitudeDeg', $this->getSession('ps_longdeg'));
-                $this->setVar('longitudeMin', $this->getSession('ps_longmin'));
-                $this->setVar('longDirec', $this->getSession('ps_longdirec'));
+                $this->setVar('latitude', $this->getSession('ps_latitude'));
+                $this->setVar('longitude', $this->getSession('ps_longitude'));
                 $this->setVar('diseaseId', $this->getSession('ps_diseaseId'));
                 $this->setVar('causativeId', $this->getSession('ps_causativeId'));
                 
@@ -323,12 +319,8 @@ class ahis extends controller {
                 $dateDiagnosis = $this->getParam('dateDiagnosis', $this->getSession('ps_dateDiagnosis'));
                 $dateInvestigation = $this->getParam('dateInvestigation', $this->getSession('ps_dateInvestigation'));
                 $locationId = $this->getParam('locationId', $this->getSession('ps_locationId'));
-                $longitudeDeg = $this->getParam('longdeg', $this->getSession('ps_longdeg'));
-                $longitudeMin = $this->getParam('longmin', $this->getSession('ps_longmin'));
-                $longitudeDirec = $this->getParam('longdirection', $this->getSession('ps_longdirec'));
-                $latitudeDeg = $this->getParam('latdeg', $this->getSession('ps_latdeg'));
-                $latitudeMin = $this->getParam('latmin', $this->getSession('ps_latmin'));
-                $latitudeDirec = $this->getParam('latdirection', $this->getSession('ps_latdirec'));
+                $longitude = $this->getParam('longitude', $this->getSession('ps_longitude'));
+                $latitude = $this->getParam('latitude', $this->getSession('ps_latitude'));
                 $diseaseId = $this->getParam('diseaseId', $this->getSession('ps_diseaseId'));
                 $causativeId = $this->getParam('causativeId', $this->getSession('ps_causativeId'));
                 
@@ -336,12 +328,8 @@ class ahis extends controller {
                 $this->setSession('ps_dateOccurence', $dateOccurence);
                 $this->setSession('ps_dateDiagnosis', $dateDiagnosis);
                 $this->setSession('ps_dateInvestigation', $dateInvestigation);
-                $this->setSession('ps_longdeg', $longitudeDeg);
-                $this->setSession('ps_longmin', $longitudeMin);
-                $this->setSession('ps_longdirec', $longitudeDirec);
-                $this->setSession('ps_latdeg', $latitudeDeg);
-                $this->setSession('ps_latmin', $latitudeMin);
-                $this->setSession('ps_latdirec', $latitudeDirec);
+                $this->setSession('ps_longitude', $longitude);
+                $this->setSession('ps_latitude', $latitude);
                 $this->setSession('ps_locationId', $locationId);
                 $this->setSession('ps_diseaseId', $diseaseId);
                 $this->setSession('ps_causativeId', $causativeId);
@@ -420,12 +408,8 @@ class ahis extends controller {
                 $ps_array['occurencedate'] = $this->getSession('ps_dateOccurence', date('Y-m-d'));
                 $ps_array['diagnosisdate'] = $this->getSession('ps_dateDiagnosis', date('Y-m-d'));
                 $ps_array['investigationdate'] = $this->getSession('ps_dateInvestigation', date('Y-m-d'));
-                $ps_array['latdeg'] = $this->getSession('ps_latdeg');
-                $ps_array['latmin'] = $this->getSession('ps_latmin');
-                $ps_array['latdirec'] = $this->getSession('ps_latdirec');
-                $ps_array['longdeg'] = $this->getSession('ps_longdeg');
-                $ps_array['longmin'] = $this->getSession('ps_longmin');
-                $ps_array['longdirec'] = $this->getSession('ps_longdirec');
+                $ps_array['latitude'] = $this->getSession('ps_latitude');
+                $ps_array['longitude'] = $this->getSession('ps_longitude');
                 
                 $ps_array['locationid'] = $this->getSession('ps_locationId');
                 $ps_array['diseaseid'] = $this->getSession('ps_diseaseId');
@@ -531,7 +515,13 @@ class ahis extends controller {
 					$this->setVar('species', $species);
 					$this->setVar('diseases', $diseases);
 					
-					$this->setVar('jsonData', $this->objPassive->getJSONData());
+					$this->setVar('jsonData','{"results": [
+								{"row": "0", "refno": "ABC-12", "lat": 20, "long": "6", "geolayer3": "Mali", "geolayer2": "East", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(8) Jan-Apr 2006", "locationname": "Jaji", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
+								{"row": "1", "refno": "CBC-37", "lat": 22, "long": "3", "geolayer3": "Nigeria", "geolayer2": "Large", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(9) May-Aug 2006", "locationname": "Noni", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
+								{"row": "2", "refno": "AAC-52", "lat": 24, "long": "0", "geolayer3": "Niger", "geolayer2": "East", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(10) Sep-Dec 2006", "locationname": "Ratiani", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
+								{"row": "3", "refno": "AHZ-23", "lat": 27, "long": "9", "geolayer3": "Elsewhere", "geolayer2": "Large", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(11) Jan-Apr 2007", "locationname": "Gauli", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"}
+							]
+						}');
 					return "view_gis_reports_tpl.php";
 				}
                 
@@ -615,9 +605,9 @@ class ahis extends controller {
                 $this->setSession('ps_campName',$campName);
                 $this->setVar('success', $success);
                 $this->setVar('campaign', $this->getSession('ps_campName'));
-                
+                if ($success) {
                     $this->unsetActiveSession();
-               
+                } 
 
                 return $this->nextAction('home'); 
                          
@@ -648,14 +638,12 @@ class ahis extends controller {
                return 'active_herddetails_tpl.php';   
                 
             case 'active_addherd':
-               $value = $this->getParam('alt');
-
+               
                $this->setVar('userList', $this->objAhisUser->getList());
                $geo2id = $this->getSession('ps_geo2');
                $data =$this->objActive->getall($this->getSession('ps_campName'));
                $hdata = $this->objNewherd->getherd($data[0]['id']);
-               $this->setVar('value',$value);
-               $this->setVar('prompt',$this->getParam('prompt'));
+               //print_r($hdata);
                $this->setVar('id',$this->getParam('id'));
                $this->setVar('hdata',$hdata);
                $this->setVar('activeid',$data[0]['id']);
@@ -673,28 +661,12 @@ class ahis extends controller {
        
        
             case 'newherd_insert':
-             $alt = $this->getParam('alt');
-             if($alt == 'yes'){
-               return $this->nextAction('active_addherd',array('prompt'=>'conf'));
-              }else{
-                        
-              $div = $this->getParam('next');
 
-              if($div == NULL ){
-              return $this->nextAction('active_addsample');
-              }else{
-              //{
-              ////  return $this->nextAction('active_addsample'); 
-              //}else
-              
-                
                 $id = $this->getParam('id');
                 $this->setSession('ps_activeid',$this->getParam('activeid'));
                 $this->setSession('ps_farm',$this->getParam('farm'));
                 $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
                 $val= $this->objGeo2->getgeo($this->getSession('ps_geo2'));
-
-                //print_r($this->getSession('ps_activeid'));
                 $arrayherd = array();
                 $arrayherd['territory'] = $this->getParam('territory');
                 $arrayherd['geolevel2'] = $val[0]['name'];
@@ -707,10 +679,14 @@ class ahis extends controller {
                 } else {
                   $this->objNewherd->insert($arrayherd);  
                     $code = 1;
-                }   
+                }             
+              // $div = $this->getParam('next');
+               //print_r($div);
+              // if($div ==$this->objLanguage->languageText('word_finished'))
+              // {
+               // return $this->nextAction('active_addsample');
+               //}else
                 return $this->nextAction('active_addherd');
-                }
-                }
                 
             case 'newherd_delete':
                $id = $this->getParam('id');
@@ -738,7 +714,7 @@ class ahis extends controller {
                $newherdid = $this->objNewherd->getherd($this->getSession('ps_activeid'));
                $this->setSession('ps_newherdid',$newherdid[0]['id']);
                $this->setSession('ps_newherd',$newherdid);
-               $this->setVar('prompt',$this->getParam('prompt'));
+
                $datan= $this->objSampledetails->getall();
                $this->setVar('datan',$datan);
                $this->setVar('id',$this->getParam('id'));
@@ -767,19 +743,6 @@ class ahis extends controller {
                return 'active_addsample_tpl.php';
                
            case 'sampleview_insert':
-             $alt = $this->getParam('alt');
-             if($alt == 'yes'){
-               return $this->nextAction('active_addsample',array('prompt'=>'conf'));
-              }else{
-                        
-              $div = $this->getParam('next');
-
-              if($div == NULL ){
-              return $this->nextAction('active_feedback');
-              }else{
-              //{
-              ////  return $this->nextAction('active_addsample'); 
-              //}else
                 $id = $this->getParam('id');
                 $this->setSession('ps_newherdid',$this->getParam('farm'));
                 $arrayherd = array();
@@ -810,16 +773,8 @@ class ahis extends controller {
 
                     $code = 1;
                 } 
-               // $div = $this->getParam('next');
-               //print_r($div);
-              //if($div ==$this->objLanguage->languageText('word_finished'))
-               //{
-               // return $this->nextAction('active_feedback'); 
-              // }else
-              return $this->nextAction('active_addsample');
-                }
-                }
-                
+               
+                return $this->nextAction('active_addsample', array('success'=>$code));
                 
             case 'sampleview_delete':
                $id = $this->getParam('id');
@@ -2107,12 +2062,8 @@ class ahis extends controller {
         $this->unsetSession('ps_dateDiagnosis');
         $this->unsetSession('ps_dateInvestigation');
         $this->unsetSession('ps_locationId');
-        $this->unsetSession('ps_longdeg');
-        $this->unsetSession('ps_latdeg');
-        $this->unsetSession('ps_longmin');
-        $this->unsetSession('ps_latmin');
-        $this->unsetSession('ps_longdirec');
-        $this->unsetSession('ps_latdirec');
+        $this->unsetSession('ps_longitude');
+        $this->unsetSession('ps_latitude');
         $this->unsetSession('ps_diseaseId');
         $this->unsetSession('ps_causativeId');
         $this->unsetSession('ps_productionId');
@@ -2386,4 +2337,3 @@ class ahis extends controller {
             return FALSE;
      }
 	}
-?>
