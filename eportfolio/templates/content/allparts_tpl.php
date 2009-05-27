@@ -157,6 +157,8 @@ if (!empty($addressList)) {
 	    }else{
 		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
 	    }
+	}else{
+	    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
 	}
         //$isMember = $this->checkIfExists($addressItem['id'], $groupId);
 /*

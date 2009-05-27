@@ -140,7 +140,7 @@ $myPid = $this->objUser->PKId($this->objUser->userId());
 //$myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->userId());
 $myGroupsId = $this->_objGroupAdmin->getId($myPid);
 $myGroups = $this->_objGroupAdmin->getSubgroups($myGroupsId);
-//var_dump($myGroups);
+
 
 // Create a table object for eportfolio
 $epTable = &$this->newObject("htmltable", "htmlelements");
@@ -152,11 +152,83 @@ $epTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_view", 'epo
 $epTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_owner", 'eportfolio') . "</b>", '', '', 'left', '', '');
 $epTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . "</b>", '', '', 'left', '', '');
 $epTable->endRow();
+//Get all groups and determine which ones the user belongs to
+$userGroupsArray = array();
+$usrGrpId = $this->objGroupsOps->getUserByUserId($this->objUser->userId());
+$permUserId = $usrGrpId['perm_user_id'];
+$allGrps = $this->objGroupsOps->getAllGroups();
+foreach($allGrps as $thisGrp){
+	if($this->objGroupsOps->isGroupMember($thisGrp['group_id'], $permUserId)){
+		$userGroupsArray[] = $thisGrp['group_id'];		
+	}		
+}
+//Array to store grpUsers inorder to get the owner of the group
+$usersListArr = array();
+$usersPidListArr = array();
+if(!empty($userGroupsArray)){
+	foreach($userGroupsArray as $userGroup){
+		$grpUsers = $this->objGroupsOps->getUsersInGroup($userGroup);
+		foreach ($grpUsers as $grpUser){
+		//Get the users in these groups
+		 if(!in_array($grpUser['auth_user_id'],$usersListArr)){
+			//Store user Pid
+			$userPid = $this->objUser->PKId($grpUser['auth_user_id']);
+			$usersPidListArr[] = $userPid;		
+			//Store User Id
+			$usersListArr[] = $grpUser['auth_user_id'];
+			//Get the user's groupId (the root)
+			$userGrpId = $this->_objGroupAdmin->getId($userPid);
+			if(!empty($userGrpId)){
+				//Get the user's sub groups
+				$userSubGrps = $this->_objGroupAdmin->getSubgroups($userGrpId);
+				foreach ($userSubGrps[0] as $userSubGrp){
+			/*
+					echo "<br>userSubGrp<br>";
+					var_dump($userSubGrp);		
+			*/		
+				}
+		/*
+				echo "<br>userGrpId<br>";
+				var_dump($userGrpId);
+		*/
+			}
+	/*
+			echo "<br>grpUser<br>";
+			var_dump($grpUser['auth_user_id']);
+			echo "<br>";
+	*/
+	    }
+	   }
+	}
+/*
+echo "<br>userGroupsArray<br>";
+var_dump($userGroupsArray);
+*/
+$usrGrpOwner = array();
+foreach ($userGroupsArray as $usrSubGrp){
+	$parentGrp = $this->_objGroupAdmin->getParent($usrSubGrp);
+	if($myPid!==$parentGrp)
+	$usrGrpOwner[$usrSubGrp] = $parentGrp;
+/*
+	echo "<br>usrGrp<br>";
+	var_dump($usrSubGrp);
+	echo "<br>parentGrp<br>";
+	var_dump($parentGrp);
+*/
+}
+/*
+echo "<br>usrGrpOwner<br>";
+var_dump($usrGrpOwner);
+echo "<br>usersListArr<br>";
+var_dump($usersListArr);
+echo "<br>usersPidListArr<br>";
+var_dump($usersPidListArr);
+*/
+}
 foreach($myGroups as $groupId) {
     //get the array key value
     foreach(array_keys($groupId) as $myGrpId)
      $groupId = $myGrpId;
-
     $filter = " WHERE id = '".$groupId."'";
 /*    
     $parentId = $this->_objGroupAdmin->getGroups($fields = array(
@@ -1036,6 +1108,7 @@ $goalsTable->addCell($goalsobjHeading->show() , '', '', '', '', 'colspan="2"');
 $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
+
 if (!empty($goalsList)) {
     $i = 0;
     echo "<ul>";
