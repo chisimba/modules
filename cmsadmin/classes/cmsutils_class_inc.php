@@ -418,10 +418,30 @@
             $objLayer = $this->newObject('layer', 'htmlelements');
             $this->loadClass('htmltable', 'htmlelements');
 
+			$this->_objQuery->loadCornerPlugin();
+
+			ob_start();
+			?>
+			<script type="text/javascript">
+				jQuery(function(){
+			        jQuery('#cpanel div.icon a').corner();
+			        jQuery('#cpanel div.icon a:hover').corner();
+			        jQuery('#cpanel div.icon').corner();
+			        //jQuery('.smallicon').corner();
+			    });
+			</script>
+			<?php
+			$script = ob_get_contents();
+			ob_end_clean();
+
+			$this->appendArrayVar('headerParams', $script);
+
+
             $tbl = new htmltable();
             $tbl->cellspacing = '5';
             $tbl->cellpadding = '5';
             $tbl->width = "45%";
+			$tbl->border = '0';
             $tbl->align = "left";
 
             $link =$this->newObject('link', 'htmlelements');
@@ -802,15 +822,16 @@
 
                 case 'sections':
 
+                // New - add
+                $url = $this->uri(array('action' => 'addsection'), 'cmsadmin');
+                $linkText = $this->objLanguage->languageText('word_new');
+                $iconList = $icon_publish->getCleanTextIcon('', $url, 'new_folder', $linkText, 'png', 'icons/cms/');
+
                 // Publish
                 $alertText = $this->objLanguage->languageText('mod_cmsadmin_selectpublishlist', 'cmsadmin');
                 $url = "javascript:if(checkSelect('select','input_arrayList[]')==false){alert('{$alertText}');}else{submitbutton('select','publish');}";
                 $linkText = $this->objLanguage->languageText('word_publish');
-                $iconList = $icon_publish->getCleanTextIcon('', $url, 'publish', $linkText, 'png', 'icons/cms/');
-                // New - add
-                $url = $this->uri(array('action' => 'addsection'), 'cmsadmin');
-                $linkText = $this->objLanguage->languageText('word_new');
-                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'new_folder', $linkText, 'png', 'icons/cms/');
+                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'publish', $linkText, 'png', 'icons/cms/');
 
                 // Unpublish
                 $alertText = $this->objLanguage->languageText('mod_cmsadmin_selectunpublishlist', 'cmsadmin');

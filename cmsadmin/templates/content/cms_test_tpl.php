@@ -1,7 +1,34 @@
 <?PHP
 
 
+/*Testing jQuery Corners*/
+
+$jQuery = $this->newObject('jquery', 'htmlelements');
+$jQuery->loadCornerPlugin();
+
+ob_start();
+?>
+<script type="text/javascript">
+jQuery(function(){
+        jQuery('#makeround').corner();
+    });
+</script>
+<?php
+$script = ob_get_contents();
+ob_end_clean();
+
+$this->appendArrayVar('headerParams', $script);
+
+?>
+<div id="makeround" style="background-color:#e3e3e3; background-image: url('http://localhost/test/packages/cmsadmin/resources/apple_back.png') ; background-repeat: repeat-x;height: 140; width: 300">
+
+<div>
+
+<?php
 /*Testing Wesley Nitskies User Admin Implementation*/
+
+/*
+
 $objIcon = $this->getObject('geticon', 'htmlelements');
 $objIcon->setIcon('loader');
 $loader = $objIcon->show();
