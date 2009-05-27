@@ -54,7 +54,6 @@ $objHeading->align = 'center';
 $objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
 echo $objHeading->show();
 echo "</br>";
-
 //Link to print pdf
 $iconPdf = $this->getObject('geticon', 'htmlelements');
 $iconPdf->setIcon('pdf');
@@ -108,6 +107,13 @@ $objaddressTitles->type = 1;
 $objcontactTitles->type = 1;
 
 $this->_objUser = $this->getObject ( 'user', 'security' );
+//Get user contexts
+$myContexts = $this->objContextUser->getUserContext($this->userId);
+/*
+$isContextLecturer = $this->objContextUser->getContextWhereLecturer($this->userId);
+$isContextStudent = $this->objContextUser->getContextWhereStudent($this->userId);
+$isContextGuest = $this->objContextUser->getContextWhereGuest($this->userId);
+*/
 //$hasAccess = $this->objEngine->_objUser->isContextLecturer();
 //$hasAccess|= $this->objEngine->_objUser->isAdmin();
 $hasAccess = $this->_objUser->isContextLecturer();
@@ -1108,6 +1114,24 @@ $goalsTable->addCell($goalsobjHeading->show() , '', '', '', '', 'colspan="2"');
 $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
+//List the course outcomes for each course a user is affiliated to
+if(!empty($myContexts)){
+	foreach($myContexts as $contextCode){
+		$contextDetails = $this->_objDBContext->getContextDetails($contextCode);
+		if(!empty($contextDetails["goals"])){
+			$contextTitle = "<b>".$contextDetails["contextcode"]." - ".ucwords(strtolower($contextDetails["title"]))." ".$this->objLanguage->code2Txt('mod_contextadmin_courseoutcomes', 'contextadmin', NULL, 'Outcomes')."</b><br>";
+			$contextOutcomes = $contextDetails["goals"];
+
+			$goalsTable->startRow();
+			$goalsTable->addCell($contextTitle, '', '', '', $class, 'colspan="2"');
+			$goalsTable->endRow();
+		    	$goalsTable->startRow();
+		    	$goalsTable->addCell($contextOutcomes, '', '', '', $class, 'colspan="2"');
+		    	$goalsTable->endRow();
+
+		}
+	}
+}
 
 if (!empty($goalsList)) {
     $i = 0;
@@ -1146,7 +1170,8 @@ if (!empty($goalsList)) {
     }
     unset($item);
     echo "</ul>";
-} else {
+}
+if(empty($myContexts) && empty($goalsList)){
     $goalsTable->startRow();
     $goalsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
     $goalsTable->endRow();

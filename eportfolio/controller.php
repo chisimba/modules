@@ -44,6 +44,7 @@ class eportfolio extends controller
         $this->objCleanUrl = $this->getObject('cleanurl', 'filemanager');
         $this->objDate = &$this->newObject('dateandtime', 'utilities');
         $this->objUserContext = $this->getObject('utils', 'contextpostlogin');
+        $this->objContextUser = $this->getObject('usercontext', 'context');
         $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
         $this->objUrl = $this->getObject('url', 'strings');
         $this->_objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
