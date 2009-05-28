@@ -40,7 +40,7 @@ class essay extends controller
         // Check if the module is registered and redirect if not.
         // Check if the assignment module is registered and can be linked to.
  	$this->objModules = $this->newObject('modules','modulecatalogue');
-
+	$this->objEssayView = $this->newObject('manageviews_essay','essay');
 
 	 $this->objModules = $this->newObject('modules','modulecatalogue');
         if(!$this->objModules->checkIfRegistered('essayadmin')){
@@ -249,7 +249,7 @@ class essay extends controller
             case 'viewallessays':
             case 'viewessays':
 		ob_start();
-           		$data=$this->getStudentEssays();
+           		$data=$this->objEssayView->getStudentEssays();
 		$this->setVar('buffer', ob_get_contents());
 		ob_end_clean();
 		//return "dump_tpl.php";
@@ -794,9 +794,10 @@ class essay extends controller
     * Method to get booked and submitted essays for a student.
     * @return array $data The students essays
     **/
+/*check class manageviews_essay
     public function getStudentEssays($contextcode=Null)
     {
-    /**************** import data ********************/
+    //import data
         // get student booked essays
         if(empty($contextcode)){
         $data=$this->dbbook->getBooking("where context='".$this->contextcode
@@ -840,7 +841,7 @@ class essay extends controller
     /**************** return data *******************/
         return $data;
     }
-
+*/
     /**
     * Method to get a list of topics, closing date and number of essays submitted in the topic and the number marked.
     * @return array Topic data
