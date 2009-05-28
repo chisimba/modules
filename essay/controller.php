@@ -794,13 +794,17 @@ class essay extends controller
     * Method to get booked and submitted essays for a student.
     * @return array $data The students essays
     **/
-    public function getStudentEssays()
+    public function getStudentEssays($contextcode=Null)
     {
     /**************** import data ********************/
         // get student booked essays
+        if(empty($contextcode)){
         $data=$this->dbbook->getBooking("where context='".$this->contextcode
         ."' and studentid='".$this->userId."'");
-
+	}else{
+        $data=$this->dbbook->getBooking("where context='".$contextcode
+        ."' and studentid='".$this->userId."'");	
+	}
         if($data){
             foreach($data as $key=>$item){
 	            //var_dump($item);
