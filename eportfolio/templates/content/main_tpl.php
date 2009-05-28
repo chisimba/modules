@@ -32,6 +32,8 @@ $objreflectionTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objassertionsTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objcategoryTitles = &$this->getObject('htmlheading', 'htmlelements');
 $tabBox = $this->newObject('tabpane', 'htmlelements');
+$this->objEssayView = $this->newObject('manageviews_essay','essay');
+$this->viewAssessments = $this->newObject('viewassessments_Eportfolio','eportfolio');
 $featureBox = &$this->newObject('featurebox', 'navigation');
 $page = '';
 $demographicspage = '';
@@ -790,6 +792,24 @@ if (!empty($activitylist)) {
     $activityTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $activityTable->endRow();
 }
+
+$hasEssays = 0;
+foreach ($myContexts as $contextCode){
+ $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
+	if(!empty($contextEssay)){
+		$hasEssays = 1;
+		$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
+		$list=$this->objLanguage->languageText('word_list');
+		$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay').' '.$this->objLanguage->languageText('word_for').' '.$contextCode." - ".$this->_objDBContext->getTitle($contextCode);
+		
+		//echo "<b>".$head."</b>".$viewEssays;
+		$activityTable->startRow();
+		$activityTable->addCell("<b>".$head."</b>".$viewEssays , '', '', '', '', 'colspan="6"');
+		$activityTable->endRow();
+
+	}
+}
+
 //    	echo $activityTable->show();
 $addlink = new link($this->uri(array(
     'module' => 'eportfolio',
