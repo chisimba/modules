@@ -3,14 +3,14 @@
 /**
 * File modulelinks extends object
 *
-* @author Nonhlanhla Gangeni
-* @copyright (c) 2007 UWC
+* @author Paul Mungai
+* @copyright (c) 2009 UWC
 * @version 0.1
 */
 
 
 
-/* -------------------- dbTable class ----------------*/
+/* -------------------- manageviews_essay class ----------------*/
 // security check - must be included in all scripts
 
 if (!$GLOBALS['kewl_entry_point_run'])
