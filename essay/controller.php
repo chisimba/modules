@@ -838,7 +838,7 @@ class essay extends controller
             }
         }
 
-    /**************** return data *******************/
+    //return data 
         return $data;
     }
 */
