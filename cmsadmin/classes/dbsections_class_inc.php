@@ -418,7 +418,7 @@ class dbsections extends dbTable
 			$description = str_ireplace("<br />", " <br /> ",$description);
 			
 			//Preventing Duplicates (title, parentId as key)
-			$isDuplicate = $this->isDuplicateSection($title,$parentId);
+			$isDuplicate = $this->isDuplicate($title,$parentId);
 
 			if ($isDuplicate == TRUE){
 				return FALSE;
@@ -475,25 +475,14 @@ class dbsections extends dbTable
 
 
         /**
-		 * Depricated: Use addSection(params...) instead
-         * Method to add a section to the database
+         * Method to check if a section exists
          *
-         * @param string $parent The id of the parent node. '0' for root nodes
-         * @param string $title The title of the new section
-         * @param string $menuText The text that will appear in the tree menu
-         * @param bool $published Whether page will be visible or not
-         * @param bool $access True if "registered" page False if "public" page
-         * @param string $description The introduction text 
-         * @param string $layout The layout type of the section
-         * @param bool $showdate Whether date will be visible or not
-         * @param bool $showintroduction Whether introduction will be visible or not
-         * @param int $numpagedisplay Number of pages to display 
-         * @param string $ordertype How the page should be ordered
-         * @param string $contextCode The context code if you are using the cms as the context section manager
+         * @param string $name the title to check for duplicates against
+         * @param string $the parent_id of the section range to check in (section may have the same name in other parents/children)
          * @access public
          * @return bool
          */
-        public function isDuplicateSection($name, $parentid) {
+        public function isDuplicate($name, $parentid) {
 			//Preventing Duplicates (title, parentId as key)
 			$checkData = $this->query("SELECT id FROM tbl_cms_sections WHERE parentId = '$parentid' AND title = '$name'");
 			if (isset($checkData[0]['id'])) {

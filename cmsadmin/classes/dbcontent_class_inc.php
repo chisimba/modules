@@ -280,6 +280,28 @@
             return $newId;
         }
 
+
+        /**
+         * Method to check if a section exists
+         *
+         * @param string $name the title to check for duplicates against
+         * @param string $the parent_id of the section range to check in (section may have the same name in other parents/children)
+         * @access public
+         * @return bool
+         */
+        public function isDuplicate($name, $sectionId) {
+            //Preventing Duplicates (title, parentId as key)
+			$qry = "SELECT id FROM tbl_cms_content WHERE sectionid = '$sectionId' AND title = '$name'";
+            $checkData = $this->query($qry);
+            if (isset($checkData[0]['id'])) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        }
+
+
+
         /**
          * Method to save a record to the database
          *
@@ -355,11 +377,15 @@
             $newArr['metadesc'] = $metadesc;
             $newArr['start_publish'] = $start_publish;
             $newArr['end_publish'] = $end_publish;
-                          
-            $newId = $this->insert($newArr);
+ 
+			//Preventing Duplicates (title, sectionId as key)
+    	    $isDuplicate = $this->isDuplicate($title,$sectionId);
+            if (!$isDuplicate) {
+	            $newId = $this->insert($newArr);
+			}
+
             $newArr['id'] = $newId;
             $this->luceneIndex($newArr);
-            //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
 
             //Frontpage Security
