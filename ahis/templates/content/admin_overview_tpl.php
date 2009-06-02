@@ -45,9 +45,10 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('layer','htmlelements');
 
+$imageFolder = $this->objConfig->getsiteRoot()."skins/ahisskin/images";
 $icon = $this->newObject('geticon','htmlelements');
 $addLink = new link($addLinkUri);
-$addLink->link = $addLinkText;
+$addLink->link = "<img src='$imageFolder/$addLinkText.jpg' />";
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;
@@ -78,22 +79,17 @@ if (isset($success)) {
     $msg = '';
 }
 
-if(empty($searchStr)){
-if($searchbut == 'Go'){
-$objMsg->setMessage($this->objLanguage->languageText('mod_ahis_search', 'ahis')."<br />");
-$msg = $objMsg->show();
-
-}
-}
 $objSearchStr = new textinput('searchStr',$searchStr);
 $button = new button('search', $this->objLanguage->languageText('word_go'));
 $button->setToSubmit();
+$button->setCSS('goButton');
 $uri = $this->uri(array('action'=>$action ));
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: document.location='$uri'");
+$cButton->setCSS('clearButton');
 $search = $this->objLanguage->languageText('word_search').": ".$objSearchStr->show()." ".$button->show()." ".$cButton->show();
 
 $formTable = $this->getObject('htmltable', 'htmlelements');
-$formTable->width = NULL;
+$formTable->width = '50%';
 $formTable->cssClass = "min50";
 $formTable->cellspacing = 2;
 $formTable->startRow();
@@ -132,9 +128,8 @@ if (!empty($data)) {
     $objTable->addCell("<span class='noRecordsMessage'>".$this->objLanguage->languageText('phrase_norecords')."</span>", NULL, 'top', NULL, NULL, "colspan='2'");
     $objTable->endRow();    
 }
-
 $backLink = new link($this->uri(array('action' => 'admin')));
-$backLink->link = $this->objLanguage->languageText('word_back');
+$backLink->link = "<img src='$imageFolder/back.jpg' />";
 $linkTable = $this->newObject('htmltable', 'htmlelements');
 $linkTable->width = '50%';
 $linkTable->startRow();

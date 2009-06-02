@@ -91,6 +91,7 @@ class ahis extends controller {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
             $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
+			$this->objConfig = $this->getObject('altconfig', 'config');
             //Log this module call
             $this->objLog = $this->newObject('logactivity', 'logger');
             $this->objLog->log();
@@ -306,8 +307,12 @@ class ahis extends controller {
                 $this->setVar('dateDiagnosis', $this->getSession('ps_dateDiagnosis', date('Y-m-d')));
                 $this->setVar('dateInvestigation', $this->getSession('ps_dateInvestigation', date('Y-m-d')));
                 $this->setVar('locationId', $this->getSession('ps_locationId'));
-                $this->setVar('latitude', $this->getSession('ps_latitude'));
-                $this->setVar('longitude', $this->getSession('ps_longitude'));
+                $this->setVar('latdeg', $this->getSession('ps_latdeg'));
+                $this->setVar('longdeg', $this->getSession('ps_longdeg'));
+                $this->setVar('latmin', $this->getSession('ps_latmin'));
+                $this->setVar('longmin', $this->getSession('ps_longmin'));
+                $this->setVar('latdirec', $this->getSession('ps_latdirec'));
+                $this->setVar('longdirec', $this->getSession('ps_longdirec'));
                 $this->setVar('diseaseId', $this->getSession('ps_diseaseId'));
                 $this->setVar('causativeId', $this->getSession('ps_causativeId'));
                 
@@ -319,8 +324,12 @@ class ahis extends controller {
                 $dateDiagnosis = $this->getParam('dateDiagnosis', $this->getSession('ps_dateDiagnosis'));
                 $dateInvestigation = $this->getParam('dateInvestigation', $this->getSession('ps_dateInvestigation'));
                 $locationId = $this->getParam('locationId', $this->getSession('ps_locationId'));
-                $longitude = $this->getParam('longitude', $this->getSession('ps_longitude'));
-                $latitude = $this->getParam('latitude', $this->getSession('ps_latitude'));
+                $longdeg = $this->getParam('longdeg', $this->getSession('ps_longdeg'));
+                $latdeg = $this->getParam('latdeg', $this->getSession('ps_latdeg'));
+                $longmin = $this->getParam('longmin', $this->getSession('ps_longmin'));
+                $latmin = $this->getParam('latmin', $this->getSession('ps_latmin'));
+                $longdirec = $this->getParam('longdirection', $this->getSession('ps_longdirec'));
+                $latdirec = $this->getParam('latdirection', $this->getSession('ps_latdirec'));
                 $diseaseId = $this->getParam('diseaseId', $this->getSession('ps_diseaseId'));
                 $causativeId = $this->getParam('causativeId', $this->getSession('ps_causativeId'));
                 
@@ -328,8 +337,12 @@ class ahis extends controller {
                 $this->setSession('ps_dateOccurence', $dateOccurence);
                 $this->setSession('ps_dateDiagnosis', $dateDiagnosis);
                 $this->setSession('ps_dateInvestigation', $dateInvestigation);
-                $this->setSession('ps_longitude', $longitude);
-                $this->setSession('ps_latitude', $latitude);
+                $this->setSession('ps_longdeg', $longdeg);
+                $this->setSession('ps_latdeg', $latdeg);
+                $this->setSession('ps_longmin', $longmin);
+                $this->setSession('ps_latmin', $latmin);
+                $this->setSession('ps_longdirec', $longdirec);
+                $this->setSession('ps_latdirec', $latdirec);
                 $this->setSession('ps_locationId', $locationId);
                 $this->setSession('ps_diseaseId', $diseaseId);
                 $this->setSession('ps_causativeId', $causativeId);
@@ -408,8 +421,12 @@ class ahis extends controller {
                 $ps_array['occurencedate'] = $this->getSession('ps_dateOccurence', date('Y-m-d'));
                 $ps_array['diagnosisdate'] = $this->getSession('ps_dateDiagnosis', date('Y-m-d'));
                 $ps_array['investigationdate'] = $this->getSession('ps_dateInvestigation', date('Y-m-d'));
-                $ps_array['latitude'] = $this->getSession('ps_latitude');
-                $ps_array['longitude'] = $this->getSession('ps_longitude');
+                $ps_array['latdeg'] = $this->getSession('ps_latdeg');
+                $ps_array['longdeg'] = $this->getSession('ps_longdeg');
+                $ps_array['latmin'] = $this->getSession('ps_latmin');
+                $ps_array['longmin'] = $this->getSession('ps_longmin');
+                $ps_array['latdirec'] = $this->getSession('ps_latdirec');
+                $ps_array['longdirec'] = $this->getSession('ps_longdirec');
                 
                 $ps_array['locationid'] = $this->getSession('ps_locationId');
                 $ps_array['diseaseid'] = $this->getSession('ps_diseaseId');
@@ -780,12 +797,7 @@ class ahis extends controller {
                $id = $this->getParam('id');
                $this->objSampledetails->delete('id', $id);
                return $this->nextAction('active_addsample', array('success'=>'2'));
-          
-            
-               // return $this->nextAction('active_sampleview', array('success'=>$code));
-                      
-           
-          
+
             case 'admin':
 
                return 'admin_tpl.php';
@@ -794,7 +806,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objGeo3->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'geography_level3_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_geo3add','ahis'));
+                $this->setVar('addLinkText', "addgeo3");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_geo3adminheading','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_name'));
@@ -815,7 +827,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objGeo2->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'geography_level2_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_geo2add','ahis'));
+                $this->setVar('addLinkText', "addgeo2");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_geo2adminheading','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_name'));
@@ -875,7 +887,7 @@ class ahis extends controller {
 				$searchStr = $this->getParam('searchStr');
                 $data = $this->objTerritory->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'create_territory')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_locationadd','ahis'));
+                $this->setVar('addLinkText', "addlocation");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_locationadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_name'));
@@ -1048,7 +1060,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objProduction->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'production_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_productionadd','ahis'));
+                $this->setVar('addLinkText', "addproduction");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_productionadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_name'));
@@ -1089,7 +1101,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objTitle->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'title_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_titleadd','ahis'));
+                $this->setVar('addLinkText', "addtitle");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_titleadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_title'));
@@ -1130,7 +1142,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objStatus->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'status_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_statusadd','ahis'));
+                $this->setVar('addLinkText', "addstatus");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_statusadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_status'));
@@ -1171,7 +1183,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objSex->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'sex_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_sexadd','ahis'));
+                $this->setVar('addLinkText', "addsex");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_sexadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_sex'));
@@ -1212,7 +1224,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objOutbreak->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'outbreak_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_outbreakadd','ahis'));
+                $this->setVar('addLinkText', "addoutbreak");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_outbreakstatusadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_outbreak'));
@@ -1253,7 +1265,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objDiagnosis->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'diagnosis_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_diagnosisadd','ahis'));
+                $this->setVar('addLinkText', "addbasis");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_diagnosisadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_diagnosis'));
@@ -1294,7 +1306,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objControl->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'control_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_controladd','ahis'));
+                $this->setVar('addLinkText', "addcontrol");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_controladmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_control'));
@@ -1335,7 +1347,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objQuality->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'quality_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_qualityadd','ahis'));
+                $this->setVar('addLinkText', "addquality");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_qualityadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_quality'));
@@ -1376,7 +1388,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objReport->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'report_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_reportadd','ahis'));
+                $this->setVar('addLinkText', "addreport");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_reportadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_report'));
@@ -1426,7 +1438,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objAge->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'age_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_ageadd','ahis'));
+                $this->setVar('addLinkText', "addagegroup");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_ageadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_age'));
@@ -1467,7 +1479,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objCausative->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'causative_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_causativeadd','ahis'));
+                $this->setVar('addLinkText', "addcausative");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_causativeadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_causative'));
@@ -1508,7 +1520,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objRole->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'role_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_roleadd','ahis'));
+                $this->setVar('addLinkText', "addrole");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_roleadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_role'));
@@ -1549,7 +1561,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objDepartment->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'department_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_departmentadd','ahis'));
+                $this->setVar('addLinkText', "adddepartment");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_departmentadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_department'));
@@ -1590,7 +1602,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objDisease->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'disease_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_diseaseadd','ahis'));
+                $this->setVar('addLinkText', "adddisease");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_diseaseadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_disease'));
@@ -1630,7 +1642,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objTest->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'test_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_testadd','ahis'));
+                $this->setVar('addLinkText', "addtest");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_testadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_test'));
@@ -1670,7 +1682,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objTestresult->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'testresult_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_testresultadd','ahis'));
+                $this->setVar('addLinkText', "addtestresult");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_testresultadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_testresult'));
@@ -1709,7 +1721,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objSample->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'sample_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_sampleadd','ahis'));
+                $this->setVar('addLinkText', "addsample");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_sampleadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_sample'));
@@ -1749,7 +1761,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objSurvey->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'survey_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_surveyadd','ahis'));
+                $this->setVar('addLinkText', "addsurvey");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_surveyadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_survey'));
@@ -1790,7 +1802,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objFarmingsystem->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'farmingsystem_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_farmingsystemadd','ahis'));
+                $this->setVar('addLinkText', "addfarm");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_farmingsystemadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system'));
@@ -1835,7 +1847,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objVaccination->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'vaccination_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_vaccinationadd','ahis'));
+                $this->setVar('addLinkText', "addvaccine");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_vaccinationadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_vaccinationhistory'));
@@ -1875,7 +1887,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objSpecies->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'species_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_speciesadd','ahis'));
+                $this->setVar('addLinkText', "addspecies");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_speciesadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_species'));
@@ -1916,7 +1928,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objBreed->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'breed_add')));
-                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_breedadd','ahis'));
+                $this->setVar('addLinkText', "addbreed");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_breedadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('word_breed'));
@@ -2062,8 +2074,12 @@ class ahis extends controller {
         $this->unsetSession('ps_dateDiagnosis');
         $this->unsetSession('ps_dateInvestigation');
         $this->unsetSession('ps_locationId');
-        $this->unsetSession('ps_longitude');
-        $this->unsetSession('ps_latitude');
+        $this->unsetSession('ps_longdeg');
+        $this->unsetSession('ps_latdeg');
+        $this->unsetSession('ps_longmin');
+        $this->unsetSession('ps_latmin');
+        $this->unsetSession('ps_longdirec');
+        $this->unsetSession('ps_latdirec');
         $this->unsetSession('ps_diseaseId');
         $this->unsetSession('ps_causativeId');
         $this->unsetSession('ps_productionId');

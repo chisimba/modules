@@ -86,15 +86,17 @@ $objHeading->type = 2;
 $objHeading->align = 'center';
 
 $addButton = new button('next', $this->objLanguage->languageText('phrase_addsample'));
+$addButton->setCSS('addSampleButton');
 $addButton->setToSubmit();
 
 
 
 $backButton = $this->uri(array('action'=>'active_addsample'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backButton'");
-
+$backButton->setCSS('backButton');
 
 $add2Button = new button('next', $this->objLanguage->languageText('word_enter'));
+$add2Button->setCSS('nextButton');
 $add2Button->setToSubmit();
 
 $campBox = new textinput('campname',$campName,'text',20);
@@ -270,7 +272,7 @@ $rep=array(
  if($count == 0){
 $finButton = $this->uri(array('action'=>'sampleview_insert','alt'=> 'yes'));
 $finButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$finButton'");
-
+$finButton->setCSS('finishedButton');
 //$nextButton->setToSubmit();
 }else
 {
@@ -363,35 +365,28 @@ $objTable->startRow();
 $objTable->addCell('&nbsp;');
 $objTable->endRow();
 $objTable->startRow();
+
 if($id){
-$objTable->addCell($add2Button->show());
-$objTable->addCell($backButton->show());
-}else
-{
-if($count == 0){
+    $objTable->addCell($add2Button->show());
+    $objTable->addCell($backButton->show());
+} else {
+    if($count == 0){
+    $objTable->addCell($addButton->show());
+    $objTable->addCell($finButton->show());
+    } else {
+        $objTable->addCell($addButton->show());
+        $objTable->addCell("<input type=\"button\" onclick=\"confirmation()\" class='finishedButton' value=\"Finished\">");
+        echo "<script type=\"text/javascript\">
 
-$objTable->addCell($addButton->show());
-$objTable->addCell($finButton->show());
-}else{
-$objTable->addCell($addButton->show()."<input type=\"button\" onclick=\"confirmation()\" value=\"Finished\">");
-echo "<script type=\"text/javascript\">
+                function confirmation() {
+                	var answer = confirm(\"Have you finished adding the samples\")
+                	if (answer){
 
-function confirmation() {
-	var answer = confirm(\"Have you finished adding the samples\")
-	if (answer){
-
-		document.location = \"index.php?module=ahis&action=active_feedback\";
-	}
-	else{
-  
-	}
-}
-//-->
-</script> ";
-
-
-
-}
+                		document.location = \"index.php?module=ahis&action=active_feedback\";
+                	}
+                }
+              </script> ";
+    }
 }
 $objTable->endRow();
 

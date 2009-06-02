@@ -56,7 +56,7 @@ $backUri = $this->uri(array('action'=>'select_officer'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $bButton->setCSS('backButton');
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSurveillance()");
-$cButton->setCSS('cancelButton');
+$cButton->setCSS('clearButton');
 
 $geo2Drop = new dropdown('geo2Id');
 $geo2Drop->addFromDB($arrayGeo2, 'name', 'id');

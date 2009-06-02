@@ -47,7 +47,6 @@ $this->loadClass('layer', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 
 //title
-//$title = $this->objLanguage->languageText('mod_movement_title', 'movement', 'Animal Movement');
 $title = 'Deworming';
 
 // Header
@@ -63,12 +62,10 @@ $formTable->cssClass = 'min50';
 $label_district = new label ('District: ', 'district');
 $district = new textinput('district',$dist);
 $district->extra = 'readonly';
-//$district->extra = 'disabled';
-//$district->size = 40;
+
 $formTable->startRow();
-//$formTable->cellpadding = 5;
 $formTable->addCell($label_district->show());
-$formTable->addCell($district->show(),NULL,NULL,'left');
+$formTable->addCell($district->show());
 $formTable->endRow();
 
 // animal classification	
@@ -77,18 +74,16 @@ $classification = new dropdown('classification');
 $classification->addFromDB($species, 'name', 'name'); 
 $formTable->startRow();
 $formTable->addCell($label->show());
-$formTable->addCell($classification->show(),NULL,NULL,'left');
+$formTable->addCell($classification->show());
 $formTable->endRow();
 
 // animal origin	
 $label = new label ('Number of animals dewormed: ', 'numberofanimals');
 $number_animals = new textinput('numberofanimals');
-//$number_animals->extra = "onclick = 'numberVal();'";
-//$origin->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show());
-$formTable->addCell($number_animals->show(),NULL,NULL,'left');
+$formTable->addCell($number_animals->show());
 $formTable->endRow();
 
 // antiemitic type
@@ -97,17 +92,15 @@ $antiemitictype = new dropdown('antiemitictype');
 $antiemitictype->addFromDB($control, 'name', 'name'); 
 $formTable->startRow();
 $formTable->addCell($label->show());
-$formTable->addCell($antiemitictype->show(),NULL,NULL,'left');
+$formTable->addCell($antiemitictype->show());
 $formTable->endRow();
-
-
 
 $label_remarks = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_remarks', 'ahis', 'Remarks: '), 'remarks');
 
 $remarks = new textarea('remarks');
 $formTable->startRow();
 $formTable->addCell($label_remarks->show());
-$formTable->addCell($remarks->show(),NULL,NULL,'left');
+$formTable->addCell($remarks->show());
 $formTable->endRow();
 
 if (isset($error)) {
@@ -116,20 +109,22 @@ if (isset($error)) {
     $formTable->endRow();
 }
 $save = new button('animaldeworming_save', 'Save');
+$save->setCSS('saveButton');
 $save->setToSubmit();
  
 $backUri = $this->uri(array('action'=>'select_officer'));
 $bButton = new button('back', $this->objLanguage->languageText('word_cancel'), "javascript: document.location='$backUri'");
+$bButton->setCSS('cancelButton');
 
 $formTable->startRow();
-$formTable->addCell($bButton->show(),NULL,NULL,'right');
 $formTable->addCell($save->show());
+$formTable->addCell($bButton->show());
 $formTable->endRow();
 
 $formAction = 'animaldeworming_save';  
 $buttonText = 'Save';
 	
-	// Create Form
+// Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 //form validations
@@ -144,10 +139,6 @@ $form->addToForm($formTable->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($header->show()."<hr />".$form->show());
-$objLayer->align = 'center';
 
 echo $objLayer->show(); 
-
-
 ?>
-

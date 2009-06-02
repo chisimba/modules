@@ -37,40 +37,17 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
-$this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
-$this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
-$this->loadClass('csslayout', 'htmlelements');
 $this->loadClass('layer', 'htmlelements');
 
-// Create an instance of the css layout class
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
-// Set columns to 2
-$cssLayout->setNumColumns(3);
-// get the sidebar object
-$this->leftMenu = $this->newObject('usermenu', 'toolbar');
-// Initialize left column
-$leftSideColumn = $this->leftMenu->show();
-$rightSideColumn = NULL;
-$middleColumn = NULL;
-
-$objIcon = $this->newObject('geticon', 'htmlelements');
-$objIcon->setIcon('loader');
-
-$link = new link($this->uri(array('action' => 'default')));
-
-$loadingIcon = $objIcon->show();
-
-//title
-//$title = $this->objLanguage->languageText('mod_movement_title', 'movement', 'Animal Movement');
-$title = 'Livestock movement';
+$title = 'Livestock Movement';
 
 // Header
 $header = new htmlheading();
@@ -80,22 +57,14 @@ $header->str = $title;
 $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
 $formTable->width = NULL;
-$formTable->cssClass = 'min50';
-
-
-
-
-$formTable = $this->newObject('htmltable', 'htmlelements');
 
 $label_district = new label ('District: ', 'district');
 $district = new textinput('district',$dist);
 $district->extra = 'readonly';
-//$district->extra = 'disabled';
-//$district->size = 40;
+
 $formTable->startRow();
-//$formTable->cellpadding = 5;
-$formTable->addCell($label_district->show(),NULL,NULL,'right');
-$formTable->addCell($district->show(),NULL,NULL,'left');
+$formTable->addCell($label_district->show());
+$formTable->addCell($district->show());
 $formTable->endRow();
 
 // animal classification	
@@ -104,8 +73,8 @@ $classification = new dropdown('classification');
 $classification->addFromDB($species, 'name', 'name'); 
 
 $formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($classification->show(),NULL,NULL,'left');
+$formTable->addCell($label->show()."&nbsp;");
+$formTable->addCell($classification->show());
 $formTable->endRow();
 
 $label_purpose = new label('Purpose: ', 'Purpose');
@@ -116,79 +85,71 @@ $radio_rear = new radio ('purpose');
 $radio_slaughter->addOption('Rearing', 'Rearing');
 
 $formTable->startRow();
-$formTable->addCell($label_purpose->show(),NULL,NULL,'right');
-$formTable->addCell($radio_slaughter->show(),NULL,NULL,'left');
+$formTable->addCell($label_purpose->show());
+$formTable->addCell($radio_slaughter->show());
 
 $formTable->startRow();
-$formTable->addCell('',40);
-$formTable->addCell($radio_rear->show(),40);
+$formTable->addCell('');
+$formTable->addCell($radio_rear->show());
 $formTable->endRow();
 
 // animal origin	
-$label = new label ('Animal origin: ', 'origin');
+$label = new label ('Animal Origin: ', 'origin');
 $origin = new textinput('origin');
 $formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($origin->show(),NULL,NULL,'left');
+$formTable->addCell($label->show());
+$formTable->addCell($origin->show());
 $formTable->endRow();
 
 // animal destination	
-$label = new label ('Animal destination: ', 'destination');
+$label = new label ('Animal Destination: ', 'destination');
 $destination = new textinput('destination');
 $formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($destination->show(),NULL,NULL,'left');
+$formTable->addCell($label->show());
+$formTable->addCell($destination->show());
 $formTable->endRow();
 
 $label_remarks = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_remarks', 'ahis', 'Remarks: '), 'remarks');
 $remarks = new textarea('remarks');
 $formTable->startRow();
-$formTable->addCell($label_remarks->show(), NULL,NULL,'right');
-$formTable->addCell($remarks->show(),NULL,NULL,'left');
+$formTable->addCell($label_remarks->show());
+$formTable->addCell($remarks->show());
 $formTable->endRow();
 
 
 $formAction = 'animalmovement_save';  
-    $buttonText = 'Save';
+$buttonText = 'Save';
 	
-	// Create Form
+// Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
 $form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_purposeerror','ahis'),'select');
-
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerrorone','ahis'),'letteronly');
-
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerrorone','ahis'),'letteronly');
-
 $form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror','ahis'),'required');
 $form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserrorone', 'ahis'), 'letteronly');
 
-
-
-
 $form->addToForm($formTable->show());
 
+$save = new button('animalmovement_save', 'Save');
+$save->setToSubmit();
+$save->setCSS('saveButton');
 
- $save = new button('animalmovement_save', 'Save');
- $save->setToSubmit();
- 
- //$cancel = new button('cancel','Cancel');
-//$cancel->setToSubmit();
 $backUri = $this->uri(array('action' => 'select_officer'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$bButton->setCSS('cancelButton');
 
-$form->addToForm($bButton->show());
-$form->addToForm($save->show(),NULL,NULL,'right');
+$form->addToForm($save->show()." ");
+$form->addToForm($bButton->show(),NULL,NULL,'right');
 
 
 $objLayer = new layer();
 $objLayer->addToStr($header->show()."<hr />".$form->show());
-$objLayer->align = 'center';
 
 echo $objLayer->show(); 
 

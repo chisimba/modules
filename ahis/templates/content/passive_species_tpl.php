@@ -56,7 +56,7 @@ $backUri = $this->uri(array('action'=>'passive_outbreak'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $bButton->setCSS('backButton');
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSpecies()");
-$cButton->setCSS('cancelButton');
+$cButton->setCSS('clearButton');
 
 $refNoBox = new textinput('refNo', $refNo, 'text', 15);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 8);

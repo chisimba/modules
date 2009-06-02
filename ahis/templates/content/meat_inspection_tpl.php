@@ -38,7 +38,7 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
-  $title = 'Meat Inspection';
+$title = 'Meat Inspection';
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $title;
 $objHeading->type = 2;
@@ -48,7 +48,7 @@ $this->loadClass('dropdown','htmlelements');
 $this->loadClass('layer','htmlelements');
 $this->loadClass('label', 'htmlelements');
 
-$msg = '<br />';
+$msg = '';
 
 if(($output=='yes')) {
         $objMsg = $this->getObject('timeoutmessage','htmlelements');
@@ -56,16 +56,15 @@ if(($output=='yes')) {
         $msg = $objMsg->show()."<br />";
 
 }
-  $formAction = 'saveinspectiondata';
+$formAction = 'saveinspectiondata';
   
-    $buttonText = 'Save';
+$buttonText = 'Save';
 
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
 $formTable->width = NULL;
-$formTable->cssClass = 'min50';
 
 //district name
 $district = new textinput('district',$dist);
@@ -87,15 +86,16 @@ $formTable->endRow();
 //number of cases
 $label = new label ('Number of Cases:', 'input_no_of_cases');
 $num_of_cases= new textinput('num_of_cases');
-//$num_of_cases->size = 50;
+
 //number at risk
 $label2 = new label ('Number at Risk:', 'input_no_at_risk');
 $num_at_risk = new textinput('num_at_risk');
-//$num_at_risk->size = 50;
 
 $formTable->startRow();
 $formTable->addCell($label->show());
-$formTable->addCell($num_of_cases->show());
+$formTable->addCell($num_of_cases->show()."&nbsp;");
+$formTable->endRow();
+$formTable->startRow();
 $formTable->addCell($label2->show());
 $formTable->addCell($num_at_risk->show());
 $formTable->endRow();
@@ -108,14 +108,16 @@ $form->addRule('num_at_risk', 'Please enter a valid number', 'numeric');
 //buttons
 $button = new button ('saveinspectiondata', 'Save');
 $button->setToSubmit();
+$button->setCSS('saveButton');
 
 $backUri = $this->uri(array('action'=>'select_officer'));
 $btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
+$btcancel->setCSS('cancelButton');
 
-$form->addToForm($button->show());
+$form->addToForm($button->show()." ");
 $form->addToForm($btcancel->show());
 $objLayer = new layer();
-$objLayer->addToStr($objHeading->show()." ".$msg."<hr class='ahis' />".$form->show());
-$objLayer->align = 'center';
+$objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$msg.$form->show());
 
 echo $objLayer->show();
+?>

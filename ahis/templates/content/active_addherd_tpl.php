@@ -72,32 +72,28 @@ $objConfirm = $this->loadClass('confirm', 'utilities');
 $message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 
 $objConfirm = new confirm();
- $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
+$objConfirm->setConfirm($objIcon->show() , $this->uri(array(
             'action' => 'newherd_delete',
             'id' => $line['id'],
         )) , $message);
 
- if($hdata == NULL){
+if($hdata == NULL){
 
 $nextButton = $this->uri(array('action'=>'newherd_insert','alt'=>'yes'));
 $nextButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript: document.location='$nextButton'");
-//$nextButton->setToSubmit();
-}else
-{
-//$nextPage = $this->uri(array('action'=>'active_addsample'));
-//$nextButton = new button('next', $this->objLanguage->languageText('word_finished'), "javascript:document.location='$nextButton'");
-
+$nextButton->setCSS('finishedButton');
 }
-
-
 
 $backButton = $this->uri(array('action'=>'active_addherd'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backButton'");
+$backButton->setCSS('backButton');
 
 $addButton = new button('next', $this->objLanguage->languageText('phrase_addfarm'));
+$addButton->setCSS('addFarmButton');
 $addButton->setToSubmit();
 
 $add2Button = new button('next', $this->objLanguage->languageText('word_enter'));
+$add2Button->setCSS('nextButton');
 $add2Button->setToSubmit();
 //$addUri = $this->uri(array('action'=>'active_newherd'));
 //$addButton = new button('cancel', $this->objLanguage->languageText('word_add'), "javascript: document.location='$addUri'");
@@ -264,36 +260,28 @@ echo "</script>";
 }
 
 $objTable->startRow();
-if($id){
-$objTable->addCell($add2Button->show());
-$objTable->addCell($backButton->show());
-}else
-{
-if($hdata == NULL){
-$objTable->addCell($addButton->show());
-$objTable->addCell($nextButton->show());
-}else{
-$objTable->addCell($addButton->show()."<input type=\"button\" onclick=\"confirmation()\" value=\"Finished\">");
-//$objTable->addCell($nextButton->show());
-$nextPage = $this->uri(array('action'=>'active_addsample'));
-echo "<script type=\"text/javascript\">
+if($id) {
+    $objTable->addCell($add2Button->show());
+    $objTable->addCell($backButton->show());
+} else {
+    if($hdata == NULL){
+        $objTable->addCell($addButton->show());
+        $objTable->addCell($nextButton->show());
+    } else {
+        $objTable->addCell($addButton->show());
+        $objTable->addCell("<input type=\"button\" onclick=\"confirmation()\" class='finishedButton' value=\"Finished\">");
+        $nextPage = $this->uri(array('action'=>'active_addsample'));
+        echo "<script type=\"text/javascript\">
 
-function confirmation() {
-	var answer = confirm(\"Have you finished adding the farms\")
-	if (answer){
-
-		document.location = \"index.php?module=ahis&action=active_addsample\";
-	}
-	else{
-  
-	}
-}
-//-->
-</script> ";
-
-
-
-}
+                function confirmation() {
+                	var answer = confirm(\"Have you finished adding the farms\")
+                	if (answer){
+    
+                	document.location = \"index.php?module=ahis&action=active_addsample\";
+                    }
+                }
+              </script> ";
+    }
 }
 $objTable->endRow();
 

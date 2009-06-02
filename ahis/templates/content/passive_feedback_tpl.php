@@ -57,7 +57,9 @@ if ($success) {
 
 $reportUri = $this->uri(array('action'=>'view_reports'));
 $buttonMore = new button('more', $morePhrase, "window.location='$addUri';");
+$buttonMore->setCSS('captureMoreButton');
 $buttonReport = new button('report',$this->objLanguage->languageText('mod_ahis_viewreports', 'ahis'), "window.location='$reportUri';");
+$buttonReport->setCSS('viewReportsButton');
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;

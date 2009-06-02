@@ -48,20 +48,15 @@ $this->loadClass('dropdown','htmlelements');
 $this->loadClass('layer','htmlelements');
 $this->loadClass('label', 'htmlelements');
 
-    $formAction = 'animal_population_save';  
-    $buttonText = 'Save';
+$formAction = 'animal_population_save';  
+$buttonText = 'Save';
 
 $classDrop = new dropdown('classification');
 $classDrop->addFromDB($species, 'name', 'name'); 
 
-
-
 $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
 $formTable->width = NULL;
-$formTable->cssClass = 'min50';
-
-
 
 //district name
 $district = new textinput('district',$dist);
@@ -83,7 +78,6 @@ $formTable->endRow();
 //number of animals
 $label = new label ('Number of Animals:', 'input_no_animal');
 $num_animals = new textinput('num_animals');
-//$num_animals->size = 50;
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($num_animals->show());
@@ -92,9 +86,7 @@ $formTable->endRow();
 //animal production
 $label = new label ('Animal Production:', ' input_production');
 $production = new dropdown('animal_production');
-
 $production->multiple=false; 
-
 $production->addOption('Beef', 'Beef');
 $production->addOption('Cheese', 'Cheese');
 $production->addOption('Eggs', 'Eggs');
@@ -108,7 +100,6 @@ $formTable->endRow();
 // animal source	
 $label = new label ('Source:', 'input_source');
 $source=new textinput('source');
-//$source->size=50;
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($source->show());
@@ -124,17 +115,17 @@ $form->addRule('source', 'Please enter valid source', 'letteronly');
 
 //buttons
 $button = new button ('animal_population_save', 'Save');
+$button->setCSS('saveButton');
 $button->setToSubmit();
 $backUri = $this->uri(array('action'=>'select_officer'));
 $btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
-//$btcancel->setToSubmit();
+$btcancel->setCSS('cancelButton');
 
-$form->addToForm($button->show());
+$form->addToForm($button->show()." ");
 $form->addToForm($btcancel->show());
-
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$form->show());
-$objLayer->align = 'center';
 
 echo $objLayer->show();
+?>

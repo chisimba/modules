@@ -57,17 +57,6 @@ $objDataHeading->str = $this->objLanguage->languageText('mod_ahis_editdataentry'
 $employeeLink = new link($this->uri(array('action' => 'employee_admin')));
 $employeeLink->link = $this->objLanguage->languageText('mod_ahis_employeeadmin', 'ahis');
 
-/*$objTable->startRow();
-$link = new link($this->uri(array('action' => 'animalmovement_admin')));
-$link->link = "Animal Movement Admin";
-$objTable->addCell($link->show(),NULL,NULL,'center');
-$link = new link($this->uri(array('action' => 'livestockimport_admin')));
-$link->link = "Livestock Import Admin";
-$objTable->addCell($link->show(),NULL,NULL,'center');
-$link = new link($this->uri(array('action' => 'livestockexport_admin')));
-$link->link = "Livestock Export Admin";
-$objTable->addCell($link->show(),NULL,NULL,'center');
-$objTable->endRow();*/
 $userList = "<strong>".$this->objLanguage->languageText('mod_ahis_userfields', 'ahis')."</strong><ul class='admin'>";
 $link = new link($this->uri(array('action' => 'department_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_departmentadmin', 'ahis');
@@ -102,14 +91,14 @@ $dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'disease_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_diseaseadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
+$link = new link($this->uri(array('action' => 'farmingsystem_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_farmingsystemadmin', 'ahis');
+$dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'geography_level2_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_geo2admin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'geography_level3_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_geo3admin', 'ahis');
-$dataList .= "<li>".$link->show()."</li>";
-$link = new link($this->uri(array('action' => 'farmingsystem_admin')));
-$link->link = $this->objLanguage->languageText('mod_ahis_farmingsystemadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'territory_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_locationadmin', 'ahis');
@@ -126,12 +115,6 @@ $dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'report_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_reportadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
-$link = new link($this->uri(array('action' => 'test_admin')));
-$link->link = $this->objLanguage->languageText('mod_ahis_testadmin', 'ahis');
-$dataList .= "<li>".$link->show()."</li>";
-$link = new link($this->uri(array('action' => 'testresult_admin')));
-$link->link = $this->objLanguage->languageText('mod_ahis_testresultadmin', 'ahis');
-$dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'sample_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_sampleadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
@@ -143,19 +126,17 @@ $link->link = $this->objLanguage->languageText('mod_ahis_speciesadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'survey_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_surveyadmin', 'ahis');
+$dataList .= "<li>".$link->show()."</li>";$link = new link($this->uri(array('action' => 'test_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_testadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
-
+$link = new link($this->uri(array('action' => 'testresult_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_testresultadmin', 'ahis');
+$dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'vaccinationhistory_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_vaccinationadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
 $dataList .= "</ul>";
 
-
-//$objLayer = new layer();
-//$objLayer->addToStr($objHeading->show()."<hr class='ahis'/>".$objTable->show());
-//$objLayer->align = 'center';
-
-//echo $objLayer->show();
 $content = $objHeading->show().$objSubHeading->show()."<div class='admin'>".$employeeLink->show()."<br /><br />";
 $content .= $objDataHeading->show().$this->objLanguage->languageText('mod_ahis_selectformfield', 'ahis')."</div>";
 $content .= "<br />$userList<br />$dataList";

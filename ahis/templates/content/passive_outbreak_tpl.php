@@ -57,7 +57,7 @@ $backUri = $this->uri(array('action'=>'passive_surveillance'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $bButton->setCSS('backButton');
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveOutbreak()");
-$cButton->setCSS('cancelButton');
+$cButton->setCSS('clearButton');
 
 $refNoBox = new textinput('refNo', $refNo, 'text', 30);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 23);
@@ -97,18 +97,18 @@ $investigationDate = $this->newObject('datepicker','htmlelements');
 $investigationDate->setName('dateInvestigation');
 $investigationDate->setDefaultDate($dateInvestigation);
 
-$latitudeDegBox = new textinput('latdeg', $latitudeDeg, 'text', 4);
-$longitudeDegBox = new textinput('longdeg', $longitudeDeg, 'text', 4);
-$latitudeMinBox = new textinput('latmin', $latitudeMin, 'text', 4);
-$longitudeMinBox = new textinput('longmin', $longitudeMin, 'text', 4);
+$latitudeDegBox = new textinput('latdeg', $latdeg, 'text', 4);
+$longitudeDegBox = new textinput('longdeg', $longdeg, 'text', 4);
+$latitudeMinBox = new textinput('latmin', $latmin, 'text', 4);
+$longitudeMinBox = new textinput('longmin', $longmin, 'text', 4);
 $latDrop = new dropdown('latdirection');
 $latDrop->addOption('N','N');
 $latDrop->addOption('S','S');
-$latDrop->setSelected($latDirec);
+$latDrop->setSelected($latdirec);
 $longDrop = new dropdown('longdirection');
 $longDrop->addOption('E','E');
 $longDrop->addOption('W','W');
-$longDrop->setSelected($longDirec);
+$longDrop->setSelected($longdirec);
 $degrees = $this->objLanguage->languageText('word_degrees');
 $minutes = $this->objLanguage->languageText('word_minutes');
 

@@ -68,6 +68,8 @@ $sButton = new button('enter', $this->objLanguage->languageText('word_enter'));
 $sButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'geography_level2_admin'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$sButton->setCSS('saveButton');
+$bButton->setCSS('backButton');
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->width = NULL;
