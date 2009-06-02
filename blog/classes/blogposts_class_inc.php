@@ -130,6 +130,7 @@ class blogposts extends object
                 // get the washout class and parse for all the bits and pieces
                 $washer = $this->getObject('washout', 'utilities');
                 $post['post_content'] = $washer->parseText($post['post_content']);
+                $post['post_content']=quoted_printable_decode($post['post_content']);
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 // build the top level stuff
                 $dt = date('r', $post['post_ts']);
