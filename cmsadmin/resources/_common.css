@@ -403,7 +403,7 @@ font-size: 0.8em;
 
 
 /** control panel settings **/
-#cpanel div.icon {
+#cpanel div._icon {
     /*border: 1px solid #f0f0f0;*/
 	background-color: #f0f0f0;
 	/*background-image: url(apple_back.png) repeat-x;*/
@@ -418,7 +418,7 @@ font-size: 0.8em;
 
 }
 
-#cpanel div.icon a {
+#cpanel div._icon a {
     display: block;
     float: left;
     /*border: 1px solid #f0f0f0;*/
@@ -434,7 +434,7 @@ font-size: 0.8em;
 	background-color: #f0f0f0;
 }
 
-#cpanel div.icon a:hover {
+#cpanel div._icon a:hover {
     /*border: 1px solid #d0d0d0;*/
     /*border-top: 1px solid #eee;*/
     /*border-right: 1px solid #ccc;*/
@@ -448,52 +448,3 @@ font-size: 0.8em;
 
 #cpanel span { display: block; text-align: center; }
 
-#cpanel .boxy-wrapper { 
-	position: absolute; 
-}
-#cpanel .boxy-wrapper.fixed { position: fixed; }
-
-  /* Modal */
-  
-  #cpanel .boxy-modal-blackout { position: absolute; background-color: black; opacity: 0.7; filter: alpha(opacity=70); left: 0; top: 0; }
-  
-  /* Border */
-
-	#cpanel .boxy-wrapper .top-left,
-	#cpanel .boxy-wrapper .top-right,
-	#cpanel .boxy-wrapper .bottom-right,
-	#cpanel .boxy-wrapper .bottom-left { width: 10px; height: 10px; padding: 0 }
-	
-	#cpanel .boxy-wrapper .top-left { background: url('cms/round/boxy-nw.png'); }
-	#cpanel .boxy-wrapper .top-right { background: url('cms/round/boxy-ne.png'); }
-	#cpanel .boxy-wrapper .bottom-right { background: url('cms/round/boxy-se.png'); }
-	#cpanel .boxy-wrapper .bottom-left { background: url('cms/round/boxy-sw.png'); }
-	
-	/* IE6 hacks for the border */
-	* html #cpanel .boxy-wrapper .top-left { background: none; filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/cms/round/boxy-nw.png'); }
-	* html #cpanel .boxy-wrapper .top-right { background: none; filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/cms/round/boxy-ne.png'); }
-	* html #cpanel .boxy-wrapper .bottom-right { background: none; filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='cms/round/boxy-se.png'); }
-	* html #cpanel .boxy-wrapper .bottom-left { background: none; filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/cms/round/boxy-sw.png'); }
-	
-	#cpanel .boxy-wrapper .top,
-	#cpanel .boxy-wrapper .bottom { height: 10px; background-color: black; opacity: 0.6; filter: alpha(opacity=60); padding: 0 }
-	
-	#cpanel .boxy-wrapper .left,
-	#cpanel .boxy-wrapper .right { width: 10px; background-color: black; opacity: 0.6; filter: alpha(opacity=60); padding: 0 }
-	
-	/* Title bar */
-	
-	#cpanel .boxy-wrapper .title-bar { background-color: black; padding: 6px; position: relative; }
-	  #cpanel .boxy-wrapper .title-bar.dragging { cursor: move; }
-	    #cpanel .boxy-wrapper .title-bar h2 { font-size: 12px; color: white; line-height: 1; margin: 0; padding: 0; font-weight: normal; }
-	    #cpanel .boxy-wrapper .title-bar .close { color: white; position: absolute; top: 6px; right: 6px; font-size: 90%; line-height: 1; }
-		
-	/* Content Region */
-	
-	#cpanel .boxy-inner { background-color: white; padding: 0 }
-	#cpanel .boxy-content { padding: 15px; }
-	
-	/* Question Boxes */
-
-    #cpanel .boxy-wrapper .question { width: 350px; min-height: 80px; }
-    #cpanel .boxy-wrapper .answers { text-align: right; }
