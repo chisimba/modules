@@ -13,3 +13,12 @@
     line-height: 30px;
     font-size: 0.8em;
 }
+
+#cpanel div._icon a span{
+	height: 18px;
+    line-height: 17px;
+}
+
+#sectionstreemenu {
+	min-height : 150px;
+}
