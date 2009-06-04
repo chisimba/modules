@@ -28,6 +28,7 @@ class webpresenttoolbar2 extends object
 
         $menuOptions = array(
             array('action'=>'upload', 'text'=>'Upload', 'actioncheck'=>array('upload'), 'module'=>'webpresent', 'status'=>'both'),
+            array('action'=>'null', 'text'=>'V-Meetings', 'actioncheck'=>array(), 'module'=>'realtime', 'status'=>'both'),
             array('action'=>'search', 'text'=>'Search', 'actioncheck'=>array('search'), 'module'=>'webpresent', 'status'=>'both'),
             array('action'=>NULL, 'text'=>'Blog', 'actioncheck'=>array(), 'module'=>'blog', 'status'=>'both'),
             array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
