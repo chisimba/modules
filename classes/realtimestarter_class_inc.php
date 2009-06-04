@@ -131,7 +131,7 @@ class realtimestarter extends object{
         fwrite($fh,   ' <argument>'.$room.'</argument>');
         fwrite($fh,   ' <argument>'.$username.'</argument>');
 
-        if($webpresent == 'true'){
+        //if($webpresent == 'true'){
             fwrite($fh,   ' <argument>'.$slidesDir.'</argument>');
             fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
             fwrite($fh,   ' <argument>'.$presentationId.'</argument>');
@@ -139,11 +139,11 @@ class realtimestarter extends object{
             fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
             fwrite($fh,   ' <argument>'.$email.'</argument>');
             fwrite($fh,   ' <argument>'.$siteUrl.'</argument>');
-        }else{
+        /*}else{
             fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
             fwrite($fh,   ' <argument>'.$email.'</argument>');
             fwrite($fh,   ' <argument>'.$siteUrl.'</argument>');
-        }
+        }*/
         fwrite($fh,   ' <argument>'.$passwordrequired.'</argument>');
         fwrite($fh,   '</application-desc>');
         fwrite($fh,'<security>');
