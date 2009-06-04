@@ -190,6 +190,13 @@ class realtime extends controller
         * @param string $action String indicating action to be taken
         */
     function dispatch($action = Null) {
+
+ $this->setVarByRef('title', 'Under Maintenance');
+                            $this->setVarByRef('desc','Under Maintenance');
+                            $this->setVarByRef('content', '<h2>Under Maintenance</h2>');
+                            return "dump_tpl.php";
+
+
         $this->contextCode = $this->objContext->getContextCode();
         switch ($action)   {
             case 'startSlideServer':{
