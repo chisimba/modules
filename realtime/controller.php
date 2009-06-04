@@ -223,8 +223,7 @@ class realtime extends controller
                             return $this->showStartLinks();
 
                             default :{
-
-                                    return $this->initClassRoom($this->contextCode);
+                                            return $this->showClassRoom();
                                 }
                             }
                         }
@@ -294,7 +293,7 @@ class realtime extends controller
 
                         }
                         public function showClassroom(){
-
+                     
                             $username=$this->objUser->userName();
                             $modPath=$this->objAltConfig->getModulePath();
                             $replacewith="";
