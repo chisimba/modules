@@ -347,6 +347,7 @@ class spie extends object
         $ret = $this->getTitleWithLogo();
         $counter=0;
         $avatar = "";
+        $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
             $author = $item->get_author();
@@ -363,12 +364,14 @@ class spie extends object
             $info = '<table><tr><td>' . $avatar
               . '</td><td>' . $nick . " "
               . $description . '</td></tr></table>';
+            $rawDate =  strtotime($item->get_date('j F Y  g:i a'));
+            $rawDate = date('Y-m-d H:i:s', $rawDate);
+            $humanTime = $objHumanizeDate->getDifference($rawDate);
             $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
               . '<p class="feed_render_description">' . $info
               . '<br /><span class="feed_render_date">'
-              .  $item->get_date('j F Y | g:i a')
-              . '</span></p>'
+              .  $humanTime . '</span></p>'
               . '</div>' . $this->getItemBottom();
 
             if (isset($this->limit)) {
