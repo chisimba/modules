@@ -406,6 +406,7 @@ class spie extends object
         }
         $ret = $this->getTitleWithLogo();
         $counter=0;
+        $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
             $description = $item->get_description();
@@ -416,11 +417,14 @@ class spie extends object
                 $description = str_replace("align=\"right\"", "style=\"float:left; margin-left: 5px; margin-right: 20px;\"", $description);
                 $description = $title . "<br />" . $description;
             }
+            $rawDate =  strtotime($item->get_date('j F Y  g:i a'));
+            $rawDate = date('Y-m-d H:i:s', $rawDate);
+            $humanTime = $objHumanizeDate->getDifference($rawDate);
             $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
               . '<p class="feed_render_description">' . $description
               . '<br /><span class="feed_render_date">'
-              .  $item->get_date('j F Y | g:i a')
+              .  $humanTime
               . '</span></p>'
               . '</div>' . $this->getItemBottom();;
             if (isset($this->limit)) {
@@ -449,18 +453,22 @@ class spie extends object
         $title = $this->getTitle();
         $ret = $this->getTitleWithLogo();
         $counter=0;
+        $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
             $description = $item->get_description();
             $description = str_replace("float:right;", "float:left; margin-left: 5px; margin-right: 20px;", $description);
             $title = $item->get_title();
             $ln = $item->get_link();
+            $rawDate =  strtotime($item->get_date('j F Y  g:i a'));
+            $rawDate = date('Y-m-d H:i:s', $rawDate);
+            $humanTime = $objHumanizeDate->getDifference($rawDate);
             $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
               . '<p class="feed_render_description"><a href="'
               . $ln . '">' . $title . '</a><br />' . $description
               . '<br /><span class="feed_render_date">'
-              .  $item->get_date('j F Y | g:i a')
+              .  $humanTime
               . '</span></p>'
               . '</div>' . $this->getItemBottom();
             if (isset($this->limit)) {
