@@ -47,7 +47,6 @@ class import extends object
 		$this->objParser->setWpBasePath($this->wpBasePath);
     }
 
-
     /**
      * This method sets the Wep Parts Module Name
      * 
@@ -93,7 +92,7 @@ class import extends object
     public function generateMdb2DataStruct($mysqlXmlDump)
     {
         $result = $this->objParser->mysqlToMdb2($mysqlXmlDump);
-        return $resultDoc;
+        return $result;
     }
     
 }

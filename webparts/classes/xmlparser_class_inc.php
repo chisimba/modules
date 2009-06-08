@@ -239,7 +239,7 @@ if (!$GLOBALS[\'kewl_entry_point_run\']) {
 					
 									if (strtolower($value) == 'pri') {
 										array_push($this->wpTableKeys, $value);
-	                					$this->templateSqlIndexCode .= '            \''.$tableFields['field'].'\' => array(),'."\n";
+	                					$this->templateSqlIndexCode .= '                \''.$tableFields['field'].'\' => array(),'."\n";
 									}
 								}
 		
@@ -255,23 +255,15 @@ if (!$GLOBALS[\'kewl_entry_point_run\']) {
 
 						array_push($this->wpTableFields,$tableFields);
 
-						//var_dump("____________________________");
-						//var_dump($tableFields);
-						
 		    		}
 		
 
 				}
 
-
-
-					//var_dump($this->wpTableName);
-					//var_dump($this->wpTableOptions);
-					//var_dump($this->wpTableFields);
-
 					$this->templateSqlCode = $this->templateSecurityCode;
 
-					$this->templateSqlCode .= "\n".'$tablename = \''.$this->wpTableName.'\';'."\n\n";
+					$tableName  = 'tbl_'. $this->wpModuleName . '_' .strtolower($this->wpTableName);
+					$this->templateSqlCode .= "\n".'$tablename = \''.$tableName.'\';'."\n\n";
 
 					if (!empty($this->wpTableOptions)) {
 						$this->templateSqlCode .= '$options = array(';
@@ -286,6 +278,13 @@ if (!$GLOBALS[\'kewl_entry_point_run\']) {
 					}
 
 					$this->templateSqlCode .= '$fields = array('."\n\n";
+
+					//Adding id field for all tables here.
+					$this->templateSqlCode .= "
+    'id' => array(
+        'type' => 'text',
+        'length' => 32
+        ),\n";
 
 					foreach ($this->wpTableFields as $tableField) {
 						if (isset($tableField['field'])) {
@@ -429,11 +428,12 @@ if (!$GLOBALS[\'kewl_entry_point_run\']) {
 					$this->templateSqlCode .= '$indexes = array('."\n";
 
 					if (!empty($this->wpTableKeys)) {
-						//$this->templateSqlCode .= '             fields => array(';
+						$this->templateSqlCode .= '             \'fields\' => array('."\n";
 						$this->templateSqlCode .= $this->templateSqlIndexCode;
+						$this->templateSqlCode = substr($this->templateSqlCode, 0, strlen($this->templateSqlCode) - 2);
+						$this->templateSqlCode .= "\n".'             )';
 					}
 
-					$this->templateSqlCode = substr($this->templateSqlCode, 0, strlen($this->templateSqlCode) - 2);
 					$this->templateSqlCode .= "\n);";
 
 
