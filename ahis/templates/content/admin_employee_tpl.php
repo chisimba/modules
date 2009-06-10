@@ -46,8 +46,9 @@ $this->loadClass('form','htmlelements');
 $this->loadClass('layer','htmlelements');
 
 $icon = $this->newObject('geticon','htmlelements');
+$imageFolder = $this->objConfig->getsiteRoot()."skins/ahisskin/images";
 $addLink = new link($this->uri(array('action'=>'create_employee')));
-$addLink->link = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_employee');;
+$addLink->link = "<img src='$imageFolder/addemployee.jpg' />";
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;

@@ -42,6 +42,9 @@ $GLOBALS['kewl_entry_point_run']) {
 $objSysconfig = $this->getObject('dbsysconfig','sysconfig');
 $apiKey = $objSysconfig->getValue('google_maps_key','ahis');
 
+$imageFolder = $this->objConfig->getsiteRoot()."skins/ahisskin/images";
+
+
 $headers = '<style>
 <!--
  /* Font Definitions */
@@ -548,13 +551,13 @@ $this->appendArrayVar('bodyOnLoad', "init();");
   <b style='mso-bidi-font-weight:normal'>
   
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="javascript:" onclick="submitQuery();" id='btnSubmit' style="display:inline">SUBMIT</a>
+  <a href="javascript:" onclick="submitQuery();" id='btnSubmit' style="display:inline"><img src="<?="$imageFolder/createmap.jpg"?>" alt="CREATE MAP" title="CREATE MAP" /></a>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="<?= $this->uri(array('action'=>'view_reports')); ?>" id='btnCancel' style="display:inline">CANCEL</a>
+  <a href="<?= $this->uri(array('action'=>'view_reports')); ?>" id='btnCancel' style="display:inline"><img src="<?="$imageFolder/cancel.jpg"?>" alt="CANCEL" title="CANCEL" /></a>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="javascript:" id='btnBack' onclick="window.location.reload();" style="display:none">BACK TO VIEW REPORTS</a>
+  <a href="javascript:" id='btnBack' onclick="window.location.reload();" style="display:none"><img src="<?="$imageFolder/backviewreports.jpg"?>" alt="BACK TO VIEW REPORTS" title="BACK TO VIEW REPORTS" /></a>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="<?= $this->uri(array('action'=>'gis_reports', 'report'=>2)); ?>" id='btnNew' style="display:none">NEW GIS MAP</a></b></p>
+  <a href="<?= $this->uri(array('action'=>'gis_reports', 'report'=>2)); ?>" id='btnNew' style="display:none"><img src="<?="$imageFolder/newgismap.jpg"?>" alt="NEW GIS MAP" title="NEWGISMAP" /></a></b></p>
   </td>
  </tr>
 </table>
