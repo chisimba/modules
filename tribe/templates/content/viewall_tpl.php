@@ -9,8 +9,7 @@ $this->loadClass ( 'htmlheading', 'htmlelements' );
 $objImView = $this->getObject ( 'viewer' );
 $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
 $objWashout = $this->getObject ( 'washout', 'utilities' );
-$this->objShare = $this->getObject('share', 'toolbar');
-$this->objShare->setup($this->uri(''), 'My thought stream', 'Interesting! ');
+
 $this->objDia = $this->getObject('jqdialogue', 'htmlelements');
 if(!isset($groupfail) || empty($groupfail)) {
     $groupfail = NULL;
@@ -27,7 +26,10 @@ if($groupfail == 'FALSE') {
     $this->objDia->setContent($message);
     echo $this->objDia->show();
 }
-$middleColumn = $this->objShare->show();
+
+$middleColumn = NULL;
+$middleColumn .= $objImView->renderTopBoxen();
+
 $leftColumn = NULL;
 $rightColumn = NULL;
 

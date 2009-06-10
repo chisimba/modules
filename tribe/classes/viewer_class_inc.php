@@ -401,6 +401,13 @@ class viewer extends object {
         $vaLink->href = $this->uri ( array ('action' => 'viewall' ) );
         $vaLink->link = $this->objLanguage->languageText ( "mod_tribe_viewpublic", "tribe" );
         $middleColumn .= " ".$vaLink->show();
+
+        // lets do a text box so that folks can enter a message on the site also
+        // first check that the user is logged in
+        if($this->objUser->isLoggedIn() == TRUE) {
+            $middleColumn .= "<br />";
+            $middleColumn .= $this->doUpdateForm();
+        }
         return $middleColumn;
     }
 
@@ -663,6 +670,30 @@ class viewer extends object {
         //$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_creategroup", "tribe") , $this->objLanguage->languageText("mod_tribe_joininstructions", "tribe") . "<br />" . $ajform);
 
         return $gform;
+    }
+
+    public function doUpdateForm() {
+        $upstuff = NULL;
+        $this->loadClass ( 'htmlheading', 'htmlelements' );
+        // set up the hasthtags header
+        $upheader = new htmlHeading ( );
+        $upheader->str = $this->objLanguage->languageText ( 'mod_tribe_updatenow', 'tribe' );
+        $upheader->type = 2;
+        $upstuff .= $upheader->show();
+        // $upstuff .= "<br />";
+        $upform = new form('updatestatus', $this->uri(array('action' => 'updatestatus')));
+        $upform->addRule('update', $this->objLanguage->languageText("mod_tribe_phrase_updatereq", "tribe") , 'required');
+        $this->loadClass('textarea', 'htmlelements');
+        $textarea = new textarea('update' , '', 3, 80);
+        $upform->addToForm($textarea->show()."<br />");
+
+        $this->obUpButton = new button($this->objLanguage->languageText('word_update', 'tribe'));
+        $this->obUpButton->setValue($this->objLanguage->languageText('word_update', 'tribe'));
+        $this->obUpButton->setToSubmit();
+        $upform->addToForm($this->obUpButton->show());
+        $upstuff .= $upform->show();
+
+        return $upstuff;
     }
 }
 ?>

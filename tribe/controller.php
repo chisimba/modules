@@ -414,7 +414,63 @@ class tribe extends controller {
 
                 break;
 
-            case 'bigdata' :
+            case 'updatestatus' :
+                $status = $this->getParam('update');
+                $groupname = $this->getParam('groupname', 0);
+                $updatearr = array();
+                $updatearr['userid'] = $this->objUser->userId();
+                $updatearr['type'] = 'web';
+                $updatearr['from'] = $this->dbUsers->getJidfromUserId($this->objUser->userId());
+                $updatearr['body'] = $status;
+                $updatearr['datesent'] = date('r');
+                $updatearr['tribegroup'] = 0;
+
+                // if in the case is a @ msg we need to pop the message to recipients also!
+                $fwd = $this->objImView->getAtTagsArr($updatearr['body']);
+                if(!empty($fwd)) {
+                    foreach($fwd as $f) {
+                        // check if the @ tag is a group name
+                        if($this->objGroups->groupExists($f)) {
+                            // get the group info and id
+                            $info = $this->objGroups->getGroupInfo($f);
+                            $add = $this->objDbMsgs->addRecord ( $updatearr, $info['groupname'] );
+                            // get the userid of all members
+                            $list = $this->objMembers->getAllUsers($info['id']);
+                            foreach($list as $member) {
+                                // send on the message
+                                $memberjid = $this->dbUsers->getJidFromUserId($member['userid']);
+                                if($memberjid != NULL) {
+                                    $poster = $this->dbUsers->getUsernamefromJid($poster);
+                                    // log_debug("popping msg to group member $memberjid");
+                                    $this->popMessage($memberjid, 'webupdate', $groupname, $updatearr['body']);
+                                }
+                            }
+                            $this->nextAction('');
+                            break;
+                        }
+                        else {
+                            // the group does not exist, so pop the message to the user...
+                            $this->objDbMsgs->addRecord($updatearr, $groupname);
+                            // log_debug("username is $f");
+                            $memberjid = $this->dbUsers->getJidFromUsername($f);
+                            // log_debug("popping msg to attag person member $memberjid");
+                            $this->popMessage($memberjid, 'webupdate', $groupname, $updatearr['body']);
+                            $this->nextAction('');
+                            break;
+                        }
+                    }
+                }
+                else {
+                    // is a regular update with no users to send to
+                    $this->objDbMsgs->addRecord($updatearr, $groupname);
+                    $this->nextAction('');
+                    break;
+                }
+
+                $this->nextAction('');
+                break;
+
+            /*case 'bigdata' :
 
                 $x = 0;
                 $end = 2000000;
@@ -429,7 +485,7 @@ class tribe extends controller {
 
                 }
                 die();
-
+ */
             default :
                 die ( "unknown action" );
                 break;
@@ -501,6 +557,31 @@ class tribe extends controller {
                                     // send a message saying that you are now unsubscribed back
                                     $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_unsubscribed', 'tribe'));
                                     continue;*/
+
+                                case 'Help' :
+                                case 'HELP' :
+                                case 'help' :
+                                    // return some help text
+                                    $message = <<<EOT
+This system makes use of a number of commands that will return certain information. Here is the list of commands:
+
+- register - type just the word "register" and send the message to register yourself as a user on the system
+- help - display this message
+- wikipedi:topic - Fetch the wikipedia (english) topic for the word <topic>. Example wikipedia:chisimba
+- dict:word - get a dictionary definition of a word <word>. Example dict:monkey will return the definition of monkey
+- joke - simply send the word joke and get a joke returned to you
+- creategroup [privacy] [groupname] - This will create a group with privacy being either private or public and a group name. If no privacy is specified, the group will default to a public group. Example: creategroup public mygroup
+- joingroup [groupname] - Join a group where groupname is a valid group name. Example: joingroup mygroup
+- leavegroup [groupname] - leave a group specified in groupname. Example: leavegroup mygroup
+- tweet: - Use the tweet keyword to send a post to twitter. If you have set up your own twitter account in your personal setting on the site, you may post to your own account, else it will post to the default users twitter account. Example: tweet: This site rocks!
+- connect [username] - Connect (friend) your user to another user. Example: connect @admin or connect admin
+- disconnect [username] - disconnect a friend. Example: disconnect admin or disconnect @admin
+EOT;
+
+                                    $this->conn->message($pl['from'],$message);
+                                    continue;
+
+
 
                                 case 'Register' :
                                 case 'REGISTER' :
@@ -860,7 +941,7 @@ class tribe extends controller {
                             }
 
                             // Send a response message
-                            elseif ($pl ['body'] != "" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register" && $pl ['body'] != "joke") {
+                            elseif ($pl ['body'] != "" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register" && $pl ['body'] != "joke" && $pl ['body'] != "help") {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];
@@ -944,7 +1025,7 @@ class tribe extends controller {
 
     }
 
-    public function  popMessage($jid, $type, $groupname) {
+    public function  popMessage($jid, $type, $groupname, $message = NULL) {
         $conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
         if($type == 'groupcreated') {
             $msg = $this->objLanguage->languageText("mod_tribe_yourgroup", "tribe")." ".$groupname." ".$this->objLanguage->languageText("mod_tribe_hasbeencreated", "tribe");
@@ -952,6 +1033,10 @@ class tribe extends controller {
 
         if($type == 'registerjid') {
             $msg = $this->objLanguage->languageText("mod_tribe_jidregistered", "tribe")." ".$this->postJID;
+        }
+
+        if($type =='webupdate') {
+            $msg = $message;
         }
 
         $conn->connect();
