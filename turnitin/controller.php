@@ -51,7 +51,18 @@ class turnitin extends controller
 		switch ($action)
 		{
 			default:
+				$m = var_export($_REQUEST, true);
+				error_log($m);
 				break;
 		}
+	}
+	
+	/**
+	 * Method to disable the login 
+	 * feature 
+	 */
+	public function requiresLogin()
+	{
+		return FALSE;
 	}
 }
