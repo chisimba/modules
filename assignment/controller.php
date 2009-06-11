@@ -310,8 +310,9 @@ class assignment extends controller
         $closingDate = $this->getParam('closingdate').' '.$this->getParam('closingtime');
         
         $description = $this->getParam('description');
-        
-        $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $mark, $yearmark, $openingDate, $closingDate);
+        $assesment_type = $this->getParam('assesment_type');
+                
+        $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $mark, $yearmark, $openingDate, $closingDate, $assesment_type);
         
         $result = $result ? 'Y' : 'N';
         

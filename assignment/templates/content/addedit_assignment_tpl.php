@@ -40,11 +40,15 @@ $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type'));
 
 if ($mode == 'edit') {
-    $textinput->value = $assignment['name'];
+    $textinput = new textinput('assesment_type');
+    $textinput->size = 20;
+    $textinput->value = $assignment['format'];
+    $textinput->fldType = "hidden";
+    $textinput->value = $assignment['format'];
     if ($assignment['format'] == '0') {
-        $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online').'</strong>');
+        $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online').'</strong>'.$textinput->show());
     } else {
-        $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload').'</strong>');
+        $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload').'</strong>'.$textinput->show());
     }
     
 } else {
