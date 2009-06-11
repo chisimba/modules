@@ -285,8 +285,10 @@ class eportfolio extends controller
             case 'view_others_eportfolio':
                 //$this->setLayoutTemplate('eportfolio_layout_tpl.php');
                 $groupId = $this->getParam('id', null);
+                $ownerId = $this->getParam('ownerId', null);
                 $this->setVarByRef('groupId', $groupId);
-                return "others_eportfolio_tpl.php";
+                $this->setVarByRef('ownerId', $ownerId);
+                return "others2_eportfolio_tpl.php";
                 break;
 
             case 'manage_group':
