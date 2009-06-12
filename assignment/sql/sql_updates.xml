@@ -14,7 +14,7 @@
      <update>
         <table>tbl_assignment</table>
         <version>0.341</version>
-        <description>Added assesment type - Is it a reflection based assignment?</description>
+        <description>Added assesment type - Is it a reflection based assignment? </description>
         <data>
             <add>
                 <name>assesment_type</name>
