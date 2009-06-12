@@ -186,7 +186,7 @@ if ($assignment['format'] == 1) {
         
         echo '<br /><br />'.$header->show();
         
-        $form = new form ('submitmark', $this->uri(array('action'=>'saveuploadmark')));
+        $form = new form ('upload', $this->uri(array('action'=>'saveuploadmark')));
         $form->extra = 'enctype="multipart/form-data"';
         
         $hiddenInput = new hiddeninput('id', $submission['id']);
@@ -208,7 +208,11 @@ if ($assignment['format'] == 1) {
 	$objSubTable->width="60%";
 
 	//Insert mark
-	$objTextinput = new textinput('mark',$submission['mark']);
+	if($submission['mark'] != NULL){
+	 $objTextinput = new textinput('mark',$submission['mark']);
+	}else{
+	 $objTextinput = new textinput('mark','0');
+	}
 	$objTextinput->size='5';
 //	$objTextinput->value=$submission['mark'];
 	$objTextinput->extra=' maxlength=\'4\'';
@@ -368,6 +372,7 @@ $slider=0;
 $slider="
 <script type=\"text/javascript\">
 form_widget_amount_slider('slider_target',document.upload.mark,200,0,".$assignment['mark'].",\"\");
+positionSliderImage(true,".$submission['mark'].");
 </script>
 ";
 echo $slider;

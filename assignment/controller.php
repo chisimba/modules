@@ -435,7 +435,7 @@ class assignment extends controller
     function __saveuploadmark()
     {
         $id = $this->getParam('id');
-        $mark = $this->getParam('slider');
+        $mark = $this->getParam('mark');
         $comment = $this->getParam('commentinfo');
         
         $this->objAssignmentSubmit->markAssignment($id, $mark, $comment);
