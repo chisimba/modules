@@ -1,7 +1,29 @@
 <?php
+//Stylesheet for the slider
+$styleSheet=0;
+$styleSheet="
+<style type=\"text/css\">
+.form_widget_amount_slider{
+	border-top:1px solid #9d9c99;
+	border-left:1px solid #9d9c99;
+	border-bottom:1px solid #eee;
+	border-right:1px solid #eee;
+	background-color:#f0ede0;
+	height:3px;
+	position:absolute;
+	bottom:0px;
+}
+</style>
+";
+echo $styleSheet;
 
-//var_dump($assignment);
+//javascript for the slider
+$str=0;
+$str='<script language="JavaScript" src="'.$this->getResourceUri('dhtmlslider.js').'" type="text/javascript"></script>';
+//append to the top of the page
+$this->appendArrayVar('headerParams', $str);
 
+//setting up of htmlelements helpers
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
@@ -9,6 +31,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
+$this->loadclass('textinput','htmlelements');
 
 $header = new htmlHeading();
 $header->str = $assignment['name'];
@@ -18,7 +41,7 @@ $objDateTime = $this->getObject('dateandtime', 'utilities');
 $objTrimStr = $this->getObject('trimstr', 'strings');
 
 echo $header->show();
-
+//Setup Tables
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $table->startRow();
@@ -240,7 +263,8 @@ if ($assignment['format'] == 1) {
         
         echo '<br /><br />'.$header->show();
         
-        $form = new form ('submitmark', $this->uri(array('action'=>'saveonlinemark')));
+//        $form = new form ('submitmark', $this->uri(array('action'=>'saveonlinemark')));
+        $form = new form ('upload', $this->uri(array('action'=>'saveonlinemark')));
         $form->extra = 'enctype="multipart/form-data"';
         
         $hiddenInput = new hiddeninput('id', $submission['id']);
@@ -249,19 +273,45 @@ if ($assignment['format'] == 1) {
         
         $button = new button('savemark', $this->objLanguage->languageText('mod_assignment_markassgn', 'assignment', 'Mark Assignment'));
         $button->setToSubmit();
-        
+/*        
         $slider = $this->newObject('slider', 'htmlelements');
         $slider->value = $submission['mark'];
         $slider->maxValue = $assignment['mark'];
+*/
+	//Setup Tables
+	$table = $this->newObject('htmltable', 'htmlelements');
+	$objSubTable = new htmltable();
+	$objSubTable->width="60%";
+
+	//Insert mark
+	$objTextinput = new textinput('mark',$submission['mark']);
+	$objTextinput->size='5';
+//	$objTextinput->value=$submission['mark'];
+	$objTextinput->extra=' maxlength=\'4\'';
+
+	$objSubTable->startRow();
+	$objSubTable->addCell($objTextinput->show().' / '.$assignment['mark']." ".$this->objLanguage->languageText('mod_assignment_typeorslider', 'assignment', 'Mark'),'70%','','left');
+	$objSubTable->addCell("&nbsp;");
+	$objSubTable->endRow();
+
+ 	$objSubTable->startRow();
+	$objSubTable->addCell("&nbsp;",'70%','','left','',' id=\'slider_target\'');
+	$objSubTable->addCell("&nbsp;");
+	$objSubTable->endRow();
+
         
-        $table = $this->newObject('htmltable', 'htmlelements');
-        
+
         $table->startRow();
+//        $table->addCell("&nbsp;");
         $table->addCell($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark'), 120);
-        $table->addCell($slider->show());
+        $table->addCell($objSubTable->show());
         $table->endRow();
-        
-        
+	//Spacer
+        $table->startRow();
+        $table->addCell("&nbsp;");        
+        $table->addCell("&nbsp;");
+        $table->endRow();
+       
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_assignment_comment', 'assignment', 'Comment'));
         $table->addCell($textArea->show());
@@ -277,7 +327,15 @@ if ($assignment['format'] == 1) {
         echo $form->show();
     }
 }
-
+//last portion of the slider's script
+//function form_widget_amount_slider(targetElId,formTarget,width,min,max,onchangeAction)
+$slider=0;
+$slider="
+<script type=\"text/javascript\">
+form_widget_amount_slider('slider_target',document.upload.mark,200,0,".$assignment['mark'].",\"\");
+</script>
+";
+echo $slider;
 
 $link = new link($this->uri(array('action'=>'view', 'id'=>$assignment['id'])));
 $link->link = $this->objLanguage->languageText('mod_assignment_returntoassgn', 'assignment', 'Return to Assignment');
