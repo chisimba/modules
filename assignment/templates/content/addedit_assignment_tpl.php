@@ -40,11 +40,10 @@ $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type'));
 
 if ($mode == 'edit') {
-    $textinput = new textinput('assesment_type');
+    $textinput = new textinput('type');
     $textinput->size = 20;
     $textinput->value = $assignment['format'];
     $textinput->fldType = "hidden";
-    $textinput->value = $assignment['format'];
     if ($assignment['format'] == '0') {
         $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online').'</strong>'.$textinput->show());
     } else {
@@ -58,6 +57,19 @@ if ($mode == 'edit') {
     $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
     $table->addCell($radio->show());
 }
+$table->endRow();
+
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_assignment_isreflection', 'assignment', 'Is it a Reflection?'));
+$objRadio = new radio ('assesment_type');
+$objRadio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
+$objRadio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
+$objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
+
+if ($mode == 'edit') {
+	$objRadio->setSelected($assignment['assesment_type']);
+}
+$table->addCell($objRadio->show());
 $table->endRow();
 
 $table->startRow();

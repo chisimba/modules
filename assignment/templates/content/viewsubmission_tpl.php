@@ -195,18 +195,53 @@ if ($assignment['format'] == 1) {
         
         $button = new button('savemark', $this->objLanguage->languageText('mod_assignment_markassgn', 'assignment', 'Mark Assignment'));
         $button->setToSubmit();
-        
+/*        
         $slider = $this->newObject('slider', 'htmlelements');
         $slider->value = $submission['mark'];
         $slider->maxValue = $assignment['mark'];
         
         $table = $this->newObject('htmltable', 'htmlelements');
+*/
+	//Setup Tables
+	$table = $this->newObject('htmltable', 'htmlelements');
+	$objSubTable = new htmltable();
+	$objSubTable->width="60%";
+
+	//Insert mark
+	$objTextinput = new textinput('mark',$submission['mark']);
+	$objTextinput->size='5';
+//	$objTextinput->value=$submission['mark'];
+	$objTextinput->extra=' maxlength=\'4\'';
+
+	$objSubTable->startRow();
+	$objSubTable->addCell($objTextinput->show().' / '.$assignment['mark']." ".$this->objLanguage->languageText('mod_assignment_typeorslider', 'assignment', 'Mark'),'70%','','left');
+	$objSubTable->addCell("&nbsp;");
+	$objSubTable->endRow();
+
+ 	$objSubTable->startRow();
+	$objSubTable->addCell("&nbsp;",'70%','','left','',' id=\'slider_target\'');
+	$objSubTable->addCell("&nbsp;");
+	$objSubTable->endRow();
+
         
+
+        $table->startRow();
+//        $table->addCell("&nbsp;");
+        $table->addCell($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark'), 120);
+        $table->addCell($objSubTable->show());
+        $table->endRow();
+	//Spacer
+        $table->startRow();
+        $table->addCell("&nbsp;");        
+        $table->addCell("&nbsp;");
+        $table->endRow();
+       
+/*
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark'), 120);
         $table->addCell($slider->show());
         $table->endRow();
-        
+*/        
         
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_assignment_comment', 'assignment', 'Comment'));

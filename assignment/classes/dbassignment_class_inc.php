@@ -122,6 +122,7 @@
          * @param <type> $percentage
          * @param <type> $opening_date
          * @param <type> $closing_date
+         * @param <type> $assesment_type
          * @return <type>
          */
         public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type)
@@ -148,18 +149,21 @@
          * @param <type> $name
          * @param <type> $description
          * @param <type> $resubmit
+         * @param <type> $format
          * @param <type> $mark
          * @param <type> $percentage
          * @param <type> $opening_date
          * @param <type> $closing_date
+         * @param <type> $assesment_type
          * @return <type>
          */
-        public function updateAssignment($id, $name, $description, $resubmit, $mark, $percentage, $opening_date, $closing_date, $assesment_type)
+        public function updateAssignment($id, $name, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type)
         {
             return $this->update('id', $id, array(
                 'name' => $name,
                 'description' => $description,
                 'resubmit' => $resubmit,
+                'format' => $format,
                 'mark' => $mark,
                 'percentage' => $percentage,
                 'opening_date' => $opening_date,
