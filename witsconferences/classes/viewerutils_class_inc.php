@@ -173,17 +173,21 @@ public function getTagCloudContent($tagCloud){
                    <li><a href="javascript:void(0);" class="selected">Abstracts</a></li>
                    </ul>
 
-                   <ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">Venue</a></li>
-                   </ul>
-                   <ul class="statslist">
-                   <li>Venue details here</li>
-                   </ul>
-
-                   <ul class="statslist">
+ <ul class="statslist">
                    <li>No abstracts available</li>
                    </ul>
 
+                   <ul class="paneltabs">
+                   <li><a href="javascript:void(0);" class="selected">Venue</a></li>
+                   </ul>
+                 
+
+
+                  <ul class="statslist">
+                   <li>Venue details here</li>
+                   </ul>
+
+ 
 
                    <ul class="paneltabs">
                    <li><a href="javascript:void(0);" class="selected">Sponsors</a></li>
@@ -192,9 +196,7 @@ public function getTagCloudContent($tagCloud){
                    <li>Sponsor details here</li>
                    </ul>
 
-                   <ul class="statslist">
-                   <li>No abstracts available</li>
-                   </ul>
+                  
                    </div>
                    </div>
                    </div>';
