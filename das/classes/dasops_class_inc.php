@@ -412,7 +412,7 @@ class dasops extends object {
 		$username = $this->juser.'@'.$this->jdomain;
 		$password = $this->jpass;
 		$pathToScript = $this->objSysConfig->getValue ( 'imdaemonpath', 'im' );
-		$exeString = "python $pathToScript/bulk_messager.py $username $password $message";
+		$exeString = "python $pathToScript/bulk_messager.py $username $password \"$message\"";
 		exec($exeString. " > /dev/null &");
 		
 	}
