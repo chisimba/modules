@@ -63,6 +63,12 @@ class active extends dbtable {
      */
 	public function init() {
 		try {
+			
+			$this->objHerd = $this->getObject('newherd');
+			$this->objSample = $this->getObject('sampledetails');
+			$this->objGeo2 = $this->getObject('geolevel2');
+			$this->objGeo3 = $this->getObject('geolevel3');
+			$this->objSpecies = $this->getObject('species');
 			parent::init('tbl_ahis_active_surveillance');
 		}
 		catch (customException $e)
@@ -79,7 +85,7 @@ class active extends dbtable {
     }
 	
 	
-	public function getall($campaign){
+	public function getallname($campaign){
 	
 	$sql="SELECT * FROM tbl_ahis_active_surveillance AS d WHERE 
 	     d.campname = '$campaign'";
@@ -112,4 +118,64 @@ class active extends dbtable {
         return FALSE;
    
    }
+   
+   /**
+	 * Method to return all active surveillance data in JSON
+	 * format to be used in the Google Earth GIS plugin
+	 *
+	 * @return JSON array of all data
+	 * */
+	public function getJSONData() {
+		$allData = $this->getAll("ORDER BY campname ASC");
+		$count = 0;
+		$results = array();
+
+		foreach ($allData as $row) {
+			$herds = $this->objHerd->getAll("WHERE activeid = '{$row['id']}'");
+			foreach ($herds as $herd) {
+				$latitude = $herd['latdeg'] + ($herd['latmin']/60);
+				if ($herd['latdirec'] == "S") {
+					$latitude *= -1;
+				}
+				$longitude = $herd['longdeg'] + ($herd['longmin']/60);
+				if ($herd['longdirec'] == "W") {
+					$longitude *= -1;
+				}
+				
+				$geo2 = $this->objGeo2->getRow('name', $herd['geolevel2']);
+				$geo3 = $this->objGeo3->getName($geo2['geo3id']);
+				
+				$samples = $this->objSample->getAll("WHERE newherdid = '{$herd['id']}'");
+				foreach ($samples as $sample) {
+					
+					//log_debug("GIS: $latitude  $longitude {$row['latdirec']}{$row['longdirec']}");
+					$results[] = array(
+						'row' 			=> "$count",
+						'lat'			=> $latitude,
+						'long'			=> $longitude,
+						'year'			=> date('Y', strtotime($sample['testdate'])),
+						'month'			=> date('n', strtotime($sample['testdate'])),
+						'refno'			=> $row['campname'],
+						'geolayer3'		=> $geo3,
+						'geolayer2'		=> $herd['geolevel2'],
+						'locationname'	=> $herd['territory'],
+						'animal'		=> $this->objSpecies->getName($sample['animalid']),
+						'diseasetype'	=> $row['disease'],
+						'surveytype'	=> $row['surveytype'],
+						'testdate'		=> $sample['testdate'],
+						'age'			=> $sample['age'],
+						'sex'			=> $sample['sex'],
+						'number'		=> $sample['number'],
+						'farm'			=> $herd['farmname'],
+						'farmingsystem'	=> $herd['farmingtype'],
+						'sampletype'	=> $sample['sampletype'],
+						'testtype'		=> $sample['testtype'],
+						'testresult'	=> $sample['testresult']
+					);
+					$count++;
+				}
+			}
+		}
+		return json_encode(array('results'=>$results));
+	}
 }

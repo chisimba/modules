@@ -25,6 +25,40 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
+	'latdeg' => array(
+		'type' => 'integer',
+		'length' => 4,
+        'notnull' => TRUE,
+		'default' => 0
+		),
+	'latmin' => array(
+		'type' => 'float',
+        'notnull' => TRUE,
+		'default' => 0
+		),
+	'latdirec' => array(
+		'type' => 'text',
+		'length' => 1,
+        'notnull' => TRUE,
+		'default' => 'E'
+		),
+	'longdeg' => array(
+		'type' => 'integer',
+		'length' => 4,
+        'notnull' => TRUE,
+		'default' => 0
+		),
+	'longmin' => array(
+		'type' => 'float',
+        'notnull' => TRUE,
+		'default' => 0
+		),
+	'longdirec' => array(
+		'type' => 'text',
+		'length' => 1,
+        'notnull' => TRUE,
+		'default' => 'N'
+		),
 	'farmname' => array(
 		'type' => 'text',
 		'length' => 64,
@@ -34,7 +68,8 @@ $fields = array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
-		)
+		),
+	
     );
 //create other indexes here...
 

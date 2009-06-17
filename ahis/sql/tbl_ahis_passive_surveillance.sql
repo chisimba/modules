@@ -131,15 +131,39 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'latitude' => array(
-		'type' => 'text',
-		'length' => 64,
-        'notnull' => TRUE
+	'latdeg' => array(
+		'type' => 'integer',
+		'length' => 4,
+        'notnull' => TRUE,
+		'default' => 0
 		),
-	'longitude' => array(
+	'latmin' => array(
+		'type' => 'float',
+        'notnull' => TRUE,
+		'default' => 0
+		),
+	'latdirec' => array(
 		'type' => 'text',
-		'length' => 64,
-        'notnull' => TRUE
+		'length' => 1,
+        'notnull' => TRUE,
+		'default' => 'E'
+		),
+	'longdeg' => array(
+		'type' => 'integer',
+		'length' => 4,
+        'notnull' => TRUE,
+		'default' => 0
+		),
+	'longmin' => array(
+		'type' => 'float',
+        'notnull' => TRUE,
+		'default' => 0
+		),
+	'longdirec' => array(
+		'type' => 'text',
+		'length' => 1,
+        'notnull' => TRUE,
+		'default' => 'N'
 		),
 	'diseaseid' => array(
 		'type' => 'text',

@@ -48,9 +48,10 @@ if ($id) {
     $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_farm');
     $formUri = $this->uri(array('action'=>'newherd_insert'));
     
-    $record['territory'] = '';
-    $record['farm'] = '';
-    $record['farmingtype'] = '';
+    $record['territory'] = $record['farm'] = $record['farmingtype'] = 
+	$record['latdeg'] = $record['latmin'] = $record['longdeg'] =
+	$record['longmin'] = $record['longdirec'] = $record['latdirec'] = '';
+
 
 }
 
@@ -126,9 +127,6 @@ $territoryDrop->setSelected($record['territory']);
 $farmsystemDrop = new dropdown('farmingsystem');
 $farmsystemDrop->addFromDB($arrayFarmingsystem, 'name', 'name');
 $farmsystemDrop->setSelected($record['farmingtype']);
-
-
-
 
 $farmBox = new textinput('farm', $record['farmname']);
 
@@ -226,25 +224,46 @@ $rep=array(
 'campName'=>$campName,
 
 );
-//$objHeading = $this->getObject('htmlheading','htmlelements');
-//$objHeading->str = $this->objLanguage->code2Txt('mod_ahis_addfarmcomment2','ahis',$rep);
-//$objHeading->type = 2;
+
+$latitudeDegBox = new textinput('latdeg', $record['latdeg'], 'text', 4);
+$longitudeDegBox = new textinput('longdeg', $record['longdeg'], 'text', 4);
+$latitudeMinBox = new textinput('latmin', $record['latmin'], 'text', 4);
+$longitudeMinBox = new textinput('longmin', $record['longmin'], 'text', 4);
+$latDrop = new dropdown('latdirection');
+$latDrop->addOption('N','N');
+$latDrop->addOption('S','S');
+$latDrop->setSelected($record['latdirec']);
+$longDrop = new dropdown('longdirection');
+$longDrop->addOption('E','E');
+$longDrop->addOption('W','W');
+$longDrop->setSelected($record['longdirec']);
+$degrees = $this->objLanguage->languageText('word_degrees');
+$minutes = $this->objLanguage->languageText('word_minutes');
+
 $objTable = new htmlTable();
 $objTable->cellpadding =4;
 $objTable->cellspacing = 2;
-$objTable->width = '60%';
+$objTable->width = NULL;
 $objTable->cssClass = 'min50';
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_farm').": ");
 $objTable->addCell($farmBox->show());
-$objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system').": $tab");
-$objTable->addCell($farmsystemDrop->show());
 $objTable->addCell($this->objLanguage->languageText('word_location').": ");
 $objTable->addCell($territoryDrop->show());
 $objTable->endRow();
-
-
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system').": $tab");
+$objTable->addCell($farmsystemDrop->show());
+$objTable->addCell($this->objLanguage->languageText('word_latitude').":$tab");
+$objTable->addCell("$degrees: ".$latitudeDegBox->show()." $minutes: ".$latitudeMinBox->show().$latDrop->show(),NULL,'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell("&nbsp;");
+$objTable->addCell("&nbsp;");
+$objTable->addCell($this->objLanguage->languageText('word_longitude').":$tab");
+$objTable->addCell("$degrees: ".$longitudeDegBox->show()." $minutes: ".$longitudeMinBox->show().$longDrop->show(),NULL,'center');
+$objTable->endRow();
 $objTable->startRow();
 
 $objTable->addCell($activeBox->show());
@@ -296,6 +315,10 @@ $objForm->addToForm($objTable->show());
 //}else
 //{
 $objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq1', 'ahis'), 'required');
+$objForm->addRule('latdeg', $this->objLanguage->languageText('mod_ahis_vallatitude', 'ahis'), 'numeric');
+$objForm->addRule('longdeg', $this->objLanguage->languageText('mod_ahis_vallongitude', 'ahis'), 'numeric');
+$objForm->addRule('latmin', $this->objLanguage->languageText('mod_ahis_vallatitude', 'ahis'), 'numeric');
+$objForm->addRule('longmin', $this->objLanguage->languageText('mod_ahis_vallongitude', 'ahis'), 'numeric');
 //}
 $objLayer = new layer();
 if($id){

@@ -208,6 +208,11 @@ class ahis extends controller {
         
         switch ($action) {
 			
+			case "tmp":
+				$tmp = $this->objActive->getJSONData();
+				var_dump($tmp);
+				die;
+				
 			case 'unset':
 				$this->unsetPassiveSession();
 				$this->unsetActiveSession();
@@ -519,19 +524,20 @@ class ahis extends controller {
 			
 			case 'gis_reports':
 				$report = $this->getParam('report');
+				$diseases = $this->objDisease->getAll('ORDER BY name');
+				$geo3 = $this->objGeo3->getAll('ORDER BY name');
+				$geo2 = $this->objGeo2->getAll('ORDER BY name');
+				$species = $this->objSpecies->getAll('ORDER BY name');
+				
+				$this->setVar('geo2', $geo2);
+				$this->setVar('geo3', $geo3);
+				$this->setVar('species', $species);
+				$this->setVar('diseases', $diseases);
+				
 				if ($report == 1) {
-					return $this->nextAction('view_reports');
+					$this->setVar('jsonData', $this->objActive->getJSONData());
+					return "view_active_gis_reports_tpl.php";
 				} else {
-					$diseases = $this->objDisease->getAll('ORDER BY name');
-					$geo3 = $this->objGeo3->getAll('ORDER BY name');
-					$geo2 = $this->objGeo2->getAll('ORDER BY name');
-					$species = $this->objSpecies->getAll('ORDER BY name');
-					
-					$this->setVar('geo2', $geo2);
-					$this->setVar('geo3', $geo3);
-					$this->setVar('species', $species);
-					$this->setVar('diseases', $diseases);
-					
 					$this->setVar('jsonData', $this->objPassive->getJSONData());
 					return "view_gis_reports_tpl.php";
 				}
@@ -642,7 +648,7 @@ class ahis extends controller {
                $disease = $this->getParam('disease');             
                $this->setSession('ps_diseases', $disease);
                $this->setVar('arrayCamp', $this->objActive->listcamp());
-               $this->setVar('arraydisease', $this->objActive->getall($this->getSession('ps_campName')));
+               $this->setVar('arraydisease', $this->objActive->getallname($this->getSession('ps_campName')));
                $this->setVar('disease', $this->getSession('ps_disease')); 
                $this->setVar('officerId', $this->getSession('ps_officerId'));
 
@@ -652,9 +658,10 @@ class ahis extends controller {
                
                $this->setVar('userList', $this->objAhisUser->getList());
                $geo2id = $this->getSession('ps_geo2');
-               $data =$this->objActive->getall($this->getSession('ps_campName'));
+               $data = $this->objActive->getallname($this->getSession('ps_campName'));
                $hdata = $this->objNewherd->getherd($data[0]['id']);
                //print_r($hdata);
+			   
                $this->setVar('id',$this->getParam('id'));
                $this->setVar('hdata',$hdata);
                $this->setVar('activeid',$data[0]['id']);
@@ -677,26 +684,35 @@ class ahis extends controller {
                 $this->setSession('ps_activeid',$this->getParam('activeid'));
                 $this->setSession('ps_farm',$this->getParam('farm'));
                 $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
-                $val= $this->objGeo2->getgeo($this->getSession('ps_geo2'));
+                $val = $this->objGeo2->getgeo($this->getSession('ps_geo2'));
+				$longdeg = $this->getParam('longdeg');
+                $latdeg = $this->getParam('latdeg');
+                $longmin = $this->getParam('longmin');
+                $latmin = $this->getParam('latmin');
+                $longdirec = $this->getParam('longdirection');
+                $latdirec = $this->getParam('latdirection');
+				
                 $arrayherd = array();
                 $arrayherd['territory'] = $this->getParam('territory');
                 $arrayherd['geolevel2'] = $val[0]['name'];
                 $arrayherd['farmname'] = $this->getSession('ps_farm');
                 $arrayherd['farmingtype'] = $this->getSession('ps_farmingsystem');
                 $arrayherd['activeid'] = $this->getSession('ps_activeid');
-                if ($id) {
-                    $this->objNewherd->update('id', $id, $arrayherd);
+                $arrayherd['longdeg'] = $longdeg;
+                $arrayherd['latdeg'] = $latdeg;
+                $arrayherd['longmin'] = $longmin;
+                $arrayherd['latmin'] = $latmin;
+                $arrayherd['longdirec'] = $longdirec;
+                $arrayherd['latdirec'] = $latdirec;
+				
+				if ($id) {
+                    $id = $this->objNewherd->update('id', $id, $arrayherd);
                     $code = 3;
                 } else {
-                  $this->objNewherd->insert($arrayherd);  
+					$id = $this->objNewherd->insert($arrayherd);  
                     $code = 1;
                 }             
-              // $div = $this->getParam('next');
-               //print_r($div);
-              // if($div ==$this->objLanguage->languageText('word_finished'))
-              // {
-               // return $this->nextAction('active_addsample');
-               //}else
+				
                 return $this->nextAction('active_addherd');
                 
             case 'newherd_delete':
@@ -767,7 +783,7 @@ class ahis extends controller {
                 $arrayherd['vachist'] = $this->getParam('vachistory');
                 $arrayherd['sampleid'] = $this->getParam('sampleid');
                 $arrayherd['animalid'] = $this->getParam('animalid');
-                $arrayherd['samplingdate'] = $this->getSession('ps_calenda', date('Y-m-d'));
+                //$arrayherd['samplingdate'] = $this->getSession('ps_calenda', date('Y-m-d'));
                 $arrayherd['number'] = $this->getParam('number');
                 $arrayherd['remarks'] = $this->getParam('remarks');
                 $arrayherd['specification'] = $this->getParam('spec');
@@ -781,7 +797,6 @@ class ahis extends controller {
                     $code = 3;
                 } else {
                     $this->objSampledetails->insert($arrayherd); 
-
                     $code = 1;
                 } 
                
@@ -2108,6 +2123,12 @@ class ahis extends controller {
         $this->unsetSession('ps_surveyTypeId');
         $this->unsetSession('ps_campName');
         $this->unsetSession('ps_reportType');
+		$this->unsetSession('ps_longdeg');
+        $this->unsetSession('ps_latdeg');
+        $this->unsetSession('ps_longmin');
+        $this->unsetSession('ps_latmin');
+        $this->unsetSession('ps_longdirec');
+        $this->unsetSession('ps_latdirec');
         
        }
        

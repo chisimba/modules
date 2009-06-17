@@ -167,7 +167,7 @@ $specArea = new textarea('spec',$record['specification'],0,25);
 $sampleidBox = new textinput('sampleid', $record['sampleid']);
 $animalidBox = new textinput('animalid', $record['animalid']);
 $numberBox = new textinput('number', $record['number']);
-$remarksBox = new textarea('remarks', $record['remarks']);
+$remarksBox = new textarea('remarks', $record['remarks'],4,25);
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellpadding =4;
@@ -403,12 +403,8 @@ $objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
 
 $objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq1', 'ahis'), 'required');
-
-//$objForm->addRule('sampleid', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
 $objForm->addRule('sampleid', $this->objLanguage->languageText('mod_ahis_valsamp', 'ahis'), 'required');
-//$objForm->addRule('animalid', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
 $objForm->addRule('animalid', $this->objLanguage->languageText('mod_ahis_valanim', 'ahis'), 'required');
-
 $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
 $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'required');
 echo "<hr class='ahis' /><br/>".$this->objLanguage->code2Txt('mod_ahis_addsamplecomment','ahis',$rep)."<br />".

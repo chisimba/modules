@@ -15,53 +15,40 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-	
 	'campname' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		),
-	
-
 	'surveytype' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		),
-	
- 
 	'disease' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		),
-	
 	'sensitivity' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		),
-   
-	
 	'specificity' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		),
-		
-	
 	'testtype' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		),
-	
-	
 	'comments' => array(
 		'type' => 'clob',
 		 'notnull' => FALSE 
 		)
-	
     );
 //create other indexes here...
 
