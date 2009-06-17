@@ -39,7 +39,7 @@ $content.=$objLatestFiles->getTagCloudContent($tagCloudContent);
 
 $content.='         </div>';
 $content.='     </div>';
-$content.=$objLatestFiles->getSponsors();
+$content.=$objLatestFiles->getArchives();
 
 
 $content.='</div>';

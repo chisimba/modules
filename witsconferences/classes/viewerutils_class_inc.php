@@ -74,8 +74,8 @@ class viewerutils extends object
         return $str;
     }
 
-public function getSponsors(){
-$list = '<li>Wits Business School</li>';
+public function getArchives(){
+$list = '<li>There no archives</li>';
 $objLanguage = $this->getObject('language', 'language');
     $str='<div class="c15r">
            <div class="subcr">
@@ -170,11 +170,30 @@ public function getTagCloudContent($tagCloud){
                    '.$keyNoteSpeakersStr.'
                    </p>
                    <ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">Tags</a></li>
+                   <li><a href="javascript:void(0);" class="selected">Abstracts</a></li>
+                   </ul>
+
+                   <ul class="paneltabs">
+                   <li><a href="javascript:void(0);" class="selected">Venue</a></li>
                    </ul>
                    <ul class="statslist">
-                   <li>'.$tagCloud.'</li>
+                   <li>Venue details here</li>
+                   </ul>
 
+                   <ul class="statslist">
+                   <li>No abstracts available</li>
+                   </ul>
+
+
+                   <ul class="paneltabs">
+                   <li><a href="javascript:void(0);" class="selected">Sponsors</a></li>
+                   </ul>
+                   <ul class="statslist">
+                   <li>Sponsor details here</li>
+                   </ul>
+
+                   <ul class="statslist">
+                   <li>No abstracts available</li>
                    </ul>
                    </div>
                    </div>
