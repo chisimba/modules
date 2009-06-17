@@ -80,7 +80,7 @@ $objLanguage = $this->getObject('language', 'language');
     $str='<div class="c15r">
            <div class="subcr">
            <ul class="paneltabs">
-              <li><a href="#" class="selected">Sponsors</a></li>
+              <li><a href="#" class="selected">Archives</a></li>
               </ul>
            <div class="tower">
            <font style="font-size:13pt;color:#5e6eb5;">
@@ -174,27 +174,11 @@ public function getTagCloudContent($tagCloud){
                    </ul>
 
  <ul class="statslist">
-                   <li>No abstracts available</li>
+                </br>
+                   <p>No abstracts available</p>
                    </ul>
 
-                   <ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">Venue</a></li>
-                   </ul>
-                 
-
-
-                  <ul class="statslist">
-                   <li>Venue details here</li>
-                   </ul>
-
- 
-
-                   <ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">Sponsors</a></li>
-                   </ul>
-                   <ul class="statslist">
-                   <li>Sponsor details here</li>
-                   </ul>
+                  
 
                   
                    </div>
