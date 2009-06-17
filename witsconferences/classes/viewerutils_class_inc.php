@@ -191,7 +191,7 @@ public function getTagCloudContent($tagCloud){
         $venue,$date,$id){
         $objTrim = $this->getObject('trimstr', 'strings');
         $desc=$objTrim->strTrim($desc,30);
-        $descLink = new link ($this->uri(array('action'=>'view', 'id'=>$id)));
+        $descLink = new link ($this->uri(array('action'=>'', 'id'=>$id)));
         $descLink->link = $desc;
         $str='<div class="'.$colType.'">
               <div class="subcl">
