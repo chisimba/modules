@@ -141,7 +141,7 @@ class dasops extends object {
                         </script>
 			";
 
-		return '<p>'.$objFB->show("Mass Message", $ajax).'</p>';
+		return '<p>'.$objFB->show("Send a message to this session's subscribers", $ajax).'</p>';
 	}
 	
     private function massmessageform($editor = FALSE) {
