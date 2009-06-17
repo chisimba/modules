@@ -111,6 +111,23 @@ class dasops extends object {
         }
     }
 
+    /**
+	* Method to post a bulk massage
+	* to all subscribed users
+	*/
+	public function sendToSubscribers()
+	{
+		$objFB = $this->getObject('featurebox', 'navigation');
+		 $ajax = "<p class=\"im_source\" id=\"massalldiv\">Ready...</p>
+            
+			 <script charset=\"utf-8\">
+                            new Ajax.InPlaceEditor('massalldiv', 'index.php', {rows:10,cols:13, callback: function(form, value) { return 'module=das&action=sendtoall&message=' + escape(value) }})
+                        </script>
+			";
+
+		return '<p>'.$objFB->show("Send a message to subscribers", $ajax).'</p>';
+	}
+	
 	/**
 	* Method to post a massage
 	*/
@@ -387,6 +404,18 @@ class dasops extends object {
 		return mail($to, $subject, $body, $headers);
 	}
 	
+	/**
+	* Method to evoke the python script to start the session
+	*/
+	public function sendToAll($message)
+	{
+		$username = $this->juser.'@'.$this->jdomain;
+		$password = $this->jpass;
+		$pathToScript = $this->objSysConfig->getValue ( 'imdaemonpath', 'im' );
+		$exeString = "python $pathToScript/bulk_messager.py $username $password $message";
+		exec($exeString. " > /dev/null &");
+		
+	}
 	
 }
 ?>

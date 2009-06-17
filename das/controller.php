@@ -195,7 +195,10 @@ class das extends controller {
                 break;
 
             case 'massmessage' :
-                $msg = $this->getParam('msg');
+                //this will send to all user for the current session
+            	$msg = $this->getParam('msg');
+            	
+            	$sendToAll = $this->getParam('sendtoall');
                 $msg = strip_tags($msg);
 
                 $conn2 = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
@@ -216,7 +219,12 @@ class das extends controller {
                 echo "Messages were sent to ".count($users)." users";
 
                 break;
-                
+            case 'sendtoall':
+            	$this->objImOps->sendToAll($this->getParam('message'));
+            	echo "Message has been sent to all subscribed users";
+            	exit(0);
+            	break;
+            	
             case 'savestatus':
             	$this->objSysConfig->changeParam('jabberstatus', 'im', $this->getParam('status'));
 				$this->objSysConfig->changeParam('jabbershow', 'im', $this->getParam('show'));
