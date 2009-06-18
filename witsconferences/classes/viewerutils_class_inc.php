@@ -250,7 +250,7 @@ class viewerutils extends object
            <h1>'.$homepagetitle.'</h1>
 
             <ul class="paneltabs">
-              <li><a href="#" class="selected">WITS to host 2010 innovation symposium</a></li>
+              <li><a href="#" class="selected">Wits  2010 innovation symposium</a></li>
                   </ul>
                    <br/>
                    <p>
