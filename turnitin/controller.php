@@ -53,6 +53,7 @@ class turnitin extends controller
 			default:
 				$m = var_export($_REQUEST, true);
 				error_log($m);
+				var_dump($_REQUEST);;
 				break;
 		}
 	}
