@@ -292,7 +292,7 @@ function showResults() {
 				lastPoint = point;
 			}
 		} else if (document.getElementById("lstCountry").selectedIndex > 0) {
-			
+			//alert (dataJSONObject.results[point].geolayer3 +" == "+ document.getElementById("lstCountry").options[document.getElementById("lstCountry").selectedIndex].value);
 			if (dataJSONObject.results[point].geolayer3 == document.getElementById("lstCountry").options[document.getElementById("lstCountry").selectedIndex].value &&	
 				dataJSONObject.results[point].year == document.getElementById("txtYear1").value &&	
 				dataJSONObject.results[point].month == document.getElementById("txtMonth1").value &&	

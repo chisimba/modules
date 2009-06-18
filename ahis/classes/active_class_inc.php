@@ -159,7 +159,7 @@ class active extends dbtable {
 						'geolayer3'		=> $geo3,
 						'geolayer2'		=> $herd['geolevel2'],
 						'locationname'	=> $herd['territory'],
-						'animal'		=> $this->objSpecies->getName($sample['animalid']),
+						'animal'		=> $sample['species'],
 						'diseasetype'	=> $row['disease'],
 						'surveytype'	=> $row['surveytype'],
 						'testdate'		=> $sample['testdate'],
