@@ -15,7 +15,7 @@ if (!
 class viewerutils extends object
 {
 
- 
+
     public function getLatestUpload(){
         $objFiles = $this->getObject('dbwebpresentfiles');
         $objView = $this->getObject("viewer", "webpresent");
@@ -52,10 +52,10 @@ class viewerutils extends object
                 $fileStr=$fileLink->show();
             }
         }
-          $objLanguage = $this->getObject('language', 'language');
-          $featuredPresentationsStr=$objLanguage->languageText("mod_webpresent_featuredpresentation", "webpresent");
+        $objLanguage = $this->getObject('language', 'language');
+        $featuredPresentationsStr=$objLanguage->languageText("mod_webpresent_featuredpresentation", "webpresent");
 
-          $str='<div id="sidebar" class="c41r">
+        $str='<div id="sidebar" class="c41r">
                    <div class="statstabs">
                    <div class="statslistcontainer">
 
@@ -74,10 +74,10 @@ class viewerutils extends object
         return $str;
     }
 
-public function getArchives(){
-$list = '<li>There no archives</li>';
-$objLanguage = $this->getObject('language', 'language');
-    $str='<div class="c15r">
+    public function getArchives(){
+        $list = '<li>There no archives</li>';
+        $objLanguage = $this->getObject('language', 'language');
+        $str='<div class="c15r">
            <div class="subcr">
            <ul class="paneltabs">
               <li><a href="#" class="selected">Archives</a></li>
@@ -85,7 +85,7 @@ $objLanguage = $this->getObject('language', 'language');
            <div class="tower">
            <font style="font-size:13pt;color:#5e6eb5;">
 
-         
+
 
            </font>
            <p>
@@ -99,15 +99,15 @@ $objLanguage = $this->getObject('language', 'language');
          </div>
 
 ';
-return $str;
-}
+        return $str;
+    }
 
-public function getMostDownloaded(){
-$objStats = $this->getObject('dbwebpresentdownloadcounter');
-$list = $objStats->getMostDownloadedList();
-$objLanguage = $this->getObject('language', 'language');
-$mostDownloadedStr=$objLanguage->languageText("mod_webpresent_mostdownloaded", "webpresent");
-    $str='<div class="c15r">
+    public function getMostDownloaded(){
+        $objStats = $this->getObject('dbwebpresentdownloadcounter');
+        $list = $objStats->getMostDownloadedList();
+        $objLanguage = $this->getObject('language', 'language');
+        $mostDownloadedStr=$objLanguage->languageText("mod_webpresent_mostdownloaded", "webpresent");
+        $str='<div class="c15r">
            <div class="subcr">
 
            <div class="tower">
@@ -125,15 +125,15 @@ $mostDownloadedStr=$objLanguage->languageText("mod_webpresent_mostdownloaded", "
          </div>
 
 ';
-return $str;
-}
-public function getMostUploaded(){
-$objStats = $this->getObject('dbwebpresentuploadscounter');
-$list = $objStats->getMostUploadedList();
-$objLanguage = $this->getObject('language', 'language');
-$mostUploadsStr=$objLanguage->languageText("mod_webpresent_mostuploaded", "webpresent");
+        return $str;
+    }
+    public function getMostUploaded(){
+        $objStats = $this->getObject('dbwebpresentuploadscounter');
+        $list = $objStats->getMostUploadedList();
+        $objLanguage = $this->getObject('language', 'language');
+        $mostUploadsStr=$objLanguage->languageText("mod_webpresent_mostuploaded", "webpresent");
 
-    $str='<div class="c15r">
+        $str='<div class="c15r">
            <div class="subcr">
 
            <div class="tower">
@@ -151,14 +151,14 @@ $mostUploadsStr=$objLanguage->languageText("mod_webpresent_mostuploaded", "webpr
          </div>
 
 ';
-return $str;
-}
+        return $str;
+    }
 
-public function getTagCloudContent($tagCloud){
-   $objLanguage = $this->getObject('language', 'language');
-   $keyNoteSpeakersStr='Key note speakers are listed here';//$objLanguage->languageText("mod_witsconferences_keynotespeakers", "witsconferences");
-   $keynoteSpeakersWord=$objLanguage->languageText("mod_witsconferences_keynotespeakers", "witsconferences");
-   $cloud= '<div id="sidebar" class="c41r">
+    public function getTagCloudContent($tagCloud){
+        $objLanguage = $this->getObject('language', 'language');
+        $keyNoteSpeakersStr='Key note speakers are listed here';//$objLanguage->languageText("mod_witsconferences_keynotespeakers", "witsconferences");
+        $keynoteSpeakersWord=$objLanguage->languageText("mod_witsconferences_keynotespeakers", "witsconferences");
+        $cloud= '<div id="sidebar" class="c41r">
                    <div class="statstabs">
                    <div class="statslistcontainer">
 
@@ -178,14 +178,14 @@ public function getTagCloudContent($tagCloud){
                    <p>No abstracts available</p>
                    </ul>
 
-                  
 
-                  
+
+
                    </div>
                    </div>
                    </div>';
-    return $cloud;
-}
+        return $cloud;
+    }
 
     private function createCell($colType,$filename,$thumbNail,$desc,$tags,
         $venue,$date,$id){
@@ -203,7 +203,7 @@ public function getTagCloudContent($tagCloud){
 
               <li class="sectionstats_first">
 
-             
+
               <h3>
              '.$descLink->show().'
               </h3>
@@ -213,7 +213,7 @@ public function getTagCloudContent($tagCloud){
               <li><strong>Tags: </strong><a  href="#">'.$tags.'</a></li>
               <li><strong>Venue: </strong>'.$venue.'</li>
               <li><strong>Date: </strong>'.$date.'</li>
-              
+
               </ul>
  <div class="clear"></div>
 
@@ -244,23 +244,23 @@ public function getTagCloudContent($tagCloud){
             $content='';
             $counter = 0;
             $homepagetitle=$objSysConfig->getValue('HOME_PAGE_TITLE', 'witsconferences');
-            
+
             $title='
-           
+
            <h1>'.$homepagetitle.'</h1>
-           
+
             <ul class="paneltabs">
-              <li><a href="#" class="selected">WITS to host 2010 innovations symposium</a></li>
+              <li><a href="#" class="selected">WITS to host 2010 innovation symposium</a></li>
                   </ul>
                    <br/>
                    <p>
-                '.$latest10Desc.'
+               
                    </p>
               ';
             $row='<div class="sectionstats">';
             $row.='<div class="subcolumns">';
             $column=0;
-            
+
 
             foreach ($latestFiles as $file)
             {
@@ -278,7 +278,7 @@ public function getTagCloudContent($tagCloud){
 
                 $source = $objConfig->getcontentBasePath().'witsconferences_thumbnails/'.$file['id'].'.png';
                 $relLink = $objConfig->getsiteRoot().$objConfig->getcontentPath().'witsconferences_thumbnails/'.$file['id'].'.png';
-                
+
 
                 $fileLink->link =$source;
                 $fileLink->title=$file['title'];
@@ -305,15 +305,15 @@ public function getTagCloudContent($tagCloud){
                     }
                 }
 
-                
-                
+
+
                 $venueLink = new link ($this->uri(array('action'=>'')));
                 $venueLink->link = $file['venue'];
 
 
                 $confdate =$file['date'];
 
-            $row.=$this->createCell(
+                $row.=$this->createCell(
                     $columnDiv,
                     $filename,
                     $fileLink,
@@ -321,8 +321,8 @@ public function getTagCloudContent($tagCloud){
                     $tagsStr,
                     $venueLink->show(),
                    '<p>'.$confdate.'</p>',
-                   $file['id']
-            );
+                    $file['id']
+                );
 
                 $column++;
                 $counter++;
