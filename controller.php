@@ -130,11 +130,30 @@ class realtime extends controller
     public $room='default';
 
 
+/**
+ * flag to shw whether we are starting a presentation or joining one
+ * @var <type>
+ */
     public $ispresenter='yes';
 
+    /**
+     * whether password is required for the meeting or not
+     * @var <type>
+     */
+
     public $passwordrequired='no';
+    /**
+     *unique id of jnlp generated
+     * @var <type>
+     */
 
     public $jnlpId="";
+    /**
+     *the id generated as short url
+     * @var <type> 
+     */
+
+    public $joinMeetingId="none";
 
     function init()
     {
@@ -190,12 +209,12 @@ class realtime extends controller
         * @param string $action String indicating action to be taken
         */
     function dispatch($action = Null) {
-/*
- $this->setVarByRef('title', 'Under Maintenance');
+         /*
+        $this->setVarByRef('title', 'Under Maintenance');
                             $this->setVarByRef('desc','Under Maintenance');
                             $this->setVarByRef('content', '<h2>Under Maintenance</h2>');
                             return "dump_tpl.php";
-*/
+       */
 
         $this->contextCode = $this->objContext->getContextCode();
         switch ($action)   {
@@ -204,36 +223,43 @@ class realtime extends controller
                     $this->sessionTitle=$this->getParam('agenda');
                     $this->startSlideServer("popopopo",$this->getParam('agenda'));
                     return "";
+            }
+
+           case 'classroom' :{
+                    $this->sessionId=$this->getParam('id');
+                    $this->sessionTitle=$this->getParam('agenda');
+                    $this->room=$this->getParam('room');
+                    $this->ispresenter=$this->getParam('presenter');
+                    $this->passwordrequired=$this->getParam('needpassword');
+                    return $this->showClassRoom();
                 }
+          case 'joinmeeting':{
+                 
+                  $this->joinMeetingId=$this->getParam('joinid');
+                  $this->ispresenter='no';
+                  return $this->showClassRoom();
+                }
+          case 'classroombeta' :{
+                    $id=$this->getParam('id');
+                    $title=$this->getParam('agenda');
+                    $this->room=$this->getParam('room');
+                    $this->ispresenter=$this->getParam('presenter');
+                return $this->showClassRoomBeta($id,$title);
+          }
+          case 'showstartlinks' :
+                    $this->sessionId=$this->getParam('id');
+                    $this->sessionTitle=$this->getParam('agenda');
+                    $this->room=$this->getParam('room');
+                    $this->ispresenter=$this->getParam('presenter');
+                    $this->passwordrequired=$this->getParam('needpassword');
+                    $this->joinMeetingId=$this->getParam('joinid');
+          return $this->showStartLinks();
 
-                case 'classroom' :{
-                        $this->sessionId=$this->getParam('id');
-                        $this->sessionTitle=$this->getParam('agenda');
-                        $this->room=$this->getParam('room');
-                        $this->ispresenter=$this->getParam('presenter');
-                        $this->passwordrequired=$this->getParam('needpassword');
-                        return $this->showClassRoom();
-                    }
-                    case 'classroombeta' :{
-                            $id=$this->getParam('id');
-                            $title=$this->getParam('agenda');
-                            $this->room=$this->getParam('room');
-                            $this->ispresenter=$this->getParam('presenter');
-                            return $this->showClassRoomBeta($id,$title);
+          default :{
+                  return $this->showClassRoom();
                         }
-                        case 'showstartlinks' :
-                            $this->sessionId=$this->getParam('id');
-                            $this->sessionTitle=$this->getParam('agenda');
-                            $this->room=$this->getParam('room');
-                            $this->ispresenter=$this->getParam('presenter');
-                            $this->passwordrequired=$this->getParam('needpassword');
-                            return $this->showStartLinks();
-
-                            default :{
-                                            return $this->showClassRoom();
-                                }
-                            }
-                        }
+                      }
+                   }
 
        /**
          * shows classroom applet to user if the user first entered a context
@@ -256,7 +282,16 @@ class realtime extends controller
          *This starts a slide server
          * @return String
          */
-                        public function generateJNLP($xsessionId,$xsessionTitle,$xroom,$ispresenter,$passwordrequired){
+                        public function generateJNLP(
+                            $xsessionId,
+                            $xsessionTitle,
+                            $xroom,
+                            $ispresenter,
+                            $passwordrequired,
+                            $useEC2,
+                            $xjoinid
+                            ){
+
                             $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
                             $modPath=$this->objAltConfig->getModulePath();
                             $replacewith="";
@@ -296,7 +331,7 @@ class realtime extends controller
                             $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$openfireHost,
                                 $openfirePort,$openfireHttpBindUrl,$username,$filePath, $xroom,
                                 $ispresenter,$xsessionId,$xsessionTitle,$webpresent,$fullnames,$email,
-                                $siteRoot,$passwordrequired,$this->jnlpId);
+                                $siteRoot,$passwordrequired,$this->jnlpId,$useEC2,$xjoinid);
 
                         }
                         public function showClassroom(){
@@ -335,10 +370,10 @@ class realtime extends controller
 
                             if($this->getSession('javatest') == 'done'){
                                 return $this->nextAction ( 'showStartLinks', array ('id'=>$this->sessionId,'agenda'=>$this->sessionTitle,'room'=>$this->room,
-                                     'presenter'=>$this->ispresenter,'needpassword'=>$this->passwordrequired ) );
+                                     'presenter'=>$this->ispresenter,'needpassword'=>$this->passwordrequired,'joinid'=>$this->joinMeetingId));
                             }else{
                                 $javaTest = $this->getObject('sysreqs', 'webpresent');
-                                $testPage=$javaTest->show($this->sessionId,$this->sessionTitle,$this->room,$this->ispresenter,$this->passwordrequired);
+                                $testPage=$javaTest->show($this->sessionId,$this->sessionTitle,$this->room,$this->ispresenter,$this->passwordrequired,$this->joinMeetingId);
                                 $this->setVarByRef('content',$testPage);
                                 $this->setSession('javatest','done');
                             }
@@ -346,75 +381,15 @@ class realtime extends controller
                         }
 
 
-                        public function showClassroomBeta($id,$title){
-
-                            $slideServerId=$this->realtimeManager->randomString(32);//'gen19Srv8Nme50';
-                            //$this->realtimeManager->startBetaSlidesServer($slideServerId);
-
-                            $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
-                            $modPath=$this->objAltConfig->getModulePath();
-                            $replacewith="";
-                            $docRoot=$_SERVER['DOCUMENT_ROOT'];
-                            $appletPath=str_replace($docRoot,$replacewith,$modPath);
-                            $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
-                            $this->reqTest= 'Verify that your system meets the <a href="'.$appletCodeBase.'/sysreq.php">minimum requirements</a><br><br>';
-
-                            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-                            $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
-                            $supernodePort=22225;//$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
-                            $username=$this->objUser->userName();
-                            $fullnames=$this->objUser->fullname();
-                            $userDetails=$fullnames.' '.$username;
-                            $userImagePath='imagepath';//".'.$this->objUser->getSmallUserImage().'"';
-                            $isLoggedIn =$this->objUser->isLoggedIn();
-                            $fileBase=$modPath.'/realtime/resources/';
-                            $resourcesPath =$modPath.'/realtime/resources';
-                            $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
-                            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
-                            $presenterimage=$this->newObject('image','htmlelements');
-                            $presenterimage->src='skins/_common/icons/webpresent/btn_START.jpg';
-                            $presenterimage->width="200";
-                            $presenterimage->height="80";
-
-                            $joinimage=$this->newObject('image','htmlelements');
-                            $joinimage->src='skins/_common/icons/webpresent/btn_JOIN.jpg';
-                            $joinimage->width="200";
-                            $joinimage->height="80";
-                            $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
-                            $presentationLink->link=   $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
-
-                            $siteRoot=$this->objAltConfig->getSiteRoot();
-                            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_START.jpg" width="200" height="80">';
-                            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_JOIN.jpg" width="200" height="80">';
-
-                            $desc="Beta 1.0.2<br><hr>";
-                            $desc.='<li>Add Live interactions to your presentation</li>';
-                            $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
-
-                            //generate for presenter
-
-                            $this->objStarter->generateJNLP1_0_2Beta('presenter',$fileBase,$appletCodeBase,$supernodeHost,
-                                $supernodePort,$username,$fullnames,'true',$id,$title,$userDetails,$userImagePath,
-                                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                                $filePath,$slideServerId,'true');
-                            //generate for participant
-                            $this->objStarter->generateJNLP1_0_2Beta('audience',$fileBase,$appletCodeBase,$supernodeHost,
-                                $supernodePort,$username,$fullnames,'false',$id,$title,$userDetails,$userImagePath,
-                                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                                $filePath,$slideServerId,'true');
-                            $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
-
-                            $this->setVarByRef('title',  $title);
-                            $this->setVarByRef('desc', $desc);
-                            $this->setVarByRef('content', $this->reqTest.'<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
-                            return "dump_tpl.php";
-                        }
                         /**
                          * this displays link from which to launch the jnlp file
                          * @return void
                          */
                         public function showStartLinks(){
-                            $this->generateJNLP($this->sessionId, $this->sessionTitle,$this->room,$this->ispresenter,$this->passwordrequired);
+                            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+                            $useEC2=$objSysConfig->getValue('USE_EC2_SERVERS', 'realtime');
+                            $this->generateJNLP($this->sessionId, $this->sessionTitle,
+                                $this->room,$this->ispresenter,$this->passwordrequired,$useEC2,$this->joinMeetingId);
                             $modPath=$this->objAltConfig->getModulePath();
                             $replacewith="";
                             $docRoot=$_SERVER['DOCUMENT_ROOT'];
