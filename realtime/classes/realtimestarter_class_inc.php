@@ -70,7 +70,9 @@ class realtimestarter extends object{
         $email,
         $siteUrl,
         $passwordrequired,
-        $jnlpId
+        $jnlpId,
+        $useEC2,
+        $joinid
     ){
         $fullname=trim($fullname);
         if($fullnames == ''){
@@ -131,20 +133,18 @@ class realtimestarter extends object{
         fwrite($fh,   ' <argument>'.$room.'</argument>');
         fwrite($fh,   ' <argument>'.$username.'</argument>');
 
-        //if($webpresent == 'true'){
-            fwrite($fh,   ' <argument>'.$slidesDir.'</argument>');
-            fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
-            fwrite($fh,   ' <argument>'.$presentationId.'</argument>');
-            fwrite($fh,   ' <argument>'.$presentationName.'</argument>');
-            fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
-            fwrite($fh,   ' <argument>'.$email.'</argument>');
-            fwrite($fh,   ' <argument>'.$siteUrl.'</argument>');
-        /*}else{
-            fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
-            fwrite($fh,   ' <argument>'.$email.'</argument>');
-            fwrite($fh,   ' <argument>'.$siteUrl.'</argument>');
-        }*/
+
+        fwrite($fh,   ' <argument>'.$slidesDir.'</argument>');
+        fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
+        fwrite($fh,   ' <argument>'.$presentationId.'</argument>');
+        fwrite($fh,   ' <argument>'.$presentationName.'</argument>');
+        fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
+        fwrite($fh,   ' <argument>'.$email.'</argument>');
+        fwrite($fh,   ' <argument>'.$siteUrl.'</argument>');
+
         fwrite($fh,   ' <argument>'.$passwordrequired.'</argument>');
+        fwrite($fh,   ' <argument>'.$useEC2.'</argument>');
+        fwrite($fh,   ' <argument>'.$joinid.'</argument>');
         fwrite($fh,   '</application-desc>');
         fwrite($fh,'<security>');
         fwrite($fh,'  <all-permissions/>');
