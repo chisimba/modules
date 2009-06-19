@@ -108,7 +108,7 @@ $form->addToForm($formTable->show());
 $form->addRule('num_animals', 'Please enter number of animals', 'required');
 $form->addRule('num_animals', 'Please enter valid number ', 'numeric');
 $form->addRule('source', 'Please enter source of animals', 'required');
-$form->addRule('source', 'Please enter valid source', 'letteronly');
+$form->addRule('source', 'Please enter valid source', 'nonnumeric');
 
 
 //buttons
