@@ -50,12 +50,7 @@ $this->loadClass('label', 'htmlelements');
 
 $msg = '';
 
-if(($output=='yes')) {
-        $objMsg = $this->getObject('timeoutmessage','htmlelements');
-        $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_promptyear', 'ahis'));
-        $msg = $objMsg->show()."<br />";
 
-}
 $formAction = 'saveinspectiondata';
   
 $buttonText = 'Save';
@@ -120,4 +115,12 @@ $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$msg.$form->show());
 
 echo $objLayer->show();
+if(($output=='yes')) {
+        
+        echo "<script type=\"text/javascript\">
+        alert(\"Please enter valid inspection date\");
+
+              </script> ";
+
+}
 ?>

@@ -75,5 +75,39 @@
                 </remarks>
             </change>                
         </data>        
-    </update>    
+    </update> 
+    <update>
+        <table>tbl_ahis_livestockimport</table>
+        <version>0.074</version>
+        <description>add count of species to livestock import</description>
+        <data>
+            <add>
+                <name>countspecies</name>
+                <type>integer</type>
+                <definition>
+                        <type>integer</type>
+                        <length>32</length>
+                        <default>0</default>
+                        <notnull>TRUE</notnull>
+                </definition>
+            </add>
+        </data>
+    </update> 
+    <update>
+        <table>tbl_ahis_livestockexport</table>
+        <version>0.074</version>
+        <description>add count of species to livestock import</description>
+        <data>
+            <add>
+                <name>countspecies</name>
+                <type>integer</type>
+                <definition>
+                        <type>integer</type>
+                        <length>32</length>
+                        <default>0</default>
+                        <notnull>TRUE</notnull>
+                </definition>
+            </add>
+        </data>
+    </update>   
 </updates>

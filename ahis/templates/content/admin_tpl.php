@@ -135,6 +135,9 @@ $dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'vaccinationhistory_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_vaccinationadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
+$link = new link($this->uri(array('action' => 'animalproduction_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_animalproductionadmin', 'ahis');
+$dataList .= "<li>".$link->show()."</li>";
 $dataList .= "</ul>";
 
 $content = $objHeading->show().$objSubHeading->show()."<div class='admin'>".$employeeLink->show()."<br /><br />";

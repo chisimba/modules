@@ -72,7 +72,7 @@ $GLOBALS['kewl_entry_point_run']) {
 		}
 	}
 	
-	public function addLivestockimportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef)
+	public function addLivestockimportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef,$count)
     {
 		
 			$sql = $this->insert(array(
@@ -86,6 +86,7 @@ $GLOBALS['kewl_entry_point_run']) {
 			'cheese' => $cheese,
 			'poultry' => $poultry,
 			'beef' => $beef,
+			'countspecies' => $count,
 			));
 			if($sql)
 			return true;

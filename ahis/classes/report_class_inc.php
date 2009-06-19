@@ -348,14 +348,14 @@ class report extends object {
 		//livestock import report generation		
 		case 'init_07': 			
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units');
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units','Count of Species of Live Animal');
 				
 				$importRecords = $this->objLivestockimport->getALL();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($importRecords as $report) {
 					
-					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef']);
+					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef'],$report['countspecies']);
 					
 					$csv .= implode(",", $row)."\n";
 				}
@@ -364,14 +364,14 @@ class report extends object {
 		//livestock export report generation		
 		case 'init_08': 
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units');
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units','Count of Species of Live Animal');
 				
 				$exportRecords = $this->objLivestockexport->getALL();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($exportRecords as $report) {
 					
-					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef']);
+					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef'],$report['countspecies']);
 					
 					$csv .= implode(",", $row)."\n";
 				}

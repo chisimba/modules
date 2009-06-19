@@ -131,6 +131,7 @@ class ahis extends controller {
             $this->objViewReport = $this->getObject('report');
             $this->objSampledetails = $this->getObject('sampledetails');
             $this->objSampling = $this->getObject('sampling');
+            $this->objAnimalProduction = $this->getObject('animalproduction');
 			$this->objMeatInspect = $this->getObject('db_meat_inspection');
 			$this->objAnimalPopulation= $this->getObject('dbanimalpop');
 			$this->objSlaughter= $this->getObject('ahis_slaughter');
@@ -170,7 +171,8 @@ class ahis extends controller {
                                         'sample_delete','species_add','species_insert','species_delete','survey_add',
                                         'survey_insert','survey_delete','farmingsystem_add','farmingsystem_insert',
                                         'farmingsystem_delete','vaccinationhistory_add','vaccinationhistory_insert',
-                                        'vaccinationhistory_delete');
+                                        'vaccinationhistory_delete','animalproduction_admin','animalproduction_add',
+                                        'animalproduction_delete');
 										
         }
         catch(customException $e) {
@@ -635,7 +637,7 @@ class ahis extends controller {
                     $this->unsetAnimalSession();
                 } 
                  
-             return $this->nextAction('home');
+             return $this->nextAction('select_officer');
 
                           
              
@@ -1188,6 +1190,46 @@ class ahis extends controller {
                 $this->objStatus->delete('id', $id);
                 return $this->nextAction('status_admin', array('success'=>'2'));
             
+            case 'animalproduction_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objAnimalProduction->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'animalproduction_add')));
+                $this->setVar('addLinkText', "addanimalproduction");
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_animalproductionadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_animalproduction'));
+                $this->setVar('deleteAction', 'animalproduction_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'animalproduction_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'animalproduction_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'animalproduction_add_tpl.php';
+            
+            case 'animalproduction_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objAnimalProduction->valueExists('name', $name)) {
+                    return $this->nextAction('animalproduction_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objAnimalProduction->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objAnimalProduction->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('AnimalProduction_admin', array('success'=>$code));
+            
+            case 'animalproduction_delete':
+                $id = $this->getParam('id');
+                $this->objAnimalProduction->delete('id', $id);
+                return $this->nextAction('animalproduction_admin', array('success'=>'2'));
             case 'sex_admin':
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objSex->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
@@ -2011,7 +2053,8 @@ class ahis extends controller {
              case 'animal_population_add':
 			 		$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
-                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));		
+			 	   $this->setVar('animprod',$this->objAnimalProduction->getAll("ORDER BY name"));
+               $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));		
 				return 'animal_population_tpl.php';
 				
 			case 'addinspectiondata':
@@ -2194,7 +2237,7 @@ class ahis extends controller {
       }
 		$data= $this->objMeatInspect->addMeatInspectionData($district, $date, $num_of_cases, $num_at_risk);
 		
-		return $this->nextAction('');
+		return $this->nextAction('animal_feedback',array('success'=>1));
 
 		
 	
@@ -2246,10 +2289,10 @@ class ahis extends controller {
 		$cheese = $this->getParam('cheese');
 		$poultry = $this->getParam('poultry');
 		$beef = $this->getParam('beef');
-		
+		$count = $this->getParam('countspecies');
 	
 		
-		$data= $this->objLivestockimport->addLivestockimportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef);
+		$data= $this->objLivestockimport->addLivestockimportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef,$count);
 							
 		return $this->nextAction('animal_feedback',array('success'=>'1'));
 	}
@@ -2267,9 +2310,11 @@ class ahis extends controller {
 		$cheese = $this->getParam('cheese');
 		$poultry = $this->getParam('poultry');
 		$beef = $this->getParam('beef');
+		$count = $this->getParam('countspecies');
 		
 		
-		$data= $this->objLivestockexport->addLivestockexportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef);
+		
+		$data= $this->objLivestockexport->addLivestockexportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef,$count);
 														
 		return $this->nextAction('animal_feedback',array('success'=>'1'));
 	}

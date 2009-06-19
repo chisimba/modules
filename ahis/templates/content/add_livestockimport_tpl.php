@@ -36,6 +36,13 @@ $formTable->addCell($label_pointentry->show());
 $formTable->addCell($entrypoint->show());
 $formTable->endRow();
 
+
+$label_countspecies = new label('Count of Species of Live Animal: ','countspecies');
+$countspecies = new textinput('countspecies');
+$formTable->startRow();
+$formTable->addCell($label_countspecies->show());
+$formTable->addCell($countspecies->show());
+$formTable->endRow();
 // animal origin	
 $label = new label ('Animal origin: ', 'origin');
 $origin = new dropdown('origin');
@@ -131,6 +138,9 @@ $form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerro
 $form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultrynumbererror','ahis'),'numeric');
 $form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'required');
 $form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beefnumbererror','ahis'),'numeric');
+$form->addRule('countspecies', $this->objLanguage->languageText('mod_ahis_countspecieserror','ahis'),'required');
+$form->addRule('countspecies', $this->objLanguage->languageText('mod_ahis_countspeciesnumbererror','ahis'),'numeric');
+
 
 $form->addToForm($formTable->show());
  

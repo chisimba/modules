@@ -86,12 +86,9 @@ $formTable->endRow();
 //animal production
 $label = new label ('Animal Production:', ' input_production');
 $production = new dropdown('animal_production');
-$production->multiple=false; 
-$production->addOption('Beef', 'Beef');
-$production->addOption('Cheese', 'Cheese');
-$production->addOption('Eggs', 'Eggs');
-$production->addOption('Milk','Milk');
-$production->addOption('Other','Other');
+
+$production->addFromDB($animprod, 'name','name');
+
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($production->show());
@@ -112,6 +109,7 @@ $form->addRule('num_animals', 'Please enter number of animals', 'required');
 $form->addRule('num_animals', 'Please enter valid number ', 'numeric');
 $form->addRule('source', 'Please enter source of animals', 'required');
 $form->addRule('source', 'Please enter valid source', 'letteronly');
+
 
 //buttons
 $button = new button ('animal_population_save', 'Save');
