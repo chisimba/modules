@@ -85,8 +85,9 @@ $objTable->endRow();
 
 $objForm = new form('ageadd', $formUri);
 $objForm->addToForm($objTable->show());
-$objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
-
+$errorMsg = str_replace('name', $this->objLanguage->languageText('phrase_age'), $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'));
+$objForm->addRule('name', $errorMsg, 'required');
+$objForm->addRule('name', $errorMsg, 'nonnumeric');
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';

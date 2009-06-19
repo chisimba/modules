@@ -1042,6 +1042,8 @@ class ahis extends controller {
 						$record['pass'] = sha1($password);
 					}
                     $this->objUser->update('id', $id, $record);
+					$user = $this->objUser->getRow('id',$id);
+					$userid = $user['userid'];
                     $code = 3;
                 } else {
                     if (!empty($test)) {

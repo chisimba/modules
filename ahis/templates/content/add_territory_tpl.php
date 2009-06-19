@@ -125,18 +125,16 @@ $objTable->endRow();
 $objForm = new form("territoryform", $formUri);
 $objForm->addToForm($objTable->show());
 $objForm->addRule('territory', $this->objLanguage->languageText('mod_ahis_territoryrequired', 'ahis'), 'required');
-$objForm->addRule('latitude_north', $this->objLanguage->languageText('mod_ahis_latitudenorthrequired', 'ahis'), 'required');
-$objForm->addRule('latitude_south', $this->objLanguage->languageText('mod_ahis_latitudesouthrequired', 'ahis'), 'required');
-$objForm->addRule('longitude_east', $this->objLanguage->languageText('mod_ahis_longitudeeastrequired', 'ahis'), 'required');
-$objForm->addRule('longitude_west', $this->objLanguage->languageText('mod_ahis_longitudewestrequired', 'ahis'), 'required');
-$objForm->addRule('latitude_north', $this->objLanguage->languageText('mod_ahis_latitudenorthrequired', 'ahis'), 'numeric');
-$objForm->addRule('latitude_south', $this->objLanguage->languageText('mod_ahis_latitudesouthrequired', 'ahis'), 'numeric');
-$objForm->addRule('longitude_east', $this->objLanguage->languageText('mod_ahis_longitudeeastrequired', 'ahis'), 'numeric');
-$objForm->addRule('longitude_west', $this->objLanguage->languageText('mod_ahis_longitudewestrequired', 'ahis'), 'numeric');
+$objForm->addRule('territory', $this->objLanguage->languageText('mod_ahis_territoryrequired', 'ahis'), 'nonnumeric');
+$objForm->addRule('latitude_north', $this->objLanguage->languageText('mod_ahis_latitudenorthrequired', 'ahis'), 'numericifpresent');
+$objForm->addRule('latitude_south', $this->objLanguage->languageText('mod_ahis_latitudesouthrequired', 'ahis'), 'numericifpresent');
+$objForm->addRule('longitude_east', $this->objLanguage->languageText('mod_ahis_longitudeeastrequired', 'ahis'), 'numericifpresent');
+$objForm->addRule('longitude_west', $this->objLanguage->languageText('mod_ahis_longitudewestrequired', 'ahis'), 'numericifpresent');
 
 
-$objForm->addRule('area', $this->objLanguage->languageText('mod_ahis_arearequired', 'ahis'), 'required');
+$objForm->addRule('area', $this->objLanguage->languageText('mod_ahis_arearequired', 'ahis'), 'numeric');
 $objForm->addRule('unit_of_measure', $this->objLanguage->languageText('mod_ahis_unitofmeasurementrequired', 'ahis'), 'required');
+$objForm->addRule('unit_of_measure', $this->objLanguage->languageText('mod_ahis_unitofmeasurementrequired', 'ahis'), 'nonnumeric');
 
 $heading = $objHeading->show()."<hr />";
 $body = $objForm->show();

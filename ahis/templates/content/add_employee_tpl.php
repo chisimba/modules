@@ -86,8 +86,11 @@ if ($error) {
 }
 
 $surnameInput = new textinput('surname',$record['surname']);
+$surnameInput->extra = "onkeyup='boxLimiter(this)'";
 $nameInput = new textinput('name',$record['firstname']);
+$nameInput->extra = "onkeyup='boxLimiter(this)'";
 $usernameInput = new textinput('username',$record['username']);
+$usernameInput->extra = "onkeyup='boxLimiter(this)'";
 $passwordInput = new textinput('password', NULL, 'password');
 $confirmInput = new textinput('confirm', NULL, 'password');
 
@@ -224,6 +227,8 @@ $objForm->id = 'form_employeeadd';
 $objForm->addToForm($objTable->show());
 $objForm->addRule('surname', $this->objLanguage->languageText('mod_ahis_surnamerequired', 'ahis'), 'required');
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
+$objForm->addRule('datebirth', $this->objLanguage->languageText('mod_ahis_valdatebirth', 'ahis'), 'datenotfuture');
+$objForm->addRule('hireddate', $this->objLanguage->languageText('mod_ahis_valdatehired', 'ahis'), 'datenotfuture');
 
 $objForm->addRule(array('confirm', 'password'), $this->objLanguage->languageText('mod_ahis_pwordmismatch', 'ahis'), 'compare');
 

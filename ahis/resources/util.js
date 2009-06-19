@@ -117,6 +117,12 @@ function clearPassiveVaccine() {
     $('input_panvac').checked = false;
 }
 
+function boxLimiter(box) {
+    if (box.value.length > 30) {
+		box.value = box.value.substr(0,30);
+    }
+}
+
 function numberVal()
 {
 	alert('Insert numerics only.');	
