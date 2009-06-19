@@ -1,4 +1,5 @@
 <?php
+//ini_set("error_reporting", "E_ALL");
 /**
  * tribe controller class
  *
@@ -108,10 +109,6 @@ class tribe extends controller {
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
-
-//            default :
-//                die ( "unknown action" );
-//                break;
 
             case 'viewallajax' :
                 $page = intval ( $this->getParam ( 'page', 0 ) );
@@ -507,9 +504,9 @@ class tribe extends controller {
         log_debug("Starting messagehandler");
         // This is a looooong running task... Lets use the background class to handle it
         //check the connection status
-        $status = $this->objBack->isUserConn ();
+        //$status = $this->objBack->isUserConn ();
         //keep the user connection alive even if the browser is closed
-        $callback = $this->objBack->keepAlive ();
+        //$callback = $this->objBack->keepAlive ();
         // Now the code is backrounded and cannot be aborted! Be careful now...
         $this->conn->autoSubscribe ();
         try {
@@ -518,6 +515,7 @@ class tribe extends controller {
                 $payloads = $this->conn->processUntil ( array ('message', 'presence', 'end_stream', 'session_start', 'reply' ) );
                 foreach ( $payloads as $event ) {
                     $pl = $event [1];
+                    //log_debug($event);
                     switch ($event [0]) {
                         case  'reply':
                             log_debug("reply to message...");
@@ -847,7 +845,7 @@ EOT;
 
                             }
 
-                            // execute yql
+                            /* execute yql
                             $bod = explode(":", $pl['body']);
                             if(isset($bod[0]) && strtolower($bod[0]) == 'yql' ) {
                                $body = implode(":", $bod);
@@ -858,7 +856,7 @@ EOT;
                                $message = base64_encode( serialize($ret) );
                                $this->conn->message($pl['from'], $message);
                                continue;
-                            }
+                            }*/
 
                             // subscribe to another user (keyword sub)
                             $bod = explode(" ", $pl['body']);
@@ -941,10 +939,11 @@ EOT;
                             }
 
                             // Send a response message
-                            elseif ($pl ['body'] != "" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register" && $pl ['body'] != "joke" && $pl ['body'] != "help") {
+                            elseif ($pl ['body'] != "" && $pl ['body'] != "quit" && $pl ['body'] != "break" && $pl ['body'] != "register" && $pl ['body'] != "joke" && $pl ['body'] != "help" && $pl['type'] != 'error') {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];
+                                log_debug($poster." is the poster");
                                 // check for any @user tags and send the message to them too
                                 $fwd = $this->objImView->getAtTagsArr($pl['body']);
                                 if(!empty($fwd)) {
@@ -980,6 +979,7 @@ EOT;
                                             if($uid != NULL) {
                                                 $poster = $this->dbUsers->getUsernamefromJid($poster);
                                                 $this->conn->message($uid, "@".$poster." says: ".$pl['body']);
+                                                continue;
                                                 //$this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                             }
                                             else {
@@ -1004,9 +1004,11 @@ EOT;
 
                         case 'presence' :
                             // Update the table presence info
+                            log_debug("Setting presence");
                             $this->objDbPres->updatePresence ( $pl );
                             break;
                         case 'session_start' :
+                            log_debug("roster");
                             $this->conn->getRoster ();
                             $this->conn->presence ( $status = $this->objLanguage->languageText ( 'mod_im_presgreeting', 'im' ) );
                             break;
@@ -1020,7 +1022,7 @@ EOT;
         }
         // OK something went wrong, make sure the sysadmin knows about it!
         $email = $this->objConfig->getsiteEmail ();
-        $call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
+        //$call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
         break;
 
     }
