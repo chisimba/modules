@@ -99,7 +99,7 @@ $formTable->endRow();
 $objForm = new form('searchForm', $uri);
 $objForm->addToForm($formTable);
 $objForm->extra = "style='margin: 0px;'";
-$objForm->addRule('searchStr', $this->objLanguage->languageText('blanksearch','ahis'), 'required');
+$objForm->addRule('searchStr', $this->objLanguage->languageText('mod_ahis_blanksearch','ahis'), 'required');
 
 $objTable = $this->newObject('htmltable','htmlelements');
 $objTable->width = NULL;
