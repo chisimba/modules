@@ -785,7 +785,7 @@ class ahis extends controller {
                 $arrayherd['vachist'] = $this->getParam('vachistory');
                 $arrayherd['sampleid'] = $this->getParam('sampleid');
                 $arrayherd['animalid'] = $this->getParam('animalid');
-                //$arrayherd['samplingdate'] = $this->getSession('ps_calenda', date('Y-m-d'));
+                $arrayherd['samplingdate'] = $this->getSession('ps_calendardate', date('Y-m-d'));
                 $arrayherd['number'] = $this->getParam('number');
                 $arrayherd['remarks'] = $this->getParam('remarks');
                 $arrayherd['specification'] = $this->getParam('spec');

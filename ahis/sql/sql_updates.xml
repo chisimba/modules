@@ -109,5 +109,20 @@
                 </definition>
             </add>
         </data>
+    </update> 
+    <update>
+        <table>tbl_ahis_sampledetails</table>
+        <version>0.075</version>
+        <description>add samplingdate</description>
+        <data>
+            <add>
+                <name>samplingdate</name>
+                <type>date</type>
+                <definition>
+                        <type>date</type>
+                        <notnull>TRUE</notnull>
+                </definition>
+            </add>
+        </data>
     </update>   
 </updates>

@@ -427,6 +427,7 @@ class report extends object {
 				$data = $this->objAhisUser->getList();
 				$csv = implode(",", $headerArray)."\n";
 
+
 				if(!empty($activeRecords)){
 				foreach ($activeRecords as $report) {
 				foreach($data as $var){if($report['reporterid']==$var['userid']){

@@ -131,6 +131,7 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypointerror','ahis'),'required');
+$form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypointerror','ahis'),'nonnumeric');
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
