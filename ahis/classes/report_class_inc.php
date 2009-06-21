@@ -425,6 +425,7 @@ class report extends object {
 									 
 				$activeRecords = $this->objActive->getactive($year,$month);
 				$data = $this->objAhisUser->getList();
+
 				$csv = implode(",", $headerArray)."\n";
 
 

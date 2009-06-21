@@ -791,7 +791,7 @@ class ahis extends controller {
                 $arrayherd['specification'] = $this->getParam('spec');
                 $arrayherd['testdate'] = $this->getParam('calendardate');
 
-                //print_r($arrayherd);
+                //print_r($arrayherd['samplingdate']);exit;
                 $this->setSession('ps_data',$arrayherd);
                
                 if ($id) {
