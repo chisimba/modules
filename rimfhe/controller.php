@@ -4,7 +4,7 @@
  * Module
  *
  */
-// security check - must be included in all scripts
+//security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']){
     die("You cannot view this page directly");
 }
@@ -13,7 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run']){
  * @package rimfhe
  * @version 0.1
  * @Copyright January 2009
- * @author Joey Akwunwa
+ * @author Ram
  */
 
 class rimfhe extends controller
