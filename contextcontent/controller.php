@@ -958,24 +958,23 @@ class contextcontent extends controller
                     // Replace XHTML
                     $pageText = str_replace('&amp;', '&', $pageText);
                     
+
                     
-                    // Get All links to files from file manager
-                    preg_match_all('%"'.$siteRoot.'index\\.php\\?module=filemanager&action=file&id=(?P<id>.+?)&.+?"%i', $pageText, $results, PREG_PATTERN_ORDER);
-                    
-                    // Start Counter
-                    $counter = 0;
-                    
-                    // Loop through all matches
-                    foreach ($results['id'] as $fileId)
-                    {
-                        // Get Full Path to File
-                        $filePath = $objFile->getFullFilePath($fileId);
-                        
-                        // Replace Item with Full Path to the File
-                        $pageText = str_replace($results[0][$counter], '"'.$filePath.'"', $pageText);
-                        // Increase Counter
-                        $counter++;
+                    // Get Image Source Links
+                    $results=spliti('src="',$pageText);
+                    // Loop through the matches
+                    foreach ($results as $line){
+                        $r2=split('"',$line);
+                        $srcURL=$r2[0];
+                        $r2=split('module=filemanager&action=file&id=',$srcURL);
+                        if (isset($r2[1])){
+                            $r3=split('&',$r2[1]);
+                            $fileId=$r3[0];
+                            $filePath = $objFile->getFullFilePath($fileId);
+                            $pageText=str_replace($srcURL,$filePath,$pageText);  
+                        }
                     }
+		
                     
                     // Create HTML Document
                     $content = '<html><head>';
