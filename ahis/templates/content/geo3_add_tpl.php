@@ -44,11 +44,21 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('layer','htmlelements');
 
+if ($id) {
+    $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_geolevel','ahis');
+    $formUri = $this->uri(array('action'=>'geography_level3_insert', 'id'=>$id));
+    $record = $this->objGeo3->getRow('id', $id);
+} else {
+    $hStr = $this->objLanguage->languageText('mod_ahis_geo3add','ahis');
+    $formUri = $this->uri(array('action'=>'geography_level3_insert'));
+    $record['name'] = '';
+}
+
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;
-$objHeading->str = $this->objLanguage->languageText('mod_ahis_geo3add','ahis');
+$objHeading->str = $hStr;
 
-$nameInput = new textinput('name');
+$nameInput = new textinput('name', $record['name']);
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_enter'));
 $sButton->setToSubmit();
@@ -72,9 +82,10 @@ $objTable->addCell($bButton->show());
 $objTable->addCell($sButton->show());
 $objTable->endRow();
 
-$objForm = new form('geo3add', $this->uri(array('action'=>'geography_level3_insert')));
+$objForm = new form('geo3add', $formUri);
 $objForm->addToForm($objTable->show());
-$objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
+$errorMsg = str_replace('name', $this->objLanguage->languageText('mod_ahis_geolevelname', 'ahis'), $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'));
+$objForm->addRule('name', $errorMsg, 'nonnumeric');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());

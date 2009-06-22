@@ -825,8 +825,9 @@ class ahis extends controller {
                 $this->setVar('fieldName', 'name');
                 $this->setVar('data', $data);
                 $this->setVar('searchStr', $searchStr);
+                $this->setVar('editAction', 'geography_level3_add');
                 $this->setVar('success', $this->getParam('success'));
-                $this->setVar('allowEdit', FALSE);
+                $this->setVar('allowEdit', TRUE);
                 return 'admin_overview_tpl.php';
             
             case 'geography_level2_admin':
@@ -852,16 +853,24 @@ class ahis extends controller {
                 return 'admin_overview_tpl.php';
             
             case 'geography_level3_add':
+                $this->setVar('id',$this->getParam('id'));
                 return 'geo3_add_tpl.php';
             
             case 'geography_level3_insert':
+                $id = $this->getParam('id');
                 $name = $this->getParam('name');
-                if ($this->objGeo3->valueExists('name',$name)) {
-                    return $this->nextAction('geography_level3_admin', array('success'=>'4'));
-                }
-                $this->objGeo3->insert(array('name'=>$name));
-                return $this->nextAction('geography_level3_admin', array('success'=>'1'));
-            
+                if ($id) {
+                    $this->objGeo3->update('id', $id, array('name'=>$name));
+                    $success = '3';
+                } else {
+					if ($this->objGeo3->valueExists('name',$name)) {
+						return $this->nextAction('geography_level3_admin', array('success'=>'4'));
+					}
+					$this->objGeo3->insert(array('name'=>$name));
+					$success = '1';
+				}
+				return $this->nextAction('geography_level3_admin', array('success'=>$success));
+				
             case 'geography_level3_delete':
                 $id = $this->getParam('id');
                 $this->objGeo3->delete('id', $id);
@@ -877,14 +886,15 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
                 $geo3Id = $this->getParam('geo3id');
-                if ($this->objGeo2->valueExists('name',$name)) {
-                    return $this->nextAction('geography_level2_admin', array('success'=>'4'));
-                }
+                
                 if ($id) {
                     $this->objGeo2->update('id', $id, array('name'=>$name, 'geo3id' => $geo3Id));
                     $success = '3';
                 } else {
-                    $this->objGeo2->insert(array('name'=>$name, 'geo3id' => $geo3Id));
+                    if ($this->objGeo2->valueExists('name',$name)) {
+					    return $this->nextAction('geography_level2_admin', array('success'=>'4'));
+					}
+					$this->objGeo2->insert(array('name'=>$name, 'geo3id' => $geo3Id));
                     $success = '1';
                 }
                 return $this->nextAction('geography_level2_admin', array('success'=>$success));

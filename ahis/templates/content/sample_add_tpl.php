@@ -85,7 +85,8 @@ $objTable->endRow();
 
 $objForm = new form('sampleadd', $formUri);
 $objForm->addToForm($objTable->show());
-$objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
+$errorMsg = str_replace('name', $this->objLanguage->languageText('word_sample'), $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'));
+$objForm->addRule('name', $errorMsg, 'nonnumeric');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());

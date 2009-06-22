@@ -85,8 +85,9 @@ $objTable->endRow();
 
 $objForm = new form('farmingsystemadd', $formUri);
 $objForm->addToForm($objTable->show());
-$objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
-
+$farming_system = $this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system');
+$errorMsg = str_replace('name', $farming_system, $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'));
+$objForm->addRule('name', $errorMsg, 'nonnumeric');
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';
