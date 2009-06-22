@@ -37,6 +37,7 @@ class turnitin extends controller
 	 */
 	public function init()
 	{
+		$this->objTOps = $this->getObject('turnitinops');
 		
 	}
 	
@@ -51,6 +52,9 @@ class turnitin extends controller
 		switch ($action)
 		{
 			default:
+				print $this->objTOps->APILogin();
+				break;
+			case 'callback':
 				$m = var_export($_REQUEST, true);
 				error_log($m);
 				var_dump($_REQUEST);;
