@@ -71,5 +71,10 @@ class dbsubs extends dbTable {
         }
     }
 
+    public function getFollowers($userid) {
+        $recs = $this->getAll("WHERE userid = '$userid'");
+        return $recs;
+    }
+
 }
 ?>

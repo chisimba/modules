@@ -992,7 +992,15 @@ EOT;
                                     // not an @ tag
                                     $add = $this->objDbMsgs->addRecord ( $pl, NULL);
                                     // send a message to the poster
-                                    //$this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
+                                    // pop a message to all that are connected as well.
+                                    $followers = $this->objDbSubs->getFollowers($this->dbUsers->getUserIdFromJid($poster));
+                                    log_debug($followers);
+                                    foreach($followers as $follow) {
+                                        // pass on the msg to their JID
+                                        $poster = $this->dbUsers->getUsernamefromJid($poster);
+                                        $this->conn->message($this->dbUsers->getJidfromUserId($follow['followid']), "@".$poster." says: ".$pl['body']);
+                                    }
+
                                 }
                                 continue;
                             }
@@ -1004,11 +1012,11 @@ EOT;
 
                         case 'presence' :
                             // Update the table presence info
-                            log_debug("Setting presence");
+                            //log_debug("Setting presence");
                             $this->objDbPres->updatePresence ( $pl );
                             break;
                         case 'session_start' :
-                            log_debug("roster");
+                            //log_debug("roster");
                             $this->conn->getRoster ();
                             $this->conn->presence ( $status = $this->objLanguage->languageText ( 'mod_im_presgreeting', 'im' ) );
                             break;
