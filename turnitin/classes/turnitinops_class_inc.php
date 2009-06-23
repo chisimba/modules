@@ -86,13 +86,14 @@ class turnitinops extends object
         $this->aid = $this->_objSysConfig->getValue('accountid', 'turnitin');
         $this->remote_host = $this->_objSysConfig->getValue('apihost', 'turnitin');
         $this->shared_secret_key = $this->_objSysConfig->getValue('sharedkey', 'turnitin');       
-        //$this->uem = $this->_objSysConfig->getValue('email', 'turnitin');       
-        //$this->upw = $this->_objSysConfig->getValue('password', 'turnitin');       
+        $this->uem = $this->_objSysConfig->getValue('email', 'turnitin');       
+        $this->upw = 'elearn2009';//$this->_objSysConfig->getValue('password', 'turnitin');       
         
-        $this->uem= 'wesleynitsckie@gmail.com';
+       
+      //  $this->uem= 'wesleynitsckie@gmail.com';
 		$this->ufn='Wesley';
 		$this->uln='Nitsckie';
-		$this->upw='364t648y';
+	//	$this->upw='364t648y';
 		
         //setup defaults
        	$this->gmtime = $this->getGMT();
@@ -119,6 +120,22 @@ class turnitinops extends object
 	public function getGMT(){
 		return substr(gmdate('YmdHi'), 0, -1);
 	}	
+	
+	/**
+	 * Method to get the returned xml result
+	 * and format it into a readable message
+	 * 
+	 * @param string $xml
+	 * @return array
+	 */
+	public function getXMLResult($xmlStr)
+	{
+		$xml = new SimpleXMLElement($xmlStr);
+		$message = $xml->returndata->message;
+		$rcode = $xml->returndata->rcode;
+		
+		return array('message' => $message, 'rcode' => $rcode );
+	}
 	
 	/**
 	 * Method to get all the parameters for
@@ -181,9 +198,13 @@ class turnitinops extends object
 	 * @return result
 	 */
 	public function doPost(){
-	  $params = $this->getParams();
-	  $user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
+	  	$params = $this->getParams();
+	  	$user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
 			
+	  	 //get the proxy info if set
+        $objProxy = $this->getObject('proxyparser', 'utilities');
+        $proxyArr = $objProxy->getProxy();
+            
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_POST,1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
@@ -193,15 +214,20 @@ class turnitinops extends object
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 		
-		//setup proxy
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-		curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
-		curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
-	
+		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+        {
+			//setup proxy
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
+			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
+        }
+        
 		$result=curl_exec ($ch);
 		curl_close ($ch);
 	
+		//return $this->getXMLResult($result);
+		print $params;
 		return $result;
 	}
 		
@@ -218,11 +244,7 @@ class turnitinops extends object
     	$this->fcmd = 1;
     	$this->fcmd = 2;
     	return $this->doPost();
-    	if(1){
-    		return TRUE;
-    	}else {
-    		return FALSE;
-    	}
+    	
     }
     
     /**
@@ -232,7 +254,7 @@ class turnitinops extends object
      */
     function createLecturer($params)
     {    	
-    	$this->createUser($params, 2);
+    	return $this->createUser($params, 2);
     }
     
      /**
@@ -242,7 +264,7 @@ class turnitinops extends object
      */
     function createStudent($params)
     {    	
-    	$this->createUser($params, 1);
+    	return $this->createUser($params, 1);
     }
     
     /**
@@ -259,10 +281,83 @@ class turnitinops extends object
     	$this->utp = $type;
     	
     	$this->upw = $params['password'];    	
+    	$this->uid = $params['username'];    	
     	$this->ufn = $params['firstname'];
     	$this->uln = $params['lastname'];
     	$this->uem = $params['email'];    	
     	
     	return $this->doPost();
     }
+    ///////////////////////// 
+    /// LECTURER FUNCTIONS///
+    /////////////////////////
+    
+    public function createClass($params)
+    {
+    	$this->fid = 2;
+    	$this->fcmd = 2;
+    	$this->utp = 2;
+    	$this->ctl = $para['contexttitle'];
+    	//$this->cpw = $para['contexttitle'];
+    	$this->uid = $para['username'];
+    	$this->cid = $para['contextcode'];
+    	
+    	return $this->doPost();
+    }
+    
+    /**
+     * Method to create an assessment
+     *
+     * @param array $params
+     */
+    public function createAssessment($params)
+    {
+    	
+    }
+    
+    
+    /**
+     * Method to get a list of assessments
+     *
+     * @param array $params
+     */
+    public function listSubmissions($params)
+    {
+    	
+    }
+    
+    
+    public function checkForSubmission($params)
+    {
+    	
+    }
+    
+    ///////////////////////// 
+    /// STUDENT FUNCTIONS////
+    /////////////////////////
+    /**
+     * Method to submit an assessment
+     *
+     * @param array $params
+     */
+    public function submitAssessment($params)
+    {
+    	
+    }
+    
+    public function getReport($params)
+    {
+    	
+    }
+    
+    public function deleteSubmission($params)
+    {
+    	
+    }
+    
+    public function viewSubmission($param)
+    {
+    	
+    }
+    
 }

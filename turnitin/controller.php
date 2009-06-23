@@ -38,7 +38,7 @@ class turnitin extends controller
 	public function init()
 	{
 		$this->objTOps = $this->getObject('turnitinops');
-		
+		$this->objUser = $this->getObject('user', 'security');
 	}
 	
 	/**
@@ -49,11 +49,32 @@ class turnitin extends controller
 	
 	public function dispatch($action)
 	{
+		$params = array();
 		switch ($action)
 		{
+			//creates a user profile (if one does not exist) and logs the user in (instructor or student)
+			case 'createlecturer':
+				$username = $this->objUser->userName();
+				$userDetails = $this->objUser->lookupData($username);
+				if ($userDetails)
+				{
+					
+					$params['password'] = 'nitsckie';//$username;    	
+	    			$params['username'] = $username;
+	    			$params['firstname'] = $userDetails['firstname']; 
+	    			$params['lastname'] = $userDetails['surname'];
+	    			$params['email'] = $userDetails['emailaddress'];
+	    				    			
+	    			print $this->objTOps->createLecturer($params);
+				} else {
+					print "no user details";
+				}
+				break;
+				
 			default:
 				print $this->objTOps->APILogin();
 				break;
+				
 			case 'callback':
 				$m = var_export($_REQUEST, true);
 				error_log($m);
