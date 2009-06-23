@@ -994,7 +994,7 @@ EOT;
                                     // send a message to the poster
                                     // pop a message to all that are connected as well.
                                     $followers = $this->objDbSubs->getFollowers($this->dbUsers->getUserIdFromJid($poster));
-                                    log_debug($followers);
+                                    //log_debug($followers);
                                     foreach($followers as $follow) {
                                         // pass on the msg to their JID
                                         $poster = $this->dbUsers->getUsernamefromJid($poster);
