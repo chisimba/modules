@@ -63,6 +63,8 @@ $this->loadClass('form','htmlelements');
 $sButton = new button('enter', $this->objLanguage->languageText('mod_ahis_runreport', 'ahis'));
 $sButton->setToSubmit();
 $sButton->setCSS('create_reportButton');
+$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript:clear_viewReports();");
+$cButton->setCSS('clearButton');
 $backUri = $this->uri(array('action'=>'home'));
 $bButton = new button('back', $this->objLanguage->languageText('word_clear'), "javascript: document.location='$backUri'");
 $bButton->setCSS('cancelButton');
@@ -110,7 +112,7 @@ $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
-$objTable->addCell("&nbsp;".$sButton->show()."&nbsp; &nbsp;&nbsp &nbsp;".$bButton->show());
+$objTable->addCell("&nbsp;".$sButton->show()."&nbsp; &nbsp;".$cButton->show()."&nbsp &nbsp;".$bButton->show());
 //$objTable->addCell('');
 //$objTable->addCell();
 $objTable->addCell('');
@@ -119,6 +121,7 @@ $objTable->endRow();
 $objForm = new form('reportForm', $this->uri(array('action' => 'view_reports')));
 $objForm->addToForm($objTable->show());
 $objForm->addRule('year', $this->objLanguage->languageText('mod_ahis_valyear', 'ahis'), 'numeric');
+$objForm->addRule(array('name'=>'year','maxnumber'=>date('Y')), $this->objLanguage->languageText('mod_ahis_valyear', 'ahis'), 'maxnumber');
 
 $gisDrop = new dropdown('report');
 $gisDrop->addOption(1, 'Active Sureveillance');
@@ -161,5 +164,8 @@ if (isset($enter) && $enter) {
 } else {
     $report = "";
 }
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar("headerParams", "<script type='text/javascript' src='$scriptUri'></script>");
 
 echo $msg.$bigTable->show().$report;

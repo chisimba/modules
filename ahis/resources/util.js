@@ -69,13 +69,13 @@ function resetDate(fieldName) {
 }
 
 function clearPassiveSurveillance() {
-    $('input_oStatusId').selectedIndex = 0;
-    $('input_qualityId').selectedIndex = 0;
+    //$('input_oStatusId').selectedIndex = 0;
+    //$('input_qualityId').selectedIndex = 0;
     $('input_remarks').value = '';
-    resetDate('datePrepared');
-    resetDate('dateIBAR');
-    resetDate('dateReceived');
-    resetDate('dateIsReported');
+    //resetDate('datePrepared');
+    //resetDate('dateIBAR');
+    //resetDate('dateReceived');
+    //resetDate('dateIsReported');
 }
 
 function clearPassiveOutbreak() {
@@ -83,20 +83,26 @@ function clearPassiveOutbreak() {
     resetDate('dateOccurence');
     resetDate('dateDiagnosis');
     resetDate('dateInvestigation');
-    $('input_location').value = '';
-    $('input_latitude').value = '';
-    $('input_longitude').value = '';
-    $('input_disease').value = '';
-    $('input_causitive').value = '';
+    $('input_latmin').value = '';
+	$('input_longmin').value = '';
+	$('input_latdeg').value = '';
+	$('input_longdeg').value = '';
+	$('input_locationId').selectedIndex = 0;
+	$('input_latdirection').selectedIndex = 0;
+    $('input_longdirection').selectedIndex = 0;
+	$('input_diseaseId').selectedIndex = 0;
+    $('input_causativeId').selectedIndex = 0;
+	
+    
 }
 
 function clearPassiveSpecies() {
-    $('input_speciesId').selectedIndex = 0;
-    $('input_ageId').selectedIndex = 0;
-    $('input_sexId').selectedIndex = 0;
-    $('input_productionId').selectedIndex = 0;
-    $('input_controlId').selectedIndex = 0;
-    $('input_basisId').selectedIndex = 0;
+    //$('input_speciesId').selectedIndex = 0;
+    //$('input_ageId').selectedIndex = 0;
+    //$('input_sexId').selectedIndex = 0;
+    //$('input_productionId').selectedIndex = 0;
+    //$('input_controlId').selectedIndex = 0;
+    //$('input_basisId').selectedIndex = 0;
     $('input_susceptible').value = '';
     $('input_cases').value = '';
     $('input_deaths').value = '';
@@ -112,8 +118,8 @@ function clearPassiveSpecies() {
 function clearPassiveVaccine() {
     $('input_source').value = '';
     $('input_batch').value = '';
-    resetDate('dateManufactured');
-    resetDate('dateExpire');
+    //resetDate('dateManufactured');
+    //resetDate('dateExpire');
     $('input_panvac').checked = false;
 }
 
@@ -121,6 +127,16 @@ function boxLimiter(box) {
     if (box.value.length > 30) {
 		box.value = box.value.substr(0,30);
     }
+}
+
+function clear_viewReports() {
+	var today = new Date();
+    var monthIndex = today.getMonth();
+    var month = monthIndex + 1;
+    var year = today.getFullYear();
+	
+	$('input_year').value = year;
+	$('input_month').selectedIndex = monthIndex;
 }
 
 function numberVal()

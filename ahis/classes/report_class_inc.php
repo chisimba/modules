@@ -83,7 +83,8 @@ class report extends object {
 			$this->objAnimalPopulation= $this->getObject('dbanimalpop');
 			$this->objMeatInspect = $this->getObject('db_meat_inspection');
 			$this->objSlaughter= $this->getObject('ahis_slaughter');
-            //$this->objCausative = $this->getObject('causative');
+            $this->objCausative = $this->getObject('causative');
+			$this->objQuality = $this->getObject('quality');
 			$this->objAnimalmovement = $this->getObject('animalmovement');
             $this->objLivestockimport = $this->getObject('livestockimport');
 			$this->objLivestockexport = $this->getObject('livestockexport');
@@ -235,23 +236,52 @@ class report extends object {
 		switch ($reportType) {
 			case 'init_01': 			//passive surveillance
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel3'),$this->objLanguage->languageText('phrase_outbreakref'),
-									 $this->objLanguage->languageText('mod_ahis_reportofficer','ahis'),$this->objLanguage->languageText('word_disease'),
-									 $this->objLanguage->languageText('mod_ahis_isreporteddate','ahis'),$this->objLanguage->languageText('mod_ahis_vetdate','ahis'),
-									 $this->objLanguage->languageText('mod_ahis_investigationdate','ahis'),$this->objLanguage->languageText('mod_ahis_diagnosisdate','ahis'),
-									 $this->objLanguage->languageText('word_location'),$this->objLanguage->languageText('word_latitude'),$this->objLanguage->languageText('word_longitude'),
-									 $this->objLanguage->languageText('word_species'),$this->objLanguage->languageText('word_age'),$this->objLanguage->languageText('word_sex'),
-									 $this->objLanguage->languageText('word_production'),$this->objLanguage->languageText('phrase_control'),
-									 $this->objLanguage->languageText('phrase_diagnosis'),$this->objLanguage->languageText('word_susceptible'),
-									 $this->objLanguage->languageText('phrase_newcases'),$this->objLanguage->languageText('word_deaths'),$this->objLanguage->languageText('word_slaughtered'),
-									 $this->objLanguage->languageText('word_recovered'),$this->objLanguage->languageText('word_destroyed'),$this->objLanguage->languageText('phrase_outbreak'),
-									 $this->objLanguage->languageText('word_vaccinated'),$this->objLanguage->languageText('word_prophylactic'),
-									 $this->objLanguage->languageText('mod_ahis_vacsource','ahis'),$this->objLanguage->languageText('mod_ahis_batch','ahis'),
-									 $this->objLanguage->languageText('mod_ahis_manufacturedate','ahis'),$this->objLanguage->languageText('mod_ahis_expiredate','ahis'));
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel3'),
+									 $this->objLanguage->languageText('phrase_geolevel2'),
+									 $this->objLanguage->languageText('phrase_outbreakref'),
+									 $this->objLanguage->languageText('mod_ahis_reportofficer','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_reportdate','ahis'),
+									 $this->objLanguage->languageText('phrase_outbreak'),
+									 $this->objLanguage->languageText('mod_ahis_dateprepared','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_ibardate','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_dvsdate','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_isreporteddate','ahis'),
+									 $this->objLanguage->languageText('phrase_quality'),
+									 $this->objLanguage->languageText('word_remarks'),
+									 $this->objLanguage->languageText('mod_ahis_vetdate','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_dateoccurence','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_diagnosisdate','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_investigationdate','ahis'),
+									 $this->objLanguage->languageText('word_location'),
+									 $this->objLanguage->languageText('word_latitude'),
+									 $this->objLanguage->languageText('word_longitude'),
+									 $this->objLanguage->languageText('word_disease'),
+									 $this->objLanguage->languageText('word_causative'),
+									 $this->objLanguage->languageText('word_species'),
+									 $this->objLanguage->languageText('phrase_age'),
+									 $this->objLanguage->languageText('word_sex'),
+									 $this->objLanguage->languageText('word_production'),
+									 $this->objLanguage->languageText('phrase_control'),
+									 $this->objLanguage->languageText('phrase_diagnosis'),
+									 $this->objLanguage->languageText('word_susceptible'),
+									 $this->objLanguage->languageText('word_cases'),
+									 $this->objLanguage->languageText('word_deaths'),
+									 $this->objLanguage->languageText('word_vaccinated'),
+									 $this->objLanguage->languageText('word_slaughtered'),
+									 $this->objLanguage->languageText('word_destroyed'),
+									 $this->objLanguage->languageText('word_production'),
+									 $this->objLanguage->languageText('phrase_newcases'),
+									 $this->objLanguage->languageText('word_recovered'),
+									 $this->objLanguage->languageText('word_prophylactic'),
+									 $this->objLanguage->languageText('mod_ahis_vacsource','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_batch','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_manufacturedate','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_expiredate','ahis'),
+									 $this->objLanguage->languageText('mod_ahis_panvactested', 'ahis'));
 				
 				$passiveRecords = $this->objPassive->getALL("WHERE YEAR(reportdate) = '$year'
 														   AND MONTH(reportdate) = '$month'
-														   ORDER BY reportdate");
+														   ");
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($passiveRecords as $report) {
@@ -264,21 +294,58 @@ class report extends object {
 					$sex = $this->objSex->getRow('id',$report['sexid']);
 					$production = $this->objProduction->getRow('id', $report['productionid']);
 					$control = $this->objControl->getRow('id', $report['controlmeasureid']);
+					$quality = $this->objQuality->getRow('id', $report['qualityid']);
+					$causative = $this->objCausative->getRow('id', $report['causativeid']);
 					$basis = $this->objDiagnosis->getRow('id', $report['basisofdiagnosisid']);
 					$status = $this->objOutbreak->getRow('id', $report['statusid']);
 					$location = $this->objTerritory->getRow('id', $report['locationid']);
 					$disease = $this->objDisease->getRow('id', $report['diseaseid']);
 					$species = $this->objSpecies->getRow('id', $report['speciesid']);
+					$panvac = ($report['vaccinetested'])? "Yes" : "No";
 					
-					$row = array($geo3['name'], $report['refno'], $this->objUser->fullname($report['reporterid']),
-								$disease['name'], $report['reporteddate'], $report['vetdate'],
-								$report['investigationdate'], $report['diagnosisdate'], $location['name'],
-								$latitude, $longitude, $species['name'], $age['name'], $sex['name'],
-								$production['name'], $control['name'], $basis['name'], $report['susceptible'],
-								$report['newcases'], $report['deaths'], $report['slaughtered'], $report['recovered'],
-								$report['destroyed'], $status['name'], $report['vaccinated'], $report['prophylactic'],
-								$report['vaccinesource'], $report['vaccinebatch'], $report['vaccinemanufacturedate'],
-								$report['vaccineexpirydate']);
+					$row = array($geo3['name'],
+								 $geo2['name'],
+								 $report['refno'],
+								 $this->objUser->fullname($report['reporterid']),
+								 $report['reportdate'],
+								 $status['name'],
+								 $report['prepareddate'],
+								 $report['ibardate'],
+								 $report['dvsdate'],
+								 $report['reporteddate'],
+								 $quality['name'],
+								 $report['remarks'],
+								 $report['vetdate'],
+								 $report['occurencedate'],
+								 $report['diagnosisdate'],
+								 $report['investigationdate'],
+								 $location['name'],
+								 $latitude,
+								 $longitude,
+								 $disease['name'],
+								 $causative['name'],
+								 $species['name'],
+								 $age['name'],
+								 $sex['name'],
+								 $production['name'],
+								 $control['name'],
+								 $basis['name'],
+								 $report['susceptible'],
+								 $report['cases'],
+								 $report['deaths'],
+								 $report['vaccinated'],
+								 $report['slaughtered'],
+								 $report['destroyed'],
+								 $report['production'],
+								 $report['newcases'],
+								 $report['recovered'],
+								 $report['prophylactic'],
+								 $report['vaccinesource'],
+								 $report['vaccinebatch'],
+								 $report['vaccinemanufacturedate'],
+								 $report['vaccineexpirydate'],
+								 $panvac
+							);
 					
 					$csv .= implode(",", $row)."\n";
 				}

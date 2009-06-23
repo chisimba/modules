@@ -167,7 +167,7 @@ $objTable->addCell($this->objLanguage->languageText('word_disease').":$tab");
 $objTable->addCell($diseaseDrop->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_causitive').":$tab");
+$objTable->addCell($this->objLanguage->languageText('word_causative').":$tab");
 $objTable->addCell($causativeDrop->show(),NULL,'center');
 $objTable->endRow();
 

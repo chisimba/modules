@@ -84,10 +84,12 @@ class passive extends dbtable {
 	 * @return int Reference no.
 	 */
 	public function nextRefNo() {
-		$sql = "SELECT MAX(refno) AS refno
+		/*$sql = "SELECT MAX(refno) AS refno
 				FROM tbl_ahis_passive_surveillance";
 		$result = $this->getArray($sql);
-		return (empty($result[0]))? 1000 : $result[0]['refno'] + 1;
+		return (empty($result[0]))? 1000 : $result[0]['refno'] + 1;*/
+		return rand(100000,999999).substr(mktime(), 7, 3);
+		
 	}
 	
 	/**

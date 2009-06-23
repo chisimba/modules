@@ -122,6 +122,7 @@ class tabsmenu extends object
             case 'passive_outbreak':
             case 'passive_species':
             case 'passive_vaccine':
+            case 'passive_feedback':
                 $this->default = 'entry';
                 break;
             case 'admin':
@@ -141,6 +142,14 @@ class tabsmenu extends object
             case 'status_add':
             case 'sex_admin':
             case 'sex_add':
+            case 'species_admin':
+            case 'species_add':
+            case 'breed_admin':
+            case 'breed_add':
+            case 'territory_admin':
+            case 'territory_add':
+            case 'disease_admin':
+            case 'disease_add':
             case 'outbreak_admin':
             case 'outbreak_add':
             case 'diagnosis_admin':
@@ -153,8 +162,12 @@ class tabsmenu extends object
             case 'age_add':
             case 'role_admin':
             case 'role_add':
+            case 'animalproduction_admin':
+            case 'animalproduction_add':
             case 'department_admin':
             case 'department_add':
+            case 'vaccinationhistory_admin':
+            case 'vaccinationhistory_add':
             case 'report_admin':
             case 'report_add':
             case 'causative_add':

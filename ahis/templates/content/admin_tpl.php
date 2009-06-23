@@ -76,6 +76,9 @@ $dataList = "<strong>".$this->objLanguage->languageText('mod_ahis_datafields', '
 $link = new link($this->uri(array('action' => 'age_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_ageadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
+$link = new link($this->uri(array('action' => 'animalproduction_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_animalproductionadmin', 'ahis');
+$dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'diagnosis_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_diagnosisadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
@@ -134,9 +137,6 @@ $link->link = $this->objLanguage->languageText('mod_ahis_testresultadmin', 'ahis
 $dataList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'vaccinationhistory_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_vaccinationadmin', 'ahis');
-$dataList .= "<li>".$link->show()."</li>";
-$link = new link($this->uri(array('action' => 'animalproduction_admin')));
-$link->link = $this->objLanguage->languageText('mod_ahis_animalproductionadmin', 'ahis');
 $dataList .= "<li>".$link->show()."</li>";
 $dataList .= "</ul>";
 

@@ -211,8 +211,7 @@ class ahis extends controller {
         switch ($action) {
 			
 			case "tmp":
-				$tmp = $this->objActive->getJSONData();
-				var_dump($tmp);
+				echo $this->objPassive->nextRefNo();
 				die;
 				
 			case 'unset':
@@ -277,7 +276,7 @@ class ahis extends controller {
                 $this->setVar('datePrepared', $this->getSession('ps_datePrepared', date('Y-m-d')));
                 $this->setVar('dateIBAR', $this->getSession('ps_dateIBAR', date('Y-m-d')));
                 $this->setVar('dateReceived', $this->getSession('ps_dateReceived', date('Y-m-d')));
-                $this->setVar('dateIsReported', $this->getSession('ps_dateisReported', date('Y-m-d')));
+                $this->setVar('dateIsReported', $this->getSession('ps_dateIsReported', date('Y-m-d')));
                 $this->setVar('refNo', $this->getSession('ps_refNo', $this->objPassive->nextRefNo()));
                 $this->setVar('remarks', $this->getSession('ps_remarks'));
 
@@ -290,7 +289,7 @@ class ahis extends controller {
                 $dateIBAR = $this->getParam('dateIBAR', $this->getSession('ps_dateIBAR'));
                 $dateReceived = $this->getParam('dateReceived', $this->getSession('ps_dateReceived'));
                 $dateIsReported = $this->getParam('dateIsReported', $this->getSession('ps_dateIsReported'));
-                $refNo = $this->getParam('refNo', $this->getSession('ps_refNo'));
+				$refNo = $this->getParam('refNo', $this->getSession('ps_refNo'));
                 $remarks = $this->getParam('remarks', $this->getSession('ps_remarks'));
 
                 $this->setSession('ps_oStatusId', $oStatusId);
@@ -421,7 +420,7 @@ class ahis extends controller {
                 $ps_array['prepareddate'] = $this->getSession('ps_datePrepared', date('Y-m-d'));
                 $ps_array['ibardate'] = $this->getSession('ps_dateIBAR', date('Y-m-d'));
                 $ps_array['dvsdate'] = $this->getSession('ps_dateReceived', date('Y-m-d'));
-                $ps_array['reporteddate'] = $this->getSession('ps_dateisReported', date('Y-m-d'));
+                $ps_array['reporteddate'] = $this->getSession('ps_dateIsReported', date('Y-m-d'));
                 $ps_array['remarks'] = $this->getSession('ps_remarks');
                 
                 $ps_array['vetdate'] = $this->getSession('ps_dateVet', date('Y-m-d'));
@@ -1226,14 +1225,14 @@ class ahis extends controller {
             case 'animalproduction_insert':
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
-                if ($this->objAnimalProduction->valueExists('name', $name)) {
-                    return $this->nextAction('animalproduction_admin', array('success'=>'4'));
-                }
                 if ($id) {
                     $this->objAnimalProduction->update('id', $id, array('name'=>$name));
                     $code = 3;
                 } else {
-                    $this->objAnimalProduction->insert(array('name'=>$name));
+                    if ($this->objAnimalProduction->valueExists('name', $name)) {
+					    return $this->nextAction('animalproduction_admin', array('success'=>'4'));
+					}
+					$this->objAnimalProduction->insert(array('name'=>$name));
                     $code = 1;
                 }
                 return $this->nextAction('AnimalProduction_admin', array('success'=>$code));
@@ -1970,7 +1969,7 @@ class ahis extends controller {
 
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
-                if ($this->objSurvey->valueExists('name', $name)) {
+                if ($this->objSpecies->valueExists('name', $name)) {
                     return $this->nextAction('species_admin', array('success'=>'4'));
                 }
                 if ($id) {

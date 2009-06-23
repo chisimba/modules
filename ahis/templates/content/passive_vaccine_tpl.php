@@ -131,10 +131,9 @@ $objForm = new form('reportForm', $this->uri(array('action' => 'passive_save')))
 $objForm->addToForm($objTable->show());
 $objForm->addRule('dateManufactured', $this->objLanguage->languageText('mod_ahis_valdatemanufactured', 'ahis'), 'datenotfuture');
 $objForm->addRule('source', $this->objLanguage->languageText('mod_ahis_valvacsourcerequired', 'ahis'), 'required');
-
-$objForm->addRule('batch', $this->objLanguage->languageText('mod_ahis_valvacbatchrequired', 'ahis'), 'required');
+$objForm->addRule('source', $this->objLanguage->languageText('mod_ahis_valvacsource', 'ahis'), 'nonnumeric');
 $objForm->addRule('batch', $this->objLanguage->languageText('mod_ahis_valvacbatchrequired', 'ahis'), 'numeric');
-$objForm->addRule('source', $this->objLanguage->languageText('mod_ahis_valvacsourcerequired', 'ahis'), 'letteronly');
+
 //$objLayer = new layer();
 //$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 //$objLayer->align = 'center';

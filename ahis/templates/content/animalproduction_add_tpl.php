@@ -85,7 +85,7 @@ $objTable->endRow();
 
 $objForm = new form('animalproductionadd', $formUri);
 $objForm->addToForm($objTable->show());
-$objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
+$objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'nonnumeric');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());

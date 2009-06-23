@@ -48,7 +48,7 @@ $this->loadClass('layer','htmlelements');
 $imageFolder = $this->objConfig->getsiteRoot()."skins/ahisskin/images";
 $icon = $this->newObject('geticon','htmlelements');
 $addLink = new link($addLinkUri);
-$addLink->link = "<img src='$imageFolder/$addLinkText.jpg' />";
+$addLink->link = "<img src='$imageFolder/$addLinkText.jpg' alt='$addLinkText'/>";
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;
