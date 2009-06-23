@@ -998,7 +998,7 @@ EOT;
                                     foreach($followers as $follow) {
                                         // pass on the msg to their JID
                                         $poster = $this->dbUsers->getUsernamefromJid($poster);
-                                        $this->conn->message($this->dbUsers->getJidfromUserId($follow['followid']), "@".$poster." says: ".$pl['body']);
+                                        $this->conn->message($this->dbUsers->getJidfromUserId($follow['userid']), "@".$poster." says: ".$pl['body']);
                                     }
 
                                 }

@@ -72,7 +72,8 @@ class dbsubs extends dbTable {
     }
 
     public function getFollowers($userid) {
-        $recs = $this->getAll("WHERE userid = '$userid'");
+        // my followers are defined by users setting the followid to me...
+        $recs = $this->getAll("WHERE followid = '$userid'");
         return $recs;
     }
 
