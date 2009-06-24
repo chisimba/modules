@@ -277,7 +277,7 @@ class turnitinops extends object
     function createUser($params, $type = 1)
     {
     	$this->fid = 1;
-    	$this->fcmd = 2;
+    	$this->fcmd = 1;
     	$this->utp = $type;
     	
     	$this->upw = $params['password'];    	
@@ -288,6 +288,16 @@ class turnitinops extends object
     	
     	return $this->doPost();
     }
+    
+    public function adminStats($params)
+    {
+    	$this->fid=12;
+    	$this->fcmd = 1;
+    	$this->utp = 3;
+    	
+    	return $this->doGet();
+    }
+    
     ///////////////////////// 
     /// LECTURER FUNCTIONS///
     /////////////////////////
@@ -297,10 +307,11 @@ class turnitinops extends object
     	$this->fid = 2;
     	$this->fcmd = 2;
     	$this->utp = 2;
-    	$this->ctl = $para['contexttitle'];
-    	//$this->cpw = $para['contexttitle'];
-    	$this->uid = $para['username'];
-    	$this->cid = $para['contextcode'];
+    	
+    	$this->ctl = $params['classtitle'];
+    	$this->cpw = $params['classpassword'];
+    	$this->uid = $params['username'];
+    	//$this->cid = $params['classid'];
     	
     	return $this->doPost();
     }
@@ -312,7 +323,23 @@ class turnitinops extends object
      */
     public function createAssessment($params)
     {
+    	$this->fid = 4;
+    	$this->fcmd = 2;
+    	$this->utp = 2;
+    	    	
+    	$this->ctl = $params['classtitle'];
+    	$this->cpw = $params['classpassword'];
+    	$this->uid = $params['username'];
+    	//$this->cid = 2758586;//$params['classid'];
     	
+    	//$this->aid = $params['assignmentid'];
+    	$this->assign = $params['assignmenttitle'];
+    	$this->ainst = $params['assignmentinstruct'];
+    	$this->dtstart = $params['assignmentdatestart'];
+    	$this->dtdue = $params['assignmentdatedue'];
+    	
+    	
+    	return $this->doPost();
     }
     
     
@@ -323,7 +350,13 @@ class turnitinops extends object
      */
     public function listSubmissions($params)
     {
+    	$this->fid = 10;
+    	$this->utp = 1;
+    	$this->ctl = $params['classtitle'];
+    	$this->assign = $params['assignmenttitle'];
+    	$this->assignid = $params['assignmentid'];
     	
+    	return $this->doGet();
     }
     
     

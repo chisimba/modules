@@ -39,6 +39,7 @@ class turnitin extends controller
 	{
 		$this->objTOps = $this->getObject('turnitinops');
 		$this->objUser = $this->getObject('user', 'security');
+		$this->objDBContext = $this->getObject('dbcontext', 'context');
 	}
 	
 	/**
@@ -49,36 +50,73 @@ class turnitin extends controller
 	
 	public function dispatch($action)
 	{
-		$params = array();
+		
 		switch ($action)
 		{
 			//creates a user profile (if one does not exist) and logs the user in (instructor or student)
-			case 'createlecturer':
-				$username = $this->objUser->userName();
-				$userDetails = $this->objUser->lookupData($username);
-				if ($userDetails)
+			case 'createlecturer':				
+				print $this->objTOps->createLecturer($this->getUserParams());
+				break;				
+			
+			case 'createstudent':				
+				print $this->objTOps->createStudent($this->getUserParams());
+				break;
+				
+			//create a class with a lecturer assigned to it	
+			case 'createclass':				
+				print $this->objTOps->createClass(array_merge(
+													$this->getUserParams(), 
+													$this->getClassParams()));
+				break;
+				
+			//create an assessment: requires lecturer and class details
+			case 'createassessment':	
+				if($this->objDBContext->isInContext())
 				{
-					
-					$params['password'] = 'nitsckie';//$username;    	
-	    			$params['username'] = $username;
-	    			$params['firstname'] = $userDetails['firstname']; 
-	    			$params['lastname'] = $userDetails['surname'];
-	    			$params['email'] = $userDetails['emailaddress'];
-	    				    			
-	    			print $this->objTOps->createLecturer($params);
+					print $this->objTOps->createAssessment(array_merge(
+														$this->getUserParams(), 
+														$this->getClassParams(),  
+														$this->getAssessmentParams()));
 				} else {
-					print "no user details";
+					return false;
 				}
+				break;
+			
+			//student submit a paper
+			case 'submitpaper':
+				break;
+				
+			case 'returnreport':
+				break;
+				
+			case 'viewsubmission':
+				break;
+				
+			case 'deletesubmission':
+				break;
+				
+			case 'listsubmissions':
+				
+				print $this->objTOps->listSubmissions(array_merge(
+														$this->getUserParams(), 
+														$this->getClassParams(),  
+														$this->getAssessmentParams()));
+				break;
+				
+			case 'adminstats':
+				$this->objTOps->adminStats($this->getUserParams());
 				break;
 				
 			default:
-				print $this->objTOps->APILogin();
+				//print $this->objTOps->APILogin();
+				echo "invalid action";
 				break;
 				
 			case 'callback':
+				echo "This is the CALLBACK ...<BR>";
 				$m = var_export($_REQUEST, true);
 				error_log($m);
-				var_dump($_REQUEST);;
+				var_dump($_REQUEST);
 				break;
 		}
 	}
@@ -90,5 +128,76 @@ class turnitin extends controller
 	public function requiresLogin()
 	{
 		return FALSE;
+	}
+	
+	/**
+	 * MEthod to get the user parameters
+	 *
+	 * @return array
+	 */
+	public function getUserParams()
+	{
+		$username = $this->objUser->userName();
+		$userDetails = $this->objUser->lookupData($username);
+				
+		$params = array();
+		
+		if ($userDetails)
+		{
+			
+			$params['password'] = 'nitsckie';//$username;    	
+			$params['username'] = $username;
+			$params['firstname'] = $userDetails['firstname']; 
+			$params['lastname'] = $userDetails['surname'];
+			$params['email'] = $userDetails['emailaddress'];	
+			
+			$params['password'] = 'nitsckie';//$username;    	
+			$params['username'] = 'wesleynitsckie';
+			$params['firstname'] = 'Wesley';
+			$params['lastname'] = 'Nitsckie';
+			$params['email'] = 'wesleynitsckie@gmail.com';			
+		}
+		
+		return $params;
+	}
+	
+	/**
+	 * MEthod to get the class parameters
+	 *
+	 * @return array
+	 */
+	public function getClassParams()
+	{
+		$params = array();
+		
+		if($this->objDBContext->isInContext())
+		{
+			$params['classid'] = $this->objDBContext->getContextCode();
+			$params['classtitle'] = $this->objDBContext->getTitle();
+			$params['classpassword'] = 'password';
+		}
+		//var_dump($params);die;
+		//$params['classid'] = $this->objDBContext->getContextCode();
+		$params['classtitle'] = "Twitter Class";//$this->objDBContext->getTitle();
+		//$params['classpassword']
+		return $params;
+	}
+	
+	/**
+	 * Method to get the assessment parameters
+	 *
+	 * @return array
+	 */
+	public function getAssessmentParams()
+	{
+		$params = array();
+		
+		$params['assignmenttitle'] = "some assessment title";
+    	$params['assignmentinstruct'] = " please complete the assessment";
+    	$params['assignmentdatestart'] = "20090623";
+    	$params['assignmentdatedue'] = "20090624";    	
+    	$params['assignmendatedue'] = "theid";    	
+    	
+    	return $params;
 	}
 }
