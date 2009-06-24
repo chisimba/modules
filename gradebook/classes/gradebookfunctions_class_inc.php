@@ -84,10 +84,11 @@ class gradebookfunctions extends controller
 		//get the info
 		$membersArr=array();
 		$membersArr=$this->objMembers->getSubGroupUsers($this->studGroupId, array('*'));
-		foreach($membersArr as $thenames) {
-			$ar[] = $this->objUser->getItemFromPkId($thenames["user_id"],$field);
-		}
-        
+		if(!empty($membersArr)){
+			foreach($membersArr as $thenames) {
+				$ar[] = $this->objUser->getItemFromPkId($thenames["user_id"],$field);
+			}
+        	}
 		if($ar){
             return $ar;
         } else {
