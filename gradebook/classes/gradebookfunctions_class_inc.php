@@ -65,6 +65,7 @@ class gradebookfunctions extends controller
 		$this->objMembers = &$this->getObject('groupusersdb','groupadmin');
 		//context management
 		$this->contextObject =& $this->getObject('dbcontext', 'context');
+		$this->userContext =& $this->getObject('usercontext', 'context');
 		$this->contextCode = $this->contextObject->getContextCode();
 	}
 
@@ -79,7 +80,15 @@ class gradebookfunctions extends controller
 	{
 		$ar=array();
 		//get the studentGroupId
+		$contextCode = $this->contextObject->getContextCode();
 		$this->studGroupId = $this->objGroupAdmin->getLeafId(array($this->contextObject->getContextCode(),'Students'));
+		$contextStudents = $this->userContext->getContextStudents($contextCode);
+		if(!empty($contextStudents)){
+			foreach($contextStudents as $contextStudent){
+				$ar[] = $this->objUser->getItemFromPkId($contextStudent["id"],$field);
+			}
+		}
+		/*
 		$this->objGroupMembers->setGroupId($this->studGroupId);
 		//get the info
 		$membersArr=array();
@@ -89,6 +98,7 @@ class gradebookfunctions extends controller
 				$ar[] = $this->objUser->getItemFromPkId($thenames["user_id"],$field);
 			}
         	}
+        	*/
 		if($ar){
             return $ar;
         } else {
@@ -107,9 +117,11 @@ class gradebookfunctions extends controller
 		$this->objGroupMembers->setGroupId($this->studGroupId);
 
 		$ar=array();
-		$ar=$this->objMembers->getSubGroupUsers($this->studGroupId, array('*'));
+		//$ar=$this->objMembers->getSubGroupUsers($this->studGroupId, array('*'));
+		$contextStudents = $this->userContext->getContextStudents($contextCode);
 		$num=0;
-		$num=count($ar);
+		//$num=count($ar);
+		$num=count($contextStudents);
         
 		if($num){
             return $num;
