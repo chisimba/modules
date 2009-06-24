@@ -87,7 +87,10 @@ $fields = array(
 		'type' => 'clob',
 		
 		),
-		
+		'samplingdate' => array(
+		'type' => 'date',
+        'notnull' => TRUE
+		),
 		
 	
     );
