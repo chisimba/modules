@@ -156,13 +156,15 @@ class tribe extends controller {
                 break;
 
             case 'rss':
-                echo $objImView->rssBox();
+                echo $this->objImView->rssBox();
                 break;
 
             case 'jbsearch':
                 // search
                 $term = $this->getParam('searchterm');
                 $msgs = $this->objDbMsgs->keySearch($term);
+                // reverse the array so that the most recent messages appear first
+                $msgs = array_reverse($msgs);
                 $this->setVarByRef('msgs', $msgs);
 
                 return 'viewsearch_tpl.php';
@@ -253,7 +255,7 @@ class tribe extends controller {
 			        // get the tags for this post (meme)
 			        $tags = $this->objDbTags->getPostTags($post['id'], 'tribe');
                     $this->objSiocMaker->createPost($this->uri ( array ('postid' => $post['id'], 'action' => 'viewsingle' ) ),
-                                                    $post['msgtype'], strip_tags($post['msgbody']), $post['msgbody'], $post['datesent'],
+                                                    $post['msgtype'], strip_tags(urlencode($post['msgbody'])), urlencode($post['msgbody']), $post['datesent'],
                                                     $updated = "",
                                                     $tags,
                                                     $links = array()
@@ -998,7 +1000,9 @@ EOT;
                                     foreach($followers as $follow) {
                                         // pass on the msg to their JID
                                         $poster = $this->dbUsers->getUsernamefromJid($poster);
-                                        $this->conn->message($this->dbUsers->getJidfromUserId($follow['userid']), "@".$poster." says: ".$pl['body']);
+                                        $to = $this->dbUsers->getJidfromUserId($follow['userid']);
+                                        log_debug("FROM:  ".$poster.",  TO:  ".$to);
+                                        $this->conn->message($to, "@".$poster." says: ".$pl['body']);
                                     }
 
                                 }

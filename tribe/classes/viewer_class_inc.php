@@ -200,9 +200,9 @@ class viewer extends object {
         return $ret;
     }
 
-    public function rssBox($userid) {
+    public function rssBox($userid = NULL) {
         $this->objFeed = $this->getObject ( 'feeder', 'feed' );
-        $this->objFeed->setupFeed ( $stylesheet = false, 'Sitename', 'Mobile Communities', $this->uri ( '' ), $this->uri ( '' ) );
+        $this->objFeed->setupFeed ( $stylesheet = false, $this->objConfig->getSiteName(), 'Mobile Communities', $this->uri ( '' ), $this->uri ( '' ) );
         // get the latest say, 50 posts, and make a feed from em
         $this->objDbIm = $this->getObject ( 'dbmsgs' );
         $count = $this->objDbIm->getNoMsgs ();
@@ -214,7 +214,7 @@ class viewer extends object {
         array_reverse ( $items );
         // now we add the items to the feed
         foreach ( $items as $item ) {
-            $this->objFeed->addItem ( $item ['msgfrom'], $this->uri ( array ('action' => 'viewsingle', 'postid' => $item ['id'] ), 'tribe' ), $item ['msgbody'], NULL, $this->objUser->userName ( $userid ), $item ['datesent'] );
+            $this->objFeed->addItem ( @$this->dbUsers->getUsernameFromJid($item ['msgfrom']), $this->uri ( array ('action' => 'viewsingle', 'postid' => $item ['id'] ), 'tribe' ), $item ['msgbody'], NULL, $this->objUser->userName ( $userid ), strtotime($item ['datesent']) );
         }
 
         return $this->objFeed->output ( "RSS2.0" );
