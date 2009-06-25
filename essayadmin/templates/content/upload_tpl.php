@@ -307,8 +307,7 @@ echo $this->objForm->show();
 $slider=0;
 $slider="
 <script type=\"text/javascript\">
-form_widget_amount_slider_handle = '".$this->getResourceUri('slider_handle.gif')."';
-form_widget_amount_slider('slider_target',document.upload.mark,200,0,100,\"\");
+form_widget_amount_slider('slider_target',document.upload.mark,200,0,100,\"\",'".$this->getResourceUri('slider_handle.gif')."');
 </script>
 ";
 echo $slider;

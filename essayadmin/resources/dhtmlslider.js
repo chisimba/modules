@@ -14,7 +14,7 @@ Alf Magne Kalleland
 
 ************************************************************************************************************/
 
-var form_widget_amount_slider_handle = ''; //'packages/essayadmin/resources/slider_handle.gif';
+var form_widget_amount_slider_handle = ''; //'slider_handle.gif'; -- setup in PHP code.
 var slider_handle_image_obj = false;
 var sliderObjectArray = new Array();
 var slider_counter = 0;
@@ -98,8 +98,9 @@ function stopMoveSlider()
 	slideInProgress = false;
 }
 
-function form_widget_amount_slider(targetElId,formTarget,width,min,max,onchangeAction)
+function form_widget_amount_slider(targetElId,formTarget,width,min,max,onchangeAction,imagePath)
 {
+	form_widget_amount_slider_handle = imagePath;
 	if(!slider_handle_image_obj){
 		getImageSliderHeight();
 	}
