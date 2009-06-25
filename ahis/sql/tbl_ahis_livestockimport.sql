@@ -65,6 +65,11 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255,
 		'notnull' => 1
+    ),
+    'count' => array(
+		'type' => 'text',
+		'length' => 32,
+		'notnull' => 1
     )
 );
 

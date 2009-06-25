@@ -390,14 +390,7 @@ if($id){
 }
 $objTable->endRow();
 
-if($prompt == 'conf'){
-echo "<script type=\"text/javascript\">";
-echo "  alert(\"Please add at least one Sample\")";
 
-
-echo "</script>";
-
-}
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
@@ -407,7 +400,15 @@ $objForm->addRule('sampleid', $this->objLanguage->languageText('mod_ahis_valsamp
 $objForm->addRule('animalid', $this->objLanguage->languageText('mod_ahis_valanim', 'ahis'), 'required');
 $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
 $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'required');
+$objForm->addRule('calendardate', $this->objLanguage->languageText('mod_ahis_valdate', 'ahis'), 'datenotfuture');
 echo "<hr class='ahis' /><br/>".$this->objLanguage->code2Txt('mod_ahis_addsamplecomment','ahis',$rep)."<br />".
      $this->objLanguage->languageText('mod_ahis_addsamplefinished', 'ahis')."<br />".$objForm->show();
+if($prompt == 'yes'){
+echo "<script type=\"text/javascript\">";
+echo "  alert(\"Please add at least one Sample\")";
 
+
+echo "</script>";
+
+}
 ?>

@@ -95,4 +95,6 @@ class vaccineinventory extends dbtable {
 			return false;
 			
 	} 
+	
+	
 }

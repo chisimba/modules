@@ -37,6 +37,9 @@ $fields = array(
 	'remarks' => array(
 		'type' => 'clob'
     )
+    'remarks' => array(
+		'type' => 'clob'
+    )
 );
 
 

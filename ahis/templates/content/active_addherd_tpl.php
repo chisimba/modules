@@ -269,14 +269,7 @@ $objTable->startRow();
 $objTable->addCell($activeBox->show());
 $objTable->endRow();
 
-if($prompt == 'conf'){
-echo "<script type=\"text/javascript\">";
-echo "  alert(\"Please add at least one Farm\")";
 
-
-echo "</script>";
-
-}
 
 $objTable->startRow();
 if($id) {
@@ -314,7 +307,8 @@ $objForm->addToForm($objTable->show());
 //$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
 //}else
 //{
-$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq1', 'ahis'), 'required');
+$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
+$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq2', 'ahis'), 'nonnumeric');
 $objForm->addRule('latdeg', $this->objLanguage->languageText('mod_ahis_vallatitude', 'ahis'), 'numeric');
 $objForm->addRule('longdeg', $this->objLanguage->languageText('mod_ahis_vallongitude', 'ahis'), 'numeric');
 $objForm->addRule('latmin', $this->objLanguage->languageText('mod_ahis_vallatitude', 'ahis'), 'numeric');
@@ -329,6 +323,13 @@ $objLayer->addToStr("<hr class='ahis' />".$this->objLanguage->code2Txt('mod_ahis
 
 
 echo $objLayer->show();
+if($prompt == 'yes'){
+echo "<script type=\"text/javascript\">";
+echo "  alert(\"Please add at least one Farm\")";
 
+
+echo "</script>";
+
+}
 
 ?>

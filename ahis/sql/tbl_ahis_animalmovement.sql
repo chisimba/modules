@@ -38,6 +38,10 @@ $fields = array(
 		'length' => 255,
 		'notnull' => 1
     ),
+    'reportdate' => array(
+		'type' => 'date',
+        'notnull' => TRUE
+		),
 	'remarks' => array(
 		'type' => 'clob'
     )

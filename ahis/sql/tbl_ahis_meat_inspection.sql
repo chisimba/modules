@@ -27,6 +27,9 @@ $fields = array(
 		'length' => 255,
 		'notnull' => 1
 	),
+	'remarks' => array(
+		'type' => 'clob'
+    ),
 	'num_of_risks' => array (
 		'type' => 'text',
 		'length' => 255,

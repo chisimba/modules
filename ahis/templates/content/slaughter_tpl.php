@@ -137,7 +137,7 @@ $form->addRule('num_sheep', 'Please enter valid number ', 'numeric');
 $form->addRule('num_goats', 'Please enter valid number ', 'numeric');
 $form->addRule('num_pigs', 'Please enter valid number ', 'numeric');
 $form->addRule('num_poultry', 'Please enter valid number ', 'numeric');
-$form->addRule('other', 'Please enter valid value ', 'lettersonly');
+$form->addRule('other', 'Please enter valid value ', 'nonnumeric');
 $form->addRule('name', 'Please enter valid number ', 'numeric');
 $form->addRule('name', 'Please enter valid number ', 'required');
 

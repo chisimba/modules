@@ -87,7 +87,7 @@ $GLOBALS['kewl_entry_point_run']) {
 			'cheese' => $cheese,
 			'poultry' => $poultry,
 			'beef' => $beef,
-			'countspecies' => $count,
+			'count' => $count,
 			));
 			if($sql)
 			return true;

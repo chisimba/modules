@@ -58,7 +58,7 @@ class ahis_slaughter extends dbtable {
 			exit;
 		}
 	}
-	public function addSlaughterData($district, $num_cattle, $num_sheep, $num_goats,$num_pigs,$num_poultry,$other,$name,$remarks)
+	public function addSlaughterData($district, $num_cattle, $num_sheep, $num_goats,$num_pigs,$num_poultry,$other,$name,$remarks,$reportdate)
     {
 		$data = $this->insert(array(
 			'district' => stripslashes($district),
@@ -69,7 +69,8 @@ class ahis_slaughter extends dbtable {
 			'num_poultry' => $num_poultry,
 			'other' => $other,
 			'name_of_other' => $name,
-			'remarks' => $remarks
+			'remarks' => $remarks,
+			'reportdate' => $reportdate
 			));
 			if($data)
 			return true;

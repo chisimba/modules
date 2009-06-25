@@ -48,13 +48,14 @@ class db_meat_inspection extends dbtable
         
     }
     
-    public function addMeatInspectionData($district, $date, $num_of_cases, $num_at_risk)
+    public function addMeatInspectionData($district, $date, $num_of_cases, $num_at_risk,$reportdate)
     {
 		$data = $this->insert(array(
 			'district' => stripslashes($district),
 			'inspection_date' => $date,
 			'num_of_cases' => $num_of_cases,
-			'num_of_risks' => $num_at_risk
+			'num_of_risks' => $num_at_risk,
+			'reportdate'=>$reportdate
 			));
 			if($data)
 			return true;

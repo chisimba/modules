@@ -662,7 +662,7 @@ class ahis extends controller {
                $data = $this->objActive->getallname($this->getSession('ps_campName'));
                $hdata = $this->objNewherd->getherd($data[0]['id']);
                //print_r($hdata);
-			   
+			      $this->setVar('prompt',$this->getParam('prompt'));
                $this->setVar('id',$this->getParam('id'));
                $this->setVar('hdata',$hdata);
                $this->setVar('activeid',$data[0]['id']);
@@ -686,13 +686,14 @@ class ahis extends controller {
                 $this->setSession('ps_farm',$this->getParam('farm'));
                 $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
                 $val = $this->objGeo2->getgeo($this->getSession('ps_geo2'));
-				$longdeg = $this->getParam('longdeg');
+				    $longdeg = $this->getParam('longdeg');
                 $latdeg = $this->getParam('latdeg');
                 $longmin = $this->getParam('longmin');
                 $latmin = $this->getParam('latmin');
                 $longdirec = $this->getParam('longdirection');
                 $latdirec = $this->getParam('latdirection');
-				
+				    $prompt = $this->getParam('alt');
+				   
                 $arrayherd = array();
                 $arrayherd['territory'] = $this->getParam('territory');
                 $arrayherd['geolevel2'] = $val[0]['name'];
@@ -714,7 +715,7 @@ class ahis extends controller {
                     $code = 1;
                 }             
 				
-                return $this->nextAction('active_addherd');
+                return $this->nextAction('active_addherd',array('prompt'=>$prompt));
                 
             case 'newherd_delete':
                $id = $this->getParam('id');
@@ -745,6 +746,7 @@ class ahis extends controller {
 
                $datan= $this->objSampledetails->getall();
                $this->setVar('datan',$datan);
+               $this->setVar('prompt',$this->getParam('prompt'));
                $this->setVar('id',$this->getParam('id'));
                $this->setVar('reportdate',$this->getSession('ps_reportdate'));
                $this->setVar('geo2',$this->getSession('ps_geo2'));
@@ -789,7 +791,7 @@ class ahis extends controller {
                 $arrayherd['remarks'] = $this->getParam('remarks');
                 $arrayherd['specification'] = $this->getParam('spec');
                 $arrayherd['testdate'] = $this->getParam('calendardate');
-
+               $prompt = $this->getParam('alt');
                 //print_r($arrayherd['samplingdate']);exit;
                 $this->setSession('ps_data',$arrayherd);
                
@@ -801,7 +803,7 @@ class ahis extends controller {
                     $code = 1;
                 } 
                
-                return $this->nextAction('active_addsample', array('success'=>$code));
+                return $this->nextAction('active_addsample', array('prompt'=>$prompt));
                 
             case 'sampleview_delete':
                $id = $this->getParam('id');
@@ -2059,6 +2061,7 @@ class ahis extends controller {
 					$this->setVar('control', $this->objControl ->getAll("ORDER BY name"));
 					$this->setVar('vaccination', $this->objVaccination ->getAll("ORDER BY name"));
 					$this->setVar('output',$this->getParam('output'));
+				   //$this->setVar('calendardate', $this->getSession('ps_calendardate',date('Y-m-d')));
 					return 'animalvaccine_tpl.php';
 				
              case 'animal_population_add':
@@ -2190,6 +2193,7 @@ class ahis extends controller {
         $this->unsetSession('ps_officerId');
         $this->unsetSession('ps_geo2Id');
         $this->unsetSession('ps_reportType');
+        $this->unsetSession('ps_calendardate');
      }
 	   private function AddData()
     {
@@ -2204,8 +2208,9 @@ class ahis extends controller {
 		$classification = $this->getParam('classification');
 		$num_animals = $this->getParam('num_animals');
 		$animal_production = $this->getParam('animal_production');
-		$source = $this->getParam('source');		
-		$data= $this->objAnimalPopulation ->addData($district, $classification, $num_animals, $animal_production,$source);
+		$source = $this->getParam('source');
+      $reportdate = $this->getSession('ps_calendardate',date('Y-m-d'));
+		$data= $this->objAnimalPopulation ->addData($district, $classification, $num_animals, $animal_production,$source,$reportdate);
 		
 		return $this->nextAction('animal_feedback',array('success'=>1));
 	
@@ -2218,7 +2223,7 @@ class ahis extends controller {
 		$date =$this->getParam('inspectiondate');
 		$num_of_cases = $this->getParam('num_of_cases');
 		$num_at_risk = $this->getParam('num_at_risk');
-		
+      $reportdate = $this->getSession('ps_calendardate',date('Y-m-d'));
       $currentyear = date('Y');
       $currentmonth = date('m');
       $currentday = date('d');
@@ -2246,7 +2251,7 @@ class ahis extends controller {
       return $this->nextAction('addinspectiondata',array('output'=>$output));
       }
       }
-		$data= $this->objMeatInspect->addMeatInspectionData($district, $date, $num_of_cases, $num_at_risk);
+		$data= $this->objMeatInspect->addMeatInspectionData($district, $date, $num_of_cases, $num_at_risk,$reportdate);
 		
 		return $this->nextAction('animal_feedback',array('success'=>1));
 
@@ -2264,8 +2269,9 @@ class ahis extends controller {
 		$num_poultry = $this->getParam('num_poultry');
 		$other = $this->getParam('other');
 		$name = $this->getParam('name');
-		$remarks = $this->getParam('remarks');					
-		$data= $this->objSlaughter->addSlaughterData($district, $num_cattle, $num_sheep, $num_goats,$num_pigs,$num_poultry,$other,$name,$remarks);
+		$remarks = $this->getParam('remarks');		
+	   $reportdate = $this->getSession('ps_calendardate',date('Y-m-d'));			
+		$data= $this->objSlaughter->addSlaughterData($district, $num_cattle, $num_sheep, $num_goats,$num_pigs,$num_poultry,$other,$name,$remarks,$reportdate);
 		
 		return $this->nextAction('animal_feedback',array('success'=>'1'));
 	
@@ -2280,8 +2286,8 @@ class ahis extends controller {
 		$origin = $this->getParam('origin');
 		$destination = $this->getParam('destination');
 		$remarks = $this->getParam('remarks');
-		
-		$data = $this->objAnimalmovement->addAnimalMovementData($district,$classification,$purpose,$origin,$destination,$remarks);  
+		$reportdate = $this->getSession('ps_calendardate',date('Y-m-d'));
+		$data = $this->objAnimalmovement->addAnimalMovementData($district,$classification,$purpose,$origin,$destination,$remarks,$reportdate);  
 							
 		return $this->nextAction('animal_feedback',array('success'=>'1'));
 	}
@@ -2338,9 +2344,9 @@ class ahis extends controller {
 		$numberofanimals = $this->getParam('numberofanimals');
 		$antiemitictype = $this->getParam('antiemitictype');
 		$remarks = $this->getParam('remarks');
+	   $reportdate = $this->getSession('ps_calendardate',date('Y-m-d'));
 		
-		
-		$data = $this->objAnimaldeworming->addAnimalDewormingData($district,$classification,$numberofanimals,$antiemitictype,$remarks);  
+		$data = $this->objAnimaldeworming->addAnimalDewormingData($district,$classification,$numberofanimals,$antiemitictype,$remarks,$reportdate);  
 							
 		return $this->nextAction('animal_feedback', array('success'=>'1'));
 	}
@@ -2359,7 +2365,7 @@ class ahis extends controller {
 		$doses_received = $this->getParam('dosesreceived');
 		$doses_used = $this->getParam('dosesused');
 		$doses_wasted= $this->getParam('doseswasted');
-
+      $reportdate = $this->getSession('ps_calendardate',date('Y-m-d'));
 		 /*$val = $this->validateDate($datePicker);
         
 		 if($val=='yes'){
@@ -2370,7 +2376,7 @@ class ahis extends controller {
 		  if($val1=='yes'){
 		   return $this->nextAction('animalvaccine_add',array('output'=>$val1));
 		 }*/
-		$data = $this->objAnimalvaccine->addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePickerOne,$doses_received,$doses_used,$doses_wasted);  
+		$data = $this->objAnimalvaccine->addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePickerOne,$doses_received,$doses_used,$doses_wasted,$reportdate);  
 							
 		return $this->nextAction('animal_feedback', array('success'=>'1'));
 	}

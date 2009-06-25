@@ -128,7 +128,7 @@ $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districter
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
 $form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_purposeerror','ahis'),'select');
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
-$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerrorone','ahis'),'letteronly');
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerrorone','ahis'),'nonnumeric');
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerrorone','ahis'),'letteronly');
 $form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror','ahis'),'required');

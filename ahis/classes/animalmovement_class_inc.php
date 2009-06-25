@@ -73,7 +73,7 @@ $GLOBALS['kewl_entry_point_run']) {
 	}
 	
 	
-	public function addAnimalMovementData($district, $classification, $purpose, $origin,$destination,$remarks)
+	public function addAnimalMovementData($district, $classification, $purpose, $origin,$destination,$remarks,$reportdate)
     {
 		$sql = $this->insert(array(
 			'district' => stripslashes($district),
@@ -81,7 +81,8 @@ $GLOBALS['kewl_entry_point_run']) {
 			'purpose' => $purpose,
 			'origin' => $origin,
 			'destination' => $destination,
-			'remarks' => $remarks
+			'remarks' => $remarks,
+			'reportdate' =>$reportdate
 			));//echo $sql;
 			if($sql)
 			return true;

@@ -132,8 +132,8 @@ $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districter
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
 $form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserror','ahis'),'required');
 $form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserrorone','ahis'),'numeric');
-$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror','ahis'),'required');
-$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserrorone', 'ahis'), 'letteronly');
+//$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror','ahis'),'required');
+//$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserrorone', 'ahis'), 'letteronly');
 
 $form->addToForm($formTable->show());
 

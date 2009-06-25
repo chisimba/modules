@@ -50,7 +50,10 @@ $fields = array(
 	),
 	'remarks' => array (
 		'type' => 'clob'
-	)				
+	),
+	'remarks' => array(
+		'type' => 'clob'
+    )				
 
 );
 //create other indexes here...

@@ -49,14 +49,15 @@ class dbanimalpop extends dbtable
        
     }
     
-    public function addData($district, $classification, $num_animals, $animal_production,$source)
+    public function addData($district, $classification, $num_animals, $animal_production,$source,$reportdate)
     {
 		$data = $this->insert(array(
 			'district' => stripslashes($district),
 			'classification' =>  stripslashes($classification),
 			'number' => $num_animals,
 			'production' => stripslashes($animal_production),
-			'source' => stripslashes($source)
+			'source' => stripslashes($source),
+			'reportdate' => $reportdate
 			));
 			if($data)
 			return true;

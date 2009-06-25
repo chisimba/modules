@@ -164,8 +164,10 @@ $form->addRule('doses', $this->objLanguage->languageText('mod_ahis_doseserror','
 $form->addRule('doses', $this->objLanguage->languageText('mod_ahis_dosesnumbererror','ahis'),'numeric');
 $form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_starterror','ahis'),'required');
 $form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_startnumbererror','ahis'),'numeric');
+$form->addRule('startmonth', $this->objLanguage->languageText('mod_ahis_valdate','ahis'),'datenotfuture');
 $form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_enderror','ahis'),'required');
 $form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_endnumbererror','ahis'),'numeric');
+$form->addRule('endmonth', $this->objLanguage->languageText('mod_ahis_valdate','ahis'),'datenotfuture');
 $form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivederror', 'ahis'), 'required');
 $form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivednumbererror', 'ahis'), 'numeric');
 $form->addRule('dosesused', $this->objLanguage->languageText('mod_ahis_usederror', 'ahis'), 'required');

@@ -73,7 +73,7 @@ $GLOBALS['kewl_entry_point_run']) {
 	}
 	
 	
-	public function addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePickerOne,$doses_received,$doses_used,$doses_wasted)
+	public function addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePickerOne,$doses_received,$doses_used,$doses_wasted,$reportdate)
     {
 		$sql = $this->insert(array(
 			'district' => stripslashes($district),
@@ -85,7 +85,8 @@ $GLOBALS['kewl_entry_point_run']) {
 			'endmonth' => $datePickerOne,
 			'dosesreceived' => $doses_received,
 			'dosesused' => $doses_used,
-			'doseswasted' => $doses_wasted
+			'doseswasted' => $doses_wasted,
+			'reportdate' => $reportdate
 			));//echo $sql;
 			if($sql)
 			return true;

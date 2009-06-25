@@ -59,6 +59,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
+		),
+		'reportdate' => array(
+		'type' => 'date',
+        'notnull' => TRUE
 		)
 	
     );

@@ -73,14 +73,15 @@ $GLOBALS['kewl_entry_point_run']) {
 	}
 	
 	
-	public function addAnimalDewormingData($district, $classification, $numberofanimals, $antiemitictype,$remarks)
+	public function addAnimalDewormingData($district, $classification, $numberofanimals, $antiemitictype,$remarks,$reportdate)
     {
 		$sql = $this->insert(array(
 			'district' => stripslashes($district),
 			'classification' =>$classification,
 			'numberofanimals' => $numberofanimals,
 			'antiemitictype' => $antiemitictype,
-			'remarks' => $remarks
+			'remarks' => $remarks,
+			'reportdate' => $reportdate
 			));//echo $sql;
 			if($sql)
 			return true;

@@ -124,7 +124,7 @@ $objForm->addRule('year', $this->objLanguage->languageText('mod_ahis_valyear', '
 $objForm->addRule(array('name'=>'year','maxnumber'=>date('Y')), $this->objLanguage->languageText('mod_ahis_valyear', 'ahis'), 'maxnumber');
 
 $gisDrop = new dropdown('report');
-$gisDrop->addOption(1, 'Active Sureveillance');
+//$gisDrop->addOption(1, 'Active Sureveillance');
 $gisDrop->addOption(2, 'Passive Surveillance');
 $gisDrop->setSelected(2);
 

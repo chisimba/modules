@@ -353,9 +353,11 @@ class report extends object {
 				
 			case 'init_02': 			//animal population
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel3'),'Animal Classification','Number Of Animals','Animal Production','Source');
+				$headerArray = array($this->objLanguage->languageText('word_district'),'Animal Classification','Number Of Animals','Animal Production','Source');
 				
-				$populationRecords = $this->objAnimalPopulation->getALL();
+				$populationRecords = $this->objAnimalPopulation->getALL("WHERE YEAR(reportdate) = '$year'
+														   AND MONTH(reportdate) = '$month'
+														   ");
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($populationRecords as $report) {
@@ -368,9 +370,11 @@ class report extends object {
 				
 				case 'init_03': 			//meat inspection
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Inspection Date','Number Of Cases','Number At Risk');
+				$headerArray = array($this->objLanguage->languageText('phrase_districtname'),'Inspection Date','Number Of Cases','Number At Risk');
 				
-				$inspectionRecords = $this->objMeatInspect->getALL();
+				$inspectionRecords = $this->objMeatInspect->getALL("WHERE YEAR(reportdate) = '$year'
+														   AND MONTH(reportdate) = '$month'
+														   ");
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($inspectionRecords as $report) {
@@ -383,9 +387,11 @@ class report extends object {
 				
 				case 'init_04': 			//slaughter
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Number Of Cattle','Number of Sheep','Number of Goats','Number of Pigs','Number of Poultry','Other','Name','Remarks');
+				$headerArray = array($this->objLanguage->languageText('phrase_districtname'),'Number Of Cattle','Number of Sheep','Number of Goats','Number of Pigs','Number of Poultry','Other','Number','Remarks');
 				
-				$slaughterRecords = $this->objSlaughter->getALL();
+				$slaughterRecords = $this->objSlaughter->getALL("WHERE YEAR(reportdate) = '$year'
+														   AND MONTH(reportdate) = '$month'
+														   ");
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($slaughterRecords as $report) {
@@ -399,9 +405,11 @@ class report extends object {
 		//animal movement report generation
 		case 'init_06':
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Purpose','Origin of Animal','Destination of Animal','Remarks');
+				$headerArray = array($this->objLanguage->languageText('word_district'),'Animal Classification','Purpose','Animal of Origin','Animal Destination','Remarks');
 				
-				$movementRecords = $this->objAnimalmovement->getALL();
+				$movementRecords = $this->objAnimalmovement->getALL("WHERE YEAR(reportdate) = '$year'
+														   AND MONTH(reportdate) = '$month'
+														   ");
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($movementRecords as $report) {
@@ -415,14 +423,14 @@ class report extends object {
 		//livestock import report generation		
 		case 'init_07': 			
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units','Count of Species of Live Animal');
+				$headerArray = array($this->objLanguage->languageText('phrase_districtname'),'Point of Entry','Animal Origin','Animal Destination','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units','Count of Species of Live Animal');
 				
 				$importRecords = $this->objLivestockimport->getALL();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($importRecords as $report) {
 					
-					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef'],$report['countspecies']);
+					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef'],$report['count']);
 					
 					$csv .= implode(",", $row)."\n";
 				}
@@ -431,14 +439,14 @@ class report extends object {
 		//livestock export report generation		
 		case 'init_08': 
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units','Count of Species of Live Animal');
+				$headerArray = array($this->objLanguage->languageText('phrase_districtname'),'Point of Entry','Animal Origin','Animal Destination','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units','Count of Species of Live Animal');
 				
 				$exportRecords = $this->objLivestockexport->getALL();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($exportRecords as $report) {
 					
-					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef'],$report['countspecies']);
+					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef'],$report['count']);
 					
 					$csv .= implode(",", $row)."\n";
 				}
@@ -446,11 +454,13 @@ class report extends object {
 				
 		case 'init_10': 
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Vaccine Name','Total Doses in hand','Doses at start of Month','Start of Month date','Doses at end of Month','End of Month Date','Doses Received During the Month','Doses Used', 'Doses Wasted');
+				$headerArray = array($this->objLanguage->languageText('phrase_districtname'),'Vaccine Name','Total Doses in hand','Total Doses at Start of Month','Month Start Date','Total Doses at End of Month','Month End Date','Total Doses Received in Month','Doses Used', 'Doses Wasted');
 				
-				$vaccineInventoryRecords = $this->objVaccineInventory->getALL();
+				$vaccineInventoryRecords = $this->objVaccineInventory->getALL("WHERE YEAR(reportdate) = '$year'
+														   AND MONTH(reportdate) = '$month'
+														   ORDER BY reportdate");
 				$csv = implode(",", $headerArray)."\n";
-				
+
 				foreach ($vaccineInventoryRecords as $report) {
 					
 					$row = array($report['district'],$report['vaccinename'],$report['doses'],$report['dosesstartofmonth'],$report['startmonth'],$report['dosesendofmonth'],$report['endmonth'],$report['dosesreceived'],$report['dosesused'],$report['doseswasted']);
@@ -462,9 +472,11 @@ class report extends object {
 				//deworming report generation
 		 case 'init_09': 
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Number of animals Dewormed','Control Measure','Remarks');
+				$headerArray = array($this->objLanguage->languageText('phrase_districtname'),'Animal Classification','Number of animals Dewormed','Control Measure','Remarks');
 				
-				$dewormingRecords = $this->objAnimalDeworming->getAll();
+				$dewormingRecords = $this->objAnimalDeworming->getALL("WHERE YEAR(reportdate) = '$year'
+														   AND MONTH(reportdate) = '$month'
+														   ");
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($dewormingRecords as $report) {
@@ -481,12 +493,12 @@ class report extends object {
 									 $this->objLanguage->languageText('mod_ahis_reportofficer','ahis'),$this->objLanguage->languageText('word_disease'),
 									 $this->objLanguage->languageText('phrase_surveytypes'),$this->objLanguage->languageText('word_comments'),
 									 $this->objLanguage->languageText('phrase_testtype'),$this->objLanguage->languageText('word_sensitivity'),
-									 $this->objLanguage->languageText('word_specificity'),$this->objLanguage->languageText('word_territory'),
+									 $this->objLanguage->languageText('word_specificity'),$this->objLanguage->languageText('word_location'),
 									 $this->objLanguage->languageText('phrase_geolevel2'),$this->objLanguage->languageText('word_farm'),$this->objLanguage->languageText('phrase_farmingsystem'),
 									 $this->objLanguage->languageText('phrase_sampleid'),$this->objLanguage->languageText('phrase_animalid'),
 									 $this->objLanguage->languageText('word_species'),$this->objLanguage->languageText('word_age'),
 									 $this->objLanguage->languageText('word_sex'),$this->objLanguage->languageText('phrase_sampletype'),$this->objLanguage->languageText('phrase_testtype'),
-									 $this->objLanguage->languageText('phrase_dateoftesting'),$this->objLanguage->languageText('phrase_testresult'),$this->objLanguage->languageText('word_specification'),
+									 $this->objLanguage->languageText('phrase_dateoftest'),$this->objLanguage->languageText('phrase_testresult'),$this->objLanguage->languageText('word_specification'),
 									 $this->objLanguage->languageText('phrase_vaccinationhistory'),$this->objLanguage->languageText('word_number'),
 									 $this->objLanguage->languageText('word_remarks'));
 									 
