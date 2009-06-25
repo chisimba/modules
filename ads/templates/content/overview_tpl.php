@@ -8,17 +8,22 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
 $header = new htmlheading();
-$header->type = 1;
+$header->type = 3;
 $header->str = $this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
 
-echo '<div style="padding:10px;">'.$header->show();
+
 $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
 $form = new form ('overview', $this->uri(array('action'=>'save_overview')));
 $messages = array();
 
+
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
-$unitname = new textinput('unit_name',NULL,NULL,50);
+
+$coursedata=$data[0];
+//$courseName=$data['title'];
+//echo $courseName;
+$unitname = new textinput('unit_name',$coursedata['title'],NULL,50);
 $unitnameLabel = new label($this->objLanguage->languageText('mod_ads_unit_name', 'ads').'&nbsp;', 'input_unitname');
 if ($mode == 'addfixup') {
     $unitname->value = $this->getParam('unit_name');
@@ -111,10 +116,16 @@ $table->endRow();
 
 $form->addToForm($table->show());
 
-$button = new button ('submitform', 'Next');
-$button->setToSubmit();
+$saveButton = new button ('submitform', 'Next');
+$saveButton->setToSubmit();
 
-$form->addToForm('<p align="center"><br />'.$button->show().'</p>');
+$buttons.=$saveButton->show();
+$cancelButton = new button('cancel','Cancel');
+$actionUrl = $this->uri(array('action' => NULL));
+$cancelButton->setOnClick("window.location='$actionUrl'");
+$buttons.='&nbsp'.$cancelButton->show();
+
+$form->addToForm('<p align="center"><br />'.$buttons.'</p>');
 
 if ($mode == 'addfixup') {
 
@@ -144,16 +155,20 @@ $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 
 $nav = $this->getObject('nav', 'ads');
-$leftSideColumn = $nav->getLeftContent();
+$toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
+$leftSideColumn = $nav->getLeftContent($toSelect);
 $cssLayout->setLeftColumnContent($leftSideColumn);
+$rightSideColumn.='<h1>'.$coursedata['title'].'</h1>';
+$rightSideColumn.='<div style="padding:10px;">'.$header->show();
 
 //Add the table to the centered layer
 $rightSideColumn .= $form->show();
+$rightSideColumn.= '</div>';
 // Add Right Column
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
 
-echo '</div>';
+
 ?>

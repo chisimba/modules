@@ -9,11 +9,11 @@ class nav extends object{
         $this->loadclass('link','htmlelements');
     }
 
-    public function getLeftContent(){
+    public function getLeftContent($toSelect){
         $sectionA = new link ($this->uri(array('action'=>'overview'),"ads"));
         $sectionA->link=   $this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
 
-        $sectionB = new link ($this->uri(array('action'=>'rules_and_syllabus'),"ads"));
+        $sectionB = new link ($this->uri(array('action'=>'rulesandsyllabus'),"ads"));
         $sectionB->link=   $this->objLanguage->languageText('mod_ads_section_b_rules_and_syllabus', 'ads');
 
         $sectionC = new link ($this->uri(array('action'=>'subsidy_requirements'),"ads"));
@@ -34,17 +34,26 @@ class nav extends object{
         $sectionH = new link ($this->uri(array('action'=>'contact'),"ads"));
         $sectionH->link=   $this->objLanguage->languageText('mod_ads_section_h_contact', 'ads');
 
+        $list=array(
+            "0"=>$sectionA->show(),
+            "1"=>$sectionB->show(),
+            "2"=>$sectionC->show(),
+            "3"=>$sectionD->show(),
+            "4"=>$sectionE->show(),
+            "5"=>$sectionF->show(),
+            "6"=>$sectionG->show(),
+            "7"=>$sectionH->show()
+        );
         $desc=
-'<ul>
-<li>'.$sectionA->show().'</li>
-<li>'.$sectionB->show().'</li>
-<li>'.$sectionC->show().'</li>
-<li>'.$sectionD->show().'</li>
-<li>'.$sectionE->show().'</li>
-<li>'.$sectionF->show().'</li>
-<li>'.$sectionG->show().'</li>
-<li>'.$sectionH->show().'</li>
-</ul>';
+        '<ul id="nav-secondary">';
+        $cssClass = '';
+        foreach($list as $element){
+             if(strtolower($element) == strtolower($toSelect)) {
+                    $cssClass = ' class="active" ';
+             }
+            $desc.='<li $cssClass>'.$element.'</li>';
+        }
+        $desc.='</ul>';
         return $desc;
     }
 }
