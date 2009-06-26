@@ -257,9 +257,12 @@ class functions_assignment extends object
     * Method to display the Students assignments.
     * @return The template with assignments including marks.
     */
-    function displayAssignment($contextCode = Null){
+    function displayAssignment($contextCode = Null, $thisUserId = Null){
 	if(empty($contextCode)){
 		$contextCode = $this->contextCode;
+	}
+	if(empty($thisUserId)){
+		$thisUserId = $this->objUser->userId();
 	}
         $assignments = $this->dbAssignment->getAssignments($contextCode);
 	$openLabel = $this->objLanguage->languageText('mod_assignment_open','assignment');
@@ -367,8 +370,10 @@ class functions_assignment extends object
 		if ($okToShow) {
 		    
 		    $counter++;
-		    //
-		    $submitData = $this->dbSubmit->getStudentSubmissions($assignment['id'], $orderBy = 'firstname, datesubmitted');
+		    // "userid='".$thisUserId."'"
+		    //$submitData = $this->dbSubmit->getStudentSubmissions($assignment['id'], $orderBy = 'firstname, datesubmitted');
+		    $submitData = $this->dbSubmit->getStudentAssignment($thisUserId, $assignment['id']);
+		    //var_dump($submitData);
 		    if(!empty($submitData[0]["mark"])){
 			    $studentsMark = (($submitData[0]["mark"]/$assignment['mark'])*100);
 			    $assgnId = $submitData[0]['assignmentid'];

@@ -107,8 +107,9 @@ class assignment extends controller
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user','security');
         $this->objContext = $this->getObject('dbcontext','context');
-        $this->objIcon= $this->newObject('geticon','htmlelements');        
-        
+        $this->objIcon= $this->newObject('geticon','htmlelements');  
+	$this->loadclass('link','htmlelements');
+        $this->objLink=new link();
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -225,6 +226,14 @@ class assignment extends controller
         $this->setVarByRef('assignments', $assignments);
         
         return 'assignment_home_tpl.php';
+    }
+    private function __displaylist()
+    {
+        
+        $assignments = $this->objAssignment->getAssignments($this->contextCode);
+        $this->setVarByRef('assignments', $assignments);
+        
+        return 'assignment_list_tpl.php';
     }
     
     

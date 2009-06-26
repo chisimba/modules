@@ -1,5 +1,5 @@
 <?php
-/*
+
 $openLabel = $this->objLanguage->languageText('mod_assignment_open','assignment');
 $closedLabel = $this->objLanguage->languageText('mod_assignment_closed','assignment');
 $viewLabel = $this->objLanguage->languageText('mod_assignment_view','assignment');
@@ -148,8 +148,10 @@ if ($this->isValid('add')) {
     
     echo '<p>'.$link->show().'</p>';
 }
-*/
-	$assgnFunctions = $this->objAssignmentFunctions->displayAssignment();
-	echo $assgnFunctions;
+
+	$this->objLink->link($this->uri(array('action'=>'displaylist')));
+	$this->objLink->link="view assignments list";
+
+	echo $this->objLink->show();
 
 ?>
