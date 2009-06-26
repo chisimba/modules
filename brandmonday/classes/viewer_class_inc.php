@@ -195,14 +195,30 @@ class viewer extends object {
 
     public function renderLeftBlocks() {
         // Chisimba ad and link
-        $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $text = "Powered By Chisimba! http://avoir.uwc.ac.za";
+        $this->objWashout = $this->getObject("washout", "utilities");
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $adhead1 = $this->objSysConfig->getValue ( 'adhead1', 'brandmonday' );
+        $adhead2 = $this->objSysConfig->getValue ( 'adhead2', 'brandmonday' );
+        $fbhead = $this->objSysConfig->getValue ( 'fbhead', 'brandmonday' );
+        $fbtext = $this->objSysConfig->getValue ( 'fbtext', 'brandmonday' );
+        $adtext1 = $this->objSysConfig->getValue ( 'adtext1', 'brandmonday' );
+        $adtext2 = $this->objSysConfig->getValue ( 'adtext2', 'brandmonday' );
+        $chistext = $this->objSysConfig->getValue ( 'chistext', 'brandmonday' );
+        $chishead = $this->objSysConfig->getValue ( 'chishead', 'brandmonday' );
+
         $ret = NULL;
-        $ret .= $objFeatureBox->show("Chisimba", $text);
 
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $text = "Today's featured blogger: Paul Scott - http://www.paulscott.za.net/";
-        $ret .= $objFeatureBox->show("Featured Blogger", $text);
+        $ret .= $objFeatureBox->show($chishead, $this->objWashout->parseText($chistext));
+
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $ret .= $objFeatureBox->show($fbhead, $this->objWashout->parseText($fbtext));
+
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $ret .= $objFeatureBox->show($adhead1, $this->objWashout->parseText($adtext1));
+
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $ret .= $objFeatureBox->show($adhead2, $this->objWashout->parseText($adtext2));
 
         $objTwitterRemote = $this->getObject("twitterremote", "twitter");
         $objTwitterRemote->userName = "CapeTown";
@@ -211,7 +227,8 @@ class viewer extends object {
 //var_dump($tweets);
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $text = $tweets;
-        $ret .= $objFeatureBox->show("@CapeTown", $text);
+        $ret .= $objFeatureBox->show("@CapeTown", $this->objWashout->parseText($text));
+
         return $ret;
     }
 

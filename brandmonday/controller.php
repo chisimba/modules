@@ -69,6 +69,7 @@ class brandmonday extends controller {
                 break;
 
             default: 
+                $this->requiresLogin('default');
                 $minusurl = "http://search.twitter.com/search.json?q=+%23BrandMonday+AND+%23BrandMinus&lang=all&geocode=-33.55%2C18.22%2C100km";
                 $plusurl = "http://search.twitter.com/search.json?q=+%23BrandMonday+AND+%23BrandPlus&lang=all&geocode=-33.55%2C18.22%2C100km";
                 $failurl = "http://search.twitter.com/search.json?q=+%23BrandMonday+AND+%23BrandFail&lang=all&geocode=-33.55%2C18.22%2C100km";
@@ -90,5 +91,17 @@ class brandmonday extends controller {
                 break;
         }
     }
+
+    /**
+     * Overide the login object in the parent class
+     *
+     * @param  void
+     * @return bool
+     * @access public
+     */
+    public function requiresLogin($action) {
+        return FALSE;
+    }
+
 }
 ?>
