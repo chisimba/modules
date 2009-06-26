@@ -102,12 +102,12 @@ class assignment extends controller
         $this->objAssignmentSubmit = $this->getObject('dbassignmentsubmit');
         
         
-        
+        $this->objAssignmentFunctions = $this->getObject('functions_assignment', 'assignment');
         $this->objDate = $this->getObject('dateandtime','utilities');
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user','security');
         $this->objContext = $this->getObject('dbcontext','context');
-        
+        $this->objIcon= $this->newObject('geticon','htmlelements');        
         
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
@@ -144,7 +144,7 @@ class assignment extends controller
     {
         if($this->objContext->isInContext()){
             $this->contextCode = $this->objContext->getContextCode();
-            $this->context = $this->objContext->getTitle();
+            $this->context = $this->objContext->getTitle();            
         } else {
             return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
         }
@@ -256,7 +256,27 @@ class assignment extends controller
             return $this->nextAction('view', array('id'=>$result));
         }
     }
-    
+    // display notes in a pop up window
+    private function __showcomment(){
+        $this->setLayoutTemplate('');
+        // get assignment id
+        $assignId=$this->getParam('id');
+        // get comment form booking details
+        $onlineSubmission=$this->objAssignment->getAssignment($assignId);
+        
+        $mydata[0]['name']=$onlineSubmission['name'];
+        $mydata[0]['description']=$onlineSubmission['description'];
+        // add head
+        $head=$this->objLanguage->languageText('mod_essay_comment','essay');
+        // remove left navigation
+        $left='';
+        $this->setVarByRef('head',$head);
+        $this->setVarByRef('mydata',$mydata);
+        $this->setVarByRef('assignId',$assignId);        
+        $this->setVarByRef('leftNav',$left);
+        return 'onlineview_tpl.php';
+    }
+
     private function __view()
     {
         $id = $this->getParam('id');
@@ -375,7 +395,7 @@ class assignment extends controller
         
         $assignment = $this->objAssignment->getAssignment($submission['assignmentid']);
         
-        if ($submission == FALSE) {
+        if ($assignment == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unknownassignment'));
         }
         
