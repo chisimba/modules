@@ -240,6 +240,7 @@ class kngimport extends controller
 	 * Retrieves a list of courses from a remote server
 	*/
 	case 'uploadFromServer':
+                ini_set('max_execution_time',180);
 		$this->setLayoutTemplate('importcourse_tpl.php');
 		$server = $this->getParam('server');
 		$localhost = $this->getParam('Localhost');
