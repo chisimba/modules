@@ -82,6 +82,7 @@ class eportfolio extends controller
         $this->userPid = $this->objUser->PKId($this->objUser->userId()); //To pick user id
         $this->setVarByRef('userPid', $this->userPid);
         $this->objUrl = $this->getObject('url', 'strings');
+        $this->objAssignmentFunctions = $this->getObject('functions_assignment', 'assignment');
         // Create an array of words to abstract
         // Create an array of words to abstract
         $this->abstractionArray = array(

@@ -875,7 +875,7 @@ if (!empty($activitylist)) {
     $activityTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $activityTable->endRow();
 }
-
+/*
 $hasEssays = 0;
 foreach ($myContexts as $contextCode){
  $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
@@ -892,7 +892,7 @@ foreach ($myContexts as $contextCode){
 
 	}
 }
-
+*/
 //    	echo $activityTable->show();
 $addlink = new link($this->uri(array(
     'module' => 'eportfolio',
@@ -1026,7 +1026,41 @@ $transcriptlist = $this->objDbTranscriptList->getByItem($userId);
 $transcriptTable = &$this->newObject("htmltable", "htmlelements");
 $transcriptTable->border = 0;
 $transcriptTable->cellspacing = '12';
-$transcriptTable->width = "50%";
+$transcriptTable->width = "100%";
+$class = NULL;
+$hasEssays = 0;
+$hasAssignments = 0;
+foreach ($myContexts as $contextCode){
+ //Get student essays for this course
+ $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
+	if(!empty($contextEssay)){
+		$hasEssays = 1;
+		$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
+		$list=$this->objLanguage->languageText('word_list');
+		$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay').' '.$this->objLanguage->languageText('word_for').' '.$contextCode." - ".$this->_objDBContext->getTitle($contextCode);
+		
+		//echo "<b>".$head."</b>".$viewEssays;
+		$transcriptTable->startRow();
+		$transcriptTable->addCell("<b>".$head."</b>".$viewEssays , '', '', '', '', 'colspan="6"');
+		$transcriptTable->endRow();
+
+	}
+ //Get student essays for this course
+ $contextAssignments = $this->objAssignmentFunctions->displayAssignment($contextCode);
+	if(!empty($contextAssignments)){
+		$hasAssignments = 1;
+		//$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
+		$list=$this->objLanguage->languageText('word_list');
+		$head=$list.' '.$this->objLanguage->languageText('mod_assignment_assignments','assignment').' '.$this->objLanguage->languageText('word_for','system').' '.$contextCode." - ".$this->_objDBContext->getTitle($contextCode);
+		
+		//echo "<b>".$head."</b>".$viewEssays;
+		$transcriptTable->startRow();
+		$transcriptTable->addCell("<b>".$head."</b>".$contextAssignments , '', '', '', '', 'colspan="6"');
+		$transcriptTable->endRow();
+
+	}
+
+}
 // Add the table heading.
 $transcriptTable->startRow();
 $transcriptTable->addCell($transcriptobjHeading->show() , '', '', '', '', 'colspan="2"');
@@ -1035,7 +1069,6 @@ $transcriptTable->startRow();
 $transcriptTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
 $transcriptTable->endRow();
 // Step through the list of addresses.
-$class = NULL;
 if (!empty($transcriptlist)) {
     foreach($transcriptlist as $item) {
         // Display each field for activities
@@ -1077,6 +1110,7 @@ if (!empty($transcriptlist)) {
     $transcriptTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
     $transcriptTable->endRow();
 }
+
 //	echo $transcriptTable->show();
 $addlink = new link($this->uri(array(
     'module' => 'eportfolio',
