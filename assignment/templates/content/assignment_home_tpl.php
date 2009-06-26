@@ -150,7 +150,7 @@ if ($this->isValid('add')) {
 }
 
 	$this->objLink->link($this->uri(array('action'=>'displaylist')));
-	$this->objLink->link="view assignments list";
+	$this->objLink->link=$this->objLanguage->languageText('mod_assignment_submittedassignments', 'assignment', 'Submitted Assignments')." ".$this->objLanguage->languageText('word_list', 'system', 'List');
 
 	echo $this->objLink->show();
 
