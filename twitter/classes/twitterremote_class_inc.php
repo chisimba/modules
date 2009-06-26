@@ -373,7 +373,7 @@ class twitterremote extends object
                $link = "<a href=\"" . $status->user->url . "\">";
                $img = $link . "<img src=\""
                  . $status->user->profile_image_url
-                 . "\" /></a>";
+                 . "\"  width='48' height='48' /></a>";
                $text = $status->text ."<br />";
                $ret .="<tr><td>" . $img
                . "</td><td valign=\"top\">"
@@ -381,7 +381,7 @@ class twitterremote extends object
                . $humanTime . "</span>"
                . "</td></tr>";
             }
-            $ret .= "</table>";
+            $ret .= "</table><br />";
         }
         return $ret;
     }
