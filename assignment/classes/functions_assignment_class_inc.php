@@ -303,8 +303,8 @@ class functions_assignment extends object
 	$objTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_closingdate', 'assignment', 'Closing Date'),'15%');
 	$objTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_datesubmitted', 'assignment', 'Date Submitted','15%'));
 	//$objTable->addHeaderCell($this->objLanguage->languageText('word_description', 'system', 'Description'));
-	$objTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark','15%'));
-	$objTable->addHeaderCell($this->objLanguage->languageText('word_download', 'system', 'Status'),'8%');
+	$objTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark','10%'));
+	$objTable->addHeaderCell($viewLabel." / ".$this->objLanguage->languageText('word_download', 'system', 'Status'),'13%');
 
 	if ($this->isValid('edit') && count($assignments) > 0) {
 	    $objTable->addHeaderCell('&nbsp;','60');
@@ -408,7 +408,7 @@ class functions_assignment extends object
 		   	$commentIcon = $this->objIcon->show();
 
 			$objPopup = new windowpop();
-		    	$objPopup->set('location',$this->uri(array('action'=>'showcomment','id'=>$assgnId)));
+		    	$objPopup->set('location',$this->uri(array('action'=>'showcomment','id'=>$assgnId,'contextCode'=>$contextCode)));
 		    	$objPopup->set('linktext',$commentIcon);
 		    	$objPopup->set('width','600');
 		    	$objPopup->set('height','350');

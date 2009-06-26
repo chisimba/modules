@@ -145,11 +145,11 @@ class assignment extends controller
     {
         if($this->objContext->isInContext()){
             $this->contextCode = $this->objContext->getContextCode();
-            $this->context = $this->objContext->getTitle();            
-        } else {
+            $this->context = $this->objContext->getTitle();
+        }/*else {
             return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
         }
-        
+        */
         if (!$this->isValid($action)) {
             return $this->nextAction(NULL, array('error'=>'nopermission'));
         }
