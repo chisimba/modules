@@ -70,9 +70,9 @@ class brandmonday extends controller {
 
             default: 
                 $this->requiresLogin('default');
-                $minusurl = "http://search.twitter.com/search.json?q=+%23BrandMonday+AND+%23BrandMinus&lang=all&geocode=-33.55%2C18.22%2C100km";
-                $plusurl = "http://search.twitter.com/search.json?q=+%23BrandMonday+AND+%23BrandPlus&lang=all&geocode=-33.55%2C18.22%2C100km";
-                $failurl = "http://search.twitter.com/search.json?q=+%23BrandMonday+AND+%23BrandFail&lang=all&geocode=-33.55%2C18.22%2C100km";
+                $minusurl = "http://search.twitter.com/search.json?q=+%23BrandMinus&lang=all&geocode=-33.55%2C18.22%2C100km";
+                $plusurl = "http://search.twitter.com/search.json?q=+%23BrandPlus&lang=all&geocode=-33.55%2C18.22%2C100km";
+                $failurl = "http://search.twitter.com/search.json?q=+%23BrandFail&lang=all&geocode=-33.55%2C18.22%2C100km";
 
                 $resMinus = $this->objCurl->exec($minusurl);
                 $resMinus = json_decode($resMinus);
