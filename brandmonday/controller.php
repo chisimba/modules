@@ -70,20 +70,20 @@ class brandmonday extends controller {
 
             default: 
                 $this->requiresLogin('default');
-                $minusurl = "http://search.twitter.com/search.json?q=+%23BrandMinus&lang=all&geocode=-33.55%2C18.22%2C100km";
-                $plusurl = "http://search.twitter.com/search.json?q=+%23BrandPlus&lang=all&geocode=-33.55%2C18.22%2C100km";
-                $failurl = "http://search.twitter.com/search.json?q=+%23BrandFail&lang=all&geocode=-33.55%2C18.22%2C100km";
+                $minusurl = "http://search.twitter.com/search.json?q=&ands=BrandMinus&phrase=&ors=&nots=BrandPlus&tag=BrandMonday&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C100km&rpp=100";
+                $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&tag=BrandMonday&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C100km&rpp=100"; //"http://search.twitter.com/search.json?q=%23BrandPlus+AND+%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C100km";
+                $menurl = "http://search.twitter.com/search.json?q=%23BrandMonday+AND+%23BrandPlus+AND+%23BrandMinus&lang=all&geocode=-33.55%2C18.22%2C100km";
 
                 $resMinus = $this->objCurl->exec($minusurl);
                 $resMinus = json_decode($resMinus);
                 
-                $resFail = $this->objCurl->exec($failurl);
-                $resFail = json_decode($resFail);
+                $resMentions = $this->objCurl->exec($menurl);
+                $resMentions = json_decode($resMentions);
 
                 $resPlus = $this->objCurl->exec($plusurl);
                 $resPlus = json_decode($resPlus);
 
-                $this->setVarByRef('resFail', $resFail);
+                $this->setVarByRef('resMentions', $resMentions);
                 $this->setVarByRef('resMinus', $resMinus);
                 $this->setVarByRef('resPlus', $resPlus);
 

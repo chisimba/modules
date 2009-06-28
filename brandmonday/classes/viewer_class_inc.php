@@ -86,20 +86,20 @@ class viewer extends object {
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
     }
 
-    public function renderCompView($plus = NULL, $minus = NULL, $fail = NULL) {
+    public function renderCompView($plus = NULL, $minus = NULL, $mentions = NULL) {
         if(is_object($plus)) {
             $plus = $plus->results;
         }
         if(is_object($minus)) {
             $minus = $minus->results;
         }
-        if(is_object($fail)) {
-            $fail = $fail->results;
+        if(is_object($mentions)) {
+            $mentions = $mentions->results;
         }
         $messages = NULL;
         $plusmessages = NULL;
         $minusmessages = NULL;
-        $failmessages = NULL;
+        $menmessages = NULL;
         // ok so lets do the iterations and build our output
         foreach($plus as $pos) {
             $text = $pos->text;
@@ -146,12 +146,12 @@ class viewer extends object {
             $minusmessages .= $msgtbl2->show();
         }
 
-        // fail messages
-        foreach($fail as $bad) {
-            $text = $bad->text;
-            $pic = $bad->profile_image_url;
-            $user = $bad->from_user;
-            $createdat = $bad->created_at;
+        // mentions messages
+        foreach($mentions as $men) {
+            $text = $men->text;
+            $pic = $men->profile_image_url;
+            $user = $men->from_user;
+            $createdat = $men->created_at;
             $usrlink = $this->newObject('link', 'htmlelements');
             $usrlink->href = "http://twitter.com/$user";
             $usrlink->link = $user;
@@ -166,10 +166,10 @@ class viewer extends object {
             $msgtbl3->addCell($txt);
             $msgtbl3->endRow();
 
-            $failmessages .= $msgtbl3->show();
+            $menmessages .= $msgtbl3->show();
         }
 
-        $minusmessages = $minusmessages.$failmessages;
+        // $minusmessages = $minusmessages.$failmessages;
 
         // 2 more headings, BrandPlus and BrandMinus needed now
         $this->loadClass ( 'htmlheading', 'htmlelements' );
@@ -190,11 +190,22 @@ class viewer extends object {
         $bigtbl->addCell($bm->show()."<br />".$minusmessages);
         $bigtbl->endRow();
         
-        return $bigtbl->show();
+        $mtbl = $this->newObject('htmltable', 'htmlelements');
+        $mtbl->cellpadding = 3;
+        $mtbl->cellspacing = 3;
+        $mtbl->border = 1;
+        $mtbl->startRow();
+        $mtbl->addCell($menmessages);
+        $mtbl->endRow();
+
+        $mh = new htmlHeading ( );
+        $mh->str = $this->objLanguage->languageText ( 'mod_brandmonday_mentions', 'brandmonday' );
+        $mh->type = 3;
+        
+        return $bigtbl->show()."<br />".$mh->show().$mtbl->show();
     }
 
-    public function renderLeftBlocks() {
-        // Chisimba ad and link
+    public function adBlocks() {
         $this->objWashout = $this->getObject("washout", "utilities");
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $adhead1 = $this->objSysConfig->getValue ( 'adhead1', 'brandmonday' );
@@ -203,13 +214,7 @@ class viewer extends object {
         $fbtext = $this->objSysConfig->getValue ( 'fbtext', 'brandmonday' );
         $adtext1 = $this->objSysConfig->getValue ( 'adtext1', 'brandmonday' );
         $adtext2 = $this->objSysConfig->getValue ( 'adtext2', 'brandmonday' );
-        $chistext = $this->objSysConfig->getValue ( 'chistext', 'brandmonday' );
-        $chishead = $this->objSysConfig->getValue ( 'chishead', 'brandmonday' );
-
         $ret = NULL;
-
-        $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $ret .= $objFeatureBox->show($chishead, $this->objWashout->parseText($chistext));
 
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $ret .= $objFeatureBox->show($fbhead, $this->objWashout->parseText($fbtext));
@@ -220,15 +225,45 @@ class viewer extends object {
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $ret .= $objFeatureBox->show($adhead2, $this->objWashout->parseText($adtext2));
 
+        return $ret;
+    }
+
+    public function chisimbaBlock() {
+        $this->objWashout = $this->getObject("washout", "utilities");
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $chistext = $this->objSysConfig->getValue ( 'chistext', 'brandmonday' );
+        $chishead = $this->objSysConfig->getValue ( 'chishead', 'brandmonday' );
+        $ret = NULL;
+
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $ret .= $objFeatureBox->show($chishead, $this->objWashout->parseText($chistext));
+        
+        return $ret;
+    }
+
+    public function aboutBlock() {
+        $this->objWashout = $this->getObject("washout", "utilities");
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $abouttext = $this->objSysConfig->getValue ( 'abouttext', 'brandmonday' );
+        $abouthead = $this->objSysConfig->getValue ( 'abouthead', 'brandmonday' );
+        $ret = NULL;
+
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $ret .= $objFeatureBox->show($abouthead, $this->objWashout->parseText($abouttext));
+        
+        return $ret;
+    }
+
+    public function tweetBlock() {
         $objTwitterRemote = $this->getObject("twitterremote", "twitter");
         $objTwitterRemote->userName = "CapeTown";
         $tweets = $objTwitterRemote->showTimeline(FALSE, 'user');
-        
-//var_dump($tweets);
+
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $text = $tweets;
+        $ret = NULL;
         $ret .= $objFeatureBox->show("@CapeTown", $this->objWashout->parseText($text));
-
+        
         return $ret;
     }
 

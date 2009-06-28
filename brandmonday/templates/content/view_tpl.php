@@ -1,6 +1,6 @@
 <?php
 $cssLayout = $this->newObject ( 'csslayout', 'htmlelements' );
-$cssLayout->setNumColumns ( 2 );
+$cssLayout->setNumColumns ( 3 );
 
 // get the sidebar object
 $this->loadClass ( 'htmlheading', 'htmlelements' );
@@ -9,23 +9,33 @@ $this->objViewer = $this->getObject('viewer');
 
 $middleColumn = NULL;
 $leftColumn = NULL;
+$rightColumn = NULL;
 
 // Add in a heading
 $header = new htmlHeading ( );
 $header->str = $this->objLanguage->languageText ( 'mod_brandmonday_bmtweets', 'brandmonday' );
 $header->type = 1;
 
-// Add in a tagline
-$headertag = new htmlHeading ( );
-$headertag->str = $this->objLanguage->languageText ( 'mod_brandmonday_bminit', 'brandmonday' );
-$headertag->type = 3;
+// CapeTown link
+$cptLink = $this->newObject('link', 'htmlelements');
+$cptLink->href = "http://twitter.com/CapeTown";
+$cptLink->link = "@CapeTown";
+$cptLink = $cptLink->show();
 
-$middleColumn .= $header->show().$headertag->show();
-$middleColumn .= $this->objViewer->renderCompView($resPlus, $resMinus, $resFail);
+$headertag2 = new htmlHeading ( );
+$headertag2->str = $this->objLanguage->languageText ( 'mod_brandmonday_bminit', 'brandmonday' )." ".$cptLink." ".$this->objLanguage->languageText ( 'mod_brandmonday_bminit2', 'brandmonday' );
+$headertag2->type = 3;
 
-$leftColumn = $this->objViewer->renderLeftBlocks();
+$middleColumn .= $header->show().$headertag2->show();
+$middleColumn .= $this->objViewer->renderCompView($resPlus, $resMinus, $resMentions);
+
+$rightColumn .= $this->objViewer->aboutBlock();
+$rightColumn .= $this->objViewer->adBlocks();
+$leftColumn .= $this->objViewer->chisimbaBlock();
+$leftColumn .= $this->objViewer->tweetBlock();
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );
+$cssLayout->setRightColumnContent ( $rightColumn );
 echo $cssLayout->show ();
 ?>
