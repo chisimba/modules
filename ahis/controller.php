@@ -1207,7 +1207,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objAnimalProduction->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'animalproduction_add')));
-                $this->setVar('addLinkText', "addanimalproduction");
+                $this->setVar('addLinkText', "addanimalproductiontype");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_animalproductionadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_animalproduction'));
