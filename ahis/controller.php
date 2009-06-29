@@ -1911,7 +1911,7 @@ class ahis extends controller {
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objVaccination->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'vaccination_add')));
-                $this->setVar('addLinkText', "addvaccine");
+                $this->setVar('addLinkText', "addvaccinename");
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_vaccinationadmin','ahis'));
                 $this->setVar('action', $action);
                 $this->setVar('columnName', $this->objLanguage->languageText('phrase_vaccinationhistory'));
