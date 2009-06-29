@@ -45,7 +45,7 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('layer','htmlelements');
 
-echo $imageFolder = $this->objConfig->getsiteRoot()."skins/ahisskin/images";
+//echo $imageFolder = $this->objConfig->getsiteRoot()."skins/ahisskin/images";
 $icon = $this->newObject('geticon','htmlelements');
 $addLink = new link($addLinkUri);
 $addLink->link = "<img src='$imageFolder/$addLinkText.jpg' alt='$addLinkText'/>";
