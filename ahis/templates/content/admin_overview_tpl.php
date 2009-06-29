@@ -45,11 +45,8 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('layer','htmlelements');
 
-<<<<<<< .mine
+
 $imageFolder = $this->objConfig->getsiteRoot()."skins/ahisskin/images";
-=======
-//echo $imageFolder = $this->objConfig->getsiteRoot()."skins/ahisskin/images";
->>>>>>> .r13783
 $icon = $this->newObject('geticon','htmlelements');
 $addLink = new link($addLinkUri);
 $addLink->link = "<img src='$imageFolder/$addLinkText.jpg' alt='$addLinkText'/>";
