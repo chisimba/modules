@@ -1043,10 +1043,17 @@ class mcqtests extends controller
                     $data[$key]['node'] = $nodes[0]['title'];
                 }
                 $result = $this->dbResults->getResult($this->userId, $line['id']);
+                //Get Total Mark
+                $totalMark = $this->dbQuestions->sumTotalmark($line['id']);
                 if (!empty($result)) {
                     $data[$key]['mark'] = $result[0]['mark'];
                 } else {
                     $data[$key]['mark'] = 'none';
+                }
+                 if (!empty($totalMark)) {
+                    $data[$key]['totalmark'] = $totalMark;
+                } else {
+                    $data[$key]['totalmark'] = 'none';
                 }
                 if ($line['comlab'] != NULL) {
                     $arrLabIps = $this->getIps($line['comlab']);

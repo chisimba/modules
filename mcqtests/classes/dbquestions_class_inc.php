@@ -188,7 +188,23 @@ class dbquestions extends dbtable
         }
         return FALSE;
     }
-
+    /**
+     * Method to sum the total mark for a test.
+     *
+     * @access public
+     * @param string $testId The id of the specified test.
+     * @return int $tmark The total mark for the test.
+     */
+    public function sumTotalmark($testId)
+    {
+        $sql = "SELECT sum(mark) AS totalmark FROM ".$this->table." WHERE testid='$testId'";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            $tmark = $data[0]['totalmark'];
+            return $tmark;
+        }
+        return FALSE;
+    }
     /**
      * Change the order of questions in the test
      *

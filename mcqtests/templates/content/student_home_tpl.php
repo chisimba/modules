@@ -84,7 +84,7 @@ if (!empty($data)) {
                     if ($line['mark'] == 0) {
                         $mark = 0;
                     } else {
-                        $mark = round($line['mark']/$line['totalmark']*100);
+                        $mark = round($line['mark']/$line['totalmark']*100,2);
                     }
                     
                 } else {
