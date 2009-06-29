@@ -53,11 +53,11 @@ $alpha = array(
     's',
     't'
 );
-$percent = round($result['mark']/$result['totalmark']*100, 2);
+$percent = round($result['mark']/$totalmark*100, 2);
 $studentName = $this->objUser->fullName($result['studentid']);
 $str = '<font size="3"><b>'.$studentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$studentName.'<br />';
 $str.= '<b>'.$testLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['name'].'<br />';
-$str.= '<b>'.$totalLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['totalmark'].'<br />';
+$str.= '<b>'.$totalLabel.':</b>&nbsp;&nbsp;&nbsp;'.$totalmark.'<br />';
 $str.= '<b>'.$markLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['mark'].'&nbsp;&nbsp;('.$percent.'%)<p /></font>';
 
 $objTable = new htmltable();

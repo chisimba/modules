@@ -968,6 +968,7 @@ class mcqtests extends controller
         $result = $this->dbResults->getResult($studentId, $testId);
         $test = $this->dbTestadmin->getTests($this->contextCode, 'name, totalmark', $testId);
         $result = array_merge($result[0], $test[0]);
+        $totalmark = $this->dbQuestions->sumTotalmark($testId);	
         $qNum = $this->getParam('qnum');
         if (empty($qNum)) {
             $data = $this->dbQuestions->getQuestionCorrectAnswer($testId);
@@ -983,8 +984,10 @@ class mcqtests extends controller
                 $data[$key]['studcomment'] = $marked[0]['commenttext'];
             }
         }
+
         $this->setVarByRef('data', $data);
         $this->setVarByRef('result', $result);
+        $this->setVarByRef('totalmark', $totalmark);
         return 'showtest_tpl.php';
     }
 
