@@ -1059,7 +1059,13 @@ foreach ($myContexts as $contextCode){
 		$transcriptTable->endRow();
 
 	}
-
+ $contextWorksheets = $this->objWorksheetFunctions->displayWorksheets($contextCode, $userId);
+ if(!empty($contextWorksheets)){
+		$transcriptTable->startRow();
+		$transcriptTable->addCell($contextWorksheets , '', '', '', '', 'colspan="6"');
+		$transcriptTable->endRow();
+ 
+ }
 }
 // Add the table heading.
 $transcriptTable->startRow();

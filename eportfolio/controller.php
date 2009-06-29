@@ -83,6 +83,12 @@ class eportfolio extends controller
         $this->setVarByRef('userPid', $this->userPid);
         $this->objUrl = $this->getObject('url', 'strings');
         $this->objAssignmentFunctions = $this->getObject('functions_assignment', 'assignment');
+        $this->objWorksheetFunctions =& $this->getObject('functions_worksheet', 'worksheet');	
+        $this->objWorksheet = $this->getObject('dbworksheet', 'worksheet');
+        $this->objWorksheetQuestions = $this->getObject('dbworksheetquestions', 'worksheet');
+        $this->objWorksheetAnswers = $this->getObject('dbworksheetanswers', 'worksheet');
+        $this->objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
+
         // Create an array of words to abstract
         // Create an array of words to abstract
         $this->abstractionArray = array(
@@ -105,6 +111,43 @@ class eportfolio extends controller
         $this->setVarByRef('user', $this->user);
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
+	    case 'viewworksheet':
+		$this->setLayoutTemplate(NULL);	    
+		$id = $this->getParam('id');
+		
+		$worksheet = $this->objWorksheet->getWorksheet($id);
+		
+		if ($worksheet == FALSE) {
+		    return $this->nextAction(NULL, array('error'=>'unknownworksheet'));
+		}
+		
+		$this->setVarByRef('id', $id);
+		$this->setVarByRef('worksheet', $worksheet);
+		
+		$questions = $this->objWorksheetQuestions->getQuestions($id);
+		$this->setVarByRef('questions', $questions);
+		
+		$worksheetResult = $this->objWorksheetResults->getWorksheetResult($this->objUser->userId(), $id);
+		
+		if ($worksheet['activity_status'] == 'open' && !$worksheetResult) {
+		    $this->setLayoutTemplate(NULL);
+		    $this->setVar('pageSuppressToolbar', TRUE);
+		    $this->setVar('pageSuppressBanner', TRUE);
+		    $this->setVar('pageSuppressSearch', TRUE);
+		    $this->setVar('suppressFooter', TRUE);
+		    return $this->nextAction(NULL, array('error'=>'unknownworksheet'));
+		    //return 'answerworksheet_tpl.php';
+		} else {
+		    $this->setVar('pageSuppressToolbar', TRUE);
+		    $this->setVar('pageSuppressBanner', TRUE);
+		    $this->setVar('pageSuppressSearch', TRUE);
+		    $this->setVar('suppressFooter', TRUE);
+		    
+		    $this->setVarByRef('worksheetResult', $worksheetResult);
+		    
+		    return 'viewworksheet_tpl.php';
+		}
+
             case 'export':
                 $exportXML = $this->objMysqlxml->convertToXML();
                 return $exportXML;
