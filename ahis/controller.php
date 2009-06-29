@@ -673,7 +673,7 @@ class ahis extends controller {
                $this->setVar('reporter',$this->getSession('ps_officerId'));
                $this->setVar('survey',$this->getSession('ps_surveyTypeId'));
                $this->setVar('arrayTerritory', $this->objTerritory->getgeo2($geo2id));
-               $this->setVar('arrayFarmingsystem',$this->objFarmingsystem->getAll("ORDER BY NAME"));
+               $this->setVar('arrayFarmingsystem',$this->objProduction->getAll("ORDER BY name"));
                $this->setVar('arraygeo2',$this->objGeo2->getAll("ORDER BY NAME"));
                $this->setVar('arraygeo3',$this->objGeo3->getAll("ORDER BY NAME"));
                return 'active_addherd_tpl.php';
