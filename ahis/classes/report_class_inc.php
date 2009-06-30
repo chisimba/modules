@@ -490,17 +490,30 @@ class report extends object {
 		default:
 		
 		      $headerArray = array($this->objLanguage->languageText('phrase_campaignname'),
-									 $this->objLanguage->languageText('mod_ahis_reportofficer','ahis'),$this->objLanguage->languageText('word_disease'),
-									 $this->objLanguage->languageText('phrase_surveytypes'),$this->objLanguage->languageText('word_comments'),
-									 $this->objLanguage->languageText('phrase_testtype'),$this->objLanguage->languageText('word_sensitivity'),
-									 $this->objLanguage->languageText('word_specificity'),$this->objLanguage->languageText('word_location'),
-									 $this->objLanguage->languageText('phrase_geolevel2'),$this->objLanguage->languageText('word_farm'),$this->objLanguage->languageText('phrase_farmingsystem'),
-									 $this->objLanguage->languageText('phrase_sampleid'),$this->objLanguage->languageText('phrase_animalid'),
-									 $this->objLanguage->languageText('word_species'),$this->objLanguage->languageText('word_age'),
-									 $this->objLanguage->languageText('word_sex'),$this->objLanguage->languageText('phrase_sampletype'),$this->objLanguage->languageText('phrase_testtype'),
-									 $this->objLanguage->languageText('phrase_dateoftest'),$this->objLanguage->languageText('phrase_testresult'),$this->objLanguage->languageText('word_specification'),
-									 $this->objLanguage->languageText('phrase_vaccinationhistory'),$this->objLanguage->languageText('word_number'),
-									 $this->objLanguage->languageText('word_remarks'));
+								   $this->objLanguage->languageText('mod_ahis_reportofficer','ahis'),
+								   $this->objLanguage->languageText('word_disease'),
+								   $this->objLanguage->languageText('phrase_surveytype'),
+								   $this->objLanguage->languageText('word_comments'),
+								   $this->objLanguage->languageText('phrase_testtype'),
+								   $this->objLanguage->languageText('word_sensitivity'),
+								   $this->objLanguage->languageText('word_specificity'),
+								   $this->objLanguage->languageText('word_location'),
+								   $this->objLanguage->languageText('phrase_geolevel2'),
+								   $this->objLanguage->languageText('word_farm'),
+								   $this->objLanguage->languageText('phrase_farmingsystem'),
+								   $this->objLanguage->languageText('phrase_sampleid'),
+								   $this->objLanguage->languageText('phrase_animalid'),
+								   $this->objLanguage->languageText('word_species'),
+								   $this->objLanguage->languageText('word_age'),
+								   $this->objLanguage->languageText('word_sex'),
+								   $this->objLanguage->languageText('phrase_sampletype'),
+								   $this->objLanguage->languageText('phrase_testtype'),
+								   $this->objLanguage->languageText('phrase_dateoftest'),
+								   $this->objLanguage->languageText('phrase_testresult'),
+								   $this->objLanguage->languageText('word_specification'),
+								   $this->objLanguage->languageText('phrase_vaccinationhistory'),
+								   $this->objLanguage->languageText('word_number'),
+								   $this->objLanguage->languageText('word_remarks'));
 									 
 				$activeRecords = $this->objActive->getactive($year,$month);
 				$data = $this->objAhisUser->getList();
