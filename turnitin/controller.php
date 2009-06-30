@@ -136,6 +136,7 @@ class turnitin extends controller
 				print $this->objTOps->APILogin($params);
 				break;
 				
+			default:
 			case 'callback':
 				echo "This is the CALLBACK ...<BR>";
 				$m = var_export($_REQUEST, true);
@@ -144,7 +145,7 @@ class turnitin extends controller
 				var_dump($_REQUEST);
 				break;
 				
-			default:				
+			case 'main':				
 				return "main_tpl.php";
 				break;
 		}
