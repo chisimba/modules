@@ -88,7 +88,11 @@ class eportfolio extends controller
         $this->objWorksheetQuestions = $this->getObject('dbworksheetquestions', 'worksheet');
         $this->objWorksheetAnswers = $this->getObject('dbworksheetanswers', 'worksheet');
         $this->objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
-
+        $this->dbTestadmin = $this->newObject('dbtestadmin', 'mcqtests');
+        $this->dbQuestions = $this->newObject('dbquestions', 'mcqtests');
+        $this->dbResults = $this->newObject('dbresults', 'mcqtests');
+        $this->dbMarked = $this->newObject('dbmarked', 'mcqtests');
+        $this->objWashout = $this->getObject('washout','utilities');
         // Create an array of words to abstract
         // Create an array of words to abstract
         $this->abstractionArray = array(
@@ -111,6 +115,13 @@ class eportfolio extends controller
         $this->setVarByRef('user', $this->user);
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
+            case 'showtest':
+            	$this->setLayoutTemplate(NULL);	    
+		$this->setVar('pageSuppressToolbar', TRUE);
+		$this->setVar('pageSuppressBanner', TRUE);
+		$this->setVar('pageSuppressSearch', TRUE);
+		$this->setVar('suppressFooter', TRUE);
+                return $this->showTest();
 	    case 'viewworksheet':
 		$this->setLayoutTemplate(NULL);	    
 		$id = $this->getParam('id');
@@ -2253,6 +2264,43 @@ class eportfolio extends controller
         //Empty array
         $selectedParts = array();
     } //end function
-    
+    /**
+     * Method to display a completed test.
+     * The method displays the test information, the students mark and a list
+     * of the questions in the test with the correct answer, the students answer
+     * and the lecturers comment on the students answer.
+     *
+     * @access private
+     * @return
+     */
+    private function showTest()
+    {
+        $testId = $this->getParam('id');
+        $studentId = $this->getParam('studentId');
+        $result = $this->dbResults->getResult($studentId, $testId);
+        $test = $this->dbTestadmin->getTests($this->contextCode, 'name, totalmark', $testId);
+        $result = array_merge($result[0], $test[0]);
+        $totalmark = $this->dbQuestions->sumTotalmark($testId);	
+        $qNum = $this->getParam('qnum');
+        if (empty($qNum)) {
+            $data = $this->dbQuestions->getQuestionCorrectAnswer($testId);
+        } else {
+            $data = $this->dbQuestions->getQuestionCorrectAnswer($testId, $qNum);
+        }
+        if (!empty($data)) {
+            foreach($data as $key => $line) {
+                $marked = $this->dbMarked->getMarked($studentId, $line['questionid'], $testId);
+                $data[$key]['studcorrect'] = $marked[0]['correct'];
+                $data[$key]['studans'] = $marked[0]['answer'];
+                $data[$key]['studorder'] = $marked[0]['answerorder'];
+                $data[$key]['studcomment'] = $marked[0]['commenttext'];
+            }
+        }
+
+        $this->setVarByRef('data', $data);
+        $this->setVarByRef('result', $result);
+        $this->setVarByRef('totalmark', $totalmark);
+        return 'showtest_tpl.php';
+    }    
 }
 ?>
