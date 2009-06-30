@@ -54,7 +54,8 @@ class turnitin extends controller
 		switch ($action)
 		{
 			//creates a user profile (if one does not exist) and logs the user in (instructor or student)
-			case 'createlecturer':				
+			case 'createlecturer':
+								
 				print $this->objTOps->createLecturer($this->getUserParams());
 				break;				
 			
@@ -68,7 +69,14 @@ class turnitin extends controller
 													$this->getUserParams(), 
 													$this->getClassParams()));
 				break;
-				
+			
+			//the student is assigned to a class
+			case 'joinclass':				
+				print $this->objTOps->joinClass(array_merge(
+													$this->getUserParams(), 
+													$this->getClassParams()));
+				break;				
+			
 			//create an assessment: requires lecturer and class details
 			case 'createassessment':	
 				if($this->objDBContext->isInContext())
@@ -83,9 +91,21 @@ class turnitin extends controller
 				break;
 			
 			//student submit a paper
-			case 'submitpaper':
+			case 'submitassessment':
+				print $this->objTOps->submitAssessment(array_merge(
+														$this->getUserParams(), 
+														$this->getClassParams(),  
+														$this->getAssessmentParams(),
+														$this->getSubmissionInfo()));
 				break;
-				
+			//student submit a paper
+			case 'sub':
+				print $this->objTOps->subA(array_merge(
+														$this->getUserParams(), 
+														$this->getClassParams(),  
+														$this->getAssessmentParams(),
+														$this->getSubmissionInfo()));
+				break;
 			case 'returnreport':
 				break;
 				
@@ -107,16 +127,25 @@ class turnitin extends controller
 				$this->objTOps->adminStats($this->getUserParams());
 				break;
 				
-			default:
-				//print $this->objTOps->APILogin();
-				echo "invalid action";
+			case 'apilogin':
+				$params = array("firstname" => $this->getParam('firstname'),
+								"lastname" => $this->getParam('lastname'),
+								"password" => $this->getParam('password'),
+								"email" => $this->getParam('email'),);
+				
+				print $this->objTOps->APILogin($params);
 				break;
 				
 			case 'callback':
 				echo "This is the CALLBACK ...<BR>";
 				$m = var_export($_REQUEST, true);
+				$this->send_alert($m);
 				error_log($m);
 				var_dump($_REQUEST);
+				break;
+				
+			default:				
+				return "main_tpl.php";
 				break;
 		}
 	}
@@ -127,7 +156,7 @@ class turnitin extends controller
 	 */
 	public function requiresLogin()
 	{
-		return FALSE;
+		return TRUE;
 	}
 	
 	/**
@@ -151,11 +180,19 @@ class turnitin extends controller
 			$params['lastname'] = $userDetails['surname'];
 			$params['email'] = $userDetails['emailaddress'];	
 			
+			
+			/*lect
 			$params['password'] = 'nitsckie';//$username;    	
 			$params['username'] = 'wesleynitsckie';
 			$params['firstname'] = 'Wesley';
 			$params['lastname'] = 'Nitsckie';
 			$params['email'] = 'wesleynitsckie@gmail.com';			
+			*/
+			$params['password'] = 'student';    	
+			$params['username'] = 'student';
+			$params['firstname'] = 'Student';
+			$params['lastname'] = 'student';
+			$params['email'] = 'student@uwc.ac.za';			
 		}
 		
 		return $params;
@@ -175,6 +212,7 @@ class turnitin extends controller
 			$params['classid'] = $this->objDBContext->getContextCode();
 			$params['classtitle'] = $this->objDBContext->getTitle();
 			$params['classpassword'] = 'password';
+			$params['instructoremail'] = 'elearning@uwc.ac.za';
 		}
 		//var_dump($params);die;
 		//$params['classid'] = $this->objDBContext->getContextCode();
@@ -200,4 +238,38 @@ class turnitin extends controller
     	
     	return $params;
 	}
+	
+	public function getSubmissionInfo()
+	{
+		$params = array();
+		
+		$params['papertitle'] = "This is submmitted title";//$this->getParam('papertitle');
+    	$params['papertype'] = 1;
+    	$params['paperdata'] = "";
+    	
+    	return $params;
+	}
+	
+	function send_alert($message,$users = array('wesleynitsckie@gmail.com'))
+	  {
+	    // email or SMS code goes here
+	    include ($this->getResourcePath('XMPPHP/XMPP.php', "im"));
+	    include ($this->getResourcePath('XMPPHP/XMPP_Log.php', "im"));
+	    //include ('../im/classes/XMPPHP/XMPPHP_Log.php' );
+	
+	    $jserver = "talk.google.com";
+	    $jport = "5222";
+	    $juser = "eteaching2009";
+	    $jpass = "3t3ach1ng2009";
+	    $jclient = "ChisimbaIM";
+	    $jdomain = "gmail.com";
+	    
+	    $conn2 = new XMPPHP_XMPP ( $jserver, intval ( $jport ), $juser, $jpass, $jclient, $jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
+	    $conn2->connect ();
+	    $conn2->processUntil ( 'session_start' );
+	    foreach ($users as $user){
+	        $conn2->message ( $user, $message );
+	    }
+	    $conn2->disconnect ();  
+	  }
 }

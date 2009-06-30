@@ -23,10 +23,9 @@
  *
  * @category  Chisimba
  * @package   turnitin
- * @author    Charl van Niekerk <charlvn@charlvn.za.net>
+ * @author    Wesley Nitsckie
  * @copyright 2008 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: twitterlib_class_inc.php 13185 2009-04-14 14:41:58Z paulscott $
  * @link      http://avoir.uwc.ac.za
  */
 
@@ -91,8 +90,8 @@ class turnitinops extends object
         
        
       //  $this->uem= 'wesleynitsckie@gmail.com';
-		$this->ufn='Wesley';
-		$this->uln='Nitsckie';
+		//$this->ufn='Wesley';
+		//$this->uln='Nitsckie';
 	//	$this->upw='364t648y';
 		
         //setup defaults
@@ -169,7 +168,7 @@ class turnitinops extends object
 		$url .= "&assignid=".urlencode($this->assignid);
 		$url .= "&dtstart=".urlencode($this->dtstart);
 		$url .= "&dtdue=".urlencode($this->dtdue);
-
+		
 		
 		return $url;
 	}
@@ -213,7 +212,7 @@ class turnitinops extends object
 		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-		
+		/*
 		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
         {
 			//setup proxy
@@ -222,7 +221,7 @@ class turnitinops extends object
 			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
 			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
         }
-        
+        */
 		$result=curl_exec ($ch);
 		curl_close ($ch);
 	
@@ -230,19 +229,58 @@ class turnitinops extends object
 		print $params;
 		return $result;
 	}
-		
 	
-    
+	
+	/**
+	 * Method to post an assessment to Turnitin
+	 *
+	 * @return boolean
+	 */
+	public function doPostAssessment($params)
+	{
+		$objProxy = $this->getObject('proxyparser', 'utilities');
+        $proxyArr = $objProxy->getProxy();
+            
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_POST,1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+		curl_setopt($ch, CURLOPT_URL,$this->remote_host);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
+		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		/*
+		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+        {
+			//setup proxy
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
+			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
+        }
+        */
+		$result=curl_exec ($ch);
+		curl_close ($ch);
+	
+		//return $this->getXMLResult($result);
+		print $params;
+		return $result;
+	}
+		    
     /**
      * Do a login with the details provided
      *
      * @return boolean
      */
-    public function APILogin()
-    {
-    	var_dump($this->aid);
+    public function APILogin($params)
+    {    	
     	$this->fcmd = 1;
     	$this->fcmd = 2;
+
+		$this->uem= $params['email'];
+		$this->ufn=$params['firstname'];
+		$this->uln=$params['lastname'];
+		$this->upw=$params['password'];		
     	return $this->doPost();
     	
     }
@@ -263,10 +301,10 @@ class turnitinops extends object
      * @param array $params
      */
     function createStudent($params)
-    {    	
+    {       	
     	return $this->createUser($params, 1);
     }
-    
+        
     /**
      * Method to create a user on Turnitin
      *
@@ -281,7 +319,7 @@ class turnitinops extends object
     	$this->utp = $type;
     	
     	$this->upw = $params['password'];    	
-    	$this->uid = $params['username'];    	
+    	//$this->uid = $params['username'];    	
     	$this->ufn = $params['firstname'];
     	$this->uln = $params['lastname'];
     	$this->uem = $params['email'];    	
@@ -289,6 +327,36 @@ class turnitinops extends object
     	return $this->doPost();
     }
     
+    /**
+     * Method for a student to be 
+     * assigned to a class
+     *
+     * @param array $params
+     * @return boolean
+     */
+    public function joinClass($params)
+    {
+    	$this->fid = 3;
+    	$this->fcmd = 2;
+    	$this->utp = 1;
+    	    	
+    	$this->upw = $params['password'];    	
+    	//$this->uid = $params['username'];    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];   
+    	$this->tem = $params['instructoremail'];
+    	$this->ctl = $params['classtitle'];    	
+    	
+    	return $this->doPost();
+    }
+    
+    /**
+     * Method to get the admin stats
+     *
+     * @param array $params
+     * @return array
+     */
     public function adminStats($params)
     {
     	$this->fid=12;
@@ -328,13 +396,15 @@ class turnitinops extends object
     	$this->utp = 2;
     	    	
     	$this->ctl = $params['classtitle'];
-    	$this->cpw = $params['classpassword'];
-    	$this->uid = $params['username'];
+    	//$this->cpw = $params['classpassword'];
+    	//$this->uid = $params['username'];
     	//$this->cid = 2758586;//$params['classid'];
+    	
+    	
     	
     	//$this->aid = $params['assignmentid'];
     	$this->assign = $params['assignmenttitle'];
-    	$this->ainst = $params['assignmentinstruct'];
+    	//$this->ainst = $params['assignmentinstruct'];
     	$this->dtstart = $params['assignmentdatestart'];
     	$this->dtdue = $params['assignmentdatedue'];
     	
@@ -368,14 +438,110 @@ class turnitinops extends object
     ///////////////////////// 
     /// STUDENT FUNCTIONS////
     /////////////////////////
+    
+    public function subA($params)
+    {
+    	$this->fid = 5;
+    	$this->fcmd = 1;
+    	$this->utp = 1; //student
+    	$this->diagnostic = 0;
+    	
+    	$this->upw = 'student';//$params['password'];    	
+    	//$this->uid = $params['username'];    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];	
+    	
+    	$this->tem = 'elearning@uwc.ac.za';//$params['instructoremail'];
+    	$this->assign = $params['assignmenttitle'];
+    	$this->ctl = $params['classtitle'];
+    	//print $this->getParams();die;
+    	return $this->doGet();
+    }
+    
     /**
      * Method to submit an assessment
      *
      * @param array $params
      */
     public function submitAssessment($params)
-    {
+    {/*
+    	$this->fid = 5;
+    	$this->fcmd = 2;
+    	$this->utp = 1; //student
     	
+    	$this->upw = $params['password'];    	
+    	//$this->uid = $params['username'];    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];	
+    	
+    	$this->tem = 'elearning@uwc.ac.za';//$params['instructoremail'];
+    	$this->assign = $params['assignmenttitle'];
+    	$this->ctl = $params['classtitle'];
+    	
+    	$this->ptl = 'my paper';//$params['papertitle'];
+    	//$this->ptype = 1;//$params['papertype'];
+    	//$this->pdata = $params['paperdata'];
+    	//var_dump($params);die;
+    	
+    	//var_dump($this->getParams());die;
+    	return $this->doPost();
+    	*/
+    	//var_dump($params);die;
+    	$postData = array();
+
+		//simulates <input type="file" name="file_name">
+		//$postData[ 'file_name' ] = " [at] test.txt";
+		//$postData[ 'submit' ] = "UPLOAD";
+		$postData[ 'ufn' ] = $params['firstname'];
+		$postData[ 'uem' ] = $params['email'];
+		$postData[ 'uln' ] = $params['lastname'];
+		$postData[ 'gmtime' ] = "";//gmdate();
+		
+		$postData[ 'ptl' ] = "my paper";
+		$postData[ 'ptype' ] = "1";
+		$postData[ 'pdata' ] = " this is sthe content of the paper";
+		
+		
+		
+		
+		//$this->ptl = 'my paper';//$params['papertitle'];
+    	//$this->ptype = 1;//$params['papertype'];
+    	//$this->pdata = $params['paperdata'];
+		print 'tryinto curl it';
+		$url = "http://www.turnitin.com/api.asp";
+		$user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
+		$ch = curl_init();
+		
+		curl_setopt($ch, CURLOPT_URL, $url );
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch, CURLOPT_POST, 1 );
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
+		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		//seems no need to tell it enctype='multipart/data' it already knows
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData );
+		
+		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
+        {
+			//setup proxy
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
+			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
+        }
+        
+		
+		$response = curl_exec( $ch );
+		
+		curl_close ($ch);
+	print 'curl done';
+		//return $this->getXMLResult($result);
+		var_dump($response);
+		return $response;
+		//where test.txt is a file in the same directory!"
     }
     
     public function getReport($params)
