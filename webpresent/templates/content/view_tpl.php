@@ -86,8 +86,12 @@ if (count($slideContent['slideshow']) > 0) {
 
         $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
         $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'admindelete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+        $objIcon->setIcon('delete');
 
-        $heading->str .= ' '.$deleteLink;
+        $objIcon->setIcon('edit');
+        $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+
+        $heading->str .= $editLink.' '.$deleteLink;
     }
 
     $heading->type = 1;
