@@ -40,5 +40,4 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 $menu = $this->getObject('tabsmenu','ahis');
-$menu->modules = array('wiki', 'blog', 'faq');
 echo $menu->show().$this->getContent();
