@@ -156,7 +156,7 @@ class turnitin extends controller
 	 */
 	public function requiresLogin()
 	{
-		return TRUE;
+		return FALSE;
 	}
 	
 	/**
