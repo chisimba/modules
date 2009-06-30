@@ -255,7 +255,7 @@ class turnitin extends controller
 	  {
 	    // email or SMS code goes here
 	    include ($this->getResourcePath('XMPPHP/XMPP.php', "im"));
-	    include ($this->getResourcePath('XMPPHP/XMPP_Log.php', "im"));
+	    include ($this->getResourcePath('XMPPHP/XMPPHP_Log.php', "im"));
 	    //include ('../im/classes/XMPPHP/XMPPHP_Log.php' );
 	
 	    $jserver = "talk.google.com";
