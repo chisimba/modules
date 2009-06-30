@@ -2127,6 +2127,7 @@ class ahis extends controller {
      *
      */
     private function unsetPassiveSession() {
+        $this->unsetSession('ps_calendardate');
         $this->unsetSession('ps_oStatusId');
         $this->unsetSession('ps_qualityId');
         $this->unsetSession('ps_datePrepared');
@@ -2174,6 +2175,7 @@ class ahis extends controller {
      */
     private function unsetActiveSession() {
     
+        $this->unsetSession('ps_calendardate');
         $this->unsetSession('ps_officerId');
         $this->unsetSession('ps_disease');
         $this->unsetSession('ps_comments');
@@ -2209,7 +2211,7 @@ class ahis extends controller {
 		$num_animals = $this->getParam('num_animals');
 		$animal_production = $this->getParam('animal_production');
 		$source = $this->getParam('source');
-      $reportdate = $this->getSession('ps_calendardate',date('Y-m-d'));
+		$reportdate = $this->getSession('ps_calendardate',date('Y-m-d'));
 		$data= $this->objAnimalPopulation ->addData($district, $classification, $num_animals, $animal_production,$source,$reportdate);
 		
 		return $this->nextAction('animal_feedback',array('success'=>1));

@@ -96,7 +96,7 @@ class ahisuser extends dbtable {
 		$sql = "SELECT u.userid AS userid, CONCAT(u.firstname,' ',u.surname) AS name
 				FROM tbl_users AS u, tbl_ahis_users AS au
 				WHERE u.id = au.id
-				ORDER BY u.surname";
+				ORDER BY name";
 		return $this->objUser->getArray($sql);
 	}
 	
