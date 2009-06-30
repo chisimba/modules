@@ -484,8 +484,10 @@ class mcqtests extends controller
             case 'liststudents':
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id, name, totalmark', $this->getParam('id'));
                 $data = $this->dbResults->getResults($this->getParam('id'));
+                $totalmark = $this->dbQuestions->sumTotalmark($this->getParam('id'));
                 $this->setVarByRef('test', $test[0]);
                 $this->setVarByRef('data', $data);
+                $this->setVarByRef('totalmark', $totalmark);
                 return 'list_test_tpl.php';
             case 'showtest':
                 return $this->showTest();

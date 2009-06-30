@@ -39,12 +39,13 @@ $tableHd[] = $startLabel;
 $tableHd[] = $endLabel;
 $tableHd[] = '';
 $objTable->addHeader($tableHd, 'heading');
+
 if (!empty($data)) {
     $i = 0;
     foreach($data as $line) {
         $class = (($i++%2) == 0) ? 'even' : 'odd';
-        if ($test['totalmark'] != 0) {
-            $mark = round($line['mark']/$test['totalmark']*100) .'%';
+        if ($totalmark != 0) {
+            $mark = round($line['mark']/$totalmark*100, 2) .'%';
         } else {
             $mark = $line['mark'];
         }
