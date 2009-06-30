@@ -1031,6 +1031,13 @@ $class = NULL;
 $hasEssays = 0;
 $hasAssignments = 0;
 foreach ($myContexts as $contextCode){
+$contextLecturers = $this->objContextUser->getContextLecturers($contextCode);
+$isaLecturer = False;
+	foreach($contextLecturers as $isLecturer){
+		if($this->userPid == $isLecturer['id'])
+		$isaLecturer = True;
+	}
+ if(!$isaLecturer){
  //Get student essays for this course
  $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
 	if(!empty($contextEssay)){
@@ -1065,6 +1072,7 @@ foreach ($myContexts as $contextCode){
 		$transcriptTable->addCell($contextWorksheets , '', '', '', '', 'colspan="6"');
 		$transcriptTable->endRow();
  
+  }
  }
 }
 // Add the table heading.
