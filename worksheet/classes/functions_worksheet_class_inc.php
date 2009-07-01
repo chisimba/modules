@@ -49,9 +49,7 @@ class functions_worksheet extends object
 	$table = $this->newObject('htmltable', 'htmlelements');
 
 	if (count($worksheets) == 0) {
-	    $table->startRow();
-	        $table->addCell('<div class="noRecordsMessage">No Worksheets at present</div>');
-	    $table->endRow();
+		return False;
 	} else {
 		$table->startHeaderRow();
 		    $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_worksheetname', 'worksheet', 'Worksheet Name'),'20%');
@@ -103,8 +101,8 @@ class functions_worksheet extends object
 			    $table->endRow();
 			}
 		}
+	    return $header->show().$table->show();		
      }
-	    return $header->show().$table->show();
    }    
 }
 ?>
