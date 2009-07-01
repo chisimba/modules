@@ -70,6 +70,7 @@ class tourinfo extends controller
     public $jclient;
     public $jdomain;
     public $objConfig;
+    public $objOps;
 
     /**
      * Initialises the instance variables.
@@ -81,6 +82,7 @@ class tourinfo extends controller
         try {
             $this->objLanguage = $this->getObject ( 'language', 'language' );
             $this->objConfig = $this->getObject('altconfig', 'config');
+            $this->objOps = $this->getObject('tourops');
             // Include the needed libs from resources
             include ($this->getResourcePath ( 'XMPPHP/BOSH.php', 'im' ));
             
@@ -117,7 +119,7 @@ class tourinfo extends controller
                 break;
 
             default: 
-                echo "tourist info!";
+                echo $this->objOps->genShortCode("tourist info!");
                 break;
         }
     }
