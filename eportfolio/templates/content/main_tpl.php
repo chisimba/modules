@@ -1075,79 +1075,17 @@ $isaLecturer = False;
 		$transcriptTable->endRow();
  
   }
- //Get MCQTests
- $data = $this->dbTestadmin->getTests($contextCode);
-
- if (!empty($data)) {
-	$objmcqTable = $this->newObject('htmltable', 'htmlelements');
-	$objmcqTable->startHeaderRow();
-	$objmcqTable->addHeaderCell($this->objLanguage->languageText('word_name', 'system', 'Name'),'23%');
-	$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_mcqtests_percentage', 'mcqtests', 'Percentage')." ".$this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests', 'Mark'), '15%');
-	$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests', 'Mark','5%'));
-	$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_mcqtests_closingdate', 'mcqtests', 'Closing Date'),'15%');
-	$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_datesubmitted', 'assignment', 'Date Submitted'),'13%');
-	$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_eportfolio_view', 'eportfolio', 'View','29%'));
-	$objmcqTable->endHeaderRow();
-  foreach($data as $myData){
-   $studentMark = "";
-   $studentSubmitDate = "";   
-   $totalmark = $this->dbQuestions->sumTotalmark($myData['id']);
-   $resultsData = $this->dbResults->getResults($myData['id']);
-   $stdntTests = $this->dbTestadmin->getStudentTests($contextCode, $userId);
-   if(!empty($stdntTests)){
-    foreach($stdntTests as $stdntTest){
-     if($stdntTest["testid"] == $myData['id'] && $stdntTest["studentid"] == $userId){
-       $studentSubmitDate = $stdntTest["endtime"];
-     }
-
-    }
-   }
-
-   foreach($resultsData as $myResults){
-    if($myResults["studentid"] == $userId){
-      //var_dump($myResults);
-
-      $studentMark = $myResults["mark"];
-    }
-    $objLink = new link($this->uri(array('action' => 'showtest','id' => $myData['id'],'studentId' => $userId)));
-
-	$objIcon->title=$objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
-	$objIcon->setIcon('comment_view');
-	$commentIcon = $objIcon->show();
-
-	$objPopup = new windowpop();
-	$objPopup->set('location',$this->uri(array('action' => 'showtest','id' => $myData['id'],'studentId' => $userId)));
-	$objPopup->set('linktext',$commentIcon);
-	$objPopup->set('width','600');
-	$objPopup->set('height','350');
-	$objPopup->set('left','200');
-	$objPopup->set('top','200');
-    	$objPopup->set('scrollbars','yes');
-    	$objPopup->set('resizable','yes');
-	$objPopup->putJs(); // you only need to do this once per page
-	//echo $objPopup->show();
-	
-   //var_dump($myData['id'].' - '.$myData['name'].' - Closing Date - '.$myData["closingdate"].' - Date Submitted - '.$studentSubmitDate." - Percentage Mark - ".$myData["percentage"]." Total Mark - ".$totalmark."<br>"." Student Mark - ".$studentMark);
-	$objmcqTable->startRow();
-	$objmcqTable->addCell($myData['name'],'','','','','');
-	$objmcqTable->addCell($myData["percentage"]." %",'','','','','');
-	$objmcqTable->addCell(round(($studentMark/$totalmark*100),2)." %",'','','','','');
-	$objmcqTable->addCell($myData["closingdate"],'','','','','');
-	$objmcqTable->addCell($studentSubmitDate,'','','','','');
-	$objmcqTable->addCell($objPopup->show(),'','','','','');
-	$objmcqTable->endRow();
-
-   }
-  }
+  //Get mcqtests
+  $objmcq = $this->objMcqtestsFunctions->displaymcq($contextCode, $userId, $uriAction='showtest', $uriModule='eportfolio'); 
+  if(!empty($objmcq)){
 	$mcqHead=$this->_objDBContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('mod_mcqtests_mcq','mcqtests');
-
 	$transcriptTable->startRow();
-	$transcriptTable->addCell("<h3>".$mcqHead."</h3>".$objmcqTable->show() , '', '', '', '', 'colspan="6"');
+	$transcriptTable->addCell("<h3>".$mcqHead."</h3>".$objmcq , '', '', '', '', 'colspan="6"');
 	$transcriptTable->endRow();
-  
- }
+  }
  }
 }
+
 // Add the table heading.
 $transcriptTable->startRow();
 $transcriptTable->addCell($transcriptobjHeading->show() , '', '', '', '', 'colspan="2"');

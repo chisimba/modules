@@ -90,6 +90,7 @@ class eportfolio extends controller
         $this->objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
         $this->dbTestadmin = $this->newObject('dbtestadmin', 'mcqtests');
         $this->dbQuestions = $this->newObject('dbquestions', 'mcqtests');
+        $this->objMcqtestsFunctions =& $this->getObject('functions_mcqtests', 'mcqtests');	
         $this->dbResults = $this->newObject('dbresults', 'mcqtests');
         $this->dbMarked = $this->newObject('dbmarked', 'mcqtests');
         $this->objWashout = $this->getObject('washout','utilities');
