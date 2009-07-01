@@ -40,6 +40,7 @@ class turnitin extends controller
 		$this->objTOps = $this->getObject('turnitinops');
 		$this->objUser = $this->getObject('user', 'security');
 		$this->objDBContext = $this->getObject('dbcontext', 'context');
+		$this->objForms = $this->getObject('forms');
 	}
 	
 	/**
@@ -50,7 +51,9 @@ class turnitin extends controller
 	
 	public function dispatch($action)
 	{
-		
+		// Set the layout template.
+        $this->setLayoutTemplate("layout_tpl.php");
+        
 		switch ($action)
 		{
 			//creates a user profile (if one does not exist) and logs the user in (instructor or student)
@@ -107,6 +110,11 @@ class turnitin extends controller
 														$this->getSubmissionInfo()));
 				break;
 			case 'returnreport':
+				print $this->objTOps->getReport(array_merge(
+														$this->getUserParams(), 
+														$this->getClassParams(),  
+														$this->getAssessmentParams(),
+														$this->getSubmissionInfo()));
 				break;
 				
 			case 'viewsubmission':
@@ -136,7 +144,7 @@ class turnitin extends controller
 				print $this->objTOps->APILogin($params);
 				break;
 				
-			default:
+			
 			case 'callback':
 				echo "This is the CALLBACK ...<BR>";
 				$m = var_export($_REQUEST, true);
@@ -144,11 +152,32 @@ class turnitin extends controller
 				error_log($m);
 				var_dump($_REQUEST);
 				break;
-				
-			case 'main':				
+			default:
+			case 'main':	
+				return $this->userTemplate();			
 				return "main_tpl.php";
 				break;
+				
+				
+				
+			//------- Ajax methods-------//
+			case 'ajax_addassignment':
+				echo $this->objForms->addAssignmentForm();
+				exit(0);
 		}
+	}
+	
+	public function userTemplate()
+	{
+		
+		$objContextGroups = $this->getObject('managegroups', 'contextgroups');	
+		if ($this->objUser->isAdmin () || $objContextGroups->isContextLecturer()) 
+		{
+			return "lectmain_tpl.php";
+		} else {
+			return "main_tpl.php";
+		}
+	
 	}
 	
 	/**
@@ -182,18 +211,18 @@ class turnitin extends controller
 			$params['email'] = $userDetails['emailaddress'];	
 			
 			
-			/*lect
+			//lect
 			$params['password'] = 'nitsckie';//$username;    	
 			$params['username'] = 'wesleynitsckie';
 			$params['firstname'] = 'Wesley';
 			$params['lastname'] = 'Nitsckie';
 			$params['email'] = 'wesleynitsckie@gmail.com';			
-			*/
+			/*
 			$params['password'] = 'student';    	
 			$params['username'] = 'student';
 			$params['firstname'] = 'Student';
 			$params['lastname'] = 'student';
-			$params['email'] = 'student@uwc.ac.za';			
+			$params['email'] = 'student@uwc.ac.za';			*/
 		}
 		
 		return $params;

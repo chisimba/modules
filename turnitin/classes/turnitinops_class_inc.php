@@ -106,7 +106,36 @@ class turnitinops extends object
 	 * @return unknown
 	 */
 	public function getMD5(){
-		$md5string = $this->aid.$this->assign.$this->assignid.$this->cid.$this->cpw.$this->ctl.$this->diagnostic.$this->dis.$this->dtdue.$this->dtstart.$this->encrypt.$this->fcmd.$this->fid.$this->gmtime.$this->newassign.$this->newupw.$this->oid.$this->pfn.$this->pln.$this->ptl.$this->ptype.$this->said.$this->tem.$this->uem.$this->ufn.$this->uid.$this->uln.$this->upw.$this->utp.$this->shared_secret_key;
+		$md5string = 	$this->aid.
+						$this->assign.
+						$this->assignid.
+						$this->cid.
+						$this->cpw.
+						$this->ctl.
+						$this->diagnostic.
+						$this->dis.
+						$this->dtdue.
+						$this->dtstart.
+						$this->encrypt.
+						$this->fcmd.
+						$this->fid.
+						$this->gmtime.
+						$this->newassign.
+						$this->newupw.
+						$this->oid.
+						$this->pfn.
+						$this->pln.
+						$this->ptl.
+						$this->ptype.
+						$this->said.
+						$this->tem.
+						$this->uem.
+						$this->ufn.
+						$this->uid.
+						$this->uln.
+						$this->upw.
+						$this->utp.
+						$this->shared_secret_key;
 		error_log($md5string);			
 		return md5($md5string);
 	}		
@@ -168,6 +197,9 @@ class turnitinops extends object
 		$url .= "&assignid=".urlencode($this->assignid);
 		$url .= "&dtstart=".urlencode($this->dtstart);
 		$url .= "&dtdue=".urlencode($this->dtdue);
+		$url .= "&ptl=".urlencode($this->ptl);
+		$url .= "&ptype=".urlencode($this->ptype);
+		$url .= "&pdata=".urlencode($this->pdata);
 		
 		
 		return $url;
@@ -212,7 +244,7 @@ class turnitinops extends object
 		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-		/*
+		
 		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
         {
 			//setup proxy
@@ -221,13 +253,18 @@ class turnitinops extends object
 			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
 			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
         }
-        */
+        //ob_start();
 		$result=curl_exec ($ch);
 		curl_close ($ch);
-	
+		//$tiixml = new SimpleXMLElement(ob_get_contents());
+    	//ob_end_clean();
+    	//return $tiixml;
 		//return $this->getXMLResult($result);
-		print $params;
+		//print $params;
 		return $result;
+		$tiixml = new SimpleXMLElement($result);
+		return $tiixml;
+		//return $result;
 	}
 	
 	
@@ -421,12 +458,22 @@ class turnitinops extends object
     public function listSubmissions($params)
     {
     	$this->fid = 10;
-    	$this->utp = 1;
+    	$this->fcmd = 2;
+    	$this->utp = 2;
+    	
+    	$this->oid = '100461236';
     	$this->ctl = $params['classtitle'];
     	$this->assign = $params['assignmenttitle'];
-    	$this->assignid = $params['assignmentid'];
+    	//$this->assignid = $params['assignmentid'];
     	
-    	return $this->doGet();
+    	//$this->upw = $params['password'];    	
+    	//$this->uid = $params['username'];    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	//$this->uem = $params['email'];  
+    	
+    	//var_dump($params);die;
+    	return $this->doPost();
     }
     
     
@@ -441,24 +488,45 @@ class turnitinops extends object
     
     public function subA($params)
     {
-    	$this->fid = 5;
-    	$this->fcmd = 1;
+    	$this->fid = 1;
+    	$this->fcmd = 2;
     	$this->utp = 1; //student
     	$this->diagnostic = 0;
     	
     	$this->upw = 'student';//$params['password'];    	
     	//$this->uid = $params['username'];    	
-    	$this->ufn = $params['firstname'];
-    	$this->uln = $params['lastname'];
-    	$this->uem = $params['email'];	
+    	$this->ufn = 'Student';//$params['firstname'];
+    	$this->uln = 'student';//$params['lastname'];
+    	$this->uem = 'student@uwc.ac.za';//$params['email'];	
     	
     	$this->tem = 'elearning@uwc.ac.za';//$params['instructoremail'];
     	$this->assign = $params['assignmenttitle'];
     	$this->ctl = $params['classtitle'];
-    	//print $this->getParams();die;
-    	return $this->doGet();
+    	
+    	$result = $this->doPost();
+    
+    	if ($result->rcode == 11)
+    	{
+    		print "logging success - doing the submit now";
+    		$this->fid = 5;
+    		$this->ptl = "this the title";
+    		$this->pdata = "You will have a week to complete each 4-5 page paper, in which you will write on ... If you intend to submit a paper which significantly draws ... Please note: All work must be submitted through turnitin.com and in hard copy; ... 61; Fuller, Positivism and Fidelity to Law,” 70; Aquinas, “What is Law,” 76; King, ...";
+    		$this->ptype = 1;
+    		$result = $this->doPost();
+    		print '<br>'.$result->rmessage;
+    	} else {
+    		print $result->rcode.'<br>'.$result->rmessage;
+    	}
+    	
+    	print '<br>Done!';
+    	//$die($code);
     }
     
+    public function getCode($xml)
+    {    	
+    	$tiixml = new SimpleXMLElement($xml);    	
+    	return $tiixml->rcode;
+    }
     /**
      * Method to submit an assessment
      *
@@ -546,7 +614,26 @@ class turnitinops extends object
     
     public function getReport($params)
     {
+    	$this->fid = 6;
+    	$this->fcmd = 1;
+    	$this->diagnostic = 1;
+    	$this->oid = '100461236';
+    	$this->utp = 1; //student
+    	$this->diagnostic = 0;
     	
+    	$this->upw = 'student';//$params['password'];    	
+    	//$this->uid = $params['username'];    	
+    	$this->ufn = 'Student';//$params['firstname'];
+    	$this->uln = 'student';//$params['lastname'];
+    	$this->uem = 'student@uwc.ac.za';//$params['email'];	
+    	
+    	$this->tem = 'elearning@uwc.ac.za';//$params['instructoremail'];
+    	$this->assign = $params['assignmenttitle'];
+    	$this->ctl = $params['classtitle'];
+    	
+    	return $this->doGet();
+    	$result = $this->doPost();
+    	print $result;//->rmessage;
     }
     
     public function deleteSubmission($params)
@@ -558,5 +645,6 @@ class turnitinops extends object
     {
     	
     }
+    
     
 }
