@@ -39,12 +39,13 @@
 	$table =& $this->newObject("htmltable","htmlelements");
 	$table->border = '0';
 	$table->width = '40%';	
-    $table->cellspacing='2';
-    $table->cellpadding='2'; 
+        $table->cellspacing='2';
+        $table->cellpadding='2'; 
 	$table->startRow();
-	$table->addHeaderCell("&nbsp;");
-    // Display performances.
+	$table->addHeaderCell($objLanguage->languageText("word_objectives","rubric"));
+        // Display performances.
 	for ($j=0;$j<$cols;$j++) {
+		if(!empty($performances[$j]))
 		$table->addHeaderCell($performances[$j]);
 	}
 	if (isset($IsAssessment)) {
@@ -78,28 +79,4 @@
 		$table->endRow();
 	}
 	echo $table->show();
-	if ($noBanner == "yes") {
-		echo "<a href=\"javascript:history.back();\">" . "Back" . "</a>";
-	}
-	else {
-        // Print the page.
-		echo "<a href=\"javascript:window.print();\">" . $objLanguage->languageText("word_print") . "</a>";
-		echo "&nbsp;";
-		if (isset($IsAssessment)) {
-			echo "<a href=\"" . 
-				$this->uri(array(
-			    	'module'=>'rubric',
-					'action'=>'assessments',
-					'tableId'=>$tableId
-				))	
-			. "\">" . $objLanguage->languageText("word_back") . "</a>"; //rubric_returntomainmenu
-		}
-		else {
-			echo "<a href=\"" . 
-				$this->uri(array(
-			    	'module'=>'rubric',
-				))	
-			. "\">" . $objLanguage->languageText("word_back") . "</a>"; //rubric_returntomainmenu
-		}
-	}
 ?>

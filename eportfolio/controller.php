@@ -124,6 +124,11 @@ class eportfolio extends controller
         switch ($action) {
 	  // View a rubric
 	  case "rubricviewtable": 
+            	$this->setLayoutTemplate(NULL);	    
+		$this->setVar('pageSuppressToolbar', TRUE);
+		$this->setVar('pageSuppressBanner', TRUE);
+		$this->setVar('pageSuppressSearch', TRUE);
+		$this->setVar('suppressFooter', TRUE);
 		$tableId = $this->getParam("tableId", "");
 		$tableInfo = $this->objDbRubricTables->listSingle($tableId);
 		$title = $tableInfo[0]['title'];
@@ -161,6 +166,11 @@ class eportfolio extends controller
 		return "viewrubric_tpl.php";
         
 	  case 'rubricsassessments':
+            	$this->setLayoutTemplate(NULL);	    
+		$this->setVar('pageSuppressToolbar', TRUE);
+		$this->setVar('pageSuppressBanner', TRUE);
+		$this->setVar('pageSuppressSearch', TRUE);
+		$this->setVar('suppressFooter', TRUE);
 		$tableId = $this->getParam('tableId', '');
 		$this->setVarByRef('tableId', $tableId);
 		$tableInfo = $this->objDbRubricTables->listSingle($tableId);   
@@ -185,7 +195,7 @@ class eportfolio extends controller
 		// Do we want to show student names ?
 		$showStudentNames = $this->getParam("showStudentNames", "yes");
 		$this->setVarByRef("showStudentNames", $showStudentNames);
-		return "rubricsassessments_tpl.php";
+		return "rubricassessments_tpl.php";
         
             case 'showtest':
             	$this->setLayoutTemplate(NULL);	    
