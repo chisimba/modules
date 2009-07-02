@@ -64,13 +64,15 @@ class functions_rubric extends object
 	foreach ($tables as $table) {        
         $tblclassB->startRow();
         $oddOrEven = ($oddOrEven=="even")? "odd":"even";		    
-        $tblclassB->addCell("<b>" . $table['title'] . "</b>", "null", "top", "left", $oddOrEven, null);
-        $tblclassB->addCell("<b>" . $table['description'] . "</b>", "null", "top", "left", $oddOrEven, null);		
+        $tblclassB->addCell($table['title'], "null", "top", "left", $oddOrEven, null);
+        $tblclassB->addCell($table['description'], "null", "top", "left", $oddOrEven, null);		
         
         // Start of Rubric Options
         $options = NULL;
         
         if ($contextCode != "root") {
+
+/*        
 	       $icon = $this->getObject('geticon','htmlelements');
                $icon->setIcon('assessments');
                $icon->title = $this->objLanguage->languageText("word_assessment");
@@ -84,8 +86,40 @@ class functions_rubric extends object
 					),$uriModule)	
 				. "\">" .$icon->show() . "</a>";
 				$options .= "&nbsp;";	
+*/
+		$this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("word_assessments","rubric");
+		$this->objIcon->setIcon('assessments');
+		$commentIconA = $this->objIcon->show();
+
+		$objPopupA = new windowpop();
+		$objPopupA->set('location',$this->uri(array('action' => $assessmentAction,'tableId'=>$table['id'],'studentId' => $userId),$uriModule));
+		$objPopupA->set('linktext',$commentIconA);
+		$objPopupA->set('width','600');
+		$objPopupA->set('height','150');
+		$objPopupA->set('left','200');
+		$objPopupA->set('top','200');
+		$objPopupA->set('scrollbars','yes');
+		$objPopupA->set('resizable','yes');
+		$objPopupA->putJs(); // you only need to do this once per page
+
 		}
-	        // View table.            
+	        // View table.
+
+	$this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("rubric_rubric","rubric");
+	$this->objIcon->setIcon('preview');
+	$commentIconB = $this->objIcon->show();
+
+	$objPopupB = new windowpop();
+	$objPopupB->set('location',$this->uri(array('action' => $viewTableAction,'tableId'=>$table['id'],'studentId' => $userId),$uriModule));
+	$objPopupB->set('linktext',$commentIconB);
+	$objPopupB->set('width','600');
+	$objPopupB->set('height','150');
+	$objPopupB->set('left','200');
+	$objPopupB->set('top','200');
+	$objPopupB->set('scrollbars','yes');
+	$objPopupB->set('resizable','yes');
+	//$objPopupB->putJs(); // you only need to do this once per page
+	/*        
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('preview');
             $icon->title = $this->objLanguage->languageText("word_view");
@@ -99,7 +133,12 @@ class functions_rubric extends object
                 ),$uriModule)	
             . "\">" . $icon->show() . "</a>";        
 			$options .= "&nbsp;";
-        $tblclassB->addCell($options, "null", "top", "left", $oddOrEven, null);
+	*/
+        if ($contextCode != "root") {
+         $tblclassB->addCell($objPopupA->show().$objPopupB->show(), "null", "top", "left", $oddOrEven, null);
+	}else{
+	 $tblclassB->addCell($objPopupB->show(), "null", "top", "left", $oddOrEven, null);
+	}
         $tblclassB->endRow();
 
 	}
@@ -143,11 +182,12 @@ class functions_rubric extends object
         $oddOrEven = "odd";
     if (isset($pdtables)) {
         foreach ($pdtables as $pdtable) {
-            $tblclass->startRow();
+            $tblclassD->startRow();
             $oddOrEven = ($oddOrEven=="even")? "odd":"even";
         
             $tblclassD->addCell("<b>" . $pdtable['title'] . "</b>", "null", "top", "left", $oddOrEven, null);
             $tblclassD->addCell("<b>" . $pdtable['description'] . "</b>", "null", "top", "left", $oddOrEven, null);        
+            /*
             // View table.            
                 $icon = $this->getObject('geticon','htmlelements');
                 $icon->setIcon('preview');
@@ -162,7 +202,22 @@ class functions_rubric extends object
                     ),$uriModule)	
                 . "\">" . $icon->show() . "</a>";
                 $options .= "&nbsp;";
-            $tblclassD->addCell($options, "null", "top", "left", $oddOrEven, null);
+	*/
+	    $this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("rubric_rubric","rubric");
+	    $this->objIcon->setIcon('preview');
+	    $commentIconC = $this->objIcon->show();
+
+	    $objPopupC = new windowpop();
+	    $objPopupC->set('location',$this->uri(array('action' => $viewTableAction,'tableId'=>$pdtable['id'],'studentId' => $userId),$uriModule));
+	    $objPopupC->set('linktext',$commentIconC);
+	    $objPopupC->set('width','600');
+	    $objPopupC->set('height','150');
+	    $objPopupC->set('left','200');
+	    $objPopupC->set('top','200');
+	    $objPopupC->set('scrollbars','yes');
+	    $objPopupC->set('resizable','yes');
+
+            $tblclassD->addCell($objPopupC->show(), "null", "top", "left", $oddOrEven, null);
             $tblclassD->endRow();
         }
     }
