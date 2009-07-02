@@ -48,9 +48,10 @@ $fields = array(
 	'name_of_other' => array (
 		'type' => 'clob'
 	),
-	'remarks' => array (
-		'type' => 'clob'
-	),
+	'reportdate' => array(
+		'type' => 'date',
+        'notnull' => TRUE
+		),
 	'remarks' => array(
 		'type' => 'clob'
     )				
