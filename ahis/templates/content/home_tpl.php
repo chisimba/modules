@@ -50,7 +50,7 @@ $deLink->link = $this->objLanguage->languageText('mod_ahis_enterdata', 'ahis');
 $repLink = new link($this->uri(array('action'=>'view_reports')));
 $repLink->link = $this->objLanguage->languageText('mod_ahis_viewreports', 'ahis');
 
-$versionString = $this->objLanguage->languageText('mod_ahis_loginversion', 'ahis');
+$versionString = $this->objLanguage->languageText('mod_ahis_version', 'ahis');
 
 $content = $objHeading->show()."<span class='admin'>".$this->objLanguage->languageText('mod_ahis_hometext', 'ahis').
             "</span><br /><br />".$deLink->show()."<br />".$repLink->show()."<br /><br /><br /><br />
