@@ -80,4 +80,7 @@ $objLayer = new layer();
 $objLayer->align = 'center';
 $objLayer->addToStr("<br />".$objForm->show());
 
-echo $objLayer->show();
+$versionString = $this->objLanguage->languageText('mod_ahis_version', 'ahis');
+$version = "<br /><br /><br /><span class='admin'>$versionString</span>";
+
+echo $objLayer->show().$version;
