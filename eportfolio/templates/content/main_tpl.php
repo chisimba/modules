@@ -1083,6 +1083,14 @@ $isaLecturer = False;
 	$transcriptTable->addCell("<h3>".$mcqHead."</h3>".$objmcq , '', '', '', '', 'colspan="6"');
 	$transcriptTable->endRow();
   }
+  //Get Rubrics
+  $studRubrics = $this->objRubricFunctions->displayrubric($contextCode, $userId, $uriModule='eportfolio', $assessmentAction='rubricsassessments', $viewTableAction='rubricviewtable');
+  if(!empty($studRubrics)){
+	$rubricHead=$this->_objDBContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('rubric_rubrics','rubric');
+	$transcriptTable->startRow();
+	$transcriptTable->addCell("<h3>".$rubricHead."</h3>".$studRubrics , '', '', '', '', 'colspan="6"');
+	$transcriptTable->endRow();
+  }
  }
 }
 

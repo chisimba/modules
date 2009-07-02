@@ -94,6 +94,12 @@ class eportfolio extends controller
         $this->dbResults = $this->newObject('dbresults', 'mcqtests');
         $this->dbMarked = $this->newObject('dbmarked', 'mcqtests');
         $this->objWashout = $this->getObject('washout','utilities');
+	$this->objDbRubricTables =& $this->getObject('dbrubrictables','rubric'); 
+	$this->objDbRubricPerformances =& $this->getObject('dbrubricperformances','rubric'); 
+	$this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives','rubric'); 
+	$this->objDbRubricCells =& $this->getObject('dbrubriccells','rubric'); 
+	$this->objDbRubricAssessments =& $this->getObject('dbrubricassessments','rubric'); 
+	$this->objRubricFunctions =& $this->getObject('functions_rubric','rubric'); 
         // Create an array of words to abstract
         // Create an array of words to abstract
         $this->abstractionArray = array(
@@ -116,6 +122,71 @@ class eportfolio extends controller
         $this->setVarByRef('user', $this->user);
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
+	  // View a rubric
+	  case "rubricviewtable": 
+		$tableId = $this->getParam("tableId", "");
+		$tableInfo = $this->objDbRubricTables->listSingle($tableId);
+		$title = $tableInfo[0]['title'];
+		$description = $tableInfo[0]['description'];
+		$rows = $tableInfo[0]['rows'];
+		$cols = $tableInfo[0]['cols'];
+		$this->setVarByRef("title", $title);
+		$this->setVarByRef("description", $description);
+		$this->setVarByRef("rows", $rows);
+		$this->setVarByRef("cols", $cols);
+		// Build the performances array
+		$performances = array();
+		for ($j=0;$j<$cols;$j++) {
+			$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
+			$performances[] = $performance[0]['performance'];
+		}				
+		$this->setVarByRef("performances", $performances);
+		// Build the objectives array
+		$objectives = array();
+		for ($i=0;$i<$rows;$i++) {
+			$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
+			$objectives[] = $objective[0]['objective'];
+		}				
+		$this->setVarByRef("objectives", $objectives);
+		// Build the cells matrix
+		$cells = array();
+		for ($i=0;$i<$rows;$i++) {
+			$cells[$i] = array();
+			for ($j=0;$j<$cols;$j++) {
+				$cell = $this->objDbRubricCells->listSingle($tableId, $i, $j);
+				$cells[$i][$j] = $cell[0]['contents'];
+			}
+		}
+		$this->setVarByRef("cells", $cells);
+		return "viewrubric_tpl.php";
+        
+	  case 'rubricsassessments':
+		$tableId = $this->getParam('tableId', '');
+		$this->setVarByRef('tableId', $tableId);
+		$tableInfo = $this->objDbRubricTables->listSingle($tableId);   
+		$title = $tableInfo[0]['title'];
+//foreach($tableInfo1 as $tableInfo)
+//{		
+		//$title = $tableInfo['title'];
+		$description = $tableInfo[0]['description'];
+		//$description = $tableInfo['description'];
+		$rows = $tableInfo[0]['rows'];
+		//$rows = $tableInfo['rows'];
+		$cols = $tableInfo[0]['cols'];
+		//$cols = $tableInfo['cols'];
+		//}
+		
+		$this->setVarByRef("title", $title);
+		$this->setVarByRef("description", $description);
+		$this->setVar('maxtotal',$cols*$rows);
+		$assessments = $this->objDbRubricAssessments->listAll($tableId);
+		
+		$this->setVarByRef("assessments", $assessments);
+		// Do we want to show student names ?
+		$showStudentNames = $this->getParam("showStudentNames", "yes");
+		$this->setVarByRef("showStudentNames", $showStudentNames);
+		return "rubricsassessments_tpl.php";
+        
             case 'showtest':
             	$this->setLayoutTemplate(NULL);	    
 		$this->setVar('pageSuppressToolbar', TRUE);
