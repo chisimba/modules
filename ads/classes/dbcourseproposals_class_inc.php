@@ -42,5 +42,13 @@ class dbcourseproposals extends dbTable{
         $rows=$this->getArray($sql);
         return $rows;
     }
+
+
+    public function changeTitle($id,$newtitle)
+    {
+	$newtitle = addslashes($newtitle);
+	$sql="update ".$this->table." set title='$newtitle' where id = '$id';";
+	$this->_execute($sql);
+    }
 }
 ?>
