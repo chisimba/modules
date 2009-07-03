@@ -76,6 +76,8 @@
         {
             try {
                 $this->objForms =  $this->newObject('dbforms', 'forms');
+                $this->objFormRecords =  $this->newObject('dbformrecords', 'forms');
+                $this->objFormSubRecords =  $this->newObject('dbformsubrecords', 'forms');
                 $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
                 $this->_objConfig =$this->newObject('altconfig', 'config');
                 $this->_objSysConfig =$this->newObject('dbsysconfig', 'sysconfig');
@@ -628,6 +630,65 @@
 
             return $display;
         }
+
+
+       /**
+        * Method to return the form records resultset grid for the given form id
+        *
+        * @param string $formId The id of the form item to report results on
+        * @access public
+        * @author Charl Mert
+        */
+        public function getResultsForm($formId = NULL)
+        {
+
+            $h3 = $this->newObject('htmlheading', 'htmlelements');
+            $objIcon = $this->getObject('geticon','htmlelements');
+
+			$records = $this->objFormRecords->getRecord($formId);
+
+            $table = new htmlTable();
+            $table->cellspacing = "0";
+            $table->cellpadding = "0";
+            $table->border = "0";
+            $table->attributes = "align ='center'";
+
+			$formName = '';
+			$formTitle = '';
+			$formIp = '';
+			$formBrowser = '';
+			if (!empty($records)) {
+				$formTitle = $records['title'];
+				$formName = $records['name'];
+				$formIp = $records['ip'];
+				$formBrowser = $records['browser'];
+
+            $h3->str = $formTitle;
+            $h3->type = 3;
+
+            $table->startRow();
+            $table->addCell($h3->show(), null, 'top', null, null, 'colspan="1"');
+            $table->endRow();
+
+            $table->startrow();
+            $table->addcell('Name', null, 'top', null, null, 'style="padding-bottom:6px"');
+            $table->addcell('Title', null, 'top', null, null, 'style="padding-bottom:6px"');
+            $table->addcell('IP', null, 'top', null, null, 'style="padding-bottom:6px"');
+            $table->addcell('Browser', null, 'top', null, null, 'style="padding-bottom:6px"');
+            $table->endrow();
+
+
+
+			} else {
+	            $table->startrow();
+	            $table->addcell('No forms have any records in yet', null, 'top', null, null, 'style="padding-bottom:6px"');
+	            $table->endrow();
+			}
+            $display = $table->show();
+            return $display;
+        }
+
+
 
     }
 

@@ -50,6 +50,7 @@ class forms extends controller
         $this->objUi =  & $this->getObject("ui", "forms");
         $this->objForms =  & $this->getObject("dbforms", "forms");
         $this->objFormRecords =  & $this->getObject("dbformrecords", "forms");
+        $this->objFormSubRecords =  & $this->getObject("dbformsubrecords", "forms");
         $this->objExport =  & $this->getObject("export", "forms");
         $this->objUser =  & $this->getObject("user", "security");
         $this->objLanguage = &$this->getObject("language", "language");
@@ -82,6 +83,13 @@ class forms extends controller
         $action = $this->getParam('action', 'listforms');
 
         switch ($action) {
+            case 'viewrecords':
+                $formId = $this->getParam('id', NULL);
+                $formDisplay = $this->objUi->getResultsForm($formId);
+                $this->setVarByRef('formDisplay', $formDisplay);
+                return 'form_viewrecords_tpl.php';
+            break;
+
             case 'addform':
                 $formId = $this->getParam('id', NULL);
                 $formDisplay = $this->objUi->getAddEditForm($formId);

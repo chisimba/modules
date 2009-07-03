@@ -138,13 +138,12 @@ if (count($arrForms) > 0) {
 
         //View Records Icon
         $objIcon->title = "View Records";
-        $recordsIcon = $objIcon->getViewIcon('javascript::void(0)', 'filter_'.$form['id']);
+        $objIcon->setIcon('addsibling');
 
-        //Setting up the Filter Code Display Box
-        $innerHtml = $this->objUi->getFilterCodeForm($form['id']);
-        $this->objBox->setHtml($innerHtml);
-        $this->objBox->setTitle('Filter Code');
-        $this->objBox->attachClickEvent('filter_'.$form['id']);
+	    $objLink = new link('?module=forms&action=viewrecords&id='.$form['id']);
+	    $objLink->link = $objIcon->show();
+
+        $recordsIcon = $objLink->show();
 
 	    $tableRow = array();
 	    //$tableRow[] = $objCheck->show();
@@ -162,7 +161,7 @@ if (count($arrForms) > 0) {
         }
         */
 
-        $tableRow[] = '<nobr>'.$editIcon.$delIcon.$viewIcon.'</nobr>';
+        $tableRow[] = '<nobr>'.$editIcon.$delIcon.$viewIcon.$recordsIcon.'</nobr>';
 
 	    $table->addRow($tableRow, $oddOrEven);
 	
