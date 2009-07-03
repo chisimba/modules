@@ -106,7 +106,7 @@ class functions_rubric extends object
 	        // View table.
 
 	$this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("rubric_rubric","rubric");
-	$this->objIcon->setIcon('preview');
+	$this->objIcon->setIcon('comment_view');
 	$commentIconB = $this->objIcon->show();
 
 	$objPopupB = new windowpop();
@@ -204,7 +204,7 @@ class functions_rubric extends object
                 $options .= "&nbsp;";
 	*/
 	    $this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("rubric_rubric","rubric");
-	    $this->objIcon->setIcon('preview');
+	    $this->objIcon->setIcon('comment_view');
 	    $commentIconC = $this->objIcon->show();
 
 	    $objPopupC = new windowpop();
