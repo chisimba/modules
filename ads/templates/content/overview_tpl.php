@@ -11,27 +11,20 @@ $header = new htmlheading();
 $header->type = 3;
 $header->str = $this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
 
-
 $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
-$form = new form ('overview', $this->uri(array('action'=>'save_overview')));
+$form = new form ('overview', $this->uri(array('action'=>'saveoverview','id'=>$this->getParam('id'),'unit_nameorg'=>$this->getParam('unit_name'),'unit_name'=>$this->getParam('unit_name'))));
 $messages = array();
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 
-$coursedata=$data[0];
-//$courseName=$data['title'];
-//echo $courseName;
-$unitname = new textinput('unit_name',$coursedata['title'],NULL,50);
+$unitname = new textinput('unit_name',$data['unit_name'],NULL,50);
 $unitnameLabel = new label($this->objLanguage->languageText('mod_ads_unit_name', 'ads').'&nbsp;', 'input_unitname');
-if ($mode == 'addfixup') {
-    $unitname->value = $this->getParam('unit_name');
-
-    if ($this->getParam('unit_name') == '') {
+if ($data['unit_name'] == ''||strlen($data['unit_name'])>255) {
         $messages[] = $this->objLanguage->languageText('mod_ads_enterunitname', 'ads');
     }
-}
+
 
 $table->addCell($unitnameLabel->show(), 150, NULL, 'left');
 $table->endRow();
@@ -43,12 +36,10 @@ $unitType = new radio ('unit_type');
 $unitType->addOption('new', $this->objLanguage->languageText('mod_ads_newunit', 'ads'));
 $unitType->addOption('edit', $this->objLanguage->languageText('mod_ads_changeunit', 'ads'));
 $unitType->setTableColumns(1);
-
-if ($mode == 'addfixup') {
-    $unitType->setSelected($this->getParam('unit_type'));
-} else {
-    $unitType->setSelected('new');
-}
+if($data['unit_type']=='')
+$unitType->setSelected('new');
+else
+$unitType->setSelected($data['unit_type']);
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_ads_thisisa','ads').'&nbsp;', 150, NULL, 'left');
 $table->endRow();
@@ -60,13 +51,12 @@ $table->endRow();
 $table->startRow();
 $motivation = new textarea('motiv');
 $motivationLabel = new label($this->objLanguage->languageText('mod_ads_motiv', 'ads').'&nbsp;', 'input_motivation');
-if ($mode == 'addfixup') {
-    $motivation->value = $this->getParam('motiv');
+$motivation->value = $data['motiv'];
 
-    if ($this->getParam('motiv') == '') {
+    if ($data['motiv'] == ''||strlen($data['motiv'])>255) {
         $messages[] = $this->objLanguage->languageText('mod_ads_entermotivation', 'ads');
     }
-}
+
 
 $table->addCell($motivationLabel->show(), 150, NULL, 'left');
 $table->endRow();
@@ -78,13 +68,13 @@ $table->endRow();
 $table->startRow();
 $qualification = new textarea('qual');
 $qualificationLabel = new label($this->objLanguage->languageText('mod_ads_unit_qual', 'ads').'&nbsp;', 'input_motivation');
-if ($mode == 'addfixup') {
-    $qualification->value = $this->getParam('qual');
 
-    if ($this->getParam('qual') == '') {
+    $qualification->value = $data['qual'];
+
+    if ($data['qual'] == ''||strlen($data['qual'])>255) {
         $messages[] = $this->objLanguage->languageText('mod_ads_enterqualification', 'ads');
     }
-}
+
 
 $table->addCell($qualificationLabel->show(), 150, NULL, 'left');
 $table->endRow();
@@ -101,11 +91,10 @@ $unitType2->addOption('changetype4', $this->objLanguage->languageText('mod_ads_c
 $unitType2->addOption('changetype5', $this->objLanguage->languageText('mod_ads_changetype5', 'ads'));
 $unitType2->setTableColumns(1);
 
-if ($mode == 'addfixup') {
-    $unitType2->setSelected($this->getParam('unit_type2'));
-} else {
-    $unitType2->setSelected('changetype5');
-}
+if($data['unit_type2']=='')
+$unitType2->setSelected('changetype5');
+else
+$unitType2->setSelected($data['unit_type2']);
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_ads_proposaltype','ads').'&nbsp;', 150, NULL, 'left');
 $table->endRow();
@@ -127,16 +116,7 @@ $buttons.='&nbsp'.$cancelButton->show();
 
 $form->addToForm('<p align="center"><br />'.$buttons.'</p>');
 
-if ($mode == 'addfixup') {
-
-    foreach ($problems as $problem)
-    {
-        $messages[] = $this->explainProblemsInfo($problem);
-    }
-
-}
-
-if ($mode == 'addfixup' && count($messages) > 0) {
+if (count($messages) > 0&&$errors==1) {
     echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
 
     echo '<ul>';
