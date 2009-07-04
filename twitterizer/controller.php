@@ -54,7 +54,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za
  */
 
-class Twitterizer extends controller
+class twitterizer extends controller
 {
     public $objLanguage;
     public $objSysConfig;
@@ -95,7 +95,7 @@ class Twitterizer extends controller
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
-            case 'go' :
+            case 'connect' :
                 $this->objOps->getData();
                 //$this->nextAction('');
                 break;

@@ -50,7 +50,7 @@ $GLOBALS ['kewl_entry_point_run']) {
  * PHP version 5.1.0+
  *
  * @author Paul Scott
- * @package tourinfo
+ * @package twitterizer
  *
  */
 class tweetops extends object {
@@ -92,7 +92,7 @@ class tweetops extends object {
     }
 
     /**
-     * go Curl method 
+     * go persistent connection to twitter API method 
      */
      public function getData() {
          $newTime = null;
