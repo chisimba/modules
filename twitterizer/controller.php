@@ -97,10 +97,6 @@ class twitterizer extends controller
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
-            case 'connect' :
-                $this->objOps->getData();
-                //$this->nextAction('');
-                break;
 
             case 'viewallajax' :
                 $page = intval ( $this->getParam ( 'page', 0 ) );
@@ -120,8 +116,8 @@ class twitterizer extends controller
                 break;
 
             case 'viewall' :
-                $count = $this->objDbTweets->getRecordCount ();
-                $pages = ceil ( $count / 10 );
+                $count = $this->objDbTweets->getMsgRecordCount ();
+                $pages = ceil ( $count / 20 );
                 $this->setVarByRef ( 'pages', $pages );
 
                 header("Content-Type: text/html;charset=utf-8");
@@ -191,6 +187,11 @@ class twitterizer extends controller
 
                 echo $this->objSiocMaker->dumpSioc($siocData);
                 break;*/
+
+            case 'connect' :
+                $this->objOps->getData();
+                //$this->nextAction('');
+                break;
 
             default:
                 echo file_get_contents($this->objConfig->getSiteRootPath()."tracking");

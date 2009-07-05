@@ -16,7 +16,8 @@ $fields = array(
         'length' => 140
     ),
     'createdat' => array(
-        'type' => 'timestamp',
+        'type' => 'text',
+        'length' => 35,
     ),
     'screen_name' => array(
         'type' => 'text',

@@ -65,6 +65,8 @@ class tweetops extends object {
     public $objLanguage;
     public $objConfig;
     public $objSysConfig;
+    public $objWashout;
+    public $objUser;
 
     /**
      * Constructor
@@ -76,6 +78,8 @@ class tweetops extends object {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->objWashout = $this->getObject('washout', 'utilities');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -123,7 +127,7 @@ class tweetops extends object {
                          $image = $userdata->profile_image_url;
                          $location = $userdata->location;
                          // make an array for db record insert
-                         $insarr = array('tweet' => $text, 'createdat' => strtotime($created), 'screen_name' => $screen_name, 'name' => $name, 'image' => $image, 'location' => $location);
+                         $insarr = array('tweet' => $text, 'createdat' => $created, 'screen_name' => $screen_name, 'name' => $name, 'image' => $image, 'location' => $location);
                          $this->objDbTweets->addRec($insarr);
                      }
                      unlink($prev);
@@ -136,6 +140,28 @@ class tweetops extends object {
      }
 
     public function renderOutputForBrowser($msgs) {
+        $ret = NULL;
+        foreach($msgs as $pos) {
+            $user = $pos['screen_name'];
+            $pic = $pos['image'];
+            $usrlink = $this->newObject('link', 'htmlelements');
+            $usrlink->href = "http://twitter.com/$user";
+            $usrlink->link = $user;
+            $txt = "<b>".$usrlink->show()."</b> ".$pos['tweet']."<br />".$pos['createdat'];
+            $image = "<a href='http://twitter.com/".$user."'><img src='$pic' height='48', width='48' /></a>";
+            // bust out a table to format the lot, then bang it in a feturebox
+            $msgtbl = $this->newObject('htmltable', 'htmlelements');
+            $msgtbl->cellpadding = 3;
+            $msgtbl->cellspacing = 3;
+            $msgtbl->startRow();
+            $msgtbl->addCell($image, 1);
+            $msgtbl->addCell($txt);
+            $msgtbl->endRow();
+
+            $ret .= $msgtbl->show();
+        }
+        header ( "Content-Type: text/html;charset=utf-8" );
+        return $ret;
     }
 
     public function renderTopBoxen($userid = NULL) {
