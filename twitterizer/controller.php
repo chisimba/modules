@@ -58,6 +58,7 @@ class twitterizer extends controller
 {
     public $objLanguage;
     public $objSysConfig;
+    public $objUser;
     public $objConfig;
     public $objOps;
     public $objDbTweets;
@@ -76,6 +77,7 @@ class twitterizer extends controller
             $this->objDbTweets = $this->getObject('dbtweets');
             // Get the sysconfig variables for the Jabber user to set up the connection.
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+            $this->objUser = $this->getObject('user', 'security');
             if(!file_exists($this->objConfig->getSiteRoot()."tracking")) {
                 $this->objOps->createTrackFile();
             }
