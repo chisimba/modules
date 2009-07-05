@@ -70,5 +70,9 @@ class dbtweets extends dbTable {
         return $this->getAll();
     }
 
+    public function getSingle($id) {
+        return $this->getAll("WHERE id = '$id'");
+    }
+
 }
 ?>

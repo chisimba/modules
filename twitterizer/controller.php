@@ -125,6 +125,11 @@ class twitterizer extends controller
                 break;
 
             case 'viewsingle':
+                $id = $this->getParam('postid');
+                $res = $this->objDbTweets->getSingle($id);
+                $this->setVarByRef('results', $res);
+                
+                return 'viewsingle_tpl.php';
                 break;
 
             case 'sioc':
