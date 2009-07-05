@@ -98,8 +98,8 @@ class tweetops extends object {
          $newTime = null;
          $this->objDbTweets = $this->getObject('dbtweets');
          $params = $this->objSysConfig->getValue('trackterms', 'twitterizer');
-         $user = 'paulscott56'; //$this->objSysConfig->getValue('twitteruser', 'twitterizer');
-         $pass = 'pongid56'; //$this->objSysConfig->getValue('twitterpass', 'twitterizer');
+         $user = $this->objSysConfig->getValue('twitteruser', 'twitterizer');
+         $pass = $this->objSysConfig->getValue('twitterpass', 'twitterizer');
          $terms = urlencode($params);
          $fp = fopen("http://".$user.":".$pass."@stream.twitter.com/track.json?track=$terms","r");  
          while($data = fgets($fp))  
@@ -134,5 +134,18 @@ class tweetops extends object {
              $newTime = $time; //date("YmdHi");
           }
      }
+
+    public function renderOutputForBrowser($msgs) {
+    }
+
+    public function renderTopBoxen($userid = NULL) {
+    }
+    
+    public function renderLeftBoxen($userid = NULL) {
+    }
+
+    public function renderRightBoxen($userid = NULL) {
+    }
+
 }
 ?>

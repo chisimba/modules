@@ -100,6 +100,96 @@ class twitterizer extends controller
                 //$this->nextAction('');
                 break;
 
+            case 'viewallajax' :
+                $page = intval ( $this->getParam ( 'page', 0 ) );
+                if ($page < 0) {
+                    $page = 0;
+                }
+                $start = $page * 10;
+                $msgs = $this->objDbTweets->getRange($start, 10);
+
+                $this->setVarByRef ( 'msgs', $msgs );
+
+                header("Content-Type: text/html;charset=utf-8");
+                return 'viewall_ajax_tpl.php';
+                break;
+
+            case NULL:
+                break;
+
+            case 'viewall' :
+                $count = $this->objDbTweets->getRecordCount ();
+                $pages = ceil ( $count / 10 );
+                $this->setVarByRef ( 'pages', $pages );
+
+                header("Content-Type: text/html;charset=utf-8");
+                return 'viewall_tpl.php';
+                break;
+
+            /*case 'sioc':
+                $userid = $this->getParam('userid');
+                $this->objSiocMaker = $this->getObject('siocmaker', 'siocexport');
+                // site data
+                $siocData = array();
+                $siocData['title'] = "Tribes";
+                $siocData['url'] = $this->uri(array('module' => 'tribe'));
+                $siocData['sioc_url'] = $this->uri(array('module' => 'tribe')).'#';
+                $siocData['encoding'] = "UTF-8";
+                $siocData['generator'] = $this->uri(array('module' => 'tribe', 'action' => 'sioc'));
+
+                // make the site data
+                $siteData = array();
+                $siteData['url'] = $this->uri(array('module' => 'tribe'));
+                $siteData['name'] = "Tribes";
+                $siteData['description'] = ''; //$this->objSysConfig->getValue ( 'jposterprofile', 'tribe' );
+
+                $fora = array();
+                $fora[0]['id'] = $userid;
+                $fora[0]['url'] = $this->uri(array('module' => 'tribe', 'userid' => $userid));
+
+                $users = array();
+                $user[0]['id'] = $userid;
+                $user[0]['url'] = $this->uri('');
+
+                $this->objSiocMaker->setSite($siteData);
+                $this->objSiocMaker->setFora($fora);
+                $this->objSiocMaker->setUsers($users);
+
+                $this->objSiocMaker->createForum($userid, $this->uri(array('module' => 'tribe', 'userid' => $userid)), $userid, 'Tribes', $this->objSysConfig->getValue ( 'jposterprofile', 'tribe' ));
+
+                $posts = $this->objDbMsgs->getAllPosts();
+
+                foreach($posts as $post) {
+                    $p[] =  array('id' => $post['id'], 'url' => $this->uri ( array ('postid' => $post['id'], 'action' => 'viewsingle' ) ));
+                }
+                $this->objSiocMaker->forumPosts($p);
+
+                // user
+                $user = array();
+                $user['id'] = $userid;
+                $user['url'] = $this->uri('');
+                $user['name'] = $this->objUser->userName($userid);
+                $user['email'] = $this->objUser->email();
+                $user['homepage'] = $this->uri('');
+                $user['role'] = "Admin";
+
+                $this->objSiocMaker->createUser($user);
+
+                // posts
+                foreach($posts as $post) {
+                    // get the tags for this post (meme)
+                    $tags = $this->objDbTags->getPostTags($post['id'], 'tribe');
+                    $this->objSiocMaker->createPost($this->uri ( array ('postid' => $post['id'], 'action' => 'viewsingle' ) ),
+                                                    $post['msgtype'], strip_tags(urlencode($post['msgbody'])), urlencode($post['msgbody']), $post['datesent'],
+                                                    $updated = "",
+                                                    $tags,
+                                                    $links = array()
+                                                    );
+                }
+
+                echo $this->objSiocMaker->dumpSioc($siocData);
+                break;*/
+
             default:
                 echo file_get_contents($this->objConfig->getSiteRootPath()."tracking");
                 break;

@@ -57,7 +57,11 @@ class dbtweets extends dbTable {
         return $this->insert($recarr);
     }
 
-    
+    public function getRange($start, $end) {
+    }
+
+    public function getRecordCount () {
+    }
 
 }
 ?>
