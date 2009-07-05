@@ -59,11 +59,15 @@ class dbtweets extends dbTable {
 
     public function getRange($start, $num) {
         $range = $this->getAll ( "ORDER BY createdat ASC LIMIT {$start}, {$num}" );
-        return array_reverse ( $range );
+        return $range;
     }
 
     public function getMsgRecordCount () {
         return $this->getRecordCount();
+    }
+
+    public function getAllPosts() {
+        return $this->getAll();
     }
 
 }

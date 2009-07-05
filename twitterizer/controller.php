@@ -124,38 +124,41 @@ class twitterizer extends controller
                 return 'viewall_tpl.php';
                 break;
 
-            /*case 'sioc':
-                $userid = $this->getParam('userid');
+            case 'viewsingle':
+                break;
+
+            case 'sioc':
+                $userid = 1; //$this->getParam('userid');
                 $this->objSiocMaker = $this->getObject('siocmaker', 'siocexport');
                 // site data
                 $siocData = array();
-                $siocData['title'] = "Tribes";
-                $siocData['url'] = $this->uri(array('module' => 'tribe'));
-                $siocData['sioc_url'] = $this->uri(array('module' => 'tribe')).'#';
+                $siocData['title'] = $this->objConfig->getSiteName();
+                $siocData['url'] = $this->uri(array('module' => 'twitterizer'));
+                $siocData['sioc_url'] = $this->uri(array('module' => 'twitterizer')).'#';
                 $siocData['encoding'] = "UTF-8";
-                $siocData['generator'] = $this->uri(array('module' => 'tribe', 'action' => 'sioc'));
+                $siocData['generator'] = $this->uri(array('module' => 'twitterizer', 'action' => 'sioc'));
 
                 // make the site data
                 $siteData = array();
-                $siteData['url'] = $this->uri(array('module' => 'tribe'));
-                $siteData['name'] = "Tribes";
-                $siteData['description'] = ''; //$this->objSysConfig->getValue ( 'jposterprofile', 'tribe' );
+                $siteData['url'] = $this->uri(array('module' => 'twitterizer'));
+                $siteData['name'] = $this->objConfig->getSiteName();
+                $siteData['description'] = $this->objConfig->getSiteName();
 
                 $fora = array();
                 $fora[0]['id'] = $userid;
-                $fora[0]['url'] = $this->uri(array('module' => 'tribe', 'userid' => $userid));
+                $fora[0]['url'] = $this->uri(array('module' => 'twitterizer', 'userid' => $userid));
 
                 $users = array();
-                $user[0]['id'] = $userid;
+                $user[0]['id'] = 1;
                 $user[0]['url'] = $this->uri('');
 
                 $this->objSiocMaker->setSite($siteData);
                 $this->objSiocMaker->setFora($fora);
                 $this->objSiocMaker->setUsers($users);
 
-                $this->objSiocMaker->createForum($userid, $this->uri(array('module' => 'tribe', 'userid' => $userid)), $userid, 'Tribes', $this->objSysConfig->getValue ( 'jposterprofile', 'tribe' ));
+                $this->objSiocMaker->createForum($userid, $this->uri(array('module' => 'twitterizer', 'userid' => 1)), $userid, $this->objConfig->getSiteName(), $this->objConfig->getSiteName());
 
-                $posts = $this->objDbMsgs->getAllPosts();
+                $posts = $this->objDbTweets->getAllPosts();
 
                 foreach($posts as $post) {
                     $p[] =  array('id' => $post['id'], 'url' => $this->uri ( array ('postid' => $post['id'], 'action' => 'viewsingle' ) ));
@@ -175,18 +178,17 @@ class twitterizer extends controller
 
                 // posts
                 foreach($posts as $post) {
-                    // get the tags for this post (meme)
-                    $tags = $this->objDbTags->getPostTags($post['id'], 'tribe');
+                    $tweet = str_replace('&', '&amp;', $post['tweet']);
                     $this->objSiocMaker->createPost($this->uri ( array ('postid' => $post['id'], 'action' => 'viewsingle' ) ),
-                                                    $post['msgtype'], strip_tags(urlencode($post['msgbody'])), urlencode($post['msgbody']), $post['datesent'],
+                                                    $tweet, strip_tags($tweet), $tweet, $post['createdat'],
                                                     $updated = "",
-                                                    $tags,
+                                                    $tags = array(),
                                                     $links = array()
                                                     );
                 }
 
                 echo $this->objSiocMaker->dumpSioc($siocData);
-                break;*/
+                break;
 
             case 'connect' :
                 $this->objOps->getData();
