@@ -6,6 +6,13 @@
 */
 class news extends controller
 {
+    /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access protected
+     * @var object
+     */
+    protected $objSysConfig;
 
     /**
      * Instance of the washout object of the utilities module.
@@ -35,6 +42,7 @@ class news extends controller
         $this->loadClass('link', 'htmlelements');
         
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUser = $this->getObject('user', 'security');
 
         $this->objWashOut = $this->getObject('washout', 'utilities');
