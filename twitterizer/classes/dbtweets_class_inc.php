@@ -79,5 +79,9 @@ class dbtweets extends dbTable {
         return $this->getAll("WHERE id = '$id'");
     }
 
+    public function searcTable($keyword) {
+        return $this->getAll("WHERE tweet LIKE '%%$keyword%%' OR screen_name LIKE '%%$keyword%%' OR name LIKE '%%$keyword%%' ");
+    }
+
 }
 ?>

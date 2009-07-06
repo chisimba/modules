@@ -201,7 +201,11 @@ class twitterizer extends controller
 
             case 'search' :
                 $term = $this->getParam('searchterm');
-var_dump($term);
+                $results = $this->objDbTweets->searcTable($term);
+                $this->setVarByRef('results', $results); 
+                header("Content-Type: text/html;charset=utf-8");
+                
+                return 'viewsingle_tpl.php';
                 break;
 
             default:
