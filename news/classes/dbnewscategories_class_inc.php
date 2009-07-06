@@ -223,7 +223,7 @@ class dbnewscategories extends dbtable
 
     public function getCategoriesWithStories($order='categoryorder')
     {
-        $sql = 'SELECT tbl_news_categories.id, categoryname, blockonfrontpage FROM tbl_news_categories, tbl_news_stories WHERE (tbl_news_categories.id = tbl_news_stories.storycategory) GROUP BY categoryname ORDER BY '.$order;
+        $sql = 'SELECT tbl_news_categories.id, categoryname, showintroduction, introduction, blockonfrontpage FROM tbl_news_categories, tbl_news_stories WHERE (tbl_news_categories.id = tbl_news_stories.storycategory) GROUP BY categoryname ORDER BY '.$order;
 
         return $this->getArray($sql);
     }

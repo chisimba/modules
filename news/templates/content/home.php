@@ -15,6 +15,12 @@ $middle = $this->objNewsMenu->toolbar('home');
 
 $middle .= $header->show();
 
+foreach ($categories as $category) {
+    if ($category['showintroduction'] == 'Y') {
+        $middle .= $this->objWashOut->parseText($category['introduction']).'<br /><br />';
+    }
+}
+
 $middle .= $topStories;
 
 if (count($categories) > 0) {

@@ -8,6 +8,14 @@ class news extends controller
 {
 
     /**
+     * Instance of the washout object of the utilities module.
+     *
+     * @access protected
+     * @var object
+     */
+    protected $objWashOut;
+
+    /**
     * Constructor for the Module
     */
     public function init()
@@ -28,6 +36,8 @@ class news extends controller
         
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject('user', 'security');
+
+        $this->objWashOut = $this->getObject('washout', 'utilities');
     }
 
     /**
