@@ -65,6 +65,11 @@ class dbtweets extends dbTable {
     public function getMsgRecordCount () {
         return $this->getRecordCount();
     }
+    
+    public function getUserCount () {
+        $users = $this->getArray("SELECT DISTINCT screen_name FROM tbl_twitterizer ORDER BY id");
+        return count($users);
+    }
 
     public function getAllPosts() {
         return $this->getAll();

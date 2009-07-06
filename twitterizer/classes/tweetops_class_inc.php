@@ -67,6 +67,7 @@ class tweetops extends object {
     public $objSysConfig;
     public $objWashout;
     public $objUser;
+    public $objDbTweets;
 
     /**
      * Constructor
@@ -80,6 +81,7 @@ class tweetops extends object {
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $this->objWashout = $this->getObject('washout', 'utilities');
         $this->objUser = $this->getObject('user', 'security');
+        $this->objDbTweets = $this->getObject('dbtweets');
     }
 
     /**
@@ -168,9 +170,67 @@ class tweetops extends object {
     }
     
     public function renderLeftBoxen($userid = NULL) {
+        $ret = NULL;
+        $ret .= $this->siocBox();
+        $ret .= $this->statsBox();
+        $ret .= $this->termsBox();
+        $ret .= $this->searchBox();
+        return $ret;
     }
 
     public function renderRightBoxen($userid = NULL) {
+    }
+
+    private function statsBox() {
+        $msgcount = $this->objDbTweets->getMsgRecordCount ();
+        $numusers = $this->objDbTweets->getUserCount ();
+        $objFB = $this->newObject('featurebox', 'navigation');
+        
+        return $objFB->show($this->objLanguage->languageText('mod_twitterizer_statsfb', 'twitterizer'), $this->objLanguage->languageText('mod_twitterizer_totsofar', 'twitterizer').': '.$msgcount.                                                                                                    "<br />".$this->objLanguage->languageText('mod_twitterizer_numusers', 'twitterizer').': '.$numusers);
+    }
+
+    private function termsBox() {
+        $ret = NULL;
+        $objFB = $this->newObject('featurebox', 'navigation');
+        $terms = $this->objSysConfig->getValue('trackterms', 'twitterizer');
+        $terms = explode(",", $terms);
+        $t = NULL;
+        foreach($terms as $term) {
+            $t .= $term."<br />";
+        }
+        return $objFB->show($this->objLanguage->languageText('mod_twitterizer_termsfb', 'twitterizer'), $this->objLanguage->languageText('mod_twitterizer_termsused', 'twitterizer').": <br />".$t);
+    }
+
+    private function searchBox() {
+        $this->loadClass('textinput', 'htmlelements');
+        $qseekform = new form('qseek', $this->uri(array(
+        'action' => 'search',
+        )));
+        $qseekform->addRule('searchterm', $this->objLanguage->languageText("mod_twitterizer_phrase_searchtermreq", "twitterizer") , 'required');
+        $qseekterm = new textinput('searchterm');
+        $qseekterm->size = 15;
+        $qseekform->addToForm($qseekterm->show());
+        $this->objsTButton = &new button($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setToSubmit();
+        $qseekform->addToForm($this->objsTButton->show());
+        $qseekform = $qseekform->show();
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_twitterizer_qseek", "twitterizer") , $qseekform);
+
+        return $ret;
+    }
+
+    private function siocBox() {
+        $objIcon = $this->newObject ( 'geticon', 'htmlelements' );
+        $this->loadClass('href', 'htmlelements');
+        $objIcon->alt = 'SIOC';
+        $objIcon->setIcon('sioc', 'gif');
+        $sioclink = new href($this->uri(array('action' => 'sioc', 'sioc_type' => 'site')), $objIcon->show());
+        $objFB = $this->newObject('featurebox', 'navigation');
+
+        return $objFB->show($this->objLanguage->languageText("mod_twitterizer_phrase_siocfb", "twitterizer"),$sioclink->show());
+        
     }
 
 }

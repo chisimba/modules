@@ -199,6 +199,11 @@ class twitterizer extends controller
                 //$this->nextAction('');
                 break;
 
+            case 'search' :
+                $term = $this->getParam('searchterm');
+var_dump($term);
+                break;
+
             default:
                 echo file_get_contents($this->objConfig->getSiteRootPath()."tracking");
                 break;
