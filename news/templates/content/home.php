@@ -15,9 +15,11 @@ $middle = $this->objNewsMenu->toolbar('home');
 
 $middle .= $header->show();
 
-foreach ($categories as $category) {
-    if ($category['showintroduction'] == 'Y') {
-        $middle .= $this->objWashOut->parseText($category['introduction']).'<br /><br />';
+if ($this->objSysConfig->getValue('mod_news_homeintroduction', 'news')) {
+    foreach ($categories as $category) {
+        if ($category['showintroduction'] == 'Y') {
+            $middle .= $this->objWashOut->parseText($category['introduction']).'<br /><br />';
+        }
     }
 }
 
