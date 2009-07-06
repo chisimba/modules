@@ -1626,5 +1626,60 @@ public function getAffiliation ( $userId ){
         } //end if
         
     } //end function    
+    public function viewSingleReflection($id){
+     $reflectionList = $this->objDbReflectionList->listSingle($id);
+     //Create a table object
+     $reflecTable = &$this->newObject("htmltable", "htmlelements");
+     $reflecTable->border = 1;
+     $reflecTable->attributes = "rules=none frame=box";
+     $reflecTable->cellspacing = '3';
+     $reflecTable->cellpadding = '3';
+     $reflecTable->width = "100%";
+     //Title
+     $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+     $objHeading->type = 1;
+     $objHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordReflection", 'eportfolio');
+     //Title
+     $reflecTable->startRow();
+     $reflecTable->addCell($objHeading->show());
+     $reflecTable->endRow();
+     //Rationale Title
+     $reflecTable->startRow();
+     $reflecTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio')."</b>");
+     $reflecTable->endRow();
+     $reflecTable->startRow();
+     $reflecTable->addCell($reflectionList[0]["rationale"]);
+     $reflecTable->endRow();
+     //Creation Date
+     $reflecTable->startRow();
+     $reflecTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio')."</b>");
+     $reflecTable->endRow();
+     $reflecTable->startRow();
+     $reflecTable->addCell($reflectionList[0]["creation_date"]);
+     $reflecTable->endRow();
+
+     //Short description
+     $reflecTable->startRow();
+     $reflecTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio')."</b>");
+     $reflecTable->endRow();
+     $reflecTable->startRow();
+     $reflecTable->addCell($reflectionList[0]["shortdescription"]);
+     $reflecTable->endRow();
+     //Long Description
+     $reflecTable->startRow();
+     $reflecTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio')."</b>");
+     $reflecTable->endRow();
+     $reflecTable->startRow();
+     $reflecTable->addCell($reflectionList[0]["longdescription"]);
+     $reflecTable->endRow();
+     //row for author comments
+     $reflecTable->startRow();
+     $reflecTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_wordComment", 'eportfolio')."</b>");
+     $reflecTable->endRow();
+     $reflecTable->startRow();
+     $reflecTable->addCell(" --".$this->objLanguage->languageText("word_none", 'system')."--");
+     $reflecTable->endRow();
+     return $reflecTable->show();
+    }
 }
 ?>

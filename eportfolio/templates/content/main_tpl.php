@@ -1585,6 +1585,25 @@ if (!empty($reflectionList)) {
         $reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
         $reflectionTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
         $reflectionTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+        
+	//Show the view Icon
+	$this->objIcon= $this->newObject('geticon','htmlelements');
+	$this->objIcon->title=$this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+	$this->objIcon->setIcon('comment_view');
+	$commentIcon = $this->objIcon->show();
+
+	$objPopup = new windowpop();
+	$objPopup->set('location',$this->uri(array('action' => 'singlereflection','reflectId' => $item['id']),'eportfolio'));
+	$objPopup->set('linktext',$commentIcon);
+	$objPopup->set('width','600');
+	$objPopup->set('height','350');
+	$objPopup->set('left','200');
+	$objPopup->set('top','200');
+    	$objPopup->set('scrollbars','yes');
+    	$objPopup->set('resizable','yes');
+	$objPopup->putJs(); // you only need to do this once per page
+	//echo $objPopup->show();
+        
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
         $iconEdit->setIcon('edit');
@@ -1612,7 +1631,7 @@ if (!empty($reflectionList)) {
             'id' => $item["id"]
         )) , $objLanguage->languageText('mod_eportfolio_suredelete', 'eportfolio'));
         //echo $objConfirm->show();
-        $reflectionTable->addCell($linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
+        $reflectionTable->addCell($objPopup->show().$linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
         $reflectionTable->endRow();
     }
     unset($item);

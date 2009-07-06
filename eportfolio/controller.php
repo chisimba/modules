@@ -123,6 +123,15 @@ class eportfolio extends controller
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
 	  // View a rubric
+	  case "singlereflection":
+		$this->setLayoutTemplate(NULL);	    
+		$this->setVar('pageSuppressToolbar', TRUE);
+		$this->setVar('pageSuppressBanner', TRUE);
+		$this->setVar('pageSuppressSearch', TRUE);
+		$this->setVar('suppressFooter', TRUE);
+		$reflectId = $this->getParam("reflectId");
+		$this->setVarByRef("reflectId", $reflectId);		
+		return "viewreflection_tpl.php";
 	  case "rubricviewtable": 
             	$this->setLayoutTemplate(NULL);	    
 		$this->setVar('pageSuppressToolbar', TRUE);
