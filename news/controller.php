@@ -15,7 +15,7 @@ class news extends controller
     protected $objSysConfig;
 
     /**
-     * Instance of the washout object of the utilities module.
+     * Instance of the washout class of the utilities module.
      *
      * @access protected
      * @var object
