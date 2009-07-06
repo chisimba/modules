@@ -18,7 +18,7 @@ $middleColumn .= $this->objOps->renderTopBoxen();
 $leftColumn = NULL;
 $rightColumn = NULL;
 
-$middleColumn .= 'tweet';
+$middleColumn .= $this->objOps->renderOutputForBrowser($results);
 
 $leftColumn .= $this->objOps->renderLeftBoxen();
 $rightColumn .= $this->objOps->renderRightBoxen();

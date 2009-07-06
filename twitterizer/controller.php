@@ -71,6 +71,7 @@ class twitterizer extends controller
     public function init()
     {
         try {
+            $this->requiresLogin();
             $this->objLanguage = $this->getObject ( 'language', 'language' );
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objOps = $this->getObject('tweetops');
@@ -113,8 +114,6 @@ class twitterizer extends controller
                 break;
 
             case NULL:
-                break;
-
             case 'viewall' :
                 $count = $this->objDbTweets->getMsgRecordCount ();
                 $pages = ceil ( $count / 20 );
@@ -204,6 +203,10 @@ class twitterizer extends controller
                 echo file_get_contents($this->objConfig->getSiteRootPath()."tracking");
                 break;
         }
+    }
+
+    public function requiresLogin() {
+        return FALSE;
     }
 }
 ?>

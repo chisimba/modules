@@ -37,7 +37,7 @@ if (! $this->objUser->isLoggedIn ()) {
 }
 
 $leftColumn .= $this->objOps->renderLeftBoxen();
-$rightColumn .= $this->objOps->renderRightBoxen($userid);
+$rightColumn .= $this->objOps->renderRightBoxen();
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );
