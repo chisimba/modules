@@ -153,7 +153,7 @@ class tweetops extends object {
             $usrlink = $this->newObject('link', 'htmlelements');
             $usrlink->href = "http://twitter.com/$user";
             $usrlink->link = $user;
-            $txt = "<b>".$usrlink->show()."</b> ".$pos['tweet']."<br />".$pos['createdat'];
+            $txt = "<b>".$usrlink->show()."</b> ".$this->objWashout->parseText($pos['tweet'])."<br />".$pos['createdat'];
             $image = "<a href='http://twitter.com/".$user."'><img src='$pic' height='48', width='48' /></a>";
             // bust out a table to format the lot, then bang it in a feturebox
             $msgtbl = $this->newObject('htmltable', 'htmlelements');
