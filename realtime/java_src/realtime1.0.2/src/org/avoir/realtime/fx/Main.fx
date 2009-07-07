@@ -11,7 +11,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.Screen;
 
-import javafx.stage.StageStyle;
+import javax.swing.UIManager;
+
 
 
 var swidth= Screen.primary.visualBounds.width;
@@ -52,6 +53,8 @@ var mainScreen:MainScreen=MainScreen{
     };
 
 function run(args: String[]) {
+  UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+
  stage;
  startConnecting(args);
 }
