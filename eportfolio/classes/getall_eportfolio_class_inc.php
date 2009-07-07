@@ -30,6 +30,7 @@ class getall_Eportfolio extends object
         $this->objDbTranscriptList = &$this->getObject('dbeportfolio_transcript', 'eportfolio');
         $this->objDbQclList = &$this->getObject('dbeportfolio_qcl', 'eportfolio');
         $this->objDbGoalsList = &$this->getObject('dbeportfolio_goals', 'eportfolio');
+        $this->objDbComment = &$this->getObject('dbeportfolio_comment', 'eportfolio');
         $this->objDbCompetencyList = &$this->getObject('dbeportfolio_competency', 'eportfolio');
         $this->objDbInterestList = &$this->getObject('dbeportfolio_interest', 'eportfolio');
         $this->objDbReflectionList = &$this->getObject('dbeportfolio_reflection', 'eportfolio');
@@ -1672,13 +1673,28 @@ public function getAffiliation ( $userId ){
      $reflecTable->startRow();
      $reflecTable->addCell($reflectionList[0]["longdescription"]);
      $reflecTable->endRow();
-     //row for author comments
+     //Spacer
      $reflecTable->startRow();
-     $reflecTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_wordComment", 'eportfolio')."</b>");
+     $reflecTable->addCell("&nbsp;");
      $reflecTable->endRow();
-     $reflecTable->startRow();
-     $reflecTable->addCell(" --".$this->objLanguage->languageText("word_none", 'system')."--");
-     $reflecTable->endRow();
+     //row for comments
+     $mycomments = $this->objDbComment->listAll($id);
+     if(!empty($mycomments)){
+      foreach ($mycomments as $comment){
+       //$this->objUser
+       $commentor = $this->objUser->fullName($comment["commentoruserid"]);
+       $commentime = "";      
+       if(!empty($comment["postdate"])){
+        $commentime = " : ".$comment["postdate"];
+       }
+       $reflecTable->startRow();
+       $reflecTable->addCell("<b>".$commentor.$commentime."</b>");
+       $reflecTable->endRow();
+       $reflecTable->startRow();
+       $reflecTable->addCell($comment["comment"]);
+       $reflecTable->endRow();
+      }
+     }
      return $reflecTable->show();
     }
 }

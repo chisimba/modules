@@ -74,6 +74,7 @@ class eportfolio extends controller
         $this->objDbAssertionList = &$this->getObject('dbeportfolio_assertion', 'eportfolio');
         $this->objDbProductList = &$this->getObject('dbeportfolio_product', 'eportfolio');
         $this->objDbCategoryList = &$this->getObject('dbeportfolio_category', 'eportfolio');
+        $this->objDbComment = &$this->getObject('dbeportfolio_comment', 'eportfolio');
         $this->objDbCategorytypeList = &$this->getObject('dbeportfolio_categorytypes', 'eportfolio');
         $this->objGetall = &$this->getObject('getall_eportfolio', 'eportfolio');
         $this->objExport = &$this->getObject('export_eportfolio', 'eportfolio');
@@ -123,6 +124,12 @@ class eportfolio extends controller
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
 	  // View a rubric
+	  case "postcomment":
+                $id = $this->objDbComment->insertSingle($this->getParam('eportfoliopartid', NULL) , $this->getParam('newcomment', NULL) , $isapproved = '0');
+                // After processing return to view main
+                $this->setVarByRef("reflectId", $reflectId);
+                return $this->nextAction('singlereflection', array('reflectId'=>$this->getParam('eportfoliopartid', NULL)));
+	        
 	  case "singlereflection":
 		$this->setLayoutTemplate(NULL);	    
 		$this->setVar('pageSuppressToolbar', TRUE);
@@ -130,7 +137,7 @@ class eportfolio extends controller
 		$this->setVar('pageSuppressSearch', TRUE);
 		$this->setVar('suppressFooter', TRUE);
 		$reflectId = $this->getParam("reflectId");
-		$this->setVarByRef("reflectId", $reflectId);		
+		$this->setVarByRef("reflectId", $reflectId);
 		return "viewreflection_tpl.php";
 	  case "rubricviewtable": 
             	$this->setLayoutTemplate(NULL);	    
