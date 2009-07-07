@@ -54,7 +54,12 @@ class dbtweets extends dbTable {
     }
 
     public function addRec($recarr) {
-        return $this->insert($recarr);
+        if($recarr['tweet'] == NULL || $recarr['screen_name'] == NULL || empty($recarr['tweet']) || empty($recarr['screen_name'])) {
+            return FALSE;
+        }
+        else {
+            return $this->insert($recarr);
+        }
     }
 
     public function getRange($start, $num) {

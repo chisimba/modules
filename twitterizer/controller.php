@@ -79,7 +79,7 @@ class twitterizer extends controller
             // Get the sysconfig variables for the Jabber user to set up the connection.
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             $this->objUser = $this->getObject('user', 'security');
-            if(!file_exists($this->objConfig->getSiteRoot()."tracking")) {
+            if(!file_exists($this->objConfig->getcontentBasePath()."tracking")) {
                 $this->objOps->createTrackFile();
             }
         } catch ( customException $e ) {
@@ -209,7 +209,7 @@ class twitterizer extends controller
                 break;
 
             default:
-                echo file_get_contents($this->objConfig->getSiteRootPath()."tracking");
+                echo file_get_contents($file = $this->objConfig->getcontentBasePath()."tracking");
                 break;
         }
     }

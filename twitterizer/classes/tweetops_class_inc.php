@@ -91,10 +91,13 @@ class tweetops extends object {
         $terms = $this->objSysConfig->getValue('trackterms', 'twitterizer');
         $seed = "track=";
         $seed = $seed.$terms;
-        $filename = $this->objConfig->getSiteRootPath()."tracking";
-        file_put_contents($filename, $seed);
-
-        return TRUE;
+        $filename = $this->objConfig->getcontentBasePath()."tracking";
+        if(file_put_contents($filename, $seed)) {
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
     }
 
     /**
@@ -111,11 +114,12 @@ class tweetops extends object {
          while($data = fgets($fp))  
          {  
              $time = date("YmdHi");
-             $file = $this->objConfig->getSiteRootPath().$time;  
+             $workdir = $this->objConfig->getcontentBasePath();
+             $file = $workdir.$time;  
              if ($newTime!=$time)  
              {  
                  @fclose($fp2);
-                 chdir($file);
+                 chdir($workdir);
                  foreach(glob("*.txt") as $prev) { 
                      $records = file($prev);
                      foreach($records as $record) {
@@ -136,7 +140,7 @@ class tweetops extends object {
                  }
                  $fp2 = fopen("{$file}.txt","a");
              }
-             fputs($fp2,$data);  
+             fputs($fp2, $data);  
              $newTime = $time; //date("YmdHi");
           }
      }
