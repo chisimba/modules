@@ -104,8 +104,8 @@ class twitterizer extends controller
                 if ($page < 0) {
                     $page = 0;
                 }
-                $start = $page * 10;
-                $msgs = $this->objDbTweets->getRange($start, 10);
+                $start = $page * 20;
+                $msgs = $this->objDbTweets->getRange($start, 20);
 
                 $this->setVarByRef ( 'msgs', $msgs );
 
