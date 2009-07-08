@@ -50,10 +50,10 @@ class functions_mcqtests extends object
 		$objmcqTable->startHeaderRow();
 		$objmcqTable->addHeaderCell($this->objLanguage->languageText('word_name', 'system', 'Name'),'23%');
 		$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_mcqtests_percentage', 'mcqtests', 'Percentage')." ".$this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests', 'Mark'), '15%');
-		$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests', 'Mark','5%'));
+		$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests', 'Mark'),'5%');
 		$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_mcqtests_closingdate', 'mcqtests', 'Closing Date'),'15%');
-		$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_datesubmitted', 'assignment', 'Date Submitted'),'13%');
-		$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_eportfolio_view', 'eportfolio', 'View','29%'));
+		$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_datesubmitted', 'assignment', 'Date Submitted'),'27%');
+		$objmcqTable->addHeaderCell($this->objLanguage->languageText('mod_eportfolio_view', 'eportfolio', 'View'),'15%');
 		$objmcqTable->endHeaderRow();
 	  foreach($data as $myData){
 	   $studentMark = "";
