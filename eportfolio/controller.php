@@ -2275,13 +2275,13 @@ class eportfolio extends controller
             //Manage Group
             $iconShare = $this->getObject('geticon', 'htmlelements');
             $iconShare->setIcon('fileshare');
+            //var_dump($objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio'));
             $iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
             $mnglink = new link($this->uri(array(
                 'module' => 'eportfolio',
                 'action' => 'manage_eportfolio',
                 'id' => $groupId
             )));
-            //	    		$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio').' '.$iconShare->show();
             $mnglink->link = $iconShare->show();
             $linkMng = $mnglink->show();
             $tableRow = array(

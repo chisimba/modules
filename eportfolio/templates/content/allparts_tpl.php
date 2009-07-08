@@ -97,7 +97,7 @@ $objcontactTitles->type = 1;
 //$hasAccess|= $this->objEngine->_objUser->isAdmin();
 
 $hasAccess = $this->_objUser->isContextLecturer();
-$hasAccess = $this->_objUser->isAdmin();
+$hasAccess |= $this->_objUser->isAdmin();
 
 $this->setVar('pageSuppressXML', true);
 $link = new link($this->uri(array(
