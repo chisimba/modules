@@ -192,7 +192,7 @@ class ahis extends controller {
         $this->objTools = $this->getObject('tools','toolbar');
         
                 
-        if (!$this->objUser->isLoggedIn()) {
+        if (!$this->objUser->isLoggedIn() && $action != 'jrupload') {
             $this->objTools->addToBreadCrumbs(array($this->objLanguage->languageText('word_login')));
             return 'login_tpl.php';
         }
@@ -217,6 +217,7 @@ class ahis extends controller {
 			case 'jrupload':
 				log_debug('GOT JAVAROSA DATA');
 				log_debug('JAVAROSA POST: '.print_r($_POST,true));
+				echo 'Submitted';
 				break;
 			
 			case 'unset':
