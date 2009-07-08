@@ -393,11 +393,11 @@ class eportfolio extends controller
 		$userGroups = $this->_objGroupAdmin->getSubgroups($groupId);
 		//Get the group_define_name which is similar from the selectedpartId from the userGroups array
 		$group_define_name = array();
-		foreach($userGroups[0] as $userGroup){
-			$group_define_name[] = $userGroup['group_define_name'];		
-		}
-
+		
                 if (empty($selectedParts)) {
+		    foreach($userGroups[0] as $userGroup){
+			$group_define_name[] = $userGroup['group_define_name'];		
+		    }
 	            foreach($group_define_name as $partPid) {
 	                $grpId = $this->_objGroupAdmin->getId($partPid);
 	                $this->_objGroupAdmin->deleteGroup($grpId);
@@ -2322,10 +2322,12 @@ class eportfolio extends controller
             }else{
             $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
             $check = 0;
-	    foreach($isSubGroup[0] as $subgrp){
+            if(!empty($isSubGroup)){
+	     foreach($isSubGroup[0] as $subgrp){
 		if($partId == $subgrp['group_define_name']){
 	            $check = 1;
 		}
+	     }
 	    }
 	    //If subgroup does not exist, create
 	    if($check==0){
