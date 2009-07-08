@@ -216,8 +216,22 @@ class ahis extends controller {
 				
 			case 'jrupload':
 				log_debug('GOT JAVAROSA DATA');
-				log_debug('JAVAROSA POST: '.serialize($_POST));
-				echo 'Submitted';
+				//$xmlString = file_get_contents("php://input");
+				$xmlString = '<?xml version="1.0" ?><passive_outbreak><reporting_officer>Administrative user</reporting_officer><geo2>western cape</geo2><report_date>2009-07-08</report_date><outbreak_status>init_01</outbreak_status><prepared_date>2009-07-08</prepared_date><ibar_date>2009-07-08</ibar_date><dvs_date>2009-07-08</dvs_date><is_date>2009-07-08</is_date><tested_for_quality>init_02</tested_for_quality><remarks>AJTPGM</remarks><vet_date>2009-07-08</vet_date><occurence_date>2009-07-08</occurence_date><diagnosis_date>2009-07-08</diagnosis_date><investigation_date>2009-07-08</investigation_date><location>cape town</location><latitude><degrees>21</degrees><minutes>18.5</minutes><direction>N</direction></latitude><longitude><degrees>25</degrees><minutes>45.74</minutes><direction>E</direction></longitude><disease>init_06</disease><causative>init_04</causative><species>init_04</species><age_group>init_01</age_group><sex>init_03</sex><production_type>init_05</production_type><control_measure>init_01</control_measure><basis_of_diagnosis>init_01</basis_of_diagnosis><susceptible>2</susceptible><cases>2</cases><deaths>2</deaths><vaccinated>2</vaccinated><slaughtered>2</slaughtered><destroyed>2</destroyed><production>2</production><new_cases>2</new_cases><recovered>2</recovered><prophylactic>3</prophylactic><vaccine_source>JT</vaccine_source><vaccine_batch>.B</vaccine_batch><vaccine_manufacture_date>2009-07-08</vaccine_manufacture_date><vaccine_expire_date>2009-07-08</vaccine_expire_date><panvac_tested>1</panvac_tested></passive_outbreak>';
+				$result = $this->objPassive->insertDataFromJavaRosa($xmlString);
+				switch ($result) {
+					case 0: echo "Data Submitted Successfully.";
+							break;
+					case 1: echo "Error: The specified Reporting Officer doesn't exist. Please contact an administrator.";
+							break;
+					case 2: echo "Error: The specified Geo Level 2 doesn't exist. Please contact and administrator.";
+							break;
+					case 3: echo "Error: The specified Location doesn't exist. Please contact and administrator.";
+							break;
+					default: echo "Error: There was a problem submitting the data. Please contact and administrator.";
+							break;
+						
+				}
 				break;
 			
 			case 'unset':
