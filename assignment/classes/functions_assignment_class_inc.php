@@ -403,7 +403,7 @@ class functions_assignment extends object
 			    
 			    $objTable->addCell('<p>'.$objFileIcon->getFileIcon($fileName).' '.$downloadLink->show().'</p>','8%','','',$class);
 		    }else{
-			$this->objIcon->title=$commenthead;
+			$this->objIcon->title=$viewLabel;
 		    	$this->objIcon->setIcon('comment_view');
 		   	$commentIcon = $this->objIcon->show();
 
