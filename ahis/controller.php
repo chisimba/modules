@@ -210,10 +210,15 @@ class ahis extends controller {
         
         switch ($action) {
 			
-			case "tmp":
+			case 'tmp':
 				echo $this->objPassive->nextRefNo();
 				die;
 				
+			case 'jrupload':
+				log_debug('GOT JAVAROSA DATA');
+				log_debug('JAVAROSA POST: '.print_r($_POST,true));
+				break;
+			
 			case 'unset':
 				$this->unsetPassiveSession();
 				$this->unsetActiveSession();
