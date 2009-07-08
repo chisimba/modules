@@ -104,4 +104,12 @@ foreach ($questions as $question)
     echo $str;
     $counter++;
 }
+//Get Object
+$this->objIcon = &$this->newObject('geticon', 'htmlelements');
+$objLayer3 = $this->newObject('layer','htmlelements');
+$this->objIcon->setIcon('close');
+$this->objIcon->extra=" onclick='javascript:window.close()'";
+$objLayer3->align='center';
+$objLayer3->str=$this->objIcon->show();
+echo $objLayer3->show();
 ?>
