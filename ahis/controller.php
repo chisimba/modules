@@ -216,7 +216,7 @@ class ahis extends controller {
 				
 			case 'jrupload':
 				log_debug('GOT JAVAROSA DATA');
-				log_debug('JAVAROSA POST: '.print_r($_POST,true));
+				log_debug('JAVAROSA POST: '.serialize($_POST));
 				echo 'Submitted';
 				break;
 			
