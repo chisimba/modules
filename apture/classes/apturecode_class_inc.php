@@ -63,17 +63,22 @@ class apture extends object
     *
     */
     public $userName='';
+    private $_aptureToken;
+    private $_uid;
     
     /**
     *
-    * Constructor for the twitterremote class
+    * Constructor for the twitterremo$aptureTokente class
     * @access public
     * @return VOID
     *
     */
     public function init()
     {
+        $objGuess = $this->getObject('bestguess', 'utilities');
+        $this->_uid = $objGuess->guessUserId();
     }
+    
     
     
     /**
@@ -81,7 +86,38 @@ class apture extends object
      */
     public function getAptureToken()
     {
-    	
+        if ($this->_uid) {
+        	if ($this->hasAptureToken($this->_uid)) {
+        	    return $this->_aptureToken($this->uid)
+        	} else {
+        	    return NULL;
+        	}
+        } else {
+            return NULL;
+        }
+    }
+    
+
+    /**
+    *
+    * Method to determing if the user has a apture token specified
+    * in userparams.
+    *
+    * @access public
+    * @return boolean TRUE|FALSE
+    *
+    */
+    public function hasAptureToken($userName)
+    {
+        $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
+        $objUserParams->readConfig();
+        $aptureToken = $this->objUserParams->getValue("apturetoken");
+        if ($aptureToken == NULL) {
+            return FALSE;
+        } else {
+            $this->$_aptureToken = $aptureToken;
+            return TRUE;
+        }
     }
     
     
