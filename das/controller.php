@@ -211,6 +211,7 @@ class das extends controller {
                 $users = $this->objDbImPres->getAll();//ActiveUsers(); 
                 foreach ( $users as $user ) {
                     $conn2->message ( $user ['person'], $msg );
+                    usleep(2000);
                 }
                 $time_end = microtime ( TRUE );
                 $time = $time_end - $time_start;
