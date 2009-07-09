@@ -142,9 +142,10 @@ class apture extends controller
 
     private function __default()
     {
+        $usr = $this->objUser->userName();
         $str="<h1>Testing the Apture module</h1>";
         $objApture = $this->getObject('apturecode','apture');
-        if ($objApture->hasAptureToken('admin')) {
+        if ($objApture->hasAptureToken($usr)) {
             $token = $objApture->aptureToken;
             $str .= "Token: " . $token;
             $str .= $objApture->getAptureScript($token);

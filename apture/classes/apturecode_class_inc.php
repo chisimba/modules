@@ -93,8 +93,8 @@ class apturecode extends object
     */
     public function init()
     {
-        $objGuess = $this->getObject('bestguess', 'utilities');
-        $this->_uid = $objGuess->guessUserId();
+        $objUser = $this->getObject('user', 'security');
+        $this->_uid = $objUser->userName();
     }
     
     /**
@@ -106,13 +106,18 @@ class apturecode extends object
     * @access public
     *
     */
-    public function getAptureScript($token)
+    public function getAptureScript()
     {
-        return '<script id="aptureScript" '
-          . 'type="text/javascript" '
-          . 'src="http://www.apture.com/js/apture.js?siteToken='
-          . $token .'" charset="utf-8">'
-          . '</script>';
+        $token = $this->getAptureToken();
+        if ($token) {
+            return '<script id="aptureScript" '
+              . 'type="text/javascript" '
+              . 'src="http://www.apture.com/js/apture.js?siteToken='
+              . $token .'" charset="utf-8">'
+              . '</script>';
+        } else {
+            return NULL;
+        }
     }
     
     
@@ -127,7 +132,7 @@ class apturecode extends object
     {
         if ($this->_uid) {
         	if ($this->hasAptureToken($this->_uid)) {
-        	    return $this->_aptureToken($this->uid);
+        	    return $this->aptureToken;
         	} else {
         	    return NULL;
         	}
