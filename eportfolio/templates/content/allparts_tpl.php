@@ -57,8 +57,13 @@ $categorypage = '';
 $categorytypepage = '';
 //Get Group Name
 $groupname = $this->_objGroupAdmin->getName($groupId);
+
 //Get the subgroups which represent the various parts of the eportfolio ie a goal item, an activity item
 $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
+//Store the GroupId
+//var_dump($isSubGroup);
+//var_dump($groupId);
+
 $objHeading->type = 1;
 $objHeading->align = center;
 $objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
@@ -69,6 +74,8 @@ echo "</br>";
 $objHeading->type = 2;
 $objHeading->str = '<font color="#FF8800">' . $objUser->getSurname() . ', ' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $groupname . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . '</font>';
 echo $objHeading->show();
+$mygroupId = new hiddeninput("mygroupId", $groupId);
+
 echo "</br>";
 //Link to epms home
 $iconSelect = $this->getObject('geticon', 'htmlelements');
@@ -1214,11 +1221,9 @@ if (!$hasAccess) {
         $assertionstable->endRow();
     }
     //Store the GroupId
-    $groupId = new hiddeninput("groupId", $groupId);
-    $row = array(
-        $groupId->show()
-    );
-    $assertionstable->addRow($row, NULL);
+    //$groupId = new hiddeninput("groupId", $groupId);
+    //$row = array( $groupId->show() );
+    //$assertionstable->addRow($row, NULL);
 } //end else hasAccess
 //End View Assertions
 //Information Title
@@ -1345,6 +1350,6 @@ $tabBox->addTab(array(
     'content' => $myeportfolioTab
 ) , 'winclassic-tab-style-sheet');
 //echo $tabBox->show();
-$form->addToForm($myeportfolioTab . '<div align="center" >' . $button->show() . '</div>');
+$form->addToForm($myeportfolioTab . '<div align="center" >' . $button->show() .$mygroupId->show(). '</div>');
 echo $form->show();
 ?>

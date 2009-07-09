@@ -383,9 +383,11 @@ class eportfolio extends controller
                 
             case 'addparts':
                 $selectedParts = $this->getArrayParam('arrayList');
-                $groupId = $this->getParam('groupId', NULL);
+                $groupId = $this->getParam('mygroupId', NULL);
+                //var_dump($groupId);
                 if(empty($groupId))
                 $groupId = $this->getSession('groupId', $groupId);
+
                 $this->setVarByRef('groupId', $groupId);
                 //Get user Groups
                 //$userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
@@ -395,6 +397,7 @@ class eportfolio extends controller
 		$group_define_name = array();
 		
                 if (empty($selectedParts)) {
+		 if (!empty($userGroups[0])) {
 		    foreach($userGroups[0] as $userGroup){
 			$group_define_name[] = $userGroup['group_define_name'];		
 		    }
@@ -402,7 +405,7 @@ class eportfolio extends controller
 	                $grpId = $this->_objGroupAdmin->getId($partPid);
 	                $this->_objGroupAdmin->deleteGroup($grpId);
 	            }
-
+		 }
                 } else {
                     // Get the added member ids
                     $addList = array_diff($selectedParts, $group_define_name);
@@ -2199,6 +2202,7 @@ class eportfolio extends controller
         //Add Group Link
         $iconAdd = $this->getObject('geticon', 'htmlelements');
         $iconAdd->setIcon('add');
+        $iconAdd->title = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');
         $iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');
         $addlink = new link($this->uri(array(
             'module' => 'eportfolio',
@@ -2264,6 +2268,7 @@ class eportfolio extends controller
             $iconManage = $this->getObject('geticon', 'htmlelements');
             $iconManage->setIcon('add_icon');
             $iconManage->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $groupName;
+            $iconManage->title = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $groupName;
             $mnglink = new link($this->uri(array(
                 'module' => 'eportfolio',
                 'action' => 'viewgroups',
@@ -2275,8 +2280,8 @@ class eportfolio extends controller
             //Manage Group
             $iconShare = $this->getObject('geticon', 'htmlelements');
             $iconShare->setIcon('fileshare');
-            //var_dump($objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio'));
             $iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
+            $iconShare->title = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
             $mnglink = new link($this->uri(array(
                 'module' => 'eportfolio',
                 'action' => 'manage_eportfolio',
