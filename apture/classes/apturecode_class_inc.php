@@ -3,7 +3,15 @@
  *
  * Apture plugin for Chisimba
  *
+ *  Apture is a service that allows publishers and bloggers to link and 
+ *  incorporate multimedia into a dynamic layer above their pages. Apture 
+ *  is currently being used by several large organizations and publishers 
+ *  including The Washington Post, The San Francisco Chronicle, O'Reilly 
+ *  Radar, and the World Wide Fund for Nature as well as individual 
+ *  bloggers. Plugin are available for a number of platforms, including
+ *  now Chisimba.
  *  
+ *  @See http://www.apture.com
  *
  * PHP version 5
  *
@@ -49,12 +57,22 @@ $GLOBALS['kewl_entry_point_run'])
 /**
 *
 * Apture plugin for Chisimba
+* 
+*  Apture is a service that allows publishers and bloggers to link and 
+*  incorporate multimedia into a dynamic layer above their pages. Apture 
+*  is currently being used by several large organizations and publishers 
+*  including The Washington Post, The San Francisco Chronicle, O'Reilly 
+*  Radar, and the World Wide Fund for Nature as well as individual 
+*  bloggers. Plugin are available for a number of platforms, including
+*  now Chisimba.
+*  
+*  @See http://www.apture.com
 *
 * @author Derek Keats
 * @package apture
 *
 */
-class apture extends object
+class apturecode extends object
 {
     /**
     *
@@ -63,7 +81,7 @@ class apture extends object
     *
     */
     public $userName='';
-    private $_aptureToken;
+    public $aptureToken;
     private $_uid;
     
     /**
@@ -79,16 +97,37 @@ class apture extends object
         $this->_uid = $objGuess->guessUserId();
     }
     
+    /**
+    * 
+    * Method to return the Apture Script 
+    * 
+    * @param $token The string value of the apture token
+    * @return string The apture script for insertion 
+    * @access public
+    *
+    */
+    public function getAptureScript($token)
+    {
+        return '<script id="aptureScript" '
+          . 'type="text/javascript" '
+          . 'src="http://www.apture.com/js/apture.js?siteToken='
+          . $token .'" charset="utf-8">'
+          . '</script>';
+    }
+    
     
     
     /**
-     * 
-     */
-    public function getAptureToken()
+    * 
+    * Method to get the Apture token from the user identified 
+    * by $this->_uid
+    * 
+    */
+    private function getAptureToken()
     {
         if ($this->_uid) {
         	if ($this->hasAptureToken($this->_uid)) {
-        	    return $this->_aptureToken($this->uid)
+        	    return $this->_aptureToken($this->uid);
         	} else {
         	    return NULL;
         	}
@@ -111,15 +150,13 @@ class apture extends object
     {
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         $objUserParams->readConfig();
-        $aptureToken = $this->objUserParams->getValue("apturetoken");
+        $aptureToken = $objUserParams->getValue("apturetoken");
         if ($aptureToken == NULL) {
             return FALSE;
         } else {
-            $this->$_aptureToken = $aptureToken;
+            $this->aptureToken = $aptureToken;
             return TRUE;
         }
     }
-    
-    
 }
 ?>
