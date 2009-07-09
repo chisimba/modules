@@ -1,0 +1,47 @@
+
+<iq id="hTWjV-22" to="davidwaf@lamia/Smack" type="result">
+    <query xmlns="iq:avoir-realtime:realtime">
+        <mode>room-resources</mode>
+        <content>
+            <fileview>
+                <file>
+                    <file-name>apple.odp</file-name>
+                    <file-path>/opt/openfire/bin/../avoir-realtime-1.0.2/slideshows/davidwaf/apple.odp</file-path>
+                    <is-directory>false</is-directory>
+                    <access>private</access>
+                    <version>0</version>
+                </file>
+                <file>
+                    <file-name>testslide1.odp</file-name>
+                    <file-path>/opt/openfire/bin/../avoir-realtime-1.0.2/slideshows/davidwaf/testslide1.odp</file-path>
+                    <is-directory>false</is-directory>
+                    <access>private</access>
+                    <version>0</version>
+                </file>
+                <file>
+                    <file-name>apple.odp</file-name>
+                    <file-path>/opt/openfire/bin/../avoir-realtime-1.0.2/slideshows/davidwaf/apple.odp</file-path>
+                    <is-directory>false</is-directory>
+                    <access>private</access>
+                    <version>0</version>
+                </file>
+                <file>
+                    <file-name>csur.odp</file-name>
+                    <file-path>/opt/openfire/bin/../avoir-realtime-1.0.2/slideshows/davidwaf/csur.odp</file-path>
+                    <is-directory>false</is-directory>
+                    <access>private</access>
+                    <version>0</version>
+                </file>
+                <file>
+                    <file-name>csur.odp</file-name>
+                    <file-path>/opt/openfire/bin/../avoir-realtime-1.0.2/slideshows/davidwaf/csur.odp</file-path>
+                    <is-directory>false</is-directory>
+                    <access>private</access>
+                    <version>0</version>
+                </file>
+            </fileview>
+            <current-wb></current-wb>
+            <schedules></schedules>
+        </content>
+    </query>
+</iq>
