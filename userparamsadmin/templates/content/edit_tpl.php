@@ -43,10 +43,17 @@ echo $objHeading->show();
 
 
 //Retrieve the data
-    $id = (isset($keyEdit)) ? $keyEdit : '';
-    $pname = (isset($keyEdit)) ? $keyEdit : '';
-    $ptag = (isset($valueEdit)) ? $valueEdit : '';
-    
+$id = (isset($keyEdit)) ? $keyEdit : '';
+$pname = (isset($keyEdit)) ? $keyEdit : '';
+$ptag = (isset($valueEdit)) ? $valueEdit : '';
+
+// Make it easy to build links to add parameters
+if ($mode=="add") {
+    if ($pname=='') {
+        // Get it from the querystring
+        $pname=$this->getParam('key','');
+    }
+}        
 
 //Create an element for the hidden text input
 $objElement = new textinput("id");
@@ -72,7 +79,10 @@ if ($mode=="edit") {
     }
     $txtToShow = $objElement->show() . $pname;
 } else {
-    //We are adding
+    // We are adding.
+    if (isset($pname)) {
+        $objElement->setValue($pname);
+    }
     $txtToShow = $objElement->show();
 }
 
