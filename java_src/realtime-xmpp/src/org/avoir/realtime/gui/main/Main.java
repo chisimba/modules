@@ -59,7 +59,7 @@ public class Main {
             System.out.println("arg[" + c + "] = " + arg);
             c++;
         }
-        UIUtils.setPreferredLookAndFeel();
+        //UIUtils.setPreferredLookAndFeel();
         NativeInterface.open();
         LoginFrame fr = new LoginFrame();
 
