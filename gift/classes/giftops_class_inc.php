@@ -27,5 +27,18 @@ class giftops extends object {
         $form = $this->createForm();
         
     }
+function sendEmail($subject, $body) {
+		
+		$objSysconfig = $this->getObject('dbsysconfig','sysconfig');
+		$adminemail = $objSysconfig->getValue('adminmail','gifts');
+		$objMailer = $this->getObject('email', 'mail');
+		$to = array($adminemail,'ana.m.ferreira@wits.ac.za');
+		$objMailer->setValue('to', $to);
+		$objMailer->setValue('from', 'noreply@wits.ac.za');
+		$objMailer->setValue('subject', $subject);
+		$objMailer->setValue('body', $body);
+		$objMailer->send(FALSE);
+
+	}
 }
 ?>
