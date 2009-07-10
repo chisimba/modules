@@ -131,12 +131,14 @@ public class RoomListFrame extends javax.swing.JDialog {
         decorateTable();
     }
 
-    public void requestRoomList() {
+    public String requestRoomList() {
+        
         RealtimePacket p = new RealtimePacket(RealtimePacket.Mode.REQUEST_ROOM_LIST);
         StringBuilder sb = new StringBuilder();
         sb.append("<room-owner>").append(ConnectionManager.getUsername()).append("</room-owner>");
         p.setContent(sb.toString());
         ConnectionManager.sendPacket(p);
+        return p.getPacketID();
     }
 
     public void populateRooms(final ArrayList<Map> mapList) {

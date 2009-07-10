@@ -241,6 +241,7 @@ public class LoginFrame extends javax.swing.JFrame {
         setTitle("Realtime Avoir Login");
 
         loginButton.setText("Login");
+        loginButton.setName("loginButton"); // NOI18N
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginButtonActionPerformed(evt);
@@ -282,6 +283,7 @@ public class LoginFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         mainPanel.add(passwordLabel, gridBagConstraints);
 
+        usernameField.setName("usernameField"); // NOI18N
         usernameField.setPreferredSize(new java.awt.Dimension(269, 21));
         usernameField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -297,6 +299,7 @@ public class LoginFrame extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         mainPanel.add(usernameField, gridBagConstraints);
 
+        passwordField.setName("passwordField"); // NOI18N
         passwordField.setPreferredSize(new java.awt.Dimension(10, 21));
         passwordField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

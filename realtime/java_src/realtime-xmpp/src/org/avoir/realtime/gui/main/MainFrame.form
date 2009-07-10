@@ -271,6 +271,9 @@
       </SubComponents>
     </Container>
     <Menu class="javax.swing.JMenuBar" name="screenShareItem">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="mainMenubar" noResource="true"/>
+      </Properties>
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="fileMenutem">
           <Properties>

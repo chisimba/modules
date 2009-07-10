@@ -10,6 +10,7 @@
  */
 package org.avoir.realtime.gui.main;
 
+import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import javax.swing.JProgressBar;
 import org.avoir.realtime.gui.webbrowser.RWebBrowserListener;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
@@ -108,6 +109,30 @@ public class MainFrame extends javax.swing.JFrame {
     private RoomMemberListFrame roomMemberListFrame;
     private SlideScroller slideScroller = new SlideScroller();
     private JTabbedPane scrollerTabbedPane = new JTabbedPane();
+
+    public static void main(String[] args) {
+        StandAloneManager.isAdmin = true;
+        ConnectionManager.audioVideoUrlReady = true;
+        ConnectionManager.flashUrlReady = true;
+        NativeInterface.open();
+        String audioVideoUrl = "localhost:7070/red5";
+        if (ConnectionManager.init(args[0], Integer.parseInt(args[1]), args[2])) {
+            String roomName = "admin";
+            String username = "admin";
+            if (ConnectionManager.login(username, "admin", roomName)) {
+                MainFrame fr = new MainFrame(roomName);
+                fr.setTitle(username + "@" + roomName + ": Realtime Virtual Classroom");
+                fr.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+                fr.setVisible(true);
+
+            } else {
+                System.out.println("cant login");
+            }
+        } else {
+            System.out.println("cant connect to server");
+        }
+
+    }
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
@@ -644,7 +669,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         instToolbar.add(newRoomButton);
 
-        changeRoomButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        changeRoomButton.setFont(new java.awt.Font("Dialog", 0, 11));
         changeRoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/join_room.png"))); // NOI18N
         changeRoomButton.setText("Change Room");
         changeRoomButton.setBorderPainted(false);
@@ -765,7 +790,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         partiToolbar.setRollover(true);
 
-        notepadButton1.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        notepadButton1.setFont(new java.awt.Font("Dialog", 0, 11));
         notepadButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
         notepadButton1.setText("Notepad");
         notepadButton1.setBorderPainted(false);
@@ -789,7 +814,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         partiToolbar.add(notepadButton1);
 
-        changeRoomButton1.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        changeRoomButton1.setFont(new java.awt.Font("Dialog", 0, 11));
         changeRoomButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/join_room.png"))); // NOI18N
         changeRoomButton1.setText("Change Room");
         changeRoomButton1.setBorderPainted(false);
@@ -846,6 +871,8 @@ public class MainFrame extends javax.swing.JFrame {
         mainSplitPane.setRightComponent(surfacePanel);
 
         getContentPane().add(mainSplitPane, java.awt.BorderLayout.CENTER);
+
+        screenShareItem.setName("mainMenubar"); // NOI18N
 
         fileMenutem.setText("File");
 

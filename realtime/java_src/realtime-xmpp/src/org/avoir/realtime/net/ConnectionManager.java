@@ -68,7 +68,15 @@ public class ConnectionManager {
     private static Timer connectionTimer = new Timer();
     private static int connectionCount = 0;
     private static int maxConnectionCount = 3;
+    private static int connectionType = Constants.Proxy.NO_PROXY;
 
+    /**
+     * This initiates connection to openfire server
+     * @param server
+     * @param port
+     * @param mediaUrl
+     * @return
+     */
     public static boolean init(String server, int port, String mediaUrl) {
 
         PORT = port;
@@ -76,24 +84,19 @@ public class ConnectionManager {
         System.out.println("connecting to " + server + ":" + PORT);
         ConnectionManager.server = server;
 
-        int connectionType = Constants.Proxy.NO_PROXY;
-
         boolean doconnect = true;
         int max = 12;
         int count = 0;
         while (doconnect) {
-
-            try {
-                connectionType = Integer.parseInt(GeneralUtil.getProperty("connection.type"));
-            } catch (NumberFormatException ex) {
-                ex.printStackTrace();
-            }
+            //acquire connection type
+            acquireCurrentConnectionType();
             if (connectionType == Constants.Proxy.NO_PROXY) {
                 if (connectDirect()) {
                     return true;
                 } else {
                     alertTimeOut();
                 }
+
             } else if (connectionType == Constants.Proxy.HTTP_PROXY) {
                 if (connectViaHttpProxy()) {
                     return true;
@@ -110,6 +113,23 @@ public class ConnectionManager {
 
     }
 
+    /**
+     * This method get the current connection type. Any type you display
+     * options dialog to the user, call this method before attempting 
+     * further connections. The user might have changed connection options
+     */
+    private static void acquireCurrentConnectionType() {
+        try {
+            connectionType = Integer.parseInt(GeneralUtil.getProperty("connection.type"));
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Alert the user of failed connection. Give them a change to change connection
+     * options. If they choose no, then just display a failed connection dialog
+     */
     private static void alertTimeOut() {
         Main.disposeBanner();
 
@@ -118,9 +138,15 @@ public class ConnectionManager {
                 JOptionPane.YES_NO_OPTION);
         if (n == JOptionPane.YES_OPTION) {
             LoginFrame.showOptionsFrame();
+            acquireCurrentConnectionType();
             Main.startBanner();
         } else {
-            System.exit(0);
+
+            ConnectionFailedDialog dl = new ConnectionFailedDialog(new javax.swing.JFrame(), true);
+            dl.setSize(400, 300);
+            dl.setLocationRelativeTo(null);
+            dl.setVisible(true);
+
         }
     }
 
@@ -161,6 +187,10 @@ public class ConnectionManager {
         config = new ConnectionConfiguration(server, PORT, resource, proxy);
         connection = new XMPPConnection(config);
         return connect();
+    }
+
+    public static ConnectionManager getInstance() {
+        return new ConnectionManager();
     }
 
     private static boolean connect() {
@@ -221,6 +251,7 @@ public class ConnectionManager {
             ex.printStackTrace();
         }
     }
+
     public static void setAUDIO_VIDEO_URL(String AUDIO_VIDEO_URL) {
         ConnectionManager.AUDIO_VIDEO_URL = AUDIO_VIDEO_URL;
     }
