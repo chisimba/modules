@@ -139,8 +139,23 @@ class apture extends controller
 
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
-
+    
     private function __default()
+    {
+        $usr = $this->objUser->userName();
+        $objApture = $this->getObject('apturecode','apture');
+        if ($objApture->hasAptureToken($usr)) {
+            $token = $objApture->aptureToken;
+            $link = "http://localhost/ch/index.php?module=userparamsadmin&action=edit&key=apturetoken";
+            
+        } else {
+            $link = "http://localhost/ch/index.php?module=userparamsadmin&action=add&key=apturetoken";
+        }
+        $this->setVarByRef('str', $link . "WORKING HERE");
+        return "dump_tpl.php";
+    }
+
+    private function __testing()
     {
         $usr = $this->objUser->userName();
         $str="<h1>Testing the Apture module</h1>";
