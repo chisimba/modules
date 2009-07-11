@@ -86,15 +86,20 @@ class apturecode extends object
     
     /**
     *
-    * Constructor for the twitterremo$aptureTokente class
+    * Constructor for the aptureToken class
     * @access public
     * @return VOID
     *
     */
     public function init()
     {
-        $objUser = $this->getObject('user', 'security');
-        $this->_uid = $objUser->userName();
+        // This enables the thing to work as a blog plugin.
+        $objGuess = $this->getObject('bestguess', 'utilities');
+        $un = $objGuess->guessUserName();
+        if ($un) {
+            $this->_uid = $un;
+        }
+        $this->mod = $objGuess->identifyModule();
     }
     
     /**
@@ -108,13 +113,19 @@ class apturecode extends object
     */
     public function getAptureScript()
     {
-        $token = $this->getAptureToken();
-        if ($token) {
-            return '<script id="aptureScript" '
-              . 'type="text/javascript" '
-              . 'src="http://www.apture.com/js/apture.js?siteToken='
-              . $token .'" charset="utf-8">'
-              . '</script>';
+        // Which modules should it work with?
+        $permittedModules=array('blog');
+        if (in_array($this->mod, $permittedModules)) {
+            $token = $this->getAptureToken();
+            if ($token) {
+                return '<script id="aptureScript" '
+                  . 'type="text/javascript" '
+                  . 'src="http://www.apture.com/js/apture.js?siteToken='
+                  . $token .'" charset="utf-8">'
+                  . '</script>';
+            } else {
+                return NULL;
+            }
         } else {
             return NULL;
         }
@@ -130,6 +141,7 @@ class apturecode extends object
     */
     private function getAptureToken()
     {
+        
         if ($this->_uid) {
         	if ($this->hasAptureToken($this->_uid)) {
         	    return $this->aptureToken;
@@ -154,6 +166,7 @@ class apturecode extends object
     public function hasAptureToken($userName)
     {
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
+        $objUserParams->setUid($userName);
         $objUserParams->readConfig();
         $aptureToken = $objUserParams->getValue("apturetoken");
         if ($aptureToken == NULL) {

@@ -146,16 +146,24 @@ class apture extends controller
         $objApture = $this->getObject('apturecode','apture');
         if ($objApture->hasAptureToken($usr)) {
             $token = $objApture->aptureToken;
-            $link = "http://localhost/ch/index.php?module=userparamsadmin&action=edit&key=apturetoken";
+            $linkText = $this->objLanguage->languageText("mod_apture_edittoken", "apture");
+            $title = '<h1>' . $this->objLanguage->languageText("mod_apture_edittitle", "apture") . '</h1>';
+            $params = array ('action'=>'edit', 'key'=>'apturetoken', 'value'=>$token);
+            $link = $this->uri($params, 'userparamsadmin');
+            $link = "<a href='$link'>$linkText</a>";
             
         } else {
-            $link = "http://localhost/ch/index.php?module=userparamsadmin&action=add&key=apturetoken";
+            $linkText = $this->objLanguage->languageText("mod_apture_addtoken", "apture");
+            $title = '<h1>' . $this->objLanguage->languageText("mod_apture_addtitle", "apture") . '</h1>';
+            $params = array ('action'=>'add', 'key'=>'apturetoken');
+            $link = $this->uri($params, 'userparamsadmin');
+            $link = "<a href='$link'>$linkText</a>";
         }
-        $this->setVarByRef('str', $link . "WORKING HERE");
+        $this->setVarByRef('str', $title . $link);
         return "dump_tpl.php";
     }
 
-    private function __testing()
+    private function __test()
     {
         $usr = $this->objUser->userName();
         $str="<h1>Testing the Apture module</h1>";
