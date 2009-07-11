@@ -81,7 +81,21 @@ class apturecode extends object
     *
     */
     public $userName='';
+    
+    /**
+    *
+    * @var string $aptureToken The apture token of the user
+    * @access public
+    *
+    */
     public $aptureToken;
+    
+    /**
+    *
+    * @var string $_uid THe user name of the best guess user
+    * @access public
+    *
+    */
     private $_uid;
     
     /**
@@ -137,6 +151,9 @@ class apturecode extends object
     * 
     * Method to get the Apture token from the user identified 
     * by $this->_uid
+    * 
+    * @return string Token or NULL if no token found
+    * @access private
     * 
     */
     private function getAptureToken()

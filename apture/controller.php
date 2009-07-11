@@ -140,6 +140,16 @@ class apture extends controller
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
     
+    /**
+    *
+    * If you have a token, it allows you to edit it using
+    * userparamsadmin, else it allows you to create it using
+    * userparamsadmin
+    * 
+    * @return string The contents of the dump template
+    * @access private
+    *
+    */
     private function __default()
     {
         $usr = $this->objUser->userName();
@@ -163,6 +173,14 @@ class apture extends controller
         return "dump_tpl.php";
     }
 
+    /**
+    * 
+    * Test method, eventually it can be deleted
+    * 
+    * @return string The contents of the dump template
+    * @access private
+    * 
+    */
     private function __test()
     {
         $usr = $this->objUser->userName();
