@@ -88,6 +88,10 @@ class dumbassbot extends controller {
                                             $this->conn->message($pl['from'], "Hello! ".$pl['from']);
                                             break;
                                     }
+                                case 'session_start' :
+                                    $this->conn->getRoster();
+                                    $this->conn->presence( $status = $this->objLanguage->languageText("mod_im_presgreeting", "im") );
+                                    break;
                             }
                         }
                     }
