@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
@@ -51,6 +52,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
     private ImageIcon fileIcon = ImageUtil.createImageIcon(this, "/images/file_small.png");
     private JPopupMenu popup = new JPopupMenu();
+    private JMenuItem refreshItem = new JMenuItem("Refresh");
     private JMenuItem deleteItem = new JMenuItem("Remove Presentation");
     private JMenuItem clearItem = new JMenuItem("Clear Whiteboard");
     public static String selectedPresentation;
@@ -59,6 +61,14 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
 
     public WebpresentNavigator() {
         super(new GridLayout(1, 0));
+
+        this.addMouseListener(new MouseAdapter() {
+
+            public void mousePressed(MouseEvent e) {
+                GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
+            }
+        });
+
 
         rootNode = new DefaultMutableTreeNode("Slides");
         treeModel = new DefaultTreeModel(rootNode);
@@ -84,12 +94,14 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
 
         JScrollPane scrollPane = new JScrollPane(tree);
         add(scrollPane);
-       // populateWithRoomResources();
+        //populateWithRoomResources();
         deleteItem.addActionListener(this);
         deleteItem.setActionCommand("remove");
-
         clearItem.addActionListener(this);
         clearItem.setActionCommand("clear");
+        refreshItem.addActionListener(this);
+        refreshItem.setActionCommand("refresh");
+        popup.add(refreshItem);
         popup.add(deleteItem);
         popup.add(clearItem);
     }
@@ -146,6 +158,9 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         if (evt.getActionCommand().equals("remove")) {
             removeRoomResource();
         }
+        if (evt.getActionCommand().equals("refresh")) {
+            populateWithRoomResources();
+        }
     }
 
     public void resetSlideCount() {
@@ -180,12 +195,12 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
                     selectedPresentation = pFile.getName();
                     resetSlideCount();
                     GUIAccessManager.mf.getSlideScroller().setStartIndex(0);
-                    GUIAccessManager.mf.getSlideScroller().setEndIndex(slideCount > 6 ? 6:slideCount);
+                    GUIAccessManager.mf.getSlideScroller().setEndIndex(slideCount > 6 ? 6 : slideCount);
                     GUIAccessManager.mf.getSlideScroller().refresh();
                 } else {
                     resetSlideCount();
                     GUIAccessManager.mf.getSlideScroller().setStartIndex(0);
-                    GUIAccessManager.mf.getSlideScroller().setEndIndex(slideCount > 6 ? 6:slideCount);
+                    GUIAccessManager.mf.getSlideScroller().setEndIndex(slideCount > 6 ? 6 : slideCount);
 
                     GUIAccessManager.mf.getSlideScroller().refresh();
                 }
@@ -219,6 +234,9 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         String resourceDir = Constants.HOME + "/rooms/" + ChatRoomManager.currentRoomName;
 
         String files[] = new File(resourceDir).list();
+        if (files == null) {
+            return;
+        }
         String standByPresentationId = "";
         java.util.Arrays.sort(files);
         if (files != null) {

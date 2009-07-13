@@ -58,10 +58,11 @@ public class Mode {
     public static final String USER_PROPERTIES = "user-properties";
     public static final String USERLIST_ACCESSLEVEL_REPLY = "userlist-accesslevel-reply";
     public static final String CREATE_ROOM_ERROR = "create-room-error";
-    public static final String SLIDE_SHOW_ROOM_RESOURCES = "room-resources";
+    public static final String ROOM_RESOURCES = "room-resources";
     public static final String DOWNLOAD_ROOM_SLIDE_SHOW = "download-room-slide-show";
     public static final String BROADCAST_OUT_SLIDE = "broadcast-out-slide";
     public static final String ITEM_BROADCAST_FROM_SERVER = "item-broadcast-from-server";
+    public static final String ITEM_HISTORY_FROM_SERVER = "item-history-from-server";
     public static final String MODIFIED_TEXT_BROADCAST = "modified-text-broadcast";
     public static final String SCREEN_SHARE_INVITE_FROM_SERVER = "screen-share-invite-from-server";
     public static final String AUDIO_VIDEO_BROADCAST = "audio-video-broadcast";

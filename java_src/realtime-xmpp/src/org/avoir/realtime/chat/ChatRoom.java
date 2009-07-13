@@ -26,7 +26,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -35,7 +38,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import org.avoir.realtime.common.util.ImageUtil;
-import org.avoir.realtime.gui.userlist.ParticipantListTree;
 import org.avoir.realtime.net.ConnectionManager;
 import org.jivesoftware.smack.packet.Message;
 
@@ -91,6 +93,18 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         init();
     }
 
+    public JTextArea getChatInputField() {
+        return chatInputField;
+    }
+
+    public JTextPane getChatTranscriptField() {
+        return chatTranscriptField;
+    }
+
+    public JPanel getChatUtilPanel() {
+        return chatUtilPanel;
+    }
+
     private void init() {
         initComponents();
 
@@ -106,6 +120,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
 
             @Override
             public void keyTyped(KeyEvent e) {
+                System.out.println("presseed "+e.getKeyCode());
                 if ((e.getKeyChar() == KeyEvent.VK_ENTER) && (e.isShiftDown())) {
                     chatInputField.append("\n");
                 } else if ((e.getKeyChar() == KeyEvent.VK_ENTER) && (!e.isShiftDown())) {
@@ -193,6 +208,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private void showUserEnteredText() {
         if (chatRoomManager != null) {
             if (!typing) {
+               
                 Message msg = chatRoomManager.getMuc().createMessage();
                 msg.setBody(ConnectionManager.fullnames + " is typing ..");
                 msg.setProperty("size", new Integer(9));
@@ -213,6 +229,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     protected void sendChat() {
         if (chatRoomManager != null) {
             if (chatRoomManager.sendMessage(chatInputField.getText(), currentTextsize, currentColor)) {
+                System.out.println("sended "+chatInputField.getText());
                 chatInputField.setText("");
             } else {
                 insertErrorMessage("Your message was not send\n");
@@ -436,6 +453,9 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         chatUtilPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         emotButton = new javax.swing.JButton();
+        fontButton1 = new javax.swing.JButton();
+        saveButton1 = new javax.swing.JButton();
+        sendButton = new javax.swing.JButton();
         chatInputScrollPane = new javax.swing.JScrollPane();
         chatInputField = new javax.swing.JTextArea();
         sysTextField = new javax.swing.JTextField();
@@ -443,9 +463,14 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         chatScrollpane = new javax.swing.JScrollPane();
         chatTranscriptField = new javax.swing.JTextPane();
 
+        setOpaque(false);
+        setPreferredSize(new java.awt.Dimension(100, 277));
         setLayout(new java.awt.BorderLayout());
+
+        topPanel.setOpaque(false);
         add(topPanel, java.awt.BorderLayout.PAGE_START);
 
+        southPanel.setOpaque(false);
         southPanel.setLayout(new java.awt.BorderLayout());
 
         chatUtilPanel.setLayout(new java.awt.BorderLayout());
@@ -454,6 +479,8 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         jToolBar1.setRollover(true);
 
         emotButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/emoticons/emoticon_smile.png"))); // NOI18N
+        emotButton.setBorderPainted(false);
+        emotButton.setContentAreaFilled(false);
         emotButton.setFocusable(false);
         emotButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         emotButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -464,6 +491,38 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         });
         jToolBar1.add(emotButton);
 
+        fontButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/type_1_font.png"))); // NOI18N
+        fontButton1.setBorderPainted(false);
+        fontButton1.setContentAreaFilled(false);
+        fontButton1.setEnabled(false);
+        fontButton1.setFocusable(false);
+        fontButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        fontButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(fontButton1);
+
+        saveButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print_16x16.gif"))); // NOI18N
+        saveButton1.setBorderPainted(false);
+        saveButton1.setContentAreaFilled(false);
+        saveButton1.setEnabled(false);
+        saveButton1.setFocusable(false);
+        saveButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        saveButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(saveButton1);
+
+        sendButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/key_enter.png"))); // NOI18N
+        sendButton.setBorderPainted(false);
+        sendButton.setContentAreaFilled(false);
+        sendButton.setFocusable(false);
+        sendButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        sendButton.setName("enterButton"); // NOI18N
+        sendButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        sendButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(sendButton);
+
         chatUtilPanel.add(jToolBar1, java.awt.BorderLayout.PAGE_END);
 
         southPanel.add(chatUtilPanel, java.awt.BorderLayout.PAGE_START);
@@ -471,18 +530,30 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         chatInputField.setColumns(20);
         chatInputField.setFont(new java.awt.Font("SansSerif", 0, 16));
         chatInputField.setRows(3);
+        chatInputField.setName("chatInput"); // NOI18N
+        chatInputField.setPreferredSize(null);
         chatInputScrollPane.setViewportView(chatInputField);
 
         southPanel.add(chatInputScrollPane, java.awt.BorderLayout.CENTER);
 
         sysTextField.setEditable(false);
+        sysTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sysTextFieldActionPerformed(evt);
+            }
+        });
         southPanel.add(sysTextField, java.awt.BorderLayout.PAGE_END);
 
         add(southPanel, java.awt.BorderLayout.PAGE_END);
 
+        mainPanel.setOpaque(false);
         mainPanel.setLayout(new java.awt.BorderLayout());
 
+        chatScrollpane.setOpaque(false);
+
         chatTranscriptField.setEditable(false);
+        chatTranscriptField.setName("chatTranscript"); // NOI18N
+        chatTranscriptField.setPreferredSize(null);
         chatScrollpane.setViewportView(chatTranscriptField);
 
         mainPanel.add(chatScrollpane, java.awt.BorderLayout.CENTER);
@@ -494,6 +565,14 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         emotPopup.show(emotButton, emotButton.getX(), emotButton.getY() - 100);
     }//GEN-LAST:event_emotButtonActionPerformed
 
+    private void sysTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sysTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sysTextFieldActionPerformed
+
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
+        sendChat();
+}//GEN-LAST:event_sendButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextArea chatInputField;
     private javax.swing.JScrollPane chatInputScrollPane;
@@ -501,8 +580,11 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private javax.swing.JTextPane chatTranscriptField;
     private javax.swing.JPanel chatUtilPanel;
     private javax.swing.JButton emotButton;
+    private javax.swing.JButton fontButton1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JButton saveButton1;
+    private javax.swing.JButton sendButton;
     private javax.swing.JPanel southPanel;
     private javax.swing.JTextField sysTextField;
     private javax.swing.JPanel topPanel;

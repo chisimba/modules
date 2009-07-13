@@ -4,7 +4,6 @@
  */
 package org.avoir.realtime.gui.main;
 
-import chrriis.common.UIUtils;
 //import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import java.awt.BorderLayout;
@@ -24,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
+import org.avoir.realtime.gui.theme.VistaBlueTheme;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.EC2Manager;
 import org.avoir.realtime.net.packets.RealtimePacket;
@@ -35,11 +35,15 @@ import org.jivesoftware.smack.XMPPConnection;
  */
 public class Main {
 
-    public static JFrame banner = new JFrame();
+    public static JFrame banner = new JFrame("Loading ...");
     public boolean DEBUG = false;
     public static Timer ec2LauncherTimer = new Timer();
 
     public Main(String[] args) {
+        //PlafOptions.setAsLookAndFeel();
+        //PlafOptions.setCurrentTheme(new KunststoffPresentationTheme());
+        VistaBlueTheme vistaBlueTheme=new VistaBlueTheme();
+        //vistaBlueTheme.activate();
         boolean browserProxyRequired = new Boolean(System.getProperty("browser.proxy.required"));
         if (browserProxyRequired) {
             //network.proxy_host
@@ -90,11 +94,10 @@ public class Main {
 
                 String presenterRoom = GeneralUtil.formatStr(names, " ");// + "_" + GeneralUtil.formatDate(new Date(), "yyyyMMdd");
                 String defaultRoomName = args[3];
-                //chisimba bug..room name could be invalid if user not logged in
-                if (GeneralUtil.isInvalidRoomName(defaultRoomName)) {
-                    System.out.println(defaultRoomName + " is invalid, fixing ...");
+                //if you are presenter, then room name is your names by default
+                if (WebPresentManager.isPresenter) {
                     defaultRoomName = GeneralUtil.formatStr(names, " ");
-                    System.out.println("Fixed, new room name: " + defaultRoomName);
+                    System.out.println("You are presenter, default room name set to " + defaultRoomName);
                 }
                 String roomName = WebPresentManager.isPresenter ? presenterRoom : defaultRoomName;
                 WebPresentManager.presentationId = args[7];
@@ -115,11 +118,10 @@ public class Main {
                 ConnectionManager.myEmail = email;
                 ConnectionManager.fullnames = names;
                 ConnectionManager.setRoomName(roomName);
-              //  Timer connectionTimer = new Timer();
-              //  connectionTimer.schedule(new ConnectionTimer(), 30 * 1000);
+                //  Timer connectionTimer = new Timer();
+                //  connectionTimer.schedule(new ConnectionTimer(), 30 * 1000);
                 if (ConnectionManager.init(host, port, audioVideoUrl)) {
-                   // connectionTimer.cancel();
-                    ConnectionManager.createUser(username, "--LDAP--", props);
+                    // connectionTimer.cancel();
                     if (ConnectionManager.login(username, "--LDAP--", roomName)) {
                         if (ConnectionManager.useEC2 && joinMeetingId.equals("none")) {
                             disposeBanner();
@@ -149,6 +151,7 @@ public class Main {
                             saveEC2Urls(audioVideoUrl, RealtimePacket.Mode.SAVE_AUDIO_VIDEO_EC2_URL, roomName);
                             saveEC2Urls("openfire-httpflash.wits.ac.za", RealtimePacket.Mode.SAVE_FLASH_EC2_URL, roomName);
                             disposeBanner();
+
                         }
                     } else {
                         disposeBanner();
@@ -170,9 +173,9 @@ public class Main {
             StandAloneManager.isAdmin = true;
             ConnectionManager.audioVideoUrlReady = true;
             ConnectionManager.flashUrlReady = true;
-            String server ="localhost";// args[0];
-            int port =5222;// Integer.parseInt(args[1].trim());
-            String audioVideoUrl ="localhost";// args[2];
+            String server = "localhost";// args[0];
+            int port = 5222;// Integer.parseInt(args[1].trim());
+            String audioVideoUrl = "http://localhost:7070/red5";// args[2];
             fr = new LoginFrame(server, port, audioVideoUrl);
             fr.setSize(400, 300);
             fr.setLocationRelativeTo(null);
@@ -197,7 +200,7 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        XMPPConnection.DEBUG_ENABLED = new Boolean(GeneralUtil.getProperty("debug.enabled"));
+        XMPPConnection.DEBUG_ENABLED =true;// new Boolean(GeneralUtil.getProperty("debug.enabled"));
         new Main(args);
     }
 
@@ -212,7 +215,7 @@ public class Main {
         banner.setBackground(Color.WHITE);
         banner.setLayout(new BorderLayout());
         banner.add(label, BorderLayout.NORTH);
-        banner.add(new Surface(),BorderLayout.CENTER);
+        banner.add(new Surface(), BorderLayout.CENTER);
         banner.add(pb, BorderLayout.SOUTH);
         banner.setLocationRelativeTo(null);
         banner.setVisible(true);

@@ -50,7 +50,7 @@ public class UserSearch extends javax.swing.JFrame {
         try {
             search = new UserSearchManager(connection);
             Form searchForm = search.getSearchForm(serviceName);
-            questionForm = new DataFormUI(searchForm);
+            questionForm = new DataFormUI(searchForm,this);
             add(questionForm, BorderLayout.CENTER);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -65,7 +65,7 @@ public class UserSearch extends javax.swing.JFrame {
         try {
             search = new UserSearchManager(connection);
             Form searchForm = search.getSearchForm(serviceName);
-            questionForm = new DataFormUI(searchForm);
+            questionForm = new DataFormUI(searchForm,this);
             add(questionForm, BorderLayout.CENTER);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -73,7 +73,7 @@ public class UserSearch extends javax.swing.JFrame {
         }
     }
 
-    private void doSearch() {
+    public void doSearch() {
 
         try {
             Form answerForm = questionForm.getFilledForm();
@@ -125,9 +125,11 @@ public class UserSearch extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Search User");
         getContentPane().add(topPanel, java.awt.BorderLayout.PAGE_START);
 
         searchButton.setText("Search");
+        searchButton.setName("searchButton"); // NOI18N
         searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchButtonActionPerformed(evt);
@@ -136,6 +138,7 @@ public class UserSearch extends javax.swing.JFrame {
         cPanel.add(searchButton);
 
         cancelButton.setText("Cancel");
+        cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);

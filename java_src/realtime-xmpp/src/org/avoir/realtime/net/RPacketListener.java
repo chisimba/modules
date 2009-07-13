@@ -192,11 +192,11 @@ public class RPacketListener implements PacketListener {
                 }
             } else if (mode.equals(Mode.ROOM_MEMBERS)) {
                 ArrayList<Map> memberList = RealtimePacketProcessor.getRoomMemberList(packet.getContent());
-                GUIAccessManager.mf.getRoomMemberListFrame().setMembers(memberList);
+                GUIAccessManager.mf.getRoomToolsPanel().getRoomMemberListFrame().setMembers(memberList);
 
             } else if (mode.equals(Mode.ROOM_LIST)) {
                 ArrayList<Map> roomList = RealtimePacketProcessor.getRoomList(packet.getContent());
-                GUIAccessManager.mf.getRoomListFrame().populateRooms(roomList);
+                GUIAccessManager.mf.getRoomToolsPanel().getRoomListFrame().populateRooms(roomList);
 
             } else if (mode.equals(Mode.FILE_UPLOAD_RESULT)) {
                 String content = RealtimePacketProcessor.getTag(packet.getContent(), "message");
@@ -209,9 +209,9 @@ public class RPacketListener implements PacketListener {
                 JOptionPane.showMessageDialog(null, msg);
                 System.exit(0);
             } else if (mode.equals(Mode.ROOM_OWNER_REPLY)) {
-                ConnectionManager.roomOwner = RealtimePacketProcessor.getTag(packet.getContent(), "room-owner");
+                //ConnectionManager.roomOwner = RealtimePacketProcessor.getTag(packet.getContent(), "room-owner");
 
-                if (ConnectionManager.roomOwner.equalsIgnoreCase(ConnectionManager.getUsername())) {
+                if (GeneralUtil.getThisRoomOwner().equalsIgnoreCase(ConnectionManager.getUsername())) {
 
                     if (!WebPresentManager.isPresenter || !StandAloneManager.isAdmin) {
                         WebPresentManager.isPresenter = true;
@@ -224,7 +224,7 @@ public class RPacketListener implements PacketListener {
                 String requesterNames = RealtimePacketProcessor.getTag(packet.getContent(), "requester-name");
                 int n = JOptionPane.showConfirmDialog(null, requesterNames + " is requesting for MIC, grant?", "MIC Request", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
-                    GUIAccessManager.mf.getUserListPanel().getUserListTree().giveMic(requester);
+//                    GUIAccessManager.mf.getUserListPanel().getUserListTree().giveMic(requester);
                 }
             } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
@@ -235,27 +235,28 @@ public class RPacketListener implements PacketListener {
                 if (msgMode.equals("return")) {
                     returnChat = true;
                 }
-                GUIAccessManager.mf.getUserListPanel().getUserListTree().
-                        appendPrivateChat(msg, sender, receiver, returnChat);
+//                GUIAccessManager.mf.getUserListPanel().getUserListTree().
+            //                      appendPrivateChat(msg, sender, receiver, returnChat);
             } else if (mode.equals(Mode.EC2_FLASH_SERVER_READY)) {
                 String host = GeneralUtil.getTagText(packet.getContent(), "host");
                 saveEC2Urls(host, RealtimePacket.Mode.SAVE_FLASH_EC2_URL);
                 ConnectionManager.flashUrlReady = true;
                 ConnectionManager.FLASH_URL = host;
-                GUIAccessManager.mf.getUserListPanel().getAudioVideoStatus().setText("Y");
-                if (ConnectionManager.flashUrlReady) {
-                    GUIAccessManager.mf.getUserListPanel().getStartAudioVideoButton().setEnabled(true);
-                }
+            /*                GUIAccessManager.mf.getUserListPanel().getAudioVideoStatus().setText("Y");
+            if (ConnectionManager.flashUrlReady) {
+            GUIAccessManager.mf.getUserListPanel().getStartAudioVideoButton().setEnabled(true);
+            }
+             */
             } else if (mode.equals(Mode.EC2_AUDIO_VIDEO_SERVER_READY)) {
                 String host = GeneralUtil.getTagText(packet.getContent(), "host");
                 saveEC2Urls(host, RealtimePacket.Mode.SAVE_AUDIO_VIDEO_EC2_URL);
                 ConnectionManager.AUDIO_VIDEO_URL = host;
                 ConnectionManager.audioVideoUrlReady = true;
-                GUIAccessManager.mf.getUserListPanel().getFlashStatus().setText("Y");
-                if (ConnectionManager.flashUrlReady) {
-                    GUIAccessManager.mf.getUserListPanel().getStartAudioVideoButton().setEnabled(true);
-                }
-
+            /*                GUIAccessManager.mf.getUserListPanel().getFlashStatus().setText("Y");
+            if (ConnectionManager.flashUrlReady) {
+            GUIAccessManager.mf.getUserListPanel().getStartAudioVideoButton().setEnabled(true);
+            }
+             */
             } else if (mode.equals(Mode.EC2_MAIN_SERVER_READY)) {
                 String host = GeneralUtil.getTagText(packet.getContent(), "host");
                 String roomname = GeneralUtil.getTagText(packet.getContent(), "roomname");
@@ -332,8 +333,8 @@ public class RPacketListener implements PacketListener {
                 GUIAccessManager.mf.getTabbedPane().setSelectedIndex(index);
             } else if (mode.equals(Mode.DELETE_ROOM_RESOURCE_SUCCESS)) {
                 SlideShowProcessor.deleteLocalSlide(packet.getContent());
-            } else if (mode.equals(Mode.SLIDE_SHOW_ROOM_RESOURCES)) {
-               
+            } else if (mode.equals(Mode.ROOM_RESOURCES)) {
+
                 ArrayList<RealtimeFile> fileView = RealtimePacketProcessor.getFileViewArrayList(packet.getContent(), true);
 
                 String resourceDir = Constants.HOME + "/rooms/" + ChatRoomManager.currentRoomName;
@@ -395,9 +396,27 @@ public class RPacketListener implements PacketListener {
 
                     Item item = RealtimePacketProcessor.getItem(xmlContent, packet.getPacketID());
                     if (item.isNewItem()) {
+                        System.out.println(item);
                         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().addItem(item);
+
                     } else {
                         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().updateItem(item);
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } else if (mode.equals(Mode.ITEM_HISTORY_FROM_SERVER)) {
+                try {
+                    String xmlContent = packet.getContent();
+
+                    Item item = RealtimePacketProcessor.getItem(xmlContent);
+                    if (item.isNewItem()) {
+                        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().addItem(item);
+
+                    } else {
+                        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().updateItem(item);
+
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -561,26 +580,15 @@ public class RPacketListener implements PacketListener {
                 from = from.substring(index + 1);
             }
 
-            String jid = from + "@" + ConnectionManager.getConnection().getServiceName();
-            // from = from + "(" + ConnectionManager.getEmail(jid) + ")";
+
             if (from.length() > 18) {
                 from = from.substring(0, 18) + "..";
             }
-            String user = from;
+            //String user = from;
 
-            if (user.startsWith("jointest:")) {
-                return;
-            }
-            int i = user.lastIndexOf(":");
-            if (i > -1) {
-                String[] s = user.split(":");
-                if (s.length > 2) {
-                    user = s[2];
-                }
-            }
-            from = user;
+            //from = user;
 
-            if (!GUIAccessManager.mf.isActive()) {
+            if (!GUIAccessManager.mf.isActive()){// || GUIAccessManager.mf.chatRoomShowing()) {
                 showChatPopup(from, message.getBody());
             }
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantName("(" + from + ") ");
@@ -645,41 +653,13 @@ public class RPacketListener implements PacketListener {
         }
 
         if (presence.getType() == Presence.Type.unavailable && !"303".equals(code)) {
-
-            String jid = from + "@" + ConnectionManager.getConnection().getServiceName();
-            //from = from + "(" + ConnectionManager.getEmail(jid) + ")";
-            String user = from;
-
-            int i = user.lastIndexOf(":");
-            if (i > -1) {
-                String[] s = user.split(":");
-                if (s.length > 2) {
-                    user = s[2];
-                }
-            }
-            if (!user.startsWith("jointest:")) {
-                GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " left the room\n");
-            }
-            GUIAccessManager.mf.getUserListPanel().getUserListTree().removeUser(user);
-            GUIAccessManager.mf.removeSpeaker(user);
+            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(from + " left the room\n");
+            GUIAccessManager.mf.getParticipantListTree().removeUser(from);
+            GUIAccessManager.mf.removeSpeaker(from);
 
         } else {
-            String jid = from + "@" + ConnectionManager.getConnection().getServiceName();
-            //from = from + "(" + ConnectionManager.getEmail(jid) + ")";
-            String user = from;
-
-            if (user.startsWith("jointest:")) {
-                return;
-            }
-            int i = user.lastIndexOf(":");
-            if (i > -1) {
-                String[] s = user.split(":");
-                if (s.length > 2) {
-                    user = s[2];
-                }
-            }
-            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " joined the room\n");
-            GUIAccessManager.mf.getUserListPanel().getUserListTree().addUser(user, packet.getFrom());
+            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(from + " joined the room\n");
+            GUIAccessManager.mf.getParticipantListTree().addUser(from);
 
         }
     }

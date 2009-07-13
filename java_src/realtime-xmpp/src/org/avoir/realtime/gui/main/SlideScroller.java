@@ -161,7 +161,7 @@ public class SlideScroller extends JPanel implements MouseListener, MouseMotionL
 
             }
         });
-        add(nextButton, BorderLayout.SOUTH);
+        add(nextButton, BorderLayout.EAST);
 
 
 
@@ -178,7 +178,7 @@ public class SlideScroller extends JPanel implements MouseListener, MouseMotionL
 
             }
         });
-        add(backButton, BorderLayout.NORTH);
+        add(backButton, BorderLayout.WEST);
     }
 
     @Override

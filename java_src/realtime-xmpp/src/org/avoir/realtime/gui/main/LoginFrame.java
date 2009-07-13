@@ -108,16 +108,7 @@ public class LoginFrame extends javax.swing.JFrame {
                             EC2Manager.requestLaunchEC2Instance();
                         } else {
                             ConnectionManager.fullnames = ConnectionManager.getConnection().getAccountManager().getAccountAttribute("name");
-                            GeneralUtil.saveProperty("rooms", "");
-                            String rooms = "";
-                            for (int i = 0; i < roomNameField.getItemCount(); i++) {
-                                rooms = roomNameField.getSelectedItem() + "#";
-
-                            }
-                            saveRoomList(rooms);
-                            if (roomName == null) {
-                                roomName = "default";
-                            }
+                            String roomName=GeneralUtil.formatStr(ConnectionManager.fullnames, " ");
                             MainFrame fr = new MainFrame(roomName);
                             fr.setTitle(username + "@" + roomName + ": Realtime Virtual Classroom");
                             fr.setSize(Toolkit.getDefaultToolkit().getScreenSize());

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+<Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Container class="javax.swing.JPanel" name="mPanel">
 
@@ -82,6 +82,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="roomNameField">
           <Properties>
+            <Property name="name" type="java.lang.String" value="roomName" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[269, 21]"/>
             </Property>
@@ -107,6 +108,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="roomDescField">
           <Properties>
+            <Property name="name" type="java.lang.String" value="roomDesc" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[100, 21]"/>
             </Property>
@@ -129,6 +131,7 @@
         </Component>
         <Component class="javax.swing.JSpinner" name="maxMembersField">
           <Properties>
+            <Property name="name" type="java.lang.String" value="maxMembersField" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 27]"/>
             </Property>
@@ -145,6 +148,7 @@
         <Component class="javax.swing.JCheckBox" name="requirePasswordOpt">
           <Properties>
             <Property name="text" type="java.lang.String" value="Require Password"/>
+            <Property name="name" type="java.lang.String" value="requirePasswordField" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -164,6 +168,7 @@
         </Component>
         <Component class="javax.swing.JPasswordField" name="passwordField1">
           <Properties>
+            <Property name="name" type="java.lang.String" value="roomPasswordField" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[200, 21]"/>
             </Property>
@@ -176,6 +181,7 @@
         </Component>
         <Component class="javax.swing.JPasswordField" name="passwordField2">
           <Properties>
+            <Property name="name" type="java.lang.String" value="confirmPasswordField" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[10, 21]"/>
             </Property>
