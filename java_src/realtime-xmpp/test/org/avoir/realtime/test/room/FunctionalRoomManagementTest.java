@@ -5,13 +5,7 @@
 package org.avoir.realtime.test.room;
 
 import org.avoir.realtime.chat.ChatRoomManager;
-import org.avoir.realtime.net.ConnectionManager;
-import org.avoir.realtime.net.packets.RealtimePacket;
-import org.avoir.realtime.net.providers.RealtimePacketProcessor;
 import org.avoir.realtime.test.net.ChisimbaRealtimeTest;
-import org.jivesoftware.smack.PacketCollector;
-import org.jivesoftware.smack.filter.PacketIDFilter;
-import org.jivesoftware.smack.packet.Packet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,9 +15,9 @@ import static org.junit.Assert.*;
  *
  * @author david
  */
-public class DestroyRoom extends ChisimbaRealtimeTest {
+public class FunctionalRoomManagementTest extends ChisimbaRealtimeTest {
 
-    public DestroyRoom() {
+    public FunctionalRoomManagementTest() {
         super();
     }
 
@@ -35,14 +29,17 @@ public class DestroyRoom extends ChisimbaRealtimeTest {
     public static void tearDownClass() throws Exception {
     }
 
+    /**
+     *create and destroy room
+     */
     @Test
-    public void destroyRoom() {
+    public void createDestroyRoom() {
         try {
             String roomname = "testroom0001";
 
             ChatRoomManager chatRoomManager = new ChatRoomManager(roomname);
             chatRoomManager.createRoom(roomname, roomname, false, null);
-            chatRoomManager.doActualJoin(username, roomname, false);
+            chatRoomManager.doActualJoin(roomname, false);
             assertEquals(true, chatRoomManager.destroyRoom(roomname));
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -58,8 +55,8 @@ public class DestroyRoom extends ChisimbaRealtimeTest {
         try {
             String roomname = "testroom003";
             ChatRoomManager chatRoomManager = new ChatRoomManager(roomname);
-            chatRoomManager.doActualJoin(username, roomname, false);
-            assertEquals(true, chatRoomManager.destroyRoom(roomname));
+            chatRoomManager.doActualJoin(roomname, false);
+            assertEquals(false, chatRoomManager.destroyRoom(roomname));
         } catch (Exception ex) {
             ex.printStackTrace();
             fail(ex.getMessage());
