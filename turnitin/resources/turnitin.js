@@ -48,3 +48,23 @@ function addAssignment()
         //alert(workgroupId);
         
     }
+    
+    function getReport(objectid)
+    {
+         
+        jQuery.ajax({
+            type: "GET", 
+            url: "index.php", 
+            data: "module=turnitin&action=ajax_returnreport&objectid="+objectid,
+            success: function(msg){
+                jQuery('#report').html(msg);
+                if ('function' == typeof window.adjustLayout) {
+                    adjustLayout();
+                }
+            }
+        });
+        
+        
+        //alert(workgroupId);
+        
+    }
