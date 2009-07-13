@@ -228,8 +228,8 @@ class turnitinops extends object
 	 *
 	 * @return result
 	 */
-	public function doPost(){
-	  	$params = $this->getParams();
+	public function doPost($headers=""){
+	  	
 	  	$user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
 			
 	  	 //get the proxy info if set
@@ -237,32 +237,42 @@ class turnitinops extends object
         $proxyArr = $objProxy->getProxy();
             
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_POST,1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+		//curl_setopt($ch, CURLOPT_POST,1);
+		
 		curl_setopt($ch, CURLOPT_URL,$this->remote_host);
+		curl_setopt($ch, CURLOPT_POST, 1 );
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
 		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-		
+	
 		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
         {
 			//setup proxy
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			//curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
 			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
 			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
         }
-        //ob_start();
+        $params = $this->getParams();
+       // print $params;
+        //die($params);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+        ob_start();
 		$result=curl_exec ($ch);
+		
+
 		curl_close ($ch);
+		return $result;
 		//$tiixml = new SimpleXMLElement(ob_get_contents());
     	//ob_end_clean();
     	//return $tiixml;
 		//return $this->getXMLResult($result);
 		//print $params;
-		return $result;
-		$tiixml = new SimpleXMLElement($result);
+		//return $result;
+		//$tiixml = new SimpleXMLElement($result);
+		$tiixml = new SimpleXMLElement(ob_get_contents());
+		 ob_end_clean();
 		return $tiixml;
 		//return $result;
 	}
@@ -503,20 +513,33 @@ class turnitinops extends object
     	$this->assign = $params['assignmenttitle'];
     	$this->ctl = $params['classtitle'];
     	
-    	$result = $this->doPost();
+    	
+    	//$result = $this->doPost();
     
-    	if ($result->rcode == 11)
-    	{
-    		print "logging success - doing the submit now";
-    		$this->fid = 5;
-    		$this->ptl = "this the title";
-    		$this->pdata = "You will have a week to complete each 4-5 page paper, in which you will write on ... If you intend to submit a paper which significantly draws ... Please note: All work must be submitted through turnitin.com and in hard copy; ... 61; Fuller, Positivism and Fidelity to Law,” 70; Aquinas, “What is Law,” 76; King, ...";
-    		$this->ptype = 1;
-    		$result = $this->doPost();
-    		print '<br>'.$result->rmessage;
-    	} else {
-    		print $result->rcode.'<br>'.$result->rmessage;
-    	}
+    	//if ($result->rcode == 11)
+    	//{
+    		$file = "/home/wesley/Downloads/ext-core-3.0/LICENSE.txt";
+    		if (file_exists($file))
+    		{   		
+	    		print "logging success - doing the submit now";
+	    		$this->fid = 5;
+	    		$this->ptl = "new title";
+	    		$this->ptype = 1;	
+	    		$filename = "/home/wesley/Downloads/API_Manual.pdf";
+
+				$content = shell_exec('pdftotext '.$filename.' -');    		
+	    		$this->pdata = $content;
+	    		
+	    		$result = $this->doPost();
+	    		print '<br>'.$result;
+	    		//print '<br>'.$result->rmessage;
+	    		//print '<br>'.$result->rcode;
+    		} else {
+    			print "file dont exist";
+    		}
+    	//} else {
+    	//	print $result->rcode.'<br>'.$result->rmessage;
+    	//}
     	
     	print '<br>Done!';
     	//$die($code);
@@ -617,7 +640,7 @@ class turnitinops extends object
     	$this->fid = 6;
     	$this->fcmd = 1;
     	$this->diagnostic = 1;
-    	$this->oid = '100461236';
+    	$this->oid = $this->getParam('objectid');
     	$this->utp = 1; //student
     	$this->diagnostic = 0;
     	
@@ -632,6 +655,7 @@ class turnitinops extends object
     	$this->ctl = $params['classtitle'];
     	
     	return $this->doGet();
+    	//print $this->doPost();
     	$result = $this->doPost();
     	print $result;//->rmessage;
     }

@@ -41,6 +41,7 @@ class turnitin extends controller
 		$this->objUser = $this->getObject('user', 'security');
 		$this->objDBContext = $this->getObject('dbcontext', 'context');
 		$this->objForms = $this->getObject('forms');
+		$this->objTAssDB = $this->getObject('turnitindbass');
 	}
 	
 	/**
@@ -102,13 +103,14 @@ class turnitin extends controller
 														$this->getSubmissionInfo()));
 				break;
 			//student submit a paper
-			case 'sub':
+			case 'sub':				
 				print $this->objTOps->subA(array_merge(
 														$this->getUserParams(), 
 														$this->getClassParams(),  
 														$this->getAssessmentParams(),
 														$this->getSubmissionInfo()));
 				break;
+			case 'ajax_returnreport':
 			case 'returnreport':
 				print $this->objTOps->getReport(array_merge(
 														$this->getUserParams(), 
@@ -162,14 +164,31 @@ class turnitin extends controller
 				
 			//------- Ajax methods-------//
 			case 'ajax_addassignment':
-				echo $this->objForms->addAssignmentForm();
+				//echo "{'success' : 'true', 'msg' : 'ja it works -> ".$this->getParam('title').$this->getParam('startdt').$this->getParam('duedt').$this->getParam('instructions')."'}"; 
+				//echo "{'success' : false, 'errors' : ['clientCode': 'Client not found', 'portOfLoading' : 'This field must not be null']}";   
+				
+				echo $this->doAddAssignment();
 				exit(0);
+				break;
+				
+			case 'json_getassessments':
+				//echo $this->objTAssDB->jsonGetAssessments($this->objDBContext->getContextCode());
+				echo $this->objForms->jsonGetAssessments();
+				exit(0);
+				break;
 		}
 	}
 	
+	
+	
+	/**
+	 * Call the correct template
+	 *
+	 * @return unknown
+	 */
 	public function userTemplate()
 	{
-		
+		return "lectmain_tpl.php";
 		$objContextGroups = $this->getObject('managegroups', 'contextgroups');	
 		if ($this->objUser->isAdmin () || $objContextGroups->isContextLecturer()) 
 		{
@@ -212,17 +231,17 @@ class turnitin extends controller
 			
 			
 			//lect
-			$params['password'] = 'nitsckie';//$username;    	
+			/*$params['password'] = 'nitsckie';//$username;    	
 			$params['username'] = 'wesleynitsckie';
 			$params['firstname'] = 'Wesley';
 			$params['lastname'] = 'Nitsckie';
 			$params['email'] = 'wesleynitsckie@gmail.com';			
-			/*
+			*/
 			$params['password'] = 'student';    	
 			$params['username'] = 'student';
 			$params['firstname'] = 'Student';
 			$params['lastname'] = 'student';
-			$params['email'] = 'student@uwc.ac.za';			*/
+			$params['email'] = 'student@uwc.ac.za';			
 		}
 		
 		return $params;
@@ -260,22 +279,51 @@ class turnitin extends controller
 	{
 		$params = array();
 		
-		$params['assignmenttitle'] = "some assessment title";
-    	$params['assignmentinstruct'] = " please complete the assessment";
-    	$params['assignmentdatestart'] = "20090623";
-    	$params['assignmentdatedue'] = "20090624";    	
-    	$params['assignmendatedue'] = "theid";    	
+		$params['assignmenttitle'] = $this->getParam('title');
+    	$params['assignmentinstruct'] = $this->getParam('instructions');
+    	$params['assignmentdatestart'] = $this->getParam('startdt');
+    	$params['assignmentdatedue'] = $this->getParam('duedt');    	
+    	//$params['assignmendatedue'] = "theid";    	
     	
     	return $params;
 	}
 	
+	public function doAddAssignment()
+	{
+		$successcodes = array(40, 41, 42, 43);
+		$assParams = $this->getAssessmentParams();
+		$rcode = array('rcode'=>42);/*$this->objTOps->createAssessment(array_merge(
+														$this->getUserParams(), 
+														$this->getClassParams(),
+														$assParams));*/
+		if(in_array($rcode['rcode'], $successcodes ))
+		{
+			//add to local database
+			if($this->objTAssDB->addAssignment($this->objDBContext->getContextCode(), $assParams))
+			{
+				return json_encode(array('success' => 'true', 'msg' => 'A new assigment entitled <b>"'.$this->getParam('title').'"</b> was successfully created'));
+			} else {
+				return json_encode(array('success' => false, 'msg' => 'The assigment was create on Turnitin but an error occurred while inserting the details into the database'));
+			}
+		} else {
+			
+			return json_encode(array('success' => false, 'msg' => $rcode['rmessage']));
+		}
+														
+	}
+	
+	/**
+	 * Get Submission data
+	 *
+	 * @return unknown
+	 */
 	public function getSubmissionInfo()
 	{
 		$params = array();
 		
 		$params['papertitle'] = "This is submmitted title";//$this->getParam('papertitle');
-    	$params['papertype'] = 1;
-    	$params['paperdata'] = "";
+    	$params['papertype'] = 2;
+    	$params['paperdata'] = $this->getParam("filedata");
     	
     	return $params;
 	}
