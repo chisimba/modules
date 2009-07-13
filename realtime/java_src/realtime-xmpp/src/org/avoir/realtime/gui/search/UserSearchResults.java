@@ -29,6 +29,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.gui.room.InviteParticipants;
 import org.avoir.realtime.gui.room.RoomMemberListFrame;
 import org.avoir.realtime.net.ConnectionManager;
@@ -62,11 +63,13 @@ public class UserSearchResults extends JDialog implements ActionListener {
 
     public UserSearchResults(InviteParticipants inviteParticipants, ArrayList<Row> tableRows, ArrayList<String> colHeaders) {
         super(inviteParticipants);
+        setTitle("User Search Results");
         this.tableRows = tableRows;
         this.colHeaders = colHeaders;
         this.inviteParticipants = inviteParticipants;
         insertButton.setEnabled(false);
         addToRoomButton.setEnabled(false);
+        addToRoomButton.setName("addToRoom");
         try {
 
             jbInit();
@@ -79,6 +82,7 @@ public class UserSearchResults extends JDialog implements ActionListener {
         this.tableRows = tableRows;
         this.colHeaders = colHeaders;
         this.roomMemberListFrame = roomMemberListFrame;
+        setTitle("Search Results");
         try {
 
             jbInit();
@@ -211,6 +215,7 @@ public class UserSearchResults extends JDialog implements ActionListener {
                         sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
                         sb.append("<username>").append(model.getValueAt(i, 0)).append("</username>");
                         sb.append("<names>").append(model.getValueAt(i, 1)).append("</names>");
+                        sb.append("<room-owner>").append(GeneralUtil.getThisRoomOwner()).append("</room-owner>");
                         p.setContent(sb.toString());
                         ConnectionManager.sendPacket(p);
                     }

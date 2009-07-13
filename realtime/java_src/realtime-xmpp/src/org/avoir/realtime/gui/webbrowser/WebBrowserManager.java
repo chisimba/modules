@@ -47,7 +47,6 @@ public class WebBrowserManager {
     private String warning = "Closing this will stop these functions from " +
             " working until you restart the application.\n Do you still want to close?";
 
- 
     public void showScreenShareViewer(final int w, final int h, final String title, final boolean centerScreen) {
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -62,7 +61,7 @@ public class WebBrowserManager {
                 frame.setLocationByPlatform(centerScreen);
                 frame.setVisible(true);
                 webBrowser.setMenuBarVisible(false);
-                webBrowser.navigate( ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
+                webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
             }
         });
         NativeInterface.runEventPump();
@@ -73,23 +72,21 @@ public class WebBrowserManager {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
+                final JFrame preview = new JFrame("Preview");
                 final JWebBrowser webBrowser = new JWebBrowser();
                 JPanel mPanel = new JPanel(new BorderLayout());
                 JPanel cPanel = new JPanel();
                 JButton stopButton = new JButton("Screen Share Options");
                 stopButton.setBackground(Color.RED);
                 stopButton.addActionListener(new ActionListener() {
-
                     public void actionPerformed(ActionEvent e) {
-                        for (int i = 1; i < GUIAccessManager.mf.getChatTabbedPane().getTabCount(); i++) {
-                            GUIAccessManager.mf.getChatTabbedPane().remove(i);
-                        }
+                        preview.dispose();
                         fr.setVisible(true);
                     }
                 });
 
                 webBrowser.setMenuBarVisible(false);
-                webBrowser.navigate( ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
+                webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
                 webBrowser.setBarsVisible(false);
                 webBrowser.setButtonBarVisible(false);
                 webBrowser.setLocationBarVisible(false);
@@ -97,8 +94,14 @@ public class WebBrowserManager {
                 mPanel.add(webBrowser, BorderLayout.CENTER);
                 mPanel.add(cPanel, BorderLayout.SOUTH);
                 cPanel.add(stopButton);
-                GUIAccessManager.mf.getChatTabbedPane().addTab("Preview", mPanel);
-                GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(mPanel);
+
+                preview.setContentPane(mPanel);
+                preview.setSize(400, 300);
+                preview.setAlwaysOnTop(true);
+                preview.toFront();
+                preview.setVisible(true);
+//                GUIAccessManager.mf.getChatTabbedPane().addTab("Preview", mPanel);
+            //              GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(mPanel);
             }
         });
         NativeInterface.runEventPump();
@@ -106,7 +109,7 @@ public class WebBrowserManager {
     }
 
     public void showScreenShareFrame() {
-        String host =  ConnectionManager.AUDIO_VIDEO_URL+ "/ScreenServlet";
+        String host = ConnectionManager.AUDIO_VIDEO_URL + "/ScreenServlet";
         StartScreen ss = new StartScreen(host, "test1", "default", "default", "test1", "test1");
         ss.initMainFrame();
 

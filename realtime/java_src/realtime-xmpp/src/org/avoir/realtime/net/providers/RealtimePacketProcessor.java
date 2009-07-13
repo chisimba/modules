@@ -73,7 +73,13 @@ public class RealtimePacketProcessor {
         }
     }
 
+    public static Item getItem(String xmlContents) {
+        String id = GeneralUtil.getTagText(xmlContents, "item-id");
+        return getItem(xmlContents, id);
+    }
+
     public static Item getItem(String xmlContents, String id) {
+
         xmlContents = "<cb>" + xmlContents + "</cb>";
         Item item = null;
         Color c = Color.BLACK;
@@ -608,9 +614,9 @@ public class RealtimePacketProcessor {
     }
 
     public static void updateCurrentWB(String xmlContents) {
-        /*
 
-        String itemContent = GeneralUtil.getTagText(xmlContents, "item-content");
+
+        /*String itemContent = GeneralUtil.getTagText(xmlContents, "item-content");
         while (itemContent != null) {
         String id = GeneralUtil.getTagText(xmlContents, "item-id");
         Item item = getItem(itemContent, id);
@@ -622,32 +628,37 @@ public class RealtimePacketProcessor {
         } catch (Exception ex) {
         ex.printStackTrace();
         }
+        System.out.println(xmlContents);
         itemContent = GeneralUtil.getTagText(xmlContents, "item-content");
         }*/
-        /*
+
         try {
 
-        Document doc = documentBuilder.parse(
-        new ByteArrayInputStream(xmlContents.getBytes(Constants.PREFERRED_ENCODING)));
+            Document doc = documentBuilder.parse(
+                    new ByteArrayInputStream(xmlContents.getBytes(Constants.PREFERRED_ENCODING)));
 
-        NodeList itemsNodeList = doc.getElementsByTagName("current-item");
-        System.out.println("no: = " + itemsNodeList.getLength());
-        for (int i = 0; i < itemsNodeList.getLength(); i++) {
-        Node node = itemsNodeList.item(i);
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-        org.w3c.dom.Element element = (org.w3c.dom.Element) node;
-        System.out.println(element.getUserData("item-content"));
-        String currentItem = XmlUtils.readString(element, "item-content");
-        System.out.println(currentItem);
-        String id = GeneralUtil.getTagText(xmlContents, "item-id");
-        Item item = getItem(currentItem, id);
-        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().addItem(item);
-        }
-        }
+            NodeList itemsNodeList = doc.getElementsByTagName("item-content");
+            System.out.println("no: = " + itemsNodeList.getLength());
+            for (int i = 0; i < itemsNodeList.getLength(); i++) {
+                Node node = itemsNodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    org.w3c.dom.Element element = (org.w3c.dom.Element) node;
+                    //System.out.println(node.toString());
+
+
+                    String id = XmlUtils.readString(element, "item-id");
+                    String type = XmlUtils.readString(element, "item-type");
+                    String mode = XmlUtils.readString(element, "item-mode");
+//                   float x1=XmlUtils.readFloat(doc, id)
+
+                // Item item = getItem(currentItemContent, id);
+                // GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().addItem(item);
+                }
+            }
         } catch (Exception ex) {
-        ex.printStackTrace();
+            ex.printStackTrace();
         }
-         */
+
     }
 
     public static ArrayList<RealtimeFile> getFileViewArrayList(String xmlContents) {

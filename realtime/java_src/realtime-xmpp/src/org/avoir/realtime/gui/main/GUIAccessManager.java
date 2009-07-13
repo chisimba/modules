@@ -23,13 +23,17 @@ public class GUIAccessManager {
     public static MainFrame mf;
     public static Map<String, Boolean> saveStatus = new HashMap<String, Boolean>();
     public static ChatRoomManager chatRoomManager;
-    public static boolean isLoggedInAnonymous=false;
-    public static String defaultPresentationName="" ;
-    public static String defaultPresentationId="" ;
-    public static String defaultSlideName="" ;
+    public static boolean isLoggedInAnonymous = false;
+    public static String defaultPresentationName = "";
+    public static String defaultPresentationId = "";
+    public static String defaultSlideName = "";
 
     public static void setMf(MainFrame mf) {
         GUIAccessManager.mf = mf;
+    }
+
+    public static GUIAccessManager getInstance() {
+        return new GUIAccessManager();
     }
 
     /**
@@ -69,10 +73,10 @@ public class GUIAccessManager {
     }
 
     public static void setButtonEnabled(boolean enabled, String name) {
-        JToolBar toolBar = mf.getToolbar();
+        //JToolBar toolBar = mf.getToolbar();
         ArrayList<JButton> buttonsToRemove = new ArrayList<JButton>();
-        for (int i = 0; i < toolBar.getComponentCount(); i++) {
-            JButton b = (JButton) toolBar.getComponentAtIndex(i);
+        for (int i = 0; i < mf.getRoomToolsPanel().getComponentCount(); i++) {
+            JButton b = (JButton) mf.getRoomToolsPanel().getComponent(i);
             if (b != null) {
                 String buttonName = b.getName();
                 if (buttonName != null) {
@@ -88,8 +92,8 @@ public class GUIAccessManager {
             }
         }
         for (int i = 0; i < buttonsToRemove.size(); i++) {
-            toolBar.remove(i);
+            mf.getRoomToolsPanel().remove(i);
         }
-        toolBar.repaint();
+        mf.getRoomToolsPanel().repaint();
     }
 }

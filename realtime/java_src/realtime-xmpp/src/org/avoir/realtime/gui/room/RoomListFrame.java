@@ -25,6 +25,7 @@
  */
 package org.avoir.realtime.gui.room;
 
+import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -44,6 +45,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import org.avoir.realtime.chat.ChatRoomManager;
 import org.avoir.realtime.gui.main.GUIAccessManager;
+import org.avoir.realtime.gui.main.MainFrame;
+import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.packets.RealtimePacket;
 
@@ -116,7 +119,7 @@ public class RoomListFrame extends javax.swing.JDialog {
                     String name = (String) map.get("room-name");
                     ChatRoomManager.oldRoom = ConnectionManager.getRoomName();
 
-                    GUIAccessManager.mf.getChatRoomManager().joinAsParticipant(ConnectionManager.getUsername(), name.trim());
+                    GUIAccessManager.mf.getChatRoomManager().joinAsParticipant(name.trim());
                     dispose();
                 }
             }
@@ -132,7 +135,7 @@ public class RoomListFrame extends javax.swing.JDialog {
     }
 
     public String requestRoomList() {
-        
+
         RealtimePacket p = new RealtimePacket(RealtimePacket.Mode.REQUEST_ROOM_LIST);
         StringBuilder sb = new StringBuilder();
         sb.append("<room-owner>").append(ConnectionManager.getUsername()).append("</room-owner>");
@@ -178,8 +181,7 @@ public class RoomListFrame extends javax.swing.JDialog {
     }
 
     private void doActualjoin(String jid, String roomName) {
-        if (GUIAccessManager.mf.getChatRoomManager().doActualJoin(ConnectionManager.getUsername(),
-                roomName, true)) {
+        if (GUIAccessManager.mf.getChatRoomManager().doActualJoin(roomName, true)) {
             dispose();
         }
     }
@@ -289,7 +291,7 @@ public class RoomListFrame extends javax.swing.JDialog {
         mPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Join Room");
+        setTitle("Room List");
 
         jLabel1.setText("Select Room ");
         jPanel1.add(jLabel1);
@@ -354,15 +356,15 @@ public class RoomListFrame extends javax.swing.JDialog {
     private void joinButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinButtonActionPerformed
         Map map = rooms.get(selectedRow);
         String jid = (String) map.get("room-jid");
-        String name = (String) map.get("room-name");
+        String roomname = (String) map.get("room-name");
         ChatRoomManager.oldRoom = ConnectionManager.getRoomName();
-        GUIAccessManager.mf.getChatRoomManager().joinAsParticipant(ConnectionManager.getUsername(), name.trim());
+        GUIAccessManager.mf.getChatRoomManager().joinAsParticipant(roomname.trim());
         dispose();
     // doActualjoin(jid, name);
     }//GEN-LAST:event_joinButtonActionPerformed
 
     private void createRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createRoomButtonActionPerformed
-        CreateRoomDialog fr = new CreateRoomDialog(GUIAccessManager.mf);
+        CreateRoomDialog fr = new CreateRoomDialog();
         fr.setSize((ss.width / 2) * 1, (ss.height / 2) * 1);
         fr.setLocationRelativeTo(this);
         fr.setVisible(true);
@@ -388,18 +390,46 @@ public class RoomListFrame extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String xargs[]) {
+        final String[] args = xargs;
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                RoomListFrame dialog = new RoomListFrame(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
+                StandAloneManager.isAdmin = true;
+                ConnectionManager.audioVideoUrlReady = true;
+                ConnectionManager.flashUrlReady = true;
+                NativeInterface.open();
+
+                if (ConnectionManager.init(args[0], Integer.parseInt(args[1]), args[2])) {
+                    String roomName = "dwaf_default";
+                    String username = "dwaf";
+                    String password="a";
+                    if (ConnectionManager.login(username, "a", roomName)) {
+                        MainFrame fr = new MainFrame(roomName);
+                        //  fr.setTitle(username + "@" + roomName + ": Realtime Virtual Classroom");
+                        //  fr.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+                        //  fr.setVisible(true);
+                        GUIAccessManager.mf = fr;
+                        RoomListFrame dialog = new RoomListFrame(fr, true);
+                        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+
+                            public void windowClosing(java.awt.event.WindowEvent e) {
+                                System.exit(0);
+                            }
+                        });
+                        dialog.setVisible(true);
+                    } else {
+                        System.out.println("cant login");
                     }
-                });
-                dialog.setVisible(true);
+                } else {
+                    System.out.println("cant connect to server");
+                }
+
+
+
+
+
             }
         });
     }

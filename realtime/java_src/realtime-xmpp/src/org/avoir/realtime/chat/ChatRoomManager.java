@@ -19,16 +19,16 @@ import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.packets.RealtimePacket;
 import org.jivesoftware.smack.SmackConfiguration;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.FormField;
+import org.jivesoftware.smackx.muc.Affiliate;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.HostedRoom;
-import org.jivesoftware.smackx.muc.InvitationListener;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.Occupant;
 import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 import org.jivesoftware.smackx.muc.RoomInfo;
 
@@ -47,7 +47,6 @@ public class ChatRoomManager {
 
         chatRoom = new ChatRoom(this);
     }
-
 
     public void setMuc(MultiUserChat muc) {
         this.muc = muc;
@@ -77,39 +76,20 @@ public class ChatRoomManager {
 
         return false;
     }
+
     private void addParticipantsListener() {
-       muc.addParticipantStatusListener(new ParticipantStatusListener() {
+        muc.addParticipantStatusListener(new ParticipantStatusListener() {
 
             public void joined(String jid) {
-
                 String user = jid.substring(jid.lastIndexOf("/") + 1);
-                int i = user.lastIndexOf(":");
-                if (i > -1) {
-                    String[] s = user.split(":");
-                    user = s[1];
-                }
-                String xjid = user + "@" + ConnectionManager.getConnection().getServiceName();
-                GUIAccessManager.mf.getUserListPanel().getUserListTree().addUser(user, jid);
+                GUIAccessManager.mf.getParticipantListTree().addUser(user);
 
             }
 
             public void left(String jid) {
 
                 String user = jid.substring(jid.lastIndexOf("/") + 1);
-
-                String xjid = user + "@" + ConnectionManager.getConnection().getServiceName();
-
-                int i = user.lastIndexOf(":");
-                if (i > -1) {
-
-                    String[] s = user.split(":");
-                    if (s.length > 2) {
-
-                        user = s[2];
-
-                    }
-                }
-                GUIAccessManager.mf.getUserListPanel().getUserListTree().removeUser(user);
+                GUIAccessManager.mf.getParticipantListTree().removeUser(user);
                 GUIAccessManager.mf.removeSpeaker(user);
             }
 
@@ -267,11 +247,9 @@ public class ChatRoomManager {
         return false;
     }
 
-    public boolean ban(String nickname) {
+    public boolean ban(String jid) {
         try {
-
-            muc.banUser(nickname + "@" + ConnectionManager.getConnection().getServiceName(), "You have been banned from this room.");
-
+            muc.banUser(jid, "You have been banned from this room.");
             return true;
         } catch (XMPPException ex) {
             ex.printStackTrace();
@@ -308,14 +286,14 @@ public class ChatRoomManager {
         return false;
     }
 
-    public void joinAsParticipant(String nickname, String roomName) {
+    public void joinAsParticipant(String roomName) {
         if (!roomExists(roomName)) {
             JOptionPane.showMessageDialog(null, "Room '" + roomName + "' does not exist");
             return;
         }
         StandAloneManager.isAdmin = false;
         WebPresentManager.isPresenter = false;
-        doActualJoin(nickname, roomName, false);
+        doActualJoin(roomName, false);
     }
 
     private void requestRoomOwner(String roomName) {
@@ -327,14 +305,23 @@ public class ChatRoomManager {
         ConnectionManager.sendPacket(p);
     }
 
-    public boolean doActualJoin(String nickname, String roomName, boolean requestslides) {
+    /**
+     * Join a room. By default, a room with same names as the this user is created
+     * if it does not exist
+     * @param nickname
+     * @param roomName
+     * @param requestslides
+     * @return
+     */
+    public boolean doActualJoin(String roomName, boolean requestslides) {
         if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
             createRoom(roomName, ConnectionManager.fullnames, false, null);
         }
         JPasswordField passwordField = new JPasswordField();
-        nickname = nickname + ":" + ConnectionManager.fullnames;
-        
-        //not allawed in more than one room at a time, so must leave old one
+        String nickname = ConnectionManager.fullnames;
+
+
+        //not allawed in more than one room at a time at this time, so must leave old one
         muc.leave();
         muc = new MultiUserChat(ConnectionManager.getConnection(), roomName + "@conference." + ConnectionManager.getConnection().getServiceName());
         addParticipantsListener();
@@ -357,21 +344,21 @@ public class ChatRoomManager {
                 roomPassword = passwordField.getPassword();
                 password = new String(roomPassword);
             }
-            muc.join("u:" + nickname, password, history, SmackConfiguration.getPacketReplyTimeout());
-
-            GUIAccessManager.mf.getChatTabbedPane().setTitleAt(0, ConnectionManager.fullnames);
-            GUIAccessManager.mf.getUserListPanel().getRoomInfoField().setText("<html>You are in <font color=\"#ff6600\">" + roomName.toUpperCase() + "</font></html>");
-            GUIAccessManager.mf.getUserListPanel().getRoomInfoField().setIcon(infoIcon);
+            muc.join(nickname, password, history, SmackConfiguration.getPacketReplyTimeout());
+            GUIAccessManager.mf.getWhiteboardToolsPanel().setGUIAccess();
+            GUIAccessManager.mf.getRoomToolsPanel().setGUIAccess();
+            GUIAccessManager.mf.doGUIAccess();
+            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().clear();
+            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(GeneralUtil.isMyRoom());
             currentRoomName = roomName;
             ConnectionManager.setRoomName(roomName);
+             GUIAccessManager.mf.setTitle("Virtual Room: "+currentRoomName);
             new File(Constants.HOME + "/rooms/" + currentRoomName).mkdirs();
-            
-
-            GUIAccessManager.mf.setTitle("Virtual Meeting: " + nickname);
+            //GUIAccessManager.mf.setTitle("Virtual Meeting: " + nickname);
+            GUIAccessManager.mf.getParticipantListTree().getRootNode().setUserObject("Room Id: " + GeneralUtil.getThisRoomOwner());
             GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setSlideImage(null);
-
-            requestRoomOwner(roomName);
             setAccessLevel(requestslides);
+            requestRoomResources();
             return true;
         } catch (XMPPException ex) {
             XMPPError errorCode = ex.getXMPPError();
@@ -391,8 +378,27 @@ public class ChatRoomManager {
         return false;
     }
 
-    private void setAccessLevel(boolean requestslides) {
+    public boolean isRoomOwner() {
+        try {
 
+            Collection<Affiliate> owners = muc.getOwners();
+            for (Affiliate owner : owners) {
+                String jid = owner.getJid();
+                int at = jid.indexOf("@");
+                String username = jid.substring(at);
+                return username.equals(ConnectionManager.getUsername());
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Only call this method after the GUI has completely initialized
+     */
+    public void requestRoomResources() {
         RealtimePacket p = new RealtimePacket();
         //get room specific resources
         p.setMode(RealtimePacket.Mode.REQUEST_ROOM_RESOURCES);
@@ -401,6 +407,11 @@ public class ChatRoomManager {
         p.setContent(sb.toString());
         ConnectionManager.getConnection().sendPacket(p);
 
+
+
+    }
+
+    private void setAccessLevel(boolean requestslides) {
         //is this launched as web present, then get the details
         //to prevent subsequent downlaods, there might be a copy, fisrt look for it
         String localCopyLocation = lookForLocalCopyLocation();
@@ -447,11 +458,10 @@ public class ChatRoomManager {
         return chatPopup;
     }
 
-    
     public static void doGUIAccessLevel() {
         GUIAccessManager.mf.resetGUIccess();
         try {
-           // GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
+            // GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
         } catch (Exception ex) {
             // ex.printStackTrace();
         }
@@ -463,7 +473,7 @@ public class ChatRoomManager {
                     public void run() {
                         if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
                             GUIAccessManager.mf.showInstructorToolbar();
-                            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
+                            //GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
                             GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
                             GUIAccessManager.mf.setWebBrowserEnabled(true);
                             enableMenus(true);
@@ -471,7 +481,7 @@ public class ChatRoomManager {
                             enableMenus(false);
                             GUIAccessManager.mf.showParticipantToolbar();
                             GUIAccessManager.setMenuEnabled(true, "screenviewer");
-                            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
+                           // GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
                             //   GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, currentRoomName);
                             GUIAccessManager.mf.setWebBrowserEnabled(false);
                         }
@@ -490,7 +500,7 @@ public class ChatRoomManager {
         GUIAccessManager.setMenuEnabled(enable, "schedule");
         GUIAccessManager.setMenuEnabled(!enable, "privatechat");
         GUIAccessManager.setMenuEnabled(enable, "createRoom");
-        GUIAccessManager.setMenuEnabled(enable, "roomList");
+        GUIAccessManager.setMenuEnabled(true, "roomList");
         GUIAccessManager.setMenuEnabled(enable, "actions");
         GUIAccessManager.setMenuEnabled(true, "joinRoom"); ///for every one
         GUIAccessManager.setMenuEnabled(enable, "invitationLink");
@@ -501,7 +511,6 @@ public class ChatRoomManager {
         GUIAccessManager.setMenuEnabled(enable, "addroommembers");
 
     }
-
 
     public boolean sendMessage(String str, int size, Color color) {
         try {

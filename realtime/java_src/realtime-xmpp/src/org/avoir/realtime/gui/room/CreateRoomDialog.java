@@ -25,24 +25,27 @@
  */
 package org.avoir.realtime.gui.room;
 
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.gui.main.GUIAccessManager;
+import org.avoir.realtime.gui.main.MainFrame;
+import org.avoir.realtime.gui.main.StandAloneManager;
+import org.avoir.realtime.net.ConnectionManager;
 
 /**
  *
  * @author developer
  */
-public class CreateRoomDialog extends javax.swing.JDialog {
+public class CreateRoomDialog extends javax.swing.JFrame {
 
     /** Creates new form CreateRoom */
-    public CreateRoomDialog(JFrame parent) {
-        super(parent,true);
+    public CreateRoomDialog(){
         initComponents();
-       roomNameField.getDocument().addDocumentListener(new DocumentListener() {
+        roomNameField.getDocument().addDocumentListener(new DocumentListener() {
 
             public void insertUpdate(DocumentEvent e) {
                 roomDescField.setText(roomNameField.getText());
@@ -81,21 +84,23 @@ public class CreateRoomDialog extends javax.swing.JDialog {
         roomName = GeneralUtil.formatStr(roomName, " ");
         String desc = roomDescField.getText();
         if (desc.trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "Provide room description");
-            return;
+           // JOptionPane.showMessageDialog(null, "Provide room description");
+           // return;
+            //if no desc, then pick room name as default
+            desc=roomName;
         }
         int maxNumber = (Integer) maxMembersField.getValue();
         if (maxNumber < 1) {
             JOptionPane.showMessageDialog(null, "Maximum number cannot be less than one.");
             return;
         }
-     
+
         boolean requirePassword = requirePasswordOpt.isSelected();
         String password = null;
         if (requirePassword) {
             String pwd1 = new String(passwordField1.getPassword());
             String pwd2 = new String(passwordField2.getPassword());
-            if(pwd1.trim().equals("") || pwd2.trim().equals("")){
+            if (pwd1.trim().equals("") || pwd2.trim().equals("")) {
                 JOptionPane.showMessageDialog(null, "Empty passwords not allowed");
                 return;
             }
@@ -108,9 +113,7 @@ public class CreateRoomDialog extends javax.swing.JDialog {
         }
         GUIAccessManager.mf.getChatRoomManager().createRoom(roomName, desc, maxNumber,
                 requirePassword, password);
-        if (GUIAccessManager.mf.getRoomListFrame() != null) {
-            GUIAccessManager.mf.getRoomListFrame().requestRoomList();
-        }
+        GUIAccessManager.mf.getRoomToolsPanel().showRoomList(null);
         dispose();
 
     }
@@ -172,6 +175,7 @@ public class CreateRoomDialog extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         topPanel.add(jLabel1, gridBagConstraints);
 
+        roomNameField.setName("roomName"); // NOI18N
         roomNameField.setPreferredSize(new java.awt.Dimension(269, 21));
         roomNameField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,6 +196,7 @@ public class CreateRoomDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         topPanel.add(jLabel3, gridBagConstraints);
 
+        roomDescField.setName("roomDesc"); // NOI18N
         roomDescField.setPreferredSize(new java.awt.Dimension(100, 21));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -207,6 +212,7 @@ public class CreateRoomDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         topPanel.add(jLabel4, gridBagConstraints);
 
+        maxMembersField.setName("maxMembersField"); // NOI18N
         maxMembersField.setPreferredSize(new java.awt.Dimension(50, 27));
         maxMembersField.setValue(30);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -217,6 +223,7 @@ public class CreateRoomDialog extends javax.swing.JDialog {
         topPanel.add(maxMembersField, gridBagConstraints);
 
         requirePasswordOpt.setText("Require Password");
+        requirePasswordOpt.setName("requirePasswordField"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
@@ -230,6 +237,7 @@ public class CreateRoomDialog extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         topPanel.add(jLabel5, gridBagConstraints);
 
+        passwordField1.setName("roomPasswordField"); // NOI18N
         passwordField1.setPreferredSize(new java.awt.Dimension(200, 21));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -237,6 +245,7 @@ public class CreateRoomDialog extends javax.swing.JDialog {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         topPanel.add(passwordField1, gridBagConstraints);
 
+        passwordField2.setName("confirmPasswordField"); // NOI18N
         passwordField2.setPreferredSize(new java.awt.Dimension(10, 21));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -286,10 +295,53 @@ public class CreateRoomDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_createRoomButtonActionPerformed
 
     private void roomNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomNameFieldActionPerformed
-        createRoom();
+        //createRoom();
     }//GEN-LAST:event_roomNameFieldActionPerformed
 
-   
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String xargs[]) {
+        final String[] args = {"localhost", "5222", "localhost"};
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                StandAloneManager.isAdmin = true;
+                ConnectionManager.audioVideoUrlReady = true;
+                ConnectionManager.flashUrlReady = true;
+                //NativeInterface.open();
+
+                if (ConnectionManager.init(args[0], Integer.parseInt(args[1]), args[2])) {
+                    String roomName = "dwaf_default";
+                    String username = "dwaf";
+                    String password = "a";
+                    if (ConnectionManager.login(username, password, roomName)) {
+                        MainFrame fr = new MainFrame(roomName);
+                        //  fr.setTitle(username + "@" + roomName + ": Realtime Virtual Classroom");
+                        fr.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+                        //  fr.setVisible(true);
+                        GUIAccessManager.mf = fr;
+                        CreateRoomDialog dialog = new CreateRoomDialog();
+                        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+
+                            @Override
+                            public void windowClosing(java.awt.event.WindowEvent e) {
+                                System.exit(0);
+                            }
+                        });
+                        dialog.setSize(400, 300);
+                        dialog.setVisible(true);
+                    } else {
+                        System.out.println("cant login");
+                    }
+                } else {
+                    System.out.println("cant connect to server");
+                }
+
+
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel cPanel;

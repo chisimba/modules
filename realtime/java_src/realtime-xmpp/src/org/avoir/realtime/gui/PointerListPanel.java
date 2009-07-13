@@ -70,6 +70,7 @@ public class PointerListPanel extends javax.swing.JDialog {
         cPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
 
+        setTitle("Select Pointer");
 
         mPanel.setLayout(new java.awt.BorderLayout());
 
@@ -79,6 +80,7 @@ public class PointerListPanel extends javax.swing.JDialog {
         arrowUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pointer-arrow_up.png"))); // NOI18N
         arrowUpButton.setBorderPainted(false);
         arrowUpButton.setContentAreaFilled(false);
+        arrowUpButton.setName("arrowUp"); // NOI18N
         arrowUpButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 arrowUpButtonMouseEntered(evt);
@@ -97,6 +99,7 @@ public class PointerListPanel extends javax.swing.JDialog {
         arrowSideButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pointer-arrow_side.png"))); // NOI18N
         arrowSideButton.setBorderPainted(false);
         arrowSideButton.setContentAreaFilled(false);
+        arrowSideButton.setName("arrowSide"); // NOI18N
         arrowSideButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 arrowSideButtonMouseEntered(evt);
@@ -115,6 +118,7 @@ public class PointerListPanel extends javax.swing.JDialog {
         handLeftButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pointer-hand_left.png"))); // NOI18N
         handLeftButton.setBorderPainted(false);
         handLeftButton.setContentAreaFilled(false);
+        handLeftButton.setName("handLeft"); // NOI18N
         handLeftButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 handLeftButtonMouseEntered(evt);
@@ -133,6 +137,7 @@ public class PointerListPanel extends javax.swing.JDialog {
         handRightButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pointer-hand_right.png"))); // NOI18N
         handRightButton.setBorderPainted(false);
         handRightButton.setContentAreaFilled(false);
+        handRightButton.setName("handRight"); // NOI18N
         handRightButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 handRightButtonMouseEntered(evt);
@@ -152,6 +157,7 @@ public class PointerListPanel extends javax.swing.JDialog {
         noPointerButton.setText("None");
         noPointerButton.setBorderPainted(false);
         noPointerButton.setContentAreaFilled(false);
+        noPointerButton.setName("noPointer"); // NOI18N
         noPointerButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 noPointerButtonMouseEntered(evt);
@@ -186,6 +192,7 @@ public class PointerListPanel extends javax.swing.JDialog {
 
     private void arrowUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_arrowUpButtonActionPerformed
         SELECTED_POINTER = ARROW_UP;
+        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().paintCurrentPointer();
         //GUIAccessManager.mf.getWhiteboardPanel().setWhiteboardToolbarEnabled(false);
         arrowUpButton.setContentAreaFilled(arrowUpButton.isSelected());
         setVisible(false);

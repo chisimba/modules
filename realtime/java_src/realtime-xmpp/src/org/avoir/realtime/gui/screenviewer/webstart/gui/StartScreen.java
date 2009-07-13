@@ -58,12 +58,12 @@ public class StartScreen {
     public void initMainFrame() {
         try {
 
-            UIManager.setLookAndFeel(new com.incors.plaf.kunststoff.KunststoffLookAndFeel());
+      //      UIManager.setLookAndFeel(new com.incors.plaf.kunststoff.KunststoffLookAndFeel());
 
 
 //			 make Web Start happy
 //			 see http://developer.java.sun.com/developer/bugParade/bugs/4155617.html
-            UIManager.getLookAndFeelDefaults().put("ClassLoader", getClass().getClassLoader());
+//            UIManager.getLookAndFeelDefaults().put("ClassLoader", getClass().getClassLoader());
 
 
             schedFact = new StdSchedulerFactory();
@@ -85,7 +85,7 @@ public class StartScreen {
 
                 public void actionPerformed(ActionEvent arg0) {
                     GUIAccessManager.mf.setSize(ss.width / 4, ss.height);
-                    GUIAccessManager.mf.setAlwaysOnTop(true);
+                    //GUIAccessManager.mf.setAlwaysOnTop(true);
                     captureScreenStart();
                     GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab(t);
                     t.setVisible(false);

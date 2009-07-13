@@ -94,8 +94,9 @@ public class RealtimePacket extends IQ {
         public static final String REQUEST_ROOM_OWNER = "request-room-owner";
         public static final String REQUEST_MIC = "request-mic";
         public static final String PRIVATE_CHAT_SEND = "private-chat-send";
-        public static final String ADD_ROOM_MEMBER= "add-room-member";
-        public static final String REQUEST_ROOM_MEMBERS= "request-room-members";
+        public static final String ADD_ROOM_MEMBER = "add-room-member";
+        public static final String REQUEST_ROOM_MEMBERS = "request-room-members";
+        public static final String DELETE_ROOM_MEMBER = "delete-room-member";
     }
 
     public String getContent() {

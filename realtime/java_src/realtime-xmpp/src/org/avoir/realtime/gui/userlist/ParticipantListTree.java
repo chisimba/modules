@@ -39,41 +39,28 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import org.avoir.realtime.chat.ChatRoom;
-import org.avoir.realtime.chat.ChatRoomManager;
+import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
-import org.avoir.realtime.gui.webbrowser.WebBrowserManager;
 import org.avoir.realtime.net.ConnectionManager;
-import org.avoir.realtime.net.SubscribePacketInt;
 import org.avoir.realtime.net.packets.RealtimePacket;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.packet.RosterPacket;
 
-public class ParticipantListTree extends JPanel implements SubscribePacketInt,
+public class ParticipantListTree extends JPanel implements 
         ActionListener {
 
     protected DefaultMutableTreeNode rootNode;
     protected DefaultTreeModel treeModel;
     private DefaultMutableTreeNode onlineNode;
-    // private DefaultMutableTreeNode offlineNode;
-    // private DefaultMutableTreeNode incomingRequestsNode;
-    //  private DefaultMutableTreeNode outgoingRequestsNode;
+
     protected JTree tree;
     private ImageIcon availableIcon = ImageUtil.createImageIcon(this, "/images/im_available.png");
-    private ImageIcon unavailableIcon = ImageUtil.createImageIcon(this, "/images/im_unavailable.png");
-    private ImageIcon awayIcon = ImageUtil.createImageIcon(this, "/images/im_away.png");
-    private ImageIcon helpIcon = ImageUtil.createImageIcon(this, "/images/help_16x16.png");
     private URL micIconURL = null;
     private Collection<RosterEntry> entries;
-    private XMPPConnection connection;
+    
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem acceptMenuItem = new JMenuItem("Accept");
     private JMenuItem profileMenuItem = new JMenuItem("Profile");
@@ -87,9 +74,9 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     private ArrayList<Map> currentSpeakers = new ArrayList<Map>();
     private ArrayList<Map<String, Object>> privateChats = new ArrayList<Map<String, Object>>();
 
-    public ParticipantListTree(XMPPConnection connection) {
+    public ParticipantListTree() {
         super(new GridLayout(1, 0));
-        this.connection = connection;
+        
         init();
         try {
             micIconURL = this.getClass().getResource("/images/mic_on.png");
@@ -100,7 +87,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     }
 
     public void init() {
-        rootNode = new DefaultMutableTreeNode("Participants");
+        rootNode = new DefaultMutableTreeNode("Unknown Room");
         treeModel = new DefaultTreeModel(rootNode);
 
         tree = new JTree(treeModel);
@@ -204,6 +191,10 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         popup.addSeparator();
         popup.add(privateChatMenuItem);
         loadUsers();
+    }
+
+    public DefaultMutableTreeNode getRootNode() {
+        return rootNode;
     }
 
     private boolean enableGiveMic(String text) {
@@ -341,26 +332,26 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         }
     }
 
-    public void addUser(String user, String jid) {
-        if (user.equals(ConnectionManager.getUsername())) {
+    public void addUser(String nickname) {
+
+        if (nickname.equals(ConnectionManager.fullnames)) {
             return;
         }
 
-        DefaultMutableTreeNode treeNode = searchNode(user);
+        DefaultMutableTreeNode treeNode = searchNode(nickname);
 
         if (treeNode != null) {
             removeNode(treeNode);
         }
-        JLabel node = new JLabel(user);
+        JLabel node = new JLabel(nickname);
         node.setIcon(availableIcon);
-        node.setName(jid);
-        addObject(onlineNode, node, true);
+           addObject(onlineNode, node, true);
 
     }
 
-    public void removeUser(String user) {
+    public void removeUser(String participant) {
 
-        DefaultMutableTreeNode treeNode = searchNode(user);
+        DefaultMutableTreeNode treeNode = searchNode(participant);
 
         if (treeNode != null) {
             removeNode(treeNode);
@@ -374,7 +365,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         if (obj instanceof JLabel) {
             JLabel l = (JLabel) obj;
             String to = l.getText();
-            String jid = l.getName();
+           
             if (to.trim().equalsIgnoreCase(ConnectionManager.fullnames.trim())) {
                 JOptionPane.showMessageDialog(null, "You cannot kick out yourself!!! :)");
                 return;
@@ -384,7 +375,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
             int n = JOptionPane.showConfirmDialog(null, permanently ? banMessage : kikMessage, "Confirm", JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 if (permanently) {
-                    if (!GUIAccessManager.mf.getChatRoomManager().ban(jid)) {
+                    if (!GUIAccessManager.mf.getChatRoomManager().ban(GeneralUtil.getJID(to))) {
                         JOptionPane.showMessageDialog(null, "Unable to ban " + to + ".");
                     }
                 } else {
@@ -550,7 +541,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
                 JOptionPane.showMessageDialog(null, "<html>" + to + " already has a MIC");
                 return;
             }
-            String toJID = l.getName();
+            
             if (to.trim().equalsIgnoreCase(ConnectionManager.fullnames.trim())) {
                 JOptionPane.showMessageDialog(null, "You cannot give MIC to yourself");
                 return;
@@ -576,10 +567,8 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
             if (obj instanceof JLabel) {
                 JLabel l = (JLabel) obj;
                 String to = l.getText();
-                String jid = l.getName();
-                jid = jid.substring(jid.lastIndexOf("/") + 1);
-                String[] s = jid.split(":");
-                String username = s[1];
+
+                String username=GeneralUtil.getUsername(to);
                 if (to.trim().equalsIgnoreCase(ConnectionManager.fullnames.trim())) {
                     JOptionPane.showMessageDialog(null, "You cannot send private message to yourself!");
                     return;
@@ -636,178 +625,6 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     public void loadUsers() {
         clear();
         onlineNode = addObject(rootNode, "Online", true);
-    }
-
-    private void initUsers() {
-        Roster roster = connection.getRoster();
-        roster.addRosterListener(new RosterListener() {
-
-            public void entriesAdded(Collection<String> addresses) {
-            }
-
-            public void entriesDeleted(Collection<String> addresses) {
-            }
-
-            public void entriesUpdated(Collection<String> addresses) {
-            }
-
-            public void presenceChanged(Presence presence) {
-            }
-        });
-
-
-        entries = roster.getEntries();
-
-        for (RosterEntry entry : entries) {
-
-            addEntry(entry);
-        }
-    }
-
-    private void addEntry(RosterEntry entry) {
-        String username = entry.getUser();
-        if (username.indexOf("@") > -1) {
-            username = username.substring(0, username.indexOf("@"));
-        }
-
-        Roster roster = ConnectionManager.getConnection().getRoster();
-        Presence presence = roster.getPresence(entry.getUser());
-        if (presence.getType() == Presence.Type.available) {
-            JLabel node = new JLabel(username);
-            node.setIcon(availableIcon);
-
-            if (presence.getMode() == Presence.Mode.away) {
-                node.setIcon(awayIcon);
-            }
-            addObject(onlineNode, node, true);
-            onlineNode.setUserObject("Online (" + (onlineNode.getChildCount()) + ")");
-        } else if (presence.getType() == Presence.Type.unavailable) {
-            JLabel node = new JLabel(username);
-            if (entry.getStatus() == RosterPacket.ItemStatus.SUBSCRIPTION_PENDING) {
-                node.setIcon(helpIcon);
-                //JOptionPane.showMessageDialog(null, presence.toXML()+" ME = "+connection.getUser());
-                //addObject(incomingRequestsNode, node, true);
-                return;
-            }
-            if (entry.getStatus() == null) {
-                //auto request for subscribtion
-                String serviceName = ConnectionManager.getConnection().getServiceName();
-                String group = "";
-                String jid = username;
-                if (jid.indexOf("@") == -1) {
-                    jid = jid + "@" + serviceName;
-                }
-                try {
-                    roster.createEntry(jid, jid, new String[]{group});
-                } catch (XMPPException ex) {
-                    JOptionPane.showMessageDialog(null, "Error accepting " + username);
-                    ex.printStackTrace();
-                }
-                node.setIcon(unavailableIcon);
-
-            }
-        }
-
-    }
-
-    public void addIncomingRequests(String from) {
-        JLabel node = new JLabel(from);
-        node.setIcon(helpIcon);
-
-    }
-
-    public void addOutgoingRequests(String from) {
-        JLabel node = new JLabel(from);
-        node.setIcon(helpIcon);
-
-    }
-
-    public void addOffline(String from) {
-        DefaultMutableTreeNode treeNode = searchNode(from);
-
-        if (treeNode != null) {
-            removeNode(treeNode);
-        }
-        JLabel node = new JLabel(from);
-        node.setIcon(unavailableIcon);
-
-    }
-
-    public void addOnlineAvailable(String from) {
-        DefaultMutableTreeNode treeNode = searchNode(from);
-
-        if (treeNode != null) {
-            removeNode(treeNode);
-        }
-        JLabel node = new JLabel(from);
-        node.setIcon(availableIcon);
-        addObject(onlineNode, node, true);
-    }
-
-    public void addOnlineAway(String from) {
-        DefaultMutableTreeNode treeNode = searchNode(from);
-
-        if (treeNode != null) {
-            removeNode(treeNode);
-        }
-        JLabel node = new JLabel(from);
-        node.setIcon(awayIcon);
-        addObject(onlineNode, node, true);
-    }
-
-    public void processSubscription(Presence presence) {
-        String user = presence.getFrom();
-        if (user.indexOf("@") > -1) {
-            user = user.substring(0, user.indexOf("@"));
-        }
-
-
-        if (presence.isAvailable()) {
-            addOnlineAvailable(user);
-            return;
-        }
-        if (presence.isAway()) {
-            addOnlineAway(user);
-            return;
-        }
-
-        if (presence.getType() == Presence.Type.subscribe) {
-            addIncomingRequests(user);
-
-            return;
-        }
-
-    }
-
-    private void processPresenceChanged(Presence presence) {
-        String user = presence.getFrom();
-        //RosterEntry entry=roster.
-        //user=entry.getUser();
-        if (user.indexOf("@") > -1) {
-            user = user.substring(0, user.indexOf("@"));
-        }
-        //search the node
-        DefaultMutableTreeNode node = searchNode(user);
-
-        if (node != null) {
-            removeNode(node);
-            if (presence.getType() == Presence.Type.available) {
-                JLabel val = new JLabel(user);
-                val.setIcon(availableIcon);
-
-                if (presence.getMode() == Presence.Mode.away) {
-                    val.setIcon(awayIcon);
-                }
-
-                addObject(onlineNode, val, true);
-
-            } else if (presence.getType() == Presence.Type.unavailable) {
-                JLabel val = new JLabel(user);
-                val.setIcon(unavailableIcon);
-            //addObject(offlineNode, val, true);
-            }
-            onlineNode.setUserObject("Online (" + (onlineNode.getChildCount()) + ")");
-        }
     }
 
     /**

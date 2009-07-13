@@ -5,7 +5,6 @@
  */
 package org.avoir.realtime.gui.userlist;
 
-import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -13,19 +12,15 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import org.avoir.realtime.common.util.ImageUtil;
-import org.avoir.realtime.gui.main.StandAloneManager;
-import org.avoir.realtime.gui.main.WebPresentManager;
+import org.avoir.realtime.gui.main.CollapsiblePane;
 import org.avoir.realtime.net.ConnectionManager;
 import org.jivesoftware.smack.AccountManager;
 
@@ -33,7 +28,7 @@ import org.jivesoftware.smack.AccountManager;
  *
  * @author developer
  */
-public class ParticipantListPanel extends javax.swing.JPanel {
+public class ParticipantListPanel extends JPanel {
 
     private ImageIcon availableIcon = ImageUtil.createImageIcon(this, "/images/im_available.png");
     private ImageIcon awayIcon = ImageUtil.createImageIcon(this, "/images/im_away.png");
@@ -45,11 +40,11 @@ public class ParticipantListPanel extends javax.swing.JPanel {
     private ParticipantListTree userListTree;
     private UserDetailsFrame userDetailsFrame;
     private JPanel userListMainPanel = new JPanel(new BorderLayout());
-    private JPanel audioVideoPanel = new JPanel(new BorderLayout());
-    private JWebBrowser webBrowser = new JWebBrowser();
-    private JButton startAudioVideoButton = new JButton("Enable");
-    private JLabel audioVideoStatus = new JLabel("N");
-    private JLabel flashStatus = new JLabel("N");
+    //   private JPanel audioVideoPanel = new JPanel(new BorderLayout());
+    //   private JWebBrowser webBrowser = new JWebBrowser();
+//    private JButton startAudioVideoButton = new JButton("Enable");
+//    private JLabel audioVideoStatus = new JLabel("N");
+//    private JLabel flashStatus = new JLabel("N");
 
     /** Creates new form UserListPanel */
     public ParticipantListPanel() {
@@ -59,14 +54,14 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         }
         accStatusField.setRenderer(new ComboBoxRenderer(statusMessages, statusIcons));
         //accountPhotoField.setIcon(avator);
-        userListTree = ConnectionManager.getUserListTree();
+//        userListTree = ConnectionManager.getUserListTree();
         displayAccountInfo();
-        audioVideoPanel.setBorder(BorderFactory.createTitledBorder("Audio Video"));
+        // audioVideoPanel.setBorder(BorderFactory.createTitledBorder("Audio Video"));
         userListMainPanel.add(userListTree, BorderLayout.CENTER);
         userListTabbedPane.addTab("Users", userListMainPanel);
-        userListTabbedPane.addTab("Audio/Video", audioVideoPanel);
-        //userListTabbedPane.setSelectedIndex(1);
-        webBrowser.setMenuBarVisible(false);
+        //userListTabbedPane.addTab("Audio/Video", audioVideoPanel);
+        userListTabbedPane.setSelectedIndex(0);
+        /*webBrowser.setMenuBarVisible(false);
         webBrowser.setBarsVisible(false);
         webBrowser.setButtonBarVisible(false);
         audioVideoPanel.add(webBrowser, BorderLayout.CENTER);
@@ -75,38 +70,38 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         p.add(startAudioVideoButton);
         startAudioVideoButton.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent arg0) {
-                if (ConnectionManager.audioVideoUrlReady && ConnectionManager.flashUrlReady) {
-                    initAudioVideo(WebPresentManager.isPresenter || StandAloneManager.isAdmin, ConnectionManager.getRoomName());
-                    startAudioVideoButton.setText("Refresh");
-                } else {
-                    JOptionPane.showMessageDialog(null, "It appears the audio video server is not ready.\n" +
-                            "Please try again after few minutes");
-                }
-            }
-        });
-        audioVideoPanel.add(p, BorderLayout.SOUTH);
+        public void actionPerformed(ActionEvent arg0) {
+        if (ConnectionManager.audioVideoUrlReady && ConnectionManager.flashUrlReady) {
+        initAudioVideo(WebPresentManager.isPresenter || StandAloneManager.isAdmin, ConnectionManager.getRoomName());
+        //  startAudioVideoButton.setText("Refresh");
+        } else {
+        JOptionPane.showMessageDialog(null, "It appears the audio video server is not ready.\n" +
+        "Please try again after few minutes");
+        }
+        }
+        });*/
+        //audioVideoPanel.add(p, BorderLayout.SOUTH);
         JPanel p2 = new JPanel();
-        p2.add(audioVideoStatus);
-        p2.add(flashStatus);
-        audioVideoPanel.add(p2, BorderLayout.NORTH);
+        //p2.add(audioVideoStatus);
+        //p2.add(flashStatus);
+        //audioVideoPanel.add(p2, BorderLayout.NORTH);
         add(userListTabbedPane, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.NORTH);
 
     }
 
-    public JLabel getAudioVideoStatus() {
-        return audioVideoStatus;
+    /*    public JLabel getAudioVideoStatus() {
+    return audioVideoStatus;
     }
-
-    public JLabel getFlashStatus() {
-        return flashStatus;
+     */
+    /*  public JLabel getFlashStatus() {
+    return flashStatus;
     }
 
     public JButton getStartAudioVideoButton() {
-        return startAudioVideoButton;
+    return startAudioVideoButton;
     }
-
+     */
     public JTabbedPane getUserListTabbedPane() {
         return userListTabbedPane;
     }
@@ -134,19 +129,19 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                webBrowser.navigate(url);
+//                webBrowser.navigate(url);
             /*         JDialog fr = new JDialog(GUIAccessManager.mf);
-            fr.setSize(400, 400);
-            fr.setLocationRelativeTo(null);
-            fr.setLayout(new BorderLayout());
-            fr.add(webBrowser,BorderLayout.CENTER);
-            JPanel p=new JPanel();
+                fr.setSize(400, 400);
+                fr.setLocationRelativeTo(null);
+                fr.setLayout(new BorderLayout());
+                fr.add(webBrowser,BorderLayout.CENTER);
+                JPanel p=new JPanel();
 
-            fr.add(p,BorderLayout.SOUTH);
-            JButton hidebutton=new JButton("Hide");
-            p.add(hidebutton);
-            fr.setVisible(true);
-             */
+                fr.add(p,BorderLayout.SOUTH);
+                JButton hidebutton=new JButton("Hide");
+                p.add(hidebutton);
+                fr.setVisible(true);
+                 */
             }
         });
     }

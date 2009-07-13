@@ -15,6 +15,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import org.avoir.realtime.gui.main.GUIAccessManager;
 
 /**
  * this object represents a text object
@@ -29,7 +30,8 @@ public class Text extends Item {
     private String fontName;
     private FontMetrics fm;
     private Graphics graphics;
-private boolean filled;
+    private boolean filled;
+
     public Text(int x, int y, String content) {
         this.x = x;
         this.y = y;
@@ -52,6 +54,9 @@ private boolean filled;
     }
 
     public Graphics getGraphic() {
+        if (graphics == null) {
+            graphics = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getGraphics2D();
+        }
         return graphics;
     }
 
@@ -193,7 +198,7 @@ private boolean filled;
 
     @Override
     public Item translate(int dx, int dy) {
-        Text text = new Text(x + dx, y + dy+height, content);
+        Text text = new Text(x + dx, y + dy + height, content);
         text.setId(id);
         text.setFontName(fontName);
         text.setFontSize(fontSize);
@@ -209,6 +214,9 @@ private boolean filled;
     @Override
     public boolean contains(Point point) {
         Font font = new Font(fontName, fontStyle, fontSize);
+        if (graphics == null) {
+            graphics = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getGraphics2D();
+        }
         fm = graphics.getFontMetrics(font);
         width = fm.stringWidth(content);
         height = fm.getHeight();

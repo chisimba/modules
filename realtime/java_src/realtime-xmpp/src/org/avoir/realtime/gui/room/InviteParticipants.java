@@ -106,7 +106,7 @@ public class InviteParticipants extends javax.swing.JFrame {
                 return;
             }
         }
-        if (GUIAccessManager.mf.getChatRoomManager().doActualJoin(ConnectionManager.getUsername(), roomName, false)) {
+        if (GUIAccessManager.mf.getChatRoomManager().doActualJoin(roomName, false)) {
 
             String name = ConnectionManager.getConnection().getAccountManager().getAccountAttribute("name");
             String xmessage = messageField.getText();
@@ -383,7 +383,7 @@ public class InviteParticipants extends javax.swing.JFrame {
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 15;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 1);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         detailsPanel.add(searchButton, gridBagConstraints);
 
         schedulePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Meeting Time"));
@@ -520,8 +520,8 @@ public class InviteParticipants extends javax.swing.JFrame {
     private void roomListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomListButtonActionPerformed
         RoomListFrame roomListFrame = new RoomListFrame(this, true);
         roomListFrame.setTitle("Room List");
-        GUIAccessManager.mf.setRoomListFrame(roomListFrame);
-        GUIAccessManager.mf.showRoomList(this);
+        GUIAccessManager.mf.getRoomToolsPanel().setRoomListFrame(roomListFrame);
+        GUIAccessManager.mf.getRoomToolsPanel().showRoomList(this);
 
     }//GEN-LAST:event_roomListButtonActionPerformed
 

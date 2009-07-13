@@ -37,6 +37,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
@@ -53,6 +54,8 @@ import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.net.ConnectionManager;
 import org.jivesoftware.smack.util.Base64;
+import org.jivesoftware.smackx.muc.Affiliate;
+import org.jivesoftware.smackx.muc.Occupant;
 import org.jivesoftware.smackx.packet.VCard;
 
 /**
@@ -80,6 +83,65 @@ public class GeneralUtil {
     public static int getCurrentYear() {
         Calendar c = Calendar.getInstance();
         return c.get(c.YEAR);
+    }
+
+    public static String getUsername(String nickname) {
+        /**
+         * user - the room occupant to search for his presence. 
+         * The format of user must be: roomName@service/nickname
+         * (e.g. darkcave@macbeth.shakespeare.lit/thirdwitch).
+         */
+        String xjid = ConnectionManager.getRoomName() + "@" + ConnectionManager.getConnection().getServiceName() + "/" + nickname;
+        Occupant occupant = GUIAccessManager.mf.getChatRoomManager().getMuc().getOccupant(xjid);
+        String jid = occupant.getJid();
+        int at = jid.indexOf("@");
+        return jid.substring(0, at);
+    }
+
+    public static String generateRandomStr(int n) {
+        char[] pw = new char[n];
+        int c = 'A';
+        int r1 = 0;
+        for (int i = 0; i < n; i++) {
+            r1 = (int) (Math.random() * 3);
+            switch (r1) {
+                case 0:
+                    c = '0' + (int) (Math.random() * 10);
+                    break;
+                case 1:
+                    c = 'a' + (int) (Math.random() * 26);
+                    break;
+                case 2:
+                    c = 'A' + (int) (Math.random() * 26);
+                    break;
+            }
+            pw[i] = (char) c;
+        }
+        return new String(pw);
+    }
+
+    public static String getJID(String nickname) {
+        Occupant occupant = GUIAccessManager.mf.getChatRoomManager().getMuc().getOccupant(nickname);
+        return occupant.getJid();
+    }
+
+    public static boolean isMyRoom() {
+        return ConnectionManager.getUsername().equals(getThisRoomOwner());
+    }
+
+    public static String getThisRoomOwner() {
+        String owner = null;
+        try {
+            Collection<Affiliate> owners = GUIAccessManager.mf.getChatRoomManager().getMuc().getOwners();
+            for (Affiliate affiliate : owners) {
+                String jid = affiliate.getJid();
+                int at = jid.indexOf("@");
+                owner = jid.substring(0, at);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return owner;
     }
 
     public static String formatDate(Date date) {
@@ -177,7 +239,6 @@ public class GeneralUtil {
         }
         return invalid;
     }
-
 
     public static String formatStr(String str, String separator) {
         String[] words = str.split(separator);
@@ -283,8 +344,9 @@ public class GeneralUtil {
 
     public static String getTagText(String xmlContent, String tag) {
         String content = null;
-        int start = xmlContent.indexOf("<" + tag + ">") + ("<" + tag + ">").length();
+        int start = (xmlContent.indexOf("<" + tag + ">")) + (("<" + tag + ">").length());
         int end = xmlContent.indexOf("</" + tag + ">");
+
         if (start > -1 && end > -1) {
             content = xmlContent.substring(start, end);
         }

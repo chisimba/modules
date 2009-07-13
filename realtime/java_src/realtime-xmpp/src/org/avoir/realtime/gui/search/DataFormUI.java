@@ -7,6 +7,8 @@ package org.avoir.realtime.gui.search;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,16 +37,17 @@ public class DataFormUI extends JPanel {
     private final Map<String, JComponent> valueMap = new HashMap<String, JComponent>();
     private int row = 5;
     private Form searchForm;
+    private UserSearch userSearch;
 
     /**
      * Creates a new DataFormUI
      *
      * @param form the <code>DataForm</code> to build a UI with.
      */
-    public DataFormUI(Form form) {
+    public DataFormUI(Form form, UserSearch userSearch) {
         this.setLayout(new GridBagLayout());
         this.searchForm = form;
-
+        this.userSearch = userSearch;
         buildUI(form);
 
         this.add(new JLabel(), new GridBagConstraints(0, row, 3, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
@@ -76,7 +79,15 @@ public class DataFormUI extends JPanel {
                 if (valueList.size() > 0) {
                     v = (String) valueList.get(0);
                 }
-                addField(label, new JTextField(v), variable);
+                JTextField searchField = new JTextField(v);
+                searchField.addActionListener(new ActionListener() {
+
+                    public void actionPerformed(ActionEvent arg0) {
+                       // userSearch.doSearch();
+                    }
+                });
+                searchField.setName("searchField");
+                addField(label, searchField, variable);
             } else if (type.equals(FormField.TYPE_TEXT_MULTI) ||
                     type.equals(FormField.TYPE_JID_MULTI)) {
                 StringBuffer buf = new StringBuffer();
@@ -101,11 +112,11 @@ public class DataFormUI extends JPanel {
 
                 addField(label, box, variable);
             } else if (type.equals(FormField.TYPE_LIST_MULTI)) {
-/*                CheckBoxList checkBoxList = new CheckBoxList();
+                /*                CheckBoxList checkBoxList = new CheckBoxList();
                 Iterator i = field.getValues();
                 while (i.hasNext()) {
-                    String value = (String) i.next();
-                    checkBoxList.addCheckBox(new JCheckBox(value), value);
+                String value = (String) i.next();
+                checkBoxList.addCheckBox(new JCheckBox(value), value);
                 }
                 addField(label, checkBoxList, variable);*/
             }
@@ -156,11 +167,11 @@ public class DataFormUI extends JPanel {
                     answerForm.setAnswer(answer, list);
                 }
             }/* else if (o instanceof CheckBoxList) {
-                List list = ((CheckBoxList) o).getSelectedValues();
-                if (list.size() > 0) {
-                    answerForm.setAnswer(answer, list);
-                }
-            }*/
+        List list = ((CheckBoxList) o).getSelectedValues();
+        if (list.size() > 0) {
+        answerForm.setAnswer(answer, list);
+        }
+        }*/
         }
 
         return answerForm;
@@ -175,7 +186,7 @@ public class DataFormUI extends JPanel {
         } else if (comp instanceof JCheckBox) {
             this.add(comp, new GridBagConstraints(0, row, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 //        } else if (comp instanceof CheckBoxList) {
-  //          this.add(comp, new GridBagConstraints(1, row, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 50));
+        //          this.add(comp, new GridBagConstraints(1, row, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 50));
         } else {
             this.add(comp, new GridBagConstraints(1, row, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 

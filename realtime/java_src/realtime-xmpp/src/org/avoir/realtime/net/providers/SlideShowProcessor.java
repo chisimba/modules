@@ -370,7 +370,7 @@ private static boolean initSlideShown=false;
 
                         public void run() {
 
-                            GUIAccessManager.mf.getGeneralWebBrowser().navigate(url);
+//                            GUIAccessManager.mf.getGeneralWebBrowser().navigate(url);
                             GUIAccessManager.mf.getTabbedPane().setSelectedIndex(1);
 
                         }
@@ -561,7 +561,7 @@ private static boolean initSlideShown=false;
                 slideCount++;
                 //}
                 if (slideCount == totalSlideCount && !initSlideShown) {
-                   // GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
+                    GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
                     WebPresentManager.presentationId = presentationId;
 
                     WebpresentNavigator.selectedPresentation = presentationName;

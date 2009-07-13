@@ -8,7 +8,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -17,6 +16,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -25,6 +25,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -36,6 +37,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
@@ -68,14 +70,14 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private Item selectedItem = null;
     private Item currentSelectedItem = null;
     private Item tempSelectedItem = null;
-    int selectOffset = 4;
+    private int selectOffset = 4;
     private Color currentColor = new Color(0, 0, 0);
     private WhiteboardPanel whiteboardPanel;
-    int initW, initH, lastW, lastH, prevX, prevY;
+    private int initW,  initH,  lastW,  lastH,  prevX,  prevY;
     private ArrayList<Line2D.Double> points = new ArrayList<Line2D.Double>();
     private boolean defaultRoom = true;
-    int width = 200;
-    int height = 200;
+    private int width = 200;
+    private int height = 200;
     private ImageIcon arrowUP = ImageUtil.createImageIcon(this, "/images/pointer-arrow_up.png");
     private ImageIcon arrowSide = ImageUtil.createImageIcon(this, "/images/pointer-arrow_side.png");
     private ImageIcon handLeft = ImageUtil.createImageIcon(this, "/images/pointer-hand_left.png");
@@ -144,11 +146,15 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private boolean scale = false;
     private boolean fitWBSize = false;
     private boolean scaleOff = false;
+    private String lastItemId = null;
+
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
         this.whiteboardPanel = whiteboardPanel;
+        textPopup.setName("textPopup");
         setBackground(Color.WHITE);
         addMouseListener(this);
         addMouseMotionListener(this);
+        setName("whiteboard");
         deleteMenuItem.setActionCommand("delete");
         deleteMenuItem.addActionListener(this);
         deleteMenuItem.setEnabled(false);
@@ -165,6 +171,18 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         whiteboardPopup.add(textFontMenuItem);
         whiteboardPopup.add(textSizeMenuItem);
         whiteboardPopup.add(textStyleMenuItem);
+
+        String key = "delete-action";
+        //am1 =  new ActionMap();
+        getActionMap().put(key, new AbstractAction() {
+
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Delete pressed");
+            }
+        });
+        //im1 = new InputMap();
+        getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), key);
+
 
         whiteboardPopup.addSeparator();
 
@@ -246,9 +264,32 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         sp.setOpaque(false);
         sp.getViewport().setOpaque(true);
         textPopup.add(textField);
+        textField.setName("textField");
+        setSize(800, 600);
 
         refreshPopup();
         repaint();
+
+    }
+
+    public ImageIcon getArrowSide() {
+        return arrowSide;
+    }
+
+    public ImageIcon getArrowUP() {
+        return arrowUP;
+    }
+
+    public ImageIcon getHandLeft() {
+        return handLeft;
+    }
+
+    public ImageIcon getHandRight() {
+        return handRight;
+    }
+
+    public Image getCurrentPointerImage() {
+        return currentPointerImage;
     }
 
     private void refreshPopup() {
@@ -259,6 +300,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     }
 
+    public String getLastItemId() {
+        return lastItemId;
+    }
+
     public boolean isDrawEnabled() {
         return drawEnabled;
     }
@@ -267,7 +312,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         this.drawEnabled = drawEnabled;
     }
 
-    private void sendText() {
+    public void sendText() {
         if (textMode.equals("add")) {
             if (textField.getText().trim().equals("")) {
                 return;
@@ -297,6 +342,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             sb.append("</item-content>");
             p.setContent(sb.toString());
             ConnectionManager.sendPacket(p);
+            lastItemId=p.getPacketID();
             textPopup.setVisible(false);
             textField.setText("");
             textMode = "add";
@@ -349,7 +395,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     public void setSlideImage(ImageIcon slideImage) {
         this.slideImage = slideImage;
         repaint();
-       
+
 
     }
 
@@ -376,7 +422,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             if (text.toLowerCase().indexOf("off") > -1) {
                 fitWBSize = false;
                 scale = false;
-                scaleOff=true;
+                scaleOff = true;
             } else {
                 int index = text.indexOf("%");
                 try {
@@ -385,7 +431,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                     scale = true;
                 } catch (Exception ex) {
                 }
-                scaleOff=false;
+                scaleOff = false;
             }
             refreshPopup();
             repaint();
@@ -504,12 +550,13 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         repaint();
     }
 
-    private void paintCurrentPointer() {
+    public void paintCurrentPointer() {
         if (currentPointer == PointerListPanel.ARROW_UP) {
 
             Cursor curCircle = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(arrowUP.getImage(),
                     new java.awt.Point(5, 5), "circle");
             setCursor(curCircle);
+
 
         } else if (currentPointer == PointerListPanel.ARROW_SIDE) {
 
@@ -552,6 +599,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
         }
+        repaint();;
     }
 
     public void setDefaultRoom(boolean defaultRoom) {
@@ -716,7 +764,15 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         }
     }
 
+    public void clear() {
+        items.clear();
+        repaint();
+    }
+
     public Graphics2D getGraphics2D() {
+        if (graphics2D == null) {
+            repaint();
+        }
         return graphics2D;
     }
 
@@ -726,9 +782,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (!gotSize) {
             int ww = (int) (getWidth());
             int hh = (int) (getHeight());
-            int xx = (getWidth() - ww) / 2;
-            int yy = (getHeight() - hh) / 2;
-            whiteboardSize = new Rectangle(xx, yy, ww, hh);
+            if (ww == 0 || hh == 00) {
+                ww = 800;
+                hh = 600;
+            }
+            whiteboardSize = new Rectangle(0, 0, ww, hh);
             gotSize = false;
         }
         Graphics2D g2 = (Graphics2D) g;
@@ -748,7 +806,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 g2.drawImage(slideImage.getImage(), 20, 70, (int) (whiteboardSize.width * scaleSlideFactor / 100), (int) (whiteboardSize.height * scaleSlideFactor / 100), this);
             } else if (fitWBSize) {
                 g2.drawImage(slideImage.getImage(), 0, 0, (int) (whiteboardSize.width), (int) (whiteboardSize.height), this);
-            }else if(scaleOff){
+            } else if (scaleOff) {
                 g2.drawImage(slideImage.getImage(), 0, 0, this);
             } else {
                 g2.drawImage(slideImage.getImage(), xx, yy, this);
@@ -782,6 +840,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                  */
             }
         }
+
         for (Item item : items) {
 
             g2.setColor(item.getColor());
@@ -790,7 +849,6 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 Img img = (Img) item;
                 g2.drawImage(img.getImage(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), this);
             } else {
-
                 item.render(g2);
             }
         }
@@ -857,6 +915,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void mouseEntered(MouseEvent e) {
+        paintCurrentPointer();
     }
 
     public void mouseExited(MouseEvent e) {
@@ -965,6 +1024,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public Rectangle getWhiteboardSize() {
+        if (whiteboardSize.width == 0 && whiteboardSize.height == 0) {
+            this.setSize(800, 600);
+            this.repaint();
+            whiteboardSize = new Rectangle(0, 0, 800, 600);
+        }
         return whiteboardSize;
     }
 
@@ -1010,7 +1074,16 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         return type;
     }
 
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public Item getTempSelectedItem() {
+        return tempSelectedItem;
+    }
+
     public void mouseReleased(MouseEvent e) {
+
         if (!drawEnabled) {
 
             return;
@@ -1018,81 +1091,87 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         paintCurrentPointer();
         dragging = false;
         currentPointerImage = null;
+        String mode = "new";
         if (ITEM_TYPE == MOVE && tempSelectedItem != null && !RESIZE) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("<item-id>").append(tempSelectedItem.getId()).append("</item-id>");
-            sb.append("<item-type>").append(getCurrentItemType()).append("</item-type>");
-            sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
-            Rectangle bounds = tempSelectedItem.getBounds();
-            if (getCurrentItemType().equals("line")) {
-                Line line = (Line) tempSelectedItem;
-                List<Point2D> pts = line.getSelectionPoints();
-                double x1 = pts.get(0).getX() / whiteboardSize.getWidth();
-                double y1 = pts.get(0).getY() / whiteboardSize.getHeight();
-                double x2 = pts.get(1).getX() / whiteboardSize.getWidth();
-                double y2 = pts.get(1).getY() / whiteboardSize.getHeight();
-                sb.append("<x1>").append(x1).append("</x1>");
-                sb.append("<y1>").append(y1).append("</y1>");
-                sb.append("<x2>").append(x2).append("</x2>");
-                sb.append("<y2>").append(y2).append("</y2>");
-            } else if (getCurrentItemType().equals("pen")) {
-                Pen pen = (Pen) tempSelectedItem;
-                List<Point2D> pts = pen.getSelectionPoints();
-                double x1 = pts.get(0).getX() / whiteboardSize.getWidth();
-                double y1 = pts.get(0).getY() / whiteboardSize.getHeight();
-                double x2 = pts.get(1).getX() / whiteboardSize.getWidth();
-                double y2 = pts.get(1).getY() / whiteboardSize.getHeight();
-                sb.append("<x1>").append(x1).append("</x1>");
-                sb.append("<y1>").append(y1).append("</y1>");
-                sb.append("<x2>").append(x2).append("</x2>");
-                sb.append("<y2>").append(y2).append("</y2>");
-            } else {
-                double x = bounds.getX() / whiteboardSize.getWidth();
-                double y = bounds.getY() / whiteboardSize.getHeight();
-                sb.append("<x>").append(x).append("</x>");
-                sb.append("<y>").append(y).append("</y>");
-            }
+            mode = "edit";
+            sendItem(tempSelectedItem, mode);
+        /*     StringBuilder sb = new StringBuilder();
+        sb.append("<item-id>").append(tempSelectedItem.getId()).append("</item-id>");
+        sb.append("<item-type>").append(getCurrentItemType()).append("</item-type>");
+        sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
+        Rectangle bounds = tempSelectedItem.getBounds();
+        if (getCurrentItemType().equals("line")) {
+        Line line = (Line) tempSelectedItem;
+        List<Point2D> pts = line.getSelectionPoints();
+        double x1 = pts.get(0).getX() / whiteboardSize.getWidth();
+        double y1 = pts.get(0).getY() / whiteboardSize.getHeight();
+        double x2 = pts.get(1).getX() / whiteboardSize.getWidth();
+        double y2 = pts.get(1).getY() / whiteboardSize.getHeight();
+        sb.append("<x1>").append(x1).append("</x1>");
+        sb.append("<y1>").append(y1).append("</y1>");
+        sb.append("<x2>").append(x2).append("</x2>");
+        sb.append("<y2>").append(y2).append("</y2>");
+        } else if (getCurrentItemType().equals("pen")) {
+        Pen pen = (Pen) tempSelectedItem;
+        List<Point2D> pts = pen.getSelectionPoints();
+        double x1 = pts.get(0).getX() / whiteboardSize.getWidth();
+        double y1 = pts.get(0).getY() / whiteboardSize.getHeight();
+        double x2 = pts.get(1).getX() / whiteboardSize.getWidth();
+        double y2 = pts.get(1).getY() / whiteboardSize.getHeight();
+        sb.append("<x1>").append(x1).append("</x1>");
+        sb.append("<y1>").append(y1).append("</y1>");
+        sb.append("<x2>").append(x2).append("</x2>");
+        sb.append("<y2>").append(y2).append("</y2>");
+        } else {
+        double x = bounds.getX() / whiteboardSize.getWidth();
+        double y = bounds.getY() / whiteboardSize.getHeight();
+        sb.append("<x>").append(x).append("</x>");
+        sb.append("<y>").append(y).append("</y>");
+        }
 
-            RealtimePacket p = new RealtimePacket();
-            p.setMode(RealtimePacket.Mode.UPDATE_ITEM_POSITION);
-            p.setContent(sb.toString());
-            ConnectionManager.sendPacket(p);
-
+        RealtimePacket p = new RealtimePacket();
+        p.setMode(RealtimePacket.Mode.UPDATE_ITEM_POSITION);
+        p.setContent(sb.toString());
+        ConnectionManager.sendPacket(p);
+         */
         }
         if (RESIZE) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("<item-id>").append(tempSelectedItem.getId()).append("</item-id>");
-            sb.append("<item-type>").append(getCurrentItemType()).append("</item-type>");
-            sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
-            if (getCurrentItemType().equals("line")) {
-                Line line = (Line) tempSelectedItem;
-                List<Point2D> pts = line.getSelectionPoints();
+            mode = "edit";
+            sendItem(tempSelectedItem, mode);
+        /*
+        StringBuilder sb = new StringBuilder();
+        sb.append("<item-id>").append(tempSelectedItem.getId()).append("</item-id>");
+        sb.append("<item-type>").append(getCurrentItemType()).append("</item-type>");
+        sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
+        if (getCurrentItemType().equals("line")) {
+        Line line = (Line) tempSelectedItem;
+        List<Point2D> pts = line.getSelectionPoints();
 
-                double x1 = pts.get(0).getX() / whiteboardSize.getWidth();
-                double y1 = pts.get(0).getY() / whiteboardSize.getHeight();
-                double x2 = pts.get(1).getX() / whiteboardSize.getWidth();
-                double y2 = pts.get(1).getY() / whiteboardSize.getHeight();
-                sb.append("<x1>").append(x1).append("</x1>");
-                sb.append("<y1>").append(y1).append("</y1>");
-                sb.append("<x2>").append(x2).append("</x2>");
-                sb.append("<y2>").append(y2).append("</y2>");
-            } else {
+        double x1 = pts.get(0).getX() / whiteboardSize.getWidth();
+        double y1 = pts.get(0).getY() / whiteboardSize.getHeight();
+        double x2 = pts.get(1).getX() / whiteboardSize.getWidth();
+        double y2 = pts.get(1).getY() / whiteboardSize.getHeight();
+        sb.append("<x1>").append(x1).append("</x1>");
+        sb.append("<y1>").append(y1).append("</y1>");
+        sb.append("<x2>").append(x2).append("</x2>");
+        sb.append("<y2>").append(y2).append("</y2>");
+        } else {
 
-                double x = e.getX() / whiteboardSize.getWidth();
-                double y = e.getY() / whiteboardSize.getHeight();
+        double x = e.getX() / whiteboardSize.getWidth();
+        double y = e.getY() / whiteboardSize.getHeight();
 
-                sb.append("<x>").append(x).append("</x>");
-                sb.append("<y>").append(y).append("</y>");
+        sb.append("<x>").append(x).append("</x>");
+        sb.append("<y>").append(y).append("</y>");
 
-            }
+        }
 
-            sb.append("<r-type>").append(resizeType).append("</r-type>");
-            RealtimePacket p = new RealtimePacket();
-            p.setMode(RealtimePacket.Mode.RESIZE_ITEM);
-            p.setContent(sb.toString());
-            ConnectionManager.sendPacket(p);
-            RESIZE = false;
-
+        sb.append("<r-type>").append(resizeType).append("</r-type>");
+        RealtimePacket p = new RealtimePacket();
+        p.setMode(RealtimePacket.Mode.RESIZE_ITEM);
+        p.setContent(sb.toString());
+        ConnectionManager.sendPacket(p);
+        RESIZE = false;
+         */
         }
         if (ITEM_TYPE != MOVE) {
             if (ITEM_TYPE == PEN) {
@@ -1102,17 +1181,17 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             }
             if (ITEM_TYPE == TEXT) {
             }
-            sendItem(currentItem, "new");
+            mode = "new";
+            sendItem(currentItem, mode);
+            tempSelectedItem = currentItem;
         }
         currentItem = null;
         if (ITEM_TYPE != MOVE) {
             currentSelectedItem = null;
         }
 
-//whiteboardPanel.getMoveButton().setSelected(true);
-
-
         repaint();
+
     }
 
     public void mouseDragged(MouseEvent e) {
@@ -1340,6 +1419,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 p.setPacketID(item.getId());
             }
             ConnectionManager.sendPacket(p);
+            lastItemId = p.getPacketID();
         }
         if (item instanceof Text) {
             Text text = (Text) item;
@@ -1367,6 +1447,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 p.setPacketID(item.getId());
             }
             ConnectionManager.sendPacket(p);
+            lastItemId = p.getPacketID();
         }
         if (item instanceof Rect) {
             Rect rect = (Rect) item;
@@ -1397,7 +1478,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 p.setPacketID(item.getId());
             }
             ConnectionManager.sendPacket(p);
-
+            lastItemId = p.getPacketID();
         }
         if (item instanceof Oval) {
             Oval oval = (Oval) item;
@@ -1428,7 +1509,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 p.setPacketID(item.getId());
             }
             ConnectionManager.sendPacket(p);
-
+            lastItemId = p.getPacketID();
         }
         if (item instanceof Pen) {
             Pen pen = (Pen) item;
@@ -1469,7 +1550,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 p.setPacketID(item.getId());
             }
             ConnectionManager.sendPacket(p);
-
+            lastItemId = p.getPacketID();
         }
         return false;
     }

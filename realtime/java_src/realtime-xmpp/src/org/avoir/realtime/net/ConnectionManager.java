@@ -17,14 +17,10 @@ import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.LoginFrame;
 import org.avoir.realtime.gui.main.Main;
-import org.avoir.realtime.gui.userlist.ParticipantListTree;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Message;
@@ -51,7 +47,7 @@ public class ConnectionManager {
     private static String username;
     private static String roomName;
     public static String myEmail = "";
-    private static ParticipantListTree userListTree;
+    
     private static boolean admin = false;
     private static JWindow banner = new JWindow();
     private static ProxyInfo proxy;
@@ -64,7 +60,7 @@ public class ConnectionManager {
     public static boolean audioVideoUrlReady = false;
     public static boolean flashUrlReady = false;
     public static String FLASH_URL = "";
-    public static String roomOwner = "";
+    
     private static Timer connectionTimer = new Timer();
     private static int connectionCount = 0;
     private static int maxConnectionCount = 3;
@@ -111,6 +107,10 @@ public class ConnectionManager {
         }
         return false;
 
+    }
+
+    public static String getFullnames() {
+        return fullnames;
     }
 
     /**
@@ -199,6 +199,7 @@ public class ConnectionManager {
             connectionTimer = new Timer();
             connectionTimer.scheduleAtFixedRate(new ConnectionTimer(), 1000, 1000);
             connection.connect();
+            System.out.println("Successfully connected");
             connectionTimer.cancel();
             return true;
         } catch (XMPPException e) {
@@ -256,9 +257,6 @@ public class ConnectionManager {
         ConnectionManager.AUDIO_VIDEO_URL = AUDIO_VIDEO_URL;
     }
 
-    public static ParticipantListTree getUserListTree() {
-        return userListTree;
-    }
 
     public static void setPORT(int PORT) {
         ConnectionManager.PORT = PORT;
@@ -282,8 +280,8 @@ public class ConnectionManager {
     }
 
     public static String getRoomName() {
-        /** We user upper case...cause Linux/Unix and whatever else is case sensitive with folder names**/
-        return roomName.toUpperCase();
+        /** We user lower case...cause Linux/Unix and whatever else is case sensitive with folder names**/
+        return roomName;
     }
 
     public static void logout() {
@@ -297,8 +295,9 @@ public class ConnectionManager {
             ConnectionManager.roomName = roomName;
             if (!connection.isAuthenticated()) {
                 connection.login(xusername, password);
+                System.out.println("Login succeeded");
             }
-            connection.getChatManager().addChatListener(new ChatManagerListener() {
+            /*connection.getChatManager().addChatListener(new ChatManagerListener() {
 
                 public void chatCreated(Chat chat, boolean createdLocally) {
                     chat.addMessageListener(new MessageListener() {
@@ -308,11 +307,11 @@ public class ConnectionManager {
                         }
                     });
                 }
-            });
+            });*/
             initPacketListener();
             initConnectionListener();
 
-            userListTree = new ParticipantListTree(connection);
+
 
             return true;
         } catch (XMPPException ex) {
