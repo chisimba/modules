@@ -36,7 +36,7 @@ class turnitindbass extends dbTable
      */
     public function init()
     {
-        parent::init('tbl_turnitin_assigments');
+        parent::init('tbl_turnitin_assignments');
         
     }
     
@@ -53,6 +53,7 @@ class turnitindbass extends dbTable
     	$recarr['title'] = $params['assignmenttitle'];
     	$recarr['contextcode'] = $contextcode;
     	$recarr['duedate'] = $params['assignmentdatedue'];
+    	$recarr['instructions'] = $params['assignmentinstruct'];
     	
     	if($recarr['title'] == "")
         {
@@ -66,7 +67,7 @@ class turnitindbass extends dbTable
     public function getAssignments($contextCode)
     {
     	$recs = $this->getAll("WHERE contextcode='$contextCode' ORDER BY duedate");
-    	if(count($recs) > 1)
+    	if(count($recs) > 0)
     	{
     		return $recs;
     	} else {

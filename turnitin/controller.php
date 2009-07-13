@@ -172,15 +172,31 @@ class turnitin extends controller
 				break;
 				
 			case 'json_getassessments':
-				//echo $this->objTAssDB->jsonGetAssessments($this->objDBContext->getContextCode());
-				echo $this->objForms->jsonGetAssessments();
+				echo $this->formatJsonAssignments($this->objTAssDB->getAssignments('11'));//$this->objDBContext-getContextCode()
+				//echo $this->objForms->jsonGetAssessments();
 				exit(0);
 				break;
+			case 'json_getsubmissions':
+				echo $this->formatSubmissions();
+				exit(0);
 		}
 	}
 	
 	
-	
+	public function formatSubmissions(){
+		
+		$submissions[] = array("username" => "nitsckie",
+							"firstname" => "Wesley",
+							"lastname" => "Nitsckie",
+							"title" => "The title of the paper",
+							"score" => "34",
+							"dateposted" => "12-12-2009"
+							);
+		$arr['totalCount'] = "1";
+		$arr['submissions'] = $submissions;
+		
+		return json_encode($arr);
+	}
 	/**
 	 * Call the correct template
 	 *
@@ -197,6 +213,27 @@ class turnitin extends controller
 			return "main_tpl.php";
 		}
 	
+	}
+	
+	public function formatJsonAssignments($assigments)
+	{
+		//get extra info from turnitin
+		//var_dump($assigments);
+		if($assigments)
+		{
+			/*foreach ($assigments as $ass)
+			{
+				//array_push(array('submissions' => '12'),$assigments[$ass] );			
+			}
+			*/
+			
+			$arr['totalCount'] = strval(count($assigments));
+			$arr['assignments'] = $assigments;
+		} else {
+			return false;
+		}
+		
+		return trim(json_encode($arr));
 	}
 	
 	/**

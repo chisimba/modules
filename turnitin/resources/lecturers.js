@@ -81,7 +81,11 @@ Ext.apply(Ext.form.VTypes, {
     function renderLast(value, p, r){
         return String.format('{0}<br/>by {1}', value.dateFormat('M j, Y, g:i a'), r.data['lastposter']);
     }
-
+	
+    function renderSubmissions(value, p, r){
+    	t = new Ext.Button('titititle');
+    	return t;
+    }
 /**
 * The add form
 *
@@ -183,6 +187,7 @@ var addForm = new Ext.FormPanel({
 			    success: function(form, action) {
 			       win.hide();
 			       addForm.getForm().reset();
+			       assStore.load({params:{start:0, limit:25}});
 		           Ext.example.msg('Success!', action.result.msg);
 				  
 			    },
@@ -202,8 +207,48 @@ var addForm = new Ext.FormPanel({
 			});
         }
     });
+var but =  new Ext.Button(action);
+    /**
+* The assignment data store used by the assGrid
+*
+*/
+var assStore = new Ext.data.JsonStore({
+        root: 'assignments',
+        totalProperty: 'totalCount',
+        idProperty: 'puid',
+        //remoteSort: true,
 
+        fields: [
+            {name: 'title'},
+            {name: 'duedate'},
+            {name: 'instructions'}
+        ],
+        proxy: new Ext.data.HttpProxy({
+            url: 'http://localhost/eteach/index.php?module=turnitin&action=json_getassessments'
+        })
+    });
+    assStore.setDefaultSort('duedate', 'desc');
     
+    //store for the submissions
+    submissionsStore =new Ext.data.JsonStore({
+        root: 'submissions',
+        totalProperty: 'totalCount',
+        idProperty: 'username',
+        //remoteSort: true,
+
+        fields: [
+            {name: 'firstname'},
+            {name: 'lastname'},
+            {name: 'title'},
+            {name: 'score'},
+            {name: 'dateposted'}
+        ],
+        proxy: new Ext.data.HttpProxy({
+            url: 'http://localhost/eteach/index.php?module=turnitin&action=json_getsubmissions'
+        })
+    });
+    
+    submissionsStore.setDefaultSort('dateposted', 'desc');
 /**
 * The assigments grid
 * the grid will use ajax-json to get the data from
@@ -211,84 +256,182 @@ var addForm = new Ext.FormPanel({
 */
 
 var assGrid = new Ext.grid.GridPanel({
-        width:700,
-        height:500,
+        width:600,
+        height:200,
         title:'Assignments',
         store: assStore,
-        trackMouseOver:false,
+        trackMouseOver:true,
         disableSelection:true,
         loadMask: true,
+        stripeRows: true,
+		sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
+		region:'center',
+
 
         // grid columns
-        columns:[{
+        columns:[new Ext.grid.RowNumberer(),{
             id: 'topic', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
             header: "Topic",
             dataIndex: 'title',
             width: 420,
-            renderer: renderTopic,
-            sortable: true
-        },{
-            header: "Author",
-            dataIndex: 'author',
-            width: 100,
-            hidden: true,
+            //renderer: renderTopic,
             sortable: true
         },{
             header: "Submissions",
             dataIndex: 'submissioncount',
-            width: 70,
+            width: 120,
             align: 'right',
             sortable: true
         },{
             id: 'last',
             header: "Due Date",
-            dataIndex: 'lastpost',
+            dataIndex: 'duedate',
             width: 150,
-            renderer: renderLast,
+            //renderer: renderLast,
             sortable: true
         }],
-
+		tbar :[ but ],
         // customize view config
         viewConfig: {
             forceFit:true,
             enableRowBody:true,
-            showPreview:true,
+            showPreview:false,
             getRowClass : function(record, rowIndex, p, store){
                 if(this.showPreview){
-                    p.body = '<p>'+record.data.excerpt+'</p>';
+                    p.body = '<p>'+record.data.instructions+'</p>';
                     return 'x-grid3-row-expanded';
                 }
                 return 'x-grid3-row-collapsed';
             }
-        }
+        },
+        // paging bar on the bottom
+        bbar: new Ext.PagingToolbar({
+            pageSize: 25,
+            store: assStore,
+            displayInfo: true,
+            displayMsg: 'Displaying topics {0} - {1} of {2}',
+            emptyMsg: "No topics to display",
+            items:[
+                '-', {
+                pressed: false,
+                enableToggle:true,
+                text: 'Show Instructions',
+                cls: 'x-btn-text-icon details',
+                toggleHandler: function(btn, pressed){
+                    var view = assGrid.getView();
+                    view.showPreview = pressed;
+                    view.refresh();
+                }
+            }]
+        })
+
+        
 });
 
 /**
-* The assignment data store used by the assGrid
-*
+* Submissions grid 
 */
-var assStore = new Ext.data.JsonStore({
-        root: 'topics',
-        totalProperty: 'totalCount',
-        idProperty: 'title',
-        remoteSort: true,
 
-        fields: [
-            'title', 
-            {name: 'replycount', type: 'int'},
-            {name: 'duedate', mapping: 'duedate', type: 'date', dateFormat: 'timestamp'},
-            'instructions', 'excerpt'
-        ],
+var submissionsGrid =  new Ext.grid.GridPanel({
+        width:600,
+        height:200,
+        title:'Submissions',
+        store: submissionsStore,
+        trackMouseOver:true,        
+        loadMask: true,
+        stripeRows: true,
+        minHeight: 100,
+        maxHeight: 200,
+		//sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
+		//region:'center',
 
-        // load using script tags for cross domain, if the data in on the same domain as
-        // this page, an HttpProxy would be better
-        proxy: new Ext.data.ScriptTagProxy({
-            url: 'http://localhost/eteach/index.php?module=turnitin&action=json_getassessments'
-        })
-    });
-    assStore.setDefaultSort('duedate', 'desc');
+
+        // grid columns
+        columns:[new Ext.grid.RowNumberer(), 
+        {
+            id: 'firstame', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            header: "First Name",
+            dataIndex: 'firstname',
+            width: 100,
+            //renderer: renderTopic,
+            sortable: true
+        },{id: 'lastname', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            header: "Last Name",
+            dataIndex: 'lastname',
+            width: 100,
+            //renderer: renderTopic,
+            sortable: true
+        },{id: 'title', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            header: "Title",
+            dataIndex: 'title',
+            width: 200,
+            //renderer: renderTopic,
+            sortable: true
+        },{id: 'score', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            header: "Score",
+            dataIndex: 'score',
+            renderer:renderScore,
+            width: 100,
+            //renderer: renderTopic,
+           // sortable: true
+        },{id: 'dateposted', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            header: "Date Submitted",
+            dataIndex: 'dateposted',
+            width: 100,
+            //renderer: renderTopic,
+           // sortable: true
+        }]
+        
+	});
+	
+var submissionsPanel = new Ext.Panel({
+        width:600,
+        height:200,
+        layout:'fit',
+        margins: '5 5 0',
+        region: 'south',
+        split: true,
+        //hidden:true,
+        minHeight: 100,
+        maxHeight: 200,
+
+        items:[submissionsGrid]
+})
 
 Ext.onReady(function(){
+
+    // render it
+    //assGrid.render('topic-grid');
+
+    
+      var layout = new Ext.Panel({
+        //title: 'Employee Salary by Month',
+        layout: 'border',
+        layoutConfig: {
+            columns: 1
+        },
+        width:600,
+        height: 400,
+        items: [assGrid, submissionsPanel]
+    });
+    layout.render('topic-grid');
+
+    // trigger the data store load
+    assStore.load({params:{start:0, limit:25}});
+    //submissionsStore.load();
+    
+    assGrid.getSelectionModel().on('rowselect', function(sm, ri, record){
+        //grid.removeBtn.setDisabled(sm.getCount() < 1);
+        //submissionsPanel.setVisible(true);
+        submissionsStore.load({params: {title:record.data.title}});
+        submissionsGrid.setTitle('Submissions for - '+record.data.title);
+        //Ext.example.msg('Success!', record.data.title);
+    });
+
+});
+
+
+/*
 
     Ext.QuickTips.init();
     
@@ -372,7 +515,26 @@ Ext.onReady(function(){
        
     });
     
-     astore.load();
-   
+     astore.load();*/
 
-});
+ function renderScore(value, p, record){
+    	var cid = 'green';
+    	
+    	if (value > 20 && value < 40)
+    	{
+    		cid = 'yellow';
+    	} else if (value > 40) {
+    		cid = 'red';
+    	} else if (value < 1){
+    		cid = 'pending';    		
+    	}
+    	if (value < 1)
+    	{
+    		value = '--&nbsp;';
+    	} else {
+    		value = value+'%';
+    	}
+        return String.format('<a href="#" class="'+cid+'" onClick="window.open(\'http://localhost/eteach/index.php?module=turnitin&action=returnreport&objectid=101049555\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
+        	value, record.data.contextcode);
+        	
+    }

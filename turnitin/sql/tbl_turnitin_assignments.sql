@@ -18,6 +18,9 @@ $fields = array(
     'title' => array(
         'type' => 'clob',
     	),  
+    'instructions' => array(
+        'type' => 'clob',
+    	),  
     'duedate' => array(
         'type' => 'timestamp',
     	),   
