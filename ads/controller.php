@@ -341,6 +341,19 @@ class ads extends controller {
             $textquestions[]  = "D6";
             $textquestions[]  = "D7";
         }
+        if ($form == "E") {
+          $textquestions[]  = "E1a";
+          $textquestions[]  = "E1b";
+          $textquestions[]  = "E2a";
+          $textquestions[]  = "E2b";
+          $textquestions[]  = "E2c";
+          $textquestions[]  = "E3a";
+          $textquestions[]  = "E3b";
+          $textquestions[]  = "E3c";
+          $textquestions[]  = "E4";
+          $textquestions[]  = "E5a";
+          $textquestions[]  = "E5b";
+        }
         return $textquestions;
     }
 
