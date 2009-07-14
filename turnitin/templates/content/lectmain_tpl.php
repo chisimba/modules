@@ -2,6 +2,7 @@
 
 $ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
 $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/FileUploadField.js', 'htmlelements');
 
 //$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/code-display.js', 'htmlelements');
 //$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/ColumnNodeUI.js', 'htmlelements');

@@ -185,13 +185,30 @@ class turnitin extends controller
 	
 	public function formatSubmissions(){
 		
-		$submissions[] = array("username" => "nitsckie",
+		$submission = array("username" => "nitsckie$",
 							"firstname" => "Wesley",
 							"lastname" => "Nitsckie",
 							"title" => "The title of the paper",
-							"score" => "34",
+							"score" => "50",
 							"dateposted" => "12-12-2009"
 							);
+		$submissions = array();
+		
+		//for($i=0; $i++;$i>10)
+		$i=0;
+		while ($i<100) 
+		{
+			//array_push($submissions, $submission);
+			$submissions[$i] =  array("username" => "nitsckie$i",
+							"firstname" => "Wesley",
+							"lastname" => "Nitsckie",
+							"title" => "The title of the paper",
+							"score" => $i,
+							"dateposted" => "12-12-2009"
+							);
+			$i++;
+		}
+		
 		$arr['totalCount'] = "1";
 		$arr['submissions'] = $submissions;
 		

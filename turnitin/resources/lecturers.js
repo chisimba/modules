@@ -86,6 +86,86 @@ Ext.apply(Ext.form.VTypes, {
     	t = new Ext.Button('titititle');
     	return t;
     }
+    
+       //upload form panel
+    var fp = new Ext.FormPanel({
+        //renderTo: 'fi-form',
+        fileUpload: true,
+        width: 500,
+        frame: true,
+        title: 'File Upload Form',
+        autoHeight: true,
+        bodyStyle: 'padding: 10px 10px 0 10px;',
+        labelWidth: 50,
+        defaults: {
+            anchor: '95%',
+            allowBlank: false,
+            msgTarget: 'side'
+        },
+        items: [{
+            xtype: 'textfield',
+            fieldLabel: 'Name'
+        },{
+            xtype: 'fileuploadfield',
+            id: 'form-file',
+            emptyText: 'Select an image',
+            fieldLabel: 'Photo',
+            name: 'photo-path',
+            buttonCfg: {
+                text: '',
+                iconCls: 'upload-icon'
+            }
+        }],
+        buttons: [{
+            text: 'Save',
+            handler: function(){
+                if(fp.getForm().isValid()){
+	                fp.getForm().submit({
+	                    url: 'file-upload.php',
+	                    waitMsg: 'Uploading your photo...',
+	                    success: function(fp, o){
+	                        msg('Success', 'Processed file "'+o.result.file+'" on the server');
+	                    }
+	                });
+                }
+            }
+        },{
+            text: 'Reset',
+            handler: function(){
+                fp.getForm().reset();
+            }
+        }]
+    });
+
+    // The action
+    var uploadAction = new Ext.Action({
+        text: 'Upload an Assignment',
+        handler: function(){
+            //Ext.example.msg('Click','You clicked on "Action 1".');
+            if(!win){
+	            win = new Ext.Window({
+	                
+	                layout:'fit',
+	                width:500,
+	                height:400,
+	                closeAction:'hide',
+	                plain: true,
+	
+	                items:[fp],
+	
+	                buttons: [submitbutton,
+		                {
+		                    text: 'Close',
+		                    handler: function(){
+		                        win.hide();
+		                    }
+		                }]
+	            });
+	        }
+	        win.show(this);
+	        },
+        iconCls: 'blist'
+    });
 /**
 * The add form
 *
@@ -208,6 +288,7 @@ var addForm = new Ext.FormPanel({
         }
     });
 var but =  new Ext.Button(action);
+var uploadButton = new Ext.Button(uploadAction);
     /**
 * The assignment data store used by the assGrid
 *
@@ -339,11 +420,11 @@ var submissionsGrid =  new Ext.grid.GridPanel({
         store: submissionsStore,
         trackMouseOver:true,        
         loadMask: true,
+        //hidden:true,
         stripeRows: true,
         minHeight: 100,
         maxHeight: 200,
-		//sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
-		//region:'center',
+		tbar :[ uploadButton ],
 
 
         // grid columns
@@ -394,6 +475,8 @@ var submissionsPanel = new Ext.Panel({
         //hidden:true,
         minHeight: 100,
         maxHeight: 200,
+       	collapsed : true,
+        collapsible: true,
 
         items:[submissionsGrid]
 })
@@ -420,9 +503,11 @@ Ext.onReady(function(){
     assStore.load({params:{start:0, limit:25}});
     //submissionsStore.load();
     
-    assGrid.getSelectionModel().on('rowselect', function(sm, ri, record){
-        //grid.removeBtn.setDisabled(sm.getCount() < 1);
-        //submissionsPanel.setVisible(true);
+    assGrid.getSelectionModel().on('rowselect', function(sm, ri, record){  
+        
+        submissionsPanel.expand(true);
+        //submissionsGrid.setVisible(true);
+       
         submissionsStore.load({params: {title:record.data.title}});
         submissionsGrid.setTitle('Submissions for - '+record.data.title);
         //Ext.example.msg('Success!', record.data.title);
@@ -523,7 +608,7 @@ Ext.onReady(function(){
     	if (value > 20 && value < 40)
     	{
     		cid = 'yellow';
-    	} else if (value > 40) {
+    	} else if (value >= 40) {
     		cid = 'red';
     	} else if (value < 1){
     		cid = 'pending';    		
@@ -538,3 +623,7 @@ Ext.onReady(function(){
         	value, record.data.contextcode);
         	
     }
+    
+    
+    
+ 
