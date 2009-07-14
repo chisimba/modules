@@ -103,9 +103,9 @@
 		    $innerTable->endRow();
 			
 	        $oddOrEvenInner = "odd";		    
-		    foreach ($members as $member) {
+		    foreach ($members as $member) {		    	
 		        $innerTable->startRow();
-		        $innerTable->addCell($member['fullname'], "null", "top", "left", $oddOrEvenInner, null);
+		        $innerTable->addCell($member['surname'].', '.$member['firstname'], "null", "top", "left", $oddOrEvenInner, null);
 		        $innerTable->endRow();
 		        $oddOrEvenInner = ($oddOrEvenInner=="even")? "odd":"even";		    
 			}
