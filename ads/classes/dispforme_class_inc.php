@@ -1,6 +1,7 @@
 <?php
 	class dispforme extends object{
 		public function init() {
+  		echo $this->submitAction;
 			$this->objLanguage = $this->getObject("language", "language");
 			$this->loadElements();
 		}// end init()

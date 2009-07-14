@@ -22,7 +22,7 @@ class ads extends controller {
     $this->objLanguage = $this->getObject('language', 'language');
     $this->objLog = $this->getObject('logactivity', 'logger');
     //$this->allForms = array("A", "B", "C", "D", "E", "F");
-    $this->allForms = array("C", "D");
+    $this->allForms = array("A", "B", "C", "D", "E");
     $this->objLog->log();
   }
   
@@ -301,6 +301,21 @@ class ads extends controller {
 
     function getTextQuestions($form) {
         $textquestions = array();
+        if ($form == "A") {
+          $textquestions[] = "A1";
+          $textquestions[] = "A3";
+          $textquestions[] = "A4";
+        }
+        if ($form == "B") {
+          $textquestions[] = "B1";
+          $textquestions[] = "B2";
+          $textquestions[] = "B3a";
+          $textquestions[] = "B3b";
+          $textquestions[] = "B4b";
+          $textquestions[] = "B4c";
+          $textquestions[] = "B5b";
+          $textquestions[] = "B6b";
+        }
         if ($form == "C") {
             $textquestions[] = "C1";
             $textquestions[] = "C2b";
@@ -331,9 +346,18 @@ class ads extends controller {
 
     function getOtherQuestions($form) { //questions with no error checking on them such as checkboxes
         $otherquestions = array();
+        if ($form == "A") {
+           $otherquestions[] = "A2";
+           $otherquestions[] = "A5";
+        }
+        if ($form == "B") {
+          $otherquestions[] = "B4a";
+          $otherquestions[] = "B5a";
+          $otherquestions[] = "B6a";
+        }
         if ($form == "C") {
-            $otherquestions[] = "C2a";//radio button
-            $otherquestions[] = "C4a";//radio button
+           $otherquestions[] = "C2a";//radio button
+           $otherquestions[] = "C4a";//radio button
         }
         if ($form == "D") {
             $otherquestions[]  = "D4_1";//D4_1-8 are checkboxes

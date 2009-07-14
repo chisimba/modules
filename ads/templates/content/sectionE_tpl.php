@@ -1,6 +1,6 @@
 <?php 
-
-$sectionE = $this->dispFormE->getForm();
+$forme = $this->getObject("dispforme", "ads");
+$sectionE = $forme->getForm();
 $content.= "<div>".$sectionE."</div>";
 
 // Create an instance of the css layout class

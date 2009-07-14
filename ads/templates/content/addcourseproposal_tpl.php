@@ -45,7 +45,7 @@ $cssLayout->setNumColumns(2);
 
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent($postLoginMenu->show());
-$rightSideColumn.='<h1>'. $objLanguage->languageText('mod_ads_addcourseproposal','ads').'</h1>';
+$rightSideColumn='<h1>'. $objLanguage->languageText('mod_ads_addcourseproposal','ads').'</h1>';
 //Add the table to the centered layer
 $rightSideColumn .= $objForm->show();
 // Add Right Column
