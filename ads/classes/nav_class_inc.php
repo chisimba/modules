@@ -9,29 +9,32 @@ class nav extends object{
         $this->loadclass('link','htmlelements');
     }
 
-    public function getLeftContent($toSelect){
-        $sectionA = new link ($this->uri(array('action'=>'overview'),"ads"));
+    public function getLeftContent($toSelect, $action, $courseid){
+        if ($action == 'viewform' || $action == 'submitform') {
+          $action = 'viewform';
+        }
+        $sectionA = new link ($this->uri(array('action'=>$action, 'formnumber'=>'A', 'courseid'=>$courseid),"ads"));
         $sectionA->link=   $this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
 
-        $sectionB = new link ($this->uri(array('action'=>'rulesandsyllabus'),"ads"));
+        $sectionB = new link ($this->uri(array('action'=>$action, 'formnumber'=>'B', 'courseid'=>$courseid),"ads"));
         $sectionB->link=   $this->objLanguage->languageText('mod_ads_section_b_rules_and_syllabus', 'ads');
-//array("action"=>"viewform", "formnumber"=>"C", "courseid"=>"math")
-        $sectionC = new link ($this->uri(array("action"=>"editform", "formnumber"=>"C", "courseid"=>"math"),"ads"));
+        
+        $sectionC = new link ($this->uri(array('action'=>$action, 'formnumber'=>'C', 'courseid'=>$courseid),"ads"));
         $sectionC->link=   $this->objLanguage->languageText('mod_ads_section_c_subsidy_requirements', 'ads');
 
-        $sectionD = new link ($this->uri(array("action"=>"editform", "formnumber"=>"D", "courseid"=>"math"),"ads"));
+        $sectionD = new link ($this->uri(array('action'=>$action, 'formnumber'=>'D', 'courseid'=>$courseid),"ads"));
         $sectionD->link=   $this->objLanguage->languageText('mod_ads_section_d_outcomes', 'ads');
 
-        $sectionE = new link ($this->uri(array('action'=>'sectione'),"ads"));
+        $sectionE = new link ($this->uri(array('action'=>$action, 'formnumber'=>'E', 'courseid'=>$courseid),"ads"));
         $sectionE->link=   $this->objLanguage->languageText('mod_ads_section_e_resources', 'ads');
 
-        $sectionF = new link ($this->uri(array('action'=>'sectionf'),"ads"));
+        $sectionF = new link ($this->uri(array('action'=>$action, 'formnumber'=>'F', 'courseid'=>$courseid),"ads"));
         $sectionF->link=   $this->objLanguage->languageText('mod_ads_section_f_collab', 'ads');
 
-        $sectionG = new link ($this->uri(array('action'=>'review'),"ads"));
+        $sectionG = new link ($this->uri(array('action'=>$action, 'formnumber'=>'G', 'courseid'=>$courseid),"ads"));
         $sectionG->link=   $this->objLanguage->languageText('mod_ads_section_g_review', 'ads');
 
-        $sectionH = new link ($this->uri(array('action'=>'viewcontacts','coursenum'=>'0'),"ads"));
+        $sectionH = new link ($this->uri(array('action'=>$action, 'formnumber'=>'H', 'courseid'=>$courseid),"ads"));
         $sectionH->link=   $this->objLanguage->languageText('mod_ads_section_h_contact', 'ads');
 
         $list=array(

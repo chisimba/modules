@@ -1,17 +1,27 @@
 <?php
-/**
-* Template layout for realtime module
-* @package realtime
-*/
-
 
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
 $objHead = $this->newObject('htmlheading','htmlelements');
 
    
-$objHead->str='$heading';
+$objHead->str="$heading";
 $objHead->type=1;
 $head = $objHead->show();
+
+$desc = "<ul>";
+foreach ($this->allForms as $form) {
+  if ($this->getParam('action') == 'viewform' || $this->getParam('action') == 'submitform') {
+    $action = 'viewform';
+  }
+  $formnumber = $form;
+  $courseid = getParam('courseid');
+  $link = new link($this->uri(array('action'=>$action, 'formnumber'=>$formnumber, 'courseid'=>$courseid),"ads"));
+  $link->link=   "Section $form";
+  $desc .= "<li>".$link->show()."</li>\n";
+}
+$desc .= "</ul>";
+
+/*
 $sectionA = new link ($this->uri(array('action'=>'overview'),"ads"));
 $sectionA->link=   $this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
 
@@ -48,6 +58,7 @@ $desc=
 <li>'.$sectionH->show().'</li>
 </ul>';
 
+*/
 $cssLayout->setLeftColumnContent($desc);
 $cssLayout->setMiddleColumnContent($head.$this->getContent());
 

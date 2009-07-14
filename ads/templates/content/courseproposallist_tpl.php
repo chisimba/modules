@@ -1,4 +1,12 @@
 <?php
+$css = '<style type="text/css">
+.submitLink {
+  background-color:#eee;
+  text-align:left;
+}
+</style>';
+echo $css;
+
 
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('form','htmlelements');
@@ -13,31 +21,49 @@ $title=$objLanguage->languageText('mod_ads_proposals','ads');
 $objTable = new htmltable();
 $courseProposals = $this->objCourseProposals->getCourseProposals($this->objUser->userId());
 
-$objTable->row_attributes=' height="10"';
+//$objTable->row_attributes=' height="10"';
 $statusLink=new link();
 $titleLink=new link();
 $deleteLink=new link();
 $editLink=new link();
+$submitLink = new link();
 
 $objTable->startHeaderRow();
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_title', 'ads'));
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_datecreated', 'ads'));
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_owner', 'ads'));
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_status', 'ads'));
+$objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_currversion', 'ads'));
+$objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_lastedit', 'ads'));
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_edit', 'ads'));
 $objTable->endHeaderRow();
 
 foreach($courseProposals as $courseProposal){
-  $objTable->startRow();
-  $titleLink->link($this->uri(array('action'=>'overview','id'=>$courseProposal['id'])));
+  $verarray = $this->objDocumentStore->getVersion($courseProposal['id'], $this->objUser->userId());
+  if ($verarray['status'] == 'unsubmitted' && $verarray['currentuser'] == $this->objUser->userId()) {
+    $objTable->startRow('submitLink');
+  }
+  else {
+    $objTable->startRow();
+  }
+  
+  $titleLink->link($this->uri(array('action'=>'viewform','courseid'=>$courseProposal['id'], 'formnumber'=>$this->allForms[0])));
   $titleLink->link=$courseProposal['title'];
   $objTable->addCell($titleLink->show());
   $objTable->addCell($courseProposal['creation_date']);
   $objTable->addCell($this->objUser->fullname($courseProposal['userid']));
-  $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$courseProposal['id'])));
-  $statusLink->link='New';
-  $objTable->addCell($statusLink->show());
-
+  //$statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$courseProposal['id'])));
+  //$statusLink->link='New';
+  $status = "unknown";
+  if ($verarray['status'] == 'unsubmitted') {
+    $status = "Currently being edited";
+  }
+  else if ($verarray['status'] == 'submitted') {
+    $status = "Editable";
+  }
+  $objTable->addCell($status);
+  $objTable->addCell($verarray['version'] . ".00");
+  $objTable->addCell($this->objUser->fullname($verarray['currentuser']));
   $deleteLink->link($this->uri(array('action'=>'deletecourseproposal','id'=>$courseProposal['id'])));
   $objIcon->setIcon('delete');
   $deleteLink->link=$objIcon->show();
@@ -45,9 +71,17 @@ foreach($courseProposals as $courseProposal){
   $editLink->link($this->uri(array('action'=>'editcourseproposal','id'=>$courseProposal['id'])));
   $objIcon->setIcon('edit');
   $editLink->link=$objIcon->show();
-
   $objTable->addCell($editLink->show().$deleteLink->show());
   $objTable->endRow();
+  if ($verarray['status'] == 'unsubmitted' && $verarray['currentuser'] == $this->objUser->userId()) {
+    $objTable->startRow('submitLink');
+    
+    $submitLink->link($this->uri(array('action'=>'submitproposal','courseid'=>$courseProposal['id'])));
+    $submitLink->link = "You are currently editing this proposal. Click here to submit the proposal for evaluation if you are done.";
+    $objTable->addCell($submitLink->show(), null, null, null, null, 'colspan="7"');
+    $objTable->endRow();
+  }
+ 
 
 }
 
@@ -71,9 +105,9 @@ regulatory requirements, when developing or amending a course/ unit. The appendi
  in responding to each of the following questions as well as offering additional information
 on the overall proposal process.
 ';
-$content.='<h1>'.$title.'</h1>';
+$content='<h1>'.$title.'</h1>';
 $content.='<p>'.$tip.'</p>';
-$content.= $this->message;
+//$content.= $this->message;
 $content.= $objForm->show();
 
 // Create an instance of the css layout class
@@ -83,7 +117,7 @@ $cssLayout->setNumColumns(2);
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent($postLoginMenu->show());
 //Add the table to the centered layer
-$rightSideColumn .= $content;
+$rightSideColumn = $content;
 // Add Right Column
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 

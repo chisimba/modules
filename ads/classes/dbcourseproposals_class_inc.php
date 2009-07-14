@@ -50,5 +50,15 @@ class dbcourseproposals extends dbTable{
 	$sql="update ".$this->table." set title='$newtitle' where id = '$id';";
 	$this->_execute($sql);
     }
+    
+    public function courseExists($id) {
+      $course = $this->getCourseProposal($id);
+      if (count($course) == 0) {
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
 }
 ?>

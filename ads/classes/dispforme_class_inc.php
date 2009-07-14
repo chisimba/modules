@@ -138,13 +138,13 @@
                         $myButton = new button($inputName);
 
                         if(strstr($inputName, "submit")) {
-                                $myButton->setValue('Submit');
-                                $myButton->setOnClick('alert(\'Hello Submit\')');
+                                $myButton->setValue('Next '); //originally submit
+                               // $myButton->setOnClick('alert(\'Hello Submit\')');
                                 $myButton->setToSubmit();  //If you want to make the button a submit button
                         }
                         else if(strstr($inputName, "cancel")) {
                                 $myButton->setValue('cancel');
-                                $myButton->setOnClick('alert(\'Hello Cancel\')');
+                                //$myButton->setOnClick('alert(\'Hello Cancel\')');
                         }
                         return $myButton->show();
                 }

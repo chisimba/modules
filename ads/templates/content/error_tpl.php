@@ -1,5 +1,5 @@
 <?php
 
-echo "There is an error in your url path";
+echo $this->formError->getError("general");
 
 ?>

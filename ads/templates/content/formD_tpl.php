@@ -7,6 +7,7 @@ $this->loadClass('textarea','htmlelements');
 $this->loadClass('htmlheading','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('checkbox','htmlelements');
+$this->loadClass('htmltable','htmlelements');
 
 $form = new form("formd",$this->submitAction);
 
@@ -15,9 +16,22 @@ $heading = new htmlheading($this->objLanguage->languageText('mod_formD_Heading',
 // Questions
 $D1 = new textinput("D1",$this->formValue->getValue('D1','ads'),"text","20");
 
-$text1 = new textarea('D2_1',$this->formValue->getValue('D2_1','ads'),15,35);
-$text2 = new textarea('D2_2',$this->formValue->getValue('D2_2','ads'),15,35);
-$text3 = new textarea('D2_3',$this->formValue->getValue('D2_3','ads'),15,35);
+$text1 = new textarea('D2_1',$this->formValue->getValue('D2_1','ads'),15,25);
+$text2 = new textarea('D2_2',$this->formValue->getValue('D2_2','ads'),15,25);
+$text3 = new textarea('D2_3',$this->formValue->getValue('D2_3','ads'),15,25);
+
+$D2 = new htmltable();
+$D2->width = "90";
+$D2->startRow();
+$D2->addCell($this->objLanguage->languageText('mod_formD_D2_1','ads'));
+$D2->addCell($this->objLanguage->languageText('mod_formD_D2_2','ads'));
+$D2->addCell($this->objLanguage->languageText('mod_formD_D2_3','ads'));
+$D2->endRow();
+$D2->startRow();
+$D2->addCell($text1->show());
+$D2->addCell($text2->show());
+$D2->addCell($text3->show());
+$D2->endRow();/*
 $D2 =  "<table border=\"1px\" cellspacing=\"0px\">
 	<tr>
 	<td>".$this->objLanguage->languageText('mod_formD_D2_1','ads')."</td> <td>".$this->objLanguage->languageText('mod_formD_D2_2','ads')."</td> <td>".$this->objLanguage->languageText('mod_formD_D2_3','ads')."</td>
@@ -36,8 +50,8 @@ if ($this->formError->getError('D2_3') != "") {
   $D2Error .= "<li>Textarea 3: " . $this->formError->getError('D2_3') . "</li>";
 }
 $D2Error .= "</ul>";
-
-$D3 = new textarea('D3',$this->formValue->getValue("D3"),15,100);
+*/
+$D3 = new textarea('D3',$this->formValue->getValue("D3"),5,50);
 $check1 = new checkbox('D4_1', NULL, ($this->formValue->getValue('D4_1') == "true" ? true : false));
 $check1->setValue('true');
 $check2 = new checkbox('D4_2', NULL, ($this->formValue->getValue('D4_2') == "true" ? true : false));
@@ -159,25 +173,27 @@ $D5 = $this->objLanguage->languageText('mod_formD_D5_S','ads')."
 	</tr>
 	</table>
 	";
-$D6 = new textarea('D6',$this->formValue->getValue('D6'),15,100);
-$D7 = new textarea('D7',$this->formValue->getValue('D7'),15,100);
-$submit = new button('submit','Submit');
+$D6 = new textarea('D6',$this->formValue->getValue('D6'),5,25);
+$D7 = new textarea('D7',$this->formValue->getValue('D7'),5,25);
+$submit = new button('submit','Next'); //originally submit
 $submit->setToSubmit();
 // done
 
 $form->addToForm($heading->show());
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D1','ads')."</b><br>".$D1->show()."<br>".$this->formError->getError('D1')."<br><br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D2','ads')."</b><br><br>".$D2."<br>$D2Error<br><br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D2','ads')."</b><br><br>".$D2->show()."<br>".$this->formError->getError('D2')."<br><br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D3','ads')."</b><br>".$D3->show()."<br>".$this->formError->getError('D3')."<br><br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D4','ads')."</b>".$D4."<br><br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D5','ads')."</b><br><br>".$D5."<br>".$this->formError->getError('D5')."<br><br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D6','ads')."</b><br>".$D6->show()."<br>".$this->formError->getError('D6')."<br><br>");"<br>".
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D7','ads')."</b><br>".$D7->show()."<br>".$this->formError->getError('D7')."<br><br>");
 $form->addToForm($submit->show());
-$form->addToForm($comment);
 
 
-
+/*===================================
+Don't know what $coursedata is
+=====================================
+*/
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -185,10 +201,10 @@ $cssLayout->setNumColumns(2);
 
 $nav = $this->getObject('nav', 'ads');
 $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-$leftSideColumn = $nav->getLeftContent($toSelect);
+$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
 $cssLayout->setLeftColumnContent($leftSideColumn);
-$rightSideColumn.='<h1>'.$coursedata['title'].'</h1>';
-$rightSideColumn.='<div style="padding:10px;">';
+//$rightSideColumn='<h1>'.$coursedata['title'].'</h1>';
+$rightSideColumn='<div style="padding:10px;">';
 
 //Add the table to the centered layer
 $rightSideColumn .= $form->show();

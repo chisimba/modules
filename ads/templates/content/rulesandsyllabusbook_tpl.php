@@ -161,7 +161,7 @@ $table->addCell($b5b->show());
 $table->endRow();
 
 
-/*
+
 $b6a = new radio ('b6_a');
 $b6a->addOption('b6_a1', $this->objLanguage->languageText('mod_ads_b6a1', 'ads'));
 $b5a->addOption('b6_a2', $this->objLanguage->languageText('mod_ads_b6a2', 'ads'));
@@ -200,7 +200,7 @@ $table->endRow();
 $table->startRow();
 $table->addCell($b5b->show());
 $table->endRow();
-*/
+
 
 $form->addToForm($table->show());
 

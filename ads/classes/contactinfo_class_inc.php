@@ -29,10 +29,10 @@ class contactinfo extends object
     {
         // set up language items
         $h1Label = $this->objLanguage->languageText('mod_ads_h1','ads');
-        $h2aLabel = $this->objLanguage->languageText('mod_contactdetails_h2a','ads');
-        $h2bLabel = $this->objLanguage->languageText('mod_contactdetails_h2b','ads');
-        $h3aLabel = $this->objLanguage->languageText('mod_contactdetails_h3a','ads');
-        $h3bLabel = $this->objLanguage->languageText('mod_contactdetails_h3b','ads');
+        $h2aLabel = $this->objLanguage->languageText('mod_ads_h2a','ads');
+        $h2bLabel = $this->objLanguage->languageText('mod_ads_h2b','ads');
+        $h3aLabel = $this->objLanguage->languageText('mod_ads_h3a','ads');
+        $h3bLabel = $this->objLanguage->languageText('mod_ads_h3b','ads');
 
         /*	//---- Getting course name
             $objDbCourse= $this->getObject("dbcoursetable");

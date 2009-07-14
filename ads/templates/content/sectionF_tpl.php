@@ -14,7 +14,7 @@ $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
 $leftSideColumn = $nav->getLeftContent($toSelect);
 $cssLayout->setLeftColumnContent($leftSideColumn);
 $rightSideColumn.='<h1>'.$coursedata['title'].'</h1>';
-$rightSideColumn.='<div style="padding:10px;"><h2>Section F: Collabortation and Contracts</h2>';
+$rightSideColumn.='<div style="padding:10px;"><h2>Section F: Collabotation and Contracts</h2>';
 
 //Add the table to the centered layer
 $rightSideColumn .= $content;

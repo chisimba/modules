@@ -8,9 +8,16 @@ $options = array('comment'=>'test','collate'=>'utf8_general_ci','character_set'=
 $fields = array(
 		'id' => array('type' => 'text','length' => 32),
 		'coursecode'=>array('type'=>'text','length'=>40),
-		'user'=>array('type'=>'text','length'=>40),
+		'userid'=>array('type'=>'text','length'=>40),
+		'formnumber'=>array('type'=>'text', 'length'=>20),
 		'question'=>array('type'=>'text','length'=>20),
-		'value'=>array('type'=>'text','length'=>4000));
+		'value'=>array('type'=>'text','length'=>4000),
+		'status'=>array('type'=>'text','length'=>30),
+		'version'=>array('type'=>'text','length'=>30),
+		'currentuser'=>array('type'=>'text','length'=>20));
+		//if status = editmode, only currentuser can edit it
+		//if status = submitted, only currentuser can't edit it
+		//this is basically a lock
 
 
 ?>
