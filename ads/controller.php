@@ -22,7 +22,7 @@ class ads extends controller {
     $this->objLanguage = $this->getObject('language', 'language');
     $this->objLog = $this->getObject('logactivity', 'logger');
     //$this->allForms = array("A", "B", "C", "D", "E", "F");
-    $this->allForms = array("A", "B", "C", "D", "E");
+    $this->allForms = array("A", "B", "C", "D");
     $this->objLog->log();
   }
   
