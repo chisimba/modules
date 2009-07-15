@@ -22,7 +22,7 @@ class ads extends controller {
     $this->objLanguage = $this->getObject('language', 'language');
     $this->objLog = $this->getObject('logactivity', 'logger');
     //$this->allForms = array("A", "B", "C", "D", "E", "F");
-    $this->allForms = array("A", "B", "C", "D");
+    $this->allForms = array("A", "B", "C", "D", "E", "F", "G", "H");
     $this->objLog->log();
   }
   
@@ -354,6 +354,30 @@ class ads extends controller {
           $textquestions[]  = "E5a";
           $textquestions[]  = "E5b";
         }
+        if ($form == "F") {
+          $textquestions[]  = "F1b";
+          $textquestions[]  = "F2b";
+          $textquestions[]  = "F3a";
+          $textquestions[]  = "F3b";
+          $textquestions[]  = "F4";
+        }
+        if ($form == "G") {
+          $textquestions[]  = "G1a";
+          $textquestions[]  = "G1b";
+          $textquestions[]  = "G2a";
+          $textquestions[]  = "G2b";
+          $textquestions[]  = "G3a";
+          $textquestions[]  = "G3b";
+          $textquestions[]  = "G4a";
+          $textquestions[]  = "G4b";
+        }
+        if ($form == "H") {
+          $textquestions[]  = "H1";
+          $textquestions[]  = "H2a";
+          $textquestions[]  = "H2b";
+          $textquestions[]  = "H3a";
+          $textquestions[]  = "H3b";
+        }
         return $textquestions;
     }
 
@@ -373,14 +397,18 @@ class ads extends controller {
            $otherquestions[] = "C4a";//radio button
         }
         if ($form == "D") {
-            $otherquestions[]  = "D4_1";//D4_1-8 are checkboxes
-            $otherquestions[]  = "D4_2";
-            $otherquestions[]  = "D4_3";
-            $otherquestions[]  = "D4_4";
-            $otherquestions[]  = "D4_5";
-            $otherquestions[]  = "D4_6";
-            $otherquestions[]  = "D4_7";
-            $otherquestions[]  = "D4_8";
+          $otherquestions[]  = "D4_1";//D4_1-8 are checkboxes
+          $otherquestions[]  = "D4_2";
+          $otherquestions[]  = "D4_3";
+          $otherquestions[]  = "D4_4";
+          $otherquestions[]  = "D4_5";
+          $otherquestions[]  = "D4_6";
+          $otherquestions[]  = "D4_7";
+          $otherquestions[]  = "D4_8";
+        }
+        if ($form == "F") {
+          $otherquestions[]  = "F1a";
+          $otherquestions[]  = "F2a";
         }
         return $otherquestions;
     }
