@@ -187,12 +187,15 @@ $saveButton = new button ('submitform', 'Next');
 $saveButton->setToSubmit();
 
 $buttons=$saveButton->show();
+/*
 $cancelButton = new button('cancel','Cancel');
 $actionUrl = $this->uri(array('action' => NULL));
 $cancelButton->setOnClick("window.location='$actionUrl'");
 $buttons.='&nbsp'.$cancelButton->show();
+ *
+ */
 
-$form->addToForm('<p align="center"><br />'.$buttons.'</p>');
+$form->addToForm('<br>'.$buttons);
 
 
 // Create an instance of the css layout class

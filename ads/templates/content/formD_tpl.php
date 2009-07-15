@@ -180,13 +180,13 @@ $submit->setToSubmit();
 // done
 
 $form->addToForm($heading->show());
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D1','ads')."</b><br>".$D1->show()."<br>".$this->formError->getError('D1')."<br><br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D2','ads')."</b><br><br>".$D2->show()."<br>".$this->formError->getError('D2')."<br><br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D3','ads')."</b><br>".$D3->show()."<br>".$this->formError->getError('D3')."<br><br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D1','ads')."</b><br>".$D1->show()."<br>".$this->formError->getError('D1')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D2','ads')."</b><br><br>".$D2->show()."<br>".$this->formError->getError('D2')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D3','ads')."</b><br>".$D3->show()."<br>".$this->formError->getError('D3')."<br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D4','ads')."</b>".$D4."<br><br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D5','ads')."</b><br><br>".$D5."<br>".$this->formError->getError('D5')."<br><br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D6','ads')."</b><br>".$D6->show()."<br>".$this->formError->getError('D6')."<br><br>");"<br>".
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D7','ads')."</b><br>".$D7->show()."<br>".$this->formError->getError('D7')."<br><br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D5','ads')."</b><br><br>".$D5."<br>".$this->formError->getError('D5')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D6','ads')."</b><br>".$D6->show()."<br>".$this->formError->getError('D6')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D7','ads')."</b><br>".$D7->show()."<br>".$this->formError->getError('D7')."<br>");
 $form->addToForm($submit->show());
 
 

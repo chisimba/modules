@@ -77,7 +77,7 @@ elseif(strlen($this->formError->getError("C4b_2")) > 0)
 {
   $formC->addToForm($this->formError->getError("C4b_2"));
 }
-$formC->addToForm("<br><br>".$btnSubmit->show());
+$formC->addToForm("<br>".$btnSubmit->show());
 
 $header = new htmlheading();
 $header->type = 3;

@@ -62,7 +62,7 @@
       $form->addToForm($saveButton->show());
 
 			return $form->show();
-		}// emd getSectionEForm()
+		}// end getSectionEForm()
 }
 
 ?>

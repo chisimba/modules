@@ -102,7 +102,7 @@
                         $myForm->addToForm($q5b_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q5b_input);
-                        $myForm->addToForm("<br />$mySubmit");
+                        $myForm->addToForm("<br /><br>$mySubmit");
 
 			return $myForm->show();
 		}// emd getSectionEForm()

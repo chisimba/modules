@@ -64,7 +64,7 @@
 			$myForm->addToForm($q4_heading);
                         $myForm->addToForm("<br />");
                         $myForm->addToForm($q4_input);
-			$myForm->addToForm("<br />$mySubmit");
+			$myForm->addToForm("<br /><br>$mySubmit");
 			
 			return $myForm->show();
 		}// emd getSectionEForm()
