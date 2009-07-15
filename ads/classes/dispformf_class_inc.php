@@ -35,7 +35,6 @@
                         $q3b_input = $this->getTextArea("F3b");
 			$q4_heading = $this->getHeading("f4");
                         $q4_input = $this->getTextArea("F4");
-			$cancel = $this->getButton("cancel");
 			$mySubmit = $this->getButton("submit");
 			
 			$myForm->addToForm($q1a_heading);
@@ -65,8 +64,7 @@
 			$myForm->addToForm($q4_heading);
                         $myForm->addToForm("<br />");
                         $myForm->addToForm($q4_input);
-			$myForm->addToForm("<br /><br />".$cancel."&nbsp;");
-			$myForm->addToForm($mySubmit);
+			$myForm->addToForm("<br />$mySubmit");
 			
 			return $myForm->show();
 		}// emd getSectionEForm()
@@ -108,18 +106,9 @@
 		} // end getRadio()
 
 		public function getButton($inputName) {
-			$myButton = new button($inputName);
-             		
-			if(strstr($inputName, "submit")) {
-				$myButton->setValue('Next'); //originally submit
-				$myButton->setOnClick('alert(\'Hello Submit\')');
-				//$myButton->setToSubmit();  //If you want to make the button a submit button
-			}
-			else if(strstr($inputName, "cancel")) {
-				$myButton->setValue('cancel');
-				//$myButton->setOnClick('alert(\'Hello Cancel\')');
-			}
-			return $myButton->show();
+      $saveButton = new button ('submitform', 'Next');
+      $saveButton->setToSubmit();
+			return $saveButton->show();
 		}
 	} 
 ?>
