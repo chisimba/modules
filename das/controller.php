@@ -64,7 +64,7 @@ class das extends controller {
     public function init() {
         try {
             // Include the needed libs from resources
-            include ($this->getResourcePath ( 'XMPPHP/XMPP.php', 'im' ));
+            include ($this->getResourcePath ( 'XMPPHP/BOSH.php', 'im' ));
             include ($this->getResourcePath ( 'XMPPHP/XMPPHP_Log.php', 'im' ));
             $this->objImOps = $this->getObject ( 'dasops', 'das' );
             $this->objViewRender = $this->getObject ( 'viewrender', 'das' );
