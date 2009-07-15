@@ -1,11 +1,16 @@
 <?php
 	class dispforme extends object{
 		public function init() {
-  		echo $this->submitAction;
 			$this->objLanguage = $this->getObject("language", "language");
 			$this->loadElements();
 		}// end init()
 	
+		public function setValues($formError, $formValue, $submitAction){
+		  $this->formError = $formError;
+		  $this->formValue = $formValue;
+		  $this->submitAction = $submitAction;
+	  }
+		
 		public function loadElements() {
 			$this->loadClass("textinput", "htmlelements");
 			$this->loadClass("textarea", "htmlelements");
@@ -16,39 +21,39 @@
 		public function getForm() {
 
 			// prepare headings and input boxes
-			$myForm = new form("signinForm", $this->uri(array("action"=>"submitForm")));
+			$myForm = new form("signinForm", $this->submitAction);
 			$q1a_heading = $this->getHeading("e1a");
-			$q1a_input = $this->getInput("q1a");
+			$q1a_input = $this->getInput("E1a");
 			$q1b_heading = $this->getHeading("e1b");
-                        $q1b_input = $this->getInput("q1b");
+                        $q1b_input = $this->getInput("E1b");
  			$q2a_heading = $this->getHeading("e2a");
-                        $q2a_input = $this->getInput("q2a");
+                        $q2a_input = $this->getInput("E2a");
 			
 
 			// textarea
  			$q2b_heading = $this->getHeading("e2b");
-                        $q2b_input = $this->getTextArea("q2b");
+                        $q2b_input = $this->getTextArea("E2b");
 			$q2c_heading = $this->getHeading("e2c");
-                        $q2c_input = $this->getTextArea("q2c");
+                        $q2c_input = $this->getTextArea("E2c");
                         
 
 			// input text
 			$q3a_heading = $this->getHeading("e3a");
-                        $q3a_input = $this->getInput("q3a");
+                        $q3a_input = $this->getInput("E3a");
  			
 			// textarea
 			$q3b_heading = $this->getHeading("e3b");
-                        $q3b_input = $this->getTextArea("q3b");
+                        $q3b_input = $this->getTextArea("E3b");
  			$q3c_heading = $this->getHeading("e3c");
-                        $q3c_input = $this->getTextArea("q3c");
+                        $q3c_input = $this->getTextArea("E3c");
 					
 
 			$q4_heading = $this->getHeading("e4");
-                        $q4_input = $this->getInput("q4");
+                        $q4_input = $this->getInput("E4");
                         $q5a_heading = $this->getHeading("e5a");
-                        $q5a_input = $this->getInput("q5a");
+                        $q5a_input = $this->getInput("E5a");
 			$q5b_heading = $this->getHeading("e5b");
-                        $q5b_input = $this->getInput("q5b");
+                        $q5b_input = $this->getInput("E5b");
 
 			// get the form buttons
 			$cancel = $this->getButton("cancel");
@@ -111,11 +116,9 @@
 		}// end getq1a_heading()
 
 		public function getInput($inputName) {
-
-			$inputName .= "_input";
-			$textinput = new textinput($inputName);
+			$textinput = new textinput($inputName, $this->formValue->getValue($inputName));
         		// check if the input name is  2b, 2c, 3b, 3c
-			if(strstr($inputName, "2b") || strstr($inputName, "2c")  || strstr($inputName, "3b")  || strstr($inputName, "3c")) {
+			if(strstr($inputName, "E2b") || strstr($inputName, "E2c")  || strstr($inputName, "E3b")  || strstr($inputName, "E3c")) {
 				$textinput->size = 50;
 			}
 			else {
@@ -126,9 +129,9 @@
 		}// end getq1a_input()
 
 		public function getTextArea($inputName) {
-			$inputName .= "_textarea";
 			
 			$myTextArea = new textarea($inputName);
+			$myTextArea->value = $this->formValue->getValue($inputName);
 			$myTextArea->setRows(5);
 			$myTextArea->setColumns('50');
 

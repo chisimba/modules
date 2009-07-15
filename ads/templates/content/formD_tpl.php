@@ -14,11 +14,11 @@ $form = new form("formd",$this->submitAction);
 $heading = new htmlheading($this->objLanguage->languageText('mod_formD_Heading','ads')."<sup>1</sup><hr />");
 
 // Questions
-$D1 = new textinput("D1",$this->formValue->getValue('D1','ads'),"text","20");
+$D1 = new textinput("D1",$this->formValue->getValue('D1'),"text","20");
 
-$text1 = new textarea('D2_1',$this->formValue->getValue('D2_1','ads'),15,25);
-$text2 = new textarea('D2_2',$this->formValue->getValue('D2_2','ads'),15,25);
-$text3 = new textarea('D2_3',$this->formValue->getValue('D2_3','ads'),15,25);
+$text1 = new textarea('D2_1',$this->formValue->getValue('D2_1'),15,25);
+$text2 = new textarea('D2_2',$this->formValue->getValue('D2_2'),15,25);
+$text3 = new textarea('D2_3',$this->formValue->getValue('D2_3'),15,25);
 
 $D2 = new htmltable();
 $D2->width = "90";

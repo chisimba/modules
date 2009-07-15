@@ -1,8 +1,8 @@
 <?php 
-
-$sectionF = $this->dispFormF->getForm();
-   
-$content.= "<div>".$sectionF."</div>";
+$formf = $this->getObject("dispformf", "ads");
+$formf->setValues($this->formError, $this->formValue, $this->submitAction);
+$sectionF = $formf->getForm();
+$content= "<div>".$sectionF."</div>";
 
 
 // Create an instance of the css layout class
@@ -11,10 +11,10 @@ $cssLayout->setNumColumns(2);
 
 $nav = $this->getObject('nav', 'ads');
 $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-$leftSideColumn = $nav->getLeftContent($toSelect);
+$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
 $cssLayout->setLeftColumnContent($leftSideColumn);
-$rightSideColumn.='<h1>'.$coursedata['title'].'</h1>';
-$rightSideColumn.='<div style="padding:10px;"><h2>Section F: Collabotation and Contracts</h2>';
+//$rightSideColumn='<h1>'.$coursedata['title'].'</h1>';
+$rightSideColumn='<div style="padding:10px;">';
 
 //Add the table to the centered layer
 $rightSideColumn .= $content;
