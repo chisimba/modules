@@ -416,6 +416,30 @@ class ads extends controller {
         $numericalquestions = array();
         return $numericalquestions;
     }
+
+    public function __viewcourseproposalstatus() {
+        $this->unit_name=$this->getParam('unit_name');
+        $this->id=$this->getParam('id');
+
+        return "viewcourseproposalstatus_tpl.php";
+    }
+
+    public function __submitproposalstatus() {
+        $this->id=$this->getParam('id');
+        $status = $this->getParam('proposalstatus');
+
+        // save status in the database
+        $submitted = $this->objCourseProposals->updateProposalStatus($this->id, $status);
+
+        if($submitted) {
+            return $this->__home();
+        }
+        else {
+            $message = "There was an error submitting your information";
+            $this->setVarByRef("message", $message);
+            return "viewcourseproposalstatus_tpl.php";
+        }
+    }
 }
 
 

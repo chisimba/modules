@@ -45,7 +45,7 @@ class dbdocument extends dbtable{
   	$sql = "select version, status, currentuser from $this->tablename where coursecode = '$courseid' order by version desc;";
   	$rows = $this->getArray($sql);
   	if (count($rows) == 0) {
-    	return array('version'=>'0', 'status'=>'submitted', 'currentuser'=>$userid);
+    	return array('version'=>'0', 'status'=>$rows[0]['status'], 'currentuser'=>$userid);
   	}
   	else {
     	return array('version'=>$rows[0]['version'], 'status'=>$rows[0]['status'], 'currentuser'=>$rows[0]['currentuser']);

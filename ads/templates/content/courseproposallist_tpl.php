@@ -52,16 +52,22 @@ foreach($courseProposals as $courseProposal){
   $objTable->addCell($titleLink->show());
   $objTable->addCell($courseProposal['creation_date']);
   $objTable->addCell($this->objUser->fullname($courseProposal['userid']));
-  //$statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$courseProposal['id'])));
-  //$statusLink->link='New';
-  $status = "unknown";
-  if ($verarray['status'] == 'unsubmitted') {
-    $status = "Currently being edited";
+  
+  $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$courseProposal['id'])));
+
+  switch($courseProposal['status']) {
+      case 0: $statusLink->link='New';
+              break;
+      case 1: $statusLink->link='Under Review';
+              break;
+      case 2: $statusLink->link='Accepted';
+              break;
+      case 3: $statusLink->link='Rejected';
+              break;
+      default: $statusLink->link= 'New';
   }
-  else if ($verarray['status'] == 'submitted') {
-    $status = "Editable";
-  }
-  $objTable->addCell($status);
+
+  $objTable->addCell($statusLink->show());
   $objTable->addCell($verarray['version'] . ".00");
   $objTable->addCell($this->objUser->fullname($verarray['currentuser']));
   $deleteLink->link($this->uri(array('action'=>'deletecourseproposal','id'=>$courseProposal['id'])));
@@ -73,16 +79,7 @@ foreach($courseProposals as $courseProposal){
   $editLink->link=$objIcon->show();
   $objTable->addCell($editLink->show().$deleteLink->show());
   $objTable->endRow();
-  if ($verarray['status'] == 'unsubmitted' && $verarray['currentuser'] == $this->objUser->userId()) {
-    $objTable->startRow('submitLink');
-    
-    $submitLink->link($this->uri(array('action'=>'submitproposal','courseid'=>$courseProposal['id'])));
-    $submitLink->link = "You are currently editing this proposal. Click here to submit the proposal for evaluation if you are done.";
-    $objTable->addCell($submitLink->show(), null, null, null, null, 'colspan="7"');
-    $objTable->endRow();
-  }
  
-
 }
 
 

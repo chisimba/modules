@@ -11,22 +11,22 @@ $fields = array(
     'type' => 'text',
     'length' => 32
     ),
-  'title'  => array(
+    'title'  => array(
      'type'  =>  'text',
      'length'=>  255
     ),
-   'userid' => array(
+    'userid' => array(
         'type' => 'text',
         'length' => 255,
         'notnull' => TRUE
-        ),
-  'creation_date' =>  array(
+    ),
+    'creation_date' =>  array(
       'type'  =>  'timestamp'
     ),
     'status' => array(
         'type' => 'text',
         'length' => 32,
         'notnull' => TRUE
-        )
-    );
+    )
+);
 ?>

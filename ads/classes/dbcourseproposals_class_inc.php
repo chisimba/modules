@@ -60,5 +60,12 @@ class dbcourseproposals extends dbTable{
         return true;
       }
     }
+
+    public function updateProposalStatus($id, $status) {
+        $data = array('status'=>$status);
+        $courseProposalStatus = $this->update('id', $id, $data, $this->table);
+
+        return $courseProposalStatus;
+    }
 }
 ?>

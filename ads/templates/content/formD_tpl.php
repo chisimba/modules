@@ -1,5 +1,12 @@
 <?php
 
+// add javascript for the hour calculations
+$jquery = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/jquery-1.2.6.min.js').'" type="text/javascript"></script>';
+$calcjs = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/calc.js').'" type="text/javascript"></script>';
+
+$this->appendArrayVar('headerParams', $jquery);
+$this->appendArrayVar('headerParams', $calcjs);
+
 $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('textinput','htmlelements');
@@ -137,7 +144,7 @@ $D5 = $this->objLanguage->languageText('mod_formD_D5_S','ads')."
 	</tr>
 	<tr>
 	<td><b>".$this->objLanguage->languageText('mod_formD_D5_1','ads')."</b></td>
-	<td></td>
+	<td id=\"totContTime\" style=\"text-align:right;padding:0 0.8em;\"></td>
 	</tr>
 	<tr>
 	<td>".$this->objLanguage->languageText('mod_formD_D5f','ads')."<br>".$this->formError->getError('D5f')."</td>
@@ -145,7 +152,7 @@ $D5 = $this->objLanguage->languageText('mod_formD_D5_S','ads')."
 	</tr>
 	<tr>
 	<td><b>".$this->objLanguage->languageText('mod_formD_D5_2','ads')."</b></td>
-	<td></td>
+	<td id=\"totNotTime\" style=\"text-align:right;padding:0 0.8em;\"></td>
 	</tr>
 	<tr>
 	<td>".$this->objLanguage->languageText('mod_formD_D5g','ads')."<br>".$this->formError->getError('D5g')."</td>
@@ -157,7 +164,7 @@ $D5 = $this->objLanguage->languageText('mod_formD_D5_S','ads')."
 	</tr>
 	<tr>
 	<td><b>".$this->objLanguage->languageText('mod_formD_D5_3','ads')."</b></td>
-	<td></td>
+	<td id=\"totExamTime\" style=\"text-align:right;padding:0 0.8em;\"></td>
 	</tr>
 	<tr>
 	<td>".$this->objLanguage->languageText('mod_formD_D5i','ads')."<br>".$this->formError->getError('D5i')."</td>
@@ -165,7 +172,7 @@ $D5 = $this->objLanguage->languageText('mod_formD_D5_S','ads')."
 	</tr>
 	<tr>
 	<td><b>".$this->objLanguage->languageText('mod_formD_D5_4','ads')."</b></td>
-	<td></td>
+	<td id=\"totNotTime2\" style=\"text-align:right;padding:0 0.8em;\"></td>
 	</tr>
 	<tr>
 	<td><b>".$this->objLanguage->languageText('mod_formD_D5_5','ads')."</b></td>
