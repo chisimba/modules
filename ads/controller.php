@@ -80,6 +80,10 @@ class ads extends controller {
     }
   }
 
+  function __addcomment(){
+      return "addcomment_tpl.php";
+  }
+
   function __admincomment(){
       return "admincomment_tpl.php";
   }
