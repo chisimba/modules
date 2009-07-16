@@ -2,7 +2,7 @@
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('button','htmlelements');
-$this->loadClass('textinput','htmlelements');
+$this->loadClass('textarea','htmlelements');
 
 
 
@@ -11,10 +11,10 @@ $objTable = new htmltable();
 
 $objTable->startRow();
 
-$objTable->addCell($objLanguage->languageText('mod_ads_unitname','ads'), 150, NULL, 'left');
+$objTable->addCell($objLanguage->languageText('mod_ads_review','ads'), 150, NULL, 'left');
 $objTable->endRow();
 $objTable->startRow();
-$coursenamefield =  new textinput('title', '');
+$coursenamefield =  new textarea('title', '');
 $objTable->addCell($coursenamefield->show(),400,NULL,'left');
 
 $objTable->endRow();
@@ -24,7 +24,7 @@ $objTable->endRow();
 $objTable->row_attributes=' height="10"';
 $buttons='';
 /************** Build form **********************/
-$saveButton = new button('save',$objLanguage->languageText('mod_ads_save','ads'));
+$saveButton = new button('save',$objLanguage->languageText('mod_ads_savereview','ads'));
 $saveButton->setToSubmit();
 
 
@@ -34,7 +34,7 @@ $actionUrl = $this->uri(array('action' => NULL));
 $cancelButton->setOnClick("window.location='$actionUrl'");
 $buttons.='&nbsp'.$cancelButton->show();
 //$objForm = new form('FormName',$this->uri(array('action'=>'savestudent')));
-$objForm = new form('FormName',$this->uri(array('action'=>'savecourseproposal')));
+$objForm = new form('FormName',$this->uri(array('action'=>'savecoursereview')));
 $objForm->addToForm($objTable->show());
 $objForm->addToForm($buttons);
 
@@ -45,7 +45,7 @@ $cssLayout->setNumColumns(2);
 
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent($postLoginMenu->show());
-$rightSideColumn='<h1>'. $objLanguage->languageText('mod_ads_addcourseproposal','ads').'</h1>';
+$rightSideColumn='<h1>'. $objLanguage->languageText('mod_ads_reviewcourseproposal','ads').'</h1>';
 //Add the table to the centered layer
 $rightSideColumn .= $objForm->show();
 // Add Right Column

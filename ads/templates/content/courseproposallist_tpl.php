@@ -1,3 +1,4 @@
+=======
 <?php
 $css = '<style type="text/css">
 .submitLink {
@@ -27,6 +28,7 @@ $titleLink=new link();
 $deleteLink=new link();
 $editLink=new link();
 $submitLink = new link();
+$reviewLink=new link();
 
 $objTable->startHeaderRow();
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_title', 'ads'));
@@ -77,7 +79,13 @@ foreach($courseProposals as $courseProposal){
   $editLink->link($this->uri(array('action'=>'editcourseproposal','id'=>$courseProposal['id'])));
   $objIcon->setIcon('edit');
   $editLink->link=$objIcon->show();
-  $objTable->addCell($editLink->show().$deleteLink->show());
+  
+    //review
+  $reviewLink->link($this->uri(array('action'=>'reviewcourseproposal','id'=>$courseProposal['id'])));
+  $objIcon->setIcon('view');
+  $reviewLink->link=$objIcon->show();
+  
+  $objTable->addCell($editLink->show().$deleteLink->show().$reviewLink->show());
   $objTable->endRow();
  
 }
@@ -120,6 +128,7 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
+
 
 
 ?>

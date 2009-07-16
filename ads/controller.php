@@ -17,6 +17,8 @@ class ads extends controller {
     
     $this->objDocumentStore = $this->getObject('dbdocument');
     $this->objCourseProposals = $this->getObject('dbcourseproposals');
+    //review
+    $this->objCourseReviews = $this->getObject('dbcoursereviews');
     $this->objUser = $this->getObject ( 'user', 'security' );
     
     $this->objLanguage = $this->getObject('language', 'language');
@@ -78,6 +80,11 @@ class ads extends controller {
     }
   }
   
+  function __reviewcourseproposal(){
+     return "reviewcourseproposal_tpl.php";
+  }
+
+  
   function __addcourseproposal(){
     return "addcourseproposal_tpl.php";
   }
@@ -86,6 +93,12 @@ class ads extends controller {
     $courseTitle= $this->getParam('title');
     $courseProposalId=$this->objCourseProposals->addCourseProposal($courseTitle);
     return $this->nextAction('overview', array('id'=>$courseProposalId));
+  }
+  
+  function __savecoursereview(){
+    $courseReview= $this->getParam('title');
+    $courseReviewlId=$this->objCourseReviews->addCourseReview($courseReview);
+    return $this->nextAction('overview', array('id'=>$courseReviewId));
   }
   
   function formExists($form) {
