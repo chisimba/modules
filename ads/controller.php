@@ -352,15 +352,6 @@ class ads extends controller {
             $textquestions[]  = "D2_2";
             $textquestions[]  = "D2_3";
             $textquestions[]  = "D3";
-            $textquestions[]  = "D5_1";
-            $textquestions[]  = "D5_2";
-            $textquestions[]  = "D5_3";
-            $textquestions[]  = "D5_4";
-            $textquestions[]  = "D5_5";
-            $textquestions[]  = "D5_6";
-            $textquestions[]  = "D5_7";
-            $textquestions[]  = "D5_8";
-            $textquestions[]  = "D5_9";
             $textquestions[]  = "D6";
             $textquestions[]  = "D7";
         }
