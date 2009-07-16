@@ -1,4 +1,3 @@
-=======
 <?php
 $css = '<style type="text/css">
 .submitLink {
