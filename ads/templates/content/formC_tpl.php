@@ -12,7 +12,8 @@ $this->loadClass('label', 'htmlelements');
 
 
 /*declare objects*/
-$CH = new htmlheading($this->objLanguage->languageText('mod_formC_Heading','ads', 2));
+//$CH = new htmlheading($this->objLanguage->languageText('mod_ads_titleC','ads', 2));
+$header = new htmlheading($this->objLanguage->languageText('mod_ads_titleC','ads'), 2);
 
 $C1  = new textarea('C1',$this->formValue->getValue("C1"),5,25);
 $C2a = new radio('C2a');
@@ -55,7 +56,7 @@ $btnSubmit = new button('submitbutton', 'Next'); //originally submit
 $btnSubmit->setToSubmit();
 
 $formC = new form('formC',$this->submitAction);
-$formC->addToForm($CH->show().$this->formError->getError("CH")."<br>");
+$formC->addToForm($header->show(). "<br />");
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C1','ads')."</b><br>" .$C1->show()."<br>".$this->formError->getError("C1"). "<br>");
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2a','ads')."</b><br>".$C2a->showTable()."<br>".$this->formError->getError("C2a")."<br>");
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2b','ads')."</b><br>".$C2b->show()."<br>".$this->formError->getError("C2b"));

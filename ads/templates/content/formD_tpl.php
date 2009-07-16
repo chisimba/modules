@@ -18,7 +18,8 @@ $this->loadClass('htmltable','htmlelements');
 
 $form = new form("formd",$this->submitAction);
 
-$heading = new htmlheading($this->objLanguage->languageText('mod_formD_Heading','ads')."<sup>1</sup><hr />");
+$header = new htmlheading($this->objLanguage->languageText('mod_ads_titleD','ads') ."<sup>1</sup>", 2);
+//$heading = new htmlheading($this->objLanguage->languageText('mod_formD_Heading','ads')."<sup>1</sup><hr />");
 
 // Questions
 $D1 = new textinput("D1",$this->formValue->getValue('D1'),"text","20");
@@ -38,26 +39,7 @@ $D2->startRow();
 $D2->addCell($text1->show());
 $D2->addCell($text2->show());
 $D2->addCell($text3->show());
-$D2->endRow();/*
-$D2 =  "<table border=\"1px\" cellspacing=\"0px\">
-	<tr>
-	<td>".$this->objLanguage->languageText('mod_formD_D2_1','ads')."</td> <td>".$this->objLanguage->languageText('mod_formD_D2_2','ads')."</td> <td>".$this->objLanguage->languageText('mod_formD_D2_3','ads')."</td>
-	</tr>
-	<tr>
-	<td>".$text1->show()."</td><td>".$text2->show()."</td><td>".$text3->show()."</td></tr></table>";
-
-$D2Error = "<ul>";
-if ($this->formError->getError('D2_1') != "") {
-  $D2Error .= "<li>Textarea 1: " . $this->formError->getError('D2_1') . "</li>";
-}
-if ($this->formError->getError('D2_2') != "") {
-  $D2Error .= "<li>Textarea 2: " . $this->formError->getError('D2_2') . "</li>";
-}
-if ($this->formError->getError('D2_3') != "") {
-  $D2Error .= "<li>Textarea 3: " . $this->formError->getError('D2_3') . "</li>";
-}
-$D2Error .= "</ul>";
-*/
+$D2->endRow();
 $D3 = new textarea('D3',$this->formValue->getValue("D3"),5,50);
 $check1 = new checkbox('D4_1', NULL, ($this->formValue->getValue('D4_1') == "true" ? true : false));
 $check1->setValue('true');
@@ -180,13 +162,23 @@ $D5 = $this->objLanguage->languageText('mod_formD_D5_S','ads')."
 	</tr>
 	</table>
 	";
+$D5 .= "<br />";
+$errorcodes = array("D5_1", "D5_2","D5_3", "D5_4","D5_5", "D5_6","D5_7", "D5_8","D5_9");
+$count = 1;
+foreach ($errorcodes as $error) {
+  if ($this->formError->getError($error) != "") {
+    $this->formError->setError($error, "Field $count: " . $this->formError->errorarray[$error]);
+    $D5 .= $this->formError->getError($error) . "<br />";
+  }
+  $count++;
+}
 $D6 = new textarea('D6',$this->formValue->getValue('D6'),5,25);
 $D7 = new textarea('D7',$this->formValue->getValue('D7'),5,25);
 $submit = new button('submit','Next'); //originally submit
 $submit->setToSubmit();
 // done
 
-$form->addToForm($heading->show());
+$form->addToForm($header->show(). "<br />");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D1','ads')."</b><br>".$D1->show()."<br>".$this->formError->getError('D1')."<br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D2','ads')."</b><br><br>".$D2->show()."<br>".$this->formError->getError('D2')."<br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D3','ads')."</b><br>".$D3->show()."<br>".$this->formError->getError('D3')."<br>");

@@ -300,6 +300,9 @@ class ads extends controller {
             elseif (strlen($_POST[$value] = trim($_POST[$value])) == 0) {
                 $this->formError->setError($value, "You must specify a value for this field.");
             }
+            elseif (strlen($_POST[$value]) > 4000) {
+              $this->formError->setError($value, "Field value too long.");
+            }
         }
     }
 
@@ -375,10 +378,7 @@ class ads extends controller {
           $textquestions[]  = "E5b";
         }
         if ($form == "F") {
-          $textquestions[]  = "F1b";
-          $textquestions[]  = "F2b";
           $textquestions[]  = "F3a";
-          $textquestions[]  = "F3b";
           $textquestions[]  = "F4";
         }
         if ($form == "G") {
@@ -429,12 +429,26 @@ class ads extends controller {
         if ($form == "F") {
           $otherquestions[]  = "F1a";
           $otherquestions[]  = "F2a";
+          $otherquestions[]  = "F1b";
+          $otherquestions[]  = "F2b";
+          $otherquestions[]  = "F3b";
         }
         return $otherquestions;
     }
 
     function getNumericalQuestions($form) {
         $numericalquestions = array();
+        if ($form == "D") {
+          $numericalquestions[] = "D5_1";
+          $numericalquestions[] = "D5_2";
+          $numericalquestions[] = "D5_3";
+          $numericalquestions[] = "D5_4";
+          $numericalquestions[] = "D5_5";
+          $numericalquestions[] = "D5_6";
+          $numericalquestions[] = "D5_7";
+          $numericalquestions[] = "D5_8";
+          $numericalquestions[] = "D5_9";
+        }
         return $numericalquestions;
     }
 

@@ -7,9 +7,8 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
-$header = new htmlheading();
-$header->type = 3;
-$header->str = $this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
+$header = new htmlheading($this->objLanguage->languageText('mod_ads_titleA','ads'), 2);
+
 
 $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
 $form = new form ('overview', $this->submitAction);
@@ -17,10 +16,12 @@ $messages = array();
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
+$table->cellspacing = 10;
 $table->startRow();
 
+
 $unitname = new textinput('A1',$this->formValue->getValue('A1'),NULL,50);
-$unitnameLabel = new label($this->objLanguage->languageText('mod_ads_unit_name', 'ads').'&nbsp;', 'input_unitname');
+$unitnameLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_name', 'ads'). "</b>".'&nbsp;', 'input_unitname');
 
 $table->addCell($unitnameLabel->show(), 150, NULL, 'left');
 $table->endRow();
@@ -39,7 +40,7 @@ else {
   $unitType->setSelected('new');
 }
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_ads_thisisa','ads').'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_thisisa','ads'). "</b>".'&nbsp;', 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($unitType->showTable());
@@ -48,7 +49,7 @@ $table->endRow();
 
 $table->startRow();
 $motivation = new textarea('A3');
-$motivationLabel = new label($this->objLanguage->languageText('mod_ads_motiv', 'ads').'&nbsp;', 'input_motivation');
+$motivationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_motiv', 'ads'). "</b>".'&nbsp;', 'input_motivation');
 $motivation->value = $this->formValue->getValue("A3");
 
 $table->addCell($motivationLabel->show(), 150, NULL, 'left');
@@ -60,7 +61,7 @@ $table->endRow();
 
 $table->startRow();
 $qualification = new textarea('A4');
-$qualificationLabel = new label($this->objLanguage->languageText('mod_ads_unit_qual', 'ads').'&nbsp;', 'input_motivation');
+$qualificationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_qual', 'ads'). "</b>".'&nbsp;', 'input_motivation');
 
     $qualification->value = $this->formValue->getValue("A4");
 
@@ -86,13 +87,13 @@ $unitType2->setSelected('changetype5');
 else
 $unitType2->setSelected($this->formValue->getValue("A5"));
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_ads_proposaltype','ads').'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_proposaltype','ads'). "</b>" .'&nbsp;', 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($unitType2->showTable());
 $table->endRow();
 
-
+$form->addToForm($header->show(). "<br />");
 $form->addToForm($table->show());
 
 $saveButton = new button ('submitform', 'Next');

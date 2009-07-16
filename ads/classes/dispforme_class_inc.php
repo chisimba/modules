@@ -15,11 +15,12 @@
 			$this->loadClass("textinput", "htmlelements");
 			$this->loadClass("textarea", "htmlelements");
 			$this->loadClass("button", "htmlelements");
+			$this->loadClass('htmlheading', 'htmlelements');
 		} // end loadElements()
 
 	
 		public function getForm() {
-
+      $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleE','ads'), 2);
 			// prepare headings and input boxes
 			$myForm = new form("signinForm", $this->submitAction);
 			$q1a_heading = $this->getHeading("e1a");
@@ -59,6 +60,7 @@
 
 
 			// add elememts to the form
+			$myForm->addToForm($header->show() . "<br />");
 			$myForm->addToForm($q1a_heading);
 			$myForm->addToForm("<br>");
 			$myForm->addToForm($q1a_input);
@@ -93,13 +95,13 @@
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q5b_input);
                         $myForm->addToForm("<br>$mySubmit");
-
+      
 			return $myForm->show();
 		}// emd getSectionEForm()
 	
 		public function getHeading($heading) {
 			$myLabel = "mod_task2_".$heading;
-			return $this->objLanguage->languageText($myLabel,"ads");
+			return "<b>" . $this->objLanguage->languageText($myLabel,"ads") . "</b>";
 		}// end getq1a_heading()
 
 		public function getInput($inputName) {

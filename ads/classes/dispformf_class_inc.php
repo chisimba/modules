@@ -10,6 +10,7 @@
 			$this->loadClass("textarea", "htmlelements");
 			$this->loadClass("radio", "htmlelements");
 			$this->loadClass("button", "htmlelements");
+			$this->loadClass('htmlheading', 'htmlelements');
 		} // end loadElements()
 
 	  public function setValues($formError, $formValue, $submitAction){
@@ -20,7 +21,7 @@
 		
 		public function getForm() {
 			$myForm = new form("signinForm", $this->submitAction);		
-
+      $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleF','ads'), 2);
 			$q1a_heading = $this->getHeading("f1a");
 			$q1a_radio = $this->getRadio("F1a");
 			$q1b_heading = $this->getHeading("f1b");
@@ -37,6 +38,7 @@
                         $q4_input = $this->getTextArea("F4");
 			$mySubmit = $this->getButton("submit");
 			
+			$myForm->addToForm($header->show() . "<br />");
 			$myForm->addToForm($q1a_heading);
 			$myForm->addToForm("<br>");
 			$myForm->addToForm($q1a_radio);
@@ -69,7 +71,7 @@
 	
 		public function getHeading($heading) {
 			$myLabel = "mod_task2_".$heading;
-			return $this->objLanguage->languageText($myLabel,"ads");
+			return "<b>" . $this->objLanguage->languageText($myLabel,"ads") . "</b>";
 		}// end getq1a_heading()
 
 		public function getInput($inputName) {
@@ -93,13 +95,13 @@
 			$objElement = new radio($radioName);
 	                $objElement->addOption('y','Yes');
 		        $objElement->addOption('n','No');
+		        $objElement->setTableColumns(1);
 		        if ($this->formValue->getValue($radioName) == "") {
               $objElement->setSelected('y');
             }
             else {
               $objElement->setSelected($this->formValue->getValue($radioName));
             }
-	               	
 			return $objElement->show();
 		} // end getRadio()
 
