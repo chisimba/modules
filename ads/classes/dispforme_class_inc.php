@@ -62,47 +62,37 @@
 			$myForm->addToForm($q1a_heading);
 			$myForm->addToForm("<br>");
 			$myForm->addToForm($q1a_input);
-			$myForm->addToForm("<br><br>");
 			$myForm->addToForm($q1b_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q1b_input); 
-                        $myForm->addToForm("<br><br>");
 			$myForm->addToForm($q2a_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q2a_input);
-			$myForm->addToForm("<br><br>");
 			$myForm->addToForm($q2b_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q2b_input);
-			$myForm->addToForm("<br><br>");
 			$myForm->addToForm($q2c_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q2c_input); 
-			$myForm->addToForm("<br><br>");
                         $myForm->addToForm($q3a_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q3a_input);
-			$myForm->addToForm("<br><br>");
                         $myForm->addToForm($q3b_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q3b_input);
-			$myForm->addToForm("<br><br>");
                         $myForm->addToForm($q3c_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q3c_input);
-			$myForm->addToForm("<br><br>");
 			$myForm->addToForm($q4_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q4_input); 
-			$myForm->addToForm("<br><br>");
                         $myForm->addToForm($q5a_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q5a_input);
-			$myForm->addToForm("<br><br>");
                         $myForm->addToForm($q5b_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q5b_input);
-                        $myForm->addToForm("<br /><br>$mySubmit");
+                        $myForm->addToForm("<br>$mySubmit");
 
 			return $myForm->show();
 		}// emd getSectionEForm()
@@ -122,7 +112,7 @@
 				$textinput->size = 15; 
         		}
 			
-			return  $textinput->show();
+			return  $textinput->show()  . "<br />" . $this->formError->getError($inputName) . "<br />";
 		}// end getq1a_input()
 
 		public function getTextArea($inputName) {
@@ -132,7 +122,7 @@
 			$myTextArea->setRows(5);
 			$myTextArea->setColumns('50');
 
-			return $myTextArea->show();
+			return $myTextArea->show()  . "<br />" . $this->formError->getError($inputName) . "<br />";
 		} // end getTextArea()
 
 		public function getButton($inputName) {
