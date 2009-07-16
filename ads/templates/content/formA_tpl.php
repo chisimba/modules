@@ -25,7 +25,7 @@ $unitnameLabel = new label($this->objLanguage->languageText('mod_ads_unit_name',
 $table->addCell($unitnameLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
-$table->addCell($unitname->show().$required);
+$table->addCell($unitname->show() . "<br />" . $this->formError->getError('A1'));
 $table->endRow();
 
 $unitType = new radio ('A2');
@@ -54,7 +54,7 @@ $motivation->value = $this->formValue->getValue("A3");
 $table->addCell($motivationLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
-$table->addCell($motivation->show().$required);
+$table->addCell($motivation->show() . "<br />" . $this->formError->getError('A3'));
 $table->endRow();
 
 
@@ -69,7 +69,7 @@ $qualificationLabel = new label($this->objLanguage->languageText('mod_ads_unit_q
 $table->addCell($qualificationLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
-$table->addCell($qualification->show().$required);
+$table->addCell($qualification->show() . "<br />" . $this->formError->getError('A4'));
 $table->endRow();
 
 
