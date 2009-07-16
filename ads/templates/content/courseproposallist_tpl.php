@@ -96,6 +96,8 @@ foreach($courseProposals as $courseProposal){
 $addButton = new button('add','Add');
 $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
 $addButton->setOnClick("window.location='$returnUrl'");
+$linkAdmComment = new link($this->uri(array('action'=>'admincomment')));
+$linkAdmComment->link = "Add Comment";
 
 $objForm = new form('FormName',$this->uri(array('action'=>'addcourseproposal')));
 $objForm->addToForm($addButton->show());
@@ -110,7 +112,8 @@ regulatory requirements, when developing or amending a course/ unit. The appendi
  in responding to each of the following questions as well as offering additional information
 on the overall proposal process.
 ';
-$content='<h1>'.$title.'</h1>';
+$content = $linkAdmComment->show().'<br>';
+$content.='<h1>'.$title.'</h1>';
 $content.='<p>'.$tip.'</p>';
 //$content.= $this->message;
 $content.= $objForm->show();
