@@ -61,8 +61,8 @@ $fields = array(
         'notnull' => TRUE
 		),
     'refno' => array(
-		'type' => 'integer',
-		'length' => 4,
+		'type' => 'text',
+		'length' => 11,
         'notnull' => TRUE,
         'default' => 0
 		),

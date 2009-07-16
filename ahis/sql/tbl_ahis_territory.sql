@@ -18,22 +18,26 @@ $fields = array(
     'northlatitude' => array(
         'type' => 'text',
         'length' => 16,
-        'notnull' => TRUE
+        'notnull' => TRUE,
+        'default' => 0
         ),
     'southlatitude' => array(
         'type' => 'text',
         'length' => 16,
-        'notnull' => TRUE
+        'notnull' => TRUE,
+        'default' => 0
         ),
     'eastlongitude' => array(
         'type' => 'text',
         'length' => 16,
-        'notnull' => TRUE
+        'notnull' => TRUE,
+        'default' => 0
         ),
     'westlongitude' => array(
         'type' => 'text',
         'length' => 16,
-        'notnull' => TRUE
+        'notnull' => TRUE,
+        'default' => 0
         ),
     'geo2id' => array(
         'type' => 'text',
