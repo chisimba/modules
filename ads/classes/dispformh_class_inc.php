@@ -25,25 +25,25 @@
 			
 			$textDescription = $this->objLanguage->languageText('mod_ads_h1','ads');
       $text = new textarea('H1',$this->formValue->getValue('H1'),5,70);
-      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H1') . "<br /><br />");
+      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H1') . "<br />");
       
       $textDescription = $this->objLanguage->languageText('mod_ads_h2a','ads');
       $text = new textarea('H2a',$this->formValue->getValue('H2a'),5,70);
-      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H2a') . "<br /><br />");
+      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H2a') . "<br />");
       
       $textDescription = $this->objLanguage->languageText('mod_ads_h2b','ads');
       $text = new textarea('H2b',$this->formValue->getValue('H2b'),5,70);
-      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H2b') . "<br /><br />");
+      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H2b') . "<br />");
       
       $textDescription = $this->objLanguage->languageText('mod_ads_h3a','ads');
       $text = new textarea('H3a',$this->formValue->getValue('H3a'),5,70);
-      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H3a') . "<br /><br />");
+      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H3a') . "<br />");
       
       $textDescription = $this->objLanguage->languageText('mod_ads_h3b','ads');
       $text = new textarea('H3b',$this->formValue->getValue('H3b'),5,70);
-      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H3b') . "<br /><br />");
+      $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('H3b') . "<br />");
 
-      $saveButton = new button ('submitform', 'Next');
+      $saveButton = new button ('submitform', 'End');
       $saveButton->setToSubmit();
 
 

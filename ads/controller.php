@@ -79,6 +79,10 @@ class ads extends controller {
         return FALSE;
     }
   }
+
+  function __admincomment(){
+      return "admincomment_tpl.php";
+  }
   
   function __reviewcourseproposal(){
      return "reviewcourseproposal_tpl.php";
