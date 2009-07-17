@@ -13,6 +13,9 @@ package org.avoir.realtime.gui.main;
 import javax.swing.JProgressBar;
 import org.avoir.realtime.gui.webbrowser.RWebBrowserListener;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
+import com.l2fprod.common.swing.JTipOfTheDay;
+import com.l2fprod.common.swing.TipModel;
+import com.l2fprod.common.swing.tips.DefaultTipModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -23,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Timer;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -1485,6 +1489,15 @@ public class MainFrame extends javax.swing.JFrame {
             ConnectionManager.sendPacket(p);
         }
 
+    }
+
+    public void showTipOfDay(){
+        Collection tips=new ArrayList();
+        tips.add("this is todays tip as well all know it");
+        TipModel tipModel=new DefaultTipModel(tips);
+        JTipOfTheDay jTipOfTheDay=new JTipOfTheDay(tipModel);
+        jTipOfTheDay.setCurrentTip(0);
+        jTipOfTheDay.showDialog(this);
     }
 
     private void doRefresh() {

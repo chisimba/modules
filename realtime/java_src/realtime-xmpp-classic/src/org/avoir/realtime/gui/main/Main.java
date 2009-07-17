@@ -145,6 +145,7 @@ public class Main {
                             MainFrame mf = new MainFrame(roomName);
                             mf.setSize(Toolkit.getDefaultToolkit().getScreenSize());
                             mf.setVisible(true);
+                            mf.showTipOfDay();
                             saveEC2Urls(host, RealtimePacket.Mode.SAVE_MAIN_EC2_URL, roomName);
                             saveEC2Urls(audioVideoUrl, RealtimePacket.Mode.SAVE_AUDIO_VIDEO_EC2_URL, roomName);
                             saveEC2Urls("openfire-httpflash.wits.ac.za", RealtimePacket.Mode.SAVE_FLASH_EC2_URL, roomName);
