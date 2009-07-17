@@ -39,16 +39,14 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import org.avoir.realtime.chat.ChatRoom;
-import org.avoir.realtime.chat.ChatRoomManager;
+import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
-import org.avoir.realtime.gui.webbrowser.WebBrowserManager;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.SubscribePacketInt;
 import org.avoir.realtime.net.packets.RealtimePacket;
-import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
@@ -73,7 +71,8 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     private ImageIcon helpIcon = ImageUtil.createImageIcon(this, "/images/help_16x16.png");
     private URL micIconURL = null;
     private Collection<RosterEntry> entries;
-    private XMPPConnection connection=ConnectionManager.getConnection();;
+    private XMPPConnection connection = ConnectionManager.getConnection();
+    
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem acceptMenuItem = new JMenuItem("Accept");
     private JMenuItem profileMenuItem = new JMenuItem("Profile");
@@ -82,6 +81,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     private JMenuItem giveMICMenuItem = new JMenuItem("Give MIC");
     private JMenuItem takeMICMenuItem = new JMenuItem("Take MIC");
     private JMenuItem kickoutMenuItem = new JMenuItem("Kick Out");
+     
     private JMenuItem banMenuItem = new JMenuItem("Ban");
     private JMenuItem privateChatMenuItem = new JMenuItem("Private Chat");
     private ArrayList<Map> currentSpeakers = new ArrayList<Map>();
@@ -89,7 +89,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
 
     public ParticipantListTree() {
         super(new GridLayout(1, 0));
-        this.connection = connection;
+  
         init();
         try {
             micIconURL = this.getClass().getResource("/images/mic_on.png");
@@ -135,7 +135,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
                             giveMICMenuItem.setEnabled(enableGiveMic(label.getText()));
                             kickoutMenuItem.setEnabled(!isMe(label.getText()));
                             banMenuItem.setEnabled(!isMe(label.getText()));
-                            privateChatMenuItem.setEnabled(!isMe(label.getText()));
+                            privateChatMenuItem.setEnabled(false);//!isMe(label.getText()));
                         }
                         popup.show(tree, e.getX(), e.getY());
                     }
@@ -342,9 +342,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     }
 
     public void addUser(String names) {
-        if (names.equals(ConnectionManager.fullnames)) {
-            return;
-        }
+
 
         DefaultMutableTreeNode treeNode = searchNode(names);
 
@@ -353,7 +351,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         }
         JLabel node = new JLabel(names);
         node.setIcon(availableIcon);
-        
+
         addObject(onlineNode, node, true);
 
     }
@@ -397,6 +395,9 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         }
     }
 
+    public void clearCurrentSpeakers(){
+        currentSpeakers.clear();
+    }
     private boolean hasMIC(String user) {
         user = getUsername(user);
         synchronized (currentSpeakers) {
@@ -576,14 +577,13 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
             if (obj instanceof JLabel) {
                 JLabel l = (JLabel) obj;
                 String to = l.getText();
-                String jid = l.getName();
-                jid = jid.substring(jid.lastIndexOf("/") + 1);
-                String[] s = jid.split(":");
-                String username = s[1];
                 if (to.trim().equalsIgnoreCase(ConnectionManager.fullnames.trim())) {
                     JOptionPane.showMessageDialog(null, "You cannot send private message to yourself!");
                     return;
                 }
+                String jid = GeneralUtil.getJID(to);
+                int at = jid.indexOf("@");
+                String username = jid.substring(0, at);
                 initPrivateChat(ConnectionManager.getUsername(), username, to);
             }
         }
@@ -927,6 +927,9 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
             if (obj instanceof JLabel) {
                 JLabel l = (JLabel) obj;
                 setIcon(l.getIcon());
+                if (isMe(l.getText())) {
+                    setForeground(new Color(255,51,51));
+                }
                 setText(l.getText());
                 setFont(new Font("Dialog", 0, 14));
 
