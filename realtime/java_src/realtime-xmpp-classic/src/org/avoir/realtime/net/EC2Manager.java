@@ -24,7 +24,7 @@ import org.avoir.realtime.net.packets.RealtimePacket;
  */
 public class EC2Manager {
 
-    private static JFrame fr = new JFrame("Launching on EC2 Server ...");
+    private static JFrame fr = new JFrame("Starting ... ...");
     private static JLabel infoLabel = new JLabel("Please wait ...");
     private static JProgressBar pb = new JProgressBar();
     private static Timer connectionTimer = new Timer();
