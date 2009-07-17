@@ -44,10 +44,10 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JWindow;
 import javax.swing.SwingConstants;
 
-import org.avoir.realtime.chat.ChatRoomManager;
 import org.avoir.realtime.common.Constants;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.StandAloneManager;
@@ -65,7 +65,7 @@ import org.jivesoftware.smackx.packet.VCard;
 public class GeneralUtil {
 
     final static String version = "1.0.2 beta";
-    public final static String about = "<html><h1>Chisimba Realtime Tools<h1><br>Version: " + version + "<br/><h3><strong>Credits:</strong></h3><br>David Wafula<br>Feroz Zaidi<br>Simoni Crause";
+    public final static String about = "<html><h1>Chisimba Realtime Tools<h1><br>Version: " + version + "<br><h3><strong>Credits:</strong></h3><br>David Wafula<br>Feroz Zaidi<br>Simoni Crause";
     final static JWindow intro = new JWindow();
     final static JLabel info = new JLabel("", JLabel.CENTER);
     static Properties props;
@@ -121,7 +121,14 @@ public class GeneralUtil {
     }
 
     public static String getJID(String nickname) {
-        Occupant occupant = GUIAccessManager.mf.getChatRoomManager().getMuc().getOccupant(nickname);
+        if(nickname.endsWith("(me)")){
+            int me=nickname.indexOf("(me)");
+            nickname=nickname.substring(0,me).trim();
+        
+        }
+        String str=ConnectionManager.getRoomName()+"@"+ConnectionManager.getConnection().getServiceName()+"/"+ nickname;
+           
+        Occupant occupant = GUIAccessManager.mf.getChatRoomManager().getMuc().getOccupant(str);
         return occupant.getJid();
     }
 
