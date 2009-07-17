@@ -81,6 +81,8 @@ public class LoginFrame extends javax.swing.JFrame {
         }
 
         passwordField.requestFocus();
+        setSize(400,300);
+        setLocationRelativeTo(null);
     }
 
     private void login(final String server, final int port, final String mediaUrl) {

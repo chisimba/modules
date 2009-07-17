@@ -13,9 +13,7 @@ package org.avoir.realtime.gui.main;
 import javax.swing.JProgressBar;
 import org.avoir.realtime.gui.webbrowser.RWebBrowserListener;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
-import com.l2fprod.common.swing.JTipOfTheDay;
-import com.l2fprod.common.swing.TipModel;
-import com.l2fprod.common.swing.tips.DefaultTipModel;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -69,7 +67,7 @@ import org.avoir.realtime.net.packets.RealtimePacket;
 import org.avoir.realtime.notepad.JNotepad;
 
 import org.jivesoftware.smack.util.Base64;
-
+import org.avoir.realtime.gui.tips.*;
 /**
  *
  * @author developer
@@ -171,6 +169,28 @@ public class MainFrame extends javax.swing.JFrame {
         userListPanel.getStartAudioVideoButton().setEnabled(!ConnectionManager.useEC2);
         displayAvator();
 
+    }
+    public void removeAllSpeakers() {
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                for (Speaker speaker : speakers) {
+                    String speakerName = speaker.getSpeaker();
+                    final JWebBrowser browser = speaker.getWebBrowser();
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        public void run() {
+                            browser.setHTMLContent("<html>Free<html>");
+                        }
+                    });
+                    speaker.setSpeaker("free");
+                    userListPanel.getUserListTree().setUserHasMIC(speakerName, speakerName, false);
+                    break;
+                }
+                userListPanel.getUserListTree().clearCurrentSpeakers();
+            }
+        });
     }
 
     public boolean addSpeaker(final String url, String speakerName) {
@@ -1490,14 +1510,11 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
     }
-
-    public void showTipOfDay(){
-        Collection tips=new ArrayList();
-        tips.add("this is todays tip as well all know it");
-        TipModel tipModel=new DefaultTipModel(tips);
-        JTipOfTheDay jTipOfTheDay=new JTipOfTheDay(tipModel);
-        jTipOfTheDay.setCurrentTip(0);
-        jTipOfTheDay.showDialog(this);
+    public void showTipOfDay() {
+        TipOfDayDialog tipOfDayDialog = new TipOfDayDialog(this, false);
+        tipOfDayDialog.setSize(400, 350);
+        tipOfDayDialog.setLocationRelativeTo(this);
+        tipOfDayDialog.setVisible(true);
     }
 
     private void doRefresh() {
