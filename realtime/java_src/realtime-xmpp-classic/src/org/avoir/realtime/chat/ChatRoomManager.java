@@ -448,7 +448,7 @@ public class ChatRoomManager {
                             GUIAccessManager.mf.showParticipantToolbar();
                             GUIAccessManager.setMenuEnabled(true, "screenviewer");
                             GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
-                            //   GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, currentRoomName);
+                            GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, currentRoomName);
                             GUIAccessManager.mf.setWebBrowserEnabled(false);
                         }
                     }
@@ -464,7 +464,7 @@ public class ChatRoomManager {
         GUIAccessManager.setMenuEnabled(enable, "screenshare");
         GUIAccessManager.setMenuEnabled(enable, "screenviewer");
         GUIAccessManager.setMenuEnabled(enable, "schedule");
-        GUIAccessManager.setMenuEnabled(!enable, "privatechat");
+        GUIAccessManager.setMenuEnabled(/*!enable*/false, "privatechat");
         GUIAccessManager.setMenuEnabled(enable, "createRoom");
         GUIAccessManager.setMenuEnabled(true, "roomList");
         GUIAccessManager.setMenuEnabled(enable, "actions");
@@ -475,6 +475,8 @@ public class ChatRoomManager {
         GUIAccessManager.setMenuEnabled(false, "roomResources");
         GUIAccessManager.setMenuEnabled(true, "requestMIC");
         GUIAccessManager.setMenuEnabled(enable, "addroommembers");
+        GUIAccessManager.setMenuEnabled(enable, "cleanParticipantsList");
+
 
 
     }
@@ -491,6 +493,15 @@ public class ChatRoomManager {
             ex.printStackTrace();
         }
         return false;
+    }
+
+    public void sendParticipantCleanupMessage() {
+        Message msg = muc.createMessage();
+        msg.setBody("Userlist cleanup request from " + ConnectionManager.fullnames);
+        msg.setProperty("size", new Integer(9));
+        msg.setProperty("color", Color.LIGHT_GRAY);
+        msg.setProperty("message-type", "sys-participant-cleanup");
+        sendMessage(msg);
     }
 
     public void sendMessage(Message message) {
