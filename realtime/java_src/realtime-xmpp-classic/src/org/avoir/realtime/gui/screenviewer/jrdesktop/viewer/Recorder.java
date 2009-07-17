@@ -79,7 +79,7 @@ public class Recorder extends Thread {
         screenPlayer.addAdapters();         
         recording = true;               
         Notify();     
-       // System.out.println("Notified!");
+
     }
                 
     public boolean isRecording () { 
@@ -87,7 +87,7 @@ public class Recorder extends Thread {
     }        
     
     public void updateData(ArrayList objects){
-    	//System.out.println("Recorder.updateData");
+
         screenPlayer.UpdateScreen((byte[]) objects.get(0));
         screenPlayer.setScteenRect((Rectangle) objects.get(1));        
     }
