@@ -89,10 +89,10 @@ class ads extends controller {
   }
   
   function __reviewcourseproposal(){
+      
      return "reviewcourseproposal_tpl.php";
   }
 
-  
   function __addcourseproposal(){
     return "addcourseproposal_tpl.php";
   }
@@ -104,8 +104,9 @@ class ads extends controller {
   }
   
   function __savecoursereview(){
-    $courseReview= $this->getParam('title');
-    $courseReviewlId=$this->objCourseReviews->addCourseReview($courseReview);
+    $courseReview = $this->getParam('title');
+    $courseID = $this->getParam('id');
+    $courseReviewlId=$this->objCourseReviews->addCourseReview($courseReview,$courseID);
     return $this->nextAction('overview', array('id'=>$courseReviewId));
   }
   

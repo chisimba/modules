@@ -16,14 +16,13 @@ class dbcoursereviews extends dbTable{
 
     }
 
-    public function addCourseReview($title){
+    public function addCourseReview($title,$course){
 
         $data = array(
-            'review' => $title,
+            'course'=>$course,
             'userid' => $this->objUser->userId(),
-            'creation_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
-            'status' =>'0',
-            'course'=>'',
+            'review_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+            'review' => $title,
         );
 
         $courseProposalId = $this->insert($data);
