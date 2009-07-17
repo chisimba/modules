@@ -126,6 +126,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         } else {
             navigateToURl(participantUrl);
         }
+        startAudioVideoButton.setText("Refresh");
     }
 
     private void navigateToURl(final String url) {
