@@ -591,11 +591,12 @@ public class RPacketListener implements PacketListener {
             }
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantName("(" + from + ") ");
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantMessage(from, message.getBody(), size, color);
-            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(sentDate + "\n");
+        // GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(sentDate + "\n");
 
         } else if (type.equals("sys-text")) {
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(message.getBody());
-
+        } else if (type.equals("sys-participant-cleanup")) {
+            GUIAccessManager.mf.removeAllSpeakers();
         } else {
             WhiteboardMessageProcessor.processCustomMessage(message);
         }
@@ -651,20 +652,12 @@ public class RPacketListener implements PacketListener {
         }
 
         if (presence.getType() == Presence.Type.unavailable && !"303".equals(code)) {
-
             String user = from;
-
-            if (!user.startsWith("jointest:")) {
-                GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " left the room\n");
-            }
             GUIAccessManager.mf.getUserListPanel().getUserListTree().removeUser(user);
             GUIAccessManager.mf.removeSpeaker(user);
 
         } else {
-            String jid = from + "@" + ConnectionManager.getConnection().getServiceName();
-            //from = from + "(" + ConnectionManager.getEmail(jid) + ")";
             String user = from;
-
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " joined the room\n");
             GUIAccessManager.mf.getUserListPanel().getUserListTree().addUser(user);
 
