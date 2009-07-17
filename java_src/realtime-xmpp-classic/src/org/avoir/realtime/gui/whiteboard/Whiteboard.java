@@ -723,14 +723,14 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (!gotSize) {
+        //if (!gotSize) {
             int ww = (int) (getWidth());
             int hh = (int) (getHeight());
-            int xx = (getWidth() - ww) / 2;
-            int yy = (getHeight() - hh) / 2;
-            whiteboardSize = new Rectangle(xx, yy, ww, hh);
+            //int xx = (getWidth() - ww) / 2;
+            //int yy = (getHeight() - hh) / 2;
+            whiteboardSize = new Rectangle(0, 0, ww, hh);
             gotSize = false;
-        }
+       // }
         Graphics2D g2 = (Graphics2D) g;
         graphics2D = g2;
         g2.draw(whiteboardSize);
