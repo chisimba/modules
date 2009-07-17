@@ -35,7 +35,7 @@ import org.jivesoftware.smack.XMPPConnection;
  */
 public class Main {
 
-    public static JFrame banner = new JFrame();
+    public static JFrame banner = new JFrame("Starting ...");
     public boolean DEBUG = false;
     public static Timer ec2LauncherTimer = new Timer();
 
@@ -53,13 +53,13 @@ public class Main {
         int c = 0;
         for (String arg : args) {
             args[c] = args[c].trim();
-            if (c != 11) {
+            if (c != 11 && c!= 9) {
                 args[c] = GeneralUtil.formatStr(args[c], " ");
             }
             System.out.println("arg[" + c + "] = " + arg);
             c++;
         }
-        UIUtils.setPreferredLookAndFeel();
+       UIUtils.setPreferredLookAndFeel();
         NativeInterface.open();
         LoginFrame fr = new LoginFrame();
 
@@ -143,8 +143,7 @@ public class Main {
                             ConnectionManager.audioVideoUrlReady = true;
                             ConnectionManager.flashUrlReady = true;
                             MainFrame mf = new MainFrame(roomName);
-                            mf.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-                            mf.setVisible(true);
+                         
                             mf.showTipOfDay();
                             saveEC2Urls(host, RealtimePacket.Mode.SAVE_MAIN_EC2_URL, roomName);
                             saveEC2Urls(audioVideoUrl, RealtimePacket.Mode.SAVE_AUDIO_VIDEO_EC2_URL, roomName);
