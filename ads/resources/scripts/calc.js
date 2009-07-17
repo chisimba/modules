@@ -7,6 +7,7 @@ jQuery(document).ready(function() {
    checkInput8();
    checkInput9();
 
+   // on page load, attach functionality on input blur
    jQuery("#input_D5_1").blur(function() {
        checkInput5();
        checkInput6();
@@ -41,11 +42,7 @@ jQuery(document).ready(function() {
 });
 
 function checkInput5() {
-   /*
-    * state = 0: action on page load
-    * state = 1: action on input blur
-    */
-    // check all the input fields from 1 to 8
+   
        var inp1 = parseInt(jQuery("#input_D5_1").val()),
            inp2 = parseInt(jQuery("#input_D5_2").val()),
            inp3 = parseInt(jQuery("#input_D5_3").val()),
@@ -57,7 +54,7 @@ function checkInput5() {
        if(isNaN(inp3)) {inp3 = 0;}
        if(isNaN(inp4)) {inp4 = 0;}
        if(isNaN(inp5)) {inp5 = 0;}
-       // do the calculations
+       
        var totalContactTime = inp1*(inp2 + inp3 + inp4 + inp5);
        jQuery("#totContTime").text(totalContactTime);
 }
@@ -70,7 +67,7 @@ function checkInput6() {
     if(isNaN(inp1)) {inp1 = 0;}
     if(isNaN(inp2)) {inp2 = 0;}
     if(isNaN(inp6)) {inp6 = 0;}
-    // calculate the total notional study
+    
     var totNotStudy = inp1*inp2*inp6;
     jQuery("#totNotTime").text(totNotStudy);
 }
@@ -88,7 +85,7 @@ function checkInput8() {
 }
 
 function checkInput9() {
-    // get the total notional hours (excluding studying)
+    
     var totNotHrs1 = parseInt(jQuery("#totNotTime").text()),
         totNotHrs2 = parseInt(jQuery("#input_D5_9").val());
 
