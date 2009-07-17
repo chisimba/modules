@@ -86,6 +86,13 @@ foreach($courseProposals as $courseProposal){
   
   $objTable->addCell($editLink->show().$deleteLink->show().$reviewLink->show());
   $objTable->endRow();
+  if ($verarray['status'] == 'unsubmitted' && $verarray['currentuser'] == $this->objUser->userId()) {
+    $objTable->startRow('submitLink');
+    $link = new link($this->uri(array('action'=>'submitproposal','courseid'=>$courseProposal['id'])));
+    $link->link = "You are currently editing this proposal. Click here to do a final submission.";
+    $objTable->addCell($link->show(), null, null, null, null, 'colspan="7"');
+    $objTable->endRow();
+  }
  
 }
 
