@@ -334,7 +334,7 @@ public class RoomResourceManager {
 
             String sql2 =
                     "insert into  ofAvoirRealtime_OnlineUsers values " +
-                    "('" + jid + "','" + room + "')";
+                    "('" + jid + "','" + room + "',0)";
             Statement st = con.createStatement();
             st.addBatch(sql1);
             st.addBatch(sql2);
@@ -401,7 +401,7 @@ public class RoomResourceManager {
                     "insert into ofAvoirRealtime_Classroom_LastWB values " +
                     "('" + roomName + "','" + itemId + "','<item-id>" + itemId + "</item-id>" + content + "')";
             Statement st = con.createStatement();
-            
+
             // st.addBatch("delete from ofAvoirRealtime_Classroom_LastWB where owner = '" + roomName + "' and item_id ='" + itemId + "'");
             st.addBatch(sql);
             st.executeBatch();
@@ -792,7 +792,7 @@ public class RoomResourceManager {
                 replyPacket.setChildElement(queryResult);
                 replyPacket.setTo(packet.getFrom());
                 packetRouter.route(replyPacket);
-              }
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -803,7 +803,47 @@ public class RoomResourceManager {
                 ex.printStackTrace();
             }
         }
-        
+
+    }
+
+    /**
+     * this sends back a list of people with MIC in requested room
+     * @param packet
+     * @param roomName Room to filter the mic holders
+     */
+    private void sendMICHolders(IQ packet, String roomName) {
+
+        try {
+            con = DbConnectionManager.getConnection();
+
+            String sql = "select * from ofAvoirRealtime_OnlineUsers " +
+                    " where room = '" + roomName + "'";// and  has_mic = 1";
+            Statement st = con.createStatement();
+            ResultSet rs2 = st.executeQuery(sql);
+
+            while (rs2.next()) {
+                IQ replyPacket = IQ.createResultIQ(packet);
+                Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
+                queryResult.addElement("mode").addText(Mode.MIC_HOLDER);
+                String jid = rs2.getString("jid");
+                RealtimePacketContent content = new RealtimePacketContent();
+                content.addTag("username", jid);
+                queryResult.addElement("content").addText(content.toString());
+                replyPacket.setChildElement(queryResult);
+                replyPacket.setTo(packet.getFrom());
+                packetRouter.route(replyPacket);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
     }
 
     public int getRoomResourceRoomVersion(String filePath) {
@@ -1113,6 +1153,7 @@ public class RoomResourceManager {
         queryResult.addElement("content").addText(content);
         replyPacket.setChildElement(queryResult);
         sendLastWBContent(packet, roomName);
+        sendMICHolders(packet, roomName);
         return replyPacket;
     }
 

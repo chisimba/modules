@@ -154,8 +154,9 @@ public class EmailSender {
             if (meetingType.trim().equals("scheduled")) {
               //  pl.getRoomResourceManager().addSchedule(owner, roomUrl, startDate, endDate, roomUrl);
             }
-            String ext = ". If you cannnot click on the link, copy and paste it in your browser addressbar.";
-            message = message + ". Meeting link is " + shortUrl1 + " starting at  " + startDate + " to " + endDate + ext;
+            String ext = ". If you cannnot click on the above, copy this link paste and it in your browser addressbar: "+shortUrl1;
+            message = message + ". <br><br> " +
+                    "<a href=\"" + shortUrl1 + "\">Click here to join me.</a> <br><br> Meeting starts at  " + startDate + " to " + endDate + ext;
             String presenterMessage = "You have scheduled to start a meeting  at " + shortUrl2 + " from " + startDate + " to " + endDate + ext;
             String subject = XmlUtils.readString(doc, "subject");
             String from = XmlUtils.readString(doc, "email-from");
@@ -171,6 +172,7 @@ public class EmailSender {
                         boolean isPresenter = new Boolean(XmlUtils.readString(element, "is-presenter"));
                         String messageBody = isPresenter ? presenterMessage : message;
                         String messageTitle = isPresenter ? "Chisimba Realtime Tools: You have scheduled a meeting" : subject;
+
                         service.sendMessage(email, email, presenterName, from, messageTitle, null, messageBody);
                     }
                 } catch (Exception ex) {
