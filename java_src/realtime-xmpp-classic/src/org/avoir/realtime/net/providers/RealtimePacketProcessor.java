@@ -580,6 +580,7 @@ public class RealtimePacketProcessor {
         }
         return rooms;
     }
+    
 
     public static ArrayList<Map> getUserArrayList(String xmlContents) {
         ArrayList<Map> users = new ArrayList<Map>();

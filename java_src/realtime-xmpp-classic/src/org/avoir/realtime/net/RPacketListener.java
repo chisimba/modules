@@ -36,8 +36,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.avoir.realtime.chat.ChatRoomManager;
 import org.avoir.realtime.common.Constants;
 import org.avoir.realtime.common.RealtimeFile;
+import org.avoir.realtime.common.Constants.Dialogs;
 import org.avoir.realtime.common.filetransfer.FileManager;
 import org.avoir.realtime.common.util.GeneralUtil;
+import org.avoir.realtime.common.util.RealtimePacketContent;
 import org.avoir.realtime.common.util.XmlUtils;
 import org.avoir.realtime.gui.QuestionNavigator;
 import org.avoir.realtime.gui.RealtimeFileChooser;
@@ -69,6 +71,7 @@ import org.jivesoftware.smackx.packet.DelayInformation;
 import org.jivesoftware.smackx.packet.MUCUser;
 import org.jivesoftware.smackx.packet.MUCUser.Destroy;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 /**
  * This class is responsible for handling all the packets coming in from the server
@@ -222,11 +225,27 @@ public class RPacketListener implements PacketListener {
             } else if (mode.equals(Mode.REQUEST_MIC_FORWARDED)) {
                 String requester = RealtimePacketProcessor.getTag(packet.getContent(), "requester");
                 String requesterNames = RealtimePacketProcessor.getTag(packet.getContent(), "requester-name");
+                RealtimePacket p = new RealtimePacket();
+                p.setMode(Mode.REQUEST_MIC_REPLY);
+                RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+                realtimePacketContent.addTag("room-name", ConnectionManager.getRoomName());
+                realtimePacketContent.addTag("username",requester);
                 int n = JOptionPane.showConfirmDialog(null, requesterNames + " is requesting for MIC, grant?", "MIC Request", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
                     GUIAccessManager.mf.getUserListPanel().getUserListTree().giveMic(requester);
+                    realtimePacketContent.addTag("response",Dialogs.REQUEST_APPROVED);
                 }
-            } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
+                else {
+                  realtimePacketContent.addTag("response",Dialogs.REQUEST_DENIED);
+                }
+                p.setContent(realtimePacketContent.toString());
+                ConnectionManager.sendPacket(p);
+            } else if (mode.equals(Mode.MIC_HOLDER)) {
+                //sends the nickname of a user who has a mic
+                String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
+                GUIAccessManager.mf.getUserListPanel().getUserListTree().setUserHasMic(nickname,null, true);
+            }
+            else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
                 String receiver = XmlUtils.readString(doc, "private-chat-receiver");
                 String msg = XmlUtils.readString(doc, "private-chat-msg");
@@ -284,7 +303,7 @@ public class RPacketListener implements PacketListener {
                 }
             } else if (mode.equals(Mode.INVITE_RESULT)) {
                 Boolean success = new Boolean(GeneralUtil.getTagText(packet.getContent(), "success"));
-                String successMessage = "Inivation was successfull";
+                String successMessage = "Invitation was successfull";
                 String errorMessage = "There was an error during invitation. The server couldnt not send emails to recipients.\n" +
                         "Try again. If problem persists, contact your system adminstrator.";
             // JOptionPane.showMessageDialog(null, success ? successMessage : errorMessage);

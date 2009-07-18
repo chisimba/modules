@@ -23,7 +23,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private ImageIcon loadingIcon = ImageUtil.createImageIcon(this, "/images/loader.gif");
     private static String server = "localhost";
-    private static int port = 443;
+    private static int port = 5222;
     private String mediaUrl = "localhost";
     private boolean firstTimeClick = true;
     private String roomName = "default";
