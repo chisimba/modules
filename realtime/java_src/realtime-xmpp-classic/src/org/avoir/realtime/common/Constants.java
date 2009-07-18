@@ -30,6 +30,12 @@ public class Constants {
         public final static int TEXT = 8;
         public final static int UNDO = 9;
     }
+    
+    public static class Dialogs { 
+        public final static int REQUEST_DENIED = 0;
+        public final static int REQUEST_APPROVED = 1;
+    }
+    
     public final static int ESSAY_QUESTION = 0;
     public final static int MCQ_QUESTION = 1;
     public final static int TRUE_FALSE_QUESTION = 2;

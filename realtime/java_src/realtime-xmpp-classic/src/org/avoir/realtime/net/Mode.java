@@ -86,6 +86,7 @@ public class Mode {
     public static final String ROOM_OWNER_REPLY = "room-owner-reply";
     public static final String REQUEST_MIC_FORWARDED = "request-mic-forwarded";
     public static final String PRIVATE_CHAT_FORWARD = "private-chat-forward";
-
+    public static final String REQUEST_MIC_REPLY = "request-mic-reply";
+    public static final String MIC_HOLDER = "mic-holder";
     public static final String ROOM_MEMBERS = "room-members";
 }

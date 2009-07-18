@@ -46,6 +46,7 @@ import org.avoir.realtime.common.RealtimeFile;
 import org.avoir.realtime.common.filetransfer.FileManager;
 import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
+import org.avoir.realtime.common.util.RealtimePacketContent;
 import org.avoir.realtime.gui.userlist.ParticipantListPanel;
 import org.avoir.realtime.gui.whiteboard.WhiteboardPanel;
 import org.avoir.realtime.net.ConnectionManager;
@@ -1406,12 +1407,21 @@ public class MainFrame extends javax.swing.JFrame {
         }
         RealtimePacket p = new RealtimePacket();
         p.setMode(RealtimePacket.Mode.REQUEST_MIC);
+        RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+        realtimePacketContent.addTag("mic-requester", ConnectionManager.getUsername());
+        realtimePacketContent.addTag("mic-requester-name", ConnectionManager.fullnames);
+        realtimePacketContent.addTag("mic-requester-name", ConnectionManager.fullnames);
+        realtimePacketContent.addTag("room-name", ConnectionManager.getRoomName());
+        realtimePacketContent.addTag("room-owner", GeneralUtil.getThisRoomOwner());
+        p.setContent(realtimePacketContent.toString());
+        /*
         StringBuilder sb = new StringBuilder();
         sb.append("<mic-requester>").append(ConnectionManager.getUsername()).append("</mic-requester>");
         sb.append("<mic-requester-name>").append(ConnectionManager.fullnames).append("</mic-requester-name>");
         sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
         sb.append("<room-owner>").append(GeneralUtil.getThisRoomOwner()).append("</room-owner>");
         p.setContent(sb.toString());
+        */
         ConnectionManager.sendPacket(p);
     }//GEN-LAST:event_requestMicMenuItemActionPerformed
 
