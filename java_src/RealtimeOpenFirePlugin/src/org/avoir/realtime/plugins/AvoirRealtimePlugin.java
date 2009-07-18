@@ -111,8 +111,8 @@ public class AvoirRealtimePlugin implements Plugin {
                 String mode = XmlUtils.readString(doc, "mode");
 
                 String roomName = XmlUtils.readString(doc, "room-name");
-                if(roomName != null){
-                    roomName=roomName.toLowerCase();
+                if (roomName != null) {
+                    roomName = roomName.toLowerCase();
                 }
                 if (mode.equals(Mode.POINTER)) {
                     pointerProcessor.broadCastPointer(packet, roomName);
@@ -134,7 +134,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     String roomMember = XmlUtils.readString(doc, "username");
                     String names = XmlUtils.readString(doc, "names");
                     String owner = XmlUtils.readString(doc, "room-owner");
-                    roomResourceManager.addRoomMember(roomName, roomMember, names,owner);
+                    roomResourceManager.addRoomMember(roomName, roomMember, names, owner);
                 } else if (mode.equals(Mode.REQUEST_MIC_FORWARDED)) {
                     return packet;
                 } else if (mode.equals(Mode.DELETE_ROOM_MEMBER)) {
