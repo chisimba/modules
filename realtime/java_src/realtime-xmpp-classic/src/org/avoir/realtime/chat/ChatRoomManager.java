@@ -311,6 +311,9 @@ public class ChatRoomManager {
         JPasswordField passwordField = new JPasswordField();
         nickname = ConnectionManager.fullnames;
 
+        //release mic
+        GUIAccessManager.mf.getUserListPanel().getUserListTree().setUserHasMIC(nickname, null, false);
+        //todo: send info to server for update
         //not allawed in more than one room at a time, so must leave old one
         muc.leave();
         muc = new MultiUserChat(ConnectionManager.getConnection(), roomName + "@conference." + ConnectionManager.getConnection().getServiceName());
