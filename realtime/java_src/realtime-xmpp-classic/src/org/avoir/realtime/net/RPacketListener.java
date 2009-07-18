@@ -243,7 +243,7 @@ public class RPacketListener implements PacketListener {
             } else if (mode.equals(Mode.MIC_HOLDER)) {
                 //sends the nickname of a user who has a mic
                 String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
-                GUIAccessManager.mf.getUserListPanel().getUserListTree().setUserHasMic(nickname,null, true);
+                GUIAccessManager.mf.getUserListPanel().getUserListTree().setUserHasMIC(nickname, null, true);
             }
             else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
