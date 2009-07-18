@@ -816,8 +816,9 @@ public class RoomResourceManager {
         try {
             con = DbConnectionManager.getConnection();
 
-            String sql = "select * from ofAvoirRealtime_OnlineUsers " +
-                    " where room = '" + roomName + "'";// and  has_mic = 1";
+            String sql = "select ofUser.name as name from ofUser,ofAvoirRealtime_OnlineUsers " +
+                    " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
+                    " ofAvoirRealtime_OnlineUsers.jid =ofUser.username";// and  has_mic = 1";
             Statement st = con.createStatement();
             ResultSet rs2 = st.executeQuery(sql);
 
@@ -825,9 +826,9 @@ public class RoomResourceManager {
                 IQ replyPacket = IQ.createResultIQ(packet);
                 Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
                 queryResult.addElement("mode").addText(Mode.MIC_HOLDER);
-                String jid = rs2.getString("jid");
+                String jid = rs2.getString("name");
                 RealtimePacketContent content = new RealtimePacketContent();
-                content.addTag("username", jid);
+                content.addTag("nickname", jid);
                 queryResult.addElement("content").addText(content.toString());
                 replyPacket.setChildElement(queryResult);
                 replyPacket.setTo(packet.getFrom());
