@@ -72,7 +72,6 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     private URL micIconURL = null;
     private Collection<RosterEntry> entries;
     private XMPPConnection connection = ConnectionManager.getConnection();
-    
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem acceptMenuItem = new JMenuItem("Accept");
     private JMenuItem profileMenuItem = new JMenuItem("Profile");
@@ -81,7 +80,6 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     private JMenuItem giveMICMenuItem = new JMenuItem("Give MIC");
     private JMenuItem takeMICMenuItem = new JMenuItem("Take MIC");
     private JMenuItem kickoutMenuItem = new JMenuItem("Kick Out");
-     
     private JMenuItem banMenuItem = new JMenuItem("Ban");
     private JMenuItem privateChatMenuItem = new JMenuItem("Private Chat");
     private ArrayList<Map> currentSpeakers = new ArrayList<Map>();
@@ -89,7 +87,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
 
     public ParticipantListTree() {
         super(new GridLayout(1, 0));
-  
+
         init();
         try {
             micIconURL = this.getClass().getResource("/images/mic_on.png");
@@ -269,7 +267,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         if (!hasMIC) {
             System.out.println("Searching for " + user + " to take mic from");
         }
-        DefaultMutableTreeNode treeNode = searchNode(user);
+        DefaultMutableTreeNode treeNode = searchNode(user.trim());
 
         if (treeNode != null) {
             JLabel l = (JLabel) treeNode.getUserObject();
@@ -342,9 +340,8 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     }
 
     public void addUser(String names) {
-
-
-        DefaultMutableTreeNode treeNode = searchNode(names);
+        names = names.trim();
+        DefaultMutableTreeNode treeNode = searchNode(names.trim());
 
         if (treeNode != null) {
             removeNode(treeNode);
@@ -357,11 +354,12 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     }
 
     public void removeUser(String user) {
-
-        DefaultMutableTreeNode treeNode = searchNode(user);
+        user = user.trim();
+        DefaultMutableTreeNode treeNode = searchNode(user.trim());
 
         if (treeNode != null) {
             removeNode(treeNode);
+
         }
     }
 
@@ -395,9 +393,10 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         }
     }
 
-    public void clearCurrentSpeakers(){
+    public void clearCurrentSpeakers() {
         currentSpeakers.clear();
     }
+
     private boolean hasMIC(String user) {
         user = getUsername(user);
         synchronized (currentSpeakers) {
@@ -546,6 +545,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
             JLabel l = (JLabel) obj;
             String to = l.getText();
             to = getUsername(to);
+
             // to=Base64.encodeBytes(to.getBytes());
             if (hasMIC(to)) {
                 JOptionPane.showMessageDialog(null, "<html>" + to + " already has a MIC");
@@ -820,12 +820,12 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
      * @return tree node
      */
     public DefaultMutableTreeNode searchNode(String nodeStr) {
-        // System.out.println("Searching for " + nodeStr);
+        System.out.println("Searching for " + nodeStr);
         String displayText = getDisplayText(nodeStr);
         if (displayText != null) {
             nodeStr = displayText;
         }
-        // System.out.println("Using for " + nodeStr);
+        System.out.println("Using for " + nodeStr);
         DefaultMutableTreeNode node = null;
 
         //Get the enumeration
@@ -928,7 +928,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
                 JLabel l = (JLabel) obj;
                 setIcon(l.getIcon());
                 if (isMe(l.getText())) {
-                    setForeground(new Color(255,51,51));
+                    setForeground(new Color(255, 51, 51));
                 }
                 setText(l.getText());
                 setFont(new Font("Dialog", 0, 14));
