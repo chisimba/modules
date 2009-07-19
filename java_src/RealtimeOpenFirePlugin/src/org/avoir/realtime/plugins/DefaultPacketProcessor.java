@@ -132,18 +132,31 @@ public class DefaultPacketProcessor {
 
     }*/
 
-    public void forwardMICRequest(IQ packet, String roomOwner, String requesterNames, String requester) {
+    public void forwardMICRequest(IQ packet, String roomOwner, String requester, String requesterName) {
         IQ replyPacket = IQ.createResultIQ(packet);
         Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
         queryResult.addElement("mode").addText(Mode.REQUEST_MIC_FORWARDED);
         StringBuilder sb = new StringBuilder();
-        sb.append("<requester>").append(requester).append("</requester>");
-        sb.append("<requester-name>").append(requesterNames).append("</requester-name>");
+        sb.append("<username>").append(requester).append("</username>");
+        sb.append("<name>").append(requesterName).append("</name>");
         queryResult.addElement("content").addText(sb.toString());
         replyPacket.setChildElement(queryResult);
         XMPPServer server = XMPPServer.getInstance();
         replyPacket.setTo(server.createJID(roomOwner, pl.getResoureName()));
         packetRouter.route(replyPacket);
+    }
+    
+    public void warnUser(IQ packet, String username, String message) {
+      IQ replyPacket = IQ.createResultIQ(packet);
+      Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
+      queryResult.addElement("mode").addText(Mode.WARN);
+      StringBuilder sb = new StringBuilder();
+      sb.append("<message>").append(message).append("</message>");
+      queryResult.addElement("content").addText(sb.toString());
+      replyPacket.setChildElement(queryResult);
+      XMPPServer server = XMPPServer.getInstance();
+      replyPacket.setTo(server.createJID(username, pl.getResoureName()));
+      packetRouter.route(replyPacket);
     }
 
     public void sendServerDetails(IQ packet, String mode, String host, String roomName) {

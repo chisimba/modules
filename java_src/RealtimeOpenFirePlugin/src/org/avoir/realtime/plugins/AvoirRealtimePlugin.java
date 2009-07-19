@@ -26,6 +26,7 @@ import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.jivesoftware.database.DbConnectionManager;
 import org.jivesoftware.openfire.IQHandlerInfo;
 import org.jivesoftware.openfire.IQRouter;
 import org.jivesoftware.openfire.PacketRouter;
@@ -44,6 +45,8 @@ import org.w3c.dom.Document;
 import org.xmpp.packet.IQ;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Presence;
+
+import java.util.Map;
 
 /**
  *
@@ -178,11 +181,16 @@ public class AvoirRealtimePlugin implements Plugin {
                     }
 
                 } else if (mode.equals(Mode.REQUEST_MIC)) {
-                    String requester = XmlUtils.readString(doc, "mic-requester");
-                    String requesterNames = XmlUtils.readString(doc, "mic-requester-name");
-                    String roomOwner = XmlUtils.readString(doc, "room-owner");
-
-                    defaultPacketProcessor.forwardMICRequest(packet, roomOwner, requesterNames, requester);
+                    String requester = XmlUtils.readString(doc, "username");
+                    Map user = roomResourceManager.isMICHolder(requester);
+                    if ((Boolean)(user.get("hasmic"))) {
+                      //if the user already has the mic, ignore.
+                      defaultPacketProcessor.warnUser(packet, requester, "You already have the MIC.");
+                    }
+                    else {
+                      String owner = roomResourceManager.getRoomOwner(requester);
+                      defaultPacketProcessor.forwardMICRequest(packet, owner, requester, (String)(user.get("fullname")));
+                    }
                 } else if (mode.equals(Mode.REQUEST_ROOM_OWNER)) {
                     return roomResourceManager.getRoomOwner(packet, roomName);
                 } else if (mode.equals(Mode.TAKEN_MIC)) {
