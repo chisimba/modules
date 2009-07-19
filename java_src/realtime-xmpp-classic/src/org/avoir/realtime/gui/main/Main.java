@@ -177,6 +177,7 @@ public class Main {
             fr.setSize(400, 300);
             fr.setLocationRelativeTo(null);
             fr.setVisible(true);
+            
         }
 
     }

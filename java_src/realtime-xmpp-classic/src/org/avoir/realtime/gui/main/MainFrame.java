@@ -590,6 +590,7 @@ public class MainFrame extends javax.swing.JFrame {
         tabbedPane = new javax.swing.JTabbedPane();
         screenShareItem = new javax.swing.JMenuBar();
         fileMenutem = new javax.swing.JMenu();
+        newWhiteboardMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         actionsMenu = new javax.swing.JMenu();
         insertGraphicMenuItem = new javax.swing.JMenuItem();
@@ -636,7 +637,7 @@ public class MainFrame extends javax.swing.JFrame {
         instToolbar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         instToolbar.setRollover(true);
 
-        roomMembersButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        roomMembersButton.setFont(new java.awt.Font("Dialog", 0, 11));
         roomMembersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/virtualroom.png"))); // NOI18N
         roomMembersButton.setText("Room Members");
         roomMembersButton.setBorderPainted(false);
@@ -660,7 +661,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         instToolbar.add(roomMembersButton);
 
-        changeRoomButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        changeRoomButton.setFont(new java.awt.Font("Dialog", 0, 11));
         changeRoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/join_room.png"))); // NOI18N
         changeRoomButton.setText("Room List");
         changeRoomButton.setBorderPainted(false);
@@ -864,6 +865,10 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().add(mainSplitPane, java.awt.BorderLayout.CENTER);
 
         fileMenutem.setText("File");
+
+        newWhiteboardMenuItem.setText("New Whiteboard");
+        newWhiteboardMenuItem.setEnabled(false);
+        fileMenutem.add(newWhiteboardMenuItem);
 
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1588,6 +1593,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane leftSplitPane;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JMenu meetingsMenuItem;
+    private javax.swing.JMenuItem newWhiteboardMenuItem;
     private javax.swing.JButton notepadButton;
     private javax.swing.JButton notepadButton1;
     private javax.swing.JMenuItem optionsMenuItem;

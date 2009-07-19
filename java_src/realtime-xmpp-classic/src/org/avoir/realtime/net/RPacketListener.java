@@ -224,20 +224,22 @@ public class RPacketListener implements PacketListener {
                     }
                 }
             } else if (mode.equals(Mode.REQUEST_MIC_FORWARDED)) {
-                String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
+                String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "name");
                 String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
-                RealtimePacket p = new RealtimePacket();
-                p.setMode(Mode.REQUEST_MIC_REPLY);
-                RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
-                realtimePacketContent.addTag("username", username);
+
                 int n = JOptionPane.showConfirmDialog(null, nickname + " is requesting for MIC, grant?", "MIC Request", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
-                    realtimePacketContent.addTag("response", Dialogs.REQUEST_APPROVED);
+                    GUIAccessManager.mf.getUserListPanel().getParticipantListTable().giveMic(username,nickname);
                 } else {
+                    RealtimePacket p = new RealtimePacket();
+                    p.setMode(Mode.REQUEST_MIC_REPLY);
+                    RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+                    realtimePacketContent.addTag("username", username);
                     realtimePacketContent.addTag("response", Dialogs.REQUEST_DENIED);
+                    p.setContent(realtimePacketContent.toString());
+                    ConnectionManager.sendPacket(p);
+
                 }
-                p.setContent(realtimePacketContent.toString());
-                ConnectionManager.sendPacket(p);
             } else if (mode.equals(Mode.MIC_HOLDER)) {
                 String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
                 int hasMic = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "has_mic"));
@@ -567,6 +569,7 @@ public class RPacketListener implements PacketListener {
     }
 
     private static void processMessage(Message message) {
+    
         DelayInformation inf = (DelayInformation) message.getExtension("x", "jabber:x:delay");
         Date sentDate;
         if (inf != null) {

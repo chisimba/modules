@@ -22,6 +22,7 @@ import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.FormField;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
@@ -79,8 +80,6 @@ public class ChatRoomManager {
     private void addParticipantsListener() {
         muc.addParticipantStatusListener(participantStatusListener);
     }
-
-
 
     class RParticipantStatusListener implements ParticipantStatusListener {
 
@@ -341,7 +340,7 @@ public class ChatRoomManager {
                 roomPassword = passwordField.getPassword();
                 password = new String(roomPassword);
             }
-            muc.join(nickname, password, history, SmackConfiguration.getPacketReplyTimeout());
+            muc.join(ConnectionManager.getUsername() + ":" + nickname, password, history, SmackConfiguration.getPacketReplyTimeout());
 
             GUIAccessManager.mf.getChatTabbedPane().setTitleAt(0, ConnectionManager.fullnames);
             GUIAccessManager.mf.getUserListPanel().getRoomInfoField().setText("<html>You are in <font color=\"#ff6600\">" + roomName.toUpperCase() + "</font></html>");
@@ -431,7 +430,7 @@ public class ChatRoomManager {
         return chatPopup;
     }
 
-    public  void doGUIAccessLevel() {
+    public void doGUIAccessLevel() {
         GUIAccessManager.mf.resetGUIccess();
         try {
             // GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
@@ -459,7 +458,7 @@ public class ChatRoomManager {
                             GUIAccessManager.mf.setWebBrowserEnabled(false);
                         }
 
-                       sendMessage(ConnectionManager.fullnames+" joined", 10, Color.LIGHT_GRAY,"sys-text");
+                        sendMessage(ConnectionManager.fullnames + " joined", 10, Color.LIGHT_GRAY, "sys-text");
                     }
                 };
                 t.start();
@@ -490,7 +489,7 @@ public class ChatRoomManager {
 
     }
 
-    public  boolean sendMessage(String str, int size, Color color) {
+    public boolean sendMessage(String str, int size, Color color) {
         try {
             Message msg = muc.createMessage();
             msg.setBody(str);
@@ -504,7 +503,7 @@ public class ChatRoomManager {
         return false;
     }
 
-     public  boolean sendMessage(String str, int size, Color color,String type) {
+    public boolean sendMessage(String str, int size, Color color, String type) {
         try {
             Message msg = muc.createMessage();
             msg.setBody(str);
