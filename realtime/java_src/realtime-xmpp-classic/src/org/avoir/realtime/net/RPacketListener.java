@@ -229,23 +229,22 @@ public class RPacketListener implements PacketListener {
                 p.setMode(Mode.REQUEST_MIC_REPLY);
                 RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
                 realtimePacketContent.addTag("room-name", ConnectionManager.getRoomName());
-                realtimePacketContent.addTag("username",requester);
+                realtimePacketContent.addTag("username", requester);
                 int n = JOptionPane.showConfirmDialog(null, requesterNames + " is requesting for MIC, grant?", "MIC Request", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
-                    GUIAccessManager.mf.getUserListPanel().getUserListTree().giveMic(requester);
-                    realtimePacketContent.addTag("response",Dialogs.REQUEST_APPROVED);
-                }
-                else {
-                  realtimePacketContent.addTag("response",Dialogs.REQUEST_DENIED);
+                    //GUIAccessManager.mf.getUserListPanel().getUserListTree().giveMic(requester);
+                    realtimePacketContent.addTag("response", Dialogs.REQUEST_APPROVED);
+                } else {
+                    realtimePacketContent.addTag("response", Dialogs.REQUEST_DENIED);
                 }
                 p.setContent(realtimePacketContent.toString());
                 ConnectionManager.sendPacket(p);
             } else if (mode.equals(Mode.MIC_HOLDER)) {
-                //sends the nickname of a user who has a mic
                 String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
-                GUIAccessManager.mf.getUserListPanel().getUserListTree().setUserHasMIC(nickname, null, true);
-            }
-            else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
+                int hasMic = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "has_mic"));
+                GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserHasMIC(nickname, true);
+                
+            } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
                 String receiver = XmlUtils.readString(doc, "private-chat-receiver");
                 String msg = XmlUtils.readString(doc, "private-chat-msg");
@@ -254,8 +253,8 @@ public class RPacketListener implements PacketListener {
                 if (msgMode.equals("return")) {
                     returnChat = true;
                 }
-                GUIAccessManager.mf.getUserListPanel().getUserListTree().
-                        appendPrivateChat(msg, sender, receiver, returnChat);
+//                GUIAccessManager.mf.getUserListPanel().getUserListTree().
+  //                      appendPrivateChat(msg, sender, receiver, returnChat);
             } else if (mode.equals(Mode.EC2_FLASH_SERVER_READY)) {
                 String host = GeneralUtil.getTagText(packet.getContent(), "host");
                 saveEC2Urls(host, RealtimePacket.Mode.SAVE_FLASH_EC2_URL);
@@ -672,13 +671,14 @@ public class RPacketListener implements PacketListener {
 
         if (presence.getType() == Presence.Type.unavailable && !"303".equals(code)) {
             String user = from;
-            GUIAccessManager.mf.getUserListPanel().getUserListTree().removeUser(user);
+            
+            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(user);
             GUIAccessManager.mf.removeSpeaker(user);
 
         } else {
             String user = from;
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " joined the room\n");
-            GUIAccessManager.mf.getUserListPanel().getUserListTree().addUser(user);
+            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().addUser(user);
 
         }
     }

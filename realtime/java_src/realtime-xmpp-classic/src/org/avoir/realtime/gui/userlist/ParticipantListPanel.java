@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import org.avoir.realtime.common.util.ImageUtil;
@@ -42,14 +43,15 @@ public class ParticipantListPanel extends javax.swing.JPanel {
     private AccountManager accManager;
     private String[] statusMessages = {"Available", "Away", "Busy"};
     private ImageIcon[] statusIcons = {availableIcon, awayIcon, dndIcon};
-    private ParticipantListTree userListTree;
+    //private ParticipantListTree userListTree;
+    private ParticipantListTable participantListTable;
     private UserDetailsFrame userDetailsFrame;
     private JPanel userListMainPanel = new JPanel(new BorderLayout());
     private JPanel audioVideoPanel = new JPanel(new BorderLayout());
     private JWebBrowser webBrowser = new JWebBrowser();
     private JButton startAudioVideoButton = new JButton("Enable");
-   // private JLabel audioVideoStatus = new JLabel("N");
-  //  private JLabel flashStatus = new JLabel("N");
+    // private JLabel audioVideoStatus = new JLabel("N");
+    //  private JLabel flashStatus = new JLabel("N");
 
     /** Creates new form UserListPanel */
     public ParticipantListPanel() {
@@ -59,10 +61,12 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         }
         accStatusField.setRenderer(new ComboBoxRenderer(statusMessages, statusIcons));
         //accountPhotoField.setIcon(avator);
-        userListTree = new ParticipantListTree();
+        participantListTable = new ParticipantListTable();
         displayAccountInfo();
         audioVideoPanel.setBorder(BorderFactory.createTitledBorder("Audio Video"));
-        userListMainPanel.add(userListTree, BorderLayout.CENTER);
+        JScrollPane sp = new JScrollPane(participantListTable);
+        sp.getViewport().setBackground(Color.WHITE);
+        userListMainPanel.add(sp, BorderLayout.CENTER);
         userListTabbedPane.addTab("Users", userListMainPanel);
         userListTabbedPane.addTab("Audio/Video", audioVideoPanel);
         //userListTabbedPane.setSelectedIndex(1);
@@ -88,18 +92,16 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         audioVideoPanel.add(p, BorderLayout.SOUTH);
         JPanel p2 = new JPanel();
 //        p2.add(audioVideoStatus);
-      //  p2.add(flashStatus);
+        //  p2.add(flashStatus);
         audioVideoPanel.add(p2, BorderLayout.NORTH);
         add(userListTabbedPane, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.NORTH);
 
     }
 
-    public ParticipantListTree getParticipantListTree() {
-        return userListTree;
+    public ParticipantListTable getParticipantListTable() {
+        return participantListTable;
     }
-
-  
 
     public JButton getStartAudioVideoButton() {
         return startAudioVideoButton;
@@ -150,10 +152,6 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         });
     }
 
-    public void setUserListTree(ParticipantListTree userListTree) {
-        this.userListTree = userListTree;
-    }
-
     private void displayAccountInfo() {
         accManager = ConnectionManager.getConnection().getAccountManager();
         String name = accManager.getAccountAttribute("name");
@@ -198,10 +196,6 @@ public class ParticipantListPanel extends javax.swing.JPanel {
 
     public JTabbedPane getUserTabbedPane() {
         return userListTabbedPane;
-    }
-
-    public ParticipantListTree getUserListTree() {
-        return userListTree;
     }
 
     public void showUserDetailsFrame(String jid) {
