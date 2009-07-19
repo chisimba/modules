@@ -806,8 +806,9 @@ public class RoomResourceManager {
 
     }
 
+    
     /**
-     * this sends back a list of people with MIC in requested room
+     * this sends back a list of occupants in the room, with thier
      * @param packet
      * @param roomName Room to filter the mic holders
      */
@@ -816,9 +817,10 @@ public class RoomResourceManager {
         try {
             con = DbConnectionManager.getConnection();
 
-            String sql = "select ofUser.name as name from ofUser,ofAvoirRealtime_OnlineUsers " +
+            String sql = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic " +
+                    " from ofUser,ofAvoirRealtime_OnlineUsers " +
                     " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
-                    " ofAvoirRealtime_OnlineUsers.jid =ofUser.username";// and  has_mic = 1";
+                    " ofAvoirRealtime_OnlineUsers.jid =ofUser.username";
             Statement st = con.createStatement();
             ResultSet rs2 = st.executeQuery(sql);
 
@@ -827,8 +829,10 @@ public class RoomResourceManager {
                 Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
                 queryResult.addElement("mode").addText(Mode.MIC_HOLDER);
                 String jid = rs2.getString("name");
+                int hasMic = rs2.getInt("has_mic");
                 RealtimePacketContent content = new RealtimePacketContent();
                 content.addTag("nickname", jid);
+                content.addTag("has_mic", hasMic);
                 queryResult.addElement("content").addText(content.toString());
                 replyPacket.setChildElement(queryResult);
                 replyPacket.setTo(packet.getFrom());
