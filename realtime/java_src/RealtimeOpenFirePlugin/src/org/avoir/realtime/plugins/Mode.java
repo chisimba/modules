@@ -123,4 +123,5 @@ public class Mode {
     public static final String ITEM_HISTORY_FROM_SERVER = "item-history-from-server";
     public static final String MIC_HOLDER = "mic-holder";
     public static final String WARN = "warn";
+    public static final String REQUEST_MIC_REPLY = "request-mic-reply";
 }

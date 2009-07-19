@@ -351,7 +351,27 @@ public class RoomResourceManager {
             }
         }
     }
-
+    
+    public void updateOnlineUser(String jid, String room, int hasmic) {
+      try {
+          con = DbConnectionManager.getConnection();
+          String sql1 =
+                  "update ofAvoirRealtime_OnlineUsers set" +
+                  " room = '" + room + "', has_mic = " + hasmic +
+                  " where jid = '" + jid + "';";
+          Statement st = con.createStatement();
+          st.addBatch(sql1);
+          st.executeBatch();
+      } catch (SQLException ex) {
+          ex.printStackTrace();
+      } finally {
+          try {
+              con.close();
+          } catch (Exception ex) {
+              ex.printStackTrace();
+          }
+      }
+  }
     public void addSchedule(String owner, String room, String startDate, String endDate, String roomUrl) {
         try {
             con = DbConnectionManager.getConnection();
