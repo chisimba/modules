@@ -853,31 +853,26 @@ public class RoomResourceManager {
 
     }
     
-    public Map isMICHolder(String username) {
-      //returns a Map with fullname being the user's full name
-      //and hasmic being the user's mic status. true = the user has a mic,
-      //false = the user doesn't.
+    public Map getUserInfo(String username) {
       Map <String, Object> user = new HashMap<String, Object>();
-
-
       try {
         
         con = DbConnectionManager.getConnection();
 
-        String sql = "select ofAvoirRealtime_OnlineUsers.has_mic, ofUsers.name" +
-                " from ofAvoirRealtime_OnlineUsers, ofAvoir" + 
+        String sql = "select ofAvoirRealtime_OnlineUsers.has_mic," +
+                " ofUser.name, ofAvoirRealtime_Rooms.room_name, ofAvoirRealtime_rooms.room_owner" +
+                " from ofAvoirRealtime_OnlineUsers, ofUser, ofAvoirRealtime_Rooms" + 
                 " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "'" +
-                " and ofUsers.username = ofAvoirRealtime_OnlineUsers.jid";
+                " and ofUser.username = ofAvoirRealtime_OnlineUsers.jid" +
+                " and ofAvoirRealtime_Rooms.room_name = ofAvoirRealtime_OnlineUsers.room;";
         Statement st = con.createStatement();
         ResultSet rs2 = st.executeQuery(sql);
         if (rs2.next()) {
-          user.put("fullname", rs2.getString("name"));
-          if (rs2.getInt("has_mic") == 1) {
-            user.put("hasmic", true);
-          }
-          else {
-            user.put("hasmic", false);
-          }
+          user.put("name", rs2.getString("name"));
+          user.put("room_name", rs2.getString("room_name"));
+          user.put("room_owner", rs2.getString("room_owner"));
+          user.put("has_mic", rs2.getInt("has_mic"));
+          user.put("username", username);
         }
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -890,63 +885,8 @@ public class RoomResourceManager {
       }
       return user;
     }
-    
-    public String getRoomOwner(String username) {
-      String roomOwner = null;
-      try {
-          con = DbConnectionManager.getConnection();
-
-          String sql = "select ofAvoirRealtime_Rooms.room_owner as owner" +
-                  " from ofAvoirRealtime_Room,ofAvoirRealtime_OnlineUsers " +
-                  " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "' and " +
-                  " ofAvoirRealtime_OnlineUsers.room =ofAvoirRealtime_Rooms.room_name";
-          Statement st = con.createStatement();
-          ResultSet rs2 = st.executeQuery(sql);
-
-          if (rs2.next()) {
-              roomOwner = rs2.getString("owner");
-          }
-
-      } catch (SQLException ex) {
-          ex.printStackTrace();
-      } finally {
-          try {
-              con.close();
-          } catch (Exception ex) {
-              ex.printStackTrace();
-          }
-      }
-      return roomOwner;
-    }
-    /*
-    public String getFullName(String username) {
-      String roomOwner = null;
-      try {
-          con = DbConnectionManager.getConnection();
-
-          String sql = "select ofAvoirRealtime_Rooms.room_owner as owner" +
-                  " from ofAvoirRealtime_Room,ofAvoirRealtime_OnlineUsers " +
-                  " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "' and " +
-                  " ofAvoirRealtime_OnlineUsers.room =ofAvoirRealtime_Rooms.room_name";
-          Statement st = con.createStatement();
-          ResultSet rs2 = st.executeQuery(sql);
-
-          if (rs2.next()) {
-              roomOwner = rs2.getString("owner");
-          }
-
-      } catch (SQLException ex) {
-          ex.printStackTrace();
-      } finally {
-          try {
-              con.close();
-          } catch (Exception ex) {
-              ex.printStackTrace();
-          }
-      }
-      return roomOwner;
-    }
-    */
+      
+ 
     public int getRoomResourceRoomVersion(String filePath) {
 
         int version = 0;
