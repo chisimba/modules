@@ -9,6 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 class ads extends controller {
   var $submitAction; //stores the action that must be taken when a user clicks the 'next' button
+  var $addCommentMessage = false;//stores messages
   
   function init() {
     //These two store error text and form values
@@ -84,8 +85,11 @@ class ads extends controller {
       return "addcomment_tpl.php";
   }
 
-  function __admincomment(){
-      return "admincomment_tpl.php";
+  function __updatecomment(){
+      //$this->objDocumentStore->updateComment($this->objUser->userId(),$_POST['comment']);
+      $this->objDocumentStore->updateComment($this->getParam('id'),$_POST['admComment']);
+      $this->addCommentMessage = true;
+      return "courseproposallist_tpl.php";
   }
   
   function __reviewcourseproposal(){
@@ -100,6 +104,7 @@ class ads extends controller {
   function __savecourseproposal(){
     $courseTitle= $this->getParam('title');
     $courseProposalId=$this->objCourseProposals->addCourseProposal($courseTitle);
+    $this->objDocumentStore->addRecord($courseProposalId, "Comment", "", "", "", "0", "");
     return $this->nextAction('overview', array('id'=>$courseProposalId));
   }
   

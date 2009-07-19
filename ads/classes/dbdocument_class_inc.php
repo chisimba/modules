@@ -72,6 +72,11 @@ class dbdocument extends dbtable{
     $sql = "select * from $this->tablename where coursecode = '$courseid' and version='$version';";
     return $this->removeSlashes($this->getArray($sql));
   }
+
+    public function updateComment($courseid, $comment){
+      $sql = "update $this->tablename set value='$comment' where formnumber= 'Comment' and coursecode='$courseid';";
+      $this->_execute($sql);
+  }
 }
 
 ?>

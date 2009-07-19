@@ -17,6 +17,8 @@ $objLanguage= $this->newObject('language','language');
 
 $title=$objLanguage->languageText('mod_ads_proposals','ads');
 
+
+
 //constructs the table
 $objTable = new htmltable();
 $courseProposals = $this->objCourseProposals->getCourseProposals($this->objUser->userId());
@@ -28,6 +30,7 @@ $deleteLink=new link();
 $editLink=new link();
 $submitLink = new link();
 $reviewLink=new link();
+$commentLink=new link();
 
 $objTable->startHeaderRow();
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_ads_title', 'ads'));
@@ -58,14 +61,19 @@ foreach($courseProposals as $courseProposal){
 
   switch($courseProposal['status']) {
       case 0: $statusLink->link='New';
+              $status = 'New';
               break;
       case 1: $statusLink->link='Under Review';
+              $status = 'Under Review';
               break;
       case 2: $statusLink->link='Accepted';
+              $status = 'Accepted';
               break;
       case 3: $statusLink->link='Rejected';
+              $status = 'Rejected';
               break;
       default: $statusLink->link= 'New';
+               $status = 'New';
   }
 
   $objTable->addCell($statusLink->show());
@@ -83,9 +91,25 @@ foreach($courseProposals as $courseProposal){
   $reviewLink->link($this->uri(array('action'=>'reviewcourseproposal','id'=>$courseProposal['id'])));
   $objIcon->setIcon('view');
   $reviewLink->link=$objIcon->show();
+
+  //test if the user is admin
+  if (strcmp($this->objUser->fullname($verarray['currentuser']),'Administrative User')==0){
+      $commentLink->link($this->uri(array('action'=>'addcomment','id'=>$courseProposal['id'],
+                                                                'title'=>$courseProposal['title'],
+                                                                'date'=>$courseProposal['creation_date'],
+                                                                'owner'=>$this->objUser->fullname($courseProposal['userid']),
+                                                                'status'=>$status,
+                                                                'version'=>$verarray['version'],
+                                                                'lastedit'=>$this->objUser->fullname($verarray['currentuser']))));
+      $objIcon->setIcon('comment');
+      $commentLink->link = $objIcon->show();
+      $objTable->addCell($commentLink->show().$editLink->show().$deleteLink->show().$reviewLink->show());
+  } else {
+      $objTable->addCell($editLink->show().$deleteLink->show().$reviewLink->show());
+  }
   
-  $objTable->addCell($editLink->show().$deleteLink->show().$reviewLink->show());
   $objTable->endRow();
+
   if ($verarray['status'] == 'unsubmitted' && $verarray['currentuser'] == $this->objUser->userId()) {
     $objTable->startRow('submitLink');
     $link = new link($this->uri(array('action'=>'submitproposal','courseid'=>$courseProposal['id'])));
@@ -102,8 +126,6 @@ foreach($courseProposals as $courseProposal){
 $addButton = new button('add','Add');
 $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
 $addButton->setOnClick("window.location='$returnUrl'");
-$linkAdmComment = new link($this->uri(array('action'=>'admincomment')));
-$linkAdmComment->link = "Add Comment";
 
 $objForm = new form('FormName',$this->uri(array('action'=>'addcourseproposal')));
 $objForm->addToForm($addButton->show());
@@ -118,7 +140,13 @@ regulatory requirements, when developing or amending a course/ unit. The appendi
  in responding to each of the following questions as well as offering additional information
 on the overall proposal process.
 ';
-$content = $linkAdmComment->show().'<br>';
+
+//prints out add comment message
+if ($this->addCommentMessage){
+    $message = "Comment has been successfully added";
+    $this->addCommentMessage = false;
+} else $message = "";
+$content = $message;
 $content.='<h1>'.$title.'</h1>';
 $content.='<p>'.$tip.'</p>';
 //$content.= $this->message;

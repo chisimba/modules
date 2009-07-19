@@ -13,8 +13,7 @@ $fields = array(
 		'value'=>array('type'=>'text','length'=>4000),
 		'status'=>array('type'=>'text','length'=>30),
 		'version'=>array('type'=>'text','length'=>30),
-		'currentuser'=>array('type'=>'text','length'=>32),
-        'admincomment'=>array('type'=>'text','length'=>5000));
+		'currentuser'=>array('type'=>'text','length'=>32));
 		//if status = editmode, only currentuser can edit it
 		//if status = submitted, only currentuser can't edit it
 		//this is basically a lock
