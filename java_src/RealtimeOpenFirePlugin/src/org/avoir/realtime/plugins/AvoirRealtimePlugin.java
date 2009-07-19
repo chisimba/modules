@@ -269,10 +269,11 @@ public class AvoirRealtimePlugin implements Plugin {
                     String imageData = XmlUtils.readString(doc, "image-data");
                     defaultPacketProcessor.broadcastImageData(packet, imageData, roomName);
                 } else if (mode.equals(Mode.GIVE_MIC)) {
-                    String recipient = XmlUtils.readString(doc, "recipient");
-                    Map user = roomResourceManager.getUserInfo(recipient);
-                    roomResourceManager.updateOnlineUser(recipient, (String)(user.get("room_name")), 1);
-                    defaultPacketProcessor.broadcastGiveMicPacket(packet, recipient, (String)(user.get("room_name")));
+                    String recipientUsername = XmlUtils.readString(doc, "recipient-username");
+                    String recipientName = XmlUtils.readString(doc, "recipient-name");
+                    Map user = roomResourceManager.getUserInfo(recipientUsername);
+                    roomResourceManager.updateOnlineUser(recipientUsername, (String)(user.get("room_name")), 1);
+                    defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientName, (String)(user.get("room_name")));
 
                 } else if (mode.equals(Mode.REQUEST_MIC_REPLY)) {
                   //user asks for mic, which gets forwarded to the channel owner
