@@ -28,6 +28,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -126,6 +127,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private boolean showInfoMessage = false;
     private Image webSnapshot = null;
     private FontMetrics fm;
+    private boolean showGrid = true;
+    private JCheckBoxMenuItem showGridMenuItem = new JCheckBoxMenuItem("Show Grid", showGrid);
     private ColorIcon colorIcon = new ColorIcon(currentColor);
     private ImageIcon eraseIcon = ImageUtil.createImageIcon(this, "/images/whiteboard/erase_all_annotations.gif");
     Cursor eraseC = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(eraseIcon.getImage(),
@@ -144,8 +147,12 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private boolean scale = false;
     private boolean fitWBSize = false;
     private boolean scaleOff = false;
+    private Grid grid = new Grid();
+
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
+
         this.whiteboardPanel = whiteboardPanel;
+        grid.setGrid(50, 50);
         setBackground(Color.WHITE);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -157,7 +164,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         insertGraphicMenuItem.setActionCommand("insertgraphic");
         insertPresentationMenuItem.addActionListener(this);
         insertPresentationMenuItem.setActionCommand("insertPresentation");
-
+        showGridMenuItem.setActionCommand("showgrid");
+        showGridMenuItem.addActionListener(this);
         whiteboardPopup.add(insertPresentationMenuItem);
         whiteboardPopup.addSeparator();
         whiteboardPopup.add(deleteMenuItem);
@@ -214,7 +222,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         colorMenuItem.setActionCommand("color");
         whiteboardPopup.addSeparator();
         whiteboardPopup.add(scaleSlideMenuItem);
-
+        whiteboardPopup.add(showGridMenuItem);
         whiteboardPopup.addSeparator();
         whiteboardPopup.add(clearMenuItem);
         whiteboardPopup.add(removeResourceMenuItem);
@@ -349,11 +357,15 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     public void setSlideImage(ImageIcon slideImage) {
         this.slideImage = slideImage;
         repaint();
-       
+
 
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("showgrid")) {
+            showGrid = showGridMenuItem.isSelected();
+            repaint();
+        }
         if (e.getActionCommand().equals("fit-wb-size")) {
             fitWBSize = true;
             scale = false;
@@ -376,7 +388,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             if (text.toLowerCase().indexOf("off") > -1) {
                 fitWBSize = false;
                 scale = false;
-                scaleOff=true;
+                scaleOff = true;
             } else {
                 int index = text.indexOf("%");
                 try {
@@ -385,7 +397,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                     scale = true;
                 } catch (Exception ex) {
                 }
-                scaleOff=false;
+                scaleOff = false;
             }
             refreshPopup();
             repaint();
@@ -723,15 +735,16 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        //if (!gotSize) {
-            int ww = (int) (getWidth());
-            int hh = (int) (getHeight());
-            //int xx = (getWidth() - ww) / 2;
-            //int yy = (getHeight() - hh) / 2;
-            whiteboardSize = new Rectangle(0, 0, ww, hh);
-            gotSize = false;
-       // }
+        int ww = (int) (getWidth());
+        int hh = (int) (getHeight());
+        whiteboardSize = new Rectangle(0, 0, ww, hh);
+
+        gotSize = false;
+
         Graphics2D g2 = (Graphics2D) g;
+        if (showGrid) {
+            grid.draw(g2, whiteboardSize);
+        }
         graphics2D = g2;
         g2.draw(whiteboardSize);
         if (slideImage != null) {
@@ -748,7 +761,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 g2.drawImage(slideImage.getImage(), 20, 70, (int) (whiteboardSize.width * scaleSlideFactor / 100), (int) (whiteboardSize.height * scaleSlideFactor / 100), this);
             } else if (fitWBSize) {
                 g2.drawImage(slideImage.getImage(), 0, 0, (int) (whiteboardSize.width), (int) (whiteboardSize.height), this);
-            }else if(scaleOff){
+            } else if (scaleOff) {
                 g2.drawImage(slideImage.getImage(), 0, 0, this);
             } else {
                 g2.drawImage(slideImage.getImage(), xx, yy, this);
@@ -782,16 +795,18 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                  */
             }
         }
-        for (Item item : items) {
+        synchronized (items) {
+            for (Item item : items) {
 
-            g2.setColor(item.getColor());
-            g2.setStroke(new BasicStroke(item.getStrokeWidth()));
-            if (item instanceof Img) {
-                Img img = (Img) item;
-                g2.drawImage(img.getImage(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), this);
-            } else {
+                g2.setColor(item.getColor());
+                g2.setStroke(new BasicStroke(item.getStrokeWidth()));
+                if (item instanceof Img) {
+                    Img img = (Img) item;
+                    g2.drawImage(img.getImage(), img.getX(), img.getY(), img.getWidth(), img.getHeight(), this);
+                } else {
 
-                item.render(g2);
+                    item.render(g2);
+                }
             }
         }
         g2.setStroke(new BasicStroke());

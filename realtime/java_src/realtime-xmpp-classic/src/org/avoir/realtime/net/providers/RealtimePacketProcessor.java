@@ -310,6 +310,11 @@ public class RealtimePacketProcessor {
         }
     }
 
+    /**
+     * This bring to front the speakers tab, so the speaker can enable the flash
+     * dialog to start capturig 
+     * @param xmlContents
+     */
     public static void displayVideoMicWindow(String xmlContents) {
 
         try {

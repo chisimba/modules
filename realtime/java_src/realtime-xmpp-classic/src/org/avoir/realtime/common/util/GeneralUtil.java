@@ -65,7 +65,15 @@ import org.jivesoftware.smackx.packet.VCard;
 public class GeneralUtil {
 
     final static String version = "1.0.2 beta";
-    public final static String about = "<html><h1>Chisimba Realtime Tools<h1><br>Version: " + version + "<br><h3><strong>Credits:</strong></h3><br>David Wafula<br>Feroz Zaidi<br>Simoni Crause";
+    public final static String about = "<html><h1>Chisimba Realtime Tools<h1><br>Version: " + version +
+            "<br><h3><strong>" +
+            "Credits:</strong></h3>" +
+            "<br>" +
+            "David Wafula<br>" +
+            "Feroz Zaidi" +
+            "<br>" +
+            "Simoni Crause<br>" +
+            "Dean Wookey";
     final static JWindow intro = new JWindow();
     final static JLabel info = new JLabel("", JLabel.CENTER);
     static Properties props;

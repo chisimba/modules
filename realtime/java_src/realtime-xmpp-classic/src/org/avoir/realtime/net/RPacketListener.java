@@ -47,7 +47,6 @@ import org.avoir.realtime.gui.SlidesNavigator;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.Main;
 import org.avoir.realtime.gui.main.MainFrame;
-import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.gui.whiteboard.items.Item;
 import org.avoir.realtime.net.packets.RealtimePacket;
@@ -71,7 +70,6 @@ import org.jivesoftware.smackx.packet.DelayInformation;
 import org.jivesoftware.smackx.packet.MUCUser;
 import org.jivesoftware.smackx.packet.MUCUser.Destroy;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 /**
  * This class is responsible for handling all the packets coming in from the server
@@ -223,16 +221,14 @@ public class RPacketListener implements PacketListener {
                 }
                 }*/
             } else if (mode.equals(Mode.REQUEST_MIC_FORWARDED)) {
-                String requester = RealtimePacketProcessor.getTag(packet.getContent(), "requester");
-                String requesterNames = RealtimePacketProcessor.getTag(packet.getContent(), "requester-name");
+                String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
+                String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
                 RealtimePacket p = new RealtimePacket();
                 p.setMode(Mode.REQUEST_MIC_REPLY);
                 RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
-                realtimePacketContent.addTag("room-name", ConnectionManager.getRoomName());
-                realtimePacketContent.addTag("username", requester);
-                int n = JOptionPane.showConfirmDialog(null, requesterNames + " is requesting for MIC, grant?", "MIC Request", JOptionPane.YES_NO_OPTION);
+                realtimePacketContent.addTag("username", username);
+                int n = JOptionPane.showConfirmDialog(null, nickname + " is requesting for MIC, grant?", "MIC Request", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
-                    //GUIAccessManager.mf.getUserListPanel().getUserListTree().giveMic(requester);
                     realtimePacketContent.addTag("response", Dialogs.REQUEST_APPROVED);
                 } else {
                     realtimePacketContent.addTag("response", Dialogs.REQUEST_DENIED);
@@ -441,9 +437,6 @@ public class RPacketListener implements PacketListener {
                 RealtimePacketProcessor.displayVideoMicWindow(packet.getContent());
             } else if (mode.equals(Mode.TAKEN_MIC)) {
                 RealtimePacketProcessor.disposeAudioVideoWindow(packet.getContent());
-
-
-            //start
             } else if (mode.equals(Mode.ITEM_HISTORY_FROM_SERVER)) {
                 try {
                     String xmlContent = packet.getContent();
@@ -598,19 +591,14 @@ public class RPacketListener implements PacketListener {
             if (index > -1) {
                 from = from.substring(index + 1);
             }
-
-
             if (from.length() > 18) {
                 from = from.substring(0, 18) + "..";
             }
-
             if (!GUIAccessManager.mf.isActive()) {
                 showChatPopup(from, message.getBody());
             }
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantName("(" + from + ") ");
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantMessage(from, message.getBody(), size, color);
-        // GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(sentDate + "\n");
-
         } else if (type.equals("sys-text")) {
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(message.getBody());
         } else if (type.equals("sys-participant-cleanup")) {
