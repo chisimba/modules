@@ -26,6 +26,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Date;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -808,7 +810,7 @@ public class RoomResourceManager {
 
     
     /**
-     * this sends back a list of occupants in the room, with thier
+     * this sends back a list of occupants in the room, with their
      * @param packet
      * @param roomName Room to filter the mic holders
      */
@@ -850,7 +852,101 @@ public class RoomResourceManager {
         }
 
     }
+    
+    public Map isMICHolder(String username) {
+      //returns a Map with fullname being the user's full name
+      //and hasmic being the user's mic status. true = the user has a mic,
+      //false = the user doesn't.
+      Map <String, Object> user = new HashMap<String, Object>();
 
+
+      try {
+        
+        con = DbConnectionManager.getConnection();
+
+        String sql = "select ofAvoirRealtime_OnlineUsers.has_mic, ofUsers.name" +
+                " from ofAvoirRealtime_OnlineUsers, ofAvoir" + 
+                " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "'" +
+                " and ofUsers.username = ofAvoirRealtime_OnlineUsers.jid";
+        Statement st = con.createStatement();
+        ResultSet rs2 = st.executeQuery(sql);
+        if (rs2.next()) {
+          user.put("fullname", rs2.getString("name"));
+          if (rs2.getInt("has_mic") == 1) {
+            user.put("hasmic", true);
+          }
+          else {
+            user.put("hasmic", false);
+          }
+        }
+      } catch (SQLException ex) {
+        ex.printStackTrace();
+      } finally {
+        try {
+            con.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+      }
+      return user;
+    }
+    
+    public String getRoomOwner(String username) {
+      String roomOwner = null;
+      try {
+          con = DbConnectionManager.getConnection();
+
+          String sql = "select ofAvoirRealtime_Rooms.room_owner as owner" +
+                  " from ofAvoirRealtime_Room,ofAvoirRealtime_OnlineUsers " +
+                  " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "' and " +
+                  " ofAvoirRealtime_OnlineUsers.room =ofAvoirRealtime_Rooms.room_name";
+          Statement st = con.createStatement();
+          ResultSet rs2 = st.executeQuery(sql);
+
+          if (rs2.next()) {
+              roomOwner = rs2.getString("owner");
+          }
+
+      } catch (SQLException ex) {
+          ex.printStackTrace();
+      } finally {
+          try {
+              con.close();
+          } catch (Exception ex) {
+              ex.printStackTrace();
+          }
+      }
+      return roomOwner;
+    }
+    /*
+    public String getFullName(String username) {
+      String roomOwner = null;
+      try {
+          con = DbConnectionManager.getConnection();
+
+          String sql = "select ofAvoirRealtime_Rooms.room_owner as owner" +
+                  " from ofAvoirRealtime_Room,ofAvoirRealtime_OnlineUsers " +
+                  " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "' and " +
+                  " ofAvoirRealtime_OnlineUsers.room =ofAvoirRealtime_Rooms.room_name";
+          Statement st = con.createStatement();
+          ResultSet rs2 = st.executeQuery(sql);
+
+          if (rs2.next()) {
+              roomOwner = rs2.getString("owner");
+          }
+
+      } catch (SQLException ex) {
+          ex.printStackTrace();
+      } finally {
+          try {
+              con.close();
+          } catch (Exception ex) {
+              ex.printStackTrace();
+          }
+      }
+      return roomOwner;
+    }
+    */
     public int getRoomResourceRoomVersion(String filePath) {
 
         int version = 0;
