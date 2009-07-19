@@ -183,12 +183,11 @@ public class AvoirRealtimePlugin implements Plugin {
                 } else if (mode.equals(Mode.REQUEST_MIC)) {
                     String requester = XmlUtils.readString(doc, "username");
                     Map user = roomResourceManager.getUserInfo(requester);
-                    if ((Integer)(user.get("has_mic")) == 1) {
-                      //if the user already has the mic, ignore.
-                      defaultPacketProcessor.warnUser(packet, requester, "You already have the MIC.");
-                    }
-                    else {
-                      defaultPacketProcessor.forwardMICRequest(packet, (String)(user.get("room_owner")), requester, (String)(user.get("name")));
+                    if ((Integer) (user.get("has_mic")) == 1) {
+                        //if the user already has the mic, ignore.
+                        defaultPacketProcessor.warnUser(packet, requester, "You already have the MIC.");
+                    } else {
+                        defaultPacketProcessor.forwardMICRequest(packet, (String) (user.get("room_owner")), requester, (String) (user.get("name")));
                     }
                 } else if (mode.equals(Mode.REQUEST_ROOM_OWNER)) {
                     return roomResourceManager.getRoomOwner(packet, roomName);

@@ -823,7 +823,7 @@ public class RoomResourceManager {
                     " from ofUser,ofAvoirRealtime_OnlineUsers " +
                     " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
                     " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
-                    " and ofAvoirRealtime_OnlineUsers.has_mic = 1;";
+                    "  ofAvoirRealtime_OnlineUsers.has_mic = 1;";
             Statement st = con.createStatement();
             ResultSet rs2 = st.executeQuery(sql);
 
@@ -861,7 +861,7 @@ public class RoomResourceManager {
         con = DbConnectionManager.getConnection();
 
         String sql = "select ofAvoirRealtime_OnlineUsers.has_mic," +
-                " ofUser.name, ofAvoirRealtime_Rooms.room_name, ofAvoirRealtime_rooms.room_owner" +
+                " ofUser.name, ofAvoirRealtime_Rooms.room_name, ofAvoirRealtime_Rooms.room_owner" +
                 " from ofAvoirRealtime_OnlineUsers, ofUser, ofAvoirRealtime_Rooms" + 
                 " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "'" +
                 " and ofUser.username = ofAvoirRealtime_OnlineUsers.jid" +
