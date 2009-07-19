@@ -77,7 +77,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
         addMouseListener(new MouseAdapter() {
 
             public void mousePressed(MouseEvent evt) {
-                if (evt.isPopupTrigger()) {
+                if (evt.getButton() == MouseEvent.BUTTON3) {
                     if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
                         String name = (String) model.getValueAt(selectedRow, 2);
                         takeMICMenuItem.setEnabled(enableTakeMic(name));
@@ -154,19 +154,19 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
         }
         if (e.getActionCommand().equals("give-mic")) {
-            Map user=users.get(selectedRow);
-            String username=(String)user.get("username");
-            String names=(String)user.get("names");
-            giveMic(username,names);
+            Map user = users.get(selectedRow);
+            String username = (String) user.get("username");
+            String names = (String) user.get("names");
+            giveMic(username, names);
         }
 
 
     }
 
-    public void giveMic(String username,String name) {
+    public void giveMic(String username, String name) {
 
-        RealtimePacketContent realtimePacketContent=new RealtimePacketContent();
-        realtimePacketContent.addTag("recipient-username",username);
+        RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+        realtimePacketContent.addTag("recipient-username", username);
         realtimePacketContent.addTag("recipient-name", name);
         realtimePacketContent.addTag("room-name", ConnectionManager.getUsername());
         RealtimePacket p = new RealtimePacket();
