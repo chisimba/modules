@@ -45,17 +45,11 @@ import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.net.ConnectionManager;
-import org.avoir.realtime.net.SubscribePacketInt;
 import org.avoir.realtime.net.packets.RealtimePacket;
-import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.packet.RosterPacket;
 
-public class ParticipantListTree extends JPanel implements SubscribePacketInt,
+public class ParticipantListTree extends JPanel implements
         ActionListener {
 
     protected DefaultMutableTreeNode rootNode;
@@ -84,6 +78,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
     private JMenuItem privateChatMenuItem = new JMenuItem("Private Chat");
     private ArrayList<Map> currentSpeakers = new ArrayList<Map>();
     private ArrayList<Map<String, Object>> privateChats = new ArrayList<Map<String, Object>>();
+    private ArrayList<String> localUsers = new ArrayList<String>();
 
     public ParticipantListTree() {
         super(new GridLayout(1, 0));
@@ -95,6 +90,14 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
             ex.printStackTrace();
         }
 
+    }
+
+    private void refreshParticipantList() {
+        clear();
+        for (String user : localUsers) {
+            JLabel txt = new JLabel(user);
+            addObject(onlineNode, txt, true);
+        }
     }
 
     public void init() {
@@ -201,7 +204,12 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         popup.add(banMenuItem);
         popup.addSeparator();
         popup.add(privateChatMenuItem);
-        loadUsers();
+        initParticipantNode();
+
+    }
+
+    private void initParticipantNode() {
+        onlineNode = addObject("Online");
     }
 
     private boolean enableGiveMic(String text) {
@@ -263,46 +271,10 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         }
     }
 
-    public void setUserHasMIC(String user, String jid, boolean hasMIC) {
-        if (!hasMIC) {
-            System.out.println("Searching for " + user + " to take mic from");
-        }
-        DefaultMutableTreeNode treeNode = searchNode(user.trim());
+    public void setUserHasMIC(String user, boolean hasMIC) {
 
-        if (treeNode != null) {
-            JLabel l = (JLabel) treeNode.getUserObject();
-            removeNode(treeNode);
             String micPic = hasMIC ? "<html><img src='" + micIconURL + "'>" : "";
             String displayText = micPic + user;
-            JLabel node = new JLabel(displayText);
-
-            node.setIcon(availableIcon);
-            node.setName(jid);
-            addObject(onlineNode, node, true);
-            if (hasMIC) {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("username", user);
-                map.put("display-text", displayText);
-                synchronized (currentSpeakers) {
-                    currentSpeakers.add(map);
-                }
-
-            } else {
-
-                synchronized (currentSpeakers) {
-                    ArrayList<Map> speakersToRemove = new ArrayList<Map>();
-                    for (Map map : currentSpeakers) {
-                        String username = (String) map.get("username");
-                        if (user.equalsIgnoreCase(username)) {
-                            speakersToRemove.add(map);
-                        }
-                    }
-                    for (Map map : speakersToRemove) {
-                        currentSpeakers.remove(map);
-                    }
-                }
-            }
-        }
     }
 
     public void updateUser(String user, String jid, boolean passed) {
@@ -341,26 +313,23 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
 
     public void addUser(String names) {
         names = names.trim();
-        DefaultMutableTreeNode treeNode = searchNode(names.trim());
-
-        if (treeNode != null) {
-            removeNode(treeNode);
-        }
-        JLabel node = new JLabel(names);
-        node.setIcon(availableIcon);
-
-        addObject(onlineNode, node, true);
-
+        localUsers.add(names);
+        refreshParticipantList();
     }
 
     public void removeUser(String user) {
         user = user.trim();
-        DefaultMutableTreeNode treeNode = searchNode(user.trim());
-
-        if (treeNode != null) {
-            removeNode(treeNode);
-
+        ArrayList<Integer> toRemove = new ArrayList<Integer>();
+        for (int i = 0; i < localUsers.size(); i++) {
+            String locaUser = localUsers.get(i);
+            if (locaUser.equalsIgnoreCase(user)) {
+                toRemove.add(i);
+            }
         }
+        for (int i : toRemove) {
+            localUsers.remove(i);
+        }
+        refreshParticipantList();
     }
 
     private void kickOut(boolean permanently) {
@@ -614,200 +583,8 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
         if (e.getActionCommand().equals("give-mic")) {
             giveMic();
         }
-        if (e.getActionCommand().equals("accept")) {
-            TreePath parentPath = tree.getSelectionPath();
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) (parentPath.getLastPathComponent());
-            Object obj = node.getUserObject();
-            if (obj instanceof JLabel) {
-                JLabel l = (JLabel) obj;
-                accept(l.getText());
-            }
-        }
-    }
-
-    private void accept(String username) {
-        String to = username + "@" + ConnectionManager.getConnection().getServiceName();
-        Presence packet = new Presence(Presence.Type.subscribed);
-        packet.setTo(to);
-        ConnectionManager.getConnection().sendPacket(packet);
-        loadUsers();
-    }
-
-    public void loadUsers() {
-        clear();
-        onlineNode = addObject(rootNode, "Online", true);
-    }
-
-    private void initUsers() {
-        Roster roster = connection.getRoster();
-        roster.addRosterListener(new RosterListener() {
-
-            public void entriesAdded(Collection<String> addresses) {
-            }
-
-            public void entriesDeleted(Collection<String> addresses) {
-            }
-
-            public void entriesUpdated(Collection<String> addresses) {
-            }
-
-            public void presenceChanged(Presence presence) {
-            }
-        });
 
 
-        entries = roster.getEntries();
-
-        for (RosterEntry entry : entries) {
-
-            addEntry(entry);
-        }
-    }
-
-    private void addEntry(RosterEntry entry) {
-        String username = entry.getUser();
-        if (username.indexOf("@") > -1) {
-            username = username.substring(0, username.indexOf("@"));
-        }
-
-        Roster roster = ConnectionManager.getConnection().getRoster();
-        Presence presence = roster.getPresence(entry.getUser());
-        if (presence.getType() == Presence.Type.available) {
-            JLabel node = new JLabel(username);
-            node.setIcon(availableIcon);
-
-            if (presence.getMode() == Presence.Mode.away) {
-                node.setIcon(awayIcon);
-            }
-            addObject(onlineNode, node, true);
-            onlineNode.setUserObject("Online (" + (onlineNode.getChildCount()) + ")");
-        } else if (presence.getType() == Presence.Type.unavailable) {
-            JLabel node = new JLabel(username);
-            if (entry.getStatus() == RosterPacket.ItemStatus.SUBSCRIPTION_PENDING) {
-                node.setIcon(helpIcon);
-                //JOptionPane.showMessageDialog(null, presence.toXML()+" ME = "+connection.getUser());
-                //addObject(incomingRequestsNode, node, true);
-                return;
-            }
-            if (entry.getStatus() == null) {
-                //auto request for subscribtion
-                String serviceName = ConnectionManager.getConnection().getServiceName();
-                String group = "";
-                String jid = username;
-                if (jid.indexOf("@") == -1) {
-                    jid = jid + "@" + serviceName;
-                }
-                try {
-                    roster.createEntry(jid, jid, new String[]{group});
-                } catch (XMPPException ex) {
-                    JOptionPane.showMessageDialog(null, "Error accepting " + username);
-                    ex.printStackTrace();
-                }
-                node.setIcon(unavailableIcon);
-
-            }
-        }
-
-    }
-
-    public void addIncomingRequests(String from) {
-        JLabel node = new JLabel(from);
-        node.setIcon(helpIcon);
-
-    }
-
-    public void addOutgoingRequests(String from) {
-        JLabel node = new JLabel(from);
-        node.setIcon(helpIcon);
-
-    }
-
-    public void addOffline(String from) {
-        DefaultMutableTreeNode treeNode = searchNode(from);
-
-        if (treeNode != null) {
-            removeNode(treeNode);
-        }
-        JLabel node = new JLabel(from);
-        node.setIcon(unavailableIcon);
-
-    }
-
-    public void addOnlineAvailable(String from) {
-        DefaultMutableTreeNode treeNode = searchNode(from);
-
-        if (treeNode != null) {
-            removeNode(treeNode);
-        }
-        JLabel node = new JLabel(from);
-        node.setIcon(availableIcon);
-        addObject(onlineNode, node, true);
-    }
-
-    public void addOnlineAway(String from) {
-        DefaultMutableTreeNode treeNode = searchNode(from);
-
-        if (treeNode != null) {
-            removeNode(treeNode);
-        }
-        JLabel node = new JLabel(from);
-        node.setIcon(awayIcon);
-        addObject(onlineNode, node, true);
-    }
-
-    public void processSubscription(Presence presence) {
-        String user = presence.getFrom();
-        if (user.indexOf("@") > -1) {
-            user = user.substring(0, user.indexOf("@"));
-        }
-
-
-        if (presence.isAvailable()) {
-            addOnlineAvailable(user);
-            return;
-        }
-        if (presence.isAway()) {
-            addOnlineAway(user);
-            return;
-        }
-
-        if (presence.getType() == Presence.Type.subscribe) {
-            addIncomingRequests(user);
-
-            return;
-        }
-
-    }
-
-    private void processPresenceChanged(Presence presence) {
-        String user = presence.getFrom();
-        //RosterEntry entry=roster.
-        //user=entry.getUser();
-        if (user.indexOf("@") > -1) {
-            user = user.substring(0, user.indexOf("@"));
-        }
-        //search the node
-        DefaultMutableTreeNode node = searchNode(user);
-
-        if (node != null) {
-            removeNode(node);
-            if (presence.getType() == Presence.Type.available) {
-                JLabel val = new JLabel(user);
-                val.setIcon(availableIcon);
-
-                if (presence.getMode() == Presence.Mode.away) {
-                    val.setIcon(awayIcon);
-                }
-
-                addObject(onlineNode, val, true);
-
-            } else if (presence.getType() == Presence.Type.unavailable) {
-                JLabel val = new JLabel(user);
-                val.setIcon(unavailableIcon);
-            //addObject(offlineNode, val, true);
-            }
-            onlineNode.setUserObject("Online (" + (onlineNode.getChildCount()) + ")");
-        }
     }
 
     /**
@@ -945,7 +722,7 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
 
     /** Remove all nodes except the root node. */
     public void clear() {
-        rootNode.removeAllChildren();
+        onlineNode.removeAllChildren();
         treeModel.reload();
     }
 
@@ -1001,12 +778,5 @@ public class ParticipantListTree extends JPanel implements SubscribePacketInt,
             tree.scrollPathToVisible(new TreePath(childNode.getPath()));
         }
         return childNode;
-    }
-
-    class UserListTimer extends TimerTask {
-
-        public void run() {
-            loadUsers();
-        }
     }
 }

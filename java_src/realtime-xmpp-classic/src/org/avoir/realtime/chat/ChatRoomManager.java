@@ -39,6 +39,7 @@ public class ChatRoomManager {
     private ChatPopup chatPopup = new ChatPopup();
     public static String oldRoom = "";
     private char[] roomPassword;
+    private RParticipantStatusListener participantStatusListener = new RParticipantStatusListener();
 
     public ChatRoomManager(String roomName) {
         muc = new MultiUserChat(ConnectionManager.getConnection(), roomName + "@conference." + ConnectionManager.getConnection().getServiceName());
@@ -76,62 +77,65 @@ public class ChatRoomManager {
     }
 
     private void addParticipantsListener() {
-        muc.addParticipantStatusListener(new ParticipantStatusListener() {
+        muc.addParticipantStatusListener(participantStatusListener);
+    }
 
-            public void joined(String jid) {
 
-                String user = jid.substring(jid.lastIndexOf("/") + 1);
-                GUIAccessManager.mf.getUserListPanel().getUserListTree().addUser(user);
-            }
 
-            public void left(String jid) {
-                String user = jid.substring(jid.lastIndexOf("/") + 1);
-                GUIAccessManager.mf.getUserListPanel().getUserListTree().removeUser(user);
-                GUIAccessManager.mf.removeSpeaker(user);
-            }
+    class RParticipantStatusListener implements ParticipantStatusListener {
 
-            public void kicked(String participant, String actor, String reason) {
-                chatRoom.insertSystemMessage(participant + " kicked out " + actor + ". Message: " + reason);
-            }
+        public void joined(String jid) {
+            String user = jid.substring(jid.lastIndexOf("/") + 1);
+            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().addUser(user);
+        }
 
-            public void voiceGranted(String arg0) {
-            }
+        public void left(String jid) {
+            String user = jid.substring(jid.lastIndexOf("/") + 1);
+            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(user);
+            GUIAccessManager.mf.removeSpeaker(user);
+        }
 
-            public void voiceRevoked(String arg0) {
-            }
+        public void kicked(String participant, String actor, String reason) {
+            // chatRoom.insertSystemMessage(participant + " kicked out " + actor + ". Message: " + reason);
+        }
 
-            public void banned(String participant, String actor, String reason) {
-                chatRoom.insertSystemMessage(participant + " kicked out " + actor + ". Message: " + reason);
+        public void voiceGranted(String arg0) {
+        }
 
-            }
+        public void voiceRevoked(String arg0) {
+        }
 
-            public void membershipGranted(String arg0) {
-            }
+        public void banned(String participant, String actor, String reason) {
+            chatRoom.insertSystemMessage(participant + " kicked out " + actor + ". Message: " + reason);
 
-            public void membershipRevoked(String arg0) {
-            }
+        }
 
-            public void moderatorGranted(String arg0) {
-            }
+        public void membershipGranted(String arg0) {
+        }
 
-            public void moderatorRevoked(String arg0) {
-            }
+        public void membershipRevoked(String arg0) {
+        }
 
-            public void ownershipGranted(String arg0) {
-            }
+        public void moderatorGranted(String arg0) {
+        }
 
-            public void ownershipRevoked(String arg0) {
-            }
+        public void moderatorRevoked(String arg0) {
+        }
 
-            public void adminGranted(String arg0) {
-            }
+        public void ownershipGranted(String arg0) {
+        }
 
-            public void adminRevoked(String arg0) {
-            }
+        public void ownershipRevoked(String arg0) {
+        }
 
-            public void nicknameChanged(String arg0, String arg1) {
-            }
-        });
+        public void adminGranted(String arg0) {
+        }
+
+        public void adminRevoked(String arg0) {
+        }
+
+        public void nicknameChanged(String arg0, String arg1) {
+        }
     }
 
     public boolean createRoom(String roomName, String desc, boolean requirePassword, String password) {
@@ -308,12 +312,12 @@ public class ChatRoomManager {
         if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
             createRoom(roomName, ConnectionManager.fullnames, false, null);
         }
+
         JPasswordField passwordField = new JPasswordField();
         nickname = ConnectionManager.fullnames;
 
-        //release mic
-        GUIAccessManager.mf.getUserListPanel().getUserListTree().setUserHasMIC(nickname, null, false);
-        //todo: send info to server for update
+        muc.removeParticipantStatusListener(participantStatusListener);
+        GUIAccessManager.mf.getUserListPanel().getParticipantListTable().clear();
         //not allawed in more than one room at a time, so must leave old one
         muc.leave();
         muc = new MultiUserChat(ConnectionManager.getConnection(), roomName + "@conference." + ConnectionManager.getConnection().getServiceName());

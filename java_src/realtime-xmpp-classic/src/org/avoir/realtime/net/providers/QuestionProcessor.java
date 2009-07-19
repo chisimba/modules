@@ -87,7 +87,7 @@ public class QuestionProcessor {
             int i = from.indexOf("@");
             String user = from.substring(0, i);
 
-            GUIAccessManager.mf.getUserListPanel().getUserListTree().updateUser(user, from, new Boolean(passStatus));
+//            GUIAccessManager.mf.getUserListPanel().getUserListTree().updateUser(user, from, new Boolean(passStatus));
 
         } catch (Exception ex) {
             ex.printStackTrace();

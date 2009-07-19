@@ -24,7 +24,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Timer;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -118,7 +117,7 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         userListPanel = new ParticipantListPanel();
         leftSplitPane.setDividerLocation((ss.height / 2));
-        mainSplitPane.setDividerLocation((ss.width / 4) + 60);
+        mainSplitPane.setDividerLocation((ss.width / 4)+ 60);
         leftSplitPane.setTopComponent(userListPanel);
         tabbedPane.addTab("Whiteboard", whiteboardPanel);
         tabbedPane.add("Browser", generalWebBrowser);
@@ -186,10 +185,10 @@ public class MainFrame extends javax.swing.JFrame {
                         }
                     });
                     speaker.setSpeaker("free");
-                    userListPanel.getUserListTree().setUserHasMIC(speakerName, speakerName, false);
+                    userListPanel.getParticipantListTable().setUserHasMIC(speakerName, false);
                     break;
                 }
-                userListPanel.getUserListTree().clearCurrentSpeakers();
+                
             }
         });
     }
@@ -212,7 +211,7 @@ public class MainFrame extends javax.swing.JFrame {
                 tabbedPane.setSelectedIndex(2);
                 speaker.setSpeaker(speakerName);
                 speakers.set(index, speaker);
-                userListPanel.getUserListTree().setUserHasMIC(speakerName, speakerName, true);
+                userListPanel.getParticipantListTable().setUserHasMIC(speakerName, true);
                 return true;
             }
         }
@@ -230,7 +229,7 @@ public class MainFrame extends javax.swing.JFrame {
                 tabbedPane.setSelectedIndex(2);
                 speaker.setSpeaker(speakerName);
                 speakers.set(index, speaker);
-                userListPanel.getUserListTree().setUserHasMIC(speakerName, speakerName, true);
+                userListPanel.getParticipantListTable().setUserHasMIC(speakerName, true);
                 return true;
             }
             index++;
@@ -257,7 +256,7 @@ public class MainFrame extends javax.swing.JFrame {
                         });
                         speaker.setSpeaker("free");
                         // System.out.println("#########removing " + speakerName);
-                        userListPanel.getUserListTree().setUserHasMIC(speakerName, speakerName, false);
+                        userListPanel.getParticipantListTable().setUserHasMIC(speakerName, false);
                         break;
                     } else {
                         // System.out.println("no match");
@@ -1267,7 +1266,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_changeRoomButtonMouseExited
 
     private void privateChatMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateChatMenuItemActionPerformed
-        userListPanel.getUserListTree().initPrivateChat(ConnectionManager.getUsername(),GeneralUtil.getThisRoomOwner(), "Room Moderator");
+       // userListPanel.getUserListTree().initPrivateChat(ConnectionManager.getUsername(),GeneralUtil.getThisRoomOwner(), "Room Moderator");
 }//GEN-LAST:event_privateChatMenuItemActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
