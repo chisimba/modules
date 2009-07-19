@@ -53,6 +53,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem deleteItem = new JMenuItem("Remove Presentation");
     private JMenuItem clearItem = new JMenuItem("Clear Whiteboard");
+    private JMenuItem refreshItem = new JMenuItem("Refresh");
     public static String selectedPresentation;
     public static int slideCount = 0;
     private boolean popuateLocalDone = false;
@@ -84,12 +85,18 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
 
         JScrollPane scrollPane = new JScrollPane(tree);
         add(scrollPane);
-       // populateWithRoomResources();
+        // populateWithRoomResources();
         deleteItem.addActionListener(this);
         deleteItem.setActionCommand("remove");
 
         clearItem.addActionListener(this);
         clearItem.setActionCommand("clear");
+
+        refreshItem.addActionListener(this);
+        refreshItem.setActionCommand("refresh");
+
+        popup.add(refreshItem);
+        popup.addSeparator();
         popup.add(deleteItem);
         popup.add(clearItem);
     }
@@ -146,6 +153,9 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         if (evt.getActionCommand().equals("remove")) {
             removeRoomResource();
         }
+        if (evt.getActionCommand().equals("refresh")) {
+            populateWithRoomResources();
+        }
     }
 
     public void resetSlideCount() {
@@ -179,9 +189,9 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
                     sendPacket(pFile.getName(), GeneralUtil.removeExt(f.getFileName()));
                     selectedPresentation = pFile.getName();
                     resetSlideCount();
-                 } else {
+                } else {
                     resetSlideCount();
-                 }
+                }
             }
         }
     }
