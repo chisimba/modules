@@ -1410,6 +1410,7 @@ public class MainFrame extends javax.swing.JFrame {
         realtimePacketContent.addTag("username", ConnectionManager.getUsername());
         p.setContent(realtimePacketContent.toString());
         ConnectionManager.sendPacket(p);
+        
     }//GEN-LAST:event_requestMicMenuItemActionPerformed
 
     private void addRoomMembersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMembersMenuItemActionPerformed

@@ -140,11 +140,11 @@ public class GeneralUtil {
         return occupant.getJid();
     }
 
-    public static boolean isMyRoom() {
+   private static boolean isMyRoom() {
         return ConnectionManager.getUsername().equals(getThisRoomOwner());
     }
 
-    public static String getThisRoomOwner() {
+    private static String getThisRoomOwner() {
         String owner = null;
         try {
             Collection<Affiliate> owners = GUIAccessManager.mf.getChatRoomManager().getMuc().getOwners();
