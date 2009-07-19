@@ -306,7 +306,7 @@ public class RoomMemberListFrame extends javax.swing.JFrame {
         RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
         realtimePacketContent.addTag("room-name", ConnectionManager.getRoomName());
         realtimePacketContent.addTag("username",username);
-        realtimePacketContent.addTag("room-owner", GeneralUtil.getThisRoomOwner());
+        realtimePacketContent.addTag("room-owner", ConnectionManager.roomOwner);
         p.setContent(realtimePacketContent.toString());
         ConnectionManager.sendPacket(p);
     }

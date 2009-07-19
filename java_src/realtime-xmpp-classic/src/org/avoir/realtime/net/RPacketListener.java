@@ -47,6 +47,7 @@ import org.avoir.realtime.gui.SlidesNavigator;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.Main;
 import org.avoir.realtime.gui.main.MainFrame;
+import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.gui.whiteboard.items.Item;
 import org.avoir.realtime.net.packets.RealtimePacket;
@@ -194,7 +195,9 @@ public class RPacketListener implements PacketListener {
             } else if (mode.equals(Mode.ROOM_MEMBERS)) {
                 ArrayList<Map> memberList = RealtimePacketProcessor.getRoomMemberList(packet.getContent());
                 GUIAccessManager.mf.getRoomMemberListFrame().setMembers(memberList);
-
+            } else if (mode.equals(Mode.SERVER_WARN)) {
+                String message = RealtimePacketProcessor.getTag(packet.getContent(), "message");
+                JOptionPane.showMessageDialog(GUIAccessManager.mf, message, "Warning", JOptionPane.WARNING_MESSAGE);
             } else if (mode.equals(Mode.ROOM_LIST)) {
                 ArrayList<Map> roomList = RealtimePacketProcessor.getRoomList(packet.getContent());
                 GUIAccessManager.mf.getRoomListFrame().populateRooms(roomList);
@@ -210,16 +213,16 @@ public class RPacketListener implements PacketListener {
                 JOptionPane.showMessageDialog(null, msg);
                 System.exit(0);
             } else if (mode.equals(Mode.ROOM_OWNER_REPLY)) {
-                /*ConnectionManager.roomOwner = RealtimePacketProcessor.getTag(packet.getContent(), "room-owner");
+                ConnectionManager.roomOwner = RealtimePacketProcessor.getTag(packet.getContent(), "room-owner");
 
                 if (ConnectionManager.roomOwner.equalsIgnoreCase(ConnectionManager.getUsername())) {
 
-                if (!WebPresentManager.isPresenter || !StandAloneManager.isAdmin) {
-                WebPresentManager.isPresenter = true;
-                StandAloneManager.isAdmin = true;
-                ChatRoomManager.doGUIAccessLevel();
+                    if (!WebPresentManager.isPresenter || !StandAloneManager.isAdmin) {
+                        WebPresentManager.isPresenter = true;
+                        StandAloneManager.isAdmin = true;
+                        GUIAccessManager.mf.getChatRoomManager().doGUIAccessLevel();
+                    }
                 }
-                }*/
             } else if (mode.equals(Mode.REQUEST_MIC_FORWARDED)) {
                 String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
                 String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
@@ -239,7 +242,7 @@ public class RPacketListener implements PacketListener {
                 String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
                 int hasMic = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "has_mic"));
                 GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserHasMIC(nickname, true);
-                
+
             } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
                 String receiver = XmlUtils.readString(doc, "private-chat-receiver");
@@ -250,7 +253,7 @@ public class RPacketListener implements PacketListener {
                     returnChat = true;
                 }
 //                GUIAccessManager.mf.getUserListPanel().getUserListTree().
-  //                      appendPrivateChat(msg, sender, receiver, returnChat);
+            //                      appendPrivateChat(msg, sender, receiver, returnChat);
             } else if (mode.equals(Mode.EC2_FLASH_SERVER_READY)) {
                 String host = GeneralUtil.getTagText(packet.getContent(), "host");
                 saveEC2Urls(host, RealtimePacket.Mode.SAVE_FLASH_EC2_URL);
@@ -659,7 +662,7 @@ public class RPacketListener implements PacketListener {
 
         if (presence.getType() == Presence.Type.unavailable && !"303".equals(code)) {
             String user = from;
-            
+
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(user);
             GUIAccessManager.mf.removeSpeaker(user);
 
