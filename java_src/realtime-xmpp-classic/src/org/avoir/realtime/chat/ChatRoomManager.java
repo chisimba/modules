@@ -431,7 +431,7 @@ public class ChatRoomManager {
         return chatPopup;
     }
 
-    public static void doGUIAccessLevel() {
+    public  void doGUIAccessLevel() {
         GUIAccessManager.mf.resetGUIccess();
         try {
             // GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
@@ -458,6 +458,8 @@ public class ChatRoomManager {
                             GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, currentRoomName);
                             GUIAccessManager.mf.setWebBrowserEnabled(false);
                         }
+
+                       sendMessage(ConnectionManager.fullnames+" joined", 10, Color.LIGHT_GRAY,"sys-text");
                     }
                 };
                 t.start();
@@ -488,12 +490,27 @@ public class ChatRoomManager {
 
     }
 
-    public boolean sendMessage(String str, int size, Color color) {
+    public  boolean sendMessage(String str, int size, Color color) {
         try {
             Message msg = muc.createMessage();
             msg.setBody(str);
             msg.setProperty("size", new Integer(size));
             msg.setProperty("color", color);
+            muc.sendMessage(msg);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+     public  boolean sendMessage(String str, int size, Color color,String type) {
+        try {
+            Message msg = muc.createMessage();
+            msg.setBody(str);
+            msg.setProperty("size", new Integer(size));
+            msg.setProperty("color", color);
+            msg.setProperty("message-type", type);
             muc.sendMessage(msg);
             return true;
         } catch (Exception ex) {
