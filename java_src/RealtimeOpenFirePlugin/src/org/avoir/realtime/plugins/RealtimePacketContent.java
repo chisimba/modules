@@ -10,14 +10,14 @@ package org.avoir.realtime.plugins;
  */
 public class RealtimePacketContent {
 
-    private StringBuilder sb = new StringBuilder();
+  private StringBuilder sb = new StringBuilder();
 
-    public void addTag(String tag, Object value) {
-        sb.append("<" + tag + ">").append(value).append("</" + tag + ">");
-    }
+  public void addTag(String tag, Object value) {
+      sb.append("<" + tag + ">").append(value).append("</" + tag + ">");
+  }
 
-    @Override
-    public String toString() {
-        return sb.toString();
-    }
+  @Override
+  public String toString() {
+      return sb.toString();
+  }
 }

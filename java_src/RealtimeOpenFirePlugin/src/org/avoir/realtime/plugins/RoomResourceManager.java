@@ -822,7 +822,8 @@ public class RoomResourceManager {
             String sql = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic " +
                     " from ofUser,ofAvoirRealtime_OnlineUsers " +
                     " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
-                    " ofAvoirRealtime_OnlineUsers.jid =ofUser.username";
+                    " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
+                    " and ofAvoirRealtime_OnlineUsers.has_mic = 1;";
             Statement st = con.createStatement();
             ResultSet rs2 = st.executeQuery(sql);
 
