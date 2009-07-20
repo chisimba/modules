@@ -20,6 +20,8 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -82,6 +84,7 @@ public class MainFrame extends javax.swing.JFrame {
     private ImageIcon chatIcon = ImageUtil.createImageIcon(this, "/images/chat_on.gif");
     private ImageIcon delIcon = ImageUtil.createImageIcon(this, "/images/delete.gif");
     private ImageIcon logo = ImageUtil.createImageIcon(this, "/images/intro_logo.jpg");
+    private ImageIcon alertIcon = ImageUtil.createImageIcon(this, "/images/message_alert.gif");
     private SlidesNavigator slidesNavigator;
     private QuestionNavigator questionsNavigator;
     private RealtimeFileChooser realtimeFileChooser = new RealtimeFileChooser("images");
@@ -170,6 +173,17 @@ public class MainFrame extends javax.swing.JFrame {
         displayAvator();
         setSize(ss);
         setVisible(true);
+        
+        this.addFocusListener(new FocusListener() {
+
+          public void focusGained(FocusEvent e) {
+
+          }
+
+          public void focusLost(FocusEvent e) {
+            MainFrame.this.setIconImage(null);
+          }
+        });
 
     }
     public void removeAllSpeakers() {
@@ -1535,6 +1549,15 @@ public class MainFrame extends javax.swing.JFrame {
         tipOfDayDialog.setVisible(true);
     }
 
+    public ImageIcon getIcon(String iconType) {
+      if (iconType.equals("alert")) {
+        return this.alertIcon;
+      }
+      else {
+        return this.chatIcon;
+      }
+    }
+    
     private void doRefresh() {
         int width = getWidth();
         int height = getHeight();

@@ -601,6 +601,7 @@ public class RPacketListener implements PacketListener {
                 from = from.substring(0, 18) + "..";
             }
             if (!GUIAccessManager.mf.isActive()) {
+                GUIAccessManager.mf.setIconImage(GUIAccessManager.mf.getIcon("alert").getImage());
                 showChatPopup(from, message.getBody());
             }
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantName("(" + from + ") ");
