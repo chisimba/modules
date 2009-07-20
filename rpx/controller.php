@@ -11,6 +11,7 @@ class rpx extends controller
 
     public function dispatch()
     {
+        $this->setLayoutTemplate('user_layout_tpl.php');
         return 'main_tpl.php';
     }
 }
