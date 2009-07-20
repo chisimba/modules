@@ -168,6 +168,8 @@ public class MainFrame extends javax.swing.JFrame {
         doRealRoomJoin(roomName);
         userListPanel.getStartAudioVideoButton().setEnabled(!ConnectionManager.useEC2);
         displayAvator();
+        setSize(ss);
+        setVisible(true);
 
     }
     public void removeAllSpeakers() {
@@ -618,6 +620,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         privateChatMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
+        tipsMenuItem = new javax.swing.JMenuItem();
         optionsMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -1054,6 +1057,14 @@ public class MainFrame extends javax.swing.JFrame {
         toolsMenu.add(privateChatMenuItem);
         toolsMenu.add(jSeparator1);
 
+        tipsMenuItem.setText("Tips");
+        tipsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tipsMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(tipsMenuItem);
+
         optionsMenuItem.setText("Options");
         optionsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1434,6 +1445,10 @@ public class MainFrame extends javax.swing.JFrame {
         showRoomList(null);
     }//GEN-LAST:event_changeRoomButton1ActionPerformed
 
+    private void tipsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipsMenuItemActionPerformed
+        showTipOfDay();
+    }//GEN-LAST:event_tipsMenuItemActionPerformed
+
     private void showRoomResourcesNavigator() {
         JFrame fr = new JFrame("Room Resources");
         slidesSplitPane.setTopComponent(slidesNavigator);
@@ -1610,6 +1625,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel surfacePanel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JMenuItem thisAppMenuItem;
+    private javax.swing.JMenuItem tipsMenuItem;
     private javax.swing.JTextArea titleField;
     private javax.swing.JPanel titlePanel;
     private javax.swing.JMenu toolsMenu;

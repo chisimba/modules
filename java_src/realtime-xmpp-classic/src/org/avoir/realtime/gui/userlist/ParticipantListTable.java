@@ -38,7 +38,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
     private ImageIcon micIcon = ImageUtil.createImageIcon(this, "/images/mic_on.png");
     private ArrayList<Map> users = new ArrayList<Map>();
-    private ParticipantListTableModel model = new ParticipantListTableModel();
+    private ParticipantListTableModel model ;
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem acceptMenuItem = new JMenuItem("Accept");
@@ -250,11 +250,11 @@ public class ParticipantListTable extends JTable implements ActionListener {
             for (int i = 0; i < model.getColumnCount(); i++) {
                 column = getColumnModel().getColumn(i);
                 if (i == 0) {
-                    column.setPreferredWidth((int) (tableWidth * 0.05));
+                    column.setPreferredWidth((int) (tableWidth * 0.1));
                 } else if (i == 1) {
-                    column.setPreferredWidth((int) (tableWidth * 0.05));
+                    column.setPreferredWidth((int) (tableWidth * 0.1));
                 } else {
-                    column.setPreferredWidth((int) (tableWidth * 0.9));
+                    column.setPreferredWidth((int) (tableWidth * 0.8));
                 }
             }
         }
