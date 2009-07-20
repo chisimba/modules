@@ -1,6 +1,6 @@
 <?php
 
-class rpx
+class rpx extends controller
 {
     public function init()
     {
