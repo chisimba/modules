@@ -1,1 +1,0 @@
-java -cp ../lib/realtime-base-1.0.1.jar:../lib/realtime-launcher-1.0.1.jar avoir.realtime.tcp.base.SlidesServer gen19Srv8Nme50  localhost 22225
