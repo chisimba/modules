@@ -2,10 +2,9 @@
 
 class rpx extends controller
 {
+    protected $identifier;
     protected $objAltConfig;
     protected $objSysConfig;
-
-    protected $data;
 
     public function init()
     {
@@ -68,7 +67,10 @@ class rpx extends controller
         $json = file_get_contents($uri, 0, $context);
 
         // Decode the JSON response retrieved from the RPX API to an array.
-        $this->data = json_decode($json, true);
+        $data = json_decode($json);
+
+        // Assign the identifier value to the instance variable.
+        $this->identifier = $data->profile->identifier;
 
         // Call the token template.
         return 'token_tpl.php';
