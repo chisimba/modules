@@ -2,7 +2,7 @@
 
 class rpx extends controller
 {
-    protected $objConfig;
+    public $objConfig;
 
     public function init()
     {
