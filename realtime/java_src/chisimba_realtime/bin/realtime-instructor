@@ -1,1 +1,0 @@
-java -cp ../lib/realtime-chat-1.0.2.jar:../lib/realtime-common-1.0.2.jar:../lib/realtime-classroom-base-1.0.2.jar avoir.realtime.classroom.standalone.LoginFrame

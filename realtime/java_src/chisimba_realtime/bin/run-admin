@@ -1,1 +1,0 @@
-java -cp ../lib/realtime-launcher-1.0.1.jar:../lib/realtime-base-1.0.1.jar avoir.realtime.tcp.base.admin.ClientAdmin
