@@ -36,6 +36,13 @@ public class Constants {
         public final static int REQUEST_APPROVED = 1;
     }
     
+    public static class AdminLevels {
+      public final static int ADMIN_LEVEL = 1;
+      public final static int PARTICIPANT_LEVEL = 3;
+      public final static int OWNER_LEVEL = 0;
+      
+    }
+    
     public final static int ESSAY_QUESTION = 0;
     public final static int MCQ_QUESTION = 1;
     public final static int TRUE_FALSE_QUESTION = 2;

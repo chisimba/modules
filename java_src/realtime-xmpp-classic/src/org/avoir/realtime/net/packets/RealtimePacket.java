@@ -97,6 +97,7 @@ public class RealtimePacket extends IQ {
         public static final String ADD_ROOM_MEMBER = "add-room-member";
         public static final String REQUEST_ROOM_MEMBERS = "request-room-members";
         public static final String DELETE_ROOM_MEMBER = "delete-room-member";
+        public static final String SET_ACCESS = "set-access";
     }
 
     public String getContent() {

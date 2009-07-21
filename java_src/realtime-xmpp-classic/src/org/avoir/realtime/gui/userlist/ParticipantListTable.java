@@ -30,6 +30,7 @@ import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.packets.RealtimePacket;
+import org.avoir.realtime.common.Constants.*;
 
 /**
  *
@@ -51,6 +52,8 @@ public class ParticipantListTable extends JTable implements ActionListener {
     private JMenuItem kickoutMenuItem = new JMenuItem("Kick Out");
     private JMenuItem banMenuItem = new JMenuItem("Ban");
     private JMenuItem privateChatMenuItem = new JMenuItem("Private Chat");
+    private JMenuItem makeAdminMenuItem = new JMenuItem("Make Admin");
+    private JMenuItem removeAdminMenuItem = new JMenuItem("Remove Admin Status");
     private int selectedRow = -1;
 
     public ParticipantListTable() {
@@ -79,7 +82,8 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
             public void mousePressed(MouseEvent evt) {
                 if (evt.getButton() == MouseEvent.BUTTON3) {
-                    if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
+                    Map user = users.get(selectedRow);
+                    if (ConnectionManager.isOwner || ConnectionManager.isAdmin) {
                         String name = (String) model.getValueAt(selectedRow, 2);
                         takeMICMenuItem.setEnabled(enableTakeMic(name));
                         giveMICMenuItem.setEnabled(enableGiveMic(name));
@@ -88,17 +92,35 @@ public class ParticipantListTable extends JTable implements ActionListener {
                         privateChatMenuItem.setEnabled(false);//!isMe(label.getText()));
                         popup.show(ParticipantListTable.this, evt.getX(), evt.getY());
                     }
+                    if (ConnectionManager.isOwner) {
+                      if ((Integer)user.get("accessLevel") != 0) {
+                        if ((Integer)user.get("accessLevel") == 1) {
+                          removeAdminMenuItem.setEnabled(true);
+                        }
+                        else {
+                          makeAdminMenuItem.setEnabled(true);
+                        }
+                      }
+                    }
                 }
                 if (evt.getClickCount() == 2 && selectedRow > 0) {
                 }
             }
         });
 
+        removeAdminMenuItem.setEnabled(false);
+        makeAdminMenuItem.setEnabled(false);
         acceptMenuItem.setEnabled(false);
         denyMenuItem.setEnabled(false);
         removeMenuItem.setEnabled(false);
         profileMenuItem.setEnabled(false);
 
+        removeAdminMenuItem.addActionListener(this);
+        removeAdminMenuItem.setActionCommand("remove-admin");
+        
+        makeAdminMenuItem.addActionListener(this);
+        makeAdminMenuItem.setActionCommand("add-admin");
+        
         acceptMenuItem.addActionListener(this);
         acceptMenuItem.setActionCommand("accept");
 
@@ -168,6 +190,25 @@ public class ParticipantListTable extends JTable implements ActionListener {
             String names = (String) user.get("names");
             giveMic(username, names);
         }
+        if (e.getActionCommand().equals("add-admin")) {
+          Map user = users.get(selectedRow);
+          String username = (String)user.get("username");
+          //int accessLevel = (Integer)user.get("access_level");
+          int accessLevel = AdminLevels.ADMIN_LEVEL;
+          int hasMIC = (Integer)user.get("has_mic");
+          setAdmin(username, accessLevel);
+          setUserAccessAndMIC(username, hasMIC == 1 ? true : false, accessLevel);
+        }
+        
+        if (e.getActionCommand().equals("remove-admin")) {
+          Map user = users.get(selectedRow);
+          String username = (String)user.get("username");
+          //int accessLevel = (Integer)user.get("access_level");
+          int accessLevel = AdminLevels.PARTICIPANT_LEVEL;
+          int hasMIC = (Integer)user.get("has_mic");
+          setAdmin(username, accessLevel);
+          setUserAccessAndMIC(username, hasMIC == 1 ? true : false, accessLevel);
+        }
 
 
     }
@@ -182,6 +223,16 @@ public class ParticipantListTable extends JTable implements ActionListener {
         p.setMode(RealtimePacket.Mode.GIVE_MIC);
         p.setContent(realtimePacketContent.toString());
         ConnectionManager.sendPacket(p);
+    }
+    
+    public void setAdmin(String username, int accessLevel) {
+      RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+      realtimePacketContent.addTag("username", username);
+      realtimePacketContent.addTag("access_level", accessLevel);
+      RealtimePacket p = new RealtimePacket();
+      p.setMode(RealtimePacket.Mode.SET_ACCESS);
+      p.setContent(realtimePacketContent.toString());
+      ConnectionManager.sendPacket(p);
     }
 
     private boolean enableTakeMic(String username) {
@@ -202,15 +253,48 @@ public class ParticipantListTable extends JTable implements ActionListener {
     public void clear() {
         users.clear();
     }
-
+    
     public void setUserHasMIC(String nickname, boolean hasMIC) {
+      int index = 0;
+      for (Map user : users) {
+          String names = (String) user.get("nickname");
+
+          if (names.equalsIgnoreCase(nickname)) {
+              user.put("has_mic", hasMIC ? 1 : 0);
+              users.set(index, user);
+          }
+          index++;
+      }
+      model = new ParticipantListTableModel();
+      setModel(model);
+      decorateTable();
+  }
+    
+    //when the userlist is broadcast, this method gets invoked
+    public void setUserAccessAndMIC(String username, boolean hasMIC, int accessLevel) {
         int index = 0;
         for (Map user : users) {
-            String names = (String) user.get("names");
+            String names = (String) user.get("username");
 
-            if (names.equalsIgnoreCase(nickname)) {
+            if (names.equalsIgnoreCase(username)) {
                 user.put("has_mic", hasMIC ? 1 : 0);
+                user.put("access_level", accessLevel);
                 users.set(index, user);
+            }
+            
+            if (names.equalsIgnoreCase(ConnectionManager.getUsername())) {
+              if (accessLevel == AdminLevels.OWNER_LEVEL) {
+                ConnectionManager.isOwner = true;
+              }
+              else {
+                ConnectionManager.isOwner = false;
+              }
+              if (accessLevel == AdminLevels.ADMIN_LEVEL) {
+                ConnectionManager.isAdmin = true;
+              }
+              else {
+                ConnectionManager.isAdmin = false;
+              }
             }
             index++;
         }
@@ -226,6 +310,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
         user.put("has_mic", 0);
         user.put("names", nickname);
         user.put("username", username);
+        user.put("access_level", 3);
         users.add(user);
         model = new ParticipantListTableModel();
         setModel(model);
