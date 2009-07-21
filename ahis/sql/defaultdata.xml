@@ -82,6 +82,344 @@
         <id>init_02</id>
         <name>Inactive</name>
     </tbl_ahis_status>
+    
+    <tbl_ahis_outbreak>
+         <id>init_01</id>
+         <name>Resolved</name>
+    </tbl_ahis_outbreak>
+    <tbl_ahis_outbreak>
+         <id>init_02</id>
+         <name>Ongoing</name>
+    </tbl_ahis_outbreak>
+    
+    <tbl_ahis_quality>
+         <id>init_01</id>
+         <name>Yes</name>
+    </tbl_ahis_quality>
+    <tbl_ahis_quality>
+         <id>init_02</id>
+         <name>No</name>
+    </tbl_ahis_quality>
+    
+    <tbl_ahis_disease>
+         <id>init_01</id>
+         <name>Foot-and-Mouth Disease</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_02</id>
+         <name>Vesicular stomatitis</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_03</id>
+         <name>Swine Vesicular Disease</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_04</id>
+         <name>Rinderpest</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_05</id>
+         <name>Test des petis-Rumminant(TPR)</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_06</id>
+         <name>Contagious Bovine Pleuropneumonial</name>
+    </tbl_ahis_disease><tbl_ahis_disease>
+         <id>init_07</id>
+         <name>African swine fever</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_08</id>
+         <name>Highly pathogenic avian influenza(HPAI)</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_09</id>
+         <name>New Castle Disease</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_10</id>
+         <name>Anthrax</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_11</id>
+         <name>Goat Mange</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_12</id>
+         <name>Sheep Mange</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_13</id>
+         <name>Dermatophilosis</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_14</id>
+         <name>Fowl Pox</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_15</id>
+         <name>Bovine tuberculosis</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_16</id>
+         <name>Bovine Trypanosomosis</name>
+    </tbl_ahis_disease>
+   
+    <tbl_ahis_disease>
+         <id>init_17</id>
+         <name>Swine Trypanosomosis</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_18</id>
+         <name>Canine Trypanosomosis</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_19</id>
+         <name>Rabies</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_20</id>
+         <name>Black leg</name>
+    </tbl_ahis_disease>
+    <tbl_ahis_disease>
+         <id>init_21</id>
+         <name>Contagious pustular Dermatitis(Contagious Ecthyma/Orf)</name>
+    </tbl_ahis_disease>
+    
+    <tbl_ahis_causative>
+        <id>init_01</id>
+        <name>Influenza  A H5N1</name>   
+    </tbl_ahis_causative>
+    <tbl_ahis_causative>
+        <id>init_02</id>
+        <name>Brucella Abortus</name>   
+    </tbl_ahis_causative>
+    <tbl_ahis_causative>
+        <id>init_03</id>
+        <name>Foot and Mouth Disease Virus A</name>   
+    </tbl_ahis_causative>
+    <tbl_ahis_causative>
+        <id>init_04</id>
+        <name>Foot and Mouth Disease Virus O</name>   
+    </tbl_ahis_causative>
+    <tbl_ahis_causative>
+        <id>init_05</id>
+        <name>Anthrax</name>   
+    </tbl_ahis_causative>
+    <tbl_ahis_causative>
+        <id>init_06</id>
+        <name>Paramyxo Virus</name>   
+    </tbl_ahis_causative>
+    
+    <tbl_ahis_age>
+        <id>init_01</id>
+        <name>Adult</name>
+    </tbl_ahis_age>
+    <tbl_ahis_age>
+        <id>init_02</id>
+        <name>Juvenile</name>
+    </tbl_ahis_age>
+    <tbl_ahis_age>
+        <id>init_03</id>
+        <name>Neonate</name>
+    </tbl_ahis_age>
+    <tbl_ahis_age>
+        <id>init_04</id>
+        <name>Sub-Adult</name>
+    </tbl_ahis_age>
+    <tbl_ahis_age>
+        <id>init_05</id>
+        <name>Young</name>
+    </tbl_ahis_age>
+    <tbl_ahis_age>
+        <id>init_06</id>
+        <name>Heifer</name>
+    </tbl_ahis_age>
+    
+    <tbl_ahis_species>
+         <id>init_01</id>
+         <name>Avian</name>
+    </tbl_ahis_species>
+    <tbl_ahis_species>
+         <id>init_02</id>
+         <name>Bovine</name>
+    </tbl_ahis_species>
+    <tbl_ahis_species>
+         <id>init_03</id>
+         <name>Canine</name>
+    </tbl_ahis_species>
+    <tbl_ahis_species>
+         <id>init_04</id>
+         <name>Caprine</name>
+    </tbl_ahis_species>
+    <tbl_ahis_species>
+         <id>init_05</id>
+         <name>Equine</name>
+    </tbl_ahis_species>
+    <tbl_ahis_species>
+         <id>init_06</id>
+         <name>Ovine</name>
+    </tbl_ahis_species>
+    <tbl_ahis_species>
+         <id>init_07</id>
+         <name>Swine</name>
+    </tbl_ahis_species>
+    
+    <tbl_ahis_sex>
+         <id>init_01</id>
+         <name>All</name>
+    </tbl_ahis_sex>
+    <tbl_ahis_sex>
+         <id>init_02</id>
+         <name>Broilers</name>
+    </tbl_ahis_sex>
+    <tbl_ahis_sex>
+         <id>init_03</id>
+         <name>Cockerals</name>
+    </tbl_ahis_sex>
+    <tbl_ahis_sex>
+         <id>init_04</id>
+         <name>Male</name>
+    </tbl_ahis_sex>
+    <tbl_ahis_sex>
+         <id>init_05</id>
+         <name>Female</name>
+    </tbl_ahis_sex>
+    <tbl_ahis_sex>
+         <id>init_06</id>
+         <name>Neutered</name>
+    </tbl_ahis_sex>
+    <tbl_ahis_sex>
+         <id>init_07</id>
+         <name>Layers</name>
+    </tbl_ahis_sex>
+    
+     <tbl_ahis_production>
+         <id>init_01</id>
+         <name>Zero Grazing</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_02</id>
+         <name>Free Range</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_03</id>
+         <name>Traditional</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_04</id>
+         <name>Extensive (Transhumant)</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_05</id>
+         <name>Extensive (Pastoral)</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_06</id>
+         <name>Extensive (Pastoral and Transhumant)</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_07</id>
+         <name>Semi-Intensive</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_08</id>
+         <name>Stray</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_09</id>
+         <name>Intensive</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_10</id>
+         <name>Pastoral</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_11</id>
+         <name>Communal</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_12</id>
+         <name>Mixed</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_13</id>
+         <name>Nomadic</name>
+    </tbl_ahis_production>
+    <tbl_ahis_production>
+         <id>init_14</id>
+         <name>Sedentary</name>
+    </tbl_ahis_production>
+    
+    <tbl_ahis_diagnosis>
+         <id>init_01</id>
+         <name>History</name>
+    </tbl_ahis_diagnosis>
+    <tbl_ahis_diagnosis>
+         <id>init_02</id>
+         <name>Meat Inspection</name>
+    </tbl_ahis_diagnosis>
+    <tbl_ahis_diagnosis>
+         <id>init_03</id>
+         <name>Rumor</name>
+    </tbl_ahis_diagnosis>
+    <tbl_ahis_diagnosis>
+         <id>init_04</id>
+         <name>Clinical Science</name>
+    </tbl_ahis_diagnosis>
+    <tbl_ahis_diagnosis>
+         <id>init_05</id>
+         <name>Post-mortem lesions</name>
+    </tbl_ahis_diagnosis>
+    <tbl_ahis_diagnosis>
+         <id>init_06</id>
+         <name>Laboratory results</name>
+    </tbl_ahis_diagnosis>
+    
+    <tbl_ahis_control>
+         <id>init_01</id>
+         <name>Burning</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_02</id>
+         <name>Slaughter</name>
+    </tbl_ahis_control><tbl_ahis_control>
+         <id>init_03</id>
+         <name>Vaccination</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_04</id>
+         <name>Ban on Slaughter</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_05</id>
+         <name>Dip</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_06</id>
+         <name>Bury</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_07</id>
+         <name>Incineration</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_08</id>
+         <name>Movement restriction</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_09</id>
+         <name>Quarantine</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_10</id>
+         <name>Street biosecurity practice</name>
+    </tbl_ahis_control>
+    <tbl_ahis_control>
+         <id>init_11</id>
+         <name>Vector Control</name>
+    </tbl_ahis_control>
+    
 	
 	<tbl_ahis_outbreak>
 		<id>init_01</id>
