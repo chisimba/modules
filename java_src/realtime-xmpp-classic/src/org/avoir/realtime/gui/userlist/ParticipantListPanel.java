@@ -117,7 +117,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         if (!ConnectionManager.AUDIO_VIDEO_URL.startsWith("http://")) {
             ConnectionManager.AUDIO_VIDEO_URL = "http://" + ConnectionManager.AUDIO_VIDEO_URL;
         }
-        final String instructorUrl = ConnectionManager.AUDIO_VIDEO_URL +
+        String instructorUrl = ConnectionManager.AUDIO_VIDEO_URL +
                 "/video/broadcaster.html?me=" +
                 currentRoomName + "&you=participant";
 

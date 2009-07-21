@@ -229,7 +229,7 @@ public class RPacketListener implements PacketListener {
 
                 int n = JOptionPane.showConfirmDialog(null, nickname + " is requesting for MIC, grant?", "MIC Request", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
-                    GUIAccessManager.mf.getUserListPanel().getParticipantListTable().giveMic(username,nickname);
+                    GUIAccessManager.mf.getUserListPanel().getParticipantListTable().giveMic(username, nickname);
                 } else {
                     RealtimePacket p = new RealtimePacket();
                     p.setMode(Mode.REQUEST_MIC_REPLY);
@@ -569,7 +569,7 @@ public class RPacketListener implements PacketListener {
     }
 
     private static void processMessage(Message message) {
-    
+
         DelayInformation inf = (DelayInformation) message.getExtension("x", "jabber:x:delay");
         Date sentDate;
         if (inf != null) {
@@ -589,6 +589,7 @@ public class RPacketListener implements PacketListener {
         }
         if (type == null) {
             String from = message.getFrom();
+
             String host = ConnectionManager.getConnection().getHost();
             if (from.equals(host)) {
                 return;
@@ -597,12 +598,19 @@ public class RPacketListener implements PacketListener {
             if (index > -1) {
                 from = from.substring(index + 1);
             }
+            from = from.split(":")[1];
             if (from.length() > 18) {
                 from = from.substring(0, 18) + "..";
             }
             if (!GUIAccessManager.mf.isActive()) {
-                GUIAccessManager.mf.setIconImage(GUIAccessManager.mf.getIcon("alert").getImage());
+
                 showChatPopup(from, message.getBody());
+                try {
+
+                    GUIAccessManager.mf.setIconImage(GUIAccessManager.mf.getIcon("alert").getImage());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantName("(" + from + ") ");
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantMessage(from, message.getBody(), size, color);
@@ -668,7 +676,7 @@ public class RPacketListener implements PacketListener {
             String user = from;
 
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(user);
-            GUIAccessManager.mf.removeSpeaker(user);
+            GUIAccessManager.mf.removeSpeaker(GeneralUtil.formatStr(user, " "));
 
         } else {
             String user = from;
@@ -677,4 +685,5 @@ public class RPacketListener implements PacketListener {
 
         }
     }
+
 }
