@@ -63,9 +63,9 @@ public class RoomResourceManager {
 
             String sql =
                     "select * from  ofAvoirRealtime_OnlineUsers where " +
-                    " room ='" + room + "'";
+                    " room ='" + room.trim() + "'";
             ps = con.prepareStatement(sql);
-
+            
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String jidStr = rs.getString("jid");
@@ -351,27 +351,27 @@ public class RoomResourceManager {
             }
         }
     }
-    
-    public void updateOnlineUser(String jid, String room, int hasmic) {
-      try {
-          con = DbConnectionManager.getConnection();
-          String sql1 =
-                  "update ofAvoirRealtime_OnlineUsers set" +
-                  " room = '" + room + "', has_mic = " + hasmic +
-                  " where jid = '" + jid + "';";
-          Statement st = con.createStatement();
-          st.addBatch(sql1);
-          st.executeBatch();
-      } catch (SQLException ex) {
-          ex.printStackTrace();
-      } finally {
-          try {
-              con.close();
-          } catch (Exception ex) {
-              ex.printStackTrace();
-          }
-      }
-  }
+
+    public void updateOnlineUser(String jid, int hasmic) {
+        try {
+            con = DbConnectionManager.getConnection();
+            String sql =
+                    "update ofAvoirRealtime_OnlineUsers set has_mic = " + hasmic +
+                    " where jid = '" + jid + "'";
+            Statement st = con.createStatement();
+            st.addBatch(sql);
+            st.executeBatch();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public void addSchedule(String owner, String room, String startDate, String endDate, String roomUrl) {
         try {
             con = DbConnectionManager.getConnection();
@@ -445,7 +445,7 @@ public class RoomResourceManager {
             String sql =
                     "update ofAvoirRealtime_Classroom_LastWB set " +
                     "content ='" + content + "' where item_id ='" + itemId + "' and owner = '" + roomName + "'";
-            System.out.println(sql);
+            
             Statement st = con.createStatement();
             st.addBatch(sql);
             st.executeBatch();
@@ -828,7 +828,6 @@ public class RoomResourceManager {
 
     }
 
-    
     /**
      * this sends back a list of occupants in the room, with their
      * @param packet
@@ -873,41 +872,40 @@ public class RoomResourceManager {
         }
 
     }
-    
-    public Map getUserInfo(String username) {
-      Map <String, Object> user = new HashMap<String, Object>();
-      try {
-        
-        con = DbConnectionManager.getConnection();
 
-        String sql = "select ofAvoirRealtime_OnlineUsers.has_mic," +
-                " ofUser.name, ofAvoirRealtime_Rooms.room_name, ofAvoirRealtime_Rooms.room_owner" +
-                " from ofAvoirRealtime_OnlineUsers, ofUser, ofAvoirRealtime_Rooms" + 
-                " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "'" +
-                " and ofUser.username = ofAvoirRealtime_OnlineUsers.jid" +
-                " and ofAvoirRealtime_Rooms.room_name = ofAvoirRealtime_OnlineUsers.room;";
-        Statement st = con.createStatement();
-        ResultSet rs2 = st.executeQuery(sql);
-        if (rs2.next()) {
-          user.put("name", rs2.getString("name"));
-          user.put("room_name", rs2.getString("room_name"));
-          user.put("room_owner", rs2.getString("room_owner"));
-          user.put("has_mic", rs2.getInt("has_mic"));
-          user.put("username", username);
-        }
-      } catch (SQLException ex) {
-        ex.printStackTrace();
-      } finally {
+    public Map getUserInfo(String username) {
+        Map<String, Object> user = new HashMap<String, Object>();
         try {
-            con.close();
-        } catch (Exception ex) {
+
+            con = DbConnectionManager.getConnection();
+
+            String sql = "select ofAvoirRealtime_OnlineUsers.has_mic," +
+                    " ofUser.name, ofAvoirRealtime_Rooms.room_name, ofAvoirRealtime_Rooms.room_owner" +
+                    " from ofAvoirRealtime_OnlineUsers, ofUser, ofAvoirRealtime_Rooms" +
+                    " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "'" +
+                    " and ofUser.username = ofAvoirRealtime_OnlineUsers.jid" +
+                    " and ofAvoirRealtime_Rooms.room_name = ofAvoirRealtime_OnlineUsers.room;";
+            Statement st = con.createStatement();
+            ResultSet rs2 = st.executeQuery(sql);
+            if (rs2.next()) {
+                user.put("name", rs2.getString("name"));
+                user.put("room_name", rs2.getString("room_name"));
+                user.put("room_owner", rs2.getString("room_owner"));
+                user.put("has_mic", rs2.getInt("has_mic"));
+                user.put("username", username);
+            }
+        } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
-      }
-      return user;
+        return user;
     }
-      
- 
+
     public int getRoomResourceRoomVersion(String filePath) {
 
         int version = 0;

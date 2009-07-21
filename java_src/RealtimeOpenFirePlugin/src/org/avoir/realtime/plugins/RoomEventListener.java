@@ -19,7 +19,6 @@
  */
 package org.avoir.realtime.plugins;
 
-import org.apache.commons.httpclient.HostConfiguration;
 import org.jivesoftware.openfire.muc.MUCEventListener;
 import org.xmpp.packet.JID;
 import org.xmpp.packet.Message;
