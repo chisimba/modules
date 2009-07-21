@@ -22,7 +22,6 @@ import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.XMPPError;
-import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.FormField;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
@@ -89,8 +88,9 @@ public class ChatRoomManager {
         }
 
         public void left(String jid) {
-            String user = jid.substring(jid.lastIndexOf("/") + 1);
-            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(user);
+            String xuser = jid.substring(jid.lastIndexOf("/") + 1);
+            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(xuser);
+            String user=xuser.split(":")[1];
             GUIAccessManager.mf.removeSpeaker(user);
         }
 
@@ -317,6 +317,8 @@ public class ChatRoomManager {
 
         muc.removeParticipantStatusListener(participantStatusListener);
         GUIAccessManager.mf.getUserListPanel().getParticipantListTable().clear();
+        //release MIC too
+        GUIAccessManager.mf.releaseMIC();
         //not allawed in more than one room at a time, so must leave old one
         muc.leave();
         muc = new MultiUserChat(ConnectionManager.getConnection(), roomName + "@conference." + ConnectionManager.getConnection().getServiceName());

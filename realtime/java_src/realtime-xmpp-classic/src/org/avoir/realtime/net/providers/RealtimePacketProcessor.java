@@ -299,12 +299,8 @@ public class RealtimePacketProcessor {
             if (index > -1) {
                 from = from.substring(0, index);
             }
-            System.err.println("*****init remove MIC from " + from);
+            speaker=GeneralUtil.formatStr(speaker, " ");
             GUIAccessManager.mf.removeSpeaker(speaker);
-        // String me = ConnectionManager.getUsername();
-        // JDialog fr = speakers.remove(speaker);
-        // fr.dispose();
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -328,22 +324,30 @@ public class RealtimePacketProcessor {
                 from = from.substring(0, index);
             }
             String me = ConnectionManager.getUsername();
+/**
+ *         String instructorUrl = ConnectionManager.AUDIO_VIDEO_URL +
+                "/video/broadcaster.html?me=" +
+                currentRoomName + "&you=participant";
 
+        String participantUrl = ConnectionManager.AUDIO_VIDEO_URL +
+                "/video/receiver.html?me=participant&you=" + currentRoomName;
+ */
             String url = "";
             String title = "";
+            String speaker1=GeneralUtil.formatStr(speaker, " ");
             if (me.equalsIgnoreCase(from)) {
                 url =
-                        ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker;
+                        ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker1;
                 title = speaker + " given mic";
                 dispayAudioVideoWindow(url, title, true, speaker);
             } else if (ConnectionManager.fullnames.equalsIgnoreCase(speaker)) {
                 url =
-                        ConnectionManager.AUDIO_VIDEO_URL + "/video/broadcaster.html?me=" + speaker + "&you=" + ConnectionManager.getRoomName();
+                        ConnectionManager.AUDIO_VIDEO_URL + "/video/broadcaster.html?me=" + speaker1 + "&you=" + ConnectionManager.getRoomName();
                 title = ConnectionManager.getUsername() + ": MIC from " + from;
                 dispayAudioVideoWindow(url, title, false, speaker);
             } else {
                 url =
-                        ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker;
+                        ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker1;
                 title = speaker + " given mic";
                 dispayAudioVideoWindow(url, title, false, speaker);
             }
@@ -364,19 +368,14 @@ public class RealtimePacketProcessor {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                //  JWebBrowser webBrowser = new JWebBrowser();
-                //   webBrowser.setMenuBarVisible(false);
-                //    webBrowser.setBarsVisible(false);
-                //    webBrowser.setButtonBarVisible(false);
-                //     webBrowser.navigate(url);
-                // final JDialog fr = new JDialog(GUIAccessManager.mf);
                 JButton takeMICButton = new JButton("Close");
-                takeMICButton.setEnabled(enableClose);
+                takeMICButton.setEnabled(false);
                 takeMICButton.addActionListener(new ActionListener() {
 
                     public void actionPerformed(ActionEvent e) {
                         StringBuilder sb = new StringBuilder();
-                        sb.append("<recipient>").append(speaker).append("</recipient>");
+                        sb.append("<recipient-names>").append(speaker).append("</recipient-names>");
+                        sb.append("<recipient-username>").append(speaker).append("</recipient-username>");
                         sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
                         RealtimePacket p = new RealtimePacket();
                         p.setMode(RealtimePacket.Mode.TAKE_MIC);
@@ -384,21 +383,12 @@ public class RealtimePacketProcessor {
                         ConnectionManager.sendPacket(p);
                     }
                 });
-                //fr.setTitle(title);
-                //fr.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-                // fr.setLayout(new BorderLayout());
-
-                // fr.add(webBrowser, BorderLayout.CENTER);
                 JPanel mPanel = new JPanel(new BorderLayout());
-                //  mPanel.add(webBrowser, BorderLayout.CENTER);
                 JPanel p = new JPanel();
                 p.add(takeMICButton);
                 mPanel.add(p, BorderLayout.SOUTH);
                 GUIAccessManager.mf.addSpeaker(url, speaker);
-            //fr.setSize(380, 250);
-            //fr.setLocationRelativeTo(null);
-            //fr.setVisible(true);
-            //speakers.put(speaker, fr);
+
             }
         });
     }
@@ -585,7 +575,6 @@ public class RealtimePacketProcessor {
         }
         return rooms;
     }
-    
 
     public static ArrayList<Map> getUserArrayList(String xmlContents) {
         ArrayList<Map> users = new ArrayList<Map>();

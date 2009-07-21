@@ -10,6 +10,7 @@
  */
 package org.avoir.realtime.gui.main;
 
+import java.awt.event.WindowEvent;
 import javax.swing.JProgressBar;
 import org.avoir.realtime.gui.webbrowser.RWebBrowserListener;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
@@ -22,10 +23,12 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Timer;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -70,6 +73,7 @@ import org.avoir.realtime.notepad.JNotepad;
 
 import org.jivesoftware.smack.util.Base64;
 import org.avoir.realtime.gui.tips.*;
+
 /**
  *
  * @author developer
@@ -84,8 +88,9 @@ public class MainFrame extends javax.swing.JFrame {
     private ImageIcon chatIcon = ImageUtil.createImageIcon(this, "/images/chat_on.gif");
     private ImageIcon delIcon = ImageUtil.createImageIcon(this, "/images/delete.gif");
     private ImageIcon logo = ImageUtil.createImageIcon(this, "/images/intro_logo.jpg");
-    private ImageIcon alertIcon = ImageUtil.createImageIcon(this, "/images/message_alert.gif");
+    private ImageIcon alertIcon = ImageUtil.createImageIcon(this, "/images/application.png");
     private SlidesNavigator slidesNavigator;
+    private ImageIcon appIcon = ImageUtil.createImageIcon(this, "/images/application_delete.png");
     private QuestionNavigator questionsNavigator;
     private RealtimeFileChooser realtimeFileChooser = new RealtimeFileChooser("images");
     private int currentRoomIndex = 0;
@@ -120,7 +125,7 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         userListPanel = new ParticipantListPanel();
         leftSplitPane.setDividerLocation((ss.height / 2));
-        mainSplitPane.setDividerLocation((ss.width / 4)+ 60);
+        mainSplitPane.setDividerLocation((ss.width / 4) + 60);
         leftSplitPane.setTopComponent(userListPanel);
         tabbedPane.addTab("Whiteboard", whiteboardPanel);
         tabbedPane.add("Browser", generalWebBrowser);
@@ -129,14 +134,11 @@ public class MainFrame extends javax.swing.JFrame {
         slidesNavigator = new SlidesNavigator(this);
         questionsNavigator = new QuestionNavigator(this);
         add(statusBar, BorderLayout.SOUTH);
+
         GUIAccessManager.setMf(this);
         chatRoomManager = new ChatRoomManager(ConnectionManager.getRoomName());
         chatTabbedPane.addTab(defaultRoomName, chatIcon, chatRoomManager.getChatRoom());
         surfacePanel.add(toolBarTabbedPane, BorderLayout.NORTH);
-        // scrollerTabbedPane.addTab("Slides", slideScroller);
-        //scrollerTabbedPane.setOpaque(false);
-        //slideScroller.setOpaque(false);
-        //scrollerTabbedPane.addTab("Images", new JPanel());
 
         slidesSplitPane.setOneTouchExpandable(true);
         tabbedPane.addChangeListener(new ChangeListener() {
@@ -173,19 +175,30 @@ public class MainFrame extends javax.swing.JFrame {
         displayAvator();
         setSize(ss);
         setVisible(true);
-        
-        this.addFocusListener(new FocusListener() {
+        this.addWindowStateListener(new WindowStateListener() {
 
-          public void focusGained(FocusEvent e) {
+            public void windowStateChanged(WindowEvent e) {
+                if (MainFrame.this.isActive()) {
+                    MainFrame.this.setIconImage(appIcon.getImage());
 
-          }
+                }
+            }
+        });
+        addFocusListener(new FocusListener() {
 
-          public void focusLost(FocusEvent e) {
-            MainFrame.this.setIconImage(null);
-          }
+            public void focusGained(FocusEvent e) {
+            }
+
+            public void focusLost(FocusEvent e) {
+                MainFrame.this.setIconImage(appIcon.getImage());
+            }
         });
 
     }
+
+    public void setAlertIconOn() {
+    }
+
     public void removeAllSpeakers() {
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -204,7 +217,7 @@ public class MainFrame extends javax.swing.JFrame {
                     userListPanel.getParticipantListTable().setUserHasMIC(speakerName, false);
                     break;
                 }
-                
+
             }
         });
     }
@@ -1126,18 +1139,32 @@ public class MainFrame extends javax.swing.JFrame {
         return userListFrame;
     }
 
+    public void releaseMIC() {
+        StringBuilder sb = new StringBuilder();
+        String username = ConnectionManager.getUsername();
+        String names = ConnectionManager.fullnames;
+        sb.append("<recipient-username>").append(username).append("</recipient-username>");
+        sb.append("<recipient-names>").append(names).append("</recipient-names>");
+        sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
+        RealtimePacket p = new RealtimePacket();
+        p.setMode(RealtimePacket.Mode.TAKE_MIC);
+        p.setContent(sb.toString());
+        ConnectionManager.sendPacket(p);
+    }
+
     private void close() {
         try {
-            RealtimePacket p = null;
+            releaseMIC();
+            /*RealtimePacket p = null;
             if (GeneralUtil.isInstructor()) {
-                p = new RealtimePacket();
-                p.setMode(RealtimePacket.Mode.CLEAR_LAST_SESSION);
-                StringBuilder sb = new StringBuilder();
-                sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
-                p.setContent(sb.toString());
-                ConnectionManager.sendPacket(p);
+            p = new RealtimePacket();
+            p.setMode(RealtimePacket.Mode.CLEAR_LAST_SESSION);
+            StringBuilder sb = new StringBuilder();
+            sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
+            p.setContent(sb.toString());
+            ConnectionManager.sendPacket(p);
 
-            /*
+
             p = new RealtimePacket();
             p.setMode(RealtimePacket.Mode.TERMINATE_INSTANCE);
             sb = new StringBuilder();
@@ -1154,13 +1181,14 @@ public class MainFrame extends javax.swing.JFrame {
             } else {
             ConnectionManager.sendPacket(p);
             }*/
-            }
+
             ConnectionManager.getConnection().disconnect();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        System.exit(0);
+        System.exit(
+                0);
 
     }
 
@@ -1296,7 +1324,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_changeRoomButtonMouseExited
 
     private void privateChatMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateChatMenuItemActionPerformed
-       // userListPanel.getUserListTree().initPrivateChat(ConnectionManager.getUsername(),GeneralUtil.getThisRoomOwner(), "Room Moderator");
+        // userListPanel.getUserListTree().initPrivateChat(ConnectionManager.getUsername(),GeneralUtil.getThisRoomOwner(), "Room Moderator");
 }//GEN-LAST:event_privateChatMenuItemActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -1347,8 +1375,10 @@ public class MainFrame extends javax.swing.JFrame {
         if (userListPanel.getUserTabbedPane().getTabCount() == 3) {
             userListPanel.getUserTabbedPane().remove(2);
         }
+
         toolBarTabbedPane.removeAll();
         adjustSize();
+
     }
 
     private void doScreenShot(boolean desktop) {
@@ -1433,14 +1463,17 @@ public class MainFrame extends javax.swing.JFrame {
         if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
             JOptionPane.showMessageDialog(null, "You are a room moderator already. You dont need to request microphone");
             return;
+
         }
+
+
         RealtimePacket p = new RealtimePacket();
         p.setMode(RealtimePacket.Mode.REQUEST_MIC);
         RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
         realtimePacketContent.addTag("username", ConnectionManager.getUsername());
         p.setContent(realtimePacketContent.toString());
         ConnectionManager.sendPacket(p);
-        
+
     }//GEN-LAST:event_requestMicMenuItemActionPerformed
 
     private void addRoomMembersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMembersMenuItemActionPerformed
@@ -1542,6 +1575,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
     }
+
     public void showTipOfDay() {
         TipOfDayDialog tipOfDayDialog = new TipOfDayDialog(this, false);
         tipOfDayDialog.setSize(400, 350);
@@ -1549,15 +1583,16 @@ public class MainFrame extends javax.swing.JFrame {
         tipOfDayDialog.setVisible(true);
     }
 
-    public ImageIcon getIcon(String iconType) {
-      if (iconType.equals("alert")) {
-        return this.alertIcon;
-      }
-      else {
-        return this.chatIcon;
-      }
+    public ImageIcon getIcon(
+            String iconType) {
+        if (iconType.equals("alert")) {
+            return this.alertIcon;
+        } else {
+            return this.chatIcon;
+        }
+
     }
-    
+
     private void doRefresh() {
         int width = getWidth();
         int height = getHeight();

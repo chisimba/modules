@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -38,7 +39,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
     private ImageIcon micIcon = ImageUtil.createImageIcon(this, "/images/mic_on.png");
     private ArrayList<Map> users = new ArrayList<Map>();
-    private ParticipantListTableModel model ;
+    private ParticipantListTableModel model;
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem acceptMenuItem = new JMenuItem("Accept");
@@ -144,8 +145,11 @@ public class ParticipantListTable extends JTable implements ActionListener {
         }
         if (e.getActionCommand().equals("take-mic")) {
             StringBuilder sb = new StringBuilder();
-            String to = (String) model.getValueAt(selectedRow, model.getColumnCount() - 1);
-            sb.append("<recipient>").append(to).append("</recipient>");
+            Map user = users.get(selectedRow);
+            String username = (String) user.get("username");
+            String names = (String) user.get("names");
+            sb.append("<recipient-username>").append(username).append("</recipient-username>");
+            sb.append("<recipient-names>").append(names).append("</recipient-names>");
             sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
             RealtimePacket p = new RealtimePacket();
             p.setMode(RealtimePacket.Mode.TAKE_MIC);
@@ -154,8 +158,13 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
         }
         if (e.getActionCommand().equals("give-mic")) {
+
             Map user = users.get(selectedRow);
             String username = (String) user.get("username");
+            if(username.equals(ConnectionManager.getUsername())){
+                JOptionPane.showMessageDialog(null, "you cannot assign a MIC to yourself");
+                return;
+            }
             String names = (String) user.get("names");
             giveMic(username, names);
         }
@@ -167,7 +176,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
         RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
         realtimePacketContent.addTag("recipient-username", username);
-        realtimePacketContent.addTag("recipient-name", name);
+        realtimePacketContent.addTag("recipient-names", name);
         realtimePacketContent.addTag("room-name", ConnectionManager.getUsername());
         RealtimePacket p = new RealtimePacket();
         p.setMode(RealtimePacket.Mode.GIVE_MIC);
