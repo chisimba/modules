@@ -186,12 +186,11 @@ public class AvoirRealtimePlugin implements Plugin {
                     if ((Integer) (user.get("has_mic")) == 1) {
                         //if the user already has the mic, ignore.
                         defaultPacketProcessor.warnUser(packet, requester, "You already have the MIC.");
-                    } 
-                    else if ((Integer) (user.get("has_mic")) == 0) {
-                        roomResourceManager.updateOnlineUser(requester, (String) (user.get("room_name")), -1);
+                    } else if ((Integer) (user.get("has_mic")) == 0) {
+                        roomResourceManager.updateOnlineUser(requester, -1);
                         defaultPacketProcessor.forwardMICRequest(packet, (String) (user.get("room_owner")), requester, (String) (user.get("name")));
                     }
-                    //case where has_mic = -1 is completely ignored
+                //case where has_mic = -1 is completely ignored
                 } else if (mode.equals(Mode.REQUEST_ROOM_OWNER)) {
                     return roomResourceManager.getRoomOwner(packet, roomName);
                 } else if (mode.equals(Mode.TAKEN_MIC)) {
@@ -260,34 +259,35 @@ public class AvoirRealtimePlugin implements Plugin {
                     String url = XmlUtils.readString(doc, "url");
                     defaultPacketProcessor.broadcastChangeURL(packet, url, roomName);
                 } else if (mode.equals(Mode.TAKE_MIC)) {
-                    String recipient = XmlUtils.readString(doc, "recipient");
-                    Map user = roomResourceManager.getUserInfo(recipient);
-                    roomResourceManager.updateOnlineUser(recipient, (String)(user.get("room_name")), 0);
-                    defaultPacketProcessor.broadcastTakeMicPacket(packet, recipient, (String)(user.get("room_name")));
+                    String recipientUsername = XmlUtils.readString(doc, "recipient-username");
+                    String recipientNames = XmlUtils.readString(doc, "recipient-names");
+                    Map user = roomResourceManager.getUserInfo(recipientUsername);
+                    roomResourceManager.updateOnlineUser(recipientUsername,  0);
+                    defaultPacketProcessor.broadcastTakeMicPacket(packet, recipientNames, (String) (user.get("room_name")));
 
                 } else if (mode.equals(Mode.BROADCAST_IMAGE_DATA)) {
                     String imageData = XmlUtils.readString(doc, "image-data");
                     defaultPacketProcessor.broadcastImageData(packet, imageData, roomName);
                 } else if (mode.equals(Mode.GIVE_MIC)) {
                     String recipientUsername = XmlUtils.readString(doc, "recipient-username");
-                    String recipientName = XmlUtils.readString(doc, "recipient-name");
+                    String recipientName = XmlUtils.readString(doc, "recipient-names");
                     Map user = roomResourceManager.getUserInfo(recipientUsername);
-                    roomResourceManager.updateOnlineUser(recipientUsername, (String)(user.get("room_name")), 1);
-                    defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientName, (String)(user.get("room_name")));
+                    roomResourceManager.updateOnlineUser(recipientUsername, 1);
+                    defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientName, (String) (user.get("room_name")));
 
                 } else if (mode.equals(Mode.REQUEST_MIC_REPLY)) {
-                  //user asks for mic, which gets forwarded to the channel owner
-                  //this is the reply, but GIVE_MIC is sent if the request is granted
-                  //so this code only really gets run when the request is denied.
-                  //Suggest change the mode to MIC_REQUEST_DENY
-                  String username = XmlUtils.readString(doc, "username");
-                  int response = XmlUtils.readInt(doc, "response");
-                  if (response == 0) {
-                    Map user = roomResourceManager.getUserInfo(username);
-                    roomResourceManager.updateOnlineUser(username, (String)(user.get("room_name")), 0);
-                    defaultPacketProcessor.warnUser(packet, username, "Your request for the MIC has been denied by the room owner, try again in a few minutes.");
-                  }
-                  
+                    //user asks for mic, which gets forwarded to the channel owner
+                    //this is the reply, but GIVE_MIC is sent if the request is granted
+                    //so this code only really gets run when the request is denied.
+                    //Suggest change the mode to MIC_REQUEST_DENY
+                    String username = XmlUtils.readString(doc, "username");
+                    int response = XmlUtils.readInt(doc, "response");
+                    if (response == 0) {
+                        Map user = roomResourceManager.getUserInfo(username);
+                        roomResourceManager.updateOnlineUser(username,  0);
+                        defaultPacketProcessor.warnUser(packet, username, "Your request for the MIC has been denied by the room owner, try again in a few minutes.");
+                    }
+
                 } else if (mode.equals(Mode.SCREEN_SHARE_INVITE)) {
                     String instructor = XmlUtils.readString(doc, "instructor");
                     defaultPacketProcessor.broadScreenInvite(packet, instructor, roomName);

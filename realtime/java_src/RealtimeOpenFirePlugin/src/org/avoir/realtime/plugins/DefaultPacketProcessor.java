@@ -145,18 +145,18 @@ public class DefaultPacketProcessor {
         replyPacket.setTo(server.createJID(roomOwner, pl.getResoureName()));
         packetRouter.route(replyPacket);
     }
-    
+
     public void warnUser(IQ packet, String username, String message) {
-      IQ replyPacket = IQ.createResultIQ(packet);
-      Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
-      queryResult.addElement("mode").addText(Mode.WARN);
-      StringBuilder sb = new StringBuilder();
-      sb.append("<message>").append(message).append("</message>");
-      queryResult.addElement("content").addText(sb.toString());
-      replyPacket.setChildElement(queryResult);
-      XMPPServer server = XMPPServer.getInstance();
-      replyPacket.setTo(server.createJID(username, pl.getResoureName()));
-      packetRouter.route(replyPacket);
+        IQ replyPacket = IQ.createResultIQ(packet);
+        Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
+        queryResult.addElement("mode").addText(Mode.WARN);
+        StringBuilder sb = new StringBuilder();
+        sb.append("<message>").append(message).append("</message>");
+        queryResult.addElement("content").addText(sb.toString());
+        replyPacket.setChildElement(queryResult);
+        XMPPServer server = XMPPServer.getInstance();
+        replyPacket.setTo(server.createJID(username, pl.getResoureName()));
+        packetRouter.route(replyPacket);
     }
 
     public void sendServerDetails(IQ packet, String mode, String host, String roomName) {
@@ -496,7 +496,7 @@ public class DefaultPacketProcessor {
         sb.append("<y>").append(y).append("</y>");
         sb.append("<id>").append(id).append("</id>");
         sb.append("<item-type>").append(type).append("</item-type>");
-        String xmlContent=packet.toXML();
+        String xmlContent = packet.toXML();
         String content = getTagText(xmlContent, "item-content");
         pl.getRoomResourceManager().updateItem(roomName, id, content);
         queryResult.addElement("content").addText(sb.toString());
@@ -523,7 +523,7 @@ public class DefaultPacketProcessor {
         sb.append("<y2>").append(y2).append("</y2>");
         sb.append("<item-type>").append(type).append("</item-type>");
         sb.append("<id>").append(id).append("</id>");
-        String xmlContent=packet.toXML();
+        String xmlContent = packet.toXML();
         String content = getTagText(xmlContent, "item-content");
         pl.getRoomResourceManager().updateItem(roomName, id, content);
         queryResult.addElement("content").addText(sb.toString());
@@ -572,7 +572,10 @@ public class DefaultPacketProcessor {
         sb.append("<speaker>").append(rec).append("</speaker>");
         queryResult.addElement("content").addText(sb.toString());
         replyPacket.setChildElement(queryResult);
-        ArrayList<JID> jids = RUserManager.users.get(roomName);
+        ArrayList<JID> jids = RUserManager.users.get(roomName.toLowerCase());
+        if (jids == null) {
+            jids = RUserManager.users.get(roomName.toUpperCase());
+        }
         for (int i = 0; i < jids.size(); i++) {
             JID jid = jids.get(i);
             replyPacket.setTo(jid);
@@ -630,7 +633,9 @@ public class DefaultPacketProcessor {
         sb.append("<speaker>").append(rec).append("</speaker>");
         queryResult.addElement("content").addText(sb.toString());
         replyPacket.setChildElement(queryResult);
-        ArrayList<JID> jids = RUserManager.users.get(roomName);
+        ArrayList<JID> jids = RUserManager.users.get(roomName.toLowerCase());
+        if(jids == null)
+            jids = RUserManager.users.get(roomName.toUpperCase());
         for (int i = 0; i < jids.size(); i++) {
             JID jid = jids.get(i);
             replyPacket.setTo(jid);
@@ -650,7 +655,7 @@ public class DefaultPacketProcessor {
         sb.append("<r-type>").append(type).append("</r-type>");
         sb.append("<id>").append(id).append("</id>");
         queryResult.addElement("content").addText(sb.toString());
-        String xmlContent=packet.toXML();
+        String xmlContent = packet.toXML();
         String content = getTagText(xmlContent, "item-content");
         pl.getRoomResourceManager().updateItem(roomName, id, content);
         replyPacket.setChildElement(queryResult);
