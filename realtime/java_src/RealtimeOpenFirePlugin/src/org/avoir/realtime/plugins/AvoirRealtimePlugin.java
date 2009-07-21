@@ -252,6 +252,15 @@ public class AvoirRealtimePlugin implements Plugin {
                     String presentationId = XmlUtils.readString(doc, "presentation-id");
 
                     slideshowProcessor.downloadWebpresentSlides(packet, slidesDir, presentationName, presentationId);
+                } else if (mode.equals(Mode.SET_ACCESS)) {
+                    String username = XmlUtils.readString(doc, "username");
+                    int accessLevel = XmlUtils.readInt(doc, "access_level");
+                  /*
+                   * 
+                   * 
+                   * 
+                   * code here
+                   */
                 } else if (mode.equals(Mode.CHANGE_TAB)) {
                     int index = XmlUtils.readInt(doc, "index");
                     defaultPacketProcessor.broadcastChangeTab(packet, index, roomName);
