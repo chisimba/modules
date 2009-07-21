@@ -66,6 +66,9 @@ public class ConnectionManager {
     private static int maxConnectionCount = 3;
     private static int connectionType = Constants.Proxy.NO_PROXY;
     public static String roomOwner;
+    
+    public static boolean isOwner = false;
+    public static boolean isAdmin = false;
 
     /**
      * This initiates connection to openfire server

@@ -240,10 +240,11 @@ public class RPacketListener implements PacketListener {
                     ConnectionManager.sendPacket(p);
 
                 }
-            } else if (mode.equals(Mode.MIC_HOLDER)) {
+            } else if (mode.equals(Mode.MIC_ADMIN_HOLDER)) {
                 String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "nickname");
                 int hasMic = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "has_mic"));
-                GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserHasMIC(nickname, true);
+                int accessLevel = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "access_level"));
+                GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserAccessAndMIC(nickname, true, accessLevel);
 
             } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
