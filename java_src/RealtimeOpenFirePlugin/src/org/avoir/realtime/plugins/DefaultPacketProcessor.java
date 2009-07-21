@@ -583,6 +583,27 @@ public class DefaultPacketProcessor {
             packetRouter.route(replyPacket);
         }
     }
+    
+    public void broadcastAccessChange(IQ packet, String username, String roomName, int newAccess) {
+      IQ replyPacket = IQ.createResultIQ(packet);
+      Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
+      queryResult.addElement("mode").addText(Mode.CHANGE_ACCESS);
+      StringBuilder sb = new StringBuilder();
+      sb.append("<username>").append(username).append("</username>");
+      sb.append("<access>").append(newAccess + "").append("</access>");
+      queryResult.addElement("content").addText(sb.toString());
+      replyPacket.setChildElement(queryResult);
+      ArrayList<JID> jids = RUserManager.users.get(roomName.toLowerCase());
+      if (jids == null) {
+          jids = RUserManager.users.get(roomName.toUpperCase());
+      }
+      for (int i = 0; i < jids.size(); i++) {
+          JID jid = jids.get(i);
+          replyPacket.setTo(jid);
+          replyPacket.setFrom(packet.getFrom());
+          packetRouter.route(replyPacket);
+      }
+    }
 
     public void broadcastChangeTab(IQ packet, int index, String roomName) {
         IQ replyPacket = IQ.createResultIQ(packet);

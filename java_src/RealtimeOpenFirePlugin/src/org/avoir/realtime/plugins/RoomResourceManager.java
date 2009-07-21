@@ -833,7 +833,7 @@ public class RoomResourceManager {
      * @param packet
      * @param roomName Room to filter the mic holders
      */
-    private void sendMICHolders(IQ packet, String roomName) {
+    private void sendMICandAdmin(IQ packet, String roomName) {
 
         try {
             con = DbConnectionManager.getConnection();
@@ -842,19 +842,21 @@ public class RoomResourceManager {
                     " from ofUser,ofAvoirRealtime_OnlineUsers " +
                     " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
                     " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
-                    "  ofAvoirRealtime_OnlineUsers.has_mic = 1;";
+                    "  (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3);";
             Statement st = con.createStatement();
             ResultSet rs2 = st.executeQuery(sql);
 
             while (rs2.next()) {
                 IQ replyPacket = IQ.createResultIQ(packet);
                 Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
-                queryResult.addElement("mode").addText(Mode.MIC_HOLDER);
+                queryResult.addElement("mode").addText(Mode.MIC_ADMIN_HOLDER);
                 String jid = rs2.getString("name");
                 int hasMic = rs2.getInt("has_mic");
+                int access_level = rs2.getInt("access_level");
                 RealtimePacketContent content = new RealtimePacketContent();
                 content.addTag("nickname", jid);
                 content.addTag("has_mic", hasMic);
+                content.addTag("access_level", access_level);
                 queryResult.addElement("content").addText(content.toString());
                 replyPacket.setChildElement(queryResult);
                 replyPacket.setTo(packet.getFrom());
@@ -1213,7 +1215,7 @@ public class RoomResourceManager {
         queryResult.addElement("content").addText(content);
         replyPacket.setChildElement(queryResult);
         sendLastWBContent(packet, roomName);
-        sendMICHolders(packet, roomName);
+        sendMICandAdmin(packet, roomName);
         return replyPacket;
     }
 
