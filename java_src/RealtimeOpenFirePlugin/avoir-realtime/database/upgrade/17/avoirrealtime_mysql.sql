@@ -1,3 +1,3 @@
-UPDATE ofVersion  set version =17 where name= 'avoirrealtime';
-ALTER TABLE ofAvoirRealtime_Classroom_LastWB change content content text;
+UPDATE ofVersion  set version =18 where name= 'avoirrealtime';
+ALTER TABLE ofAvoirRealtime_OnlineUsers add has_mic int;
 
