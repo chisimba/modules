@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
+
+import javax.swing.JOptionPane;
+
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.QName;
@@ -857,23 +860,21 @@ public class RoomResourceManager {
      * @param roomName Room to filter the mic holders
      */
     private void sendMICandAdmin(IQ packet, String roomName) {
-
+        String username = packet.getFrom().toBareJID().split(":")[0];
+        System.out.println(packet.getFrom().toBareJID());
+        
         try {
             con = DbConnectionManager.getConnection();
 
-            String sql1 = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic,access_level " +
+            String sql1 = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic,ofAvoirRealtime_OnlineUsers.access_level as access_level" +
                     " from ofUser,ofAvoirRealtime_OnlineUsers " +
                     " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
                     " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
-                    "  (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3);";
-            
-            String sql2 = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic,access_level " +
-            " from ofUser,ofAvoirRealtime_OnlineUsers " +
-            " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
-            " ofAvoirRealtime_OnlineUsers.jid =ofUser.username;";
+                    "  (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3" +
+                    " or ofAvoirRealtime_OnlineUsers.jid = '" + username + "');";
 
             Statement st = con.createStatement();
-            ResultSet rs2 = st.executeQuery(sql2);
+            ResultSet rs2 = st.executeQuery(sql1);
 
             while (rs2.next()) {
                 IQ replyPacket = IQ.createResultIQ(packet);
@@ -883,7 +884,7 @@ public class RoomResourceManager {
                 int hasMic = rs2.getInt("has_mic");
                 int access_level = rs2.getInt("access_level");
                 RealtimePacketContent content = new RealtimePacketContent();
-                content.addTag("nickname", jid);
+                content.addTag("username", jid);
                 content.addTag("has_mic", hasMic);
                 content.addTag("access_level", access_level);
                 queryResult.addElement("content").addText(content.toString());
