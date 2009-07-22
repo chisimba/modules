@@ -170,12 +170,11 @@ public class RPacketListener implements PacketListener {
     private static void processRealtimePacket(RealtimePacket packet) {
         String xml = packet.toXML();
         xml = "<rpacket>" + xml + "</rpacket>";
-
+        
         try {
             Document doc = documentBuilder.parse(
                     new ByteArrayInputStream(xml.getBytes(Constants.PREFERRED_ENCODING)));
             String mode = XmlUtils.readString(doc, "mode");
-
             if (mode.equals(Mode.USERLIST_ACCESSLEVEL_REPLY)) {
                 // ChatRoomManager.doGUIAccessLevel(packet);
             } else if (mode.equals(Mode.USER_PROPERTIES)) {
