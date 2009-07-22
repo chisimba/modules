@@ -860,9 +860,12 @@ public class RoomResourceManager {
      * @param roomName Room to filter the mic holders
      */
     private void sendMICandAdmin(IQ packet, String roomName) {
-        String username = packet.getFrom().toBareJID().split(":")[0];
-        System.out.println(packet.getFrom().toBareJID());
-        
+        String username = packet.getFrom().toBareJID().split("@")[0];
+        Map user = this.getUserInfo(username);
+        String room = (String) user.get("room_name");
+        int accessLevel = (Integer)user.get("has_mic");
+        pl.getDefaultPacketProcessor().broadcastAccessChange(packet, username, room, accessLevel, (Integer)user.get("has_mic"));
+        //this will broadcast the current user's permissions to everyone including himself
         try {
             con = DbConnectionManager.getConnection();
 
@@ -870,17 +873,17 @@ public class RoomResourceManager {
                     " from ofUser,ofAvoirRealtime_OnlineUsers " +
                     " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
                     " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
-                    "  (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3" +
-                    " or ofAvoirRealtime_OnlineUsers.jid = '" + username + "');";
+                    " (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3);";
 
             Statement st = con.createStatement();
             ResultSet rs2 = st.executeQuery(sql1);
 
             while (rs2.next()) {
+              //this will send everyone else's permissions to the user
                 IQ replyPacket = IQ.createResultIQ(packet);
                 Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
                 queryResult.addElement("mode").addText(Mode.MIC_ADMIN_HOLDER);
-                String jid = rs2.getString("name");
+                String jid = rs2.getString("username");
                 int hasMic = rs2.getInt("has_mic");
                 int access_level = rs2.getInt("access_level");
                 RealtimePacketContent content = new RealtimePacketContent();

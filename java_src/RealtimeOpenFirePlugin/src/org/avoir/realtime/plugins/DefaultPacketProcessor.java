@@ -584,13 +584,14 @@ public class DefaultPacketProcessor {
         }
     }
     
-    public void broadcastAccessChange(IQ packet, String username, String roomName, int newAccess) {
+    public void broadcastAccessChange(IQ packet, String username, String roomName, int newAccess, int hasMic) {
       IQ replyPacket = IQ.createResultIQ(packet);
       Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
-      queryResult.addElement("mode").addText(Mode.CHANGE_ACCESS);
+      queryResult.addElement("mode").addText(Mode.MIC_ADMIN_HOLDER);
       StringBuilder sb = new StringBuilder();
       sb.append("<username>").append(username).append("</username>");
-      sb.append("<access>").append(newAccess + "").append("</access>");
+      sb.append("<access_level>").append(newAccess + "").append("</access_level>");
+      sb.append("<has_mic>").append(hasMic + "").append("</has_mic>");
       queryResult.addElement("content").addText(sb.toString());
       replyPacket.setChildElement(queryResult);
       ArrayList<JID> jids = RUserManager.users.get(roomName.toLowerCase());
