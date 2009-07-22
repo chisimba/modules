@@ -309,13 +309,13 @@ public class RPacketListener implements PacketListener {
             // JOptionPane.showMessageDialog(null, success ? successMessage : errorMessage);
             } else if (mode.equals(Mode.SLIDES_COUNT)) {
                 SlideShowProcessor.initProgressMonitorIfNecessary(packet.getContent());
-            } else if (mode.equals(Mode.CHANGE_ACCESS)) {
+            } /* else if (mode.equals(Mode.CHANGE_ACCESS)) {
                 String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
                 int accessLevel = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "access_level"));
 
                 GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserAccess(username, accessLevel);
 
-            } else if (mode.equals(Mode.SCREEN_SHARE_INVITE_FROM_SERVER)) {
+            } */else if (mode.equals(Mode.SCREEN_SHARE_INVITE_FROM_SERVER)) {
 
                 String instructor = XmlUtils.readString(doc, "instructor");
                 String me = ConnectionManager.getUsername();

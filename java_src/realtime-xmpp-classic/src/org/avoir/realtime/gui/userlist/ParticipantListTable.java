@@ -85,8 +85,8 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 if (evt.getButton() == MouseEvent.BUTTON3) {
                     Map user = users.get(selectedRow);
                     System.out.println(ConnectionManager.isOwner + ", " + ConnectionManager.isAdmin);
-                   // if (ConnectionManager.isOwner || ConnectionManager.isAdmin) {
-                    if(WebPresentManager.isPresenter || StandAloneManager.isAdmin){
+                    if (ConnectionManager.isOwner || ConnectionManager.isAdmin) {
+                    //if(WebPresentManager.isPresenter || StandAloneManager.isAdmin){
                         String name = (String) model.getValueAt(selectedRow, 2);
                         takeMICMenuItem.setEnabled(enableTakeMic(name));
                         giveMICMenuItem.setEnabled(enableGiveMic(name));
@@ -329,21 +329,22 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 user.put("has_mic", hasMIC ? 1 : 0);
                 user.put("access_level", accessLevel);
                 users.set(index, user);
+                if (names.equalsIgnoreCase(ConnectionManager.getUsername())) {
+                  if (accessLevel == AdminLevels.OWNER_LEVEL) {
+                      ConnectionManager.isOwner = true;
+                  }
+                  else {
+                    ConnectionManager.isOwner = false;
+                  }
+                  if (accessLevel == AdminLevels.ADMIN_LEVEL) {
+                      ConnectionManager.isAdmin = true;
+                  } else {
+                 ConnectionManager.isAdmin = false;
+                 }
+                }
             }
 
-            if (names.equalsIgnoreCase(ConnectionManager.getUsername())) {
-                if (accessLevel == AdminLevels.OWNER_LEVEL) {
-                    ConnectionManager.isOwner = true;
-                }
-                /*else {
-                ConnectionManager.isOwner = false;
-                }*/
-                if (accessLevel == AdminLevels.ADMIN_LEVEL) {
-                    ConnectionManager.isAdmin = true;
-                } /*else {
-            ConnectionManager.isAdmin = false;
-            }*/
-            }
+
             index++;
         }
         model = new ParticipantListTableModel();
