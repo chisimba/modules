@@ -7,6 +7,7 @@
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
  *
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
@@ -259,23 +260,21 @@ public class AvoirRealtimePlugin implements Plugin {
                     //currently. Need to check if sender is the owner.
                     String username = XmlUtils.readString(doc, "username");
                     int accessLevel = XmlUtils.readInt(doc, "access_level");
-                    roomResourceManager.setAccess(username,accessLevel);
+                    roomResourceManager.setAccess(username, accessLevel);
                     if (accessLevel == Constants.ADMIN_LEVEL) {
-                      defaultPacketProcessor.warnUser(packet, username, "You have been promoted to admin level.");
-                    }
-                    else {
-                      defaultPacketProcessor.warnUser(packet, username, "Your admin status has been removed.");
+                        defaultPacketProcessor.warnUser(packet, username, "You have been promoted to admin level.");
+                    } else {
+                        defaultPacketProcessor.warnUser(packet, username, "Your admin status has been removed.");
                     }
                     Map user = roomResourceManager.getUserInfo(username);
-                    String room = (String)user.get("room_name");
+                    String room = (String) user.get("room_name");
                     defaultPacketProcessor.broadcastAccessChange(packet, username, room, accessLevel);
 
                 } else if (mode.equals(Mode.CHANGE_TAB)) {
                     int index = XmlUtils.readInt(doc, "index");
                     defaultPacketProcessor.broadcastChangeTab(packet, index, roomName);
-                } 
-                else if(mode.equals(Mode.MIC_ADMIN_HOLDER)){
-                  return packet;
+                } else if (mode.equals(Mode.MIC_ADMIN_HOLDER)) {
+                    return packet;
                 } else if (mode.equals(Mode.UPDATE_URL)) {
                     String url = XmlUtils.readString(doc, "url");
                     defaultPacketProcessor.broadcastChangeURL(packet, url, roomName);
@@ -283,7 +282,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     String recipientUsername = XmlUtils.readString(doc, "recipient-username");
                     String recipientNames = XmlUtils.readString(doc, "recipient-names");
                     Map user = roomResourceManager.getUserInfo(recipientUsername);
-                    roomResourceManager.updateOnlineUser(recipientUsername,  0);
+                    roomResourceManager.updateOnlineUser(recipientUsername, 0);
                     defaultPacketProcessor.broadcastTakeMicPacket(packet, recipientNames, (String) (user.get("room_name")));
 
                 } else if (mode.equals(Mode.BROADCAST_IMAGE_DATA)) {
@@ -305,7 +304,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     int response = XmlUtils.readInt(doc, "response");
                     if (response == 0) {
                         Map user = roomResourceManager.getUserInfo(username);
-                        roomResourceManager.updateOnlineUser(username,  0);
+                        roomResourceManager.updateOnlineUser(username, 0);
                         defaultPacketProcessor.warnUser(packet, username, "Your request for the MIC has been denied by the room owner, try again in a few minutes.");
                     }
 

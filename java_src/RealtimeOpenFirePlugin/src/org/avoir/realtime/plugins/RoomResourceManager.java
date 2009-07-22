@@ -337,7 +337,7 @@ public class RoomResourceManager {
             String sql2 =
                     "insert into  ofAvoirRealtime_OnlineUsers values " +
                     "('" + jid + "','" + room + "',0, " +
-                    "if ((Select room_owner from ofAvoirRealTime_Rooms where" +
+                    "if ((Select room_owner from ofAvoirRealtime_Rooms where" +
                     " room_name = '" + room + "')='" + jid + "',0 , 3))";
             Statement st = con.createStatement();
             st.addBatch(sql1);
@@ -861,18 +861,19 @@ public class RoomResourceManager {
         try {
             con = DbConnectionManager.getConnection();
 
-            String sql = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic " +
+            String sql1 = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic,access_level " +
                     " from ofUser,ofAvoirRealtime_OnlineUsers " +
                     " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
                     " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
                     "  (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3);";
             
-            sql = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic " +
+            String sql2 = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic,access_level " +
             " from ofUser,ofAvoirRealtime_OnlineUsers " +
             " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
             " ofAvoirRealtime_OnlineUsers.jid =ofUser.username;";
+
             Statement st = con.createStatement();
-            ResultSet rs2 = st.executeQuery(sql);
+            ResultSet rs2 = st.executeQuery(sql2);
 
             while (rs2.next()) {
                 IQ replyPacket = IQ.createResultIQ(packet);
