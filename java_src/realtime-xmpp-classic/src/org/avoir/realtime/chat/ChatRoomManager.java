@@ -469,7 +469,7 @@ public class ChatRoomManager {
 
     }
 
-    private static void enableMenus(boolean enable) {
+    public static void enableMenus(boolean enable) {
         GUIAccessManager.setMenuEnabled(enable, "screenShot");
         GUIAccessManager.setMenuEnabled(enable, "screenshare");
         GUIAccessManager.setMenuEnabled(enable, "screenviewer");

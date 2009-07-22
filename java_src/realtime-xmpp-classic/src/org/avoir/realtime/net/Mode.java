@@ -89,7 +89,8 @@ public class Mode {
     public static final String REQUEST_MIC_REPLY = "request-mic-reply";
     public static final String MIC_HOLDER = "mic-holder";
     public static final String ROOM_MEMBERS = "room-members";
-    public static final String SERVER_WARN = "server-warn";
+    public static final String WARN = "warn";
     public static final String MIC_ADMIN_HOLDER = "mic-admin-holder";
     public static final String SET_ACCESS = "set-access";
+    public static final String CHANGE_ACCESS = "change-access";
 }
