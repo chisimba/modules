@@ -45,4 +45,7 @@ public class Constants {
     public static final String PROXY_PASSWORD = "avoirrealtime.proxy.password";
     public static final String PROXY_DOMAIN = "avoirrealtime.proxy.domain";
     public static final String PROXY_REQUIRED = "avoirrealtime.proxy.required";
+    public final static int ADMIN_LEVEL = 1;
+    public final static int PARTICIPANT_LEVEL = 3;
+    public final static int OWNER_LEVEL = 0;
 }

@@ -336,7 +336,9 @@ public class RoomResourceManager {
 
             String sql2 =
                     "insert into  ofAvoirRealtime_OnlineUsers values " +
-                    "('" + jid + "','" + room + "',0)";
+                    "('" + jid + "','" + room + "',0, " +
+                    "if ((Select room_owner from ofAvoirRealTime_Rooms where" +
+                    " room_name = '" + room + "')='" + jid + "',0 , 3))";
             Statement st = con.createStatement();
             st.addBatch(sql1);
             st.addBatch(sql2);
@@ -350,6 +352,27 @@ public class RoomResourceManager {
                 ex.printStackTrace();
             }
         }
+    }
+    
+    public void setAccess(String jid, int accessLevel) {
+      try {
+        con = DbConnectionManager.getConnection();
+        String sql1 =
+                "Update ofAvoirRealtime_OnlineUsers set (access_level =" + accessLevel +
+                ") where jid = '" + jid + "'";
+
+        Statement st = con.createStatement();
+        st.addBatch(sql1);
+        st.executeBatch();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            con.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     }
 
     public void updateOnlineUser(String jid, int hasmic) {
@@ -843,6 +866,11 @@ public class RoomResourceManager {
                     " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
                     " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
                     "  (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3);";
+            
+            sql = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic " +
+            " from ofUser,ofAvoirRealtime_OnlineUsers " +
+            " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
+            " ofAvoirRealtime_OnlineUsers.jid =ofUser.username;";
             Statement st = con.createStatement();
             ResultSet rs2 = st.executeQuery(sql);
 
