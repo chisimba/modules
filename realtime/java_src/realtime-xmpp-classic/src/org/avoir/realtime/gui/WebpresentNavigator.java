@@ -69,6 +69,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         tree.setTransferHandler(new RoomResourceTreeTransferHandler());
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setShowsRootHandles(true);
+
         tree.setCellRenderer(new FileRenderer());
         tree.addMouseListener(new MouseAdapter() {
 
