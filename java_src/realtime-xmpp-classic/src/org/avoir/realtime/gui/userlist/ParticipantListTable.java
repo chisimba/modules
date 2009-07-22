@@ -152,6 +152,9 @@ public class ParticipantListTable extends JTable implements ActionListener {
         popup.add(banMenuItem);
         popup.addSeparator();
         popup.add(privateChatMenuItem);
+        popup.addSeparator();
+        popup.add(makeAdminMenuItem);
+        popup.add(removeAdminMenuItem);
 
         decorateTable();
     }
