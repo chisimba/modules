@@ -268,7 +268,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     }
                     Map user = roomResourceManager.getUserInfo(username);
                     String room = (String) user.get("room_name");
-                    defaultPacketProcessor.broadcastAccessChange(packet, username, room, accessLevel);
+                    defaultPacketProcessor.broadcastAccessChange(packet, username, room, accessLevel, (Integer)user.get("has_mic"));
 
                 } else if (mode.equals(Mode.CHANGE_TAB)) {
                     int index = XmlUtils.readInt(doc, "index");
@@ -469,7 +469,7 @@ public class AvoirRealtimePlugin implements Plugin {
     public String getDomain() {
         return domain;
     }
-
+    
     public DefaultPacketProcessor getDefaultPacketProcessor() {
         return defaultPacketProcessor;
     }
