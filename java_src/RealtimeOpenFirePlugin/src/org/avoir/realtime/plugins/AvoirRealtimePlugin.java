@@ -253,17 +253,29 @@ public class AvoirRealtimePlugin implements Plugin {
 
                     slideshowProcessor.downloadWebpresentSlides(packet, slidesDir, presentationName, presentationId);
                 } else if (mode.equals(Mode.SET_ACCESS)) {
+                    //change the access of a member of a room
+                    //this code will even change to owner
+                    //could be security hazard. Anyone can send this command
+                    //currently. Need to check if sender is the owner.
                     String username = XmlUtils.readString(doc, "username");
                     int accessLevel = XmlUtils.readInt(doc, "access_level");
-                  /*
-                   * 
-                   * 
-                   * 
-                   * code here
-                   */
+                    roomResourceManager.setAccess(username,accessLevel);
+                    if (accessLevel == Constants.ADMIN_LEVEL) {
+                      defaultPacketProcessor.warnUser(packet, username, "You have been promoted to admin level.");
+                    }
+                    else {
+                      defaultPacketProcessor.warnUser(packet, username, "Your admin status has been removed.");
+                    }
+                    Map user = roomResourceManager.getUserInfo(username);
+                    String room = (String)user.get("room_name");
+                    defaultPacketProcessor.broadcastAccessChange(packet, username, room, accessLevel);
+
                 } else if (mode.equals(Mode.CHANGE_TAB)) {
                     int index = XmlUtils.readInt(doc, "index");
                     defaultPacketProcessor.broadcastChangeTab(packet, index, roomName);
+                } 
+                else if(mode.equals(Mode.MIC_ADMIN_HOLDER)){
+                  return packet;
                 } else if (mode.equals(Mode.UPDATE_URL)) {
                     String url = XmlUtils.readString(doc, "url");
                     defaultPacketProcessor.broadcastChangeURL(packet, url, roomName);
