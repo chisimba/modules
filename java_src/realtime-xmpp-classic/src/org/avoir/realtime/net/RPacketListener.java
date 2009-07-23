@@ -414,7 +414,7 @@ public class RPacketListener implements PacketListener {
                     String xfrom = packet.getFrom();
                     int at = xfrom.indexOf("@");
                     String from = xfrom.substring(0, at);
-                    item.setFrom(from);
+                    item.setFrom(GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(from));
                     if (item.isNewItem()) {
                         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().addItem(item);
                     } else {
