@@ -211,17 +211,10 @@ public class RPacketListener implements PacketListener {
                 String msg = RealtimePacketProcessor.getTag(packet.getContent(), "msg");
                 JOptionPane.showMessageDialog(null, msg);
                 System.exit(0);
+
             } else if (mode.equals(Mode.ROOM_OWNER_REPLY)) {
                 ConnectionManager.roomOwner = RealtimePacketProcessor.getTag(packet.getContent(), "room-owner");
 
-                if (ConnectionManager.roomOwner.equalsIgnoreCase(ConnectionManager.getUsername())) {
-
-                    if (!WebPresentManager.isPresenter || !StandAloneManager.isAdmin) {
-                        WebPresentManager.isPresenter = true;
-                        StandAloneManager.isAdmin = true;
-                        GUIAccessManager.mf.getChatRoomManager().doGUIAccessLevel();
-                    }
-                }
             } else if (mode.equals(Mode.REQUEST_MIC_FORWARDED)) {
                 String nickname = RealtimePacketProcessor.getTag(packet.getContent(), "name");
                 String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
@@ -310,12 +303,11 @@ public class RPacketListener implements PacketListener {
             } else if (mode.equals(Mode.SLIDES_COUNT)) {
                 SlideShowProcessor.initProgressMonitorIfNecessary(packet.getContent());
             } /* else if (mode.equals(Mode.CHANGE_ACCESS)) {
-                String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
-                int accessLevel = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "access_level"));
+            String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
+            int accessLevel = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "access_level"));
+            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserAccess(username, accessLevel);
 
-                GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserAccess(username, accessLevel);
-
-            } */else if (mode.equals(Mode.SCREEN_SHARE_INVITE_FROM_SERVER)) {
+            } */ else if (mode.equals(Mode.SCREEN_SHARE_INVITE_FROM_SERVER)) {
 
                 String instructor = XmlUtils.readString(doc, "instructor");
                 String me = ConnectionManager.getUsername();
@@ -418,6 +410,11 @@ public class RPacketListener implements PacketListener {
                     String xmlContent = packet.getContent();
 
                     Item item = RealtimePacketProcessor.getItem(xmlContent, packet.getPacketID());
+                    item.setFromAdmin(GeneralUtil.isAdmin(packet.getFrom()));
+                    String xfrom = packet.getFrom();
+                    int at = xfrom.indexOf("@");
+                    String from = xfrom.substring(0, at);
+                    item.setFrom(from);
                     if (item.isNewItem()) {
                         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().addItem(item);
                     } else {
@@ -436,6 +433,7 @@ public class RPacketListener implements PacketListener {
                 }
             } else if (mode.equals(Mode.RESIZE_ITEM_BROADCAST)) {
                 BroadcastItem item = RealtimePacketProcessor.getItemDim(packet.getContent());
+
                 GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().resizeItem(item.getX(), item.getY(), item.getId(),
                         item.getResizeType());
             } else if (mode.equals(Mode.MODIFIED_TEXT_BROADCAST)) {
@@ -450,7 +448,6 @@ public class RPacketListener implements PacketListener {
             } else if (mode.equals(Mode.ITEM_HISTORY_FROM_SERVER)) {
                 try {
                     String xmlContent = packet.getContent();
-
                     Item item = RealtimePacketProcessor.getItem(xmlContent);
                     if (item.isNewItem()) {
                         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().addItem(item);
@@ -647,10 +644,17 @@ public class RPacketListener implements PacketListener {
         }
     }
 
-    private static void showChatPopup(String user, String message) {
-        GUIAccessManager.mf.getChatRoomManager().getChatPopup().setMessage(user, message);
-        GUIAccessManager.mf.getChatRoomManager().getChatPopup().setLocation(ss.width - 200, ss.height - GUIAccessManager.mf.getChatRoomManager().getChatPopup().getHeight() - 100);
-        GUIAccessManager.mf.getChatRoomManager().getChatPopup().setVisible(true);
+    private static void showChatPopup(final String user, final String message) {
+        Thread t = new Thread() {
+
+            public void run() {
+                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setMessage(user, message);
+                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setLocation(ss.width - 200, ss.height - GUIAccessManager.mf.getChatRoomManager().getChatPopup().getHeight() - 100);
+                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setVisible(true);
+              //  GUIAccessManager.mf.runMessageAlerter();
+            }
+        };
+        t.start();
     }
 
     private static void processPresence(Packet packet) {

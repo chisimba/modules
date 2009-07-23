@@ -8,7 +8,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -38,7 +37,6 @@ import javax.swing.JScrollPane;
 
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
 import org.avoir.realtime.gui.PointerListPanel;
 import org.avoir.realtime.gui.main.GUIAccessManager;
@@ -61,10 +59,11 @@ import static org.avoir.realtime.common.Constants.Whiteboard.*;
 public class Whiteboard extends JPanel implements MouseListener, MouseMotionListener,
         ActionListener {
 
+    java.text.DecimalFormat df = new java.text.DecimalFormat("#.####");
     private ArrayList<Item> items = new ArrayList<Item>();
     private int startX,  startY;
     private boolean dragging = false;
-    private int ITEM_TYPE = MOVE;
+    private int ITEM_TYPE = PEN;
     private Item currentItem = null;
     private Item selectedItem = null;
     private Item currentSelectedItem = null;
@@ -92,7 +91,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private String fontName = "SansSerif";
     private int fontStyle = 0;
     private int fontSize = 22;
-    private JMenuItem clearMenuItem = new JMenuItem("Clear");
+    private JMenuItem clearMenuItem = new JMenuItem("Clear Whiteboard");
     private JMenuItem removeResourceMenuItem = new JMenuItem("Remove This Resource");
     private JMenuItem deleteMenuItem = new JMenuItem("Delete");
     private JMenuItem insertGraphicMenuItem = new JMenuItem("Insert Graphic");
@@ -376,7 +375,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             GUIAccessManager.mf.getWebPresentNavigator().removeRoomResource();
         }
         if (e.getActionCommand().equals("clear")) {
-            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setSlideImage(null);
+            clearWhiteboard();
         }
         if (e.getActionCommand().equals("insertPresentation")) {
             GUIAccessManager.mf.insertPresentation();
@@ -488,7 +487,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         ITEM_TYPE = MOVE;
         textPopup.setVisible(false);
         textField.setText("");
-        whiteboardPanel.setWhiteboardToolbarEnabled(false);
+
         paintCurrentPointer();
     }
 
@@ -511,7 +510,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             currentPointerImage = null;
             currentPointerX = 0;
             currentPointerY = 0;
-            whiteboardPanel.setWhiteboardToolbarEnabled(true);
+
         }
         repaint();
     }
@@ -862,10 +861,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public void mouseClicked(MouseEvent evt) {
         if (evt.getButton() == MouseEvent.BUTTON3) {
-            if (GeneralUtil.isInstructor()) {
+            if (ConnectionManager.isAdmin || ConnectionManager.isOwner) {
                 deleteMenuItem.setEnabled(currentSelectedItem != null);
-                //colorMenuItem.setEnabled(currentSelectedItem != null);
-
                 whiteboardPopup.show(this, evt.getX(), evt.getY());
             }
         }
@@ -981,6 +978,19 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public Rectangle getWhiteboardSize() {
         return whiteboardSize;
+    }
+
+    public void clearWhiteboard() {
+        for (Item item : items) {
+            RealtimePacket p = new RealtimePacket();
+            p.setMode(RealtimePacket.Mode.DELETE_ITEM);
+            StringBuilder sb = new StringBuilder();
+            sb.append("<item-id>").append(item.getId()).append("</item-id>");
+            sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
+            p.setContent(sb.toString());
+            ConnectionManager.sendPacket(p);
+        }
+        repaint();
     }
 
     public void undo() {
@@ -1456,18 +1466,22 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
             sb.append("<point-data>");
             for (Line2D pt : pts) {
-                double x1 = pt.getX1() / whiteboardSize.getWidth();
-                double y1 = pt.getY1() / whiteboardSize.getHeight();
-                double x2 = pt.getX2() / whiteboardSize.getWidth();
-                double y2 = pt.getY2() / whiteboardSize.getHeight();
-                sb.append(x1);
-                sb.append(",");
-                sb.append(y1);
-                sb.append(",");
-                sb.append(x2);
-                sb.append(",");
-                sb.append(y2);
-                sb.append("#");
+                try {
+                    double x1 = df.parse(df.format(pt.getX1() / whiteboardSize.getWidth())).doubleValue();
+                    double y1 = df.parse(df.format(pt.getY1() / whiteboardSize.getHeight())).doubleValue();
+                    double x2 = df.parse(df.format(pt.getX2() / whiteboardSize.getWidth())).doubleValue();
+                    double y2 = df.parse(df.format(pt.getY2() / whiteboardSize.getHeight())).doubleValue();
+                    sb.append(x1);
+                    sb.append(",");
+                    sb.append(y1);
+                    sb.append(",");
+                    sb.append(x2);
+                    sb.append(",");
+                    sb.append(y2);
+                    sb.append("#");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
             sb.append("<color>");
             sb.append("<red>").append(currentColor.getRed()).append("</red>");

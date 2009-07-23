@@ -5,6 +5,7 @@
 package org.avoir.realtime.gui.whiteboard.items;
 
 import java.awt.BasicStroke;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -12,6 +13,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import org.avoir.realtime.net.ConnectionManager;
 
 /**
  * This object represents a line item
@@ -87,6 +89,10 @@ public class Line extends Item {
     public void render(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeWidth));
         g.drawLine(x1, y1, x2, y2);
+        if (isFromAdmin()) {
+            g.setFont(new Font("Dialog", 2,11));
+            g.drawString(getFrom(), x2, y2 + 5);
+        }
 
     }
 

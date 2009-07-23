@@ -4,6 +4,7 @@
  */
 package org.avoir.realtime.gui.whiteboard.items;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -122,6 +123,10 @@ public class Oval extends Item {
             g.fillOval(x, y, width, height);
         } else {
             g.drawOval(x, y, width, height);
+        }
+        if (isFromAdmin()) {
+            g.setFont(new Font("Dialog", 2, 11));
+            g.drawString(getFrom(), x + width, y + height + 5);
         }
     }
 

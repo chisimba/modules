@@ -174,33 +174,37 @@ public class RealtimePacketProcessor {
                 item = text;
             }
             if (type.equals("pen")) {
-                String content = XmlUtils.readString(doc, "point-data");
-                String[] points = content.split("#");
-                ArrayList<Line2D.Double> linePoints = new ArrayList<Line2D.Double>();
-                Rectangle rect = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getWhiteboardSize();
+                try {
+                    String content = XmlUtils.readString(doc, "point-data");
 
-                for (int i = 0; i < points.length; i++) {
-                    String point[] = points[i].split(",");
-                    double xx1 = Double.valueOf(point[0]);
-                    double yy1 = Double.valueOf(point[1]);
-                    double xx2 = Double.valueOf(point[2]);
-                    double yy2 = Double.valueOf(point[3]);
+                    String[] points = content.split("#");
+                    ArrayList<Line2D.Double> linePoints = new ArrayList<Line2D.Double>();
+                    Rectangle rect = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getWhiteboardSize();
 
-                    double x1 = (xx1 * rect.getWidth());
-                    double y1 = (yy1 * rect.getHeight());
-                    double x2 = (xx2 * rect.getWidth());
-                    double y2 = (yy2 * rect.getHeight());
-                    Line2D.Double line = new Line2D.Double(
-                            x1,
-                            y1,
-                            x2,
-                            y2);
-                    linePoints.add(line);
+                    for (int i = 0; i < points.length; i++) {
+                        String point[] = points[i].split(",");
+                        double xx1 = Double.valueOf(point[0]);
+                        double yy1 = Double.valueOf(point[1]);
+                        double xx2 = Double.valueOf(point[2]);
+                        double yy2 = Double.valueOf(point[3]);
 
+                        double x1 = (xx1 * rect.getWidth());
+                        double y1 = (yy1 * rect.getHeight());
+                        double x2 = (xx2 * rect.getWidth());
+                        double y2 = (yy2 * rect.getHeight());
+                        Line2D.Double line = new Line2D.Double(
+                                x1,
+                                y1,
+                                x2,
+                                y2);
+                        linePoints.add(line);
+
+                    }
+                    item = new Pen(linePoints);
+                    item.setId(id);
+                } catch (Exception ex1) {
+                    ex1.printStackTrace();
                 }
-                item = new Pen(linePoints);
-                item.setId(id);
-
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -299,7 +303,7 @@ public class RealtimePacketProcessor {
             if (index > -1) {
                 from = from.substring(0, index);
             }
-            speaker=GeneralUtil.formatStr(speaker, " ");
+            speaker = GeneralUtil.formatStr(speaker, " ");
             GUIAccessManager.mf.removeSpeaker(speaker);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -324,17 +328,18 @@ public class RealtimePacketProcessor {
                 from = from.substring(0, index);
             }
             String me = ConnectionManager.getUsername();
-/**
- *         String instructorUrl = ConnectionManager.AUDIO_VIDEO_URL +
-                "/video/broadcaster.html?me=" +
-                currentRoomName + "&you=participant";
+            /**
+             *         String instructorUrl = ConnectionManager.AUDIO_VIDEO_URL +
+            "/video/broadcaster.html?me=" +
+            currentRoomName + "&you=participant";
 
-        String participantUrl = ConnectionManager.AUDIO_VIDEO_URL +
-                "/video/receiver.html?me=participant&you=" + currentRoomName;
- */
+            String participantUrl = ConnectionManager.AUDIO_VIDEO_URL +
+            "/video/receiver.html?me=participant&you=" + currentRoomName;
+             */
             String url = "";
             String title = "";
-            String speaker1=GeneralUtil.formatStr(speaker, " ");
+            String names = GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(speaker);
+            String speaker1 = GeneralUtil.formatStr(names, " ");
             if (me.equalsIgnoreCase(from)) {
                 url =
                         ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker1;

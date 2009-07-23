@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * MainFrame.java
  *
  * Created on 2009/03/21, 04:16:43
@@ -18,7 +13,6 @@ import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
@@ -29,8 +23,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -87,12 +81,10 @@ public class MainFrame extends javax.swing.JFrame {
     private ChatRoomManager chatRoomManager;
     private String defaultRoomName = "No Room";
     private ImageIcon chatIcon = ImageUtil.createImageIcon(this, "/images/chat_on.gif");
-    private ImageIcon delIcon = ImageUtil.createImageIcon(this, "/images/delete.gif");
     private ImageIcon logo = ImageUtil.createImageIcon(this, "/images/intro_logo.jpg");
     private ImageIcon alertIcon = ImageUtil.createImageIcon(this, "/images/application.png");
     private SlidesNavigator slidesNavigator;
     private ImageIcon appIcon = ImageUtil.createImageIcon(this, "/images/application_delete.png");
-    private QuestionNavigator questionsNavigator;
     private RealtimeFileChooser realtimeFileChooser = new RealtimeFileChooser("images");
     private int currentRoomIndex = 0;
     private int notepadCount = 0;
@@ -100,13 +92,8 @@ public class MainFrame extends javax.swing.JFrame {
     private PointerListPanel pointerListPanel;
     private boolean expand = false;
     private WebBrowserManager webbrowserManager;
-    private JTabbedPane toolBarTabbedPane = new JTabbedPane();
-    private boolean slidesPopulated = false;
-    private boolean questionsPopulated = false;
     private JWebBrowser generalWebBrowser = new JWebBrowser();
     private Timer tabTimer = new Timer();
-    //private DefaultListModel roomResourceModel = new DefaultListModel();
-    //private JList roomResourceList = new JList(roomResourceModel);
     private RoomResourceNavigator roomResourceNavigator = new RoomResourceNavigator();
     private JSplitPane slidesSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     private WebpresentNavigator webPresentNavigator;
@@ -117,13 +104,14 @@ public class MainFrame extends javax.swing.JFrame {
     private RoomListFrame roomListFrame;
     private JFileChooser presentationFC = new JFileChooser();
     private RoomMemberListFrame roomMemberListFrame;
-    //private SlideScroller slideScroller = new SlideScroller();
-    private JTabbedPane scrollerTabbedPane = new JTabbedPane();
+    private boolean slidesPopulated = false;
+    private Timer messageTimer = new Timer();
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
 
         initComponents();
+
         userListPanel = new ParticipantListPanel();
         leftSplitPane.setDividerLocation((ss.height / 2));
         mainSplitPane.setDividerLocation((ss.width / 4) + 60);
@@ -131,15 +119,33 @@ public class MainFrame extends javax.swing.JFrame {
         tabbedPane.addTab("Whiteboard", whiteboardPanel);
         tabbedPane.add("Browser", generalWebBrowser);
         tabbedPane.add("Speakers", speakersPanel);
+        surfaceTopTabbedPane.addTab("Whiteboard", whiteboardPanel.getWbToolbar());
+        webPresentNavigator = new WebpresentNavigator();
+
+        userListPanel.getUserTabbedPane().addTab("Slides", webPresentNavigator);
+        userListPanel.getUserTabbedPane().addChangeListener(new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
+                    if (!slidesPopulated) {
+                        webPresentNavigator.populateWithRoomResources();
+                        slidesPopulated =
+                                true;
+
+                        adjustSize();
+
+                    }
+                }
+            }
+        });
         generalWebBrowser.addWebBrowserListener(new RWebBrowserListener(generalWebBrowser));
         slidesNavigator = new SlidesNavigator(this);
-        questionsNavigator = new QuestionNavigator(this);
         add(statusBar, BorderLayout.SOUTH);
 
         GUIAccessManager.setMf(this);
         chatRoomManager = new ChatRoomManager(ConnectionManager.getRoomName());
         chatTabbedPane.addTab(defaultRoomName, chatIcon, chatRoomManager.getChatRoom());
-        surfacePanel.add(toolBarTabbedPane, BorderLayout.NORTH);
+
 
         slidesSplitPane.setOneTouchExpandable(true);
         tabbedPane.addChangeListener(new ChangeListener() {
@@ -185,19 +191,8 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
-        addFocusListener(new FocusListener() {
 
-            public void focusGained(FocusEvent e) {
-            }
 
-            public void focusLost(FocusEvent e) {
-                MainFrame.this.setIconImage(appIcon.getImage());
-            }
-        });
-
-    }
-
-    public void setAlertIconOn() {
     }
 
     public void removeAllSpeakers() {
@@ -221,6 +216,26 @@ public class MainFrame extends javax.swing.JFrame {
 
             }
         });
+    }
+
+    public void runMessageAlerter(){
+       messageTimer.cancel();
+       messageTimer=new Timer();
+       messageTimer.scheduleAtFixedRate(new MessageAlerter(), 1000, 1000);
+    }
+    class MessageAlerter extends TimerTask {
+
+        boolean blink = false;
+
+        public void run() {
+            if (blink) {
+                MainFrame.this.setIconImage(appIcon.getImage());
+            } else {
+                MainFrame.this.setIconImage(alertIcon.getImage());
+            }
+            blink=!blink;
+            System.out.println("blinking : "+blink);
+        }
     }
 
     public boolean addSpeaker(final String url, String speakerName) {
@@ -273,10 +288,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             public void run() {
                 for (Speaker speaker : speakers) {
-                    //     System.out.println("testing " + speakerName + " against " + speaker.getSpeaker());
                     if (speaker.getSpeaker().equals(speakerName)) {
-                        //  System.out.println("Match");
-
                         final JWebBrowser browser = speaker.getWebBrowser();
                         SwingUtilities.invokeLater(new Runnable() {
 
@@ -285,11 +297,9 @@ public class MainFrame extends javax.swing.JFrame {
                             }
                         });
                         speaker.setSpeaker("free");
-                        // System.out.println("#########removing " + speakerName);
                         userListPanel.getParticipantListTable().setUserHasMIC(speakerName, false);
                         break;
                     } else {
-                        // System.out.println("no match");
                     }
                 }
             }
@@ -412,45 +422,49 @@ public class MainFrame extends javax.swing.JFrame {
         return slideCount;
     }
 
-    public void showInstructorToolbar() {
-        toolBarTabbedPane.addTab("Toolbar", instToolbar);
-        toolBarTabbedPane.addTab("Whiteboard Toolbox", whiteboardPanel.getWbToolbar());
-        toolBarTabbedPane.addChangeListener(new ChangeListener() {
+    public JToolBar getRoomToolsToolbar() {
+        return roomToolsToolbar;
+    }
 
-            public void stateChanged(ChangeEvent e) {
-                if (toolBarTabbedPane.getSelectedIndex() == 1) {
-                    tabbedPane.setSelectedIndex(0);
-                }
+    /* public void showInstructorToolbar() {
+    toolBarTabbedPane.addTab("Toolbar", instToolbar);
+    toolBarTabbedPane.addTab("Whiteboard Toolbox", whiteboardPanel.getWbToolbar());
+    toolBarTabbedPane.addChangeListener(new ChangeListener() {
 
-            }
-        });
-        for (int i = 2; i <
-                userListPanel.getUserTabbedPane().getTabCount(); i++) {
-            userListPanel.getUserTabbedPane().removeTabAt(i);
-        }
+    public void stateChanged(ChangeEvent e) {
+    if (toolBarTabbedPane.getSelectedIndex() == 1) {
+    tabbedPane.setSelectedIndex(0);
+    }
 
-        JTabbedPane tp = new JTabbedPane();
-        webPresentNavigator = new WebpresentNavigator();
+    }
+    });
+    for (int i = 2; i <
+    userListPanel.getUserTabbedPane().getTabCount(); i++) {
+    userListPanel.getUserTabbedPane().removeTabAt(i);
+    }
 
-        userListPanel.getUserTabbedPane().addTab("Slides", webPresentNavigator);
-        userListPanel.getUserTabbedPane().addChangeListener(new ChangeListener() {
+    JTabbedPane tp = new JTabbedPane();
+    webPresentNavigator = new WebpresentNavigator();
 
-            public void stateChanged(ChangeEvent e) {
-                if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
-                    if (!slidesPopulated) {
-                        webPresentNavigator.populateWithRoomResources();
-                        slidesPopulated =
-                                true;
+    userListPanel.getUserTabbedPane().addTab("Slides", webPresentNavigator);
+    userListPanel.getUserTabbedPane().addChangeListener(new ChangeListener() {
 
-                        adjustSize();
+    public void stateChanged(ChangeEvent e) {
+    if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
+    if (!slidesPopulated) {
+    webPresentNavigator.populateWithRoomResources();
+    slidesPopulated =
+    true;
 
-                    }
-                }
-            }
-        });
+    adjustSize();
 
-        adjustSize();
-    /* } else {
+    }
+    }
+    }
+    });
+
+    adjustSize();
+    } else {
     slidesSplitPane.setTopComponent(slidesNavigator);
     slidesSplitPane.setDividerLocation(180);
     // userListPanel.getUserTabbedPane().setFont(new Font("Dialog", 0, 12));
@@ -492,11 +506,10 @@ public class MainFrame extends javax.swing.JFrame {
     slidesSplitPane.repaint();
     adjustSize();
 
-    }*/
-
-
     }
 
+
+    }*/
     public RoomResourceNavigator getRoomResourceNavigator() {
         return roomResourceNavigator;
     }
@@ -512,13 +525,12 @@ public class MainFrame extends javax.swing.JFrame {
         setSize(w - 1, h - 1);
     }
 
-    public void showParticipantToolbar() {
-        toolBarTabbedPane.addTab("Toolbar", partiToolbar);
+    /*  public void showParticipantToolbar() {
+    toolBarTabbedPane.addTab("Toolbar", partiToolbar);
 
-        adjustSize();
+    adjustSize();
 
-    }
-
+    }*/
     public JTabbedPane getChatTabbedPane() {
         return chatTabbedPane;
     }
@@ -597,13 +609,6 @@ public class MainFrame extends javax.swing.JFrame {
         titlePanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         titleField = new javax.swing.JTextArea();
-        instToolbar = new javax.swing.JToolBar();
-        roomMembersButton = new javax.swing.JButton();
-        changeRoomButton = new javax.swing.JButton();
-        pointerButton = new javax.swing.JButton();
-        deskShareButton = new javax.swing.JButton();
-        imagesButton = new javax.swing.JButton();
-        notepadButton = new javax.swing.JButton();
         wbButtonGroup = new javax.swing.ButtonGroup();
         partiToolbar = new javax.swing.JToolBar();
         notepadButton1 = new javax.swing.JButton();
@@ -618,6 +623,14 @@ public class MainFrame extends javax.swing.JFrame {
         chatTabbedPane = new javax.swing.JTabbedPane();
         surfacePanel = new javax.swing.JPanel();
         tabbedPane = new javax.swing.JTabbedPane();
+        surfaceTopTabbedPane = new javax.swing.JTabbedPane();
+        roomToolsToolbar = new javax.swing.JToolBar();
+        roomMembersButton = new javax.swing.JButton();
+        changeRoomButton = new javax.swing.JButton();
+        pointerButton = new javax.swing.JButton();
+        deskShareButton = new javax.swing.JButton();
+        imagesButton = new javax.swing.JButton();
+        notepadButton = new javax.swing.JButton();
         screenShareItem = new javax.swing.JMenuBar();
         fileMenutem = new javax.swing.JMenu();
         newWhiteboardMenuItem = new javax.swing.JMenuItem();
@@ -664,152 +677,6 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(titleField);
 
         titlePanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        instToolbar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        instToolbar.setRollover(true);
-
-        roomMembersButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        roomMembersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/virtualroom.png"))); // NOI18N
-        roomMembersButton.setText("Room Members");
-        roomMembersButton.setBorderPainted(false);
-        roomMembersButton.setContentAreaFilled(false);
-        roomMembersButton.setFocusable(false);
-        roomMembersButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        roomMembersButton.setName("newRoom"); // NOI18N
-        roomMembersButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        roomMembersButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                roomMembersButtonActionPerformed(evt);
-            }
-        });
-        roomMembersButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                roomMembersButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                roomMembersButtonMouseExited(evt);
-            }
-        });
-        instToolbar.add(roomMembersButton);
-
-        changeRoomButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        changeRoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/join_room.png"))); // NOI18N
-        changeRoomButton.setText("Room List");
-        changeRoomButton.setBorderPainted(false);
-        changeRoomButton.setContentAreaFilled(false);
-        changeRoomButton.setFocusable(false);
-        changeRoomButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        changeRoomButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        changeRoomButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                changeRoomButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                changeRoomButtonMouseExited(evt);
-            }
-        });
-        changeRoomButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeRoomButtonActionPerformed(evt);
-            }
-        });
-        instToolbar.add(changeRoomButton);
-
-        pointerButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        pointerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/arrow_side32.png"))); // NOI18N
-        pointerButton.setText("Pointer");
-        pointerButton.setBorderPainted(false);
-        pointerButton.setContentAreaFilled(false);
-        pointerButton.setFocusable(false);
-        pointerButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        pointerButton.setName("pointer"); // NOI18N
-        pointerButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        pointerButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                pointerButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                pointerButtonMouseExited(evt);
-            }
-        });
-        pointerButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pointerButtonActionPerformed(evt);
-            }
-        });
-        instToolbar.add(pointerButton);
-
-        deskShareButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        deskShareButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/desktopsharing.png"))); // NOI18N
-        deskShareButton.setText("Desktop Share");
-        deskShareButton.setBorderPainted(false);
-        deskShareButton.setContentAreaFilled(false);
-        deskShareButton.setFocusable(false);
-        deskShareButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deskShareButton.setName("deskShare"); // NOI18N
-        deskShareButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deskShareButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                deskShareButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                deskShareButtonMouseExited(evt);
-            }
-        });
-        deskShareButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deskShareButtonActionPerformed(evt);
-            }
-        });
-        instToolbar.add(deskShareButton);
-
-        imagesButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        imagesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/image.png"))); // NOI18N
-        imagesButton.setText("Graphics");
-        imagesButton.setBorderPainted(false);
-        imagesButton.setContentAreaFilled(false);
-        imagesButton.setFocusable(false);
-        imagesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        imagesButton.setName("images"); // NOI18N
-        imagesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        imagesButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                imagesButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                imagesButtonMouseExited(evt);
-            }
-        });
-        imagesButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                imagesButtonActionPerformed(evt);
-            }
-        });
-        instToolbar.add(imagesButton);
-
-        notepadButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        notepadButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
-        notepadButton.setText("Notepad");
-        notepadButton.setBorderPainted(false);
-        notepadButton.setContentAreaFilled(false);
-        notepadButton.setFocusable(false);
-        notepadButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        notepadButton.setName("notepad"); // NOI18N
-        notepadButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        notepadButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                notepadButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                notepadButtonMouseExited(evt);
-            }
-        });
-        notepadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                notepadButtonActionPerformed(evt);
-            }
-        });
-        instToolbar.add(notepadButton);
 
         partiToolbar.setRollover(true);
 
@@ -890,6 +757,157 @@ public class MainFrame extends javax.swing.JFrame {
 
         surfacePanel.setLayout(new java.awt.BorderLayout());
         surfacePanel.add(tabbedPane, java.awt.BorderLayout.CENTER);
+
+        roomToolsToolbar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        roomToolsToolbar.setRollover(true);
+
+        roomMembersButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        roomMembersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/virtualroom.png"))); // NOI18N
+        roomMembersButton.setText("Room Members");
+        roomMembersButton.setBorderPainted(false);
+        roomMembersButton.setContentAreaFilled(false);
+        roomMembersButton.setFocusable(false);
+        roomMembersButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        roomMembersButton.setName("roomMembers"); // NOI18N
+        roomMembersButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        roomMembersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roomMembersButtonActionPerformed(evt);
+            }
+        });
+        roomMembersButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                roomMembersButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                roomMembersButtonMouseExited(evt);
+            }
+        });
+        roomToolsToolbar.add(roomMembersButton);
+
+        changeRoomButton.setFont(new java.awt.Font("Dialog", 0, 11));
+        changeRoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/join_room.png"))); // NOI18N
+        changeRoomButton.setText("Room List");
+        changeRoomButton.setBorderPainted(false);
+        changeRoomButton.setContentAreaFilled(false);
+        changeRoomButton.setFocusable(false);
+        changeRoomButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        changeRoomButton.setName("roomList"); // NOI18N
+        changeRoomButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        changeRoomButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                changeRoomButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                changeRoomButtonMouseExited(evt);
+            }
+        });
+        changeRoomButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeRoomButtonActionPerformed(evt);
+            }
+        });
+        roomToolsToolbar.add(changeRoomButton);
+
+        pointerButton.setFont(new java.awt.Font("Dialog", 0, 11));
+        pointerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/arrow_side32.png"))); // NOI18N
+        pointerButton.setText("Pointer");
+        pointerButton.setBorderPainted(false);
+        pointerButton.setContentAreaFilled(false);
+        pointerButton.setFocusable(false);
+        pointerButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        pointerButton.setName("pointer"); // NOI18N
+        pointerButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        pointerButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                pointerButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                pointerButtonMouseExited(evt);
+            }
+        });
+        pointerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pointerButtonActionPerformed(evt);
+            }
+        });
+        roomToolsToolbar.add(pointerButton);
+
+        deskShareButton.setFont(new java.awt.Font("Dialog", 0, 11));
+        deskShareButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/desktopsharing.png"))); // NOI18N
+        deskShareButton.setText("Desktop Share");
+        deskShareButton.setBorderPainted(false);
+        deskShareButton.setContentAreaFilled(false);
+        deskShareButton.setFocusable(false);
+        deskShareButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deskShareButton.setName("deskShare"); // NOI18N
+        deskShareButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deskShareButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                deskShareButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                deskShareButtonMouseExited(evt);
+            }
+        });
+        deskShareButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deskShareButtonActionPerformed(evt);
+            }
+        });
+        roomToolsToolbar.add(deskShareButton);
+
+        imagesButton.setFont(new java.awt.Font("Dialog", 0, 11));
+        imagesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/image.png"))); // NOI18N
+        imagesButton.setText("Graphics");
+        imagesButton.setBorderPainted(false);
+        imagesButton.setContentAreaFilled(false);
+        imagesButton.setFocusable(false);
+        imagesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        imagesButton.setName("images"); // NOI18N
+        imagesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        imagesButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                imagesButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                imagesButtonMouseExited(evt);
+            }
+        });
+        imagesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imagesButtonActionPerformed(evt);
+            }
+        });
+        roomToolsToolbar.add(imagesButton);
+
+        notepadButton.setFont(new java.awt.Font("Dialog", 0, 11));
+        notepadButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
+        notepadButton.setText("Notepad");
+        notepadButton.setBorderPainted(false);
+        notepadButton.setContentAreaFilled(false);
+        notepadButton.setFocusable(false);
+        notepadButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        notepadButton.setName("notepad"); // NOI18N
+        notepadButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        notepadButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                notepadButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                notepadButtonMouseExited(evt);
+            }
+        });
+        notepadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                notepadButtonActionPerformed(evt);
+            }
+        });
+        roomToolsToolbar.add(notepadButton);
+
+        surfaceTopTabbedPane.addTab("Tools", roomToolsToolbar);
+
+        surfacePanel.add(surfaceTopTabbedPane, java.awt.BorderLayout.PAGE_START);
 
         mainSplitPane.setRightComponent(surfacePanel);
 
@@ -1133,7 +1151,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public JToolBar getToolbar() {
-        return instToolbar;
+        return roomToolsToolbar;
     }
 
     public UserListFrame getUserListFrame() {
@@ -1371,16 +1389,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void inviteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inviteMenuItemActionPerformed
         inviteParticipants();
     }//GEN-LAST:event_inviteMenuItemActionPerformed
-
-    public void resetGUIccess() {
-        if (userListPanel.getUserTabbedPane().getTabCount() == 3) {
-            userListPanel.getUserTabbedPane().remove(2);
-        }
-
-        toolBarTabbedPane.removeAll();
-        adjustSize();
-
-    }
 
     private void doScreenShot(boolean desktop) {
         try {
@@ -1651,7 +1659,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton imagesButton;
     private javax.swing.JMenuItem insertGraphicMenuItem;
     private javax.swing.JMenuItem insertPresentationMenuItem;
-    private javax.swing.JToolBar instToolbar;
     private javax.swing.JMenuItem invitationLinkMenuItem;
     private javax.swing.JMenuItem inviteMenuItem;
     private javax.swing.JLabel jLabel1;
@@ -1677,11 +1684,13 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem requestMicMenuItem;
     private javax.swing.JMenuItem roomListMenuItem;
     private javax.swing.JButton roomMembersButton;
+    private javax.swing.JToolBar roomToolsToolbar;
     private javax.swing.JMenuBar screenShareItem;
     private javax.swing.JMenuItem screenShareMenuItem;
     private javax.swing.JMenuItem screenViewerMenuItem;
     private javax.swing.JPanel statusBar;
     private javax.swing.JPanel surfacePanel;
+    private javax.swing.JTabbedPane surfaceTopTabbedPane;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JMenuItem thisAppMenuItem;
     private javax.swing.JMenuItem tipsMenuItem;
