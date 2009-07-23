@@ -29,7 +29,8 @@ public class Text extends Item {
     private String fontName;
     private FontMetrics fm;
     private Graphics graphics;
-private boolean filled;
+    private boolean filled;
+
     public Text(int x, int y, String content) {
         this.x = x;
         this.y = y;
@@ -193,7 +194,7 @@ private boolean filled;
 
     @Override
     public Item translate(int dx, int dy) {
-        Text text = new Text(x + dx, y + dy+height, content);
+        Text text = new Text(x + dx, y + dy + height, content);
         text.setId(id);
         text.setFontName(fontName);
         text.setFontSize(fontSize);
@@ -220,6 +221,10 @@ private boolean filled;
         g.setFont(new Font(fontName, fontStyle, fontSize));
         g.setColor(new Color(red, green, blue));
         g.drawString(content, x, y + height);
+        if (isFromAdmin()) {
+            g.setFont(new Font("Dialog", 2, 11));
+            g.drawString(getFrom(), x, y + height + 5);
+        }
 
     }
 

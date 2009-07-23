@@ -22,6 +22,25 @@ public abstract class Item implements Serializable {
     protected float strokeWidth = 1;
     protected Color color = Color.BLACK;
     protected boolean newItem;
+    protected boolean fromAdmin;
+    protected  String from;
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public boolean isFromAdmin() {
+        return fromAdmin;
+    }
+
+    public void setFromAdmin(boolean fromAdmin) {
+        this.fromAdmin = fromAdmin;
+    }
+
 
     public boolean isNewItem() {
         return newItem;

@@ -5,6 +5,7 @@
 package org.avoir.realtime.gui.whiteboard.items;
 
 import java.awt.BasicStroke;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -119,9 +120,16 @@ public class Pen extends Item {
     @Override
     public void render(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeWidth));
+        Line2D line=null;
         for (int i = 0; i < points.size(); i++) {
-            Line2D line = points.get(i);
+           line = points.get(i);
             g.draw(line);
+        }
+        if(line != null){
+                    if (isFromAdmin()) {
+            g.setFont(new Font("Dialog", 2,11));
+            g.drawString(getFrom(), (int)line.getX2(), (int)(line.getY2() + 5));
+        }
         }
     }
 

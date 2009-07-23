@@ -4,6 +4,7 @@
  */
 package org.avoir.realtime.gui.main;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,10 +24,10 @@ public class GUIAccessManager {
     public static MainFrame mf;
     public static Map<String, Boolean> saveStatus = new HashMap<String, Boolean>();
     public static ChatRoomManager chatRoomManager;
-    public static boolean isLoggedInAnonymous=false;
-    public static String defaultPresentationName="" ;
-    public static String defaultPresentationId="" ;
-    public static String defaultSlideName="" ;
+    public static boolean isLoggedInAnonymous = false;
+    public static String defaultPresentationName = "";
+    public static String defaultPresentationId = "";
+    public static String defaultSlideName = "";
 
     public static void setMf(MainFrame mf) {
         GUIAccessManager.mf = mf;
@@ -91,5 +92,54 @@ public class GUIAccessManager {
             toolBar.remove(i);
         }
         toolBar.repaint();
+    }
+
+    public static void enableToolbarButtons(boolean state) {
+        enableToolbarButton("roomMember", true);
+        enableToolbarButton("roomList", true);
+        enableToolbarButton("pointer", state);
+        enableToolbarButton("deskShare", state);
+        enableToolbarButton("images", state);
+        enableToolbarButton("notepad", true);
+    }
+
+    public static void enableWhiteboardButtons(boolean state) {
+        JToolBar toolbar = GUIAccessManager.mf.getWhiteboardPanel().getWbToolbar();
+        int count = toolbar.getComponentCount();
+        for (int i = 0; i < count; i++) {
+            Component c = toolbar.getComponentAtIndex(i);
+            c.setEnabled(state);
+        }
+    }
+
+    public static void enableMenus(boolean enable) {
+        GUIAccessManager.setMenuEnabled(enable, "screenShot");
+        GUIAccessManager.setMenuEnabled(enable, "screenshare");
+        GUIAccessManager.setMenuEnabled(enable, "screenviewer");
+        GUIAccessManager.setMenuEnabled(enable, "schedule");
+        GUIAccessManager.setMenuEnabled(/*!enable*/false, "privatechat");
+        GUIAccessManager.setMenuEnabled(enable, "createRoom");
+        GUIAccessManager.setMenuEnabled(true, "roomList");
+        GUIAccessManager.setMenuEnabled(enable, "actions");
+        GUIAccessManager.setMenuEnabled(true, "joinRoom"); ///for every one
+        GUIAccessManager.setMenuEnabled(enable, "invitationLink");
+        GUIAccessManager.setMenuEnabled(enable, "insertGraphic");
+        GUIAccessManager.setMenuEnabled(enable, "insertPresentation");
+        GUIAccessManager.setMenuEnabled(false, "roomResources");
+        GUIAccessManager.setMenuEnabled(true, "requestMIC");
+        GUIAccessManager.setMenuEnabled(enable, "addroommembers");
+        GUIAccessManager.setMenuEnabled(enable, "cleanParticipantsList");
+        GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setEnabledAt(2, enable);
+    }
+
+    private static void enableToolbarButton(String name, boolean state) {
+        JToolBar toolbar = GUIAccessManager.mf.getRoomToolsToolbar();
+        int count = toolbar.getComponentCount();
+        for (int i = 0; i < count; i++) {
+            Component c = toolbar.getComponentAtIndex(i);
+            if (c.getName().equals(name)) {
+                c.setEnabled(state);
+            }
+        }
     }
 }

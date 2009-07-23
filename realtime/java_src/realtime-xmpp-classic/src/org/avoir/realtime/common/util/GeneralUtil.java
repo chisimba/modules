@@ -129,19 +129,23 @@ public class GeneralUtil {
     }
 
     public static String getJID(String nickname) {
-        if(nickname.endsWith("(me)")){
-            int me=nickname.indexOf("(me)");
-            nickname=nickname.substring(0,me).trim();
-        
+        if (nickname.endsWith("(me)")) {
+            int me = nickname.indexOf("(me)");
+            nickname = nickname.substring(0, me).trim();
+
         }
-        String str=ConnectionManager.getRoomName()+"@"+ConnectionManager.getConnection().getServiceName()+"/"+ nickname;
-           
+        String str = ConnectionManager.getRoomName() + "@" + ConnectionManager.getConnection().getServiceName() + "/" + nickname;
+
         Occupant occupant = GUIAccessManager.mf.getChatRoomManager().getMuc().getOccupant(str);
         return occupant.getJid();
     }
 
-   private static boolean isMyRoom() {
+    private static boolean isMyRoom() {
         return ConnectionManager.getUsername().equals(getThisRoomOwner());
+    }
+
+    public static boolean isAdmin(String from) {
+        return GUIAccessManager.mf.getUserListPanel().getParticipantListTable().isAdmin(from);
     }
 
     private static String getThisRoomOwner() {

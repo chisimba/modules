@@ -4,6 +4,7 @@
  */
 package org.avoir.realtime.gui.whiteboard.items;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -156,6 +157,10 @@ public class Rect extends Item {
             g.fill(rect);
         } else {
             g.draw(rect);
+        }
+                if (isFromAdmin()) {
+            g.setFont(new Font("Dialog", 2,11));
+            g.drawString(getFrom(),(int)(rect.getX()+rect.getWidth()), (int)(rect.getY()+rect.getHeight() + 5));
         }
     }
 

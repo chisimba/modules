@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -198,7 +197,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
     }
 
     private void sendPacket(String presentationName, String slideName) {
-
+        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().clearWhiteboard();
         RealtimePacket p = new RealtimePacket();
         p.setMode(RealtimePacket.Mode.BROADCAST_SLIDE);
         StringBuilder sb = new StringBuilder();

@@ -31,7 +31,7 @@ public class OptionsPanel extends javax.swing.JPanel {
         audioVideoHttpUrlField.setText(audioVideoUrl);
         requireAuthOpt.setSelected(new Boolean(GeneralUtil.getProperty("proxy.require.auth")));
         showDebugOpt.setSelected(new Boolean(GeneralUtil.getProperty("debug.enabled")));
-        browserProxyOpt.setSelected(new Boolean(System.getProperty("browser.proxy.required")));
+        browserProxyOpt.setSelected(new Boolean(GeneralUtil.getProperty("browser.proxy.required")));
         int connectionType = Constants.Proxy.NO_PROXY;
         httpProxyHostField.setText(GeneralUtil.getProperty("proxy.host"));
 

@@ -59,8 +59,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         Color bg = new Color(244, 247, 203);
         roomResourceSlides.setBackground(bg);
         slidesPanel.addTab("Current Slides", new JScrollPane(roomResourceSlides));
-    // slidesPanel.setBorder(BorderFactory.createTitledBorder("Slides"));
-    // add(slidesPanel, BorderLayout.SOUTH);
+
     }
 
     public void setSlides(ArrayList<RealtimeFile> slides, String title) {
@@ -84,12 +83,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         return wbToolbar;
     }
 
-    public void setWhiteboardToolbarEnabled(boolean state) {
-        /*for (int i = 0; i < wbToolbar.getComponentCount(); i++) {
-        wbToolbar.getComponentAtIndex(i).setEnabled(state);
-        }*/
-    }
-
+    
     public Whiteboard getWhiteboard() {
         return whiteboard;
     }
@@ -174,10 +168,10 @@ public class WhiteboardPanel extends javax.swing.JPanel {
 
         wbButtonGroup.add(moveButton);
         moveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/whiteboard/movearrow.gif"))); // NOI18N
-        moveButton.setSelected(true);
         moveButton.setToolTipText("Move");
         moveButton.setFocusable(false);
         moveButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        moveButton.setName("move"); // NOI18N
         moveButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         moveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,6 +247,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
 
         wbButtonGroup.add(scribbleButton);
         scribbleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/whiteboard/draw_Scribble.gif"))); // NOI18N
+        scribbleButton.setSelected(true);
         scribbleButton.setToolTipText("Scribble");
         scribbleButton.setFocusable(false);
         scribbleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -351,7 +346,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_drawRectButtonActionPerformed
 
     private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
-       whiteboard.undo();
+        whiteboard.undo();
     }//GEN-LAST:event_undoButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

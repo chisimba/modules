@@ -10,6 +10,12 @@ package org.avoir.realtime.common;
  */
 public class Constants {
 
+    public static class MIC {
+
+        public final static int MIC_ON = 1;
+        public final static int MIC_OFF = 0;
+    }
+
     public static class Proxy {
 
         public final static int NO_PROXY = 0;
@@ -30,19 +36,19 @@ public class Constants {
         public final static int TEXT = 8;
         public final static int UNDO = 9;
     }
-    
-    public static class Dialogs { 
+
+    public static class Dialogs {
+
         public final static int REQUEST_DENIED = 0;
         public final static int REQUEST_APPROVED = 1;
     }
-    
+
     public static class AdminLevels {
-      public final static int ADMIN_LEVEL = 1;
-      public final static int PARTICIPANT_LEVEL = 3;
-      public final static int OWNER_LEVEL = 0;
-      
+
+        public final static int ADMIN_LEVEL = 1;
+        public final static int PARTICIPANT_LEVEL = 3;
+        public final static int OWNER_LEVEL = 0;
     }
-    
     public final static int ESSAY_QUESTION = 0;
     public final static int MCQ_QUESTION = 1;
     public final static int TRUE_FALSE_QUESTION = 2;

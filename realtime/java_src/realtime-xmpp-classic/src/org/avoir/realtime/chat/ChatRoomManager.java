@@ -1,6 +1,7 @@
 package org.avoir.realtime.chat;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +10,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import org.avoir.realtime.common.Constants;
 import org.avoir.realtime.common.util.GeneralUtil;
@@ -90,7 +92,7 @@ public class ChatRoomManager {
         public void left(String jid) {
             String xuser = jid.substring(jid.lastIndexOf("/") + 1);
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(xuser);
-            String user=xuser.split(":")[1];
+            String user = xuser.split(":")[1];
             GUIAccessManager.mf.removeSpeaker(user);
         }
 
@@ -239,6 +241,7 @@ public class ChatRoomManager {
 
     public boolean kick(String nickname) {
         try {
+
             muc.kickParticipant(nickname, "You have been kicked out.");
             return true;
         } catch (XMPPException ex) {
@@ -312,6 +315,7 @@ public class ChatRoomManager {
             createRoom(roomName, ConnectionManager.fullnames, false, null);
         }
 
+
         JPasswordField passwordField = new JPasswordField();
         nickname = ConnectionManager.fullnames;
 
@@ -354,9 +358,10 @@ public class ChatRoomManager {
 
             GUIAccessManager.mf.setTitle("Virtual Meeting: " + nickname);
             GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setSlideImage(null);
+            sendMessage(ConnectionManager.fullnames + " joined", 10, Color.LIGHT_GRAY, "sys-text");
 
             requestRoomOwner(roomName);
-            setAccessLevel(requestslides);
+            requestRoomResources(requestslides);
             return true;
         } catch (XMPPException ex) {
             XMPPError errorCode = ex.getXMPPError();
@@ -376,7 +381,7 @@ public class ChatRoomManager {
         return false;
     }
 
-    private void setAccessLevel(boolean requestslides) {
+    private void requestRoomResources(boolean requestslides) {
 
         RealtimePacket p = new RealtimePacket();
         //get room specific resources
@@ -413,7 +418,7 @@ public class ChatRoomManager {
 
         }
 
-        doGUIAccessLevel();
+
     }
 
     public void requestNewSlides(String ext) {
@@ -432,65 +437,37 @@ public class ChatRoomManager {
         return chatPopup;
     }
 
-    public void doGUIAccessLevel() {
-        GUIAccessManager.mf.resetGUIccess();
-        try {
-            // GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
-        } catch (Exception ex) {
-            // ex.printStackTrace();
-        }
-        SwingUtilities.invokeLater(new Runnable() {
+    /*  public void doGUIAccessLevel() {
 
-            public void run() {
-                Thread t = new Thread() {
+    SwingUtilities.invokeLater(new Runnable() {
 
-                    public void run() {
-                        if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
-                            GUIAccessManager.mf.showInstructorToolbar();
-                            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
-                            GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
-                            GUIAccessManager.mf.setWebBrowserEnabled(true);
-                            enableMenus(true);
-                        } else {
-                            enableMenus(false);
-                            GUIAccessManager.mf.showParticipantToolbar();
-                            GUIAccessManager.setMenuEnabled(true, "screenviewer");
-                            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
-                            GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, currentRoomName);
-                            GUIAccessManager.mf.setWebBrowserEnabled(false);
-                        }
+    public void run() {
+    Thread t = new Thread() {
 
-                        sendMessage(ConnectionManager.fullnames + " joined", 10, Color.LIGHT_GRAY, "sys-text");
-                    }
-                };
-                t.start();
-            }
-        });
-
+    public void run() {
+    if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
+    //  GUIAccessManager.mf.showInstructorToolbar();
+    GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
+    // GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
+    GUIAccessManager.mf.setWebBrowserEnabled(true);
+    enableMenus(true);
+    } else {
+    enableMenus(false);
+    // GUIAccessManager.mf.showParticipantToolbar();
+    GUIAccessManager.setMenuEnabled(true, "screenviewer");
+    GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
+    GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, currentRoomName);
+    GUIAccessManager.mf.setWebBrowserEnabled(false);
     }
 
-    public static void enableMenus(boolean enable) {
-        GUIAccessManager.setMenuEnabled(enable, "screenShot");
-        GUIAccessManager.setMenuEnabled(enable, "screenshare");
-        GUIAccessManager.setMenuEnabled(enable, "screenviewer");
-        GUIAccessManager.setMenuEnabled(enable, "schedule");
-        GUIAccessManager.setMenuEnabled(/*!enable*/false, "privatechat");
-        GUIAccessManager.setMenuEnabled(enable, "createRoom");
-        GUIAccessManager.setMenuEnabled(true, "roomList");
-        GUIAccessManager.setMenuEnabled(enable, "actions");
-        GUIAccessManager.setMenuEnabled(true, "joinRoom"); ///for every one
-        GUIAccessManager.setMenuEnabled(enable, "invitationLink");
-        GUIAccessManager.setMenuEnabled(enable, "insertGraphic");
-        GUIAccessManager.setMenuEnabled(enable, "insertPresentation");
-        GUIAccessManager.setMenuEnabled(false, "roomResources");
-        GUIAccessManager.setMenuEnabled(true, "requestMIC");
-        GUIAccessManager.setMenuEnabled(enable, "addroommembers");
-        GUIAccessManager.setMenuEnabled(enable, "cleanParticipantsList");
-
-
-
+    sendMessage(ConnectionManager.fullnames + " joined", 10, Color.LIGHT_GRAY, "sys-text");
     }
+    };
+    t.start();
+    }
+    });
 
+    }*/
     public boolean sendMessage(String str, int size, Color color) {
         try {
             Message msg = muc.createMessage();
