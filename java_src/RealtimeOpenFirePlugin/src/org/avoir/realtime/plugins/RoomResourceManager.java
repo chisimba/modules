@@ -68,7 +68,7 @@ public class RoomResourceManager {
                     "select * from  ofAvoirRealtime_OnlineUsers where " +
                     " room ='" + room.trim() + "'";
             ps = con.prepareStatement(sql);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String jidStr = rs.getString("jid");
@@ -356,26 +356,26 @@ public class RoomResourceManager {
             }
         }
     }
-    
-    public void setAccess(String jid, int accessLevel) {
-      try {
-        con = DbConnectionManager.getConnection();
-        String sql1 =
-                "Update ofAvoirRealtime_OnlineUsers set (access_level =" + accessLevel +
-                ") where jid = '" + jid + "'";
 
-        Statement st = con.createStatement();
-        st.addBatch(sql1);
-        st.executeBatch();
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    } finally {
+    public void setAccess(String jid, int accessLevel) {
         try {
-            con.close();
-        } catch (Exception ex) {
+            con = DbConnectionManager.getConnection();
+            String sql1 =
+                    "Update ofAvoirRealtime_OnlineUsers set (access_level =" + accessLevel +
+                    ") where jid = '" + jid + "'";
+
+            Statement st = con.createStatement();
+            st.addBatch(sql1);
+            st.executeBatch();
+        } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
-    }
     }
 
     public void updateOnlineUser(String jid, int hasmic) {
@@ -471,7 +471,7 @@ public class RoomResourceManager {
             String sql =
                     "update ofAvoirRealtime_Classroom_LastWB set " +
                     "content ='" + content + "' where item_id ='" + itemId + "' and owner = '" + roomName + "'";
-            
+
             Statement st = con.createStatement();
             st.addBatch(sql);
             st.executeBatch();
@@ -860,30 +860,31 @@ public class RoomResourceManager {
      * @param roomName Room to filter the mic holders
      */
     private void sendMICandAdmin(IQ packet, String roomName) {
-        String username = packet.getFrom().toBareJID().split("@")[0];
-        Map user = this.getUserInfo(username);
-        String room = (String) user.get("room_name");
-        int accessLevel = (Integer)user.get("has_mic");
-        pl.getDefaultPacketProcessor().broadcastAccessChange(packet, username, room, accessLevel, (Integer)user.get("has_mic"));
+       // String username = packet.getFrom().toBareJID().split("@")[0];
+       // Map user = this.getUserInfo(username);
+        //String room = (String) user.get("room_name");
+        //int accessLevel = (Integer) user.get("has_mic");
+        //pl.getDefaultPacketProcessor().broadcastAccessChange(packet, username, room, accessLevel, (Integer) user.get("has_mic"));
         //this will broadcast the current user's permissions to everyone including himself
         try {
             con = DbConnectionManager.getConnection();
 
-            String sql1 = "select ofUser.name as name,ofAvoirRealtime_OnlineUsers.has_mic as has_mic,ofAvoirRealtime_OnlineUsers.access_level as access_level" +
-                    " from ofUser,ofAvoirRealtime_OnlineUsers " +
-                    " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
-                    " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
-                    " (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3);";
-
+            /*            String sql1 = "select ofUser.username as username,ofAvoirRealtime_OnlineUsers.has_mic as has_mic,ofAvoirRealtime_OnlineUsers.access_level as access_level" +
+            " from ofUser,ofAvoirRealtime_OnlineUsers " +
+            " where ofAvoirRealtime_OnlineUsers.room = '" + roomName + "' and " +
+            " ofAvoirRealtime_OnlineUsers.jid =ofUser.username and " +
+            " (ofAvoirRealtime_OnlineUsers.has_mic = 1 or ofAvoirRealtime_OnlineUsers.access_level < 3);";
+             */
+            String sql = "select * from ofAvoirRealtime_OnlineUsers where room ='" + roomName + "'";
             Statement st = con.createStatement();
-            ResultSet rs2 = st.executeQuery(sql1);
+            ResultSet rs2 = st.executeQuery(sql);
 
             while (rs2.next()) {
-              //this will send everyone else's permissions to the user
+                //this will send everyone else's permissions to the user
                 IQ replyPacket = IQ.createResultIQ(packet);
                 Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
                 queryResult.addElement("mode").addText(Mode.MIC_ADMIN_HOLDER);
-                String jid = rs2.getString("username");
+                String jid = rs2.getString("jid");
                 int hasMic = rs2.getInt("has_mic");
                 int access_level = rs2.getInt("access_level");
                 RealtimePacketContent content = new RealtimePacketContent();
@@ -893,7 +894,9 @@ public class RoomResourceManager {
                 queryResult.addElement("content").addText(content.toString());
                 replyPacket.setChildElement(queryResult);
                 replyPacket.setTo(packet.getFrom());
+
                 packetRouter.route(replyPacket);
+
             }
 
         } catch (SQLException ex) {

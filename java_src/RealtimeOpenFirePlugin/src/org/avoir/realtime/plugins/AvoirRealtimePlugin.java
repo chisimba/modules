@@ -274,7 +274,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     int index = XmlUtils.readInt(doc, "index");
                     defaultPacketProcessor.broadcastChangeTab(packet, index, roomName);
                 } else if (mode.equals(Mode.MIC_ADMIN_HOLDER)) {
-                    return packet;
+                  //  return packet;
                 } else if (mode.equals(Mode.UPDATE_URL)) {
                     String url = XmlUtils.readString(doc, "url");
                     defaultPacketProcessor.broadcastChangeURL(packet, url, roomName);
@@ -283,7 +283,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     String recipientNames = XmlUtils.readString(doc, "recipient-names");
                     Map user = roomResourceManager.getUserInfo(recipientUsername);
                     roomResourceManager.updateOnlineUser(recipientUsername, 0);
-                    defaultPacketProcessor.broadcastTakeMicPacket(packet, recipientNames, (String) (user.get("room_name")));
+                    defaultPacketProcessor.broadcastTakeMicPacket(packet, recipientUsername, (String) (user.get("room_name")));
 
                 } else if (mode.equals(Mode.BROADCAST_IMAGE_DATA)) {
                     String imageData = XmlUtils.readString(doc, "image-data");
@@ -293,7 +293,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     String recipientName = XmlUtils.readString(doc, "recipient-names");
                     Map user = roomResourceManager.getUserInfo(recipientUsername);
                     roomResourceManager.updateOnlineUser(recipientUsername, 1);
-                    defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientName, (String) (user.get("room_name")));
+                    defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientUsername, (String) (user.get("room_name")));
 
                 } else if (mode.equals(Mode.REQUEST_MIC_REPLY)) {
                     //user asks for mic, which gets forwarded to the channel owner
