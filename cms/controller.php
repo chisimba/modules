@@ -18,7 +18,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @license GNU GPL
 * @author Wesley  Nitsckie
 * @author Warren Windvogel
-* @author Derek Keats
 *
 */
 
