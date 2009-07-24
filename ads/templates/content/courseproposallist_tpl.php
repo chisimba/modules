@@ -167,7 +167,7 @@
                     var grid = new xg.GridPanel({
                         store: new Ext.data.GroupingStore({
                             reader: reader,
-                            data: xg.dummyData,
+                            data: xg.Data,
                             sortInfo:{field: 'title', direction: \"ASC\"},
                             groupField:'faculty'
                         }),
@@ -201,7 +201,7 @@
 
 
                 // Array data for the grids
-                Ext.grid.dummyData = [".$data."];";
+                Ext.grid.Data = [".$data."];";
 
     echo "<script type=\"text/javascript\">".$mainjs."</script>";
 ?>
