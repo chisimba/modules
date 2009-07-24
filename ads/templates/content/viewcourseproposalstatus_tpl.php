@@ -25,7 +25,21 @@
     $this->appendArrayVar('headerParams', $styleSheet);
     
     // display the extj radio form
-    echo '<div id="myForm">';
-    echo '<div id="form-ct"></div></div>';
-    echo '<input type="hidden" name="id" id="id" value="'.$this->getParam("id").'">';
+    $content = '<div id="myForm">';
+    $content .= '<div id="form-ct"></div></div>';
+    $content .= '<input type="hidden" name="id" id="id" value="'.$this->getParam("id").'">';
+
+    // Create an instance of the css layout class
+    $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+    $cssLayout->setNumColumns(2);
+
+    $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
+    $cssLayout->setLeftColumnContent($postLoginMenu->show());
+    //Add the table to the centered layer
+    $rightSideColumn = $content;
+    // Add Right Column
+    $cssLayout->setMiddleColumnContent($rightSideColumn);
+
+    //Output the content to the page
+    echo $cssLayout->show();
 ?>

@@ -11,6 +11,10 @@ $fields = array(
     'type' => 'text',
     'length' => 32
     ),
+    'faculty'  => array(
+     'type'  =>  'text',
+     'length'=>  50
+    ),
     'title'  => array(
      'type'  =>  'text',
      'length'=>  255

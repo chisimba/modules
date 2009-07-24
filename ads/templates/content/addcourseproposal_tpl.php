@@ -1,56 +1,81 @@
 <?php
-$this->loadClass('htmltable','htmlelements');
-$this->loadClass('form','htmlelements');
-$this->loadClass('button','htmlelements');
-$this->loadClass('textinput','htmlelements');
+    //language stuff
+    $faculty = $objLanguage->languageText('mod_ads_faculty','ads');
+    $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
+
+    // scripts for extjs
+    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-base.js').'" type="text/javascript"></script>';
+    $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-all.js').'" type="text/javascript"></script>';
+    $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/ext-all.css').'"/>';
+    $extalldebug = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-all-debug.js').'" type="text/javascript"></script>';
+    
+    $this->appendArrayVar('headerParams', $extbase);
+    $this->appendArrayVar('headerParams', $extalljs);
+    $this->appendArrayVar('headerParams', $extallcss);
+    $this->appendArrayVar('headerParams', $extalldebug);
+    
+    // Create an instance of the css layout class
+    $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+    $cssLayout->setNumColumns(2);
+
+    $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
+    $cssLayout->setLeftColumnContent($postLoginMenu->show());
+    $rightSideColumn =  '<div id="courseProposal"></div>';
+    $cssLayout->setMiddleColumnContent($rightSideColumn);
+
+    echo $cssLayout->show();
 
 
 
-//constructs the table
-$objTable = new htmltable();
+    $submitUrl = $this->uri(array('action'=>'savecourseproposal'));
+    $cancelUrl = $this->uri(array('action'=>'NULL'));
+    
+    $script = "
+    Ext.onReady(function(){
+        Ext.QuickTips.init();
 
-$objTable->startRow();
+        var simple = new Ext.FormPanel({
+            standardSubmit: true,
+            labelWidth: 125, // label settings here cascade unless overridden
+            url:'".str_replace("amp;", "", $submitUrl)."',
+            frame:true,
+            title: 'Add  New Course Proposal',
+            bodyStyle:'padding:5px 5px 0',
+            width: 350,
+            defaults: {width: 230},
+            defaultType: 'textfield',
 
-$objTable->addCell($objLanguage->languageText('mod_ads_unitname','ads'), 150, NULL, 'left');
-$objTable->endRow();
-$objTable->startRow();
-$coursenamefield =  new textinput('title', '');
-$objTable->addCell($coursenamefield->show(),400,NULL,'left');
+            items: [{
+                    fieldLabel: '".$faculty."',
+                    name: 'faculty',
+                    allowBlank: false
+                },{
+                    fieldLabel: '".$unitName."',
+                    name: 'title',
+                    id: 'input_title',
+                    allowBlank: false
+                }
+            ],
 
-$objTable->endRow();
+            buttons: [{
+                text: 'Save',
+                handler: function(){
+                    if (simple.getForm().isValid()) {
+                        if (simple.url)
+                            simple.getForm().getEl().dom.action = simple.url;
+                        
+                        simple.getForm().submit();
+                    }
+                }
+            },{
+                text: 'Reset',
+                handler: function(){
+                    simple.getForm().reset();
+                }
+            }]
+        });
 
-
-
-$objTable->row_attributes=' height="10"';
-$buttons='';
-/************** Build form **********************/
-$saveButton = new button('save',$objLanguage->languageText('mod_ads_save','ads'));
-$saveButton->setToSubmit();
-
-
-$buttons.=$saveButton->show();
-$cancelButton = new button('cancel','Cancel');
-$actionUrl = $this->uri(array('action' => NULL));
-$cancelButton->setOnClick("window.location='$actionUrl'");
-$buttons.='&nbsp'.$cancelButton->show();
-//$objForm = new form('FormName',$this->uri(array('action'=>'savestudent')));
-$objForm = new form('FormName',$this->uri(array('action'=>'savecourseproposal')));
-$objForm->addToForm($objTable->show());
-$objForm->addToForm($buttons);
-
-
-// Create an instance of the css layout class
-$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout->setNumColumns(2);
-
-$postLoginMenu  = $this->newObject('postloginmenu','toolbar');
-$cssLayout->setLeftColumnContent($postLoginMenu->show());
-$rightSideColumn='<h1>'. $objLanguage->languageText('mod_ads_addcourseproposal','ads').'</h1>';
-//Add the table to the centered layer
-$rightSideColumn .= $objForm->show();
-// Add Right Column
-$cssLayout->setMiddleColumnContent($rightSideColumn);
-
-//Output the content to the page
-echo $cssLayout->show();
+        simple.render('courseProposal');
+    });";
+    echo '<script type="text/javascript">'.$script.'</script>';
 ?>

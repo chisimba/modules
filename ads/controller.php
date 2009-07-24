@@ -89,7 +89,8 @@ class ads extends controller {
       //$this->objDocumentStore->updateComment($this->objUser->userId(),$_POST['comment']);
       $this->objDocumentStore->updateComment($this->getParam('id'),$_POST['admComment']);
       $this->addCommentMessage = true;
-      return "courseproposallist_tpl.php";
+      
+      return $this->__home();
   }
   
   function __reviewcourseproposal(){
@@ -102,8 +103,10 @@ class ads extends controller {
   }
 
   function __savecourseproposal(){
+    $faculty = $this->getParam('faculty');
     $courseTitle= $this->getParam('title');
-    $courseProposalId=$this->objCourseProposals->addCourseProposal($courseTitle);
+
+    $courseProposalId=$this->objCourseProposals->addCourseProposal($faculty, $courseTitle);
     $this->objDocumentStore->addRecord($courseProposalId, "Comment", "", "", "", "0", "");
     return $this->nextAction('overview', array('id'=>$courseProposalId));
   }
@@ -194,7 +197,7 @@ class ads extends controller {
     }
   }
   function __home() {
-    return "courseproposallist_tpl.php";
+    return "courseproposallist_tpl.php"; //"courseproposallist_tpl.php";
   }
   
   function __submitproposal() {

@@ -16,9 +16,10 @@ class dbcourseproposals extends dbTable{
 
     }
 
-    public function addCourseProposal($title){
+    public function addCourseProposal($faculty, $title){
 
         $data = array(
+            'faculty' => $faculty,
             'title' => $title,
             'userid' => $this->objUser->userId(),
             'creation_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
@@ -66,6 +67,11 @@ class dbcourseproposals extends dbTable{
         $courseProposalStatus = $this->update('id', $id, $data, $this->table);
 
         return $courseProposalStatus;
+    }
+
+    public function getNumberOfCourses() {
+
+        return $this->getRecordCount();
     }
 }
 ?>
