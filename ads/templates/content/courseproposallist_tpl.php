@@ -173,8 +173,8 @@
                         }),
 
                         columns: [
-                            {id:'".$title."',header: \"".$title."\", width: 80, dataIndex: 'title'},
-                            {header: \"".$dateCreated."\", width: 45},
+                            {id:'".$title."',header: \"".$title."\", width: 60, dataIndex: 'title'},
+                            {header: \"".$dateCreated."\", width: 35},
                             {header: \"".$owner."\", width: 40},
                             {header: \"".$status."\", width: 25, dataIndex: 'status'},
                             {header: \"".$currVersion."\", width: 20, dataIndex: 'currVersion'},
@@ -189,7 +189,7 @@
                         }),
 
                         frame:true,
-                        width: 900,
+                        width: 750,
                         height: 450,
                         collapsible: true,
                         animCollapse: false,
