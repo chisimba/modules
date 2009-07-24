@@ -341,7 +341,7 @@ class realtime extends controller
                             $replacewith="";
                             $docRoot=$_SERVER['DOCUMENT_ROOT'];
                             $appletPath=str_replace($docRoot,$replacewith,$modPath);
-                            $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+                            $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources';
 
                             $presenterimage=$this->newObject('image','htmlelements');
                             $presenterimage->src='skins/_common/icons/webpresent/btn_START.jpg';
