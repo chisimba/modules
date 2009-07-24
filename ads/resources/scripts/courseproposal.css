@@ -1,0 +1,21 @@
+/* 
+    Document   : courseproposal
+    Created on : Jul 23, 2009, 4:06:41 PM
+    Author     : nguni
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+div#proposal-note {
+    width: 800px;
+    padding-bottom: 10px;
+}
+
+span#commentSuccess {
+    color: #FF0000;
+}
