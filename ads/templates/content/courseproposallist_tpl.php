@@ -7,11 +7,11 @@
     $courseProposals = $this->objCourseProposals->getCourseProposals($this->objUser->userId());
 
     // scripts
-    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-base.js').'" type="text/javascript"></script>';
+    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-base.js','ads').'" type="text/javascript"></script>';
     $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-all.js').'" type="text/javascript"></script>';
     $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/ext-all.css').'"/>';
     $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/courseproposal.css').'"/>';
-    
+
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);
     $this->appendArrayVar('headerParams', $extallcss);
@@ -139,6 +139,7 @@
         }
 
     }
+   
 
     $mainjs = "/*!
                  * Ext JS Library 3.0.0
