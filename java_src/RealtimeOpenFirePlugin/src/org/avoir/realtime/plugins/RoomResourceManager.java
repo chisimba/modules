@@ -337,11 +337,14 @@ public class RoomResourceManager {
                     "delete from  ofAvoirRealtime_OnlineUsers where " +
                     "jid = '" + jid + "'";
 
-            String sql2 =
+             String sql2 =
+            "insert into  ofAvoirRealtime_OnlineUsers values " +
+            "('" + jid + "','" + room + "',0, " +
+            "if ((Select room_owner from ofAvoirRealtime_Rooms where" +
+            " room_name = '" + room + "' and room_owner = '"+jid+"')='" + jid + "',0 , 3))";
+            /*String sql2 =
                     "insert into  ofAvoirRealtime_OnlineUsers values " +
-                    "('" + jid + "','" + room + "',0, " +
-                    "if ((Select room_owner from ofAvoirRealtime_Rooms where" +
-                    " room_name = '" + room + "')='" + jid + "',0 , 3))";
+                    "('" + jid + "','" + room + "',0, " + getAccessStatus(jid, room) + ")";*/
             Statement st = con.createStatement();
             st.addBatch(sql1);
             st.addBatch(sql2);
@@ -357,12 +360,13 @@ public class RoomResourceManager {
         }
     }
 
+
     public void setAccess(String jid, int accessLevel) {
         try {
             con = DbConnectionManager.getConnection();
             String sql1 =
-                    "Update ofAvoirRealtime_OnlineUsers set (access_level =" + accessLevel +
-                    ") where jid = '" + jid + "'";
+                    "Update ofAvoirRealtime_OnlineUsers set access_level =" + accessLevel +
+                    " where jid = '" + jid + "'";
 
             Statement st = con.createStatement();
             st.addBatch(sql1);
@@ -860,8 +864,8 @@ public class RoomResourceManager {
      * @param roomName Room to filter the mic holders
      */
     private void sendMICandAdmin(IQ packet, String roomName) {
-       // String username = packet.getFrom().toBareJID().split("@")[0];
-       // Map user = this.getUserInfo(username);
+        // String username = packet.getFrom().toBareJID().split("@")[0];
+        // Map user = this.getUserInfo(username);
         //String room = (String) user.get("room_name");
         //int accessLevel = (Integer) user.get("has_mic");
         //pl.getDefaultPacketProcessor().broadcastAccessChange(packet, username, room, accessLevel, (Integer) user.get("has_mic"));

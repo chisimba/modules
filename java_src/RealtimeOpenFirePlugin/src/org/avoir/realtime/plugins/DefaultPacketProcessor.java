@@ -647,6 +647,7 @@ public class DefaultPacketProcessor {
     }
 
     public void broadcastTakeMicPacket(IQ packet, String rec, String roomName) {
+        try{
         IQ replyPacket = IQ.createResultIQ(packet);
         Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
         queryResult.addElement("mode").addText(Mode.TAKEN_MIC);
@@ -655,6 +656,8 @@ public class DefaultPacketProcessor {
         sb.append("<speaker>").append(rec).append("</speaker>");
         queryResult.addElement("content").addText(sb.toString());
         replyPacket.setChildElement(queryResult);
+
+       //this is a test
         ArrayList<JID> jids = RUserManager.users.get(roomName.toLowerCase());
         if (jids == null) {
             jids = RUserManager.users.get(roomName.toUpperCase());
@@ -664,6 +667,9 @@ public class DefaultPacketProcessor {
             replyPacket.setTo(jid);
             replyPacket.setFrom(packet.getFrom());
             packetRouter.route(replyPacket);
+        }
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
     }
 
