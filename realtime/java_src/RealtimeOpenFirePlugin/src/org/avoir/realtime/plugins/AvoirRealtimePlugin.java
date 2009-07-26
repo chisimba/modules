@@ -278,14 +278,7 @@ public class AvoirRealtimePlugin implements Plugin {
                 } else if (mode.equals(Mode.UPDATE_URL)) {
                     String url = XmlUtils.readString(doc, "url");
                     defaultPacketProcessor.broadcastChangeURL(packet, url, roomName);
-                } else if (mode.equals(Mode.TAKE_MIC)) {
-                    String recipientUsername = XmlUtils.readString(doc, "recipient-username");
-                    String recipientNames = XmlUtils.readString(doc, "recipient-names");
-                    Map user = roomResourceManager.getUserInfo(recipientUsername);
-                    roomResourceManager.updateOnlineUser(recipientUsername, 0);
-                    defaultPacketProcessor.broadcastTakeMicPacket(packet, recipientUsername, (String) (user.get("room_name")));
-
-                } else if (mode.equals(Mode.BROADCAST_IMAGE_DATA)) {
+                }  else if (mode.equals(Mode.BROADCAST_IMAGE_DATA)) {
                     String imageData = XmlUtils.readString(doc, "image-data");
                     defaultPacketProcessor.broadcastImageData(packet, imageData, roomName);
                 } else if (mode.equals(Mode.GIVE_MIC)) {
