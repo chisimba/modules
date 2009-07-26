@@ -31,6 +31,7 @@ import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.packets.RealtimePacket;
 import org.avoir.realtime.common.Constants.*;
 import org.avoir.realtime.gui.main.GUIAccessManager;
+import org.avoir.realtime.net.providers.RealtimePacketProcessor;
 
 /**
  *
@@ -343,15 +344,43 @@ public class ParticipantListTable extends JTable implements ActionListener {
         decorateTable();
     }
 
+    private void giveMeAppropriateAccessLevel(int accessLevel) {
+        if (accessLevel == AdminLevels.ADMIN_LEVEL ||
+                accessLevel == AdminLevels.OWNER_LEVEL) {
 
+            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
+            GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
+            GUIAccessManager.mf.setWebBrowserEnabled(true);
+            GUIAccessManager.enableMenus(true);
+            GUIAccessManager.enableToolbarButtons(true);
+            GUIAccessManager.enableWhiteboardButtons(true);
+            GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+
+        } else {
+            GUIAccessManager.enableMenus(false);
+            GUIAccessManager.enableToolbarButtons(false);
+            GUIAccessManager.enableWhiteboardButtons(false);
+            GUIAccessManager.setMenuEnabled(true, "screenviewer");
+            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
+            GUIAccessManager.mf.setWebBrowserEnabled(false);
+            GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+        }
+    }
     //when the userlist is broadcast, this method gets invoked
-    public void setUserAccessAndMIC(String targetUsername, boolean hasMIC, int accessLevel) {
+
+    public void setUserAccessAndMIC(String targetUsername, int hasMIC, int accessLevel) {
         int index = 0;
+        if (users.size() == 0) {
+            giveMeAppropriateAccessLevel(accessLevel);
+        }
+        if (hasMIC == MIC.MIC_ON) {
+            RealtimePacketProcessor.showExistingSpeakerOnJoinSession(targetUsername);
+        }
         for (Map user : users) {
             String currentUsername = (String) user.get("username");
 
-            if (currentUsername.equals(targetUsername)) {
-                user.put("has_mic", hasMIC ? 1 : 0);
+            if (currentUsername.equalsIgnoreCase(targetUsername)) {
+                user.put("has_mic", hasMIC);
                 user.put("access_level", accessLevel);
                 users.set(index, user);
 
@@ -380,6 +409,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
                         GUIAccessManager.enableToolbarButtons(true);
                         GUIAccessManager.enableWhiteboardButtons(true);
                         GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+                    //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
 
                     } else {
                         GUIAccessManager.enableMenus(false);
@@ -389,6 +419,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
                         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
                         GUIAccessManager.mf.setWebBrowserEnabled(false);
                         GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+                        GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, ConnectionManager.getRoomName());
                     }
 
                 }
@@ -548,9 +579,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            if (columnIndex == 2) {
-                return true;
-            }
+
             return false;
         }
 

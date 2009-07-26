@@ -14,6 +14,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 import org.avoir.realtime.chat.ChatRoomManager;
+import org.avoir.realtime.common.Constants;
+import org.avoir.realtime.net.ConnectionManager;
 
 /**
  *
@@ -67,6 +69,16 @@ public class GUIAccessManager {
                 }
             }
         }
+    }
+    public static boolean amIHoldingMic(){
+        ArrayList<Map> users=mf.getUserListPanel().getParticipantListTable().getUsers();
+        for(Map user:users){
+            String username=(String)user.get("username");
+            if(username.equals(ConnectionManager.getUsername())){
+                return ((Integer)user.get("has_mic") == Constants.MIC.MIC_ON);
+            }
+        }
+        return false;
     }
 
     public static void setButtonEnabled(boolean enabled, String name) {

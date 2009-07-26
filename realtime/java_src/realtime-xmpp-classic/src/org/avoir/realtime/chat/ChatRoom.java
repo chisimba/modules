@@ -29,6 +29,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -161,6 +162,10 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         iconsSurface = new IconsSurface(emots, chatInputField, emotPopup);
         emotPopup.add(iconsSurface);
 
+    }
+
+    public JTextPane getChatTranscriptField() {
+        return chatTranscriptField;
     }
 
     public void actionPerformed(ActionEvent e) {
