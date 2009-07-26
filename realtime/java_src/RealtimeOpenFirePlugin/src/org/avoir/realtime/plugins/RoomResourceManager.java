@@ -20,17 +20,22 @@
 package org.avoir.realtime.plugins;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -337,17 +342,29 @@ public class RoomResourceManager {
                     "delete from  ofAvoirRealtime_OnlineUsers where " +
                     "jid = '" + jid + "'";
 
-             String sql2 =
+            /*String sql2 =
             "insert into  ofAvoirRealtime_OnlineUsers values " +
             "('" + jid + "','" + room + "',0, " +
             "if ((Select room_owner from ofAvoirRealtime_Rooms where" +
-            " room_name = '" + room + "' and room_owner = '"+jid+"')='" + jid + "',0 , 3))";
+            " room_name = '" + room + "' and room_owner = '"+jid+"')='" + jid + "',0 , 3))"; */
             /*String sql2 =
                     "insert into  ofAvoirRealtime_OnlineUsers values " +
                     "('" + jid + "','" + room + "',0, " + getAccessStatus(jid, room) + ")";*/
+             
+            String sql3 =
+               "insert into  ofAvoirRealtime_OnlineUsers values " +
+               "('" + jid + "','" + room + "',0, 3, '');";
+            String sql4 =
+              "update ofAvoirRealtime_OnlineUsers set" +
+              " access_level = 0, permissions='o' where" +
+              " ofAvoirRealtime_OnlineUsers.jid = '" + jid + "'" +
+              " and EXISTS (SELECT * FROM ofAvoirRealtime_Rooms" +
+              " where ofAvoirRealtime_Rooms.room_owner = '" + jid + "'" +
+              " and ofAvoirRealtime_Rooms.room_name = ofAvoirRealtime_OnlineUsers.room);";
             Statement st = con.createStatement();
             st.addBatch(sql1);
-            st.addBatch(sql2);
+            st.addBatch(sql3);
+            st.addBatch(sql4);
             st.executeBatch();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -400,6 +417,75 @@ public class RoomResourceManager {
                 ex.printStackTrace();
             }
         }
+    }
+    
+    public void updateUserPermissions(String jid, String permissions) {
+      if (permissions == null) {
+        permissions = "";
+      }
+      try {
+        con = DbConnectionManager.getConnection();
+        String sql = 
+          "update ofAvoirRealtime_OnlineUsers set permissions ='" + permissions + "'" +
+          " where jid = '" + jid + "';";
+        Statement st = con.createStatement();
+        st.addBatch(sql);
+        st.executeBatch();
+      } catch (SQLException ex) {
+        ex.printStackTrace();
+      } finally {
+        try {
+          con.close();
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      }
+    }
+    
+    public void addUserPermissions(String jid, String permissions) {
+      if (permissions == null) {
+        permissions = "";
+      }
+      Map<Character, Boolean> combinedPermissions = getPermissions(jid);
+      char permissionArray[] = permissions.toCharArray();
+      for (char perm:permissionArray) {
+        combinedPermissions.put(perm, true);
+      }
+      Set<Character> newPermissionArray = combinedPermissions.keySet();
+      String newPermissions = "";
+      for (char perm:newPermissionArray) {
+        newPermissions += perm;
+      }
+      
+      
+      try {
+        con = DbConnectionManager.getConnection();
+        String sql = 
+          "update ofAvoirRealtime_OnlineUsers set permissions ='" + newPermissions + "'" +
+          " where jid = '" + jid + "';";
+        Statement st = con.createStatement();
+        st.addBatch(sql);
+        st.executeBatch();
+      } catch (SQLException ex) {
+        ex.printStackTrace();
+      } finally {
+        try {
+          con.close();
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      }
+    }
+    
+    public Map<Character, Boolean> getPermissions(String jid) {
+      Map user = getUserInfo(jid);
+      String currentPermissions = (String) user.get("permissions");
+      char permissionArray[] = currentPermissions.toCharArray();
+      Map permissions = new HashMap();
+      for (char perm:permissionArray) {
+        permissions.put(perm, true);
+      }
+      return permissions;
     }
 
     public void addSchedule(String owner, String room, String startDate, String endDate, String roomUrl) {
@@ -891,10 +977,12 @@ public class RoomResourceManager {
                 String jid = rs2.getString("jid");
                 int hasMic = rs2.getInt("has_mic");
                 int access_level = rs2.getInt("access_level");
+                String permissions = rs2.getString("permissions");
                 RealtimePacketContent content = new RealtimePacketContent();
                 content.addTag("username", jid);
                 content.addTag("has_mic", hasMic);
                 content.addTag("access_level", access_level);
+                content.addTag("permissions", permissions);
                 queryResult.addElement("content").addText(content.toString());
                 replyPacket.setChildElement(queryResult);
                 replyPacket.setTo(packet.getFrom());
@@ -935,6 +1023,7 @@ public class RoomResourceManager {
                 user.put("room_owner", rs2.getString("room_owner"));
                 user.put("has_mic", rs2.getInt("has_mic"));
                 user.put("username", username);
+                user.put("permissions", rs2.getString("permissions"));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

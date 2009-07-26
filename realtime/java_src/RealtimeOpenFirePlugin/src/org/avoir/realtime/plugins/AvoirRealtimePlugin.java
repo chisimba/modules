@@ -260,7 +260,9 @@ public class AvoirRealtimePlugin implements Plugin {
                     //currently. Need to check if sender is the owner.
                     String username = XmlUtils.readString(doc, "username");
                     int accessLevel = XmlUtils.readInt(doc, "access_level");
+                    String newPermissions = XmlUtils.readString(doc, "permissions");
                     roomResourceManager.setAccess(username, accessLevel);
+                    roomResourceManager.updateUserPermissions(username, newPermissions);
                     if (accessLevel == Constants.ADMIN_LEVEL) {
                         defaultPacketProcessor.warnUser(packet, username, "You have been promoted to admin level.");
                     } else {
@@ -268,7 +270,9 @@ public class AvoirRealtimePlugin implements Plugin {
                     }
                     Map user = roomResourceManager.getUserInfo(username);
                     String room = (String) user.get("room_name");
-                    defaultPacketProcessor.broadcastAccessChange(packet, username, room, accessLevel, (Integer)user.get("has_mic"));
+                    int hasMic = (Integer)user.get("has_mic");
+                    String permissions = (String) user.get("permissions");
+                    defaultPacketProcessor.broadcastAccessChange(packet, username, room, accessLevel, hasMic, permissions);
 
                 } else if (mode.equals(Mode.CHANGE_TAB)) {
                     int index = XmlUtils.readInt(doc, "index");
@@ -284,8 +288,10 @@ public class AvoirRealtimePlugin implements Plugin {
                 } else if (mode.equals(Mode.GIVE_MIC)) {
                     String recipientUsername = XmlUtils.readString(doc, "recipient-username");
                     String recipientName = XmlUtils.readString(doc, "recipient-names");
+                    String permissions = XmlUtils.readString(doc, "permissions");
                     Map user = roomResourceManager.getUserInfo(recipientUsername);
                     roomResourceManager.updateOnlineUser(recipientUsername, 1);
+                    roomResourceManager.updateUserPermissions(recipientUsername, permissions);
                     defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientUsername, (String) (user.get("room_name")));
 
                 } else if (mode.equals(Mode.REQUEST_MIC_REPLY)) {
