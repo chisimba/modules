@@ -16,8 +16,6 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -51,7 +49,6 @@ import org.avoir.realtime.gui.whiteboard.WhiteboardPanel;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.gui.PointerListPanel;
 import org.avoir.realtime.gui.PresentationFilter;
-import org.avoir.realtime.gui.QuestionNavigator;
 import org.avoir.realtime.gui.RealtimeFileChooser;
 import org.avoir.realtime.gui.RoomResourceNavigator;
 import org.avoir.realtime.gui.SlidesNavigator;
@@ -218,11 +215,12 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
 
-    public void runMessageAlerter(){
-       messageTimer.cancel();
-       messageTimer=new Timer();
-       messageTimer.scheduleAtFixedRate(new MessageAlerter(), 1000, 1000);
+    public void runMessageAlerter() {
+        messageTimer.cancel();
+        messageTimer = new Timer();
+        messageTimer.scheduleAtFixedRate(new MessageAlerter(), 1000, 1000);
     }
+
     class MessageAlerter extends TimerTask {
 
         boolean blink = false;
@@ -233,8 +231,8 @@ public class MainFrame extends javax.swing.JFrame {
             } else {
                 MainFrame.this.setIconImage(alertIcon.getImage());
             }
-            blink=!blink;
-            System.out.println("blinking : "+blink);
+            blink = !blink;
+            System.out.println("blinking : " + blink);
         }
     }
 
@@ -761,7 +759,7 @@ public class MainFrame extends javax.swing.JFrame {
         roomToolsToolbar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         roomToolsToolbar.setRollover(true);
 
-        roomMembersButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        roomMembersButton.setFont(new java.awt.Font("Dialog", 0, 11));
         roomMembersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/virtualroom.png"))); // NOI18N
         roomMembersButton.setText("Room Members");
         roomMembersButton.setBorderPainted(false);
@@ -933,6 +931,7 @@ public class MainFrame extends javax.swing.JFrame {
         actionsMenu.setName(""); // NOI18N
 
         insertGraphicMenuItem.setText("Insert Graphic");
+        insertGraphicMenuItem.setEnabled(false);
         insertGraphicMenuItem.setName("insertGraphic"); // NOI18N
         insertGraphicMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -942,6 +941,7 @@ public class MainFrame extends javax.swing.JFrame {
         actionsMenu.add(insertGraphicMenuItem);
 
         insertPresentationMenuItem.setText("Insert Presentation");
+        insertPresentationMenuItem.setEnabled(false);
         insertPresentationMenuItem.setName("insertPresentation"); // NOI18N
         insertPresentationMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -951,6 +951,7 @@ public class MainFrame extends javax.swing.JFrame {
         actionsMenu.add(insertPresentationMenuItem);
 
         updateRoomResourcesMenuItem.setText("Room Resources");
+        updateRoomResourcesMenuItem.setEnabled(false);
         updateRoomResourcesMenuItem.setName("roomResources"); // NOI18N
         updateRoomResourcesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -961,6 +962,7 @@ public class MainFrame extends javax.swing.JFrame {
         actionsMenu.add(jSeparator7);
 
         requestMicMenuItem.setText("Request MIC");
+        requestMicMenuItem.setEnabled(false);
         requestMicMenuItem.setName("requestMIC"); // NOI18N
         requestMicMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1159,16 +1161,20 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void releaseMIC() {
-        StringBuilder sb = new StringBuilder();
-        String username = ConnectionManager.getUsername();
-        String names = ConnectionManager.fullnames;
-        sb.append("<recipient-username>").append(username).append("</recipient-username>");
-        sb.append("<recipient-names>").append(names).append("</recipient-names>");
-        sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
-        RealtimePacket p = new RealtimePacket();
-        p.setMode(RealtimePacket.Mode.TAKE_MIC);
-        p.setContent(sb.toString());
-        ConnectionManager.sendPacket(p);
+        if (ConnectionManager.getRoomName() != null &&
+                GUIAccessManager.amIHoldingMic()) {
+
+            StringBuilder sb = new StringBuilder();
+            String username = ConnectionManager.getUsername();
+            String names = ConnectionManager.fullnames;
+            sb.append("<recipient-username>").append(username).append("</recipient-username>");
+            sb.append("<recipient-names>").append(names).append("</recipient-names>");
+            sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
+            RealtimePacket p = new RealtimePacket();
+            p.setMode(RealtimePacket.Mode.TAKE_MIC);
+            p.setContent(sb.toString());
+            ConnectionManager.sendPacket(p);
+        }
     }
 
     private void close() {

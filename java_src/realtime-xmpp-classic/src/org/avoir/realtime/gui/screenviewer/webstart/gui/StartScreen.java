@@ -85,7 +85,7 @@ public class StartScreen {
 
                 public void actionPerformed(ActionEvent arg0) {
                     GUIAccessManager.mf.setSize(ss.width / 4, ss.height);
-                    GUIAccessManager.mf.setAlwaysOnTop(true);
+                    //GUIAccessManager.mf.setAlwaysOnTop(true);
                     captureScreenStart();
                     GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab(t);
                     t.setVisible(false);

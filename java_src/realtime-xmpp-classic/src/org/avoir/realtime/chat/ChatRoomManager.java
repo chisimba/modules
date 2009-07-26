@@ -1,7 +1,6 @@
 package org.avoir.realtime.chat;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,8 +9,6 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import org.avoir.realtime.common.Constants;
 import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
@@ -87,6 +84,10 @@ public class ChatRoomManager {
         public void joined(String jid) {
             String user = jid.substring(jid.lastIndexOf("/") + 1);
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().addUser(user);
+             
+            GUIAccessManager.mf.removeSpeaker(user);
+            String xuser = user.split(":")[1];
+            chatRoom.insertSystemMessage(xuser+" joined.");
         }
 
         public void left(String jid) {
@@ -94,6 +95,8 @@ public class ChatRoomManager {
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(xuser);
             String user = xuser.split(":")[1];
             GUIAccessManager.mf.removeSpeaker(user);
+            chatRoom.insertSystemMessage(user+" left.");
+
         }
 
         public void kicked(String participant, String actor, String reason) {
@@ -323,6 +326,7 @@ public class ChatRoomManager {
         GUIAccessManager.mf.getUserListPanel().getParticipantListTable().clear();
         //release MIC too
         GUIAccessManager.mf.releaseMIC();
+        chatRoom.getChatTranscriptField().setText("");
         //not allawed in more than one room at a time, so must leave old one
         muc.leave();
         muc = new MultiUserChat(ConnectionManager.getConnection(), roomName + "@conference." + ConnectionManager.getConnection().getServiceName());

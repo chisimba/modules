@@ -53,13 +53,13 @@ public class Main {
         int c = 0;
         for (String arg : args) {
             args[c] = args[c].trim();
-            if (c != 11 && c!= 9) {
+            if (c != 11 && c != 9) {
                 args[c] = GeneralUtil.formatStr(args[c], " ");
             }
             System.out.println("arg[" + c + "] = " + arg);
             c++;
         }
-       UIUtils.setPreferredLookAndFeel();
+        UIUtils.setPreferredLookAndFeel();
         NativeInterface.open();
         LoginFrame fr = new LoginFrame();
 
@@ -92,11 +92,14 @@ public class Main {
                 String defaultRoomName = args[3];
                 //chisimba bug..room name could be invalid if user not logged in
                 if (GeneralUtil.isInvalidRoomName(defaultRoomName)) {
-                    System.out.println(defaultRoomName + " is invalid, fixing ...");
+                    /*System.out.println(defaultRoomName + " is invalid, fixing ...");
                     defaultRoomName = GeneralUtil.formatStr(names, " ");
-                    System.out.println("Fixed, new room name: " + defaultRoomName);
+                    System.out.println("Fixed, new room name: " + defaultRoomName);*/
+                    JOptionPane.showMessageDialog(null, "FATAL ERROR: Invalid room name: " + defaultRoomName,
+                            "Invalid Room Name", JOptionPane.ERROR_MESSAGE);
+                    System.exit(0);
                 }
-                String roomName = WebPresentManager.isPresenter ? presenterRoom : defaultRoomName;
+                String roomName = defaultRoomName;//WebPresentManager.isPresenter ? presenterRoom : defaultRoomName;
                 WebPresentManager.presentationId = args[7];
                 WebPresentManager.presentationName = args[8];
                 String email = args[10];
@@ -115,10 +118,10 @@ public class Main {
                 ConnectionManager.myEmail = email;
                 ConnectionManager.fullnames = names;
                 ConnectionManager.setRoomName(roomName);
-              //  Timer connectionTimer = new Timer();
-              //  connectionTimer.schedule(new ConnectionTimer(), 30 * 1000);
+                //  Timer connectionTimer = new Timer();
+                //  connectionTimer.schedule(new ConnectionTimer(), 30 * 1000);
                 if (ConnectionManager.init(host, port, audioVideoUrl)) {
-                   // connectionTimer.cancel();
+                    // connectionTimer.cancel();
                     ConnectionManager.createUser(username, "--LDAP--", props);
                     if (ConnectionManager.login(username, "--LDAP--", roomName)) {
                         if (ConnectionManager.useEC2 && joinMeetingId.equals("none")) {
@@ -143,8 +146,12 @@ public class Main {
                             ConnectionManager.audioVideoUrlReady = true;
                             ConnectionManager.flashUrlReady = true;
                             MainFrame mf = new MainFrame(roomName);
-                         
-                            mf.showTipOfDay();
+                            boolean showTipOfDay = false;
+                            String xs = GeneralUtil.getProperty("showtipofday");
+                            showTipOfDay = new Boolean(xs);
+                            if (showTipOfDay) {
+                                mf.showTipOfDay();
+                            }
                             saveEC2Urls(host, RealtimePacket.Mode.SAVE_MAIN_EC2_URL, roomName);
                             saveEC2Urls(audioVideoUrl, RealtimePacket.Mode.SAVE_AUDIO_VIDEO_EC2_URL, roomName);
                             saveEC2Urls("openfire-httpflash.wits.ac.za", RealtimePacket.Mode.SAVE_FLASH_EC2_URL, roomName);
@@ -170,14 +177,14 @@ public class Main {
             StandAloneManager.isAdmin = true;
             ConnectionManager.audioVideoUrlReady = true;
             ConnectionManager.flashUrlReady = true;
-            String server ="localhost";// args[0];
-            int port =5222;// Integer.parseInt(args[1].trim());
-            String audioVideoUrl ="localhost";// args[2];
+            String server = "localhost";// args[0];
+            int port = 5222;// Integer.parseInt(args[1].trim());
+            String audioVideoUrl = "localhost";// args[2];
             fr = new LoginFrame(server, port, audioVideoUrl);
             fr.setSize(400, 300);
             fr.setLocationRelativeTo(null);
             fr.setVisible(true);
-            
+
         }
 
     }
@@ -213,7 +220,7 @@ public class Main {
         banner.setBackground(Color.WHITE);
         banner.setLayout(new BorderLayout());
         banner.add(label, BorderLayout.NORTH);
-        banner.add(new Surface(),BorderLayout.CENTER);
+        banner.add(new Surface(), BorderLayout.CENTER);
         banner.add(pb, BorderLayout.SOUTH);
         banner.setLocationRelativeTo(null);
         banner.setVisible(true);

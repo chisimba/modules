@@ -236,7 +236,7 @@ public class RPacketListener implements PacketListener {
                 String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
                 int hasMic = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "has_mic"));
                 int accessLevel = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "access_level"));
-                GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserAccessAndMIC(username, hasMic == 1, accessLevel);
+                GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserAccessAndMIC(username, hasMic, accessLevel);
 
             } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
@@ -651,7 +651,7 @@ public class RPacketListener implements PacketListener {
                 GUIAccessManager.mf.getChatRoomManager().getChatPopup().setMessage(user, message);
                 GUIAccessManager.mf.getChatRoomManager().getChatPopup().setLocation(ss.width - 200, ss.height - GUIAccessManager.mf.getChatRoomManager().getChatPopup().getHeight() - 100);
                 GUIAccessManager.mf.getChatRoomManager().getChatPopup().setVisible(true);
-              //  GUIAccessManager.mf.runMessageAlerter();
+            //  GUIAccessManager.mf.runMessageAlerter();
             }
         };
         t.start();
@@ -686,7 +686,7 @@ public class RPacketListener implements PacketListener {
 
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(user);
             GUIAccessManager.mf.removeSpeaker(GeneralUtil.formatStr(user, " "));
-
+            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " left the room\n");
         } else {
             String user = from;
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " joined the room\n");

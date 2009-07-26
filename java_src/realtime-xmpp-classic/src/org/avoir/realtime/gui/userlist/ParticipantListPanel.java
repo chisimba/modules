@@ -81,7 +81,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
 
             public void actionPerformed(ActionEvent arg0) {
                 if (ConnectionManager.audioVideoUrlReady && ConnectionManager.flashUrlReady) {
-                    initAudioVideo(WebPresentManager.isPresenter || StandAloneManager.isAdmin, ConnectionManager.getRoomName());
+                    initAudioVideo(ConnectionManager.isOwner, ConnectionManager.getRoomName());
                     startAudioVideoButton.setText("Refresh");
                 } else {
                     JOptionPane.showMessageDialog(null, "It appears the audio video server is not ready.\n" +

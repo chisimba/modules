@@ -157,6 +157,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="insertGraphicMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Insert Graphic"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="insertGraphic" noResource="true"/>
               </Properties>
               <Events>
@@ -166,6 +167,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="insertPresentationMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Insert Presentation"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="insertPresentation" noResource="true"/>
               </Properties>
               <Events>
@@ -175,6 +177,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="updateRoomResourcesMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Room Resources"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="roomResources" noResource="true"/>
               </Properties>
               <Events>
@@ -186,6 +189,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="requestMicMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Request MIC"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="requestMIC" noResource="true"/>
               </Properties>
               <Events>

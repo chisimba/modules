@@ -337,24 +337,24 @@ public class RealtimePacketProcessor {
             "/video/receiver.html?me=participant&you=" + currentRoomName;
              */
             String url = "";
-            String title = "";
+
             String names = GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(speaker);
             String speaker1 = GeneralUtil.formatStr(names, " ");
             if (me.equalsIgnoreCase(from)) {
                 url =
                         ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker1;
-                title = speaker + " given mic";
-                dispayAudioVideoWindow(url, title, true, speaker);
-            } else if (ConnectionManager.fullnames.equalsIgnoreCase(speaker)) {
+
+                dispayAudioVideoWindow(url, speaker);
+            } else if (ConnectionManager.getUsername().equalsIgnoreCase(speaker)) {
                 url =
                         ConnectionManager.AUDIO_VIDEO_URL + "/video/broadcaster.html?me=" + speaker1 + "&you=" + ConnectionManager.getRoomName();
-                title = ConnectionManager.getUsername() + ": MIC from " + from;
-                dispayAudioVideoWindow(url, title, false, speaker);
+
+                dispayAudioVideoWindow(url, speaker);
             } else {
                 url =
                         ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker1;
-                title = speaker + " given mic";
-                dispayAudioVideoWindow(url, title, false, speaker);
+
+                dispayAudioVideoWindow(url, speaker);
             }
 
         } catch (Exception ex) {
@@ -365,10 +365,17 @@ public class RealtimePacketProcessor {
 
     }
 
+    public static void showExistingSpeakerOnJoinSession(String username) {
+        String names = GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(username);
+        String speaker1 = GeneralUtil.formatStr(names, " ");
+        String url =
+                ConnectionManager.AUDIO_VIDEO_URL + "/video/broadcaster.html?me=" + speaker1 + "&you=" + ConnectionManager.getRoomName();
+
+        dispayAudioVideoWindow(url, username);
+    }
+
     private static void dispayAudioVideoWindow(
             final String url,
-            final String title,
-            final boolean enableClose,
             final String speaker) {
         SwingUtilities.invokeLater(new Runnable() {
 
