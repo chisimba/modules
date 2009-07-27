@@ -178,7 +178,7 @@ $mainjs = " Ext.onReady(function(){
 
                         frame:true,
                         width: 750,
-                        height: 150,
+                        height: 250,
                         collapsible: true,
                         animCollapse: false,
                         title: 'The Schedules',
