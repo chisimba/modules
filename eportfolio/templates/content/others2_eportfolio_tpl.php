@@ -140,10 +140,9 @@ if (!empty($addressList)) {
 	//Check if this item has been checked already            
             
 	if(!empty($isSubGroup)){
-
 	    $addCheck = 0;
 	    foreach($isSubGroup[0] as $subgrp){
-		if($addressItem['id'] == $mysubgrp['group_define_name']){
+		if($addressItem['id'] == $subgrp['group_define_name']){
 		    $addCheck = 1;	            
 		}
 	    }

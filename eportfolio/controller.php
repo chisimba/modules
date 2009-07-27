@@ -393,6 +393,15 @@ class eportfolio extends controller
                 //$userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
                 //$userGroups = $this->objGroupUsers->getUserGroups( $groupId );
 		$userGroups = $this->_objGroupAdmin->getSubgroups($groupId);
+		 if (!empty($userGroups[0])) {
+		    foreach($userGroups[0] as $userGroup){
+			$group_define_name[] = $userGroup['group_define_name'];		
+		    }
+	            foreach($group_define_name as $partPid) {
+	                $grpId = $this->_objGroupAdmin->getId($partPid);
+	                $this->_objGroupAdmin->deleteGroup($grpId);
+	            }
+		 }
 		//Get the group_define_name which is similar from the selectedpartId from the userGroups array
 		$group_define_name = array();
 		
