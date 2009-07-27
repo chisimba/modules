@@ -178,7 +178,7 @@ $mainjs = " Ext.onReady(function(){
 
                         frame:true,
                         width: 750,
-                        height: 450,
+                        height: 150,
                         collapsible: true,
                         animCollapse: false,
                         title: 'The Schedules',
@@ -300,7 +300,7 @@ function showAddSessionWindow(){
                 applyTo:'addsession-win',
                 layout:'fit',
                 width:500,
-                height:150,
+                height:350,
                 x:250,
                 y:150,
                 closeAction:'hide',
@@ -327,17 +327,7 @@ function showAddSessionWindow(){
         win.show(this);
 }
 
-   function confirm(){
-        Ext.MessageBox.confirm('Confirm', 'Are you sure you want to do that?', showResult);
-    }
-
-    function showResult(btn){
-        Ext.example.msg('Button Click', 'You clicked the {0} button', btn);
-    };
-
-    function showResultText(btn, text){
-        Ext.example.msg('Button Click', 'You clicked the {0} button and entered the text \"{1}\".', btn, text);
-    };
+   
 
 ";
 
