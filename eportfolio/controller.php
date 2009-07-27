@@ -43,7 +43,7 @@ class eportfolio extends controller
 	$this->objFolders = $this->getObject('dbfolder','filemanager');
         $this->objCleanUrl = $this->getObject('cleanurl', 'filemanager');
         $this->objDate = &$this->newObject('dateandtime', 'utilities');
-        $this->objUserContext = $this->getObject('utils', 'contextpostlogin');
+        //$this->objUserContext = $this->getObject('utils', 'contextpostlogin');
         $this->objContextUser = $this->getObject('usercontext', 'context');
         $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
         $this->objUrl = $this->getObject('url', 'strings');
@@ -1663,15 +1663,19 @@ class eportfolio extends controller
      * @return array
      * @access public
      */
+
     public function getUserContexts() 
     {
-        $usercontextcodes = $this->objUserContext->getContextList();
-        foreach($usercontextcodes as $code) {
+        //$usercontextcodes = $this->objUserContext->getContextList();
+        $usercontextcodes2 = $this->objContextUser->getUserContext($this->userId);
+        foreach($usercontextcodes2 as $code) {
             $objDbContext = &$this->getObject('dbcontext', 'context');
-            $mycontextRecord[] = $objDbContext->getContextDetails($code['contextcode']);
+            //$mycontextRecord[] = $objDbContext->getContextDetails($code['contextcode']);
+	    $mycontextRecord[] = $objDbContext->getContextDetails($code);
         } //End foreach
         return $mycontextRecord;
     }
+
     private function changePicture() 
     {
         $fileId = $this->getParam('imageselect');
