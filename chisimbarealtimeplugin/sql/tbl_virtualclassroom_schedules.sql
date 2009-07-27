@@ -40,10 +40,19 @@ $fields = array(
       'type'  =>  'timestamp'
     ),
     'start_date' =>  array(
-      'type'  =>  'timestamp'
+      'type'  =>  'date'
     ),
+    'start_time' =>  array(
+      'type'  =>  'text',
+      'length' => '12'
+    ),
+
     'end_date' =>  array(
-      'type'  =>  'timestamp'
+      'type'  =>  'date'
+    ),
+    'end_time' =>  array(
+      'type'  =>  'text',
+      'length' => '12'
     ),
     'status' => array(
         'type' => 'text',

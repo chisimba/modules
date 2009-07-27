@@ -137,19 +137,25 @@ class chisimbarealtimeplugin extends controller {
         $starttime=$this->getParam('starttime');
         $endDate=$this->getParam('enddate');
         $endtime=$this->getParam('endtime');
+
         $about=$this->getParam('about');
-
-        echo $startDate.' to '.$endDate;
-        die();
-
+     
         $this->objDbSchedules->addSchedule(
             $this->contextCode,
             $sessionTitle,
             $category,
             $about,
             $startDate,
-            $endDate
+            $starttime,
+            $endDate,
+            $endtime
         );
         $this->nextAction(NULL);
+    }
+
+    function __deleteschedule(){
+         $id=$this->getParam('id');
+         $this->objDbSchedules->deleteSchedule($id);
+         $this->nextAction(NULL);
     }
 }

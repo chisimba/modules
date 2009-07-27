@@ -65,6 +65,12 @@ $content='<div id="addsession-win" class="x-hidden">
 <div class="x-window-header">Add Session</div>
 </div>';
 
+$chapters="[";
+$xchapters=$this->objDbSchedules->getChapters($this->contextCode);
+foreach($xchapters as $c){
+    $chapters.="['".$c["chapter"]."'],";
+}
+$chapters.="]";
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -111,6 +117,7 @@ foreach($dbdata as $row){
     $deleteLink->link($this->uri(array('action'=>'deleteschedule','id'=>$row['id'])));
     $objIcon->setIcon('delete');
     $deleteLink->link=$objIcon->show();
+    
 
     $editLink->link($this->uri(array('action'=>'editschedule','id'=>$row['id'])));
     $objIcon->setIcon('edit');
@@ -120,8 +127,8 @@ foreach($dbdata as $row){
     $data.="[";
     $data.= "'<a href=\"".$roomUrl."\">".$row['title']."</a>',";
     $data.="'".$this->objUser->fullname($row['owner'])."',";
-    $data.="'".$row['start_date']."',";
-    $data.="'".$row['end_date']."',";
+    $data.="'".$row['start_date']." ".$row['start_time']."',";
+    $data.="'".$row['end_date']." ".$row['end_time']."',";
     $data.="'".$row['participants']."',";
     $data.="'".$row['category']."',";
     $data.="'".$editDeleteLink."',";
@@ -201,7 +208,7 @@ Ext.grid.data = [
         triggerAction: 'all',
         emptyText:'Select time from...',
         selectOnFocus:true,
-        name : 'timefrom'
+        name : 'starttime'
 
     });
     var timetostore = new Ext.data.ArrayStore({
@@ -219,13 +226,32 @@ Ext.grid.data = [
         triggerAction: 'all',
         emptyText:'Select time to...',
         selectOnFocus:true,
-        name: 'timeto'
+        name: 'endtime'
+    });
+
+    var categorystore = new Ext.data.ArrayStore({
+        fields: ['chapter'],
+        data : ".$chapters."
+    });
+    var categoryField = new Ext.form.ComboBox({
+        store: categorystore,
+        displayField:'chapter',
+        fieldLabel:'Category',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        editable:false,
+        triggerAction: 'all',
+        emptyText:'Select category...',
+        selectOnFocus:true,
+        name: 'category'
     });
     var startDateField=new Ext.form.DateField(
     {
         fieldLabel:'Start',
         emptyText:'Select start date ...',
         width: 200,
+        format:'Y-m-d',
         allowBlank:false,
         editable:false,
         name: 'startdate'
@@ -236,6 +262,7 @@ Ext.grid.data = [
         fieldLabel:'End',
         emptyText:'Select end date...',
         width: 200,
+        format:'Y-m-d',
         allowBlank:false,
         editable:false,
         name: 'enddate'
@@ -255,14 +282,8 @@ Ext.grid.data = [
             allowBlank:false,
             anchor:'100%'  // anchor width by percentage
         },
-        {
-            fieldLabel: 'Category',
-            name: 'category',
-            emptyText:'Default',
-            allowBlank:false,
-            anchor:'100%'
-        },
-        startDateField,timeFromField, endDateField,timeToField,
+        
+        categoryField,startDateField,timeFromField, endDateField,timeToField,
         {
             xtype: 'textarea',
             fieldLabel: 'About',
@@ -305,6 +326,18 @@ function showAddSessionWindow(){
         }
         win.show(this);
 }
+
+   function confirm(){
+        Ext.MessageBox.confirm('Confirm', 'Are you sure you want to do that?', showResult);
+    }
+
+    function showResult(btn){
+        Ext.example.msg('Button Click', 'You clicked the {0} button', btn);
+    };
+
+    function showResultText(btn, text){
+        Ext.example.msg('Button Click', 'You clicked the {0} button and entered the text \"{1}\".', btn, text);
+    };
 
 ";
 
