@@ -300,7 +300,7 @@ function showAddSessionWindow(){
                 applyTo:'addsession-win',
                 layout:'fit',
                 width:500,
-                height:350,
+                height:150,
                 x:250,
                 y:150,
                 closeAction:'hide',
