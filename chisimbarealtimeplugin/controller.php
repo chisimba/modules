@@ -8,41 +8,64 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 class chisimbarealtimeplugin extends controller {
 
- /**
-  * @var string $userLevel: The user's access level
-  * @access public
- */
-public $userLevel;
+  /**
+   * holds refrence to this user's information
+   * @var <type>
+   */
+   public $objUser;
 
- /**
-  * @var object $objConfig: The altconfig class in the config module
-  * @access public
-  */
-public $objConfig;
+  /**
+   * @var string $userLevel: The user's access level
+   * @access public
+   */
+
+   public $userLevel;
+
+  /**
+   * @var object $objConfig: The altconfig class in the config module
+   * @access public
+   */
+   public $objConfig;
 
 
+  /**
+   *Holds reference to class dbschedules used to manipulating entries
+   * in tbl_virtualclassroon_schedules table
+   * @var <type>
+   */
+   public $objDbSchedules;
 
-/**
- * @access public
- * @var contexctcode
- */
-public $contextCode;
+  /**
+   * @access public
+   * @var contexctcode
+   */
+    public $contextCode;
+
+
+   /**
+     * config object
+     * @var <type>
+     */
+    public $objAltConfig;
 
     function init() {
         $this->objUser = $this->getObject ( 'user', 'security' );
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLog = $this->getObject('logactivity', 'logger');
         $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objDbSchedules=$this->getObject('dbschedules');
+        $this->objAltConfig = $this->getObject('altconfig','config');
+
         $this->objLog->log();
     }
 
     public function dispatch($action) {
 
-       $this->contextCode = $this->objContext->getContextCode();
-       if($this->contextCode == ''){
-           echo 'You must be in contenxt';
-           die();
-       }
+        $this->contextCode = $this->objContext->getContextCode();
+        if($this->contextCode == ''){
+            return $this->nextAction(NULL,NULL,'postlogin');
+
+        }
     /*
     * Convert the action into a method (alternative to
     * using case selections)
@@ -94,10 +117,39 @@ public $contextCode;
             return FALSE;
         }
     }
+
+    /**
+     *Takes us to default home pages
+     * @return <type>
+     */
     function __home() {
-        return "home_tpl.php"; //"courseproposallist_tpl.php";
+        return "home_tpl.php";
     }
-  function __addsession(){
-    return "addsession_tpl.php";
-  }
+
+
+    /**
+     * Ssave the newly created  session details into the database
+     */
+    function __saveschedule(){
+        $sessionTitle=$this->getParam('title');
+        $category=$this->getParam('category');
+        $startDate=$this->getParam('startdate');
+        $starttime=$this->getParam('starttime');
+        $endDate=$this->getParam('enddate');
+        $endtime=$this->getParam('endtime');
+        $about=$this->getParam('about');
+
+        echo $startDate.' to '.$endDate;
+        die();
+
+        $this->objDbSchedules->addSchedule(
+            $this->contextCode,
+            $sessionTitle,
+            $category,
+            $about,
+            $startDate,
+            $endDate
+        );
+        $this->nextAction(NULL);
+    }
 }

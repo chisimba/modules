@@ -1,183 +1,105 @@
 <?php
-//language stuff
-$session="Session Name";
+$this->loadClass('link', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('form', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+$this->loadClass('hiddeninput', 'htmlelements');
+$this->loadClass('textarea', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('label', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
 
-// scripts
-$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objIcon->setIcon('loader');
 
-    $this->appendArrayVar('headerParams', $extbase);
-    $this->appendArrayVar('headerParams', $extalljs);
-    $this->appendArrayVar('headerParams', $extallcss);
-    $this->appendArrayVar('headerParams', $extalldebug);
+$loadingIcon = $objIcon->show();
 
-    // Create an instance of the css layout class
-    $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-    $cssLayout->setNumColumns(2);
+if ($mode == 'edit') {
+    $formAction = 'updatesession';
+    $title = 'Edit Session';
+    $buttonText = "Update Session";
+} else {
+    $formAction = 'savestory';
+    $title ='New Session';
+    $buttonText = "Save Session";
+}
 
-    $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
-    $cssLayout->setLeftColumnContent($postLoginMenu->show());
-    $rightSideColumn =  '<div id="courseProposal"></div>';
-    $cssLayout->setMiddleColumnContent($rightSideColumn);
-
-    echo $cssLayout->show();
-
+// Header
+$header = new htmlheading();
+$header->type = 1;
+$header->str = $title;
+echo $header->show();
 
 
-    $submitUrl = $this->uri(array('action'=>'savecourseproposal'));
-    $cancelUrl = $this->uri(array('action'=>'NULL'));
 
-    $script = "
+$datePicker = $this->newObject('datepicker', 'htmlelements');
+$datePicker->name = 'startdate';
+// Create Form
+$form = new form ('addedit', $this->uri(array('action'=>$formAction)));
 
-Ext.apply(Ext.form.VTypes, {
-    daterange : function(val, field) {
-        var date = field.parseDate(val);
+$formTable = $this->newObject('htmltable', 'htmlelements');
 
-        if(!date){
-            return;
-        }
-        if (field.startDateField && (!this.dateRangeMax || (date.getTime() != this.dateRangeMax.getTime()))) {
-            var start = Ext.getCmp(field.startDateField);
-            start.setMaxValue(date);
-            start.validate();
-            this.dateRangeMax = date;
-        }
-        else if (field.endDateField && (!this.dateRangeMin || (date.getTime() != this.dateRangeMin.getTime()))) {
-            var end = Ext.getCmp(field.endDateField);
-            end.setMinValue(date);
-            end.validate();
-            this.dateRangeMin = date;
-        }
-        /*
-         * Always return true since we're only using this vtype to set the
-         * min/max allowed values (these are tested for after the vtype test)
-         */
-        return true;
-   } });
+$sessionTitle = new textarea('sessiontitle');
+$sessionTitle->size = 60;
+$formTable->startRow();
+$formTable->addCell('Session Title');
+$formTable->addCell($sessionTitle->show());
+$formTable->endRow();
 
-  var dtTest = new Ext.form.DateField({
-        name: 'brokenDateField',
-        width: 390,
-        allowBlank: false
-    });
+$objTimePicker = $this->newObject('timepicker', 'htmlelements');
 
-    Ext.onReady(function(){
-        Ext.QuickTips.init();
-       var simple = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 125, // label settings here cascade unless overridden
-            url:'".str_replace("amp;", "", $submitUrl)."',
-            frame:true,
-            title: 'Add  New Session',
-            bodyStyle:'padding:5px 5px 0',
-            width: 550,
-            defaults: {width: 230},
-            defaultType: 'textfield',
+if ($mode == 'add') {
+	$radio->setSelected('now');
+	$objTimePicker->setSelectedNow();
+}
 
-            items: [{
-                    fieldLabel: '".$session."',
-                    name: 'faculty',
-                    allowBlank: false
-                },
-                    {
-                    fieldLabel: 'Date',
-                    name: 'ffaculty',
-                    vtype: dtTest,
-                    allowBlank: false
-                }
-            ],
 
-            buttons: [{
-                text: 'Save',
-                handler: function(){
-                    if (simple.getForm().isValid()) {
-                        if (simple.url)
-                            simple.getForm().getEl().dom.action = simple.url;
 
-                        simple.getForm().submit();
-                    }
-                }
-            },{
-                text: 'Reset',
-                handler: function(){
-                    simple.getForm().reset();
-                }
-            }]
-        });
+$startDate = $this->newObject('htmltable', 'htmlelements');
+$startDate->width = NULL;
+$startDate->startRow();
+$startDate->addCell($datePicker->show());
+$startDate->addCell(' at ', 20);
+$startDate->addCell($objTimePicker->show());
+$startDate->endRow();
 
-        simple.render('courseProposal');
-    });";
+$formTable->startRow();
+$formTable->addCell('End Date');
+$formTable->addCell($startDate->show());
+$formTable->endRow();
 
-$dateRangeScript="
-<script language=\"javascript\">
-// Add the additional 'advanced' VTypes -- [Begin]
-Ext.apply(Ext.form.VTypes, {
-	daterange : function(val, field) {
-		var date = field.parseDate(val);
+$objTimePicker = $this->newObject('timepicker', 'htmlelements');
 
-		if(!date){
-			return;
-		}
-		if (field.startDateField && (!this.dateRangeMax || (date.getTime() != this.dateRangeMax.getTime()))) {
-			var start = Ext.getCmp(field.startDateField);
-			start.setMaxValue(date);
-			start.validate();
-			this.dateRangeMax = date;
-		}
-		else if (field.endDateField && (!this.dateRangeMin || (date.getTime() != this.dateRangeMin.getTime()))) {
-			var end = Ext.getCmp(field.endDateField);
-			end.setMinValue(date);
-			end.validate();
-			this.dateRangeMin = date;
-		}
-		/*
-		 * Always return true since we're only using this vtype to set the
-		 * min/max allowed values (these are tested for after the vtype test)
-		 */
-		return true;
-	}
-});
-// Add the additional 'advanced' VTypes -- [End]
+if ($mode == 'add') {
+	$radio->setSelected('now');
+	$objTimePicker->setSelectedNow();
+}
 
-dateRangeFunc();
-function dateRangeFunc()
-	{
-		// Date picker
-		var fromdate = new Ext.form.DateField({
-			format: 'Y-M-d', //YYYY-MMM-DD
-			fieldLabel: '',
-			id: 'startdt',
-			name: 'startdt',
-			width:140,
-			allowBlank:false,
-			vtype: 'daterange',
-            endDateField: 'enddt'// id of the 'To' date field
-		});
+$endDate = $this->newObject('htmltable', 'htmlelements');
+$endDate->width = NULL;
+$endDate->startRow();
+$endDate->addCell($datePicker->show());
+$endDate->addCell(' at ', 20);
+$endDate->addCell($objTimePicker->show());
+$endDate->endRow();
 
-		var todate = new Ext.form.DateField({
-			format: 'Y-M-d', //YYYY-MMM-DD
-			fieldLabel: '',
-			id: 'enddt',
-			name: 'enddt',
-			width:140,
-			allowBlank:false,
-			vtype: 'daterange',
-            startDateField: 'startdt'// id of the 'From' date field
-		});
+$formTable->startRow();
+$formTable->addCell('Start Date');
+$formTable->addCell($startDate->show());
+$formTable->endRow();
 
-		fromdate.render('fromdate');
-		todate.render('todate');
-} //dateRangeFunc() close
-</script>";
-    echo '<script type="text/javascript">'.$script.'</script>';
- echo'   <div>
-  <div style="float:left;"><strong>From: </strong>
-    <div id="fromdate"></div>
-  </div>
-  <div style="float:left; padding-left:20px;"><strong>To: </strong>
-  	<div id="todate"></div>
-  </div>
-  <div style="clear:both"></div>
-</div>';
+// Create an instance of the css layout class
+$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout->setNumColumns(2);
+
+
+$addButton = new button('add-session','Add Schedule');
+$returnUrl = $this->uri(array('action' => 'addsession'));
+$addButton->setOnClick("window.location='$returnUrl'");
+
+$postLoginMenu  = $this->newObject('postloginmenu','toolbar');
+$cssLayout->setLeftColumnContent($postLoginMenu->show());
+$rightSideColumn =  $formTable->show();
+$cssLayout->setMiddleColumnContent($rightSideColumn);
+echo $cssLayout->show();
 ?>

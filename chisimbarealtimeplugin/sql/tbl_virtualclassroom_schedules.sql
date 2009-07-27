@@ -1,6 +1,6 @@
 <?php
 // Table Name
-$tablename = 'tbl_schedules';
+$tablename = 'tbl_virtualclassroom_schedules';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'Table holding course schedules for realtime virtual classroom', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -16,6 +16,10 @@ $fields = array(
      'length'=>  255
     ),
     'title'  => array(
+     'type'  =>  'text',
+     'length'=>  512
+    ),
+    'category'  => array(
      'type'  =>  'text',
      'length'=>  512
     ),
