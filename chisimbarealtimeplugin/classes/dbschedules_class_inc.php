@@ -33,7 +33,6 @@ cx.contextcode='".$contextcode."'";
         $about,
         $startdate,
         $starttime,
-        $enddate,
         $endtime){
 
 
@@ -48,7 +47,7 @@ cx.contextcode='".$contextcode."'";
             'creation_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
             'start_date'=>$startdate,
             'start_time'=>$starttime,
-            'end_date'=>$enddate,
+            'end_date'=>$startdate,
             'end_time'=>$endtime,
         );
 

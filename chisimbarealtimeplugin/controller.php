@@ -135,7 +135,6 @@ class chisimbarealtimeplugin extends controller {
         $category=$this->getParam('category');
         $startDate=$this->getParam('startdate');
         $starttime=$this->getParam('starttime');
-        $endDate=$this->getParam('enddate');
         $endtime=$this->getParam('endtime');
 
         $about=$this->getParam('about');
@@ -147,7 +146,6 @@ class chisimbarealtimeplugin extends controller {
             $about,
             $startDate,
             $starttime,
-            $endDate,
             $endtime
         );
         $this->nextAction(NULL);

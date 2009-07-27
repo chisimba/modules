@@ -55,8 +55,9 @@ $this->appendArrayVar('headerParams', $datedata);
 //initialize language items
 $title= 'Session';
 $owner='Instructor';
-$startDate='Start Date';
-$endDate='End Date';
+$date='Date';
+$startTime='Start';
+$endTime='End';
 $enrolled='Enrolled';
 $session='Session';
 $edit='Edit';
@@ -127,8 +128,9 @@ foreach($dbdata as $row){
     $data.="[";
     $data.= "'<a href=\"".$roomUrl."\">".$row['title']."</a>',";
     $data.="'".$this->objUser->fullname($row['owner'])."',";
-    $data.="'".$row['start_date']." ".$row['start_time']."',";
-    $data.="'".$row['end_date']." ".$row['end_time']."',";
+    $data.="'".$row['start_date']."',";
+    $data.="'".$row['start_time']."',";
+    $data.="'".$row['end_time']."',";
     $data.="'".$row['participants']."',";
     $data.="'".$row['category']."',";
     $data.="'".$editDeleteLink."',";
@@ -146,8 +148,9 @@ $mainjs = " Ext.onReady(function(){
                     var reader = new Ext.data.ArrayReader({}, [
                        {name: 'title'},
                        {name: 'owner'},
-                       {name: 'startDate'},
-                       {name: 'endDate'},
+                       {name: 'date'},
+                       {name: 'starttime'},
+                       {name: 'endtime'},
                        {name: 'enrolled'},
                        {name: 'session'},
                        {name: 'edit'},
@@ -164,8 +167,9 @@ $mainjs = " Ext.onReady(function(){
                         columns: [
                             {id:'".$title."',header: \"".$title."\", width: 60, dataIndex: 'title'},
                             {header: \"".$owner."\", width: 30,dataIndex: 'owner'},
-                            {header: \"".$startDate."\", width: 40, dataIndex: 'startDate'},
-                            {header: \"".$endDate."\", width: 40, dataIndex: 'endDate'},
+                            {header: \"".$date."\", width: 40, dataIndex: 'date'},
+                            {header: \"".$startTime."\", width: 20, dataIndex: 'starttime'},
+                            {header: \"".$endTime."\", width: 20, dataIndex: 'endtime'},
                             {header: \"".$session."\", width: 20, dataIndex: 'session'},
                             {header: \"".$enrolled."\", width: 20, dataIndex: 'enrolled'},
                             {header: \"".$edit."\", width: 20, dataIndex: 'edit'},
@@ -248,8 +252,8 @@ Ext.grid.data = [
     });
     var startDateField=new Ext.form.DateField(
     {
-        fieldLabel:'Start',
-        emptyText:'Select start date ...',
+        fieldLabel:'Date',
+        emptyText:'Select date ...',
         width: 200,
         format:'Y-m-d',
         allowBlank:false,
@@ -257,17 +261,7 @@ Ext.grid.data = [
         name: 'startdate'
     }
     );
-    var endDateField=new Ext.form.DateField(
-    {
-        fieldLabel:'End',
-        emptyText:'Select end date...',
-        width: 200,
-        format:'Y-m-d',
-        allowBlank:false,
-        editable:false,
-        name: 'enddate'
-    }
-    );
+
     var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 55,
@@ -283,7 +277,7 @@ Ext.grid.data = [
             anchor:'100%'  // anchor width by percentage
         },
         
-        categoryField,startDateField,timeFromField, endDateField,timeToField,
+        categoryField,startDateField,timeFromField, timeToField,
         {
             xtype: 'textarea',
             fieldLabel: 'About',
