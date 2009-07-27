@@ -90,7 +90,7 @@ $submitUrl = $this->uri(array('action' => 'saveschedule'));
 $data='';
 
 //data grid from db
-$dbdata=$this->objDbSchedules->getSchedules($this->objUser->userId());
+$dbdata=$this->objDbSchedules->getSchedules($this->contextCode);
 
 foreach($dbdata as $row){
     $deleteLink=new link();

@@ -56,9 +56,9 @@ cx.contextcode='".$contextcode."'";
         return $scheduleId;
     }
 
-    public function getSchedules($userid)
+    public function getSchedules($contextcode)
     {
-        $sql="select * from " .$this->table;//." where owner = '".$userid."'";
+        $sql="select * from " .$this->table." where contextcode = '".$contextcode."'";
         $rows=$this->getArray($sql);
         return $rows;
     }
