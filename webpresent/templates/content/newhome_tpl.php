@@ -1,6 +1,42 @@
 <?php
+// load the ext js and module specific scripts
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+
+
+$this->appendArrayVar('headerParams', $extbase);
+$this->appendArrayVar('headerParams', $extalljs);
+$this->appendArrayVar('headerParams', $extallcss);
 
 $objLatestFiles= $this->getObject('viewerutils','webpresent');
+
+$featured=
+        "Ext.onReady(function(){
+
+       // basic tabs 1, built from existing content
+    var tabs = new Ext.Panel({
+        renderTo: 'sidebar',
+        title: 'Featured',
+        width:320,
+        height:300,
+        activeTab: 0,
+        frame:true,
+        defaults:{autoHeight: true},
+        items:[
+            {
+
+             html: '".$objLatestFiles->getFeatured()."'
+
+            },
+
+        ]
+    });
+
+
+});
+";
+
 $this->loadClass('link', 'htmlelements');
 $content='';
 $content.='<div class="subcolumns" id="latestuploads">';//subcolumns starts
@@ -33,7 +69,8 @@ $content.='            <div class="c59l" id="homepagestats">';
 $content.=$objLatestFiles->getLatestUploads();
 $content.='             </div>';
 $content.=$objLatestFiles->getTagCloudContent($tagCloudContent);
-$content.=$objLatestFiles->getLatestUpload();
+
+$content.="<div id=\"featured\"><script type=\"text/javascript\">".$featured."</script></div>";
 $content.='         </div>';
 $content.='     </div>';
 $content.=$objLatestFiles->getMostViewed();

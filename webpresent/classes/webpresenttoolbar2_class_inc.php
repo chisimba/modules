@@ -13,6 +13,7 @@ class webpresenttoolbar2 extends object
     */
     public function init()
     {
+
         $this->loadClass('link', 'htmlelements');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
     }
@@ -48,15 +49,15 @@ class webpresenttoolbar2 extends object
             if ($option['status'] == 'both') {
                 $okToAdd = TRUE;
 
-            // 2) Check Items to be added only if user is not logged in
+                // 2) Check Items to be added only if user is not logged in
             } else if ($option['status'] == 'login' && !$userIsLoggedIn) {
                 $okToAdd = TRUE;
 
-            // 3) Check Items to be added only if user IS logged in
+                // 3) Check Items to be added only if user IS logged in
             } else if ($option['status'] == 'loggedin' && $userIsLoggedIn) {
                 $okToAdd = TRUE;
 
-            // 4) Check if User is Admin
+                // 4) Check if User is Admin
             } else if ($option['status'] == 'admin' && $objUser->isAdmin() && $userIsLoggedIn) {
                 $okToAdd = TRUE;
             } else {
@@ -107,21 +108,21 @@ class webpresenttoolbar2 extends object
         switch ($module)
         {
             case '_default' : $isRegistered = TRUE; break;
-            default: $isRegistered = $this->objModules->checkIfRegistered($module); break;
+                default: $isRegistered = $this->objModules->checkIfRegistered($module); break;
+            }
+
+            if ($isRegistered) {
+                $link = new link ($this->uri(array('action'=>$action), $module));
+                $link->link = $text;
+
+                $isActive = $isActive ? ' id="current"' : '';
+
+                return '<li'.$isActive.'>'.$link->show().'</li>';
+            } else {
+                return '';
+            }
         }
 
-        if ($isRegistered) {
-            $link = new link ($this->uri(array('action'=>$action), $module));
-            $link->link = $text;
 
-            $isActive = $isActive ? ' id="current"' : '';
-
-            return '<li'.$isActive.'>'.$link->show().'</li>';
-        } else {
-            return '';
-        }
     }
-
-
-}
-?>
+    ?>

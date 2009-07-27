@@ -19,6 +19,7 @@ class viewerutils extends object
     public function getLatestUpload(){
         $objFiles = $this->getObject('dbwebpresentfiles');
         $objView = $this->getObject("viewer", "webpresent");
+
         $filename='';
         $latestFile = $objFiles->getLatestPresentation();
         $preview='';
@@ -82,9 +83,6 @@ $statisticStr=$objLanguage->languageText("mod_webpresent_statistics", "webpresen
 $mostViewedStr=$objLanguage->languageText("mod_webpresent_mostviewed", "webpresent");
     $str='<div class="c15r">
            <div class="subcr">
-           <ul class="paneltabs">
-              <li><a href="#" class="selected">'.$statisticStr.'</a></li>
-              </ul>
            <div class="tower">
            <font style="font-size:13pt;color:#5e6eb5;">
 
@@ -156,7 +154,6 @@ $mostUploadsStr=$objLanguage->languageText("mod_webpresent_mostuploaded", "webpr
 ';
 return $str;
 }
-
 public function getTagCloudContent($tagCloud){
    $objLanguage = $this->getObject('language', 'language');
    $aboutStr=$objLanguage->languageText("mod_webpresent_aboutstr", "webpresent");
@@ -166,14 +163,14 @@ public function getTagCloudContent($tagCloud){
                    <div class="statslistcontainer">
 
                    <ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">'.$aboutWord.'</a></li>
+                  <font style="font-size:13pt;color:#5e6eb5;">'.$aboutWord.'</font>
                    </ul>
                    <br/>
                    <p>
                    '.$aboutStr.'
                    </p>
                    <ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">Tags</a></li>
+                  <font style="font-size:13pt;color:#5e6eb5;">Tags</font>
                    </ul>
                    <ul class="statslist">
                    <li>'.$tagCloud.'</li>
@@ -183,6 +180,45 @@ public function getTagCloudContent($tagCloud){
                    </div>
                    </div>';
     return $cloud;
+}
+public function getFeatured(){
+        $objFiles = $this->getObject('dbwebpresentfiles');
+        $objView = $this->getObject("viewer", "webpresent");
+        $this->loadClass('link', 'htmlelements');
+        $filename='';
+        $latestFile = $objFiles->getLatestPresentation();
+        $preview='';
+        $fileStr='';
+        if (count($latestFile) == 0) {
+            $latestFileContent = '';
+        } else {
+            $latestFileContent = '';
+            $objTrim = $this->getObject('trimstr', 'strings');
+
+            $objTrim = $this->getObject('trimstr', 'strings');
+
+            $counter = 0;
+
+            foreach ($latestFile as $file)
+            {
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+                $link->link = $objView->getPresentationFirstSlide($file['id'],$filename);
+                $preview=$link->show();
+                $linkname = $objTrim->strTrim($filename, 45);
+                $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+                $fileLink->link =$linkname;
+                $fileLink->title = $filename;
+                $fileStr=$fileLink->show();
+            }
+        }
+    return $preview;
 }
 
     private function createCell($colType,$filename,$thumbNail,$desc,$tags,
@@ -245,8 +281,13 @@ public function getTagCloudContent($tagCloud){
            
            <h1>'.$homepagetitle.'</h1>
            
-            <ul class="paneltabs">
-              <li><a href="#" class="selected">'.$latest10Str.'</a></li>
+            <ul class="paneltabs">             
+
+          <font style="font-size:13pt;color:#5e6eb5;">
+
+          '.$latest10Str.'
+
+           </font>
                   </ul>
                    <br/>
                    <p>
