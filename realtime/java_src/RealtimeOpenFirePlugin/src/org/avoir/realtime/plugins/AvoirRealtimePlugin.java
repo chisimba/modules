@@ -183,12 +183,14 @@ public class AvoirRealtimePlugin implements Plugin {
 
                 } else if (mode.equals(Mode.REQUEST_MIC)) {
                     String requester = XmlUtils.readString(doc, "username");
+                    Map<Character, Boolean> userPermissions = roomResourceManager.getPermissions(requester);
                     Map user = roomResourceManager.getUserInfo(requester);
-                    if ((Integer) (user.get("has_mic")) == 1) {
+                    if (userPermissions.get('m')) {
                         //if the user already has the mic, ignore.
                         defaultPacketProcessor.warnUser(packet, requester, "You already have the MIC.");
-                    } else if ((Integer) (user.get("has_mic")) == 0) {
-                        roomResourceManager.updateOnlineUser(requester, -1);
+                    }
+                    else {
+                        roomResourceManager.addUserPermissions(requester, "m");
                         defaultPacketProcessor.forwardMICRequest(packet, (String) (user.get("room_owner")), requester, (String) (user.get("name")));
                     }
                 //case where has_mic = -1 is completely ignored
@@ -259,20 +261,21 @@ public class AvoirRealtimePlugin implements Plugin {
                     //could be security hazard. Anyone can send this command
                     //currently. Need to check if sender is the owner.
                     String username = XmlUtils.readString(doc, "username");
-                    int accessLevel = XmlUtils.readInt(doc, "access_level");
                     String newPermissions = XmlUtils.readString(doc, "permissions");
-                    roomResourceManager.setAccess(username, accessLevel);
+                    //Map<Character,Boolean> userPermissions = roomResourceManager.getPermissions(username);
                     roomResourceManager.updateUserPermissions(username, newPermissions);
-                    if (accessLevel == Constants.ADMIN_LEVEL) {
-                        defaultPacketProcessor.warnUser(packet, username, "You have been promoted to admin level.");
-                    } else {
-                        defaultPacketProcessor.warnUser(packet, username, "Your admin status has been removed.");
+                    String message = XmlUtils.readString(doc, "message");
+                    if (message != null) {
+                      defaultPacketProcessor.warnUser(packet, username, message);
                     }
+                    else {
+                      defaultPacketProcessor.warnUser(packet, username, "Your room permissions have been changed.");
+                    }
+
                     Map user = roomResourceManager.getUserInfo(username);
                     String room = (String) user.get("room_name");
-                    int hasMic = (Integer)user.get("has_mic");
                     String permissions = (String) user.get("permissions");
-                    defaultPacketProcessor.broadcastAccessChange(packet, username, room, accessLevel, hasMic, permissions);
+                    defaultPacketProcessor.broadcastAccessChange(packet, username, room, permissions);
 
                 } else if (mode.equals(Mode.CHANGE_TAB)) {
                     int index = XmlUtils.readInt(doc, "index");
@@ -285,7 +288,9 @@ public class AvoirRealtimePlugin implements Plugin {
                 }  else if (mode.equals(Mode.BROADCAST_IMAGE_DATA)) {
                     String imageData = XmlUtils.readString(doc, "image-data");
                     defaultPacketProcessor.broadcastImageData(packet, imageData, roomName);
-                } else if (mode.equals(Mode.GIVE_MIC)) {
+                } 
+                //this should all be covered by SET_ACCESS
+                /* else if (mode.equals(Mode.GIVE_MIC)) {
                     String recipientUsername = XmlUtils.readString(doc, "recipient-username");
                     String recipientName = XmlUtils.readString(doc, "recipient-names");
                     String permissions = XmlUtils.readString(doc, "permissions");
@@ -294,7 +299,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     roomResourceManager.updateUserPermissions(recipientUsername, permissions);
                     defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientUsername, (String) (user.get("room_name")));
 
-                } else if (mode.equals(Mode.REQUEST_MIC_REPLY)) {
+                }else if (mode.equals(Mode.REQUEST_MIC_REPLY)) {
                     //user asks for mic, which gets forwarded to the channel owner
                     //this is the reply, but GIVE_MIC is sent if the request is granted
                     //so this code only really gets run when the request is denied.
@@ -307,7 +312,7 @@ public class AvoirRealtimePlugin implements Plugin {
                         defaultPacketProcessor.warnUser(packet, username, "Your request for the MIC has been denied by the room owner, try again in a few minutes.");
                     }
 
-                } else if (mode.equals(Mode.SCREEN_SHARE_INVITE)) {
+                }*/ else if (mode.equals(Mode.SCREEN_SHARE_INVITE)) {
                     String instructor = XmlUtils.readString(doc, "instructor");
                     defaultPacketProcessor.broadScreenInvite(packet, instructor, roomName);
                 } else if (mode.equals(Mode.MODIFIED_TEXT_BROADCAST)) {

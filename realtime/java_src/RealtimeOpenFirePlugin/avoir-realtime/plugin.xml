@@ -15,7 +15,7 @@
     <licenseType>gpl</licenseType>
 	
     <databaseKey>avoirrealtime</databaseKey>
-	<databaseVersion>20</databaseVersion>
+	<databaseVersion>21</databaseVersion>
 	<!-- Admin console entries -->
     <adminconsole>		
 	<tab id="tab-server">
