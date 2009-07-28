@@ -39,314 +39,515 @@ import org.avoir.realtime.net.providers.RealtimePacketProcessor;
  */
 public class ParticipantListTable extends JTable implements ActionListener {
 
-    private ImageIcon micIcon = ImageUtil.createImageIcon(this, "/images/mic_on.png");
-    private ArrayList<Map> users = new ArrayList<Map>();
-    private ParticipantListTableModel model;
-    private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
-    private JPopupMenu popup = new JPopupMenu();
-    private JMenuItem acceptMenuItem = new JMenuItem("Accept");
-    private JMenuItem profileMenuItem = new JMenuItem("Profile");
-    private JMenuItem denyMenuItem = new JMenuItem("Deny");
-    private JMenuItem removeMenuItem = new JMenuItem("Remove");
-    private JMenuItem giveMICMenuItem = new JMenuItem("Give MIC");
-    private JMenuItem takeMICMenuItem = new JMenuItem("Take MIC");
-    private JMenuItem kickoutMenuItem = new JMenuItem("Kick Out");
-    private JMenuItem banMenuItem = new JMenuItem("Ban");
-    private JMenuItem privateChatMenuItem = new JMenuItem("Private Chat");
-    private JMenuItem makeAdminMenuItem = new JMenuItem("Make Admin");
-    private JMenuItem removeAdminMenuItem = new JMenuItem("Remove Admin Status");
-    private int selectedRow = -1;
+  private ImageIcon micIcon = ImageUtil.createImageIcon(this, "/images/mic_on.png");
+  private ArrayList<Map> users = new ArrayList<Map>();
+  private ParticipantListTableModel model;
+  private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+  private JPopupMenu popup = new JPopupMenu();
+  private JMenuItem acceptMenuItem = new JMenuItem("Accept");
+  private JMenuItem profileMenuItem = new JMenuItem("Profile");
+  private JMenuItem denyMenuItem = new JMenuItem("Deny");
+  private JMenuItem removeMenuItem = new JMenuItem("Remove");
+  private JMenuItem giveMICMenuItem = new JMenuItem("Give MIC");
+  private JMenuItem takeMICMenuItem = new JMenuItem("Take MIC");
+  private JMenuItem kickoutMenuItem = new JMenuItem("Kick Out");
+  private JMenuItem banMenuItem = new JMenuItem("Ban");
+  private JMenuItem giveVoice = new JMenuItem("Give Voice");
+  private JMenuItem removeVoice = new JMenuItem("Mute");
+  private JMenuItem allowWhiteboard = new JMenuItem("Allow Whiteboard");
+  private JMenuItem removeWhiteboard = new JMenuItem("Remove Whiteboard");
+  private JMenuItem privateChatMenuItem = new JMenuItem("Private Chat");
+  private JMenuItem makeAdminMenuItem = new JMenuItem("Make Admin");
+  private JMenuItem removeAdminMenuItem = new JMenuItem("Remove Admin Status");
+  private int selectedRow = -1;
+  private Map thisUser = null;
 
-    public ParticipantListTable() {
-        model = new ParticipantListTableModel();
-        setModel(model);
-        setTableHeader(null);
-        setShowVerticalLines(false);
-        setGridColor(Color.LIGHT_GRAY);
+  public ParticipantListTable() {
+    model = new ParticipantListTableModel();
+    setModel(model);
+    setTableHeader(null);
+    setShowVerticalLines(false);
+    setGridColor(Color.LIGHT_GRAY);
 
 
-        ListSelectionModel listSelectionModel = getSelectionModel();
-        listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+    ListSelectionModel listSelectionModel = getSelectionModel();
+    listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    listSelectionModel.addListSelectionListener(new ListSelectionListener() {
 
-            public void valueChanged(ListSelectionEvent e) {
-                ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+      public void valueChanged(ListSelectionEvent e) {
+        ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
-                if (lsm.isSelectionEmpty()) {
-                } else {
-                    selectedRow = lsm.getMinSelectionIndex();
+        if (lsm.isSelectionEmpty()) {
+        } else {
+          selectedRow = lsm.getMinSelectionIndex();
 
-                }
+        }
+      }
+    });
+    addMouseListener(new MouseAdapter() {
+
+      public void mousePressed(MouseEvent evt) {
+        if (evt.getButton() == MouseEvent.BUTTON3) {
+          removeAdminMenuItem.setEnabled(false);
+          makeAdminMenuItem.setEnabled(false);
+          giveMICMenuItem.setEnabled(false);
+          takeMICMenuItem.setEnabled(false);
+          kickoutMenuItem.setEnabled(false);
+          banMenuItem.setEnabled(false);
+          giveVoice.setEnabled(false);
+          removeVoice.setEnabled(false);
+          allowWhiteboard.setEnabled(false);
+          removeWhiteboard.setEnabled(false);
+
+          Map user = users.get(selectedRow);
+          String name = (String) model.getValueAt(selectedRow, 2);
+          PermissionList selectedUsersPermissions = (PermissionList)(user.get("permissions"));
+          PermissionList currentUsersPermissions = (PermissionList)(thisUser.get("permissions"));
+
+            if (currentUsersPermissions.canKick && !selectedUsersPermissions.isOwner) {
+              kickoutMenuItem.setEnabled(!isMe((String) user.get("username")));
             }
-        });
-        addMouseListener(new MouseAdapter() {
-
-            public void mousePressed(MouseEvent evt) {
-                if (evt.getButton() == MouseEvent.BUTTON3) {
-                    Map user = users.get(selectedRow);
-                    System.out.println(ConnectionManager.isOwner + ", " + ConnectionManager.isAdmin);
-                    if (ConnectionManager.isOwner) {// || ConnectionManager.isAdmin) {
-                        //if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
-                        String name = (String) model.getValueAt(selectedRow, 2);
-                        takeMICMenuItem.setEnabled(enableTakeMic(name));
-                        giveMICMenuItem.setEnabled(enableGiveMic(name));
-                        kickoutMenuItem.setEnabled(!isMe((String) user.get("username")));
-                        banMenuItem.setEnabled(!isMe((String) user.get("username")));
-                        privateChatMenuItem.setEnabled(false);//!isMe(label.getText()));
-                        makeAdminMenuItem.setEnabled(false);
-                        removeAdminMenuItem.setEnabled(false);
-                        if (ConnectionManager.isOwner) {
-                            int access = (Integer) user.get("access_level");
-                            makeAdminMenuItem.setEnabled(access != 1);
-                            removeAdminMenuItem.setEnabled(!makeAdminMenuItem.isEnabled());
-                        }
-
-                        popup.show(ParticipantListTable.this, evt.getX(), evt.getY());
-                    }
-
-
-                }
-                if (evt.getClickCount() == 2 && selectedRow > 0) {
-                }
+            if (currentUsersPermissions.canBan && !selectedUsersPermissions.isOwner) {
+              banMenuItem.setEnabled(!isMe((String) user.get("username")));
             }
-        });
-
-        removeAdminMenuItem.setEnabled(false);
-        makeAdminMenuItem.setEnabled(false);
-        acceptMenuItem.setEnabled(false);
-        denyMenuItem.setEnabled(false);
-        removeMenuItem.setEnabled(false);
-        profileMenuItem.setEnabled(false);
-
-        removeAdminMenuItem.addActionListener(this);
-        removeAdminMenuItem.setActionCommand("remove-admin");
-
-        makeAdminMenuItem.addActionListener(this);
-        makeAdminMenuItem.setActionCommand("add-admin");
-
-        acceptMenuItem.addActionListener(this);
-        acceptMenuItem.setActionCommand("accept");
-
-        denyMenuItem.addActionListener(this);
-        denyMenuItem.setActionCommand("deny");
-
-        removeMenuItem.addActionListener(this);
-        removeMenuItem.setActionCommand("remove");
-
-        profileMenuItem.addActionListener(this);
-        profileMenuItem.setActionCommand("profile");
-
-        privateChatMenuItem.addActionListener(this);
-        privateChatMenuItem.setActionCommand("privatechat");
-
-        giveMICMenuItem.addActionListener(this);
-        giveMICMenuItem.setActionCommand("give-mic");
-        takeMICMenuItem.addActionListener(this);
-        takeMICMenuItem.setActionCommand("take-mic");
-        kickoutMenuItem.addActionListener(this);
-        kickoutMenuItem.setActionCommand("kick-out");
-        banMenuItem.addActionListener(this);
-        banMenuItem.setActionCommand("ban");
-
-        popup.add(giveMICMenuItem);
-        popup.add(takeMICMenuItem);
-        popup.addSeparator();
-        popup.add(kickoutMenuItem);
-        popup.add(banMenuItem);
-        popup.addSeparator();
-        popup.add(privateChatMenuItem);
-        popup.addSeparator();
-        popup.add(makeAdminMenuItem);
-        popup.add(removeAdminMenuItem);
-
-        decorateTable();
-    }
-
-    private void kickOut(boolean permanently) {
-
-        Map user = users.get(selectedRow);
-        String username = (String) user.get("username");
-        String names = (String) user.get("names");
-        String jid = username + ":" + names;
-        if (username.trim().equalsIgnoreCase(ConnectionManager.getUsername().trim())) {
-            JOptionPane.showMessageDialog(null, "You cannot kick out yourself!!! :)");
-            return;
-        }
-        String kikMessage = "Do you want to kick  " + names + " out ?";
-        String banMessage = "Do you want to ban  " + names + "?";
-        int n = JOptionPane.showConfirmDialog(null, permanently ? banMessage : kikMessage, "Confirm", JOptionPane.YES_NO_OPTION);
-        if (n == JOptionPane.YES_OPTION) {
-            if (permanently) {
-                if (!GUIAccessManager.mf.getChatRoomManager().ban(jid)) {
-                    JOptionPane.showMessageDialog(null, "Unable to ban " + names + ".");
-                }
-            } else {
-
-                if (!GUIAccessManager.mf.getChatRoomManager().kick(jid)) {
-                    JOptionPane.showMessageDialog(null, "Unable to kick " + names + " out");
-                }
+            if (currentUsersPermissions.grantMic) {
+              if (!selectedUsersPermissions.isOwner && selectedUsersPermissions.hasMic) {
+                takeMICMenuItem.setEnabled(enableTakeMic(name));
+              }
+              else if (!selectedUsersPermissions.hasMic) {
+                giveMICMenuItem.setEnabled(enableGiveMic(name));
+              }
             }
-        }
-
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("privatechat")) {
-        }
-        if (e.getActionCommand().equals("ban")) {
-            kickOut(true);
-        }
-        if (e.getActionCommand().equals("kick-out")) {
-            kickOut(false);
-        }
-        if (e.getActionCommand().equals("take-mic")) {
-            Map user = users.get(selectedRow);
-            String username = (String) user.get("username");
-            String names = (String) user.get("names");
-            takeMic(username, names);
-        }
-        if (e.getActionCommand().equals("give-mic")) {
-
-            Map user = users.get(selectedRow);
-            String username = (String) user.get("username");
-            if (username.equals(ConnectionManager.getUsername())) {
-                JOptionPane.showMessageDialog(null, "You cannot assign a MIC to yourself");
-                return;
+            if ((currentUsersPermissions.isOwner || currentUsersPermissions.grantAdmin)) {
+              makeAdminMenuItem.setEnabled(true);
+              if (!selectedUsersPermissions.isOwner) {
+                removeAdminMenuItem.setEnabled(true);
+              }
             }
-            String names = (String) user.get("names");
-            giveMic(username, names);
-        }
-        if (e.getActionCommand().equals("add-admin")) {
-
-            Map user = users.get(selectedRow);
-            String username = (String) user.get("username");
-            if (isMe(username)) {
-                JOptionPane.showMessageDialog(null, "You are already admin");
-                return;
+            if (currentUsersPermissions.grantVoice) {
+              if (!selectedUsersPermissions.hasVoice) {
+                giveVoice.setEnabled(true);
+              }
+              else {
+                removeVoice.setEnabled(true);
+              }
             }
-            int accessLevel = AdminLevels.ADMIN_LEVEL;
-            sendAccessLevelPacket(username, accessLevel);
-
-        }
-
-        if (e.getActionCommand().equals("remove-admin")) {
-            Map user = users.get(selectedRow);
-            String username = (String) user.get("username");
-            int accessLevel = AdminLevels.PARTICIPANT_LEVEL;
-            sendAccessLevelPacket(username, accessLevel);
-        }
-
-
-    }
-
-    private String getCurrentMicHolder() {
-        for (Map user : users) {
-            int hasMic = (Integer) user.get("has_mic");
-            if (hasMic == MIC.MIC_ON) {
-                return (String) user.get("username");
+            popup.show(ParticipantListTable.this, evt.getX(), evt.getY());    
+            if (evt.getClickCount() == 2 && selectedRow > 0) {
             }
-        }
-        return null;
-    }
+          }
 
-    private void takeMic(String username, String names) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<recipient-username>").append(username).append("</recipient-username>");
-        sb.append("<recipient-names>").append(names).append("</recipient-names>");
-        sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
-        RealtimePacket p = new RealtimePacket();
-        p.setMode(RealtimePacket.Mode.TAKE_MIC);
-        p.setContent(sb.toString());
-        ConnectionManager.sendPacket(p);
+          /*
+            if (ConnectionManager.isOwner) {// || ConnectionManager.isAdmin) {
+              //if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
 
-    }
+              takeMICMenuItem.setEnabled(enableTakeMic(name));
+              giveMICMenuItem.setEnabled(enableGiveMic(name));
+              kickoutMenuItem.setEnabled(!isMe((String) user.get("username")));
+              banMenuItem.setEnabled(!isMe((String) user.get("username")));
+              privateChatMenuItem.setEnabled(false);//!isMe(label.getText()));
+              makeAdminMenuItem.setEnabled(false);
+              removeAdminMenuItem.setEnabled(false);
+              if (ConnectionManager.isOwner) {
+                int access = (Integer) user.get("access_level");
+                makeAdminMenuItem.setEnabled(access != 1);
+                removeAdminMenuItem.setEnabled(!makeAdminMenuItem.isEnabled());
+              }
 
-    public void giveMic(String username, String name) {
-        String currentMicHolderUsername = getCurrentMicHolder();
-        String currentMicHolderNames = getNames(currentMicHolderUsername);
-        if (currentMicHolderUsername != null) {
-            int n = JOptionPane.showConfirmDialog(null, "'" + currentMicHolderNames + "' is in possession of the MIC. Take it away?",
-                    "MIC in use", JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.NO_OPTION) {
-                return;
-            } else {
-                takeMic(currentMicHolderUsername, currentMicHolderNames);
+              popup.show(ParticipantListTable.this, evt.getX(), evt.getY());
             }
+
+
+          }
+
+          }
         }
+           */
+        }});
 
-        RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
-        realtimePacketContent.addTag("recipient-username", username);
-        realtimePacketContent.addTag("recipient-names", name);
-        realtimePacketContent.addTag("room-name", ConnectionManager.getUsername());
-        RealtimePacket p = new RealtimePacket();
-        p.setMode(RealtimePacket.Mode.GIVE_MIC);
-        p.setContent(realtimePacketContent.toString());
-        ConnectionManager.sendPacket(p);
+
+    acceptMenuItem.setEnabled(false);
+    denyMenuItem.setEnabled(false);
+    removeMenuItem.setEnabled(false);
+    profileMenuItem.setEnabled(false);
+    
+    removeAdminMenuItem.addActionListener(this);
+    removeAdminMenuItem.setActionCommand("remove-admin");
+
+    makeAdminMenuItem.addActionListener(this);
+    makeAdminMenuItem.setActionCommand("add-admin");
+
+    acceptMenuItem.addActionListener(this);
+    acceptMenuItem.setActionCommand("accept");
+
+    denyMenuItem.addActionListener(this);
+    denyMenuItem.setActionCommand("deny");
+
+    removeMenuItem.addActionListener(this);
+    removeMenuItem.setActionCommand("remove");
+
+    profileMenuItem.addActionListener(this);
+    profileMenuItem.setActionCommand("profile");
+
+    privateChatMenuItem.addActionListener(this);
+    privateChatMenuItem.setActionCommand("privatechat");
+
+    giveMICMenuItem.addActionListener(this);
+    giveMICMenuItem.setActionCommand("give-mic");
+    takeMICMenuItem.addActionListener(this);
+    takeMICMenuItem.setActionCommand("take-mic");
+    kickoutMenuItem.addActionListener(this);
+    kickoutMenuItem.setActionCommand("kick-out");
+    banMenuItem.addActionListener(this);
+    banMenuItem.setActionCommand("ban");
+    giveVoice.addActionListener(this);
+    giveVoice.setActionCommand("add-voice");
+    removeVoice.addActionListener(this);
+    removeVoice.setActionCommand("remove-voice");
+    allowWhiteboard.addActionListener(this);
+    allowWhiteboard.setActionCommand("allow-whiteboard");
+    removeWhiteboard.addActionListener(this);
+    removeWhiteboard.setActionCommand("remove-whiteboard");
+    
+
+    popup.add(giveMICMenuItem);
+    popup.add(takeMICMenuItem);
+    popup.addSeparator();
+    popup.add(kickoutMenuItem);
+    popup.add(banMenuItem);
+    popup.addSeparator();
+    popup.add(privateChatMenuItem);
+    popup.addSeparator();
+    popup.add(makeAdminMenuItem);
+    popup.add(removeAdminMenuItem);
+
+    decorateTable();
+  }
+
+  private void kickOut(boolean permanently) {
+
+    Map user = users.get(selectedRow);
+    String username = (String) user.get("username");
+    String names = (String) user.get("names");
+    String jid = username + ":" + names;
+    if (username.trim().equalsIgnoreCase(ConnectionManager.getUsername().trim())) {
+      JOptionPane.showMessageDialog(null, "You cannot kick out yourself!!! :)");
+      return;
     }
-
-    public void sendAccessLevelPacket(String username, int accessLevel) {
-        RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
-        realtimePacketContent.addTag("username", username);
-        realtimePacketContent.addTag("access_level", accessLevel);
-        RealtimePacket p = new RealtimePacket();
-        p.setMode(RealtimePacket.Mode.SET_ACCESS);
-        p.setContent(realtimePacketContent.toString());
-        ConnectionManager.sendPacket(p);
-    }
-
-    public boolean isAdmin(String xfrom) {
-        int at = xfrom.indexOf("@");
-        String from = xfrom.substring(0, at);
-        for (Map user : users) {
-            String username = (String) user.get("username");
-            if (username.equals(from)) {
-                return ((Integer) user.get("access_level")) == AdminLevels.ADMIN_LEVEL;
-            }
+    String kikMessage = "Do you want to kick  " + names + " out ?";
+    String banMessage = "Do you want to ban  " + names + "?";
+    int n = JOptionPane.showConfirmDialog(null, permanently ? banMessage : kikMessage, "Confirm", JOptionPane.YES_NO_OPTION);
+    if (n == JOptionPane.YES_OPTION) {
+      if (permanently) {
+        if (!GUIAccessManager.mf.getChatRoomManager().ban(jid)) {
+          JOptionPane.showMessageDialog(null, "Unable to ban " + names + ".");
         }
-        return false;
+      } else {
+
+        if (!GUIAccessManager.mf.getChatRoomManager().kick(jid)) {
+          JOptionPane.showMessageDialog(null, "Unable to kick " + names + " out");
+        }
+      }
     }
 
-    private boolean enableTakeMic(String username) {
-        //ImageIcon icon = (ImageIcon) model.getValueAt(selectedRow, 1);
-        // return icon == micIcon;
-        return ((String) model.getValueAt(selectedRow, 1)).equals("Mic");
+  }
+
+  public void actionPerformed(ActionEvent e) {
+    if (e.getActionCommand().equals("privatechat")) {
+    }
+    if (e.getActionCommand().equals("ban")) {
+      kickOut(true);
+    }
+    if (e.getActionCommand().equals("kick-out")) {
+      kickOut(false);
+    }
+    if (e.getActionCommand().equals("take-mic")) {
+      Map user = users.get(selectedRow);
+      String username = (String) user.get("username");
+      String names = (String) user.get("names");
+      takeMic(username, names);
+    }
+    if (e.getActionCommand().equals("give-mic")) {
+
+      Map user = users.get(selectedRow);
+      String username = (String) user.get("username");
+      if (username.equals(ConnectionManager.getUsername())) {
+        JOptionPane.showMessageDialog(null, "You cannot assign a MIC to yourself");
+        return;
+      }
+      String names = (String) user.get("names");
+      giveMic(username, names);
+    }
+    if (e.getActionCommand().equals("add-admin")) {
+
+      Map user = users.get(selectedRow);
+      String username = (String) user.get("username");
+      if (isMe(username)) {
+        JOptionPane.showMessageDialog(null, "You are already admin");
+        return;
+      }
+      makeAdmin(username);
+
     }
 
-    private boolean enableGiveMic(String username) {
+    if (e.getActionCommand().equals("remove-admin")) {
+      Map user = users.get(selectedRow);
+      String username = (String) user.get("username");
+      removeAdmin(username);
+    }
 
-        /*ImageIcon icon = (ImageIcon) model.getValueAt(selectedRow, 1);
+
+  }
+
+  private String getCurrentMicHolder() {
+    for (Map user : users) {
+      PermissionList permission = (PermissionList)user.get("permissions");
+      if (permission.hasMic) {
+        return (String) user.get("username");
+      }
+    }
+    return null;
+  }
+  
+  private void makeAdmin(String username) {
+    StringBuilder sb = new StringBuilder();
+    PermissionList permissions = getUserPermissions(username);
+    permissions.grantAdmin = true;
+    permissions.grantMic = true;
+    permissions.canKick = true;
+    permissions.grantVoice = true;
+    permissions.grantWhiteboard = true;
+    String permissionString = permissions.getPermissionString();
+    RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+    realtimePacketContent.addTag("username", username);
+    realtimePacketContent.addTag("permissions", permissionString);
+    realtimePacketContent.addTag("message", "You are now an admin.");
+    RealtimePacket p = new RealtimePacket();
+    p.setMode(RealtimePacket.Mode.SET_ACCESS);
+    p.setContent(realtimePacketContent.toString());
+    ConnectionManager.sendPacket(p);
+  }
+  
+  private void removeAdmin(String username) {
+    StringBuilder sb = new StringBuilder();
+    PermissionList permissions = getUserPermissions(username);
+    permissions.grantAdmin = false;
+    permissions.grantMic = false;
+    permissions.canKick = false;
+    permissions.grantVoice = false;
+    permissions.grantWhiteboard = false;
+    String permissionString = permissions.getPermissionString();
+    RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+    realtimePacketContent.addTag("username", username);
+    realtimePacketContent.addTag("permissions", permissionString);
+    realtimePacketContent.addTag("message", "You are no longer an admin.");
+    RealtimePacket p = new RealtimePacket();
+    p.setMode(RealtimePacket.Mode.SET_ACCESS);
+    p.setContent(realtimePacketContent.toString());
+    ConnectionManager.sendPacket(p);
+  }
+
+  private void takeMic(String username, String names) {
+    StringBuilder sb = new StringBuilder();
+    PermissionList permissions = getUserPermissions(username);
+    permissions.hasMic = false;
+    String permissionString = permissions.getPermissionString();
+    RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+    realtimePacketContent.addTag("username", username);
+    realtimePacketContent.addTag("permissions", permissionString);
+    realtimePacketContent.addTag("message", "You no longer have the MIC");
+    RealtimePacket p = new RealtimePacket();
+    p.setMode(RealtimePacket.Mode.SET_ACCESS);
+    p.setContent(realtimePacketContent.toString());
+    ConnectionManager.sendPacket(p);
+
+  }
+
+  public void giveMic(String username, String name) {
+    String currentMicHolderUsername = getCurrentMicHolder();
+    String currentMicHolderNames = getNames(currentMicHolderUsername);
+    if (currentMicHolderUsername != null) {
+      int n = JOptionPane.showConfirmDialog(null, "'" + currentMicHolderNames + "' is in possession of the MIC. Take it away?",
+          "MIC in use", JOptionPane.YES_NO_OPTION);
+      if (n == JOptionPane.NO_OPTION) {
+        return;
+      } else {
+        takeMic(currentMicHolderUsername, currentMicHolderNames);
+      }
+    }
+    PermissionList permissions = getUserPermissions(username);
+    permissions.hasMic = true;
+    String permissionString = permissions.getPermissionString();
+    RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+    realtimePacketContent.addTag("username", username);
+    realtimePacketContent.addTag("permissions", permissionString);
+    realtimePacketContent.addTag("message", "You have been given the MIC");
+    RealtimePacket p = new RealtimePacket();
+    p.setMode(RealtimePacket.Mode.SET_ACCESS);
+    p.setContent(realtimePacketContent.toString());
+    ConnectionManager.sendPacket(p);
+  }
+
+  public void sendAccessLevelPacket(String username, int accessLevel) {
+    RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
+    realtimePacketContent.addTag("username", username);
+    realtimePacketContent.addTag("access_level", accessLevel);
+    RealtimePacket p = new RealtimePacket();
+    p.setMode(RealtimePacket.Mode.SET_ACCESS);
+    p.setContent(realtimePacketContent.toString());
+    ConnectionManager.sendPacket(p);
+  }
+
+  public PermissionList getUserPermissions(String username) {
+    for (Map user:users) {
+      if (((String)(user.get("username"))).equalsIgnoreCase(username)) {
+        return (PermissionList)user.get("permissions");
+      }
+    }
+    return null;
+  }
+  
+  public boolean isAdmin(String xfrom) {
+    int at = xfrom.indexOf("@");
+    String from = xfrom.substring(0, at);
+    for (Map user : users) {
+      String username = (String) user.get("username");
+      if (username.equals(from)) {
+        return ((Integer) user.get("access_level")) == AdminLevels.ADMIN_LEVEL;
+      }
+    }
+    return false;
+  }
+
+  private boolean enableTakeMic(String username) {
+    //ImageIcon icon = (ImageIcon) model.getValueAt(selectedRow, 1);
+    // return icon == micIcon;
+    return ((String) model.getValueAt(selectedRow, 1)).equals("Mic");
+  }
+
+  private boolean enableGiveMic(String username) {
+
+    /*ImageIcon icon = (ImageIcon) model.getValueAt(selectedRow, 1);
         return icon != micIcon;*/
-        return !((String) model.getValueAt(selectedRow, 1)).equals("Mic");
+    return !((String) model.getValueAt(selectedRow, 1)).equals("Mic");
 
+  }
+
+  private boolean isMe(String to) {
+    return to.trim().equalsIgnoreCase(ConnectionManager.getUsername().trim());
+  }
+
+  public void clear() {
+    users.clear();
+  }
+
+  public void setUserHasMIC(String xusername, boolean hasMIC) {
+    int index = 0;
+    for (Map user : users) {
+      String username = (String) user.get("username");
+
+      if (xusername.equalsIgnoreCase(username)) {
+        user.put("has_mic", hasMIC ? 1 : 0);
+        users.set(index, user);
+      }
+      index++;
     }
+    model = new ParticipantListTableModel();
+    setModel(model);
+    decorateTable();
+  }
 
-    private boolean isMe(String to) {
-        return to.trim().equalsIgnoreCase(ConnectionManager.getUsername().trim());
+  private void giveMeAppropriateAccessLevel(int accessLevel) {
+    if (accessLevel == AdminLevels.ADMIN_LEVEL ||
+        accessLevel == AdminLevels.OWNER_LEVEL) {
+
+      GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
+      GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
+      GUIAccessManager.mf.setWebBrowserEnabled(true);
+      GUIAccessManager.enableMenus(true);
+      GUIAccessManager.enableToolbarButtons(true);
+      GUIAccessManager.enableWhiteboardButtons(true);
+      GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+
+    } else {
+      GUIAccessManager.enableMenus(false);
+      GUIAccessManager.enableToolbarButtons(false);
+      GUIAccessManager.enableWhiteboardButtons(false);
+      GUIAccessManager.setMenuEnabled(true, "screenviewer");
+      GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
+      GUIAccessManager.mf.setWebBrowserEnabled(false);
+      GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
     }
+  }
+  //when the userlist is broadcast, this method gets invoked
 
-    public void clear() {
-        users.clear();
+  public void setUserPermissions(String targetUsername, String permissionString) {
+    if (permissionString == null) {
+      permissionString = "";
     }
-
-    public void setUserHasMIC(String xusername, boolean hasMIC) {
-        int index = 0;
-        for (Map user : users) {
-            String username = (String) user.get("username");
-
-            if (xusername.equalsIgnoreCase(username)) {
-                user.put("has_mic", hasMIC ? 1 : 0);
-                users.set(index, user);
-            }
-            index++;
-        }
-        model = new ParticipantListTableModel();
-        setModel(model);
-        decorateTable();
+    char permissionArray[] = permissionString.toCharArray();
+    for (char c:permissionArray) {
+      if (c == 'm') { //user has mic
+        RealtimePacketProcessor.showExistingSpeakerOnJoinSession(targetUsername);
+      }
     }
+    int index = 0;
+    for (Map user:users) {
+      String currentUsername = (String) user.get("username");
+      if (targetUsername.equalsIgnoreCase(currentUsername)) {
+        PermissionList perm = new PermissionList(targetUsername,permissionString);
+        perm.removeAllPermissions();
+        perm.setAllPermissions();
+        user.put("permissions", perm);
+        users.set(index, user);
+        break;
+      }
+      index++;
+    }
+    if (targetUsername.equalsIgnoreCase(ConnectionManager.getUsername())) {
+      thisUser = users.get(index);
+    }
+    model = new ParticipantListTableModel();
+    setModel(model);
+    decorateTable();
+  }
 
-    private void giveMeAppropriateAccessLevel(int accessLevel) {
-        if (accessLevel == AdminLevels.ADMIN_LEVEL ||
-                accessLevel == AdminLevels.OWNER_LEVEL) {
+
+
+/*
+  public void setUserAccessAndMIC(String targetUsername, int hasMIC, int accessLevel) {
+    int index = 0;
+    if (users.size() == 0) {
+      giveMeAppropriateAccessLevel(accessLevel);
+    }
+    if (hasMIC == MIC.MIC_ON) {
+      RealtimePacketProcessor.showExistingSpeakerOnJoinSession(targetUsername);
+    }
+    for (Map user : users) {
+      String currentUsername = (String) user.get("username");
+
+      if (currentUsername.equalsIgnoreCase(targetUsername)) {
+        user.put("has_mic", hasMIC);
+        user.put("access_level", accessLevel);
+        users.set(index, user);
+
+        //now if is target user
+
+        if (currentUsername.equalsIgnoreCase(ConnectionManager.getUsername())) {
+
+          if (accessLevel == AdminLevels.OWNER_LEVEL) {
+            ConnectionManager.isOwner = true;
+          } else {
+            ConnectionManager.isOwner = false;
+          }
+          if (accessLevel == AdminLevels.ADMIN_LEVEL) {
+            ConnectionManager.isAdmin = true;
+          } else {
+            ConnectionManager.isAdmin = false;
+          }
+
+          if (accessLevel == AdminLevels.ADMIN_LEVEL ||
+              accessLevel == AdminLevels.OWNER_LEVEL) {
 
             GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
             GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
@@ -355,8 +556,9 @@ public class ParticipantListTable extends JTable implements ActionListener {
             GUIAccessManager.enableToolbarButtons(true);
             GUIAccessManager.enableWhiteboardButtons(true);
             GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+            //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
 
-        } else {
+          } else {
             GUIAccessManager.enableMenus(false);
             GUIAccessManager.enableToolbarButtons(false);
             GUIAccessManager.enableWhiteboardButtons(false);
@@ -364,240 +566,332 @@ public class ParticipantListTable extends JTable implements ActionListener {
             GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
             GUIAccessManager.mf.setWebBrowserEnabled(false);
             GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+            GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, ConnectionManager.getRoomName());
+          }
+
         }
+      }
+
+
+      index++;
     }
-    //when the userlist is broadcast, this method gets invoked
+    model = new ParticipantListTableModel();
+    setModel(model);
+    decorateTable();
+  }
+  */
 
-    public void setUserAccessAndMIC(String targetUsername, int hasMIC, int accessLevel) {
-        int index = 0;
-        if (users.size() == 0) {
-            giveMeAppropriateAccessLevel(accessLevel);
-        }
-        if (hasMIC == MIC.MIC_ON) {
-            RealtimePacketProcessor.showExistingSpeakerOnJoinSession(targetUsername);
-        }
-        for (Map user : users) {
-            String currentUsername = (String) user.get("username");
+  public void addUser(String name) {
+    String username = name.split(":")[0];
+    String nickname = name.split(":")[1];
+    Map user = new HashMap();
+    PermissionList perm = new PermissionList(username,"");
+    perm.removeAllPermissions();
+    perm.setAllPermissions();
+    user.put("permissions", perm);
+    user.put("names", nickname);
+    user.put("username", username);
+    users.add(user);
+    model = new ParticipantListTableModel();
+    setModel(model);
+    decorateTable();
+  }
 
-            if (currentUsername.equalsIgnoreCase(targetUsername)) {
-                user.put("has_mic", hasMIC);
-                user.put("access_level", accessLevel);
-                users.set(index, user);
-
-                //now if is target user
-
-                if (currentUsername.equalsIgnoreCase(ConnectionManager.getUsername())) {
-
-                    if (accessLevel == AdminLevels.OWNER_LEVEL) {
-                        ConnectionManager.isOwner = true;
-                    } else {
-                        ConnectionManager.isOwner = false;
-                    }
-                    if (accessLevel == AdminLevels.ADMIN_LEVEL) {
-                        ConnectionManager.isAdmin = true;
-                    } else {
-                        ConnectionManager.isAdmin = false;
-                    }
-
-                    if (accessLevel == AdminLevels.ADMIN_LEVEL ||
-                            accessLevel == AdminLevels.OWNER_LEVEL) {
-
-                        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
-                        GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
-                        GUIAccessManager.mf.setWebBrowserEnabled(true);
-                        GUIAccessManager.enableMenus(true);
-                        GUIAccessManager.enableToolbarButtons(true);
-                        GUIAccessManager.enableWhiteboardButtons(true);
-                        GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
-                    //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
-
-                    } else {
-                        GUIAccessManager.enableMenus(false);
-                        GUIAccessManager.enableToolbarButtons(false);
-                        GUIAccessManager.enableWhiteboardButtons(false);
-                        GUIAccessManager.setMenuEnabled(true, "screenviewer");
-                        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
-                        GUIAccessManager.mf.setWebBrowserEnabled(false);
-                        GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
-                        GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, ConnectionManager.getRoomName());
-                    }
-
-                }
-            }
-
-
-            index++;
-        }
-        model = new ParticipantListTableModel();
-        setModel(model);
-        decorateTable();
+  public void removeUser(String nickname) {
+    int index = 0;
+    ArrayList<Integer> toRemove = new ArrayList<Integer>();
+    for (Map user : users) {
+      String names = (String) user.get("names");
+      String username = (String) user.get("username");
+      if ((username + ":" + names).equalsIgnoreCase(nickname)) {
+        toRemove.add(index);
+      }
+      index++;
     }
 
-    public void addUser(String name) {
-        String username = name.split(":")[0];
-        String nickname = name.split(":")[1];
-        Map user = new HashMap();
-        user.put("has_mic", 0);
-        user.put("names", nickname);
-        user.put("username", username);
-        user.put("access_level", 3);
-        users.add(user);
-        model = new ParticipantListTableModel();
-        setModel(model);
-        decorateTable();
+    for (int i : toRemove) {
+      users.remove(i);
+    }
+    model = new ParticipantListTableModel();
+    setModel(model);
+    decorateTable();
+  }
+
+  private void decorateTable() {
+    int tableWidth = ss.width / 4;
+    TableColumn column = null;
+    if (model != null) {
+      for (int i = 0; i < model.getColumnCount(); i++) {
+        column = getColumnModel().getColumn(i);
+        if (i == 0) {
+          column.setPreferredWidth((int) (tableWidth * 0.1));
+        } else if (i == 1) {
+          column.setPreferredWidth((int) (tableWidth * 0.1));
+        } else {
+          column.setPreferredWidth((int) (tableWidth * 0.8));
+        }
+      }
     }
 
-    public void removeUser(String nickname) {
-        int index = 0;
-        ArrayList<Integer> toRemove = new ArrayList<Integer>();
-        for (Map user : users) {
-            String names = (String) user.get("names");
-            String username = (String) user.get("username");
-            if ((username + ":" + names).equalsIgnoreCase(nickname)) {
-                toRemove.add(index);
-            }
-            index++;
-        }
+  }
 
-        for (int i : toRemove) {
-            users.remove(i);
-        }
-        model = new ParticipantListTableModel();
-        setModel(model);
-        decorateTable();
+  private void removeDuplicates() {
+    int index = 0;
+    String prev = "";
+    ArrayList<Integer> toRemove = new ArrayList<Integer>();
+    for (Map user : users) {
+      String names = (String) user.get("names");
+      if (names.equalsIgnoreCase(prev)) {
+        toRemove.add(index);
+
+      }
+      prev = names;
+      index++;
     }
 
-    private void decorateTable() {
-        int tableWidth = ss.width / 4;
-        TableColumn column = null;
-        if (model != null) {
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                column = getColumnModel().getColumn(i);
-                if (i == 0) {
-                    column.setPreferredWidth((int) (tableWidth * 0.1));
-                } else if (i == 1) {
-                    column.setPreferredWidth((int) (tableWidth * 0.1));
-                } else {
-                    column.setPreferredWidth((int) (tableWidth * 0.8));
-                }
-            }
-        }
-
+    for (int i : toRemove) {
+      users.remove(i);
     }
+  }
 
-    private void removeDuplicates() {
-        int index = 0;
-        String prev = "";
-        ArrayList<Integer> toRemove = new ArrayList<Integer>();
-        for (Map user : users) {
-            String names = (String) user.get("names");
-            if (names.equalsIgnoreCase(prev)) {
-                toRemove.add(index);
+  public ArrayList<Map> getUsers() {
+    return users;
+  }
 
-            }
-            prev = names;
-            index++;
-        }
-
-        for (int i : toRemove) {
-            users.remove(i);
-        }
+  public String getNames(String username) {
+    String name = "Unknown";
+    for (Map map : users) {
+      String xusername = (String) map.get("username");
+      if (xusername.equals(username)) {
+        return (String) map.get("names");
+      }
     }
+    return name;
+  }
 
-    public ArrayList<Map> getUsers() {
-        return users;
-    }
+  class ParticipantListTableModel extends AbstractTableModel {
 
-    public String getNames(String username) {
-        String name = "Unknown";
-        for (Map map : users) {
-            String xusername = (String) map.get("username");
-            if (xusername.equals(username)) {
-                return (String) map.get("names");
-            }
+    private String[] columnNames = {
+        "A",
+        "M",
+        "Names"
+    };
+    private Object[][] data = new Object[0][columnNames.length];
+
+    public ParticipantListTableModel() {
+      removeDuplicates();
+      data = new Object[users.size()][columnNames.length];
+
+      for (int i = 0; i < users.size(); i++) {
+        Map user = users.get(i);
+        PermissionList permissions = (PermissionList)user.get("permissions");
+        String names = (String) user.get("names");
+        String AccessLevel = "";
+        if (permissions.isOwner) {
+          AccessLevel = "O";
         }
-        return name;
-    }
-
-    class ParticipantListTableModel extends AbstractTableModel {
-
-        private String[] columnNames = {
-            "A",
-            "M",
-            "Names"
-        };
-        private Object[][] data = new Object[0][columnNames.length];
-
-        public ParticipantListTableModel() {
-            removeDuplicates();
-            data = new Object[users.size()][columnNames.length];
-
-            for (int i = 0; i < users.size(); i++) {
-                Map user = users.get(i);
-                int hasMIC = 0;
-                try {
-                    hasMIC = (Integer) user.get("has_mic");
-
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                }
-                String names = (String) user.get("names");
-                int accessLevel = (Integer) user.get("access_level");
-                Object[] row = {
-                    accessLevel == AdminLevels.ADMIN_LEVEL ? "A" : "",
-                    hasMIC == 1 ? "Mic" : "",
+        else if (permissions.grantAdmin) {
+          AccessLevel = "A";
+        }
+        if (permissions.hasVoice) {
+          AccessLevel = "+" + AccessLevel;
+        }
+        Object[] row = {
+            AccessLevel,
+                permissions.hasMic ? "Mic" : "",
                     names
-                };
-                data[i] = row;
-            }
-        }
-
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        @Override
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-
-        }
-
-        @Override
-        public void setValueAt(Object value, int row, int col) {
-
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
-
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-
-            return false;
-        }
-
-        /*
-         * JTable uses this method to determine the default renderer/
-         * editor for each cell.  If we didn't implement this method,
-         * then the last column would contain text ("true"/"false"),
-         * rather than a check box.
-         */
-        @Override
-        public Class getColumnClass(int c) {
-
-            Object obj = getValueAt(0, c);
-            if (obj != null) {
-                return getValueAt(0, c).getClass();
-            } else {
-                return new Object().getClass();
-            }
-        }
+        };
+        data[i] = row;
+      }
     }
+
+    public int getColumnCount() {
+      return columnNames.length;
+    }
+
+    public int getRowCount() {
+      return data.length;
+    }
+
+    @Override
+    public String getColumnName(int col) {
+      return columnNames[col];
+    }
+
+    public Object getValueAt(int row, int col) {
+      return data[row][col];
+
+    }
+
+    @Override
+    public void setValueAt(Object value, int row, int col) {
+
+      data[row][col] = value;
+      fireTableCellUpdated(row, col);
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+
+      return false;
+    }
+
+    /*
+     * JTable uses this method to determine the default renderer/
+     * editor for each cell.  If we didn't implement this method,
+     * then the last column would contain text ("true"/"false"),
+     * rather than a check box.
+     */
+    @Override
+    public Class getColumnClass(int c) {
+
+      Object obj = getValueAt(0, c);
+      if (obj != null) {
+        return getValueAt(0, c).getClass();
+      } else {
+        return new Object().getClass();
+      }
+    }
+  }
+  class PermissionList {
+    public boolean isOwner = false;
+    public boolean canKick = false;
+    public boolean canBan = false;
+    public boolean hasVoice = false;
+    public boolean hasMic = false;
+    public boolean grantVoice = false;
+    public boolean grantMic = false;
+    public boolean grantWhiteboard = false;
+    public boolean canWhiteboard = false;
+    public boolean grantAdmin = false;
+    public String username = "";
+    public PermissionList(String username,String permissionString) {
+      this.username = username;
+      char permissionArray[] = permissionString.toCharArray();
+      for (char permission:permissionArray) {
+        if (permission == 'm') { //has mic
+          hasMic = true;
+        }
+        else if (permission == 'o') { //is owner
+          isOwner = true;
+        }
+        else if (permission == 'k') { //kick permission
+          canKick = true;
+        }
+        else if (permission == 'b') { //ban permission
+          canBan = true;
+        }
+        else if (permission == 'v') { //voice - permission to chat
+          hasVoice = true;
+        }
+        else if (permission == 'g') { //give and remove voice permission
+          grantVoice = true;
+        }
+        else if (permission == 'i') { //give and remove mic permission
+          grantMic = true;
+        }
+        else if (permission == 'w') { //add and remove whiteboard permissions
+          grantWhiteboard = true;
+        }
+        else if (permission == 'h') { //has white board permissions
+          canWhiteboard = true;
+        }
+        else if (permission == 'a') { //admin permission - can give any permissions to a user that this admin has
+          grantAdmin = true;
+        }
+      }
+    }
+    public void evaluatePermissions() {
+      if (isOwner) {
+        ConnectionManager.isOwner = true;
+      }
+      if (canKick) {
+        ConnectionManager.canKick = true;
+      }
+      if (canBan) {
+        ConnectionManager.canBan = true;
+      }
+      if (hasVoice) {
+        ConnectionManager.hasVoice = true;
+      }
+      if (grantVoice) {
+        ConnectionManager.grantVoice = true;
+      }
+      if (grantMic) {
+        ConnectionManager.grantMic = true;
+      }
+      if (grantWhiteboard) {
+        ConnectionManager.grantWhiteboard = true;
+      }
+      if (canWhiteboard) {
+        ConnectionManager.canWhiteboard = true;
+      }
+      if (grantAdmin) {
+        ConnectionManager.grantAdmin = true;
+      }
+    }
+    public void removeAllPermissions() {
+      //only remove permissions from this user if it is the current user
+      if (username.equalsIgnoreCase(ConnectionManager.getUsername())) {
+        GUIAccessManager.enableMenus(false);
+        GUIAccessManager.enableToolbarButtons(false);
+        GUIAccessManager.enableWhiteboardButtons(false);
+        GUIAccessManager.setMenuEnabled(true, "screenviewer");
+        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
+        GUIAccessManager.mf.setWebBrowserEnabled(false);
+        GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+        GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, ConnectionManager.getRoomName());
+      }
+    }
+    public void setAllPermissions() {
+      //supposed to give user access to what he has.
+      //this is where the whiteboard/mic/voice etc. must be enabled
+      if (username.equalsIgnoreCase(ConnectionManager.getUsername())) {
+        if (isOwner) {
+          GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
+          GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
+          GUIAccessManager.mf.setWebBrowserEnabled(true);
+          GUIAccessManager.enableMenus(true);
+          GUIAccessManager.enableToolbarButtons(true);
+          GUIAccessManager.enableWhiteboardButtons(true);
+          GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
+          //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
+        }
+      }
+    }
+    public String getPermissionString() {
+      String permissionString = "";
+      if (hasMic) {
+        permissionString += "m";
+      }
+      if (isOwner) {
+        permissionString += "o";
+      }
+      if (canKick) {
+        permissionString += "k";
+      }
+      if (canBan) {
+        permissionString += "b";
+      }
+      if (hasVoice) {
+        permissionString += "v";
+      }
+      if (grantVoice) {
+        permissionString += "g";
+      }
+      if (grantMic) {
+        permissionString += "i";
+      }
+      if (grantWhiteboard) {
+        permissionString += "w";
+      }
+      if (canWhiteboard) {
+        permissionString += "h";
+      }
+      if (grantAdmin) {
+        permissionString += "a";
+      }
+      return permissionString;
+    }
+  }
 }

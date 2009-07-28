@@ -232,13 +232,12 @@ public class RPacketListener implements PacketListener {
                     ConnectionManager.sendPacket(p);
 
                 }
-            } else if (mode.equals(Mode.MIC_ADMIN_HOLDER)) {
+            } else if (mode.equals(Mode.SET_PERMISSIONS)) {
                 String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
-                int hasMic = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "has_mic"));
-                int accessLevel = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "access_level"));
-                GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserAccessAndMIC(username, hasMic, accessLevel);
-
-            } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
+                String permissionString = RealtimePacketProcessor.getTag(packet.getContent(), "permissions");
+                GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserPermissions(username, permissionString);
+            }
+            else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
                 String receiver = XmlUtils.readString(doc, "private-chat-receiver");
                 String msg = XmlUtils.readString(doc, "private-chat-msg");

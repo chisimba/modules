@@ -67,8 +67,20 @@ public class ConnectionManager {
     private static int connectionType = Constants.Proxy.NO_PROXY;
     public static String roomOwner;
     
-    public static boolean isOwner = false;
+    
     public static boolean isAdmin = false;
+    //permissions======================================
+    public static boolean isOwner = false;
+    public static boolean canKick = false;
+    public static boolean canBan = false;
+    public static boolean hasVoice = false;
+    public static boolean grantVoice = false;
+    public static boolean grantMic = false;
+    public static boolean grantWhiteboard = false;
+    public static boolean canWhiteboard = false;
+    public static boolean grantAdmin = false;
+    //=================================================
+
 
     /**
      * This initiates connection to openfire server
