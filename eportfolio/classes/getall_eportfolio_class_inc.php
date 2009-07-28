@@ -39,6 +39,29 @@ class getall_Eportfolio extends object
         $this->objUser = &$this->getObject('user', 'security');
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->objDate = &$this->newObject('dateandtime', 'utilities');
+        $this->objContextUser = $this->getObject('usercontext', 'context');
+        $this->objEssayView = $this->newObject('manageviews_essay','essay');
+	$this->viewAssessments = $this->newObject('viewassessments_Eportfolio','eportfolio');
+        $this->objAssignmentFunctions = $this->getObject('functions_assignment', 'assignment');
+        $this->objWorksheetFunctions =& $this->getObject('functions_worksheet', 'worksheet');	
+        $this->objWorksheet = $this->getObject('dbworksheet', 'worksheet');
+        $this->objWorksheetQuestions = $this->getObject('dbworksheetquestions', 'worksheet');
+        $this->objWorksheetAnswers = $this->getObject('dbworksheetanswers', 'worksheet');
+        $this->objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
+        $this->dbTestadmin = $this->newObject('dbtestadmin', 'mcqtests');
+        $this->dbQuestions = $this->newObject('dbquestions', 'mcqtests');
+        $this->objMcqtestsFunctions =& $this->getObject('functions_mcqtests', 'mcqtests');	
+        $this->dbResults = $this->newObject('dbresults', 'mcqtests');
+        $this->dbMarked = $this->newObject('dbmarked', 'mcqtests');
+        $this->objWashout = $this->getObject('washout','utilities');
+	$this->objDbRubricTables =& $this->getObject('dbrubrictables','rubric'); 
+	$this->objDbRubricPerformances =& $this->getObject('dbrubricperformances','rubric'); 
+	$this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives','rubric'); 
+	$this->objDbRubricCells =& $this->getObject('dbrubriccells','rubric'); 
+	$this->objDbRubricAssessments =& $this->getObject('dbrubricassessments','rubric'); 
+	$this->objRubricFunctions =& $this->getObject('functions_rubric','rubric'); 
+	
+
         //$objLanguage =& $this->getObject('language','language');
         $this->objLanguage = &$this->getObject('language', 'language');
     }
@@ -744,18 +767,90 @@ public function getAffiliation ( $userId ){
         $transcriptobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordTranscripts", 'eportfolio');
         // echo $transcriptobjHeading->show();
         $transcriptlist = $this->objDbTranscriptList->getByItem($userId);
+        //Get user contexts
+        $myContexts = $this->objContextUser->getUserContext($userId);
+	// Create a table object
+	$transcriptTable = &$this->newObject("htmltable", "htmlelements");
+	$transcriptTable->border = 0;
+	$transcriptTable->cellspacing = '1';
+	$transcriptTable->width = "100%";
+	// Add the table heading.
+	$transcriptTable->startRow();
+	$transcriptTable->addCell($transcriptobjHeading->show() , '', '', '', '', Null);
+	$transcriptTable->endRow();
+	$hasAssessment = 0;
+	//Get DB Object
+	 $objDbContext = &$this->getObject('dbcontext', 'context');
+	foreach ($myContexts as $contextCode){
+	$contextLecturers = $this->objContextUser->getContextLecturers($contextCode);
+	$isaLecturer = False;
+		foreach($contextLecturers as $isLecturer){
+			if($this->userPid == $isLecturer['id'])
+			$isaLecturer = True;
+		}
+	 if(!$isaLecturer){
+	 //Get student essays for this course
+
+	 $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
+		if(!empty($contextEssay)){
+			$hasAssessment = 1;
+			$hasEssays = 1;
+			$viewEssays = $this->viewAssessments->viewEssaysFull($contextEssay);
+			$list=$this->objLanguage->languageText('word_list');
+			$head=$objDbContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('mod_essay_essay','essay');
+	
+			//echo "<b>".$head."</b>".$viewEssays;
+			$transcriptTable->startRow();
+			$transcriptTable->addCell("<h3>".$head."</h3>".$viewEssays);
+			$transcriptTable->endRow();
+
+		}
+	 //Get student essays for this course
+	 $contextAssignments = $this->objAssignmentFunctions->displayAssignmentFull($contextCode);
+		if(!empty($contextAssignments)){
+			$hasAssessment = 1;
+			//$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
+			$list=$this->objLanguage->languageText('word_list');
+			$head=$objDbContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('mod_assignment_assignments','assignment');
+	
+			//echo "<b>".$head."</b>".$viewEssays;
+			$transcriptTable->startRow();
+			$transcriptTable->addCell("<h3>".$head."</h3>".$contextAssignments);
+			$transcriptTable->endRow();
+
+		}
+	 $contextWorksheets = $this->objWorksheetFunctions->displayWorksheetsFull($contextCode, $userId);
+	 if(!empty($contextWorksheets)){
+	 		$hasAssessment = 1;
+			$transcriptTable->startRow();
+			$transcriptTable->addCell($contextWorksheets);
+			$transcriptTable->endRow();
+	 
+	  }
+	  //Get mcqtests
+	  $objmcq = $this->objMcqtestsFunctions->displaymcq($contextCode, $userId, $uriAction='showtest', $uriModule='eportfolio'); 
+	  if(!empty($objmcq)){
+	  	$hasAssessment = 1;
+		$mcqHead=$objDbContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('mod_mcqtests_mcq','mcqtests');
+		$transcriptTable->startRow();
+		$transcriptTable->addCell("<h3>".$mcqHead."</h3>".$objmcq);
+		$transcriptTable->endRow();
+	  }
+	  //Get Rubrics
+	  $studRubrics = $this->objRubricFunctions->displayrubric($contextCode, $userId, $uriModule='eportfolio', $assessmentAction='rubricsassessments', $viewTableAction='rubricviewtable');
+	  if(!empty($studRubrics)){
+	  	$hasAssessment = 1;
+		$rubricHead=$objDbContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('rubric_rubrics','rubric');
+		$transcriptTable->startRow();
+		$transcriptTable->addCell("<h3>".$rubricHead."</h3>".$studRubrics);
+		$transcriptTable->endRow();
+	  }
+	 }
+	} 
         if (!empty($transcriptlist)) {
-            // Create a table object
-            $transcriptTable = &$this->newObject("htmltable", "htmlelements");
-            $transcriptTable->border = 0;
-            $transcriptTable->cellspacing = '4';
-            $transcriptTable->width = "100%";
-            // Add the table heading.
-            $transcriptTable->startRow();
-            $transcriptTable->addCell($transcriptobjHeading->show() , '', '', '', '', Null);
-            $transcriptTable->endRow();
             // Step through the list of transcripts.
             $class = NULL;
+           
             if (!empty($transcriptlist)) {
                 $transNo = 1;
                 foreach($transcriptlist as $item) {
@@ -795,10 +890,11 @@ public function getAffiliation ( $userId ){
                 $transcriptTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
                 $transcriptTable->endRow();
             }
+        } //end if
+	if($hasAssessment == 1 || !empty($transcriptlist)){
             $transcripttbl = $transcriptTable->show();
             return $transcripttbl;
-        } //end if
-        
+        }
     } //end function
     //Function to Get user transcripts (one column)
     public function getViewTranscripts($userId) 
