@@ -126,4 +126,5 @@ public class Mode {
     public static final String REQUEST_MIC_REPLY = "request-mic-reply";
     public static final String MIC_ADMIN_HOLDER = "mic-admin-holder";
     public static final String SET_ACCESS = "set-access";
+    public static final String SET_PERMISSIONS = "set-permissions";
 }
