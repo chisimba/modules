@@ -1441,6 +1441,28 @@ public function getAffiliation ( $userId ){
                     $reflectionTable->startRow();
                     $reflectionTable->addCell($item['longdescription'], "", NULL, NULL, $class, '');
                     $reflectionTable->endRow();
+		    //Spacer
+		    $reflectionTable->startRow();
+		    $reflectionTable->addCell("&nbsp;");
+		    $reflectionTable->endRow();
+		    //row for comments
+		    $mycomments = $this->objDbComment->listAll($item['id']);
+		    if(!empty($mycomments)){
+		     foreach ($mycomments as $comment){
+		       //$this->objUser
+		       $commentor = $this->objUser->fullName($comment["commentoruserid"]);
+		       $commentime = "";      
+		       if(!empty($comment["postdate"])){
+			$commentime = " : ".$comment["postdate"];
+		       }
+		       $reflectionTable->startRow();
+		       $reflectionTable->addCell("<b>".$commentor.$commentime."</b>");
+		       $reflectionTable->endRow();
+		       $reflectionTable->startRow();
+		       $reflectionTable->addCell($comment["comment"]);
+		       $reflectionTable->endRow();
+		      }
+		    }                    
                     $refNo = $refNo+1;
                 }
                 unset($item);

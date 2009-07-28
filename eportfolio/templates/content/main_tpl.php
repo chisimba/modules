@@ -2120,7 +2120,8 @@ $this->objTab->addTab(array(
 ));
 $addressTab = $this->objTab->show();
 //Information tab
-$page.= $featureBox->show($objinfoTitles->show() , $addressTab, 'box1', 'default', TRUE);
+//public function show($title = null, $content = null, $id = null, $hidden = 'default', $showToggle = TRUE)
+$page.= $featureBox->show($objinfoTitles->show() , $addressTab, '1', 'default', TRUE);
 $this->objmainTab->init();
 $this->objmainTab->tabId = TRUE;
 $this->objmainTab->addTab(array(
@@ -2129,7 +2130,7 @@ $this->objmainTab->addTab(array(
 ));
 //Activity Title
 $objactivityTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_activitylist", 'eportfolio');
-$activitypage.= $featureBox->show($objactivityTitles->show() , $activityLabel, 'box2', 'default', TRUE);
+$activitypage.= $featureBox->show($objactivityTitles->show() , $activityLabel, '2', 'default', TRUE);
 $this->objmainTab->tabId = TRUE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordActivity", 'eportfolio') ,
@@ -2137,7 +2138,7 @@ $this->objmainTab->addTab(array(
 ));
 //Affiliation Title
 $objaffiliationTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_affiliationheading", 'eportfolio');
-$affiliationpage.= $featureBox->show($objaffiliationTitles->show() , $affiliationTable->show() , 'box3', 'default', TRUE);
+$affiliationpage.= $featureBox->show($objaffiliationTitles->show() , $affiliationTable->show() , '3', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAffiliation", 'eportfolio') ,
@@ -2145,7 +2146,7 @@ $this->objmainTab->addTab(array(
 ));
 //Transcript Title
 $objtranscriptTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_transcriptlist", 'eportfolio');
-$transcriptpage.= $featureBox->show($objtranscriptTitles->show() , $transcriptTable->show() , 'box4', 'default', TRUE);
+$transcriptpage.= $featureBox->show($objtranscriptTitles->show() , $transcriptTable->show() , '4', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordTranscripts", 'eportfolio') ,
@@ -2153,7 +2154,7 @@ $this->objmainTab->addTab(array(
 ));
 //Qcl Title
 $objqclTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_qclheading", 'eportfolio');
-$qclpage.= $featureBox->show($objqclTitles->show() , $qclTable->show() , 'box5', 'default', TRUE);
+$qclpage.= $featureBox->show($objqclTitles->show() , $qclTable->show() , '5', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordQualification", 'eportfolio') ,
@@ -2161,7 +2162,7 @@ $this->objmainTab->addTab(array(
 ));
 //Goals Title
 $objgoalsTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_goalList", 'eportfolio');
-$goalspage.= $featureBox->show($objgoalsTitles->show() , $goalsTable->show() , 'box6', 'default', TRUE);
+$goalspage.= $featureBox->show($objgoalsTitles->show() , $goalsTable->show() , '6', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordGoals", 'eportfolio') ,
@@ -2169,7 +2170,7 @@ $this->objmainTab->addTab(array(
 ));
 //Competency Title
 $objcompetencyTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_competencylist", 'eportfolio');
-$competencypage.= $featureBox->show($objcompetencyTitles->show() , $competencyTable->show() , 'box7', 'default', TRUE);
+$competencypage.= $featureBox->show($objcompetencyTitles->show() , $competencyTable->show() , '7', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordCompetency", 'eportfolio') ,
@@ -2177,7 +2178,7 @@ $this->objmainTab->addTab(array(
 ));
 //interest Title
 $objinterestTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_interestList", 'eportfolio');
-$interestpage.= $featureBox->show($objinterestTitles->show() , $interestTable->show() , 'box8', 'default', TRUE);
+$interestpage.= $featureBox->show($objinterestTitles->show() , $interestTable->show() , '8', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInterests", 'eportfolio') ,
@@ -2185,7 +2186,7 @@ $this->objmainTab->addTab(array(
 ));
 //reflection Title
 $objreflectionTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_reflectionList", 'eportfolio');
-$reflectionpage.= $featureBox->show($objreflectionTitles->show() , $reflectionTable->show() , 'box9', 'default', TRUE);
+$reflectionpage.= $featureBox->show($objreflectionTitles->show() , $reflectionTable->show() , '9', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordReflections", 'eportfolio') ,
@@ -2194,7 +2195,7 @@ $this->objmainTab->addTab(array(
 
 //assertions Title
 $objassertionsTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_assertionList", 'eportfolio');
-$assertionspage.= $featureBox->show($objassertionsTitles->show() , $assertionstable->show() , 'box10', 'default', TRUE);
+$assertionspage.= $featureBox->show($objassertionsTitles->show() , $assertionstable->show() , '10', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAssertion", 'eportfolio') ,
@@ -2219,7 +2220,7 @@ if ($hasAccess) {
     ));
     $categoryTab = $this->objTab->show();
     //category tab
-    $categorypage.= $featureBox->show($objcategoryTitles->show() , $categoryTab, 'box11', 'default', TRUE);
+    $categorypage.= $featureBox->show($objcategoryTitles->show() , $categoryTab, '11', 'default', TRUE);
     $this->objmainTab->tabId = FALSE;
     $this->objmainTab->addTab(array(
         'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordCategory", 'eportfolio') ,
