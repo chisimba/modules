@@ -28,6 +28,10 @@ class functions_worksheet extends object
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->objContext = &$this->newObject('dbcontext', 'context');
         $this->objIcon= $this->newObject('geticon','htmlelements');
+        $this->objWorksheetQuestions = $this->getObject('dbworksheetquestions', 'worksheet');
+        $this->objWorksheetAnswers = $this->getObject('dbworksheetanswers', 'worksheet');
+        $this->objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');   
+        $this->objUser = &$this->getObject('user', 'security');             
 	$objPopup=&$this->loadClass('windowpop','htmlelements');
     }
     
@@ -103,6 +107,177 @@ class functions_worksheet extends object
 		}
 	    return $header->show().$table->show();		
      }
-   }    
+   }
+    /**
+     * 
+     *Method to output worksheets in context
+     *@param string $contextCode
+     * @return array
+     */
+    public function displayWorksheetsFull($contextCode, $userId=Null)
+    { 
+	//Get worksheets
+	$worksheets = $this->objWorksheet->getWorksheetsInContext($contextCode);
+
+	$header = new htmlheading();
+	$header->type = 3;
+	$header->str = $this->objContext->getTitle($contextCode).': '.$this->objLanguage->languageText('mod_worksheet_worksheets', 'worksheet', 'Worksheets');
+	//Load Table Object
+	$mytable = $this->newObject('htmltable', 'htmlelements');
+
+	if (count($worksheets) == 0) {
+		return False;
+	} else {
+		foreach ($worksheets as $worksheet)
+		{
+		 $wkshtResults = $this->objWorksheetResults->getWorksheetResult($userId, $worksheet['id']);
+			 if($wkshtResults['userid']==$userId){
+			 if(!empty($wkshtResults['mark'])){
+			   $theMark = round(($wkshtResults['mark']/$worksheet['total_mark']*100),2)." %";
+			 }else{
+			   $theMark = "";
+			 }
+			if(!empty($theMark)){
+				$questions = $this->objWorksheetQuestions->getQuestions($worksheet['id']);
+
+				$worksheetResult = $this->objWorksheetResults->getWorksheetResult($userId, $worksheet['id']);
+	
+				if ($worksheet['activity_status'] == 'open' && !$worksheetResult) {
+				} else {
+					$header = new htmlheading();
+					$header->type = 1;
+
+					$header->str = $this->objLanguage->languageText('mod_worksheet_worksheet', 'worksheet', 'Worksheet').': '.$worksheet['name'];
+
+
+					$mytable->startRow();
+					$mytable->addCell('<br />'.$header->show());
+					$mytable->endRow();
+
+					//$firstStr = '<br />'.$header->show();
+
+					//$firstStr .= $worksheet['description'];
+
+					$mytable->startRow();
+					$mytable->addCell($worksheet['description']);
+					$mytable->endRow();
+
+					$objDateTime = $this->getObject('dateandtime', 'utilities');
+
+					$table = $this->newObject('htmltable', 'htmlelements');
+					$table->startRow();
+					$table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_closingdate', 'worksheet', 'Closing Date').'</strong>: '.$objDateTime->formatDate($worksheet['closing_date']));
+					$table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_questions', 'worksheet', 'Questions').'</strong>: '.count($questions));
+					$table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_percentage', 'worksheet', 'Percentage').'</strong>: '.$worksheet['percentage'].'%');
+					$table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark').'</strong>: '.$worksheet['total_mark']);
+					$table->endRow();
+
+					$mytable->startRow();
+					$mytable->addCell($table->show().'<hr />');
+					$mytable->endRow();
+
+					//$firstStr .= $table->show();
+
+					//$firstStr .= '<hr />';
+
+					$header = new htmlheading();
+					$header->type = 3;
+					$header->str = $this->objLanguage->languageText('mod_worksheet_result', 'worksheet', 'Result').':';
+					//$firstStr .= $header->show();
+					$mytable->startRow();
+					$mytable->addCell($header->show());
+					$mytable->endRow();
+
+
+					if ($worksheetResult == FALSE) {
+					    $notcomplete .= '<p>'.$this->objLanguage->languageText('mod_worksheet_result_notcompleted', 'worksheet', 'Worksheet not completed prior to expiry date').' - 0</p>';
+					$mytable->startRow();
+					$mytable->addCell($notcomplete);
+					$mytable->endRow();
+
+					} else {
+					    if ($worksheetResult['mark'] == '-1') {
+						$notmarked .= '<p class="error">'.$this->objLanguage->languageText('mod_worksheet_result_notmarked', 'worksheet', 'Worksheet submitted but not yet marked').'.</p>';
+						$mytable->startRow();
+						$mytable->addCell($notmarked);
+						$mytable->endRow();											    } else {
+						$score = $this->objLanguage->code2Txt('mod_worksheet_result_marked', 'worksheet', NULL, '[-mark-] out of [-total-]');
+						$score = str_replace('[-mark-]', $worksheetResult['mark'], $score);
+						$score = str_replace('[-total-]', $worksheet['total_mark'], $score);
+						//$firstStr .= '<p>'.$score.'</p>';
+						$mytable->startRow();
+						$mytable->addCell('<p>'.$score.'</p>');
+						$mytable->endRow();
+
+					    }
+					}
+
+					//$firstStr .= '<hr />';
+					$mytable->startRow();
+					$mytable->addCell('<hr />');
+					$mytable->endRow();						
+					$objWashout = $this->getObject('washout', 'utilities');
+
+					$counter = 1;
+					foreach ($questions as $question)
+					{
+					    $str = '<div class="newForumContainer">';
+						$str .= '<div class="newForumTopic">';
+						    $str .= '<strong>'.$this->objLanguage->languageText('mod_worksheet_question', 'worksheet', 'Question').' '.$counter.':</strong><br />';
+						    $str .= $objWashout->parseText($question['question']);
+						    $str .= '<strong>'.$this->objLanguage->languageText('mod_worksheet_marks', 'worksheet', 'Marks').'</strong> ('.$question['question_worth'].')<br/>';
+						$str .= '</div>';
+						$str .= '<div class="newForumContent">';
+	
+						    
+						    $studentAnswer = $this->objWorksheetAnswers->getAnswer($question['id'], $userId);
+						    
+						    if ($studentAnswer != FALSE) {
+							$str .= $studentAnswer['answer'];
+			
+						       $str .= '</div><div class="newForumContent">';
+			
+							if ($studentAnswer['mark'] == NULL) {
+							    $str .= '<p class="error">'.'Your answer has not been marked yet.'.'</p>';
+							} else {
+							    $table = $this->newObject('htmltable', 'htmlelements');
+							    $table->startRow();
+							    $table->addCell("<b>".$this->objLanguage->languageText('mod_worksheet_mark', 'worksheet', 'Mark').': </b>'.$studentAnswer['mark'], 180);
+							    $table->endRow();
+							    $table->startRow();
+							    $table->addCell("<b>".$this->objLanguage->languageText('mod_worksheet_comment', 'worksheet', 'Comment').': </b>'.$studentAnswer['comments']);
+							    $table->endRow();
+							    $table->startRow();
+							    $table->addCell("<b>".ucwords($this->objLanguage->code2Txt('mod_worksheet_lecturer', 'worksheet', NULL, '[-author-]')).': </b>'.$this->objUser->fullName($studentAnswer['lecturer_id']));
+							    $table->endRow();
+							    
+							    $str .= $table->show();
+							}
+			
+						    } else {
+							$str .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_worksheet_notanswered', 'worksheet', 'Not answered').'</div>';
+						    }
+						    
+						$str .= '</div>';
+					    
+					    $str .= '</div>';
+					    
+					    //echo $str;
+					$mytable->startRow();
+					$mytable->addCell($str);
+					$mytable->endRow();
+					    $counter++;
+					}
+					}
+			}else{
+			  $mytable->startRow();
+			  $mytable->addCell("&nbsp;");
+			  $mytable->endRow();
+			}
+			}
+		}
+	    return $header->show().$mytable->show();
+     }
+   }
 }
 ?>
