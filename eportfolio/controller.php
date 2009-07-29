@@ -368,14 +368,23 @@ class eportfolio extends controller
                 //Write pdf
                 $objPdf->initWrite();
                 $objPdf->partWrite($text);
+                if(!empty($activity))
                 $objPdf->partWrite($activity);
+                if(!empty($affiliation))
                 $objPdf->partWrite($affiliation);
+                if(!empty($transcripts))
                 $objPdf->partWrite($transcripts);
+                if(!empty($qualification))
                 $objPdf->partWrite($qualification);
+                if(!empty($competency))
                 $objPdf->partWrite($competency);
+                if(!empty($goals))
                 $objPdf->partWrite($goals);
+                if(!empty($interests))
                 $objPdf->partWrite($interests);
+                if(!empty($reflections))
                 $objPdf->partWrite($reflections);
+                if(!empty($assertions))
                 $objPdf->partWrite($assertions);
                 return $objPdf->show();
                 break;
