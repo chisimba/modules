@@ -74,7 +74,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.isPopupTrigger()) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     deleteItem.setEnabled(enableRemoveResource());
                     popup.show(tree, e.getX(), e.getY());
                 } else {
@@ -154,6 +154,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
             removeRoomResource();
         }
         if (evt.getActionCommand().equals("refresh")) {
+            popuateLocalDone = false;
             populateWithRoomResources();
         }
     }

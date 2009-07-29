@@ -84,18 +84,20 @@ public class ChatRoomManager {
         public void joined(String jid) {
             String user = jid.substring(jid.lastIndexOf("/") + 1);
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().addUser(user);
-             
-            GUIAccessManager.mf.removeSpeaker(user);
+
+            //GUIAccessManager.mf.removeSpeaker(user);
             String xuser = user.split(":")[1];
-            chatRoom.insertSystemMessage(xuser+" joined.");
+            chatRoom.insertSystemMessage(xuser + " joined.");
         }
 
         public void left(String jid) {
+
             String xuser = jid.substring(jid.lastIndexOf("/") + 1);
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(xuser);
-            String user = xuser.split(":")[1];
-            GUIAccessManager.mf.removeSpeaker(user);
-            chatRoom.insertSystemMessage(user+" left.");
+            String username = xuser.split(":")[0];
+            String names = xuser.split(":")[1];
+            GUIAccessManager.mf.removeSpeaker(username);
+            chatRoom.insertSystemMessage(names + " left.");
 
         }
 
@@ -103,10 +105,12 @@ public class ChatRoomManager {
             // chatRoom.insertSystemMessage(participant + " kicked out " + actor + ". Message: " + reason);
         }
 
-        public void voiceGranted(String arg0) {
+        public void voiceGranted(String participant) {
         }
 
-        public void voiceRevoked(String arg0) {
+        public void voiceRevoked(String participant) {
+
+          ;
         }
 
         public void banned(String participant, String actor, String reason) {
@@ -139,6 +143,19 @@ public class ChatRoomManager {
         }
 
         public void nicknameChanged(String arg0, String arg1) {
+        }
+    }
+
+    public void cgrantVoice(boolean state, String nickname) {
+        try {
+            if (state) {
+                
+                muc.grantVoice(nickname);
+            } else {
+                muc.revokeVoice(nickname);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -327,6 +344,7 @@ public class ChatRoomManager {
         //release MIC too
         GUIAccessManager.mf.releaseMIC();
         chatRoom.getChatTranscriptField().setText("");
+        GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().clearWhiteboard();
         //not allawed in more than one room at a time, so must leave old one
         muc.leave();
         muc = new MultiUserChat(ConnectionManager.getConnection(), roomName + "@conference." + ConnectionManager.getConnection().getServiceName());

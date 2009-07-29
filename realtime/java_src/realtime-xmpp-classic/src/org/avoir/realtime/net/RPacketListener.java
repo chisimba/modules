@@ -236,8 +236,7 @@ public class RPacketListener implements PacketListener {
                 String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
                 String permissionString = RealtimePacketProcessor.getTag(packet.getContent(), "permissions");
                 GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserPermissions(username, permissionString);
-            }
-            else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
+            } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
                 String receiver = XmlUtils.readString(doc, "private-chat-receiver");
                 String msg = XmlUtils.readString(doc, "private-chat-msg");
@@ -420,7 +419,7 @@ public class RPacketListener implements PacketListener {
                         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().updateItem(item);
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    // ex.printStackTrace();
                 }
             } else if (mode.equals(Mode.DELETE_ITEM_BROADCAST)) {
                 String id = RealtimePacketProcessor.getItemId(packet.getContent());
@@ -456,7 +455,7 @@ public class RPacketListener implements PacketListener {
 
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    // ex.printStackTrace();
                 }
             //end
 
@@ -680,16 +679,16 @@ public class RPacketListener implements PacketListener {
             }
         }
 
+        String username = from.split(":")[0];
+        String names = from.split(":")[1];
         if (presence.getType() == Presence.Type.unavailable && !"303".equals(code)) {
-            String user = from;
-
-            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(user);
-            GUIAccessManager.mf.removeSpeaker(GeneralUtil.formatStr(user, " "));
-            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " left the room\n");
+            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(from);
+            GUIAccessManager.mf.removeSpeaker(username);
+            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(names + " left the room\n");
         } else {
-            String user = from;
-            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(user + " joined the room\n");
-            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().addUser(user);
+
+            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(names + " joined the room\n");
+            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().addUser(from);
 
         }
     }
