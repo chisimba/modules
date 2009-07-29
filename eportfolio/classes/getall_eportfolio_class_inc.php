@@ -828,7 +828,7 @@ public function getAffiliation ( $userId ){
 	 
 	  }
 	  //Get mcqtests
-	  $objmcq = $this->objMcqtestsFunctions->displaymcq($contextCode, $userId, $uriAction='showtest', $uriModule='eportfolio'); 
+	  $objmcq = $this->objMcqtestsFunctions->displaymcqFull($contextCode, $userId); 
 	  if(!empty($objmcq)){
 	  	$hasAssessment = 1;
 		$mcqHead=$objDbContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('mod_mcqtests_mcq','mcqtests');
