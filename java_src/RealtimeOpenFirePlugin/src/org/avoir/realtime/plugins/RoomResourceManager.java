@@ -950,7 +950,7 @@ public class RoomResourceManager {
 
       con = DbConnectionManager.getConnection();
 
-      String sql = "select ofAvoirRealtime_OnlineUsers.has_mic," +
+      String sql = "select ofAvoirRealtime_OnlineUsers.permissions," +
       " ofUser.name, ofAvoirRealtime_Rooms.room_name, ofAvoirRealtime_Rooms.room_owner" +
       " from ofAvoirRealtime_OnlineUsers, ofUser, ofAvoirRealtime_Rooms" +
       " where ofAvoirRealtime_OnlineUsers.jid = '" + username + "'" +
