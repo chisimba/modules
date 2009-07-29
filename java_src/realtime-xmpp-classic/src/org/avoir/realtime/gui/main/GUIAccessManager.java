@@ -70,12 +70,13 @@ public class GUIAccessManager {
             }
         }
     }
-    public static boolean amIHoldingMic(){
-        ArrayList<Map> users=mf.getUserListPanel().getParticipantListTable().getUsers();
-        for(Map user:users){
-            String username=(String)user.get("username");
-            if(username.equals(ConnectionManager.getUsername())){
-                return ((Integer)user.get("has_mic") == Constants.MIC.MIC_ON);
+
+    public static boolean amIHoldingMic() {
+        ArrayList<Map> users = mf.getUserListPanel().getParticipantListTable().getUsers();
+        for (Map user : users) {
+            String username = (String) user.get("username");
+            if (username.equals(ConnectionManager.getUsername())) {
+                return mf.getUserListPanel().getParticipantListTable().hasMic(username);
             }
         }
         return false;

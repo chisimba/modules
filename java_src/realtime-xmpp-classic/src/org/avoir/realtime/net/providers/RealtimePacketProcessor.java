@@ -203,11 +203,11 @@ public class RealtimePacketProcessor {
                     item = new Pen(linePoints);
                     item.setId(id);
                 } catch (Exception ex1) {
-                    ex1.printStackTrace();
+                   // ex1.printStackTrace();
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+           // ex.printStackTrace();
         }
         if (item != null) {
             item.setColor(c);
@@ -315,19 +315,20 @@ public class RealtimePacketProcessor {
      * dialog to start capturig 
      * @param xmlContents
      */
-    public static void displayVideoMicWindow(String xmlContents) {
+    public static void displayVideoMicWindow(String speakerUsername) {// xmlContents) {
 
         try {
-            xmlContents = "<inst>" + xmlContents + "</inst>";
+            /*xmlContents = "<inst>" + xmlContents + "</inst>";
             Document doc = documentBuilder.parse(
-                    new ByteArrayInputStream(xmlContents.getBytes(Constants.PREFERRED_ENCODING)));
+            new ByteArrayInputStream(xmlContents.getBytes(Constants.PREFERRED_ENCODING)));
+
             String from = XmlUtils.readString(doc, "instructor");
             String speaker = XmlUtils.readString(doc, "speaker");
             int index = from.lastIndexOf("@");
             if (index > -1) {
-                from = from.substring(0, index);
-            }
-            String me = ConnectionManager.getUsername();
+            from = from.substring(0, index);
+            }*/
+
             /**
              *         String instructorUrl = ConnectionManager.AUDIO_VIDEO_URL +
             "/video/broadcaster.html?me=" +
@@ -337,24 +338,25 @@ public class RealtimePacketProcessor {
             "/video/receiver.html?me=participant&you=" + currentRoomName;
              */
             String url = "";
-
-            String names = GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(speaker);
+            String me = ConnectionManager.getUsername();
+            String from = ConnectionManager.roomOwner;
+            String names = GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(speakerUsername);
             String speaker1 = GeneralUtil.formatStr(names, " ");
             if (me.equalsIgnoreCase(from)) {
                 url =
                         ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker1;
 
-                dispayAudioVideoWindow(url, speaker);
-            } else if (ConnectionManager.getUsername().equalsIgnoreCase(speaker)) {
+                dispayAudioVideoWindow(url, speakerUsername);
+            } else if (ConnectionManager.getUsername().equalsIgnoreCase(speakerUsername)) {
                 url =
                         ConnectionManager.AUDIO_VIDEO_URL + "/video/broadcaster.html?me=" + speaker1 + "&you=" + ConnectionManager.getRoomName();
 
-                dispayAudioVideoWindow(url, speaker);
+                dispayAudioVideoWindow(url, speakerUsername);
             } else {
                 url =
                         ConnectionManager.AUDIO_VIDEO_URL + "/video/receiver.html?me=" + ConnectionManager.getRoomName() + "&you=" + speaker1;
 
-                dispayAudioVideoWindow(url, speaker);
+                dispayAudioVideoWindow(url, speakerUsername);
             }
 
         } catch (Exception ex) {
@@ -376,7 +378,7 @@ public class RealtimePacketProcessor {
 
     private static void dispayAudioVideoWindow(
             final String url,
-            final String speaker) {
+            final String speakerUsername) {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
@@ -386,8 +388,8 @@ public class RealtimePacketProcessor {
 
                     public void actionPerformed(ActionEvent e) {
                         StringBuilder sb = new StringBuilder();
-                        sb.append("<recipient-names>").append(speaker).append("</recipient-names>");
-                        sb.append("<recipient-username>").append(speaker).append("</recipient-username>");
+                        sb.append("<recipient-names>").append(speakerUsername).append("</recipient-names>");
+                        sb.append("<recipient-username>").append(speakerUsername).append("</recipient-username>");
                         sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
                         RealtimePacket p = new RealtimePacket();
                         p.setMode(RealtimePacket.Mode.TAKE_MIC);
@@ -399,7 +401,7 @@ public class RealtimePacketProcessor {
                 JPanel p = new JPanel();
                 p.add(takeMICButton);
                 mPanel.add(p, BorderLayout.SOUTH);
-                GUIAccessManager.mf.addSpeaker(url, speaker);
+                GUIAccessManager.mf.addSpeaker(url, speakerUsername);
 
             }
         });

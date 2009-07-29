@@ -236,14 +236,14 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    public boolean addSpeaker(final String url, String speakerName) {
+    public boolean addSpeaker(final String url, String speakerUsername) {
         //speakerName = new String(Base64.decode(speakerName));
         int index = 0;
         //first, check same guy already there, if so, simply update instead
         //of creating new window
 
         for (Speaker speaker : speakers) {
-            if (speaker.getSpeaker().equals(speakerName)) {
+            if (speaker.getSpeaker().equals(speakerUsername)) {
                 final JWebBrowser browser = speaker.getWebBrowser();
                 SwingUtilities.invokeLater(new Runnable() {
 
@@ -252,9 +252,9 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                 });
                 tabbedPane.setSelectedIndex(2);
-                speaker.setSpeaker(speakerName);
+                speaker.setSpeaker(speakerUsername);
                 speakers.set(index, speaker);
-                userListPanel.getParticipantListTable().setUserHasMIC(speakerName, true);
+                userListPanel.getParticipantListTable().setUserHasMIC(speakerUsername, true);
                 return true;
             }
         }
@@ -270,9 +270,9 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                 });
                 tabbedPane.setSelectedIndex(2);
-                speaker.setSpeaker(speakerName);
+                speaker.setSpeaker(speakerUsername);
                 speakers.set(index, speaker);
-                userListPanel.getParticipantListTable().setUserHasMIC(speakerName, true);
+                //userListPanel.getParticipantListTable().setUserHasMIC(speakerUsername, true);
                 return true;
             }
             index++;
@@ -280,13 +280,14 @@ public class MainFrame extends javax.swing.JFrame {
         return false;
     }
 
-    public void removeSpeaker(final String speakerName) {
+    public void removeSpeaker(final String speakerUsername) {
+        removeAllSpeakers();
         //final String speakerName = new String(Base64.decode(xspeakerName));
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
                 for (Speaker speaker : speakers) {
-                    if (speaker.getSpeaker().equals(speakerName)) {
+                    if (speaker.getSpeaker().equalsIgnoreCase(speakerUsername)) {
                         final JWebBrowser browser = speaker.getWebBrowser();
                         SwingUtilities.invokeLater(new Runnable() {
 
@@ -295,7 +296,7 @@ public class MainFrame extends javax.swing.JFrame {
                             }
                         });
                         speaker.setSpeaker("free");
-                        userListPanel.getParticipantListTable().setUserHasMIC(speakerName, false);
+                        tabbedPane.setSelectedIndex(0);
                         break;
                     } else {
                     }
@@ -739,7 +740,7 @@ public class MainFrame extends javax.swing.JFrame {
         statusBar.add(wbInfoField);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Realtime Server");
+        setTitle("Realtime Virtual Classroom");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -1164,16 +1165,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (ConnectionManager.getRoomName() != null &&
                 GUIAccessManager.amIHoldingMic()) {
 
-            StringBuilder sb = new StringBuilder();
-            String username = ConnectionManager.getUsername();
-            String names = ConnectionManager.fullnames;
-            sb.append("<recipient-username>").append(username).append("</recipient-username>");
-            sb.append("<recipient-names>").append(names).append("</recipient-names>");
-            sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
-            RealtimePacket p = new RealtimePacket();
-            p.setMode(RealtimePacket.Mode.TAKE_MIC);
-            p.setContent(sb.toString());
-            ConnectionManager.sendPacket(p);
+            userListPanel.getParticipantListTable().takeMic(ConnectionManager.getUsername());
         }
     }
 

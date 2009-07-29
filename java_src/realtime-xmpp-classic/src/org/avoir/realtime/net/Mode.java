@@ -93,5 +93,5 @@ public class Mode {
     public static final String MIC_ADMIN_HOLDER = "mic-admin-holder";
     public static final String SET_ACCESS = "set-access";
     public static final String CHANGE_ACCESS = "change-access";
-    public static final Object SET_PERMISSIONS = "set-permissions";
+    public static final String SET_PERMISSIONS = "set-permissions";
 }
