@@ -31,6 +31,7 @@ class functions_mcqtests extends object
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->objContext = &$this->newObject('dbcontext', 'context');
         $this->objIcon= $this->newObject('geticon','htmlelements');
+        $this->objUser = &$this->getObject('user', 'security');
 	$objPopup=&$this->loadClass('windowpop','htmlelements');
     }
     
@@ -110,6 +111,169 @@ class functions_mcqtests extends object
 	 }else{
 	  return False;
 	 }	
-   }    
+   }
+    /**
+     * 
+     *Method to output student mcq's
+     *@param string $contextCode
+     * @return array
+     *example: $this->objMcqtestsFunctions->displaymcq($contextCode, $userId); 
+     */
+    public function displaymcqFull($contextCode, $userId=Null)
+    {
+	// set up language items
+	$studentLabel = ucfirst($this->objLanguage->languageText('mod_context_readonly', 'context'));
+	$heading = $this->objLanguage->languageText('mod_mcqtests_testresults', 'mcqtests');
+	$testLabel = $this->objLanguage->languageText('mod_mcqtests_test', 'mcqtests');
+	$totalLabel = $this->objLanguage->languageText('mod_mcqtests_totalmarks', 'mcqtests');
+	$markLabel = $this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests');
+	$questionLabel = $this->objLanguage->languageText('mod_mcqtests_question', 'mcqtests');
+	$commentLabel = $this->objLanguage->languageText('mod_mcqtests_comment', 'mcqtests');
+	$correctAnsLabel = $this->objLanguage->languageText('mod_mcqtests_correctans', 'mcqtests');
+	$noAnsLabel = $this->objLanguage->languageText('mod_mcqtests_unanswered', 'mcqtests');
+	$yourAnsLabel = $this->objLanguage->languageText('mod_mcqtests_answer', 'mcqtests');
+	$exitLabel = $this->objLanguage->languageText('word_exit');
+	$nextLabel = $this->objLanguage->languageText('mod_mcqtests_next', 'mcqtests');
+
+	 $data = $this->dbTestadmin->getTests($contextCode);
+
+	 if (!empty($data)) {
+	  foreach($data as $myData){
+	   $studentMark = "";
+	   $studentSubmitDate = "";   
+	   $totalmark = $this->dbQuestions->sumTotalmark($myData['id']);
+	   $resultsData = $this->dbResults->getResults($myData['id']);
+	   $stdntTests = $this->dbTestadmin->getStudentTests($contextCode, $userId);
+	   if(!empty($stdntTests)){
+	    foreach($stdntTests as $stdntTest){
+	     if($stdntTest["testid"] == $myData['id'] && $stdntTest["studentid"] == $userId){
+	       $studentSubmitDate = $stdntTest["endtime"];
+	     }
+
+	    }
+	   }
+
+	   foreach($resultsData as $myResults){
+		if($myResults["studentid"] == $userId){
+	 	 $studentMark = $myResults["mark"];
+		}
+	
+		$result = $this->dbResults->getResult($userId, $myData['id']);
+		$test = $this->dbTestadmin->getTests($this->contextCode, 'name, totalmark', $myData['id']);
+		$result = array_merge($result[0], $test[0]);
+		$totalmark = $this->dbQuestions->sumTotalmark($myData['id']);	
+		$qNum = $this->getParam('qnum');
+		if (empty($qNum)) {
+		    $data = $this->dbQuestions->getQuestionCorrectAnswer($myData['id']);
+		} else {
+		    $data = $this->dbQuestions->getQuestionCorrectAnswer($myData['id'], $qNum);
+		}
+		if (!empty($data)) {
+		    foreach($data as $key => $line) {
+		        $marked = $this->dbMarked->getMarked($userId, $line['questionid'], $myData['id']);
+		        $data[$key]['studcorrect'] = $marked[0]['correct'];
+		        $data[$key]['studans'] = $marked[0]['answer'];
+		        $data[$key]['studorder'] = $marked[0]['answerorder'];
+		        $data[$key]['studcomment'] = $marked[0]['commenttext'];
+		    }
+		}
+		$objTable = new htmltable();
+		$objTable->cellpadding = 5;
+		$objTable->width = '99%';
+
+		$percent = round($result['mark']/$totalmark*100, 2);
+		$studentName = $this->objUser->fullName($result['studentid']);
+		$objTable->startRow();
+		$objTable->addCell('<font size="12"><b>'.$studentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$studentName.'</font>');
+		$objTable->endRow();
+
+		//$str = '<font size="3"><b>'.$studentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$studentName.'<br />';
+		$objTable->startRow();
+		$objTable->addCell('<font size="12"><b>'.$testLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['name'].'</font>');
+		$objTable->endRow();
+
+		//$str.= '<b>'.$testLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['name'].'<br />';
+		$objTable->startRow();
+		$objTable->addCell('<font size="12"><b>'.$totalLabel.':</b>&nbsp;&nbsp;&nbsp;'.$totalmark.'</font>');
+		$objTable->endRow();
+
+		//$str.= '<b>'.$totalLabel.':</b>&nbsp;&nbsp;&nbsp;'.$totalmark.'<br />';
+		$objTable->startRow();
+		$objTable->addCell('<font size="12"><b>'.$markLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['mark'].'&nbsp;&nbsp;('.$percent.'%)</font>');
+		$objTable->endRow();
+		//$str.= '<font size="3"><b>'.$markLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['mark'].'&nbsp;&nbsp;('.$percent.'%)</font>';
+
+		if (!empty($data)) {
+		    $qNum = $data[0]['questionorder'];
+		    $this->objIcon->setIcon('greentick');
+		    $tickIcon = $this->objIcon->show();
+		    $this->objIcon->setIcon('redcross');
+		    $crossIcon = $this->objIcon->show();
+		    foreach($data as $line) {
+			$ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['answerorder']].')';
+			$content = '<b>'.$correctAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['answer'].'<br />';
+			if (!$line['studcorrect']) {
+			    if (!empty($line['studorder']) && !empty($line['studans'])) {
+				$ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['studorder']].')';
+				$content.= '<b>'.$yourAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['studans'].'<br />';
+			    } else {
+				$content.= $noAnsLabel;
+			    }
+			    $icon = $crossIcon;
+			} else {
+			    $icon = $tickIcon;
+			}
+			if (!empty($line['studcomment'])) {
+			    $content.= '<b>'.$commentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$line['studcomment'];
+			}
+
+			$objLayer = new layer();
+			$objLayer->str = $icon;
+			$objLayer->align = 'right';
+			$objLayer->cssClass = 'forumTopic';
+			$iconLayer = $objLayer->show();
+
+			$objLayer = new layer();
+			$objLayer->left = 'margin-right: 20px; float:left';
+			$objLayer->cssClass = 'forumTopic';
+			$parsedQuestion = $this->objWashout->parseText($line['question']);
+			$objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>'.$parsedQuestion;
+			$question = $objLayer->show();
+
+
+			$objLayer = new layer();
+			$objLayer->cssClass = 'forumContent';
+			$objLayer->str = $content;
+			$answers = $objLayer->show();
+
+			$objLayer = new layer();
+			$objLayer->cssClass = 'topicContainer';
+			$objLayer->str = $question.$answers.$iconLayer;
+
+			//$str.= $objLayer->show();
+			$objTable->startRow();
+			$objTable->addCell($objLayer->show());
+			$objTable->endRow();
+			$objLayer = new layer();
+
+			$objLayer->cssClass = 'forumBase';
+			$objLayer->str = '';
+			//$str.= $objLayer->show() .'<br />';
+
+			$objTable->startRow();
+			$objTable->addCell($objLayer->show());
+			$objTable->endRow();
+
+			$qNum = $line['questionorder'];
+
+		    }
+		}
+	   }
+	  }
+	    return $objTable->show();
+	 }else{
+	    return False;
+	 }
+   }
 }
 ?>
