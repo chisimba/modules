@@ -31,6 +31,11 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         'notnull' => TRUE
+    ),
+    'deleteStatus' => array(
+        'type' => 'integer',
+        'length' => 4,
+        'notnull' => TRUE
     )
 );
 ?>

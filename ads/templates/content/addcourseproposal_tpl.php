@@ -4,15 +4,13 @@
     $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
 
     // scripts for extjs
-    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-base.js').'" type="text/javascript"></script>';
-    $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-all.js').'" type="text/javascript"></script>';
-    $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/ext-all.css').'"/>';
-    $extalldebug = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-all-debug.js').'" type="text/javascript"></script>';
+    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+    $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+    $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
     
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);
     $this->appendArrayVar('headerParams', $extallcss);
-    $this->appendArrayVar('headerParams', $extalldebug);
     
     // Create an instance of the css layout class
     $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2

@@ -45,7 +45,7 @@ $txtComment = new textarea('admComment','',10,110);
 $submit = new button('submitbutton','Submit');
 $submit->setToSubmit();
 
-$frmComment = new form('Commentform',$this->uri(array('action'=>'updatecomment','id'=>$courseID)));
+$frmComment = new form('Commentform',$this->uri(array('action'=>'savecomment','id'=>$courseID)));
 $frmComment->addToForm($txtComment->show().'<br>');
 $frmComment->addToForm($submit->show());
 

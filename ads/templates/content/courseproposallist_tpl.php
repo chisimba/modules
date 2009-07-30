@@ -7,9 +7,9 @@
     $courseProposals = $this->objCourseProposals->getCourseProposals($this->objUser->userId());
 
     // scripts
-    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-base.js','ads').'" type="text/javascript"></script>';
-    $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-all.js').'" type="text/javascript"></script>';
-    $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/ext-all.css').'"/>';
+    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+    $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+    $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
     $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/courseproposal.css').'"/>';
 
     $this->appendArrayVar('headerParams', $extbase);
@@ -28,10 +28,7 @@
     $lastEdit = $this->objLanguage->languageText('mod_ads_lastedit', 'ads');
     $edit = $this->objLanguage->languageText('mod_ads_edit', 'ads');
     $faculty = $this->objLanguage->languageText('mod_ads_faculty', 'ads');
-    $curEdit_1 = $this->objLanguage->languageText('mod_ads_curedit_1', 'ads');
-    $curEdit_2 = $this->objLanguage->languageText('mod_ads_curedit_2', 'ads');
-
-
+    
     $addButton = new button('add','Add Proposal');
     $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
     $addButton->setOnClick("window.location='$returnUrl'");
@@ -67,8 +64,7 @@
 
     foreach($courseProposals as $value) {
         $verarray = $this->objDocumentStore->getVersion($value['id'], $this->objUser->userId());
-
-        $titleLink->link($this->uri(array('action'=>'viewform','courseid'=>$value['id'], 'formnumber'=>$this->allForms[0])));
+        $titleLink->link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$value['id'])));
         $titleLink->link=$value['title'];
 
         $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$value['id'])));
@@ -92,11 +88,7 @@
         $reviewLink->link($this->uri(array('action'=>'reviewcourseproposal','id'=>$value['id'])));
 
         $data .= "['".$titleLink->show();
-        if ($verarray['status'] == 'unsubmitted' && $verarray['currentuser'] == $this->objUser->userId()) {
-            $link = new link($this->uri(array('action'=>'submitproposal','courseid'=>$value['id'])));
-            $link->link = "<br />".$curEdit_1."<br />".$curEdit_2;
-            $data .= $link->show();
-        }
+        
         
         $data .= "',";
         $data .= "'".$value['creation_date']."',";

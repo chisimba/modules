@@ -32,15 +32,14 @@ class dbcourseproposals extends dbTable{
 
     public function getCourseProposals($userid)
     {
-        $sql="select * from " .$this->table;//." where userid = '".$userid."'";
+        $sql="select * from " .$this->table." where deleteStatus <> 1";//." where userid = '".$userid."'";
         $rows=$this->getArray($sql);
         return $rows;
     }
 
     public function getCourseProposal($id)
     {
-        $sql="select * from " .$this->table." where id = '".$id."'";
-        $rows=$this->getArray($sql);
+        $rows=$this->getRow('id', $id, $this->table);
         return $rows;
     }
 
@@ -72,6 +71,24 @@ class dbcourseproposals extends dbTable{
     public function getNumberOfCourses() {
 
         return $this->getRecordCount();
+    }
+
+    public function getTitle($id) {
+        $data = $this->getRow('id', $id, $this->table);
+
+        return $data['title'];
+    }
+
+    public function editProposal($id,$faculty, $title) {
+        $data = array('faculty'=>$faculty, 'title'=>$title);
+        $courseProposalStatus = $this->update('id', $id, $data, $this->table);
+    }
+
+    public function deleteProposal($id) {
+        $data = array('deleteStatus'=>'1');
+        $courseProposalStatus = $this->update('id', $id, $data, $this->table);
+
+        return $courseProposalStatus;
     }
 }
 ?>

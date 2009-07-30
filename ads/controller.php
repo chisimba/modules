@@ -18,6 +18,7 @@ class ads extends controller {
     
     $this->objDocumentStore = $this->getObject('dbdocument');
     $this->objCourseProposals = $this->getObject('dbcourseproposals');
+    $this->objComment = $this->getObject('dbcoursecomments');
     //review
     $this->objCourseReviews = $this->getObject('dbcoursereviews');
     $this->objUser = $this->getObject ( 'user', 'security' );
@@ -86,11 +87,24 @@ class ads extends controller {
   }
 
   function __updatecomment(){
-      //$this->objDocumentStore->updateComment($this->objUser->userId(),$_POST['comment']);
       $this->objDocumentStore->updateComment($this->getParam('id'),$_POST['admComment']);
       $this->addCommentMessage = true;
       
       return $this->__home();
+  }
+
+  function __savecomment() {
+      $this->objComment->addComment($this->getParam('id'),$_POST['admComment']);
+      $this->addCommentMessage = true;
+
+      return $this->__home();
+  }
+
+  function __viewcomments() {
+      $this->id = $this->getParam('courseid');
+      $this->setVarByRef('version', $this->getParam('version'));
+
+      return "viewcomment_tpl.php";
   }
   
   function __reviewcourseproposal(){
@@ -102,11 +116,23 @@ class ads extends controller {
     return "addcourseproposal_tpl.php";
   }
 
+  function __editcourseproposal() {
+      $this->id = $this->getParam('id');
+
+     return "editcourseproposal_tpl.php";
+  }
+
   function __savecourseproposal(){
     $faculty = $this->getParam('faculty');
     $courseTitle= $this->getParam('title');
-
-    $courseProposalId=$this->objCourseProposals->addCourseProposal($faculty, $courseTitle);
+    
+    if($this->getParam('edit')) {
+        $this->id = $this->getParam('id');
+        $courseProposalId=$this->objCourseProposals->editProposal($this->id, $faculty, $courseTitle);
+    }
+    else {
+        $courseProposalId=$this->objCourseProposals->addCourseProposal($faculty, $courseTitle);
+    }
     $this->objDocumentStore->addRecord($courseProposalId, "Comment", "", "", "", "0", "");
     return $this->nextAction('overview', array('id'=>$courseProposalId));
   }
@@ -473,6 +499,24 @@ class ads extends controller {
             $message = "There was an error submitting your information";
             $this->setVarByRef("message", $message);
             return "viewcourseproposalstatus_tpl.php";
+        }
+    }
+
+    public function __deletecourseproposal() {
+        $this->id=$this->getParam('id');
+        $this->objCourseProposals->deleteProposal($this->id);
+
+        return $this->__home();
+    }
+
+    public function __showcourseprophist() {
+        $this->id = $this->getParam('courseid');
+        $data = $this->objDocumentStore->getVersion($this->id, $this->objUser->userId());
+        if($data['version'] == 0) {
+            return $this->nextAction('viewForm', array('courseid'=>$this->id, 'formnumber'=>$this->allForms[0]));
+        }
+        else {
+            return "showcourseprophist_tpl.php";
         }
     }
 }

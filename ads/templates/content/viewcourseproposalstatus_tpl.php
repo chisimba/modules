@@ -1,8 +1,8 @@
 <?php
 
-    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-base.js').'" type="text/javascript"></script>';
-    $extall = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/ext-all.css').'"/>';
-    $extalldebug = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/ext-all-debug.js').'" type="text/javascript"></script>';
+    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+    $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+    $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
     $mainjs = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/check-radio.js').'" type="text/javascript"></script>';
     $styleSheet="
     <style type=\"text/css\">
@@ -19,8 +19,8 @@
     
     //append to the top of the page
     $this->appendArrayVar('headerParams', $extbase);
-    $this->appendArrayVar('headerParams', $extall);
-    $this->appendArrayVar('headerParams', $extalldebug);
+    $this->appendArrayVar('headerParams', $extalljs);
+    $this->appendArrayVar('headerParams', $extallcss);
     $this->appendArrayVar('headerParams', $mainjs);
     $this->appendArrayVar('headerParams', $styleSheet);
     
