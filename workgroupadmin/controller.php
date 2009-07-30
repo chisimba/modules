@@ -26,8 +26,8 @@ class workgroupadmin extends controller
     {
         $this->objUser =& $this->getObject('user', 'security');
         $this->objLanguage =& $this->getObject('language','language');
-		$this->objDbWorkgroup =& $this->getObject('dbworkgroup','workgroup'); 
-		$this->objDbWorkgroupUsers =& $this->getObject('dbworkgroupusers','workgroup'); 
+		$this->objDbWorkgroup =& $this->getObject('dbworkgroup','workgroup');
+		$this->objDbWorkgroupUsers =& $this->getObject('dbworkgroupusers','workgroup');
         //$this->objHelp=& $this->getObject('helplink','help');
         //$this->objHelp->rootModule="helloworld";
         //Get the activity logger class
@@ -37,7 +37,7 @@ class workgroupadmin extends controller
         //Log this module call
         $this->objLog->log();
     }
-    
+
     /**
     * The dispatch funtion
     * @param string $action The action
@@ -55,7 +55,7 @@ class workgroupadmin extends controller
         // 2. load the data object (calls the magical getObject which finds the
         //    appropriate file, includes it, and either instantiates the object,
         //    or returns the existing instance if there is one. In this case we
-        //    are not actually getting a data object, just a helper to the 
+        //    are not actually getting a data object, just a helper to the
         //    controller.
         // 3. Pass variables to the template
         $this->setVarByRef('objUser', $this->objUser);
@@ -78,18 +78,18 @@ class workgroupadmin extends controller
             //}
 		}
 		else {
-            // ... else 
+            // ... else
 			$contextTitle = 'context0'; //$objDbContext->getTitle();
 			$this->setVarByRef('contextTitle', $contextTitle);
 		}
-        
+
 		switch($action){
             case 'create':
                 return "create_tpl.php";
-			case "createconfirm": 
+			case "createconfirm":
                 // Create a new workgroup.
 				$id = $this->objDbWorkgroup->insertSingle(
-					$contextCode, 
+					$contextCode,
 					$this->getParam('newworkgroup')
 				);
                 //$id = $this->objDbWorkgroup->getLastInsertId();
@@ -102,10 +102,10 @@ class workgroupadmin extends controller
 				$workgroup = $list[0]['description'];
 				$this->setVarByRef("workgroup", $workgroup);
                 return "rename_tpl.php";
-			case "renameconfirm": 
+			case "renameconfirm":
 				$id = $this->getParam('workgroupId',NULL);
 				$this->objDbWorkgroup->updateSingle(
-					$id, 
+					$id,
 					$this->getParam('newworkgroup')
 				);
 				return $this->nextAction('confirm', null);
@@ -125,42 +125,43 @@ class workgroupadmin extends controller
 				$this->setVarByRef("members", $members);
                 //if ($isAlumni) {
                 //    $objUsers = $this->getObject('dbusers','workgroup');
-               //     $users = $objUsers->listAll();
-    		//		$this->setVarByRef("users", $users);
-               // } else {
+                //    $users = $objUsers->listAll();
+        		//	  $this->setVarByRef("users", $users);
+                //} else {
                     // Get the members of all workgroups in the context.
     				//$membersOfAll = $this->objDbWorkgroupUsers->getAllInContext($contextCode);
-    				$members = $this->objDbWorkgroupUsers->listAll($workgroup['id']);
-    				
-                    // Get the groupAdminModel object.
-    				$groups = $this->getObject("groupAdminModel", "groupadmin");
-                    
-                    // Get list of lecturers
-    				$gid = $groups->getLeafId(array($contextCode,'Lecturers'));
-    				$lecturers = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
-    				   				
+//				$members = $this->objDbWorkgroupUsers->listAll($workgroup['id']);
 
-                    // Get list of students
-    				$gid=$groups->getLeafId(array($contextCode,'Students'));
-    				$students = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
+                // Get the groupAdminModel object.
+				$groups = $this->getObject("groupAdminModel", "groupadmin");
 
-    				$_users = array_merge($lecturers, $students);
+                // Get list of lecturers
+				$gid = $groups->getLeafId(array($contextCode,'Lecturers'));
+				$lecturers = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
 
-                    $users = array();
-                    foreach ($_users as $_user) {
-                        $inWorkgroup = false;
-                        foreach ($members as $member) {
-                            if ($_user['userid'] == $member['userid']) {
-                                $inWorkgroup = true;
-                                break;
-                            }
-                        }
-                        if (!$inWorkgroup) {                          
-                            $users[] = $_user;
+
+                // Get list of students
+				$gid=$groups->getLeafId(array($contextCode,'Students'));
+				$students = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
+
+				$_users = array_merge($lecturers, $students);
+
+                $users = array();
+                foreach ($_users as $_user) {
+                    $inWorkgroup = false;
+                    foreach ($members as $member) {
+                        if ($_user['userid'] == $member['userid']) {
+                            $inWorkgroup = true;
+                            break;
                         }
                     }
-
-                    $this->setVarByRef("users", $users);    
+                    if (!$inWorkgroup) {
+                        $_user['fullname'] = $_user['surname'].', '.$_user['firstname'];
+                        $users[$_user['surname'].$_user['firstname']] = $_user;
+                    }
+                }
+			    ksort($users);
+                $this->setVarByRef("users", $users);
                 //}
 				$this->setVar('pageSuppressXML',true);
 				return "managenew_tpl.php";
@@ -194,5 +195,5 @@ class workgroupadmin extends controller
 		$this->setVarByRef('workgroups', $workgroups);
         return "main_tpl.php";
     }
-}    
+}
 ?>
