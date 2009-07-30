@@ -26,13 +26,13 @@ $mnglink->link = $iconSelect->show();
 $linkManage = $mnglink->show();
 //Heading
 $objHeading->type = 1;
-$objHeading->str = $objUser->fullname() . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio')."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$linkManage;
+$objHeading->str = $objUser->fullname() . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $linkManage;
 echo "<div>" . $objHeading->show() . "</div>";
 //display user's names
 // Spacer
 $objTable->startRow();
-$objTable->addCell($identification.$demographics.$address.$contacts.$emails.$affiliation.$goals.$interests, 340, 'top', 'left');
-$objTable->addCell($qualification.$transcripts.$activity.$competency.$reflections.$assertions, Null, 'top', 'right');
+$objTable->addCell($identification . $demographics . $address . $contacts . $emails . $affiliation . $goals . $interests, 340, 'top', 'left');
+$objTable->addCell($qualification . $transcripts . $activity . $competency . $reflections . $assertions, Null, 'top', 'right');
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('&nbsp;');

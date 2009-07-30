@@ -1,5 +1,4 @@
 <?php
-
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
@@ -11,10 +10,8 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('mouseoverpopup', 'htmlelements');
 $this->loadClass('mysqlxml_eportfolio', 'eportfolio');
-
 $objIcon = $this->newObject('geticon', 'htmlelements');
-$objPopup=&$this->loadClass('windowpop','htmlelements');
-
+$objPopup = &$this->loadClass('windowpop', 'htmlelements');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objinfoTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objactivityTitles = &$this->getObject('htmlheading', 'htmlelements');
@@ -34,8 +31,8 @@ $objreflectionTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objassertionsTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objcategoryTitles = &$this->getObject('htmlheading', 'htmlelements');
 $tabBox = $this->newObject('tabpane', 'htmlelements');
-$this->objEssayView = $this->newObject('manageviews_essay','essay');
-$this->viewAssessments = $this->newObject('viewassessments_Eportfolio','eportfolio');
+$this->objEssayView = $this->newObject('manageviews_essay', 'essay');
+$this->viewAssessments = $this->newObject('viewassessments_Eportfolio', 'eportfolio');
 $featureBox = &$this->newObject('featurebox', 'navigation');
 $page = '';
 $demographicspage = '';
@@ -102,15 +99,13 @@ $linkImportManage = $mngImportlink->show();
 //echo "</br>";
 $objHeading->type = 2;
 $objHeading->align = 'center';
-$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage. '    ' . $linkviewManage  . '    ' . $linkExportManage  . '    ' . $linkImportManage  . '</font>';
+$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage . '    ' . $linkviewManage . '    ' . $linkExportManage . '    ' . $linkImportManage . '</font>';
 echo $objHeading->show();
-
 $objHeading->align = 'left';
 $objinfoTitles->type = 1;
 $objaddressTitles->type = 1;
 $objcontactTitles->type = 1;
-
-$this->_objUser = $this->getObject ( 'user', 'security' );
+$this->_objUser = $this->getObject('user', 'security');
 //Get user contexts
 $myContexts = $this->objContextUser->getUserContext($this->userId);
 /*
@@ -122,26 +117,21 @@ $isContextGuest = $this->objContextUser->getContextWhereGuest($this->userId);
 //$hasAccess|= $this->objEngine->_objUser->isAdmin();
 $hasAccess = $this->_objUser->isContextLecturer();
 $hasAccess = $this->_objUser->isAdmin();
-
 $this->setVar('pageSuppressXML', true);
 $link = new link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'view_contact'
 )));
 $link->link = 'View Identification Details';
-
 //echo '<br clear="left" />'.$link->show();
 //Create Owner and Guest group for user
 //$eportfoliogrpList = $this->_objGroupAdmin->getId($this->objUser->PKId($this->objUser->userId()) , $pkField = 'name');
-
 $eportfoliogrpList = $this->_objGroupAdmin->getId($name = $this->objUser->PKId($this->objUser->userId()));
-
 if (empty($eportfoliogrpList)) {
     //Add User to context groups
     $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
     $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
 }
-
 //End Create
 //View Other's eportfolio
 //getUserDirectGroups
@@ -150,8 +140,6 @@ $myPid = $this->objUser->PKId($this->objUser->userId());
 //$myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->userId());
 $myGroupsId = $this->_objGroupAdmin->getId($myPid);
 $myGroups = $this->_objGroupAdmin->getSubgroups($myGroupsId);
-
-
 // Create a table object for eportfolio
 $epTable = &$this->newObject("htmltable", "htmlelements");
 $epTable->border = 0;
@@ -168,201 +156,189 @@ $userGroupsArray = array();
 $usrGrpId = $this->objGroupsOps->getUserByUserId($this->objUser->userId());
 $permUserId = $usrGrpId['perm_user_id'];
 $allGrps = $this->objGroupsOps->getAllGroups();
-foreach($allGrps as $thisGrp){
-$isGpMbr = $this->objGroupsOps->isGroupMember($thisGrp['group_id'], $this->objUser->userId());
-
-	if($isGpMbr){
-		$userGroupsArray[] = $thisGrp['group_id'];		
-	}		
+foreach($allGrps as $thisGrp) {
+    $isGpMbr = $this->objGroupsOps->isGroupMember($thisGrp['group_id'], $this->objUser->userId());
+    if ($isGpMbr) {
+        $userGroupsArray[] = $thisGrp['group_id'];
+    }
 }
 //Array to store grpUsers inorder to get the owner of the group
 $usersListArr = array();
 $usersPidListArr = array();
 $buddiesListArr = array();
 $buddiesPidListArr = array();
-if(!empty($userGroupsArray)){
-	foreach($userGroupsArray as $userGroup){
-		$grpUsers = $this->objGroupsOps->getUsersInGroup($userGroup);
-		foreach ($grpUsers as $grpUser){
-		//Get the users in these groups
-		 if(!in_array($grpUser['auth_user_id'],$usersListArr)){
-			//Store user Pid
-			$userPid = $this->objUser->PKId($grpUser['auth_user_id']);
-			$usersPidListArr[] = $userPid;		
-			//Store User Id
-			$usersListArr[] = $grpUser['auth_user_id'];
-			//Get the user's groupId (the root)
-			$userGrpId = $this->_objGroupAdmin->getId($userPid);
-						
-			if(!empty($userGrpId)){
-				//Get the user's sub groups
-				$userSubGrps = $this->_objGroupAdmin->getSubgroups($userGrpId);
-				foreach ($userSubGrps[0] as $key=>$userSubGrp){
-//					echo "<br>userSubGrp<br>";
-//					var_dump($key);
-					//The fields to use in the select for getting group users
-				        $fields = array(
-					  'firstName',
-					  'surname',
-					  'tbl_users.id'
-				        );
-					//Get the group users
-					$membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
-					foreach($membersList as $users) {
-						//Check if the logged in user is a user here, if true store userid and groupid
-						if($users['id']==$this->userPid){
-						  $buddiesPidListArr[$userGrpId] = $userPid;
-						  $buddiesListArr[$userGrpId] = $grpUser['auth_user_id'];
-						}
-					}
-					
-				}
-				//echo "<br>buddiesListArr<br>";
-				//var_dump($buddiesListArr);
-				//echo "<br>buddiesPidListArr<br>";
-				//var_dump($buddiesPidListArr);
-	//			echo "<br>userGrpId<br>";
-	//			var_dump($userGrpId);
-		
-			}
-	
-	//		echo "<br>grpUser<br>";
-	//		var_dump($grpUser['auth_user_id']);
-	//		echo "<br>";
-	
-	    }
-	   }
-	}
-
-//echo "<br>userGroupsArray<br>";
-//var_dump($userGroupsArray);
-//echo "<br>userGroupsArray<br>";
-//var_dump($userGroupsArray);
-
-$usrGrpOwner = array();
-foreach ($userGroupsArray as $usrSubGrp){
-	$parentGrp = $this->_objGroupAdmin->getParent($usrSubGrp);
-	if($myPid!==$parentGrp)
-	$usrGrpOwner[$usrSubGrp] = $parentGrp;
-/*
-	echo "<br>usrGrp<br>";
-	var_dump($usrSubGrp);
-	echo "<br>parentGrp<br>";
-	var_dump($parentGrp);
-*/
-}
-/*
-echo "<br>usrGrpOwner<br>";
-var_dump($usrGrpOwner);
-echo "<br>usersListArr<br>";
-var_dump($usersListArr);
-echo "<br>usersPidListArr<br>";
-var_dump($usersPidListArr);
-*/
+if (!empty($userGroupsArray)) {
+    foreach($userGroupsArray as $userGroup) {
+        $grpUsers = $this->objGroupsOps->getUsersInGroup($userGroup);
+        foreach($grpUsers as $grpUser) {
+            //Get the users in these groups
+            if (!in_array($grpUser['auth_user_id'], $usersListArr)) {
+                //Store user Pid
+                $userPid = $this->objUser->PKId($grpUser['auth_user_id']);
+                $usersPidListArr[] = $userPid;
+                //Store User Id
+                $usersListArr[] = $grpUser['auth_user_id'];
+                //Get the user's groupId (the root)
+                $userGrpId = $this->_objGroupAdmin->getId($userPid);
+                if (!empty($userGrpId)) {
+                    //Get the user's sub groups
+                    $userSubGrps = $this->_objGroupAdmin->getSubgroups($userGrpId);
+                    foreach($userSubGrps[0] as $key => $userSubGrp) {
+                        //					echo "<br>userSubGrp<br>";
+                        //					var_dump($key);
+                        //The fields to use in the select for getting group users
+                        $fields = array(
+                            'firstName',
+                            'surname',
+                            'tbl_users.id'
+                        );
+                        //Get the group users
+                        $membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
+                        foreach($membersList as $users) {
+                            //Check if the logged in user is a user here, if true store userid and groupid
+                            if ($users['id'] == $this->userPid) {
+                                $buddiesPidListArr[$userGrpId] = $userPid;
+                                $buddiesListArr[$userGrpId] = $grpUser['auth_user_id'];
+                            }
+                        }
+                    }
+                    //echo "<br>buddiesListArr<br>";
+                    //var_dump($buddiesListArr);
+                    //echo "<br>buddiesPidListArr<br>";
+                    //var_dump($buddiesPidListArr);
+                    //			echo "<br>userGrpId<br>";
+                    //			var_dump($userGrpId);
+                    
+                }
+                //		echo "<br>grpUser<br>";
+                //		var_dump($grpUser['auth_user_id']);
+                //		echo "<br>";
+                
+            }
+        }
+    }
+    //echo "<br>userGroupsArray<br>";
+    //var_dump($userGroupsArray);
+    //echo "<br>userGroupsArray<br>";
+    //var_dump($userGroupsArray);
+    $usrGrpOwner = array();
+    foreach($userGroupsArray as $usrSubGrp) {
+        $parentGrp = $this->_objGroupAdmin->getParent($usrSubGrp);
+        if ($myPid !== $parentGrp) $usrGrpOwner[$usrSubGrp] = $parentGrp;
+        /*
+        echo "<br>usrGrp<br>";
+        var_dump($usrSubGrp);
+        echo "<br>parentGrp<br>";
+        var_dump($parentGrp);
+        */
+    }
+    /*
+    echo "<br>usrGrpOwner<br>";
+    var_dump($usrGrpOwner);
+    echo "<br>usersListArr<br>";
+    var_dump($usersListArr);
+    echo "<br>usersPidListArr<br>";
+    var_dump($usersPidListArr);
+    */
 }
 //foreach($myGroups as $groupId) {
-foreach($buddiesPidListArr as $grpIdKey=>$buddy){
+foreach($buddiesPidListArr as $grpIdKey => $buddy) {
     //get the array key value
     //foreach(array_keys($groupId) as $myGrpId)
     // $groupId = $myGrpId;
-     $groupId = $grpIdKey;
-    $filter = " WHERE id = '".$groupId."'";
-/*    
+    $groupId = $grpIdKey;
+    $filter = " WHERE id = '" . $groupId . "'";
+    /*
     $parentId = $this->_objGroupAdmin->getGroups($fields = array(
-        "id",
-        "name",
-        "parent_id"
+    "id",
+    "name",
+    "parent_id"
     ) , $filter);
     $myparentId = $parentId[0];
     $ownerId = $this->_objGroupAdmin->getname($myparentId['parent_id']);
-*/
+    */
     //$myownerId = $this->_objGroupAdmin->getGroupUsers( $groupId, $fields = null, $filter = null );
-
     //$ownerId=$myownerId[0]['perm_user_id'];
-    //if ($ownerId !== $myPid) 
+    //if ($ownerId !== $myPid)
     if ($buddy !== $myPid) {
-    //    $fullname = $this->objUserAdmin->getUserDetails($ownerId);
-    $fullname = $this->objUserAdmin->getUserDetails($buddy);
+        //    $fullname = $this->objUserAdmin->getUserDetails($ownerId);
+        $fullname = $this->objUserAdmin->getUserDetails($buddy);
         if (!empty($fullname)) {
             //Get the buddys' sub groups
-		$userSubGrps = $this->_objGroupAdmin->getSubgroups($groupId);
-		foreach ($userSubGrps[0] as $key=>$userSubGrp){
-	//					echo "<br>userSubGrp<br>";
-	//					var_dump($key);
-			//The fields to use in the select for getting group users			
-			$fields = array(
-			  'firstName',
-			  'surname',
-			  'tbl_users.id'
-			);
-			//Get the group users
-			$membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
-			foreach($membersList as $users) {
-				//Check if the logged in user is a user here, if true store userid and groupid
-				if($users['id']==$this->userPid){
-				  //$buddiesPidListArr[$userGrpId] = $userPid;
-				  //$buddiesListArr[$userGrpId] = $grpUser['auth_user_id'];
-				    // Add row with user details.
-				    //$groupname = $this->_objGroupAdmin->getName($groupId);
-				    //var_dump($key);
-				    //Select View
-				    $iconSelect = $this->getObject('geticon', 'htmlelements');
-				    $iconSelect->setIcon('view');
-				    $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
-				    $mnglink = new link($this->uri(array(
-					'module' => 'eportfolio',
-					'action' => 'view_others_eportfolio',
-					'id' => $key,
-					'ownerId'=>$buddy
-				    )));
-				    $mnglink->link = $iconSelect->show();
-				    $linkManage = $mnglink->show();
-				    //Store Group id
-				    $textinput = new textinput("groupId", $key);
-				    $epTable->startRow();
-				    $epTable->addCell($linkManage, '', '', 'left', '', '');
-				    $epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
-				    $epTable->addCell($userSubGrp['group_define_name'], '', '', 'left', '', '');
-				    $epTable->endRow();
-				    $groupexists = $groupexists+1;
-
-				}
-			}
-		
-		}
-    
+            $userSubGrps = $this->_objGroupAdmin->getSubgroups($groupId);
+            foreach($userSubGrps[0] as $key => $userSubGrp) {
+                //					echo "<br>userSubGrp<br>";
+                //					var_dump($key);
+                //The fields to use in the select for getting group users
+                $fields = array(
+                    'firstName',
+                    'surname',
+                    'tbl_users.id'
+                );
+                //Get the group users
+                $membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
+                foreach($membersList as $users) {
+                    //Check if the logged in user is a user here, if true store userid and groupid
+                    if ($users['id'] == $this->userPid) {
+                        //$buddiesPidListArr[$userGrpId] = $userPid;
+                        //$buddiesListArr[$userGrpId] = $grpUser['auth_user_id'];
+                        // Add row with user details.
+                        //$groupname = $this->_objGroupAdmin->getName($groupId);
+                        //var_dump($key);
+                        //Select View
+                        $iconSelect = $this->getObject('geticon', 'htmlelements');
+                        $iconSelect->setIcon('view');
+                        $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
+                        $mnglink = new link($this->uri(array(
+                            'module' => 'eportfolio',
+                            'action' => 'view_others_eportfolio',
+                            'id' => $key,
+                            'ownerId' => $buddy
+                        )));
+                        $mnglink->link = $iconSelect->show();
+                        $linkManage = $mnglink->show();
+                        //Store Group id
+                        $textinput = new textinput("groupId", $key);
+                        $epTable->startRow();
+                        $epTable->addCell($linkManage, '', '', 'left', '', '');
+                        $epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
+                        $epTable->addCell($userSubGrp['group_define_name'], '', '', 'left', '', '');
+                        $epTable->endRow();
+                        $groupexists = $groupexists+1;
+                    }
+                }
+            }
         }
-   }     
+    }
+}
+//}
+/*
+if (!empty($fullname)) {
+// Add row with user details.
+$groupname = $this->_objGroupAdmin->getName($groupId);
+//Select View
+$iconSelect = $this->getObject('geticon', 'htmlelements');
+$iconSelect->setIcon('view');
+$iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
+$mnglink = new link($this->uri(array(
+'module' => 'eportfolio',
+'action' => 'view_others_eportfolio',
+'id' => $groupId
+)));
+$mnglink->link = $iconSelect->show();
+$linkManage = $mnglink->show();
+//Store Group id
+$textinput = new textinput("groupId", $groupId);
+$epTable->startRow();
+$epTable->addCell($linkManage, '', '', 'left', '', '');
+$epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
+$epTable->addCell($groupname, '', '', 'left', '', '');
+$epTable->endRow();
+$groupexists = $groupexists+1;
 }
 
-     //}
-	/*
-        if (!empty($fullname)) {
-            // Add row with user details.
-            $groupname = $this->_objGroupAdmin->getName($groupId);
-            //Select View
-            $iconSelect = $this->getObject('geticon', 'htmlelements');
-            $iconSelect->setIcon('view');
-            $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
-            $mnglink = new link($this->uri(array(
-                'module' => 'eportfolio',
-                'action' => 'view_others_eportfolio',
-                'id' => $groupId
-            )));
-            $mnglink->link = $iconSelect->show();
-            $linkManage = $mnglink->show();
-            //Store Group id
-            $textinput = new textinput("groupId", $groupId);
-            $epTable->startRow();
-            $epTable->addCell($linkManage, '', '', 'left', '', '');
-            $epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
-            $epTable->addCell($groupname, '', '', 'left', '', '');
-            $epTable->endRow();
-            $groupexists = $groupexists+1;
-        }
+}
 
-    }
-        
 }
 */
 if ($groupexists == 0) {
@@ -371,7 +347,6 @@ if ($groupexists == 0) {
     $epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
     $epTable->endRow();
 }
-
 //View Other's eportfolio
 //Start Address View
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
@@ -464,7 +439,6 @@ $mainlink = new link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'add_address'
 )));
-
 $mainlink->link = $objLanguage->languageText("mod_eportfolio_addAddress", 'eportfolio');
 $addressTable->startRow();
 $addressTable->addCell($mainlink->show() , '', '', '', '', '', 'colspan="8"');
@@ -509,11 +483,9 @@ $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_countr
 $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_areacode", 'eportfolio') . "</b>");
 $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contactnumber", 'eportfolio') . "</b>");
 $contactTable->endRow();
-
 // Step through the list of contacts
 if (!empty($contactList)) {
     foreach($contactList as $contactItem) {
-
         // Display each field for contacts
         $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
         $modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
@@ -679,7 +651,7 @@ if (empty($demographicsList)) {
     $demographicsTable->addCell($demographicsobjHeading->show() , '', '', '', '', 'colspan="4"');
     $demographicsTable->endRow();
     //echo $objHeading->show();
-
+    
 } else {
     $demographicsobjHeading->str = $objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio');
     $demographicsTable->startRow();
@@ -880,19 +852,19 @@ if (!empty($activitylist)) {
 /*
 $hasEssays = 0;
 foreach ($myContexts as $contextCode){
- $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
-	if(!empty($contextEssay)){
-		$hasEssays = 1;
-		$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
-		$list=$this->objLanguage->languageText('word_list');
-		$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay').' '.$this->objLanguage->languageText('word_for').' '.$contextCode." - ".$this->_objDBContext->getTitle($contextCode);
-		
-		//echo "<b>".$head."</b>".$viewEssays;
-		$activityTable->startRow();
-		$activityTable->addCell("<b>".$head."</b>".$viewEssays , '', '', '', '', 'colspan="6"');
-		$activityTable->endRow();
+$contextEssay = $this->objEssayView->getStudentEssays($contextCode);
+if(!empty($contextEssay)){
+$hasEssays = 1;
+$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
+$list=$this->objLanguage->languageText('word_list');
+$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay').' '.$this->objLanguage->languageText('word_for').' '.$contextCode." - ".$this->_objDBContext->getTitle($contextCode);
 
-	}
+//echo "<b>".$head."</b>".$viewEssays;
+$activityTable->startRow();
+$activityTable->addCell("<b>".$head."</b>".$viewEssays , '', '', '', '', 'colspan="6"');
+$activityTable->endRow();
+
+}
 }
 */
 //    	echo $activityTable->show();
@@ -1032,68 +1004,61 @@ $transcriptTable->width = "100%";
 $class = NULL;
 $hasEssays = 0;
 $hasAssignments = 0;
-foreach ($myContexts as $contextCode){
-$contextLecturers = $this->objContextUser->getContextLecturers($contextCode);
-$isaLecturer = False;
-	foreach($contextLecturers as $isLecturer){
-		if($this->userPid == $isLecturer['id'])
-		$isaLecturer = True;
-	}
- if(!$isaLecturer){
- //Get student essays for this course
- $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
-	if(!empty($contextEssay)){
-		$hasEssays = 1;
-		$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
-		$list=$this->objLanguage->languageText('word_list');
-		$head=$this->_objDBContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('mod_essay_essay','essay');
-		
-		//echo "<b>".$head."</b>".$viewEssays;
-		$transcriptTable->startRow();
-		$transcriptTable->addCell("<h3>".$head."</h3>".$viewEssays , '', '', '', '', 'colspan="6"');
-		$transcriptTable->endRow();
-
-	}
- //Get student essays for this course
- $contextAssignments = $this->objAssignmentFunctions->displayAssignment($contextCode);
-	if(!empty($contextAssignments)){
-		$hasAssignments = 1;
-		//$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
-		$list=$this->objLanguage->languageText('word_list');
-		$head=$this->_objDBContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('mod_assignment_assignments','assignment');
-		
-		//echo "<b>".$head."</b>".$viewEssays;
-		$transcriptTable->startRow();
-		$transcriptTable->addCell("<h3>".$head."</h3>".$contextAssignments , '', '', '', '', 'colspan="6"');
-		$transcriptTable->endRow();
-
-	}
- $contextWorksheets = $this->objWorksheetFunctions->displayWorksheets($contextCode, $userId);
- if(!empty($contextWorksheets)){
-		$transcriptTable->startRow();
-		$transcriptTable->addCell($contextWorksheets , '', '', '', '', 'colspan="6"');
-		$transcriptTable->endRow();
- 
-  }
-  //Get mcqtests
-  $objmcq = $this->objMcqtestsFunctions->displaymcq($contextCode, $userId, $uriAction='showtest', $uriModule='eportfolio'); 
-  if(!empty($objmcq)){
-	$mcqHead=$this->_objDBContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('mod_mcqtests_mcq','mcqtests');
-	$transcriptTable->startRow();
-	$transcriptTable->addCell("<h3>".$mcqHead."</h3>".$objmcq , '', '', '', '', 'colspan="6"');
-	$transcriptTable->endRow();
-  }
-  //Get Rubrics
-  $studRubrics = $this->objRubricFunctions->displayrubric($contextCode, $userId, $uriModule='eportfolio', $assessmentAction='rubricsassessments', $viewTableAction='rubricviewtable');
-  if(!empty($studRubrics)){
-	$rubricHead=$this->_objDBContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('rubric_rubrics','rubric');
-	$transcriptTable->startRow();
-	$transcriptTable->addCell("<h3>".$rubricHead."</h3>".$studRubrics , '', '', '', '', 'colspan="6"');
-	$transcriptTable->endRow();
-  }
- }
+foreach($myContexts as $contextCode) {
+    $contextLecturers = $this->objContextUser->getContextLecturers($contextCode);
+    $isaLecturer = False;
+    foreach($contextLecturers as $isLecturer) {
+        if ($this->userPid == $isLecturer['id']) $isaLecturer = True;
+    }
+    if (!$isaLecturer) {
+        //Get student essays for this course
+        $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
+        if (!empty($contextEssay)) {
+            $hasEssays = 1;
+            $viewEssays = $this->viewAssessments->viewEssays($contextEssay);
+            $list = $this->objLanguage->languageText('word_list');
+            $head = $this->_objDBContext->getTitle($contextCode) . " : " . $this->objLanguage->languageText('mod_essay_essay', 'essay');
+            //echo "<b>".$head."</b>".$viewEssays;
+            $transcriptTable->startRow();
+            $transcriptTable->addCell("<h3>" . $head . "</h3>" . $viewEssays, '', '', '', '', 'colspan="6"');
+            $transcriptTable->endRow();
+        }
+        //Get student essays for this course
+        $contextAssignments = $this->objAssignmentFunctions->displayAssignment($contextCode);
+        if (!empty($contextAssignments)) {
+            $hasAssignments = 1;
+            //$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
+            $list = $this->objLanguage->languageText('word_list');
+            $head = $this->_objDBContext->getTitle($contextCode) . " : " . $this->objLanguage->languageText('mod_assignment_assignments', 'assignment');
+            //echo "<b>".$head."</b>".$viewEssays;
+            $transcriptTable->startRow();
+            $transcriptTable->addCell("<h3>" . $head . "</h3>" . $contextAssignments, '', '', '', '', 'colspan="6"');
+            $transcriptTable->endRow();
+        }
+        $contextWorksheets = $this->objWorksheetFunctions->displayWorksheets($contextCode, $userId);
+        if (!empty($contextWorksheets)) {
+            $transcriptTable->startRow();
+            $transcriptTable->addCell($contextWorksheets, '', '', '', '', 'colspan="6"');
+            $transcriptTable->endRow();
+        }
+        //Get mcqtests
+        $objmcq = $this->objMcqtestsFunctions->displaymcq($contextCode, $userId, $uriAction = 'showtest', $uriModule = 'eportfolio');
+        if (!empty($objmcq)) {
+            $mcqHead = $this->_objDBContext->getTitle($contextCode) . " : " . $this->objLanguage->languageText('mod_mcqtests_mcq', 'mcqtests');
+            $transcriptTable->startRow();
+            $transcriptTable->addCell("<h3>" . $mcqHead . "</h3>" . $objmcq, '', '', '', '', 'colspan="6"');
+            $transcriptTable->endRow();
+        }
+        //Get Rubrics
+        $studRubrics = $this->objRubricFunctions->displayrubric($contextCode, $userId, $uriModule = 'eportfolio', $assessmentAction = 'rubricsassessments', $viewTableAction = 'rubricviewtable');
+        if (!empty($studRubrics)) {
+            $rubricHead = $this->_objDBContext->getTitle($contextCode) . " : " . $this->objLanguage->languageText('rubric_rubrics', 'rubric');
+            $transcriptTable->startRow();
+            $transcriptTable->addCell("<h3>" . $rubricHead . "</h3>" . $studRubrics, '', '', '', '', 'colspan="6"');
+            $transcriptTable->endRow();
+        }
+    }
 }
-
 // Add the table heading.
 $transcriptTable->startRow();
 $transcriptTable->addCell($transcriptobjHeading->show() , '', '', '', '', 'colspan="2"');
@@ -1143,7 +1108,6 @@ if (!empty($transcriptlist)) {
     $transcriptTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
     $transcriptTable->endRow();
 }
-
 //	echo $transcriptTable->show();
 $addlink = new link($this->uri(array(
     'module' => 'eportfolio',
@@ -1285,24 +1249,21 @@ $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 //List the course outcomes for each course a user is affiliated to
-if(!empty($myContexts)){
-	foreach($myContexts as $contextCode){
-		$contextDetails = $this->_objDBContext->getContextDetails($contextCode);
-		if(!empty($contextDetails["goals"])){
-			$contextTitle = "<b>".$contextDetails["contextcode"]." - ".ucwords(strtolower($contextDetails["title"]))." ".$this->objLanguage->code2Txt('mod_contextadmin_courseoutcomes', 'contextadmin', NULL, 'Outcomes')."</b><br>";
-			$contextOutcomes = $contextDetails["goals"];
-
-			$goalsTable->startRow();
-			$goalsTable->addCell($contextTitle, '', '', '', $class, 'colspan="2"');
-			$goalsTable->endRow();
-		    	$goalsTable->startRow();
-		    	$goalsTable->addCell($contextOutcomes, '', '', '', $class, 'colspan="2"');
-		    	$goalsTable->endRow();
-
-		}
-	}
+if (!empty($myContexts)) {
+    foreach($myContexts as $contextCode) {
+        $contextDetails = $this->_objDBContext->getContextDetails($contextCode);
+        if (!empty($contextDetails["goals"])) {
+            $contextTitle = "<b>" . $contextDetails["contextcode"] . " - " . ucwords(strtolower($contextDetails["title"])) . " " . $this->objLanguage->code2Txt('mod_contextadmin_courseoutcomes', 'contextadmin', NULL, 'Outcomes') . "</b><br>";
+            $contextOutcomes = $contextDetails["goals"];
+            $goalsTable->startRow();
+            $goalsTable->addCell($contextTitle, '', '', '', $class, 'colspan="2"');
+            $goalsTable->endRow();
+            $goalsTable->startRow();
+            $goalsTable->addCell($contextOutcomes, '', '', '', $class, 'colspan="2"');
+            $goalsTable->endRow();
+        }
+    }
 }
-
 if (!empty($goalsList)) {
     $i = 0;
     echo "<ul>";
@@ -1341,7 +1302,7 @@ if (!empty($goalsList)) {
     unset($item);
     echo "</ul>";
 }
-if(empty($myContexts) && empty($goalsList)){
+if (empty($myContexts) && empty($goalsList)) {
     $goalsTable->startRow();
     $goalsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
     $goalsTable->endRow();
@@ -1585,25 +1546,25 @@ if (!empty($reflectionList)) {
         $reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
         $reflectionTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
         $reflectionTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-        
-	//Show the view Icon
-	$this->objIcon= $this->newObject('geticon','htmlelements');
-	$this->objIcon->title=$this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
-	$this->objIcon->setIcon('comment_view');
-	$commentIcon = $this->objIcon->show();
-
-	$objPopup = new windowpop();
-	$objPopup->set('location',$this->uri(array('action' => 'singlereflection','reflectId' => $item['id']),'eportfolio'));
-	$objPopup->set('linktext',$commentIcon);
-	$objPopup->set('width','600');
-	$objPopup->set('height','350');
-	$objPopup->set('left','200');
-	$objPopup->set('top','200');
-    	$objPopup->set('scrollbars','yes');
-    	$objPopup->set('resizable','yes');
-	$objPopup->putJs(); // you only need to do this once per page
-	//echo $objPopup->show();
-        
+        //Show the view Icon
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+        $this->objIcon->setIcon('comment_view');
+        $commentIcon = $this->objIcon->show();
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+            'action' => 'singlereflection',
+            'reflectId' => $item['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
+        //echo $objPopup->show();
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
         $iconEdit->setIcon('edit');
@@ -1631,7 +1592,7 @@ if (!empty($reflectionList)) {
             'id' => $item["id"]
         )) , $objLanguage->languageText('mod_eportfolio_suredelete', 'eportfolio'));
         //echo $objConfirm->show();
-        $reflectionTable->addCell($objPopup->show().$linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
+        $reflectionTable->addCell($objPopup->show() . $linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
         $reflectionTable->endRow();
     }
     unset($item);
@@ -1675,7 +1636,7 @@ if (!$hasAccess) {
     $assertionsobjHeading->type = 3;
     $assertionsobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio') . '&nbsp;&nbsp;&nbsp;' . $assertionslinkAdd;
     //  echo $assertionsobjHeading->show();
-//    $Id = $this->_objGroupAdmin->getUserGroups($userPid);
+    //    $Id = $this->_objGroupAdmin->getUserGroups($userPid);
     // Create a table object
     $assertionstable = &$this->newObject("htmltable", "htmlelements");
     $assertionstable->border = 0;
@@ -1693,43 +1654,41 @@ if (!$hasAccess) {
     $assertionstable->endRow();
     // Step through the list of addresses.
     $class = NULL;
-//    if (!empty($Id))
-      if (!empty($myGroups)) {
+    //    if (!empty($Id))
+    if (!empty($myGroups)) {
         foreach($myGroups as $groupId) {
             //Get the group parent_id
-	    foreach(array_keys($groupId) as $myGrpId)
-	     $groupId = $myGrpId;
-
-//            $parentId = $this->_objGroupAdmin->getParent($groupId);
-	$myownerId = $this->_objGroupAdmin->getGroupUsers( $groupId, $fields = null, $filter = null );
-//var_dump($myownerId[0]['perm_user_id']);
-//            foreach($parentId as $myparentId) {
-                //Get the name from group table
-                $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
-                $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
-                if (!empty($assertionslist)) {
-                    // Display each field for activities
-                    $assertionstable->startRow();
-                    $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
-                    $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-                    $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
-                    $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
-                    // Show the view link
-                    //Display Icon
-                    $atyiconView = $this->getObject('geticon', 'htmlelements');
-                    $atyiconView->setIcon('bookopen');
-                    $atyiconView->alt = $objLanguage->languageText("mod_eportfolio_display", 'eportfolio');
-                    $atymnglink = new link($this->uri(array(
-                        'module' => 'eportfolio',
-                        'action' => 'displayassertion',
-                        'thisid' => $assertionslist[0]["id"]
-                    )));
-                    $atymnglink->link = $atyiconView->show();
-                    $atylinkManage = $atymnglink->show();
-                    $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
-                    $assertionstable->endRow();
-                }
-                unset($myparentId);
+            foreach(array_keys($groupId) as $myGrpId) $groupId = $myGrpId;
+            //            $parentId = $this->_objGroupAdmin->getParent($groupId);
+            $myownerId = $this->_objGroupAdmin->getGroupUsers($groupId, $fields = null, $filter = null);
+            //var_dump($myownerId[0]['perm_user_id']);
+            //            foreach($parentId as $myparentId) {
+            //Get the name from group table
+            $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+            $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
+            if (!empty($assertionslist)) {
+                // Display each field for activities
+                $assertionstable->startRow();
+                $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
+                $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
+                $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
+                // Show the view link
+                //Display Icon
+                $atyiconView = $this->getObject('geticon', 'htmlelements');
+                $atyiconView->setIcon('bookopen');
+                $atyiconView->alt = $objLanguage->languageText("mod_eportfolio_display", 'eportfolio');
+                $atymnglink = new link($this->uri(array(
+                    'module' => 'eportfolio',
+                    'action' => 'displayassertion',
+                    'thisid' => $assertionslist[0]["id"]
+                )));
+                $atymnglink->link = $atyiconView->show();
+                $atylinkManage = $atymnglink->show();
+                $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
+                $assertionstable->endRow();
+            }
+            unset($myparentId);
             //}
             unset($groupId);
         }
@@ -1737,7 +1696,6 @@ if (!$hasAccess) {
         $assertionstable->startRow();
         $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
         $assertionstable->endRow();
-
     }
     //echo $assertionstable->show();
     
@@ -1854,7 +1812,6 @@ if (!$hasAccess) {
         $assertionstable->startRow();
         $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
         $assertionstable->endRow();
-
     }
     //echo $assertionstable->show();
     $assertionsaddlink = new link($this->uri(array(
@@ -1868,7 +1825,6 @@ if (!$hasAccess) {
     //echo $assertionstable->show();
     
 } //end else hasAccess
-
 //End View Assertions
 //View category
 $hasAccess = $this->_objUser->isContextLecturer();
@@ -2192,7 +2148,6 @@ $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordReflections", 'eportfolio') ,
     'content' => $reflectionpage
 ));
-
 //assertions Title
 $objassertionsTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_assertionList", 'eportfolio');
 $assertionspage.= $featureBox->show($objassertionsTitles->show() , $assertionstable->show() , '10', 'default', TRUE);
@@ -2241,20 +2196,22 @@ $tabBox->addTab(array(
     'content' => $this->getEportfolioUsers()
 ) , 'winclassic-tab-style-sheet');
 echo $tabBox->show();
-
 if ($this->getParam('message') == 'uploadsuccessful') {
     //$uploadstatus = $this->getParam('status');
     $alertBox = $this->getObject('alertbox', 'htmlelements');
     $alertBox->putJs();
-    
     echo "<script type='text/javascript'>
  var browser=navigator.appName;
  var b_version=parseFloat(b_version);
  if(browser=='Microsoft Internet Explorer'){
-	alert('".str_replace('&amp;', '&', $this->uri(array('action'=>'uploaddonemessage')))."');
+	alert('" . str_replace('&amp;', '&', $this->uri(array(
+        'action' => 'uploaddonemessage'
+    ))) . "');
  }else{
 	 jQuery.facebox(function() {
-	  jQuery.get('".str_replace('&amp;', '&', $this->uri(array('action'=>'uploaddonemessage')))."', function(data) {
+	  jQuery.get('" . str_replace('&amp;', '&', $this->uri(array(
+        'action' => 'uploaddonemessage'
+    ))) . "', function(data) {
 	    jQuery.facebox(data);
 	  })
 	 })

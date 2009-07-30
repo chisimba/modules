@@ -3,10 +3,9 @@
 $hasAccess = $this->objEngine->_objUser->isContextLecturer();
 $hasAccess|= $this->objEngine->_objUser->isAdmin();
 */
-$this->_objUser = $this->getObject ( 'user', 'security' );
+$this->_objUser = $this->getObject('user', 'security');
 $hasAccess = $this->_objUser->isContextLecturer();
 $hasAccess = $this->_objUser->isAdmin();
-
 $this->setVar('pageSuppressXML', true);
 if (!$hasAccess) {
     // Redirect
@@ -57,7 +56,6 @@ if (!$hasAccess) {
     );
     $objTable->addCell($row[0], Null, 'top', 'left');
     $objTable->endRow();
-
     //rationale text box
     $textinput = new textarea("rationale", "");
     $form->addRule('rationale', 'Please enter the rationale', 'required');

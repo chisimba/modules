@@ -155,7 +155,6 @@ $row = array(
 //$form->addRule('longdescription', 'Please enter the long description','required');
 $objTable->addCell($row[0], NULL, 'top', 'left');
 $objTable->endRow();
-
 //Save button
 $button = new button("submit", $objLanguage->languageText("word_save")); //word_save
 $button->setToSubmit();

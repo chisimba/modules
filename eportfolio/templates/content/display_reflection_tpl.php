@@ -28,7 +28,6 @@ $objTable->startRow();
 $objTable->addCell($objWashout->parseText("<b>" . $objLanguage->languageText("mod_eportfolio_wordlanguage", 'eportfolio') . ":</b>") , null, "top", "right", null, null, null);
 $objTable->addCell($objWashout->parseText($language) , null, "top", "left", null, null, null);
 $objTable->endRow();
-
 //display user's names
 // Spacer
 $objTable->startRow();

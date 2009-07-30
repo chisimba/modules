@@ -35,16 +35,15 @@ $language = new textinput("language", $language);
 $language->size = 30;
 $form->addRule('language', 'Please enter the Language', 'required');
 $row = array(
-"<b>" . $label = $objLanguage->languageText("mod_eportfolio_language", 'eportfolio') . ":</b>"
+    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_language", 'eportfolio') . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'top', 'right');
 $row = array(
-$language->show()
+    $language->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
-
 //rationale text box
 $textinput = new textinput("rationale", $rationale);
 $textinput->size = 40;

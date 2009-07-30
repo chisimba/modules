@@ -38,22 +38,22 @@ $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
 //parent goal label
 $row = array(
-    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_parent", 'eportfolio') . ":</b>"
+"<b>" . $label = $objLanguage->languageText("mod_eportfolio_parent", 'eportfolio') . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'top', 'right');
 //Goals Drop down list
 $dropdown = new dropdown('parentid');
 if (!empty($mygoals)) {
-    $dropdown->addOption('None', "-Root-");
-    foreach($mygoals as $goals) {
-        $dropdown->addOption($goals['id'], $goals['shortdescription']);
-    }
+$dropdown->addOption('None', "-Root-");
+foreach($mygoals as $goals) {
+$dropdown->addOption($goals['id'], $goals['shortdescription']);
+}
 } else {
-    $dropdown->addOption('None', "-Root-");
+$dropdown->addOption('None', "-Root-");
 }
 $row = array(
-    $dropdown->show()
+$dropdown->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();

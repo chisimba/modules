@@ -65,7 +65,7 @@ $objTable->addCell($row[0], 200, 'top', 'right');
 $form->addRule('birth', 'Please enter your birth date', 'required');
 /*
 $row = array(
-    $startField
+$startField
 );
 */
 $row = array(

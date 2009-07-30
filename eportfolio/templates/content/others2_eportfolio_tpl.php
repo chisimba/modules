@@ -10,7 +10,7 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('mouseoverpopup', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
-$this->_objUser = $this->getObject ( 'user', 'security' );
+$this->_objUser = $this->getObject('user', 'security');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objinfoTitles = &$this->getObject('htmlheading', 'htmlelements');
@@ -99,10 +99,8 @@ $objaddressTitles->type = 1;
 $objcontactTitles->type = 1;
 //$hasAccess = $this->objEngine->_objUser->isContextLecturer();
 //$hasAccess|= $this->objEngine->_objUser->isAdmin();
-
 $hasAccess = $this->_objUser->isContextLecturer();
 $hasAccess = $this->_objUser->isAdmin();
-
 $this->setVar('pageSuppressXML', true);
 $link = new link($this->uri(array(
     'module' => 'eportfolio',
@@ -137,36 +135,34 @@ $addressTable->endRow();
 // Step through the list of addresses.
 if (!empty($addressList)) {
     foreach($addressList as $addressItem) {
-	//Check if this item has been checked already            
-            
-	if(!empty($isSubGroup)){
-	    $addCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($addressItem['id'] == $subgrp['group_define_name']){
-		    $addCheck = 1;	            
-		}
-	    }
-	    if($addCheck==1){
-		//$objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
-		// Display each field for addresses
-		$addressTable->startRow();
-		// Show the manage item check box
-		$cattype = $this->objDbCategorytypeList->listSingle($addressItem['type']);
-		$addressTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-		$addressTable->addCell($addressItem['street_no'], "", NULL, NULL, NULL, '');
-		$addressTable->addCell($addressItem['street_name'], "", NULL, NULL, NULL, '');
-		$addressTable->addCell($addressItem['locality'], "", NULL, NULL, NULL, '');
-		$addressTable->addCell($addressItem['city'], "", NULL, NULL, NULL, '');
-		$addressTable->addCell($addressItem['postcode'], "", NULL, NULL, NULL, '');
-		$addressTable->addCell($addressItem['postal_address'], "", NULL, NULL, NULL, '');
-		$addressTable->endRow();
-		    
-	    }
-	}else{
-	    $addressTable->startRow();
-	    $addressTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
-	    $addressTable->endRow();
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $addCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($addressItem['id'] == $subgrp['group_define_name']) {
+                    $addCheck = 1;
+                }
+            }
+            if ($addCheck == 1) {
+                //$objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+                // Display each field for addresses
+                $addressTable->startRow();
+                // Show the manage item check box
+                $cattype = $this->objDbCategorytypeList->listSingle($addressItem['type']);
+                $addressTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
+                $addressTable->addCell($addressItem['street_no'], "", NULL, NULL, NULL, '');
+                $addressTable->addCell($addressItem['street_name'], "", NULL, NULL, NULL, '');
+                $addressTable->addCell($addressItem['locality'], "", NULL, NULL, NULL, '');
+                $addressTable->addCell($addressItem['city'], "", NULL, NULL, NULL, '');
+                $addressTable->addCell($addressItem['postcode'], "", NULL, NULL, NULL, '');
+                $addressTable->addCell($addressItem['postal_address'], "", NULL, NULL, NULL, '');
+                $addressTable->endRow();
+            }
+        } else {
+            $addressTable->startRow();
+            $addressTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
+            $addressTable->endRow();
+        }
     }
     unset($addressItem);
 } else {
@@ -208,26 +204,25 @@ if (!empty($contactList)) {
         // Display each field
         $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
         $modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
-	//Check if this item has been checked already
-                        
-	if(!empty($isSubGroup)){
-	    $contCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($contactItem['id'] == $subgrp['group_define_name']){
-		    $contCheck = 1;	            
-		}
-	    }
-	    if($contCheck==1){
-		$contactTable->startRow();
-		// Show the manage item check box
-		$contactTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-		$contactTable->addCell($modetype[0]['type'], "", NULL, NULL, NULL, '');
-		$contactTable->addCell($contactItem['country_code'], "", NULL, NULL, NULL, '');
-		$contactTable->addCell($contactItem['area_code'], "", NULL, NULL, NULL, '');
-		$contactTable->addCell($contactItem['id_number'], "", NULL, NULL, NULL, '');
-		$contactTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $contCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($contactItem['id'] == $subgrp['group_define_name']) {
+                    $contCheck = 1;
+                }
+            }
+            if ($contCheck == 1) {
+                $contactTable->startRow();
+                // Show the manage item check box
+                $contactTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
+                $contactTable->addCell($modetype[0]['type'], "", NULL, NULL, NULL, '');
+                $contactTable->addCell($contactItem['country_code'], "", NULL, NULL, NULL, '');
+                $contactTable->addCell($contactItem['area_code'], "", NULL, NULL, NULL, '');
+                $contactTable->addCell($contactItem['id_number'], "", NULL, NULL, NULL, '');
+                $contactTable->endRow();
+            }
+        }
     }
     unset($contactItem);
 } else {
@@ -263,27 +258,26 @@ $emailTable->endRow();
 $class = 'even';
 if (!empty($emailList)) {
     foreach($emailList as $emailItem) {
-	//Check if this item has been checked already            
-            
-	if(!empty($isSubGroup)){
-	    $emailCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($emailItem['id'] == $subgrp['group_define_name']){
-		    $emailCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($emailCheck==1){
-		// Display each field for addresses
-		$cattype = $this->objDbCategorytypeList->listSingle($emailItem['type']);
-		$emailTable->startRow();
-		$emailTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-		$emailTable->addCell($emailItem['email'], "", NULL, NULL, NULL, '');
-		$emailTable->endRow();
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $emailCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($emailItem['id'] == $subgrp['group_define_name']) {
+                    $emailCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($emailCheck == 1) {
+                // Display each field for addresses
+                $cattype = $this->objDbCategorytypeList->listSingle($emailItem['type']);
+                $emailTable->startRow();
+                $emailTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
+                $emailTable->addCell($emailItem['email'], "", NULL, NULL, NULL, '');
+                $emailTable->endRow();
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
     }
     unset($emailItem);
 } else {
@@ -327,23 +321,22 @@ if (!empty($demographicsList)) {
     foreach($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
-	//Check if this item has been checked already            
-            
-	if(!empty($isSubGroup)){
-	    $demoCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($demographicsItem['id'] == $subgrp['group_define_name']){
-		    $demoCheck = 1;	            
-		}
-	    }
-	    if($demoCheck==1){
-		$demographicsTable->startRow();
-		$demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-		$demographicsTable->addCell($this->objDate->formatDate($demographicsItem['birth']) , "", NULL, NULL, NULL, '');
-		$demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
-		$demographicsTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $demoCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($demographicsItem['id'] == $subgrp['group_define_name']) {
+                    $demoCheck = 1;
+                }
+            }
+            if ($demoCheck == 1) {
+                $demographicsTable->startRow();
+                $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
+                $demographicsTable->addCell($this->objDate->formatDate($demographicsItem['birth']) , "", NULL, NULL, NULL, '');
+                $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
+                $demographicsTable->endRow();
+            }
+        }
     }
     unset($demographicsItem);
 } else {
@@ -428,28 +421,26 @@ if (!empty($activitylist)) {
         } else {
             $mycontextTitle = $item['contextid'];
         }
-	//Check if this item has been checked already
-                    
-	if(!empty($isSubGroup)){
-	    $actvCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $actvCheck = 1;	            
-		}
-	    }
-	    if($actvCheck==1){
-		// Display each field for activities
-		$cattype = $this->objDbCategorytypeList->listSingle($item['type']);
-		$activityTable->startRow();
-		$activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, '');
-		$activityTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-		$activityTable->addCell($this->objDate->formatDate($item['start']) , "", NULL, NULL, $class, '');
-		$activityTable->addCell($this->objDate->formatDate($item['finish']) , "", NULL, NULL, $class, '');
-		$activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-		$activityTable->endRow();
-	    }
-	}
-
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $actvCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $actvCheck = 1;
+                }
+            }
+            if ($actvCheck == 1) {
+                // Display each field for activities
+                $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
+                $activityTable->startRow();
+                $activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, '');
+                $activityTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
+                $activityTable->addCell($this->objDate->formatDate($item['start']) , "", NULL, NULL, $class, '');
+                $activityTable->addCell($this->objDate->formatDate($item['finish']) , "", NULL, NULL, $class, '');
+                $activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                $activityTable->endRow();
+            }
+        }
     }
     unset($item);
 } else {
@@ -491,27 +482,26 @@ if (!empty($affiliationList)) {
     foreach($affiliationList as $affiliationItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
-	//Check if this item has been checked already
-                    
-	if(!empty($isSubGroup)){
-	    $affiliationCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($affiliationItem['id'] == $subgrp['group_define_name']){
-		    $affiliationCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($affiliationCheck==1){
-		$affiliationTable->startRow();
-		$affiliationTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-		$affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, $class, '');
-		$affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, $class, '');
-		$affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, $class, '');
-		$affiliationTable->addCell($this->objDate->formatDate($affiliationItem['start']) , "", NULL, NULL, $class, '');
-		$affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']) , "", NULL, NULL, $class, '');
-		$affiliationTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $affiliationCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($affiliationItem['id'] == $subgrp['group_define_name']) {
+                    $affiliationCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($affiliationCheck == 1) {
+                $affiliationTable->startRow();
+                $affiliationTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['start']) , "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']) , "", NULL, NULL, $class, '');
+                $affiliationTable->endRow();
+            }
+        }
     }
     unset($affiliationItem);
 } else {
@@ -544,22 +534,21 @@ $transcriptTable->endRow();
 $class = NULL;
 if (!empty($transcriptlist)) {
     foreach($transcriptlist as $item) {
-	//Check if this item has been checked already
-                    
-	if(!empty($isSubGroup)){
-	    $transCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $transCheck = 1;	            
-		}
-	    }
-	    if($transCheck==1){
-		// Display each field for activities
-		$transcriptTable->startRow();
-		$transcriptTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-		$transcriptTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $transCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $transCheck = 1;
+                }
+            }
+            if ($transCheck == 1) {
+                // Display each field for activities
+                $transcriptTable->startRow();
+                $transcriptTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                $transcriptTable->endRow();
+            }
+        }
     }
     unset($item);
 } else {
@@ -600,25 +589,24 @@ if (!empty($qclList)) {
     foreach($qclList as $qclItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($qclItem['qcl_type']);
-	//Check if this item has been checked already
-        
-	if(!empty($isSubGroup)){
-	    $qclCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($qclItem['id'] == $subgrp['group_define_name']){
-		    $qclCheck = 1;	            
-		}
-	    }
-	    if($qclCheck==1){
-		$qclTable->startRow();
-		$qclTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-		$qclTable->addCell($qclItem['qcl_title'], "", NULL, NULL, $class, '');
-		$qclTable->addCell($qclItem['organisation'], "", NULL, NULL, $class, '');
-		$qclTable->addCell($qclItem['qcl_level'], "", NULL, NULL, $class, '');
-		$qclTable->addCell($this->objDate->formatDate($qclItem['award_date']) , "", NULL, NULL, $class, '');
-		$qclTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $qclCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($qclItem['id'] == $subgrp['group_define_name']) {
+                    $qclCheck = 1;
+                }
+            }
+            if ($qclCheck == 1) {
+                $qclTable->startRow();
+                $qclTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
+                $qclTable->addCell($qclItem['qcl_title'], "", NULL, NULL, $class, '');
+                $qclTable->addCell($qclItem['organisation'], "", NULL, NULL, $class, '');
+                $qclTable->addCell($qclItem['qcl_level'], "", NULL, NULL, $class, '');
+                $qclTable->addCell($this->objDate->formatDate($qclItem['award_date']) , "", NULL, NULL, $class, '');
+                $qclTable->endRow();
+            }
+        }
     }
     unset($qclItem);
 } else {
@@ -650,22 +638,22 @@ $class = NULL;
 if (!empty($goalsList)) {
     $i = 0;
     foreach($goalsList as $item) {
-	//Check if this item has been checked already
-	if(!empty($isSubGroup)){
-	    $goalsCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $goalsCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($goalsCheck==1){
-		// Display each field for activities
-		$goalsTable->startRow();
-		$goalsTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-		$goalsTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $goalsCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $goalsCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($goalsCheck == 1) {
+                // Display each field for activities
+                $goalsTable->startRow();
+                $goalsTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                $goalsTable->endRow();
+            }
+        }
     }
     unset($item);
 } else {
@@ -703,23 +691,23 @@ if (!empty($competencyList)) {
     foreach($competencyList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
-	//Check if this item has been checked already
-	if(!empty($isSubGroup)){
-	    $ctyCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $ctyCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($ctyCheck==1){
-		$competencyTable->startRow();
-		$competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-		$competencyTable->addCell($this->objDate->formatDate($item['award_date']) , "", NULL, NULL, $class, '');
-		$competencyTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-		$competencyTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $ctyCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $ctyCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($ctyCheck == 1) {
+                $competencyTable->startRow();
+                $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
+                $competencyTable->addCell($this->objDate->formatDate($item['award_date']) , "", NULL, NULL, $class, '');
+                $competencyTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                $competencyTable->endRow();
+            }
+        }
     }
     unset($item);
 } else {
@@ -757,23 +745,23 @@ if (!empty($interestList)) {
     foreach($interestList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
-	//Check if this item has been checked already
-	if(!empty($isSubGroup)){
-	    $intrstCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $intrstCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($intrstCheck==1){
-		$interestTable->startRow();
-		$interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-		$interestTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
-		$interestTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-		$interestTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $intrstCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $intrstCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($intrstCheck == 1) {
+                $interestTable->startRow();
+                $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
+                $interestTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+                $interestTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                $interestTable->endRow();
+            }
+        }
     }
     unset($item);
 } else {
@@ -810,42 +798,43 @@ $reflectionTable->endRow();
 $class = NULL;
 if (!empty($reflectionList)) {
     foreach($reflectionList as $item) {
-	//Check if this item has been checked already
-	if(!empty($isSubGroup)){
-	    $rfctnCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $rfctnCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($rfctnCheck==1){
-		//Show the view Icon
-		$this->objIcon= $this->newObject('geticon','htmlelements');
-		$this->objIcon->title=$this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
-		$this->objIcon->setIcon('comment_view');
-		$commentIcon = $this->objIcon->show();
-
-		$objPopup = new windowpop();
-		$objPopup->set('location',$this->uri(array('action' => 'singlereflection','reflectId' => $item['id']),'eportfolio'));
-		$objPopup->set('linktext',$commentIcon);
-		$objPopup->set('width','600');
-		$objPopup->set('height','350');
-		$objPopup->set('left','200');
-		$objPopup->set('top','200');
-		$objPopup->set('scrollbars','yes');
-		$objPopup->set('resizable','yes');
-		$objPopup->putJs(); // you only need to do this once per page
-
-		// Display each field for activities
-		$reflectionTable->startRow();
-		$reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-		$reflectionTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
-		$reflectionTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-		$reflectionTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
-		$reflectionTable->endRow();
-	    }
-	}
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $rfctnCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $rfctnCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($rfctnCheck == 1) {
+                //Show the view Icon
+                $this->objIcon = $this->newObject('geticon', 'htmlelements');
+                $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+                $this->objIcon->setIcon('comment_view');
+                $commentIcon = $this->objIcon->show();
+                $objPopup = new windowpop();
+                $objPopup->set('location', $this->uri(array(
+                    'action' => 'singlereflection',
+                    'reflectId' => $item['id']
+                ) , 'eportfolio'));
+                $objPopup->set('linktext', $commentIcon);
+                $objPopup->set('width', '600');
+                $objPopup->set('height', '350');
+                $objPopup->set('left', '200');
+                $objPopup->set('top', '200');
+                $objPopup->set('scrollbars', 'yes');
+                $objPopup->set('resizable', 'yes');
+                $objPopup->putJs(); // you only need to do this once per page
+                // Display each field for activities
+                $reflectionTable->startRow();
+                $reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
+                $reflectionTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+                $reflectionTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                $reflectionTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
+                $reflectionTable->endRow();
+            }
+        }
     }
     unset($item);
 } else {
@@ -893,25 +882,25 @@ if (!$hasAccess) {
                 $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                 $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                 if (!empty($assertionslist)) {
-			//Check if this item has been checked already
-			if(!empty($isSubGroup)){
-			    $asserCheck = 0;
-			    foreach($isSubGroup[0] as $subgrp){
-				if($assertionslist[0]['id'] == $subgrp['group_define_name']){
-				    $asserCheck = 1;	            
-				}
-			    }
-			    //Do justice on the checkbox
-			    if($asserCheck==1){
-				    // Display each field for activities
-				    $assertionstable->startRow();
-				    $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
-				    $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-				    $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
-				    $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
-				    $assertionstable->endRow();
-			    }
-			}
+                    //Check if this item has been checked already
+                    if (!empty($isSubGroup)) {
+                        $asserCheck = 0;
+                        foreach($isSubGroup[0] as $subgrp) {
+                            if ($assertionslist[0]['id'] == $subgrp['group_define_name']) {
+                                $asserCheck = 1;
+                            }
+                        }
+                        //Do justice on the checkbox
+                        if ($asserCheck == 1) {
+                            // Display each field for activities
+                            $assertionstable->startRow();
+                            $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
+                            $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
+                            $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                            $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
+                            $assertionstable->endRow();
+                        }
+                    }
                 }
                 unset($myparentId);
             }
@@ -933,7 +922,6 @@ if (!$hasAccess) {
     $assertionsobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio');
     // echo $assertionsobjHeading->show();
     $assertionslist = $this->objDbAssertionList->getByItem($userId);
-
     // Create a table object
     $assertionstable = &$this->newObject("htmltable", "htmlelements");
     $assertionstable->border = 0;
@@ -950,27 +938,27 @@ if (!$hasAccess) {
     $assertionstable->endRow();
     // Step through the list of addresses.
     $class = NULL;
-//    $arrayLists = array();
+    //    $arrayLists = array();
     if (!empty($assertionslist)) {
         foreach($assertionslist as $item) {
-		//Check if this item has been checked already
-		if(!empty($isSubGroup)){
-		    $assertCheck = 0;
-		    foreach($isSubGroup[0] as $subgrp){
-			if($item['id'] == $subgrp['group_define_name']){
-			    $assertCheck = 1;
-			}
-		    }
-		    //Do justice on the checkbox
-		    if($assertCheck==1){
-			// Display each field for activities
-			$assertionstable->startRow();
-			$assertionstable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-			$assertionstable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
-			$assertionstable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-			$assertionstable->endRow();
-		    }
-		}
+            //Check if this item has been checked already
+            if (!empty($isSubGroup)) {
+                $assertCheck = 0;
+                foreach($isSubGroup[0] as $subgrp) {
+                    if ($item['id'] == $subgrp['group_define_name']) {
+                        $assertCheck = 1;
+                    }
+                }
+                //Do justice on the checkbox
+                if ($assertCheck == 1) {
+                    // Display each field for activities
+                    $assertionstable->startRow();
+                    $assertionstable->addCell($item['rationale'], "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                    $assertionstable->endRow();
+                }
+            }
         }
         unset($item);
     } else {

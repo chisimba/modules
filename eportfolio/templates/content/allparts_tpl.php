@@ -10,7 +10,7 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('mouseoverpopup', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
-$this->_objUser = $this->getObject ( 'user', 'security' );
+$this->_objUser = $this->getObject('user', 'security');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objinfoTitles = &$this->getObject('htmlheading', 'htmlelements');
@@ -57,13 +57,11 @@ $categorypage = '';
 $categorytypepage = '';
 //Get Group Name
 $groupname = $this->_objGroupAdmin->getName($groupId);
-
 //Get the subgroups which represent the various parts of the eportfolio ie a goal item, an activity item
 $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
 //Store the GroupId
 //var_dump($isSubGroup);
 //var_dump($groupId);
-
 $objHeading->type = 1;
 $objHeading->align = center;
 $objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
@@ -75,7 +73,6 @@ $objHeading->type = 2;
 $objHeading->str = '<font color="#FF8800">' . $objUser->getSurname() . ', ' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $groupname . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . '</font>';
 echo $objHeading->show();
 $mygroupId = new hiddeninput("mygroupId", $groupId);
-
 echo "</br>";
 //Link to epms home
 $iconSelect = $this->getObject('geticon', 'htmlelements');
@@ -102,10 +99,8 @@ $objaddressTitles->type = 1;
 $objcontactTitles->type = 1;
 //$hasAccess = $this->objEngine->_objUser->isContextLecturer();
 //$hasAccess|= $this->objEngine->_objUser->isAdmin();
-
 $hasAccess = $this->_objUser->isContextLecturer();
-$hasAccess |= $this->_objUser->isAdmin();
-
+$hasAccess|= $this->_objUser->isAdmin();
 $this->setVar('pageSuppressXML', true);
 $link = new link($this->uri(array(
     'module' => 'eportfolio',
@@ -150,31 +145,30 @@ $addressTable->endRow();
 // Step through the list of addresses.
 if (!empty($addressList)) {
     foreach($addressList as $addressItem) {
-	//Check if this item has been checked already            
-            
-	if(!empty($isSubGroup)){
-	    $addCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($addressItem['id'] == $subgrp['group_define_name']){
-		    $addCheck = 1;	            
-		}
-	    }
-	    if($addCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}else{
-	    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	}
-        //$isMember = $this->checkIfExists($addressItem['id'], $groupId);
-/*
-        if ($isMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $addCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($addressItem['id'] == $subgrp['group_define_name']) {
+                    $addCheck = 1;
+                }
+            }
+            if ($addCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
         } else {
             $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        //$isMember = $this->checkIfExists($addressItem['id'], $groupId);
+        /*
+        if ($isMember) {
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        } else {
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        }
+        */
         // Display each field for addresses
         $addressTable->startRow();
         // Show the manage item check box
@@ -233,31 +227,30 @@ if (!empty($contactList)) {
         // Display each field
         $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
         $modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
-	//Check if this item has been checked already
-                        
-	if(!empty($isSubGroup)){
-	    $contCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($contactItem['id'] == $subgrp['group_define_name']){
-		    $contCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($contCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $contCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($contactItem['id'] == $subgrp['group_define_name']) {
+                    $contCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($contCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if contact exists in group
         $isGroupMember = $this->checkIfExists($contactItem['id'], $groupId);
         if ($isGroupMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         $contactTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $contactItem['id'];
@@ -306,31 +299,30 @@ $emailTable->endRow();
 $class = 'even';
 if (!empty($emailList)) {
     foreach($emailList as $emailItem) {
-	//Check if this item has been checked already            
-            
-	if(!empty($isSubGroup)){
-	    $emailCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($emailItem['id'] == $subgrp['group_define_name']){
-		    $emailCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($emailCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $emailCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($emailItem['id'] == $subgrp['group_define_name']) {
+                    $emailCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($emailCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if contact exists in group
         $isMember = $this->checkIfExists($emailItem['id'], $groupId);
         if ($isMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($emailItem['type']);
         $emailTable->startRow();
@@ -386,31 +378,30 @@ if (!empty($demographicsList)) {
     foreach($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
-	//Check if this item has been checked already            
-            
-	if(!empty($isSubGroup)){
-	    $demoCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($demographicsItem['id'] == $subgrp['group_define_name']){
-		    $demoCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($demoCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $demoCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($demographicsItem['id'] == $subgrp['group_define_name']) {
+                    $demoCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($demoCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if contact exists in group
         $dgisGrpMember = $this->checkIfExists($demographicsItem['id'], $groupId);
         if ($dgisGrpMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         $demographicsTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $demographicsItem['id'];
@@ -506,30 +497,29 @@ if (!empty($activitylist)) {
         } else {
             $mycontextTitle = $item['contextid'];
         }
-	//Check if this item has been checked already
-                    
-	if(!empty($isSubGroup)){
-	    $actvCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $actvCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($actvCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $actvCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $actvCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($actvCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         $acisMember = $this->checkIfExists($item['id'], $groupId);
         if ($acisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         $activityTable->startRow();
@@ -586,31 +576,30 @@ if (!empty($affiliationList)) {
     foreach($affiliationList as $affiliationItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
-	//Check if this item has been checked already
-                    
-	if(!empty($isSubGroup)){
-	    $affiliationCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($affiliationItem['id'] == $subgrp['group_define_name']){
-		    $affiliationCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($affiliationCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $affiliationCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($affiliationItem['id'] == $subgrp['group_define_name']) {
+                    $affiliationCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($affiliationCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if exists in group
         $affisMember = $this->checkIfExists($affiliationItem['id'], $groupId);
         if ($affisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         $affiliationTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $affiliationItem['id'];
@@ -657,32 +646,30 @@ $transcriptTable->endRow();
 $class = NULL;
 if (!empty($transcriptlist)) {
     foreach($transcriptlist as $item) {
-	//Check if this item has been checked already
-                    
-	if(!empty($isSubGroup)){
-	    $transCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $transCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($transCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $transCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $transCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($transCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if exists in group
         $transisMember = $this->checkIfExists($item['id'], $groupId);
         if ($transisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         // Display each field for activities
         $transcriptTable->startRow();
         // Show the manage item check box
@@ -733,32 +720,30 @@ if (!empty($qclList)) {
     foreach($qclList as $qclItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($qclItem['qcl_type']);
-	//Check if this item has been checked already
-        
-	if(!empty($isSubGroup)){
-	    $qclCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($qclItem['id'] == $subgrp['group_define_name']){
-		    $qclCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($qclCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-
-/*        
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $qclCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($qclItem['id'] == $subgrp['group_define_name']) {
+                    $qclCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($qclCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if exists in group
         $qclisMember = $this->checkIfExists($qclItem['id'], $groupId);
         if ($qclisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         $qclTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $qclItem['id'];
@@ -806,31 +791,30 @@ $class = NULL;
 if (!empty($goalsList)) {
     $i = 0;
     foreach($goalsList as $item) {
-	//Check if this item has been checked already
-	if(!empty($isSubGroup)){
-	    $goalsCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $goalsCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($goalsCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-
-/*    
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $goalsCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $goalsCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($goalsCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if exists in group
         $glisMember = $this->checkIfExists($item['id'], $groupId);
         if ($glisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         // Display each field for activities
         $goalsTable->startRow();
         // Show the manage item check box
@@ -878,30 +862,30 @@ if (!empty($competencyList)) {
     foreach($competencyList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
-	//Check if this item has been checked already
-	if(!empty($isSubGroup)){
-	    $ctyCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $ctyCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($ctyCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $ctyCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $ctyCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($ctyCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if exists in group
         $ctyisMember = $this->checkIfExists($item['id'], $groupId);
         if ($ctyisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         $competencyTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
@@ -950,30 +934,30 @@ if (!empty($interestList)) {
     foreach($interestList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
-	//Check if this item has been checked already
-	if(!empty($isSubGroup)){
-	    $intrstCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $intrstCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($intrstCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $intrstCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $intrstCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($intrstCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if exists in group
         $intrstisMember = $this->checkIfExists($item['id'], $groupId);
         if ($intrstisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         $interestTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
@@ -1020,30 +1004,30 @@ $reflectionTable->endRow();
 $class = NULL;
 if (!empty($reflectionList)) {
     foreach($reflectionList as $item) {
-	//Check if this item has been checked already
-	if(!empty($isSubGroup)){
-	    $rfctnCheck = 0;
-	    foreach($isSubGroup[0] as $subgrp){
-		if($item['id'] == $subgrp['group_define_name']){
-		    $rfctnCheck = 1;	            
-		}
-	    }
-	    //Do justice on the checkbox
-	    if($rfctnCheck==1){
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-	    }else{
-		    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-	    }
-	}
-/*
+        //Check if this item has been checked already
+        if (!empty($isSubGroup)) {
+            $rfctnCheck = 0;
+            foreach($isSubGroup[0] as $subgrp) {
+                if ($item['id'] == $subgrp['group_define_name']) {
+                    $rfctnCheck = 1;
+                }
+            }
+            //Do justice on the checkbox
+            if ($rfctnCheck == 1) {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            } else {
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            }
+        }
+        /*
         //Check if exists in group
         $rfctnisMember = $this->checkIfExists($item['id'], $groupId);
         if ($rfctnisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-*/
+        */
         // Display each field for activities
         $reflectionTable->startRow();
         // Show the manage item check box
@@ -1103,29 +1087,29 @@ if (!$hasAccess) {
                 $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                 $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                 if (!empty($assertionslist)) {
-			//Check if this item has been checked already
-			if(!empty($isSubGroup)){
-			    $asserCheck = 0;
-			    foreach($isSubGroup[0] as $subgrp){
-				if($assertionslist[0]['id'] == $subgrp['group_define_name']){
-				    $asserCheck = 1;	            
-				}
-			    }
-			    //Do justice on the checkbox
-			    if($asserCheck==1){
-				    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-			    }else{
-				    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-			    }
-			}
-/*
+                    //Check if this item has been checked already
+                    if (!empty($isSubGroup)) {
+                        $asserCheck = 0;
+                        foreach($isSubGroup[0] as $subgrp) {
+                            if ($assertionslist[0]['id'] == $subgrp['group_define_name']) {
+                                $asserCheck = 1;
+                            }
+                        }
+                        //Do justice on the checkbox
+                        if ($asserCheck == 1) {
+                            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+                        } else {
+                            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+                        }
+                    }
+                    /*
                     $astnisMember = $this->checkIfExists($assertionslist[0]['id'], $groupId);
                     if ($astnisMember) {
-                        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+                    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
                     } else {
-                        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+                    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
                     }
-*/
+                    */
                     // Display each field for activities
                     $assertionstable->startRow();
                     // Show the manage item check box
@@ -1176,32 +1160,32 @@ if (!$hasAccess) {
     $assertionstable->endRow();
     // Step through the list of addresses.
     $class = NULL;
-//    $arrayLists = array();
+    //    $arrayLists = array();
     if (!empty($assertionslist)) {
         foreach($assertionslist as $item) {
-		//Check if this item has been checked already
-		if(!empty($isSubGroup)){
-		    $assertCheck = 0;
-		    foreach($isSubGroup[0] as $subgrp){
-			if($item['id'] == $subgrp['group_define_name']){
-			    $assertCheck = 1;
-			}
-		    }
-		    //Do justice on the checkbox
-		    if($assertCheck==1){
-			    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);	    
-		    }else{
-			    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);		
-		    }
-		}
-/*
+            //Check if this item has been checked already
+            if (!empty($isSubGroup)) {
+                $assertCheck = 0;
+                foreach($isSubGroup[0] as $subgrp) {
+                    if ($item['id'] == $subgrp['group_define_name']) {
+                        $assertCheck = 1;
+                    }
+                }
+                //Do justice on the checkbox
+                if ($assertCheck == 1) {
+                    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+                } else {
+                    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+                }
+            }
+            /*
             $asnisMember = $this->checkIfExists($item['id'], $groupId);
             if ($asnisMember) {
-                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
             } else {
-                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-*/
+            */
             // Display each field for activities
             $assertionstable->startRow();
             // Show the manage item check box
@@ -1224,6 +1208,7 @@ if (!$hasAccess) {
     //$groupId = new hiddeninput("groupId", $groupId);
     //$row = array( $groupId->show() );
     //$assertionstable->addRow($row, NULL);
+    
 } //end else hasAccess
 //End View Assertions
 //Information Title
@@ -1350,6 +1335,6 @@ $tabBox->addTab(array(
     'content' => $myeportfolioTab
 ) , 'winclassic-tab-style-sheet');
 //echo $tabBox->show();
-$form->addToForm($myeportfolioTab . '<div align="center" >' . $button->show() .$mygroupId->show(). '</div>');
+$form->addToForm($myeportfolioTab . '<div align="center" >' . $button->show() . $mygroupId->show() . '</div>');
 echo $form->show();
 ?>

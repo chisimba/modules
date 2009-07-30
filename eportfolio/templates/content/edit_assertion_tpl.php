@@ -52,7 +52,6 @@ if (!$hasAccess) {
     );
     $objTable->addCell($row[0], Null, 'top', 'left');
     $objTable->endRow();
-
     //rationale text box
     $textinput = new textarea("rationale", $rationale);
     $form->addRule('rationale', 'Please enter the rationale', 'required');

@@ -39,7 +39,8 @@ class export_Eportfolio extends object
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->objDate = &$this->newObject('dateandtime', 'utilities');
         //$objLanguage =& $this->getObject('language','language');
-//        $this->objLanguage = &$this->getObject('language', 'language');
+        //        $this->objLanguage = &$this->getObject('language', 'language');
+        
     }
     public function exportAddress($userId) 
     {
@@ -96,10 +97,10 @@ class export_Eportfolio extends object
             //create root node
             $root = $doc->createElement('root');
             $root = $doc->appendChild($root);
-		var_dump($addressList);
+            var_dump($addressList);
             //process one row at a time
-//            while ($row = mysql_fetch_assoc($addressList)) {
-	      while ($rowcount = count($addressList)){
+            //            while ($row = mysql_fetch_assoc($addressList)) {
+            while ($rowcount = count($addressList)) {
                 //add node for each row
                 $occ = $doc->createElement($table_id);
                 $occ = $root->appendChild($occ);

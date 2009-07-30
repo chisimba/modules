@@ -787,26 +787,27 @@ if (!empty($reflectionList)) {
                 'action' => 'displayothers_reflection',
                 'thisid' => $reflectionOwner
             )));
-	//Show the view Icon
-	$this->objIcon= $this->newObject('geticon','htmlelements');
-	$this->objIcon->title=$this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
-	$this->objIcon->setIcon('comment_view');
-	$commentIcon = $this->objIcon->show();
-
-	$objPopup = new windowpop();
-	$objPopup->set('location',$this->uri(array('action' => 'singlereflection','reflectId' => $item['id']),'eportfolio'));
-	$objPopup->set('linktext',$commentIcon);
-	$objPopup->set('width','600');
-	$objPopup->set('height','350');
-	$objPopup->set('left','200');
-	$objPopup->set('top','200');
-	$objPopup->set('scrollbars','yes');
-	$objPopup->set('resizable','yes');
-	$objPopup->putJs(); // you only need to do this once per page
-            
+            //Show the view Icon
+            $this->objIcon = $this->newObject('geticon', 'htmlelements');
+            $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+            $this->objIcon->setIcon('comment_view');
+            $commentIcon = $this->objIcon->show();
+            $objPopup = new windowpop();
+            $objPopup->set('location', $this->uri(array(
+                'action' => 'singlereflection',
+                'reflectId' => $item['id']
+            ) , 'eportfolio'));
+            $objPopup->set('linktext', $commentIcon);
+            $objPopup->set('width', '600');
+            $objPopup->set('height', '350');
+            $objPopup->set('left', '200');
+            $objPopup->set('top', '200');
+            $objPopup->set('scrollbars', 'yes');
+            $objPopup->set('resizable', 'yes');
+            $objPopup->putJs(); // you only need to do this once per page
             $rmnglink->link = $riconView->show();
             $rlinkManage = $rmnglink->show();
-            $reflectionTable->addCell($objPopup->show().$rlinkManage, "", NULL, NULL, $class, '');
+            $reflectionTable->addCell($objPopup->show() . $rlinkManage, "", NULL, NULL, $class, '');
             $reflectionTable->endRow();
         }
     }

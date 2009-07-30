@@ -71,7 +71,6 @@ class dbEportfolio_Affiliation extends dbTable
             'finish' => $finish,
             'shortdescription' => $shortdescription,
             'longdescription' => $longdescription
-
         ));
         return $id;
     }

@@ -1,18 +1,14 @@
 <?php
-
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('loader');
-
 //AJAX to check if selected folder contains scorm
-    
-    $this->appendArrayVar('headerParams', '
+$this->appendArrayVar('headerParams', '
     <script type="text/javascript">
         
         // Flag Variable - Update message or not
@@ -64,7 +60,7 @@ $objIcon->setIcon('loader');
                     
                     // Set message to checking
                     jQuery("#contextcodemessage").removeClass("success");
-                    jQuery("#contextcodemessage").html("<span id=\"contextcodecheck\">'.addslashes($objIcon->show()).' Checking ...</span>");
+                    jQuery("#contextcodemessage").html("<span id=\"contextcodecheck\">' . addslashes($objIcon->show()) . ' Checking ...</span>");
                     
                     
                     // Set current Code
@@ -106,47 +102,38 @@ $objIcon->setIcon('loader');
             }
         }
     </script>');
-
-    echo '<h1>'.$this->objLanguage->languageText('mod_eportfolio_import','eportfolio').' '.$this->objLanguage->languageText('mod_eportfolio_wordEportfolio','eportfolio').'</h1>';
-    $formaction = 'uploadeportfolio';
-    //echo '<p>Todo: Allow User to place order of chapter</p>';
-    
-$form = new form ('uploadeportfolio', $this->uri(array('action'=>$formaction)));
+echo '<h1>' . $this->objLanguage->languageText('mod_eportfolio_import', 'eportfolio') . ' ' . $this->objLanguage->languageText('mod_eportfolio_wordEportfolio', 'eportfolio') . '</h1>';
+$formaction = 'uploadeportfolio';
+//echo '<p>Todo: Allow User to place order of chapter</p>';
+$form = new form('uploadeportfolio', $this->uri(array(
+    'action' => $formaction
+)));
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->width = '100%';
 $table->attributes = " align='left' border='0'";
 $table->cellspacing = '2';
 $table->cellpadding = '5';
-
 //spacer
 $table->startRow();
 $table->addCell("&nbsp;");
 $table->addCell("&nbsp;");
 $table->endRow();
-
-$label = new label ($this->objLanguage->languageText('mod_eportfolio_selectFolder','eportfolio'), 'input_parentfolder');
-
+$label = new label($this->objLanguage->languageText('mod_eportfolio_selectFolder', 'eportfolio') , 'input_parentfolder');
 $usrFolders = $this->objFolders->getTreedropdown(Null);
-
 $table->startRow();
-$table->addCell($label->show()." ", 190, 'top', 'left');
+$table->addCell($label->show() . " ", 190, 'top', 'left');
 //$table->addCell($htmlArea->show());
-$table->addCell($usrFolders.' <span id="contextcodemessage">'.$contextCodeMessage.'</span>', Null, 'top', 'left');
+$table->addCell($usrFolders . ' <span id="contextcodemessage">' . $contextCodeMessage . '</span>', Null, 'top', 'left');
 $table->endRow();
 //spacer
 $table->startRow();
 $table->addCell("&nbsp;");
 $table->addCell("&nbsp;");
 $table->endRow();
-
 $form->addToForm($table->show());
-
-$button = new button('submitbutton', $this->objLanguage->languageText('mod_eportfolio_import','eportfolio'));
+$button = new button('submitbutton', $this->objLanguage->languageText('mod_eportfolio_import', 'eportfolio'));
 $button->cssId = 'savebutton';
 $button->setToSubmit();
-$form->addToForm($button->show().' <span id="contextcodemessage2">'.$contextCodeMessage.'</span>');
-
-
+$form->addToForm($button->show() . ' <span id="contextcodemessage2">' . $contextCodeMessage . '</span>');
 echo $form->show();
-
 ?>
