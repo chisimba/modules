@@ -837,7 +837,7 @@ public function getAffiliation ( $userId ){
 		$transcriptTable->endRow();
 	  }
 	  //Get Rubrics
-	  $studRubrics = $this->objRubricFunctions->displayrubric($contextCode, $userId, $uriModule='eportfolio', $assessmentAction='rubricsassessments', $viewTableAction='rubricviewtable');
+	  $studRubrics = $this->objRubricFunctions->displayrubricFull($contextCode, $userId, $uriModule='eportfolio', $assessmentAction='rubricsassessments', $viewTableAction='rubricviewtable');
 	  if(!empty($studRubrics)){
 	  	$hasAssessment = 1;
 		$rubricHead=$objDbContext->getTitle($contextCode)." : ".$this->objLanguage->languageText('rubric_rubrics','rubric');

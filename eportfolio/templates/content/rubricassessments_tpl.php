@@ -1,5 +1,4 @@
 <?php
-
     $pageTitle = $this->newObject('htmlheading','htmlelements');
     $pageTitle->type=1;
     $pageTitle->align='left';
@@ -48,7 +47,7 @@
 	        $tblclass->addCell("<b>" . $assessment['teacher'] . "</b>", "null", "top", "left", $oddOrEven, null);
 	        $tblclass->addCell("<b>" . $assessment['timestamp'] . "</b>", "null", "top", "left", $oddOrEven, null);
 	        $tblclass->endRow();
-	}    
+	}
     echo $tblclass->show();
 //Get Object
 $this->objIcon = &$this->newObject('geticon', 'htmlelements');

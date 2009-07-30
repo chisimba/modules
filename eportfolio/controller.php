@@ -95,12 +95,12 @@ class eportfolio extends controller
         $this->dbResults = $this->newObject('dbresults', 'mcqtests');
         $this->dbMarked = $this->newObject('dbmarked', 'mcqtests');
         $this->objWashout = $this->getObject('washout','utilities');
-	$this->objDbRubricTables =& $this->getObject('dbrubrictables','rubric'); 
-	$this->objDbRubricPerformances =& $this->getObject('dbrubricperformances','rubric'); 
-	$this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives','rubric'); 
-	$this->objDbRubricCells =& $this->getObject('dbrubriccells','rubric'); 
-	$this->objDbRubricAssessments =& $this->getObject('dbrubricassessments','rubric'); 
-	$this->objRubricFunctions =& $this->getObject('functions_rubric','rubric'); 
+								$this->objDbRubricTables =& $this->getObject('dbrubrictables','rubric'); 
+								$this->objDbRubricPerformances =& $this->getObject('dbrubricperformances','rubric'); 
+								$this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives','rubric'); 
+								$this->objDbRubricCells =& $this->getObject('dbrubriccells','rubric'); 
+								$this->objDbRubricAssessments =& $this->getObject('dbrubricassessments','rubric'); 
+								$this->objRubricFunctions =& $this->getObject('functions_rubric','rubric'); 
         // Create an array of words to abstract
         // Create an array of words to abstract
         $this->abstractionArray = array(
@@ -139,7 +139,7 @@ class eportfolio extends controller
 		$reflectId = $this->getParam("reflectId");
 		$this->setVarByRef("reflectId", $reflectId);
 		return "viewreflection_tpl.php";
-	  case "rubricviewtable": 
+	 case "rubricviewtable": 
             	$this->setLayoutTemplate(NULL);	    
 		$this->setVar('pageSuppressToolbar', TRUE);
 		$this->setVar('pageSuppressBanner', TRUE);
@@ -213,14 +213,14 @@ class eportfolio extends controller
 		$this->setVarByRef("showStudentNames", $showStudentNames);
 		return "rubricassessments_tpl.php";
         
-            case 'showtest':
-            	$this->setLayoutTemplate(NULL);	    
+  case 'showtest':
+  $this->setLayoutTemplate(NULL);	    
 		$this->setVar('pageSuppressToolbar', TRUE);
 		$this->setVar('pageSuppressBanner', TRUE);
 		$this->setVar('pageSuppressSearch', TRUE);
 		$this->setVar('suppressFooter', TRUE);
-                return $this->showTest();
-	    case 'viewworksheet':
+  return $this->showTest();
+	 case 'viewworksheet':
 		$this->setLayoutTemplate(NULL);	    
 		$id = $this->getParam('id');
 		
