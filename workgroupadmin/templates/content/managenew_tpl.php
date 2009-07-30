@@ -1,12 +1,12 @@
 <?php
-echo '<pre>';
-echo "LECTURERS:\n";
-var_dump($lecturers);
-echo "STUDENTS:\n";
-var_dump($students);
-echo "USERS:\n";
-var_dump($users);
-echo '</pre>';
+//echo '<pre>';
+//echo "LECTURERS:\n";
+//var_dump($lecturers);
+//echo "STUDENTS:\n";
+//var_dump($students);
+//echo "USERS:\n";
+//var_dump($users);
+//echo '</pre>';
 
 
 // Display heading.
