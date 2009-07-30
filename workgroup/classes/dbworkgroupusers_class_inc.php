@@ -17,7 +17,7 @@ class dbWorkgroupUsers extends dbTable
     /**
     * Constructor method to define the table
     */
-    function init() 
+    function init()
     {
         parent::init('tbl_workgroup_users');
         //$this->USE_PREPARED_STATEMENTS=True;
@@ -43,7 +43,7 @@ class dbWorkgroupUsers extends dbTable
 		return $this->getArray($sql);
 		//return $this->getAll("WHERE workgroupId='".$workgroupId."'");
 	}
-    
+
     /**
     * Method to check if a user is a member of a workgroup
     * @param string $userId Record Id of the User
@@ -54,9 +54,9 @@ class dbWorkgroupUsers extends dbTable
     {
         $sql = 'WHERE workgroupid="'.$workgroup.'" AND  userid="'.$userId.'"';
         $list = $this->getAll($sql);
-        
+
         if (count($list) == 0) {
-			// If the user is not a student in the workgroup, 
+			// If the user is not a student in the workgroup,
 			// check if the user is a context lecturer.
             return $this->objUser->isContextLecturer();
         } else {
@@ -74,11 +74,11 @@ class dbWorkgroupUsers extends dbTable
 		$sql = "SELECT {$this->_tableName}.userid, tbl_users.firstname, tbl_users.surname FROM $this->_tableName, tbl_users
 		WHERE {$this->_tableName}.userid=tbl_users.userid
         AND {$this->_tableName}.workgroupid='" . $workgroupId . "'
-		ORDER BY surname";
+		ORDER BY tbl_users.surname, tbl_users.firstname ASC";
 		$rows = $this->getArray($sql);
 		$count = count($rows);
 		for ($i = 0; $i < $count; $i++) {
-			$rows[$i]['fullname'] = stripslashes($rows[$i]['firstname']).' '.stripslashes($rows[$i]['surname']);
+			$rows[$i]['fullname'] = stripslashes($rows[$i]['surname']).', '.stripslashes($rows[$i]['firstname']);
 		}
 		return $rows;
 		//return $this->getAll("WHERE workgroupId='".$workgroupId."'");
@@ -114,10 +114,10 @@ class dbWorkgroupUsers extends dbTable
 	function insertSingle($workgroupId, $userId)
 	{
 		$this->insert(array(
-			'workgroupid'=>$workgroupId, 
+			'workgroupid'=>$workgroupId,
 			'userid'=>$userId
 		));
-		return;	
+		return;
 	}
 
 	/**
@@ -127,14 +127,14 @@ class dbWorkgroupUsers extends dbTable
 	*/
 	function deleteSingle($workgroupId, $userId)
 	{
-        
+
         $sql = "SELECT id FROM $this->_tableName
 		WHERE workgroupid='".$workgroupId."'
 		AND userid='".$userId."'";
         $list = $this->getArray($sql);
         if (!empty($list)) {
             $this->delete("id", $list[0]['id']);
-        }        
+        }
 	}
 
 	/**
