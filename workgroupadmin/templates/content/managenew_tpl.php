@@ -1,4 +1,9 @@
 <?php
+//echo '<pre>';
+//var_dump($users);
+//echo '</pre>';
+
+
 // Display heading.
 
     $pageTitle = $this->newObject('htmlheading','htmlelements');
@@ -9,21 +14,21 @@
 
 $objForm = $this->newObject('form','htmlelements');
 $objForm->name = "form1";
-$objForm->action = $this->uri ( 
-    array( 
+$objForm->action = $this->uri (
+    array(
         'action' => 'processform',
         'workgroupId'=>$workgroup['id']
-    ) 
+    )
 );
 
 // Create the selectbox object
 $objSelectBox = $this->newObject('selectbox','htmlelements');
 // Initialise the selectbox.
-$objSelectBox->create( 
-    $objForm, 
-    'leftList[]', 
-    ucfirst($objLanguage->code2Txt('mod_workgroupadmin_users_in_course','workgroupadmin')), 
-    'rightList[]', 
+$objSelectBox->create(
+    $objForm,
+    'leftList[]',
+    ucfirst($objLanguage->code2Txt('mod_workgroupadmin_users_in_course','workgroupadmin')),
+    'rightList[]',
     ucfirst($objLanguage->code2Txt('mod_workgroupadmin_members','workgroupadmin'))
 );
 
