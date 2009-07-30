@@ -138,12 +138,11 @@ class workgroupadmin extends controller
                 // Get list of lecturers
 				$gid = $groups->getLeafId(array($contextCode,'Lecturers'));
 				$lecturers = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
-
-
+                $this->setVarByRef('lecturers', $lecturers);
                 // Get list of students
 				$gid=$groups->getLeafId(array($contextCode,'Students'));
 				$students = $groups->getGroupUsers($gid, array('userid',"CONCAT(firstname, ' ', surname) AS fullname"), "ORDER BY fullname");
-
+    			$this->setVarByRef('students',$students);
 				$_users = array_merge($lecturers, $students);
 
                 $users = array();
