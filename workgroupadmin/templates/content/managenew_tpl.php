@@ -1,7 +1,7 @@
 <?php
-//echo '<pre>';
-//var_dump($users);
-//echo '</pre>';
+echo '<pre>';
+var_dump($users);
+echo '</pre>';
 
 
 // Display heading.
