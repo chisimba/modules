@@ -108,6 +108,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame(String roomName) {
 
         initComponents();
+        initComponentsManually();
 
         userListPanel = new ParticipantListPanel();
         leftSplitPane.setDividerLocation((ss.height / 2));
@@ -603,6 +604,19 @@ public class MainFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponentsManually() {
+      javax.swing.JMenuItem raiseHand = new javax.swing.JMenuItem();
+      raiseHand.setText("Raise Hand");
+      raiseHand.setEnabled(true);
+      raiseHand.setName("raiseHand");
+      raiseHand.addActionListener(new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+              raiseHandActionPerformed(evt);
+          }
+      });
+      actionsMenu.add(raiseHand);
+    }
+    
     private void initComponents() {
 
         titlePanel = new javax.swing.JPanel();
@@ -1482,7 +1496,10 @@ public class MainFrame extends javax.swing.JFrame {
         ConnectionManager.sendPacket(p);
 
     }//GEN-LAST:event_requestMicMenuItemActionPerformed
+    private void raiseHandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestMicMenuItemActionPerformed
+      GUIAccessManager.mf.getUserListPanel().getParticipantListTable().raiseHand();
 
+    }
     private void addRoomMembersMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMembersMenuItemActionPerformed
         showRoomMemberList();
     }//GEN-LAST:event_addRoomMembersMenuItemActionPerformed
