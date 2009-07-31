@@ -269,7 +269,7 @@ public class AvoirRealtimePlugin implements Plugin {
                       defaultPacketProcessor.warnUser(packet, username, message);
                     }
                     else {
-                      defaultPacketProcessor.warnUser(packet, username, "Your room permissions have been changed.");
+                      //defaultPacketProcessor.warnUser(packet, username, "Your room permissions have been changed.");
                     }
 
                     Map user = roomResourceManager.getUserInfo(username);
