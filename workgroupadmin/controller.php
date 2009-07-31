@@ -137,11 +137,11 @@ class workgroupadmin extends controller
 
                 // Get list of lecturers
 				$gid = $groups->getLeafId(array($contextCode,'Lecturers'));
-				$lecturers = $groups->getGroupUsers($gid, array('userid',"CONCAT(surname, ', ', firstname) AS fullname"), "ORDER BY fullname ASC");
+				$lecturers = $groups->getGroupUsers($gid, array('userid',"CONCAT(surname, ', ', firstname) AS fullname"), "ORDER BY fullname ASC"); //, CONCAT(surname, firstname) AS key
 //                $this->setVarByRef('lecturers', $lecturers);
                 // Get list of students
 				$gid=$groups->getLeafId(array($contextCode,'Students'));
-				$students = $groups->getGroupUsers($gid, array('userid',"CONCAT(surname, ', ', firstname) AS fullname"), "ORDER BY fullname ASC");
+				$students = $groups->getGroupUsers($gid, array('userid',"CONCAT(surname, ', ', firstname) AS fullname"), "ORDER BY fullname ASC"); //, CONCAT(surname, firstname) AS key
 //    			$this->setVarByRef('students',$students);
 				$_users = array_merge($lecturers, $students);
 
@@ -155,7 +155,11 @@ class workgroupadmin extends controller
                         }
                     }
                     if (!$inWorkgroup) {
-//                        $_user['fullname'] = $_user['surname'].', '.$_user['firstname'];
+                        if (!isset($_user['fullname'])) {
+//                            $_user['key'] = $_user['surname'].$_user['firstname'];
+                            $_user['fullname'] = $_user['surname'].', '.$_user['firstname'];
+
+                        }
 //                        $users[$_user['surname'].$_user['firstname']] = $_user;
                         $users[$_user['fullname']] = $_user;
                     }
