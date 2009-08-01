@@ -401,6 +401,7 @@ $hiddeninput = new hiddeninput('id', $data['id']);
 $form->addToForm($hiddeninput->show().'<p>'.$radio->show().'</p>');
 
 $button = new button ('update', $this->objLanguage->languageText('mod_mcqtests_updatestatus', 'mcqtests', 'Update Status'));
+$button->setToSubmit();
 
 $form->addToForm($button->show());
 
