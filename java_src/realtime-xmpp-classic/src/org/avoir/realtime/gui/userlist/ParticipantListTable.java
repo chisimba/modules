@@ -31,6 +31,7 @@ import org.avoir.realtime.net.packets.RealtimePacket;
 import org.avoir.realtime.common.Constants.*;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.net.providers.RealtimePacketProcessor;
+import org.jivesoftware.smack.XMPPException;
 
 /**
  *
@@ -401,7 +402,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
     PermissionList permissions = getUserPermissions(username);
     switch (permission) {
     case 'v': {
-      permissions.grantVoice = status;
+      permissions.hasVoice = status;
       break;
     }
     case 'w': {
@@ -430,10 +431,15 @@ public class ParticipantListTable extends JTable implements ActionListener {
     p.setContent(realtimePacketContent.toString());
     ConnectionManager.sendPacket(p);
   }
-  
+
   public void raiseHand() {
     PermissionList permissions = (PermissionList)thisUser.get("permissions");
     permissions.raisedHand = true;
+    sendUserPermissions((String)thisUser.get("username"));
+  }
+  public void lowerHand() {
+    PermissionList permissions = (PermissionList)thisUser.get("permissions");
+    permissions.raisedHand = false;
     sendUserPermissions((String)thisUser.get("username"));
   }
   public void giveMic(String username, String name) {
@@ -941,6 +947,16 @@ public class ParticipantListTable extends JTable implements ActionListener {
     public void setAllPermissions() {
       //supposed to give user access to what he has.
       //this is where the whiteboard/mic/voice etc. must be enabled
+      try {
+        if (hasVoice) {
+          GUIAccessManager.mf.getChatRoomManager().getMuc().grantVoice(username);
+        }
+        else {
+          GUIAccessManager.mf.getChatRoomManager().getMuc().revokeVoice(username);
+        }
+      } catch (XMPPException e) {
+        e.printStackTrace();
+      }
       if (username.equalsIgnoreCase(ConnectionManager.getUsername())) {
         if (isOwner) {
           grantEverything();
