@@ -16,6 +16,9 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,6 +28,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -44,6 +50,7 @@ import org.avoir.realtime.common.filetransfer.FileManager;
 import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
 import org.avoir.realtime.common.util.RealtimePacketContent;
+import org.avoir.realtime.gui.Magnifier;
 import org.avoir.realtime.gui.userlist.ParticipantListPanel;
 import org.avoir.realtime.gui.whiteboard.WhiteboardPanel;
 import org.avoir.realtime.net.ConnectionManager;
@@ -72,6 +79,7 @@ import org.avoir.realtime.gui.tips.*;
  */
 public class MainFrame extends javax.swing.JFrame {
 
+    private JDialog magnifierDialog;
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
     private ParticipantListPanel userListPanel;
     private WhiteboardPanel whiteboardPanel = new WhiteboardPanel();
@@ -103,11 +111,11 @@ public class MainFrame extends javax.swing.JFrame {
     private RoomMemberListFrame roomMemberListFrame;
     private boolean slidesPopulated = false;
     private Timer messageTimer = new Timer();
-    private double zoomFactor = 100.0;
+    private JComponent glass = new Magnifier();
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
-
+        this.setGlassPane(glass);
         initComponents();
         //initComponentsManually();
 
@@ -137,6 +145,7 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
+
         generalWebBrowser.addWebBrowserListener(new RWebBrowserListener(generalWebBrowser));
         slidesNavigator = new SlidesNavigator(this);
         add(statusBar, BorderLayout.SOUTH);
@@ -664,6 +673,8 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         tipsMenuItem = new javax.swing.JMenuItem();
         optionsMenuItem = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JSeparator();
+        magnifierMenuitem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -1121,6 +1132,15 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         toolsMenu.add(optionsMenuItem);
+        toolsMenu.add(jSeparator6);
+
+        magnifierMenuitem.setText("Maginifier");
+        magnifierMenuitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                magnifierMenuitemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(magnifierMenuitem);
 
         screenShareItem.add(toolsMenu);
 
@@ -1506,6 +1526,32 @@ public class MainFrame extends javax.swing.JFrame {
         showTipOfDay();
     }//GEN-LAST:event_tipsMenuItemActionPerformed
 
+    private void magnifierMenuitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_magnifierMenuitemActionPerformed
+        final JCheckBox onSwitch = new JCheckBox("Turn magnifier on");
+        onSwitch.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                glass.setVisible(((JCheckBox) evt.getSource()).isSelected());
+            }
+        });
+        if (magnifierDialog == null) {
+
+            magnifierDialog = new JDialog(this, "Magnifier", false);
+            magnifierDialog.getContentPane().add(onSwitch);
+            magnifierDialog.pack();
+            magnifierDialog.setLocation(this.getX() + this.getWidth(), this.getY());
+            magnifierDialog.addWindowListener(new WindowAdapter() {
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    glass.setVisible(false);
+                    onSwitch.setSelected(false);
+                }
+            });
+        }
+        magnifierDialog.setVisible(true);
+    }//GEN-LAST:event_magnifierMenuitemActionPerformed
+
     private void showRoomResourcesNavigator() {
         JFrame fr = new JFrame("Room Resources");
         slidesSplitPane.setTopComponent(slidesNavigator);
@@ -1584,24 +1630,6 @@ public class MainFrame extends javax.swing.JFrame {
             ConnectionManager.sendPacket(p);
         }
 
-    }
-
-    public void whiteBoardZoomIn() {
-        zoomFactor += 10.0;
-        whiteboardPanel.getWhiteboard().zoomIn(zoomFactor / 100);
-    }
-
-    public void whiteBoardZoomOut() {
-        if (zoomFactor - 10 >= 100) {
-            zoomFactor -= 10.0;
-            whiteboardPanel.getWhiteboard().zoomOut(zoomFactor / 100);
-        } else {
-            whiteBoardZoomOriginal();
-        }
-    }
-
-    public void whiteBoardZoomOriginal() {
-        whiteboardPanel.getWhiteboard().zoomOriginal();
     }
 
     public void showTipOfDay() {
@@ -1688,9 +1716,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JMenuItem joinRoomMenuItem;
     private javax.swing.JSplitPane leftSplitPane;
+    private javax.swing.JMenuItem magnifierMenuitem;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JMenu meetingsMenuItem;
     private javax.swing.JMenuItem newWhiteboardMenuItem;

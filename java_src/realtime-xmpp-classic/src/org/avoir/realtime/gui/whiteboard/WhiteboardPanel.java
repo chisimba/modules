@@ -47,7 +47,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
     public WhiteboardPanel() {
         initComponents();
         whiteboard = new Whiteboard(this);
-        add(whiteboard, BorderLayout.CENTER);
+        add(new JScrollPane(whiteboard), BorderLayout.CENTER);
 
     }
 
