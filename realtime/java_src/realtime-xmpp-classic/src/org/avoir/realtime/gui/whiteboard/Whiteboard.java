@@ -147,6 +147,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private boolean fitWBSize = false;
     private boolean scaleOff = false;
     private Grid grid = new Grid();
+    private double imgZoom = 1.0;
+    private double imgZoomPercentage;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -741,6 +743,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         gotSize = false;
 
         Graphics2D g2 = (Graphics2D) g;
+        g2.scale(imgZoom, imgZoom);
         if (showGrid) {
             grid.draw(g2, whiteboardSize);
         }
@@ -857,6 +860,33 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (webSnapshot != null) {
             g2.drawImage(webSnapshot, 0, 0, this);
         }
+    }
+
+    public void zoomIn(double zoom){
+        imgZoom += zoom;
+        repaint();
+    }
+
+    public void zoomOut(double zoom){
+        imgZoom -= zoom;
+        
+        if(imgZoom <= zoom)
+            {
+                if(zoom >= 1.0)
+                {
+                   imgZoom = 1.0;
+                }
+                else
+                {
+                    zoomIn(zoom);
+                }
+            }
+        repaint();
+    }
+
+    public void zoomOriginal(){
+        imgZoom = 1.0;
+        repaint();
     }
 
     public void mouseClicked(MouseEvent evt) {
