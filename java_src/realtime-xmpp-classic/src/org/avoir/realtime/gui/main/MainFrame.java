@@ -103,12 +103,13 @@ public class MainFrame extends javax.swing.JFrame {
     private RoomMemberListFrame roomMemberListFrame;
     private boolean slidesPopulated = false;
     private Timer messageTimer = new Timer();
+    private double zoomFactor = 100.0;
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
 
         initComponents();
-        initComponentsManually();
+        //initComponentsManually();
 
         userListPanel = new ParticipantListPanel();
         leftSplitPane.setDividerLocation((ss.height / 2));
@@ -604,19 +605,6 @@ public class MainFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponentsManually() {
-      javax.swing.JMenuItem raiseHand = new javax.swing.JMenuItem();
-      raiseHand.setText("Raise Hand");
-      raiseHand.setEnabled(true);
-      raiseHand.setName("raiseHand");
-      raiseHand.addActionListener(new java.awt.event.ActionListener() {
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
-              raiseHandActionPerformed(evt);
-          }
-      });
-      actionsMenu.add(raiseHand);
-    }
-    
     private void initComponents() {
 
         titlePanel = new javax.swing.JPanel();
@@ -646,6 +634,7 @@ public class MainFrame extends javax.swing.JFrame {
         notepadButton = new javax.swing.JButton();
         zoomInButton = new javax.swing.JButton();
         zoomOutButton = new javax.swing.JButton();
+        zoomOriginalButton = new javax.swing.JButton();
         screenShareItem = new javax.swing.JMenuBar();
         fileMenutem = new javax.swing.JMenu();
         newWhiteboardMenuItem = new javax.swing.JMenuItem();
@@ -783,17 +772,17 @@ public class MainFrame extends javax.swing.JFrame {
         roomMembersButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         roomMembersButton.setName("roomMembers"); // NOI18N
         roomMembersButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        roomMembersButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                roomMembersButtonActionPerformed(evt);
-            }
-        });
         roomMembersButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 roomMembersButtonMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 roomMembersButtonMouseExited(evt);
+            }
+        });
+        roomMembersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roomMembersButtonActionPerformed(evt);
             }
         });
         roomToolsToolbar.add(roomMembersButton);
@@ -870,7 +859,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         roomToolsToolbar.add(deskShareButton);
 
-        imagesButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        imagesButton.setFont(new java.awt.Font("Dialog", 0, 11));
         imagesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/image.png"))); // NOI18N
         imagesButton.setText("Graphics");
         imagesButton.setBorderPainted(false);
@@ -965,6 +954,30 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         roomToolsToolbar.add(zoomOutButton);
+
+        zoomOriginalButton.setFont(new java.awt.Font("Dialog", 0, 11));
+        zoomOriginalButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
+        zoomOriginalButton.setText("original");
+        zoomOriginalButton.setBorderPainted(false);
+        zoomOriginalButton.setContentAreaFilled(false);
+        zoomOriginalButton.setFocusable(false);
+        zoomOriginalButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        zoomOriginalButton.setName("notepad"); // NOI18N
+        zoomOriginalButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        zoomOriginalButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                zoomOriginalButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                zoomOriginalButtonMouseExited(evt);
+            }
+        });
+        zoomOriginalButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zoomOriginalButtonActionPerformed(evt);
+            }
+        });
+        roomToolsToolbar.add(zoomOriginalButton);
 
         surfaceTopTabbedPane.addTab("Tools", roomToolsToolbar);
 
@@ -1544,7 +1557,7 @@ public class MainFrame extends javax.swing.JFrame {
         ConnectionManager.sendPacket(p);
 
     }//GEN-LAST:event_requestMicMenuItemActionPerformed
-    private void raiseHandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestMicMenuItemActionPerformed
+    private void raiseHandActionPerformed(java.awt.event.ActionEvent evt) {                                                   
       GUIAccessManager.mf.getUserListPanel().getParticipantListTable().raiseHand();
 
     }
@@ -1569,11 +1582,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tipsMenuItemActionPerformed
 
     private void zoomInButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomInButtonMouseEntered
-        // TODO add your handling code here:
+        zoomInButton.setContentAreaFilled(true);
+        zoomInButton.setBorderPainted(true);
 }//GEN-LAST:event_zoomInButtonMouseEntered
 
     private void zoomInButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomInButtonMouseExited
-        // TODO add your handling code here:
+        zoomInButton.setContentAreaFilled(false);
+        zoomInButton.setBorderPainted(false);
 }//GEN-LAST:event_zoomInButtonMouseExited
 
     private void zoomInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomInButtonActionPerformed
@@ -1581,16 +1596,30 @@ public class MainFrame extends javax.swing.JFrame {
 }//GEN-LAST:event_zoomInButtonActionPerformed
 
     private void zoomOutButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomOutButtonMouseEntered
-        // TODO add your handling code here:
+        zoomOutButton.setContentAreaFilled(true);
+        zoomOutButton.setBorderPainted(true);
 }//GEN-LAST:event_zoomOutButtonMouseEntered
 
     private void zoomOutButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomOutButtonMouseExited
-        // TODO add your handling code here:
+        zoomOutButton.setContentAreaFilled(false);
+        zoomOutButton.setBorderPainted(false);
 }//GEN-LAST:event_zoomOutButtonMouseExited
 
     private void zoomOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomOutButtonActionPerformed
-        whileBoardZoomOut();
+        whiteBoardZoomOut();
 }//GEN-LAST:event_zoomOutButtonActionPerformed
+
+    private void zoomOriginalButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomOriginalButtonMouseEntered
+        // TODO add your handling code here:
+}//GEN-LAST:event_zoomOriginalButtonMouseEntered
+
+    private void zoomOriginalButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomOriginalButtonMouseExited
+        // TODO add your handling code here:
+}//GEN-LAST:event_zoomOriginalButtonMouseExited
+
+    private void zoomOriginalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomOriginalButtonActionPerformed
+        whiteBoardZoomOriginal();
+}//GEN-LAST:event_zoomOriginalButtonActionPerformed
 
     private void showRoomResourcesNavigator() {
         JFrame fr = new JFrame("Room Resources");
@@ -1673,11 +1702,19 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void whiteBoardZoomIn(){
-
+        zoomFactor += 10.0;
+        whiteboardPanel.getWhiteboard().zoomIn(zoomFactor/100);
     }
 
     public void whiteBoardZoomOut(){
-        
+        if (zoomFactor-10>=100){
+            zoomFactor -= 10.0;
+            whiteboardPanel.getWhiteboard().zoomOut(zoomFactor/100);
+        } else whiteBoardZoomOriginal();
+    }
+
+    public void whiteBoardZoomOriginal(){
+        whiteboardPanel.getWhiteboard().zoomOriginal();
     }
 
     public void showTipOfDay() {
@@ -1798,6 +1835,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel wbInfoField;
     private javax.swing.JProgressBar wbProgressBar;
     private javax.swing.JButton zoomInButton;
+    private javax.swing.JButton zoomOriginalButton;
     private javax.swing.JButton zoomOutButton;
     // End of variables declaration//GEN-END:variables
 }
