@@ -82,7 +82,7 @@ class dbdocument extends dbtable{
         $courseid = addslashes($courseid);
         $sql = "select distinct A.version, B.currentuser from $this->tablename as A join (select currentuser, version from $this->tablename) as B on A.version = B.version where coursecode = '$courseid' and A.version > 0 order by A.version";
         $data = $this->getArray($sql);
-
+        
         return $data;
     }
 }
