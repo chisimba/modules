@@ -907,6 +907,15 @@ public class ParticipantListTable extends JTable implements ActionListener {
         }
 
         public void evaluatePermissions() {
+            ConnectionManager.isOwner = false;
+            ConnectionManager.hasVoice = false;
+            ConnectionManager.canKick = false;
+            ConnectionManager.canBan = false;
+            ConnectionManager.grantVoice = false;
+            ConnectionManager.grantMic = false;
+            ConnectionManager.grantWhiteboard = false;
+            ConnectionManager.canWhiteboard = false;
+            ConnectionManager.grantAdmin = false;
             if (isOwner) {
                 ConnectionManager.isOwner = true;
             }
@@ -974,10 +983,10 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 e.printStackTrace();
             }
             if (username.equalsIgnoreCase(ConnectionManager.getUsername())) {
+                evaluatePermissions();
                 if (isOwner) {
                     grantEverything();
                     GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
-                    evaluatePermissions();
                 } else if (grantAdmin) {
                     grantEverything();
                 } else if (grantWhiteboard) {
