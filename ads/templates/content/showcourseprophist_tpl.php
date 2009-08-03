@@ -1,7 +1,7 @@
 <?php
-
-    // load class
+    //load class
     $this->loadclass('link','htmlelements');
+    $objIcon= $this->newObject('geticon','htmlelements');
 
     // scripts
     $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
@@ -17,8 +17,10 @@
     $curEdit_1 = $this->objLanguage->languageText('mod_ads_curedit_1', 'ads');
     $curEdit_2 = $this->objLanguage->languageText('mod_ads_curedit_2', 'ads');
 
-    $myLink = new link($this->uri(array('action'=>'courseproposallist', 'courseid'=>$this->id)));
-    $myLink->link = "Test";
+    $version = $this->objLanguage->languageText('mod_ads_historyversion', 'ads');
+    $editor = $this->objLanguage->languageText('mod_ads_historyeditor', 'ads');
+    $lastUpdated = $this->objLanguage->languageText('mod_ads_historyupdate', 'ads');
+    $comments = $this->objLanguage->languageText('mod_ads_historycomments', 'ads');
 
     $verarray = $this->objDocumentStore->getVersion($this->id, $this->objUser->userId());
     if ($verarray['status'] == 'unsubmitted' && $verarray['currentuser'] == $this->objUser->userId()) {
@@ -68,7 +70,7 @@
         $comment->link = 'Click to View Comments';
         $editor = $this->objUser->fullname($value['currentuser']);
         $dateUpdated = date("m/d/Y H:m:s" );
-        
+
         $data .= "['".$curVersion."',";
         $data .= "'".$editor."',";
         $data .= "'".$dateUpdated."',";
@@ -78,71 +80,45 @@
         }
         $curRow += 1;
     }
-    
-    $mainjs="
-    	/*!
-	 * Ext JS Library 3.0.0
-	 * Copyright(c) 2006-2009 Ext JS, LLC
-	 * licensing@extjs.com
-	 * http://www.extjs.com/license
-	 */
-	Ext.onReady(function(){
 
-	    // NOTE: This is an example showing simple state management. During development,
-	    // it is generally best to disable state management as dynamically-generated ids
-	    // can change across page loads, leading to unpredictable results.  The developer
-	    // should ensure that stable state ids are set for stateful components in real apps.    
-	    Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+    $mainjs = "/*!
+                 * Ext JS Library 3.0.0
+                 * Copyright(c) 2006-2009 Ext JS, LLC
+                 * licensing@extjs.com
+                 * http://www.extjs.com/license
+                 */
+                Ext.onReady(function(){
+                    Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 
-	    var myData = [".$data."];
+                    var myData = [".$data."];
 
-	    // example of custom renderer function
-	    function change(val){
-		if(val > 0){
-		    return '<span style=\"color:green;\"\>' + val + '</span>';
-		}else if(val < 0){
-		    return '<span style=\"color:red;\">' + val + '</span>';
-		}
-		return val;
-	    }
+                    // create the data store
+                    var store = new Ext.data.ArrayStore({
+                        fields: [
+                           {name: 'version'},
+                           {name: 'editor'},
+                           {name: 'lastChange'},
+                           {name: 'comments'}
+                        ]
+                    });
+                    store.loadData(myData);
 
-	    // example of custom renderer function
-	    function pctChange(val){
-		if(val > 0){
-		    return '<span style=\"color:green;\">' + val + '%</span>';
-		}else if(val < 0){
-		    return '<span style=\"color:red;\">' + val + '%</span>';
-		}
-		return val;
-	    }
+                    // create the Grid
+                    var grid = new Ext.grid.GridPanel({
+                        store: store,
+                        columns: [
+                            {id:'version',header: \"Version\", width: 75, dataIndex: 'version'},
+                            {header: \"Editor\", width: 180, dataIndex: 'editor'},
+                            {header: \"Last Updated\", width: 120, dataIndex: 'lastChange'},
+                            {header: \"Comments\", width: 150, dataIndex: 'comments'}
+                        ],
+                        stripeRows: true,
+                        height:350,
+                        width:600,
+                        title:'".$courseName."'
+                    });
+                    grid.render('history-grid');
+                });";
 
-	    // create the data store
-	    var store = new Ext.data.ArrayStore({
-		fields: [
-		   {name: 'version'},
-		   {name: 'editor'},
-		   {name: 'lastChange'},
-                   {name: 'comment'}
-		]
-	    });
-	    store.loadData(myData);
-
-	    // create the Grid
-	    var grid = new Ext.grid.GridPanel({
-		store: store,
-		columns: [
-		    {id:'version',header: \"Version\", width: 75, dataIndex: 'version'},
-		    {header: \"Editor\", width: 180, dataIndex: 'editor'},
-		    {header: \"Last Updated\", width: 120, dataIndex: 'lastChange'},
-                    {header: \"Comments\", width: 150, dataIndex: 'comment'},
-		],
-		stripeRows: true,
-                height:350,
-		width:600,
-		title:'".$courseName."'
-	    });
-	    grid.render('history-grid');
-	});";
-
-   echo "<script type=\"text/javascript\">".$mainjs."</script>";
+    echo "<script type=\"text/javascript\">".$mainjs."</script>";
 ?>
