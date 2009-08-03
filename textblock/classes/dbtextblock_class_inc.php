@@ -23,7 +23,21 @@ class dbtextblock extends dbTable
     */
     public function init() {
         parent::init('tbl_textblock');
+
+		$this->objBlock = $this->getObject('dbblocksdata', 'blocks');
     }
+
+    /**
+    * Method to return the block row
+    * @param string $blockId the blockId as per tbl_module_blocks.id.
+    */
+    public function getBlock($blockId)
+    {   
+		$blockArr = $this->objBlock->getBlock($blockId);;
+		$txtBlockId = trim($blockArr['blockname']);
+		$result = $this->getAll(" WHERE blockid = '$txtBlockId'");
+		return $result[0];
+	}
 
     /**
     * Save method for editing a record in this table
@@ -37,6 +51,12 @@ class dbtextblock extends dbTable
             $title = $this->getParam('title', NULL);
             $blocktext = $this->getParam('blocktext', NULL);
 			$objUser = $this->getObject("user", "security");
+			$showTitle = $this->getParam('show_title', '1');
+
+			$showTitle = ($showTitle == 'on')? '1' : '0';
+
+            $cssId = $this->getParam('css_id', NULL);
+            $cssClass = $this->getParam('css_class', NULL);
             // if edit use update
             if ($mode=="edit") {
                 $this->update("id", $id, array(
@@ -45,7 +65,10 @@ class dbtextblock extends dbTable
                 'blocktext' => $blocktext,
                 'datemodified' => $this->now(),
                 'modified' => $this->now(),
-                'modifierid' => $objUser->userId()));
+                'modifierid' => $objUser->userId(),
+                'css_id' => $cssId,
+                'css_class' => $cssClass,
+                'show_title' => $showTitle));
 
             }//if
             // if add use insert
@@ -56,7 +79,10 @@ class dbtextblock extends dbTable
                 'blocktext' => $blocktext,
                 'datecreated' => $this->now(),
                 'creatorid' => $objUser->userId(),
-                'modified' => $this->now()));
+                'modified' => $this->now(),
+                'css_id' => $cssId,
+                'css_class' => $cssClass,
+                'show_title' => $showTitle));
 
             }//if
         } catch (customException $e)

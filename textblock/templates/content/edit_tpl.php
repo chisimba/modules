@@ -37,6 +37,9 @@ $cssLayout->setLeftColumnContent($leftSideColumn);
 if (isset($ar)) {
     $id = $ar['id'];
     $title = $ar['title'];
+    $showTitle = $ar['show_title'];
+    $cssClass = $ar['css_class'];
+    $cssId = $ar['css_id'];
     $blockid = $ar['blockid'];
     $blocktext = $ar['blocktext'];
     $dateCreated = $ar['datecreated'];
@@ -74,10 +77,48 @@ $objElement = new textinput ("title");
 if (isset($title)) {
     $objElement->setValue($title);
 }
+
+//Checkbox to toggle title display
+$this->loadClass('checkbox', 'htmlelements');
+if ($showTitle == '') {
+	$showTitle = TRUE;
+}
+$objCheck = new checkbox('show_title', 'Show title for this block?', $showTitle);
+
 // Create label for blocktext
 $wsiLabel = new label($this->objLanguage->languageText('mod_textblock_field_title','textblock'), "input_title");
+$wsiQuestionLabel = new label($this->objLanguage->languageText('mod_textblock_show_title','textblock'), "input_title");
 //Add the $blocktext element to the form
-$objForm->addToForm($wsiLabel->show()."<br />".$objElement->show()."<br /><br />");
+$objForm->addToForm($wsiLabel->show().'&nbsp;&nbsp;&nbsp;&nbsp;'.$objCheck->show()." " . $wsiQuestionLabel->show() . " <br />".$objElement->show()."<br /><br />");
+
+
+//Create input for an alternative cssClass to use
+$objElement = new textinput ("css_class");
+//Set the value of the element to $title
+if (isset($cssClass)) {
+    $objElement->setValue($cssClass);
+}
+
+$objElement->extra = " onfocus=\"if (this.value == 'featurebox') {this.value='';}\" onblur=\"if (this.value == '') {this.value='featurebox'; } \" ";
+
+// Create label for cssClass
+$wsiLabel = new label($this->objLanguage->languageText('mod_textblock_css_class','textblock'), "input_title");
+$objForm->addToForm($wsiLabel->show()." <br />".$objElement->show()."<br /><br />");
+
+$objElement->extra = '';
+
+
+//Create input for an alternative cssId to use
+$objElement = new textinput ("css_id");
+//Set the value of the element to $title
+if (isset($cssId)) {
+    $objElement->setValue($cssId);
+}
+
+// Create label for css Id
+$wsiLabel = new label($this->objLanguage->languageText('mod_textblock_css_id','textblock'), "input_title");
+$objForm->addToForm($wsiLabel->show()." <br />".$objElement->show()."<br /><br />");
+
 //------------------------------------------------------------------------
 //die(htmlspecialchars($blocktext));
 
@@ -107,6 +148,7 @@ $objCancel->setOnClick("window.location='".$this->uri(NULL)."';");
 $objCancel->setValue(' ' . $this->objLanguage->languageText("mod_textblock_cancel",'textblock') . ' ');
 // Add the buttons to the form
 $objForm->addToForm('<br/>'.$objElement->show()."&nbsp;".$objCancel->show());
+
 
 
 

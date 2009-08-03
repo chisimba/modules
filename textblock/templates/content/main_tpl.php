@@ -38,7 +38,8 @@ $leftSideColumn .= $objBlocks->showBlock("text1", 'textblock')
   . $objBlocks->showBlock("text3", 'textblock')
   . $objBlocks->showBlock("text4", 'textblock')
   . $objBlocks->showBlock("text5", 'textblock')
-  . $objBlocks->showBlock("text6", 'textblock');
+  . $objBlocks->showBlock("text6", 'textblock')
+  . $objBlocks->showBlock("text7", 'textblock');
 
 
 $cssLayout->setLeftColumnContent($leftSideColumn);

@@ -23,6 +23,20 @@ $fields = array(
 		'type'=>'text',
 		'length'=> 10
 		),
+    'show_title' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'g'
+        ),
+	'css_id' => array(
+		'type'=>'text',
+		'length'=> 250
+		),
+	'css_class' => array(
+		'type'=>'text',
+		'length'=> 250
+		),
 	'datecreated' => array(
 		'type' => 'timestamp'
 		),
