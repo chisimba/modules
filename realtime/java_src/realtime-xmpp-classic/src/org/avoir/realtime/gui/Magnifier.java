@@ -9,9 +9,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Window;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
@@ -20,20 +20,20 @@ import javax.swing.SwingUtilities;
 
 public class Magnifier extends JComponent {
 
-    private static final int SIDE =256;
+    private static final int SIDE =128;
     private Point point;
     private BufferedImage image = new BufferedImage(SIDE, SIDE, BufferedImage.TYPE_INT_RGB);
-    private MouseListener l = new MouseAdapter() {
+    private MouseMotionListener l = new MouseMotionAdapter() {
 
         @Override
-        public void mousePressed(MouseEvent e) {
+        public void mouseMoved(MouseEvent e) {
             point = e.getPoint();
             repaint();
         }
     };
 
     public Magnifier() {
-        addMouseListener(l);
+        addMouseMotionListener(l);
     }
 
     @Override
