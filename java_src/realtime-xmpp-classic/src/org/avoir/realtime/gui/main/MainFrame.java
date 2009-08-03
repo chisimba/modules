@@ -29,11 +29,13 @@ import java.util.TimerTask;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -200,7 +202,26 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        addCustomComponents();
+    }
 
+    private void addCustomComponents() {
+        final JCheckBoxMenuItem handItem = new JCheckBoxMenuItem("Raise Hand");
+        handItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (ConnectionManager.isOwner) {
+                    JOptionPane.showMessageDialog(null, "You are room owner, no need of raising hand.");
+                    return;
+                }
+                if (handItem.isSelected()) {
+                    userListPanel.getParticipantListTable().raiseHand();
+                } else {
+                    userListPanel.getParticipantListTable().lowerHand();
+                }
+            }
+        });
+        actionsMenu.add(handItem);
     }
 
     public void removeAllSpeakers() {
@@ -218,7 +239,7 @@ public class MainFrame extends javax.swing.JFrame {
                         }
                     });
                     speaker.setSpeaker("free");
-                    userListPanel.getParticipantListTable().setUserHasMIC(speakerName, false);
+//                    userListPanel.getParticipantListTable().setUserHasMIC(speakerName, false);
                     break;
                 }
 
@@ -265,7 +286,7 @@ public class MainFrame extends javax.swing.JFrame {
                 tabbedPane.setSelectedIndex(2);
                 speaker.setSpeaker(speakerUsername);
                 speakers.set(index, speaker);
-                userListPanel.getParticipantListTable().setUserHasMIC(speakerUsername, true);
+
                 return true;
             }
         }
@@ -1538,8 +1559,9 @@ public class MainFrame extends javax.swing.JFrame {
 
             magnifierDialog = new JDialog(this, "Magnifier", false);
             magnifierDialog.getContentPane().add(onSwitch);
+            magnifierDialog.setSize(100, 50);
             magnifierDialog.pack();
-            magnifierDialog.setLocation(this.getX() + this.getWidth(), this.getY());
+            //magnifierDialog.setLocation(this.getX() + this.getWidth(), this.getY());
             magnifierDialog.addWindowListener(new WindowAdapter() {
 
                 @Override
