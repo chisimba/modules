@@ -40,14 +40,19 @@
     
     $myComments = "";
     $count = 1;
-    foreach($data as $data) {
-        $myComments .= "{title: 'Comment ".$count."', html: '".$data['comment']."'}";
-        if($count != $myRows) {
-            $myComments .= ",";
-        }
-        $count += 1;
+    if($myRows == 0) {
+        $myComments .= "{title: 'Comment', html: 'THERE ARE NO COMMENTS FOR THIS PROPOSAL.'}";
     }
-
+    else {
+        foreach($data as $data) {
+            $myComments .= "{title: 'Comment ".$count."', html: '".$data['comment']."'}";
+            if($count != $myRows) {
+                $myComments .= ",";
+            }
+            $count += 1;
+        }
+    }
+    
     $mainjs = "Ext.onReady(function(){
                     var tabs = new Ext.TabPanel({
                         renderTo: 'commentsBody',
