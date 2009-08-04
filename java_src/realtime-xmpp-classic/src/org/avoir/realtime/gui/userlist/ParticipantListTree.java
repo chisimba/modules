@@ -391,7 +391,7 @@ public class ParticipantListTree extends JPanel implements
             return displayText;
         }
     }
-
+/*
     private PrivateChatFrame getPrivateChatFrame(String receiver) {
         return (PrivateChatFrame)privateChats.get(receiver);
     }
@@ -444,6 +444,7 @@ public class ParticipantListTree extends JPanel implements
         }
 
     }
+    */
 /*
     class PrivateChatFrame extends JFrame {
 
