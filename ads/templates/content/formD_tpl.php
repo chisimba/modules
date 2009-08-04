@@ -1,8 +1,8 @@
 <?php
 
 // add javascript for the hour calculations
-$jquery = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/jquery-1.2.6.min.js').'" type="text/javascript"></script>';
-$calcjs = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/calc.js').'" type="text/javascript"></script>';
+$jquery = '<script language="JavaScript" src="'.$this->getResourceUri('js/jquery-1.2.6.min.js').'" type="text/javascript"></script>';
+$calcjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/calc.js').'" type="text/javascript"></script>';
 
 $this->appendArrayVar('headerParams', $jquery);
 $this->appendArrayVar('headerParams', $calcjs);

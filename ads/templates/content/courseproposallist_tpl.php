@@ -10,7 +10,7 @@
     $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
     $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
     $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
-    $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/courseproposal.css').'"/>';
+    $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/courseproposal.css').'"/>';
 
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);

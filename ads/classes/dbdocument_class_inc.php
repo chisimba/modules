@@ -80,11 +80,17 @@ class dbdocument extends dbtable{
 
   public function getHistory($courseid) {
         $courseid = addslashes($courseid);
-        $sql = "select distinct A.version, B.currentuser from $this->tablename as A join (select currentuser, version from $this->tablename) as B on A.version = B.version where coursecode = '$courseid' and A.version > 0 order by A.version";
+        $sql = "select distinct A.version, B.currentuser, C.deleteStatus 
+                from $this->tablename as A
+                        join (select currentuser, version from $this->tablename) as B on A.version = B.version
+                        join tbl_course_proposals as C on A.coursecode = C.id where coursecode = '$courseid'
+                and A.version > 0
+                and C.deleteStatus = 0
+                order by A.version";
         $data = $this->getArray($sql);
         
         return $data;
-    }
+  }
 }
 
 ?>

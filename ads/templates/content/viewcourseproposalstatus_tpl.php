@@ -3,7 +3,7 @@
     $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
     $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
     $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
-    $mainjs = '<script language="JavaScript" src="'.$this->getResourceUri('scripts/check-radio.js').'" type="text/javascript"></script>';
+    $mainjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/check-radio.js').'" type="text/javascript"></script>';
     $styleSheet="
     <style type=\"text/css\">
         .x-check-group-alt {
