@@ -75,6 +75,7 @@ $objLink->link = "Stop Session";
 $admin .= "<br/>".$objLink->show();
 
 $objTable->width = "90%";
+$objTable->cssClass = "advisors";
 $objTable->addHeader(array("Name"/*, "No. of people assigned"*/, "Logged In", "Auto Assign"));
 $objTable->arrayToTable($arr);
 $middleColumn .= $objTable->show();
