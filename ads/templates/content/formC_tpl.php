@@ -15,7 +15,7 @@ $this->loadClass('label', 'htmlelements');
 //$CH = new htmlheading($this->objLanguage->languageText('mod_ads_titleC','ads', 2));
 $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleC','ads'), 2);
 
-$C1  = new textarea('C1',$this->formValue->getValue("C1"),5,25);
+$C1  = new textarea('C1',$this->formValue->getValue("C1"),5,50);
 $C2a = new radio('C2a');
 $C2a->addOption('On-campus',$this->objLanguage->languageText('mod_formC_C2a_R1','ads'));
 $C2a->addOption('Off-campus',$this->objLanguage->languageText('mod_formC_C2a_R2','ads'));
@@ -26,8 +26,8 @@ if ($this->formValue->getValue("C2a") != "") {
 else {
   $C2a->setSelected('On-campus');
 }
-$C2b = new textarea("C2b",$this->formValue->getValue("C2b"),5,25);
-$C3  = new textarea('C3',$this->formValue->getValue("C3"),5,25);
+$C2b = new textarea("C2b",$this->formValue->getValue("C2b"),5,50);
+$C3  = new textarea('C3',$this->formValue->getValue("C3"),5,50);
 $C4a = new radio('C4a');
 $C4a->addOption('yes',$this->objLanguage->languageText('mod_formC_C4a_R1','ads'));
 $C4a->addOption('no',$this->objLanguage->languageText('mod_formC_C4a_R2','ads'));
@@ -38,8 +38,8 @@ if ($this->formValue->getValue("C4a") != "") {
 else {
   $C4a->setSelected('yes');
 }
-$C4b_1 = new textinput('C4b_1',$this->formValue->getValue("C4b_1"),'',15);
-$C4b_2 = new textinput('C4b_2','','',15);
+$C4b_1 = new textinput('C4b_1',$this->formValue->getValue("C4b_1"),'',25);
+$C4b_2 = new textinput('C4b_2','','',25);
 
 $tbl4b = new htmltable();
 $tbl4b->width = "55%";
