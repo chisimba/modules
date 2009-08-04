@@ -31,6 +31,8 @@ import org.avoir.realtime.net.packets.RealtimePacket;
 import org.avoir.realtime.common.Constants.*;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.net.providers.RealtimePacketProcessor;
+import org.avoir.realtime.privatechat.PrivateChatFrame;
+import org.avoir.realtime.privatechat.PrivateChatPanel;
 import org.jivesoftware.smack.XMPPException;
 
 /**
@@ -99,7 +101,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
                     takeMICMenuItem.setEnabled(false);
                     kickoutMenuItem.setEnabled(false);
                     banMenuItem.setEnabled(false);
-                    privateChatMenuItem.setEnabled(false);
+                    privateChatMenuItem.setEnabled(true);
                     giveVoice.setEnabled(false);
                     removeVoice.setEnabled(false);
                     allowWhiteboard.setEnabled(false);
@@ -272,6 +274,10 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("privatechat")) {
+          Map user = users.get(selectedRow);
+          String username = (String)user.get("username");
+          String fullname = (String)user.get("names");
+          initPrivateChat(username, fullname);
         }
         if (e.getActionCommand().equals("ban")) {
             kickOut(true);
@@ -333,8 +339,25 @@ public class ParticipantListTable extends JTable implements ActionListener {
             String username = (String) user.get("username");
             effectPermissionForSelectedUser(username, "You have been given permission to chat", 'v', true);
         }
-
     }
+
+  public void initPrivateChat(String receiverUsername, String receiverName) {
+      PrivateChatFrame privateChat = (PrivateChatFrame)ConnectionManager.getPrivateChats().get(receiverUsername);
+      if (privateChat == null) {
+          PrivateChatPanel privateChatPanel = new PrivateChatPanel(receiverUsername, receiverName);
+          PrivateChatFrame privateChatFrame = new PrivateChatFrame(privateChatPanel);
+          privateChatFrame.setContentPane(privateChatPanel);
+          privateChatFrame.setTitle(ConnectionManager.fullnames + ": Chat with " + receiverName);
+          privateChatFrame.setSize(400, 300);
+          privateChatFrame.setLocationRelativeTo(null);
+          privateChatFrame.setVisible(true);
+          ConnectionManager.getPrivateChats().put(receiverUsername, privateChatFrame);
+      } else {
+          privateChat.setSize(400, 300);
+          privateChat.setVisible(true);
+      }
+
+  }
 
     private String getCurrentMicHolder() {
         for (Map user : users) {
@@ -661,6 +684,16 @@ public class ParticipantListTable extends JTable implements ActionListener {
     decorateTable();
     }
      */
+    public Map<String, String> getUser(String username) {
+      for (Map user : users) {
+        String thisUsername = (String) user.get("username");
+        if ((thisUsername).equalsIgnoreCase(username)) {
+            return user;
+        }
+    }
+      return null;
+    }
+    
     public void addUser(String name) {
         String username = name.split(":")[0];
         String nickname = name.split(":")[1];

@@ -51,6 +51,7 @@ import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.gui.whiteboard.items.Item;
 import org.avoir.realtime.net.packets.RealtimePacket;
+import org.avoir.realtime.privatechat.*;
 
 import org.avoir.realtime.net.packets.RealtimeQuestionPacket;
 import org.avoir.realtime.net.packets.RealtimeSlideShowPacket;
@@ -245,6 +246,14 @@ public class RPacketListener implements PacketListener {
                 if (msgMode.equals("return")) {
                     returnChat = true;
                 }
+                PrivateChatFrame privateChat = ((PrivateChatFrame)ConnectionManager.getPrivateChats().get(receiver));
+                if (privateChat == null) {
+                  Map<String, String> user = GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getUser(receiver);
+                  String receiverName = user.get("names");
+                  GUIAccessManager.mf.getUserListPanel().getParticipantListTable().initPrivateChat(receiver, receiverName);
+                  privateChat = ((PrivateChatFrame)ConnectionManager.getPrivateChats().get(receiver));
+                }
+                privateChat.getChatPanel().receivePrivateChat(msg);
 //                GUIAccessManager.mf.getUserListPanel().getUserListTree().
             //                      appendPrivateChat(msg, sender, receiver, returnChat);
             } else if (mode.equals(Mode.EC2_FLASH_SERVER_READY)) {
