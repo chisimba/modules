@@ -37,6 +37,9 @@ $fields = array(
     'hidden' => array(
         'type' => 'integer',	
         ),
+     'needs_reply' => array(
+        'type' => 'integer',	
+        ),
     );
 
 ?>
