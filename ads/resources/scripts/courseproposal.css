@@ -15,6 +15,9 @@ div#proposal-note {
     width: 750px;
     padding-bottom: 10px;
 }
-span#commentSuccess, div#note {
-    color: #FF0000;
+span#commentSuccess, div#note {color: #FF0000;}
+div#note a {
+    color: #0033FF;
+    text-decoration: underline;
 }
+div#note a:hover {color: #FF0000;}

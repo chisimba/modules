@@ -1,6 +1,6 @@
 <?php
 // Table Name
-$tablename = 'tbl_rules';
+$tablename = 'tbl_ads_rules';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'Table holding rules and syllabus book information', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');

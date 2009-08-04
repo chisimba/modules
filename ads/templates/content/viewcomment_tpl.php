@@ -7,22 +7,30 @@
     }
     // end security check
 
+    $this->loadclass('link','htmlelements');
+    
     // scripts for extjs
     $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
     $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
     $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+    $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('scripts/courseproposal.css').'"/>';
     
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);
     $this->appendArrayVar('headerParams', $extallcss);
+    $this->appendArrayVar('headerParams', $maincss);
 
+    $backLink = new link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$this->id)));
+    $backLink->link = $this->objLanguage->languageText('mod_ads_historylink', 'ads');
+    
     // Create an instance of the css layout class
     $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
     $cssLayout->setNumColumns(2);
 
     $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
     $cssLayout->setLeftColumnContent($postLoginMenu->show());
-    $rightSideColumn =  '<div id="commentsBody"></div>';
+    $rightSideColumn = '<div id="note">'.$backLink->show().'</div>';
+    $rightSideColumn .=  '<div id="commentsBody"></div>';
     $cssLayout->setMiddleColumnContent($rightSideColumn);
 
     echo $cssLayout->show();

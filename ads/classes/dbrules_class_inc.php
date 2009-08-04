@@ -10,8 +10,8 @@ class dbrules extends dbtable{
 
     public function init()
     {
-        parent::init('tbl_rules');  //super
-        $this->table = 'tbl_rules';
+        parent::init('tbl_ads_rules');  //super
+        $this->table = 'tbl_ads_rules';
         $this->objUser = $this->getObject ( 'user', 'security' );
 
     }

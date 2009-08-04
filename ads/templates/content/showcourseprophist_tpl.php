@@ -35,8 +35,8 @@
 
     $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
     $cssLayout->setLeftColumnContent($postLoginMenu->show());
-    $rightSideColumn =  '<div id="note">NB: Click on last version to edit and create a new version.</div><div id ="proposal-history"><div id="history-grid">';
-    $rightSideColumn .= $data;
+    $rightSideColumn =  '<div id="note">NB: Click on last version to edit and create a new version.<br>'.$data;
+    $rightSideColumn .= '</div><div id ="proposal-history"><div id="history-grid">';
     $rightSideColumn .= '</div></div>';
     $cssLayout->setMiddleColumnContent($rightSideColumn);
 
