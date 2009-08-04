@@ -46,6 +46,7 @@ import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.packets.RealtimePacket;
+import org.avoir.realtime.privatechat.*;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPConnection;
 
@@ -77,7 +78,7 @@ public class ParticipantListTree extends JPanel implements
     private JMenuItem banMenuItem = new JMenuItem("Ban");
     private JMenuItem privateChatMenuItem = new JMenuItem("Private Chat");
     private ArrayList<Map> currentSpeakers = new ArrayList<Map>();
-    private ArrayList<Map<String, Object>> privateChats = new ArrayList<Map<String, Object>>();
+    private Map<String, Object> privateChats = new HashMap<String, Object>();
     private ArrayList<String> localUsers = new ArrayList<String>();
 
     public ParticipantListTree() {
@@ -391,63 +392,59 @@ public class ParticipantListTree extends JPanel implements
         }
     }
 
-    private Map<String, Object> getPrivateChatFrame(String sender, String receiver) {
-        for (int i = 0; i < privateChats.size(); i++) {
-            Map<String, Object> map = privateChats.get(i);
-            if ((map.get("sender").equals(sender) && map.get("receiver").equals(receiver)) ||
-                    (map.get("receiver").equals(sender) && map.get("sender").equals(receiver))) {
-                return map;
-            }
-        }
-        return null;
+    private PrivateChatFrame getPrivateChatFrame(String receiver) {
+        return (PrivateChatFrame)privateChats.get(receiver);
     }
 
-    public void appendPrivateChat(String msg, String sender, String receiver, boolean returnChat) {
-        //String username = returnChat ? sender: receiver;
-        Map<String, Object> map = getPrivateChatFrame(sender, receiver);
-        if (map == null) {
-            if (returnChat) {
-                initPrivateChat(sender, receiver, receiver);
-            } else {
-                initPrivateChat(ConnectionManager.getUsername(), sender, sender);
-            }
-        }
-
-        map = getPrivateChatFrame(sender, receiver);
-
-        PrivateChatFrame fr = (PrivateChatFrame) map.get("chatframe");
-        fr.getChatPanel().insertParticipantName("(" + (sender) + ") ");
-        fr.getChatPanel().insertParticipantMessage(sender, msg, 17, Color.BLACK);
-        if (!fr.isVisible()) {
-            fr.setSize(400, 300);
-            fr.setVisible(true);
-        }
+    public void sendPrivateChat(String msg, String receiver, String receiverName) {
+      PrivateChatFrame privateChat;
+      privateChat = getPrivateChatFrame(receiver);
+      if (privateChat == null) {
+        initPrivateChat(receiver, receiverName);
+        privateChat = getPrivateChatFrame(receiver);
+        //initPrivateChat(ConnectionManager.getUsername(), sender, sender);
+      }
+      privateChat.getChatPanel().insertParticipantName("(" + (ConnectionManager.getFullnames()) + ") ");
+      privateChat.getChatPanel().insertParticipantMessage(receiver, msg, 17, Color.BLACK);
+      if (!privateChat.isVisible()) {
+        privateChat.setSize(400, 300);
+        privateChat.setVisible(true);
+      } 
+    }
+    public void receivePrivateChat(String msg, String sender, String senderName) {
+      PrivateChatFrame privateChat;
+      privateChat = getPrivateChatFrame(sender);
+      if (privateChat == null) {
+        initPrivateChat(sender, senderName);
+        privateChat = getPrivateChatFrame(sender);
+        //initPrivateChat(ConnectionManager.getUsername(), sender, sender);
+      }
+      privateChat.getChatPanel().insertParticipantName("(" + (senderName) + ") ");
+      privateChat.getChatPanel().insertParticipantMessage(sender, msg, 17, Color.BLACK);
+      if (!privateChat.isVisible()) {
+        privateChat.setSize(400, 300);
+        privateChat.setVisible(true);
+      }
     }
 
-    public void initPrivateChat(String sender, String receiverUsername, String receiverName) {
-        Map<String, Object> map = getPrivateChatFrame(sender, receiverUsername);
-        if (map == null) {
-            PrivateChatPanel privateChatPanel = new PrivateChatPanel(receiverUsername);
+    public void initPrivateChat(String receiverUsername, String receiverName) {
+        PrivateChatFrame privateChat = getPrivateChatFrame(receiverUsername);
+        if (privateChat == null) {
+            PrivateChatPanel privateChatPanel = new PrivateChatPanel(receiverUsername, receiverName);
             PrivateChatFrame privateChatFrame = new PrivateChatFrame(privateChatPanel);
             privateChatFrame.setContentPane(privateChatPanel);
             privateChatFrame.setTitle(ConnectionManager.fullnames + ": Chat with " + receiverName);
             privateChatFrame.setSize(400, 300);
             privateChatFrame.setLocationRelativeTo(null);
             privateChatFrame.setVisible(true);
-            Map<String, Object> m = new HashMap<String, Object>();
-            m.put("receiver", receiverUsername);
-            m.put("sender", sender);
-            m.put("chatframe", privateChatFrame);
-            privateChats.add(m);
+            privateChats.put(receiverUsername, privateChatFrame);
         } else {
-            map = getPrivateChatFrame(sender, receiverUsername);
-            PrivateChatFrame privateChatFrame = (PrivateChatFrame) map.get("chatframe");
-            privateChatFrame.setSize(400, 300);
-            privateChatFrame.setVisible(true);
+            privateChat.setSize(400, 300);
+            privateChat.setVisible(true);
         }
 
     }
-
+/*
     class PrivateChatFrame extends JFrame {
 
         private PrivateChatPanel chatPanel;
@@ -497,6 +494,7 @@ public class ParticipantListTree extends JPanel implements
         }
         return false;
     }
+    */
 
     public void giveMic(String to) {
         StringBuilder sb = new StringBuilder();
@@ -539,6 +537,7 @@ public class ParticipantListTree extends JPanel implements
     }
 
     public void actionPerformed(ActionEvent e) {
+      /*
         if (e.getActionCommand().equals("privatechat")) {
             TreePath parentPath = tree.getSelectionPath();
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) (parentPath.getLastPathComponent());
@@ -584,7 +583,7 @@ public class ParticipantListTree extends JPanel implements
             giveMic();
         }
 
-
+    */
     }
 
     /**

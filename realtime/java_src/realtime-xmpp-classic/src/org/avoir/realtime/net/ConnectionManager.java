@@ -6,6 +6,7 @@ package org.avoir.realtime.net;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,7 +81,8 @@ public class ConnectionManager {
     public static boolean canWhiteboard = false;
     public static boolean grantAdmin = false;
     //=================================================
-
+    
+    private static Map<String, Object> privateChats = new HashMap<String, Object>();
 
     /**
      * This initiates connection to openfire server
@@ -124,7 +126,9 @@ public class ConnectionManager {
         return false;
 
     }
-
+    public static Map<String, Object> getPrivateChats(){
+      return privateChats;
+    }
     public static String getFullnames() {
         return fullnames;
     }
