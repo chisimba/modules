@@ -19,7 +19,7 @@ $this->appendArrayVar('headerParams', $ext);*/
 
 
 <div style="position:absolute;right:180px;" >
-
+<br/><br/>
 <object width="550" height="400">
 <param name="movie" value="somefilename.swf">
 <embed src="http://lifeline.org.za/flash/homepage.swf" width="550" height="400">
