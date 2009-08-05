@@ -638,6 +638,9 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        zoomInButton = new javax.swing.JButton();
+        zoomOutButton = new javax.swing.JButton();
+        zoomOriginalButton = new javax.swing.JButton();
         titlePanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         titleField = new javax.swing.JTextArea();
@@ -663,9 +666,6 @@ public class MainFrame extends javax.swing.JFrame {
         deskShareButton = new javax.swing.JButton();
         imagesButton = new javax.swing.JButton();
         notepadButton = new javax.swing.JButton();
-        zoomInButton = new javax.swing.JButton();
-        zoomOutButton = new javax.swing.JButton();
-        zoomOriginalButton = new javax.swing.JButton();
         screenShareItem = new javax.swing.JMenuBar();
         fileMenutem = new javax.swing.JMenu();
         newWhiteboardMenuItem = new javax.swing.JMenuItem();
@@ -702,6 +702,75 @@ public class MainFrame extends javax.swing.JFrame {
         magnifierMenuitem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
+
+        zoomInButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        zoomInButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
+        zoomInButton.setText("+");
+        zoomInButton.setBorderPainted(false);
+        zoomInButton.setContentAreaFilled(false);
+        zoomInButton.setFocusable(false);
+        zoomInButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        zoomInButton.setName("notepad"); // NOI18N
+        zoomInButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        zoomInButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zoomInButtonActionPerformed(evt);
+            }
+        });
+        zoomInButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                zoomInButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                zoomInButtonMouseExited(evt);
+            }
+        });
+
+        zoomOutButton.setFont(new java.awt.Font("Dialog", 0, 11));
+        zoomOutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
+        zoomOutButton.setText("-");
+        zoomOutButton.setBorderPainted(false);
+        zoomOutButton.setContentAreaFilled(false);
+        zoomOutButton.setFocusable(false);
+        zoomOutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        zoomOutButton.setName("notepad"); // NOI18N
+        zoomOutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        zoomOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zoomOutButtonActionPerformed(evt);
+            }
+        });
+        zoomOutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                zoomOutButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                zoomOutButtonMouseExited(evt);
+            }
+        });
+
+        zoomOriginalButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        zoomOriginalButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
+        zoomOriginalButton.setText("100%");
+        zoomOriginalButton.setBorderPainted(false);
+        zoomOriginalButton.setContentAreaFilled(false);
+        zoomOriginalButton.setFocusable(false);
+        zoomOriginalButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        zoomOriginalButton.setName("notepad"); // NOI18N
+        zoomOriginalButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        zoomOriginalButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zoomOriginalButtonActionPerformed(evt);
+            }
+        });
+        zoomOriginalButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                zoomOriginalButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                zoomOriginalButtonMouseExited(evt);
+            }
+        });
 
         titlePanel.setLayout(new java.awt.BorderLayout());
 
@@ -941,78 +1010,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         roomToolsToolbar.add(notepadButton);
-
-        zoomInButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        zoomInButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
-        zoomInButton.setText("+");
-        zoomInButton.setBorderPainted(false);
-        zoomInButton.setContentAreaFilled(false);
-        zoomInButton.setFocusable(false);
-        zoomInButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        zoomInButton.setName("notepad"); // NOI18N
-        zoomInButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        zoomInButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                zoomInButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                zoomInButtonMouseExited(evt);
-            }
-        });
-        zoomInButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                zoomInButtonActionPerformed(evt);
-            }
-        });
-        roomToolsToolbar.add(zoomInButton);
-
-        zoomOutButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        zoomOutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
-        zoomOutButton.setText("-");
-        zoomOutButton.setBorderPainted(false);
-        zoomOutButton.setContentAreaFilled(false);
-        zoomOutButton.setFocusable(false);
-        zoomOutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        zoomOutButton.setName("notepad"); // NOI18N
-        zoomOutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        zoomOutButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                zoomOutButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                zoomOutButtonMouseExited(evt);
-            }
-        });
-        zoomOutButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                zoomOutButtonActionPerformed(evt);
-            }
-        });
-        roomToolsToolbar.add(zoomOutButton);
-
-        zoomOriginalButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        zoomOriginalButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
-        zoomOriginalButton.setText("100%");
-        zoomOriginalButton.setBorderPainted(false);
-        zoomOriginalButton.setContentAreaFilled(false);
-        zoomOriginalButton.setFocusable(false);
-        zoomOriginalButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        zoomOriginalButton.setName("notepad"); // NOI18N
-        zoomOriginalButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        zoomOriginalButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                zoomOriginalButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                zoomOriginalButtonMouseExited(evt);
-            }
-        });
-        zoomOriginalButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                zoomOriginalButtonActionPerformed(evt);
-            }
-        });
-        roomToolsToolbar.add(zoomOriginalButton);
 
         surfaceTopTabbedPane.addTab("Tools", roomToolsToolbar);
 
@@ -1774,19 +1771,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     }
 
-    public void whiteBoardZoomIn(){
-        zoomFactor += 10.0;
-        whiteboardPanel.getWhiteboard().zoomIn(zoomFactor/100);
+    public void whiteBoardZoomIn() {
+
+        whiteboardPanel.getWhiteboard().zoomIn();
     }
 
-    public void whiteBoardZoomOut(){
-        if (zoomFactor-10>=100){
-            zoomFactor -= 10.0;
-            whiteboardPanel.getWhiteboard().zoomOut(zoomFactor/100);
-        } else whiteBoardZoomOriginal();
+    public void whiteBoardZoomOut() {
+        whiteboardPanel.getWhiteboard().zoomOut();
+
     }
 
-    public void whiteBoardZoomOriginal(){
+    public void whiteBoardZoomOriginal() {
         whiteboardPanel.getWhiteboard().zoomOriginal();
     }
 

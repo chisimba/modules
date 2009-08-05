@@ -13,6 +13,7 @@ package org.avoir.realtime.gui.main;
 import javax.swing.JCheckBox;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import org.avoir.realtime.common.Constants;
 import org.avoir.realtime.common.util.GeneralUtil;
@@ -31,6 +32,7 @@ public class OptionsPanel extends javax.swing.JPanel {
         audioVideoHttpUrlField.setText(audioVideoUrl);
         requireAuthOpt.setSelected(new Boolean(GeneralUtil.getProperty("proxy.require.auth")));
         showDebugOpt.setSelected(new Boolean(GeneralUtil.getProperty("debug.enabled")));
+        maxSpeakersField.setValue(new Integer(GeneralUtil.getProperty("maxspeakers")));
         browserProxyOpt.setSelected(new Boolean(GeneralUtil.getProperty("browser.proxy.required")));
         int connectionType = Constants.Proxy.NO_PROXY;
         httpProxyHostField.setText(GeneralUtil.getProperty("proxy.host"));
@@ -122,7 +124,9 @@ public class OptionsPanel extends javax.swing.JPanel {
         return requireAuthOpt;
     }
 
-    
+    public JSpinner getMaxSpeakersField() {
+        return maxSpeakersField;
+    }
 
     private void enableControls(boolean state) {
         httpProxyHostField.setEditable(state);
@@ -163,6 +167,8 @@ public class OptionsPanel extends javax.swing.JPanel {
         requireAuthOpt = new javax.swing.JCheckBox();
         browserProxyOpt = new javax.swing.JCheckBox();
         showDebugOpt = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
+        maxSpeakersField = new javax.swing.JSpinner();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -333,10 +339,24 @@ public class OptionsPanel extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         add(showDebugOpt, gridBagConstraints);
+
+        jLabel8.setText("Maximum Speakers");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
+        add(jLabel8, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        add(maxSpeakersField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void serverPortFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverPortFieldActionPerformed
@@ -372,6 +392,8 @@ public class OptionsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JSpinner maxSpeakersField;
     private javax.swing.JRadioButton noProxyOpt;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JPanel proxyPanel;
