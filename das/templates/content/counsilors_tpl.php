@@ -76,14 +76,51 @@ $admin .= "<br/>".$objLink->show();
 
 $objTable->width = "90%";
 $objTable->cssClass = "advisors";
+$objTable->id = "advisors";
 $objTable->addHeader(array("Name"/*, "No. of people assigned"*/, "Logged In", "Auto Assign"));
+
 $objTable->arrayToTable($arr);
-$middleColumn .= $objTable->show();
+//$middleColumn .= $objTable->show();
 $objLink->href = $this->uri(array('action' => 'resetcounsillors'));
 $objLink->link = "Reset Counsillors";
 
 $admin.= "<br/>".$objLink->show();
 
+$tbl = '<table id="gradient-style" summary="Advisor available">
+
+    <thead>
+    	<tr>
+        	<th scope="col" class="rounded-company">Advisor</th>
+        	<th scope="col" class="rounded-q1">Logged in</th>
+            <th scope="col" class="rounded-q2">Auto Assign</th>           
+            <th scope="col" class="rounded-q4"></th>
+
+        </tr>
+    </thead>
+        <tfoot>
+    	<tr>
+        	<td colspan="3" class="rounded-foot-left"><em>Please make sure that at least one advisor is activate before starting the session</em></td>
+        	<td class="rounded-foot-right">&nbsp;</td>
+        </tr>
+    </tfoot>
+
+    <tbody>';
+$tbody = '';
+foreach($arr as $advisor)
+{
+	$isLoggedIn = ($advisor[1]==1) ? 'Yes':'No';
+	$tbody .= '<tr>
+        	<td>'.$advisor[0].'</td>
+            <td align="left">'.$isLoggedIn.'</td>
+            <td align="center">'.$advisor[2].'</td>
+            <td align="center">'.$advisor[3].'</td>
+            
+        </tr>';
+}
+
+$tbl .= $tbody.'    </tbody>
+</table>';
+$middleColumn .=$tbl;
 $rightColumn .= $objFB->show('', $admin);
 $rightColumn .= $objFB->show("Settings",  $this->objImOps->getConfigBlock());
 $leftColumn .= $objFB->show("Status",  $this->objImOps->getStatusBlock());
