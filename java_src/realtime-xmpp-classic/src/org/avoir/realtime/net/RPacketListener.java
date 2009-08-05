@@ -239,9 +239,11 @@ public class RPacketListener implements PacketListener {
                 GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserPermissions(username, permissionString);
             } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
-                String receiver = XmlUtils.readString(doc, "private-chat-receiver");
+                String senderName = XmlUtils.readString(doc,"private-chat-sender-name");
                 String msg = XmlUtils.readString(doc, "private-chat-msg");
                 String msgMode = XmlUtils.readString(doc, "private-chat-mode");
+                PrivateChatManager.receiveMessage(sender, senderName, msg);
+                /*
                 boolean returnChat = false;
                 if (msgMode.equals("return")) {
                     returnChat = true;
@@ -253,7 +255,7 @@ public class RPacketListener implements PacketListener {
                   GUIAccessManager.mf.getUserListPanel().getParticipantListTable().initPrivateChat(receiver, receiverName);
                   privateChat = ((PrivateChatFrame)ConnectionManager.getPrivateChats().get(receiver));
                 }
-                privateChat.getChatPanel().receivePrivateChat(msg);
+                privateChat.getChatPanel().receivePrivateChat(msg); */
 //                GUIAccessManager.mf.getUserListPanel().getUserListTree().
             //                      appendPrivateChat(msg, sender, receiver, returnChat);
             } else if (mode.equals(Mode.EC2_FLASH_SERVER_READY)) {

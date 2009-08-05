@@ -11,7 +11,7 @@ public class PrivateChatPanel extends ChatRoom {
   private String receiver;
   private String receiverName;
 
-  public PrivateChatPanel(String receiver, String recieverName) {
+  public PrivateChatPanel(String receiver, String receiverName) {
       super();
       this.receiver = receiver;
       this.receiverName = receiverName;
@@ -38,6 +38,7 @@ public class PrivateChatPanel extends ChatRoom {
         StringBuilder sb = new StringBuilder();
         sb.append("<private-chat-receiver>").append(receiver).append("</private-chat-receiver>");
         sb.append("<private-chat-sender>").append(ConnectionManager.getUsername()).append("</private-chat-sender>");
+        sb.append("<private-chat-sender-name>").append(ConnectionManager.getFullnames()).append("</private-chat-sender-name>");
         sb.append("<private-chat-msg>").append(msg).append("</private-chat-msg>");
         p.setContent(sb.toString());
         ConnectionManager.sendPacket(p);
