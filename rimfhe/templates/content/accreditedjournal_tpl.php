@@ -118,6 +118,8 @@ $table->addCell($categoryLabel->show(), 150, NULL, 'left');
 $table->addCell($objCategory->show(), 150, NULL, 'left');
 $table->endRow();
 
+
+
 //Input and label for Title of Article
 $table->startRow();
 $objarticleTitle = new textinput('articletitle');

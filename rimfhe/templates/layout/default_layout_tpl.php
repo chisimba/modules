@@ -85,6 +85,7 @@ $objUniSummary = new link($this->uri(array('action'=>'General Summary')));
 $objUniSummary->link='University Summary';
  $sumarry = $objUniSummary->show();
 
+
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
 
 //$leftColumn =$objRegStaff->show();// $this->getVar('leftContent');

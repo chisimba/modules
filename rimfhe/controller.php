@@ -12,7 +12,7 @@ if (!$GLOBALS['kewl_entry_point_run']){
  *
  * @package rimfhe
  * @version 0.1
- * @Copyright January 2009
+ * @Copyright june 2009
  * @author Ram
  */
 

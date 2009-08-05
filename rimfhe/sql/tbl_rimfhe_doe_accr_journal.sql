@@ -1,7 +1,7 @@
 <?php
 
 /*
-*Table to hold book  details
+*Table to hold journal article  details
 */
 
 /*

@@ -96,6 +96,7 @@ $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_firstpage', '
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_lastpage', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_fraction', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));
 $table->endHeaderRow();
@@ -119,6 +120,8 @@ if ( count($arrJournal) > 0) {
 	$tableRow[] = $journal['lastpageno'];
 	$tableRow[] = $journal['pagetotal'];
 	$tableRow[] = $journal['authorname'];
+	$tableRow[] = $journal['fractionalweightedavg'];
+	
 	$editlink = new link($this->uri(array('action'=>'Edit Journal Articles', 'id'=> $journal['id'])));
 	$editlink->link = $editIcon;
 	$tableRow[] = $editlink->show();

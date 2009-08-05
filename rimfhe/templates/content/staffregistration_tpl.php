@@ -68,6 +68,7 @@ echo '<br /><span style="color:red;font-size:12px;">'.$header2.'</span>';
 	$staffRegistration->addRule('surname','Please enter your Surname','required');
 	if($mode == 'fixerror'){
 		$objSurname->value =$this->getParam('surname');
+		
 	}
 	$table->addCell($surnameLabel->show(), 1500, NULL, 'left');
 	$table->addCell($objSurname->show(), 1500, NULL, 'left');

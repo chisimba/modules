@@ -33,7 +33,7 @@ class dbaccreditedjournal extends dbtable
 		$author2affiliate= $this->getParam('author2affiliate');
 		$author3affiliate= $this->getParam('author3affiliate');
 		$author4affiliate= $this->getParam('author4affiliate');
-			
+		$fractionalweightedavg->getParam('fraction');
 		//check which author fieild is not empty
 		//Differiate authors affiliated to UWC with bold text
 		if (!empty($author1)){
@@ -117,7 +117,8 @@ class dbaccreditedjournal extends dbtable
 				'firstpageno'=> $fisrtpgno,
 				'lastpageno' => $lastpgno,
 				'pagetotal'=> $pagetotal,
-				'authorname' => $author
+				'authorname' => $author,
+			
 				);
 		//if not edite mode, add record tp database
 		if (empty($id)){
