@@ -15,7 +15,7 @@ public class PrivateChatFrame extends JFrame {
       this.chatPanel = chatPanel;
   }
 
-  public PrivateChatPanel getChatPanel() {
+  public PrivateChatPanel getPrivateChatPanel() {
       return chatPanel;
   }
 }

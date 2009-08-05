@@ -32,6 +32,7 @@ import org.avoir.realtime.common.Constants.*;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.net.providers.RealtimePacketProcessor;
 import org.avoir.realtime.privatechat.PrivateChatFrame;
+import org.avoir.realtime.privatechat.PrivateChatManager;
 import org.avoir.realtime.privatechat.PrivateChatPanel;
 import org.jivesoftware.smack.XMPPException;
 
@@ -277,7 +278,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
           Map user = users.get(selectedRow);
           String username = (String)user.get("username");
           String fullname = (String)user.get("names");
-          initPrivateChat(username, fullname);
+          PrivateChatManager.initPrivateChat(username, fullname);
         }
         if (e.getActionCommand().equals("ban")) {
             kickOut(true);
@@ -341,23 +342,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
         }
     }
 
-  public void initPrivateChat(String receiverUsername, String receiverName) {
-      PrivateChatFrame privateChat = (PrivateChatFrame)ConnectionManager.getPrivateChats().get(receiverUsername);
-      if (privateChat == null) {
-          PrivateChatPanel privateChatPanel = new PrivateChatPanel(receiverUsername, receiverName);
-          PrivateChatFrame privateChatFrame = new PrivateChatFrame(privateChatPanel);
-          privateChatFrame.setContentPane(privateChatPanel);
-          privateChatFrame.setTitle(ConnectionManager.fullnames + ": Chat with " + receiverName);
-          privateChatFrame.setSize(400, 300);
-          privateChatFrame.setLocationRelativeTo(null);
-          privateChatFrame.setVisible(true);
-          ConnectionManager.getPrivateChats().put(receiverUsername, privateChatFrame);
-      } else {
-          privateChat.setSize(400, 300);
-          privateChat.setVisible(true);
-      }
 
-  }
 
     private String getCurrentMicHolder() {
         for (Map user : users) {
