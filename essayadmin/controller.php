@@ -314,8 +314,10 @@ class essayadmin extends controller
 		    foreach($data as $key=>$item){
                 $essay=$this->dbessays->getEssay($item['essayid'],'topic');
                 $data[$key]['essay']=$essay[0]['topic'];
-                $student=$this->objUser->fullname($item['studentid']);
-                $data[$key]['student']=$student;//[0]['fullname'];
+                //$student=
+		        //$studentNo=$this->objUser->fullname($item['studentid']);
+                    $data[$key]['studentNo']=$this->objUser->getStaffNumber($item['studentid']); //[0]['fullname'];
+                    $data[$key]['student']=$this->objUser->fullname($item['studentid']); //$student;//[0]['fullname'];
             }
             $this->setVarByRef('topicdata',$topicdata);
             $this->setVarByRef('data',$data);

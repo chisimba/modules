@@ -66,6 +66,7 @@ $this->setVarByRef('heading',$head);
 
 
 $tableHd=array();
+$tableHd[]=$this->objLanguage->languageText('mod_essayadmin_studentno','essayadmin');
 $tableHd[]=$studenthead;
 $tableHd[]=$essayhead;
 $tableHd[]=$submithead;
@@ -78,8 +79,9 @@ $objTable->addHeader($tableHd,'heading');
 
 $objTable->row_attributes=' height="5"';
 $objTable->startRow();
+$objTable->addCell('','10%','bottom');
 $objTable->addCell('','20%','bottom');
-$objTable->addCell('','40%','bottom');
+$objTable->addCell('','30%','bottom');
 $objTable->addCell('','15%','bottom');
 $objTable->addCell('','15%','bottom');
 $objTable->addCell('','10%');
@@ -132,7 +134,8 @@ if(!empty($data)){
         $objTable->addCell($mark,'','','center',$class);
         $objTable->addCell($loadicons,'','','center',$class,' colspan=2');
 */
-		$objTable->addCell($item['studentid'],'','','',$class);
+        $objTable->addCell($item['studentNo'],'','','',$class);
+        $objTable->addCell($item['student'],'','','',$class);
         $objTable->addCell($item['essay']/*$topicdata[0]['name']*/,'','','',$class);
         $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
         $objTable->addCell($mark,'','','center',$class);
