@@ -29,11 +29,10 @@ import org.avoir.realtime.common.util.RealtimePacketContent;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.packets.RealtimePacket;
 import org.avoir.realtime.common.Constants.*;
+import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.net.providers.RealtimePacketProcessor;
-import org.avoir.realtime.privatechat.PrivateChatFrame;
 import org.avoir.realtime.privatechat.PrivateChatManager;
-import org.avoir.realtime.privatechat.PrivateChatPanel;
 import org.jivesoftware.smack.XMPPException;
 
 /**
@@ -279,6 +278,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
           String username = (String)user.get("username");
           String fullname = (String)user.get("names");
           PrivateChatManager.initPrivateChat(username, fullname);
+
         }
         if (e.getActionCommand().equals("ban")) {
             kickOut(true);
@@ -343,15 +343,15 @@ public class ParticipantListTable extends JTable implements ActionListener {
     }
 
 
-
-    private String getCurrentMicHolder() {
+    private ArrayList<Map> getCurrentMicHolders() {
+        ArrayList<Map> micHolders = new ArrayList<Map>();
         for (Map user : users) {
             PermissionList permission = (PermissionList) user.get("permissions");
             if (permission.hasMic) {
-                return (String) user.get("username");
+                micHolders.add(user);
             }
         }
-        return null;
+        return micHolders;
     }
 
     private void makeAdmin(String username) {
@@ -464,17 +464,28 @@ public class ParticipantListTable extends JTable implements ActionListener {
     }
 
     public void giveMic(String username, String name) {
-        String currentMicHolderUsername = getCurrentMicHolder();
-        String currentMicHolderNames = getNames(currentMicHolderUsername);
-        if (currentMicHolderUsername != null) {
-            int n = JOptionPane.showConfirmDialog(null, "'" + currentMicHolderNames + "' is in possession of the MIC. Take it away?",
-                    "MIC in use", JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.NO_OPTION) {
-                return;
-            } else {
-                takeMic(currentMicHolderUsername);
-            }
+        String spks = GeneralUtil.getProperty("maxspeakers");
+        if (spks == null) {
+            GeneralUtil.saveProperty("maxspeakers", "1");
+            spks = GeneralUtil.getProperty("maxspeakers");
         }
+        Integer maxSpeakers = new Integer(spks);
+        ArrayList<Map> currentMicHolders = getCurrentMicHolders();
+        String holdersList = "";
+        for (Map holder : currentMicHolders) {
+            holdersList += holder.get("names") + "\n";
+        }
+        if (currentMicHolders.size() >= maxSpeakers) {
+            JOptionPane.showMessageDialog(null, "<html>The system is configured to allow maximum of " + currentMicHolders.size() +
+                    " users to have mics.\n" +
+                    "Take a mic from one of the following users, before attempting to assign '" + name + "'.\n" +
+                    "<font color=\"green\">MIC Holders</font>" +
+                    "<font color=\"black\">" +
+                    holdersList +
+                    "</font>");
+            return;
+        }
+
         PermissionList permissions = getUserPermissions(username);
         permissions.hasMic = true;
         String permissionString = permissions.getPermissionString();
@@ -670,15 +681,15 @@ public class ParticipantListTable extends JTable implements ActionListener {
     }
      */
     public Map<String, String> getUser(String username) {
-      for (Map user : users) {
-        String thisUsername = (String) user.get("username");
-        if ((thisUsername).equalsIgnoreCase(username)) {
-            return user;
+        for (Map user : users) {
+            String thisUsername = (String) user.get("username");
+            if ((thisUsername).equalsIgnoreCase(username)) {
+                return user;
+            }
         }
+        return null;
     }
-      return null;
-    }
-    
+
     public void addUser(String name) {
         String username = name.split(":")[0];
         String nickname = name.split(":")[1];

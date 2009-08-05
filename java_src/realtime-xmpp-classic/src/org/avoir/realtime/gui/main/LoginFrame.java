@@ -81,7 +81,7 @@ public class LoginFrame extends javax.swing.JFrame {
         }
 
         passwordField.requestFocus();
-        setSize(400,300);
+        setSize(400, 300);
         setLocationRelativeTo(null);
     }
 
@@ -182,7 +182,8 @@ public class LoginFrame extends javax.swing.JFrame {
                 proxyPort = Integer.parseInt(panel.getHttpProxyPortField().getText().trim());
             } catch (NumberFormatException ex) {
             }
-
+            Integer maxSpeakers = (Integer) panel.getMaxSpeakersField().getValue();
+            GeneralUtil.saveProperty("maxspeakers", maxSpeakers + "");
             GeneralUtil.saveProperty("proxy.host", proxyHost);
             GeneralUtil.saveProperty("proxy.port", proxyPort + "");
             GeneralUtil.saveProperty("proxy.require.auth", panel.getRequireAuthOpt().isSelected() + "");

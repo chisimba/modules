@@ -131,7 +131,7 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(enable, "screenviewer");
         GUIAccessManager.setMenuEnabled(enable, "schedule");
         GUIAccessManager.setMenuEnabled(/*!enable*/false, "privatechat");
-        GUIAccessManager.setMenuEnabled(enable, "createRoom");
+        GUIAccessManager.setMenuEnabled(true, "createRoom");
         GUIAccessManager.setMenuEnabled(true, "roomList");
         GUIAccessManager.setMenuEnabled(enable, "actions");
         GUIAccessManager.setMenuEnabled(true, "joinRoom"); ///for every one
