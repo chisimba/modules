@@ -99,12 +99,13 @@ public class DefaultPacketProcessor {
     return replyPacket;
   }
 
-  public void forwardPrivateChatToReceiver(IQ packet, String receiver, String sender, String msg) {
+  public void forwardPrivateChatToReceiver(IQ packet, String receiver, String sender, String senderName, String msg) {
     IQ replyPacket = IQ.createResultIQ(packet);
     Element queryResult = DocumentHelper.createElement(QName.get("query", Constants.NAME_SPACE));
     queryResult.addElement("mode").addText(Mode.PRIVATE_CHAT_FORWARD);
     StringBuilder sb = new StringBuilder();
     sb.append("<private-chat-sender>").append(sender).append("</private-chat-sender>");
+    sb.append("<private-chat-sender-name>").append(senderName).append("</private-chat-sender-name>");
     sb.append("<private-chat-receiver>").append(receiver).append("</private-chat-receiver>");
     sb.append("<private-chat-msg>").append(msg).append("</private-chat-msg>");
     sb.append("<private-chat-mode>").append("forward").append("</private-chat-mode>");
@@ -113,9 +114,10 @@ public class DefaultPacketProcessor {
     XMPPServer server = XMPPServer.getInstance();
     replyPacket.setTo(server.createJID(receiver, pl.getResoureName()));
     packetRouter.route(replyPacket);
-
+    /*
     replyPacket.setTo(server.createJID(sender, pl.getResoureName()));
     packetRouter.route(replyPacket);
+    */
   }
   /*
     public void returnPrivateChatToSender(IQ packet, String receiver, String sender, String msg) {

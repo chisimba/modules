@@ -150,9 +150,9 @@ public class AvoirRealtimePlugin implements Plugin {
                 } else if (mode.equals(Mode.PRIVATE_CHAT_SEND)) {
                     String receiver = XmlUtils.readString(doc, "private-chat-receiver");
                     String sender = XmlUtils.readString(doc, "private-chat-sender");
+                    String senderName = XmlUtils.readString(doc,"private-chat-sender-name");
                     String msg = XmlUtils.readString(doc, "private-chat-msg");
-                    defaultPacketProcessor.forwardPrivateChatToReceiver(packet, receiver, sender, msg);
-                // defaultPacketProcessor.returnPrivateChatToSender(packet, receiver, sender, msg);
+                    defaultPacketProcessor.forwardPrivateChatToReceiver(packet, receiver, sender, senderName, msg);
                 } else if (mode.equals(Mode.JOIN_MEETING_ID)) {
                     String joinId = XmlUtils.readString(doc, "joinid");
                     String longURL[] = roomResourceManager.getLongUrl(joinId);
