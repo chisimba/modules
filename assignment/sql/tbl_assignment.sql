@@ -65,8 +65,9 @@ $fields = array(
 		),
 	'assesment_type' => array(
 		'type' => 'text',
+		'length' => 1,
 		'notnull' => 1,
-		'default' => '0'			
+		'default' => '0'
 		)
 	);
 ?>
