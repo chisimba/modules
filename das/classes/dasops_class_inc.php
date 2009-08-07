@@ -380,7 +380,7 @@ class dasops extends object {
 		//get the service email
 		$to = $this->dasfeedbackemail; //'$this->wnitsckie@uwc.ac.za, wesleynitsckie@gmail.com';//$this->juser.'@'.$this->jdomain;
 		$subject = "Feedback from ".$this->objConfig ->getSiteName();
-		
+		$from  = $this->juser.'@'.$this->jserver;
 		
 		//set mailer
 		//$objEmail = $this->getObject('email', 'mail');
@@ -397,8 +397,8 @@ class dasops extends object {
 		//$message = 'hello';
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-		$headers .= 'From: webmaster@example.com' . "\r\n" .
-			'Reply-To: webmaster@example.com' . "\r\n" .
+		$headers .= 'From: '.$from . "\r\n" .
+			'Reply-To: '.$from . "\r\n" .
 			'X-Mailer: PHP/' . phpversion();
 
 		return mail($to, $subject, $body, $headers);
