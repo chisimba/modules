@@ -34,6 +34,7 @@
     $addButton->setOnClick("window.location='$returnUrl'");
 
     //prints out add comment message
+    
     if ($this->addCommentMessage){
         $message = "<span id=\"commentSuccess\">".$this->objLanguage->languageText('mod_ads_commentSuccess', 'ads')."</span><br />";
         $this->addCommentMessage = false;
@@ -106,8 +107,10 @@
         $data .= $editLink->show();
 
         $objIcon->setIcon('view');
+        $objIcon->setAlt('review');
         $reviewLink->link=$objIcon->show();
         $data .= $reviewLink->show();
+        $objIcon->resetAlt();
         
         if (strstr($this->objUser->fullname($verarray['currentuser']),'Administrative User')) {
             $commentLink->link($this->uri(array('action'=>'addcomment',
@@ -192,9 +195,16 @@
                 });
 
 
-
                 // Array data for the grids
                 Ext.grid.Data = [".$data."];";
 
     echo "<script type=\"text/javascript\">".$mainjs."</script>";
+  $tooltipHelp =& $this->getObject('tooltip','htmlelements');
+$tooltipHelp->setCaption('Help');
+$tooltipHelp->setText('Some help text...');
+$tooltipHelp->setCursor('help');
+echo $tooltipHelp->show();
+
+
+
 ?>

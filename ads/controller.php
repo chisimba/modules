@@ -27,6 +27,7 @@ class ads extends controller {
     $this->objLog = $this->getObject('logactivity', 'logger');
     $this->allForms = array("A", "B", "C", "D", "E", "F", "G", "H");
     $this->objLog->log();
+    
   }
   
   public function dispatch($action) {

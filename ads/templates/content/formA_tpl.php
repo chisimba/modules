@@ -7,6 +7,17 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
+
+// scripts
+    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+    $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+    $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+    $tip = '<div id="tip1"><img src="'.$this->getResourceUri('ext-3.0-rc2/resources/images/default/window/icon-question.gif','htmlelements').'" ></div>';
+    
+    $this->appendArrayVar('headerParams', $extbase);
+    $this->appendArrayVar('headerParams', $extalljs);
+    $this->appendArrayVar('headerParams', $extallcss);
+ //end of scripts
 $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleA','ads'), 2);
 
 
@@ -21,12 +32,25 @@ $table->startRow();
 
 
 $unitname = new textinput('A1',$this->formValue->getValue('A1'),NULL,50);
+
+//the tip image
+//$tip = "<div id = 'tip1'>The tip</div>";
+$myscript = "Ext.onReady(function(){
+                        new Ext.ToolTip({
+                            target: 'tip1',
+                            html: 'what the f**k do you want now'
+                         });
+
+                         Ext.QuickTips.init();
+                })";
 $unitnameLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_name', 'ads'). "</b>".'&nbsp;', 'input_unitname');
 
-$table->addCell($unitnameLabel->show(), 150, NULL, 'left');
+$table->addCell($unitnameLabel->show(), 100, NULL, 'left');
+
 $table->endRow();
 $table->startRow();
 $table->addCell($unitname->show() . "<br />" . $this->formError->getError('A1'));
+$table->addCell($tip, 500, NULL, 'left');
 $table->endRow();
 
 $unitType = new radio ('A2');
@@ -128,6 +152,7 @@ $rightSideColumn.= '</div>';
 // Add Right Column
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 
+echo "<script type=\"text/javascript\">".$myscript."</script>";
 //Output the content to the page
 echo $cssLayout->show();
 ?>

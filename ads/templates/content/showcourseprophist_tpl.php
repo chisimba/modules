@@ -121,4 +121,5 @@
                 });";
 
     echo "<script type=\"text/javascript\">".$mainjs."</script>";
+
 ?>
