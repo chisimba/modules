@@ -36,15 +36,18 @@ class brandmonday extends controller {
     public $objTwitterLib;
     public $objCurl;
     public $objViewer;
+    public $objDbBm;
 
     public function init() {
         try {
             $this->teeny = $this->getObject ( 'tiny', 'tinyurl' );
             $this->objCurl = $this->getObject('curl', 'utilities');
+            $this->objConfig = $this->getObject('altconfig', 'config');
             //Create an instance of the language object
             $this->objLanguage = $this->getObject ( 'language', 'language' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
             $this->objViewer = $this->getObject('viewer');
+            $this->objDbBm = $this->getObject('dbbm');
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
                 $this->objTwitterLib = $this->getObject ( 'twitterlib', 'twitter' );
@@ -70,23 +73,44 @@ class brandmonday extends controller {
 
             default: 
                 $this->requiresLogin('default');
-                $minusurl = "http://search.twitter.com/search.json?q=&ands=BrandMinus&phrase=&ors=&nots=BrandPlus&tag=BrandMonday&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C100km&rpp=100";
-                $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&tag=BrandMonday&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C100km&rpp=100"; //"http://search.twitter.com/search.json?q=%23BrandPlus+AND+%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C100km";
-                $menurl = "http://search.twitter.com/search.json?q=%23BrandMonday+AND+%23BrandPlus+AND+%23BrandMinus&lang=all&geocode=-33.55%2C18.22%2C100km";
+                $path = $this->objConfig->getSiteRootPath()."bmupdate";
+                if(!file_exists($path)) {
+                    touch($path);
+                    chmod($path, 0777);
+                }
+
+                $lastupdate = file_get_contents($path);
+                $minusurl = "http://search.twitter.com/search.json?q=&ands=BrandMinus&phrase=&ors=&nots=BrandPlus&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C500km&since_id=$lastupdate&rpp=100";
+                $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C500km&since_id=$lastupdate&rpp=100"; //"http://search.twitter.com/search.json?q=%23BrandPlus+AND+%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C100km";
+                $menurl = "http://search.twitter.com/search.json?q=%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C500km&since_id=$lastupdate";
 
                 $resMinus = $this->objCurl->exec($minusurl);
                 $resMinus = json_decode($resMinus);
-                
+
                 $resMentions = $this->objCurl->exec($menurl);
                 $resMentions = json_decode($resMentions);
 
                 $resPlus = $this->objCurl->exec($plusurl);
                 $resPlus = json_decode($resPlus);
 
+// var_dump($resMinus);
+                if($lastupdate <= $resMinus->since_id) {
+                    //echo "Update needed!";
+                    // do "smart" update on db, so we only get the tweets that don't yet exist
+                    $this->objDbBm->smartUpdate($resMinus, $resPlus, $resMentions);
+                }
+                
+                if(file_exists($path)) {
+                    unlink($path);
+                    touch($path);
+                    chmod($path, 0777);
+                    file_put_contents($path, $resMinus->since_id);
+                }
+
                 $this->setVarByRef('resMentions', $resMentions);
                 $this->setVarByRef('resMinus', $resMinus);
                 $this->setVarByRef('resPlus', $resPlus);
-
+//die();
                 return 'view_tpl.php';
                 break;
         }

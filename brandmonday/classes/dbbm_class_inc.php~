@@ -61,17 +61,13 @@ class dbbm extends dbTable {
             }
         }
         foreach($resMinus->results as $res) {
-            if(!$this->tweetExists('tbl_bmminus', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmminus');
-            }
+            $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmminus');
         }
         foreach($resMentions->results as $res) {
             if(!isset($res->to_user)) {
                 $res->to_user = NULL;
             }
-            if(!$this->tweetExists('tbl_bmmentions', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmmentions');
-            }
+            $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmmentions');
         }
     }
 
