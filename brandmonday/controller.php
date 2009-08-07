@@ -93,9 +93,7 @@ class brandmonday extends controller {
                 $resPlus = $this->objCurl->exec($plusurl);
                 $resPlus = json_decode($resPlus);
 
-// var_dump($resMinus);
-                if($lastupdate <= $resMinus->since_id) {
-                    //echo "Update needed!";
+                if(is_object($resMinus) && $lastupdate <= $resMinus->since_id) {
                     // do "smart" update on db, so we only get the tweets that don't yet exist
                     $this->objDbBm->smartUpdate($resMinus, $resPlus, $resMentions);
                 }
@@ -104,7 +102,9 @@ class brandmonday extends controller {
                     unlink($path);
                     touch($path);
                     chmod($path, 0777);
-                    file_put_contents($path, $resMinus->since_id);
+                    if(is_object($resMinus)) {
+                        file_put_contents($path, $resMinus->since_id);
+                    }
                 }
 
                 $this->setVarByRef('resMentions', $resMentions);

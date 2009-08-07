@@ -90,11 +90,20 @@ class viewer extends object {
         if(is_object($plus)) {
             $plus = $plus->results;
         }
+        else {
+            $plus = array();
+        }
         if(is_object($minus)) {
             $minus = $minus->results;
         }
+        else {
+            $minus = array();
+        }
         if(is_object($mentions)) {
             $mentions = $mentions->results;
+        }
+        else {
+            $mentions = array();
         }
         $messages = NULL;
         $plusmessages = NULL;
