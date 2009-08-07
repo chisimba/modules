@@ -382,8 +382,11 @@ class twitterremote extends object
                . "</td></tr>";
             }
             $ret .= "</table><br />";
+            return $ret;
         }
-        return $ret;
+        else {
+            return NULL;
+        }
     }
 
 
