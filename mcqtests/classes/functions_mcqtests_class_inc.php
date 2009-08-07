@@ -71,6 +71,8 @@ class functions_mcqtests extends object
 	    }
 	   }
 
+if(!empty($resultdata))
+{ 
 	   foreach($resultsData as $myResults){
 	    if($myResults["studentid"] == $userId){
 	      //var_dump($myResults);
@@ -106,6 +108,7 @@ class functions_mcqtests extends object
 		$objmcqTable->endRow();
 
 	   }
+       }
 	  }
 	    return $objmcqTable->show();
 	 }else{
