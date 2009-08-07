@@ -69,7 +69,9 @@ $header->type = 3;
 
 $refreshLink->href = $this->uri(null, 'das');
 $refreshLink->extra = ' onclick="showLoading(\'conversations\'); loadConversations()" ';
-$refreshIcon->setIcon('refresh');
+$refreshIcon->setIcon('refresh_blue24x24','png');
+$refreshIcon->alt="Check for new messages";
+$refreshIcon->title="Check for new messages";
 $refreshLink->link = $refreshIcon->show();
 
 if($this->objUser->inAdminGroup($this->objUser->userId()))
@@ -77,6 +79,8 @@ if($this->objUser->inAdminGroup($this->objUser->userId()))
     $cid = $this->objUser->userId();
     
 	$configIcon->setIcon('admin');
+	$configIcon->title="Configuration";
+	$configIcon->alt="Configuration";
 	$configLink->href = $this->uri(array('action' => 'viewcounsilors', 'das'));
 	$configLink->link = $configIcon->show();
 	$config = $configLink->show();
