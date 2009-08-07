@@ -61,13 +61,17 @@ class dbbm extends dbTable {
             }
         }
         foreach($resMinus->results as $res) {
-            $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmminus');
+            if(!$this->tweetExists('tbl_bmminus', $res->id)) {
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmminus');
+            }
         }
         foreach($resMentions->results as $res) {
             if(!isset($res->to_user)) {
                 $res->to_user = NULL;
             }
-            $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmmentions');
+            if(!$this->tweetExists('tbl_bmmentions', $res->id)) {
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmmentions');
+            }
         }
     }
 
@@ -87,18 +91,21 @@ class dbbm extends dbTable {
         }
     }
 
-
-
-
-
-
-
-
-
-    public function getRange($start, $num) {
+    public function getRange($table, $start, $num) {
+        parent::init($table);
         $range = $this->getAll ( "ORDER BY puid ASC LIMIT {$start}, {$num}" );
-        return array_reverse($range);
+        $results = new StdClass();
+        $results->results = $range;
+        
+        return $results;
     }
+
+
+
+
+
+
+
 
 
     

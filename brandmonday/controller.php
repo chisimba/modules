@@ -106,11 +106,15 @@ class brandmonday extends controller {
                         file_put_contents($path, $resMinus->since_id);
                     }
                 }
-
+               
+                $resMinus = $this->objDbBm->getRange('tbl_bmminus', 0, 100);
+                $resPlus = $this->objDbBm->getRange('tbl_bmplus', 0, 100);
+                $resMentions = $this->objDbBm->getRange('tbl_bmmentions', 0, 100);
+               
                 $this->setVarByRef('resMentions', $resMentions);
                 $this->setVarByRef('resMinus', $resMinus);
                 $this->setVarByRef('resPlus', $resPlus);
-//die();
+
                 return 'view_tpl.php';
                 break;
         }

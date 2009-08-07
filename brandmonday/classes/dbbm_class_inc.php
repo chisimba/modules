@@ -91,18 +91,21 @@ class dbbm extends dbTable {
         }
     }
 
-
-
-
-
-
-
-
-
-    public function getRange($start, $num) {
+    public function getRange($table, $start, $num) {
+        parent::init($table);
         $range = $this->getAll ( "ORDER BY puid ASC LIMIT {$start}, {$num}" );
-        return array_reverse($range);
+        $results = new StdClass();
+        $results->results = $range;
+        
+        return $results;
     }
+
+
+
+
+
+
+
 
 
     

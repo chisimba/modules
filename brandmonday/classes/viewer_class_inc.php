@@ -111,10 +111,10 @@ class viewer extends object {
         $menmessages = NULL;
         // ok so lets do the iterations and build our output
         foreach($plus as $pos) {
-            $text = $pos->text;
-            $pic = $pos->profile_image_url;
-            $user = $pos->from_user;
-            $createdat = $pos->created_at;
+            $text = $pos['tweet'];
+            $pic = $pos['image'];
+            $user = $pos['from_user'];
+            $createdat = $pos['createdat'];
             $usrlink = $this->newObject('link', 'htmlelements');
             $usrlink->href = "http://twitter.com/$user";
             $usrlink->link = $user;
@@ -134,10 +134,10 @@ class viewer extends object {
 
         // now the minus messages
         foreach($minus as $neg) {
-            $text = $neg->text;
-            $pic = $neg->profile_image_url;
-            $user = $neg->from_user;
-            $createdat = $neg->created_at;
+            $text = $neg['tweet'];
+            $pic = $neg['image'];
+            $user = $neg['from_user'];
+            $createdat = $neg['createdat'];
             $usrlink = $this->newObject('link', 'htmlelements');
             $usrlink->href = "http://twitter.com/$user";
             $usrlink->link = $user;
@@ -157,10 +157,10 @@ class viewer extends object {
 
         // mentions messages
         foreach($mentions as $men) {
-            $text = $men->text;
-            $pic = $men->profile_image_url;
-            $user = $men->from_user;
-            $createdat = $men->created_at;
+            $text = $men['tweet'];
+            $pic = $men['image'];
+            $user = $men['from_user'];
+            $createdat = $men['createdat'];
             $usrlink = $this->newObject('link', 'htmlelements');
             $usrlink->href = "http://twitter.com/$user";
             $usrlink->link = $user;
