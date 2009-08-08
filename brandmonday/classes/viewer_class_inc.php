@@ -210,7 +210,7 @@ class viewer extends object {
         $mh = new htmlHeading ( );
         $mh->str = $this->objLanguage->languageText ( 'mod_brandmonday_mentions', 'brandmonday' );
         $mh->type = 3;
-        
+        header ( "Content-Type: text/html;charset=utf-8" );
         return $bigtbl->show()."<br />".$mh->show().$mtbl->show();
     }
 
@@ -250,6 +250,42 @@ class viewer extends object {
         return $ret;
     }
 
+    public function awardsBlock() {
+        $this->objWashout = $this->getObject("washout", "utilities");
+        $ret = NULL;
+        $linklist = NULL;
+
+        // happiest tweeter
+        $htlink = $this->newObject('alertbox', 'htmlelements');
+        $linklist .= $htlink->show($this->objLanguage->languageText("mod_brandmonday_happypeeps", "brandmonday"), $this->uri(array('action' => 'happypeeps')));
+        $linklist .= "<br />";
+        // saddest tweeter
+        $sadlink = $this->newObject('alertbox', 'htmlelements');
+        $linklist .= $sadlink->show($this->objLanguage->languageText("mod_brandmonday_sadpeeps", "brandmonday"), $this->uri(array('action' => 'sadpeeps')));
+        $linklist .= "<br />";
+        // most tweets
+        $aclink = $this->newObject('alertbox', 'htmlelements');
+        $linklist .= $aclink->show($this->objLanguage->languageText("mod_brandmonday_activepeeps", "brandmonday"), $this->uri(array('action' => 'activepeeps')));
+        $linklist .= "<br />";
+        // best service
+        $bslink = $this->newObject('alertbox', 'htmlelements');
+        $linklist .= $bslink->show($this->objLanguage->languageText("mod_brandmonday_bestserv", "brandmonday"), $this->uri(array('action' => 'bestserv')));
+        $linklist .= "<br />";
+        // worst service
+        $wslink = $this->newObject('alertbox', 'htmlelements');
+        $linklist .= $wslink->show($this->objLanguage->languageText("mod_brandmonday_worstserv", "brandmonday"), $this->uri(array('action' => 'worstserv')));
+        $linklist .= "<br />";
+        // most mentions
+        $menlink = $this->newObject('alertbox', 'htmlelements');
+        $linklist .= $menlink->show($this->objLanguage->languageText("mod_brandmonday_mentions", "brandmonday"), $this->uri(array('action' => 'mentions')));
+        $linklist .= "<br />";
+
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_brandmonday_awards", "brandmonday"), $linklist);
+        
+        return $ret;
+    }
+
     public function aboutBlock() {
         $this->objWashout = $this->getObject("washout", "utilities");
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
@@ -275,6 +311,16 @@ class viewer extends object {
         
         return $ret;
     }
+
+    public function disclaimerBlock() {
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $text = $this->objLanguage->languageText("mod_brandmonday_disclaimertext", "brandmonday");
+        $ret = NULL;
+        $ret .= $objFeatureBox->show($this->objLanguage->languageText("mod_brandmonday_disclaimer", "brandmonday"), $this->objWashout->parseText($text));
+        
+        return $ret;
+    }
+
 
 }
 ?>

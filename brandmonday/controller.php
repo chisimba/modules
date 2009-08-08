@@ -37,6 +37,7 @@ class brandmonday extends controller {
     public $objCurl;
     public $objViewer;
     public $objDbBm;
+    public $objBmOps;
 
     public function init() {
         try {
@@ -48,6 +49,7 @@ class brandmonday extends controller {
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
             $this->objViewer = $this->getObject('viewer');
             $this->objDbBm = $this->getObject('dbbm');
+            $this->objBmOps = $this->getObject('bmops');
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
                 $this->objTwitterLib = $this->getObject ( 'twitterlib', 'twitter' );
@@ -116,6 +118,30 @@ class brandmonday extends controller {
                 $this->setVarByRef('resPlus', $resPlus);
 
                 return 'view_tpl.php';
+                break;
+
+            case 'happypeeps':
+                echo $this->objBmOps->happyPeepsTagCloud();
+                break;
+
+            case 'sadpeeps':
+                echo $this->objBmOps->sadPeepsTagCloud();
+                break;
+
+            case 'activepeeps':
+                echo $this->objBmOps->activePeepsTagCloud();
+                break;
+
+            case 'bestserv':
+                echo "best service";
+                break;
+
+            case 'worstserv':
+                echo "worst service";
+                break;
+
+            case 'mentions':
+                echo $this->objBmOps->mentionsTagCloud();
                 break;
         }
     }

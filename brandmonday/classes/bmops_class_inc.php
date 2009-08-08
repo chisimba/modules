@@ -65,6 +65,7 @@ class bmops extends object {
     public $objWashout;
     public $teeny;
     public $objConfig;
+    public $objDbBm;
 
     /**
      *
@@ -79,12 +80,136 @@ class bmops extends object {
         $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
         $this->objIcon = $this->getObject ( 'geticon', 'htmlelements' );
         $this->objLink = $this->getObject ( 'link', 'htmlelements' );
+        $this->objDbBm = $this->getObject('dbbm');
         
         $this->objUser = $this->getObject ( 'user', 'security' );
         //$this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $this->objWashout = $this->getObject ( 'washout', 'utilities' );
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
     }
+
+    public function happyPeepsTagCloud() {
+        $this->objTC = $this->newObject('tagcloud', 'utilities');
+        $tagarr = $this->objDbBm->getHappyPeeps();
+        if (empty($tagarr)) {
+            return NULL;
+        }
+        else {
+            foreach($tagarr as $pl) {
+                $utags[] = $pl['from_user'];
+            }
+            asort($utags);
+            foreach($utags as $tag) {
+                // create the url
+                $url = "http://twitter.com/$tag";
+                // get the count of the tag (weight)
+                $weight = $this->objDbBm->getTagWeight('tbl_bmplus', $tag);
+                $weight = $weight*1000;
+                $tag4cloud = array(
+                    'name' => $tag,
+                    'url' => $url,
+                    'weight' => $weight,
+                    'time' => time()
+                );
+                $ret[] = $tag4cloud;
+            }
+            return $this->objTC->buildCloud($ret);
+        }
+    }
+
+    public function sadPeepsTagCloud() {
+        $this->objTC = $this->newObject('tagcloud', 'utilities');
+        $tagarr = $this->objDbBm->getSadPeeps();
+        if (empty($tagarr)) {
+            return NULL;
+        }
+        else {
+            foreach($tagarr as $pl) {
+                $utags[] = $pl['from_user'];
+            }
+            asort($utags);
+            foreach($utags as $tag) {
+                // create the url
+                $url = "http://twitter.com/$tag";
+                // get the count of the tag (weight)
+                $weight = $this->objDbBm->getTagWeight('tbl_bmminus', $tag);
+                $weight = $weight*1000;
+                $tag4cloud = array(
+                    'name' => $tag,
+                    'url' => $url,
+                    'weight' => $weight,
+                    'time' => time()
+                );
+                $ret[] = $tag4cloud;
+            }
+            return $this->objTC->buildCloud($ret);
+        }
+    }
+
+    public function activePeepsTagCloud() {
+        $this->objTC = $this->newObject('tagcloud', 'utilities');
+        $tagarr1 = $this->objDbBm->getSadPeeps();
+        $tagarr2 = $this->objDbBm->getHappyPeeps();
+        $tagarr = array_merge($tagarr1, $tagarr2);
+        if (empty($tagarr)) {
+            return NULL;
+        }
+        else {
+            foreach($tagarr as $pl) {
+                $utags[] = $pl['from_user'];
+            }
+            $utags = array_unique($utags);
+            asort($utags);
+            foreach($utags as $tag) {
+                // create the url
+                $url = "http://twitter.com/$tag";
+                // get the count of the tag (weight)
+                $weightsad = $this->objDbBm->getTagWeight('tbl_bmminus', $tag);
+                $weighthappy = $this->objDbBm->getTagWeight('tbl_bmplus', $tag);
+                $weight = $weightsad+$weighthappy;
+                $weight = $weight*1000;
+                $tag4cloud = array(
+                    'name' => $tag,
+                    'url' => $url,
+                    'weight' => $weight,
+                    'time' => time()
+                );
+                $ret[] = $tag4cloud;
+            }
+            return $this->objTC->buildCloud($ret);
+        }
+    }
+
+    public function mentionsTagCloud() {
+        $this->objTC = $this->newObject('tagcloud', 'utilities');
+        $tagarr = $this->objDbBm->getUserMentions();
+        if (empty($tagarr)) {
+            return NULL;
+        }
+        else {
+            foreach($tagarr as $pl) {
+                $utags[] = $pl['from_user'];
+            }
+            asort($utags);
+            foreach($utags as $tag) {
+                // create the url
+                $url = "http://twitter.com/$tag";
+                // get the count of the tag (weight)
+                $weight = $this->objDbBm->getTagWeight('tbl_bmmentions', $tag);
+                $weight = $weight*1000;
+                $tag4cloud = array(
+                    'name' => $tag,
+                    'url' => $url,
+                    'weight' => $weight,
+                    'time' => time()
+                );
+                $ret[] = $tag4cloud;
+            }
+            return $this->objTC->buildCloud($ret);
+        }
+    }
+
+    
 
 }
 ?>

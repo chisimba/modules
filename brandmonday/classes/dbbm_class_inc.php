@@ -100,8 +100,26 @@ class dbbm extends dbTable {
         return $results;
     }
 
+    public function getHappyPeeps() {
+        $plususers = $this->getArray("SELECT DISTINCT from_user FROM tbl_bmplus ORDER BY id");
+        return $plususers;
+    }
 
+    public function getSadPeeps() {
+        $minususers = $this->getArray("SELECT DISTINCT from_user FROM tbl_bmminus ORDER BY id");
+        return $minususers;
+    }
 
+    public function getTagWeight($table, $user) {
+        parent::init($table);
+        $cnt = $this->getRecordCount("WHERE from_user = '$user'");
+        return $cnt;
+    }
+
+    public function getUserMentions() {
+        $menusers = $this->getArray("SELECT DISTINCT from_user FROM tbl_bmmentions ORDER BY id");
+        return $menusers;
+    }
 
 
 

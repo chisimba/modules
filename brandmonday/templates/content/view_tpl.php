@@ -30,8 +30,11 @@ $middleColumn .= $header->show().$headertag2->show();
 $middleColumn .= $this->objViewer->renderCompView($resPlus, $resMinus, $resMentions);
 
 $rightColumn .= $this->objViewer->aboutBlock();
+$rightColumn .= $this->objViewer->disclaimerBlock();
 $rightColumn .= $this->objViewer->adBlocks();
+
 $leftColumn .= $this->objViewer->chisimbaBlock();
+$leftColumn .= $this->objViewer->awardsBlock();
 $leftColumn .= $this->objViewer->tweetBlock();
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
