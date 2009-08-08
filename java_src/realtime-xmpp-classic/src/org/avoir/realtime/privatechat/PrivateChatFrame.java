@@ -18,4 +18,11 @@ public class PrivateChatFrame extends JFrame {
   public PrivateChatPanel getPrivateChatPanel() {
       return chatPanel;
   }
+  public void receivePrivateChat(String msg) {
+    chatPanel.receivePrivateChat(msg);
+    if (!isVisible()) {
+      setSize(400, 300);
+      setVisible(true);
+    }
+  }
 }
