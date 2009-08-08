@@ -54,9 +54,5 @@ public class PrivateChatPanel extends ChatRoom {
   public void receivePrivateChat(String msg) {
     insertParticipantName("(" + (receiverName) + ") ");
     insertParticipantMessage(receiverName, msg, 17, Color.BLACK);
-    if (!isVisible()) {
-      setSize(400, 300);
-      setVisible(true);
-    }
   }
 }

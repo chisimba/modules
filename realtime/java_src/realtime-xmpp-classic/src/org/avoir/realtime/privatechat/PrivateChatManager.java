@@ -27,13 +27,11 @@ public class PrivateChatManager {
   }
   
   public static void receiveMessage(String sender, String senderName, String message) {
-    System.out.println(sender + " " + senderName);
     PrivateChatFrame privateChat = ((PrivateChatFrame)privateChats.get(sender));
     if (privateChat == null) {
-      System.out.println("test2");
       initPrivateChat(sender, senderName);
       privateChat = ((PrivateChatFrame)privateChats.get(sender));
     }
-    privateChat.getPrivateChatPanel().receivePrivateChat(message);
+    privateChat.receivePrivateChat(message);
   }
 }
