@@ -1737,6 +1737,7 @@ public class MainFrame extends javax.swing.JFrame {
             zoomButton.setContentAreaFilled(false);
             zoomButton.setBorderPainted(false);
             whiteboardPanel.getWhiteboard().zoomEnabled = false;
+            whiteboardPanel.getWhiteboard().zoomOriginal();
             zoomControl = true;
         }
 }//GEN-LAST:event_zoomButtonActionPerformed
