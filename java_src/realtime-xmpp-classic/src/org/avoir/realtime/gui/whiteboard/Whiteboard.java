@@ -1028,12 +1028,16 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             }
             if (scale) {
                 g2.drawImage(slideImage.getImage(), 20, 70, (int) (whiteboardSize.width * scaleSlideFactor / 100), (int) (whiteboardSize.height * scaleSlideFactor / 100), this);
+                g2.drawRoundRect(15, 65, ((int) (whiteboardSize.width * scaleSlideFactor / 100)+10), ((int) (whiteboardSize.height * scaleSlideFactor / 100)+10), 10, 10);
             } else if (fitWBSize) {
-                g2.drawImage(slideImage.getImage(), 0, 0, (int) (whiteboardSize.width), (int) (whiteboardSize.height), this);
+                g2.drawImage(slideImage.getImage(), 0, 0, getWidth(), getHeight(), this);
+                g2.drawRoundRect(-5, -5, getWidth()+10, getHeight()+10,10, 10);
             } else if (scaleOff) {
                 g2.drawImage(slideImage.getImage(), 0, 0, this);
+                g2.drawRoundRect(-5, -5, slideImage.getIconWidth()+10, slideImage.getIconHeight()+10,10, 10);
             } else {
                 g2.drawImage(slideImage.getImage(), xx, yy, this);
+                g2.drawRoundRect(xx-5, yy-5, slideImage.getIconWidth()+10, slideImage.getIconHeight()+10,10, 10);
             }
         }
         if (firstTime) {

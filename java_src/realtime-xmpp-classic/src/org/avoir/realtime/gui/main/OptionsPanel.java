@@ -32,6 +32,9 @@ public class OptionsPanel extends javax.swing.JPanel {
         audioVideoHttpUrlField.setText(audioVideoUrl);
         requireAuthOpt.setSelected(new Boolean(GeneralUtil.getProperty("proxy.require.auth")));
         showDebugOpt.setSelected(new Boolean(GeneralUtil.getProperty("debug.enabled")));
+        if(GeneralUtil.getProperty("maxspeakers") == null){
+            GeneralUtil.saveProperty("maxspeakers", "1");
+        }
         maxSpeakersField.setValue(new Integer(GeneralUtil.getProperty("maxspeakers")));
         browserProxyOpt.setSelected(new Boolean(GeneralUtil.getProperty("browser.proxy.required")));
         int connectionType = Constants.Proxy.NO_PROXY;
