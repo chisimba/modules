@@ -174,7 +174,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private JDialog zoomControl;
     public double translateX = 0;
     public double translateY = 0;
-    public double scaleX = 1, scaleY = 1;
+    ZoomListener zoomlistener ;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -465,9 +465,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     class ZoomListener implements MouseListener, MouseMotionListener, MouseWheelListener {
         //class variable declaration
-        public static final int DEFAULT_MIN_ZOOM_LEVEL = -1000;
-        public static final int DEFAULT_MAX_ZOOM_LEVEL = 1000;
-        public static final double DEFAULT_ZOOM_MULTIPLICATION_FACTOR = 1.2;
+        public static final int DEFAULT_MIN_ZOOM_LEVEL = -20;
+        public static final int DEFAULT_MAX_ZOOM_LEVEL = 10;
+        public static final double DEFAULT_ZOOM_MULTIPLICATION_FACTOR = 0.1;
 
         private int zoomLevel = 0;
         private int minZoomLevel = DEFAULT_MIN_ZOOM_LEVEL;
@@ -547,13 +547,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             double dy = dragEnd.getY() - dragStart.getY();
             translateX = dx;
             translateY = dy;
-            scaleX = 1;
-            scaleY = 1;
-            repaint();
-            //coordTransform.translate(dx, dy);
             dragStartScreen = dragEndScreen;
             dragEndScreen = null;
-            //targetComponent.repaint();
+            repaint();
             } catch (NoninvertibleTransformException ex) {
                 ex.printStackTrace();
             }
@@ -565,33 +561,21 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 int wheelRotation = e.getWheelRotation();
                 Point p = e.getPoint();
                 if (wheelRotation > 0) {
-                    if (zoomLevel < maxZoomLevel) {
-                        zoomLevel++;
-                        Point2D p1 = transformPoint(p);
-                        coordTransform.scale(1 / zoomMultiplicationFactor, 1 / zoomMultiplicationFactor);
-                        Point2D p2 = transformPoint(p);
-                        //coordTransform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY());
-                        translateX = p2.getX() - p1.getX();
-                        translateY = p2.getY() - p1.getY();
-                        scaleX = 1 / zoomMultiplicationFactor;
-                        scaleY = 1 / zoomMultiplicationFactor;
-                        repaint();
-                        //targetComponent.repaint();
-                    }
+                    Point2D p1 = transformPoint(p);
+                    Point2D p2 = transformPoint(p);
+                    translateX = p2.getX() - p1.getX();
+                    translateY = p2.getY() - p1.getY();
+                    zoomFactor -= zoomMultiplicationFactor;
+                    if (zoomFactor<1)
+                        zoomFactor = 1;
+                    repaint();
                 } else {
-                    if (zoomLevel > minZoomLevel) {
-                        zoomLevel--;
-                        Point2D p1 = transformPoint(p);
-                        //coordTransform.scale(zoomMultiplicationFactor, zoomMultiplicationFactor);
-                        Point2D p2 = transformPoint(p);
-                        //coordTransform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY());
-                        //targetComponent.repaint();
-                        translateX = p2.getX() - p1.getX();
-                        translateY = p2.getY() - p1.getY();
-                        scaleX = zoomMultiplicationFactor;
-                        scaleY = zoomMultiplicationFactor;
-                        repaint();
-                    }
+                    Point2D p1 = transformPoint(p);
+                    Point2D p2 = transformPoint(p);
+                    translateX = p2.getX() - p1.getX();
+                    translateY = p2.getY() - p1.getY();
+                    zoomFactor += zoomMultiplicationFactor;
+                    repaint();
                 }
             } catch (NoninvertibleTransformException ex) {
                 ex.printStackTrace();
@@ -605,14 +589,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             return p2;
         }
 
-        public double [] getTransform(){
-            double point [] = {translateX,translateY};
-            return point;
-        }
-
-        public double [] getScale(){
-            double point [] = {scaleX, scaleY};
-            return point;
+        public AffineTransform getTransform() {
+            return coordTransform;
         }
     }
 
@@ -1009,6 +987,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         Graphics2D g2 = (Graphics2D) g;
         if (zoomEnabled) {
             //edit here!!
+            g2.setTransform(zoomlistener.getTransform());
             g2.scale(zoomFactor, zoomFactor);
             g2.translate(translateX, translateY);
         }
@@ -1158,15 +1137,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public void zoomPan(){
         zoomEnabled = true;
-        ZoomListener zoomlistener = new ZoomListener();
+        zoomlistener = new ZoomListener();
         addMouseListener(zoomlistener);
         addMouseMotionListener(zoomlistener);
         addMouseWheelListener(zoomlistener);
-        translateX = zoomlistener.getTransform()[0];
-        translateY = zoomlistener.getTransform()[1];
-        scaleX = zoomlistener.getScale()[0];
-        scaleY = zoomlistener.getScale()[1];
-        repaint();
     }
 
     public void mouseClicked(MouseEvent evt) {
