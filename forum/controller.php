@@ -472,7 +472,7 @@ class forum extends controller
                 $returnTemplate = 'forum_newtopic.php';
 
             // Else check if user is lecturer or admin
-            } else if ($this->objUser->isCourseAdmin()) {
+            } else if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
                 $returnTemplate = 'forum_newtopic.php';
             } else {
                 $returnTemplate = 'forum_studentaccess.php';
@@ -695,7 +695,7 @@ class forum extends controller
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
-                if ($this->objUser->isCourseAdmin()) {
+                if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
                     $this->objPost->showModeration = TRUE;
                 }
             }
@@ -780,7 +780,7 @@ class forum extends controller
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
-                if ($this->objUser->isCourseAdmin()) {
+                if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
                     $this->objPost->showModeration = TRUE;
                 }
             }
@@ -906,7 +906,7 @@ class forum extends controller
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
-                if ($this->objUser->isCourseAdmin()) {
+                if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
                     $this->objPost->showModeration = TRUE;
                 }
             }
@@ -1739,7 +1739,7 @@ class forum extends controller
         $link->link = $this->objLanguage->languageText('mod_forum_forumstatistics', 'forum');
         $forumLinksFieldset->addContent($link->show());
 
-        if ($this->objUser->isCourseAdmin() && $this->forumtype != 'workgroup' && $this->isLoggedIn) {
+        if ($this->objUser->isCourseAdmin(NULL, $this->contextCode) && $this->forumtype != 'workgroup' && $this->isLoggedIn) {
             $showSettings = $forumLinksFieldset->show();
         } else if ($this->forumtype != 'workgroup') {
             $link2 = new link ($this->uri(array('type'=>'context')));
