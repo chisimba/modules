@@ -28,6 +28,8 @@ class forum extends controller
 
     protected $workgroupDescription; // Workgroup Title
 
+    protected $objContextGroups;
+
     /**
     * Constructor method to instantiate objects and get variables
     */
@@ -138,6 +140,7 @@ class forum extends controller
             $this->showFullName = TRUE;
         }
 
+        $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
     }
 
     public function requiresLogin()
