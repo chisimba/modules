@@ -1013,8 +1013,8 @@ public class MainFrame extends javax.swing.JFrame {
         });
         roomToolsToolbar.add(notepadButton);
 
-        zoomButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        zoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
+        zoomButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        zoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/zoom-in.png"))); // NOI18N
         zoomButton.setText("Zoom");
         zoomButton.setBorderPainted(false);
         zoomButton.setContentAreaFilled(false);

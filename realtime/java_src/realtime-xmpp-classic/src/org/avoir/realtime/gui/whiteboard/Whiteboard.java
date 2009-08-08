@@ -174,7 +174,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private JDialog zoomControl;
     public double translateX = 0;
     public double translateY = 0;
-    ZoomListener zoomlistener ;
+    ZoomListener zoomlistener;
     private boolean initWB = true;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
@@ -463,25 +463,22 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         zoomOriginal();
     }
 
-
     class ZoomListener implements MouseListener, MouseMotionListener, MouseWheelListener {
         //class variable declaration
+
         public static final int DEFAULT_MIN_ZOOM_LEVEL = -20;
         public static final int DEFAULT_MAX_ZOOM_LEVEL = 10;
         public static final double DEFAULT_ZOOM_MULTIPLICATION_FACTOR = 0.1;
-
         private int zoomLevel = 0;
         private int minZoomLevel = DEFAULT_MIN_ZOOM_LEVEL;
         private int maxZoomLevel = DEFAULT_MAX_ZOOM_LEVEL;
         private double zoomMultiplicationFactor = DEFAULT_ZOOM_MULTIPLICATION_FACTOR;
-
         private Point dragStartScreen;
         private Point dragEndScreen;
         private AffineTransform coordTransform = new AffineTransform();
 
         //constructor
-        public ZoomListener(){
-
+        public ZoomListener() {
         }
 
         public void mouseClicked(MouseEvent e) {
@@ -496,68 +493,67 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         public void mousePressed(MouseEvent e) {
             dragStartScreen = e.getPoint();
             dragEndScreen = null;
-            /*
-            JButton b = (JButton) e.getSource();
-            if (b.getActionCommand().equals("zoomin")) {
-                zoomOut();
-            }
-            if (b.getActionCommand().equals("zoomout")) {
-                zoomIn();
-            }
-            if (b.getActionCommand().equals("scrolldown")) {
-                translateY += 10;
-                repaint();
-            }
-            if (b.getActionCommand().equals("scrollup")) {
-                translateY -= 10;
-                repaint();
-            }
-            if (b.getActionCommand().equals("scrollright")) {
-                translateX += 10;
-                repaint();
-            }
-            if (b.getActionCommand().equals("scrollleft")) {
-                translateX -= 10;
-                repaint();
-            }
-            */
+        /*
+        JButton b = (JButton) e.getSource();
+        if (b.getActionCommand().equals("zoomin")) {
+        zoomOut();
+        }
+        if (b.getActionCommand().equals("zoomout")) {
+        zoomIn();
+        }
+        if (b.getActionCommand().equals("scrolldown")) {
+        translateY += 10;
+        repaint();
+        }
+        if (b.getActionCommand().equals("scrollup")) {
+        translateY -= 10;
+        repaint();
+        }
+        if (b.getActionCommand().equals("scrollright")) {
+        translateX += 10;
+        repaint();
+        }
+        if (b.getActionCommand().equals("scrollleft")) {
+        translateX -= 10;
+        repaint();
+        }
+         */
         }
 
         public void mouseReleased(MouseEvent e) {
         }
 
-        public void mouseMoved(MouseEvent e){
-
+        public void mouseMoved(MouseEvent e) {
         }
 
-        public void mouseDragged(MouseEvent e){
+        public void mouseDragged(MouseEvent e) {
             moveCamera(e);
         }
 
-        public void mouseWheelMoved(MouseWheelEvent e){
+        public void mouseWheelMoved(MouseWheelEvent e) {
             zoomCamera(e);
         }
 
-        private void moveCamera(MouseEvent e){
+        private void moveCamera(MouseEvent e) {
             try {
-            dragEndScreen = e.getPoint();
-            Point2D.Float dragStart = transformPoint(dragStartScreen);
-            Point2D.Float dragEnd = transformPoint(dragEndScreen);
-            double dx = dragEnd.getX() - dragStart.getX();
-            double dy = dragEnd.getY() - dragStart.getY();
-            translateX = dragEndScreen.getX()-dragStartScreen.getX();
-            translateY = dragEndScreen.getY()-dragStartScreen.getY();
-            coordTransform.translate(translateX, translateY);
-            dragStartScreen = dragEndScreen;
-            dragEndScreen = null;
-            repaint();
+                dragEndScreen = e.getPoint();
+                Point2D.Float dragStart = transformPoint(dragStartScreen);
+                Point2D.Float dragEnd = transformPoint(dragEndScreen);
+                double dx = dragEnd.getX() - dragStart.getX();
+                double dy = dragEnd.getY() - dragStart.getY();
+                translateX = dragEndScreen.getX() - dragStartScreen.getX();
+                translateY = dragEndScreen.getY() - dragStartScreen.getY();
+                coordTransform.translate(translateX, translateY);
+                dragStartScreen = dragEndScreen;
+                dragEndScreen = null;
+                repaint();
             } catch (NoninvertibleTransformException ex) {
                 ex.printStackTrace();
             }
 
         }
 
-        private void zoomCamera(MouseWheelEvent e){
+        private void zoomCamera(MouseWheelEvent e) {
             try {
                 int wheelRotation = e.getWheelRotation();
                 Point p = e.getPoint();
@@ -568,8 +564,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                     //translateY = p.getY();// - p1.getY();
                     zoomFactor -= zoomMultiplicationFactor;
                     //coordTransform.translate(translateX, translateY);
-                    if (zoomFactor<0.5)
+                    if (zoomFactor < 0.5) {
                         zoomFactor += zoomMultiplicationFactor;
+                    }
                     //coordTransform.scale(1/zoomMultiplicationFactor, 1/zoomMultiplicationFactor);
                     repaint();
                 } else {
@@ -580,8 +577,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                     //coordTransform.scale(zoomMultiplicationFactor, zoomMultiplicationFactor);
                     zoomFactor += zoomMultiplicationFactor;
                     //coordTransform.translate(translateX, translateY);
-                    if (zoomFactor > 4.5)
+                    if (zoomFactor > 4.5) {
                         zoomFactor -= zoomMultiplicationFactor;
+                    }
                     repaint();
                 }
             } catch (NoninvertibleTransformException ex) {
@@ -589,7 +587,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             }
         }
 
-        private Point2D.Float transformPoint(Point p1)throws NoninvertibleTransformException{
+        private Point2D.Float transformPoint(Point p1) throws NoninvertibleTransformException {
             AffineTransform inverse = coordTransform.createInverse();
             Point2D.Float p2 = new Point2D.Float();
             inverse.transform(p1, p2);
@@ -996,12 +994,14 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         whiteboardSize = new Rectangle(xx, yy, 800, 600);
         gotSize = false;
         Graphics2D g2 = (Graphics2D) g;
-        
-        if (initWB&&!zoomEnabled){
-            zoomlistener.setCoordTransform(g2.getTransform());
+
+        if (initWB && !zoomEnabled) {
+            if (zoomlistener != null) {
+                zoomlistener.setCoordTransform(g2.getTransform());
+            }
             initWB = false;
         }/* else
-            g2.setTransform(zoomlistener.getTransform());
+        g2.setTransform(zoomlistener.getTransform());
          */
         if (zoomEnabled) {
             //edit here!!
@@ -1153,7 +1153,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         repaint();
     }
 
-    public void zoomPan(){
+    public void zoomPan() {
         zoomEnabled = true;
         zoomlistener = new ZoomListener();
         addMouseListener(zoomlistener);

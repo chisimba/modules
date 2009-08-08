@@ -66,7 +66,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
     private JMenuItem removeAdminMenuItem = new JMenuItem("Remove Admin Status");
     private int selectedRow = -1;
     private Map thisUser = null;
-    private boolean hasMic = false;
+    // private boolean hasMic = false;
     //private boolean micIconDone = false;
 
     public ParticipantListTable() {
@@ -274,10 +274,10 @@ public class ParticipantListTable extends JTable implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("privatechat")) {
-          Map user = users.get(selectedRow);
-          String username = (String)user.get("username");
-          String fullname = (String)user.get("names");
-          PrivateChatManager.initPrivateChat(username, fullname);
+            Map user = users.get(selectedRow);
+            String username = (String) user.get("username");
+            String fullname = (String) user.get("names");
+            PrivateChatManager.initPrivateChat(username, fullname);
 
         }
         if (e.getActionCommand().equals("ban")) {
@@ -341,7 +341,6 @@ public class ParticipantListTable extends JTable implements ActionListener {
             effectPermissionForSelectedUser(username, "You have been given permission to chat", 'v', true);
         }
     }
-
 
     private ArrayList<Map> getCurrentMicHolders() {
         ArrayList<Map> micHolders = new ArrayList<Map>();
@@ -581,19 +580,16 @@ public class ParticipantListTable extends JTable implements ActionListener {
         if (permissionString == null) {
             permissionString = "";
         }
-
-
-        hasMic = permissionString.indexOf("m") > -1;
-        if (hasMic) {
-            RealtimePacketProcessor.displayVideoMicWindow(targetUsername); //.showExistingSpeakerOnJoinSession(targetUsername);
-        } else {
-            GUIAccessManager.mf.removeSpeaker(targetUsername);
-        }
-
         int index = 0;
         for (Map user : users) {
             String currentUsername = (String) user.get("username");
             if (targetUsername.equalsIgnoreCase(currentUsername)) {
+                boolean hasMic = permissionString.indexOf("m") > -1;
+                if (hasMic) {
+                    RealtimePacketProcessor.displayVideoMicWindow(targetUsername); //.showExistingSpeakerOnJoinSession(targetUsername);
+                } else {
+                    GUIAccessManager.mf.removeSpeaker(targetUsername);
+                }
                 PermissionList perm = new PermissionList(targetUsername, permissionString);
                 perm.removeAllPermissions();
                 perm.setAllPermissions();
@@ -614,72 +610,6 @@ public class ParticipantListTable extends JTable implements ActionListener {
         decorateTable();
     }
 
-    /*
-    public void setUserAccessAndMIC(String targetUsername, int hasMIC, int accessLevel) {
-    int index = 0;
-    if (users.size() == 0) {
-    giveMeAppropriateAccessLevel(accessLevel);
-    }
-    if (hasMIC == MIC.MIC_ON) {
-    RealtimePacketProcessor.showExistingSpeakerOnJoinSession(targetUsername);
-    }
-    for (Map user : users) {
-    String currentUsername = (String) user.get("username");
-
-    if (currentUsername.equalsIgnoreCase(targetUsername)) {
-    user.put("has_mic", hasMIC);
-    user.put("access_level", accessLevel);
-    users.set(index, user);
-
-    //now if is target user
-
-    if (currentUsername.equalsIgnoreCase(ConnectionManager.getUsername())) {
-
-    if (accessLevel == AdminLevels.OWNER_LEVEL) {
-    ConnectionManager.isOwner = true;
-    } else {
-    ConnectionManager.isOwner = false;
-    }
-    if (accessLevel == AdminLevels.ADMIN_LEVEL) {
-    ConnectionManager.isAdmin = true;
-    } else {
-    ConnectionManager.isAdmin = false;
-    }
-
-    if (accessLevel == AdminLevels.ADMIN_LEVEL ||
-    accessLevel == AdminLevels.OWNER_LEVEL) {
-
-    GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(true);
-    GUIAccessManager.mf.getWhiteboardPanel().addSlideViewerNavigator();
-    GUIAccessManager.mf.setWebBrowserEnabled(true);
-    GUIAccessManager.enableMenus(true);
-    GUIAccessManager.enableToolbarButtons(true);
-    GUIAccessManager.enableWhiteboardButtons(true);
-    GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
-    //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
-
-    } else {
-    GUIAccessManager.enableMenus(false);
-    GUIAccessManager.enableToolbarButtons(false);
-    GUIAccessManager.enableWhiteboardButtons(false);
-    GUIAccessManager.setMenuEnabled(true, "screenviewer");
-    GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(false);
-    GUIAccessManager.mf.setWebBrowserEnabled(false);
-    GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setSelectedIndex(0);
-    GUIAccessManager.mf.getUserListPanel().initAudioVideo(false, ConnectionManager.getRoomName());
-    }
-
-    }
-    }
-
-
-    index++;
-    }
-    model = new ParticipantListTableModel();
-    setModel(model);
-    decorateTable();
-    }
-     */
     public Map<String, String> getUser(String username) {
         for (Map user : users) {
             String thisUsername = (String) user.get("username");
@@ -1015,7 +945,9 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 evaluatePermissions();
                 if (isOwner) {
                     grantEverything();
-                    GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
+                    //NB: the following line should be enabled as it crashes on most
+                    //windows machines
+                    //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
                 } else if (grantAdmin) {
                     grantEverything();
                 } else if (grantWhiteboard) {
