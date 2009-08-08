@@ -856,6 +856,8 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        mainSplitPane.setOneTouchExpandable(true);
+
         leftSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         leftSplitPane.setBottomComponent(chatTabbedPane);
 
