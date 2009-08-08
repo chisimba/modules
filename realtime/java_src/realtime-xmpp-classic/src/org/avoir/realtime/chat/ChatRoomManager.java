@@ -335,7 +335,10 @@ public class ChatRoomManager {
             createRoom(roomName, ConnectionManager.fullnames, false, null);
         }
 
-
+        if (!roomExists(roomName)) {
+            JOptionPane.showMessageDialog(null, "Room '" + roomName + "' is not active yet.");
+            return false;
+        }
         JPasswordField passwordField = new JPasswordField();
         nickname = ConnectionManager.fullnames;
 

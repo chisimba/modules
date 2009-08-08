@@ -599,11 +599,12 @@ public class ParticipantListTable extends JTable implements ActionListener {
             }
             index++;
         }
-        if (targetUsername.equalsIgnoreCase(ConnectionManager.getUsername())) {
-            thisUser = users.get(index);
-            PermissionList perm = (PermissionList) thisUser.get("permissions");
-            GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(perm.grantWhiteboard);
-        //GUIAccessManager.mf.getChatRoomManager().grantVoice(perm.grantVoice, targetUsername + ":" + ConnectionManager.fullnames);
+        if (users.size() > 0) {
+            if (targetUsername.equalsIgnoreCase(ConnectionManager.getUsername())) {
+                thisUser = users.get(index);
+                PermissionList perm = (PermissionList) thisUser.get("permissions");
+                GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(perm.grantWhiteboard);
+            }
         }
         model = new ParticipantListTableModel();
         setModel(model);
@@ -621,19 +622,23 @@ public class ParticipantListTable extends JTable implements ActionListener {
     }
 
     public void addUser(String name) {
-        String username = name.split(":")[0];
-        String nickname = name.split(":")[1];
-        Map user = new HashMap();
-        PermissionList perm = new PermissionList(username, "");
-        perm.removeAllPermissions();
-        perm.setAllPermissions();
-        user.put("permissions", perm);
-        user.put("names", nickname);
-        user.put("username", username);
-        users.add(user);
-        model = new ParticipantListTableModel();
-        setModel(model);
-        decorateTable();
+        try {
+            String username = name.split(":")[0];
+            String nickname = name.split(":")[1];
+            Map user = new HashMap();
+            PermissionList perm = new PermissionList(username, "");
+            perm.removeAllPermissions();
+            perm.setAllPermissions();
+            user.put("permissions", perm);
+            user.put("names", nickname);
+            user.put("username", username);
+            users.add(user);
+            model = new ParticipantListTableModel();
+            setModel(model);
+            decorateTable();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void removeUser(String name) {
@@ -945,9 +950,9 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 evaluatePermissions();
                 if (isOwner) {
                     grantEverything();
-                    //NB: the following line should be enabled as it crashes on most
-                    //windows machines
-                    //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
+                //NB: the following line should be enabled as it crashes on most
+                //windows machines
+                //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
                 } else if (grantAdmin) {
                     grantEverything();
                 } else if (grantWhiteboard) {

@@ -142,7 +142,7 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(true, "requestMIC");
         GUIAccessManager.setMenuEnabled(enable, "addroommembers");
         GUIAccessManager.setMenuEnabled(enable, "cleanParticipantsList");
-        GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setEnabledAt(2, enable);
+
     }
 
     private static void enableToolbarButton(String name, boolean state) {

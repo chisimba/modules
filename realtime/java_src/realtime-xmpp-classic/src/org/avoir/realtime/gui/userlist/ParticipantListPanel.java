@@ -9,15 +9,20 @@ import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -25,8 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import org.avoir.realtime.common.util.ImageUtil;
-import org.avoir.realtime.gui.main.StandAloneManager;
-import org.avoir.realtime.gui.main.WebPresentManager;
+import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.net.ConnectionManager;
 import org.jivesoftware.smack.AccountManager;
 
@@ -50,8 +54,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
     private JPanel audioVideoPanel = new JPanel(new BorderLayout());
     private JWebBrowser webBrowser = new JWebBrowser();
     private JButton startAudioVideoButton = new JButton("Enable");
-    // private JLabel audioVideoStatus = new JLabel("N");
-    //  private JLabel flashStatus = new JLabel("N");
+    private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
 
     /** Creates new form UserListPanel */
     public ParticipantListPanel() {
@@ -97,6 +100,24 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         add(userListTabbedPane, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.NORTH);
 
+    }
+
+    public void showRoomOwnerAudioVideoWindow() {
+        /*final JDialog dlg = new JDialog(GUIAccessManager.mf, "Room Owner", false);
+        dlg.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dlg.setSize(100, 50);
+                dlg.setLocation(ss.width - dlg.getWidth(), 5);
+            }
+        });
+        JPanel p = (JPanel) dlg.getContentPane();
+        p.setLayout(new BorderLayout());
+        p.add(audioVideoPanel, BorderLayout.CENTER);
+        dlg.setSize(350, 300);
+        dlg.setLocation(ss.width - dlg.getWidth(), 10);
+        dlg.setVisible(true);*/
     }
 
     public ParticipantListTable getParticipantListTable() {
