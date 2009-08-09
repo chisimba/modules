@@ -452,4 +452,22 @@
     <datemodified>NULL</datemodified>
     <modifierid>NULL</modifierid>
    </tbl_quotes>
+   <tbl_quotes>
+        <id>init_52</id>
+        <quote>The first question I ask myself when something doesn't seem to be beautiful is why do I think it's not beautiful. And very shortly you discover that there is no reason.</quote>
+        <whosaidit>John Cage</whosaidit>
+        <datecreated>2005-03-12 09:47:25</datecreated>
+        <creatorid>1</creatorid>
+    <datemodified>NULL</datemodified>
+    <modifierid>NULL</modifierid>
+   </tbl_quotes>
+   <tbl_quotes>
+        <id>init_53</id>
+        <quote>No one means all he says, and yet very few say all they mean, for words are slippery and thought is viscous.</quote>
+        <whosaidit>Henry Adams</whosaidit>
+        <datecreated>2005-03-12 09:47:25</datecreated>
+        <creatorid>1</creatorid>
+    <datemodified>NULL</datemodified>
+    <modifierid>NULL</modifierid>
+   </tbl_quotes>  
 </defaultdata>
