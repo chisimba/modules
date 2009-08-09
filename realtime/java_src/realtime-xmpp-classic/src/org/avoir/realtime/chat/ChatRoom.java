@@ -82,6 +82,14 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private long lasttime = 0;
     private long duration = 0;
 
+
+    /////// Kevin's declaration ////////////////////
+    private JPopupMenu fontPopup = new JPopupMenu();
+    private JMenu submenu;
+    private JMenuItem item;
+    ////////////////////////////////////////////////
+
+
     public ChatRoom() {
        
         init();
@@ -162,7 +170,55 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         iconsSurface = new IconsSurface(emots, chatInputField, emotPopup);
         emotPopup.add(iconsSurface);
 
+        createFonts();
     }
+
+
+    /////// Kevin's Code - Adding submenu to change fonts ////////////
+    private void createFonts()
+    {
+        submenu = new JMenu("Font Color");
+        item = new JMenuItem("red");
+        item.addActionListener(this);
+        submenu.add(item);
+        item = new JMenuItem("blue");
+        item.addActionListener(this);
+        submenu.add(item);
+        item = new JMenuItem("black");
+        item.addActionListener(this);
+        submenu.add(item);
+        item = new JMenuItem("green");
+        item.addActionListener(this);
+        submenu.add(item);
+        item = new JMenuItem("purple");
+        item.addActionListener(this);
+        submenu.add(item);
+        fontPopup.add(submenu);
+
+        submenu = new JMenu("Font");
+        item = new JMenuItem("Light");
+        item.addActionListener(this);
+        submenu.add(item);
+        item = new JMenuItem("Regular");
+        item.addActionListener(this);
+        submenu.add(item);
+        item = new JMenuItem("Bold");
+        item.addActionListener(this);
+        submenu.add(item);
+        fontPopup.add(submenu);
+
+        submenu = new JMenu("Font size");
+        for(int i=8;i<=30;i++)
+        {
+            item = new JMenuItem("" + i);
+            item.addActionListener(this);
+            submenu.add(item);
+        }
+        fontPopup.add(submenu);
+    }
+    ////////////////////////////////////////////////////////////////////
+
+    
 
     public JTextPane getChatTranscriptField() {
         return chatTranscriptField;
@@ -442,6 +498,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         chatUtilPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         emotButton = new javax.swing.JButton();
+        fontButton = new javax.swing.JButton();
         chatInputScrollPane = new javax.swing.JScrollPane();
         chatInputField = new javax.swing.JTextArea();
         sysTextField = new javax.swing.JTextField();
@@ -469,6 +526,17 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
             }
         });
         jToolBar1.add(emotButton);
+
+        fontButton.setText("Set Font");
+        fontButton.setFocusable(false);
+        fontButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        fontButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        fontButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fontButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(fontButton);
 
         chatUtilPanel.add(jToolBar1, java.awt.BorderLayout.PAGE_END);
 
@@ -500,6 +568,12 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         emotPopup.show(emotButton, emotButton.getX(), emotButton.getY() - 100);
     }//GEN-LAST:event_emotButtonActionPerformed
 
+    private void fontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontButtonActionPerformed
+        fontPopup.show(fontButton, fontButton.getX(), fontButton.getY() - 75);
+        JMenuItem source = (JMenuItem)(evt.getSource());
+        String text = source.getText();
+}//GEN-LAST:event_fontButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTextArea chatInputField;
     private javax.swing.JScrollPane chatInputScrollPane;
@@ -507,6 +581,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private javax.swing.JTextPane chatTranscriptField;
     private javax.swing.JPanel chatUtilPanel;
     private javax.swing.JButton emotButton;
+    private javax.swing.JButton fontButton;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel southPanel;
