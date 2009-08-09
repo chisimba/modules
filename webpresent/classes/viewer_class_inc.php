@@ -259,48 +259,7 @@ class viewer extends object
         }
     }
 
-        /**
-         * Setup display to ask the user to enter email address for the participant
-         * who are to be invited.
-         * Added by David Wafula
-         * @return <type>
-         */
-    public function createPresentationForm($id,$agenda,$room)
-    {
-        $form =$this->loadClass('form', 'htmlelements');
-        $objButton = $this->loadClass('button', 'htmlelements');
 
-        $form = new form ('enterpresentationmodeform',
-            $this->uri(array('action'=>'classroom',
-'id'=>$id,'agenda'=>$agenda,'room'=>$room,'presenter'=>'yes','needpassword'=>'no'),"realtime"));
-        $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
-        $button->setToSubmit();
-        $features=$this->objLanguage->languageText("mod_webpresent_features", "webpresent");
-        $requirements=$this->objLanguage->languageText("mod_webpresent_requirements", "webpresent");
-
-        $content='<h2>'.$features.'</h2>';
-        $content.='<ul>';
-        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_audiovideo", "webpresent").'</li>';
-        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_deskshare", "webpresent").'</li>';
-        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_interactivewhiteboard", "webpresent").'</li>';
-        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_questionmanager", "webpresent").'</li>';
-        $content.="</ul>";
-
-        $content.='<h2>'.$requirements.'</h2>';
-
-        $content.='<ul>';
-        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_workingmic", "webpresent").'</li>';
-        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_workingspeakers", "webpresent").'</li>';
-        $content.="<li>".$this->objLanguage->languageText("mod_webpresent_goodinternetspeed", "webpresent").'</li>';
-        $content.="</ul>";
-
-
-        $form->addToForm($content);
-        $form->addToForm($button->show());
-
-
-        return $form->show();
-    }
 /**
  * Get latest feeds
  * @return <type>
