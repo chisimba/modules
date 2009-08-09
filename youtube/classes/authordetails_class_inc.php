@@ -123,7 +123,6 @@ class authordetails extends object
         $table->addCell($this->objLanguage->languageText('mod_youtube_authhomepage', 'youtube'));
         $table->addCell($this->homepage);
         $table->endRow();
-
         return $table->show();
     }
 

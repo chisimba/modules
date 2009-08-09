@@ -130,7 +130,6 @@ class videodetails extends object
         $table->addCell($this->objLanguage->languageText('mod_youtube_tags', 'youtube'));
         $table->addCell($this->tags);
         $table->endRow();
-
         return $table->show();
     }
     

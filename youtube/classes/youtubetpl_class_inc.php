@@ -147,6 +147,10 @@ class youtubetpl extends object
             $objAuthor->set('author', $objDetails->author);
             $tab3 = $objAuthor->showDetails();
             
+//DEBUG
+//$tab1 = "ONE";
+
+            
             $multiTab  = $this->newObject('tabcontent','htmlelements');
             $multiTab->width ='400px';
             $multiTab->addTab($this->objLanguage->languageText("mod_youtube_filtercode",'youtube'), $tab1, FALSE, '360px');
@@ -375,7 +379,7 @@ class youtubetpl extends object
     */
     private function getFilterLink($url)
     {
-        return '[YOUTUBE]' . $url . '[/YOUTUBE]';
+        return '&#91;YOUTUBE&#93;' . $url . '&#91;/YOUTUBE&#93;';
     }
     
     /**
@@ -499,7 +503,6 @@ class youtubetpl extends object
     */
     public function getVideoPlayer($videoId)
     {
-        //$this->objYtFilter = $this->getObject('parse4youtube', 'filters');
         return $this->objYtFilter->getVideoObject($videoId);
     }
     
@@ -529,9 +532,9 @@ class youtubetpl extends object
     */
     public function getTextBox($contents)
     {   
-        $this->loadClass('textinput','htmlelements');
-        $boxywoxy = new textinput('ytbox', $contents, NULL, 70);
-        return $boxywoxy->show();
+        /*$this->loadClass('textinput','htmlelements');
+        $boxywoxy = new textinput('ytbox', $contents, NULL, 70);*/
+        return "<div style='border: 1px solid grey; background: white; padding:5px; width: 390px; height: 60px; overflow: auto;' id='faketextbox' name='faketextbox'>$contents</div>";
     }
     
 
