@@ -73,7 +73,8 @@ public class GeneralUtil {
             "Feroz Zaidi" +
             "<br>" +
             "Simoni Crause<br>" +
-            "Dean Wookey";
+            "Dean Wookey<br>"+
+            "Sheng Yan Lim";
     final static JWindow intro = new JWindow();
     final static JLabel info = new JLabel("", JLabel.CENTER);
     static Properties props;
