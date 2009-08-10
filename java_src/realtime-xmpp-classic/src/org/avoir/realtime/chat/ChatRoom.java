@@ -56,8 +56,8 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private JPopupMenu popup = new JPopupMenu();
     private JMenu sizesMenu = new JMenu();
     private JMenuItem colorMenuItem = new JMenuItem("Color");
-    private Color currentColor = Color.BLACK;
-    private int currentTextsize = 17;
+    public Color currentColor = Color.BLACK;
+    public int currentTextsize = 17;
     private ColorIcon colorIcon = new ColorIcon(currentColor);
     private ImageIcon fontIcon = ImageUtil.createImageIcon(this, "/images/font_go.png");
     private SimpleAttributeSet st = new SimpleAttributeSet();
@@ -90,8 +90,8 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private JPopupMenu fontPopup = new JPopupMenu();
     private JMenu submenu;
     private JMenuItem item;
-    private String currentStyle = Font.DIALOG;
-    private int currentStyleEmphasis = Font.PLAIN;
+    public String currentStyle = Font.DIALOG;
+    public int currentStyleEmphasis = Font.PLAIN;
     ////////////////////////////////////////////////
 
 
@@ -206,10 +206,6 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         fontPopup.add(submenu);
 
         submenu = new JMenu("Font Style");
-        item = new JMenuItem("Light");
-        item.addActionListener(this);
-        item.setActionCommand("Font Style");
-        submenu.add(item);
         item = new JMenuItem("Regular");
         item.addActionListener(this);
         item.setActionCommand("Font Style");
@@ -219,6 +215,10 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         item.setActionCommand("Font Style");
         submenu.add(item);
         submenu.setActionCommand("Font Style");
+        item = new JMenuItem("Italic");
+        item.addActionListener(this);
+        item.setActionCommand("Font Style");
+        submenu.add(item);
         fontPopup.add(submenu);
 
         submenu = new JMenu("Font Size");
@@ -246,37 +246,44 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
                 currentColor = Color.GREEN;
             else if(text.equalsIgnoreCase("LIGHT GRAY"))
                 currentColor = Color.LIGHT_GRAY;
-            chatInputField.setForeground(currentColor);
         }
 
         else if (menu.equalsIgnoreCase("Font Style"))
         {
             if(text.equalsIgnoreCase("REGULAR"))
-                ;
-            else if(text.equalsIgnoreCase("LIGHT"))
-                ;
+                currentStyleEmphasis = Font.PLAIN;
             else if(text.equalsIgnoreCase("BOLD"))
-                ;
+                currentStyleEmphasis = Font.BOLD;
+            else if(text.equalsIgnoreCase("ITALIC"))
+                currentStyleEmphasis = Font.ITALIC;
         }
 
         else if (menu.equalsIgnoreCase("Font Size"))
         {
             currentTextsize = Integer.parseInt(text);
-            Font font = new Font(currentStyle, currentStyleEmphasis, currentTextsize);
-            
-            chatInputField.setFont(font);
-            //chatTranscriptField.setFont(font);
-            setJTextPaneFont(chatTranscriptField,currentTextsize);
-            sizesMenu.setText("Size: " + currentTextsize);
         }
+        Font font = new Font(currentStyle, currentStyleEmphasis, currentTextsize);
+        chatInputField.setFont(font);
+        chatInputField.setForeground(currentColor);
+        setJTextPaneFont(chatTranscriptField,font);
+        sizesMenu.setText("Size: " + currentTextsize);
     }
 
-    public void setJTextPaneFont(JTextPane jtp, int fontsize)
+    public void setJTextPaneFont(JTextPane jtp,Font font)
     {
         MutableAttributeSet attrs = jtp.getInputAttributes();
-        StyleConstants.setFontSize(attrs,fontsize);
+        
+        StyleConstants.setFontSize(attrs,font.getSize());
+        if (font.isBold())
+            StyleConstants.setBold(attrs, true);
+        else if (font.isPlain())
+            StyleConstants.setBold(attrs, false);
+        if (font.isItalic())
+            StyleConstants.setItalic(attrs, true);
+        StyleConstants.setForeground(attrs, currentColor);
+        
         StyledDocument doc = jtp.getStyledDocument();
-        doc.setCharacterAttributes(0, doc.getLength(), attrs, false);
+        doc.setCharacterAttributes(0, doc.getLength()+1, attrs, false);
     }
     ////////////////////////////////////////////////////////////////////
 
