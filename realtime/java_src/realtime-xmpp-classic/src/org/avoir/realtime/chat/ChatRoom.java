@@ -43,6 +43,7 @@ import org.jivesoftware.smack.packet.Message;
 
 
 import javax.swing.text.MutableAttributeSet;
+import java.awt.im.InputContext;
 
 /**
  *
@@ -259,16 +260,17 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
 
         else if (menu.equalsIgnoreCase("Font Size"))
         {
-            Font font = new Font(currentStyle, 0, currentTextsize);
             currentTextsize = Integer.parseInt(text);
+            Font font = new Font(currentStyle, 0, currentTextsize);
+            
             chatInputField.setFont(font);
             setJTextPaneFont(chatTranscriptField,currentTextsize);
             sizesMenu.setText("Size: " + currentTextsize);
         }
     }
 
-    public static void setJTextPaneFont(JTextPane jtp, int fontsize) {
-
+    public static void setJTextPaneFont(JTextPane jtp, int fontsize)
+    {
         MutableAttributeSet attrs = jtp.getInputAttributes();
         StyleConstants.setFontSize(attrs,fontsize);
         StyledDocument doc = jtp.getStyledDocument();
