@@ -56,8 +56,8 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private JPopupMenu popup = new JPopupMenu();
     private JMenu sizesMenu = new JMenu();
     private JMenuItem colorMenuItem = new JMenuItem("Color");
-    public Color currentColor = Color.BLACK;
-    public int currentTextsize = 17;
+    private Color currentColor = Color.BLACK; // Default color for chat room
+    private int currentTextsize = 17;         // Default text size for chat room
     private ColorIcon colorIcon = new ColorIcon(currentColor);
     private ImageIcon fontIcon = ImageUtil.createImageIcon(this, "/images/font_go.png");
     private SimpleAttributeSet st = new SimpleAttributeSet();
@@ -87,11 +87,11 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
 
 
     /////// Kevin's declaration ////////////////////
-    private JPopupMenu fontPopup = new JPopupMenu();
-    private JMenu submenu;
-    private JMenuItem item;
-    public String currentStyle = Font.DIALOG;
-    public int currentStyleEmphasis = Font.PLAIN;
+    private JPopupMenu fontPopup = new JPopupMenu();  // Popup menu for fonts
+    private JMenu submenu;                            // Creates the menus inside the popup
+    private JMenuItem item;                           // items for the submenus
+    private String currentStyle = Font.DIALOG;         // Default style for chat room
+    private int currentStyleEmphasis = Font.PLAIN;     // Default style emphasis for chat room
     ////////////////////////////////////////////////
 
 
@@ -285,7 +285,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         StyledDocument doc = jtp.getStyledDocument();
         doc.setCharacterAttributes(0, doc.getLength()+1, attrs, false);
     }
-    ////////////////////////////////////////////////////////////////////
+    //////// End of Kevin's Code for the Font changin ////////////////////
 
     
 
