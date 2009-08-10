@@ -41,6 +41,9 @@ import org.avoir.realtime.common.util.ImageUtil;
 import org.avoir.realtime.net.ConnectionManager;
 import org.jivesoftware.smack.packet.Message;
 
+
+import javax.swing.text.MutableAttributeSet;
+
 /**
  *
  * @author developer
@@ -55,6 +58,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private JMenuItem colorMenuItem = new JMenuItem("Color");
     private Color currentColor = Color.BLACK;
     private int currentTextsize = 17;
+    private String currentStyle = Font.DIALOG;
     private ColorIcon colorIcon = new ColorIcon(currentColor);
     private ImageIcon fontIcon = ImageUtil.createImageIcon(this, "/images/font_go.png");
     private SimpleAttributeSet st = new SimpleAttributeSet();
@@ -178,43 +182,97 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private void createFonts()
     {
         submenu = new JMenu("Font Color");
-        item = new JMenuItem("red");
+        item = new JMenuItem("Red");
         item.addActionListener(this);
+        item.setActionCommand("Font Color");
         submenu.add(item);
-        item = new JMenuItem("blue");
+        item = new JMenuItem("Blue");
         item.addActionListener(this);
+        item.setActionCommand("Font Color");
         submenu.add(item);
-        item = new JMenuItem("black");
+        item = new JMenuItem("Black");
         item.addActionListener(this);
+        item.setActionCommand("Font Color");
         submenu.add(item);
-        item = new JMenuItem("green");
+        item = new JMenuItem("Green");
         item.addActionListener(this);
+        item.setActionCommand("Font Color");
         submenu.add(item);
-        item = new JMenuItem("purple");
+        item = new JMenuItem("Light Gray");
         item.addActionListener(this);
+        item.setActionCommand("Font Color");
         submenu.add(item);
         fontPopup.add(submenu);
 
-        submenu = new JMenu("Font");
+        submenu = new JMenu("Font Style");
         item = new JMenuItem("Light");
         item.addActionListener(this);
+        item.setActionCommand("Font Style");
         submenu.add(item);
         item = new JMenuItem("Regular");
         item.addActionListener(this);
+        item.setActionCommand("Font Style");
         submenu.add(item);
         item = new JMenuItem("Bold");
         item.addActionListener(this);
+        item.setActionCommand("Font Style");
         submenu.add(item);
+        submenu.setActionCommand("Font Style");
         fontPopup.add(submenu);
 
-        submenu = new JMenu("Font size");
+        submenu = new JMenu("Font Size");
         for(int i=8;i<=30;i++)
         {
             item = new JMenuItem("" + i);
             item.addActionListener(this);
+            item.setActionCommand("Font Size");
             submenu.add(item);
-        }
+        }        
         fontPopup.add(submenu);
+    }
+
+    private void setSelectedFont(String text, String menu)
+    {
+        if (menu.equalsIgnoreCase("Font Color"))
+        {
+            if(text.equalsIgnoreCase("BLACK"))
+                currentColor = Color.BLACK;
+            else if(text.equalsIgnoreCase("red"))
+                currentColor = Color.RED;
+            else if(text.equalsIgnoreCase("BLUE"))
+                currentColor = Color.BLUE;
+            else if(text.equalsIgnoreCase("GREEN"))
+                currentColor = Color.GREEN;
+            else if(text.equalsIgnoreCase("LIGHT GRAY"))
+                currentColor = Color.LIGHT_GRAY;
+        }
+
+        else if (menu.equalsIgnoreCase("Font Style"))
+        {
+            if(text.equalsIgnoreCase("REGULAR"))
+                ;
+            else if(text.equalsIgnoreCase("LIGHT"))
+                ;
+            else if(text.equalsIgnoreCase("BOLD"))
+                ;
+        }
+
+        else if (menu.equalsIgnoreCase("Font Size"))
+        {
+            Font font = new Font(currentStyle, 0, currentTextsize);
+            currentTextsize = Integer.parseInt(text);
+            chatInputField.setFont(font);
+            setJTextPaneFont(chatTranscriptField,currentTextsize);
+            sizesMenu.setText("Size: " + currentTextsize);
+        }
+    }
+
+    public static void setJTextPaneFont(JTextPane jtp, int fontsize) {
+
+        MutableAttributeSet attrs = jtp.getInputAttributes();
+        StyleConstants.setFontSize(attrs,fontsize);
+        StyledDocument doc = jtp.getStyledDocument();
+        doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
     }
     ////////////////////////////////////////////////////////////////////
 
@@ -236,6 +294,14 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
             currentTextsize = Integer.parseInt(source.getText());
             chatInputField.setFont(new Font("Dialog", 0, currentTextsize));
             sizesMenu.setText("Size: " + currentTextsize);
+        }
+
+        Object source = e.getSource();
+        if(source instanceof JMenuItem)
+        {
+            JMenuItem item = (JMenuItem)source;
+            String text = item.getText();
+            setSelectedFont(text,e.getActionCommand());
         }
     }
 
@@ -570,8 +636,6 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
 
     private void fontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontButtonActionPerformed
         fontPopup.show(fontButton, fontButton.getX(), fontButton.getY() - 75);
-        JMenuItem source = (JMenuItem)(evt.getSource());
-        String text = source.getText();
 }//GEN-LAST:event_fontButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
