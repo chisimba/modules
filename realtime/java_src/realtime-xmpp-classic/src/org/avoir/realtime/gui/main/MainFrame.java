@@ -707,6 +707,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator5 = new javax.swing.JSeparator();
         banUserMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
+        fullScreenMenuItem = new javax.swing.JMenuItem();
         screenShareMenuItem = new javax.swing.JMenuItem();
         screenViewerMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
@@ -1033,7 +1034,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         roomToolsToolbar.add(notepadButton);
 
-        zoomButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        zoomButton.setFont(new java.awt.Font("Dialog", 0, 11));
         zoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/zoom-in.png"))); // NOI18N
         zoomButton.setText("Zoom");
         zoomButton.setBorderPainted(false);
@@ -1203,6 +1204,14 @@ public class MainFrame extends javax.swing.JFrame {
         screenShareItem.add(meetingsMenuItem);
 
         toolsMenu.setText("Tools");
+
+        fullScreenMenuItem.setText("Full Screen");
+        fullScreenMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fullScreenMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(fullScreenMenuItem);
 
         screenShareMenuItem.setText("Screen Share");
         screenShareMenuItem.setEnabled(false);
@@ -1738,29 +1747,29 @@ public class MainFrame extends javax.swing.JFrame {
 }//GEN-LAST:event_zoomOriginalButtonActionPerformed
 
     private void zoomButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomButtonMouseEntered
-        //zoomButton.setContentAreaFilled(true);
-        //zoomButton.setBorderPainted(true);
+        zoomButton.setContentAreaFilled(true);
+        zoomButton.setBorderPainted(true);
 }//GEN-LAST:event_zoomButtonMouseEntered
 
     private void zoomButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomButtonMouseExited
-        //zoomButton.setContentAreaFilled(false);
-        //zoomButton.setBorderPainted(false);
+        zoomButton.setContentAreaFilled(false);
+        zoomButton.setBorderPainted(false);
 }//GEN-LAST:event_zoomButtonMouseExited
 
     private void zoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomButtonActionPerformed
         if (zoomControl){
-            zoomButton.setContentAreaFilled(true);
-            zoomButton.setBorderPainted(true);
             zoomControl = false;
             whiteBoardZoom();
         } else {
-            zoomButton.setContentAreaFilled(false);
-            zoomButton.setBorderPainted(false);
             whiteboardPanel.getWhiteboard().zoomEnabled = false;
             whiteboardPanel.getWhiteboard().zoomOriginal();
             zoomControl = true;
         }
 }//GEN-LAST:event_zoomButtonActionPerformed
+
+    private void fullScreenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullScreenMenuItemActionPerformed
+        setFullScreenMode();
+    }//GEN-LAST:event_fullScreenMenuItemActionPerformed
 
     private void showRoomResourcesNavigator() {
         JFrame fr = new JFrame("Room Resources");
@@ -1865,6 +1874,10 @@ public class MainFrame extends javax.swing.JFrame {
         tipOfDayDialog.setVisible(true);
     }
 
+    public void setFullScreen(){
+        whiteboardPanel.getWhiteboard().setFullScreen();
+    }
+
     public ImageIcon getIcon(
             String iconType) {
         if (iconType.equals("alert")) {
@@ -1928,6 +1941,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem desktopMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenutem;
+    private javax.swing.JMenuItem fullScreenMenuItem;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JButton imagesButton;
     private javax.swing.JMenuItem insertGraphicMenuItem;
