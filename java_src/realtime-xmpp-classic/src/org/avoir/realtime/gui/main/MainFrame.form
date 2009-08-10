@@ -349,6 +349,14 @@
             <Property name="text" type="java.lang.String" value="Tools"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="fullScreenMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Full Screen"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fullScreenMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="screenShareMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Screen Share"/>

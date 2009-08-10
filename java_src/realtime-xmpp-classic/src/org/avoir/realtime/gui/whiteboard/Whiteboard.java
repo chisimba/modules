@@ -176,6 +176,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     public double translateY = 0;
     ZoomListener zoomlistener;
     private boolean initWB = true;
+    private int fullScreenX = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+    private int fullScreenY = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -1163,6 +1165,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         addMouseListener(zoomlistener);
         addMouseMotionListener(zoomlistener);
         addMouseWheelListener(zoomlistener);
+    }
+
+    public void setFullScreen(){
+        whiteboardPanel.setBounds(0,0 , fullScreenX, fullScreenY);
+        repaint();
     }
 
     public void mouseClicked(MouseEvent evt) {
