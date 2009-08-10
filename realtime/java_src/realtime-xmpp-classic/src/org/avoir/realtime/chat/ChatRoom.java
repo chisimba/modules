@@ -43,7 +43,6 @@ import org.jivesoftware.smack.packet.Message;
 
 
 import javax.swing.text.MutableAttributeSet;
-import java.awt.im.InputContext;
 
 /**
  *
@@ -59,7 +58,6 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private JMenuItem colorMenuItem = new JMenuItem("Color");
     private Color currentColor = Color.BLACK;
     private int currentTextsize = 17;
-    private String currentStyle = Font.DIALOG;
     private ColorIcon colorIcon = new ColorIcon(currentColor);
     private ImageIcon fontIcon = ImageUtil.createImageIcon(this, "/images/font_go.png");
     private SimpleAttributeSet st = new SimpleAttributeSet();
@@ -92,6 +90,8 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private JPopupMenu fontPopup = new JPopupMenu();
     private JMenu submenu;
     private JMenuItem item;
+    private String currentStyle = Font.DIALOG;
+    private int currentStyleEmphasis = Font.PLAIN;
     ////////////////////////////////////////////////
 
 
@@ -238,7 +238,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         {
             if(text.equalsIgnoreCase("BLACK"))
                 currentColor = Color.BLACK;
-            else if(text.equalsIgnoreCase("red"))
+            else if(text.equalsIgnoreCase("RED"))
                 currentColor = Color.RED;
             else if(text.equalsIgnoreCase("BLUE"))
                 currentColor = Color.BLUE;
@@ -246,6 +246,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
                 currentColor = Color.GREEN;
             else if(text.equalsIgnoreCase("LIGHT GRAY"))
                 currentColor = Color.LIGHT_GRAY;
+            chatInputField.setForeground(currentColor);
         }
 
         else if (menu.equalsIgnoreCase("Font Style"))
@@ -261,20 +262,21 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
         else if (menu.equalsIgnoreCase("Font Size"))
         {
             currentTextsize = Integer.parseInt(text);
-            Font font = new Font(currentStyle, 0, currentTextsize);
+            Font font = new Font(currentStyle, currentStyleEmphasis, currentTextsize);
             
             chatInputField.setFont(font);
+            //chatTranscriptField.setFont(font);
             setJTextPaneFont(chatTranscriptField,currentTextsize);
             sizesMenu.setText("Size: " + currentTextsize);
         }
     }
 
-    public static void setJTextPaneFont(JTextPane jtp, int fontsize)
+    public void setJTextPaneFont(JTextPane jtp, int fontsize)
     {
         MutableAttributeSet attrs = jtp.getInputAttributes();
         StyleConstants.setFontSize(attrs,fontsize);
         StyledDocument doc = jtp.getStyledDocument();
-        doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
+        doc.setCharacterAttributes(0, doc.getLength(), attrs, false);
     }
     ////////////////////////////////////////////////////////////////////
 
