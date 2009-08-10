@@ -218,6 +218,8 @@ public class QuestionFrame extends javax.swing.JFrame implements QuestionFrameLi
         answersTable.setFont(new Font("Dialog", 0, 17));
         answersTable.setRowHeight(21);
         decorateTable();
+        setSize((int)(ss.width/1.7),(int)(ss.height/1.86));
+        setLocationRelativeTo(null);
         imagePanel.add(new JScrollPane(surface), BorderLayout.CENTER);
 
     }
