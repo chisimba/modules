@@ -231,17 +231,12 @@ public class MainFrame extends javax.swing.JFrame {
          presentnew.addActionListener(new ActionListener() {
 
              public void actionPerformed(ActionEvent e) {
-            	// if (userisnotinanyroom){
-                //     JOptionPane.showMessageDialog(null, "You need to be in a room to perform this action.");
-               //      return;
-            	// }
-            	 if (!ConnectionManager.isOwner) { 
-                     JOptionPane.showMessageDialog(null, "You do not have permission to perform this action.");
+            	if (!ConnectionManager.isOwner) { 
+                     JOptionPane.showMessageDialog(null, "You do not have permission to perform this action in this room.");
                      return;
                  }
             	 else{
             	 org.avoir.realtime.questions.QuestionFrame fr=new org.avoir.realtime.questions.QuestionFrame();
-            	 fr.setSize(750,550); //this needs to be changed to work for any screen resolution (looks fine on 1280x1024), and should centre the window in the middle of the screen when created.
             	 fr.setVisible(true);    
             	 }
              }
