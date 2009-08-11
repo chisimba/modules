@@ -86,11 +86,51 @@ class dbdocument extends dbtable{
                         join tbl_course_proposals as C on A.coursecode = C.id where coursecode = '$courseid'
                 and A.version > 0
                 and C.deleteStatus = 0
-                order by A.version";
+                order by A.version desc";
         $data = $this->getArray($sql);
         
         return $data;
   }
+
+  public function getUserId($email) {
+      // check users table first
+      $sql = "select userid from tbl_users where emailAddress = '".trim($email)."'";
+      $info = $this->getArray($sql);
+      if($info[0]['userid'] == null) {
+        // check document users table
+        $sql = "select id from $this->tablename where email = '".trim($email)."'";
+        $info = $this->getArray($sql);
+        return $info[0]['id'];
+      }
+      else {
+          return $info[0]['userid'];
+      }
+  }
+
+  public function getFullName($email, $courseid) {
+      $sql = "select fName, lName from tbl_documentusers where email = '$email' and courseid = '$courseid'";
+      $data = $this->getArray($sql);
+      $fullName = $data[0]['lName'].$data[0]['fName'];
+
+      return $fullName;
+  }
+
+    public function sendProposal($lname, $fname, $email, $phone, $courseid) {
+        $status = true;
+
+        // user data for proposal
+        $data = array("lname"=>$lname, "fname"=>$fname, "email"=>$email, "phone"=>$phone, "courseid"=>$courseid);
+        $status = $this->insert($data, "tbl_documentusers");
+
+        // owner of document now changes
+        $sql = "select max(version) maxversion from tbl_documentstore where coursecode = '$courseid'";
+        $data = $this->getArray($sql);
+        $maxversion = $data[0]['maxversion'];
+        $sql = "update $this->tablename set currentuser = '$email' where coursecode = '$courseid' and version = '$maxversion'";
+        $status = $this->_execute($sql);
+
+        return $status;
+    }
 }
 
 ?>

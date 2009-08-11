@@ -9,7 +9,7 @@ class nav extends object{
         $this->loadclass('link','htmlelements');
     }
 
-    public function getLeftContent($toSelect, $action, $courseid){
+    public function getLeftContent($toSelect, $action, $courseid, $edit = "YES"){
         if ($action == 'viewform' || $action == 'submitform') {
           $action = 'viewform';
         }

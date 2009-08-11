@@ -68,15 +68,21 @@
         $titleLink->link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$value['id'])));
         $titleLink->link=$value['title'];
 
-        $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$value['id'])));
+        $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$value['id'], 'status'=>$value['status'])));
         switch($value['status']) {
             case 0: $statusLink->link='New';
                     break;
-            case 1: $statusLink->link='Under Review';
+            case 1: $statusLink->link='APO Comment';
                     break;
-            case 2: $statusLink->link='Accepted';
+            case 2: $statusLink->link='Library comment';
                     break;
-            case 3: $statusLink->link='Rejected';
+            case 3: $statusLink->link='Subsidy comment';
+                    break;
+            case 4: $statusLink->link='Faculty subcommittee';
+                    break;
+            case 5: $statusLink->link='Faculty';
+                    break;
+            case 6: $statusLink->link='APDC';
                     break;
             default: $statusLink->link= 'New';
         }
@@ -96,7 +102,10 @@
         $data .= "'".$this->objUser->fullname($value['userid'])."',";
         $data .= "'".$statusLink->show()."',";
         $data .= "'".$verarray['version'] .".00',";
-        $data .= "'".$this->objUser->fullname($verarray['currentuser'])."',";
+
+        $tmpID = $this->objDocumentStore->getUserId($verarray['currentuser']);
+        $name = $this->objUser->fullname($tmpID);
+        $data .= "'".$name."',";
 
         $objIcon->setIcon('delete');
         $deleteLink->link=$objIcon->show();
@@ -107,12 +116,12 @@
         $data .= $editLink->show();
 
         $objIcon->setIcon('view');
-        $objIcon->setAlt('review');
+        //$objIcon->setAlt('review');
         $reviewLink->link=$objIcon->show();
-        $data .= $reviewLink->show();
-        $objIcon->resetAlt();
-        
-        if (strstr($this->objUser->fullname($verarray['currentuser']),'Administrative User')) {
+        //$data .= $reviewLink->show();
+        //$objIcon->resetAlt();
+
+        if (strcmp($this->objUser->fullname($verarray['currentuser']),'Administrative User') == 0) {
             $commentLink->link($this->uri(array('action'=>'addcomment',
                                                 'id'=>$value['id'],
                                                 'title'=>$value['title'],

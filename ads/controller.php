@@ -134,7 +134,7 @@ class ads extends controller {
     else {
         $courseProposalId=$this->objCourseProposals->addCourseProposal($faculty, $courseTitle);
     }
-    $this->objDocumentStore->addRecord($courseProposalId, "Comment", "", "", "", "0", "");
+    $this->objDocumentStore->addRecord($courseProposalId, "Comment", "", "", "", "0", $this->objUser->email($this->objUser->userId()));
     return $this->nextAction('overview', array('id'=>$courseProposalId));
   }
   
@@ -173,10 +173,10 @@ class ads extends controller {
       $this->createDocument($userid, $courseid);
     }
     else if ($verarray['status'] == 'submitted') {
-      $this->objDocumentStore->increaseVersion($courseid, $userid, ($verarray['version'] + 1));
+      $this->objDocumentStore->increaseVersion($courseid, $this->objUser->email($userid), ($verarray['version'] + 1));
     }
     else {
-      if ($verarray['currentuser'] != $userid) { //current user is trying to edit a locked document
+      if (!strcmp($verarray['currentuser'], $this->objUser->email($userid)) == 0) { //current user is trying to edit a locked document
         $this->formError->setError("general", "This document is currently locked, please wait until the user editing it is finished.");
         return "error_tpl.php";
       }
@@ -224,7 +224,7 @@ class ads extends controller {
     }
   }
   function __home() {
-    return "courseproposallist_tpl.php"; //"courseproposallist_tpl.php";
+    return "courseproposallist_tpl.php";
   }
   
   function __submitproposal() {
@@ -236,7 +236,7 @@ class ads extends controller {
     //$proposal = $this->objCourseProposals->getProposal($courseid);
     $userid = $this->objUser->userID();
     $verarray = $this->objDocumentStore->getVersion($courseid, $userid);
-    if ($verarray['currentuser'] != $userid) {
+    if (strcmp($verarray['currentuser'], $this->objUser->email(userid)) == 0) {
       $this->formError->setError("general", "This document is currently locked, please wait until the user editing it is finished.");
       return "error_tpl.php";
     }
@@ -310,7 +310,7 @@ class ads extends controller {
       $allquestions = array_merge($text, $num);
       $allquestions = array_merge($allquestions, $other);
       foreach ($allquestions as $question) {
-        $this->objDocumentStore->addRecord($courseid, $form, $question, "", "unsubmitted", "1", $userid);
+        $this->objDocumentStore->addRecord($courseid, $form, $question, "", "unsubmitted", "1", $this->objUser->email($this->objUser->userId()));
       }
     }
   }
@@ -320,7 +320,7 @@ class ads extends controller {
       if (!isset($_POST[$question])) {
         $_POST[$question] = "";
       }
-      if ($this->objDocumentStore->updateRecord($courseid, $form , $question, $_POST[$question], $this->objUser->userId()) == false) {
+      if ($this->objDocumentStore->updateRecord($courseid, $form , $question, $_POST[$question], $this->objUser->email($this->objUser->userId())) == false) {
         $this->formError->setError("general", "This document is currently locked, please wait until the user editing it is finished.");
         return $this->__home();
       }
@@ -519,6 +519,21 @@ class ads extends controller {
         else {
             return "showcourseprophist_tpl.php";
         }
+    }
+
+    public function __sendproposal() {
+        $lname = $this->getParam("lname");
+        $fname = $this->getParam("fname");
+        $email = $this->getParam("email");
+        $phone = $this->getParam("phone");
+        $this->id = $this->getParam('id');
+        
+        $this->setVarByRef("lname", $lname);
+        $this->setVarByRef("fname", $fname);
+        $this->setVarByRef("email", $email);
+        $this->setVarByRef("phone", $phone);
+        
+        return "sendproposal_tpl.php";
     }
 }
 

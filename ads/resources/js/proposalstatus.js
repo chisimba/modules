@@ -17,9 +17,12 @@ Ext.onReady(function(){
             columns: 1,
             items: [
                 {boxLabel: 'New', name: 'proposalstatus', inputValue: '0', checked: true},
-                {boxLabel: 'Under Review', name: 'proposalstatus', inputValue: '1'},
-                {boxLabel: 'Accepted', name: 'proposalstatus', inputValue: '2'},
-                {boxLabel: 'Rejected', name: 'proposalstatus', inputValue: '3'}
+                {boxLabel: 'APO comment', name: 'proposalstatus', inputValue: '1'},
+                {boxLabel: 'Library comment', name: 'proposalstatus', inputValue: '2'},
+                {boxLabel: 'Subsidy comment', name: 'proposalstatus', inputValue: '3'},
+                {boxLabel: 'Faculty committee', name: 'proposalstatus', inputValue: '4'},
+                {boxLabel: 'Faculty', name: 'proposalstatus', inputValue: '5'},
+                {boxLabel: 'APDC', name: 'proposalstatus', inputValue: '6'}
             ]
     };
     var id = document.getElementById('id').value;
