@@ -82,7 +82,6 @@ public class WhiteboardPanel extends javax.swing.JPanel {
     public JToolBar getWbToolbar() {
         return wbToolbar;
     }
-
     
     public Whiteboard getWhiteboard() {
         return whiteboard;

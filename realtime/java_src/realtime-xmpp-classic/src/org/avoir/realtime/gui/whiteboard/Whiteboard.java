@@ -38,12 +38,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -176,8 +178,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     public double translateY = 0;
     ZoomListener zoomlistener;
     private boolean initWB = true;
-    private int fullScreenX = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-    private int fullScreenY = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    private int fullScreenX = (int) ss.getWidth();
+    private int fullScreenY = (int) ss.getHeight();
+    private boolean fullScreen = false;
+    private JFrame fullScreenFrame;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -461,19 +465,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     }
 
-    public void whiteBoardZoomOriginal() {
-        zoomOriginal();
-    }
-
     class ZoomListener implements MouseListener, MouseMotionListener, MouseWheelListener {
         //class variable declaration
 
-        public static final int DEFAULT_MIN_ZOOM_LEVEL = -20;
-        public static final int DEFAULT_MAX_ZOOM_LEVEL = 10;
         public static final double DEFAULT_ZOOM_MULTIPLICATION_FACTOR = 0.1;
-        private int zoomLevel = 0;
-        private int minZoomLevel = DEFAULT_MIN_ZOOM_LEVEL;
-        private int maxZoomLevel = DEFAULT_MAX_ZOOM_LEVEL;
         private double zoomMultiplicationFactor = DEFAULT_ZOOM_MULTIPLICATION_FACTOR;
         private Point dragStartScreen;
         private Point dragEndScreen;
@@ -993,6 +988,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         int hh = (int) (getHeight());
         int xx = (ww - 800) / 2;
         int yy = (hh - 600) / 2;
+
         whiteboardSize = new Rectangle(xx, yy, 800, 600);
         gotSize = false;
         Graphics2D g2 = (Graphics2D) g;
@@ -1002,9 +998,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 zoomlistener.setCoordTransform(g2.getTransform());
             }
             initWB = false;
-        }/* else
-        g2.setTransform(zoomlistener.getTransform());
-         */
+        }
         if (zoomEnabled) {
             //edit here!!
             g2.setTransform(zoomlistener.getTransform());
@@ -1168,8 +1162,17 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void setFullScreen(){
-        whiteboardPanel.setBounds(0,0 , fullScreenX, fullScreenY);
-        repaint();
+        fullScreen = true;
+        fullScreenFrame = new JFrame();
+        fullScreenFrame.setBounds(0,0,fullScreenX,fullScreenY);
+        fullScreenFrame.setUndecorated(true);
+        fullScreenFrame.addKeyListener(this);
+        whiteboardPanel = new WhiteboardPanel();
+        //fullScreenFrame.add(btnGroup);
+        //whiteboardPanel.getWbToolbar();
+        fullScreenFrame.add(whiteboardPanel);
+        fullScreenFrame.show();
+
     }
 
     public void mouseClicked(MouseEvent evt) {
@@ -1596,6 +1599,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public void keyPressed(KeyEvent e) {
         System.out.println(e.getKeyCode());
+
+        if (e.getKeyCode()==27){
+            fullScreenFrame.setVisible(false);
+        }
 
     }
 
