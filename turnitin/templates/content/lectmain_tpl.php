@@ -1,8 +1,8 @@
 <?php  
 
 $ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/FileUploadField.js', 'htmlelements');
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'htmlelements');
+//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/FileUploadField.js', 'htmlelements');
 
 //$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/code-display.js', 'htmlelements');
 //$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/ColumnNodeUI.js', 'htmlelements');
@@ -85,12 +85,12 @@ $ext .= '<style type="text/css">
     <div id="hello-tabs">
         <!-- Auto create tab 1 -->
         <div class="x-tab" title="Hello World 1">
-            <p>Hello...</p>
+           
         </div>
         <!-- Auto create tab 2 -->
         <div class="x-tab" title="Hello World 2">
 
-            <p>... World!</p>
+            
         </div>
     </div>
 </div>

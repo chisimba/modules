@@ -102,7 +102,7 @@ Ext.apply(Ext.form.VTypes, {
             allowBlank: false,
             msgTarget: 'side'
         },
-        items: [{
+        items: [/*{
             xtype: 'textfield',
             fieldLabel: 'Name'
         },{
@@ -115,7 +115,7 @@ Ext.apply(Ext.form.VTypes, {
                 text: '',
                 iconCls: 'upload-icon'
             }
-        }],
+        }*/],
         buttons: [{
             text: 'Save',
             handler: function(){

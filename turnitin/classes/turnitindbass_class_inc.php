@@ -67,6 +67,7 @@ class turnitindbass extends dbTable
     public function getAssignments($contextCode)
     {
     	$recs = $this->getAll("WHERE contextcode='$contextCode' ORDER BY duedate");
+    	
     	if(count($recs) > 0)
     	{
     		return $recs;

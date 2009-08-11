@@ -37,11 +37,23 @@ class turnitin extends controller
 	 */
 	public function init()
 	{
-		$this->objTOps = $this->getObject('turnitinops');
-		$this->objUser = $this->getObject('user', 'security');
-		$this->objDBContext = $this->getObject('dbcontext', 'context');
-		$this->objForms = $this->getObject('forms');
-		$this->objTAssDB = $this->getObject('turnitindbass');
+		 try{		
+			
+			$this->objTOps = $this->getObject('turnitinops');
+			$this->objUser = $this->getObject('user', 'security');
+			$this->objDBContext = $this->getObject('dbcontext', 'context');
+			$this->objForms = $this->getObject('forms');
+			$this->objTAssDB = $this->getObject('turnitindbass');
+			
+			// Supressing Prototype and Setting jQuery Version with Template Variables
+			$this->setVar('SUPPRESS_PROTOTYPE', true); //Can't stop prototype in the public space as this might impact blocks
+			//$this->setVar('SUPPRESS_JQUERY', true);
+			//$this->setVar('JQUERY_VERSION', '1.3.2');
+		
+		}catch(Exception $e){
+            throw customException($e->getMessage());
+            exit();
+        }
 	}
 	
 	/**
@@ -172,7 +184,7 @@ class turnitin extends controller
 				break;
 				
 			case 'json_getassessments':
-				echo $this->formatJsonAssignments($this->objTAssDB->getAssignments('11'));//$this->objDBContext-getContextCode()
+				echo $this->formatJsonAssignments($this->objTAssDB->getAssignments( $this->objDBContext->getContextCode()));
 				//echo $this->objForms->jsonGetAssessments();
 				exit(0);
 				break;
