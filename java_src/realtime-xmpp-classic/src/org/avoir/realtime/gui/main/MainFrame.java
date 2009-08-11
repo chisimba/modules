@@ -1768,7 +1768,7 @@ public class MainFrame extends javax.swing.JFrame {
 }//GEN-LAST:event_zoomButtonActionPerformed
 
     private void fullScreenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullScreenMenuItemActionPerformed
-        setFullScreenMode();
+        setFullScreen();
     }//GEN-LAST:event_fullScreenMenuItemActionPerformed
 
     private void showRoomResourcesNavigator() {
