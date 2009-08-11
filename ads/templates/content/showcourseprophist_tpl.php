@@ -108,6 +108,7 @@
         $data .= "'".$editor."',";
         $data .= "'".$dateUpdated."',";
         $data .= "'".$comment->show()."']";
+        
         if($curRow != $numRows) {
             $data .= ",";
         }
@@ -141,10 +142,11 @@
                     var grid = new Ext.grid.GridPanel({
                         store: store,
                         columns: [
-                            {id:'version',header: \"Version\", width: 75, dataIndex: 'version'},
-                            {header: \"Editor\", width: 150, dataIndex: 'editor'},
-                            {header: \"Last Updated\", width: 120, dataIndex: 'lastChange'},
-                            {header: \"Comments\", width: 150, dataIndex: 'comments'}
+                            {id:'version',header: \"Version\", width:100, dataIndex: 'version'},
+                            {header: \"Editor\", width: 250, dataIndex: 'editor'},
+                            {header: \"Last Updated\", width: 150, dataIndex: 'lastChange'},
+                            {header: \"Comments\", width: 100, dataIndex: 'comments'}
+                            
                         ],
                         stripeRows: true,
                         height:350,
