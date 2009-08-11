@@ -12,7 +12,7 @@ $this->loadClass('htmlheading', 'htmlelements');
     $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
     $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
     $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
-    $tip = '<div id="tip1"><img src="'.$this->getResourceUri('ext-3.0-rc2/resources/images/default/window/icon-question.gif','htmlelements').'" ></div>';
+   // $tip = '<div id="tip1"><img src="'.$this->getResourceUri('ext-3.0-rc2/resources/images/default/window/icon-question.gif','htmlelements').'" ></div>';
     
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);
@@ -27,19 +27,82 @@ $messages = array();
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
-$table->cellspacing = 10;
+$table->cellspacing = '20';
 $table->startRow();
 
 
 $unitname = new textinput('A1',$this->formValue->getValue('A1'),NULL,50);
 
-//the tip image
-//$tip = "<div id = 'tip1'>The tip</div>";
+//the tips
+$tip1 = "<div id = 'tip1'><h3>[?]</h3></div>";
+$tip2 = "<div id = 'tip2'><h3>[?]</h3></div>";
+$tip3 = "<div id = 'tip3'><h3>[?]</h3></div>";
+
 $myscript = "Ext.onReady(function(){
                         new Ext.ToolTip({
-                            target: 'tip1',
-                            html: 'what the f**k do you want now'
-                         });
+                                title: '<a href=\"#\">Rich Content Tooltip</a>',
+                                id: 'content-anchor-tip',
+                                target: 'tip1',
+                                anchor: 'bottom',
+                                html: null,
+                                width: 100,
+                                autoHide: true,
+                                closable: false,
+                                //contentEl: 'content-tip', // load content from the page
+                                listeners: {
+                                    'render': function(){
+                                        this.header.on('click', function(e){
+                                            e.stopEvent();
+                                            Ext.Msg.alert('Link', 'Link to something interesting.');
+                                            Ext.getCmp('content-anchor-tip').hide();
+                                        }, this, {delegate:'a'});
+                                    }
+                                }
+                        });
+
+                                                 new Ext.ToolTip({
+                                title: '<a href=\"#\">Rich Content Tooltip</a>',
+                                id: 'content-anchor-tip',
+                                target: 'tip2',
+                                anchor: 'bottom',
+                                html: null,
+                                width: 100,
+                                autoHide: true,
+                                closable: false,
+                                //contentEl: 'content-tip', // load content from the page
+                                listeners: {
+                                    'render': function(){
+                                        this.header.on('click', function(e){
+                                            e.stopEvent();
+                                            Ext.Msg.alert('Link', 'Link to something interesting.');
+                                            Ext.getCmp('content-anchor-tip').hide();
+                                        }, this, {delegate:'a'});
+                                    }
+                                }
+                        });
+
+
+                                                 new Ext.ToolTip({
+                                title: '<a href=\"#\">Rich Content Tooltip</a>',
+                                id: 'content-anchor-tip',
+                                target: 'tip3',
+                                anchor: 'bottom',
+                                html: null,
+                                width: 100,
+                                autoHide: true,
+                                closable: false,
+                                //contentEl: 'content-tip', // load content from the page
+                                listeners: {
+                                    'render': function(){
+                                        this.header.on('click', function(e){
+                                            e.stopEvent();
+                                            Ext.Msg.alert('Link', 'Link to something interesting.');
+                                            Ext.getCmp('content-anchor-tip').hide();
+                                        }, this, {delegate:'a'});
+                                    }
+                                }
+                        });
+
 
                          Ext.QuickTips.init();
                 })";
@@ -49,8 +112,8 @@ $table->addCell($unitnameLabel->show(), 100, NULL, 'left');
 
 $table->endRow();
 $table->startRow();
-$table->addCell($unitname->show() . "<br />" . $this->formError->getError('A1'));
-$table->addCell($tip, 500, NULL, 'left');
+$table->addCell($unitname->show(). "<br />" . $this->formError->getError('A1'));
+$table->addCell($tip1, 100, NULL, 'left');
 $table->endRow();
 
 $unitType = new radio ('A2');
@@ -80,6 +143,7 @@ $table->addCell($motivationLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($motivation->show() . "<br />" . $this->formError->getError('A3'));
+$table->addCell($tip2, 150, NULL, 'left');
 $table->endRow();
 
 
@@ -95,6 +159,7 @@ $table->addCell($qualificationLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($qualification->show() . "<br />" . $this->formError->getError('A4'));
+$table->addCell($tip3);
 $table->endRow();
 
 
