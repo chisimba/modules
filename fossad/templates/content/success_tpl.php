@@ -16,14 +16,16 @@ $table->cellpadding = 5;
 $table->cellpadding = 5;
 $regformObj = $this->getObject('formmanager');
 
+$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+$contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'fossad');
+$title1=$objSysConfig->getValue('LEFT_TITLE1', 'fossad');
+$title2=$objSysConfig->getValue('LEFT_TITLE2', 'fossad');
 
 $rightTitle='<h1>'.$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad').'</h1>';
 $rightTitle.='<h3>'.$this->objLanguage->languageText('mod_fossad_success', 'fossad').'</h3>';
-$leftTitle.='<h1>'.$this->objLanguage->languageText('mod_fossad_lefttitle1', 'fossad').'</h1>';
-$leftTitle.='<h4>'.$this->objLanguage->languageText('mod_fossad_lefttitle2', 'fossad').'</h4>';
+$leftTitle.='<h1>'.$title1.'</h1>';
+$leftTitle.='<h4>'.$title2, 'fossad').'</h4>';
 
-$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-$contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'fossad');
 
 $home = new link ($this->uri(array('action'=>'home')));
 $home->link= $this->objLanguage->languageText('mod_fossad_home', 'fossad');

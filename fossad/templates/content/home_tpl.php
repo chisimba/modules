@@ -26,11 +26,7 @@ $table->addCell('<img src="'.$this->getResourceUri('images/logo.png').'">');
 $table->addCell($regformObj->createRegisterForm());
 $table->endRow();
 
-//$rightContent.='<div id="main"><img src="'.$this->getResourceUri('images/logo.png').'"></div>';
-//$rightContent.='<div id="sidebar">'.$regformObj->createRegisterForm().'</div>';
-//$rightContent.='<div id ="main">'.$table->show().'</div>';
 echo '<div id="wrap">'.$table->show().'</div>';
-//echo $rightContent;
 
 //echo $table->show();
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
