@@ -38,7 +38,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -51,6 +50,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -305,6 +305,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         addKeyListener(this);
         refreshPopup();
         repaint();
+
+        fullScreenFrame = new JFrame();
+        fullScreenFrame.setBounds(0,0,fullScreenX,fullScreenY);
+        fullScreenFrame.setUndecorated(true);
+        fullScreenFrame.addKeyListener(this);
     }
 
     private void refreshPopup() {
@@ -1009,6 +1014,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             grid.draw(g2, new Rectangle(0, 0, getWidth(), getHeight()));
         }
         graphics2D = g2;
+        if (fullScreen)
+            g2.drawString("Press Esc", 0, fullScreenY-20);
         g2.setColor(Color.WHITE);
         g2.draw(whiteboardSize);
         g2.setColor(Color.BLACK);
@@ -1163,16 +1170,17 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public void setFullScreen(){
         fullScreen = true;
-        fullScreenFrame = new JFrame();
-        fullScreenFrame.setBounds(0,0,fullScreenX,fullScreenY);
-        fullScreenFrame.setUndecorated(true);
-        fullScreenFrame.addKeyListener(this);
-        whiteboardPanel = new WhiteboardPanel();
-        //fullScreenFrame.add(btnGroup);
-        //whiteboardPanel.getWbToolbar();
         fullScreenFrame.add(whiteboardPanel);
-        fullScreenFrame.show();
+        fullScreenFrame.setVisible(true);
+        repaint();
 
+    }
+
+    public void unSetFullScreen(){
+        fullScreenFrame.setVisible(false);
+        fullScreenFrame.remove(whiteboardPanel);
+        fullScreen = false;
+        repaint();
     }
 
     public void mouseClicked(MouseEvent evt) {
@@ -1601,7 +1609,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         System.out.println(e.getKeyCode());
 
         if (e.getKeyCode()==27){
-            fullScreenFrame.setVisible(false);
+            unSetFullScreen();
         }
 
     }
