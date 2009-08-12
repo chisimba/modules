@@ -40,9 +40,15 @@ $table->addCell('<img src="'.$this->getResourceUri('images/logo.png').'">','300'
 $table->addCell($this->objLanguage->languageText('mod_fossad_contactemail', 'fossad').' '.$contactemail);
 $table->endRow();
 
+$admin = new link ($this->uri(array('action'=>'admin')));
+$admin->link= $this->objLanguage->languageText('mod_fossad_admin', 'fossad');
+
 $table->startRow();
 $table->addCell($home->show());
+$table->addCell($admin->show());
 $table->endRow();
+
+
 
 echo '<div id="wrap">'.$table->show().'</div>';
 
