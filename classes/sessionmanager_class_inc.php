@@ -171,7 +171,8 @@ class sessionmanager extends object{
             $roomUrl.='inviteurl='.$inviteUrl.'&';
             $roomUrl.='useec2=false&';
             $roomUrl.='joinid=none&';
-            $roomUrl.='codebase='.$codebase;
+            $roomUrl.='codebase='.$codebase.'&';
+            $roomUrl.='skinclass=null';
 
             $deleteLink->link($this->uri(array('action'=>'deleteschedule','id'=>$row['id'])));
             $objIcon->setIcon('delete');
