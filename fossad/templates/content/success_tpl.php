@@ -44,8 +44,7 @@ $admin = new link ($this->uri(array('action'=>'admin')));
 $admin->link= $this->objLanguage->languageText('mod_fossad_admin', 'fossad');
 
 $table->startRow();
-$table->addCell($home->show());
-$table->addCell($admin->show());
+$table->addCell($home->show().'&nbps'.$admin->show());
 $table->endRow();
 
 
