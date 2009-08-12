@@ -72,6 +72,9 @@ class fossad extends controller {
     function __home() {
         return "home_tpl.php"; //"courseproposallist_tpl.php";
     }
+    /**
+     * save a new registration
+     */
     function __register() {
         $firstame=$this->getParam('firstname');
         $lastname=$this->getParam('lastname');
@@ -79,6 +82,7 @@ class fossad extends controller {
         $email=$this->getParam('emailfield');
         $reg = $this->getObject('dbregistration');
         if($reg->addRegistration($firstame,$lastname,$company,$email)){
+            $this->sendMail($email);
             $this->nextAction("success");
         }
         else{
@@ -95,12 +99,14 @@ class fossad extends controller {
      *  Sends the email to the newly registered member
      */
     function sendMail($to){
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'fossad');
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($to));
-        $objMailer->setValue('from', $this->objConfig->getsiteEmail());
+        $objMailer->setValue('from', $contactemail);
         $objMailer->setValue('fromName', $this->objConfig->getSiteName() . " " . $this->objLanguage->languageText("mod_userregistration_emailfromname", "userregistration"));
-        $objMailer->setValue('subject', $this->objLanguage->languageText("mod_userregistration_emailsub", "userregistration") . " " . $this->objConfig->getSiteName());
-        $objMailer->setValue('body', strip_tags($msg));
+        $objMailer->setValue('subject', 'Fossad');
+        $objMailer->setValue('body', 'test message');
         $objMailer->send();
     }
       /**
