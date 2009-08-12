@@ -19,7 +19,7 @@
             <add>
                 <name>assesment_type</name>
                 <type>text</type>
-                <notnull>1</notnull>                
+                <notnull>1</notnull>
                 <default>0</default>
             </add>
         </data>
@@ -35,6 +35,22 @@
                         <type>decimal</type>
                     </definition>
                 </mark>
+            </change>
+        </data>
+    </update>
+    <update>
+        <table>tbl_assignment</table>
+        <version>0.347</version>
+            <description>Change assesment_type to length 1</description>
+        <data>
+            <change>
+                <assesment_type>
+                <type>text</type>
+                    <definition>
+                        <type>text</type>
+                        <length>1</length>
+                    </definition>
+                </assesment_type>
             </change>
         </data>
     </update>
