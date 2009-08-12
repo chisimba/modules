@@ -104,7 +104,7 @@ class fossad extends controller {
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($to));
         $objMailer->setValue('from', $contactemail);
-        $objMailer->setValue('fromName', $this->objConfig->getSiteName() . " " . $this->objLanguage->languageText("mod_userregistration_emailfromname", "userregistration"));
+        $objMailer->setValue('fromName', 'FOSSAD');
         $objMailer->setValue('subject', 'Fossad');
         $objMailer->setValue('body', 'test message');
         $objMailer->send();
