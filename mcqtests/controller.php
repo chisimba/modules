@@ -109,11 +109,17 @@ class mcqtests extends controller
         if ($this->contextCode == '') {
             return $this->nextAction(NULL, NULL, '_default');
         }
-        
+
         // Now the main switch for $action
         switch ($action)
         {
-                 // create an interface to choose a questiontype 
+            case 'activatetest':
+                $id = $this->getParam('id', '');
+                $this->applyChangeStatus();
+                return $this->nextAction('view', array(
+                    'id' => $id
+                ));
+                 // create an interface to choose a questiontype
             case 'choosequestiontype':
                  $this->viewtest();
                  return 'choosequestiontype_tpl.php';
@@ -122,7 +128,7 @@ class mcqtests extends controller
                 $id = $this->getParam('id', NULL);
                 $count = $this->getParam('count');
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
-                
+
                 // Get the total number of questions if this isn't the first
                 if ($count > 1) {
                     $count = $this->dbQuestions->countQuestions($id);
@@ -145,7 +151,7 @@ class mcqtests extends controller
                     $imgConfirm = $this->getParam('imageconfirm', '');
                     $hintConfirm = $this->getParam('enablehint', '');
                     $postMark = $this->getParam('mark', 0);
-                    
+
                     $qType = $this->getParam('type');
                     $fields = array();
                     $fields['testid'] = $id;
@@ -163,7 +169,7 @@ class mcqtests extends controller
                     // Add to database and set the total mark for the test
                     $qId = $this->dbQuestions->addQuestion($fields, $qId);
                     $this->dbTestadmin->setTotal($id, $this->dbQuestions->getTotalMarks($id));
-                    
+
                     if ($qType == 'mcq') {
                         return $this->nextAction('addanswers', array(
                             'questionId' => $qId,
@@ -188,14 +194,14 @@ class mcqtests extends controller
 	                        'count' => $this->getParam('qOrder')
 	                         ));
 			         }
-                    
+
                 }
                 break;
             case 'addfreeform':
                  $id = $this->getParam('id', NULL);
                  $count = $this->getParam('count');
                  $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
-                
+
                 // Get the total number of questions if this isn't the first
                  if ($count > 1) {
                     $count = $this->dbQuestions->countQuestions($id);
@@ -203,18 +209,18 @@ class mcqtests extends controller
                  $test[0]['count'] = $count;
                  $this->setVarByRef('test', $test[0]);
                  $this->setVar('mode', 'add');
-               
+
                  return 'addfreeform_tpl.php';
-                 break;   
-            
-                
+                 break;
+
+
             case 'addstep':
                 $this->setVar('mode', 'add');
                 return 'addstep_tpl.php';
-    
+
             case 'savestep':
                 $currentstep = $this->getParam('currentstep');
-                
+
                 switch ($currentstep)
                 {
                     case '1':
@@ -230,13 +236,13 @@ class mcqtests extends controller
                         $StepMenuArr['qSequence'] = $this->getParam('qSequence');
                         $StepMenuArr['aSequence'] = $this->getParam('aSequence');
                         $StepMenuArr['save'] = $this->getParam('save');
-                        
+
                         $this->setSession('stepmenu1', null);
                         $this->setSession('stepmenu1', $StepMenuArr);
                         $StepMenuArr = null;
-                        
+
                         return $this->nextAction('savestep', array('currentstep'=>'2a'));
-                        
+
                     case '2a':
                         return 'addstep_tpl.php';
                         break;
@@ -262,7 +268,7 @@ class mcqtests extends controller
                     default:
                         $step_data1 = $this->getSession('stepmenu1');
                         $step_data2 = $this->getSession('stepmenu2');
-                        //merge 2 arrays 	
+                        //merge 2 arrays
                         $fields = array();
                         $fields['status'] = $step_data1['status'];
                         $fields['name'] = $step_data1['name'];
@@ -280,12 +286,12 @@ class mcqtests extends controller
                         $fields['min'] = $step_data2['min'];
                         $fields['comLab'] = $this->getParam('comLab');
                         //saving the step data
-                        
+
                         $id = $this->StepAddTest($fields);
                         return $this->nextAction('view', array('id' => $id));
                         break;
                 }
-                
+
             case 'addtest':
                 return $this->addTest();
                 // add a test to the database
@@ -329,7 +335,7 @@ class mcqtests extends controller
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $data[0]['testid']);
                 $this->setVarByRef('test', $test[0]);
                 $this->setVarByRef('data', $data[0]);
-                
+
                 $numAnswers = $this->dbAnswers->countAnswers($this->getParam('questionId'));
                 $this->setVarByRef('numAnswers', $numAnswers);
                 $this->setVar('mode', 'edit');
@@ -337,12 +343,12 @@ class mcqtests extends controller
                 {
                    return 'addfreeform_tpl.php';
                    }
-                else 
+                else
                 {
                return 'addquestion_tpl.php';
                }
                 break;
-                
+
             // delete a question
             case 'deletequestion':
                 $this->dbQuestions->deleteQuestion($this->getParam('questionId'));
@@ -368,7 +374,7 @@ class mcqtests extends controller
                 $qNum = $this->getParam('qNum');
                 $data[0]['count'] = $this->getParam('count');
                 $truefalse = $this->getParam('truefalse');
-                
+
                 $data = $this->dbQuestions->getQuestion($questionId);
                 $answers = $this->dbAnswers->getAll("WHERE testid = '$testId' AND questionid = '$questionId'");
 
@@ -376,10 +382,10 @@ class mcqtests extends controller
                 $this->setVarByRef('qNum', $qNum);
                 $this->setVarByRef('answers', $answers);
                 $this->setVarByRef('truefalse', $truefalse);
-                
+
                 $correctAnswerNum = $this->dbAnswers->getCorrectAnswer($questionId);
                 $this->setVarByRef('correctAnswerNum', $correctAnswerNum);
-                
+
                 if($answers == null){
                     $this->setVar('mode', 'add');
                 }else{
@@ -387,22 +393,22 @@ class mcqtests extends controller
                 }
                 return 'addanswer_tpl.php';
                 // save answers to the database
-                
-             case 'addfreeformanswers':    
-            
+
+             case 'addfreeformanswers':
+
                 $questionId = $this->getParam('questionId');
                 $testId = $this->getParam('testId');
                 $qNum = $this->getParam('qNum');
                 $data[0]['count'] = $this->getParam('count');
-                
+
                 $data = $this->dbQuestions->getQuestion($questionId);
                 $answers = $this->dbAnswers->getAll("WHERE testid = '$testId' AND questionid = '$questionId'");
 
                 $this->setVarByRef('data', $data[0]);
                 $this->setVarByRef('qNum', $qNum);
                 $this->setVarByRef('answers', $answers);
-               
-                
+
+
                 if($answers == null){
                 	$this->setVar('mode', 'add');
                 }else{
@@ -410,8 +416,8 @@ class mcqtests extends controller
                 }
                 return 'addfreeformanswer_tpl.php';
                 // save answers to the database
-                
-                
+
+
             case 'saveanswer':
                 $postAns = $this->getParam('correctans', NULL);
                 $postCorId = $this->getParam('correctId', NULL);
@@ -445,12 +451,12 @@ class mcqtests extends controller
                     'id' => $postTestId,
                     'qNum' => $qNum
                 ));
-                
+
              case 'applyfreeformanswer':
                 $postSave = $this->getParam('save', '');
                 $postTestId = $this->getParam('testId', '');
                 $postQuestionId = $this->getParam('questionId', '');
-              
+
                 if ($postSave == $this->objLanguage->languageText('word_cancel')) {
                     return $this->nextAction('editquestion', array(
                         'questionId' => $postQuestionId
@@ -459,7 +465,7 @@ class mcqtests extends controller
                 $this->addAnswers($postTestId, $postQuestionId, $_POST, 4);
                 $msg = $this->objLanguage->languageText('mod_mcqtests_confirmaddanswer', 'mcqtests');
                 $this->setSession('confirm', $msg);
-               
+
                 return $this->nextAction('view',array(
                 'id' => $postTestId,
                 'qNum' => $qNum
@@ -620,8 +626,8 @@ class mcqtests extends controller
             case 'answertest':
                 $testId = $this->getParam('id');
                 $check = $this->getSession('taketest', NULL);
-                
-                
+
+
                 if ($check != 'open') {
                     $this->unsetSession('qData');
                     $resultId = $this->closeTest($testId);
@@ -654,7 +660,7 @@ class mcqtests extends controller
                 return 'answertest_tpl.php';
             case 'marktest2':
                 echo $this->markTest($this->getParam('resultId', NULL));
-                
+
                 break;
             case 'showstudenttest':
                 return $this->showStudentTest();
@@ -681,7 +687,7 @@ class mcqtests extends controller
             return FALSE;//parent::isValid ( $action );
         }
     }
-    
+
     /**
      * Method to display a list of tests in the test home page.
      *
@@ -708,8 +714,8 @@ class mcqtests extends controller
         $this->setVarByRef('data', $data);
         return 'index_tpl.php';
     }
-    
-    
+
+
 
     /**
      * Method to get the context child nodes and display form to add a new test.
@@ -785,7 +791,20 @@ class mcqtests extends controller
         }
         return $id;
     }
-
+    /**
+     * Method to add change status of test
+     *
+     * @access private
+     * @return void
+     */
+    private function applyChangeStatus()
+    {
+        $id = $this->getParam('id', '');
+        $fields = array();
+        $fields['status'] = $this->getParam('status', '');
+        $id = $this->dbTestadmin->addTest($fields, $id);
+        return;
+    }
     /**
      * Method to add a new test
      *
@@ -794,7 +813,7 @@ class mcqtests extends controller
      */
     private function applyAddTest()
     {
-        
+
         $id = $this->getParam('id', '');
         $fields = array();
         $fields['name'] = $this->getParam('name', '');
@@ -916,14 +935,14 @@ class mcqtests extends controller
             $this->dbAnswers->addAnswers($fields, $answerId);
             return TRUE;
         }*/
-        
+
         $i = 1;
         $order = 1;
         $f = 1;
-        
+
         // Remove Existing Answers
         $this->dbAnswers->removeAnswers($questionId);
-        
+
         while ($i <= $num) {
             $fields = array();
             $fields['testid'] = $testId;
@@ -936,7 +955,7 @@ class mcqtests extends controller
            {
            $fields['correct']= 1;
            $f++;
-           }else 
+           }else
             if($answers['correctans'] == $i){
                 $fields['correct'] = 1;
             }else{
@@ -970,7 +989,7 @@ class mcqtests extends controller
         $result = $this->dbResults->getResult($studentId, $testId);
         $test = $this->dbTestadmin->getTests($this->contextCode, 'name, totalmark', $testId);
         $result = array_merge($result[0], $test[0]);
-        $totalmark = $this->dbQuestions->sumTotalmark($testId);	
+        $totalmark = $this->dbQuestions->sumTotalmark($testId);
         $qNum = $this->getParam('qnum');
         if (empty($qNum)) {
             $data = $this->dbQuestions->getQuestionCorrectAnswer($testId);
@@ -1178,9 +1197,9 @@ class mcqtests extends controller
         }
         $this->setVarByRef('test', $test[0]);
         $this->setVarByRef('data', $data);
-        
+
         $this->setVar('suppressFooter', TRUE);
-        
+
         return 'answertest_tpl.php';
     }
 
@@ -1224,7 +1243,7 @@ class mcqtests extends controller
             }
         }
         return $resultId;
-      
+
     }
 
     /**
@@ -1250,13 +1269,13 @@ class mcqtests extends controller
                       $total = $total+$val['mark'];
                             //$total = $p;
                              }
-                               
+
                           }
-                  
+
                }
                }   //  $j++;
-     
-        
+
+
         if (!empty($testId)) {
             $data = $this->dbMarked->getCorrectAnswers($this->userId, $testId);
             if (!empty($data)) {
@@ -1267,7 +1286,7 @@ class mcqtests extends controller
                    }
                 }
             }
-        
+
         }
         $this->dbResults->addMark($resultId, $total);
     }
@@ -1288,7 +1307,7 @@ class mcqtests extends controller
         $test = $this->dbTestadmin->getTests($this->contextCode, 'name, totalmark', $testId);
         $result = array_merge($result[0], $test[0]);
         $qNum = $this->getParam('qnum');
-        
+
         if (empty($qNum)) {
             $data = $this->dbQuestions->getQuestionCorrectAnswer($testId);
         } else {
@@ -1314,7 +1333,7 @@ class mcqtests extends controller
                 $data[$key]['studfreecorrect'] = $stringOut;
             }
         }
-       // $this->setVarByRef('stringOut', $stringOut);                    
+       // $this->setVarByRef('stringOut', $stringOut);
         $this->setVarByRef('data', $data);
         $this->setVarByRef('result', $result);
         //$this->setVarByRef('datanew',$datanew);

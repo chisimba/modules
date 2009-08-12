@@ -73,7 +73,7 @@
 	$tabcontent = $this->newObject('tabcontent', 'htmlelements');
 
 
-	
+
 
 
 
@@ -186,14 +186,14 @@
 // Show Table
 	echo $objTable->show();
 
-	
+
 
 	$count = count($questions);
 	if (empty($questions)) {
 		$count = 0;
 	}
 
-// choose questiontype 
+// choose questiontype
 	$objIcon->title = $addLabel;
 	$addQUrl = $this->uri(array(
 		'action' => 'choosequestiontype',
@@ -319,8 +319,8 @@ if (!empty($questions)) {
         }
         $objLink = new link($editUrl);
         $objLink->link = $strQuestion;
-        
-        
+
+
         $objTable->startRow();
         $objTable->addCell($i.'.');
         $objTable->addCell($this->dbQuestions->previewQuestion($line));
@@ -406,5 +406,4 @@ $button->setToSubmit();
 $form->addToForm($button->show());
 
 echo $form->show();
-
 ?>
