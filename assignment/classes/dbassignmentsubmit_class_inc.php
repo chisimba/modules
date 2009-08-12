@@ -289,8 +289,8 @@ class dbassignmentsubmit extends dbtable
     public function getContextSubmissions($context)
     {
         $sql = 'SELECT assign.id, assign.name, assign.closing_date, submit.datesubmitted, submit.mark ';
-        $sql .= 'FROM '.$this->table.' AS submit ';
-        $sql .= 'LEFT JOIN '.$this->assignTable.' as assign ON assign.id = submit.assignmentId ';
+        $sql .= 'FROM tbl_assignment_submit AS submit ';
+        $sql .= 'LEFT JOIN tbl_assignment as assign ON assign.id = submit.assignmentId ';
         $sql .= "WHERE context = '$context' ORDER BY assign.id";
 
         $data = $this->getArray($sql);
