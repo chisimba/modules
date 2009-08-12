@@ -13,6 +13,7 @@ class fossad extends controller {
         $this->objUser = $this->getObject ( 'user', 'security' );
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLog = $this->getObject('logactivity', 'logger');
+        $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objLog->log();
     }
 
@@ -84,7 +85,7 @@ class fossad extends controller {
         $this->setVarByRef('editcompany',$company);
         $this->setVarByRef('editemail',$email);
         $this->setVarByRef('mode',$mode);
-        return "home_tpl.php"; 
+        return "home_tpl.php";
     }
     /**
      * save a new registration; incase email exists already ,return it back to
@@ -98,13 +99,29 @@ class fossad extends controller {
         $reg = $this->getObject('dbregistration');
         if($reg->addRegistration($firstame,$lastname,$company,$email)){
             $this->sendMail($email);
-            $this->nextAction("success");
+ 
+            $this->nextAction("success",array('title1'=>$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad'),
+   'title2'=>''));
         }
         else{
             $this->nextAction('home',array('firstname'=>$firstame,'lastname'=>$lastname,'company'=>$company,'email'=>$email,"mode"=>'edit'));
         }
     }
 
+    function __expresssignin(){
+        $reg = $this->getObject('dbregistration');
+        if($reg->emailExists($this->objUser->email())){
+            $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_fossad_alreadysignedup', 'fossad'),
+   'title2'=>''));
+        }else{
+            $this->nextAction('register',array('firstname'=>$this->objUser->getSurname(),
+  'lastname'=>$this->objUser->getFirstName(),
+   'company'=>$this->objConfig->getSiteName(),
+   'email'=>$this->objUser->email(),
+   'title1'=>$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad'),
+   'title2'=>$this->objLanguage->languageText('mod_fossad_success', 'fossad')));
+        }
+    }
    /**
     * For admin functions
     * @return <type>
@@ -123,6 +140,10 @@ class fossad extends controller {
      * Registration is a success, inform users
      */
     function __success(){
+        $title1=$this->getParam('title1');
+        $title2=$this->getParam('title2');
+        $this->setVarByRef('rightTitle1',$title1);
+        $this->setVarByRef('rightTitle2',$title2);
         return "success_tpl.php";
     }
 
@@ -152,8 +173,10 @@ class fossad extends controller {
         switch ($this->getParam('action')) {
             case 'admin':
                 return TRUE;
-                default:
-                    return FALSE;
+                case 'expresssignin':
+                    return TRUE;
+                    default:
+                        return FALSE;
+                    }
                 }
             }
-        }

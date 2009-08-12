@@ -1,5 +1,8 @@
 
 <?php
+if($this->objUser->isLoggedIn()){
+    $this->nextAction('expresssignin');
+}
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/fossad.css').'"/>';
 $this->appendArrayVar('headerParams', $maincss);
 
@@ -31,6 +34,7 @@ $table->endRow();
 
 $admin = new link ($this->uri(array('action'=>'admin')));
 $admin->link= $this->objLanguage->languageText('mod_fossad_admin', 'fossad');
+
 $table->startRow();
 $table->addCell($admin->show());
 $table->endRow();

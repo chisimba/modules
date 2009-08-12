@@ -40,7 +40,13 @@ class formmanager extends object{
    * @return <type>
    */
     public function createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode){
-        $submitUrl = $this->uri(array('action' => 'register'));
+        
+        $submitUrl = $this->uri(array('action' => 'register','title1'=>$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad'),
+   'title2'=>$this->objLanguage->languageText('mod_fossad_success', 'fossad')));
+
+        $express =$this->uri(array('action'=>'expresssignin'));
+        $expressTxt= $this->objLanguage->languageText('mod_fossad_express', 'fossad');
+
         $editfirstname=$mode == 'edit' ? "value:'".$editfirstname."',":"";
         $editlastname=$mode == 'edit' ? "value:'".$editlastname."',":"";
         $editcompany=$mode == 'edit' ? "value:'".$editcompany."',":"";
@@ -86,7 +92,11 @@ class formmanager extends object{
                 name: 'emailfield',
                 ".$editemail."
                 vtype:'email'
-            }
+            },{
+               xtype: 'box',
+               autoEl: {cn: '<a href=\"".$express."\">".$expressTxt."</a>'}
+
+               }
         ],
 
         buttons: [{

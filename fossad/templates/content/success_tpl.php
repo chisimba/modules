@@ -21,8 +21,8 @@ $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'fossad');
 $title1=$objSysConfig->getValue('LEFT_TITLE1', 'fossad');
 $title2=$objSysConfig->getValue('LEFT_TITLE2', 'fossad');
 
-$rightTitle='<h1>'.$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad').'</h1>';
-$rightTitle.='<h3>'.$this->objLanguage->languageText('mod_fossad_success', 'fossad').'</h3>';
+$rightTitle='<h1>'.$rightTitle1.'</h1>';
+$rightTitle.='<h3>'.$rightTitle2.'</h3>';
 $leftTitle.='<h1>'.$title1.'</h1>';
 $leftTitle.='<h4>'.$title2.'</h4>';
 

@@ -11,7 +11,8 @@ $this->appendArrayVar('headerParams', $extallcss);
 
 
 if(!$this->objUser->isAdmin()){
-
+ $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_fossad_alreadysignedup', 'fossad'),
+ 'title2'=>''));
 }
 
 $scheduleTitle='<h2>'.$this->objLanguage->languageText('mod_fossad_registeredmembers', 'fossad').'</h2>';
