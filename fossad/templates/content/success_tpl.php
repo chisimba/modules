@@ -24,7 +24,7 @@ $title2=$objSysConfig->getValue('LEFT_TITLE2', 'fossad');
 $rightTitle='<h1>'.$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad').'</h1>';
 $rightTitle.='<h3>'.$this->objLanguage->languageText('mod_fossad_success', 'fossad').'</h3>';
 $leftTitle.='<h1>'.$title1.'</h1>';
-$leftTitle.='<h4>'.$title2.'fossad').'</h4>';
+$leftTitle.='<h4>'.$title2.'</h4>';
 
 
 $home = new link ($this->uri(array('action'=>'home')));
