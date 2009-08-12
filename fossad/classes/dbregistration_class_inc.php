@@ -47,7 +47,7 @@ class dbregistration extends dbTable{
             'company'=>$company,
         );
 
-        if($this->emailExists($title)){
+        if($this->emailExists($email)){
             return FALSE;
         }else{
             $regId = $this->insert($data);
@@ -68,7 +68,7 @@ class dbregistration extends dbTable{
         $rows=$this->getArray($sql);
         return count($rows) > 0 ? TRUE:FALSE;
     }
-    public function deleteRegistration($id)
+    public function deletemember($id)
     {
         $sql="delete from " .$this->table." where id = '".$id."'";
         $rows=$this->getArray($sql);

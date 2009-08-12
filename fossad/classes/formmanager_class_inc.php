@@ -11,6 +11,9 @@
  */
 class formmanager extends object{
 
+   /**
+    * initialize the object, and set the necessary ext js scripts
+    */
     public function init(){
         // scripts
         $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
@@ -26,36 +29,22 @@ class formmanager extends object{
         $this->objLanguage = $this->getObject('language', 'language');
     }
 
-    public function getLeftContent(){
-        
-        
-        
-        $sponsorA='<a href=""><img  width="100" height="50" src="'.$this->getResourceUri('images/inwent.gif').'"></a>';
-        $sponsorB='<a href=""><img  width="100" height="50" src="'.$this->getResourceUri('images/sun.jpeg').'"></a>';
-        $sponsorC='<a href=""><img  width="100" height="50" src="'.$this->getResourceUri('images/acer.jpeg').'"></a>';
-        $sponsorD='<a href=""><img  width="100" height="50" src="'.$this->getResourceUri('images/hp.jpeg').'"></a>';
-
-        $list=array(
-            
-            "0"=>$sponsorA,
-            "1"=>$sponsorB,
-            "2"=>$sponsorC,
-            "3"=>$sponsorD,
-        );
-        $desc=
-        '<ul id="nav-secondary">';
-        $cssClass = '';
-        foreach($list as $element){
-             if(strtolower($element) == strtolower($toSelect)) {
-                    $cssClass = ' class="active" ';
-             }
-            $desc.='<li $cssClass>'.$element.'</li>';
-        }
-        $desc.='</ul>';
-        return $desc;
-    }
-    public function createRegisterForm(){
+  /**
+   * Create an Ext Js based form. If mode is 'edit', then the form is pre-populated
+   * with values
+   * @param <type> $editfirstname
+   * @param <type> $editlastname
+   * @param <type> $editcompany
+   * @param <type> $editemail
+   * @param <type> $mode
+   * @return <type>
+   */
+    public function createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode){
         $submitUrl = $this->uri(array('action' => 'register'));
+        $editfirstname=$mode == 'edit' ? "value:'".$editfirstname."',":"";
+        $editlastname=$mode == 'edit' ? "value:'".$editlastname."',":"";
+        $editcompany=$mode == 'edit' ? "value:'".$editcompany."',":"";
+        $editemail=$mode == 'edit' ? "value:'".$editemail."',":"";
         $regFormJS=
     "Ext.onReady(function(){
 
@@ -81,17 +70,21 @@ class formmanager extends object{
         items: [{
                 fieldLabel: 'First Name',
                 name: 'firstname',
+                ".$editfirstname."
                 allowBlank:false
             },{
                 fieldLabel: 'Last Name',
                 name: 'lastname',
+                ".$editlastname."
                 allowBlank:false
             },{
                 fieldLabel: 'Company',
+                ".$editcompany."
                 name: 'company'
             }, {
                 fieldLabel: 'Email',
                 name: 'emailfield',
+                ".$editemail."
                 vtype:'email'
             }
         ],
@@ -147,7 +140,7 @@ class formmanager extends object{
  });
 ";
 
-          //where we render the 'popup' window
+          //where we render the frame
         $content='<div id="registration"></div>';
         $content.= "<script type=\"text/javascript\">".$regFormJS."</script>";
 

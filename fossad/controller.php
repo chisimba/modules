@@ -69,11 +69,26 @@ class fossad extends controller {
         }
     }
 
+   /**
+    * default home page
+    * @return <type>
+    */
     function __home() {
-        return "home_tpl.php"; //"courseproposallist_tpl.php";
+        $firstname=$this->getParam('firstname');
+        $lastname=$this->getParam('lastname');
+        $company=$this->getParam('company');
+        $email=$this->getParam('email');
+        $mode=$this->getParam('mode');
+        $this->setVarByRef('editfirstname',$firstname);
+        $this->setVarByRef('editlastname',$lastname);
+        $this->setVarByRef('editcompany',$company);
+        $this->setVarByRef('editemail',$email);
+        $this->setVarByRef('mode',$mode);
+        return "home_tpl.php"; 
     }
     /**
-     * save a new registration
+     * save a new registration; incase email exists already ,return it back to
+     * user
      */
     function __register() {
         $firstame=$this->getParam('firstname');
@@ -86,11 +101,27 @@ class fossad extends controller {
             $this->nextAction("success");
         }
         else{
-            $this->nextAction(NULL);
+            $this->nextAction('home',array('firstname'=>$firstame,'lastname'=>$lastname,'company'=>$company,'email'=>$email,"mode"=>'edit'));
         }
     }
 
+   /**
+    * For admin functions
+    * @return <type>
+    */
+    function __admin() {
+        return "memberlist_tpl.php";
+    }
 
+    function __deletemember(){
+        $id=$this->getParam('id');
+        $reg = $this->getObject('dbregistration');
+        $reg->deleteMember($id);
+        $this->nextAction('admin');
+    }
+    /**
+     * Registration is a success, inform users
+     */
     function __success(){
         return "success_tpl.php";
     }

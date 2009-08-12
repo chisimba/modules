@@ -46,10 +46,4 @@ $table->endRow();
 
 echo '<div id="wrap">'.$table->show().'</div>';
 
-//echo $rightContent;
-$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout->setNumColumns(2);
-$cssLayout->setLeftColumnContent($regformObj->getLeftContent());
-$cssLayout->setMiddleColumnContent($rightContent);
-//echo $cssLayout->show();
 ?>
