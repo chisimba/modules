@@ -101,12 +101,15 @@ class fossad extends controller {
     function sendMail($to){
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'fossad');
+        $subject=$objSysConfig->getValue('EMAIL_SUBJECT', 'fossad');
+        $body=$objSysConfig->getValue('EMAIL_BODY', 'fossad');
+        $emailName=$objSysConfig->getValue('EMAIL_NAME', 'fossad');
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($to));
         $objMailer->setValue('from', $contactemail);
-        $objMailer->setValue('fromName', 'FOSSAD');
-        $objMailer->setValue('subject', 'Fossad');
-        $objMailer->setValue('body', 'test message');
+        $objMailer->setValue('fromName', $emailName);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
         $objMailer->send();
     }
       /**
