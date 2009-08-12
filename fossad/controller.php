@@ -115,9 +115,9 @@ class fossad extends controller {
    'title2'=>''));
         }else{
             $this->nextAction('register',array('firstname'=>$this->objUser->getSurname(),
-  'lastname'=>$this->objUser->getFirstName(),
+   'lastname'=>$this->objUser->getFirstName(),
    'company'=>$this->objConfig->getSiteName(),
-   'email'=>$this->objUser->email(),
+   'emailfield'=>$this->objUser->email(),
    'title1'=>$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad'),
    'title2'=>$this->objLanguage->languageText('mod_fossad_success', 'fossad')));
         }
