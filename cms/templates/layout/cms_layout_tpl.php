@@ -1,9 +1,15 @@
 <?php
 
+$objModule =  $this->newObject('modules', 'modulecatalogue');
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $objBlocks =  $this->newObject('blocks', 'blocks');
+$objDbBlocks = $this->newObject('dbblocksdata', 'blocks');
+
+if($objModule->checkIfRegistered('textblock')) {
+	$objTextBlock = $this->newObject('dbtextblock', 'textblock');
+}
+
 $objLucene =  $this->newObject('searchresults', 'search');
-$objModule =  $this->newObject('modules', 'modulecatalogue');
 $objLink =  $this->newObject('link', 'htmlelements');
 $objTreeMenu = $this->newObject('cmstree', 'cmsadmin');
 $objUser = $this->newObject('user', 'security');
@@ -19,7 +25,11 @@ $currentNode = $this->getParam('sectionid', NULL);
 if(!isset($rss)){
     $rss = '';
 }
-$leftSide = $this->objLayout->getLeftMenu($currentNode, $rss);
+
+//Content ID if any
+$contentId = $this->getParam('id', '');
+
+$leftSide = $this->objLayout->getLeftMenu($currentNode, $rss, $contentId);
 
 $leftSide .= '<div id="cmsleftblockscontainer">';
 
@@ -54,7 +64,35 @@ if(!empty($leftPageBlocks)) {
         $blockId = $pbks['blockid'];
         $blockToShow = $objDbBlocks->getBlock($blockId);
 
-        $leftSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
+		
+		$showToggle = TRUE;
+		$showTitle = TRUE;
+
+		$cssId = '';
+		$cssClass = 'featurebox';
+
+		//If a textblock is being used then check the show title fields
+		if($objModule->checkIfRegistered('textblock')) {
+			$txtBlockArr = $objTextBlock->getBlock($blockId);
+
+			if (isset($txtBlockArr['show_title']) && $txtBlockArr['show_title'] != '1') {
+				$showToggle = FALSE;
+				$showTitle = FALSE;
+			}
+
+			if (isset($txtBlockArr['css_id']) && $txtBlockArr['css_id'] != '') {
+				$cssId = $txtBlockArr['css_id'];
+			}
+
+			if (isset($txtBlockArr['css_class']) && $txtBlockArr['css_class'] != '') {
+				$cssClass = $txtBlockArr['css_class'];
+			}
+
+		}
+
+		//TODO: Add support for hiding fields to core block module
+
+		$leftSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid'], NULL, 20, TRUE, $showToggle, 'default', $showTitle, $cssClass, $cssId);
     }
 }
 
@@ -80,7 +118,34 @@ if(!empty($pageBlocks)) {
         $blockId = $pbks['blockid'];
         $blockToShow = $objDbBlocks->getBlock($blockId);
 
-        $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
+		$showToggle = TRUE;
+		$showTitle = TRUE;
+
+		$cssId = '';
+		$cssClass = 'featurebox';
+
+		//If a textblock is being used then check the show title fields
+		if($objModule->checkIfRegistered('textblock')) {
+			$txtBlockArr = $objTextBlock->getBlock($blockId);
+
+			if (isset($txtBlockArr['show_title']) && $txtBlockArr['show_title'] != '1') {
+				$showToggle = FALSE;
+				$showTitle = FALSE;
+			}
+
+			if (isset($txtBlockArr['css_id']) && $txtBlockArr['css_id'] != '') {
+				$cssId = $txtBlockArr['css_id'];
+			}
+
+			if (isset($txtBlockArr['css_class']) && $txtBlockArr['css_class'] != '') {
+				$cssClass = $txtBlockArr['css_class'];
+			}
+
+		}
+
+		//TODO: Add support for hiding fields to core block module
+
+		$rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid'], NULL, 20, TRUE, $showToggle, 'default', $showTitle, $cssClass, $cssId);
     }
 }
 if ($objModule) {

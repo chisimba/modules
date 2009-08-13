@@ -16,8 +16,10 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @category chisimba
 * @copyright AVOIR
 * @license GNU GPL
+* @author Charl Mert
 * @author Wesley  Nitsckie
 * @author Warren Windvogel
+* @author Derek Keats
 *
 */
 
@@ -124,7 +126,7 @@ class cms extends controller
                 $this->_objSections = $this->getObject('dbsections', 'cmsadmin');
                 $this->_objSecurity = $this->getObject('dbsecurity', 'cmsadmin');
 
-                $this->_objSimpleTree = $this->getObject('simplecontenttree', 'cmsadmin');
+                $this->_objSimpleTree = $this->getObject('simpletreemenu', 'cmsadmin');
 
                 $this->objLayout = $this->getObject('cmslayouts', 'cms');
                 $this->rss = $this->getObject('dblayouts','cmsadmin');
@@ -310,12 +312,6 @@ class cms extends controller
 
 			return "menu_child_node_tpl.php";
         }
-
-
-
-
-
-
 
 
         /**
