@@ -78,6 +78,15 @@
    
    <!-- tbl_cms_menustyles -->
    <tbl_cms_menustyles>
+       <id>init_0</id>
+       <menu_style>none</menu_style>
+       <root_nodes>0</root_nodes>
+       <is_active>0</is_active>
+       <editable>0</editable>
+	   
+   </tbl_cms_menustyles>
+
+   <tbl_cms_menustyles>
        <id>init_1</id>
        <menu_style>tree</menu_style>
        <root_nodes>0</root_nodes>
@@ -104,6 +113,14 @@
    <tbl_cms_menustyles>
        <id>init_4</id>
        <menu_style>superfish</menu_style>
+       <root_nodes>0</root_nodes>
+       <is_active>1</is_active>
+       <editable>0</editable>
+   </tbl_cms_menustyles>
+
+   <tbl_cms_menustyles>
+       <id>init_5</id>
+       <menu_style>none_frontpage</menu_style>
        <root_nodes>0</root_nodes>
        <is_active>1</is_active>
        <editable>0</editable>

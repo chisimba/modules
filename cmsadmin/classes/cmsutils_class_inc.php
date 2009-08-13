@@ -1964,31 +1964,14 @@
             */
 
             $objCmsTree =$this->newObject('superfishtree', 'cmsadmin');
-    
-            //Yahoo Menu
-            //$objCmsTree =$this->newObject('cmstree', 'cmsadmin');
-
-            //jQuery Tree Menu
-            //$objSimpleCmsTree =$this->newObject('simplecontenttree', 'cmsadmin');
 
             if (!$hideCmsMenu) {
 			    $nav  = '<div id="cmsnavcontainer">'."\n";
             } else {
                 $nav = '';
             }
-			//jQuery SuperFish
-
             $objAdminCmsTree =$this->newObject('simpletreemenu', 'cmsadmin');
-
-            //Better ajax tree menu
-            //$objAdminCmsTree =$this->newObject('simplecontenttree', 'cmsadmin');
             $cmsAdminMenu .= $objAdminCmsTree->getCMSAdminTree($currentNode);
-
-			//Yahoo Menu
-            //$nav = $objCMSTree->getCMSAdminTree($currentNode);
-
-			//jQuery SimpleTree
-            //$nav = $objSimpleCMSTree->getSimpleCMSAdminTree($currentNode);
 
             if (!$hideCmsMenu) {
                 $nav .="<div id='cmsnavigation'>".$cmsAdminMenu."</div>\n"; 
@@ -3169,16 +3152,12 @@
             $table->cellspacing = '2';  
             //the title
             $titleInput = new textinput('title',null,null,30);
-            $menuTextInput = new textinput('menutext',null,null,30);
             $objForm->addRule('title', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddtitle', 'cmsadmin'), 'required');
-            $objForm->addRule('menutext', $this->objLanguage->languageText('mod_cmsadmin_pleaseaddmenutext', 'cmsadmin'), 'required');
-            //$button->setToSubmit();
             $button = new button('save', $this->objLanguage->languageText('word_save'));
             $button->id = 'save';
             $button->setToSubmit();
             if ($editmode) {
                 $titleInput->value = $section['title'];
-                $menuTextInput->value = $section['menutext'];
                 $layout = $section['layout'];
                 $isPublished = $section['published'];
                 $showTitle = isset($section['show_title']) ? $section['show_title'] : '0';
@@ -3206,7 +3185,6 @@
                 $objOrdering->value = $section['ordering'];
             } else {
                 $titleInput->value = '';
-                $menuTextInput->value = '';
                 $bodyInput->value = '';
                 $layout = 0;
                 $isPublished = '1';
@@ -3231,19 +3209,9 @@
                 $table->addCell($this->objLanguage->languageText('mod_cmsadmin_parentfolder', 'cmsadmin'));
 
                 if (isset($parentid)) {
-                    //$table->addCell($this->getSectionTreeDropdown($parentid).'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
                     $table->addCell($this->getSectionList($parentid)->show());
-
-                    //$sections = $this->getContentTreeDropdown($parentid, FALSE);
-                    //$table->addCell($sections->show().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
-
                 } else {
-                    //$table->addCell($this->getSectionTreeDropdown().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
                     $table->addCell($this->getSectionList()->show());
-                    
-                    //$sections = $this->getContentTreeDropdown(null, FALSE);
-                    //$table->addCell($sections->show().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
-                    
                 }
 
                 $table->endRow();
@@ -3261,18 +3229,7 @@
             //title name
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('word_title').': ');
-            $table->addCell($titleInput->show().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_sectionnamedescription', 'cmsadmin'),'','','','',"colspan='2'");
-            $table->endRow();
-
-            $table->startRow();
-            $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;','','','','',"colspan='2'");
-            $table->endRow();
-
-            //menu text name
-            $table->startRow();
-            $table->addCell($this->objLanguage->languageText('mod_cmsadmin_menuname', 'cmsadmin').': ');
-            $table->addCell($menuTextInput->show().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_menutextdescription', 'cmsadmin'),'','','','',"colspan='2'");
+            $table->addCell($titleInput->show(),'','','','',"colspan='2'");
             $table->endRow();
 
             $table->startRow();
@@ -5456,7 +5413,7 @@
                 $introInput->height = '200px';
                 $introInput->width = '100%';
 
-                $h3->str = $this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')';
+                $h3->str = $this->objLanguage->languageText('word_introduction')/*.' ('.$this->objLanguage->languageText('word_required').')'*/;
                 $h3->type = 3;
 
                 //add hidden text input

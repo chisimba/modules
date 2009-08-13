@@ -2,7 +2,7 @@
 
 
 /*Testing jQuery Corners*/
-
+/*
 $jQuery = $this->newObject('jquery', 'htmlelements');
 $jQuery->loadCornerPlugin();
 
@@ -218,6 +218,7 @@ echo $objCmsTree->getCMSAdminTree($currentNode);
 */
 
 //Default Menu Below:
+/*
 ?>
 
 <a tabindex="0" href="#news-items-2" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">Control Panel</a>
@@ -250,7 +251,7 @@ echo $objCmsTree->getCMSAdminTree($currentNode);
 </div>
 
 <?PHP
-
+*/
 
 
 
@@ -312,8 +313,8 @@ $objForm->addToForm(" <input type='submit' value='submit'> ");
 $objForm->addRule('input_body', 'Please Type Something you Dumbass', 'required');
 
 echo $objForm->show();
+*/
 
-/*
 //Testing SimpleTree Plugin
 $jQuery = $this->newObject('jquery', 'htmlelements');
 $jQuery->loadSimpleTreePlugin();
@@ -350,7 +351,7 @@ ob_end_clean();
 $this->appendArrayVar('headerParams', $script);
 
 
-$objCmsTree =$this->newObject('sectionstreemenu', 'cmsadmin');
+$objCmsTree =$this->newObject('simpletreemenu', 'cmsadmin');
 echo $objCmsTree->getCMSAdminTree($currentNode);
 
 
@@ -471,7 +472,6 @@ echo $objCmsTree->getCMSAdminTree($currentNode);
         </ul>
     </li>
 </ul>
-
 
 <?php
 

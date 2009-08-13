@@ -187,6 +187,7 @@
                 $this->_objHtmlBlock =  $this->newObject('dbhtmlblock', 'cmsadmin');
                 $this->_objUtils =  $this->newObject('cmsutils', 'cmsadmin');
                 $this->_objLayouts =  $this->newObject('dblayouts', 'cmsadmin');
+                $this->_objAdminLayout =  $this->newObject('cmsadminlayouts', 'cmsadmin');
                 $this->_objUser =  $this->newObject('user', 'security');
                 $this->objLanguage =  $this->newObject('language', 'language');
                 $this->_objFrontPage =  $this->newObject('dbcontentfrontpage', 'cmsadmin');
@@ -242,6 +243,117 @@
 
 				//Loading the ipod style menu
                 $this->_objJQuery->loadFgMenuPlugin();
+
+
+				//Loading the SimpleTree
+				
+				//jQuery SuperFish Menu
+				$jQuery = $this->newObject('jquery', 'htmlelements');
+
+				//jQuery 1.2.6 SuperFish Menu
+				$jQuery->loadSuperFishMenuPlugin();
+
+				ob_start();
+				/*
+				   ?>
+
+				   <script type="text/javascript"> 
+				// initialise Superfish 
+				jQuery(document).ready(function(){ 
+				jQuery("ul.sf-menu").superfish({ 
+animation: {opacity:'show'},   // slide-down effect without fade-in 
+width: 300,
+delay:     0,               // 1.2 second delay on mouseout 
+speed: 'fast',
+dropShadows: false
+}); 
+}); 
+
+</script>
+
+
+<?PHP
+				 */
+				?>
+
+				<script type="text/javascript"> 
+				// initialise Superfish 
+				jQuery(document).ready(function(){ 
+						jQuery("ul.sf-menu").superfish({
+animation: {opacity:'show'},   // slide-down effect without fade-in 
+width: 300,
+delay: 0,               // 1.2 second delay on mouseout 
+speed: 'fast'
+}); 
+						}); 
+
+</script>
+
+
+<?PHP
+
+$script = ob_get_contents();
+ob_end_clean();
+
+ob_start();
+?>
+<script type="text/javascript">
+var simpleTreeCollection;
+jQuery(document).ready(function(){
+		simpleTreeCollection = jQuery('.simpleTree').simpleTree({
+autoclose: true,
+drag: false,
+afterClick:function(node){
+//alert("text-"+jQuery('span:first',node).text());
+//alert("link-"+jQuery('.active a:first', node).attr('href') + "\n");
+
+var turl = jQuery('.active a:first', node).attr('href');
+document.location.href = turl;
+
+/*
+   var turl = jQuery('.active a:first', node).attr('href');
+   var xhr = jQuery.ajax({
+type: 'GET',
+url:turl,
+success:function(){
+var cleanContent = xhr.responseText;
+cleanContent = jQuery('#content', cleanContent).html()
+jQuery('#content').html(cleanContent);
+}
+});
+ */
+		//alert(xhr.responseText);
+
+		//jQuery('#content').html(tcontent);
+
+		//jQuery('#content').load(turl);
+		},
+		/*
+afterDblClick:function(node){
+		//alert("text-"+$('span:first',node).text());
+		},
+afterMove:function(destination, source, pos){
+		//alert("destination-"+destination.attr('id')+" source-"+source.attr('id')+" pos-"+pos);
+		},
+afterAjax:function()
+{
+		//alert('Loaded');
+		},
+		 */
+animate:true
+//,docToFolderConvert:true
+});
+});
+</script>
+<?php
+$script = ob_get_contents();
+ob_end_clean();
+
+$this->appendArrayVar('headerParams', $script);
+
+$jQuery->loadSimpleTreePlugin();
+
+
 
             } catch (customException $e){
                 throw customException($e->getMessage());
@@ -799,7 +911,8 @@
                     //Save the section
                     $parentId = $this->getParam('parent');
                     $title = $this->getParam('title');
-                    $menuText = $this->getParam('menutext');
+                    //$menuText = $this->getParam('menutext');
+                    $menuText = $title;
                     $access = $this->getParam('access');
                     $description = $this->getParam('introtext');
                     $published = $this->getParam('published');
@@ -848,7 +961,8 @@
                     $parentId = $this->getParam('parent');
                     $rootId = $this->getParam('rootid');
                     $title = $this->getParam('title');
-                    $menuText = $this->getParam('menutext');
+                    //$menuText = $this->getParam('menutext');
+					$menuText = $title;
                     $access = $this->getParam('access');
                     $description = $this->getParam('introtext');
                     $published = $this->getParam('published');

@@ -304,6 +304,7 @@
 #superfishmenu {
     display: block;
     margin-bottom: auto;
+	z-index: 100;
 }
 
 #cmsleftblockscontainer {
@@ -447,4 +448,3 @@ font-size: 0.8em;
 #cpanel img  { padding: 8px 0; margin: 0 auto; }
 
 #cpanel span { display: block; text-align: center; }
-

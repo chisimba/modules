@@ -675,18 +675,17 @@
         public function updateContentBody($contentid, $body)
         {  
             $fields['body'] = $body;
-            $this->update('id', $contentid, $fields);	
-            return TRUE;
+            return $this->update('id', $contentid, $fields);	
         }
 
-        /**
-    *
-    * Method to return all content items with href data
-    *
-    * @return arr content records with body that has href="..." in it
-    * @access public
-    *
-    */
+      /**
+	   *
+	   * Method to return all content items with href data
+	   *
+	   * @return arr content records with body that has href="..." in it
+	   * @access public
+	   *
+	   */
         public function getHrefContentRecords($sectionid = '') {
             if ($sectionid != ''){
                 $data = $this->getAll("WHERE body like '%href=%' AND sectionid='$sectionid'");
@@ -696,6 +695,22 @@
             return $data;
         }
 
+      /**
+	   *
+	   * Method to return all content items with <img> tags
+	   *
+	   * @return arr content records with body that has an image tag.
+	   * @access public
+	   *
+	   */
+        public function getImgContentRecords($sectionid = '') {
+            if ($sectionid != ''){
+                $data = $this->getAll("WHERE body like '%img%' AND sectionid='$sectionid'");
+            } else {
+                $data = $this->getAll("WHERE body like '%img%'");
+            }
+            return $data;
+        }
 
 
 

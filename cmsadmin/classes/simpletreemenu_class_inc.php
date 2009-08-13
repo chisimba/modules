@@ -81,12 +81,9 @@ class simpletreemenu extends object
         * Method to get the simple jquery tree to display on the CMS Admin module
         * @return string
         */
-        public function getCMSAdminTree($current)
+        public function getCMSAdminTree($current, $ajaxMode = TRUE)
         {
-            $menu_html =  $this->show($current,TRUE,'cmsadmin','viewsection','addcontent');
-
-            //echo $menu_html; exit;
-
+            $menu_html =  $this->show($current,TRUE,'cmsadmin','viewsection','addcontent', $ajaxMode);
             return $menu_html;
         }
 
@@ -105,13 +102,13 @@ class simpletreemenu extends object
         /**
         * Method to return back the tree code
         * @param string $currentNode The currently selected node, which should remain open
-           * @param bool $admin Select whether admin user or not
+        * @param bool $admin Select whether admin user or not
         * @return string
         * @access public
         */
-        public function show($currentNode, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent')
+        public function show($currentNode, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent', $ajaxMode = TRUE)
         {
-            $html = $this->showTree($currentNode, $admin, $module, $sectionAction, $contentAction);
+            $html = $this->showTree($currentNode, $admin, $module, $sectionAction, $contentAction, $ajaxMode);
             return $html;
         }
 
@@ -125,7 +122,7 @@ class simpletreemenu extends object
         * @author Charl Mert
         * @access public
         */
-        public function showTree($currentNode, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent')
+        public function showTree($currentNode, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent', $ajaxMode = TRUE)
         {
             //check if there are any root nodes
             
@@ -153,7 +150,7 @@ class simpletreemenu extends object
          * @return string
          * @access public
          */
-        public function buildTree($currentNodeId, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent', $isChild = false)
+        public function buildTree($currentNodeId, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent', $isChild = false, $ajaxMode = TRUE)
         {
             //gets all the child nodes of id
             $nodes = $this->getChildNodes($currentNodeId, $admin);
@@ -188,7 +185,7 @@ class simpletreemenu extends object
                         //var_dump('CURR : '.$sec['title']);
                         //var_dump('NODE : '.$node['title']);
 
-                        $html .= '<li><span>'.$link."</span>\n";
+                        $html .= '<li id="'.$node['id'].'" ><span>'.$link."</span>\n";
                         //If the Section has child sections recurse
                         
                         $contentItem = '';
@@ -218,7 +215,7 @@ class simpletreemenu extends object
                                         $link.="<br />\n";
                                     }                                
         
-                                    $contentItem .= '<li><span>'.$link.'</span></li>'."\n";
+                                    $contentItem .= '<li id="'.$cNode['id'].'" ><span>'.$link.'</span></li>'."\n";
                                     
                                     //echo "CONTENT NODE HERE : "; 
                                     //var_dump($cNode); 
@@ -226,7 +223,7 @@ class simpletreemenu extends object
                             }
                         } else {
                             //Catering for empty sections
-                            $html .= "<ul><li><span>--Empty--</span></ul>\n";
+                            $html .= "<ul><li id='".$node['id']."' ><span>--Empty--</span></ul>\n";
                         }
 
                         $hasChildNodes = $this->hasChildNodes($node['id']);
@@ -234,7 +231,12 @@ class simpletreemenu extends object
                         //Call Recursively to add children sections and content
                             $level = $this->buildTree($node['id'], $admin, $module, $sectionAction, $contentAction, true) . $contentItem;
                             if (trim($level) != ''){
-                                $html .= '<ul>' .$level . '</ul>'."\n";
+								if ($ajaxMode) {
+									$ajaxLink = $this->uri(array('action' => 'getmenuchildnodes', 'id' => $node['id']), 'cms');
+                                	$html .= '<ul class="ajax"><li id="'.$node['id'].'" >{url:'.$ajaxLink.'}</li></ul>'."\n";
+								} else {
+                                	$html .= '<ul>' .$level . '</ul>'."\n";
+								}
                             }
                         }
 
@@ -246,256 +248,6 @@ class simpletreemenu extends object
                 }
             }
             return $html;
-        }
-
-        /**
-         * Method to build the next level in tree
-         * @param string $parentid The node id whose child nodes need to be built
-         * @param string $currentNode The currently selected node, which should remain open
-         * @param bool $admin Select whether admin user or not
-         * @return string
-         * @access public
-         */
-        public function buildLevel($parentId, $currentNode, $admin, $module, $sectionAction, $contentAction)
-        {
-            //gets all the child nodes of id
-            $nodes = $this->getChildNodes($parentId, $admin);
-        
-            //get the list of nodes that need to stay open for the currently selected node
-
-			/*
-           echo "PARENT IDs : [".$parentId."]<br/>"; 
-			if ($parentId == 'gen9Srv16Nme30_2000_1207657570' && $parentId != 0){ 
-				echo "PARENT ID : ".$parentId.'<br/>';
-				//var_dump($nodes);
-				echo "Node Title : ". $nodes['title'];
-			}
-			*/
-
-            //var_dump($nodes);
-            if (!empty($nodes)) {
-
-
-                $htmlLevel = '';
-                foreach($nodes as $node) {
-                       //var_dump($node['title']);
-    
-                    $item = '';
-                    if (!empty($sectionAction)) {
-                        $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        if (strlen($node['title'])>24){
-                        	$text = wordwrap(trim($node['title']),24,"<br />\n");
-                        }else{
-                        	$text = trim($node['title']);
-                        }
-                        
-                        $link = '<a href="'.$nodeUri.'">'.$text.'</a>'."\n";
-                    } else {
-                        $link = $node['title'];
-                    }
-
-                    // small fix here for problem with wraparounds
-				    if (strlen($node['title'])>24){
-				    	$link.="<br />\n";
-					}
-
-
-                     // if node has further child nodes, recursively call buildLevel
-					//echo 'Admin : '.$admin . '<br/>';
-					//echo "Child Nodes : ".var_dump($this->getChildNodes($node['id'], $admin))."<br/>";
-					//echo "NODE ID : $node[id] <br/>";
-                    if ($this->getChildNodes($node['id'], $admin)) {
-                    	$htmlLevel .= "<li>".$link."\n";
-                    	$item = $this->addContent($node['id'], $module, $sectionAction, $contentAction, $admin);
-
-                        $htmlLevel .= '<ul>'.$this->buildLevel($node['id'], $currentNode, $admin, $module, $sectionAction, $contentAction).'</ul>';
-
-                        $htmlLevel .= $item.'</li>' ."\n";
-                    }else{
-
-                    	  $htmlLevel .= "<li>".$link."\n";
-                    	  $item .= $this->addContent($node['id'], $module, $sectionAction, $contentAction, $admin);
-                    	  $htmlLevel .= $item.'</li>' ."\n";
-
-                    }
-                                       
-                }
-
-				//echo "CALLED: ".$htmlLevel . '<br/>'.$link. "</br><br/>";
-                return $htmlLevel;
-            }
-            // if no nodes return empty string
-            return '';
-        }
-
-        /**
-         * Method to get a list of all nodes to remain open
-         * @param string $currentNode The currently selected node
-         * @return array
-         * @access public
-         */
-        public function getOpenNodes($currentNode)
-        {
-            $nodeId = $currentNode;
-
-            $openNodes = array();
-
-            $openNodes[0] = $currentNode;
-            $i = 1;
-
-            while ($nodeId != '0') {
-                $node = $this->getNode($nodeId);
-
-                if (count($node)) {
-                    $nodeId = $node['parentid'];
-                    $openNodes[$i] = $nodeId;
-                    $i++;
-                } else {
-                    $nodeId = '0';
-                }
-            }
-
-            return $openNodes;
-        }
-
-
-
-        /**
-         * Method to get add all content for a particular section node
-         * @param string $id The id of the section node
-         * @return string
-         * @access public
-         */
-     	public function addContent($id, $module, $sectionAction, $contentAction, $admin = FALSE)
-        {       	
-            
-            $contentNodes = $this->getContent($id, $admin);
-
-            $htmlContent = '';
-            if (!empty($contentNodes)) {
-		        $htmlContent =		'<ul>'."\n";	
-                foreach($contentNodes as $contentNode) {
-                    if (!empty($contentAction)) {
-                        $url = $this->uri(array('action' => $contentAction, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-                        $link = '<a href="'.$url.'">'.trim($contentNode['title']).'</a>'."\n";
-                    } else {
-                        $link = $contentNode['title'];
-                    } 
-             
-                    $htmlContent .='<li>'.$link.'</li>'."\n";
-                   
-                }
-                if ($this->getChildNodes($id, $admin)) {
-		         
-                 	$htmlContent .= $this->addChildren($id, $module, $sectionAction, $contentAction, $admin);
-		        }
-
-                return $htmlContent .'</ul>'."\n";
-            }
-            return '';
-        }
-
-        
-        /**
-         * Method to get add all content/sections for a particular child node
-         * @param string $id The id of the section node
-         * @return string
-         * @access public
-         */
-        public function addChildren($id, $module, $sectionAction, $contentAction, $admin = FALSE)
-        {
-        	 //gets all the child nodes of id
-            $nodes = $this->getChildNodes($id, $admin);
-            $htmlContent = '';
-        	foreach($nodes as $node) {
-					
-					//Correctly marking the section
-					$hasChildren = $this->hasChildNodes($node['id']);
-					//var_dump($hasChildren);
-					//var_dump($node['id'] . ' : ' . $node['title']);
-					if ($hasChildren){
-						//var_dump('has children: '.$node['title']);						
-
-	                    if (!empty($sectionAction)) {
-    	                    $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-        	                $link = '<a href="'.$nodeUri.'">'.$node['title'].'</a>'."\n";
-            	        } else {
-                	        $link = $node['title']; 
-                    	}
-
-					} else {
-						//var_dump('no kids: '. $node['title']);						
-
-	                    if (!empty($contentAction)) {
-    	                    $nodeUri = $this->uri(array('action' => $contentAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-        	                $link = '<a href="'.$nodeUri.'">'.$node['title'].'</a>'."\n";
-            	        } else {
-                	        $link = $node['title'];
-                    	}
-
-					}
-
-
-                   	$htmlContent .= "<li>".$link."\n";
-                        	                        
-                    $contentNodes = $this->getContent($node['id'], $admin);
-			         
-		            if (!empty($contentNodes)) {
-		            	$htmlContent .=	'<ul>'."\n";		
-			             foreach($contentNodes as $contentNode) {
-			                    if (!empty($contentAction)) {
-			                        $url = $this->uri(array('action' => $contentAction, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-			                        $link = '<a href="'.$url.'">'.$contentNode['title'].'</a>'."\n";
-			                    } else {
-			                        $link = $contentNode['title'];
-			                    }                                      
-			                    $htmlContent .='<li>'.$link.'</li>'."\n";
-			                }
-                        
-                        //var_dump($this->getChildNodes($node['id'], $admin));
-
-		                if ($this->getChildNodes($node['id'], $admin)) {
-		                	$sibling = $this->getChildNodes($node['id'], $admin);
-		                	 
-                 			foreach($sibling as $ctNodes) {
-			                     if (!empty($contentAction)) {
-                        			$nodeUri = $this->uri(array('action' => $contentAction, 'id' => $ctNodes['id'], 'sectionid' => $ctNodes['id']), $module);
-                        			$link = '<a href="'.$nodeUri.'">'.$ctNodes['title'].'</a>'."\n";
-                    			} else {
-                        			$link = $ctNodes['title'];
-                    			}
-                   				$htmlContent .= "<li>".$link."\n";
-		           				$cNodes = $this->getContent($ctNodes['id'], $admin);
-
-                                //if (!empty($cNodes)){
-		                            $htmlContent .='<span class="text">'.$cNodes[0]['title'].'</span>'."\n";
-		                            $htmlContent .=	'<ul>'."\n";	
-                                    foreach ($cNodes as $value) {
-                                        if (!empty($contentAction)) {
-			                                $url = $this->uri(array('action' => $contentAction, 'id' => $value['id'], 'sectionid' => $value['sectionid']), $module);
-			                                $link = '<a href="'.$url.'">'.$value['title'].'</a>';
-			                            } else {
-			                                $link = $value['title'];
-			                            }
-			                            $htmlContent .='<li>'.$link.'</li>'."\n";
-                                    }
-                                    $htmlContent .='</ul>'."\n";
-		                            $htmlContent .='</li>'."\n";
-                                //}
-			                }
-		          		}
-
-		                $htmlContent .='</ul>'."\n";
-		                $htmlContent .='</li>'."\n";
-		               
-		                
-		            }
-                  
-
-                }
-                       
-           
-            return $htmlContent;
         }
 
         /**
@@ -600,6 +352,172 @@ class simpletreemenu extends object
         public function getNodeContentCount($sectionId)
         {
             return $this->_objContent->getNumberOfPagesInSection($sectionId);
+        }
+
+
+       /**
+        *  This method returns the immediate children of the given section to ease the tree
+        *  menu via Ajax
+        *
+        * @author Charl Mert
+        * @param sectionid the id of the parent section to get child items for
+        * @return list of formatted child items
+        */
+        public function getMenuChildNodes($sectionid, $contentAction = 'addcontent'){
+            $item .= $this->addNextAjaxContent($sectionid, 'cmsadmin', $contentAction, $admin);
+            return $item;
+        }
+
+
+        /**
+         * Method to get add ONLY the IMEDIATE/next level content/sections for a particular section node
+		 * FOR USE WITH AJAX in JQuery Simple Tree
+         * @param string $id The id of the section node
+         * @return string
+         * @access public
+         */
+     	public function addNextAjaxContent($id, $module, $action, $admin = FALSE)
+        {    
+            $contentNodes = $this->getContent($id, $admin);
+
+            $htmlContent = '';
+            if (!empty($contentNodes)) {
+		        //$htmlContent =		'<ul>'."\n";	
+                foreach($contentNodes as $contentNode) {
+
+					$contentTitle = $contentNode[title];
+					if ($id != '0'){
+						if (strlen($contentTitle) > 20){
+							if (!strcmp(' ',$contentTitle)){
+								$contentTitle = wordwrap($contentNode[title], 20, '<br/>'."\n");
+							} else {
+								$contentTitle = substr($contentNode[title], 0, 16).'...';
+							}
+						}
+					}
+
+					if ($this->hasChildNodes($contentNode[id], $admin)){
+						$action = 'viewsection';
+					} else {
+						$action = 'addcontent';
+					}
+                    if (!empty($action)) {
+                        $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
+                        $link = '<a href="'.$url.'">'.trim($contentTitle).'</a>'."\n";
+                    } else {
+                        $link = $contentTitle;
+                    } 
+             
+                    $htmlContent .='<li id="'.$contentNode['id'].'" ><span>'.$link.'</span></li>'."\n";
+                   
+                }
+
+                if ($this->getChildNodes($id, $admin)) {
+                	$htmlContent .= $this->addNextAjaxChildren($id, $module, $action, $admin);
+		        }
+
+                return $htmlContent;
+            }
+            return '';
+        }
+        
+ 
+
+        /**
+         * Method to get add ONLY IMMEDIATE content for a particular child node
+         * @param string $id The id of the section node
+         * @return string
+         * @access public
+         */
+        public function addNextAjaxChildren($id, $module, $action, $admin = FALSE)
+        {	
+        	 //gets all the child nodes of id
+            $nodes = $this->getChildNodes($id, $admin);
+
+            $htmlContent = '';
+        	foreach($nodes as $node) {
+					//var_dump($node);
+					$contentTitle = $node[title];
+				
+                    if ($id != '0'){
+                        if (strlen($contentTitle) > 20){
+							if (!strcmp(' ',$contentTitle)){
+								$contentTitle = wordwrap($contentTitle, 20, '<br/>'."\n");
+							} else {
+								$contentTitle = substr($contentTitle, 0, 18).'...';
+							}
+                        }
+                    }
+
+                    if ($this->hasChildNodes($contentNode[id], $admin)){
+                        $action = 'viewsection';
+                    } else {
+                        $action = 'viewsection';
+                    }
+	
+                    if (!empty($action)) {
+                        $nodeUri = $this->uri(array('action' => $action, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
+                        $link = '<a href="'.$nodeUri.'">'.$contentTitle.'</a>'."\n";
+                    } else {
+                        $link = $contentTitle;
+                    }
+
+                    
+					if ($this->hasChildNodes($id, $admin)){
+						$ajaxLink = $this->uri(array('action' => 'getmenuchildnodes', 'id' => $node['id']), 'cms');
+						$htmlContent .= "<li  id='".$node['id']."'><span>$link</span><ul class='ajax'><li id='".$node['id']."'> {$ajaxLink} </li></ul></li>";
+					} else {
+                        //Catering for empty sections
+                        $htmlContent .= "<ul><li id='".$node['id']."' ><span>--Empty--</span></ul>\n";
+                   		//$htmlContent .= "<li><span>".$link."</span>\n";
+					}
+                }
+                       
+           
+            return $htmlContent;
+        }
+
+
+        /**
+         * Method to cache a piece of the menu for quick ajax retrieval
+      	 * The cache is written to usrfiles/cmsmenucache/[sectionid]_siblings.html
+     	 *
+         * @access public
+         * @param  sectionId The id of the section whos children will be cached
+         * @return bool
+         */
+        public function cacheMenu($sectionId)
+        {
+            $objConfig =  $this->newObject('altconfig', 'config');
+			$menuCachePath = 'cmstreemenucache/';
+			$basePath = $objConfig->getcontentBasePath();
+
+			if ($basePath[strlen($basePath)] != '/' &&
+				$basePath[strlen($basePath)] != '\\' ){
+				$basePath .= '/';
+			}
+
+			$basePath = $objConfig->getcontentBasePath().$menuCachePath;
+
+            //Ensuring the menu cache exists
+            if(!file_exists($basePath))
+            {
+                mkdir($basePath, 0777, true);
+            }
+
+			$fileName = 'section_id'.'_siblings.html';
+
+            //Writting the file to disk
+            $fp = fopen($basePath.$fileName, 'w');
+			if (!$fp) {
+				log_debug('CMS Tree Menu Cache: Could\'nt Save cache file: ['.$basePath.']');
+				return FALSE;
+			}
+
+            fwrite($fp, $basePath.$fileName);
+            fclose($fp);
+
+            return TRUE;
         }
 
 }

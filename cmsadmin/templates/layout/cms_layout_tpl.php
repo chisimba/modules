@@ -1,193 +1,111 @@
 <?php
 
-/*
-//This script drives the menus. Uses the YAHOO libs.
-$script ='
-<script type="text/javascript">
-//<![CDATA[
-// Initialize and render the menu when it is available in the DOM
+//Working on blocks for CMSAdmin so that users can personalize it (WebParts will adopt this).
 
-            YAHOO.util.Event.onContentReady("productsandservices", function () {
+$objFeatureBox = $this->newObject('featurebox', 'navigation');
+$objBlocks =  $this->newObject('blocks', 'blocks');
+$objLucene =  $this->newObject('searchresults', 'search');
+$objModule =  $this->newObject('modules', 'modulecatalogue');
+$objLink =  $this->newObject('link', 'htmlelements');
+$objTreeMenu = $this->newObject('cmstree', 'cmsadmin');
+$objUser = $this->newObject('user', 'security');
+$objLanguage = $this->newObject('language', 'language');
+$objArticleBox = $this->newObject('articlebox', 'cmsadmin');
+$objDbBlocks = $this->newObject('dbblocks', 'cmsadmin');
 
-                //     Instantiate the menu.  The first argument passed to the 
-                //     constructor is the id of the element in the DOM that 
-                //     represents the menu; the second is an object literal 
-                //    representing a set of configuration properties for 
-                //    the menu.
-                //
+/*****************LEFT SIDE ***************************************/
 
-                var oMenu = new YAHOO.widget.Menu(
-                                    "productsandservices", 
-                                    {
-                                        position: "static", 
-                                        hidedelay: 750, 
-                                        lazyload: true, 
-                                        effect: { 
-                                            effect: YAHOO.widget.ContainerEffect.FADE,
-                                            duration: 0.25
-                                        } 
-                                    }
-                                );
+// Navigation
+$currentNode = $this->getParam('sectionid', NULL);
 
-
-                //     Call the "render" method with no arguments since the markup for 
-                //     this menu already exists in the DOM.
-                //
-
-                oMenu.render();            
-            
-            });
-
-//]]>
-</script>
-';
-*/
+if(!isset($rss)){
+    $rss = '';
+}
+$leftSide = $this->_objAdminLayout->getLeftMenu($currentNode, $rss);
 
 /*
-$script_jquery = "<script type=\"text/javascript\">
-jQuery(document).ready(function(){
-    jQuery('#tree1').SimpleTree();
-    jQuery('#tree2').SimpleTree({animate: true});
-    jQuery('#tree3').SimpleTree({animate: true,autoclose:true});
-    jQuery('#tree4').SimpleTree({
-        animate: true,
-        autoclose:true,
-        click:function(el){
-            alert(jQuery(el).text());
-        }
-    });
+$leftSide .= '<div id="cmsleftblockscontainer">';
 
-});
-</script>";
-*/
+// Add blocks
+$currentAction = $this->getParam('action', NULL);
 
-//jQuery SuperFish Menu
-$jQuery = $this->newObject('jquery', 'htmlelements');
-
-//jQuery 1.2.6 SuperFish Menu
-$jQuery->loadSuperFishMenuPlugin();
-
-ob_start();
-/*
-?>
-
-	<script type="text/javascript"> 
-	// initialise Superfish 
-	jQuery(document).ready(function(){ 
-		jQuery("ul.sf-menu").superfish({ 
-		animation: {opacity:'show'},   // slide-down effect without fade-in 
-		width: 300,
-		delay:     0,               // 1.2 second delay on mouseout 
-		speed: 'fast',
-		dropShadows: false
-		}); 
-	}); 
-	
-	</script>
-
-
-<?PHP
-*/
-?>
-
-    <script type="text/javascript"> 
-    // initialise Superfish 
-    jQuery(document).ready(function(){ 
-        jQuery("ul.sf-menu").superfish({
-        animation: {opacity:'show'},   // slide-down effect without fade-in 
-        width: 300,
-        delay: 0,               // 1.2 second delay on mouseout 
-        speed: 'fast'
-        }); 
-    }); 
+switch($currentAction){
+    case 'showsection':
+        $sectionId = $this->getParam('id');
+        $pageBlocks = $objDbBlocks->getBlocksForSection($sectionId);
+        $leftPageBlocks = $objDbBlocks->getBlocksForSection($sectionId, 1);
+        break;
     
-    </script>
+    case 'showcontent':
+    case 'showfulltext':
+        $sectionId = $this->getParam('sectionid');
+        $pageId = $this->getParam('id');
+        $leftPageBlocks = $objDbBlocks->getBlocksForPage($pageId, $sectionId, 1);
+        $pageBlocks = $objDbBlocks->getBlocksForPage($pageId, $sectionId);
+        break;
+    
+    case 'home':
+    case '':
+        $leftPageBlocks = $objDbBlocks->getBlocksForFrontPage(1);
+        $pageBlocks = $objDbBlocks->getBlocksForFrontPage();
+        break;
+}
 
+// Add left blocks
+if(!empty($leftPageBlocks)) {
+    foreach($leftPageBlocks as $pbks) {
+        $blockId = $pbks['blockid'];
+        $blockToShow = $objDbBlocks->getBlock($blockId);
 
-<?PHP
+        $leftSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
+    }
+}
 
-$script = ob_get_contents();
-ob_end_clean();
+$leftSide .= '</div>';
+/***************** END OF LEFT SIDE *******************************/
 
-ob_start();
-?>
-<script type="text/javascript">
-var simpleTreeCollection;
-jQuery(document).ready(function(){
-    simpleTreeCollection = jQuery('.simpleTree').simpleTree({
-        autoclose: true,
-        drag: false,
-        afterClick:function(node){
-            //alert("text-"+jQuery('span:first',node).text());
-            //alert("link-"+jQuery('.active a:first', node).attr('href') + "\n");
+if(!$this->getParam('query') == ''){
 
-            var turl = jQuery('.active a:first', node).attr('href');
-            document.location.href = turl;
+    $searchResults = $objLucene->displaySearchResults($this->getParam('query'), 'cms');
+} else {
+    $searchResults = '';
+}
 
-            /*
-            var turl = jQuery('.active a:first', node).attr('href');
-            var xhr = jQuery.ajax({
-                type: 'GET',
-                url:turl,
-                success:function(){
-                            var cleanContent = xhr.responseText;
-                            cleanContent = jQuery('#content', cleanContent).html()
-                            jQuery('#content').html(cleanContent);
-                        }
-            });
-            */
-            //alert(xhr.responseText);
+/***************** Right Side Content *******************************/
 
-            //jQuery('#content').html(tcontent);
+$hasBlocks = FALSE;
+$rightSide = '';
 
-            //jQuery('#content').load(turl);
-        },
-        /*
-        afterDblClick:function(node){
-            //alert("text-"+$('span:first',node).text());
-        },
-        afterMove:function(destination, source, pos){
-            //alert("destination-"+destination.attr('id')+" source-"+source.attr('id')+" pos-"+pos);
-        },
-        afterAjax:function()
-        {
-            //alert('Loaded');
-        },
-        */
-        animate:true
-        //,docToFolderConvert:true
-    });
-});
-</script>
-<?php
-$script = ob_get_contents();
-ob_end_clean();
+// Add right blocks    
+if(!empty($pageBlocks)) {
+    $hasBlocks = TRUE;
+    foreach($pageBlocks as $pbks) {
+        $blockId = $pbks['blockid'];
+        $blockToShow = $objDbBlocks->getBlock($blockId);
 
-$this->appendArrayVar('headerParams', $script);
+        $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid']);
+    }
+}
+if ($objModule) {
+	
+}
 
-$jQuery->loadSimpleTreePlugin();
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 
+/*
+if($hasBlocks){
+    $cssLayout->setNumColumns(3);
+    $cssLayout->setRightColumnContent($rightSide);
+} else {
+    $cssLayout->setNumColumns(2);
+}
+*/
 
-// Create an instance of the CSS Layout
-$cssLayout = $this->getObject('csslayout', 'htmlelements');
-//$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/skins/sam/menu.css", 'yahoolib').'" />';
-
-//Yahoo Libs
-//$this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo-dom-event/yahoo-dom-event.js', 'yahoolib'));
-//$this->appendArrayVar('headerParams', $this->getJavascriptFile('animation/animation.js', 'yahoolib'));
-//$this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container_core.js', 'yahoolib'));
-//$this->appendArrayVar('headerParams', $this->getJavascriptFile('menu/menu.js', 'yahoolib'));
-//$this->setVar('bodyParams','class=" yui-skin-sam"');	
-//$this->appendArrayVar('headerParams', $css);
-$this->appendArrayVar('headerParams',$script);
-
-//Set to automatically render htmllist into tree menu
 $cssLayout->setNumColumns(2);
-// Set the Content of middle column
-$cssLayout->setLeftColumnContent($this->getCMSMenu());
-$cssLayout->setMiddleColumnContent($this->getContent());
+$cssLayout->setLeftColumnContent($leftSide.'<br />');
 
-// Display the Layout
+$cssLayout->setMiddleColumnContent(/*$this->getBreadCrumbs().*/$this->getContent().'<br />'.$searchResults);
+
 echo $cssLayout->show();
 
-?>
+$this->setVar('footerStr', $this->footerStr);
