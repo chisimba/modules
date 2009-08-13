@@ -180,7 +180,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private boolean initWB = true;
     private int fullScreenX = (int) ss.getWidth();
     private int fullScreenY = (int) ss.getHeight();
-    private boolean fullScreen = false;
+    public boolean fullScreen = false;
     private JFrame fullScreenFrame;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
@@ -1011,7 +1011,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             g2.translate(translateX, translateY);
         }
         if (showGrid) {
-            grid.draw(g2, new Rectangle(0, 0, getWidth(), getHeight()));
+            grid.draw(g2, new Rectangle(0, 0, fullScreenX, fullScreenY));
         }
         graphics2D = g2;
         if (fullScreen)
@@ -1177,8 +1177,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void unSetFullScreen(){
-        fullScreenFrame.setVisible(false);
         fullScreenFrame.remove(whiteboardPanel);
+        fullScreenFrame.setVisible(false);
         fullScreen = false;
         repaint();
     }
