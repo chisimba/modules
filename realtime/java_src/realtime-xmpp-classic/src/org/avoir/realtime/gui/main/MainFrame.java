@@ -79,7 +79,7 @@ import org.avoir.realtime.gui.tips.*;
  *
  * @author developer
  */
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame{
 
     private JDialog magnifierDialog;
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
@@ -1769,6 +1769,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void fullScreenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullScreenMenuItemActionPerformed
         setFullScreen();
+        //if (!whiteboardPanel.getWhiteboard().fullScreen)
+            //tabbedPane.addTab("Whiteboard", whiteboardPanel);
     }//GEN-LAST:event_fullScreenMenuItemActionPerformed
 
     private void showRoomResourcesNavigator() {
