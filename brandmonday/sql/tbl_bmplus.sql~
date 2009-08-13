@@ -29,7 +29,11 @@ $fields = array(
     ),
     'lang' => array(
         'type' => 'text',
-        'length' => 3,
+        'length' => 2,
+    ),
+    'source' => array(
+        'type' => 'text',
+        'length' => 50,
     ),
     'image' => array(
         'type' => 'text',
@@ -39,6 +43,9 @@ $fields = array(
         'type' => 'text',
         'length' => 255,
     ),
-    
+    'thetimetweettime' => array(
+        'type' => 'text',
+        'length' => 100,
+     ),
 );
 ?>

@@ -57,12 +57,16 @@ class dbbm extends dbTable {
         // first the plus
         foreach($resPlus->results as $res) {
             if(!$this->tweetExists('tbl_bmplus', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmplus');
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location, 'tweettime' => strtotime($res->created_at)), 'tbl_bmplus');
+                $this->parseHashTags($res->text, $res->id, 'plus');
+                $this->analyseWords('tbl_bmplus_words', $res->text);
             }
         }
         foreach($resMinus->results as $res) {
             if(!$this->tweetExists('tbl_bmminus', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmminus');
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location, 'tweettime' => strtotime($res->created_at)), 'tbl_bmminus');
+                $this->parseHashTags($res->text, $res->id, 'minus');
+                $this->analyseWords('tbl_bmminus_words', $res->text);
             }
         }
         foreach($resMentions->results as $res) {
@@ -70,7 +74,8 @@ class dbbm extends dbTable {
                 $res->to_user = NULL;
             }
             if(!$this->tweetExists('tbl_bmmentions', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location), 'tbl_bmmentions');
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location, 'tweettime' => strtotime($res->created_at)), 'tbl_bmmentions');
+                // $this->parseHashTags($res->text, $res->id);
             }
         }
     }
@@ -93,7 +98,7 @@ class dbbm extends dbTable {
 
     public function getRange($table, $start, $num) {
         parent::init($table);
-        $range = $this->getAll ( "ORDER BY puid ASC LIMIT {$start}, {$num}" );
+        $range = $this->getAll ( "ORDER BY tweettime DESC LIMIT {$start}, {$num}" );
         $results = new StdClass();
         $results->results = $range;
         
@@ -116,7 +121,81 @@ class dbbm extends dbTable {
         return $cnt;
     }
 
+    public function getServiceTagWeight($mood, $tag) {
+        $cnt = $this->getRecordCount("WHERE module = 'brandmonday' and context = '$mood' and meta_value = '$tag'");
+        return $cnt;
+    }
 
+    public function getUserMentions() {
+        $menusers = $this->getArray("SELECT DISTINCT from_user FROM tbl_bmmentions ORDER BY id");
+        return $menusers;
+    }
+    
+    public function getBmTags($mood) {
+        $tags = $this->getArray("SELECT DISTINCT meta_value FROM tbl_tags WHERE module = 'brandmonday' and context = '$mood'");
+        foreach($tags as $recs) {
+            if(strtolower($recs['meta_value']) != 'brandmonday' && strtolower($recs['meta_value']) != 'brandplus' && strtolower($recs['meta_value']) != 'brandminus' && strtolower($recs['meta_value']) != 'fail') {
+                $tagarr[] = $recs['meta_value'];
+            }
+        }
+        return $tagarr;
+    }
+    
+    public function parseHashtags($str, $tweetid, $mood)
+    {
+        $str = stripslashes($str);
+        preg_match_all('/\#([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
+        $counter = 0;
+        foreach ($results[1] as $item)
+        {
+            $memetag = array($item);
+            // add the $item to tbl_tags
+            $objTags = $this->getObject('dbtags', 'tagging');
+            $objTags->insertHashTags($memetag, 1, $tweetid, 'brandmonday', NULL, $mood);
+            
+            $counter++;
+        }
+
+        return $str;
+    }
+
+    public function analyseWords($table, $str) {
+        $arr = explode(" ", $str);
+        parent::init($table);
+        foreach($arr as $word) {
+            $word = strtolower($word);
+            $word = addslashes($word);
+            $count = $this->getRecordCount("WHERE word = '$word'");
+            $count = intval($count);
+            if($count == 0) {
+                // add in the word
+                $this->insert(array('word' => $word, 'occurances' => 1));
+            }
+            else {
+                $res = $this->getAll("WHERE word = '$word'");
+                // var_dump($res);
+                $occ = intval($res[0]['occurances']);
+                $occ = $occ+1;
+                $this->update('id', $res[0]['id'], array('word' => $word, 'occurances' => $occ));
+            }
+        }
+    }
+
+    public function renderHashTags($str) {
+        $str = stripslashes($str);
+        preg_match_all('/\#([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
+        $counter = 0;
+        foreach ($results[1] as $item) {
+            // set up a link to the URI to display all posts in the meme
+            $hashlink = $this->getObject ( 'link', 'htmlelements' );
+            $hashlink->href = $this->uri ( array ('meme' => $item, 'action' => 'viewmeme' ) );
+            $hashlink->link = $item;
+            //$str = str_replace($results[0][$counter], $hashlink->show()." ", $str);
+            $counter++;
+        }
+
+        return $str;
+    }
 
 
 

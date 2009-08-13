@@ -137,7 +137,7 @@ class brandmonday extends controller {
                 break;
 
             case 'worstserv':
-                echo $this->objBmOps->worstServiceTagCloud();
+                echo "worst service";
                 break;
 
             case 'mentions':

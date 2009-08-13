@@ -43,6 +43,9 @@ $fields = array(
         'type' => 'text',
         'length' => 255,
     ),
-    
+    'tweettime' => array(
+        'type' => 'text',
+        'length' => 100,
+     ),
 );
 ?>

@@ -209,7 +209,58 @@ class bmops extends object {
         }
     }
 
-    
+    public function bestServiceTagCloud() {
+        $this->objTC = $this->newObject('tagcloud', 'utilities');
+        $tagarr = $this->objDbBm->getBmTags('plus');
+        if (empty($tagarr)) {
+            return NULL;
+        }
+        else {
+            $utags = $tagarr;
+            asort($utags);
+            foreach($utags as $tag) {
+                // create the url
+                $url = "http://twitter.com/#search?q=%23$tag";
+                // get the count of the tag (weight)
+                $weight = $this->objDbBm->getServiceTagWeight('plus', $tag);
+                $weight = $weight*1000;
+                $tag4cloud = array(
+                    'name' => $tag,
+                    'url' => $url,
+                    'weight' => $weight,
+                    'time' => time()
+                );
+                $ret[] = $tag4cloud;
+            }
+            return $this->objTC->buildCloud($ret);
+        }
+    }
 
+    public function worstServiceTagCloud() {
+        $this->objTC = $this->newObject('tagcloud', 'utilities');
+        $tagarr = $this->objDbBm->getBmTags('minus');
+        if (empty($tagarr)) {
+            return NULL;
+        }
+        else {
+            $utags = $tagarr;
+            asort($utags);
+            foreach($utags as $tag) {
+                // create the url
+                $url = "http://twitter.com/#search?q=%23$tag";
+                // get the count of the tag (weight)
+                $weight = $this->objDbBm->getServiceTagWeight('minus', $tag);
+                $weight = $weight*1000;
+                $tag4cloud = array(
+                    'name' => $tag,
+                    'url' => $url,
+                    'weight' => $weight,
+                    'time' => time()
+                );
+                $ret[] = $tag4cloud;
+            }
+            return $this->objTC->buildCloud($ret);
+        }
+    }
 }
 ?>
