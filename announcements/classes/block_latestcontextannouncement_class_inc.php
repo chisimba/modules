@@ -87,11 +87,11 @@ class block_latestcontextannouncement extends object
      *
      * @return NULL
      */
-    public function init() 
+    public function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objBlocks =& $this->getObject('dbAnnouncements', 'announcements');
-        $this->title = $this->objLanguage->languageText('mod_announcements_latestcourse', 'announcements');
+        $this->title = $this->objLanguage->code2Txt('mod_announcements_latestcourse', 'announcements'); //languageText
         $this->objContext = $this->getObject('dbcontext','context');
         $isInContext=$this->objContext->isInContext();
 		if($isInContext)
@@ -106,36 +106,36 @@ class block_latestcontextannouncement extends object
 			$contextTitle = $this->objLanguage->languageText('mod_announcements_siteword', 'announcements');
 		}
     }
-        
+
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
-    public function show() 
+    public function show()
     {
         $this->loadClass('link', 'htmlelements');
         $str = '';
-        
+
         $announcements = $this->objBlocks->getContextAnnouncements($this->contextCode, 0, 5);
-        
+
         if (count($announcements) > 0) {
             $str .= '<ul>';
-            
+
             foreach ($announcements as $announcement)
             {
                 $link = new link ($this->uri(array('action'=>'view', 'id'=>$announcement['id'])));
                 $link->link = $announcement['title'];
-                
+
                 $str .= '<li>'.$link->show().'</li>';
             }
-            
+
             $str .= '</ul>';
         }
-        
+
         $announcementLink = new link ($this->uri(NULL, 'announcements'));
         $announcementLink->link = 'Announcements';
-        
+
         return $str.'<p>'.$announcementLink->show().'</p>';
         //return "context";//$this->objBlocks->showList();
     }
