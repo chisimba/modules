@@ -35,18 +35,37 @@ $table->addCell($leftTitle);
 $table->addCell($rightTitle);
 $table->endRow();
 
+
 $table->startRow();
-$table->addCell('<img src="'.$this->getResourceUri('images/logo.png').'">','300');
-$table->addCell($this->objLanguage->languageText('mod_fossad_contactemail', 'fossad').' '.$contactemail);
+$table->addCell('<img src="'.$this->getResourceUri('images/fosslogo.png').' ">');
+$table->addCell($this->objLanguage->languageText('mod_fossad_contactemail', 'fossad').'<br>'.$contactemail);
 $table->endRow();
 
 $admin = new link ($this->uri(array('action'=>'admin')));
 $admin->link= $this->objLanguage->languageText('mod_fossad_admin', 'fossad');
 
 $table->startRow();
-$table->addCell($home->show().'&nbsp;'.$admin->show());
+$table->addCell('<br/><br/>'.$home->show().'&nbsp;'.$admin->show());
 $table->endRow();
 
+$table->startRow();
+$table->addCell('<br/><br/><br/>');
+$table->endRow();
+
+
+
+
+$table->startRow();
+$table->addCell('<h6><a href="http://openoffice.org">Open Office</a>,
+ <a href="http://avoir.uwc.ac.za">Chisimba</a>,
+ <a href="http://presentations.wits.ac.za">Realtime tools</a>,
+ <a href="http://kim.wits.ac.za/elearndemo">Podcasting,
+<a href="http://www.ubuntu.com">Ubuntu Kiosk,
+<a href="http://www.gimp.org">GIMP,
+<a href="http://www.blender.org">Blender</a>,
+<a href="http://www.icecast.org">IceCast</a>,
+Audacity</6>');
+$table->endRow();
 
 
 echo '<div id="wrap">'.$table->show().'</div>';

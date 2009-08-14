@@ -11,7 +11,7 @@ body,
 		background: #ffffff;
 	}
     #wrap table{
-		margin-left:50px;
+		margin-left:20px;
      }
 	#header {
     	padding:5px 10px;
@@ -20,6 +20,9 @@ body,
 	h1 {
 	    margin:0;
     }
+    hr{
+    	color:#c99;
+     }
 	#nav {
 		padding:5px 10px;
 		background:#c99;

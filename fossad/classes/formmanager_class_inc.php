@@ -44,9 +44,6 @@ class formmanager extends object{
         $submitUrl = $this->uri(array('action' => 'register','title1'=>$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad'),
    'title2'=>$this->objLanguage->languageText('mod_fossad_success', 'fossad')));
 
-        $express =$this->uri(array('action'=>'expresssignin'));
-        $expressTxt= $this->objLanguage->languageText('mod_fossad_express', 'fossad');
-
         $editfirstname=$mode == 'edit' ? "value:'".$editfirstname."',":"";
         $editlastname=$mode == 'edit' ? "value:'".$editlastname."',":"";
         $editcompany=$mode == 'edit' ? "value:'".$editcompany."',":"";
@@ -68,75 +65,53 @@ class formmanager extends object{
         url:'".str_replace("amp;", "", $submitUrl)."',
         defaultType: 'textfield',
         renderTo: 'registration',
-        defaults: {width: 230},
+        collapsible: true,
+        defaults: {width: 320},
         width: 350,
+        
         bodyStyle:'background-color:transparent',
         border:false,
+      items: {
+            xtype: 'fieldset',
+            title: 'Students/Visitors registration here',
+            autoHeight: true,
+            
 
-        items: [{
+        items: [
+             {
                 fieldLabel: 'First Name',
+                height: 21,
+                width: 200,
+                xtype: 'textfield',
                 name: 'firstname',
                 ".$editfirstname."
                 allowBlank:false
             },{
                 fieldLabel: 'Last Name',
+                height: 21,
+                width: 200,
+                xtype: 'textfield',
                 name: 'lastname',
                 ".$editlastname."
                 allowBlank:false
             },{
-                fieldLabel: 'Company',
+                fieldLabel: 'Sch./Inst.',
+                height: 21,
+                width: 200,
+                xtype: 'textfield',
                 ".$editcompany."
                 name: 'company'
             }, {
                 fieldLabel: 'Email',
+                height: 21,
+                width: 200,
+                xtype: 'textfield',
                 name: 'emailfield',
                 ".$editemail."
                 vtype:'email'
-            },{
-               xtype: 'box',
-               autoEl: {cn: '<a href=\"".$express."\">".$expressTxt."</a>'}
-
-               }
-        ],
-
-        buttons: [{
-            text: 'Sign Up',
-            handler: function(){
-            if (form.url)
-            form.getForm().getEl().dom.action = form.url;
-            form.getForm().submit();
             }
-        }]
-    });
-    var xform = new Ext.FormPanel({
-        labelWidth: 75, 
-        url:'".str_replace("amp;", "", $submitUrl)."',
-        frame:false,
-        
-        bodyStyle:'padding:5px 5px 0',
-        width: 350,
-        defaults: {width: 230},
-        defaultType: 'textfield',
-        bodyStyle:'background-color:transparent',
-        border:false,
-
-        items: [{
-                fieldLabel: 'First Name',
-                name: 'firstname',
-                allowBlank:false
-            },{
-                fieldLabel: 'Last Name',
-                name: 'lastname',
-                allowBlank:false
-            },{
-                fieldLabel: 'Company',
-                name: 'company'
-            }, {
-                fieldLabel: 'Email',
-                name: 'emailfield',
-                vtype:'email'
-            }
-        ],
+        ]
+        },
 
         buttons: [{
             text: 'Sign Up',
