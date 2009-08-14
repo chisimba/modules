@@ -73,7 +73,7 @@ public class GeneralUtil {
             "Feroz Zaidi" +
             "<br>" +
             "Simoni Crause<br>" +
-            "Dean Wookey<br>"+
+            "Dean Wookey<br>" +
             "Sheng Yan Lim";
     final static JWindow intro = new JWindow();
     final static JLabel info = new JLabel("", JLabel.CENTER);
@@ -147,6 +147,10 @@ public class GeneralUtil {
 
     public static boolean isAdmin(String from) {
         return GUIAccessManager.mf.getUserListPanel().getParticipantListTable().isAdmin(from);
+    }
+
+    public static boolean isOwner(String from) {
+        return GUIAccessManager.mf.getUserListPanel().getParticipantListTable().isOwner(from);
     }
 
     private static String getThisRoomOwner() {

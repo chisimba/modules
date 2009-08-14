@@ -1,6 +1,8 @@
 package org.avoir.realtime.chat;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +17,7 @@ import org.avoir.realtime.common.util.ImageUtil;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
+import org.avoir.realtime.gui.room.CreateRoomDialog;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.packets.RealtimePacket;
 import org.jivesoftware.smack.SmackConfiguration;
@@ -39,6 +42,7 @@ public class ChatRoomManager {
     public static String oldRoom = "";
     private char[] roomPassword;
     private RParticipantStatusListener participantStatusListener = new RParticipantStatusListener();
+    private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
 
     public ChatRoomManager(String roomName) {
         muc = new MultiUserChat(ConnectionManager.getConnection(), roomName + "@conference." + ConnectionManager.getConnection().getServiceName());
@@ -110,7 +114,7 @@ public class ChatRoomManager {
 
         public void voiceRevoked(String participant) {
 
-          ;
+            ;
         }
 
         public void banned(String participant, String actor, String reason) {
@@ -149,7 +153,7 @@ public class ChatRoomManager {
     public void cgrantVoice(boolean state, String nickname) {
         try {
             if (state) {
-                
+
                 muc.grantVoice(nickname);
             } else {
                 muc.revokeVoice(nickname);
@@ -331,13 +335,17 @@ public class ChatRoomManager {
     }
 
     public boolean doActualJoin(String nickname, String roomName, boolean requestslides) {
-        if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
-            createRoom(roomName, ConnectionManager.fullnames, false, null);
-        }
-
         if (!roomExists(roomName)) {
-            JOptionPane.showMessageDialog(null, "Room '" + roomName + "' is not active yet.");
-            return false;
+            if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
+                // createRoom(roomName, ConnectionManager.fullnames, false, null);
+                CreateRoomDialog fr = new CreateRoomDialog(roomName, ConnectionManager.fullnames,false);
+                fr.setSize((ss.width / 2) * 1, (ss.height / 2) * 1);
+                fr.setLocationRelativeTo(GUIAccessManager.mf);
+                fr.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Room '" + roomName + "' is not active yet or does not exists. The application will exit.");
+                System.exit(0);
+            }
         }
         JPasswordField passwordField = new JPasswordField();
         nickname = ConnectionManager.fullnames;
@@ -373,7 +381,7 @@ public class ChatRoomManager {
             }
             muc.join(ConnectionManager.getUsername() + ":" + nickname, password, history, SmackConfiguration.getPacketReplyTimeout());
 
-            GUIAccessManager.mf.getChatTabbedPane().setTitleAt(0, ConnectionManager.fullnames);
+            //GUIAccessManager.mf.getChatTabbedPane().setTitleAt(0, ConnectionManager.fullnames);
             GUIAccessManager.mf.getUserListPanel().getRoomInfoField().setText("<html>You are in <font color=\"#ff6600\">" + roomName.toUpperCase() + "</font></html>");
             GUIAccessManager.mf.getUserListPanel().getRoomInfoField().setIcon(infoIcon);
             currentRoomName = roomName;

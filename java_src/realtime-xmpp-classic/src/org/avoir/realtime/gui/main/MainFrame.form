@@ -657,9 +657,9 @@
                         <Property name="verticalTextPosition" type="int" value="3"/>
                       </Properties>
                       <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deskShareButtonActionPerformed"/>
                         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="deskShareButtonMouseEntered"/>
                         <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="deskShareButtonMouseExited"/>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deskShareButtonActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="imagesButton">
@@ -723,9 +723,9 @@
                         <Property name="verticalTextPosition" type="int" value="3"/>
                       </Properties>
                       <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="zoomButtonActionPerformed"/>
                         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="zoomButtonMouseEntered"/>
                         <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="zoomButtonMouseExited"/>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="zoomButtonActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

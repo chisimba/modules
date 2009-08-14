@@ -14,7 +14,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 import org.avoir.realtime.chat.ChatRoomManager;
-import org.avoir.realtime.common.Constants;
 import org.avoir.realtime.net.ConnectionManager;
 
 /**
@@ -30,6 +29,7 @@ public class GUIAccessManager {
     public static String defaultPresentationName = "";
     public static String defaultPresentationId = "";
     public static String defaultSlideName = "";
+    public static String skinClass=null;//"org.avoir.realtime.skins.winxp.WinXPSkin";
 
     public static void setMf(MainFrame mf) {
         GUIAccessManager.mf = mf;

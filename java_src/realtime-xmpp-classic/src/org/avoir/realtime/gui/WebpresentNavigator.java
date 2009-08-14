@@ -12,16 +12,22 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -56,6 +62,8 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
     public static String selectedPresentation;
     public static int slideCount = 0;
     private boolean popuateLocalDone = false;
+    private int selectedIndex = 0;
+    private int currentSlideIndex = 0;
 
     public WebpresentNavigator() {
         super(new GridLayout(1, 0));
@@ -82,7 +90,26 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
                 }
             }
         });
+        tree.addKeyListener(new KeyAdapter() {
 
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+        });
+        TreeSelectionModel listSelectionModel = tree.getSelectionModel();
+        listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listSelectionModel.addTreeSelectionListener(new TreeSelectionListener() {
+
+            public void valueChanged(TreeSelectionEvent e) {
+                TreeSelectionModel lsm = (TreeSelectionModel) e.getSource();
+
+                if (lsm.isSelectionEmpty()) {
+                } else {
+                    // selectedIndex = lsm.getMinSelectionIndex();
+                    displaySlide();
+                }
+            }
+        });
         JScrollPane scrollPane = new JScrollPane(tree);
         add(scrollPane);
         // populateWithRoomResources();
@@ -175,6 +202,29 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         }
     }
 
+    public int getCurrentSlideIndex() {
+        return currentSlideIndex;
+    }
+
+    public static int getSlideCount() {
+        return slideCount;
+    }
+
+    public void moveToNextSlide() {
+
+        if (currentSlideIndex < slideCount) {
+            currentSlideIndex++;
+            sendPacket(selectedPresentation, "Slide " + currentSlideIndex);
+        }
+    }
+
+    public void moveToPrevSlide() {
+        if (currentSlideIndex > 1) {
+            currentSlideIndex--;
+            sendPacket(selectedPresentation, "Slide " + currentSlideIndex);
+        }
+    }
+
     private void displaySlide() {
         TreePath parentPath = tree.getSelectionPath();
         if (parentPath != null) {
@@ -197,7 +247,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         }
     }
 
-    private void sendPacket(String presentationName, String slideName) {
+    public void sendPacket(String presentationName, String slideName) {
         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().clearWhiteboard();
         RealtimePacket p = new RealtimePacket();
         p.setMode(RealtimePacket.Mode.BROADCAST_SLIDE);

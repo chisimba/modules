@@ -90,7 +90,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
     private JPopupMenu fontPopup = new JPopupMenu();  // Popup menu for fonts
     private JMenu submenu;                            // Creates the menus inside the popup
     private JMenuItem item;                           // items for the submenus
-    private String currentStyle = Font.DIALOG;         // Default style for chat room
+    private String currentStyle ="dialog";         // Default style for chat room
     private int currentStyleEmphasis = Font.PLAIN;     // Default style emphasis for chat room
     ////////////////////////////////////////////////
 

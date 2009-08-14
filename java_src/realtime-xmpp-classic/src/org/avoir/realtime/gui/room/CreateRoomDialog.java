@@ -39,11 +39,21 @@ import org.avoir.realtime.net.ConnectionManager;
  *
  * @author developer
  */
-public class CreateRoomDialog extends javax.swing.JFrame {
+public class CreateRoomDialog extends javax.swing.JDialog {
+
+    private boolean showRoomList = true;
+
+    public CreateRoomDialog() {
+        this(null, null, true);
+    }
 
     /** Creates new form CreateRoom */
-    public CreateRoomDialog(){
+    public CreateRoomDialog(String roomName, String roomDesc, boolean showRoomList) {
+        super(GUIAccessManager.mf);
+        setModal(true);
+        this.showRoomList = showRoomList;
         initComponents();
+
         roomNameField.getDocument().addDocumentListener(new DocumentListener() {
 
             public void insertUpdate(DocumentEvent e) {
@@ -57,7 +67,13 @@ public class CreateRoomDialog extends javax.swing.JFrame {
             public void changedUpdate(DocumentEvent e) {
             }
         });
+        if (roomName != null) {
+            roomNameField.setText(roomName);
 
+        }
+        if (roomDesc != null) {
+            roomDescField.setText(roomDesc);
+        }
     }
 
     private void createRoom() {
@@ -83,10 +99,10 @@ public class CreateRoomDialog extends javax.swing.JFrame {
         roomName = GeneralUtil.formatStr(roomName, " ");
         String desc = roomDescField.getText();
         if (desc.trim().equals("")) {
-           // JOptionPane.showMessageDialog(null, "Provide room description");
-           // return;
+            // JOptionPane.showMessageDialog(null, "Provide room description");
+            // return;
             //if no desc, then pick room name as default
-            desc=roomName;
+            desc = roomName;
         }
         int maxNumber = (Integer) maxMembersField.getValue();
         if (maxNumber < 1) {
@@ -112,7 +128,9 @@ public class CreateRoomDialog extends javax.swing.JFrame {
         }
         GUIAccessManager.mf.getChatRoomManager().createRoom(roomName, desc, maxNumber,
                 requirePassword, password);
-        GUIAccessManager.mf.showRoomList(null);
+        if (showRoomList) {
+            GUIAccessManager.mf.showRoomList(null);
+        }
         dispose();
 
     }
@@ -283,7 +301,13 @@ public class CreateRoomDialog extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        dispose();
+        if (GUIAccessManager.mf.getChatRoomManager().getMuc().isJoined()) {
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "You are not in any room, the system will exit");
+            System.exit(0);
+        }
+
 }//GEN-LAST:event_closeButtonActionPerformed
 
     private void createRoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createRoomButtonActionPerformed
