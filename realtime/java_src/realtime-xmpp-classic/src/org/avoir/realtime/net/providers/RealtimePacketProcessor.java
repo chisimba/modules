@@ -133,13 +133,12 @@ public class RealtimePacketProcessor {
                 double xx1 = XmlUtils.readDouble(doc, "x");
                 double yy1 = XmlUtils.readDouble(doc, "y");
 
-                Rectangle rect = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getWhiteboardSize();
-                int x = (int) (xx1 * rect.getWidth());
-                int y = (int) (yy1 * rect.getHeight());
-
+                Rectangle rect = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getBounds(); //getWhiteboardSize();
+                int x = (int) (xx1 *GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getWidth());
+                int y = (int) (yy1 * GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getHeight());
                 int w = XmlUtils.readInt(doc, "width");
                 int h = XmlUtils.readInt(doc, "height");
-                Oval oval = new Oval(x, y, h, w);
+                Oval oval = new Oval(x, y, w, h);
                 String filled = XmlUtils.readString(doc, "filled");
                 oval.setFilled(new Boolean(filled));
                 item = oval;
@@ -515,8 +514,7 @@ public class RealtimePacketProcessor {
             } else {
                 double xx1 = XmlUtils.readDouble(doc, "x");
                 double yy1 = XmlUtils.readDouble(doc, "y");
-
-                Rectangle rect = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getWhiteboardSize();
+                Rectangle rect = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getBounds();//.getWhiteboardSize();
                 int x = (int) (xx1 * rect.getWidth());
                 int y = (int) (yy1 * rect.getHeight());
                 item.setId(id);

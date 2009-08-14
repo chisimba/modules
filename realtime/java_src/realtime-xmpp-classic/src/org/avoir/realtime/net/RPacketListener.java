@@ -239,31 +239,16 @@ public class RPacketListener implements PacketListener {
                 GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserPermissions(username, permissionString);
             } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
-                String senderName = XmlUtils.readString(doc,"private-chat-sender-name");
+                String senderName = XmlUtils.readString(doc, "private-chat-sender-name");
                 String msg = XmlUtils.readString(doc, "private-chat-msg");
                 String msgMode = XmlUtils.readString(doc, "private-chat-mode");
                 PrivateChatManager.receiveMessage(sender, senderName, msg);
-                /*
-                boolean returnChat = false;
-                if (msgMode.equals("return")) {
-                    returnChat = true;
-                }
-                PrivateChatFrame privateChat = ((PrivateChatFrame)ConnectionManager.getPrivateChats().get(receiver));
-                if (privateChat == null) {
-                  Map<String, String> user = GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getUser(receiver);
-                  String receiverName = user.get("names");
-                  GUIAccessManager.mf.getUserListPanel().getParticipantListTable().initPrivateChat(receiver, receiverName);
-                  privateChat = ((PrivateChatFrame)ConnectionManager.getPrivateChats().get(receiver));
-                }
-                privateChat.getChatPanel().receivePrivateChat(msg); */
-//                GUIAccessManager.mf.getUserListPanel().getUserListTree().
-            //                      appendPrivateChat(msg, sender, receiver, returnChat);
+
             } else if (mode.equals(Mode.EC2_FLASH_SERVER_READY)) {
                 String host = GeneralUtil.getTagText(packet.getContent(), "host");
                 saveEC2Urls(host, RealtimePacket.Mode.SAVE_FLASH_EC2_URL);
                 ConnectionManager.flashUrlReady = true;
                 ConnectionManager.FLASH_URL = host;
-//                GUIAccessManager.mf.getUserListPanel().getAudioVideoStatus().setText("Y");
                 if (ConnectionManager.flashUrlReady) {
                     GUIAccessManager.mf.getUserListPanel().getStartAudioVideoButton().setEnabled(true);
                 }
@@ -272,7 +257,6 @@ public class RPacketListener implements PacketListener {
                 saveEC2Urls(host, RealtimePacket.Mode.SAVE_AUDIO_VIDEO_EC2_URL);
                 ConnectionManager.AUDIO_VIDEO_URL = host;
                 ConnectionManager.audioVideoUrlReady = true;
-                // GUIAccessManager.mf.getUserListPanel().getFlashStatus().setText("Y");
                 if (ConnectionManager.flashUrlReady) {
                     GUIAccessManager.mf.getUserListPanel().getStartAudioVideoButton().setEnabled(true);
                 }
@@ -280,7 +264,6 @@ public class RPacketListener implements PacketListener {
             } else if (mode.equals(Mode.EC2_MAIN_SERVER_READY)) {
                 String host = GeneralUtil.getTagText(packet.getContent(), "host");
                 String roomname = GeneralUtil.getTagText(packet.getContent(), "roomname");
-
                 doEc2Login(host.trim(), 443, "", roomname);
             } else if (mode.equals(Mode.LAUNCH_EC2_STATUS_MSG)) {
                 Main.ec2LauncherTimer.cancel();
@@ -311,12 +294,7 @@ public class RPacketListener implements PacketListener {
             // JOptionPane.showMessageDialog(null, success ? successMessage : errorMessage);
             } else if (mode.equals(Mode.SLIDES_COUNT)) {
                 SlideShowProcessor.initProgressMonitorIfNecessary(packet.getContent());
-            } /* else if (mode.equals(Mode.CHANGE_ACCESS)) {
-            String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
-            int accessLevel = Integer.parseInt(RealtimePacketProcessor.getTag(packet.getContent(), "access_level"));
-            GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserAccess(username, accessLevel);
-
-            } */ else if (mode.equals(Mode.SCREEN_SHARE_INVITE_FROM_SERVER)) {
+            } else if (mode.equals(Mode.SCREEN_SHARE_INVITE_FROM_SERVER)) {
 
                 String instructor = XmlUtils.readString(doc, "instructor");
                 String me = ConnectionManager.getUsername();
@@ -419,11 +397,15 @@ public class RPacketListener implements PacketListener {
                     String xmlContent = packet.getContent();
 
                     Item item = RealtimePacketProcessor.getItem(xmlContent, packet.getPacketID());
-                    item.setFromAdmin(GeneralUtil.isAdmin(packet.getFrom()));
+                    if (!GeneralUtil.isOwner(packet.getFrom())) {
+                        item.setFromAdmin(GeneralUtil.isAdmin(packet.getFrom()));
+                    }
                     String xfrom = packet.getFrom();
                     int at = xfrom.indexOf("@");
                     String from = xfrom.substring(0, at);
-                    item.setFrom(GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(from));
+                      if (!GeneralUtil.isOwner(packet.getFrom())) {
+                        item.setFrom(GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(from));
+                    }
                     if (item.isNewItem()) {
                         GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().addItem(item);
                     } else {

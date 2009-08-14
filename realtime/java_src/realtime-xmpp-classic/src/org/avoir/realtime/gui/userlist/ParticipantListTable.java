@@ -530,6 +530,19 @@ public class ParticipantListTable extends JTable implements ActionListener {
         return false;
     }
 
+    public boolean isOwner(String xfrom) {
+        int at = xfrom.indexOf("@");
+        String from = xfrom.substring(0, at);
+        for (Map user : users) {
+            String username = (String) user.get("username");
+            if (username.equals(from)) {
+                PermissionList permissionList = (PermissionList) user.get("permissions");
+                return permissionList.isOwner;
+            }
+        }
+        return false;
+    }
+
     private boolean enableTakeMic(String username) {
         //ImageIcon icon = (ImageIcon) model.getValueAt(selectedRow, 1);
         // return icon == micIcon;
@@ -946,11 +959,13 @@ public class ParticipantListTable extends JTable implements ActionListener {
             } catch (XMPPException e) {
                 e.printStackTrace();
             }
+
+            GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setEnabledAt(2, isOwner || grantAdmin);
             if (username.equalsIgnoreCase(ConnectionManager.getUsername())) {
                 evaluatePermissions();
                 if (isOwner) {
                     grantEverything();
-                //NB: the following line should be enabled as it crashes on most
+                //NB: the following line should remain commented as it crashes on most
                 //windows machines
                 //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
                 } else if (grantAdmin) {

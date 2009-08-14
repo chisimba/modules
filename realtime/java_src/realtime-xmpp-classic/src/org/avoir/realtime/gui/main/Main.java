@@ -58,7 +58,7 @@ public class Main {
             System.out.println("arg[" + c + "] = " + arg);
             c++;
         }
-        UIUtils.setPreferredLookAndFeel();
+        //UIUtils.setPreferredLookAndFeel();
         NativeInterface.open();
         LoginFrame fr = new LoginFrame();
 
@@ -75,25 +75,24 @@ public class Main {
             audioVideoUrl = args[2];
 
             //this is webpresent version
-            if (args.length == 15) {
+            if (args.length == 16) {
                 startBanner();
 
                 String username = args[4];
                 String slidesDir = args[5];
                 String xuseEc2 = args[13].trim().toLowerCase();
                 String joinMeetingId = args[14];
+                String skinClass=args[15];
+                if(skinClass.equals("null")){
+                    skinClass=null;
+                }
+                GUIAccessManager.skinClass=skinClass;
                 ConnectionManager.useEC2 = new Boolean(xuseEc2);
 
                 String names = args[9];
                 WebPresentManager.isPresenter = args[6].equals("yes");
-
-                String presenterRoom = GeneralUtil.formatStr(names, " ");// + "_" + GeneralUtil.formatDate(new Date(), "yyyyMMdd");
                 String defaultRoomName = args[3];
-                //chisimba bug..room name could be invalid if user not logged in
                 if (GeneralUtil.isInvalidRoomName(defaultRoomName)) {
-                    /*System.out.println(defaultRoomName + " is invalid, fixing ...");
-                    defaultRoomName = GeneralUtil.formatStr(names, " ");
-                    System.out.println("Fixed, new room name: " + defaultRoomName);*/
                     JOptionPane.showMessageDialog(null, "FATAL ERROR: Invalid room name: " + defaultRoomName,
                             "Invalid Room Name", JOptionPane.ERROR_MESSAGE);
                     System.exit(0);
@@ -117,10 +116,7 @@ public class Main {
                 ConnectionManager.myEmail = email;
                 ConnectionManager.fullnames = names;
                 ConnectionManager.setRoomName(roomName);
-                //  Timer connectionTimer = new Timer();
-                //  connectionTimer.schedule(new ConnectionTimer(), 30 * 1000);
                 if (ConnectionManager.init(host, port, audioVideoUrl)) {
-                    // connectionTimer.cancel();
                     ConnectionManager.createUser(username, "--LDAP--", props);
                     if (ConnectionManager.login(username, "--LDAP--", roomName)) {
                         if (ConnectionManager.useEC2 && joinMeetingId.equals("none")) {
@@ -128,7 +124,6 @@ public class Main {
                             EC2Manager.requestLaunchEC2Instance();
                             EC2Manager.showLoginProgress();
                             ec2LauncherTimer.cancel();
-
                             ec2LauncherTimer = new Timer();
                             ec2LauncherTimer.schedule(new EC2Timer(), 10 * 1000);
                         } else if (!WebPresentManager.isPresenter && !joinMeetingId.equals("none")) {
@@ -165,7 +160,7 @@ public class Main {
                 } else {
 
                     disposeBanner();
-//                    connectionTimer.cancel();
+
                     JOptionPane.showMessageDialog(null, "Internal Error occured. Cannot connect to server.\n" +
                             "Contact your system adminstrator");
                     System.exit(0);
@@ -179,7 +174,7 @@ public class Main {
             String server = "localhost";// args[0];
             int port = 5222;// Integer.parseInt(args[1].trim());
             String audioVideoUrl = "localhost";// args[2];
-            fr = new LoginFrame(server, port, audioVideoUrl);
+            fr = new LoginFrame(server, port, audioVideoUrl,"null");
             fr.setSize(400, 300);
             fr.setLocationRelativeTo(null);
             fr.setVisible(true);
@@ -266,7 +261,7 @@ public class Main {
                     "If this problem persists, contact your network administrator for further assistance.");
             if (WebPresentManager.hasBeenLaunchedAsWebPresent) {
                 LoginFrame.showOptionsFrame();
-            // System.exit(0);
+           
             }
         }
     }

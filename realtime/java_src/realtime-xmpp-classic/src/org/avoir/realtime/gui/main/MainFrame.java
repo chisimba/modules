@@ -86,7 +86,7 @@ public class MainFrame extends javax.swing.JFrame{
     private ParticipantListPanel userListPanel;
     private WhiteboardPanel whiteboardPanel = new WhiteboardPanel();
     private ChatRoomManager chatRoomManager;
-    private String defaultRoomName = "No Room";
+    private String defaultRoomName = "Chat";
     private ImageIcon chatIcon = ImageUtil.createImageIcon(this, "/images/chat_on.gif");
     private ImageIcon logo = ImageUtil.createImageIcon(this, "/images/intro_logo.jpg");
     private ImageIcon alertIcon = ImageUtil.createImageIcon(this, "/images/application.png");
@@ -107,6 +107,7 @@ public class MainFrame extends javax.swing.JFrame{
     private ArrayList<Speaker> speakers = new ArrayList<Speaker>();
     int speakerRows = 2;
     int speakerCols = 2;
+
     private JPanel speakersPanel = new JPanel(new GridLayout(speakerRows, speakerCols));
     private RoomListFrame roomListFrame;
     private JFileChooser presentationFC = new JFileChooser();
@@ -121,14 +122,16 @@ public class MainFrame extends javax.swing.JFrame{
     public MainFrame(String roomName) {
         this.setGlassPane(glass);
         initComponents();
-        //initComponentsManually();
-
         userListPanel = new ParticipantListPanel();
         leftSplitPane.setDividerLocation((ss.height / 2));
         mainSplitPane.setDividerLocation((ss.width / 4) + 60);
-        leftSplitPane.setTopComponent(userListPanel);
+        if (GUIAccessManager.skinClass == null) {
+            leftSplitPane.setTopComponent(userListPanel);
+        }
         tabbedPane.addTab("Whiteboard", whiteboardPanel);
-        tabbedPane.add("Browser", generalWebBrowser);
+        if (GUIAccessManager.skinClass == null) {
+            tabbedPane.add("Browser", generalWebBrowser);
+        }
         tabbedPane.add("Speakers", speakersPanel);
         surfaceTopTabbedPane.addTab("Whiteboard", whiteboardPanel.getWbToolbar());
         webPresentNavigator = new WebpresentNavigator();
@@ -174,17 +177,19 @@ public class MainFrame extends javax.swing.JFrame{
             }
         });
         whiteboardPanel.getWhiteboard().setDefaultRoom(true);
-        for (int i = 0; i < speakerCols; i++) {
-            for (int j = 0; j < speakerRows; j++) {
-                String speakerName = "free";
-                JWebBrowser browser = new JWebBrowser();
-                browser.setMenuBarVisible(false);
-                browser.setBarsVisible(false);
-                browser.setButtonBarVisible(false);
-                Speaker speaker = new Speaker(browser, speakerName);
-                speakers.add(speaker);
-                speakersPanel.add(browser);
+        if (GUIAccessManager.skinClass == null) {
+            for (int i = 0; i < speakerCols; i++) {
+                for (int j = 0; j < speakerRows; j++) {
+                    String speakerName = "free";
+                    JWebBrowser browser = new JWebBrowser();
+                    browser.setMenuBarVisible(false);
+                    browser.setBarsVisible(false);
+                    browser.setButtonBarVisible(false);
+                    Speaker speaker = new Speaker(browser, speakerName);
+                    speakers.add(speaker);
+                    speakersPanel.add(browser);
 
+                }
             }
         }
         presentationFC.addChoosableFileFilter(new PresentationFilter());
@@ -193,7 +198,9 @@ public class MainFrame extends javax.swing.JFrame{
         userListPanel.getStartAudioVideoButton().setEnabled(!ConnectionManager.useEC2);
         displayAvator();
         setSize(ss);
-        setVisible(true);
+        if (GUIAccessManager.skinClass == null) {
+            setVisible(true);
+        }
         this.addWindowStateListener(new WindowStateListener() {
 
             public void windowStateChanged(WindowEvent e) {
@@ -205,7 +212,23 @@ public class MainFrame extends javax.swing.JFrame{
         });
 
         addCustomComponents();
-       userListPanel.showRoomOwnerAudioVideoWindow();
+        userListPanel.showRoomOwnerAudioVideoWindow();
+        applySkin();
+    }
+
+    private void applySkin() {
+        String skinName = GUIAccessManager.skinClass;
+        if (skinName != null) {
+
+            try {
+                Class cl = Class.forName(skinName);
+                SkinManager skinManager = (SkinManager) cl.newInstance();
+                skinManager.init();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        adjustSize();
     }
 
     private void addCustomComponents() {
@@ -225,24 +248,23 @@ public class MainFrame extends javax.swing.JFrame{
             }
         });
         actionsMenu.add(handItem);
-        
-        //This code generates the menu item for generating a new question, and opens it when clicking on the item.
-         final JMenuItem presentnew = new JMenuItem("Present New Question");
-         presentnew.addActionListener(new ActionListener() {
 
-             public void actionPerformed(ActionEvent e) {
-            	if (!ConnectionManager.isOwner) { 
-                     JOptionPane.showMessageDialog(null, "You do not have permission to perform this action in this room.");
-                     return;
-                 }
-            	 else{
-            	 org.avoir.realtime.questions.QuestionFrame fr=new org.avoir.realtime.questions.QuestionFrame();
-            	 fr.setVisible(true);    
-            	 }
-             }
-         });
-         actionsMenu.add(presentnew);
-        }
+        //This code generates the menu item for generating a new question, and opens it when clicking on the item.
+        final JMenuItem presentnew = new JMenuItem("Present New Question");
+        presentnew.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (!ConnectionManager.isOwner) {
+                    JOptionPane.showMessageDialog(null, "You do not have permission to perform this action in this room.");
+                    return;
+                } else {
+                    org.avoir.realtime.questions.QuestionFrame fr = new org.avoir.realtime.questions.QuestionFrame();
+                    fr.setVisible(true);
+                }
+            }
+        });
+        actionsMenu.add(presentnew);
+    }
 
     public void removeAllSpeakers() {
 
@@ -321,7 +343,7 @@ public class MainFrame extends javax.swing.JFrame{
                         browser.navigate(url);
                     }
                 });
-                tabbedPane.setSelectedIndex(2);
+                tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
                 speaker.setSpeaker(speakerUsername);
                 speakers.set(index, speaker);
                 //userListPanel.getParticipantListTable().setUserHasMIC(speakerUsername, true);
@@ -357,33 +379,7 @@ public class MainFrame extends javax.swing.JFrame{
         });
     }
 
-    class Speaker {
-
-        private JWebBrowser webBrowser;
-        private String speaker;
-
-        public Speaker(JWebBrowser webBrowser, String speaker) {
-            this.webBrowser = webBrowser;
-            this.speaker = speaker;
-        }
-
-        public String getSpeaker() {
-            return speaker;
-        }
-
-        public void setSpeaker(String speaker) {
-            this.speaker = speaker;
-        }
-
-        public JWebBrowser getWebBrowser() {
-            return webBrowser;
-        }
-
-        public void setWebBrowser(JWebBrowser webBrowser) {
-            this.webBrowser = webBrowser;
-        }
-    }
-
+   
     public void updateURL(final String url) {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -1757,7 +1753,11 @@ public class MainFrame extends javax.swing.JFrame{
 }//GEN-LAST:event_zoomButtonMouseExited
 
     private void zoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomButtonActionPerformed
-        if (zoomControl){
+        doZoom();
+}//GEN-LAST:event_zoomButtonActionPerformed
+
+    public void doZoom() {
+        if (zoomControl) {
             zoomControl = false;
             whiteBoardZoom();
         } else {
@@ -1765,7 +1765,7 @@ public class MainFrame extends javax.swing.JFrame{
             whiteboardPanel.getWhiteboard().zoomOriginal();
             zoomControl = true;
         }
-}//GEN-LAST:event_zoomButtonActionPerformed
+    }
 
     private void fullScreenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullScreenMenuItemActionPerformed
         setFullScreen();
@@ -1787,7 +1787,7 @@ public class MainFrame extends javax.swing.JFrame{
         roomResourceNavigator.populateWithRoomResources();
     }
 
-    private void initScreenShare() {
+    public void initScreenShare() {
         if (webbrowserManager == null) {
             webbrowserManager = new WebBrowserManager();
         }
@@ -1865,7 +1865,7 @@ public class MainFrame extends javax.swing.JFrame{
         whiteboardPanel.getWhiteboard().zoomOriginal();
     }
 
-    public void whiteBoardZoom(){
+    public void whiteBoardZoom() {
         whiteboardPanel.getWhiteboard().zoomPan();
     }
 
@@ -1929,6 +1929,27 @@ public class MainFrame extends javax.swing.JFrame{
         setSize(width - 1, height - 1);
         RPacketListener.removeNavigatorFileVewListener(slidesNavigator);
         RPacketListener.removeSlideShowListener(slidesNavigator);
+    }
+
+    /*** The gets **/
+    public JSplitPane getMainSplitPane() {
+        return mainSplitPane;
+    }
+
+    public JTabbedPane getSurfaceTopTabbedPane() {
+        return surfaceTopTabbedPane;
+    }
+
+    public ArrayList<Speaker> getSpeakers() {
+        return speakers;
+    }
+
+    public JPanel getSpeakersPanel() {
+        return speakersPanel;
+    }
+
+    public JPanel getSurfacePanel() {
+        return surfacePanel;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;

@@ -76,6 +76,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         webBrowser.setMenuBarVisible(false);
         webBrowser.setBarsVisible(false);
         webBrowser.setButtonBarVisible(false);
+        
         audioVideoPanel.add(webBrowser, BorderLayout.CENTER);
         startAudioVideoButton.setEnabled(false);
         JPanel p = new JPanel();
@@ -94,8 +95,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         });
         audioVideoPanel.add(p, BorderLayout.SOUTH);
         JPanel p2 = new JPanel();
-//        p2.add(audioVideoStatus);
-        //  p2.add(flashStatus);
+
         audioVideoPanel.add(p2, BorderLayout.NORTH);
         add(userListTabbedPane, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.NORTH);
@@ -106,11 +106,11 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         /*final JDialog dlg = new JDialog(GUIAccessManager.mf, "Room Owner", false);
         dlg.addWindowListener(new WindowAdapter() {
 
-            @Override
-            public void windowClosing(WindowEvent e) {
-                dlg.setSize(100, 50);
-                dlg.setLocation(ss.width - dlg.getWidth(), 5);
-            }
+        @Override
+        public void windowClosing(WindowEvent e) {
+        dlg.setSize(100, 50);
+        dlg.setLocation(ss.width - dlg.getWidth(), 5);
+        }
         });
         JPanel p = (JPanel) dlg.getContentPane();
         p.setLayout(new BorderLayout());
@@ -225,6 +225,15 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         userDetailsFrame.setLocationRelativeTo(null);
         userDetailsFrame.setVisible(true);
     }
+
+    public JPanel getAudioVideoPanel() {
+        return audioVideoPanel;
+    }
+    /**
+     * getters
+     */
+
+
 
     /** This method is called from within the constructor to
      * initialize the form.

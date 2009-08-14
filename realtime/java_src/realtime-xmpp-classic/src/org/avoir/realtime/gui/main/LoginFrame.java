@@ -6,7 +6,8 @@
  */
 package org.avoir.realtime.gui.main;
 
-import java.awt.Toolkit;
+import chrriis.common.UIUtils;
+import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.avoir.realtime.common.Constants;
@@ -28,10 +29,17 @@ public class LoginFrame extends javax.swing.JFrame {
     private boolean firstTimeClick = true;
     private String roomName = "default";
     boolean preSuppliedConnectionDetails = false;
+    private String skinClass = "null";
 
-    public LoginFrame(String serverHost, int serverPort, String audioVideoUrl) {
+    public LoginFrame(String serverHost, int serverPort, String audioVideoUrl, String skinClass) {
         initComponents();
-
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        this.skinClass = skinClass;
+        if (skinClass.equals("null")) {
+            skinClass = null;
+        }
+        GUIAccessManager.skinClass = skinClass;
         server = serverHost;
         port = serverPort;
         mediaUrl = audioVideoUrl;
@@ -121,9 +129,9 @@ public class LoginFrame extends javax.swing.JFrame {
                                 roomName = "default";
                             }
                             MainFrame fr = new MainFrame(roomName);
-                            fr.setTitle(username + "@" + roomName + ": Realtime Virtual Classroom");
-                            fr.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-                            fr.setVisible(true);
+                            // fr.setTitle(username + "@" + roomName + ": Realtime Virtual Classroom");
+                            // fr.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+                            // fr.setVisible(true);
                             dispose();
                         }
                     } else {
@@ -384,11 +392,19 @@ public class LoginFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String xargs[]) {
+        //UIUtils.setPreferredLookAndFeel();
+        NativeInterface.open();
+        ConnectionManager.audioVideoUrlReady = true;
+        ConnectionManager.flashUrlReady = true;
+
+        final String[] args = xargs;
+        WebPresentManager.isPresenter = args[6].equals("yes");
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new LoginFrame().setVisible(true);
+
+                new LoginFrame(args[0], Integer.parseInt(args[1].trim()), args[2], args[15]).setVisible(true);
             }
         });
     }

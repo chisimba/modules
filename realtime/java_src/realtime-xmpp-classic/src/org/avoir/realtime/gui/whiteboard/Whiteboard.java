@@ -5,6 +5,7 @@
 package org.avoir.realtime.gui.whiteboard;
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -50,7 +51,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
 
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -103,7 +103,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private Image currentPointerImage;
     private int currentPointerX,  currentPointerY;
     private boolean firstTime = true;
-    private Rectangle whiteboardSize = new Rectangle();
+    private Rectangle whiteboardSize = new Rectangle(600, 600);
     private boolean gotSize = false;
     private boolean sendNoPointer = false;
     private String prevImageId = null;
@@ -182,6 +182,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private int fullScreenY = (int) ss.getHeight();
     public boolean fullScreen = false;
     private JFrame fullScreenFrame;
+    private boolean showingToolbox = false;
+    private JDialog toolboxDlg;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -307,9 +309,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         repaint();
 
         fullScreenFrame = new JFrame();
-        fullScreenFrame.setBounds(0,0,fullScreenX,fullScreenY);
+        fullScreenFrame.setBounds(0, 0, fullScreenX, fullScreenY);
         fullScreenFrame.setUndecorated(true);
         fullScreenFrame.addKeyListener(this);
+
     }
 
     private void refreshPopup() {
@@ -856,12 +859,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public void updateItemPostion(int x, int y, String id) {
         GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
-        int newX = whiteboardSize.x + x;
-        int newY = whiteboardSize.y + y;
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             if (item.getId().equals(id)) {
-                item.setPosition(newX, newY);
+                item.setPosition(x, y);
                 repaint();
                 break;
             }
@@ -896,15 +897,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public void updateItemPostion(int x1, int y1, int x2, int y2, String id) {
         GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
-        int newX1 = whiteboardSize.x + x1;
-        int newY1 = whiteboardSize.y + y1;
-        int newX2 = whiteboardSize.x + x2;
-        int newY2 = whiteboardSize.y + y2;
 
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             if (item.getId().equals(id)) {
-                item.setPosition(newX1, newY1, newX2, newY2);
+                item.setPosition(x1, y1, x2, y2);
                 repaint();
                 break;
             }
@@ -991,16 +988,16 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
         int ww = (int) (getWidth());
         int hh = (int) (getHeight());
-        int xx = (ww - 800) / 2;
+        int xx = (ww - 600) / 2;
         int yy = (hh - 600) / 2;
 
-        whiteboardSize = new Rectangle(xx, yy, 800, 600);
+        whiteboardSize = new Rectangle(0, 0, ww, hh);
         gotSize = false;
         Graphics2D g2 = (Graphics2D) g;
 
         if (initWB && !zoomEnabled) {
             if (zoomlistener != null) {
-                zoomlistener.setCoordTransform(g2.getTransform());
+                //  zoomlistener.setCoordTransform(g2.getTransform());
             }
             initWB = false;
         }
@@ -1014,8 +1011,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             grid.draw(g2, new Rectangle(0, 0, fullScreenX, fullScreenY));
         }
         graphics2D = g2;
-        if (fullScreen)
-            g2.drawString("Press Esc", 0, fullScreenY-20);
+        if (fullScreen) {
+            g2.drawString("Press Esc", 0, fullScreenY - 20);
+        }
         g2.setColor(Color.WHITE);
         g2.draw(whiteboardSize);
         g2.setColor(Color.BLACK);
@@ -1029,19 +1027,20 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             if (yy < 10) {
                 yy = 10;
             }
-            if (scale) {
-                g2.drawImage(slideImage.getImage(), 20, 70, (int) (whiteboardSize.width * scaleSlideFactor / 100), (int) (whiteboardSize.height * scaleSlideFactor / 100), this);
-                g2.drawRoundRect(15, 65, ((int) (whiteboardSize.width * scaleSlideFactor / 100)+10), ((int) (whiteboardSize.height * scaleSlideFactor / 100)+10), 10, 10);
+            /* if (scale) {
+            g2.drawImage(slideImage.getImage(), 20, 70, (int) (whiteboardSize.width * scaleSlideFactor / 100), (int) (whiteboardSize.height * scaleSlideFactor / 100), this);
+            g2.drawRoundRect(15, 65, ((int) (whiteboardSize.width * scaleSlideFactor / 100) + 10), ((int) (whiteboardSize.height * scaleSlideFactor / 100) + 10), 10, 10);
             } else if (fitWBSize) {
-                g2.drawImage(slideImage.getImage(), 0, 0, getWidth(), getHeight(), this);
-                g2.drawRoundRect(-5, -5, getWidth()+10, getHeight()+10,10, 10);
-            } else if (scaleOff) {
-                g2.drawImage(slideImage.getImage(), 0, 0, this);
-                g2.drawRoundRect(-5, -5, slideImage.getIconWidth()+10, slideImage.getIconHeight()+10,10, 10);
-            } else {
-                g2.drawImage(slideImage.getImage(), xx, yy, this);
-                g2.drawRoundRect(xx-5, yy-5, slideImage.getIconWidth()+10, slideImage.getIconHeight()+10,10, 10);
-            }
+             */ 
+            g2.drawImage(slideImage.getImage(), 0, 0, getWidth() - 10, getHeight() - 10, this);
+            g2.drawRoundRect(3, 3, getWidth() - 6, getHeight() - 6, 10, 10);
+        /*  } else if (scaleOff) {
+        g2.drawImage(slideImage.getImage(), 0, 0, this);
+        g2.drawRoundRect(-5, -5, slideImage.getIconWidth() + 10, slideImage.getIconHeight() + 10, 10, 10);
+        } else {
+        g2.drawImage(slideImage.getImage(), xx, yy, this);
+        g2.drawRoundRect(xx - 5, yy - 5, slideImage.getIconWidth() + 10, slideImage.getIconHeight() + 10, 10, 10);
+        }*/
         }
         if (firstTime) {
             //  g2.drawImage(GUIAccessManager.mf.getLogo().getImage(), 100, 100, this);
@@ -1168,7 +1167,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         addMouseWheelListener(zoomlistener);
     }
 
-    public void setFullScreen(){
+    public void setFullScreen() {
         fullScreen = true;
         fullScreenFrame.add(whiteboardPanel);
         fullScreenFrame.setVisible(true);
@@ -1176,9 +1175,15 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     }
 
-    public void unSetFullScreen(){
+    public void unSetFullScreen() {
         fullScreenFrame.remove(whiteboardPanel);
         fullScreenFrame.setVisible(false);
+        GUIAccessManager.mf.getTabbedPane().insertTab("Whiteboard", null, whiteboardPanel, "Whiteboard", 0);
+        if (showingToolbox) {
+            showingToolbox = false;
+            GUIAccessManager.mf.getSurfacePanel().add(GUIAccessManager.mf.getSurfaceTopTabbedPane(), BorderLayout.NORTH);
+
+        }
         fullScreen = false;
         repaint();
     }
@@ -1405,10 +1410,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 sb.append("<x2>").append(x2).append("</x2>");
                 sb.append("<y2>").append(y2).append("</y2>");
             } else {
-                double x = bounds.getX() / whiteboardSize.getWidth();
-                double y = bounds.getY() / whiteboardSize.getHeight();
+                double x = bounds.getX() / getWidth();
+                double y = bounds.getY() / getHeight();
                 sb.append("<x>").append(x).append("</x>");
                 sb.append("<y>").append(y).append("</y>");
+
             }
 
             RealtimePacket p = new RealtimePacket();
@@ -1466,10 +1472,6 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (ITEM_TYPE != MOVE) {
             currentSelectedItem = null;
         }
-
-//whiteboardPanel.getMoveButton().setSelected(true);
-
-
         repaint();
     }
 
@@ -1606,12 +1608,34 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void keyPressed(KeyEvent e) {
-        System.out.println(e.getKeyCode());
-
-        if (e.getKeyCode()==27){
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             unSetFullScreen();
         }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            GUIAccessManager.mf.getWebPresentNavigator().moveToPrevSlide();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            GUIAccessManager.mf.getWebPresentNavigator().moveToNextSlide();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_F5) {
+            if (!showingToolbox) {
+                if (toolboxDlg == null) {
+                    toolboxDlg = new JDialog(fullScreenFrame, false);
+                }
+                toolboxDlg.setContentPane(GUIAccessManager.mf.getSurfaceTopTabbedPane());
+                toolboxDlg.pack();
+                toolboxDlg.addWindowListener(new WindowAdapter() {
 
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        GUIAccessManager.mf.getSurfacePanel().add(toolboxDlg.getContentPane(), BorderLayout.NORTH);
+                    }
+                });
+                toolboxDlg.setVisible(true);
+                showingToolbox = false;
+            }
+
+        }
     }
 
     public void keyReleased(KeyEvent e) {
