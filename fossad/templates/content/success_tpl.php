@@ -44,12 +44,13 @@ $table->endRow();
 $admin = new link ($this->uri(array('action'=>'admin')));
 $admin->link= $this->objLanguage->languageText('mod_fossad_admin', 'fossad');
 
+$admin=$this->objUser->isAdmin() ?$admin->show():"";
 $table->startRow();
-$table->addCell('<br/><br/>'.$home->show().'&nbsp;'.$admin->show());
+$table->addCell('<br/><br/><br/><br/>'.$home->show().'&nbsp;'.$admin);
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<br/><br/><br/>');
+$table->addCell('<hr/><br>');
 $table->endRow();
 
 

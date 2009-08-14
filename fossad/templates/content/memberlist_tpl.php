@@ -9,13 +9,17 @@ $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 
+//data grid from db
+$reg = $this->getObject('dbregistration');
+$dbdata=$reg->getRegistrations();
+$total=count($dbdata);
 
 if(!$this->objUser->isAdmin()){
  $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_fossad_alreadysignedup', 'fossad'),
  'title2'=>''));
 }
 
-$scheduleTitle='<h2>'.$this->objLanguage->languageText('mod_fossad_registeredmembers', 'fossad').'</h2>';
+$scheduleTitle='<h2>'.$total.' '.$this->objLanguage->languageText('mod_fossad_registeredmembers', 'fossad').'</h2>';
 $scheduleTitle.='
           <p></p>
          ';
@@ -25,10 +29,7 @@ $objIcon= $this->newObject('geticon','htmlelements');
 $content= '<div id="grouping-grid">'.$scheduleTitle.'</div>';
 $data='';
 
-//data grid from db
-$reg = $this->getObject('dbregistration');
-$dbdata=$reg->getRegistrations();
-$total=count($dbdata);
+
 $index=0;
 foreach($dbdata as $row){
 
