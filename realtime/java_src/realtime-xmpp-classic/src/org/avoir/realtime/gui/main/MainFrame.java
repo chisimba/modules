@@ -79,7 +79,7 @@ import org.avoir.realtime.gui.tips.*;
  *
  * @author developer
  */
-public class MainFrame extends javax.swing.JFrame{
+public class MainFrame extends javax.swing.JFrame {
 
     private JDialog magnifierDialog;
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
@@ -681,7 +681,6 @@ public class MainFrame extends javax.swing.JFrame{
         deskShareButton = new javax.swing.JButton();
         imagesButton = new javax.swing.JButton();
         notepadButton = new javax.swing.JButton();
-        zoomButton = new javax.swing.JButton();
         screenShareItem = new javax.swing.JMenuBar();
         fileMenutem = new javax.swing.JMenu();
         newWhiteboardMenuItem = new javax.swing.JMenuItem();
@@ -716,6 +715,7 @@ public class MainFrame extends javax.swing.JFrame{
         tipsMenuItem = new javax.swing.JMenuItem();
         optionsMenuItem = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JSeparator();
+        jMenuItem1 = new javax.swing.JMenuItem();
         magnifierMenuitem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -967,17 +967,17 @@ public class MainFrame extends javax.swing.JFrame{
         deskShareButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deskShareButton.setName("deskShare"); // NOI18N
         deskShareButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deskShareButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deskShareButtonActionPerformed(evt);
+            }
+        });
         deskShareButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 deskShareButtonMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 deskShareButtonMouseExited(evt);
-            }
-        });
-        deskShareButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deskShareButtonActionPerformed(evt);
             }
         });
         roomToolsToolbar.add(deskShareButton);
@@ -1029,30 +1029,6 @@ public class MainFrame extends javax.swing.JFrame{
             }
         });
         roomToolsToolbar.add(notepadButton);
-
-        zoomButton.setFont(new java.awt.Font("Dialog", 0, 11));
-        zoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/zoom-in.png"))); // NOI18N
-        zoomButton.setText("Zoom");
-        zoomButton.setBorderPainted(false);
-        zoomButton.setContentAreaFilled(false);
-        zoomButton.setFocusable(false);
-        zoomButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        zoomButton.setName("notepad"); // NOI18N
-        zoomButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        zoomButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                zoomButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                zoomButtonMouseExited(evt);
-            }
-        });
-        zoomButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                zoomButtonActionPerformed(evt);
-            }
-        });
-        roomToolsToolbar.add(zoomButton);
 
         surfaceTopTabbedPane.addTab("Tools", roomToolsToolbar);
 
@@ -1280,6 +1256,15 @@ public class MainFrame extends javax.swing.JFrame{
         });
         toolsMenu.add(optionsMenuItem);
         toolsMenu.add(jSeparator6);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Zoom");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(jMenuItem1);
 
         magnifierMenuitem.setText("Maginifier");
         magnifierMenuitem.addActionListener(new java.awt.event.ActionListener() {
@@ -1742,19 +1727,13 @@ public class MainFrame extends javax.swing.JFrame{
         whiteBoardZoomOriginal();
 }//GEN-LAST:event_zoomOriginalButtonActionPerformed
 
-    private void zoomButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomButtonMouseEntered
-        zoomButton.setContentAreaFilled(true);
-        zoomButton.setBorderPainted(true);
-}//GEN-LAST:event_zoomButtonMouseEntered
+    private void fullScreenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullScreenMenuItemActionPerformed
+        setFullScreen();
+    }//GEN-LAST:event_fullScreenMenuItemActionPerformed
 
-    private void zoomButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomButtonMouseExited
-        zoomButton.setContentAreaFilled(false);
-        zoomButton.setBorderPainted(false);
-}//GEN-LAST:event_zoomButtonMouseExited
-
-    private void zoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomButtonActionPerformed
-        doZoom();
-}//GEN-LAST:event_zoomButtonActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+       doZoom();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     public void doZoom() {
         if (zoomControl) {
@@ -1766,13 +1745,6 @@ public class MainFrame extends javax.swing.JFrame{
             zoomControl = true;
         }
     }
-
-    private void fullScreenMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullScreenMenuItemActionPerformed
-        setFullScreen();
-        //if (!whiteboardPanel.getWhiteboard().fullScreen)
-            //tabbedPane.addTab("Whiteboard", whiteboardPanel);
-    }//GEN-LAST:event_fullScreenMenuItemActionPerformed
-
     private void showRoomResourcesNavigator() {
         JFrame fr = new JFrame("Room Resources");
         slidesSplitPane.setTopComponent(slidesNavigator);
@@ -1973,6 +1945,7 @@ public class MainFrame extends javax.swing.JFrame{
     private javax.swing.JMenuItem inviteMenuItem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -2014,7 +1987,6 @@ public class MainFrame extends javax.swing.JFrame{
     private javax.swing.ButtonGroup wbButtonGroup;
     private javax.swing.JLabel wbInfoField;
     private javax.swing.JProgressBar wbProgressBar;
-    private javax.swing.JButton zoomButton;
     private javax.swing.JButton zoomInButton;
     private javax.swing.JButton zoomOriginalButton;
     private javax.swing.JButton zoomOutButton;
