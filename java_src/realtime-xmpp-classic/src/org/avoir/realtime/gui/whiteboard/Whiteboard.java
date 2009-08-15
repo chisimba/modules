@@ -473,7 +473,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     }
 
-    class ZoomListener implements MouseListener, MouseMotionListener, MouseWheelListener {
+    class ZoomListener implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
         //class variable declaration
 
         public static final double DEFAULT_ZOOM_MULTIPLICATION_FACTOR = 0.1;
@@ -537,6 +537,22 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
         public void mouseWheelMoved(MouseWheelEvent e) {
             zoomCamera(e);
+        }
+
+        public void keyPressed(KeyEvent e){
+            if (e.getKeyCode()==KeyEvent.VK_PAGE_UP){
+                zoomOut();
+            }
+            if (e.getKeyCode()==KeyEvent.VK_PAGE_DOWN)
+                zoomIn();
+        }
+
+        public void keyReleased(KeyEvent e){
+
+        }
+
+        public void keyTyped(KeyEvent e){
+            
         }
 
         private void moveCamera(MouseEvent e) {
@@ -1165,6 +1181,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         addMouseListener(zoomlistener);
         addMouseMotionListener(zoomlistener);
         addMouseWheelListener(zoomlistener);
+        addKeyListener(zoomlistener);
     }
 
     public void setFullScreen() {
@@ -1634,7 +1651,6 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 toolboxDlg.setVisible(true);
                 showingToolbox = false;
             }
-
         }
     }
 
