@@ -10,16 +10,21 @@ class edit extends object {
 
     public function getResults($data) {
 
+        $this->objCancelButton=new button('cancel');
+        $this->objCancelButton->setValue($this->objLanguage->languageText("mod_addedit_btnCancel","gift"));
+        $this->objCancelButton->setOnClick("window.location='".$this->uri(NULL)."';");
+
         $title = new htmlheading($this->objLanguage->languageText('mod_edit_pickdonation','gift'),2);
 
         $table = new htmltable();
+        $table->cellspacing = 5;
         $table->startRow();
-        $table->addHeaderCell($this->objLanguage->languageText('mod_addedit_donor','gift'));
-        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_receiver","gift"));
-        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_giftname","gift"));
-        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_description","gift"));
-        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_value","gift"));
-        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_state","gift"));
+        $table->addHeaderCell($this->objLanguage->languageText('mod_addedit_donor','gift'),'10%');
+        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_receiver","gift"),'10%');
+        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_giftname","gift"),'10%');
+        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_description","gift"),'50%');
+        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_value","gift"),'10%');
+        $table->addHeaderCell($this->objLanguage->languageText("mod_addedit_state","gift"),'10%');
         $table->endRow();
 
         $i = 0;
@@ -30,8 +35,10 @@ class edit extends object {
             $description = $info['description'];
             $value = $info['value'];
             $listed = $info['listed'];
-            $link   = new link($this->uri(array("linknumber"=>"$i","action"=>"edit")));
-            $link->link = $this->objLanguage->languageText("mod_linkedit_edit","gift");
+            $editLink   = new link($this->uri(array("action"=>"edit","id"=>$info['id'])));
+            $editLink->link = $this->objLanguage->languageText("mod_linkedit_edit","gift");
+            $archiveLink   = new link($this->uri(array("action"=>"archive","id"=>$info['id'])));
+            $archiveLink->link = $this->objLanguage->languageText("mod_linkedit_archive","gift");
             $i++;
 	
             if ($listed) {
@@ -48,7 +55,8 @@ class edit extends object {
             $table->addCell($description);
             $table->addCell($value);
             $table->addCell($listed);
-            $table->addCell($link->show());
+            $table->addCell($editLink->show());
+            $table->addCell($archiveLink->show());
             $table->endRow();
         }
         if (sizeof($data)==0) {
@@ -56,6 +64,10 @@ class edit extends object {
             $table->addCell($this->objLanguage->languageText('mod_edit_NoResults','gift'),'','','','','colspan="6"');
             $table->endRow();
         }
+
+        $table->startRow();
+        $table->addCell("<br>".$this->objCancelButton->show());
+        $table->endRow();
 
         $table = $title->show().$table->show();
         return $table;

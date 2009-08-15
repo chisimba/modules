@@ -1,10 +1,10 @@
 <?php
 $action = $this->getParam('action');
 if($action == 'edit') {
-    $linknum = $this->getParam('linknumber');
-    $qry = "SELECT * FROM tbl_gifttable WHERE donor LIKE '%$donor' OR recipient LIKE '%$recipient' OR giftname LIKE '%$giftname'";
+    $id  = $this->getParam('id');
+    $qry = "SELECT * FROM tbl_gifttable WHERE id = '$id'";
     $data = $this->objDbGift->getInfo($qry);
-	$data = $data[$linknum];
+    $data = $data[0];
     $form = $this->objGift->displayForm($this->objUser->fullName(),$data);
 }
 else {

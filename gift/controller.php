@@ -3,6 +3,7 @@
 class gift extends controller
 {
     public $id;
+    public $msg;
 
     function init() {
         // Importing classes for use in controller
@@ -23,6 +24,7 @@ class gift extends controller
             case 'submitadd': return $this->submitAdd();
             case 'result': return $this->result();
             case 'edit': return $this->edit();
+            case 'archive': return $this->archive();
             case 'submitedit': return $this->submitEdit();
             default: return "home_tpl.php";
         }
@@ -40,8 +42,15 @@ class gift extends controller
         $value = $this->getParam('gvalue');
         $listed = $this->getParam('gstatevalue');
 		
-        $this->objDbGift->addInfo($donor,$recipient,$name,$description,$value,$listed);
-		
+        $result = $this->objDbGift->addInfo($donor,$recipient,$name,$description,$value,$listed);
+
+        if($result) {
+            $this->msg = $this->objLanguage->languageText('mod_addInfoSuccess','gift');
+        }
+        else {
+            $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
+        }
+
         return "home_tpl.php";
     }
 	
@@ -59,6 +68,21 @@ class gift extends controller
     function edit() {
         return "addedit_tpl.php";
     }
+
+    function archive() {
+        $data = array();
+        $data['listed'] = 0;
+        $id = $this->getParam('id');
+        $result = $this->objDbGift->archive($id,$data);
+
+        if($result) {
+            $this->msg = $this->objLanguage->languageText('mod_archiveSuccess','gift');
+        }
+        else {
+            $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
+        }
+        return 'home_tpl.php';
+    }
 	
     function submitEdit() {
         $donor = $this->getParam('dnvalue');
@@ -68,7 +92,14 @@ class gift extends controller
         $value = $this->getParam('gvalue');
         $listed = $this->getParam('gstatevalue');
 		
-        $this->objDbGift->updateInfo($donor,$recipient,$name,$description,$value,$listed,$this->getParam('id'));
+        $result = $this->objDbGift->updateInfo($donor,$recipient,$name,$description,$value,$listed,$this->getParam('id'));
+
+        if($result) {
+            $this->msg = $this->objLanguage->languageText('mod_updateInfoSuccess','gift');
+        }
+        else {
+            $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
+        }
 		
         return "home_tpl.php";
     }

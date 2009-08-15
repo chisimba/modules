@@ -8,7 +8,7 @@ class home extends object {
         $this->objLanguage = $this->getObject("language", "language");
     }
 	
-	public function displayForm() {
+	public function displayForm($msg) {
 	
         $addgift  = new link($this->uri(array("action"=>"add")));
         $editgift = new link($this->uri(array("action"=>"result")));
@@ -24,7 +24,7 @@ class home extends object {
                  <li>$edit</li>
                  </ul>";
 				 
-		return $home;
+		return '<center><font color="green">'.$msg.'</font></center>'.$home;
 	}
 }
 ?>

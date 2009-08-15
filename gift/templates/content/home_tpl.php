@@ -1,4 +1,4 @@
 <?php
-$home = $this->objHome->displayForm();
+$home = $this->objHome->displayForm($this->msg);
 echo $home;
 ?>
