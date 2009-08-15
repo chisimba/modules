@@ -23,9 +23,16 @@ class dbgift extends dbtable
         return $data;
     }
 
-    public function archive($id,$data) {
+    public function archive($id) {
+        $listed = !$this->_getListedValue($id);
+        $data['listed'] = $listed;
         $result = $this->update('id',$id,$data);
         return $result;
+    }
+
+    private function _getListedValue($id) {
+        $result = $this->getRow('id',$id);
+        return $result['listed'];
     }
 }
 ?>

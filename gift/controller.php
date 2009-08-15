@@ -58,8 +58,9 @@ class gift extends controller
         $donor = $this->getParam('donor');
         $recipient = $this->objUser->fullName();
         $giftname = $this->getParam('giftname');
+        $this->status = $this->getParam('archived');
 	
-        $qry = "SELECT * FROM tbl_gifttable WHERE donor LIKE '%$donor' OR recipient LIKE '%$recipient' OR giftname LIKE '%$giftname'";
+        $qry = "SELECT * FROM tbl_gifttable WHERE (donor LIKE '%$donor' OR recipient LIKE '%$recipient' OR giftname LIKE '%$giftname') AND listed='".!$this->status."'";
         $this->data = $this->objDbGift->getInfo($qry);
 
         return "edit_tpl.php";
@@ -71,9 +72,8 @@ class gift extends controller
 
     function archive() {
         $data = array();
-        $data['listed'] = 0;
         $id = $this->getParam('id');
-        $result = $this->objDbGift->archive($id,$data);
+        $result = $this->objDbGift->archive($id);
 
         if($result) {
             $this->msg = $this->objLanguage->languageText('mod_archiveSuccess','gift');
