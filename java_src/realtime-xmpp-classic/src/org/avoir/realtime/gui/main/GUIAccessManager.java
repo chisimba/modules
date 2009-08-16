@@ -142,6 +142,7 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(true, "requestMIC");
         GUIAccessManager.setMenuEnabled(enable, "addroommembers");
         GUIAccessManager.setMenuEnabled(enable, "cleanParticipantsList");
+        GUIAccessManager.setMenuEnabled(enable, "undo");
 
     }
 

@@ -184,6 +184,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private JFrame fullScreenFrame;
     private boolean showingToolbox = false;
     private JDialog toolboxDlg;
+    public static final double DEFAULT_ZOOM_MULTIPLICATION_FACTOR = 0.1;
+    private double zoomMultiplicationFactor = DEFAULT_ZOOM_MULTIPLICATION_FACTOR;
+    private Point dragStartScreen;
+    private Point dragEndScreen;
+    private AffineTransform coordTransform = new AffineTransform();
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -263,7 +268,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         whiteboardPopup.add(clearMenuItem);
         whiteboardPopup.add(removeResourceMenuItem);
 
-        whiteboardPopup.addSeparator();
+        //whiteboardPopup.addSeparator();
         // whiteboardPopup.add(zoomInMenuItem);
         // whiteboardPopup.add(zoomOutMenuItem);
         //whiteboardPopup.add(zoomOpt);
@@ -476,11 +481,6 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     class ZoomListener implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
         //class variable declaration
 
-        public static final double DEFAULT_ZOOM_MULTIPLICATION_FACTOR = 0.1;
-        private double zoomMultiplicationFactor = DEFAULT_ZOOM_MULTIPLICATION_FACTOR;
-        private Point dragStartScreen;
-        private Point dragEndScreen;
-        private AffineTransform coordTransform = new AffineTransform();
 
         //constructor
         public ZoomListener() {
@@ -539,89 +539,88 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             zoomCamera(e);
         }
 
-        public void keyPressed(KeyEvent e){
-            if (e.getKeyCode()==KeyEvent.VK_PAGE_UP){
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_PAGE_UP) {
                 zoomOut();
             }
-            if (e.getKeyCode()==KeyEvent.VK_PAGE_DOWN)
+            if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
                 zoomIn();
-        }
-
-        public void keyReleased(KeyEvent e){
-
-        }
-
-        public void keyTyped(KeyEvent e){
-            
-        }
-
-        private void moveCamera(MouseEvent e) {
-            try {
-                dragEndScreen = e.getPoint();
-                Point2D.Float dragStart = transformPoint(dragStartScreen);
-                Point2D.Float dragEnd = transformPoint(dragEndScreen);
-                double dx = dragEnd.getX() - dragStart.getX();
-                double dy = dragEnd.getY() - dragStart.getY();
-                translateX = dragEndScreen.getX() - dragStartScreen.getX();
-                translateY = dragEndScreen.getY() - dragStartScreen.getY();
-                coordTransform.translate(translateX, translateY);
-                dragStartScreen = dragEndScreen;
-                dragEndScreen = null;
-                repaint();
-            } catch (NoninvertibleTransformException ex) {
-                ex.printStackTrace();
             }
-
         }
 
-        private void zoomCamera(MouseWheelEvent e) {
-            try {
-                int wheelRotation = e.getWheelRotation();
-                Point p = e.getPoint();
-                if (wheelRotation > 0) {
-                    Point2D p1 = transformPoint(p);
-                    Point2D p2 = transformPoint(p);
-                    //translateX = p.getX();// - p1.getX();
-                    //translateY = p.getY();// - p1.getY();
-                    zoomFactor -= zoomMultiplicationFactor;
-                    //coordTransform.translate(translateX, translateY);
-                    if (zoomFactor < 0.5) {
-                        zoomFactor += zoomMultiplicationFactor;
-                    }
-                    //coordTransform.scale(1/zoomMultiplicationFactor, 1/zoomMultiplicationFactor);
-                    repaint();
-                } else {
-                    Point2D p1 = transformPoint(p);
-                    Point2D p2 = transformPoint(p);
-                    //translateX = p.getX();// - p1.getX();
-                    //translateY = p.getY();// - p1.getY();
-                    //coordTransform.scale(zoomMultiplicationFactor, zoomMultiplicationFactor);
+        public void keyReleased(KeyEvent e) {
+        }
+
+        public void keyTyped(KeyEvent e) {
+        }
+    }
+
+    private void moveCamera(MouseEvent e) {
+        try {
+            dragEndScreen = e.getPoint();
+            Point2D.Float dragStart = transformPoint(dragStartScreen);
+            Point2D.Float dragEnd = transformPoint(dragEndScreen);
+            double dx = dragEnd.getX() - dragStart.getX();
+            double dy = dragEnd.getY() - dragStart.getY();
+            translateX = dragEndScreen.getX() - dragStartScreen.getX();
+            translateY = dragEndScreen.getY() - dragStartScreen.getY();
+            coordTransform.translate(translateX, translateY);
+            dragStartScreen = dragEndScreen;
+            dragEndScreen = null;
+            repaint();
+        } catch (NoninvertibleTransformException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    private void zoomCamera(MouseWheelEvent e) {
+        try {
+            int wheelRotation = e.getWheelRotation();
+            Point p = e.getPoint();
+            if (wheelRotation > 0) {
+                Point2D p1 = transformPoint(p);
+                Point2D p2 = transformPoint(p);
+                //translateX = p.getX();// - p1.getX();
+                //translateY = p.getY();// - p1.getY();
+                zoomFactor -= zoomMultiplicationFactor;
+                //coordTransform.translate(translateX, translateY);
+                if (zoomFactor < 0.5) {
                     zoomFactor += zoomMultiplicationFactor;
-                    //coordTransform.translate(translateX, translateY);
-                    if (zoomFactor > 4.5) {
-                        zoomFactor -= zoomMultiplicationFactor;
-                    }
-                    repaint();
                 }
-            } catch (NoninvertibleTransformException ex) {
-                ex.printStackTrace();
+                //coordTransform.scale(1/zoomMultiplicationFactor, 1/zoomMultiplicationFactor);
+                repaint();
+            } else {
+                Point2D p1 = transformPoint(p);
+                Point2D p2 = transformPoint(p);
+                //translateX = p.getX();// - p1.getX();
+                //translateY = p.getY();// - p1.getY();
+                //coordTransform.scale(zoomMultiplicationFactor, zoomMultiplicationFactor);
+                zoomFactor += zoomMultiplicationFactor;
+                //coordTransform.translate(translateX, translateY);
+                if (zoomFactor > 4.5) {
+                    zoomFactor -= zoomMultiplicationFactor;
+                }
+                repaint();
             }
+        } catch (NoninvertibleTransformException ex) {
+            ex.printStackTrace();
         }
+    }
 
-        private Point2D.Float transformPoint(Point p1) throws NoninvertibleTransformException {
-            AffineTransform inverse = coordTransform.createInverse();
-            Point2D.Float p2 = new Point2D.Float();
-            inverse.transform(p1, p2);
-            return p2;
-        }
+    private Point2D.Float transformPoint(Point p1) throws NoninvertibleTransformException {
+        AffineTransform inverse = coordTransform.createInverse();
+        Point2D.Float p2 = new Point2D.Float();
+        inverse.transform(p1, p2);
+        return p2;
+    }
 
-        public AffineTransform getTransform() {
-            return coordTransform;
-        }
+    public AffineTransform getTransform() {
+        return coordTransform;
+    }
 
-        public void setCoordTransform(AffineTransform coordTransform) {
-            this.coordTransform = coordTransform;
-        }
+    public void setCoordTransform(AffineTransform coordTransform) {
+        this.coordTransform = coordTransform;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -755,6 +754,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void setCurrentPointer(int currentPointer) {
+        zoomEnabled = false;
         this.currentPointer = currentPointer;
         sendNoPointer = false;
         ITEM_TYPE = MOVE;
@@ -762,6 +762,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         textField.setText("");
 
         paintCurrentPointer();
+        repaint();
     }
 
     public void paintPointer(int pointer, int x, int y) {
@@ -848,78 +849,89 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public void addItem(Item item) {
         GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
-        items.add(item);
-        firstTime = false;
-        repaint();
+        synchronized (items) {
+            items.add(item);
+            firstTime = false;
+            repaint();
+        }
     }
 
     public void resizeItem(int x, int y, String id, String type) {
-        GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            if (item.getId().equals(id)) {
-                if (type.equals("NW")) {
-                    item.northWestResize(x, y);
-                } else if (type.equals("NE")) {
-                    item.northEastResize(x, y);
-                } else if (type.equals("SE")) {
-                    item.southEastResize(x, y);
-                } else if (type.equals("SW")) {
-                    item.southWestResize(x, y);
+        synchronized (items) {
+            GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                if (item.getId().equals(id)) {
+                    if (type.equals("NW")) {
+                        item.northWestResize(x, y);
+                    } else if (type.equals("NE")) {
+                        item.northEastResize(x, y);
+                    } else if (type.equals("SE")) {
+                        item.southEastResize(x, y);
+                    } else if (type.equals("SW")) {
+                        item.southWestResize(x, y);
+                    }
+                    repaint();
+                    break;
                 }
-                repaint();
-                break;
             }
         }
     }
 
     public void updateItemPostion(int x, int y, String id) {
-        GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            if (item.getId().equals(id)) {
-                item.setPosition(x, y);
-                repaint();
-                break;
+        synchronized (items) {
+            GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                if (item.getId().equals(id)) {
+                    item.setPosition(x, y);
+                    repaint();
+                    break;
+                }
             }
         }
     }
 
     public void updateItem(Item updatedItem) {
-        GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            if (item.getId().equals(updatedItem.getId())) {
-                items.set(i, updatedItem);
-                repaint();
-                break;
+        synchronized (items) {
+            GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                if (item.getId().equals(updatedItem.getId())) {
+                    items.set(i, updatedItem);
+                    repaint();
+                    break;
+                }
             }
         }
     }
 
     public void updateText(String content, String id) {
-        GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            if (item.getId().equals(id)) {
-                Text text = (Text) item;
-                text.setContent(content);
-                items.set(i, text);
-                repaint();
-                break;
+        synchronized (items) {
+            GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                if (item.getId().equals(id)) {
+                    Text text = (Text) item;
+                    text.setContent(content);
+                    items.set(i, text);
+                    repaint();
+                    break;
+                }
             }
         }
     }
 
     public void updateItemPostion(int x1, int y1, int x2, int y2, String id) {
         GUIAccessManager.mf.getTabbedPane().setSelectedIndex(0);
-
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            if (item.getId().equals(id)) {
-                item.setPosition(x1, y1, x2, y2);
-                repaint();
-                break;
+        synchronized (items) {
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                if (item.getId().equals(id)) {
+                    item.setPosition(x1, y1, x2, y2);
+                    repaint();
+                    break;
+                }
             }
         }
     }
@@ -943,14 +955,15 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void deleteItem(String id) {
-
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            if (item.getId().equals(id)) {
-                items.remove(i);
-                currentSelectedItem = null;
-                repaint();
-                break;
+        synchronized (items) {
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                if (item.getId().equals(id)) {
+                    items.remove(i);
+                    currentSelectedItem = null;
+                    repaint();
+                    break;
+                }
             }
         }
     }
@@ -978,9 +991,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void setItem(Item item) {
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getId().equals(item.getId())) {
-                items.set(i, item);
+        synchronized (items) {
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).getId().equals(item.getId())) {
+                    items.set(i, item);
+                }
             }
         }
     }
@@ -1019,9 +1034,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         }
         if (zoomEnabled) {
             //edit here!!
-            g2.setTransform(zoomlistener.getTransform());
+            g2.setTransform(getTransform());
             g2.scale(zoomFactor, zoomFactor);
             g2.translate(translateX, translateY);
+
         }
         if (showGrid) {
             grid.draw(g2, new Rectangle(0, 0, fullScreenX, fullScreenY));
@@ -1047,13 +1063,13 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             g2.drawImage(slideImage.getImage(), 20, 70, (int) (whiteboardSize.width * scaleSlideFactor / 100), (int) (whiteboardSize.height * scaleSlideFactor / 100), this);
             g2.drawRoundRect(15, 65, ((int) (whiteboardSize.width * scaleSlideFactor / 100) + 10), ((int) (whiteboardSize.height * scaleSlideFactor / 100) + 10), 10, 10);
             } else if (fitWBSize) {
-             */ 
-            g2.drawImage(slideImage.getImage(), 0, 0, getWidth() - 10, getHeight() - 10, this);
-            g2.drawRoundRect(3, 3, getWidth() - 6, getHeight() - 6, 10, 10);
-        /*  } else if (scaleOff) {
-        g2.drawImage(slideImage.getImage(), 0, 0, this);
-        g2.drawRoundRect(-5, -5, slideImage.getIconWidth() + 10, slideImage.getIconHeight() + 10, 10, 10);
-        } else {
+             */
+            //g2.drawImage(slideImage.getImage(), 0, 0, getWidth() - 10, getHeight() - 10, this);
+            //g2.drawRoundRect(3, 3, getWidth() - 6, getHeight() - 6, 10, 10);
+            //  } else if (scaleOff) {
+            g2.drawImage(slideImage.getImage(), xx, yy, this);
+            g2.drawRoundRect(xx - 5, yy - 5, slideImage.getIconWidth() + 10, slideImage.getIconHeight() + 10, 10, 10);
+        /*} else {
         g2.drawImage(slideImage.getImage(), xx, yy, this);
         g2.drawRoundRect(xx - 5, yy - 5, slideImage.getIconWidth() + 10, slideImage.getIconHeight() + 10, 10, 10);
         }*/
@@ -1062,30 +1078,6 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             //  g2.drawImage(GUIAccessManager.mf.getLogo().getImage(), 100, 100, this);
         }
 
-
-        if (slideText != null) {
-            if (!slideText.equals("null")) {
-                /*     g2.setColor(slideTextColor);
-                g2.setFont(new Font("Dialog", 1, slideTextSize));
-                if (fm == null) {
-                fm = g2.getFontMetrics();
-                }
-                int longest = fm.stringWidth(slideText);
-
-                g2.setColor(new Color(255, 0, 0, 100));
-
-                g2.fillRoundRect(20, 50 - fm.getHeight(),
-                longest + 20, (fm.getHeight()) + 10, 5, 5);
-                g2.setColor(Color.BLACK);
-
-                g2.drawRoundRect(20, 50 - fm.getHeight(),
-                longest + 20, (fm.getHeight()) + 10, 5, 5);
-
-
-                g2.drawString(slideText.equals("null") ? "" : slideText, 30, 50);
-                 */
-            }
-        }
         synchronized (items) {
             for (Item item : items) {
 
@@ -1254,7 +1246,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void mousePressed(MouseEvent e) {
-
+        
+        dragStartScreen = e.getPoint();
+        dragEndScreen = null;
+        
+        this.requestFocusInWindow();
         if (!drawEnabled || zoomEnabled) {
             return;
         }
@@ -1276,20 +1272,22 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             boolean select = false;
             for (int i = 0; i < items.size(); i++) {
                 try {
-                    if (items.get(i).contains(e.getPoint())) {
-                        dragging = true;
-                        select = true;
-                        selectedItem = items.get(i);
-                        currentSelectedItem = selectedItem;
-                        Rectangle bounds = selectedItem.getBounds();
-                        initH = bounds.height;
-                        initW = bounds.width;
-                        if (currentPointer != PointerListPanel.NO_POINTER) {
-                            setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                        }
-                        tempSelectedItem = selectedItem;
-                        repaint();
+                    synchronized (items) {
+                        if (items.get(i).contains(e.getPoint())) {
+                            dragging = true;
+                            select = true;
+                            selectedItem = items.get(i);
+                            currentSelectedItem = selectedItem;
+                            Rectangle bounds = selectedItem.getBounds();
+                            initH = bounds.height;
+                            initW = bounds.width;
+                            if (currentPointer != PointerListPanel.NO_POINTER) {
+                                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                            }
+                            tempSelectedItem = selectedItem;
+                            repaint();
 
+                        }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -1335,33 +1333,35 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void clearWhiteboard() {
-        for (Item item : items) {
-            RealtimePacket p = new RealtimePacket();
-            p.setMode(RealtimePacket.Mode.DELETE_ITEM);
-            StringBuilder sb = new StringBuilder();
-            sb.append("<item-id>").append(item.getId()).append("</item-id>");
-            sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
-            p.setContent(sb.toString());
-            ConnectionManager.sendPacket(p);
+        synchronized (items) {
+            for (Item item : items) {
+                RealtimePacket p = new RealtimePacket();
+                p.setMode(RealtimePacket.Mode.DELETE_ITEM);
+                StringBuilder sb = new StringBuilder();
+                sb.append("<item-id>").append(item.getId()).append("</item-id>");
+                sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
+                p.setContent(sb.toString());
+                ConnectionManager.sendPacket(p);
+            }
+            repaint();
         }
-        repaint();
     }
 
     public void undo() {
-        //tempSelectedItem = currentSelectedItem = item;
-        int lastIndex = items.size() - 1;
-        if (lastIndex > -1) {
-            Item lastAddedItem = items.get(lastIndex);
-            repaint();
-            RealtimePacket p = new RealtimePacket();
-            p.setMode(RealtimePacket.Mode.DELETE_ITEM);
-            StringBuilder sb = new StringBuilder();
-            sb.append("<item-id>").append(lastAddedItem.getId()).append("</item-id>");
-            sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
-            p.setContent(sb.toString());
-            ConnectionManager.sendPacket(p);
+        synchronized (items) {
+            int lastIndex = items.size() - 1;
+            if (lastIndex > -1) {
+                Item lastAddedItem = items.get(lastIndex);
+                repaint();
+                RealtimePacket p = new RealtimePacket();
+                p.setMode(RealtimePacket.Mode.DELETE_ITEM);
+                StringBuilder sb = new StringBuilder();
+                sb.append("<item-id>").append(lastAddedItem.getId()).append("</item-id>");
+                sb.append("<room-name>").append(ConnectionManager.getRoomName()).append("</room-name>");
+                p.setContent(sb.toString());
+                ConnectionManager.sendPacket(p);
+            }
         }
-
     }
 
     private String getCurrentItemType() {
@@ -1492,12 +1492,25 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         repaint();
     }
 
-    public void mouseDragged(MouseEvent e) {
+    public void setZoomEnabled(boolean zoomEnabled) {
+        this.zoomEnabled = zoomEnabled;
+    }
 
-        if (!drawEnabled || zoomEnabled) {
+    public void mouseDragged(MouseEvent e) {
+        if (ITEM_TYPE == TRANSFORM) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            zoomEnabled = true;
+            moveCamera(e);
+            repaint();
+            return;
+        } else {
+            zoomEnabled = false;
+            translateX = 0;
+            translateY = 0;
+        }
+        if (!drawEnabled) {
             return;
         }
-
         int endX = e.getX();
         int endY = e.getY();
         currentSelectedItem = tempSelectedItem;
@@ -1505,11 +1518,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (ITEM_TYPE == LINE) {
             Line line = new Line("", startX, startY, endX, endY);
             line.setStrokeWidth(strokeWidth);
-
             currentItem = line;
             repaint();
             return;
-
         }
 
         if (ITEM_TYPE == DRAW_RECT || ITEM_TYPE == FILL_RECT) {
@@ -1625,8 +1636,15 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            unSetFullScreen();
+        if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+            if (tempSelectedItem != null) {
+                sendDeleteBroadcast();
+            }
+        }
+        if (fullScreen) {
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                unSetFullScreen();
+            }
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             GUIAccessManager.mf.getWebPresentNavigator().moveToPrevSlide();
@@ -1634,22 +1652,29 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             GUIAccessManager.mf.getWebPresentNavigator().moveToNextSlide();
         }
+        if (e.getKeyCode() == KeyEvent.VK_F9) {
+            GUIAccessManager.mf.getGlass().setVisible(!GUIAccessManager.mf.getGlass().isVisible());
+        }
         if (e.getKeyCode() == KeyEvent.VK_F5) {
-            if (!showingToolbox) {
-                if (toolboxDlg == null) {
-                    toolboxDlg = new JDialog(fullScreenFrame, false);
-                }
-                toolboxDlg.setContentPane(GUIAccessManager.mf.getSurfaceTopTabbedPane());
-                toolboxDlg.pack();
-                toolboxDlg.addWindowListener(new WindowAdapter() {
-
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        GUIAccessManager.mf.getSurfacePanel().add(toolboxDlg.getContentPane(), BorderLayout.NORTH);
+            if (fullScreen) {
+                if (!showingToolbox) {
+                    if (toolboxDlg == null) {
+                        toolboxDlg = new JDialog(fullScreenFrame, false);
                     }
-                });
-                toolboxDlg.setVisible(true);
-                showingToolbox = false;
+                    toolboxDlg.setContentPane(GUIAccessManager.mf.getSurfaceTopTabbedPane());
+                    toolboxDlg.pack();
+                    toolboxDlg.addWindowListener(new WindowAdapter() {
+
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            GUIAccessManager.mf.getSurfacePanel().add(toolboxDlg.getContentPane(), BorderLayout.NORTH);
+                        }
+                    });
+                    toolboxDlg.setVisible(true);
+                    showingToolbox = false;
+                }
+            } else {
+                setFullScreen();
             }
         }
     }
@@ -1668,17 +1693,19 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (ITEM_TYPE != MOVE) {
             return;
         }
+        synchronized (items) {
+            for (Item item : items) {
+                try {
+                    if (item.contains(e.getPoint())) {
+                        tempSelectedItem = currentSelectedItem = item;
 
-        for (Item item : items) {
-            try {
-                if (item.contains(e.getPoint())) {
-                    tempSelectedItem = currentSelectedItem = item;
-
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
         }
+
 
         // GUIAccessManager.mf.getWbInfoField().setText("x =" + e.getX() + " y= " + e.getY() + " Click button to show pointer to participants.");
         if (tempSelectedItem != null) {
