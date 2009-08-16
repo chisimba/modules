@@ -20,9 +20,10 @@ import javax.swing.SwingUtilities;
 
 public class Magnifier extends JComponent {
 
-    private static final int SIDE =128;
+    private static final int WIDTH =256;
+    private static final int HEIGHT =128;
     private Point point;
-    private BufferedImage image = new BufferedImage(SIDE, SIDE, BufferedImage.TYPE_INT_RGB);
+    private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     private MouseMotionListener l = new MouseMotionAdapter() {
 
         @Override
@@ -45,12 +46,12 @@ public class Magnifier extends JComponent {
             JLayeredPane lp = rpc.getLayeredPane();
             Graphics2D g2 = image.createGraphics();
             g2.scale(2, 2);
-            g2.translate(-point.x - SIDE / 4, -point.y + SIDE / 4);
+            g2.translate(-point.x+80 -WIDTH / 4, -point.y + HEIGHT / 4);
             lp.paint(g2);
             g2.dispose();
-            g.drawImage(image, point.x, point.y - SIDE / 2, null);
+            g.drawImage(image, point.x, point.y - HEIGHT / 2, null);
             g.setColor(Color.BLUE);
-            g.drawRect(point.x, point.y - SIDE / 2, SIDE - 1, SIDE - 1);
+            g.drawRect(point.x, point.y - HEIGHT / 2, WIDTH - 1, HEIGHT - 1);
         }
     }
 }

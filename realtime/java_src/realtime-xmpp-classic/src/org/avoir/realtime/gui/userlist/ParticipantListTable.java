@@ -960,7 +960,7 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 e.printStackTrace();
             }
 
-            GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setEnabledAt(2, isOwner || grantAdmin);
+            //GUIAccessManager.mf.getUserListPanel().getUserTabbedPane().setEnabledAt(2, isOwner || grantAdmin);
             if (username.equalsIgnoreCase(ConnectionManager.getUsername())) {
                 evaluatePermissions();
                 if (isOwner) {

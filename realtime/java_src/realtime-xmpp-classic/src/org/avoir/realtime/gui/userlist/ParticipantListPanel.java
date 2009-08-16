@@ -246,10 +246,10 @@ public class ParticipantListPanel extends javax.swing.JPanel {
 
         accountUserPanel = new AccountUserPanel();
         statusPanel = new javax.swing.JToolBar();
-        accStatusField = new javax.swing.JComboBox();
         roomInfoField = new javax.swing.JLabel();
         photoButton = new javax.swing.JButton();
         accountNameField = new javax.swing.JLabel();
+        accStatusField = new javax.swing.JComboBox();
         userListTabbedPane = new javax.swing.JTabbedPane();
 
         accountUserPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -259,9 +259,6 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         statusPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
         statusPanel.setFloatable(false);
         statusPanel.setRollover(true);
-
-        accStatusField.setPreferredSize(new java.awt.Dimension(100, 21));
-        statusPanel.add(accStatusField);
 
         roomInfoField.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/warn.png"))); // NOI18N
         roomInfoField.setText("You are not in any Room");
@@ -287,7 +284,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
             }
         });
 
-        accountNameField.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
+        accountNameField.setFont(new java.awt.Font("Dialog", 1, 15));
         accountNameField.setForeground(new java.awt.Color(153, 51, 0));
         accountNameField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -305,6 +302,8 @@ public class ParticipantListPanel extends javax.swing.JPanel {
                 accountNameFieldMouseDragged(evt);
             }
         });
+
+        accStatusField.setPreferredSize(new java.awt.Dimension(100, 21));
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {

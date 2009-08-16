@@ -152,6 +152,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
 
         wbButtonGroup = new javax.swing.ButtonGroup();
         wbToolbar = new javax.swing.JToolBar();
+        transformButton = new javax.swing.JToggleButton();
         moveButton = new javax.swing.JToggleButton();
         lineButton = new javax.swing.JToggleButton();
         drawOvalButton = new javax.swing.JToggleButton();
@@ -164,6 +165,18 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         undoButton = new javax.swing.JButton();
 
         wbToolbar.setRollover(true);
+
+        wbButtonGroup.add(transformButton);
+        transformButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/transform-move.png"))); // NOI18N
+        transformButton.setFocusable(false);
+        transformButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        transformButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        transformButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transformButtonActionPerformed(evt);
+            }
+        });
+        wbToolbar.add(transformButton);
 
         wbButtonGroup.add(moveButton);
         moveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/whiteboard/movearrow.gif"))); // NOI18N
@@ -348,6 +361,11 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         whiteboard.undo();
     }//GEN-LAST:event_undoButtonActionPerformed
 
+    private void transformButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transformButtonActionPerformed
+         whiteboard.setCurrentPointer(PointerListPanel.NO_POINTER);
+        whiteboard.setItemType(TRANSFORM);
+}//GEN-LAST:event_transformButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton drawOvalButton;
     private javax.swing.JToggleButton drawRectButton;
@@ -358,6 +376,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
     private javax.swing.JToggleButton rectFillButton;
     private javax.swing.JToggleButton scribbleButton;
     private javax.swing.JToggleButton textButton;
+    private javax.swing.JToggleButton transformButton;
     private javax.swing.JButton undoButton;
     private javax.swing.ButtonGroup wbButtonGroup;
     private javax.swing.JToolBar wbToolbar;

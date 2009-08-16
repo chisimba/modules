@@ -35,6 +35,7 @@ public class Constants {
         public final static int ERASE = 7;
         public final static int TEXT = 8;
         public final static int UNDO = 9;
+        public final static int TRANSFORM = 10;
     }
 
     public static class Dialogs {
