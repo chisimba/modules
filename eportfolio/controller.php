@@ -49,11 +49,7 @@ class eportfolio extends controller
         $this->objUrl = $this->getObject('url', 'strings');
         $this->_objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
-        //Check if class groupops exists
-								if(!class_exists('groupops')) 
-								{
-	        $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
-								}
+	       $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
         $this->objGroupUsers = $this->getObject('groupusersdb', 'groupadmin');
         $this->_objDBContext = &$this->newObject('dbcontext', 'context');
         $this->objContextUsers = $this->getObject('contextusers', 'contextgroups');
@@ -1489,7 +1485,11 @@ private function removeUserFromGroup($userId = NULL, $groupId = NULL)
         ));
     }
     //$pkId = $this->objUser->PKId($userId);
-    $permid = $this->objGroupsOps->getUserByUserId($userId);
+    //Check if class groupops exists
+				if(class_exists('groupops', false)) 
+				{
+	    $permid = $this->objGroupsOps->getUserByUserId($userId);
+				}
     $pkId = $permid['perm_user_id'];
     $deleteMember = $this->_objGroupAdmin->deleteGroupUser($groupId, $pkId);
     return $this->nextAction('viewgroups', array(
@@ -1567,10 +1567,14 @@ private function updateUserRoles()
     $changedItems = array_unique($changedItems);
     $groups = $this->_objGroupAdmin->getTopLevelGroups();
     foreach($changedItems as $item) {
-        $permid = $this->objGroupsOps->getUserByUserId($item);
-        $pkId = $permid['perm_user_id'];
-        //remove users
-        $this->objGroupsOps->removeUser($groupId, $pkId);
+								//Check if class groupops exists
+								if(class_exists('groupops', false)) 
+								{
+		       $permid = $this->objGroupsOps->getUserByUserId($item);
+		       $pkId = $permid['perm_user_id'];
+		       //remove users
+		       $this->objGroupsOps->removeUser($groupId, $pkId);
+								}
         $this->_objGroupAdmin->addGroupUser($groupId, $pkId);
     }
     // die;
