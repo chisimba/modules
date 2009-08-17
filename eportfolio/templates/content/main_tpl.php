@@ -153,7 +153,9 @@ $epTable->endRow();
 //Get all groups and determine which ones the user belongs to
 $userGroupsArray = array();
 //Get the perm_user_d
-$usrGrpId = $this->objGroupsOps->getUserByUserId($this->objUser->userId());
+if(class_exists('groupops',false)){
+	$usrGrpId = $this->objGroupsOps->getUserByUserId($this->objUser->userId());
+}
 $permUserId = $usrGrpId['perm_user_id'];
 $allGrps = $this->objGroupsOps->getAllGroups();
 foreach($allGrps as $thisGrp) {

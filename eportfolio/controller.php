@@ -49,7 +49,10 @@ class eportfolio extends controller
         $this->objUrl = $this->getObject('url', 'strings');
         $this->_objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
-	       $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
+								//TEMPORARY Check if class groupops exists
+								if(file_exists($this->objConfig->getsiteRootPath()."core_modules/groupadmin/classes/groupops_class_inc.php")){
+		       $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
+								}
         $this->objGroupUsers = $this->getObject('groupusersdb', 'groupadmin');
         $this->_objDBContext = &$this->newObject('dbcontext', 'context');
         $this->objContextUsers = $this->getObject('contextusers', 'contextgroups');
