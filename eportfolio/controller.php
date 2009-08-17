@@ -49,6 +49,7 @@ class eportfolio extends controller
         $this->objUrl = $this->getObject('url', 'strings');
         $this->_objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
+        //Check if class groupops exists
 								if(!class_exists('groupops')) 
 								{
 	        $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
