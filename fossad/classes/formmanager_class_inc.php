@@ -114,12 +114,13 @@ class formmanager extends object{
         },
 
         buttons: [{
-            text: 'Sign Up',
+            text: 'Visitor/Student Sign Up',
             handler: function(){
             if (form.url)
             form.getForm().getEl().dom.action = form.url;
             form.getForm().submit();
             }
+
         }]
     });
  });
