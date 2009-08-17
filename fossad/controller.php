@@ -158,7 +158,8 @@ class fossad extends controller {
         $subject=$objSysConfig->getValue('EMAIL_SUBJECT', 'fossad');
         $body=$objSysConfig->getValue('EMAIL_BODY', 'fossad');
         $emailName=$objSysConfig->getValue('EMAIL_NAME', 'fossad');
-        $attach=$objSysConfig->getValue('INVITE_ATTACH', 'fossad');
+        $inviteattach=$objSysConfig->getValue('INVITE_ATTACH', 'fossad');
+        $programattach=$objSysConfig->getValue('PROGRAM_ATTACH', 'fossad');
 
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($to));
@@ -166,7 +167,8 @@ class fossad extends controller {
         $objMailer->setValue('fromName', $emailName);
         $objMailer->setValue('subject', $subject);
         $objMailer->setValue('body', $body);
-        $objMailer->attach($attach);
+        $objMailer->attach($inviteattach);
+        $objMailer->attach($programattach);
         $objMailer->send();
     }
       /**
