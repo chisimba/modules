@@ -43,6 +43,8 @@ class formmanager extends object{
         
         $submitUrl = $this->uri(array('action' => 'register','title1'=>$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad'),
    'title2'=>$this->objLanguage->languageText('mod_fossad_success', 'fossad')));
+$expressLink =$this->uri(array('action' => 'expresssignin'));
+
 
         $editfirstname=$mode == 'edit' ? "value:'".$editfirstname."',":"";
         $editlastname=$mode == 'edit' ? "value:'".$editlastname."',":"";
@@ -56,7 +58,37 @@ class formmanager extends object{
     /*
      * ================  Registration form  =======================
      */
-  
+    var wform = new Ext.form.FormPanel({
+        baseCls: 'x-plain',
+        labelWidth: 75,
+        bodyStyle:'padding:5px 5px 0',
+        standardSubmit: true,
+        url:'".str_replace("amp;", "", $expressLink)."',
+        defaultType: 'textfield',
+        renderTo: 'registration',
+        collapsible: true,
+        defaults: {width: 320},
+        width: 350,
+
+        bodyStyle:'background-color:transparent',
+        border:false,
+      items: {
+            xtype: 'fieldset',
+            title: 'Wits Staff registration here',
+            autoHeight: true,
+
+
+        buttons: [{
+            text: 'Wits Staff Sign Up',
+            handler: function(){
+            if (form.url)
+            wform.getForm().getEl().dom.action = wform.url;
+            wform.getForm().submit();
+            }
+
+        }]
+ }
+    });
    var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,
@@ -111,10 +143,10 @@ class formmanager extends object{
                 vtype:'email'
             }
         ]
-        },
+       ,
 
         buttons: [{
-            text: 'Visitor/Student Sign Up',
+            text: 'Sign Up',
             handler: function(){
             if (form.url)
             form.getForm().getEl().dom.action = form.url;
@@ -122,6 +154,7 @@ class formmanager extends object{
             }
 
         }]
+ }
     });
  });
 ";
