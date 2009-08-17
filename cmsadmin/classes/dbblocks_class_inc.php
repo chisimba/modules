@@ -893,7 +893,7 @@ class dbblocks extends dbTable
                     $tbl_blocks->addCell($position->show());
 
                 } else if ($blockCat == 'content') {
-                    //Using Default Left block because content renders in 2 column layout
+                    $tbl_blocks->addCell($position->show());
                 } else {
                     //Using Default Left block because content renders in 2 column layout
                 }

@@ -5264,10 +5264,6 @@
         */
         public function getAddEditContentForm($contentId = NULL, $section = NULL, $fromModule = NULL, $fromAction = NULL, $s_param = NULL)
         {
-
-            
-            //$this->_objQuery->loadJFramePlugin();
-
             $h3 = $this->newObject('htmlheading', 'htmlelements');
 
             // Determine whether to show the toggle or not
@@ -5287,13 +5283,11 @@
                 }
             }
 
-
             $published = new checkbox('published');
             $frontPage = new checkbox('frontpage');
             $frontPage->value = 1;
 
             $objOrdering = new textinput();
-            //$objCCLicence = $this->newObject('licensechooser', 'creativecommons');
             $is_front = FALSE;
             $show_content = '0';
             if ($contentId == NULL) {
@@ -5317,7 +5311,6 @@
                 $arrContent = $this->_objContent->getContentPage($contentId);
                 $titleInputValue = $arrContent['title'];
 
-                //var_dump($this->getParam('frontpage')); exit;
                 if (!isset($is_front)) {
                     $is_front = false;
                 }
@@ -5338,9 +5331,6 @@
 
             if ($editmode) {
                 //Set ordering as hidden field
-                //$objOrdering = new hiddeninput('ordering', $arrContent['ordering']);
-                
-                //$sectionsHiddenInput = new hiddeninput('parent', $arrContent['sectionid']);
                 if (!isset($section)) {
                     $section = $arrContent['sectionid'];
                 }
@@ -5361,7 +5351,6 @@
             $tableContainer->attributes = "align ='center'";
 
             $table = new htmlTable();
-            //$table->width = "470px";
             $table->width = "100%";
             $table->cellspacing = "0";
             $table->cellpadding = "0";
@@ -5397,7 +5386,6 @@
 
 
             $table->startRow();
-            //$table->addCell($this->objLanguage->languageText('word_title').': ' . $titleInput->show());
             $table->addCell($tableInput->show());
 
             $table->endRow();
@@ -5419,13 +5407,11 @@
                 //add hidden text input
                 $table->row_attributes = '';
                 $table->startRow();
-                //$table->addCell(NULL);
                 $table->addCell('<div id="introdiv"><br />'.$h3->show().$introInput->show().'</div>','','left','left', null, 'colspan="2"');
                 $table->endRow();
             }
 
             //Adding the FCK_EDITOR
-
             if ($editmode) {
 
                 if (isset($arrContent['body'])) {
@@ -5444,13 +5430,6 @@
 
             $bodyInput->height = '400px';
 
-            //echo $bodyInput->show(); exit;
-
-            //$table->startRow();
-            //$table->addCell('', null, 'top', null, 'cmsvspacer');
-            //$table->endRow();
-
-
             $h3->str = $this->objLanguage->languageText('word_body').' ('.$this->objLanguage->languageText('word_required').')';
             $h3->type = 3;
 
@@ -5462,7 +5441,6 @@
 
             //add the main body
             $table2 = new htmltable();
-            //$table2->width = "250px";
             $table2->width = "100%";
 
             $h3->str = $this->objLanguage->languageText('mod_cmsadmin_contentparams','cmsadmin');
@@ -5471,11 +5449,6 @@
             $table2->startRow();
             $table2->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
             $table2->endRow();
-
-            //$table2->startRow();
-            //$table2->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
-            //$table2->endRow();
-
             $table2->startRow();
 
             if (!$editmode) {
@@ -5487,24 +5460,18 @@
             // Content Area
 
             //Header for main body
-            //$h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
             //Pass action
             $txt_action = new textinput('action',$action,'hidden');
             $table->startRow();
-            //$table->addCell($h3->show(),null,'center','left');
-            //$table->addCell($table2->show(),null,'top','left', null, 'colspan="2"');
             if ($fromModule) { 
                 $mod = new textinput('frommodule',$fromModule,'hidden');
                 $act = new textinput('fromaction',$fromAction,'hidden');
                 $param = new textinput('s_param',$s_param,'hidden');
                 $table->addCell($mod->show().$act->show().$param->show()); 
             }
-            //$table->addCell(,null,'bottom','center');
             $table->endRow();         		
 
             //Adding the 250px hieght buffer to make sure the jQuery functions won't overlap existing skins
-            //var_dump($is_front); exit;
-
             if ($this->_objUserPerm->canAddToFrontPage() && !$is_front) {
                 $layer = new layer();
                 $layer->height = '250px';
@@ -5513,19 +5480,6 @@
                 $table->addCell($layer->show());
                 $table->endRow();
             }
-            
-	        /*
-	        //Should be done in the main CSS styles config
-	        $div1 = new layer();
-	        $div1->floating = 'left';
-                $div1->width = '50%';
-                $div1->str = $table->show();
-    
-	        $div2 = new layer();
-	        $div2->floating = 'right';
-                $div2->width = '50%';
-                $div2->str = $table2->show();
-                */
     
 	        $pageParams = new layer();
 	        $pageParams->id = 'AddContentPageParams';
@@ -5561,14 +5515,6 @@
 
             //add action
             $objForm->addToForm($txt_action);
-
-
-            //body
-            // $dialogForm = new form();
-
-
-            // $dialogForm->addToForm($table2->show());
-            //add page header for the body
 
             $display = $objForm->show(); 	
             return $display;

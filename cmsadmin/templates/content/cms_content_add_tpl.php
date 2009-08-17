@@ -82,7 +82,6 @@ $objLayer = $this->newObject('layer', 'htmlelements');
 //$Icon->setIcon('loading_circles_big');
 $objIcon->setIcon('add_article', 'png', 'icons/cms/');
 
-
 $pageId = $id;
 $sectionId = $section;
 

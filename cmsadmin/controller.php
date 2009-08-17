@@ -244,9 +244,6 @@
 				//Loading the ipod style menu
                 $this->_objJQuery->loadFgMenuPlugin();
 
-
-				//Loading the SimpleTree
-				
 				//jQuery SuperFish Menu
 				$jQuery = $this->newObject('jquery', 'htmlelements');
 
@@ -254,42 +251,20 @@
 				$jQuery->loadSuperFishMenuPlugin();
 
 				ob_start();
-				/*
-				   ?>
-
-				   <script type="text/javascript"> 
-				// initialise Superfish 
-				jQuery(document).ready(function(){ 
-				jQuery("ul.sf-menu").superfish({ 
-animation: {opacity:'show'},   // slide-down effect without fade-in 
-width: 300,
-delay:     0,               // 1.2 second delay on mouseout 
-speed: 'fast',
-dropShadows: false
-}); 
-}); 
-
-</script>
-
-
-<?PHP
-				 */
-				?>
+?>
 
 				<script type="text/javascript"> 
 				// initialise Superfish 
 				jQuery(document).ready(function(){ 
 						jQuery("ul.sf-menu").superfish({
-animation: {opacity:'show'},   // slide-down effect without fade-in 
-width: 300,
-delay: 0,               // 1.2 second delay on mouseout 
-speed: 'fast'
-}); 
+							animation: {opacity:'show'},   // slide-down effect without fade-in 
+							width: 300,
+							delay: 0,               // 1.2 second delay on mouseout 
+							speed: 'fast'
+							}); 
 						}); 
 
-</script>
-
-
+				</script>
 <?PHP
 
 $script = ob_get_contents();
@@ -304,29 +279,8 @@ jQuery(document).ready(function(){
 autoclose: true,
 drag: false,
 afterClick:function(node){
-//alert("text-"+jQuery('span:first',node).text());
-//alert("link-"+jQuery('.active a:first', node).attr('href') + "\n");
-
 var turl = jQuery('.active a:first', node).attr('href');
-document.location.href = turl;
-
-/*
-   var turl = jQuery('.active a:first', node).attr('href');
-   var xhr = jQuery.ajax({
-type: 'GET',
-url:turl,
-success:function(){
-var cleanContent = xhr.responseText;
-cleanContent = jQuery('#content', cleanContent).html()
-jQuery('#content').html(cleanContent);
-}
-});
- */
-		//alert(xhr.responseText);
-
-		//jQuery('#content').html(tcontent);
-
-		//jQuery('#content').load(turl);
+	document.location.href = turl;
 		},
 		/*
 afterDblClick:function(node){
@@ -352,8 +306,6 @@ ob_end_clean();
 $this->appendArrayVar('headerParams', $script);
 
 $jQuery->loadSimpleTreePlugin();
-
-
 
             } catch (customException $e){
                 throw customException($e->getMessage());
@@ -1379,21 +1331,8 @@ $jQuery->loadSimpleTreePlugin();
                 $sectionId = $this->getParam('sectionid', NULL);
                 $pageId = $this->getParam('pageid', NULL);
                 $closePage = $this->getParam('closePage', FALSE);
-                switch ($blockCat) {
+                $blockForm  = $this->_objBlocks->getPositionBlockForm($pageId, $sectionId, $blockCat);
 
-                    case 'frontpage':
-                    $blockForm  = $this->_objBlocks->getAddRemoveBlockForm(NULL, NULL, 'frontpage');
-                    break;
-
-                    case 'section':
-                    $blockForm  = $this->_objBlocks->getAddRemoveBlockForm(NULL, $sectionId, 'section');
-                    break;    
-
-                    case 'content':
-                    $blockForm  = $this->_objBlocks->getAddRemoveBlockForm($pageId, NULL, 'content');
-                    break;
-
-                }
                 $this->setVarByRef('closePage', $closePage);
                 $this->setVarByRef('blockForm', $blockForm);
                 return 'cms_blocks_tpl.php';
@@ -1403,25 +1342,11 @@ $jQuery->loadSimpleTreePlugin();
                 $sectionId = $this->getParam('sectionid', NULL);
                 $pageId = $this->getParam('pageid', NULL);
                 $closePage = $this->getParam('closePage', FALSE);
-                switch ($blockCat) {
+                $blockForm  = $this->_objBlocks->getPositionBlockForm($pageId, $sectionId, $blockCat);
 
-                    case 'frontpage':
-                    $blockForm  = $this->_objBlocks->getPositionBlockForm(NULL, NULL, 'frontpage');
-                    break;
-
-                    case 'section':
-                    $blockForm  = $this->_objBlocks->getPositionBlockForm(NULL, $sectionId, 'section');
-                    break;    
-
-                    case 'content':
-                    $blockForm  = $this->_objBlocks->getPositionBlockForm($pageId, NULL, 'content');
-                    break;
-
-                }
                 $this->setVarByRef('closePage', $closePage);
                 $this->setVarByRef('blockForm', $blockForm);
                 return 'cms_blocks_tpl.php';
-
 
                 case 'saveblock':
                 $blockCat = $this->getParam('blockcat', NULL);
