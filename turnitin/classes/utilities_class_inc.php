@@ -88,16 +88,21 @@ class utilities extends object
 			return false;
 		}
 		
-		
+		$cnt = 0;
 		foreach($recs as $rec)
 		{
-			$assRec = array("title" => $rec['title'],
+			$assRec[] = array("title" => $rec['title'],
 							"score" => $rec['score'],
-							"duedate" => $rec['duedate']);
-			
+							"duedate" => $rec['duedate'],
+							"assid" => $rec['duedate'],
+							"contextcode" => $rec['contextcode'],
+							"assid" => $rec['assid']);
+			$cnt++;
 		}
 		
-		return json_encode($assRec);
+		$arr['totalCount'] = $cnt;
+		$arr['assignments'] = $assRec;
+		return json_encode($arr);
 	}
 	
 	/**

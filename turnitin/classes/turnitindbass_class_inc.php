@@ -64,6 +64,13 @@ class turnitindbass extends dbTable
         }
     }
     
+    
+    /**
+     * Get the course assessments
+     *
+     * @param string $contextCode
+     * @return array
+     */
     public function getAssignments($contextCode)
     {
     	$recs = $this->getAll("WHERE contextcode='$contextCode' ORDER BY duedate");
@@ -71,6 +78,37 @@ class turnitindbass extends dbTable
     	if(count($recs) > 0)
     	{
     		return $recs;
+    	} else {
+    		return false;
+    	}
+    }
+    
+    /**
+     * Get the list of assignments together 
+     * with the scores for a student in a course
+     *
+     * @param string $contextCode
+     * @param string $userId
+     * @return array
+     */
+    public function getStudentAssessments($contextCode, $userId)
+    {
+    	$recs = $this->getAssignments($contextCode);
+    	if ($recs)
+    	{
+    		$bigArr = array();
+    		foreach($recs as $rec)
+    		{
+    			$newArr = array('title' => $rec['title'],
+    							'duedate' => $rec['duedate'],
+    							'score' => '',  //$this->objOps->getScore($contextCode, $userId),
+    							'contextcode' => $contextCode,
+    							'assid' => $rec['id']
+    							);
+    			$bigArr[] = $newArr;
+    		};
+    		
+    		return $bigArr;
     	} else {
     		return false;
     	}

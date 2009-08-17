@@ -1,62 +1,289 @@
+var uri;
+uri = 'http://localhost/eteach/index.php?';
+
+var msg = function(title, msg){
+        Ext.Msg.show({
+            title: title,
+            msg: msg,
+            minWidth: 200,
+            modal: true,
+            icon: Ext.Msg.INFO,
+            buttons: Ext.Msg.OK
+        });
+    };
+
+/**
+* The upload action
+*/
+/*
+var action = new Ext.Action({
+    text: 'Add Assessment',
+    handler: function(){
+        //Ext.example.msg('Click','You clicked on "Action 1".');
+        if(!win){
+            win = new Ext.Window({
+                
+                layout:'fit',
+                width:500,
+                height:400,
+                closeAction:'hide',
+                plain: true,
+
+                items:[addForm],
+
+                buttons: [submitbutton,
+	                {
+	                    text: 'Close',
+	                    handler: function(){
+	                        win.hide();
+	                    }
+	                }]
+            });
+        }
+        win.show(this);
+        },
+    iconCls: 'blist'
+});
+
+/**
+* The assignment data store used by the assGrid
+*
+*/
+var assStore = new Ext.data.JsonStore({
+        root: 'assignments',
+        totalProperty: 'totalCount',
+        idProperty: 'puid',
+        //remoteSort: true,
+
+        fields: [
+            {name: 'title'},
+            {name: 'duedate'},
+            {name: 'score'},
+            {name: 'assid'},
+            {name: 'contextcode'},
+        ],
+        proxy: new Ext.data.HttpProxy({
+            url: uri+'module=turnitin&action=json_getstudentassessments'
+        })
+    });
+    assStore.setDefaultSort('duedate', 'desc');
+    
+    
+    
+/**
+* The assignment Grid/List
+*/
+var assGrid = new Ext.grid.GridPanel({
+        width:700,
+        height:200,
+        title:'Assignments',
+        store: assStore,
+        trackMouseOver:true,
+        disableSelection:true,
+        loadMask: true,
+        stripeRows: true,
+		sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
+		region:'center',
+
+
+        // grid columns
+        columns:[new Ext.grid.RowNumberer(),{
+            id: 'topic', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            header: "Topic",
+            dataIndex: 'title',
+            width: 420,
+            //renderer: renderTopic,
+            sortable: true
+        },{
+            header: "Score",
+            dataIndex: 'score',
+            renderer:renderScore,
+            width: 120,
+            align: 'center',
+            sortable: true
+        },{
+            id: 'last',
+            header: "Due Date",
+            dataIndex: 'duedate',
+            width: 150,
+            //renderer: renderLast,
+            sortable: true
+        }],
+		//tbar :[ but ],
+        // customize view config
+        viewConfig: {
+            forceFit:true,
+            enableRowBody:true,
+            showPreview:false,
+            getRowClass : function(record, rowIndex, p, store){
+                if(this.showPreview){
+                    p.body = '<p>'+record.data.instructions+'</p>';
+                    return 'x-grid3-row-expanded';
+                }
+                return 'x-grid3-row-collapsed';
+            }
+        },
+        // paging bar on the bottom
+        bbar: new Ext.PagingToolbar({
+            pageSize: 25,
+            store: assStore,
+            displayInfo: true,
+            displayMsg: 'Displaying topics {0} - {1} of {2}',
+            emptyMsg: "No topics to display",
+            items:[
+                '-', {
+                pressed: false,
+                enableToggle:true,
+                text: 'Show Instructions',
+                cls: 'x-btn-text-icon details',
+                toggleHandler: function(btn, pressed){
+                    var view = assGrid.getView();
+                    view.showPreview = pressed;
+                    view.refresh();
+                }
+            }]
+        })
+
+        
+});
+
 
 Ext.onReady(function(){
-var form = new Ext.FormPanel({
-    title: 'Simple Form with FieldSets',
-    labelWidth: 75, // label settings here cascade unless overridden
+	
+	Ext.QuickTips.init();
 
-    url: 'save-form.php',
-    frame:true,
-    bodyStyle:'padding:5px 5px 0',
-    width: 700,
-    renderTo: document.body,
-    layout:'column', // arrange items in columns
+	//student must a list of assignments ordered by due date
+	// this can be done by using a grid
+	assGrid.render('topic-grid');
+	
+	// trigger the data store load
+    assStore.load({params:{start:0, limit:25}});
+    
+    
+	
+});
 
-    defaults: {      // defaults applied to items
 
-        layout: 'form',
-        border: false,
-        bodyStyle: 'padding:4px'
-    },
-    items: [{
-        // Fieldset in Column 1
 
-        xtype:'fieldset',
-        columnWidth: 0.5,
-        title: 'Fieldset 1',
-        collapsible: true,
-        autoHeight:true,
+ function renderScore(value, p, record){
+    	var cid = 'green';
+    	
+    	var v; 
+    	v = value;
+    	
+    	if (value > 20 && value < 40)
+    	{
+    		cid = 'yellow';
+    	} else if (value >= 40) {
+    		cid = 'red';
+    	} else if (value < 1){
+    		cid = 'pending';    		
+    	}
+    	if (value < 1)
+    	{
+    		value = '--&nbsp;';
+    	} else {
+    		value = value+'%';
+    	}
+    	
+    	if(v == '')
+    	{
+    		
+    		return String.format('<a href="#"  onClick="uploadFormPanel(\'{0}\', \'{1}\')" >Submit </a>', 	record.data.assid, record.data.contextcode);
+        	
+        	//return  new Ext.Button('titititle');
+        	/*return new Ext.Button({
+    			text:'Submit',
+    			iconCls: 'add16',
+                iconAlign: 'right'
+
+    		});*/
+    	}else {
+    	
+        	return String.format('<a href="#" class="'+cid+'" onClick="window.open(\'http://localhost/eteach/index.php?module=turnitin&action=returnreport&objectid=101049555\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
+        	value, record.data.contextcode);
+    	}
+    }
+    
+function uploadWindow(assId, contextCode) {
+	Ext.MessageBox.alert(contextCode);
+	
+}
+
+
+/**
+* Upload an assignment
+*/
+function uploadFormPanel(assId, contextCode){
+	var win;
+
+	if(!win){
+        win = new Ext.Window({           
+            layout:'fit',
+            width:500,
+            height:200,
+            closeAction:'hide',
+            plain: true,
+            items: [fp]
+            
+        });
+    }
+    win.show(this);
+
+
+}
+
+  
+   var fu = new Ext.form.TextField({
+          inputType: 'file',
+          fieldLabel: 'File',
+          name: 'fileupload',
+          emptyText: 'Select your paper'
+          
+        })
+
+ var fp = new Ext.FormPanel({
+        //renderTo: 'fi-form',
+        fileUpload: true,
+        //width: 600,
+        
+        frame: true,
+        title: 'Submit a Paper',
+        autoHeight: true,
+        bodyStyle: 'padding: 10px 10px 0 10px;',
+        labelWidth: 50,
         defaults: {
-            anchor: '-20' // leave room for error icon
-
+            //anchor: '95%',
+            allowBlank: false,
+            width:200,
+            msgTarget: 'side'
         },
-        defaultType: 'textfield',
-        items :[{
-                fieldLabel: 'Field 1'
-            }, {
-                fieldLabel: 'Field 2'
-            }, {
-                fieldLabel: 'Field 3'
+        items: [{
+	            xtype: 'textfield',
+	            width:350,
+	            emptyText: 'Give your paper a title ...',
+	            fieldLabel: 'Title'
+        	},fu
+        	],
+        
+        buttons: [{
+            text: 'Submit',
+            handler: function(){
+                if(fp.getForm().isValid()){
+	                fp.getForm().submit({
+	                    url: uri+'?module=turnitin&action=ajax_sumbitassessment',
+	                    waitMsg: 'Uploading your paper...',
+	                    success: function(fp, o){
+	                        msg('Success', 'Processed file "'+o.result.file+'" on the server');
+	                    }
+	                });
+                }
             }
-        ]
-    },{
-        // Fieldset in Column 2 - Panel inside
-
-        xtype:'fieldset',
-        title: 'Show Panel', // title, header, or checkboxToggle creates fieldset header
-
-        autoHeight:true,
-        columnWidth: 0.5,
-        checkboxToggle: true,
-        collapsed: true, // fieldset initially collapsed
-
-        layout:'anchor',
-        items :[{
-            xtype: 'panel',
-            anchor: '100%',
-            title: 'Panel inside a fieldset',
-            frame: true,
-            height: 100
+        },{
+            text: 'Reset',
+            handler: function(){
+                fp.getForm().reset();
+            }
         }]
-    }]
-});
-});
+    });
+

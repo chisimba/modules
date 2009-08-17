@@ -422,6 +422,7 @@ var submissionsGrid =  new Ext.grid.GridPanel({
         loadMask: true,
         //hidden:true,
         stripeRows: true,
+       
         minHeight: 100,
         maxHeight: 200,
 		tbar :[ uploadButton ],
@@ -477,6 +478,7 @@ var submissionsPanel = new Ext.Panel({
         maxHeight: 200,
        	collapsed : true,
         collapsible: true,
+        titleCollapse: true,
 
         items:[submissionsGrid]
 })
@@ -487,7 +489,7 @@ Ext.onReady(function(){
     //assGrid.render('topic-grid');
 
     
-      var layout = new Ext.Panel({
+     var layout = new Ext.Panel({
         //title: 'Employee Salary by Month',
         layout: 'border',
         layoutConfig: {
