@@ -35,9 +35,12 @@ $table->addCell($leftTitle);
 $table->addCell($rightTitle);
 $table->endRow();
 
+$objWashout = $this->getObject('washout', 'utilities');
+$content=$objSysConfig->getValue('CONTENT', 'fossad');
+$pagecontent= $objWashout->parseText($content);
 
 $table->startRow();
-$table->addCell('<img src="'.$this->getResourceUri('images/fosslogo.png').' ">');
+$table->addCell($pagecontent);
 $table->addCell($this->objLanguage->languageText('mod_fossad_contactemail', 'fossad').'<br>'.$contactemail);
 $table->endRow();
 

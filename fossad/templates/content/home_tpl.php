@@ -39,9 +39,12 @@ $table->addCell('');
 $table->addCell($expressLink->show());//.'<img src="'.$this->getResourceUri('images/line.png').'">');
 $table->endRow();
 
+$objWashout = $this->getObject('washout', 'utilities');
+$content=$objSysConfig->getValue('CONTENT', 'fossad');
+$pagecontent= $objWashout->parseText($content);
 
 $table->startRow();
-$table->addCell('<img src="'.$this->getResourceUri('images/fosslogo.png').'" width="486" width="238">');
+$table->addCell($pagecontent);
 $table->addCell($regformObj->createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode));
 $table->endRow();
 
