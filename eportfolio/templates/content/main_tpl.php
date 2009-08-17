@@ -668,9 +668,10 @@ if (!empty($demographicsList)) {
     foreach($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
+        $datetime = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
         $demographicsTable->startRow();
         $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-        $demographicsTable->addCell($this->objDate->formatDate($demographicsItem['birth']) , "", NULL, NULL, NULL, '');
+        $demographicsTable->addCell($datetime[0] , "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
@@ -1687,7 +1688,11 @@ if (!$hasAccess) {
                 $atylinkManage = $atymnglink->show();
                 $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
                 $assertionstable->endRow();
-            }
+            }else {
+														 $assertionstable->startRow();
+														 $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+														 $assertionstable->endRow();
+											}
             unset($myparentId);
             //}
             unset($groupId);

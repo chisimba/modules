@@ -330,9 +330,10 @@ if (!empty($demographicsList)) {
                 }
             }
             if ($demoCheck == 1) {
+									       $datetime = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
                 $demographicsTable->startRow();
                 $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-                $demographicsTable->addCell($this->objDate->formatDate($demographicsItem['birth']) , "", NULL, NULL, NULL, '');
+                $demographicsTable->addCell($datetime[0] , "", NULL, NULL, NULL, '');
                 $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
                 $demographicsTable->endRow();
             }

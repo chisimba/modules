@@ -1370,7 +1370,7 @@ class eportfolio extends controller
             } else {
                 $contexttitle = 'None';
             }
-            $id = $this->objDbActivityList->insertSingle($contexttitle, $this->getParam('activity_type', NULL) , $this->getParam('activityStart', NULL) , $this->getParam('activityFinish', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
+            $id = $this->objDbActivityList->insertSingle($contexttitle, $this->getParam('activityType', NULL) , $this->getParam('activityStart', NULL) , $this->getParam('activityFinish', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
             return $this->nextAction('main', NULL);
             break;
 

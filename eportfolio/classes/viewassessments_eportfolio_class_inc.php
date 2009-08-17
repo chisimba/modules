@@ -175,6 +175,9 @@ class viewassessments_Eportfolio extends object
         // set up html elements
         //$objTable=$this->objTable;
         $objTable = new htmltable();
+        $objTable->border = 1;
+        $objTable->cellspacing = '1';
+        $objTable->width = "100%";
         $objLayer = $this->objLayer;
         // set up language items
         $list = $this->objLanguage->languageText('word_list');
@@ -190,6 +193,7 @@ class viewassessments_Eportfolio extends object
         $downloadhead = $this->objLanguage->languageText('mod_essay_download', 'essay');
         $loadhead = $submittitle . ' / ' . $downloadhead;
         $submittitle.= ' ' . $this->objLanguage->languageText('mod_essay_essay', 'essay');
+        $essayComment = $this->objLanguage->languageText('mod_essay_comment', 'essay');
         $downloadhead.= ' ' . $this->objLanguage->languageText('mod_essay_marked', 'essay') . ' ' . $this->objLanguage->languageText('mod_essay_essay', 'essay');
         $commenthead = $this->objLanguage->languageText('word_view') . ' ' . $this->objLanguage->languageText('mod_essay_comment', 'essay');
         $topiclist = $this->objLanguage->languageText('word_back') . ' ' . strtolower($this->objLanguage->languageText('word_to')) . ' ' . $topichead;
@@ -204,18 +208,22 @@ class viewassessments_Eportfolio extends object
         $tableHd[] = "<b>" . $bypasshead . "</b>";
         $tableHd[] = "<b>" . $submithead . "</b>";
         $tableHd[] = "<b>" . $markhead . "</b>";
+        $tableHd[] = "<b>" . $essayComment . "</b>";
+/*
         $objTable->row_attributes = 'height="5"';
-        $objTable->startRow();
-        $objTable->addCell('');
-        $objTable->endRow();
-        $objTable->cellspacing = 2;
-        $objTable->cellpadding = 5;
-        $objTable->addHeader($tableHd, 'Heading');
+        $objTable->cellspacing = 1;
+        $objTable->cellpadding = 1;
+*/
+        $objTable->addHeader($tableHd, 'Heading',$row_attributes = 'bgcolor="#D3D3D3"');
         $objTable->row_attributes = 'height="5"';
         /********************* display data *************************/
         $i = 0;
+        $bgcolor = "#FFFFFF";
+
         foreach($data as $item) {
             $class = ($i++%2) ? 'even' : 'odd';
+            $bgcolor = ($i++%2) ? "#D3D3D3" : "#FFFFFF";
+												$i = $i + 1;
             if ($item['mark'] == 'submit') {
                 // if essay hasn't been submitted: display submit icon
                 // check if closing date has passed
@@ -254,7 +262,7 @@ class viewassessments_Eportfolio extends object
                 // get comment form booking details
                 $comment = $this->dbbook->getBooking("where id='" . $item['id'] . "'", 'comment');
                 $notes = $comment[0]['comment'];
-                $essayComment = $this->objLanguage->languageText('mod_essay_comment', 'essay');
+
                 //$observersEmailPopup=$objPopup->show();
                 //       $this->objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay']))."', "essaycomment", "width=400", "height=200", "scrollbars=1")\" ";
                 //$this->objIcon->title=$commenthead;
@@ -266,24 +274,30 @@ class viewassessments_Eportfolio extends object
                 $mark = '';
                 $load = $lblSubmitted;
             }
+
             $objTable->startRow();
-            $objTable->addCell($item['name'], '', '', '', $class);
+            $objTable->addCell($item['name'], '', '', '', $class, "bgcolor='".$bgcolor."'");
             //$objTable->addCell($item['essayid'],'','','',$class);
-            $objTable->addCell($item['essay'], '', '', '', $class);
-            $objTable->addCell($this->objDateformat->formatDate($item['date']) , '', '', '', $class);
-            $objTable->addCell($item['bypass'], '', '', '', $class);
+            $objTable->addCell($item['essay'], '', '', '', $class, "bgcolor='".$bgcolor."'");
+            $objTable->addCell($this->objDateformat->formatDate($item['date']) , '', '', '', $class, "bgcolor='".$bgcolor."'");
+            $objTable->addCell($item['bypass'], '', '', '', $class, "bgcolor='".$bgcolor."'");
             if (!empty($item['submitdate'])) {
-                $objTable->addCell($this->objDateformat->formatDate($item['submitdate']) , '', '', '', $class);
+                $objTable->addCell($this->objDateformat->formatDate($item['submitdate']) , '', '', '', $class, "bgcolor='".$bgcolor."'");
             } else {
-                $objTable->addCell('', '', '', '', $class);
+                $objTable->addCell('', '', '', '', $class, "bgcolor='".$bgcolor."'");
             }
-            $objTable->addCell($mark . "<br><b>" . $essayComment . ": </b></br>" . $notes, '', '', '', $class);
+            $objTable->addCell($mark, '', '', '', $class, "bgcolor='".$bgcolor."'");
+            $objTable->addCell($notes, '', '', '', $class, "bgcolor='".$bgcolor."'");            
             $objTable->endRow();
+/*
+            $objTable->startRow();
+            $objTable->addCell("<b>".$essayComment.": </b>".$notes, '', '', '', $class,'colspan="6"');
+            //$objTable->addCell("<b>".$essayComment.": </b></br>".$notes,'', '', '', $class);
+  //          $objTable->row_attributes = 'colspan="6"';
+            $objTable->endRow();
+*/
         }
-        $objTable->row_attributes = 'height="10"';
-        $objTable->startRow();
-        $objTable->addCell('');
-        $objTable->endRow();
+        //$objTable->row_attributes = 'height="10"';
         /********************* display table ************************/
         $essayLabel = '<br></br>' . $objTable->show() . '<br></br>';
         return $essayLabel;
