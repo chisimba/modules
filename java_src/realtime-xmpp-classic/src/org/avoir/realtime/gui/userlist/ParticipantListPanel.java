@@ -86,7 +86,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent arg0) {
                 if (ConnectionManager.audioVideoUrlReady && ConnectionManager.flashUrlReady) {
                     initAudioVideo(ConnectionManager.isOwner, ConnectionManager.getRoomName());
-                    startAudioVideoButton.setText("Refresh");
+                    startAudioVideoButton.setText("Reload");
                 } else {
                     JOptionPane.showMessageDialog(null, "It appears the audio video server is not ready.\n" +
                             "Please try again after few minutes");
@@ -149,7 +149,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         } else {
             navigateToURl(participantUrl);
         }
-        startAudioVideoButton.setText("Refresh");
+        startAudioVideoButton.setText("Reload");
     }
 
     private void navigateToURl(final String url) {

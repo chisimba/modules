@@ -18,8 +18,6 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -29,7 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -80,7 +78,7 @@ import org.avoir.realtime.gui.tips.*;
  *
  * @author developer
  */
-public class MainFrame extends javax.swing.JFrame  {
+public class MainFrame extends javax.swing.JFrame {
 
     private JDialog magnifierDialog;
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
@@ -181,13 +179,30 @@ public class MainFrame extends javax.swing.JFrame  {
             for (int i = 0; i < speakerCols; i++) {
                 for (int j = 0; j < speakerRows; j++) {
                     String speakerName = "free";
-                    JWebBrowser browser = new JWebBrowser();
+                    final JWebBrowser browser = new JWebBrowser();
                     browser.setMenuBarVisible(false);
                     browser.setBarsVisible(false);
                     browser.setButtonBarVisible(false);
                     Speaker speaker = new Speaker(browser, speakerName);
                     speakers.add(speaker);
-                    speakersPanel.add(browser);
+                    JPanel p = new JPanel(new BorderLayout());
+                    p.add(browser, BorderLayout.CENTER);
+                    JButton refreshButton = new JButton("Reload");
+                    refreshButton.addActionListener(new ActionListener() {
+
+                        public void actionPerformed(ActionEvent arg0) {
+                            SwingUtilities.invokeLater(new Runnable() {
+
+                                public void run() {
+                                    browser.reloadPage();
+                                }
+                            });
+                        }
+                    });
+                    JPanel p2 = new JPanel();
+                    p2.add(refreshButton);
+                    p.add(p2, BorderLayout.SOUTH);
+                    speakersPanel.add(p);
 
                 }
             }
@@ -281,7 +296,7 @@ public class MainFrame extends javax.swing.JFrame  {
                         }
                     });
                     speaker.setSpeaker("free");
-//                    userListPanel.getParticipantListTable().setUserHasMIC(speakerName, false);
+
                     break;
                 }
 
@@ -683,13 +698,18 @@ public class MainFrame extends javax.swing.JFrame  {
         screenShareItem = new javax.swing.JMenuBar();
         fileMenutem = new javax.swing.JMenu();
         exitMenuItem = new javax.swing.JMenuItem();
+        editMenu = new javax.swing.JMenu();
+        undoMenuItem = new javax.swing.JMenuItem();
+        deleteMenuItem = new javax.swing.JMenuItem();
+        viewMenu = new javax.swing.JMenu();
+        fullScreenMenuItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        escMenuItem = new javax.swing.JMenuItem();
         actionsMenu = new javax.swing.JMenu();
         insertGraphicMenuItem = new javax.swing.JMenuItem();
         insertPresentationMenuItem = new javax.swing.JMenuItem();
-        updateRoomResourcesMenuItem = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JSeparator();
         requestMicMenuItem = new javax.swing.JMenuItem();
-        undoMenuItem = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JSeparator();
         meetingsMenuItem = new javax.swing.JMenu();
         jSeparator4 = new javax.swing.JSeparator();
@@ -699,22 +719,22 @@ public class MainFrame extends javax.swing.JFrame  {
         jSeparator5 = new javax.swing.JSeparator();
         banUserMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
-        fullScreenMenuItem = new javax.swing.JMenuItem();
         screenShareMenuItem = new javax.swing.JMenuItem();
         screenViewerMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
+        updateRoomResourcesMenuItem = new javax.swing.JMenuItem();
+        questionManagerMenuItem = new javax.swing.JMenuItem();
+        slideBuilderMenuItem = new javax.swing.JMenuItem();
+        jSeparator10 = new javax.swing.JSeparator();
         jMenu1 = new javax.swing.JMenu();
         thisAppMenuItem = new javax.swing.JMenuItem();
         desktopMenuItem = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JSeparator();
         privateChatMenuItem = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JSeparator();
         tipsMenuItem = new javax.swing.JMenuItem();
-        optionsMenuItem = new javax.swing.JMenuItem();
-        jSeparator6 = new javax.swing.JSeparator();
-        jMenuItem1 = new javax.swing.JMenuItem();
         magnifierMenuitem = new javax.swing.JMenuItem();
-        escMenuItem = new javax.swing.JMenuItem();
+        cleanMicsMenuItem = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JSeparator();
+        optionsMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -764,7 +784,7 @@ public class MainFrame extends javax.swing.JFrame  {
             }
         });
 
-        zoomOriginalButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        zoomOriginalButton.setFont(new java.awt.Font("Dialog", 0, 11));
         zoomOriginalButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/kedit32.png"))); // NOI18N
         zoomOriginalButton.setText("100%");
         zoomOriginalButton.setBorderPainted(false);
@@ -886,7 +906,7 @@ public class MainFrame extends javax.swing.JFrame  {
         roomToolsToolbar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         roomToolsToolbar.setRollover(true);
 
-        changeRoomButton.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        changeRoomButton.setFont(new java.awt.Font("Dialog", 0, 11));
         changeRoomButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/join_room.png"))); // NOI18N
         changeRoomButton.setText("Room List");
         changeRoomButton.setBorderPainted(false);
@@ -1028,6 +1048,62 @@ public class MainFrame extends javax.swing.JFrame  {
 
         screenShareItem.add(fileMenutem);
 
+        editMenu.setText("Edit");
+
+        undoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        undoMenuItem.setText("Undo");
+        undoMenuItem.setEnabled(false);
+        undoMenuItem.setName("undo"); // NOI18N
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(undoMenuItem);
+
+        deleteMenuItem.setText("Delete");
+        deleteMenuItem.setEnabled(false);
+        deleteMenuItem.setName("delete"); // NOI18N
+        deleteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(deleteMenuItem);
+
+        screenShareItem.add(editMenu);
+
+        viewMenu.setText("View");
+
+        fullScreenMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
+        fullScreenMenuItem.setText("Full Screen");
+        fullScreenMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fullScreenMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(fullScreenMenuItem);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Zoom");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        viewMenu.add(jMenuItem1);
+
+        escMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
+        escMenuItem.setText("Esc");
+        escMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                escMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(escMenuItem);
+
+        screenShareItem.add(viewMenu);
+
         actionsMenu.setText("Actions");
         actionsMenu.setName(""); // NOI18N
 
@@ -1052,16 +1128,6 @@ public class MainFrame extends javax.swing.JFrame  {
             }
         });
         actionsMenu.add(insertPresentationMenuItem);
-
-        updateRoomResourcesMenuItem.setText("Room Resources");
-        updateRoomResourcesMenuItem.setEnabled(false);
-        updateRoomResourcesMenuItem.setName("roomResources"); // NOI18N
-        updateRoomResourcesMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateRoomResourcesMenuItemActionPerformed(evt);
-            }
-        });
-        actionsMenu.add(updateRoomResourcesMenuItem);
         actionsMenu.add(jSeparator7);
 
         requestMicMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, 0));
@@ -1074,17 +1140,6 @@ public class MainFrame extends javax.swing.JFrame  {
             }
         });
         actionsMenu.add(requestMicMenuItem);
-
-        undoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
-        undoMenuItem.setText("Whiteboard Undo");
-        undoMenuItem.setEnabled(false);
-        undoMenuItem.setName("undo"); // NOI18N
-        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                undoMenuItemActionPerformed(evt);
-            }
-        });
-        actionsMenu.add(undoMenuItem);
         actionsMenu.add(jSeparator8);
 
         screenShareItem.add(actionsMenu);
@@ -1136,15 +1191,7 @@ public class MainFrame extends javax.swing.JFrame  {
 
         toolsMenu.setText("Tools");
 
-        fullScreenMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
-        fullScreenMenuItem.setText("Full Screen");
-        fullScreenMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fullScreenMenuItemActionPerformed(evt);
-            }
-        });
-        toolsMenu.add(fullScreenMenuItem);
-
+        screenShareMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F10, 0));
         screenShareMenuItem.setText("Screen Share");
         screenShareMenuItem.setEnabled(false);
         screenShareMenuItem.setName("screenshare"); // NOI18N
@@ -1155,6 +1202,7 @@ public class MainFrame extends javax.swing.JFrame  {
         });
         toolsMenu.add(screenShareMenuItem);
 
+        screenViewerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
         screenViewerMenuItem.setText("Screen Viewer");
         screenViewerMenuItem.setEnabled(false);
         screenViewerMenuItem.setName("screenviewer"); // NOI18N
@@ -1165,6 +1213,25 @@ public class MainFrame extends javax.swing.JFrame  {
         });
         toolsMenu.add(screenViewerMenuItem);
         toolsMenu.add(jSeparator2);
+
+        updateRoomResourcesMenuItem.setText("Room Resources");
+        updateRoomResourcesMenuItem.setEnabled(false);
+        updateRoomResourcesMenuItem.setName("roomResources"); // NOI18N
+        updateRoomResourcesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateRoomResourcesMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(updateRoomResourcesMenuItem);
+
+        questionManagerMenuItem.setText("Question Manager");
+        questionManagerMenuItem.setEnabled(false);
+        toolsMenu.add(questionManagerMenuItem);
+
+        slideBuilderMenuItem.setText("Slide Builder");
+        slideBuilderMenuItem.setEnabled(false);
+        toolsMenu.add(slideBuilderMenuItem);
+        toolsMenu.add(jSeparator10);
 
         jMenu1.setText("Screen Shot");
         jMenu1.setEnabled(false);
@@ -1187,7 +1254,6 @@ public class MainFrame extends javax.swing.JFrame  {
         jMenu1.add(desktopMenuItem);
 
         toolsMenu.add(jMenu1);
-        toolsMenu.add(jSeparator3);
 
         privateChatMenuItem.setText("Private Chat");
         privateChatMenuItem.setEnabled(false);
@@ -1198,7 +1264,6 @@ public class MainFrame extends javax.swing.JFrame  {
             }
         });
         toolsMenu.add(privateChatMenuItem);
-        toolsMenu.add(jSeparator1);
 
         tipsMenuItem.setText("Tips");
         tipsMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1207,24 +1272,6 @@ public class MainFrame extends javax.swing.JFrame  {
             }
         });
         toolsMenu.add(tipsMenuItem);
-
-        optionsMenuItem.setText("Options");
-        optionsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                optionsMenuItemActionPerformed(evt);
-            }
-        });
-        toolsMenu.add(optionsMenuItem);
-        toolsMenu.add(jSeparator6);
-
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Zoom");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        toolsMenu.add(jMenuItem1);
 
         magnifierMenuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, 0));
         magnifierMenuitem.setText("Maginifier");
@@ -1235,14 +1282,24 @@ public class MainFrame extends javax.swing.JFrame  {
         });
         toolsMenu.add(magnifierMenuitem);
 
-        escMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
-        escMenuItem.setText("Esc");
-        escMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        cleanMicsMenuItem.setText("Reset");
+        cleanMicsMenuItem.setEnabled(false);
+        cleanMicsMenuItem.setName("clearMics"); // NOI18N
+        cleanMicsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                escMenuItemActionPerformed(evt);
+                cleanMicsMenuItemActionPerformed(evt);
             }
         });
-        toolsMenu.add(escMenuItem);
+        toolsMenu.add(cleanMicsMenuItem);
+        toolsMenu.add(jSeparator9);
+
+        optionsMenuItem.setText("Options");
+        optionsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optionsMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(optionsMenuItem);
 
         screenShareItem.add(toolsMenu);
 
@@ -1602,27 +1659,27 @@ public class MainFrame extends javax.swing.JFrame  {
         /*final JCheckBox onSwitch = new JCheckBox("Turn magnifier on");
         onSwitch.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent evt) {*/
-                glass.setVisible(!glass.isVisible());
-            /*}
-        });
-        if (magnifierDialog == null) {
+        public void actionPerformed(ActionEvent evt) {*/
+        glass.setVisible(!glass.isVisible());
+    /*}
+    });
+    if (magnifierDialog == null) {
 
-            magnifierDialog = new JDialog(this, "Magnifier", false);
-            magnifierDialog.getContentPane().add(onSwitch);
-            magnifierDialog.setSize(100, 50);
-            magnifierDialog.pack();
-            //magnifierDialog.setLocation(this.getX() + this.getWidth(), this.getY());
-            magnifierDialog.addWindowListener(new WindowAdapter() {
+    magnifierDialog = new JDialog(this, "Magnifier", false);
+    magnifierDialog.getContentPane().add(onSwitch);
+    magnifierDialog.setSize(100, 50);
+    magnifierDialog.pack();
+    //magnifierDialog.setLocation(this.getX() + this.getWidth(), this.getY());
+    magnifierDialog.addWindowListener(new WindowAdapter() {
 
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    glass.setVisible(false);
-                    onSwitch.setSelected(false);
-                }
-            });
-        }
-        magnifierDialog.setVisible(true);*/
+    @Override
+    public void windowClosing(WindowEvent e) {
+    glass.setVisible(false);
+    onSwitch.setSelected(false);
+    }
+    });
+    }
+    magnifierDialog.setVisible(true);*/
     }//GEN-LAST:event_magnifierMenuitemActionPerformed
 
     private void zoomInButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomInButtonMouseEntered
@@ -1676,12 +1733,20 @@ public class MainFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
-      whiteboardPanel.getWhiteboard().undo();
+        whiteboardPanel.getWhiteboard().undo();
     }//GEN-LAST:event_undoMenuItemActionPerformed
 
     private void escMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_escMenuItemActionPerformed
         glass.setVisible(false);
     }//GEN-LAST:event_escMenuItemActionPerformed
+
+    private void deleteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMenuItemActionPerformed
+        whiteboardPanel.getWhiteboard().sendDeleteBroadcast();
+    }//GEN-LAST:event_deleteMenuItemActionPerformed
+
+    private void cleanMicsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanMicsMenuItemActionPerformed
+        userListPanel.getParticipantListTable().clearMics();
+    }//GEN-LAST:event_cleanMicsMenuItemActionPerformed
 
     public void doZoom() {
         if (zoomControl) {
@@ -1883,9 +1948,12 @@ public class MainFrame extends javax.swing.JFrame  {
     private javax.swing.JButton changeRoomButton;
     private javax.swing.JButton changeRoomButton1;
     private javax.swing.JTabbedPane chatTabbedPane;
+    private javax.swing.JMenuItem cleanMicsMenuItem;
     private javax.swing.JMenuItem createRoomMenuItem;
+    private javax.swing.JMenuItem deleteMenuItem;
     private javax.swing.JButton deskShareButton;
     private javax.swing.JMenuItem desktopMenuItem;
+    private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem escMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenutem;
@@ -1898,14 +1966,13 @@ public class MainFrame extends javax.swing.JFrame  {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
     private javax.swing.JMenuItem joinRoomMenuItem;
     private javax.swing.JSplitPane leftSplitPane;
     private javax.swing.JMenuItem magnifierMenuitem;
@@ -1917,12 +1984,14 @@ public class MainFrame extends javax.swing.JFrame  {
     private javax.swing.JToolBar partiToolbar;
     private javax.swing.JButton pointerButton;
     private javax.swing.JMenuItem privateChatMenuItem;
+    private javax.swing.JMenuItem questionManagerMenuItem;
     private javax.swing.JMenuItem requestMicMenuItem;
     private javax.swing.JMenuItem roomListMenuItem;
     private javax.swing.JToolBar roomToolsToolbar;
     private javax.swing.JMenuBar screenShareItem;
     private javax.swing.JMenuItem screenShareMenuItem;
     private javax.swing.JMenuItem screenViewerMenuItem;
+    private javax.swing.JMenuItem slideBuilderMenuItem;
     private javax.swing.JPanel statusBar;
     private javax.swing.JPanel surfacePanel;
     private javax.swing.JTabbedPane surfaceTopTabbedPane;
@@ -1936,6 +2005,7 @@ public class MainFrame extends javax.swing.JFrame  {
     private javax.swing.JPanel topPanel;
     private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JMenuItem updateRoomResourcesMenuItem;
+    private javax.swing.JMenu viewMenu;
     private javax.swing.ButtonGroup wbButtonGroup;
     private javax.swing.JLabel wbInfoField;
     private javax.swing.JProgressBar wbProgressBar;

@@ -74,6 +74,7 @@ import static org.avoir.realtime.common.Constants.Whiteboard.*;
  * @author developer
  */
 public class Whiteboard extends JPanel implements MouseListener, MouseMotionListener,
+        MouseWheelListener,
         KeyListener,
         ActionListener {
 
@@ -317,7 +318,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         fullScreenFrame.setBounds(0, 0, fullScreenX, fullScreenY);
         fullScreenFrame.setUndecorated(true);
         fullScreenFrame.addKeyListener(this);
-
+        addMouseWheelListener(this);
     }
 
     private void refreshPopup() {
@@ -1188,6 +1189,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         fullScreenFrame.remove(whiteboardPanel);
         fullScreenFrame.setVisible(false);
         GUIAccessManager.mf.getTabbedPane().insertTab("Whiteboard", null, whiteboardPanel, "Whiteboard", 0);
+
         if (showingToolbox) {
             showingToolbox = false;
             GUIAccessManager.mf.getSurfacePanel().add(GUIAccessManager.mf.getSurfaceTopTabbedPane(), BorderLayout.NORTH);
@@ -1246,15 +1248,18 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void mousePressed(MouseEvent e) {
-        
+
         dragStartScreen = e.getPoint();
         dragEndScreen = null;
-        
+
         this.requestFocusInWindow();
+
         if (!drawEnabled || zoomEnabled) {
             return;
         }
         points.clear();
+
+
         startX = e.getX();
         startY = e.getY();
         prevX = startX;
@@ -1494,6 +1499,12 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     public void setZoomEnabled(boolean zoomEnabled) {
         this.zoomEnabled = zoomEnabled;
+    }
+
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        if (ITEM_TYPE == TRANSFORM) {
+            zoomCamera(e);
+        }
     }
 
     public void mouseDragged(MouseEvent e) {

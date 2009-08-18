@@ -170,6 +170,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         transformButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/transform-move.png"))); // NOI18N
         transformButton.setFocusable(false);
         transformButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        transformButton.setName("pan"); // NOI18N
         transformButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         transformButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,6 +198,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         lineButton.setToolTipText("Line");
         lineButton.setFocusable(false);
         lineButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lineButton.setName("line"); // NOI18N
         lineButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         lineButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,6 +212,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         drawOvalButton.setToolTipText("Draw Oval");
         drawOvalButton.setFocusable(false);
         drawOvalButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        drawOvalButton.setName("ovaldraw"); // NOI18N
         drawOvalButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         drawOvalButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -223,6 +226,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         ovalFillButton.setToolTipText("Fill Oval");
         ovalFillButton.setFocusable(false);
         ovalFillButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ovalFillButton.setName("ovalfill"); // NOI18N
         ovalFillButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ovalFillButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -236,6 +240,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         drawRectButton.setToolTipText("Draw Rectangle");
         drawRectButton.setFocusable(false);
         drawRectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        drawRectButton.setName("rectdraw"); // NOI18N
         drawRectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         drawRectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -249,6 +254,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         rectFillButton.setToolTipText("Fill Rectangle");
         rectFillButton.setFocusable(false);
         rectFillButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        rectFillButton.setName("rectfill"); // NOI18N
         rectFillButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         rectFillButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -263,6 +269,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         scribbleButton.setToolTipText("Scribble");
         scribbleButton.setFocusable(false);
         scribbleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        scribbleButton.setName("pen"); // NOI18N
         scribbleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         scribbleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -276,6 +283,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         eraseButton.setToolTipText("Erase selected Item");
         eraseButton.setFocusable(false);
         eraseButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        eraseButton.setName("erase"); // NOI18N
         eraseButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         eraseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -289,6 +297,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         textButton.setToolTipText("Text");
         textButton.setFocusable(false);
         textButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        textButton.setName("text"); // NOI18N
         textButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         textButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -301,6 +310,7 @@ public class WhiteboardPanel extends javax.swing.JPanel {
         undoButton.setToolTipText("Undo");
         undoButton.setFocusable(false);
         undoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        undoButton.setName("undo"); // NOI18N
         undoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         undoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
