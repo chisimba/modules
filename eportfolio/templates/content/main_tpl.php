@@ -157,7 +157,7 @@ if(class_exists('groupops',false)){
 	$usrGrpId = $this->objGroupsOps->getUserByUserId($this->objUser->userId());
 }
 $permUserId = $usrGrpId['perm_user_id'];
-if(!class_exists('groupops',false)){
+if(class_exists('groupops',false)){
 	$allGrps = $this->objGroupsOps->getAllGroups();
 }else{
 		$allGrps = $this->_objGroupAdmin->getUserGroups( $this->objUser->PKId($this->objUser->userId()));
