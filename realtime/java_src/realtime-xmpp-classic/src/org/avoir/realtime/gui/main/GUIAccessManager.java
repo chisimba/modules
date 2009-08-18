@@ -29,7 +29,7 @@ public class GUIAccessManager {
     public static String defaultPresentationName = "";
     public static String defaultPresentationId = "";
     public static String defaultSlideName = "";
-    public static String skinClass=null;//"org.avoir.realtime.skins.winxp.WinXPSkin";
+    public static String skinClass = null;//"org.avoir.realtime.skins.winxp.WinXPSkin";
 
     public static void setMf(MainFrame mf) {
         GUIAccessManager.mf = mf;
@@ -117,11 +117,27 @@ public class GUIAccessManager {
     }
 
     public static void enableWhiteboardButtons(boolean state) {
+        enableWhiteboardButton("undo",state);
+        enableWhiteboardButton("pan",true);
+        enableWhiteboardButton("move",state);
+        enableWhiteboardButton("ovaldraw",state);
+        enableWhiteboardButton("ovalfill",state);
+        enableWhiteboardButton("rectdraw",state);
+        enableWhiteboardButton("rectfill",state);
+        enableWhiteboardButton("pen",state);
+        enableWhiteboardButton("erase",state);
+        enableWhiteboardButton("text",state);
+        enableWhiteboardButton("line",state);
+    }
+
+    public static void enableWhiteboardButton(String name,boolean state ) {
         JToolBar toolbar = GUIAccessManager.mf.getWhiteboardPanel().getWbToolbar();
         int count = toolbar.getComponentCount();
         for (int i = 0; i < count; i++) {
             Component c = toolbar.getComponentAtIndex(i);
-            c.setEnabled(state);
+            if (c.getName().equals(name)) {
+                c.setEnabled(state);
+            }
         }
     }
 
@@ -143,6 +159,8 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(enable, "addroommembers");
         GUIAccessManager.setMenuEnabled(enable, "cleanParticipantsList");
         GUIAccessManager.setMenuEnabled(enable, "undo");
+        GUIAccessManager.setMenuEnabled(enable, "delete");
+        GUIAccessManager.setMenuEnabled(enable, "clearMics");
 
     }
 

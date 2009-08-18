@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -281,9 +280,6 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
                 String path = resourceDir + "/" + files[i];
                 String presentationName = GeneralUtil.readTextFile(path + "/presentationname.txt");
                 standByPresentationId = files[i];
-
-
-
                 RealtimeFile f = new RealtimeFile(presentationName == null ? files[i] : presentationName, path, false, false);
                 f.setSlideName(true);
                 f.setName(files[i]);

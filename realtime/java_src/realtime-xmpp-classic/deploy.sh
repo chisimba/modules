@@ -1,4 +1,4 @@
-/dwaf/core-software/apache-ant-1.7.1/bin/ant -f deploy.xml deploy
+/dwaf/software/apache-ant-1.7.1/bin/ant -f deploy.xml deploy
 
 jarsigner -keystore keystore deploy/realtime-xmpp.jar  avoir
 #cp lib/realtime-xmpp.jar /var/www/chisimba-realtime-1.0.2/

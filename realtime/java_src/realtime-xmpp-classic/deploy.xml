@@ -3,6 +3,7 @@
     <description>Chisimba Realtime Tools</description>
     <property name="src" location="src"/>
     <property name="build" location="build"/>
+    <property name="deploy" location="deploy"/>
     <property name="dist" location="."/>
     <property name="realtime.classroom.base.filename" value="deploy/realtime-xmpp.jar" />
     <path id="classpathlib">
@@ -31,6 +32,18 @@
     </path>
     <target name="init">
         <mkdir dir="${build}"/>
+        <mkdir dir="${build}/images"/>
+        <mkdir dir="${build}/META-INF"/>
+        <mkdir dir="${deploy}"/>
+        
+        <copy todir="${build}/images">
+              <fileset dir="${src}/images"/>
+        </copy>
+
+        <copy todir="${build}/META-INF">
+              <fileset dir="${src}/META-INF"/>
+        </copy>
+
     </target>
     <target name="compile" depends="init" description="compile the source ">
         <!-- Compile the java code from ${src} into ${build} -->

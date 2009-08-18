@@ -62,7 +62,8 @@ public class SlideShowProcessor {
     // public static ProgressMonitor progressMonitor;
     public static int slideCount = 0;
     public static int totalSlideCount = 0;
-private static boolean initSlideShown=false;
+    private static boolean initSlideShown = false;
+
 
     static {
         try {
@@ -192,7 +193,7 @@ private static boolean initSlideShown=false;
             GeneralUtil.writeTextFile(targetDir + "/server_path.txt", serverPath, false);
             slideCount = 0;
             GUIAccessManager.mf.getWbProgressBar().setMinimum(0);
-            GUIAccessManager.mf.getWbProgressBar().setMaximum(totalSlideCount-1);
+            GUIAccessManager.mf.getWbProgressBar().setMaximum(totalSlideCount - 1);
         //  progressMonitor = new ProgressMonitor(GUIAccessManager.mf, "Initializing slides..please wait", "", 0, totalSlideCount);
 
         } catch (Exception ex) {
@@ -327,6 +328,7 @@ private static boolean initSlideShown=false;
             Document doc = documentBuilder.parse(
                     new ByteArrayInputStream(xmlContent.getBytes(Constants.PREFERRED_ENCODING)));
             String slideShowName = XmlUtils.readString(doc, "slide-show-name");
+
             String slideTitle = XmlUtils.readString(doc, "slide-title");
             String slideNoStr = slideTitle.substring(5);
             int slideNo = Integer.parseInt(slideNoStr.trim());
@@ -526,11 +528,13 @@ private static boolean initSlideShown=false;
         ImageIcon image = slide.getImage();
         String slideName = slide.getFileName();
 
-        String presentationName = slide.getPresentationName();
+        String presentationName = GeneralUtil.formatStrUsingIllegalChars(slide.getPresentationName(), "-");
         String presentationId = slide.getPresentationId();
         String targetDir = Constants.HOME + "/rooms/" + ChatRoomManager.currentRoomName + "/" + presentationId;
-       
 
+        if (presentationName.equals("null")) {
+            presentationName = presentationId;
+        }
         new File(targetDir).mkdirs();
         GeneralUtil.writeTextFile(targetDir + "/presentationname.txt", GeneralUtil.removeExt(presentationName), false);
         if (image != null) {
@@ -555,21 +559,21 @@ private static boolean initSlideShown=false;
                 GeneralUtil.writeTextFile(fn + ".tr", trContent, false);
                 //if (progressMonitor != null) {
                 //  progressMonitor.setProgress(slideCount++);
-                GUIAccessManager.mf.getWbInfoField().setText("Downloaded " + (slideCount+1) + " of " + totalSlideCount);
+                GUIAccessManager.mf.getWbInfoField().setText("Downloaded " + (slideCount + 1) + " of " + totalSlideCount);
                 GUIAccessManager.mf.getWbProgressBar().setValue(slideCount + 1);
 
                 slideCount++;
                 //}
                 if (slideCount == totalSlideCount && !initSlideShown) {
-                   // GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
+                    // GUIAccessManager.mf.getWebPresentNavigator().populateWithRoomResources();
                     WebPresentManager.presentationId = presentationId;
 
                     WebpresentNavigator.selectedPresentation = presentationName;
                     //GUIAccessManager.mf.getSlideScroller().refresh();
                     displayInitialSlide(presentationId);
-                   
-                   GUIAccessManager.mf.getRoomResourceNavigator().populateWithRoomResources();
-                    initSlideShown=true;
+
+                    GUIAccessManager.mf.getRoomResourceNavigator().populateWithRoomResources();
+                    initSlideShown = true;
                 }
 
             } catch (Exception ex) {

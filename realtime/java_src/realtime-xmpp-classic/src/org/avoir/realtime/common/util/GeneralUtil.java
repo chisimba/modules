@@ -41,6 +41,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -139,6 +140,22 @@ public class GeneralUtil {
 
         Occupant occupant = GUIAccessManager.mf.getChatRoomManager().getMuc().getOccupant(str);
         return occupant.getJid();
+    }
+
+    private static int generateRandomInteger(int aStart, int aEnd) {
+        if (aStart > aEnd) {
+            int temp=aStart;
+            aStart=aEnd;
+            aEnd=temp;
+
+        }
+        Random aRandom = new Random();
+        //get the range, casting to long to avoid overflow problems
+        long range = (long) aEnd - (long) aStart + 1;
+        // compute a fraction of the range, 0 <= frac < range
+        long fraction = (long) (range * aRandom.nextDouble());
+        int randomNumber = (int) (fraction + aStart);
+        return randomNumber;
     }
 
     private static boolean isMyRoom() {
