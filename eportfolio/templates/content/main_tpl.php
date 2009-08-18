@@ -157,7 +157,10 @@ if(class_exists('groupops',false)){
 	$usrGrpId = $this->objGroupsOps->getUserByUserId($this->objUser->userId());
 }
 $permUserId = $usrGrpId['perm_user_id'];
-$allGrps = $this->objGroupsOps->getAllGroups();
+if(class_exists('groupops',false)){
+	$allGrps = $this->objGroupsOps->getAllGroups();
+}else{
+}
 foreach($allGrps as $thisGrp) {
     $isGpMbr = $this->objGroupsOps->isGroupMember($thisGrp['group_id'], $this->objUser->userId());
     if ($isGpMbr) {
