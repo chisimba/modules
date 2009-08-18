@@ -159,10 +159,6 @@ if(class_exists('groupops',false)){
 $permUserId = $usrGrpId['perm_user_id'];
 if(class_exists('groupops',false)){
 	$allGrps = $this->objGroupsOps->getAllGroups();
-}else{
-		$allGrps = $this->_objGroupAdmin->getUserGroups( $this->objUser->PKId($this->objUser->userId()));
-}
-var_dump($allGrps);
 foreach($allGrps as $thisGrp) {
     $isGpMbr = $this->objGroupsOps->isGroupMember($thisGrp['group_id'], $this->objUser->userId());
     if ($isGpMbr) {
@@ -318,6 +314,47 @@ foreach($buddiesPidListArr as $grpIdKey => $buddy) {
         }
     }
 }
+}else{
+		$allGrps = $this->_objGroupAdmin->getUserGroups( $this->objUser->PKId($this->objUser->userId()));
+		$myPid = $this->objUser->PKId($this->objUser->userId());
+            foreach( $myGroups as $groupId ) {
+		$filter = " WHERE id = '$groupId'";
+		$parentId = $this->_objGroupAdmin->getGroups( $fields = array( "id", "name", "parent_id" ), $filter );
+
+		$myparentId = $parentId[0];
+
+		$ownerId = $this->_objGroupAdmin->getname( $myparentId[parent_id] );		
+		if ( $ownerId !== $myPid ){
+	                $fullname = $this->objUserAdmin->getUserDetails($ownerId);
+			
+			if(!empty($fullname)){			
+			// Add row with user details.
+			$groupname = $this->_objGroupAdmin->getName( $groupId );
+			        //Select View 
+		                $iconSelect = $this->getObject('geticon','htmlelements');
+	            		$iconSelect->setIcon('view');	
+		    		$iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view",'eportfolio').' '.$fullname[firstname].$objLanguage->languageText("mod_eportfolio_viewEportfolio",'eportfolio');
+		    		$mnglink = new link($this->uri(array(
+					'module'=>'eportfolio',
+					'action'=>'view_others_eportfolio', 
+					'id' => $groupId
+				)));
+				$mnglink->link = $iconSelect->show();
+				$linkManage = $mnglink->show();     
+				//Store Group id
+				$textinput = new textinput("groupId",$groupId);
+				$epTable->startRow();
+				$epTable->addCell($linkManage,'','','left','','');
+				$epTable->addCell($fullname[title].' '.$fullname[firstname].' '.$fullname[surname],'','','left','','');
+				$epTable->addCell($groupname,'','','left','','');				
+				$epTable->endRow();
+				$groupexists = $groupexists + 1;
+
+			}
+		}
+ }
+}
+
 //}
 /*
 if (!empty($fullname)) {
