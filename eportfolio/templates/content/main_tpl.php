@@ -125,12 +125,22 @@ $link = new link($this->uri(array(
 $link->link = 'View Identification Details';
 //echo '<br clear="left" />'.$link->show();
 //Create Owner and Guest group for user
-//$eportfoliogrpList = $this->_objGroupAdmin->getId($this->objUser->PKId($this->objUser->userId()) , $pkField = 'name');
-$eportfoliogrpList = $this->_objGroupAdmin->getId($name = $this->objUser->PKId($this->objUser->userId()));
-if (empty($eportfoliogrpList)) {
-    //Add User to context groups
-    $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
-    $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
+if(class_exists('groupops',false)){
+	$eportfoliogrpList = $this->_objGroupAdmin->getId($name = $this->objUser->PKId($this->objUser->userId()));
+	if (empty($eportfoliogrpList)) {
+		   //Add User to context groups
+		   $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
+		   $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
+	}
+}else{
+	$eportfoliogrpList = $this->_objGroupAdmin->getId( $this->objUser->PKId($this->objUser->userId()), $pkField = 'name' );
+	if(empty($eportfoliogrpList))
+	{
+		
+		//Add User to context groups
+		$title = $this->objUser->PKId($this->objUser->userId()).' '.$objUser->getSurname();
+	        $this->createGroupsOld($this->objUser->PKId($this->objUser->userId()), $title);
+	}
 }
 //End Create
 //View Other's eportfolio

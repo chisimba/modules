@@ -2138,7 +2138,30 @@ function createGroups($userid, $title)
     //$this->addGroupMembers();
     // Now create the ACLS
     $this->_objManageGroups->createAcls($userid, $title);
-} // End createGroups
+} 
+	/**
+	* Method to create the groups for a new eportfolio user on kewl2
+	* @param string The user id.
+	* @param string The Title of a new context.
+	*/
+	function createGroupsOld( $userid, $title )
+	{
+		   // Context node
+		   $eportfolioGroupId = $this->_objGroupAdmin->addGroup($userid,$title,NULL);
+		   // For each subgroup
+		   foreach( $this->_arrSubGroups as $groupName=>$groupId ) {
+
+		       $newGroupId = $this->_objGroupAdmin->addGroup(
+		           $groupName,
+		           $this->objUser->PKId($this->objUser->userId()).' '.$groupName,
+		           $eportfolioGroupId);
+		       $this->_arrSubGroups[$groupName]['id'] = $newGroupId;
+		   } // End foreach subgroup
+
+		   // Add groupMembers
+		   $this->addGroupMembers();
+					$this->_objManageGroups->createAcls( $userid, $title );
+	} 
 
 /**
  * Method to create more groups for an eportfolio user
