@@ -2224,10 +2224,13 @@ public function getEportfolioUsers()
     //Get group id
     $userPid = $this->objUser->PKId($this->objUser->userId());
     $this->setVarByRef('userPid', $this->userPid);
-    $usergroupId = $this->_objGroupAdmin->getId($userPid);
     //get the descendents.
-    //        $usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
-    $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
+    if(class_exists('groupops',false)){
+    	$usergroupId = $this->_objGroupAdmin->getId($userPid);
+	    $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
+    }else{
+     $usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
+    }
     foreach($usersubgroups as $subgroup) {
         // The member list of this group
         $myGroupId = array();
