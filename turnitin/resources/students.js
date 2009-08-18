@@ -237,7 +237,7 @@ function uploadFormPanel(assId, contextCode){
    var fu = new Ext.form.TextField({
           inputType: 'file',
           fieldLabel: 'File',
-          name: 'fileupload',
+          name: 'file',
           emptyText: 'Select your paper'
           
         })
@@ -271,11 +271,16 @@ function uploadFormPanel(assId, contextCode){
             handler: function(){
                 if(fp.getForm().isValid()){
 	                fp.getForm().submit({
-	                    url: uri+'?module=turnitin&action=ajax_sumbitassessment',
+	                    url: uri,//+'?module=turnitin&action=ajax_sumbitassessment',
+	                    params:  {'module' : 'turnitin', 'action': 'ajax_sumbitassessment'},
 	                    waitMsg: 'Uploading your paper...',
 	                    success: function(fp, o){
-	                        msg('Success', 'Processed file "'+o.result.file+'" on the server');
+	                        msg('Success', 'File was successfully uploaded');
+	                    },
+	                    failure: function(fp, action){
+	                    	msg('Error!', action.result.ms);
 	                    }
+	                    	
 	                });
                 }
             }

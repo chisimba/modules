@@ -199,7 +199,8 @@ class turnitin extends controller
 				break;
 				
 			case 'ajax_sumbitassessment':
-				echo '{"success":"true"}';
+				echo $this->objUtils->doFileUpload();
+				//echo '{"success":"true"}';
 				exit(0);
 				break;
 		}

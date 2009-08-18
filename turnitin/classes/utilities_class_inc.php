@@ -331,4 +331,50 @@ class utilities extends object
 	    }
 	    $conn2->disconnect ();  
 	  }
+	  
+	public function doFileUpload()
+	{
+		if (!$_FILES["file"]["error"] > 0)
+		{
+			return json(array('success' => 'false', 'msg' => 'Error: ' . $_FILES["file"]["error"] ));
+		} else {
+			
+			return '{"success":"true"}';
+		}
+		$success = 'false';
+		$allowed = array('doc, docx', 'pdf', 'txt', 'rtf', '');
+		
+		if (in_array($_FILES["file"]["type"],$allowed)	&& ($_FILES["file"]["size"] < 20000))
+		  {
+		  if ($_FILES["file"]["error"] > 0)
+		    {
+		    $msg = "Return Code: " . $_FILES["file"]["error"];
+		    }
+		  else
+		    {
+		    $msg = "Upload: " . $_FILES["file"]["name"] . "<br />";
+		    $msg .= "Type: " . $_FILES["file"]["type"] . "<br />";
+		    $msg .= "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";
+		    $msg .= "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
+		
+		    if (file_exists("upload/" . $_FILES["file"]["name"]))
+		      {
+		      $msg = $_FILES["file"]["name"] . " already exists. ";
+		      }
+		    else
+		      {
+		      move_uploaded_file($_FILES["file"]["tmp_name"],
+		      "upload/" . $_FILES["file"]["name"]);
+		      $msg .= "Stored in: " . "upload/" . $_FILES["file"]["name"];
+		      $success = 'true';
+		      }
+		    }
+		  }
+		else
+		  {
+		  $msg = "Invalid file";
+		  }
+		 
+		  return json(array('success' => $success, 'msg' => $msg)); 
+	}
 }
