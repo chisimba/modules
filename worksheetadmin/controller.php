@@ -51,7 +51,7 @@ class worksheetadmin extends controller
         if($this->objModules->checkIfRegistered(NULL, 'rubric')){
             $this->rubric = TRUE;
         }
-			
+
         $this->action = $this->getParam('action', NULL);
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->objWorksheet =& $this->getObject('dbworksheet', 'worksheet');
@@ -65,7 +65,7 @@ class worksheetadmin extends controller
         $this->user = $this->objUser->fullname();
         $this->userId = $this->objUser->userId();
         $this->objFile =& $this->getObject('upload','filemanager');
-        
+
         // Problem* $this->objFile->changeTables('tbl_worksheet_filestore','tbl_worksheet_blob');
         $this->objFileErase =& $this->getObject('dbfile','filemanager');
 
@@ -172,7 +172,7 @@ class worksheetadmin extends controller
                  $ValuesArray=array('question'=>$question,'model_answer'=>$answer,'question_worth'=>$worth);
                  $objDbworksheetquestion=$this->newObject('dbworksheetquestions','worksheet');
                  $objDbworksheetquestion->updateQn('id',$id,$ValuesArray);
-           
+
                 return $this->nextAction('view', array('id'=>$this->getParam('worksheet_id')));
 
             // Display form to edit a question
@@ -235,7 +235,7 @@ class worksheetadmin extends controller
                 $postSave = $this->getParam('save');
                 $postSubmit = $this->getParam('submitmark');
                 $postExit = $this->getParam('exit');
-                                    
+
                 if(isset($postSubmit) && !empty($postSubmit)){
                     $this->saveMark();
                     $this->submitMark();
@@ -259,7 +259,7 @@ class worksheetadmin extends controller
                             return $this->getLast();
                     }
                 }
-                
+
                 return $this->nextAction('listworksheet',array('id'=>$this->getParam('worksheet')));
 
             default:
@@ -282,8 +282,8 @@ class worksheetadmin extends controller
             	if (isset($row['chapter'])){
                 	$sql = "SELECT title FROM tbl_context_nodes WHERE ";
                 	$sql .= "id = '".$row['chapter']."'";
-					$nodes = $this->objContentNodes->getArray($sql);                
-                }                
+					$nodes = $this->objContentNodes->getArray($sql);
+                }
 
                 if(!empty($nodes)){
                     $ar[$key]['node'] = $nodes[0]['title'];
@@ -453,7 +453,7 @@ class worksheetadmin extends controller
         foreach ($data as $line ){
         				$this->objWorksheetAnswers->delete('question_id',$line['id']);
         }
-			
+
         $back = $this->getParam('back');
 
         if($back){
@@ -762,7 +762,7 @@ class worksheetadmin extends controller
         $mark=$this->objWorksheetAnswers->addMarks($worksheet_id,$student_id);
         $total=$this->objWorksheet->getWorksheet($worksheet_id,'total_mark');
 
-        $marks=($mark/$total[0]['total_mark'])*100;
+        $marks=($mark/$total['total_mark'])*100; //[0] JOC 20090818
 
         $result_id = $this->objWorksheetResults->getId($student_id,$worksheet_id);
 
