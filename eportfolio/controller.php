@@ -813,7 +813,12 @@ class eportfolio extends controller
             break;
 
         case "addgroupconfirm":
-            $id = $this->addGroups($this->getParam('group', NULL));
+												if(class_exists('groupops',false)){
+            	$id = $this->addGroups($this->getParam('group', NULL));
+            }else{
+            	$id = $this->addGroupsOld($this->getParam('group', NULL));
+            }
+
             return $this->nextAction('main', NULL);
             break;
 
@@ -2187,6 +2192,28 @@ function addGroups($title)
     // Now create the ACLS
     $this->_objManageGroups->createAcls($userPid, $title);
 } // End addGroups
+
+    /**
+    * Method to create more groups for an eportfolio user for kewl 2.0
+    * @param string The user id.
+    * @param string The Title of a new context.
+    */
+    function addGroupsOld( $title )
+    {
+        // user Pk id
+	$userPid = $this->objUser->PKId($this->objUser->userId());
+        $usergroupId = $this->_objGroupAdmin->getId( $userPid, $pkField = 'name' );  
+        // Add subgroup
+        $newGroupId = $this->_objGroupAdmin->addGroup($title,$userPid.' '.$groupName,$usergroupId);
+
+        // Add groupMembers
+        $this->addGroupMembers();
+
+        // Now create the ACLS
+
+	$this->_objManageGroups->createAcls( $userPid, $title );
+
+    } // End createGroups
 
 /**
  * Method to add members to the groups for a new eportfolio user
