@@ -5,15 +5,12 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 /**
  * @copyright (c) 2000-2004, Kewl.NextGen ( http://kngforge.uwc.ac.za )
- * @package contextgroups
+ * @package eportfolio
  * @subpackage template
  * @version 0.1
- * @since 15 February 2005
- * @author Jonathan Abrahams modified by Paul Mungai
- * @filesource
+ * @since 19 August 2009
+ * @author Paul Mungai
  */
-?>
-<?php
 // Page headers and layout template
 //$this->setLayoutTemplate('contextgroups_layout_tpl.php');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
@@ -44,5 +41,4 @@ echo $frmManage->show(); ?>
 </DIV>
 <?php
 //echo $linkToContextHome;
-
 ?>
