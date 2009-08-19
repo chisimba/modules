@@ -181,19 +181,15 @@ $table->endRow();
 $form->addToForm($header->show(). "<br />");
 $form->addToForm($table->show());
 
-$saveButton = new button ('submitform', 'Next');
-$saveButton->setToSubmit();
+$nextButton = new button ('submitform', 'Next');
+$nextButton->setToSubmit();
+$saveButton = new button('saveform', 'Save');
+$saveButton->setId("saveBtn");
+$saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
-$buttons=$saveButton->show();
-/*
-$cancelButton = new button('cancel','Cancel');
-$actionUrl = $this->uri(array('action' => NULL));
-$cancelButton->setOnClick("window.location='$actionUrl'");
-$buttons.='&nbsp'.$cancelButton->show();
- *
- */
-
-$form->addToForm('<br>'.$buttons);
+$form->addToForm("<br>".$nextButton->show());
+$form->addToForm("&nbsp;".$saveButton->show());
+$form->addToForm($saveMsg);
 
 
 // Create an instance of the css layout class
@@ -215,4 +211,27 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
+
+$saveUrl = $this->submitAction;
+$saveFormJS = 'jQuery(document).ready(function() {
+                    jQuery("#saveMsg").hide();
+
+                    jQuery("#saveBtn").click(function() {
+                           data = jQuery("form").serialize();
+                           url = "'.str_replace("amp;", "", $saveUrl).'";
+
+                           jQuery.ajax({
+                                type: "POST",
+                                url: url,
+                                data: data,
+                                success: function(msg) {
+                                    jQuery("#saveMsg").show();
+                                    jQuery("#saveMsg").text("Data saved successfully");
+                                    jQuery("#saveMsg").fadeOut(5000);
+                                }
+                           });
+                    });
+              });';
+
+echo "<script type='text/javascript'>".$saveFormJS."</script>";
 ?>

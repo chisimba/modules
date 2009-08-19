@@ -30,7 +30,8 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $table->cellspacing = '20';
 $table->startRow();
 
-
+$coursename = $this->objCourseProposals->getTitle($this->getParam('courseid'));
+$this->formValue->setValue('A1', $coursename);
 $unitname = new textinput('A1',$this->formValue->getValue('A1'),NULL,50);
 
 //the tips
@@ -185,20 +186,17 @@ $table->endRow();
 $form->addToForm($header->show(). "<br />");
 $form->addToForm($table->show());
 
-$saveButton = new button ('submitform', 'Next');
-$saveButton->setToSubmit();
+$nextButton = new button ('submitform', 'Next');
+$nextButton->setToSubmit();
+$saveButton = new button('saveform', 'Save');
+$saveButton->setId("saveBtn");
 
-
-$buttons=$saveButton->show();
-/*
-$cancelButton = new button('cancel','Cancel');
-$actionUrl = $this->uri(array('action' => NULL));
-$cancelButton->setOnClick("window.location='$actionUrl'");
-$buttons.='&nbsp'.$cancelButton->show();
- *
- */
+$buttons=$nextButton->show();
+$saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 $form->addToForm("<br>".$buttons);
+$form->addToForm("&nbsp;".$saveButton->show());
+$form->addToForm($saveMsg);
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -218,6 +216,29 @@ $rightSideColumn.= '</div>';
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 echo "<script type=\"text/javascript\">".$myscript."</script>";
+
+$saveUrl = $this->submitAction;
+$saveFormJS = 'jQuery(document).ready(function() {
+                    jQuery("#saveMsg").hide();
+
+                    jQuery("#saveBtn").click(function() {
+                           data = jQuery("form").serialize();
+                           url = "'.str_replace("amp;", "", $saveUrl).'";
+
+                           jQuery.ajax({
+                                type: "POST",
+                                url: url,
+                                data: data,
+                                success: function(msg) {
+                                    jQuery("#saveMsg").show();
+                                    jQuery("#saveMsg").text("Data saved successfully");
+                                    jQuery("#saveMsg").fadeOut(5000);
+                                }
+                           });
+                    });
+              });';
+
+echo "<script type='text/javascript'>".$saveFormJS."</script>";
 //Output the content to the page
 echo $cssLayout->show();
 ?>

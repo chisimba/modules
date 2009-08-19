@@ -22,6 +22,29 @@ class formvalue extends object {
   function setAllValues($valuearray) {
     $this->valuearray = $valuearray;
   }
+  function getSaveScript($saveUrl) {
+      $saveFormJS = 'jQuery(document).ready(function() {
+                    jQuery("#saveMsg").hide();
+
+                    jQuery("#saveBtn").click(function() {
+                           data = jQuery("form").serialize();
+                           url = "'.str_replace("amp;", "", $saveUrl).'";
+
+                           jQuery.ajax({
+                                type: "POST",
+                                url: url,
+                                data: data,
+                                success: function(msg) {
+                                    jQuery("#saveMsg").show();
+                                    jQuery("#saveMsg").text("Data saved successfully");
+                                    jQuery("#saveMsg").fadeOut(5000);
+                                }
+                           });
+                    });
+              });';
+
+    return "<script type='text/javascript'>".$saveFormJS."</script>";
+  }
 }
 
 ?>

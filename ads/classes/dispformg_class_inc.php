@@ -56,11 +56,16 @@
       $text = new textarea('G4b',$this->formValue->getValue('G4b'),5,70);
       $form->addToForm($textDescription . "<br />" . $text->show() . "<br />" . $this->formError->getError('G4b') . "<br />");
 
-      $saveButton = new button ('submitform', 'Next');
-      $saveButton->setToSubmit();
+      $nextButton = new button ('submitform', 'Next');
+      $nextButton->setToSubmit();
+      $saveButton = new button('saveform', 'Save');
+      $saveButton->setId("saveBtn");
+      $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 
-      $form->addToForm($saveButton->show());
+      $form->addToForm($nextButton->show());
+      $form->addToForm("&nbsp;".$saveButton->show());
+      $form->addToForm($saveMsg);
 
 			return $form->show();
 		}// end getSectionEForm()

@@ -37,6 +37,9 @@
 			$q4_heading = $this->getHeading("f4");
                         $q4_input = $this->getTextArea("F4");
 			$mySubmit = $this->getButton("submit");
+                        $saveButton = new button('saveform', 'Save');
+                        $saveButton->setId("saveBtn");
+                        $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 			
 			$myForm->addToForm($header->show() . "<br />");
 			$myForm->addToForm($q1a_heading);
@@ -65,6 +68,8 @@
                         $myForm->addToForm("<br />");
                         $myForm->addToForm($q4_input);
 			$myForm->addToForm("<br>$mySubmit");
+                        $myForm->addToForm("&nbsp;".$saveButton->show());
+                        $myForm->addToForm($saveMsg);
 			
 			return $myForm->show();
 		}// emd getSectionEForm()

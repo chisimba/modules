@@ -535,6 +535,17 @@ class ads extends controller {
         
         return "sendproposal_tpl.php";
     }
+
+    public function __showcourseprophisttest() {
+        return "showcourseprophisttest_tpl.php";
+    }
+
+    public function __getHistoryData() {
+        $objGetData = $this->getObject("getdata");
+        $response['this'] = $objGetData->getcoursehistory();
+        echo $response['this'];
+        die(); // break does not work. throws and error.
+    }
 }
 
 

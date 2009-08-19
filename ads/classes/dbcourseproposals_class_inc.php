@@ -43,7 +43,6 @@ class dbcourseproposals extends dbTable{
         return $rows;
     }
 
-
     public function changeTitle($id,$newtitle)
     {
 	$newtitle = addslashes($newtitle);

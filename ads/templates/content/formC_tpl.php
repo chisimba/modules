@@ -52,9 +52,6 @@ $tbl4b->addCell($this->objLanguage->languageText('mod_formC_C4b_2','ads'));
 $tbl4b->addCell($C4b_2->show());
 $tbl4b->endRow();
 
-$btnSubmit = new button('submitbutton', 'Next'); //originally submit
-$btnSubmit->setToSubmit();
-
 $formC = new form('formC',$this->submitAction);
 $formC->addToForm($header->show(). "<br />");
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C1','ads')."</b><br>" .$C1->show()."<br>".$this->formError->getError("C1"). "<br>");
@@ -63,8 +60,6 @@ $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2b','ads').
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C3','ads')."</b><br>".$C3->show()."<br>".$this->formError->getError("C3")."<br>");
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C4a','ads')."</b><br>".$C4a->showTable()."<br>");
 $formC->addToForm($tbl4b->show());
-//$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C4b_1','ads')."</b>&nbsp;&nbsp".$C4b_1->show()."<br>");
-//$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C4b_2','ads')."</b>&nbsp;&nbsp".$C4b_2->show());
 
 if(strcmp($this->formError->getError("C4b_1"),$this->formError->getError("C4b_2")) == 0 and strlen($this->formError->getError("C4b_1")) > 0)
 {
@@ -78,7 +73,16 @@ elseif(strlen($this->formError->getError("C4b_2")) > 0)
 {
   $formC->addToForm($this->formError->getError("C4b_2"));
 }
-$formC->addToForm("<br>".$btnSubmit->show());
+
+$nextButton = new button ('submitform', 'Next');
+$nextButton->setToSubmit();
+$saveButton = new button('saveform', 'Save');
+$saveButton->setId("saveBtn");
+$saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
+
+$formC->addToForm("<br>".$nextButton->show());
+$formC->addToForm("&nbsp;".$saveButton->show());
+$formC->addToForm($saveMsg);
 
 $header = new htmlheading();
 $header->type = 3;
@@ -103,4 +107,27 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
+
+$saveUrl = $this->submitAction;
+$saveFormJS = 'jQuery(document).ready(function() {
+                    jQuery("#saveMsg").hide();
+
+                    jQuery("#saveBtn").click(function() {
+                           data = jQuery("form").serialize();
+                           url = "'.str_replace("amp;", "", $saveUrl).'";
+
+                           jQuery.ajax({
+                                type: "POST",
+                                url: url,
+                                data: data,
+                                success: function(msg) {
+                                    jQuery("#saveMsg").show();
+                                    jQuery("#saveMsg").text("Data saved successfully");
+                                    jQuery("#saveMsg").fadeOut(5000);
+                                }
+                           });
+                    });
+              });';
+
+echo "<script type='text/javascript'>".$saveFormJS."</script>";
 ?>

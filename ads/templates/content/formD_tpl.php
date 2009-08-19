@@ -1,10 +1,7 @@
 <?php
 
 // add javascript for the hour calculations
-$jquery = '<script language="JavaScript" src="'.$this->getResourceUri('js/jquery-1.2.6.min.js').'" type="text/javascript"></script>';
 $calcjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/calc.js').'" type="text/javascript"></script>';
-
-$this->appendArrayVar('headerParams', $jquery);
 $this->appendArrayVar('headerParams', $calcjs);
 
 $this->loadClass('form','htmlelements');
@@ -174,9 +171,11 @@ foreach ($errorcodes as $error) {
 }
 $D6 = new textarea('D6',$this->formValue->getValue('D6'),5,25);
 $D7 = new textarea('D7',$this->formValue->getValue('D7'),5,25);
-$submit = new button('submit','Next'); //originally submit
-$submit->setToSubmit();
-// done
+$nextButton = new button ('submitform', 'Next');
+$nextButton->setToSubmit();
+$saveButton = new button('saveform', 'Save');
+$saveButton->setId("saveBtn");
+$saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 $form->addToForm($header->show(). "<br />");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D1','ads')."</b><br>".$D1->show()."<br>".$this->formError->getError('D1')."<br>");
@@ -186,13 +185,9 @@ $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D4','ads')."<
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D5','ads')."</b><br><br>".$D5."<br>".$this->formError->getError('D5')."<br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D6','ads')."</b><br>".$D6->show()."<br>".$this->formError->getError('D6')."<br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D7','ads')."</b><br>".$D7->show()."<br>".$this->formError->getError('D7')."<br>");
-$form->addToForm($submit->show());
-
-
-/*===================================
-Don't know what $coursedata is
-=====================================
-*/
+$form->addToForm("<br>".$nextButton->show());
+$form->addToForm("&nbsp;".$saveButton->show());
+$form->addToForm($saveMsg);
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -202,7 +197,6 @@ $nav = $this->getObject('nav', 'ads');
 $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
 $leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
 $cssLayout->setLeftColumnContent($leftSideColumn);
-//$rightSideColumn='<h1>'.$coursedata['title'].'</h1>';
 $rightSideColumn='<div style="padding:10px;">';
 
 //Add the table to the centered layer
@@ -213,4 +207,27 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
+
+$saveUrl = $this->submitAction;
+$saveFormJS = 'jQuery(document).ready(function() {
+                    jQuery("#saveMsg").hide();
+
+                    jQuery("#saveBtn").click(function() {
+                           data = jQuery("form").serialize();
+                           url = "'.str_replace("amp;", "", $saveUrl).'";
+
+                           jQuery.ajax({
+                                type: "POST",
+                                url: url,
+                                data: data,
+                                success: function(msg) {
+                                    jQuery("#saveMsg").show();
+                                    jQuery("#saveMsg").text("Data saved successfully");
+                                    jQuery("#saveMsg").fadeOut(5000);
+                                }
+                           });
+                    });
+              });';
+
+echo "<script type='text/javascript'>".$saveFormJS."</script>";
 ?>

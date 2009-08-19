@@ -1,7 +1,7 @@
 <?php
 
    $submission = $this->objDocumentStore->sendProposal($lname, $fname, $email, $phone, $this->id);
-   //$submission = true;
+   
    echo "<div id=\"submitResponse\">";
    if($submission) {
        echo "Your details have been submitted successfully";

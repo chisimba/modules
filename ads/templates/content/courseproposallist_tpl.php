@@ -92,8 +92,8 @@ foreach($courseProposals as $value) {
                         break;
                         default: $statusLink->link= 'New';
                         }
-
-                        $deleteLink->link($this->uri(array('action'=>'deletecourseproposal','id'=>$value['id'])));
+                        
+                        $deleteLink->link("#");
                         $editLink->link($this->uri(array('action'=>'editcourseproposal','id'=>$value['id'])));
 
                         //review
@@ -113,6 +113,7 @@ foreach($courseProposals as $value) {
                         //$data .= "'".$name."',";
 
                         $objIcon->setIcon('delete');
+                        $objIcon->extra = "id=\"deleteBtn\"";
                         $deleteLink->link=$objIcon->show();
                         $data .= "'".$deleteLink->show();
 
@@ -246,6 +247,7 @@ $proposalForm=
 
         });
  ";
+
 $mainjs = "/*!
                  * Ext JS Library 3.0.0
                  * Copyright(c) 2006-2009 Ext JS, LLC
@@ -264,7 +266,7 @@ $mainjs = "/*!
                        {name: 'dateCreated'},
                        {name: 'owner'},
                        {name: 'status'},
-                       //{name: 'currVersion'},
+                     //{name: 'currVersion'},
                        //{name: 'lastEdit'},
                        {name: 'edit'},
                        {name: 'faculty'}
@@ -286,7 +288,11 @@ $mainjs = "/*!
                             //{header: \"".$currVersion."\", width: 20, dataIndex: 'currVersion'},
                             {header: \"".$faculty."\", width: 100, dataIndex: 'faculty'},
                             //{header: \"".$lastEdit."\", width: 50, dataIndex: 'lastEdit'},
-                            {header: \"".$edit."\", width: 70, dataIndex: 'edit'}
+                            ";
+                            if($this->objUser->isAdmin()) {
+                                $mainjs .= "{header: \"".$edit."\", width: 70, dataIndex: 'edit'}";
+                            }
+                            $mainjs .="
                         ],
 
                         view: new Ext.grid.GroupingView({
@@ -310,16 +316,40 @@ $mainjs = "/*!
                   ".$faculties."
                   ".$proposalForm."
                   ".$addProposalWindowJS."
-
+               
                ";
 
-                    echo "<script type=\"text/javascript\">".$mainjs."</script>";
+$delBtnjs = "
+Ext.onReady(function() {
+    var getDelBtn = function(){
+        var delBtn = Ext.get('deleteBtn');
+        delBtn.on('click', function(){
+            Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this course proposal?', showResult);
+        })
+    }
+
+    function showResult(btn){
+        var s = String.format.apply(String, Array.prototype.slice.call(btn, 0)),
+            url = '".str_replace("amp;", "",$this->uri(array('action'=>'deletecourseproposal','id'=>$value['id'])))."';
+
+        if(s == 'y') {
+            // go to the delete page
+            goDelete(url);
+        }
+    };
+
+    // executes after 2 seconds:
+    getDelBtn.defer(2000, this);
+});
+
+function goDelete(url) {
+    window.location.href = url;
+}";
+
+                    echo "<script type=\"text/javascript\">".$mainjs.$delBtnjs."</script>";
                     $tooltipHelp =& $this->getObject('tooltip','htmlelements');
                     $tooltipHelp->setCaption('Help');
                     $tooltipHelp->setText('Some help text...');
                     $tooltipHelp->setCursor('help');
                     echo $tooltipHelp->show();
-
-
-
-                    ?>
+?>

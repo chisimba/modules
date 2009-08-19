@@ -57,6 +57,9 @@
                         $q5b_input = $this->getInput("E5b");
 
                         $mySubmit = $this->getButton("submit");
+                        $saveButton = new button('saveform', 'Save');
+                        $saveButton->setId("saveBtn");
+                        $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 
 			// add elememts to the form
@@ -95,6 +98,8 @@
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q5b_input);
                         $myForm->addToForm("<br>$mySubmit");
+                        $myForm->addToForm("&nbsp;".$saveButton->show());
+                        $myForm->addToForm($saveMsg);
       
 			return $myForm->show();
 		}// emd getSectionEForm()

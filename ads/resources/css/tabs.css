@@ -1,22 +1,20 @@
 /* 
     Document   : tabs
     Created on : 29 Jul 2009, 11:50:18 PM
-    Author     : nguni
+    Author     : Nguni (Nkululeko Phakela)
     Description: 
 */
-
-
-.list {list-style:square;width:500px;padding-left:16px;}
-.list li{padding:2px;font-size:8pt;}
-
-pre {
-   font-size:11px;
+.list {
+    list-style:square;
+    width:500px;
+    padding-left:16px;
 }
-
-.x-tab-panel-body .x-panel-body {
-    padding:10px;
+.list li{
+    padding:2px;
+    font-size:8pt;
 }
-
+pre {font-size:11px;}
+.x-tab-panel-body .x-panel-body {padding:10px;}
 /* default loading indicator for ajax calls */
 .loading-indicator {
 	font-size:8pt;
@@ -25,13 +23,5 @@ pre {
 	background-position: left;
 	padding-left:20px;
 }
-
-.new-tab {
-    background-image:url(../feed-viewer/images/new_tab.gif) !important;
-}
-
-
-.tabs {
-    background-image:url( ../desktop/images/tabs.gif ) !important;
-}
-
+.new-tab {background-image:url(../feed-viewer/images/new_tab.gif) !important;}
+.tabs {background-image:url( ../desktop/images/tabs.gif ) !important;}

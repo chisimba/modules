@@ -21,3 +21,6 @@ div#note a {
     text-decoration: underline;
 }
 div#note a:hover {color: #FF0000;}
+.x-panel-btns {
+    text-align:right;
+}
