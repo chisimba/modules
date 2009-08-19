@@ -7,10 +7,10 @@ $options = array('comment'=>'Table to store Gifts','collate'=>'utf8_general_ci',
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32),
-		'donor'=>array('type'=>'text','length'=>128),
-		'recipient'=>array('type'=>'text','length'=>128),
-		'giftname'=>array('type'=>'text','length'=>128),
-		'description'=>array('type'=>'blob'),
-		'value'=>array('type'=>'integer'),
-		'listed'=>array('type'=>'boolean'));
+		'donor'=>array('type'=>'text','length'=>128,'not null'),
+		'recipient'=>array('type'=>'text','length'=>128,'not null'),
+		'giftname'=>array('type'=>'text','length'=>128,'not null'),
+		'description'=>array('type'=>'blob','not null'),
+		'value'=>array('type'=>'integer','not null'),
+		'listed'=>array('type'=>'boolean','not null'));
 ?>

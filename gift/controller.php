@@ -29,18 +29,27 @@ class gift extends controller
             default: return "home_tpl.php";
         }
     }
-	
+
+    /**
+     * Add link clicked from home page, calls this method
+     * @return string
+     */
     function add() {
         return "addedit_tpl.php";
     }
-	
+
+    /**
+     * Submits the addition of a new gift to the database
+     * and returns to the home page
+     * @return string
+     */
     function submitAdd() {
-        $donor = $this->getParam('dnvalue');
-        $recipient = $this->objUser->fullName();
-        $name = $this->getParam('gname');
-        $description = $this->getParam('descripvalue');
-        $value = $this->getParam('gvalue');
-        $listed = $this->getParam('gstatevalue');
+        $donor = $this->getParam('dnvalue');             // Donor name
+        $recipient = $this->objUser->fullName();         // Recipient name
+        $name = $this->getParam('gname');                // Gift's name
+        $description = $this->getParam('descripvalue');  // Description
+        $value = $this->getParam('gvalue');              // Gift's value
+        $listed = $this->getParam('gstatevalue');        // Archived status
 		
         $result = $this->objDbGift->addInfo($donor,$recipient,$name,$description,$value,$listed);
 
@@ -51,27 +60,44 @@ class gift extends controller
             $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
         }
 
-        return "home_tpl.php";
-    }
-	
-    function result() {
-        $donor = $this->getParam('donor');
-        $recipient = $this->objUser->fullName();
-        $giftname = $this->getParam('giftname');
-        $this->status = $this->getParam('archived');
-	
-        $qry = "SELECT * FROM tbl_gifttable WHERE (donor LIKE '%$donor' OR recipient LIKE '%$recipient' OR giftname LIKE '%$giftname') AND listed='".!$this->status."'";
+        $recipient = $this->objUser->fullName();     // Recipient name
+
+        $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
         $this->data = $this->objDbGift->getInfo($qry);
 
         return "edit_tpl.php";
     }
+
+    /**
+     * Depending on the archived parameter, finds all gifts donated
+     * to the specific owner based on whether the gift is archived
+     * or not archived
+     * @return string
+     */
+    function result() {
+        $recipient = $this->objUser->fullName();     // Recipient name
 	
+        $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
+        $this->data = $this->objDbGift->getInfo($qry);
+
+        return "edit_tpl.php";
+    }
+
+    /**
+     * Edit link from edit template, calls this method
+     * @return string
+     */
     function edit() {
         return "addedit_tpl.php";
     }
 
+    /**
+     * Adjusts the archive status of a particular gift and returns to the
+     * home page.  (i.e. if the gift is archived, there is an option to
+     * unarchive it and vice versa)
+     * @return string
+     */
     function archive() {
-        $data = array();
         $id = $this->getParam('id');
         $result = $this->objDbGift->archive($id);
 
@@ -81,9 +107,19 @@ class gift extends controller
         else {
             $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
         }
-        return 'home_tpl.php';
+
+        $qry = "SELECT * FROM tbl_gifttable";
+        $data = $this->objDbGift->getInfo($qry);
+        $this->data = $data;
+
+        return "edit_tpl.php";
     }
-	
+
+    /**
+     * Updates a record in the database dependent on the gift that
+     * was edited and returns to the home page.
+     * @return string
+     */
     function submitEdit() {
         $donor = $this->getParam('dnvalue');
         $recipient = $this->objUser->fullName();
@@ -100,8 +136,12 @@ class gift extends controller
         else {
             $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
         }
-		
-        return "home_tpl.php";
+
+        $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
+        $this->data = $this->objDbGift->getInfo($qry);
+        $this->recentdata['id'] = $this->getParam('id');
+
+        return "edit_tpl.php";
     }
 }
 ?>

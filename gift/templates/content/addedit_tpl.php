@@ -3,11 +3,11 @@ $action = $this->getParam('action');
 if($action == 'edit') {
     $id  = $this->getParam('id');
     $data = $this->objDbGift->getRow('id',$id);
-    $addEditForm = $this->objGift->displayForm($this->objUser->fullName(),$data);
+    $addEditForm = $this->objGift->displayForm($this->objUser->fullName(),$data,$action);
     $addEditForm = '<h2>'.$this->objLanguage->languageText('mod_addedit_editHeading','gift').'</h2>'.$addEditForm;
 }
 else {
-    $addEditForm = $this->objGift->displayForm($this->objUser->fullName(),array());
+    $addEditForm = $this->objGift->displayForm($this->objUser->fullName(),array(),$action);
     $addEditForm = '<h2>'.$this->objLanguage->languageText('mod_addedit_addHeading','gift').'</h2>'.$addEditForm;
 }
 

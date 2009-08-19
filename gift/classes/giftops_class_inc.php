@@ -1,6 +1,9 @@
 <?php
 class giftops extends object {
 
+    /**
+     * Initialises classes to be used
+     */
     public function init() {
         // importing classes
         $this->loadClass('textinput', 'htmlelements');
@@ -11,10 +14,18 @@ class giftops extends object {
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('htmltable','htmlelements');
         $this->loadClass("layer","htmlelements");
+        $this->loadClass("mouseoverpopup","htmlelements");
         $this->objLanguage = $this->getObject("language", "language");
     }
 
-    public function displayForm($rname,$data) {
+    /**
+     * Builds the form for the addition of a new gift or editing an
+     * existing gift from the database.
+     * @param string $rname
+     * @param array $data
+     * @return string
+     */
+    public function displayForm($rname,$data,$action) {
         // set up language items
         $dnlabel = $this->objLanguage->languageText('mod_addedit_donor','gift').":";
         $rnlabel = $this->objLanguage->languageText("mod_addedit_receiver","gift").":";
@@ -27,23 +38,23 @@ class giftops extends object {
             $objForm = new form('contactdetailsform', $this->uri(array('action' => 'submitAdd')));
         }
         else {
-            $objForm = new form('contactdetailsform', $this->uri(array('action' => 'submitEdit')));
+            $objForm = new form('contactdetailsform', $this->uri(array('action' => 'submitEdit','id' => $data['id'])));
         }
 		
         //Setting up input text boxes
-        $objInputh1 = new textinput('dnvalue',$data['donor'], '', '15');
-        $dnvalue = $objInputh1->show();
+        $objInputh1 = new textinput('dnvalue',$data['donor'], '', '74');
+        $dnvalue = $objInputh1->show()."<br><br>";
 		
         $hiddenid = "<input type=\"hidden\" name=\"id\" value=\"".$data['id']."\" />";
 			
-        $objInputh2b = new textinput('gname',$data['giftname'], '', '15');
-        $gnvalue = $objInputh2b->show();
+        $objInputh2b = new textinput('gname',$data['giftname'], '', '74');
+        $gnvalue = $objInputh2b->show()."<br><br>";
 			
-        $objInputh3a = new textarea('descripvalue',$data['description'], 15, 50);
-        $descripvalue = $objInputh3a->show();
+        $objInputh3a = new textarea('descripvalue',$data['description'], 15, 54);
+        $descripvalue = $objInputh3a->show()."<br><br>";
 			
-        $objInputh3b = new textinput('gvalue',$data['value'], '', '15');
-        $gvalue = $objInputh3b->show();
+        $objInputh3b = new textinput('gvalue',$data['value'], '', '30');
+        $gvalue = $objInputh3b->show()."<br><br>";
 			
         $dropdown=&new dropdown('gstatevalue');
         $dropdown->addOption(1,$this->objLanguage->languageText("mod_dropdown_active","gift"));
@@ -55,11 +66,11 @@ class giftops extends object {
         else {
             $dropdown->setSelected(0);
         }
-        $gstatevalue = $dropdown->show();
+        $gstatevalue = $dropdown->show()."<br><br>";
 		
         //Buttons OK and cancel
         $this->objSubmitButton=new button('Submit');
-        $this->objSubmitButton->setValue($this->objLanguage->languageText("mod_addedit_btnSubmit","gift"));
+        $this->objSubmitButton->setValue($this->objLanguage->languageText("mod_addedit_btnSave","gift"));
         $this->objSubmitButton->setToSubmit();
 			
         $this->objResetButton=new button('Reset');
@@ -68,23 +79,24 @@ class giftops extends object {
 			
         $this->objCancelButton=new button('cancel');
         $this->objCancelButton->setValue($this->objLanguage->languageText("mod_addedit_btnCancel","gift"));
-        $this->objCancelButton->setOnClick("window.location='".$this->uri(NULL)."';");
+        
+        if($action == 'add')
+            $this->objCancelButton->setOnClick("window.location='".$this->uri(NULL)."';");
+        else
+            $this->objCancelButton->setOnClick("window.location='".$this->uri(array('action'=>'result'))."';");
         
         //Defining table
         $objTable = new htmltable();
         $objTable->cellpadding = '2';
         $objTable->border='0';
-        $objTable->startRow();
-        $objTable->addCell($hiddenid, '', '', '', '', '');
-        $objTable->addCell('', '', '', '', '', '');
-        $objTable->endRow();
+
         $objTable->startRow();
         $objTable->addCell($dnlabel, '', '', '', '', '');
         $objTable->addCell($dnvalue, '', '', '', '', '');
-        $objTable->endRow();	
-        $objTable->startRow();	
+        $objTable->endRow();
+        $objTable->startRow();
         $objTable->addCell($rnlabel, '', '', '', '', '');
-        $objTable->addCell($rname, '', '', '', '', '');
+        $objTable->addCell($rname."<br><br>", '', '', '', '', '');
         $objTable->endRow();
 
         $objTable->startRow();
@@ -92,7 +104,7 @@ class giftops extends object {
         $objTable->addCell($gnvalue, '', '', '', '', '');
         $objTable->addCell(" ", '', '', '', '', '');
         $objTable->endRow();
-                        
+
         $objTable->startRow();
         $objTable->addCell($descriplabel, '', 'top', '', '', '');
         $objTable->addCell($descripvalue, '', '', '', '', 'colspan="3"');
@@ -101,9 +113,8 @@ class giftops extends object {
         $objTable->startRow();
         $objTable->addCell($gvaluelabel, '', '', '', '', '');
         $objTable->addCell($gvalue, '', '', '', '', '');
-        $objTable->addCell(" ", '', '', '', '', '');
         $objTable->endRow();
-                        
+
         $objTable->startRow();
         $objTable->addCell($gstatelabel, '', '', '', '', '');
         $objTable->addCell($gstatevalue, '', '', '', '', '');
@@ -135,7 +146,8 @@ class giftops extends object {
         $pageLayer = $objLayer->show();
         return $pageLayer;
     }
-function sendEmail($subject, $body) {
+    
+    function sendEmail($subject, $body) {
 		
 		$objSysconfig = $this->getObject('dbsysconfig','sysconfig');
 		$adminemail = $objSysconfig->getValue('adminmail','gifts');

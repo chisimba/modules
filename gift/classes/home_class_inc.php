@@ -2,6 +2,9 @@
 
 class home extends object{
 
+    /**
+     * Initialises the classes to be used
+     */
     public function init()
     {
         $this->loadClass('htmlheading', 'htmlelements');
@@ -10,20 +13,27 @@ class home extends object{
         $this->loadclass('link','htmlelements');
     }
 
+    /**
+     * Links are displayed on the left hand side of every page.  This method
+     * gets that list.
+     * @param string $toSelect
+     * @param string $action
+     * @return string
+     */
     public function getLeftContent($toSelect, $action){
 
+        $homelink = new link($this->uri(NULL));
         $addgift  = new link($this->uri(array("action"=>"add")));
-        $editNonArchivedgift = new link($this->uri(array("action"=>"result","archived"=>"0")));
-        $editArchivedgift = new link($this->uri(array("action"=>"result","archived"=>"1")));
+        $editgift = new link($this->uri(array("action"=>"result")));
 
+        $homelink->link = $this->objLanguage->languageText('mod_home_homeLink','gift');;
         $addgift->link  = $this->objLanguage->languageText('mod_home_addLink','gift');
-        $editNonArchivedgift->link = $this->objLanguage->languageText('mod_home_editNonArchivedLink','gift');
-        $editArchivedgift->link = $this->objLanguage->languageText('mod_home_editArchivedLink','gift');
+        $editgift->link = $this->objLanguage->languageText('mod_home_editLink','gift');
 
         $list=array(
-            "0"=>$addgift->show(),
-            "1"=>$editNonArchivedgift->show(),
-            "2"=>$editArchivedgift->show()
+            "0"=>$homelink->show(),
+            "1"=>$addgift->show(),
+            "2"=>$editgift->show()
         );
 
         $desc = '<ul id="nav-secondary">';
@@ -36,6 +46,13 @@ class home extends object{
         }
         $desc.='</ul>';
         return $desc;
+    }
+
+    public function homePage() {
+        $heading = new htmlheading($this->objLanguage->languageText('mod_homeWelcome_heading','gift'),1);
+        $body    = $this->objLanguage->languageText('mod_homeWelcome_body','gift');
+        $notice  = $this->objLanguage->languageText('mod_homeWelcome_warning','gift');
+        return $heading->show()."<br>".$body."<br>".$notice;
     }
 }
 
