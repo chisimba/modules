@@ -1197,6 +1197,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         }
         fullScreen = false;
         repaint();
+
     }
 
     public void mouseClicked(MouseEvent evt) {
@@ -1682,7 +1683,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                         }
                     });
                     toolboxDlg.setVisible(true);
-                    showingToolbox = false;
+                    showingToolbox = true;
                 }
             } else {
                 setFullScreen();
