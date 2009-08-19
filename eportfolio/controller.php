@@ -466,7 +466,6 @@ class eportfolio extends controller
         case 'manage_form':
             $myid = $this->getParam('id', null);
             $this->setVarByRef('myid', $myid);
-            exit;
             return $this->processManagegroup($myid);
             break;
 
@@ -1797,6 +1796,7 @@ function processManagegroup($myId)
         }
         // Get the original member ids
         $fields = array('id');
+        exit;
         $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, $fields, Null);
         //$oldList = $this->_objGroupAdmin->getField($memberList, 'id');
         // Get the added member ids
