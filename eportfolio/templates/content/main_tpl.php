@@ -2250,10 +2250,17 @@ $tabBox->addTab(array(
     'name' => $this->objLanguage->code2Txt("phrase_othersePortfolio", 'eportfolio') ,
     'content' => $epTable->show()
 ) , 'winclassic-tab-style-sheet');
+if(class_exists('groupops',false)){
 $tabBox->addTab(array(
     'name' => $this->objLanguage->code2Txt("phrase_manage", 'eportfolio') ,
     'content' => $this->getEportfolioUsers()
 ) , 'winclassic-tab-style-sheet');
+}else{
+$tabBox->addTab(array(
+    'name' => $this->objLanguage->code2Txt("phrase_manage", 'eportfolio') ,
+    'content' => $this->getEportfolioUsersOld()
+) , 'winclassic-tab-style-sheet');
+}
 echo $tabBox->show();
 if ($this->getParam('message') == 'uploadsuccessful') {
     //$uploadstatus = $this->getParam('status');

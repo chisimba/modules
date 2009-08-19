@@ -2341,68 +2341,111 @@ public function getEportfolioUsers()
         $str.= $mngfeatureBox->show($groupName, $table->show());
         $table = &$this->newObject('htmltable', 'htmlelements');
         $managelink = new link();
-    } //end foreach
-    }else{
-    	$usergroupId = $this->_objGroupAdmin->getId($userPid);
-     $usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
-					foreach ($usersubgroups as $subgroup)
-					{
-						// The member list of this group
-						$fields = array ( 'firstName', 'surname', 'tbl_users.id' );
-						$membersList = $this->_objGroupAdmin->getGroupUsers($subgroup['id'], $fields);
-						foreach ( $membersList as $users ) {
-							if ($users)
-							{
-								$fullName = $users['firstname'] . " " . $users['surname'];
-								$userPKId = $users['id'];
-								$tableRow = array($fullName);
-								$table->addRow($tableRow);
-							}else{
-								$tableRow = array('<div align="center" style="font-size:small;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.$this->objLanguage->languageText('mod_eportfolio_wordManage','eportfolio').'</div>');
-								$table->addRow($tableRow);
-							}
-						}
-						//Add Users 
-						$iconManage = $this->getObject('geticon','htmlelements');
-						$iconManage->setIcon('add_icon');	
-						$iconManage->alt = $objLanguage->languageText("mod_eportfolio_add",'eportfolio').' / '.$objLanguage->languageText("word_edit").' '.$subgroup['name'];
-						$mnglink = new link($this->uri(array(
-						'module'=>'eportfolio',
-						'action'=>'manage_group', 
-						'id' => $subgroup["id"]
-						)));
-						//	    		$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$subgroup['name'].' '.$iconManage->show();
-						$mnglink->link = $iconManage->show();
-						$linkManage = $mnglink->show();     
-						//Manage Group
-
-						$iconShare = $this->getObject('geticon','htmlelements');
-						$iconShare->setIcon('fileshare');	
-						$iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure",'eportfolio').' '.$subgroup['name'].' '.$this->objLanguage->code2Txt("mod_eportfolio_view",'eportfolio');
-						$mnglink = new link($this->uri(array(
-						'module'=>'eportfolio',
-						'action'=>'manage_eportfolio', 
-						'id' => $subgroup["id"]
-						)));
-						//	    		$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio').' '.$iconShare->show();
-						$mnglink->link = $iconShare->show();
-
-						$linkMng = $mnglink->show();     
-
-
-						$tableRow = array('<hr/>'.$linkManage.'   '.$linkMng);
-						$table->addRow($tableRow);	 
-						$textinput = new textinput("groupname",$subgroup['name']);
-						$str .= $mngfeatureBox->show($subgroup['name'],$table->show());
-						//$table = & $this->newObject('htmltable' , 'htmlelements');
-						$managelink = new link();          
-					}//end foreach
+    	} //end foreach
     }
 
     $str.= $mngfeatureBox->show(NULL, $linkstable->show());
     return $str;
     unset($users);
 } //end method
+/**
+* Method to get the eportfolio users for kewl 2.0
+* @return string
+*/
+public function getEportfolioUsersOld()
+{
+	//manage eportfolio users
+	$objLink =  new link();
+	$objLanguage = &$this->getObject('language', 'language');
+	$icon =  & $this->newObject('geticon', 'htmlelements');
+	$table = & $this->newObject('htmltable' , 'htmlelements');
+	$linkstable = & $this->newObject('htmltable' , 'htmlelements');
+	$objGroups = & $this->newObject('managegroups', 'contextgroups');
+	$mngfeatureBox =  & $this->newObject('featurebox', 'navigation');
+	$table->width = '40%';
+	$linkstable->width = '40%';
+	$str = '';
+
+	//Add Group Link
+	$iconAdd = $this->getObject('geticon','htmlelements');
+	$iconAdd->setIcon('add');	
+	$iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');			
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_group')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_add",'eportfolio').' '.$objLanguage->languageText("mod_eportfolio_wordGroup",'eportfolio').' '.$iconAdd->show();
+	//$addlink->link = 'Add Group'.' '.$iconAdd->show();
+	$linkAdd = $addlink->show();     
+	$linkstableRow = array('<hr/>'.$linkAdd);
+	$linkstable->addRow($linkstableRow);	 
+	//	$str .= $mngfeatureBox->show(NULL,$linkstable->show());	    
+
+	//Get group members
+	//Get group id
+	$userPid = $this->objUser->PKId($this->objUser->userId());
+	$this->setVarByRef('userPid', $this->userPid);
+	$usergroupId = $this->_objGroupAdmin->getId( $userPid, $pkField = 'name' );  
+
+	//get the descendents.
+	$usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
+	foreach ($usersubgroups as $subgroup)
+	{
+
+	// The member list of this group
+	$fields = array ( 'firstName', 'surname', 'tbl_users.id' );
+	$membersList = $this->_objGroupAdmin->getGroupUsers($subgroup['id'], $fields);
+	foreach ( $membersList as $users ) {
+		if ($users)
+		{
+			$fullName = $users['firstname'] . " " . $users['surname'];
+			$userPKId = $users['id'];
+		 $tableRow = array($fullName);
+		 $table->addRow($tableRow);
+		}else{
+			$tableRow = array('<div align="center" style="font-size:small;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.$this->objLanguage->languageText('mod_eportfolio_wordManage','eportfolio').'</div>');
+   $table->addRow($tableRow);
+		}
+	}
+		//Add Users
+		$iconManage = $this->getObject('geticon','htmlelements');
+		$iconManage->setIcon('add_icon');	
+		$iconManage->alt = $objLanguage->languageText("mod_eportfolio_add",'eportfolio').' / '.$objLanguage->languageText("word_edit").' '.$subgroup['name'];
+		$mnglink = new link($this->uri(array(
+		'module'=>'eportfolio',
+		'action'=>'manage_group', 
+		'id' => $subgroup["id"]
+		)));
+		//$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$subgroup['name'].' '.$iconManage->show();
+		$mnglink->link = $iconManage->show();
+		$linkManage = $mnglink->show();     
+		//Manage Group
+
+		$iconShare = $this->getObject('geticon','htmlelements');
+		$iconShare->setIcon('fileshare');	
+		$iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure",'eportfolio').' '.$subgroup['name'].' '.$this->objLanguage->code2Txt("mod_eportfolio_view",'eportfolio');
+		$mnglink = new link($this->uri(array(
+		'module'=>'eportfolio',
+		'action'=>'manage_eportfolio', 
+		'id' => $subgroup["id"]
+		)));
+		//$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio').' '.$iconShare->show();
+		$mnglink->link = $iconShare->show();
+
+		$linkMng = $mnglink->show();     
+
+
+		$tableRow = array('<hr/>'.$linkManage.'   '.$linkMng);
+		$table->addRow($tableRow);	 
+
+		$textinput = new textinput("groupname",$subgroup['name']);
+		$str .= $mngfeatureBox->show($subgroup['name'],$table->show());
+		$table = & $this->newObject('htmltable' , 'htmlelements');
+		$managelink = new link();          
+	}//end foreach
+	$str .= $mngfeatureBox->show(NULL,$linkstable->show());
+
+	return $str;
+	unset($users);
+
+}//end method
 
 //Function for managing eportfolio group items/parts
 public function manageEportfolioViewers($selectedParts, $groupId) 
