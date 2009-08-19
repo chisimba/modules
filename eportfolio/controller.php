@@ -1864,119 +1864,109 @@ function processManage($groupName, $myId)
     // After processing return to main
     return $this->nextAction('view_assertion', array());
 }
-/**
- * Method to show the manage member group template.
- * @param string the group id to be managed.
- */
-function showManagegroup($myid) 
-{
-    // The member list of this group
-    $fields = array(
-        'firstName',
-        'surname',
-        'tbl_users.id'
-    );
-    $memberList = $this->_objGroupAdmin->getGroupUsers($myid, $fields);
-    if (!empty($memberList)) $memberIds = $this->_objGroupAdmin->getField($memberList, 'id');
-    if (!empty($memberIds)) {
-        $filter = "'" . implode("', '", $memberIds) . "'";
-        // Users list need the firstname, surname, and userId fields.
-        $fields = array(
-            'firstName',
-            'surname',
-            'id'
-        );
-        $usersList = $this->_objGroupAdmin->getUsers($fields, " WHERE id NOT IN($filter)");
-        sort($usersList);
-    } else {
-        $filter = "";
-        $usersList = $this->_objGroupAdmin->getUsers($fields, "");
-        sort($usersList);
-    }
-    // Members list dropdown
-    $lstMembers = $this->newObject('dropdown', 'htmlelements');
-    $lstMembers->name = 'list2[]';
-    $lstMembers->extra = ' multiple="multiple" style="width:100pt" size="10" ondblclick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true); "';
-    foreach($memberList as $user) {
-        $fullName = $user['firstname'] . " " . $user['surname'];
-        $userPKId = $user['id'];
-        //echo "<h1>userPKId ".$userPKId."</h1>";
-        $lstMembers->addOption($userPKId, $fullName);
-    }
-    $tblLayoutM = &$this->newObject('htmltable', 'htmlelements');
-    $tblLayoutM->row_attributes = 'align="center" ';
-    $tblLayoutM->width = '100px';
-    $tblLayoutM->startRow();
-    $tblLayoutM->endRow();
-    $tblLayoutM->startRow();
-    $tblLayoutM->addCell($lstMembers->show());
-    $tblLayoutM->endRow();
-    $this->setVarByRef('lstMembers', $tblLayoutM);
-    // Users list dropdown
-    $lstUsers = $this->newObject('dropdown', 'htmlelements');
-    $lstUsers->name = 'list1[]';
-    $lstUsers->extra = ' multiple="multiple" style="width:100pt"  size="10" ondblclick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
-    if (!empty($usersList)) {
-        foreach($usersList as $user) {
-            $fullName = $user['firstname'] . " " . $user['surname'];
-            $userPKId = $user['id'];
-            $lstUsers->addOption($userPKId, $fullName);
-        }
-    } else {
-        //   $lstUsers->addOption(Null, Null);
-        
-    }
-    $tblLayoutU = &$this->newObject('htmltable', 'htmlelements');
-    $tblLayoutU->row_attributes = 'align="center"';
-    $tblLayoutU->width = '100px';
-    $tblLayoutU->startRow();
-    $tblLayoutU->addCell($this->objLanguage->code2Txt('mod_contextgroups_ttlUsers', 'contextgroups') , '10%', null, null, 'heading');
-    $tblLayoutU->endRow();
-    $tblLayoutU->startRow();
-    $tblLayoutU->addCell($lstUsers->show());
-    $tblLayoutU->endRow();
-    $this->setVarByRef('lstUsers', $tblLayoutU);
-    // Link method
-    $lnkSave = $this->newObject('link', 'htmlelements');
-    $lnkSave->href = '#';
-    $lnkSave->extra = 'onclick="javascript:';
-    $lnkSave->extra.= 'selectAllOptions( document.forms[\'frmManage\'][\'list2[]\'] ); ';
-    $lnkSave->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'save\'; ';
-    $lnkSave->extra.= 'document.forms[\'frmManage\'].submit(); "';
-    $lnkSave->link = $this->objLanguage->languageText('word_save');
-    $lnkCancel = $this->newObject('link', 'htmlelements');
-    $lnkCancel->href = '#';
-    $lnkCancel->extra = 'onclick="javascript:';
-    $lnkCancel->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'cancel\'; ';
-    $lnkCancel->extra.= 'document.forms[\'frmManage\'].submit(); "';
-    $lnkCancel->link = $this->objLanguage->languageText('word_cancel');
-    $ctrlButtons = array();
-    $ctrlButtons['lnkSave'] = $lnkSave->show();
-    $ctrlButtons['lnkCancel'] = $lnkCancel->show();
-    $this->setVar('ctrlButtons', $ctrlButtons);
-    $navButtons = array();
-    $navButtons['lnkRight'] = $this->navLink('>>', 'Selected', "forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
-    $navButtons['lnkRightAll'] = $this->navLink('All >>', 'All', "forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
-    $navButtons['lnkLeft'] = $this->navLink('<<', 'Selected', "forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
-    $navButtons['lnkLeftAll'] = $this->navLink('All <<', 'All', "forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
-    $this->setVar('navButtons', $navButtons);
-    $frmManage = &$this->getObject('form', 'htmlelements');
-    $frmManage->name = 'frmManage';
-    $frmManage->displayType = '3';
-    $frmManage->action = $this->uri(array(
-        'action' => 'manage_form',
-        'id' => $myid
-    ));
-    //$frmManage->action = $this->uri ( array( 'module'=>'eportfolio', 'action' => 'main', 'id'=>$myid) );
-    $frmManage->addToForm("<input type='hidden' name='button' value='' />");
-    $this->setVarByRef('frmManage', $frmManage);
-    $title = $this->objLanguage->code2Txt('mod_contextgroups_ttlManageMembers', 'contextgroups', array(
-        'GROUPNAME' => $groupName,
-        'TITLE' => $this->_objDBContext->getTitle()
-    ));
-    $this->setVar('title', $title);
-    return 'manage_group_tpl.php';
-}
+
+ /**
+  * Method to show the manage member group template.
+  * @param string the group id to be managed.
+  */
+ function showManagegroup($myid) 
+ {
+     // The member list of this group
+     $fields = array(
+         'firstName',
+         'surname',
+         'tbl_users.id'
+     );
+     $memberList = $this->_objGroupAdmin->getGroupUsers($myid, $fields);
+     $memberIds = $this->_objGroupAdmin->getField($memberList, 'id');
+     $filter = "'" . implode("', '", $memberIds) . "'";
+     // Users list need the firstname, surname, and userId fields.
+     $fields = array(
+         'firstName',
+         'surname',
+         'id'
+     );
+     $usersList = $this->_objGroupAdmin->getUsers($fields, " WHERE id NOT IN($filter)");
+     sort($usersList);
+     // Members list dropdown
+     $lstMembers = $this->newObject('dropdown', 'htmlelements');
+     $lstMembers->name = 'list2[]';
+     $lstMembers->extra = ' multiple="multiple" style="width:100pt" size="10" ondblclick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true); "';
+     foreach($memberList as $user) {
+         $fullName = $user['firstname'] . " " . $user['surname'];
+         $userPKId = $user['id'];
+         //echo "<h1>userPKId ".$userPKId."</h1>";
+         $lstMembers->addOption($userPKId, $fullName);
+     }
+     $tblLayoutM = &$this->newObject('htmltable', 'htmlelements');
+     $tblLayoutM->row_attributes = 'align="center" ';
+     $tblLayoutM->width = '100px';
+     $tblLayoutM->startRow();
+     $tblLayoutM->endRow();
+     $tblLayoutM->startRow();
+     $tblLayoutM->addCell($lstMembers->show());
+     $tblLayoutM->endRow();
+     $this->setVarByRef('lstMembers', $tblLayoutM);
+     // Users list dropdown
+     $lstUsers = $this->newObject('dropdown', 'htmlelements');
+     $lstUsers->name = 'list1[]';
+     $lstUsers->extra = ' multiple="multiple" style="width:100pt"  size="10" ondblclick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
+     foreach($usersList as $user) {
+         $fullName = $user['firstname'] . " " . $user['surname'];
+         $userPKId = $user['id'];
+         $lstUsers->addOption($userPKId, $fullName);
+     }
+     $tblLayoutU = &$this->newObject('htmltable', 'htmlelements');
+     $tblLayoutU->row_attributes = 'align="center"';
+     $tblLayoutU->width = '100px';
+     $tblLayoutU->startRow();
+     $tblLayoutU->addCell($this->objLanguage->code2Txt('mod_contextgroups_ttlUsers', 'contextgroups') , '10%', null, null, 'heading');
+     $tblLayoutU->endRow();
+     $tblLayoutU->startRow();
+     $tblLayoutU->addCell($lstUsers->show());
+     $tblLayoutU->endRow();
+     $this->setVarByRef('lstUsers', $tblLayoutU);
+     // Link method
+     $lnkSave = $this->newObject('link', 'htmlelements');
+     $lnkSave->href = '#';
+     $lnkSave->extra = 'onclick="javascript:';
+     $lnkSave->extra.= 'selectAllOptions( document.forms[\'frmManage\'][\'list2[]\'] ); ';
+     $lnkSave->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'save\'; ';
+     $lnkSave->extra.= 'document.forms[\'frmManage\'].submit(); "';
+     $lnkSave->link = $this->objLanguage->languageText('word_save');
+     $lnkCancel = $this->newObject('link', 'htmlelements');
+     $lnkCancel->href = '#';
+     $lnkCancel->extra = 'onclick="javascript:';
+     $lnkCancel->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'cancel\'; ';
+     $lnkCancel->extra.= 'document.forms[\'frmManage\'].submit(); "';
+     $lnkCancel->link = $this->objLanguage->languageText('word_cancel');
+     $ctrlButtons = array();
+     $ctrlButtons['lnkSave'] = $lnkSave->show();
+     $ctrlButtons['lnkCancel'] = $lnkCancel->show();
+     $this->setVar('ctrlButtons', $ctrlButtons);
+     $navButtons = array();
+     $navButtons['lnkRight'] = $this->navLink('>>', 'Selected', "forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
+     $navButtons['lnkRightAll'] = $this->navLink('All >>', 'All', "forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
+     $navButtons['lnkLeft'] = $this->navLink('<<', 'Selected', "forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
+     $navButtons['lnkLeftAll'] = $this->navLink('All <<', 'All', "forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
+     $this->setVar('navButtons', $navButtons);
+     $frmManage = &$this->getObject('form', 'htmlelements');
+     $frmManage->name = 'frmManage';
+     $frmManage->displayType = '3';
+     $frmManage->action = $this->uri(array(
+         'action' => 'manage_form',
+         'id' => $myid
+     ));
+     //$frmManage->action = $this->uri ( array( 'module'=>'eportfolio', 'action' => 'main', 'id'=>$myid) );
+     $frmManage->addToForm("<input type='hidden' name='button' value='' />");
+     $this->setVarByRef('frmManage', $frmManage);
+     $title = $this->objLanguage->code2Txt('mod_contextgroups_ttlManageMembers', 'contextgroups', array(
+         'GROUPNAME' => $groupName,
+         'TITLE' => $this->_objDBContext->getTitle()
+     ));
+     $this->setVar('title', $title);
+     return 'manage2_group_tpl.php';
+ }
 /**
  * Method to show the manage member group template.
  * @param string the group to be managed.
