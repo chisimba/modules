@@ -1840,7 +1840,7 @@ function processManage($groupName, $myId)
         }
         // Get the original member ids
         $fields = array(
-            'id'
+            'tbl_users.id'
         );
         $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, $fields);
         $oldList = $this->_objGroupAdmin->getField($memberList, 'id');
@@ -1850,6 +1850,7 @@ function processManage($groupName, $myId)
         $delList = array_diff($oldList, $list);
         // Add these members
         foreach($addList as $userId) {
+        
             $this->_objGroupAdmin->addGroupUser($groupId, $userId);
         }
         // Delete these members
