@@ -1810,9 +1810,6 @@ function processManagegroup($myId)
         $addList = array_diff($list, $member);
         // Get the deleted member ids
         $delList = array_diff($member, $list);
-        var_dump($member);
-        var_dump($list);
-//        var_dump($delList);
         // Add these members
         foreach($addList as $userId) {        
 									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == FALSE){
