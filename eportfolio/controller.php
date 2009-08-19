@@ -1804,6 +1804,7 @@ function processManagegroup($myId)
         $addList = array_diff($list, $memberList);
         // Get the deleted member ids
         $delList = array_diff($memberList, $list);
+        var_dump($list);
         var_dump($delList);
         // Add these members
         foreach($addList as $userId) {        
