@@ -2402,6 +2402,7 @@ public function getEportfolioUsers()
     return $str;
     unset($users);
 } //end method
+
 //Function for managing eportfolio group items/parts
 public function manageEportfolioViewers($selectedParts, $groupId) 
 {
