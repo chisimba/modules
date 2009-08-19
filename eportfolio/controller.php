@@ -1850,8 +1850,8 @@ function processManage($groupName, $myId)
         $delList = array_diff($oldList, $list);
         // Add these members
         foreach($addList as $userId) {
-        
-            $this->_objGroupAdmin->addGroupUser($groupId, $userId);
+									if(!$this->_objGroupAdmin->isGroupMember( $userId, $groupId ))
+          $this->_objGroupAdmin->addGroupUser($groupId, $userId);
         }
         // Delete these members
         foreach($delList as $userId) {
