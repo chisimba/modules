@@ -1797,14 +1797,21 @@ function processManagegroup($myId)
         // Get the original member ids
         $fields = array('tbl_users.id');
 
-        $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, "id", Null);        
+        $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, Null, Null);
+        if(!empty($memberList)){
+	        $member = array();
+		       foreach($memberList as $theList){
+		        $member[]= $theList['id'];
+		       } 
+        }
         //$oldList = $this->_objGroupAdmin->getField($memberList, 'id');
         // Get the added member ids
         //$addList = array_diff($list, $oldList);
-        $addList = array_diff($list, $memberList);
+        $addList = array_diff($list, $member);
         // Get the deleted member ids
-        $delList = array_diff($memberList, $list);
-        var_dump($memberList);
+        $delList = array_diff($member, $list);
+        var_dump($member);
+        var_dump($list);
 //        var_dump($delList);
         // Add these members
         foreach($addList as $userId) {        
