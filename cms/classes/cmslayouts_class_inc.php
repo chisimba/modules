@@ -1215,6 +1215,18 @@ public function showBody($isPreview = false)
 	$lbWritten = $this->objLanguage->languageText('phrase_writtenby');
 	$page = $this->_objContent->getContentPageFiltered($contentId);
 
+	$tblShowTitle = true;
+	$tblShowAuthor = true;
+	$tblShowDate = true;
+	$tblShowPrint = true;
+	$tblShowPdf = true;
+	$tblShowMail = true;
+
+	//var_dump($page);	
+	if ($page['trash'] == '1') {
+		return 'This item has been archived.';
+	}
+
 	//Including Meta Tags Here
 	$this->appendArrayVar('metaKeywords', $page['metakey']);
 	$this->appendArrayVar('metaDescriptions', $page['metadesc']);
@@ -1289,8 +1301,8 @@ public function showBody($isPreview = false)
 	if(isset($page['show_flag'])) {
 		if ($page['show_flag'] == 'g'){
 			//Checking the global sys config
-			$globalShowDate = $this->_objSysConfig->getValue('SHOW_FLAG', 'cmsadmin');
-			if ($globalShowDate == 'n') {
+			$globalShowFlag = $this->_objSysConfig->getValue('SHOW_FLAG', 'cmsadmin');
+			if ($globalShowFlag == 'n') {
 				$flagContent = '';
 			}
 		}
@@ -1348,10 +1360,12 @@ public function showBody($isPreview = false)
 			$globalShowPdf = $this->_objSysConfig->getValue('SHOW_PDF', 'cmsadmin');
 			if ($globalShowPdf == 'n') {
 				$pdflink = new href('', '', NULL);
+				$tblShowPdf = false;
 			}
 		}
 		if ($page['show_pdf'] == 'n'){
 			$pdflink = new href('', '', NULL);
+			$tblShowPdf = false;
 		}
 	}
 
@@ -1362,10 +1376,12 @@ public function showBody($isPreview = false)
 			$globalShowMtf = $this->_objSysConfig->getValue('SHOW_MAIL', 'cmsadmin');
 			if ($globalShowMtf == 'n') {
 				$mtflink = new href('', '', NULL);
+				$tblShowMail = false;
 			}
 		}
 		if ($page['show_email'] == 'n'){
 			$mtflink = new href('', '', NULL);  
+			$tblShowMail = false;
 		}
 	}
 
@@ -1376,27 +1392,33 @@ public function showBody($isPreview = false)
 			$globalShowPrint = $this->_objSysConfig->getValue('SHOW_PRINT', 'cmsadmin');
 			if ($globalShowPrint == 'n') {
 				$printlink = new href('', '', NULL);
+				$tblShowPrint = false;
 			}
 		}
 		if ($page['show_print'] == 'n'){
 			$printlink = new href('', '', NULL);  
+			$tblShowPrint = false;
 		}
 	}
 
 	// Adding Title
-	$this->objHead->str = $page['title'].$this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+	$btnEditLink = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+	$lblPageTitle = $page['title'];
+	
 	if(isset($page['show_title'])) {
 		if ($page['show_title'] == 'g'){
 			//Checking the global sys config
 			$globalShowTitle = $this->_objSysConfig->getValue('SHOW_TITLE', 'cmsadmin');
 			if ($globalShowTitle == 'n') {
 				//Only showing edit button
-				$this->objHead->str = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+				$lblPageTitle = '';
+				$tblShowTitle = false;
 			}
 		}
 		if ($page['show_title'] == 'n'){
 			//Only showing edit button
-			$this->objHead->str = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+			$lblPageTitle = '';
+			$tblShowTitle = false;
 		}
 	}
 
@@ -1407,9 +1429,16 @@ public function showBody($isPreview = false)
 	$tblh->width = "100%";
 	$tblh->align = "center";
 
+	//Title and Edit Button
 	$this->objHead->type = 2;
+        $this->objHead->str = $lblPageTitle.$btnEditLink;
+	
 	$tblh->startRow();
-	$tblh->addCell($this->objHead->show());
+
+	if ($lblPageTitle != '') {
+	    $tblh->addCell($this->objHead->show());
+        }
+
 	$tblh->addCell($pdflink->show() . $mtflink->show() . $printlink->show(),null,null,'right', 'printpdfmailicons'); //pdf icon
 	$tblh->endRow();
 
@@ -1425,10 +1454,12 @@ public function showBody($isPreview = false)
 			$globalShowAuthor = $this->_objSysConfig->getValue('SHOW_AUTHOR', 'cmsadmin');
 			if ($globalShowAuthor == 'n') {
 				$showAuthorText = '';
+				$tblShowAuthor = false;
 			}
 		}
 		if ($page['show_author'] == 'n'){
 			$showAuthorText = '';
+			$tblShowAuthor = false;
 		}
 	}
 
@@ -1445,24 +1476,39 @@ public function showBody($isPreview = false)
 			$globalShowDate = $this->_objSysConfig->getValue('SHOW_DATE', 'cmsadmin');
 			if ($globalShowDate == 'n') {
 				$showDateText = '';
+				$tblShowDate = false;
 			}
 		}
 		if ($page['show_date'] == 'n'){
 			$showDateText = '';
+			$tblShowDate = false;
 		}
 	}
 
+	if ($tblShowTitle == false &&
+	    $tblShowAuthor == false &&
+	    $tblShowDate == false &&
+	    $tblShowPdf == false &&
+	    $tblShowMail == false &&
+	    $tblShowPrint == false) {
+
+	    if ($this->objUser->isLoggedIn()) {
+	        $strHeader = $this->objHead->show();
+	    }
+        } else {
+	    $strHeader = '<hr /><p />';
+	    $strHeader .= $tblh->show();
+	}
+	
 	$strBody .= $showDateText;
 
-	$strBody .= '<hr />';
 	//parse for mindmaps
 	$page['body'] = $objMindMap->parse($page['body']);
 	//parse for mathml as well
 	$page['body'] = $objMath->parseAll($page['body']);
 	$strBody .= stripslashes($page['body']);
-	$strBody .= '<hr /><p />';
 	$objLayer = new layer();
-	$objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() . "</center><hr/><p/>";
+	$objLayer->str = $strHeader.$strBody ."<p /><center>".$tblnl->show() . "</center><hr/><p/>";
 	$objLayer->id = 'cmscontent';
 
 	return $objLayer->show();
