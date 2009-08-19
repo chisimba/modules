@@ -1805,6 +1805,7 @@ function processManagegroup($myId)
         $delList = array_diff($memberList, $list);
         // Add these members
         foreach($addList as $userId) {
+        
 									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == FALSE){
             $this->_objGroupAdmin->addGroupUser($groupId, $userId);
 									}
