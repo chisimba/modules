@@ -1890,7 +1890,7 @@ function showManagegroup($myid)
         sort($usersList);
     } else {
         $filter = "";
-        $usersList = $this->_objGroupAdmin->getUsers($fields, " WHERE id NOT IN($filter)");
+        $usersList = $this->_objGroupAdmin->getUsers($fields, "");
         sort($usersList);
     }
     // Members list dropdown
