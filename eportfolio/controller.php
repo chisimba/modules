@@ -1852,13 +1852,15 @@ function processManage($groupName, $myId)
         $delList = array_diff($oldList, $list);
         // Add these members
         foreach($addList as $userId) {
-									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId == FALSE)){
+									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == FALSE){
           $this->_objGroupAdmin->addGroupUser($groupId, $userId);
 									}
         }
         // Delete these members
         foreach($delList as $userId) {
+									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == TRUE){
             $this->_objGroupAdmin->deleteGroupUser($groupId, $userId);
+         }
         }
     }
     if ($this->getParam('button') == 'cancel' && $groupId <> '') {
