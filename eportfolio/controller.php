@@ -1797,6 +1797,7 @@ function processManagegroup($myId)
         // Get the original member ids
         $fields = array('id');
         $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, $fields, Null);
+        var_dump($memberList);
         //$oldList = $this->_objGroupAdmin->getField($memberList, 'id');
         // Get the added member ids
         //$addList = array_diff($list, $oldList);
@@ -1804,8 +1805,7 @@ function processManagegroup($myId)
         // Get the deleted member ids
         $delList = array_diff($memberList, $list);
         // Add these members
-        foreach($addList as $userId) {
-        
+        foreach($addList as $userId) {        
 									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == FALSE){
             $this->_objGroupAdmin->addGroupUser($groupId, $userId);
 									}
