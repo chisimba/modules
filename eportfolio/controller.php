@@ -1795,9 +1795,7 @@ function processManagegroup($myId)
             $list = array();
         }
         // Get the original member ids
-        $fields = array(
-            'id'
-        );
+        $fields = array('id');
         $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, $fields, Null);
         //var_dump($memberList);
         //$oldList = $this->_objGroupAdmin->getField($memberList, 'id');
