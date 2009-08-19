@@ -1840,7 +1840,7 @@ function processManage($groupName, $myId)
         }
         // Get the original member ids
         $fields = array(
-            'tbl_users.id'
+            'id'
         );
         $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, $fields);
         $oldList = $this->_objGroupAdmin->getField($memberList, 'id');
