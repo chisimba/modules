@@ -2343,6 +2343,7 @@ public function getEportfolioUsers()
         $managelink = new link();
     } //end foreach
     }else{
+    	$usergroupId = $this->_objGroupAdmin->getId($userPid);
      $usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
 					foreach ($usersubgroups as $subgroup)
 					{
