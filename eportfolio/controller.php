@@ -1811,7 +1811,9 @@ function processManagegroup($myId)
         }
         // Delete these members
         foreach($delList as $userId) {
+									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == TRUE){
             $this->_objGroupAdmin->deleteGroupUser($groupId, $userId);
+         }   
         }
     }
     if ($this->getParam('button') == 'cancel' && $groupId <> '') {
