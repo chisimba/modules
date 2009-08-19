@@ -1796,8 +1796,9 @@ function processManagegroup($myId)
         }
         // Get the original member ids
         $fields = array('id');
-        exit;
+
         $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, $fields, Null);
+        exit;
         //$oldList = $this->_objGroupAdmin->getField($memberList, 'id');
         // Get the added member ids
         //$addList = array_diff($list, $oldList);
