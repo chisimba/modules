@@ -7,7 +7,7 @@ class dbdocument extends dbtable{
   }
 
   public function addRecord($courseid, $form, $question, $value, $status, $version, $currentuser) {
-    $data = array('coursecode'=>$courseid,'question'=>$question,'value'=>$value, 'status'=>$status, 'version'=>$version, 'currentuser'=>$currentuser, 'formnumber'=>$form);
+    $data = array('coursecode'=>$courseid,'question'=>$question,'value'=>$value, 'status'=>$status, 'version'=>$version, 'currentuser'=>$currentuser, 'formnumber'=>$form, 'datemodified'=>strftime('%m/%d/%Y %H:%M:%S', mktime()));
     $this->insert($data);
   }
   
@@ -34,7 +34,7 @@ class dbdocument extends dbtable{
 	}
 
 	public function updateRecord($courseid, $form , $question, $field, $currentuser){
-		$sql = "update $this->tablename set value = '$field' where coursecode = '$courseid' and question = '$question' and formnumber='$form' and currentuser='$currentuser';";
+		$sql = "update $this->tablename set value = '$field', datemodified = '".strftime('%m/%d/%Y %H:%M:%S', mktime())."' where coursecode = '$courseid' and question = '$question' and formnumber='$form' and currentuser='$currentuser';";
 		$count = $this->_execute($sql)->fetchRow();
 		return true;
 	}
@@ -64,7 +64,7 @@ class dbdocument extends dbtable{
   }
   
   public function submitProposal($courseid, $version) {
-    $sql = "update $this->tablename set status = 'submitted' where coursecode = '$courseid' and version = '$version';";
+    $sql = "update $this->tablename set status = 'submitted', datemodified = '".strftime('%m/%d/%Y %H:%M:%S', mktime())."' where coursecode = '$courseid' and version = '$version';";
     $count = $this->_execute($sql);
   }
   
@@ -74,7 +74,7 @@ class dbdocument extends dbtable{
   }
 
     public function updateComment($courseid, $comment){
-      $sql = "update $this->tablename set value='$comment' where formnumber= 'Comment' and coursecode='$courseid';";
+      $sql = "update $this->tablename set value='$comment', datemodified = '".strftime('%m/%d/%Y %H:%M:%S', mktime())."' where formnumber= 'Comment' and coursecode='$courseid';";
       $this->_execute($sql);
   }
 
@@ -98,7 +98,7 @@ class dbdocument extends dbtable{
       $info = $this->getArray($sql);
       if($info[0]['userid'] == null) {
         // check document users table
-        $sql = "select id from $this->tablename where email = '".trim($email)."'";
+        $sql = "select id from tbl_documentusers where email = '".trim($email)."'";
         $info = $this->getArray($sql);
         return $info[0]['id'];
       }
@@ -126,10 +126,18 @@ class dbdocument extends dbtable{
         $sql = "select max(version) maxversion from tbl_documentstore where coursecode = '$courseid'";
         $data = $this->getArray($sql);
         $maxversion = $data[0]['maxversion'];
-        $sql = "update $this->tablename set currentuser = '$email' where coursecode = '$courseid' and version = '$maxversion'";
+        $sql = "update $this->tablename set currentuser = '$email', set datemodified = '".strftime('%m/%d/%Y %H:%M:%S', mktime())."' where coursecode = '$courseid' and version = '$maxversion'";
         $status = $this->_execute($sql);
 
         return $status;
+    }
+
+    public function getLastModified($version, $currentuser) {
+        $sql = "select datemodified from $this->tablename where version = '$version' and currentuser = '$currentuser'";
+        $data = $this->getArray($sql);
+        $lastModified = $data[0]['datemodified'];
+
+        return $lastModified;
     }
 }
 
