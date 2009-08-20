@@ -1824,8 +1824,8 @@ function processManagegroup($myId)
         $fields = array('tbl_users.id');
 
         $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, Null, Null);
+	       $member = array();
         if(!empty($memberList)){
-	        $member = array();
 		       foreach($memberList as $theList){
 		        $member[]= $theList['id'];
 		       } 
