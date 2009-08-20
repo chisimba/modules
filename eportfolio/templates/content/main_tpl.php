@@ -320,6 +320,8 @@ if(class_exists('groupops',false)){
 		$epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
 		$epTable->endRow();
 	}
+}
+}
 }else{
 //Else if groupops not found, use old groupadmin
 	//getUserDirectGroups
