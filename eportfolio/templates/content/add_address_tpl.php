@@ -159,14 +159,20 @@ $objCancel->link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'main'
 )));
-$objCancel->link = $buttonCancel->show();
+//$objLanguage->languageText("mod_filemanager_returnto")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome");
+//$objCancel->link = $buttonCancel->show();
+$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome","eportfolio");
 $linkCancel = $objCancel->show();
 $row = array(
-    $button->show() . '  ' . $linkCancel
+    $button->show() 
 );
 $objTable->startRow();
 $objTable->addCell('&nbsp;', 140, 'top', 'right');
 $objTable->addCell($row[0], Null, 'top', 'left');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell('&nbsp;', 140, 'top', 'right');
+$objTable->addCell($linkCancel, Null, 'top', 'left');
 $objTable->endRow();
 $form->addToForm($objTable->show());
 echo $form->show();
