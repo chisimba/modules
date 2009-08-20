@@ -320,8 +320,8 @@ if(class_exists('groupops',false)){
 		$epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
 		$epTable->endRow();
 	}
-//Else if groupops not found, use old groupadmin
 }else{
+//Else if groupops not found, use old groupadmin
 	//getUserDirectGroups
 	$groupexists = 0;
 	$myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->PKId($this->objUser->userId()));
