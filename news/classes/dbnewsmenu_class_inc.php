@@ -14,7 +14,7 @@ class dbnewsmenu extends dbtable
     public function init()
     {
         parent::init('tbl_news_menu');
-        $this->objLanguage =& $this->getObject('language', 'language');
+        $this->objLanguage = $this->getObject('language', 'language');
         $this->loadClass('link', 'htmlelements');
         
         $this->objBlocks = $this->getObject('blocks', 'blocks');
