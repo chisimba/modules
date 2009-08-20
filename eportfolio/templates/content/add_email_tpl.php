@@ -83,7 +83,7 @@ $objCancel->link($this->uri(array(
 $objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome","eportfolio");
 $linkCancel = $objCancel->show();
 $row = array(
-    $button->show() . ' ' . $linkCancel
+    $button->show()
 );
 $objTable->startRow();
 $objTable->addCell('&nbsp;', 140, 'top', 'right');
