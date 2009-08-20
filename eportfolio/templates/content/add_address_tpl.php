@@ -157,7 +157,7 @@ $buttonCancel = new button("submit", $objLanguage->languageText("word_cancel"));
 $objCancel = &$this->getObject("link", "htmlelements");
 $objCancel->link($this->uri(array(
     'module' => 'eportfolio',
-    'action' => 'view_contact'
+    'action' => 'main'
 )));
 $objCancel->link = $buttonCancel->show();
 $linkCancel = $objCancel->show();
