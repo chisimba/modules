@@ -153,7 +153,7 @@ $objTable->endRow();
 $button = new button("submit", $objLanguage->languageText("word_save")); //word_save
 $button->setToSubmit();
 // Show the cancel link
-$buttonCancel = new button("submit", $objLanguage->languageText("word_cancel"));
+$buttonCancel = new button("cancel", $objLanguage->languageText("word_cancel"));
 $objCancel = &$this->getObject("link", "htmlelements");
 $objCancel->link($this->uri(array(
     'module' => 'eportfolio',
