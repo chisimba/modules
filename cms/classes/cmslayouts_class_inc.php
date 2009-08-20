@@ -1502,13 +1502,15 @@ public function showBody($isPreview = false)
 	
 	$strBody .= $showDateText;
 
+
+	
 	//parse for mindmaps
 	$page['body'] = $objMindMap->parse($page['body']);
 	//parse for mathml as well
 	$page['body'] = $objMath->parseAll($page['body']);
 	$strBody .= stripslashes($page['body']);
 	$objLayer = new layer();
-	$objLayer->str = $strHeader.$strBody ."<p /><center>".$tblnl->show() . "</center><hr/><p/>";
+	$objLayer->str = $strHeader.$strBody ."<p style='clear:both'/><center>".$tblnl->show() . "</center><hr/><p/>";
 	$objLayer->id = 'cmscontent';
 
 	return $objLayer->show();
