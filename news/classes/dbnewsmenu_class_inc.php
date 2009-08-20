@@ -23,8 +23,7 @@ class dbnewsmenu extends dbtable
 
     public function toolbar($current='storyview')
     {
-        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $toolbar = $objSysConfig->getValue('SHOWTOOLBAR', 'news');
+        $toolbar = $this->objSysConfig->getValue('SHOWTOOLBAR', 'news');
 
         if ($toolbar != 1) {
             return '';
