@@ -346,7 +346,7 @@ if(class_exists('groupops',false)){
 				$iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
 				$mnglink = new link($this->uri(array(
 				'module' => 'eportfolio',
-				'action' => 'view_others_eportfolio',
+				'action' => 'view_others3_eportfolio',
 				'id' => $groupId
 				)));
 				$mnglink->link = $iconSelect->show();
@@ -1725,6 +1725,7 @@ if(class_exists('groupops',false)){
         $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
         $assertionstable->endRow();
     }
+   //Else if groupops does not exist
 			}else{
     // user Pk id
     $userPid = $this->objUser->PKId($this->objUser->userId());

@@ -474,6 +474,13 @@ class eportfolio extends controller
             }
             break;
 
+        case 'view_others3_eportfolio':
+            //$this->setLayoutTemplate('eportfolio_layout_tpl.php');
+            $groupId = $this->getParam('id', null);
+            $this->setVarByRef('groupId', $groupId);
+            return "others3_eportfolio_tpl.php";
+            break;
+
         case 'view_others_eportfolio':
             //$this->setLayoutTemplate('eportfolio_layout_tpl.php');
             $groupId = $this->getParam('id', null);
