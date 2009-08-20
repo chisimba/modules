@@ -1,7 +1,7 @@
 
 <?php
 if($this->objUser->isLoggedIn()){
-    $this->nextAction('expresssignin');
+//    $this->nextAction('expresssignin');
 }
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/fossad.css').'"/>';
 $this->appendArrayVar('headerParams', $maincss);
@@ -16,6 +16,10 @@ $title2=$objSysConfig->getValue('LEFT_TITLE2', 'fossad');
 $message='"'.$this->objLanguage->languageText('mod_fossad_isopen', 'fossad').'"';
 if($mode == 'edit'){
     $message='<font color="red">'.$this->objLanguage->languageText('mod_fossad_emailinuse', 'fossad').'</font>';
+}
+
+if($mode == 'loginagain'){
+    $message='<font color="red">Please sign in again to complete registration</font>';
 }
 $rightTitle='<h1>'.$this->objLanguage->languageText('mod_fossad_registration', 'fossad').'</h1>';
 $rightTitle.='<h3>'.$message.'</h3>';

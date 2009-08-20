@@ -110,6 +110,11 @@ class fossad extends controller {
 
     function __expresssignin(){
         $reg = $this->getObject('dbregistration');
+        if($this->objUser->email() == 'Anonymous user (not logged in)'){
+         $this->objUser->logout();
+        return  $this->nextAction('home',  array ('mode' => 'loginagain' ));
+         
+       }
         if($reg->emailExists($this->objUser->email())){
             $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_fossad_alreadysignedup', 'fossad'),
    'title2'=>''));
