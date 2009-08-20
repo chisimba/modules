@@ -385,58 +385,80 @@ class eportfolio extends controller
             //manage_group
             
         case 'addparts':
-            $selectedParts = $this->getArrayParam('arrayList');
-            $groupId = $this->getParam('mygroupId', NULL);
-            //var_dump($groupId);
-            if (empty($groupId)) $groupId = $this->getSession('groupId', $groupId);
-            $this->setVarByRef('groupId', $groupId);
-            //Get user Groups
-            //$userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
-            //$userGroups = $this->objGroupUsers->getUserGroups( $groupId );
-            $userGroups = $this->_objGroupAdmin->getSubgroups($groupId);
-            if (!empty($userGroups[0])) {
-                foreach($userGroups[0] as $userGroup) {
-                    $group_define_name[] = $userGroup['group_define_name'];
-                }
-                foreach($group_define_name as $partPid) {
-                    $grpId = $this->_objGroupAdmin->getId($partPid);
-                    $this->_objGroupAdmin->deleteGroup($grpId);
-                }
-            }
-            //Get the group_define_name which is similar from the selectedpartId from the userGroups array
-            $group_define_name = array();
-            if (empty($selectedParts)) {
-                if (!empty($userGroups[0])) {
-                    foreach($userGroups[0] as $userGroup) {
-                        $group_define_name[] = $userGroup['group_define_name'];
-                    }
-                    foreach($group_define_name as $partPid) {
-                        $grpId = $this->_objGroupAdmin->getId($partPid);
-                        $this->_objGroupAdmin->deleteGroup($grpId);
-                    }
-                }
-            } else {
-                // Get the added member ids
-                $addList = array_diff($selectedParts, $group_define_name);
-                // Get the deleted member ids
-                $delList = array_diff($group_define_name, $selectedParts);
-                // Delete these members
-                if (count($delList) > 0) {
-                    foreach($delList as $partPid) {
-                        $grpId = $this->_objGroupAdmin->getId($partPid);
-                        $this->_objGroupAdmin->deleteGroup($grpId);
-                        //		                $this->_objGroupAdmin->deleteGroupUser($partPid, $groupId);
-                        
-                    }
-                }
-                // Add these members
-                if (count($addList) > 0) {
-                    $this->manageEportfolioViewers($addList, $groupId);
-                }
-                //Empty array
-                $selectedParts = array();
-            }
-            return 'allparts_tpl.php';
+									if(class_exists('groupops',false)){
+										$selectedParts = $this->getArrayParam('arrayList');
+										$groupId = $this->getParam('mygroupId', NULL);
+										if (empty($groupId)) $groupId = $this->getSession('groupId', $groupId);
+										$this->setVarByRef('groupId', $groupId);
+										//Get user Groups
+										$userGroups = $this->_objGroupAdmin->getSubgroups($groupId);
+										if (!empty($userGroups[0])) {
+											foreach($userGroups[0] as $userGroup) {
+												$group_define_name[] = $userGroup['group_define_name'];
+											}
+											foreach($group_define_name as $partPid) {
+												$grpId = $this->_objGroupAdmin->getId($partPid);
+												$this->_objGroupAdmin->deleteGroup($grpId);
+											}
+										}
+										//Get the group_define_name which is similar from the selectedpartId from the userGroups array
+										$group_define_name = array();
+										if (empty($selectedParts)) {
+											if (!empty($userGroups[0])) {
+												foreach($userGroups[0] as $userGroup) {
+													$group_define_name[] = $userGroup['group_define_name'];
+												}
+												foreach($group_define_name as $partPid) {
+													$grpId = $this->_objGroupAdmin->getId($partPid);
+													$this->_objGroupAdmin->deleteGroup($grpId);
+												}
+											}
+										} else {
+										// Get the added member ids
+										$addList = array_diff($selectedParts, $group_define_name);
+										// Get the deleted member ids
+										$delList = array_diff($group_define_name, $selectedParts);
+										// Delete these members
+										if (count($delList) > 0) {
+											foreach($delList as $partPid) {
+												$grpId = $this->_objGroupAdmin->getId($partPid);
+												$this->_objGroupAdmin->deleteGroup($grpId);
+											}
+										}
+										// Add these members
+										if (count($addList) > 0) {
+											$this->manageEportfolioViewers($addList, $groupId);
+										}
+										//Empty array
+										$selectedParts = array();
+         }
+          return 'allparts_tpl.php';
+         }else{
+										$selectedParts = $this->getArrayParam('arrayList');
+										$groupId = $this->getParam('groupId', NULL);
+										$this->setVarByRef('groupId', $groupId);
+										//Get user Groups
+										$userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
+										if (empty($selectedParts)) {
+											$this->deleteGroupUsers($userGroups, $groupId);
+										} else {
+											// Get the added member ids
+											$addList = array_diff($selectedParts, $userGroups);
+											// Get the deleted member ids
+											$delList = array_diff($userGroups, $selectedParts);
+											// Delete these members
+											foreach($delList as $partPid) {
+												$this->_objGroupAdmin->deleteGroupUser($partPid['group_id'], $groupId);
+											}
+											// Add these members
+											if (count($addList) > 0) {
+												$this->manageEportfolioViewersOld($addList, $groupId);
+											}
+											//Empty array
+											$selectedParts = array();
+										}
+          return 'allparts2_tpl.php';
+         }
         case "add_group":
             return "add_group_tpl.php";
             break;
@@ -445,7 +467,11 @@ class eportfolio extends controller
             //$this->setLayoutTemplate('eportfolio_layout_tpl.php');
             $groupId = $this->getParam('id', null);
             $this->setVarByRef('groupId', $groupId);
-            return "allparts_tpl.php";
+            if(class_exists('groupops',false)){
+            	return "allparts_tpl.php";
+            }else{
+            	return "allparts2_tpl.php";
+            }
             break;
 
         case 'view_others_eportfolio':
@@ -2494,6 +2520,26 @@ public function manageEportfolioViewers($selectedParts, $groupId)
         }
     }
 } //end function
+//Function for managing eportfolio group items/parts
+public function manageEportfolioViewersOld($selectedParts, $groupId) 
+{
+    // user Pk id
+    $userPid = $this->objUser->PKId($this->objUser->userId());
+    foreach($selectedParts as $partId) {
+        $thisId = $this->_objGroupAdmin->getId($partId, $pkField = 'name');
+        $partList = $this->_objGroupAdmin->getId($partId, $pkField = 'name');
+        if (empty($partList)) {
+            $partGroupsId = $this->_objGroupAdmin->addGroup($partId, $partId, $userPid);
+            $groupUser = $this->_objGroupAdmin->addGroupUser($partGroupsId, $groupId);
+        } else {
+            $isGroupMember = $this->_objGroupAdmin->isGroupMember($groupId, $partList);
+            if (empty($isGroupMember)) {
+                $this->_objGroupAdmin->addGroupUser($partList, $groupId);
+            }
+        }
+    }
+} //end function
+
 public function checkIfExists($partId, $groupId) 
 {
     // user Pk id
