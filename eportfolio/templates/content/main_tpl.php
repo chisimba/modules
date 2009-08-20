@@ -177,6 +177,7 @@ if(class_exists('groupops',false)){
 			if ($isGpMbr) {
 				$userGroupsArray[] = $thisGrp['group_id'];
 			}
+		}
 	}
 	//Array to store grpUsers inorder to get the owner of the group
 	$usersListArr = array();
@@ -226,54 +227,53 @@ if(class_exists('groupops',false)){
 				if ($myPid !== $parentGrp) $usrGrpOwner[$usrSubGrp] = $parentGrp;
 			}
 	}
-	//foreach($myGroups as $groupId) {
 	foreach($buddiesPidListArr as $grpIdKey => $buddy) {
-	//get the array key value
-	$groupId = $grpIdKey;
-	$filter = " WHERE id = '" . $groupId . "'";
-	if ($buddy !== $myPid) {
-		//    $fullname = $this->objUserAdmin->getUserDetails($ownerId);
-		$fullname = $this->objUserAdmin->getUserDetails($buddy);
-		if (!empty($fullname)) {
-			//Get the buddys' sub groups
-			$userSubGrps = $this->_objGroupAdmin->getSubgroups($groupId);
-			foreach($userSubGrps[0] as $key => $userSubGrp) {
-				//The fields to use in the select for getting group users
-				$fields = array(
-				'firstName',
-				'surname',
-				'tbl_users.id'
-				);
-				//Get the group users
-				$membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
-				foreach($membersList as $users) {
-					//Check if the logged in user is a user here, if true store userid and groupid
-					if ($users['id'] == $this->userPid) {
-						//Select View
-						$iconSelect = $this->getObject('geticon', 'htmlelements');
-						$iconSelect->setIcon('view');
-						$iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
-						$mnglink = new link($this->uri(array(
-						'module' => 'eportfolio',
-						'action' => 'view_others_eportfolio',
-						'id' => $key,
-						'ownerId' => $buddy
-						)));
-						$mnglink->link = $iconSelect->show();
-						$linkManage = $mnglink->show();
-						//Store Group id
-						$textinput = new textinput("groupId", $key);
-						$epTable->startRow();
-						$epTable->addCell($linkManage, '', '', 'left', '', '');
-						$epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
-						$epTable->addCell($userSubGrp['group_define_name'], '', '', 'left', '', '');
-						$epTable->endRow();
-						$groupexists = $groupexists+1;
+		//get the array key value
+		$groupId = $grpIdKey;
+		$filter = " WHERE id = '" . $groupId . "'";
+		if ($buddy !== $myPid) {
+			//    $fullname = $this->objUserAdmin->getUserDetails($ownerId);
+			$fullname = $this->objUserAdmin->getUserDetails($buddy);
+			if (!empty($fullname)) {
+				//Get the buddys' sub groups
+				$userSubGrps = $this->_objGroupAdmin->getSubgroups($groupId);
+				foreach($userSubGrps[0] as $key => $userSubGrp) {
+					//The fields to use in the select for getting group users
+					$fields = array(
+					'firstName',
+					'surname',
+					'tbl_users.id'
+					);
+					//Get the group users
+					$membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
+					foreach($membersList as $users) {
+						//Check if the logged in user is a user here, if true store userid and groupid
+						if ($users['id'] == $this->userPid) {
+							//Select View
+							$iconSelect = $this->getObject('geticon', 'htmlelements');
+							$iconSelect->setIcon('view');
+							$iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
+							$mnglink = new link($this->uri(array(
+							'module' => 'eportfolio',
+							'action' => 'view_others_eportfolio',
+							'id' => $key,
+							'ownerId' => $buddy
+							)));
+							$mnglink->link = $iconSelect->show();
+							$linkManage = $mnglink->show();
+							//Store Group id
+							$textinput = new textinput("groupId", $key);
+							$epTable->startRow();
+							$epTable->addCell($linkManage, '', '', 'left', '', '');
+							$epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
+							$epTable->addCell($userSubGrp['group_define_name'], '', '', 'left', '', '');
+							$epTable->endRow();
+							$groupexists = $groupexists+1;
+						}
 					}
 				}
 			}
 		}
-	}
 	}
 	}else{
 		$allGrps = $this->_objGroupAdmin->getUserGroups( $this->objUser->PKId($this->objUser->userId()));
@@ -320,8 +320,6 @@ if(class_exists('groupops',false)){
 		$epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
 		$epTable->endRow();
 	}
-}
-}
 }else{
 //Else if groupops not found, use old groupadmin
 	//getUserDirectGroups
