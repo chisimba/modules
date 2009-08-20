@@ -382,8 +382,6 @@ class eportfolio extends controller
             if (!empty($assertions)) $objPdf->partWrite($assertions);
             return $objPdf->show();
             break;
-            //manage_group
-            
         case 'addparts':
 									if(class_exists('groupops',false)){
 										$selectedParts = $this->getArrayParam('arrayList');

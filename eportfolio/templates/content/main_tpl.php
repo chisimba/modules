@@ -59,10 +59,17 @@ echo "</br>";
 $iconPdf = $this->getObject('geticon', 'htmlelements');
 $iconPdf->setIcon('pdf');
 $iconPdf->alt = $objLanguage->languageText("mod_eportfolio_saveaspdf", 'eportfolio');
-$mngpdflink = new link($this->uri(array(
+if(class_exists('groupops',false)){
+	$mngpdflink = new link($this->uri(array(
+		   'module' => 'eportfolio',
+		   'action' => 'makepdf'
+	)));
+}else{
+	$mngpdflink = new link($this->uri(array(
     'module' => 'eportfolio',
-    'action' => 'makepdf'
-)));
+    'action' => 'makepdfOld'
+	)));
+}
 $mngpdflink->link = $iconPdf->show();
 $linkpdfManage = $mngpdflink->show();
 //Link to view eportfolio
