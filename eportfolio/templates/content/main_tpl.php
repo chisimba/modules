@@ -1675,6 +1675,7 @@ if (!$hasAccess) {
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
     $assertionstable->endRow();
+if(class_exists('groupops',false)){
     // Step through the list of addresses.
     $class = NULL;
     //    if (!empty($Id))
@@ -1724,7 +1725,53 @@ if (!$hasAccess) {
         $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
         $assertionstable->endRow();
     }
-    //echo $assertionstable->show();
+			}else{
+    // user Pk id
+    $userPid = $this->objUser->PKId($this->objUser->userId());
+				$Id = $this->_objGroupAdmin->getUserGroups($userPid);
+    // Step through the list of addresses.
+    $class = NULL;
+    if (!empty($Id)) {
+        foreach($Id as $groupId) {
+            //Get the group parent_id
+            $parentId = $this->_objGroupAdmin->getParent($groupId);
+            foreach($parentId as $myparentId) {
+                //Get the name from group table
+                $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
+                if (!empty($assertionslist)) {
+                    // Display each field for activities
+                    $assertionstable->startRow();
+                    $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
+                    // Show the view link
+                    //Display Icon
+                    $atyiconView = $this->getObject('geticon', 'htmlelements');
+                    $atyiconView->setIcon('bookopen');
+                    $atyiconView->alt = $objLanguage->languageText("mod_eportfolio_display", 'eportfolio');
+                    $atymnglink = new link($this->uri(array(
+                        'module' => 'eportfolio',
+                        'action' => 'displayassertion',
+                        'thisid' => $assertionslist[0]["id"]
+                    )));
+                    $atymnglink->link = $atyiconView->show();
+                    $atylinkManage = $atymnglink->show();
+                    $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
+                    $assertionstable->endRow();
+                }
+                unset($myparentId);
+            }
+            unset($groupId);
+        }
+    } else {
+        $assertionstable->startRow();
+        $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+        $assertionstable->endRow();
+    }
+		}
+    
     
 } else {
     //Language Items
