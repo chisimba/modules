@@ -3,6 +3,14 @@
 class dbnewsmenu extends dbtable
 {
 
+    /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access protected
+     * @var object
+     */
+    protected $objSysConfig;
+
     public function init()
     {
         parent::init('tbl_news_menu');
@@ -10,6 +18,7 @@ class dbnewsmenu extends dbtable
         $this->loadClass('link', 'htmlelements');
         
         $this->objBlocks = $this->getObject('blocks', 'blocks');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
     public function toolbar($current='storyview')
@@ -61,7 +70,9 @@ class dbnewsmenu extends dbtable
         $list = $this->getMenuItems();
 
         $str = '<h2>'.$this->prepareItem_module(array('itemvalue'=>'news', 'itemname'=>$this->objLanguage->languageText('mod_news_frontpage', 'news', 'Front Page'))).'</h2>';
-        $str = '<h2 id="newswelcome">'.$this->prepareItem_module(array('itemvalue'=>'news', 'itemname'=>'Welcome')).'</h2>';
+
+        $homeLinkText = $this->objSysConfig->getValue('mod_news_homelinktext', 'news');
+        $str = '<h2 id="newswelcome">'.$this->prepareItem_module(array('itemvalue'=>'news', 'itemname'=>$homeLinkText)).'</h2>';
 
         if (count($list) == 0){
             return $str.'<p class="warning">'.$this->objLanguage->languageText('mod_news_nosectionssetupyet', 'news', 'No Sections setup yet').'.</p>';
