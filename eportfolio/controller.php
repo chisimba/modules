@@ -386,14 +386,15 @@ class eportfolio extends controller
 		           return $this->nextAction('main', array(
 		               'message' => 'sorryemptypdf'
 		           ));
-            }
+            }            
+            break;
+            
         case 'emptypdfmessage':
             $this->setPageTemplate(NULL);
             $this->setLayoutTemplate(NULL);
             echo '<h3>' . $this->objLanguage->languageText('mod_eportfolio_wordNotice', 'eportfolio') . '!</h3><br></br><p>' . $this->objLanguage->languageText('phrase_eportfolio_emptypdfmessage', 'eportfolio') . "</p>";
             break;
-            
-            break;
+
         case 'addparts':
 									if(class_exists('groupops',false)){
 										$selectedParts = $this->getArrayParam('arrayList');
