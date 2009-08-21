@@ -385,7 +385,12 @@ class eportfolio extends controller
             if (!empty($interests)) $objPdf->partWrite($interests);
             if (!empty($reflections)) $objPdf->partWrite($reflections);
             if (!empty($assertions)) $objPdf->partWrite($assertions);
-            return $objPdf->show();
+            if ($createPdf == True){
+             return $objPdf->show();
+            }else{
+             return False;
+            }
+            
             break;
         case 'addparts':
 									if(class_exists('groupops',false)){
