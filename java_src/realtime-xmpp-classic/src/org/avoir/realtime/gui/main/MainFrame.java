@@ -370,12 +370,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void removeSpeaker(final String speakerUsername) {
-        removeAllSpeakers();
+        
         //final String speakerName = new String(Base64.decode(xspeakerName));
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
                 for (Speaker speaker : speakers) {
+
                     if (speaker.getSpeaker().equalsIgnoreCase(speakerUsername)) {
                         final JWebBrowser browser = speaker.getWebBrowser();
                         SwingUtilities.invokeLater(new Runnable() {

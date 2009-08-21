@@ -38,7 +38,9 @@ public class LoginFrame extends javax.swing.JFrame {
         this.skinClass = skinClass;
         if (skinClass.equals("null")) {
             skinClass = null;
+            UIUtils.setPreferredLookAndFeel();
         }
+        NativeInterface.open();
         GUIAccessManager.skinClass = skinClass;
         server = serverHost;
         port = serverPort;
