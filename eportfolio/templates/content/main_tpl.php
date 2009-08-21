@@ -67,7 +67,7 @@ if(class_exists('groupops',false)){
 }else{
 	$mngpdflink = new link($this->uri(array(
     'module' => 'eportfolio',
-    'action' => 'makepdfOld'
+    'action' => 'makepdf'
 	)));
 }
 $mngpdflink->link = $iconPdf->show();
