@@ -2307,4 +2307,27 @@ if ($this->getParam('message') == 'uploadsuccessful') {
  }
 </script>";
 }
+if ($this->getParam('message') == 'sorryemptypdf') {
+    //$uploadstatus = $this->getParam('status');
+    $alertBox = $this->getObject('alertbox', 'htmlelements');
+    $alertBox->putJs();
+    echo "<script type='text/javascript'>
+ var browser=navigator.appName;
+ var b_version=parseFloat(b_version);
+ if(browser=='Microsoft Internet Explorer'){
+	alert('" . str_replace('&amp;', '&', $this->uri(array(
+        'action' => 'emptypdfmessage'
+    ))) . "');
+ }else{
+	 jQuery.facebox(function() {
+	  jQuery.get('" . str_replace('&amp;', '&', $this->uri(array(
+        'action' => 'emptypdfmessage'
+    ))) . "', function(data) {
+	    jQuery.facebox(data);
+	  })
+	 })
+ }
+</script>";
+}
+
 ?>
