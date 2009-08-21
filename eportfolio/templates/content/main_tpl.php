@@ -2293,7 +2293,7 @@ if ($this->getParam('message') == 'uploadsuccessful') {
  var browser=navigator.appName;
  var b_version=parseFloat(b_version);
  if(browser=='Microsoft Internet Explorer'){
-	alert(<h3>" . $this->objLanguage->languageText('mod_eportfolio_congratulations', 'eportfolio') . '!</h3><br></br><p>' . $this->objLanguage->languageText('mod_eportfolio_successMessage', 'eportfolio') . "</p>);
+	alert('<h3>" . $this->objLanguage->languageText('mod_eportfolio_congratulations', 'eportfolio') . '!</h3><br></br><p>' . $this->objLanguage->languageText('mod_eportfolio_successMessage', 'eportfolio') . "</p>');
  }else{
 	 jQuery.facebox(function() {
 	  jQuery.get('" . str_replace('&amp;', '&', $this->uri(array(
@@ -2313,7 +2313,7 @@ if ($this->getParam('message') == 'sorryemptypdf') {
  var browser=navigator.appName;
  var b_version=parseFloat(b_version);
  if(browser=='Microsoft Internet Explorer'){
-	alert(<h3>" . $this->objLanguage->languageText('mod_eportfolio_wordNotice', 'eportfolio') . '!</h3><br></br><p>' . $this->objLanguage->languageText('phrase_eportfolio_emptypdfmessage', 'eportfolio') . "</p>);
+	alert('<h3>" . $this->objLanguage->languageText('mod_eportfolio_wordNotice', 'eportfolio') . '!</h3><br></br><p>' . $this->objLanguage->languageText('phrase_eportfolio_emptypdfmessage', 'eportfolio') . "</p>');
  }else{
 	 jQuery.facebox(function() {
 	  jQuery.get('" . str_replace('&amp;', '&', $this->uri(array(
