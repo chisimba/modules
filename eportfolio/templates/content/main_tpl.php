@@ -207,21 +207,24 @@ if(class_exists('groupops',false)){
 					if (!empty($userGrpId)) {
 						//Get the user's sub groups
 						$userSubGrps = $this->_objGroupAdmin->getSubgroups($userGrpId);
-						foreach($userSubGrps[0] as $key => $userSubGrp) {
-							//					echo "<br>userSubGrp<br>";
-							//The fields to use in the select for getting group users
-							$fields = array(
-							'firstName',
-							'surname',
-							'tbl_users.id'
-							);
-							//Get the group users
-							$membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
-							foreach($membersList as $users) {
-							//Check if the logged in user is a user here, if true store userid and groupid
-								if ($users['id'] == $this->userPid) {
-									$buddiesPidListArr[$userGrpId] = $userPid;
-									$buddiesListArr[$userGrpId] = $grpUser['auth_user_id'];
+						//Check if empty
+						if(!empty($userSubGrps)){
+							foreach($userSubGrps[0] as $key => $userSubGrp) {
+								//					echo "<br>userSubGrp<br>";
+								//The fields to use in the select for getting group users
+								$fields = array(
+								'firstName',
+								'surname',
+								'tbl_users.id'
+								);
+								//Get the group users
+								$membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
+								foreach($membersList as $users) {
+								//Check if the logged in user is a user here, if true store userid and groupid
+									if ($users['id'] == $this->userPid) {
+										$buddiesPidListArr[$userGrpId] = $userPid;
+										$buddiesListArr[$userGrpId] = $grpUser['auth_user_id'];
+									}
 								}
 							}
 						}
@@ -2325,5 +2328,4 @@ if ($this->getParam('message') == 'sorryemptypdf') {
  }
 </script>";
 }
-
 ?>
