@@ -368,11 +368,6 @@ class eportfolio extends controller
             $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
             $text = '<h1>' . $fullnames . "</h1><br></br>\r\n" . $address . $contacts . $emails . $demographics;
             $otherText = $activity . $affiliation . $transcripts . $qualification . $goals . $competency . $interests . $reflections . $assertions;
-            /*
-            .$email.$demographics.$activity.$affiliation.$transcripts.$qualification.$goals.$competency.$interests.$reflections.$assertions
-            
-            $text = '<h1>'.$fullnames. "</h1><br></br>\r\n".html_entity_decode($address). "\r\n".html_entity_decode($contacts). "\r\n".html_entity_decode($email). "\r\n".html_entity_decode($demographics). "\r\n".html_entity_decode($activity). "\r\n".html_entity_decode($affiliation). "\r\n".html_entity_decode($transcripts). "\r\n".html_entity_decode(strip_tags($qualification)). "\r\n".html_entity_decode($goals). "\r\n".html_entity_decode($competency). "\r\n".html_entity_decode($interests). "\r\n".html_entity_decode($reflections). "\r\n".html_entity_decode($assertions);
-            */
             //Write pdf
             $objPdf->initWrite();
             if ($createPdf == True)$objPdf->partWrite($text);
@@ -388,7 +383,7 @@ class eportfolio extends controller
             if ($createPdf == True){
              return $objPdf->show();
             }else{
-             return False;
+             //return False;
             }
             
             break;
