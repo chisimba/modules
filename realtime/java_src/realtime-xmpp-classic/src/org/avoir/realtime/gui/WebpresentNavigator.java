@@ -104,7 +104,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
 
                 if (lsm.isSelectionEmpty()) {
                 } else {
-                    // selectedIndex = lsm.getMinSelectionIndex();
+                    currentSlideIndex = lsm.getMinSelectionRow();
                     displaySlide();
                 }
             }

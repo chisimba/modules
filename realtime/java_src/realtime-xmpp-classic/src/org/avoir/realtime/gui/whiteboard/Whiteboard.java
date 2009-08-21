@@ -4,6 +4,7 @@
  */
 package org.avoir.realtime.gui.whiteboard;
 
+import com.sun.org.apache.bcel.internal.generic.IFEQ;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -190,6 +191,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private Point dragStartScreen;
     private Point dragEndScreen;
     private AffineTransform coordTransform = new AffineTransform();
+    private boolean chatBoxShowing = false;
+    private JDialog chatBox;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -319,6 +322,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         fullScreenFrame.setUndecorated(true);
         fullScreenFrame.addKeyListener(this);
         addMouseWheelListener(this);
+
     }
 
     private void refreshPopup() {
@@ -1648,6 +1652,25 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_F2) {
+            if (!chatBoxShowing) {
+                if (chatBox == null) {
+                    chatBox = new JDialog(fullScreenFrame, false);
+                }
+                chatBox.setContentPane(GUIAccessManager.mf.getChatRoomManager().getChatRoom());
+                chatBox.setSize(300, 250);
+                chatBox.addWindowListener(new WindowAdapter() {
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        GUIAccessManager.mf.getChatTabbedPane().addTab("Chat", GUIAccessManager.mf.getChatRoomManager().getChatRoom());
+                        chatBoxShowing = false;
+                    }
+                });
+                chatBox.setVisible(true);
+                chatBoxShowing = true;
+            }
+        }
         if (e.getKeyCode() == KeyEvent.VK_DELETE) {
             if (tempSelectedItem != null) {
                 sendDeleteBroadcast();

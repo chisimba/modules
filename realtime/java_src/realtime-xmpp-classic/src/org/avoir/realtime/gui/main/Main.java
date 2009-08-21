@@ -4,8 +4,8 @@
  */
 package org.avoir.realtime.gui.main;
 
-import chrriis.common.UIUtils;
 //import chrriis.dj.nativeswing.swtimpl.NativeInterface;
+import chrriis.common.UIUtils;
 import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -58,8 +58,7 @@ public class Main {
             System.out.println("arg[" + c + "] = " + arg);
             c++;
         }
-        //UIUtils.setPreferredLookAndFeel();
-        NativeInterface.open();
+
         LoginFrame fr = new LoginFrame();
 
         if (args.length >= 9) {
@@ -82,11 +81,14 @@ public class Main {
                 String slidesDir = args[5];
                 String xuseEc2 = args[13].trim().toLowerCase();
                 String joinMeetingId = args[14];
-                String skinClass=args[15];
-                if(skinClass.equals("null")){
-                    skinClass=null;
+                String skinClass = args[15];
+                if (skinClass.equals("null")) {
+                    skinClass = null;
+                    UIUtils.setPreferredLookAndFeel();
                 }
-                GUIAccessManager.skinClass=skinClass;
+
+                NativeInterface.open();
+                GUIAccessManager.skinClass = skinClass;
                 ConnectionManager.useEC2 = new Boolean(xuseEc2);
 
                 String names = args[9];
@@ -97,7 +99,7 @@ public class Main {
                             "Invalid Room Name", JOptionPane.ERROR_MESSAGE);
                     System.exit(0);
                 }
-                String roomName = defaultRoomName;//WebPresentManager.isPresenter ? presenterRoom : defaultRoomName;
+                String roomName = GeneralUtil.formatStr(defaultRoomName, " ").toLowerCase();//WebPresentManager.isPresenter ? presenterRoom : defaultRoomName;
                 WebPresentManager.presentationId = args[7];
                 WebPresentManager.presentationName = args[8];
                 String email = args[10];
@@ -174,7 +176,7 @@ public class Main {
             String server = "localhost";// args[0];
             int port = 5222;// Integer.parseInt(args[1].trim());
             String audioVideoUrl = "localhost";// args[2];
-            fr = new LoginFrame(server, port, audioVideoUrl,"null");
+            fr = new LoginFrame(server, port, audioVideoUrl, "null");
             fr.setSize(400, 300);
             fr.setLocationRelativeTo(null);
             fr.setVisible(true);
@@ -261,7 +263,7 @@ public class Main {
                     "If this problem persists, contact your network administrator for further assistance.");
             if (WebPresentManager.hasBeenLaunchedAsWebPresent) {
                 LoginFrame.showOptionsFrame();
-           
+
             }
         }
     }
