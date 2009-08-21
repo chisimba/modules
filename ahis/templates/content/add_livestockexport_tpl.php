@@ -29,7 +29,7 @@ $formTable->addCell($label_district->show());
 $formTable->addCell($input_district->show());
 $formTable->endRow();
 
-$label_pointentry = new label ('Point of Entry:', 'entrypoint');
+$label_pointentry = new label ('Point of Exit:', 'entrypoint');
 $entrypoint= new textinput('entrypoint');
 
 
@@ -38,7 +38,7 @@ $formTable->addCell($label_pointentry->show());
 $formTable->addCell($entrypoint->show());
 $formTable->endRow();
 
-$label_countspecies = new label('Count of Species of Live Animal: ','countspecies');
+$label_countspecies = new label('Number of Live Animals: ','countspecies');
 $countspecies = new textinput('countspecies');
 $formTable->startRow();
 $formTable->addCell($label_countspecies->show());

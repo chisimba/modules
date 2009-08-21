@@ -80,7 +80,7 @@ $formTable->endRow();
 $label_purpose = new label('Purpose: ', 'Purpose');
 $radio_slaughter = new radio ('purpose');
 
-$radio_slaughter->addOption('Slaughtered', 'Slaughtered');
+$radio_slaughter->addOption('Slaughtering', 'Slaughtering');
 $radio_rear = new radio ('purpose');
 $radio_slaughter->addOption('Rearing', 'Rearing');
 
