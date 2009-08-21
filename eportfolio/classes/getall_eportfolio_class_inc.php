@@ -1571,11 +1571,12 @@ class getall_Eportfolio extends object
         $assertionsobjHeading->type = 2;
         $assertionsobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio');
         $Id = $this->_objGroupAdmin->getUserGroups($userPid);
+        $emptyChecker = 0;
         if (!empty($Id)) {
             // Create a table object
             $assertionstable = &$this->newObject("htmltable", "htmlelements");
-            $assertionstable->border = 0;
-            $assertionstable->cellspacing = '3';
+            $assertionstable->border = 1;
+            $assertionstable->cellspacing = '1';
             $assertionstable->width = "100%";
             // Add the table heading.
             $assertionstable->startRow();
@@ -1594,6 +1595,7 @@ class getall_Eportfolio extends object
                         $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                         $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                         if (!empty($assertionslist)) {
+																												$emptyChecker = 1;
                             // Display each field for assertions
                             $assertionstable->startRow();
                             $assertionstable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_assertion", 'eportfolio') . "&nbsp;&nbsp;" . "</b>");
@@ -1650,7 +1652,20 @@ class getall_Eportfolio extends object
                     unset($groupId);
                 }
             }
-            $assertionstbl = $assertionstable->show();
+												if($emptyChecker==1){
+		           // Create a table object
+		           $asserTable = &$this->newObject("htmltable", "htmlelements");
+		           $asserTable->border = 0;
+		           $asserTable->cellspacing = '1';
+		           $asserTable->width = "100%";
+		           // Add the table heading.
+		           $asserTable->startRow();
+		           $asserTable->addCell($assertionstable->show() , '', '', '', '', Null);
+		           $asserTable->endRow();
+		           $assertionstbl = $assertionstable->show();
+												}else{
+            $assertionstbl = "";
+            }
             return $assertionstbl;
         } //end if
         
