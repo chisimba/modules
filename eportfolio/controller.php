@@ -359,6 +359,11 @@ class eportfolio extends controller
             $interests = $this->objGetall->getInterests($myid);
             $reflections = $this->objGetall->getReflections($myid);
             $assertions = $this->objGetall->getAssertions($myPid);
+												//Avoid empty pdf output
+												$createPdf = False;
+												if(!empty($address)||!empty($contacts)||!empty($emails)||!empty($demographics)||!empty($activity)||!empty($affiliation)||!empty($transcripts)||!empty($qualification)||!empty($goals)||!empty($competency)||!empty($interests)||!empty($reflections)||!empty($assertions)){
+													$createPdf = True;
+												}
             //get the pdfmaker classes
             $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
             $text = '<h1>' . $fullnames . "</h1><br></br>\r\n" . $address . $contacts . $emails . $demographics;
@@ -370,7 +375,7 @@ class eportfolio extends controller
             */
             //Write pdf
             $objPdf->initWrite();
-            $objPdf->partWrite($text);
+            if ($createPdf == True)$objPdf->partWrite($text);
             if (!empty($activity)) $objPdf->partWrite($activity);
             if (!empty($affiliation)) $objPdf->partWrite($affiliation);
             if (!empty($transcripts)) $objPdf->partWrite($transcripts);
