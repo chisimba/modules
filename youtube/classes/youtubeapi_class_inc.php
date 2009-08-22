@@ -130,9 +130,9 @@ class youtubeapi extends object
         //Get the apiKey
         $this->apiKey="DP44qovp8v8";
         //Set the default method
-        $this->ytMethod = "by_tag";
+        $this->ytMethod = NULL;
         //set the default identifier
-        $this->ytIdentifier = "digitalfreedom";
+        $this->ytIdentifier = NULL;
         $this->page = $this->getParam('ytpage', 1);
         $this->hitsPerPage = $this->getParam('hitsperpage', 24);
         
@@ -173,10 +173,13 @@ class youtubeapi extends object
     * @access public
     * 
     */
-    public function setupCall()
+    public function setupCall($ytMethod)
     {
         //Get the method to use and default to by_tag
-        $ytMethod = $this->getParam('ytmethod', $this->ytMethod);
+        if ($ytmethod==NULL || $ytmethod=="") {
+            $ytMethod = $this->getParam('ytmethod', $this->ytMethod);
+        }
+        
         //Get the tag or user or other identifier and default to digitalfreedom
         $ytIdentifier = $this->getParam('ytidentifier', $this->ytIdentifier);
         switch ($ytMethod) {
@@ -186,7 +189,6 @@ class youtubeapi extends object
                 case "by_user":
                     $callStr = $this->videosListByUser($ytIdentifier);
                     break;
-                    
                 case "by_playlist":
                     $callStr = $this->videosListByPlaylist($ytIdentifier);
                     break;

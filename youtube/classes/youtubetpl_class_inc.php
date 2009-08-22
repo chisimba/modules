@@ -100,7 +100,7 @@ class youtubetpl extends object
     * Youtube API call
     * 
     */
-    public function showVideos(& $apiXml)
+    public function showVideos(& $apiXml, $ytMethod)
     {
         $isInvalid = $this->catchError($apiXml);
         if (!$isInvalid) {
@@ -146,11 +146,6 @@ class youtubetpl extends object
             $objAuthor = $this->getObject('authordetails','youtube');
             $objAuthor->set('author', $objDetails->author);
             $tab3 = $objAuthor->showDetails();
-            
-//DEBUG
-//$tab1 = "ONE";
-
-            
             $multiTab  = $this->newObject('tabcontent','htmlelements');
             $multiTab->width ='400px';
             $multiTab->addTab($this->objLanguage->languageText("mod_youtube_filtercode",'youtube'), $tab1, FALSE, '360px');
@@ -173,16 +168,18 @@ class youtubetpl extends object
                 //Set up the link URL
                 $videoUrl = $video->url;
                 $videoId = $this->objYtFilter->getVideoCode($videoUrl);
-                $ytMethod = $this->getParam('ytmethod', 'by_tag');
                 $ytIdentifier = $this->getParam('ytidentifier', $this->ytIdentifier);
                 $action=$this->getParam('ytaction', 'view');
                 $objLink->href = $this->getViewUrl($ytMethod, $ytIdentifier, $action, $videoId, $perpage);
+//echo $objLink->href . "<br />";
                 //$objLink->href = htmlentities($video->url);
                 //Make the link the image
                 $objLink->link = $objImage->show();
+//echo $objLink->show() . "<br /><br />";
                 //Add the linked image to a table cell
                 $tipHelp = $tooltipHelp->show();
-                $table->addCell($objLink->show() . "<br />" . $tipHelp, "130");
+                //$table->addCell($objLink->show() . "<br />" . $tipHelp, "130");
+                $table->addCell($objLink->show() . "<br />");
                 //Using two counters, one to keep track of rows, and one to track the totals
                 $i++;
                 $count++;
@@ -321,9 +318,9 @@ class youtubetpl extends object
             $ytIdentifier = $this->getParam('ytidentifier', $this->ytIdentifier);
             $action=$this->getParam('ytaction', 'view');
             $arUri = $this->extractQueryString();
-            $arUri['ytmethod'] = $ytMethod;
             $arUri['ytidentifier'] = $ytIdentifier;
             $arUri['ytpage'] = $prevPage;
+            $arUri['ytmethod'] = $ytMethod;
             $arUri['ytaction'] = $action;
             $objLink = new link();
             $curModule = $this->getParam('module', 'youtube');
