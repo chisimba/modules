@@ -134,7 +134,7 @@ public class RealtimePacketProcessor {
                 double yy1 = XmlUtils.readDouble(doc, "y");
 
                 Rectangle rect = GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getBounds(); //getWhiteboardSize();
-                int x = (int) (xx1 *GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getWidth());
+                int x = (int) (xx1 * GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getWidth());
                 int y = (int) (yy1 * GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getHeight());
                 int w = XmlUtils.readInt(doc, "width");
                 int h = XmlUtils.readInt(doc, "height");
@@ -202,11 +202,11 @@ public class RealtimePacketProcessor {
                     item = new Pen(linePoints);
                     item.setId(id);
                 } catch (Exception ex1) {
-                   // ex1.printStackTrace();
+                    // ex1.printStackTrace();
                 }
             }
         } catch (Exception ex) {
-           // ex.printStackTrace();
+            // ex.printStackTrace();
         }
         if (item != null) {
             item.setColor(c);
@@ -726,6 +726,37 @@ public class RealtimePacketProcessor {
                 updateCurrentWB("<wb>" + wbContent + "</wb>");
             }
 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return files;
+    }
+
+    public static ArrayList<Map> getRoomResourcesAsArrayList(String xmlContents) {
+        ArrayList<Map> files = new ArrayList<Map>();
+        try {
+            xmlContents = "<rs>" + xmlContents + "</rs>";
+            Document doc = documentBuilder.parse(
+                    new ByteArrayInputStream(xmlContents.getBytes(Constants.PREFERRED_ENCODING)));
+
+            NodeList resourceNodeList = doc.getElementsByTagName("file");
+            for (int i = 0; i < resourceNodeList.getLength(); i++) {
+                Node node = resourceNodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    org.w3c.dom.Element element = (org.w3c.dom.Element) node;
+                    String filename = XmlUtils.readString(element, "file-name");
+                    String filePath = XmlUtils.readString(element, "file-path");
+                    String active = XmlUtils.readString(element, "active");
+                    String id = XmlUtils.readString(element, "id");
+                    Map map = new HashMap();
+                    map.put("id", id);
+                    map.put("resource-name", filename);
+                    map.put("resource-path", filePath);
+                    map.put("resource-type", "Presentation");
+                    map.put("active", active);
+                    files.add(map);
+                }
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

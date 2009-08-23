@@ -154,13 +154,15 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(enable, "invitationLink");
         GUIAccessManager.setMenuEnabled(enable, "insertGraphic");
         GUIAccessManager.setMenuEnabled(enable, "insertPresentation");
-        GUIAccessManager.setMenuEnabled(false, "roomResources");
+        GUIAccessManager.setMenuEnabled(enable, "roomResources");
         GUIAccessManager.setMenuEnabled(true, "requestMIC");
         GUIAccessManager.setMenuEnabled(enable, "addroommembers");
         GUIAccessManager.setMenuEnabled(enable, "cleanParticipantsList");
         GUIAccessManager.setMenuEnabled(enable, "undo");
         GUIAccessManager.setMenuEnabled(enable, "delete");
         GUIAccessManager.setMenuEnabled(enable, "clearMics");
+        GUIAccessManager.setMenuEnabled(enable, "nextSlide");
+        GUIAccessManager.setMenuEnabled(enable, "prevSlide");
 
     }
 

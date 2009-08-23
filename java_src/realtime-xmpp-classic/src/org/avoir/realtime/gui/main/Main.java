@@ -175,7 +175,7 @@ public class Main {
             ConnectionManager.flashUrlReady = true;
             String server = "localhost";// args[0];
             int port = 5222;// Integer.parseInt(args[1].trim());
-            String audioVideoUrl = "localhost";// args[2];
+            String audioVideoUrl = "localhost:7070/red5";// args[2];
             fr = new LoginFrame(server, port, audioVideoUrl, "null");
             fr.setSize(400, 300);
             fr.setLocationRelativeTo(null);

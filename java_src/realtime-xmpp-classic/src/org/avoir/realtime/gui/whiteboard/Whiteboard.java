@@ -4,7 +4,6 @@
  */
 package org.avoir.realtime.gui.whiteboard;
 
-import com.sun.org.apache.bcel.internal.generic.IFEQ;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +21,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -54,6 +54,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import org.avoir.realtime.common.util.ImageUtil;
 import org.avoir.realtime.gui.PointerListPanel;
@@ -423,8 +424,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     public void setSlideImage(ImageIcon slideImage) {
         this.slideImage = slideImage;
         repaint();
+    }
 
-
+    public boolean isFullScreen() {
+        return fullScreen;
     }
 
     private void showZoomDialog(boolean show) {
@@ -1189,11 +1192,15 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     }
 
+    public JFrame getFullScreenFrame() {
+        return fullScreenFrame;
+    }
+
     public void unSetFullScreen() {
         fullScreenFrame.remove(whiteboardPanel);
         fullScreenFrame.setVisible(false);
         GUIAccessManager.mf.getTabbedPane().insertTab("Whiteboard", null, whiteboardPanel, "Whiteboard", 0);
-
+        GUIAccessManager.mf.getUserListPanel().resetAlerterField();
         if (showingToolbox) {
             showingToolbox = false;
             GUIAccessManager.mf.getSurfacePanel().add(GUIAccessManager.mf.getSurfaceTopTabbedPane(), BorderLayout.NORTH);
@@ -1652,6 +1659,11 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void keyPressed(KeyEvent e) {
+        KeyStroke ctrlZ = KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+                InputEvent.CTRL_MASK);
+        if (e.getKeyCode() == ctrlZ.getKeyCode()) {
+            undo();
+        }
         if (e.getKeyCode() == KeyEvent.VK_F2) {
             if (!chatBoxShowing) {
                 if (chatBox == null) {
@@ -1687,6 +1699,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             GUIAccessManager.mf.getWebPresentNavigator().moveToNextSlide();
         }
+        if (e.getKeyCode() == KeyEvent.VK_F3) {
+            GUIAccessManager.mf.showImageFileChooser();
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_F9) {
             GUIAccessManager.mf.getGlass().setVisible(!GUIAccessManager.mf.getGlass().isVisible());
         }

@@ -40,6 +40,7 @@ public class RealtimePacket extends IQ {
 
     public static final class Mode {
 
+        public static final String REQUEST_ROOM_RESOURCE_LIST = "request-room-resource-list";
         public static final String REQUEST_USER_LIST = "request-user-list";
         public static final String UPDATE_USER_PROPERTIES = "update-user-properties";
         public static final String REQUEST_USER_PROPERTIES = "request-user-properties";
@@ -98,6 +99,7 @@ public class RealtimePacket extends IQ {
         public static final String REQUEST_ROOM_MEMBERS = "request-room-members";
         public static final String DELETE_ROOM_MEMBER = "delete-room-member";
         public static final String SET_ACCESS = "set-access";
+        public static final String SET_ROOM_RESOURCE_STATE = "set-room-resource-state";
     }
 
     public String getContent() {

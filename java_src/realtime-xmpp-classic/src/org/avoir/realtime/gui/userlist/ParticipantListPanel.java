@@ -17,12 +17,9 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -55,6 +52,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
     private JWebBrowser webBrowser = new JWebBrowser();
     private JButton startAudioVideoButton = new JButton("Enable");
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+    private boolean audioEnabled = false;
 
     /** Creates new form UserListPanel */
     public ParticipantListPanel() {
@@ -76,7 +74,7 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         webBrowser.setMenuBarVisible(false);
         webBrowser.setBarsVisible(false);
         webBrowser.setButtonBarVisible(false);
-        
+
         audioVideoPanel.add(webBrowser, BorderLayout.CENTER);
         startAudioVideoButton.setEnabled(false);
         JPanel p = new JPanel();
@@ -85,8 +83,8 @@ public class ParticipantListPanel extends javax.swing.JPanel {
 
             public void actionPerformed(ActionEvent arg0) {
                 if (ConnectionManager.audioVideoUrlReady && ConnectionManager.flashUrlReady) {
-                    initAudioVideo(ConnectionManager.isOwner, ConnectionManager.getRoomName());
-                    startAudioVideoButton.setText("Reload");
+                    enableAudio();
+
                 } else {
                     JOptionPane.showMessageDialog(null, "It appears the audio video server is not ready.\n" +
                             "Please try again after few minutes");
@@ -98,8 +96,36 @@ public class ParticipantListPanel extends javax.swing.JPanel {
 
         audioVideoPanel.add(p2, BorderLayout.NORTH);
         add(userListTabbedPane, BorderLayout.CENTER);
-        add(statusPanel, BorderLayout.NORTH);
+        //statusPanel.add(soundAlerterField);
+        soundAlerterField.setPreferredSize(new Dimension(100, 21));
+        soundAlerterField.setBorder(BorderFactory.createEtchedBorder());
+        statusPanel.add(alerterField);
+        JPanel p3 = new JPanel(new BorderLayout());
+        p3.add(statusPanel, BorderLayout.NORTH);
+        p3.add(soundAlerterField, BorderLayout.SOUTH);
+        add(p3, BorderLayout.NORTH);
 
+    }
+
+    public JLabel getSoundAlerterField() {
+        return soundAlerterField;
+    }
+
+    public boolean isAudioEnabled() {
+        return audioEnabled;
+    }
+
+    public void resetAlerterField() {
+        statusPanel.add(alerterField);
+    }
+
+    public void enableAudio() {
+        userListTabbedPane.setSelectedIndex(1);
+        initAudioVideo(ConnectionManager.isOwner, ConnectionManager.getRoomName());
+        GUIAccessManager.mf.getSoundMonitor().cancel();
+        soundAlerterField.setText("");
+        soundAlerterField.setIcon(null);
+        audioEnabled = true;
     }
 
     public void showRoomOwnerAudioVideoWindow() {
@@ -157,18 +183,6 @@ public class ParticipantListPanel extends javax.swing.JPanel {
 
             public void run() {
                 webBrowser.navigate(url);
-            /*         JDialog fr = new JDialog(GUIAccessManager.mf);
-            fr.setSize(400, 400);
-            fr.setLocationRelativeTo(null);
-            fr.setLayout(new BorderLayout());
-            fr.add(webBrowser,BorderLayout.CENTER);
-            JPanel p=new JPanel();
-
-            fr.add(p,BorderLayout.SOUTH);
-            JButton hidebutton=new JButton("Hide");
-            p.add(hidebutton);
-            fr.setVisible(true);
-             */
             }
         });
     }
@@ -226,14 +240,16 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         userDetailsFrame.setVisible(true);
     }
 
-    public JPanel getAudioVideoPanel() {
-        return audioVideoPanel;
-    }
     /**
      * getters
      */
+    public JPanel getAudioVideoPanel() {
+        return audioVideoPanel;
+    }
 
-
+    public JLabel getAlerterField() {
+        return alerterField;
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -246,7 +262,9 @@ public class ParticipantListPanel extends javax.swing.JPanel {
 
         accountUserPanel = new AccountUserPanel();
         statusPanel = new javax.swing.JToolBar();
+        soundAlerterField = new javax.swing.JLabel();
         roomInfoField = new javax.swing.JLabel();
+        alerterField = new javax.swing.JLabel();
         photoButton = new javax.swing.JButton();
         accountNameField = new javax.swing.JLabel();
         accStatusField = new javax.swing.JComboBox();
@@ -260,11 +278,38 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         statusPanel.setFloatable(false);
         statusPanel.setRollover(true);
 
+        soundAlerterField.setForeground(new java.awt.Color(255, 0, 0));
+        soundAlerterField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                soundAlerterFieldMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                soundAlerterFieldMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                soundAlerterFieldMouseExited(evt);
+            }
+        });
+        statusPanel.add(soundAlerterField);
+
         roomInfoField.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/warn.png"))); // NOI18N
         roomInfoField.setText("You are not in any Room");
         statusPanel.add(roomInfoField);
 
         accountUserPanel.add(statusPanel, java.awt.BorderLayout.CENTER);
+
+        alerterField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                alerterFieldMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                alerterFieldMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                alerterFieldMouseExited(evt);
+            }
+        });
+        accountUserPanel.add(alerterField, java.awt.BorderLayout.LINE_START);
 
         photoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/default_avatar_32x32.png"))); // NOI18N
         photoButton.setBorderPainted(false);
@@ -351,12 +396,41 @@ public class ParticipantListPanel extends javax.swing.JPanel {
         photoButton.setBorderPainted(false);
     }//GEN-LAST:event_photoButtonMouseExited
 
+    private void alerterFieldMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_alerterFieldMouseEntered
+        alerterField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+    }//GEN-LAST:event_alerterFieldMouseEntered
+
+    private void alerterFieldMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_alerterFieldMouseExited
+        alerterField.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+    }//GEN-LAST:event_alerterFieldMouseExited
+
+    private void alerterFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_alerterFieldMouseClicked
+        participantListTable.showHandRaisers();
+
+    }//GEN-LAST:event_alerterFieldMouseClicked
+
+    private void soundAlerterFieldMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_soundAlerterFieldMouseEntered
+        soundAlerterField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_soundAlerterFieldMouseEntered
+
+    private void soundAlerterFieldMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_soundAlerterFieldMouseExited
+        soundAlerterField.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_soundAlerterFieldMouseExited
+
+    private void soundAlerterFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_soundAlerterFieldMouseClicked
+        enableAudio();
+    }//GEN-LAST:event_soundAlerterFieldMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox accStatusField;
     private javax.swing.JLabel accountNameField;
     private javax.swing.JPanel accountUserPanel;
+    private javax.swing.JLabel alerterField;
     private javax.swing.JButton photoButton;
     private javax.swing.JLabel roomInfoField;
+    private javax.swing.JLabel soundAlerterField;
     private javax.swing.JToolBar statusPanel;
     private javax.swing.JTabbedPane userListTabbedPane;
     // End of variables declaration//GEN-END:variables

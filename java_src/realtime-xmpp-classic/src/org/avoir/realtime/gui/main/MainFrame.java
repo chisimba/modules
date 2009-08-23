@@ -50,7 +50,7 @@ import org.avoir.realtime.common.RealtimeFile;
 import org.avoir.realtime.common.filetransfer.FileManager;
 import org.avoir.realtime.common.util.GeneralUtil;
 import org.avoir.realtime.common.util.ImageUtil;
-import org.avoir.realtime.common.util.RealtimePacketContent;
+import org.avoir.realtime.common.util.RTimer;
 import org.avoir.realtime.gui.Magnifier;
 import org.avoir.realtime.gui.userlist.ParticipantListPanel;
 import org.avoir.realtime.gui.whiteboard.WhiteboardPanel;
@@ -65,6 +65,7 @@ import org.avoir.realtime.gui.room.CreateRoomDialog;
 import org.avoir.realtime.gui.room.InviteParticipants;
 import org.avoir.realtime.gui.room.RoomListFrame;
 import org.avoir.realtime.gui.room.RoomMemberListFrame;
+import org.avoir.realtime.gui.room.RoomResourcesList;
 import org.avoir.realtime.gui.webbrowser.WebBrowserManager;
 import org.avoir.realtime.gui.userlist.UserListFrame;
 import org.avoir.realtime.net.RPacketListener;
@@ -73,6 +74,7 @@ import org.avoir.realtime.notepad.JNotepad;
 
 import org.jivesoftware.smack.util.Base64;
 import org.avoir.realtime.gui.tips.*;
+import org.avoir.realtime.sound.SoundMonitor;
 
 /**
  *
@@ -108,6 +110,7 @@ public class MainFrame extends javax.swing.JFrame {
     int speakerCols = 2;
     private JPanel speakersPanel = new JPanel(new GridLayout(speakerRows, speakerCols));
     private RoomListFrame roomListFrame;
+    private RoomResourcesList roomResourcesList;
     private JFileChooser presentationFC = new JFileChooser();
     private RoomMemberListFrame roomMemberListFrame;
     private boolean slidesPopulated = false;
@@ -115,6 +118,9 @@ public class MainFrame extends javax.swing.JFrame {
     private JComponent glass = new Magnifier();
     private double zoomFactor = 100.0;
     private boolean zoomControl = true;
+    final JCheckBoxMenuItem handItem = new JCheckBoxMenuItem("Raise Hand");
+    private boolean handRaised = false;
+    private SoundMonitor soundMonitor = new SoundMonitor();
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
@@ -134,19 +140,19 @@ public class MainFrame extends javax.swing.JFrame {
         toolsPanel.add(whiteboardPanel.getWbToolbar(), BorderLayout.SOUTH);
         webPresentNavigator = new WebpresentNavigator();
 
-        userListPanel.getUserTabbedPane().addTab("Slides", webPresentNavigator);
+        userListPanel.getUserTabbedPane().addTab("Presentations", webPresentNavigator);
         userListPanel.getUserTabbedPane().addChangeListener(new ChangeListener() {
 
             public void stateChanged(ChangeEvent e) {
-                if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
-                    if (!slidesPopulated) {
-                        webPresentNavigator.populateWithRoomResources();
-                        slidesPopulated =
-                                true;
-
-                        adjustSize();
-
+                if (userListPanel.getUserTabbedPane().getSelectedIndex() == 1) {
+                    if (!userListPanel.isAudioEnabled()) {
+                        userListPanel.enableAudio();
                     }
+                }
+                if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
+                    webPresentNavigator.populateWithRoomResources();
+                    adjustSize();
+
                 }
             }
         });
@@ -183,11 +189,13 @@ public class MainFrame extends javax.swing.JFrame {
                     browser.setMenuBarVisible(false);
                     browser.setBarsVisible(false);
                     browser.setButtonBarVisible(false);
-                    Speaker speaker = new Speaker(browser, speakerName);
+                    JButton refreshButton = new JButton("Reload");
+                    Speaker speaker = new Speaker(browser, speakerName, refreshButton);
                     speakers.add(speaker);
                     JPanel p = new JPanel(new BorderLayout());
                     p.add(browser, BorderLayout.CENTER);
-                    JButton refreshButton = new JButton("Reload");
+
+                    refreshButton.setVisible(false);
                     refreshButton.addActionListener(new ActionListener() {
 
                         public void actionPerformed(ActionEvent arg0) {
@@ -226,9 +234,11 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        addCustomComponents();
+//        addCustomComponents();
         userListPanel.showRoomOwnerAudioVideoWindow();
         applySkin();
+        RTimer.init();
+        soundMonitor.init();
     }
 
     private void applySkin() {
@@ -246,8 +256,8 @@ public class MainFrame extends javax.swing.JFrame {
         adjustSize();
     }
 
-    private void addCustomComponents() {
-        final JCheckBoxMenuItem handItem = new JCheckBoxMenuItem("Raise Hand");
+    private void xaddCustomComponents() {
+
         handItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -278,7 +288,8 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
-        actionsMenu.add(presentnew);
+    //dwaf temporarily disabled this
+    //actionsMenu.add(presentnew);
     }
 
     public void removeAllSpeakers() {
@@ -334,6 +345,7 @@ public class MainFrame extends javax.swing.JFrame {
         for (Speaker speaker : speakers) {
             if (speaker.getSpeaker().equals(speakerUsername)) {
                 final JWebBrowser browser = speaker.getWebBrowser();
+                speaker.getButton().setVisible(true);
                 SwingUtilities.invokeLater(new Runnable() {
 
                     public void run() {
@@ -370,7 +382,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void removeSpeaker(final String speakerUsername) {
-        
+
         //final String speakerName = new String(Base64.decode(xspeakerName));
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -379,6 +391,7 @@ public class MainFrame extends javax.swing.JFrame {
 
                     if (speaker.getSpeaker().equalsIgnoreCase(speakerUsername)) {
                         final JWebBrowser browser = speaker.getWebBrowser();
+                        speaker.getButton().setVisible(false);
                         SwingUtilities.invokeLater(new Runnable() {
 
                             public void run() {
@@ -456,7 +469,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public JLabel getWbInfoField() {
-        return wbInfoField;
+        return infoField;
     }
 
     public JProgressBar getWbProgressBar() {
@@ -614,6 +627,19 @@ public class MainFrame extends javax.swing.JFrame {
 
     }
 
+    public void showRoomResourceList() {
+        if (roomResourcesList == null) {
+            roomResourcesList = new RoomResourcesList(this, false);
+
+        }
+
+        roomResourcesList.setSize((ss.width / 4) * 3, (ss.height / 4) * 3);
+        roomResourcesList.setLocationRelativeTo(null);
+        roomResourcesList.requestRoomResorcesList();
+        roomResourcesList.setVisible(true);
+
+    }
+
     public void showRoomMemberList() {
         if (roomMemberListFrame == null) {
             roomMemberListFrame = new RoomMemberListFrame(this, false);
@@ -680,9 +706,9 @@ public class MainFrame extends javax.swing.JFrame {
         changeRoomButton1 = new javax.swing.JButton();
         topPanel = new javax.swing.JPanel();
         statusBar = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        timerField = new javax.swing.JLabel();
         wbProgressBar = new javax.swing.JProgressBar();
-        wbInfoField = new javax.swing.JLabel();
+        infoField = new javax.swing.JLabel();
         mainSplitPane = new javax.swing.JSplitPane();
         leftSplitPane = new javax.swing.JSplitPane();
         chatTabbedPane = new javax.swing.JTabbedPane();
@@ -701,17 +727,16 @@ public class MainFrame extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         undoMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
         fullScreenMenuItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
         escMenuItem = new javax.swing.JMenuItem();
         actionsMenu = new javax.swing.JMenu();
         insertGraphicMenuItem = new javax.swing.JMenuItem();
         insertPresentationMenuItem = new javax.swing.JMenuItem();
+        nextPrevMenuItem = new javax.swing.JMenuItem();
+        prevslideMenuItem = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JSeparator();
-        requestMicMenuItem = new javax.swing.JMenuItem();
-        jSeparator8 = new javax.swing.JSeparator();
+        raiseHandMenuItem = new javax.swing.JMenuItem();
         meetingsMenuItem = new javax.swing.JMenu();
         jSeparator4 = new javax.swing.JSeparator();
         roomListMenuItem = new javax.swing.JMenuItem();
@@ -723,7 +748,7 @@ public class MainFrame extends javax.swing.JFrame {
         screenShareMenuItem = new javax.swing.JMenuItem();
         screenViewerMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
-        updateRoomResourcesMenuItem = new javax.swing.JMenuItem();
+        roomResourcesMenuItem = new javax.swing.JMenuItem();
         questionManagerMenuItem = new javax.swing.JMenuItem();
         slideBuilderMenuItem = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JSeparator();
@@ -873,14 +898,14 @@ public class MainFrame extends javax.swing.JFrame {
 
         statusBar.setLayout(new java.awt.GridLayout(1, 3));
 
-        jLabel1.setText("Ready");
-        jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        statusBar.add(jLabel1);
+        timerField.setText("Ready");
+        timerField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        statusBar.add(timerField);
         statusBar.add(wbProgressBar);
 
-        wbInfoField.setText("Ready");
-        wbInfoField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        statusBar.add(wbInfoField);
+        infoField.setText("Ready");
+        infoField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        statusBar.add(infoField);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Realtime Virtual Classroom");
@@ -1062,16 +1087,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
         editMenu.add(undoMenuItem);
 
-        deleteMenuItem.setText("Delete");
-        deleteMenuItem.setEnabled(false);
-        deleteMenuItem.setName("delete"); // NOI18N
-        deleteMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteMenuItemActionPerformed(evt);
-            }
-        });
-        editMenu.add(deleteMenuItem);
-
         screenShareItem.add(editMenu);
 
         viewMenu.setText("View");
@@ -1084,15 +1099,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         viewMenu.add(fullScreenMenuItem);
-
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Zoom");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        viewMenu.add(jMenuItem1);
 
         escMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
         escMenuItem.setText("Esc");
@@ -1129,19 +1135,38 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         actionsMenu.add(insertPresentationMenuItem);
-        actionsMenu.add(jSeparator7);
 
-        requestMicMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, 0));
-        requestMicMenuItem.setText("Request MIC");
-        requestMicMenuItem.setEnabled(false);
-        requestMicMenuItem.setName("requestMIC"); // NOI18N
-        requestMicMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        nextPrevMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, 0));
+        nextPrevMenuItem.setText("Next Slide");
+        nextPrevMenuItem.setEnabled(false);
+        nextPrevMenuItem.setName("nextSlide"); // NOI18N
+        nextPrevMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                requestMicMenuItemActionPerformed(evt);
+                nextPrevMenuItemActionPerformed(evt);
             }
         });
-        actionsMenu.add(requestMicMenuItem);
-        actionsMenu.add(jSeparator8);
+        actionsMenu.add(nextPrevMenuItem);
+
+        prevslideMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, 0));
+        prevslideMenuItem.setText("Previous Slide");
+        prevslideMenuItem.setEnabled(false);
+        prevslideMenuItem.setName("prevSlide"); // NOI18N
+        prevslideMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prevslideMenuItemActionPerformed(evt);
+            }
+        });
+        actionsMenu.add(prevslideMenuItem);
+        actionsMenu.add(jSeparator7);
+
+        raiseHandMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        raiseHandMenuItem.setText("Raise Hand");
+        raiseHandMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                raiseHandMenuItemActionPerformed(evt);
+            }
+        });
+        actionsMenu.add(raiseHandMenuItem);
 
         screenShareItem.add(actionsMenu);
 
@@ -1215,15 +1240,15 @@ public class MainFrame extends javax.swing.JFrame {
         toolsMenu.add(screenViewerMenuItem);
         toolsMenu.add(jSeparator2);
 
-        updateRoomResourcesMenuItem.setText("Room Resources");
-        updateRoomResourcesMenuItem.setEnabled(false);
-        updateRoomResourcesMenuItem.setName("roomResources"); // NOI18N
-        updateRoomResourcesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        roomResourcesMenuItem.setText("Room Resources");
+        roomResourcesMenuItem.setEnabled(false);
+        roomResourcesMenuItem.setName("roomResources"); // NOI18N
+        roomResourcesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateRoomResourcesMenuItemActionPerformed(evt);
+                roomResourcesMenuItemActionPerformed(evt);
             }
         });
-        toolsMenu.add(updateRoomResourcesMenuItem);
+        toolsMenu.add(roomResourcesMenuItem);
 
         questionManagerMenuItem.setText("Question Manager");
         questionManagerMenuItem.setEnabled(false);
@@ -1609,9 +1634,9 @@ public class MainFrame extends javax.swing.JFrame {
         insertPresentation();
     }//GEN-LAST:event_insertPresentationMenuItemActionPerformed
 
-    private void updateRoomResourcesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateRoomResourcesMenuItemActionPerformed
-        showRoomResourcesNavigator();
-    }//GEN-LAST:event_updateRoomResourcesMenuItemActionPerformed
+    private void roomResourcesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomResourcesMenuItemActionPerformed
+        showRoomResourceList();
+}//GEN-LAST:event_roomResourcesMenuItemActionPerformed
 
     private void joinRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinRoomMenuItemActionPerformed
         String roomName = JOptionPane.showInputDialog("Enter room name: ");
@@ -1619,23 +1644,6 @@ public class MainFrame extends javax.swing.JFrame {
             chatRoomManager.joinAsParticipant(ConnectionManager.getUsername(), roomName.trim());
         }
     }//GEN-LAST:event_joinRoomMenuItemActionPerformed
-
-    private void requestMicMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestMicMenuItemActionPerformed
-        if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
-            JOptionPane.showMessageDialog(null, "You are a room moderator already. You dont need to request microphone");
-            return;
-
-        }
-
-
-        RealtimePacket p = new RealtimePacket();
-        p.setMode(RealtimePacket.Mode.REQUEST_MIC);
-        RealtimePacketContent realtimePacketContent = new RealtimePacketContent();
-        realtimePacketContent.addTag("username", ConnectionManager.getUsername());
-        p.setContent(realtimePacketContent.toString());
-        ConnectionManager.sendPacket(p);
-
-    }//GEN-LAST:event_requestMicMenuItemActionPerformed
     private void raiseHandActionPerformed(java.awt.event.ActionEvent evt) {
         GUIAccessManager.mf.getUserListPanel().getParticipantListTable().raiseHand();
 
@@ -1729,10 +1737,6 @@ public class MainFrame extends javax.swing.JFrame {
         setFullScreen();
     }//GEN-LAST:event_fullScreenMenuItemActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        doZoom();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
         whiteboardPanel.getWhiteboard().undo();
     }//GEN-LAST:event_undoMenuItemActionPerformed
@@ -1741,13 +1745,32 @@ public class MainFrame extends javax.swing.JFrame {
         glass.setVisible(false);
     }//GEN-LAST:event_escMenuItemActionPerformed
 
-    private void deleteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMenuItemActionPerformed
-        whiteboardPanel.getWhiteboard().sendDeleteBroadcast();
-    }//GEN-LAST:event_deleteMenuItemActionPerformed
-
     private void cleanMicsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanMicsMenuItemActionPerformed
         userListPanel.getParticipantListTable().clearMics();
     }//GEN-LAST:event_cleanMicsMenuItemActionPerformed
+
+    private void nextPrevMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextPrevMenuItemActionPerformed
+        webPresentNavigator.moveToNextSlide();
+    }//GEN-LAST:event_nextPrevMenuItemActionPerformed
+
+    private void prevslideMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevslideMenuItemActionPerformed
+        webPresentNavigator.moveToPrevSlide();
+    }//GEN-LAST:event_prevslideMenuItemActionPerformed
+
+    private void raiseHandMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raiseHandMenuItemActionPerformed
+        if (ConnectionManager.isOwner) {
+            JOptionPane.showMessageDialog(null, "You are room owner, no need of raising hand.");
+            return;
+        }
+        if (handRaised) {
+            userListPanel.getParticipantListTable().raiseHand();
+            raiseHandMenuItem.setText("Lower Hand");
+        } else {
+            raiseHandMenuItem.setText("Raise Hand");
+            userListPanel.getParticipantListTable().lowerHand();
+        }
+        handRaised = !handRaised;
+    }//GEN-LAST:event_raiseHandMenuItemActionPerformed
 
     public void doZoom() {
         if (zoomControl) {
@@ -1918,9 +1941,29 @@ public class MainFrame extends javax.swing.JFrame {
         RPacketListener.removeSlideShowListener(slidesNavigator);
     }
 
+    public RoomResourcesList getRoomResourcesList() {
+        return roomResourcesList;
+    }
+
     /*** The gets **/
     public JComponent getGlass() {
         return glass;
+    }
+
+    public JLabel getInfoField() {
+        return infoField;
+    }
+
+    public JLabel getTimerField() {
+        return timerField;
+    }
+
+    public JCheckBoxMenuItem getHandItem() {
+        return handItem;
+    }
+
+    public SoundMonitor getSoundMonitor() {
+        return soundMonitor;
     }
 
     public JSplitPane getMainSplitPane() {
@@ -1951,7 +1994,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane chatTabbedPane;
     private javax.swing.JMenuItem cleanMicsMenuItem;
     private javax.swing.JMenuItem createRoomMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
     private javax.swing.JButton deskShareButton;
     private javax.swing.JMenuItem desktopMenuItem;
     private javax.swing.JMenu editMenu;
@@ -1961,33 +2003,34 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem fullScreenMenuItem;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JButton imagesButton;
+    private javax.swing.JLabel infoField;
     private javax.swing.JMenuItem insertGraphicMenuItem;
     private javax.swing.JMenuItem insertPresentationMenuItem;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator7;
-    private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JMenuItem joinRoomMenuItem;
     private javax.swing.JSplitPane leftSplitPane;
     private javax.swing.JMenuItem magnifierMenuitem;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JMenu meetingsMenuItem;
+    private javax.swing.JMenuItem nextPrevMenuItem;
     private javax.swing.JButton notepadButton;
     private javax.swing.JButton notepadButton1;
     private javax.swing.JMenuItem optionsMenuItem;
     private javax.swing.JToolBar partiToolbar;
     private javax.swing.JButton pointerButton;
+    private javax.swing.JMenuItem prevslideMenuItem;
     private javax.swing.JMenuItem privateChatMenuItem;
     private javax.swing.JMenuItem questionManagerMenuItem;
-    private javax.swing.JMenuItem requestMicMenuItem;
+    private javax.swing.JMenuItem raiseHandMenuItem;
     private javax.swing.JMenuItem roomListMenuItem;
+    private javax.swing.JMenuItem roomResourcesMenuItem;
     private javax.swing.JToolBar roomToolsToolbar;
     private javax.swing.JMenuBar screenShareItem;
     private javax.swing.JMenuItem screenShareMenuItem;
@@ -1998,6 +2041,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane surfaceTopTabbedPane;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JMenuItem thisAppMenuItem;
+    private javax.swing.JLabel timerField;
     private javax.swing.JMenuItem tipsMenuItem;
     private javax.swing.JTextArea titleField;
     private javax.swing.JPanel titlePanel;
@@ -2005,10 +2049,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel toolsPanel;
     private javax.swing.JPanel topPanel;
     private javax.swing.JMenuItem undoMenuItem;
-    private javax.swing.JMenuItem updateRoomResourcesMenuItem;
     private javax.swing.JMenu viewMenu;
     private javax.swing.ButtonGroup wbButtonGroup;
-    private javax.swing.JLabel wbInfoField;
     private javax.swing.JProgressBar wbProgressBar;
     private javax.swing.JButton zoomInButton;
     private javax.swing.JButton zoomOriginalButton;

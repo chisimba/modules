@@ -46,15 +46,15 @@ public class WebBrowserManager {
     private boolean showAudioVideoBroadcast = true;
     private String warning = "Closing this will stop these functions from " +
             " working until you restart the application.\n Do you still want to close?";
+    private JFrame frame = new JFrame();
 
- 
     public void showScreenShareViewer(final int w, final int h, final String title, final boolean centerScreen) {
 
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
                 final JWebBrowser webBrowser = new JWebBrowser();
-                JFrame frame = new JFrame(title);
+                frame.setTitle(title);
                 frame.setAlwaysOnTop(true);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.getContentPane().add(webBrowser, BorderLayout.CENTER);
@@ -62,10 +62,14 @@ public class WebBrowserManager {
                 frame.setLocationByPlatform(centerScreen);
                 frame.setVisible(true);
                 webBrowser.setMenuBarVisible(false);
-                webBrowser.navigate( ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
+                webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
             }
         });
         NativeInterface.runEventPump();
+    }
+
+    public void closeScreenShareViewer() {
+        frame.dispose();
     }
 
     public void showScreenShareViewerAsEmbbededTab(final JFrame fr) {
@@ -89,7 +93,7 @@ public class WebBrowserManager {
                 });
 
                 webBrowser.setMenuBarVisible(false);
-                webBrowser.navigate( ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
+                webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
                 webBrowser.setBarsVisible(false);
                 webBrowser.setButtonBarVisible(false);
                 webBrowser.setLocationBarVisible(false);
@@ -106,7 +110,7 @@ public class WebBrowserManager {
     }
 
     public void showScreenShareFrame() {
-        String host =  ConnectionManager.AUDIO_VIDEO_URL+ "/ScreenServlet";
+        String host = ConnectionManager.AUDIO_VIDEO_URL + "/ScreenServlet";
         StartScreen ss = new StartScreen(host, "test1", "default", "default", "test1", "test1");
         ss.initMainFrame();
 

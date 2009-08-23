@@ -85,7 +85,7 @@ public class StartScreen {
 
                 public void actionPerformed(ActionEvent arg0) {
                     GUIAccessManager.mf.setSize(ss.width / 4, ss.height);
-                    //GUIAccessManager.mf.setAlwaysOnTop(true);
+                    
                     captureScreenStart();
                     GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab(t);
                     t.setVisible(false);
@@ -112,6 +112,7 @@ public class StartScreen {
                     GUIAccessManager.mf.setAlwaysOnTop(false);
                     GUIAccessManager.mf.setSize(ss);
                     captureScreenStop();
+                    GUIAccessManager.mf.getChatRoomManager().sendMessage("", 0, Color.BLACK, "stop-screen-share");
                 }
             });
             stopButton.setBounds(220, 50, 200, 24);
