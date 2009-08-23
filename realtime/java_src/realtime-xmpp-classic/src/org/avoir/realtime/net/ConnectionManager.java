@@ -6,7 +6,7 @@ package org.avoir.realtime.net;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,7 +48,6 @@ public class ConnectionManager {
     private static String username;
     private static String roomName;
     public static String myEmail = "";
-    
     private static boolean admin = false;
     private static JWindow banner = new JWindow();
     private static ProxyInfo proxy;
@@ -61,14 +60,12 @@ public class ConnectionManager {
     public static boolean audioVideoUrlReady = false;
     public static boolean flashUrlReady = false;
     public static String FLASH_URL = "";
-    
     private static Timer connectionTimer = new Timer();
     private static int connectionCount = 0;
     private static int maxConnectionCount = 3;
     private static int connectionType = Constants.Proxy.NO_PROXY;
     public static String roomOwner;
-    
-    
+    private static ArrayList<String> connectionErrorMessages = new ArrayList<String>();
     public static boolean isAdmin = false;
     //permissions======================================
     public static boolean isOwner = false;
@@ -81,6 +78,12 @@ public class ConnectionManager {
     public static boolean canWhiteboard = false;
     public static boolean grantAdmin = false;
     //=================================================
+
+    /*
+     * connection error messages
+     */
+    private static String DIRECT_CONNECTION_FAIL = " - Direct connection to the server failed";
+    private static String HTTP_PROXY_CONNECTION_FAIL = "- Connection via HTTP Proxy to the server failed";
 
     /**
      * This initiates connection to openfire server
@@ -124,6 +127,7 @@ public class ConnectionManager {
         return false;
 
     }
+
     public static String getFullnames() {
         return fullnames;
     }
@@ -147,9 +151,13 @@ public class ConnectionManager {
      */
     private static void alertTimeOut() {
         Main.disposeBanner();
-
-        int n = JOptionPane.showConfirmDialog(null, "Internal Error occured. Cannot connect to server.\n" +
-                "Would you like to adjust settings and try again?", "Settings",
+        String errorMessages="";
+        for(String message:connectionErrorMessages){
+            errorMessages+=message+"\n";
+        }
+        int n = JOptionPane.showConfirmDialog(null, "<html>Internal Error occured. Cannot connect to server.\n" +
+                errorMessages+
+                "Would you like to adjust connection settings and try again?", "Settings",
                 JOptionPane.YES_NO_OPTION);
         if (n == JOptionPane.YES_OPTION) {
             LoginFrame.showOptionsFrame();
@@ -166,10 +174,15 @@ public class ConnectionManager {
     }
 
     private static boolean connectDirect() {
+        connectionErrorMessages.clear();
         System.out.println("Attempting direct connection");
         ConnectionConfiguration config = new ConnectionConfiguration(server, PORT, resource);
         connection = new XMPPConnection(config);
-        return connect();
+        boolean success = connect();
+        if (!success) {
+            connectionErrorMessages.add(DIRECT_CONNECTION_FAIL);
+        }
+        return success;
     }
 
     private static boolean connectViaHttpProxy() {
@@ -183,7 +196,7 @@ public class ConnectionManager {
             String portStr = GeneralUtil.getProperty("proxy.port");
             //System.out.println("PORT STR: = "+portStr);
             PROXY_PORT = Integer.parseInt(portStr);
-            System.out.println("Proxy identified as "+PROXY_HOST+":"+PROXY_PORT);
+            System.out.println("Proxy identified as " + PROXY_HOST + ":" + PROXY_PORT);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -202,7 +215,11 @@ public class ConnectionManager {
         proxy = new ProxyInfo(ProxyType.HTTP, PROXY_HOST, PROXY_PORT, proxyUsername, proxyPassword);
         config = new ConnectionConfiguration(server, PORT, resource, proxy);
         connection = new XMPPConnection(config);
-        return connect();
+        boolean success = connect();
+        if (!success) {
+            connectionErrorMessages.add(HTTP_PROXY_CONNECTION_FAIL);
+        }
+        return success;
     }
 
     public static ConnectionManager getInstance() {
@@ -215,7 +232,7 @@ public class ConnectionManager {
             connectionTimer = new Timer();
             connectionTimer.scheduleAtFixedRate(new ConnectionTimer(), 1000, 1000);
             connection.connect();
-            System.out.println("Successfully connected to "+connection.getHost());
+            System.out.println("Successfully connected to " + connection.getHost());
             connectionTimer.cancel();
             return true;
         } catch (XMPPException e) {
@@ -273,7 +290,6 @@ public class ConnectionManager {
         ConnectionManager.AUDIO_VIDEO_URL = AUDIO_VIDEO_URL;
     }
 
-
     public static void setPORT(int PORT) {
         ConnectionManager.PORT = PORT;
     }
@@ -315,14 +331,14 @@ public class ConnectionManager {
             }
             /*connection.getChatManager().addChatListener(new ChatManagerListener() {
 
-                public void chatCreated(Chat chat, boolean createdLocally) {
-                    chat.addMessageListener(new MessageListener() {
+            public void chatCreated(Chat chat, boolean createdLocally) {
+            chat.addMessageListener(new MessageListener() {
 
-                        public void processMessage(Chat chat, Message message) {
-                            JOptionPane.showMessageDialog(null, message.getBody());
-                        }
-                    });
-                }
+            public void processMessage(Chat chat, Message message) {
+            JOptionPane.showMessageDialog(null, message.getBody());
+            }
+            });
+            }
             });*/
             initPacketListener();
             initConnectionListener();

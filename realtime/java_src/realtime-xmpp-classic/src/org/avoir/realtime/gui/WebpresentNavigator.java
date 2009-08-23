@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -55,6 +56,7 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
     private ImageIcon fileIcon = ImageUtil.createImageIcon(this, "/images/file_small.png");
     private JPopupMenu popup = new JPopupMenu();
+    private JMenuItem newItem = new JMenuItem("New Presentation");
     private JMenuItem deleteItem = new JMenuItem("Remove Presentation");
     private JMenuItem clearItem = new JMenuItem("Clear Whiteboard");
     private JMenuItem refreshItem = new JMenuItem("Refresh");
@@ -118,9 +120,12 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         clearItem.addActionListener(this);
         clearItem.setActionCommand("clear");
 
+        newItem.addActionListener(this);
+        newItem.setActionCommand("new");
+
         refreshItem.addActionListener(this);
         refreshItem.setActionCommand("refresh");
-
+        popup.add(newItem);
         popup.add(refreshItem);
         popup.addSeparator();
         popup.add(deleteItem);
@@ -176,6 +181,9 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         if (evt.getActionCommand().equals("clear")) {
             GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setSlideImage(null);
         }
+        if (evt.getActionCommand().equals("new")) {
+            GUIAccessManager.mf.insertPresentation();
+        }
         if (evt.getActionCommand().equals("remove")) {
             removeRoomResource();
         }
@@ -200,7 +208,6 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
             }
         }
     }
-
     public int getCurrentSlideIndex() {
         return currentSlideIndex;
     }
@@ -209,15 +216,65 @@ public class WebpresentNavigator extends JPanel implements ActionListener {
         return slideCount;
     }
 
+    private void showPresentationList() {
+        String resourceDir = Constants.HOME + "/rooms/" + ChatRoomManager.currentRoomName;
+        System.out.println(resourceDir);
+        String files[] = new File(resourceDir).list();
+        Object[] presentations = new Object[files.length];
+        java.util.Arrays.sort(files);
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                String path = resourceDir + "/" + files[i];
+                String presentationName = GeneralUtil.readTextFile(path + "/presentationname.txt");
+                System.out.println("the files :" + presentationName);
+                presentations[i] = presentationName;
+            }
+        }
+        if (presentations.length > 0) {
+            Object val = JOptionPane.showInputDialog(null,
+                    "Select the presentation to use",
+                    "Presentation", JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    presentations,
+                    presentations[0]);
+            if (val != null) {
+                selectedPresentation = (String) val;
+            }
+        }
+    }
+
     public void moveToNextSlide() {
+
+        if (selectedPresentation == null) {
+            showPresentationList();
+        }
+        if (selectedPresentation.trim().equals("")) {
+            showPresentationList();
+        }
+        if (selectedPresentation.indexOf('\n') > 0) {
+            selectedPresentation = selectedPresentation.substring(0, selectedPresentation.indexOf('\n'));
+        }
+        resetSlideCount();
 
         if (currentSlideIndex < slideCount) {
             currentSlideIndex++;
             sendPacket(selectedPresentation, "Slide " + currentSlideIndex);
+
         }
     }
 
     public void moveToPrevSlide() {
+        if (selectedPresentation == null) {
+            showPresentationList();
+        }
+        if (selectedPresentation.trim().equals("")) {
+            showPresentationList();
+        }
+        if (selectedPresentation.indexOf('\n') > 0) {
+            selectedPresentation = selectedPresentation.substring(0, selectedPresentation.indexOf('\n'));
+        }
+        resetSlideCount();
+
         if (currentSlideIndex > 1) {
             currentSlideIndex--;
             sendPacket(selectedPresentation, "Slide " + currentSlideIndex);

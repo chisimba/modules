@@ -236,6 +236,7 @@ public class RPacketListener implements PacketListener {
             } else if (mode.equals(Mode.SET_PERMISSIONS)) {
                 String username = RealtimePacketProcessor.getTag(packet.getContent(), "username");
                 String permissionString = RealtimePacketProcessor.getTag(packet.getContent(), "permissions");
+
                 GUIAccessManager.mf.getUserListPanel().getParticipantListTable().setUserPermissions(username, permissionString);
             } else if (mode.equals(Mode.PRIVATE_CHAT_FORWARD)) {
                 String sender = XmlUtils.readString(doc, "private-chat-sender");
@@ -335,6 +336,9 @@ public class RPacketListener implements PacketListener {
                 GUIAccessManager.mf.getTabbedPane().setSelectedIndex(index);
             } else if (mode.equals(Mode.DELETE_ROOM_RESOURCE_SUCCESS)) {
                 SlideShowProcessor.deleteLocalSlide(packet.getContent());
+            } else if (mode.equals(org.avoir.realtime.net.Mode.ROOM_RESOURCE_LIST)) {
+                ArrayList<Map> fileView = RealtimePacketProcessor.getRoomResourcesAsArrayList(packet.getContent());
+                GUIAccessManager.mf.getRoomResourcesList().setRoomResources(fileView);
             } else if (mode.equals(org.avoir.realtime.net.Mode.ROOM_RESOURCES)) {
 
                 ArrayList<RealtimeFile> fileView = RealtimePacketProcessor.getFileViewArrayList(packet.getContent(), true);
@@ -403,7 +407,7 @@ public class RPacketListener implements PacketListener {
                     String xfrom = packet.getFrom();
                     int at = xfrom.indexOf("@");
                     String from = xfrom.substring(0, at);
-                      if (!GeneralUtil.isOwner(packet.getFrom())) {
+                    if (!GeneralUtil.isOwner(packet.getFrom())) {
                         item.setFrom(GUIAccessManager.mf.getUserListPanel().getParticipantListTable().getNames(from));
                     }
                     if (item.isNewItem()) {
@@ -611,6 +615,8 @@ public class RPacketListener implements PacketListener {
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(message.getBody());
         } else if (type.equals("sys-participant-cleanup")) {
             GUIAccessManager.mf.removeAllSpeakers();
+        } else if (type.equals("stop-screen-share")) {
+            GUIAccessManager.mf.getWebbrowserManager().closeScreenShareViewer();
         } else {
             WhiteboardMessageProcessor.processCustomMessage(message);
         }

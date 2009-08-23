@@ -94,4 +94,5 @@ public class Mode {
     public static final String SET_ACCESS = "set-access";
     public static final String CHANGE_ACCESS = "change-access";
     public static final String SET_PERMISSIONS = "set-permissions";
+    public static final String ROOM_RESOURCE_LIST = "room-resource-list";
 }

@@ -11,6 +11,7 @@ import com.pagosoft.plaf.PlafOptions;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -123,7 +124,7 @@ public class WinXPSkin implements SkinManager {
                         browser.setMenuBarVisible(false);
                         browser.setBarsVisible(false);
                         browser.setButtonBarVisible(false);
-                        Speaker speaker = new Speaker(browser, speakerName);
+                        Speaker speaker = new Speaker(browser, speakerName,new JButton());
                         speakers.add(speaker);
                         GUIAccessManager.mf.getSpeakersPanel().add(browser);
 
