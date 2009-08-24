@@ -65,8 +65,8 @@ class forum extends controller
         $this->objForumEmail =& $this->getObject('forumemail');
 
         // Load Forum Subscription classes
-		$this->objForumSubscriptions =& $this->getObject('dbforumsubscriptions');
-		$this->objTopicSubscriptions =& $this->getObject('dbtopicsubscriptions');
+        $this->objForumSubscriptions =& $this->getObject('dbforumsubscriptions');
+        $this->objTopicSubscriptions =& $this->getObject('dbtopicsubscriptions');
 
         // Forum Statistics
         $this->objForumStats =& $this->getObject('forumstats');
@@ -187,8 +187,8 @@ class forum extends controller
 
         switch ($action)
         {
-        	case 'test':
-        		return 'test.php';
+            case 'test':
+                return 'test.php';
             case 'forum':
                 return $this->showForum($this->getParam('id'));
 
@@ -498,11 +498,11 @@ class forum extends controller
         }
         $this->setVarByRef('temporaryId', $temporaryId);
 
-		$numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($id, $this->objUser->userId());
-		$this->setVarByRef('numTopicSubscriptions', $numTopicSubscriptions);
+        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($id, $this->objUser->userId());
+        $this->setVarByRef('numTopicSubscriptions', $numTopicSubscriptions);
 
-		$forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($id, $this->objUser->userId());
-		$this->setVarByRef('forumSubscription', $forumSubscription);
+        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($id, $this->objUser->userId());
+        $this->setVarByRef('forumSubscription', $forumSubscription);
 
         return $returnTemplate;
     }
@@ -607,9 +607,9 @@ class forum extends controller
         $forumDetails = $this->objForum->getForum($forum_id);
 
 
-		$forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forum_id, $this->objUser->userId());
+        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forum_id, $this->objUser->userId());
 
-		// Manage Subscriptions
+        // Manage Subscriptions
         if (isset($_POST['subscriptions'])) {
             if ($_POST['subscriptions'] == 'forumsubscribe') { // First check subscriptions to forum
                 if (!$forumSubscription) { // If not subscribed to forum, subscribe user now.
@@ -738,7 +738,7 @@ class forum extends controller
                 $this->objTopicRead->markTopicRead ($topic_id, $this->userId);
             }
 
-			// Bread Crumbs
+            // Bread Crumbs
             $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
             $forumLink->link = $forum['forum_name'];
             $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title']));
@@ -837,7 +837,7 @@ class forum extends controller
             }
 
 
-			// Bread Crumbs
+            // Bread Crumbs
             $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
             $forumLink->link = $forum['forum_name'];
             $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title']));
@@ -1120,7 +1120,7 @@ class forum extends controller
         if ($forumDetails['subscriptions'] == 'Y') {
             $replyUrl = $this->uri(array('action'=>'postreply','id'=>$post_id));
             //$emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
-        	$emailSuccess = NULL;
+            $emailSuccess = NULL;
         } else {
             $emailSuccess = NULL;
         }
@@ -1207,7 +1207,7 @@ class forum extends controller
         $contextForums = $this->objForum->getAllContextForums($this->contextCode);
         $this->setVarByRef('forumsList', $contextForums);
 
-		$visibleForums = $this->objForum->getContextForums($this->contextCode);
+        $visibleForums = $this->objForum->getContextForums($this->contextCode);
         $this->setVarByRef('visibleForums', $visibleForums);
 
         $defaultForum = $this->objForum->getDefaultForum($this->contextCode);
@@ -2107,8 +2107,8 @@ class forum extends controller
         $allTopics = $this->objTopic->showTopicsInForum($id, $this->userId, $forum['archivedate'], $order, $direction);
 
         $this->loadClass('treemenu','tree');
-		$this->loadClass('treenode','tree');
-		$this->loadClass('freemindmap','tree');
+        $this->loadClass('treenode','tree');
+        $this->loadClass('freemindmap','tree');
         $this->loadClass('htmllist','tree');
 
         $treeMenu = new treemenu();
@@ -2213,8 +2213,8 @@ class forum extends controller
 
         // Load the Tree Classes
         $this->loadClass('treemenu','tree');
-		$this->loadClass('treenode','tree');
-		$this->loadClass('freemindmap','tree');
+        $this->loadClass('treenode','tree');
+        $this->loadClass('freemindmap','tree');
         $this->loadClass('htmllist','tree');
 
         // Load Color Generator
