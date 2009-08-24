@@ -72,7 +72,7 @@ $table->addCell('<h6><a href="http://openoffice.org">Open Office</a>,
 <a href="http://www.gimp.org">GIMP,
 <a href="http://www.blender.org">Blender</a>,
 <a href="http://www.icecast.org">IceCast</a>,
-Audacity</6>');
+<a href="http://audacity.sourceforge.net/">Audacity</a></6>');
 $table->endRow();
 
 echo '<div id="wrap">'.$error.$table->show().'</div>';
