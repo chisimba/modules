@@ -124,7 +124,7 @@ echo $tblclass->show();
 $objSearch = $this->getObject('forumsearch');
 echo $objSearch->show();
 
-if ($this->objUser->isCourseAdmin() && $this->isLoggedIn) {
+if ($this->objUser->isCourseAdmin(NULL, $this->contextCode) && $this->isLoggedIn) {
     $administrationLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'administration')));
     $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumadministration', 'forum');
     echo '<p><strong>'.$administrationLink->show().'</strong></p>';
