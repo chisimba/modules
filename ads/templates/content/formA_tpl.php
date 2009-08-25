@@ -32,7 +32,7 @@ $table->startRow();
 
 $coursename = $this->objCourseProposals->getTitle($this->getParam('courseid'));
 $this->formValue->setValue('A1', $coursename);
-$unitname = new textinput('A1',$this->formValue->getValue('A1'),NULL,50);
+$unitname = new textinput('A1',$this->formValue->getValue('A1'),NULL,75);
 
 //the tips
 $tip1 = "<div id = 'tip1'><h3>[?]</h3></div>";
@@ -136,7 +136,7 @@ $table->endRow();
 
 
 $table->startRow();
-$motivation = new textarea('A3');
+$motivation = new textarea('A3', NULL, 10, 75);
 $motivationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_motiv', 'ads'). "</b>".'&nbsp;', 'input_motivation');
 $motivation->value = $this->formValue->getValue("A3");
 
@@ -149,7 +149,7 @@ $table->endRow();
 
 
 $table->startRow();
-$qualification = new textarea('A4');
+$qualification = new textarea('A4', NULL, 10, 75);
 $qualificationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_qual', 'ads'). "</b>".'&nbsp;', 'input_motivation');
 
     $qualification->value = $this->formValue->getValue("A4");

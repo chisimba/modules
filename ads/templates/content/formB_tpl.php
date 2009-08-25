@@ -20,7 +20,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $table->cellspacing = "10";
 $table->startRow();
 
-$changetype = new textarea('B1');
+$changetype = new textarea('B1', NULL, 10, 75);
 $changetypeLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b1', 'ads')."</b>".'&nbsp;', 'change_type');
 $changetype->value = $this->formValue->getValue("B1");
 
@@ -31,7 +31,7 @@ $table->addCell($changetype->show() . "<br />" . $this->formError->getError('B1'
 $table->endRow();
 
 
-$coursedesc = new textarea('B2');
+$coursedesc = new textarea('B2', NULL, 10, 75);
 $coursedescLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b2', 'ads')."</b>".'&nbsp;', 'course_desc');
 $coursedesc->value = $this->formValue->getValue("B2");
 
@@ -43,7 +43,7 @@ $table->addCell($coursedesc->show() . "<br />" . $this->formError->getError('B2'
 $table->endRow();
 
 
-$prereq = new textarea('B3a');
+$prereq = new textarea('B3a', NULL, 10, 75);
 $prereqLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b3a', 'ads')."</b>".'&nbsp;', 'pre_req');
 $prereq->value = $this->formValue->getValue("B3a");
 
@@ -54,7 +54,7 @@ $table->addCell($prereq->show() . "<br />" . $this->formError->getError('B3a'));
 $table->endRow();
 
 
-$coreq = new textarea('B3b');
+$coreq = new textarea('B3b', NULL, 10, 75);
 $coreqLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b3b', 'ads')."</b>".'&nbsp;', 'co_req');
 $coreq->value = $this->formValue->getValue("B3b");
 
@@ -82,7 +82,7 @@ $table->addCell($b4a->showTable());
 $table->endRow();
 
 
-$b4b = new textarea('B4b');
+$b4b = new textarea('B4b', NULL, 10, 75);
 $b4bLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b4b', 'ads')."</b>".'&nbsp;', 'b4_b');
 $b4b->value = $this->formValue->getValue("B4b");
 
@@ -94,7 +94,7 @@ $table->endRow();
 
 
 
-$b4c = new textarea('B4c');
+$b4c = new textarea('B4c', NULL, 10, 75);
 $b4cLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b4c', 'ads')."</b>".'&nbsp;', 'b4_c');
 $b4c->value = $this->formValue->getValue("B4c");
 
@@ -130,7 +130,7 @@ $table->addCell($b5a->showTable());
 $table->endRow();
 
 
-$b5b = new textarea('B5b');
+$b5b = new textarea('B5b', NULL, 10, 75);
 $b5bLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b5b', 'ads')."</b>".'&nbsp;', 'b5_b');
 $b5b->value = $this->formValue->getValue("B5b");
 
@@ -165,7 +165,7 @@ $table->addCell($b6a->showTable());
 $table->endRow();
 
 
-$b6b = new textarea('B6b');
+$b6b = new textarea('B6b', NULL, 10, 75);
 $b6bLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b6b', 'ads')."</b>".'&nbsp;', 'b6_b');
 
     $b6b->value = $this->formValue->getValue("B6b");

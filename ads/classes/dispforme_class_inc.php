@@ -113,10 +113,10 @@
 			$textinput = new textinput($inputName, $this->formValue->getValue($inputName));
         		// check if the input name is  2b, 2c, 3b, 3c
 			if(strstr($inputName, "E2b") || strstr($inputName, "E2c")  || strstr($inputName, "E3b")  || strstr($inputName, "E3c")) {
-				$textinput->size = 50;
+				$textinput->size = 75;
 			}
 			else {
-				$textinput->size = 15; 
+				$textinput->size = 75;
         		}
 			
 			return  $textinput->show()  . "<br />" . $this->formError->getError($inputName) . "<br />";
@@ -126,15 +126,15 @@
 			
 			$myTextArea = new textarea($inputName);
 			$myTextArea->value = $this->formValue->getValue($inputName);
-			$myTextArea->setRows(5);
-			$myTextArea->setColumns('50');
+			$myTextArea->setRows(10);
+			$myTextArea->setColumns('75');
 
 			return $myTextArea->show()  . "<br />" . $this->formError->getError($inputName) . "<br />";
 		} // end getTextArea()
 
 		public function getButton($inputName) {
-      $saveButton = new button ('submitform', 'Next');
-      $saveButton->setToSubmit();
+                        $saveButton = new button ('submitform', 'Next');
+                        $saveButton->setToSubmit();
 			return $saveButton->show();
 		}
 

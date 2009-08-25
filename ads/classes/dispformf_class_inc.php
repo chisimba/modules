@@ -80,7 +80,7 @@
 		}// end getq1a_heading()
 
 		public function getInput($inputName) {
-			$textinput = new textinput($inputName, $this->formValue->getValue($inputName));
+			$textinput = new textinput($inputName, $this->formValue->getValue($inputName), 10, 75);
 			return  $textinput->show()  . "<br />" . $this->formError->getError($inputName) . "<br />";
 		}// end getq1a_input()
 
@@ -88,8 +88,8 @@
 			
 			$myTextArea = new textarea($inputName);
 			$myTextArea->value = $this->formValue->getValue($inputName);
-			$myTextArea->setRows(5);
-			$myTextArea->setColumns('50');
+			$myTextArea->setRows(10);
+			$myTextArea->setColumns('75');
 
 			return $myTextArea->show()  . "<br />" . $this->formError->getError($inputName) . "<br />";
 		} // end getTextArea()

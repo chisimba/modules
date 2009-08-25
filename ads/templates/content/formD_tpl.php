@@ -19,11 +19,11 @@ $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleD','ads
 //$heading = new htmlheading($this->objLanguage->languageText('mod_formD_Heading','ads')."<sup>1</sup><hr />");
 
 // Questions
-$D1 = new textinput("D1",$this->formValue->getValue('D1'),"text","20");
+$D1 = new textinput("D1",$this->formValue->getValue('D1'),"text","50");
 
-$text1 = new textarea('D2_1',$this->formValue->getValue('D2_1'),15,25);
-$text2 = new textarea('D2_2',$this->formValue->getValue('D2_2'),15,25);
-$text3 = new textarea('D2_3',$this->formValue->getValue('D2_3'),15,25);
+$text1 = new textarea('D2_1',$this->formValue->getValue('D2_1'),15,23);
+$text2 = new textarea('D2_2',$this->formValue->getValue('D2_2'),15,23);
+$text3 = new textarea('D2_3',$this->formValue->getValue('D2_3'),15,23);
 
 $D2 = new htmltable();
 $D2->width = "90";
@@ -37,7 +37,7 @@ $D2->addCell($text1->show()."<br>".$this->formError->getError('D2_1'));
 $D2->addCell($text2->show()."<br>".$this->formError->getError('D2_2'));
 $D2->addCell($text3->show()."<br>".$this->formError->getError('D2_3'));
 $D2->endRow();
-$D3 = new textarea('D3',$this->formValue->getValue("D3"),5,50);
+$D3 = new textarea('D3',$this->formValue->getValue("D3"), 10, 75);
 $check1 = new checkbox('D4_1', NULL, ($this->formValue->getValue('D4_1') == "true" ? true : false));
 $check1->setValue('true');
 $check2 = new checkbox('D4_2', NULL, ($this->formValue->getValue('D4_2') == "true" ? true : false));
@@ -169,8 +169,8 @@ foreach ($errorcodes as $error) {
   }
   $count++;
 }
-$D6 = new textarea('D6',$this->formValue->getValue('D6'),5,25);
-$D7 = new textarea('D7',$this->formValue->getValue('D7'),5,25);
+$D6 = new textarea('D6',$this->formValue->getValue('D6'),10, 75);
+$D7 = new textarea('D7',$this->formValue->getValue('D7'),10, 75);
 $nextButton = new button ('submitform', 'Next');
 $nextButton->setToSubmit();
 $saveButton = new button('saveform', 'Save');
