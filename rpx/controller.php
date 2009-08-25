@@ -113,8 +113,8 @@ class rpx extends controller
         // Decode the JSON response retrieved from the RPX API to an array.
         $data = json_decode($json);
 
-        // Assign the identifier value to the instance variable.
-        $this->identifier = $data->profile->identifier;
+        // Add the identifier to the database.
+        $this->objRpxIdentifiers->addIdentifier($data->profile->identifier);
 
         // Call the token template.
         return 'token_tpl.php';
