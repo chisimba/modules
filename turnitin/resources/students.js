@@ -238,15 +238,13 @@ function uploadFormPanel(assId, contextCode){
           inputType: 'file',
           fieldLabel: 'File',
           name: 'file',
-          emptyText: 'Select your paper'
+          emptyText: 'Select a paper'
           
         })
 
  var fp = new Ext.FormPanel({
-        //renderTo: 'fi-form',
-        fileUpload: true,
-        //width: 600,
-        
+         fileUpload: true,
+        //width: 600,        
         frame: true,
         title: 'Submit a Paper',
         autoHeight: true,
@@ -274,11 +272,11 @@ function uploadFormPanel(assId, contextCode){
 	                    url: uri,//+'?module=turnitin&action=ajax_sumbitassessment',
 	                    params:  {'module' : 'turnitin', 'action': 'ajax_sumbitassessment'},
 	                    waitMsg: 'Uploading your paper...',
-	                    success: function(fp, o){
-	                        msg('Success', 'File was successfully uploaded');
+	                    success: function(fp, action){
+	                        msg('Success', 'File was successfully uploaded\n'+action.result.msg);
 	                    },
 	                    failure: function(fp, action){
-	                    	msg('Error!', action.result.ms);
+	                    	msg('Error!', action.result.msg);
 	                    }
 	                    	
 	                });

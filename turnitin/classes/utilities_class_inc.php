@@ -334,47 +334,72 @@ class utilities extends object
 	  
 	public function doFileUpload()
 	{
-		if (!$_FILES["file"]["error"] > 0)
+		//var_dump($_FILES);
+		$allowedExtensions = array("txt","csv","htm","html","xml",
+								    "css","doc","xls","rtf","ppt","pdf","swf","flv","avi",
+								    "wmv","mov","jpg","jpeg","gif","png");
+								    
+								    
+    	$file = $_FILES["file"];
+		$allowedSize = $file['size'];
+		if ($file["error"] > 0)
 		{
-			return json(array('success' => 'false', 'msg' => 'Error: ' . $_FILES["file"]["error"] ));
+			return json_encode(array('success' => 'false', 'msg' => 'Error: ' . $this->fileUploadErrorMessage($_FILES["file"]["error"]) ));
 		} else {
-			
-			return '{"success":"true"}';
+			//if (!in_array(end(explode(".", strtolower($file['name']))),$allowedExtensions)) {} 
+			$extension = end(explode(".", strtolower($file['name'])));
+		//	var_dump($extension);
+			$filename = $file['tmp_name'];
+			switch ($extension){
+				case 'pdf':
+					$content = shell_exec('pdftotext '.$filename.' -'); 
+					break;
+				case 'doc':
+				case 'docx':
+					$content = shell_exec('antiword '.$filename.' -');
+					break;
+				case 'odt':
+					$content = shell_exec('odt2txt '.$filename);
+					break;
+				default:
+					$content = file_get_contents($filename, true);
+					break;
+			}
+			//hand the content off to TII 
+			//var_dump($content);
+			$msg = "<br /><br />Upload: " . $file["name"] . "<br />";
+		    //$msg .= "Type: " . $file["type"] . "<br />";
+		    $msg .= "Size: " . ($file["size"] / 1024) . " Kb<br />";
+			//$content = shell_exec('pdftotext '.$filename.' -'); 
+			return '{"success":"true", "msg": "'.$msg.'"}';
 		}
-		$success = 'false';
-		$allowed = array('doc, docx', 'pdf', 'txt', 'rtf', '');
-		
-		if (in_array($_FILES["file"]["type"],$allowed)	&& ($_FILES["file"]["size"] < 20000))
-		  {
-		  if ($_FILES["file"]["error"] > 0)
-		    {
-		    $msg = "Return Code: " . $_FILES["file"]["error"];
-		    }
-		  else
-		    {
-		    $msg = "Upload: " . $_FILES["file"]["name"] . "<br />";
-		    $msg .= "Type: " . $_FILES["file"]["type"] . "<br />";
-		    $msg .= "Size: " . ($_FILES["file"]["size"] / 1024) . " Kb<br />";
-		    $msg .= "Temp file: " . $_FILES["file"]["tmp_name"] . "<br />";
-		
-		    if (file_exists("upload/" . $_FILES["file"]["name"]))
-		      {
-		      $msg = $_FILES["file"]["name"] . " already exists. ";
-		      }
-		    else
-		      {
-		      move_uploaded_file($_FILES["file"]["tmp_name"],
-		      "upload/" . $_FILES["file"]["name"]);
-		      $msg .= "Stored in: " . "upload/" . $_FILES["file"]["name"];
-		      $success = 'true';
-		      }
-		    }
-		  }
-		else
-		  {
-		  $msg = "Invalid file";
-		  }
-		 
-		  return json(array('success' => $success, 'msg' => $msg)); 
+	
+	}
+	
+	/**
+	 * Error codes explained
+	 *
+	 * @param unknown_type $error_code
+	 * @return unknown
+	 */
+	function fileUploadErrorMessage($error_code) {
+	    switch ($error_code) {
+	        case UPLOAD_ERR_INI_SIZE:
+	            return 'The uploaded file exceeds the upload_max_filesize directive in php.ini';
+	        case UPLOAD_ERR_FORM_SIZE:
+	            return 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
+	        case UPLOAD_ERR_PARTIAL:
+	            return 'The uploaded file was only partially uploaded';
+	        case UPLOAD_ERR_NO_FILE:
+	            return 'No file was uploaded';
+	        case UPLOAD_ERR_NO_TMP_DIR:
+	            return 'Missing a temporary folder';
+	        case UPLOAD_ERR_CANT_WRITE:
+	            return 'Failed to write file to disk';
+	        case UPLOAD_ERR_EXTENSION:
+	            return 'File upload stopped by extension';
+	        default:
+	            return 'Unknown upload error';
+	    } 
 	}
 }
