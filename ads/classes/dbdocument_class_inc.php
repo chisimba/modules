@@ -1,7 +1,7 @@
 <?php
 
 class dbdocument extends dbtable{
-  var $tablename = "tbl_documentstore";
+  var $tablename = "tbl_ads_documentstore";
   public function init(){
     parent::init($this->tablename);
   }
@@ -83,7 +83,7 @@ class dbdocument extends dbtable{
         $sql = "select distinct A.version, B.currentuser, C.deleteStatus 
                 from $this->tablename as A
                         join (select currentuser, version from $this->tablename) as B on A.version = B.version
-                        join tbl_course_proposals as C on A.coursecode = C.id where coursecode = '$courseid'
+                        join tbl_ads_course_proposals as C on A.coursecode = C.id where coursecode = '$courseid'
                 and A.version > 0
                 and C.deleteStatus = 0
                 order by A.version desc";
@@ -98,7 +98,7 @@ class dbdocument extends dbtable{
       $info = $this->getArray($sql);
       if($info[0]['userid'] == null) {
         // check document users table
-        $sql = "select id from tbl_documentusers where email = '".trim($email)."'";
+        $sql = "select id from tbl_ads_documentusers where email = '".trim($email)."'";
         $info = $this->getArray($sql);
         return $info[0]['id'];
       }
@@ -108,7 +108,7 @@ class dbdocument extends dbtable{
   }
 
   public function getFullName($email, $courseid) {
-      $sql = "select fName, lName from tbl_documentusers where email = '$email' and courseid = '$courseid'";
+      $sql = "select fName, lName from tbl_ads_documentusers where email = '$email' and courseid = '$courseid'";
       $data = $this->getArray($sql);
       $fullName = $data[0]['lName'].$data[0]['fName'];
 
@@ -120,10 +120,10 @@ class dbdocument extends dbtable{
 
         // user data for proposal
         $data = array("lname"=>$lname, "fname"=>$fname, "email"=>$email, "phone"=>$phone, "courseid"=>$courseid);
-        $status = $this->insert($data, "tbl_documentusers");
+        $status = $this->insert($data, "tbl_ads_documentusers");
 
         // owner of document now changes
-        $sql = "select max(version) maxversion from tbl_documentstore where coursecode = '$courseid'";
+        $sql = "select max(version) maxversion from tbl_ads_documentstore where coursecode = '$courseid'";
         $data = $this->getArray($sql);
         $maxversion = $data[0]['maxversion'];
         $sql = "update $this->tablename set currentuser = '$email', set datemodified = '".strftime('%m/%d/%Y %H:%M:%S', mktime())."' where coursecode = '$courseid' and version = '$maxversion'";

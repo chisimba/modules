@@ -1,7 +1,7 @@
 <?php
 
 //define table
-$tablename = 'tbl_documentstore';
+$tablename = 'tbl_ads_documentstore';
 $options = array('comment'=>'test','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
 //define fields
@@ -13,6 +13,7 @@ $fields = array(
 		'value'=>array('type'=>'text','length'=>4000),
 		'status'=>array('type'=>'text','length'=>30),
 		'version'=>array('type'=>'text','length'=>30),
+        'datemodified'=>array('type'=>'text','length'=>30),
 		'currentuser'=>array('type'=>'text','length'=>32));
 		//if status = editmode, only currentuser can edit it
 		//if status = submitted, only currentuser can't edit it

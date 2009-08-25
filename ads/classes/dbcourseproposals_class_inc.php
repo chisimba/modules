@@ -10,8 +10,8 @@ class dbcourseproposals extends dbTable{
 
     public function init()
     {
-        parent::init('tbl_course_proposals');  //super
-        $this->table = 'tbl_course_proposals';
+        parent::init('tbl_ads_course_proposals');  //super
+        $this->table = 'tbl_ads_course_proposals';
         $this->objUser = $this->getObject ( 'user', 'security' );
 
     }

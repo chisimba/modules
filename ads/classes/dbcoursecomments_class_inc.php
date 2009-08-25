@@ -8,8 +8,8 @@
 
         public function init()
         {
-            parent::init('tbl_course_comments');  //super
-            $this->table = 'tbl_course_comments';
+            parent::init('tbl_ads_course_comments');  //super
+            $this->table = 'tbl_ads_course_comments';
             $this->objUser = $this->getObject( 'user', 'security' );
         }
 

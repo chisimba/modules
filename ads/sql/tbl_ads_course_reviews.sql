@@ -1,6 +1,6 @@
 <?php
 // Table Name
-$tablename = 'tbl_course_reviews';
+$tablename = 'tbl_ads_course_reviews';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'Table holding course proposals titles and status', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');

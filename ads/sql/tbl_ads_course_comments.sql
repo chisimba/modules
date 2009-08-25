@@ -1,5 +1,5 @@
 <?php
-    $tablename = 'tbl_course_comments';
+    $tablename = 'tbl_ads_course_comments';
     $options = array('comment' => 'Table holding course proposals comments', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
     $fields = array('id' => array('type' => 'text','length' => 32),
                     'courseid'  => array('type'  =>  'text','length'=> 32,'notnull' => TRUE),
