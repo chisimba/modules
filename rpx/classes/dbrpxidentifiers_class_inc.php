@@ -31,45 +31,104 @@
  */
 class dbrpxidentifiers extends dbTable 
 {
-    protected $objUser;
-    protected $userId;
+    /**
+     * The database list of the current user's RPX identifiers.
+     *
+     * @access protected
+     * @var    array
+     */
+    protected $dbIdentifiers;
 
-    private $id;
-    private $identifier;
+    /**
+     * The working list of the current user's RPX identifiers.
+     *
+     * @access protected
+     * @var    array
+     */
+    protected $identifiers;
+
+    /**
+     * Instance of the user class of the security module.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objUser;
+
+    /**
+     * The current user's unique identifier.
+     *
+     * @access protected
+     * @var    string
+     */
+    protected $userId;
 
     /**
      * The standard class constructor.
      */
     public function init()
     {
+        // Initialise the parent class with the table name.
         parent::init('tbl_rpx_identifiers');
 
+        // Get the user object and user identifier.
         $this->objUser = $this->getObject('user', 'security');
-        $this->userId = $this->objUser->userId();
+        $this->userId  = $this->objUser->userId();
 
-        if ($this->userId) {
-            $row = $this->getRow('userid', $this->userId);
-            $this->populate($row);
+        // Populate the dbIdentifiers property from the database.
+        $this->dbIdentifiers = array();
+        $rows = $this->getAll('userid = ' . $this->userId);
+        foreach ($rows as $row) {
+            $this->dbIdentifiers[] = $row['identifier'];
+        }
+
+        // To start off with, use the database identifiers list as the working list.
+        $this->identifiers = $this->dbIdentifiers;
+    }
+
+    /**
+     * Returns the current working identifiers.
+     *
+     * @access public
+     * @return array A single-dimensional array of strings.
+     */
+    public function getIdentifiers()
+    {
+        return $this->identifiers;
+    }
+
+    /**
+     * Adds an identifier if it doesn't already exist.
+     *
+     * @access public
+     * @param  string $identifier The new identifier.
+     */
+    public function addIdentifier($identifier)
+    {
+        if (!in_array($identifier, $this->identifiers)) {
+            $this->identifiers[] = $identifier;
         }
     }
 
-    private function populate($row) {
-        if ($row && is_array($row) && count($row)) {
-            $this->id         = $row['id'];
-            $this->identifier = $row['identifier'];
+    /**
+     * Removes an identifer if it exists.
+     *
+     * @access public
+     * @param  string $identifier The identifier to remove.
+     */
+    public function removeIdentifier($identifier)
+    {
+        $key = array_search($identifier, $this->identifiers);
+        if ($key !== FALSE) {
+            unset($this->identifiers[$key]);
         }
     }
 
-    public function getIdentifier()
-    {
-        return $this->identifier;
-    }
-
-    public function setIdentifier($identifier)
-    {
-        $this->identifier = $identifier;
-    }
-
+    /**
+     * Update the identifiers in the database according to the working list.
+     *
+     * @access public
+     */
     public function put()
     {
         $row = array();
