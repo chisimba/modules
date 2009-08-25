@@ -491,14 +491,24 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="magnifierMenuitemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="cleanMicsMenuItem">
+            <MenuItem class="javax.swing.JSeparator" name="jSeparator1">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="whiteboardToolsMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Reset"/>
+                <Property name="text" type="java.lang.String" value="Whiteboard Tools"/>
                 <Property name="enabled" type="boolean" value="false"/>
-                <Property name="name" type="java.lang.String" value="clearMics" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="whiteboardtools" noResource="true"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cleanMicsMenuItemActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="whiteboardToolsMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="audioVideoTestMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Audio/Video Test"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="audioVideoTestMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator9">
@@ -509,6 +519,18 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="optionsMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JSeparator" name="jSeparator3">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="cleanMicsMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Reset"/>
+                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="clearMics" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cleanMicsMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

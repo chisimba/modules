@@ -61,7 +61,7 @@ public class RTimer {
                 minutes = 0;
             }
 
-            GUIAccessManager.mf.getTimerField().setText("<html>In session for <font color=\"green\">"+decimalFormat.format(hours)+"h: "+decimalFormat.format(minutes)+"m:"+decimalFormat.format(seconds)+"s</font>");
+            GUIAccessManager.mf.getTimerField().setText("<html>In session for <font color=\"green\">"+decimalFormat.format(hours)+"h "+decimalFormat.format(minutes)+"m "+decimalFormat.format(seconds)+"s</font>");
         }
     }
 }

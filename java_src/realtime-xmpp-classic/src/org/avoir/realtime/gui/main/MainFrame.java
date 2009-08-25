@@ -74,6 +74,7 @@ import org.avoir.realtime.notepad.JNotepad;
 
 import org.jivesoftware.smack.util.Base64;
 import org.avoir.realtime.gui.tips.*;
+import org.avoir.realtime.sound.AudioVideoTest;
 import org.avoir.realtime.sound.SoundMonitor;
 
 /**
@@ -137,7 +138,7 @@ public class MainFrame extends javax.swing.JFrame {
             tabbedPane.add("Browser", generalWebBrowser);
         }
         tabbedPane.add("Speakers", speakersPanel);
-        toolsPanel.add(whiteboardPanel.getWbToolbar(), BorderLayout.SOUTH);
+        //toolsPanel.add(whiteboardPanel.getWbToolbar(), BorderLayout.SOUTH);
         webPresentNavigator = new WebpresentNavigator();
 
         userListPanel.getUserTabbedPane().addTab("Presentations", webPresentNavigator);
@@ -238,7 +239,7 @@ public class MainFrame extends javax.swing.JFrame {
         userListPanel.showRoomOwnerAudioVideoWindow();
         applySkin();
         RTimer.init();
-        soundMonitor.init();
+
     }
 
     private void applySkin() {
@@ -758,9 +759,13 @@ public class MainFrame extends javax.swing.JFrame {
         privateChatMenuItem = new javax.swing.JMenuItem();
         tipsMenuItem = new javax.swing.JMenuItem();
         magnifierMenuitem = new javax.swing.JMenuItem();
-        cleanMicsMenuItem = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JSeparator();
+        whiteboardToolsMenuItem = new javax.swing.JMenuItem();
+        audioVideoTestMenuItem = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JSeparator();
         optionsMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JSeparator();
+        cleanMicsMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -1307,6 +1312,35 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         toolsMenu.add(magnifierMenuitem);
+        toolsMenu.add(jSeparator1);
+
+        whiteboardToolsMenuItem.setText("Whiteboard Tools");
+        whiteboardToolsMenuItem.setEnabled(false);
+        whiteboardToolsMenuItem.setName("whiteboardtools"); // NOI18N
+        whiteboardToolsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                whiteboardToolsMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(whiteboardToolsMenuItem);
+
+        audioVideoTestMenuItem.setText("Audio/Video Test");
+        audioVideoTestMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                audioVideoTestMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(audioVideoTestMenuItem);
+        toolsMenu.add(jSeparator9);
+
+        optionsMenuItem.setText("Options");
+        optionsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optionsMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(optionsMenuItem);
+        toolsMenu.add(jSeparator3);
 
         cleanMicsMenuItem.setText("Reset");
         cleanMicsMenuItem.setEnabled(false);
@@ -1317,15 +1351,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         toolsMenu.add(cleanMicsMenuItem);
-        toolsMenu.add(jSeparator9);
-
-        optionsMenuItem.setText("Options");
-        optionsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                optionsMenuItemActionPerformed(evt);
-            }
-        });
-        toolsMenu.add(optionsMenuItem);
 
         screenShareItem.add(toolsMenu);
 
@@ -1772,6 +1797,16 @@ public class MainFrame extends javax.swing.JFrame {
         handRaised = !handRaised;
     }//GEN-LAST:event_raiseHandMenuItemActionPerformed
 
+    private void audioVideoTestMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioVideoTestMenuItemActionPerformed
+        AudioVideoTest audioVideoTest = new AudioVideoTest();
+        audioVideoTest.setLocationRelativeTo(null);
+        audioVideoTest.setVisible(true);
+    }//GEN-LAST:event_audioVideoTestMenuItemActionPerformed
+
+    private void whiteboardToolsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_whiteboardToolsMenuItemActionPerformed
+        whiteboardPanel.getWhiteboard().displayToolsDialog();
+    }//GEN-LAST:event_whiteboardToolsMenuItemActionPerformed
+
     public void doZoom() {
         if (zoomControl) {
             zoomControl = false;
@@ -1988,6 +2023,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenu actionsMenu;
+    private javax.swing.JMenuItem audioVideoTestMenuItem;
     private javax.swing.JMenuItem banUserMenuItem;
     private javax.swing.JButton changeRoomButton;
     private javax.swing.JButton changeRoomButton1;
@@ -2008,8 +2044,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem insertPresentationMenuItem;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator7;
@@ -2052,6 +2090,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu viewMenu;
     private javax.swing.ButtonGroup wbButtonGroup;
     private javax.swing.JProgressBar wbProgressBar;
+    private javax.swing.JMenuItem whiteboardToolsMenuItem;
     private javax.swing.JButton zoomInButton;
     private javax.swing.JButton zoomOriginalButton;
     private javax.swing.JButton zoomOutButton;

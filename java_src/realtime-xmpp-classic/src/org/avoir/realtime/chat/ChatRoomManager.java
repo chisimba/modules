@@ -337,8 +337,7 @@ public class ChatRoomManager {
     public boolean doActualJoin(String nickname, String roomName, boolean requestslides) {
         if (!roomExists(roomName)) {
             if (WebPresentManager.isPresenter || StandAloneManager.isAdmin) {
-                // createRoom(roomName, ConnectionManager.fullnames, false, null);
-                CreateRoomDialog fr = new CreateRoomDialog(roomName, ConnectionManager.fullnames,false);
+                CreateRoomDialog fr = new CreateRoomDialog(roomName, ConnectionManager.fullnames, false);
                 fr.setSize((ss.width / 2) * 1, (ss.height / 2) * 1);
                 fr.setLocationRelativeTo(GUIAccessManager.mf);
                 fr.setVisible(true);
@@ -395,6 +394,7 @@ public class ChatRoomManager {
 
             requestRoomOwner(roomName);
             requestRoomResources(requestslides);
+            GUIAccessManager.mf.getSoundMonitor().init();
             return true;
         } catch (XMPPException ex) {
             XMPPError errorCode = ex.getXMPPError();
