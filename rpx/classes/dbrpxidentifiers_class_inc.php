@@ -131,13 +131,17 @@ class dbrpxidentifiers extends dbTable
      */
     public function put()
     {
-        $row = array();
-        $row['userid']     = $this->userId;
-        $row['identifier'] = $this->identifier;
-        if ($this->id) {
-            $this->update('id', $this->id, $row);
-        } else {
-            $this->id = $this->insert($row);
+        // Insert all the new identifiers.
+        foreach (array_diff($this->identifiers, $this->dbIdentifiers) as $identifier) {
+            $this->insert(array('identifier'=>$identifier, 'userid'=>$this->userId));
         }
+
+        // Delete all the removed identifiers.
+        foreach (array_diff($this->dbIdentifiers, $this->identifiers) as $identifier) {
+            $this->delete('identifier', $identifier);
+        }
+
+        // Update the dbIdentifiers property to reflect the current database state.
+        $this->dbIdentifiers = $this->identifiers;
     }
 }
