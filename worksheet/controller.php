@@ -132,7 +132,7 @@ class worksheet extends controller
         $lecturerActions = array('add', 'saveworksheet', 'worksheetinfo', 'managequestions', 'savequestion', 'activate', 'updatestatus', 'viewstudentworksheet', 'editquestion');
         
         if (in_array($action, $lecturerActions)) {
-            if ($this->objUser->isCourseAdmin()) {
+            if ($this->objUser->isContextLecturer($this->objUser->userid(),$this->contextCode)) {
                 return TRUE;
             } else {
                 return FALSE;
