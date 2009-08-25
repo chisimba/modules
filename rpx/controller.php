@@ -2,11 +2,35 @@
 
 class rpx extends controller
 {
-    protected $identifier;
+    /**
+     * Instance of the altconfig class of the config module.
+     *
+     * @access protected
+     * @var    object
+     */
     protected $objAltConfig;
+
+    /**
+     * Instance of the dbrpxidentifiers class of the rpx module.
+     *
+     * @access protected
+     * @var    object
+     */
     protected $objRpxIdentifiers;
+
+    /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access protected
+     * @var    object
+     */
     protected $objSysConfig;
 
+    /**
+     * Standard framework constructor.
+     *
+     * @access public
+     */
     public function init()
     {
         $this->objAltConfig      = $this->getObject('altconfig', 'config');
@@ -14,6 +38,12 @@ class rpx extends controller
         $this->objSysConfig      = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
+    /**
+     * Standard framework dispatcher.
+     *
+     * @access public
+     * @return string The name of the template to load.
+     */
     public function dispatch()
     {
         // Define a list of valid actions.
@@ -40,12 +70,24 @@ class rpx extends controller
         return $data;
     }
 
+    /**
+     * The default action for the controller.
+     *
+     * @access public
+     * @return string The name of the template to load.
+     */
     public function main()
     {
         // Call the main template.
         return 'main_tpl.php';
     }
 
+    /**
+     * The RPX web service token callback action.
+     *
+     * @access public
+     * @return string The name of the template to load.
+     */
     public function token()
     {
         // Fetch token query string parameter.
