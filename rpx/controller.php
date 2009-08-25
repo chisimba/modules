@@ -4,12 +4,14 @@ class rpx extends controller
 {
     protected $identifier;
     protected $objAltConfig;
+    protected $objRpxIdentifiers;
     protected $objSysConfig;
 
     public function init()
     {
-        $this->objAltConfig = $this->getObject('altconfig', 'config');
-        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objAltConfig      = $this->getObject('altconfig', 'config');
+        $this->objRpxIdentifiers = $this->getObject('dbrpxidentifiers', 'rpx')
+        $this->objSysConfig      = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
     public function dispatch()
