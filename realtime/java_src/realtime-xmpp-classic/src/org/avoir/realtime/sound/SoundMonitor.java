@@ -42,6 +42,10 @@ public class SoundMonitor {
                 } else {
                     cancel();
                 }
+            } else {
+                GUIAccessManager.mf.getUserListPanel().getSoundAlerterField().setIcon(null);
+                GUIAccessManager.mf.getUserListPanel().getSoundAlerterField().setText("");
+                cancel();
             }
             on = !on;
         }

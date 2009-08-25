@@ -194,6 +194,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private AffineTransform coordTransform = new AffineTransform();
     private boolean chatBoxShowing = false;
     private JDialog chatBox;
+    private JDialog toolsDialog;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -1259,6 +1260,16 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
 
     }
 
+    public void displayToolsDialog() {
+        if(toolsDialog == null){
+            toolsDialog=new JDialog(GUIAccessManager.mf);
+            toolsDialog.setContentPane(whiteboardPanel.getWbToolbar());
+            toolsDialog.pack();
+            toolsDialog.setLocation(ss.width-toolsDialog.getWidth(), 100);
+        }
+        toolsDialog.setVisible(true);
+    }
+
     public void mousePressed(MouseEvent e) {
 
         dragStartScreen = e.getPoint();
@@ -1269,6 +1280,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (!drawEnabled || zoomEnabled) {
             return;
         }
+
+        displayToolsDialog();
         points.clear();
 
 

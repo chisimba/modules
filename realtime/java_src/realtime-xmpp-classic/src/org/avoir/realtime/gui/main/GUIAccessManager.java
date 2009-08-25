@@ -117,20 +117,20 @@ public class GUIAccessManager {
     }
 
     public static void enableWhiteboardButtons(boolean state) {
-        enableWhiteboardButton("undo",state);
-        enableWhiteboardButton("pan",true);
-        enableWhiteboardButton("move",state);
-        enableWhiteboardButton("ovaldraw",state);
-        enableWhiteboardButton("ovalfill",state);
-        enableWhiteboardButton("rectdraw",state);
-        enableWhiteboardButton("rectfill",state);
-        enableWhiteboardButton("pen",state);
-        enableWhiteboardButton("erase",state);
-        enableWhiteboardButton("text",state);
-        enableWhiteboardButton("line",state);
+        enableWhiteboardButton("undo", state);
+        enableWhiteboardButton("pan", true);
+        enableWhiteboardButton("move", state);
+        enableWhiteboardButton("ovaldraw", state);
+        enableWhiteboardButton("ovalfill", state);
+        enableWhiteboardButton("rectdraw", state);
+        enableWhiteboardButton("rectfill", state);
+        enableWhiteboardButton("pen", state);
+        enableWhiteboardButton("erase", state);
+        enableWhiteboardButton("text", state);
+        enableWhiteboardButton("line", state);
     }
 
-    public static void enableWhiteboardButton(String name,boolean state ) {
+    public static void enableWhiteboardButton(String name, boolean state) {
         JToolBar toolbar = GUIAccessManager.mf.getWhiteboardPanel().getWbToolbar();
         int count = toolbar.getComponentCount();
         for (int i = 0; i < count; i++) {
@@ -163,7 +163,7 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(enable, "clearMics");
         GUIAccessManager.setMenuEnabled(enable, "nextSlide");
         GUIAccessManager.setMenuEnabled(enable, "prevSlide");
-
+        GUIAccessManager.setMenuEnabled(enable, "whiteboardtools");
     }
 
     private static void enableToolbarButton(String name, boolean state) {
