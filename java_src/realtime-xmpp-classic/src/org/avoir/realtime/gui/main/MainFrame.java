@@ -1820,7 +1820,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_whiteboardToolsMenuItemActionPerformed
 
     private void questionManagerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_questionManagerMenuItemActionPerformed
-        // TODO add your handling code here:
+        if (!ConnectionManager.isOwner) {
+            JOptionPane.showMessageDialog(null, "You do not have permission to perform this action in this room.");
+            return;
+        } else {
+            org.avoir.realtime.questions.QuestionFrame fr = new org.avoir.realtime.questions.QuestionFrame();
+            fr.setVisible(true);
+        }
     }//GEN-LAST:event_questionManagerMenuItemActionPerformed
 
     private void slideBuilderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_slideBuilderMenuItemActionPerformed
