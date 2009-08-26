@@ -1257,10 +1257,20 @@ public class MainFrame extends javax.swing.JFrame {
 
         questionManagerMenuItem.setText("Question Manager");
         questionManagerMenuItem.setEnabled(false);
+        questionManagerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                questionManagerMenuItemActionPerformed(evt);
+            }
+        });
         toolsMenu.add(questionManagerMenuItem);
 
         slideBuilderMenuItem.setText("Slide Builder");
         slideBuilderMenuItem.setEnabled(false);
+        slideBuilderMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                slideBuilderMenuItemActionPerformed(evt);
+            }
+        });
         toolsMenu.add(slideBuilderMenuItem);
         toolsMenu.add(jSeparator10);
 
@@ -1806,6 +1816,14 @@ public class MainFrame extends javax.swing.JFrame {
     private void whiteboardToolsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_whiteboardToolsMenuItemActionPerformed
         whiteboardPanel.getWhiteboard().displayToolsDialog();
     }//GEN-LAST:event_whiteboardToolsMenuItemActionPerformed
+
+    private void questionManagerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_questionManagerMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_questionManagerMenuItemActionPerformed
+
+    private void slideBuilderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_slideBuilderMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_slideBuilderMenuItemActionPerformed
 
     public void doZoom() {
         if (zoomControl) {
