@@ -195,6 +195,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private boolean chatBoxShowing = false;
     private JDialog chatBox;
     private JDialog toolsDialog;
+    private boolean firstTimeFullscreenMouePresss = true;
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -1261,11 +1262,20 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void displayToolsDialog() {
-        if(toolsDialog == null){
-            toolsDialog=new JDialog(GUIAccessManager.mf);
+        if (toolsDialog == null) {
+            toolsDialog = new JDialog(GUIAccessManager.mf);
             toolsDialog.setContentPane(whiteboardPanel.getWbToolbar());
             toolsDialog.pack();
-            toolsDialog.setLocation(ss.width-toolsDialog.getWidth(), 100);
+            toolsDialog.setLocation(ss.width - toolsDialog.getWidth(), 100);
+        }
+        if (fullScreen) {
+            if (firstTimeFullscreenMouePresss) {
+                toolsDialog = new JDialog(fullScreenFrame);
+                toolsDialog.setContentPane(whiteboardPanel.getWbToolbar());
+                toolsDialog.pack();
+                toolsDialog.setLocation(ss.width - toolsDialog.getWidth(), 100);
+                firstTimeFullscreenMouePresss=false;
+            }
         }
         toolsDialog.setVisible(true);
     }
@@ -1690,6 +1700,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                     public void windowClosing(WindowEvent e) {
                         GUIAccessManager.mf.getChatTabbedPane().addTab("Chat", GUIAccessManager.mf.getChatRoomManager().getChatRoom());
                         chatBoxShowing = false;
+                        if (fullScreen) {
+                            fullScreenFrame.setVisible(true);
+                            fullScreenFrame.toFront();
+                        }
                     }
                 });
                 chatBox.setVisible(true);
@@ -1724,16 +1738,18 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 if (!showingToolbox) {
                     if (toolboxDlg == null) {
                         toolboxDlg = new JDialog(fullScreenFrame, false);
-                    }
-                    toolboxDlg.setContentPane(GUIAccessManager.mf.getSurfaceTopTabbedPane());
-                    toolboxDlg.pack();
-                    toolboxDlg.addWindowListener(new WindowAdapter() {
 
-                        @Override
-                        public void windowClosing(WindowEvent e) {
-                            GUIAccessManager.mf.getSurfacePanel().add(toolboxDlg.getContentPane(), BorderLayout.NORTH);
-                        }
-                    });
+                        toolboxDlg.setContentPane(GUIAccessManager.mf.getSurfaceTopTabbedPane());
+                        toolboxDlg.pack();
+                        toolboxDlg.addWindowListener(new WindowAdapter() {
+
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                GUIAccessManager.mf.getSurfacePanel().add(toolboxDlg.getContentPane(), BorderLayout.NORTH);
+
+                            }
+                        });
+                    }
                     toolboxDlg.setVisible(true);
                     showingToolbox = true;
                 }
