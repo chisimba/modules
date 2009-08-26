@@ -427,6 +427,7 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Question Manager"/>
                 <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="questionBuilder" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="questionManagerMenuItemActionPerformed"/>
@@ -436,6 +437,7 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Slide Builder"/>
                 <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="slideBuilder" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="slideBuilderMenuItemActionPerformed"/>
