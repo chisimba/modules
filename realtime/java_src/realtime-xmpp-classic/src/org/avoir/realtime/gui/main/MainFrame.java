@@ -1824,9 +1824,12 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "You do not have permission to perform this action in this room.");
             return;
         } else {
-            org.avoir.realtime.questions.QuestionFrame fr = new org.avoir.realtime.questions.QuestionFrame();
-            fr.setVisible(true);
-        }
+        	org.avoir.realtime.gui.Navigator navi = new org.avoir.realtime.gui.Navigator(this, "questions", "Question Manager");
+        	JFrame QManagerFrame=new JFrame("Question Manager");
+        	QManagerFrame.setSize((int)(ss.width / 4), (int)(ss.height / 2.5));
+        	QManagerFrame.setLocation((int)(ss.width/2-ss.width / 8),(int)(ss.height/2-ss.height / 5));
+        	QManagerFrame.setContentPane(navi);
+        	QManagerFrame.setVisible(true);        }
     }//GEN-LAST:event_questionManagerMenuItemActionPerformed
 
     private void slideBuilderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_slideBuilderMenuItemActionPerformed
