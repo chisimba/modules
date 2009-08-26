@@ -233,11 +233,12 @@ public class Navigator extends JPanel implements ActionListener, FileChooserList
         //add(p, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         addAccessTypes();
-    /*
+    
     if (mode.equals("questions")) {
     populateNodes("questions");
+    add(p, BorderLayout.NORTH);
     }
-    if (mode.equals("slideshows")) {
+   /* if (mode.equals("slideshows")) {
     populateNodes("slideshows");
 
     }
