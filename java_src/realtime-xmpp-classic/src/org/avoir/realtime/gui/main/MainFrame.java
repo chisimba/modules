@@ -1257,6 +1257,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         questionManagerMenuItem.setText("Question Manager");
         questionManagerMenuItem.setEnabled(false);
+        questionManagerMenuItem.setName("questionBuilder"); // NOI18N
         questionManagerMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 questionManagerMenuItemActionPerformed(evt);
@@ -1266,6 +1267,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         slideBuilderMenuItem.setText("Slide Builder");
         slideBuilderMenuItem.setEnabled(false);
+        slideBuilderMenuItem.setName("slideBuilder"); // NOI18N
         slideBuilderMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 slideBuilderMenuItemActionPerformed(evt);

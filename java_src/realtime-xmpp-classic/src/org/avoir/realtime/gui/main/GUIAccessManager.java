@@ -146,7 +146,7 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(enable, "screenshare");
         GUIAccessManager.setMenuEnabled(enable, "screenviewer");
         GUIAccessManager.setMenuEnabled(enable, "schedule");
-        GUIAccessManager.setMenuEnabled(/*!enable*/false, "privatechat");
+        GUIAccessManager.setMenuEnabled(enable, "privatechat");
         GUIAccessManager.setMenuEnabled(true, "createRoom");
         GUIAccessManager.setMenuEnabled(true, "roomList");
         GUIAccessManager.setMenuEnabled(enable, "actions");
@@ -164,6 +164,8 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(enable, "nextSlide");
         GUIAccessManager.setMenuEnabled(enable, "prevSlide");
         GUIAccessManager.setMenuEnabled(enable, "whiteboardtools");
+        GUIAccessManager.setMenuEnabled(enable, "questionBuilder");
+        GUIAccessManager.setMenuEnabled(enable, "slideBuilder");
     }
 
     private static void enableToolbarButton(String name, boolean state) {
