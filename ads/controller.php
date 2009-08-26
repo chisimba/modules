@@ -537,14 +537,17 @@ class ads extends controller {
     }
 
     public function __showcourseprophisttest() {
+        $this->id = $this->getParam('courseid');
         return "showcourseprophisttest_tpl.php";
     }
 
-    public function __getHistoryData() {
+    public function __gethistorydata() {
         $objGetData = $this->getObject("getdata");
-        $response['this'] = $objGetData->getcoursehistory();
-        echo $response['this'];
-        die(); // break does not work. throws and error.
+        $data = $this->getParam('data');
+        $version = $this->getParam('version');
+        $response = $objGetData->getcoursehistory($this->getParam('courseid'), $this->getParam('formnumber'), $data, $version);
+        echo $response;
+        die(); // break does not work. throws an error.
     }
 }
 

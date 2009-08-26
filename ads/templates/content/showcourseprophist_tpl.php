@@ -1,235 +1,261 @@
 <?php
-    //load class
+    // load classes
     $this->loadclass('link','htmlelements');
-    $objIcon= $this->newObject('geticon','htmlelements');
-
     // scripts
     $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
     $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
     $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
     $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/courseproposal.css').'"/>';
-    $jQuery = '<script language="JavaScript" src="'.$this->getResourceUri('js/jquery-1.2.6.min').'" type="text/javascript"></script>';
 
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);
     $this->appendArrayVar('headerParams', $extallcss);
     $this->appendArrayVar('headerParams', $maincss);
-    $this->appendArrayVar('headerParams', $jQuery);
 
-    $curEdit_1 = $this->objLanguage->languageText('mod_ads_curedit_1', 'ads');
-    $curEdit_2 = $this->objLanguage->languageText('mod_ads_curedit_2', 'ads');
+    echo '<div id="tree-div" style="padding-top: 2em;"></div>
+          <div id="myLayout">
+            <div id="send-win" class="x-hidden">
+                <div class="x-window-header">Send Document To User</div>
+                <div id="send-tab">
+                    <!-- Auto create tab 1 -->
+                    <div class="x-tab" title="Please Fill Out Info"></div>
+                </div>
+            </div>
+          </div>';
 
-    $version = $this->objLanguage->languageText('mod_ads_historyversion', 'ads');
-    $editor = $this->objLanguage->languageText('mod_ads_historyeditor', 'ads');
-    $lastUpdated = $this->objLanguage->languageText('mod_ads_historyupdate', 'ads');
-    $comments = $this->objLanguage->languageText('mod_ads_historycomments', 'ads');
-
-    $verarray = $this->objDocumentStore->getVersion($this->id, $this->objUser->userId());
-    if ($verarray['status'] == 'unsubmitted' && strcmp($verarray['currentuser'],$this->objUser->email($this->objUser->userId())) == 0) {
-        $link = new link($this->uri(array('action'=>'submitproposal','courseid'=>$this->id)));
-        $link->link = $curEdit_1." ".$curEdit_2;
-        $data = $link->show();
-    }
-
-    $version = new link();
-    $comment = new link();
-    $send = new link();
-    $send->href = "#";
-    $send->extra = "id=\"show-btn\"";
-    $objIcon->setIcon('forward');
-    $send->link=$objIcon->show();
-
-    // labels for the forward form
+    // labels for the forward form (popup window)
     $lname = "Last Name";
     $fname = "First Name";
     $email = "Email Address";
     $phone = "Phone #";
+    $nextForm = new link($this->uri(array('action'=>'viewform','courseid'=>$this->id, 'formnumber'=>$this->allForms[0])));
+    $submitForm = new link($this->uri(array('action'=>'submitproposal','courseid'=>$this->id)));
+    $submitUrl = new link($this->uri(array('action'=>'sendProposal','edit'=>true,'id'=>$this->id)));
+    
+    $mainjs =  "<script type='text/javascript'>
+            
+            Ext.onReady(function() {
+                var tree = new Ext.tree.TreePanel({
+                                useArrows: true,
+                                autoScroll: true,
+                                animate: true,
+                                enableDD: true,
+                                containerScroll: true,
+                                border: false,
+                                rootVisible: false,
 
-    $courseName = $this->objCourseProposals->getTitle($this->id);
-    $historyData = $this->objDocumentStore->getHistory($this->id);
-
-    // Create an instance of the css layout class
-    $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-    $cssLayout->setNumColumns(2);
-
-    $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
-    $cssLayout->setLeftColumnContent($postLoginMenu->show());
-    $rightSideColumn =  '<div id="note">NB: Click on latest version to edit and create a new version.<br>'.$data;
-    $rightSideColumn .= '</div><div id ="proposal-history">';
-
-    if (strcmp($verarray['currentuser'],$this->objUser->email($this->objUser->userId())) == 0) {
-        $rightSideColumn .= $send->show().'<br><br>';
-    }
-
-    $rightSideColumn .= '<div id="history-grid">';
-    $rightSideColumn .= '</div>';
-    $rightSideColumn .= '<div id="send-win" class="x-hidden">
-
-                            <div class="x-window-header">Send Document To User</div>
-                            <div id="send-tab">
-                                <!-- Auto create tab 1 -->
-                                <div class="x-tab" title="Please Fill Out Info"></div>
-                            </div>
-                        </div>';
-    $cssLayout->setMiddleColumnContent($rightSideColumn);
-    echo $cssLayout->show();
-
-    $numRows = 0;
-
-    foreach($historyData  as $value) {
-        $numRows += 1;
-    }
-
-    $data = "";
-    $curRow = 1;
-    foreach($historyData  as $value) {
-        if($curRow == $numRows) {
-            $version->link($this->uri(array('action'=>'viewform','courseid'=>$this->id, 'formnumber'=>$this->allForms[0])));
-            $version->link = $value['version'].".00";
-            $curVersion = $version->show();
-        }
-        else {
-            $version->link($this->uri(array('action'=>'viewform','courseid'=>$this->id, 'formnumber'=>$this->allForms[0], 'edit'=>'NO')));
-            $version->link = $value['version'].".00";
-            $curVersion = $version->show();
-        }
-
-        $comment->link($this->uri(array('action'=>'viewComments','courseid'=>$this->id, 'version'=>$value['version'])));
-        $comment->link = 'Click to View Comments';
-
-        $editor = $this->objUser->fullname(trim($this->objDocumentStore->getUserId($value['currentuser'])));
-        if($editor == null) {
-            $editor = $this->objDocumentStore->getFullName($value['currentuser'], $this->id);echo "HELL: ".$value['currentuser']." :".$editor;
-        }
-        
-        $dateUpdated = date("m/d/Y H:m:s" );
-        
-        $data .= "['".$curVersion."',";
-        $data .= "'".$editor."',";
-        $data .= "'".$dateUpdated."',";
-        $data .= "'".$comment->show()."']";
-        
-        if($curRow != $numRows) {
-            $data .= ",";
-        }
-        $curRow += 1;
-    }
-    $submitUrl = $this->uri(array('action'=>'sendProposal','edit'=>true,'id'=>$this->id) );
-
-    $mainjs = "/*!
-                 * Ext JS Library 3.0.0
-                 * Copyright(c) 2006-2009 Ext JS, LLC
-                 * licensing@extjs.com
-                 * http://www.extjs.com/license
-                 */
-                Ext.onReady(function(){
-                    Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
-
-                    var myData = [".$data."];
-
-                    // create the data store
-                    var store = new Ext.data.ArrayStore({
-                        fields: [
-                           {name: 'version'},
-                           {name: 'editor'},
-                           {name: 'lastChange'},
-                           {name: 'comments'}
-                        ]
-                    });
-                    store.loadData(myData);
-
-                    // create the Grid
-                    var grid = new Ext.grid.GridPanel({
-                        store: store,
-                        columns: [
-                            {id:'version',header: \"Version\", width:100, dataIndex: 'version'},
-                            {header: \"Editor\", width: 250, dataIndex: 'editor'},
-                            {header: \"Last Updated\", width: 150, dataIndex: 'lastChange'},
-                            {header: \"Comments\", width: 100, dataIndex: 'comments'}
-                            
-                        ],
-                        stripeRows: true,
-                        height:350,
-                        width:600,
-                        title:'".$courseName."'
-                    });
-                    grid.render('history-grid');
-                });";
-
-    $sendjs = "/*!
-                 * Ext JS Library 3.0.0
-                 * Copyright(c) 2006-2009 Ext JS, LLC
-                 * licensing@extjs.com
-                 * http://www.extjs.com/license
-                 */
-                Ext.onReady(function(){
-                    var win;
-                    var button = Ext.get('show-btn');
-                    var myForm = new Ext.FormPanel({
-                                    labelWidth: 125,
-                                    url:'".str_replace("amp;", "", $submitUrl)."',
-                                    frame:true,
-                                    title: 'User Details',
-                                    bodyStyle:'padding:5px 5px 0',
-                                    width: 350,
-                                    defaults: {width: 230},
-                                    defaultType: 'textfield',
-
-                                    items: [{
-                                            fieldLabel: '".$lname."',
-                                            name: 'lname',
-                                            allowBlank: false
-                                        },{
-                                            fieldLabel: '".$fname."',
-                                            name: 'fname',
-                                            allowBlank: false
-                                        },{
-                                            fieldLabel: '".$email."',
-                                            name: 'email',
-                                            allowBlank: false
-                                        },{
-                                            fieldLabel: '".$phone."',
-                                            name: 'phone',
-                                            allowBlank: false
-                                        }
-                                    ]
-                                });
-
-                    button.on('click', function(){
-                        // create the window on the first click and reuse on subsequent clicks
-                        if(!win){
-                            win = new Ext.Window({
-                                applyTo:'send-win',
-                                layout:'fit',
-                                width:500,
-                                height:300,
-                                closeAction:'hide',
-                                plain: true,
-                                items: myForm,
-                                buttons: [{
-                                    text:'Submit',
-                                    handler: function() {
-                                        if (myForm.getForm().isValid()) {
-                                            if (myForm.url) {
-                                                myForm.getForm().getEl().dom.action = myForm.url;
-                                                test = myForm.getForm().submit();
-                                                win.hide();
-                                                //window.location.reload();
-                                            }
-                                        }
+                                // auto create TreeLoader
+                                dataUrl: '".str_replace("amp;", "",$this->uri(array('action'=>'gethistorydata', 'courseid'=>$this->id, 'formnumber'=>$this->allforms[0])))."',
+                                root: {
+                                    nodeType: 'async',
+                                    text: 'Ext JS',
+                                    draggable: false,
+                                    id: 'source'
+                                },
+                                listeners: {
+                                    click: function(n) {
+                                        populateForm(n);
                                     }
-                                },{
-                                    text: 'Close',
-                                    handler: function(){
-                                        win.hide();
-                                    }
-                                }]
+                                }
+
                             });
-                        }
-                        win.show(this);
-                    });
-                });";
+                tree.getRootNode().expand();
 
-    echo "<script type=\"text/javascript\">".$mainjs."</script>";
-    echo "<script type=\"text/javascript\">".$sendjs."</script>";
+
+                var form = {
+                    xtype: 'form', // since we are not using the default 'panel' xtype, we must specify it
+                    id: 'form-panel',
+                    labelWidth: 75,
+                    bodyStyle: 'padding:15px',
+                    width: 500,
+                    labelPad: 20,
+                    defaultType: 'textfield',
+                    items: [
+                        new Ext.form.DateField({
+                            fieldLabel: 'Date',
+                            name: 'date',
+                            id: 'myDate',
+                            allowBlank:false
+                        })
+                        ,{
+                            fieldLabel: 'Edited By',
+                            name: 'editor',
+                            id: 'myEditor',
+                            allowBlank: false
+                        },
+                        new Ext.form.DisplayField({
+                            fieldLabel: 'Comments',
+                            name: 'comments',
+                            id: 'myComments'
+                        })
+                    ],
+                    buttons: [
+                        {
+                            text: 'Foward',
+                            handler: function()
+                                forwardProposal()
+                        },
+                        {
+                            text: 'Forward to Moderator',
+                            handler: function()
+                                forwardProposalToModerator()
+                        },
+                        {
+                            text: 'Save Changes',
+                            handler: function()
+                                saveChanges()
+                        },
+                        {
+                            text: 'Edit Proposal',
+                            handler: function()
+                                editProposal()
+                        },
+                        {
+                            text: 'Submit Proposal',
+                            handler: function()
+                                submitProposal()
+                        }
+                    ]
+                };
+
+                var propHist = {
+                    title: 'Proposal History',
+                    width: 250,
+                    height: 300,
+                    items: [tree]
+                };
+
+                var propForm = {
+                    title: 'Proposal Form',
+                    columnWidth: .6,
+                    height: 300,
+                    items: [form]
+                };
+
+                new Ext.Viewport({
+                    title: 'Table Layout',
+                    applyTo: 'myLayout',
+                    region: 'center',
+                    layout: 'column',
+                    miheight: 200,
+                    defaults: {
+                        bodyStyle:'padding:20px'
+                    },
+                    items: [propHist, propForm]
+                });
+
+                // populate the fields in proposal form with data
+                jQuery.getJSON('".str_replace("amp;", "",$this->uri(array('action'=>'gethistorydata', 'courseid'=>$this->id, 'data'=>true)))."', function(json) {
+                    jQuery('#myDate').val(json.datemodified);
+                    jQuery('#myEditor').val(json.editor);
+                    jQuery('#myComments').append(json.comment);
+                });
+           });
+
+           function populateForm(n) {
+                // get the data clicked on
+                var propChosen = n.attributes.text,
+                    eachSplit = propChosen.split('_'),
+                    date = eachSplit[0],
+                    version = eachSplit[1],
+                    url = '".str_replace("amp;", "",$this->uri(array('action'=>'gethistorydata', 'courseid'=>$this->id, 'data'=>true)))."';
+
+                    url = url + '&version=' + version;
+
+                // get data from database and populate form fields with query data
+                jQuery.getJSON(url, function(json) {
+                    var editor = json.editor,
+                        comments = json.comment;
+
+                    jQuery('#myDate').val(date);
+                    jQuery('#myEditor').val(editor);
+                    jQuery('#myComments').replaceWith(comments);
+                });
+           }
+
+            function forwardProposal() {
+                var win;
+                var button = Ext.get('show-btn');
+                var myForm = new Ext.FormPanel({
+                                labelWidth: 125,
+                                url:'".str_replace("amp;", "", $submitUrl->show())."',
+                                frame:true,
+                                title: 'User Details',
+                                bodyStyle:'padding:5px 5px 0',
+                                width: 350,
+                                defaults: {width: 230},
+                                defaultType: 'textfield',
+
+                                items: [{
+                                        fieldLabel: '".$lname."',
+                                        name: 'lname',
+                                        allowBlank: false
+                                    },{
+                                        fieldLabel: '".$fname."',
+                                        name: 'fname',
+                                        allowBlank: false
+                                    },{
+                                        fieldLabel: '".$email."',
+                                        name: 'email',
+                                        allowBlank: false
+                                    },{
+                                        fieldLabel: '".$phone."',
+                                        name: 'phone',
+                                        allowBlank: false
+                                    }
+                                ]
+                            });
+   
+                // create the window on the first click and reuse on subsequent clicks
+                if(!win){
+                    win = new Ext.Window({
+                        applyTo:'send-win',
+                        layout:'fit',
+                        width:500,
+                        height:300,
+                        closeAction:'hide',
+                        plain: true,
+                        items: myForm,
+                        buttons: [{
+                            text:'Submit',
+                            handler: function() {
+                                if (myForm.getForm().isValid()) {
+                                    if (myForm.url) {
+                                        //myForm.getForm().getEl().dom.action = myForm.url;
+                                        //test = myForm.getForm().submit();
+                                        win.hide();
+                                        window.location.reload();
+                                        Ext.MessageBox.alert('sending info');
+                                    }
+                                }
+                            }
+                        },{
+                            text: 'Close',
+                            handler: function(){
+                                win.hide();
+                            }
+                        }]
+                    });
+                }
+                win.show(this);
+            }
+
+            function forwardProposalToModerator() {
+
+            }
+
+            function saveChanges() {
+
+            }
+
+            function editProposal() {
+                window.location.href = '".str_replace("amp;", "",$nextForm->href)."';
+            }
+
+            function submitProposal() {
+                window.location.href = '".str_replace("amp;", "", $submitForm->href)."';
+            }
+    </script>";
+
+    $this->appendArrayVar('headerParams', $mainjs);
 ?>

@@ -18,15 +18,21 @@
             $this->loadclass('link','htmlelements');
         }
         
-        public function getcoursehistory($courseid, $formnumber, $info = null) {
+        public function getcoursehistory($courseid, $formnumber, $info = null, $version = 1) {
             $this->courseid = $courseid;
             $this->formnumber = $formnumber;
+            if(strlen($version) == 0) {
+                $this->version = $this->objDocumentStore->getMaxVersion($this->courseid);
+            }
+            else {
+                $this->version = $version;
+            }
             $coursename = $this->getCourseName();
             
             if($info) {
                 // we are getting all the data for this course
                 $data = $this->getAllCourseData();
-                $str = "$data";
+                $str = $data;
             }
             else {
                 $data = $this->getHistoryData();
@@ -42,39 +48,25 @@
             return $courseName;
         }
         
-        public function getAllCourseData($version = null, $datemodified = null) {
+        public function getAllCourseData($datemodified = null) {
+            $info = "";
             $allData = $this->objDocumentStore->getHistory($this->courseid);
 
-            /*foreach($allData  as $value) {
-                $numRows += 1;
+            foreach($allData as $allData) {
+                if($allData['version'] == $this->version) {
+                    $comment = $this->getComment($allData['version']);
+                    $editor = $this->getEditor($allData['currentuser']);
+                    $dateUpdated = $this->objDocumentStore->getLastModified($this->courseid, $allData[0]['version'], $allData[0]['currentuser']);
+
+                    $date = date_create($dateUpdated);
+
+                    $info = array('datemodified'=>date_format($date, 'm/d/Y'), 'editor'=>$editor, 'comment'=>$comment);
+                }
+                else {
+                    // version data not found.
+                }
             }
 
-            $curRow = 1;
-            $data = "";
-            foreach($allData  as $value) {
-                
-                
-                $dateUpdated = $this->objDocumentStore->getLastModified($value['version'], $value['currentuser']);
-
-                if($curRow != $numRows) {
-                    $data .= ",";
-                }
-                
-                $data .= "{\n";
-                $data .= "\t\"comment\": '".$comment."',\n";
-                $data .= "\t\"editor\": '".$editor."',\n";
-                $data .= "\t\"id\": 'ver".$curRow."',\n";
-                $data .= "}";
-    
-                $curRow += 1;
-            }*/
-            $comment = $this->getComment($allData['version']);
-            $editor = $this->getEditor($allData['currentuser']);
-            $dateUpdated = $this->objDocumentStore->getLastModified($allData[0]['version'], $allData[0]['currentuser']);
-
-            $date = date_create($dateUpdated);
-            
-            $info = array('datemodified'=>date_format($date, 'm/d/Y'), 'editor'=>$editor, 'comment'=>$comment);
             return json_encode($info);
         }
 
@@ -90,17 +82,18 @@
             foreach($historyData  as $value) {
                 $comment = $this->getComment($value['version']);
                 $editor = $this->getEditor($value['currentuser']);
-                $dateUpdated = $this->objDocumentStore->getLastModified($value['version'], $value['currentuser']);
+                $dateUpdated = $this->objDocumentStore->getLastModified($this->courseid, $value['version'], $value['currentuser']);
+                $date = date_create($dateUpdated);
+                
+                $data .= "{\n";
+                $data .= "\t\ttext: '".date_format($date, 'm/d/Y')."_".$value['version']."',\n";
+                $data .= "\t\tid: 'ver".$curRow."',\n";
+                $data .= "\t\tleaf: true\n";
+                $data .= "\t}";
 
                 if($curRow != $numRows) {
                     $data .= ",";
                 }
-                
-                $data .= "{\n";
-                $data .= "\t\ttext: '".substr($dateUpdated, 0, 10)."_".$value['version']."',\n";
-                $data .= "\t\tid: 'ver".$curRow."',\n";
-                $data .= "\t\tleaf: true\n";
-                $data .= "\t}";
     
                 $curRow += 1;
             }
@@ -126,7 +119,7 @@
 
         public function getComment($version) {
             $comment = new link();
-            $comment->link($this->uri(array('action'=>'viewComments','courseid'=>$this->id, 'version'=>$version)));
+            $comment->link($this->uri(array('action'=>'viewComments','courseid'=>$this->courseid, 'version'=>$version)));
             $comment->link = 'Click to View Comments';
 
             return $comment->show();
@@ -135,7 +128,7 @@
         public function getEditor($currentuser) {
             $editor = $this->objUser->fullname(trim($this->objDocumentStore->getUserId($currentuser)));
             if($editor == null) {
-                $editor = $this->objDocumentStore->getFullName($currentuser, $this->id);
+                $editor = $this->objDocumentStore->getFullName($currentuser, $this->courseid);
             }
 
             return $editor;
