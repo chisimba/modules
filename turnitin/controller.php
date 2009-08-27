@@ -49,7 +49,8 @@ class turnitin extends controller
 			$this->setVar('SUPPRESS_PROTOTYPE', true); //Can't stop prototype in the public space as this might impact blocks
 			//$this->setVar('SUPPRESS_JQUERY', true);
 			//$this->setVar('JQUERY_VERSION', '1.3.2');
-		
+			$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+		 	$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
 		}catch(Exception $e){
             throw customException($e->getMessage());
             exit();
@@ -66,7 +67,11 @@ class turnitin extends controller
 	{
 		// Set the layout template.
         $this->setLayoutTemplate("layout_tpl.php");
-        
+       
+        $this->eventDispatcher->post($this->objActivityStreamer, "Turnitin", array('title'=>'Site Annoucement',
+    																				'link'=> $this->uri(array()),
+    																				'author' => $this->objUser->fullname(),
+    																				'description'=>' Some is trying to access the TII module'));
 		switch ($action)
 		{
 			//creates a user profile (if one does not exist) and logs the user in (instructor or student)
@@ -200,6 +205,11 @@ class turnitin extends controller
 				
 			case 'ajax_sumbitassessment':
 				echo $this->objUtils->doFileUpload();
+				 $this->eventDispatcher->post($this->objActivityStreamer, "turnitin", array('title'=>'Assignment Submitted',
+    																				'link'=> $this->uri(array()),
+    																				'contextcode' => $this->objContext->getContextCode(),
+    																				'author' => $this->objUser->fullname(),
+    																				'description'=> $this->objUser->fullname()." submitted an assignment to Turnitin"));
 				//echo '{"success":"true"}';
 				exit(0);
 				break;

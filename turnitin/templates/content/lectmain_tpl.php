@@ -99,9 +99,4 @@ $ext .= '<style type="text/css">
     </div>
 </div>
 
-<form action="<?php echo $this->uri(array('action' => 'ajax_sumbitassessment'));?>" method="POST" enctype="multipart/form-data">
-
-<input type="file" name="file">
-<input type="submit">
-</form>
 
