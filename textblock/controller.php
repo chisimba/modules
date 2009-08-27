@@ -53,7 +53,11 @@ class textblock extends controller
         switch ($this->action) {
             case null:
             case "view":
-                  $ar = $this->objDb->getAll();
+		  $pageNr = $this->getParam('pagenum', '1');
+		  $records = 20;
+		  $start = (($pageNr * $records) - $records);
+		  $end = $pageNr * $records;
+                  $ar = $this->objDb->getAll(" LIMIT $start, $end");
                   $this->setVarByRef('ar', $ar);
                   return "main_tpl.php";
                   break;

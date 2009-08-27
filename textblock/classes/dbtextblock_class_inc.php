@@ -37,7 +37,7 @@ class dbtextblock extends dbTable
 		$txtBlockId = trim($blockArr['blockname']);
 		$result = $this->getAll(" WHERE blockid = '$txtBlockId'");
 		return $result[0];
-	}
+    }
 
     /**
     * Save method for editing a record in this table

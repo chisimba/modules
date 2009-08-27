@@ -29,17 +29,107 @@ if ($objUser->isAdmin()) {
     $this->objH->str=$objLanguage->languageText("mod_textblock_title",'textblock');
     $allowAdmin = FALSE;
 }
-$rightSideColumn = $this->objH->show();
+
+$pageNr = $this->getParam('pagenum', '1');
+
+if ($pageNr == '1') {
+    $this->objH->str .= ' <span style="font-size:17px; float:right">(Showing Blocks <b>1 - 20</b>)';
+    $this->objH->str .= ' <br/> &gt;&gt; <a href="?module=textblock&pagenum=2"> Display blocks <i>21 - 40</i> </a>
+			  <br/> &gt;&gt; <a href="?module=textblock&pagenum=3"> Display blocks <i>41 - 60</i> </a></span>';
+
+} else if ($pageNr == '2') {
+    $this->objH->str .= '  <span style="font-size:17px; float:right">';
+    $this->objH->str .= ' &gt;&gt;<a href="?module=textblock&pagenum=1"> Display blocks <i>1 - 20</i> </a>
+			  <br/> (Showing Blocks <b>21 - 40</b>) 
+			  <br/> &gt;&gt; <a href="?module=textblock&pagenum=3"> Display blocks <i>41 - 60</i> </a></span>';
+
+
+} else if ($pageNr == '3') {
+    $this->objH->str .= '  <span style="font-size:17px; float:right">';
+    $this->objH->str .= ' &gt;&gt;<a href="?module=textblock&pagenum=1"> Display blocks <i>1 - 20</i> </a>
+			  <br/> &gt;&gt; <a href="?module=textblock&pagenum=2"> Display blocks <i>21 - 40</i> </a>
+			  <br/> (Showing Blocks <b>41 - 60</b>)
+			  </span>';
+}
+
+$rightSideColumn = $this->objH->show().'<hr/>';
 
 // Add Left column
 $objBlocks = &$this->getObject('blocks','blocks');
-$leftSideColumn .= $objBlocks->showBlock("text1", 'textblock')
+
+
+if ($pageNr == '1') {
+$leftSideColumn .= 
+    $objBlocks->showBlock("text1", 'textblock')
   . $objBlocks->showBlock("text2", 'textblock')
   . $objBlocks->showBlock("text3", 'textblock')
   . $objBlocks->showBlock("text4", 'textblock')
   . $objBlocks->showBlock("text5", 'textblock')
   . $objBlocks->showBlock("text6", 'textblock')
-  . $objBlocks->showBlock("text7", 'textblock');
+  . $objBlocks->showBlock("text7", 'textblock')
+  . $objBlocks->showBlock("text8", 'textblock')
+  . $objBlocks->showBlock("text9", 'textblock')
+  . $objBlocks->showBlock("text10", 'textblock')
+  . $objBlocks->showBlock("text11", 'textblock')
+  . $objBlocks->showBlock("text12", 'textblock')
+  . $objBlocks->showBlock("text13", 'textblock')
+  . $objBlocks->showBlock("text14", 'textblock')
+  . $objBlocks->showBlock("text15", 'textblock')
+  . $objBlocks->showBlock("text16", 'textblock')
+  . $objBlocks->showBlock("text17", 'textblock')
+  . $objBlocks->showBlock("text18", 'textblock')
+  . $objBlocks->showBlock("text19", 'textblock')
+  . $objBlocks->showBlock("text20", 'textblock');
+}
+
+if ($pageNr == '2') {
+$leftSideColumn .= 
+    $objBlocks->showBlock("text21", 'textblock')
+  . $objBlocks->showBlock("text22", 'textblock')
+  . $objBlocks->showBlock("text23", 'textblock')
+  . $objBlocks->showBlock("text24", 'textblock')
+  . $objBlocks->showBlock("text25", 'textblock')
+  . $objBlocks->showBlock("text26", 'textblock')
+  . $objBlocks->showBlock("text27", 'textblock')
+  . $objBlocks->showBlock("text28", 'textblock')
+  . $objBlocks->showBlock("text29", 'textblock')
+  . $objBlocks->showBlock("text30", 'textblock')
+  . $objBlocks->showBlock("text31", 'textblock')
+  . $objBlocks->showBlock("text32", 'textblock')
+  . $objBlocks->showBlock("text33", 'textblock')
+  . $objBlocks->showBlock("text34", 'textblock')
+  . $objBlocks->showBlock("text35", 'textblock')
+  . $objBlocks->showBlock("text36", 'textblock')
+  . $objBlocks->showBlock("text37", 'textblock')
+  . $objBlocks->showBlock("text38", 'textblock')
+  . $objBlocks->showBlock("text39", 'textblock')
+  . $objBlocks->showBlock("text40", 'textblock');
+}
+
+if ($pageNr == '3') {
+$leftSideColumn .= 
+    $objBlocks->showBlock("text41", 'textblock')
+  . $objBlocks->showBlock("text42", 'textblock')
+  . $objBlocks->showBlock("text43", 'textblock')
+  . $objBlocks->showBlock("text44", 'textblock')
+  . $objBlocks->showBlock("text45", 'textblock')
+  . $objBlocks->showBlock("text46", 'textblock')
+  . $objBlocks->showBlock("text47", 'textblock')
+  . $objBlocks->showBlock("text48", 'textblock')
+  . $objBlocks->showBlock("text49", 'textblock')
+  . $objBlocks->showBlock("text50", 'textblock')
+  . $objBlocks->showBlock("text51", 'textblock')
+  . $objBlocks->showBlock("text52", 'textblock')
+  . $objBlocks->showBlock("text53", 'textblock')
+  . $objBlocks->showBlock("text54", 'textblock')
+  . $objBlocks->showBlock("text55", 'textblock')
+  . $objBlocks->showBlock("text56", 'textblock')
+  . $objBlocks->showBlock("text57", 'textblock')
+  . $objBlocks->showBlock("text58", 'textblock')
+  . $objBlocks->showBlock("text59", 'textblock')
+  . $objBlocks->showBlock("text60", 'textblock');
+}
+
 
 
 $cssLayout->setLeftColumnContent($leftSideColumn);
