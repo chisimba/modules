@@ -17,26 +17,32 @@ $table->cellpadding = 5;
 $regformObj = $this->getObject('formmanager');
 
 $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-$contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'simpleregistration');
-$title1=$objSysConfig->getValue('LEFT_TITLE1', 'simpleregistration');
-$title2=$objSysConfig->getValue('LEFT_TITLE2', 'simpleregistration');
+if(count($content) > 0){
+    $eventcontent=$content[0];
+}
+
+$objWashout = $this->getObject('washout', 'utilities');
+$title1=$objWashout->parseText($eventcontent['event_lefttitle1']);
+$title2=$objWashout->parseText($eventcontent['event_lefttitle2']);
+$footer=$objWashout->parseText($eventcontent['event_footer']);
+$contactemail=$objWashout->parseText($eventcontent['event_emailcontact']);
 
 $rightTitle='<h1>'.$rightTitle1.'</h1>';
 $rightTitle.='<h3>'.$rightTitle2.'</h3>';
-$leftTitle.='<h1>'.$title1.'</h1>';
-$leftTitle.='<h4>'.$title2.'</h4>';
+$leftTitle.=$title1.'<br/>';
+$leftTitle.=$title2;
 
 
-$home = new link ($this->uri(array('action'=>'home')));
-$home->link= $this->objLanguage->languageText('mod_simpleregistration_home', 'simpleregistration');
-
+//$home = new link ($this->uri(array('action'=>'home','shortname'=>$shhortname)));
+//$home->link= $this->objLanguage->languageText('mod_simpleregistration_home', 'simpleregistration');
+$home='<a href="'.$_SERVER['HTTP_REFERER'].'">Home</a>';
 $table->startRow();
 $table->addCell($leftTitle);
 $table->addCell($rightTitle);
 $table->endRow();
 
 $objWashout = $this->getObject('washout', 'utilities');
-$content=$objSysConfig->getValue('CONTENT', 'simpleregistration');
+$content=$eventcontent['event_content'];
 $pagecontent= $objWashout->parseText($content);
 
 $table->startRow();
@@ -44,12 +50,12 @@ $table->addCell($pagecontent);
 $table->addCell($this->objLanguage->languageText('mod_simpleregistration_contactemail', 'simpleregistration').'<br>'.$contactemail);
 $table->endRow();
 
-$admin = new link ($this->uri(array('action'=>'admin')));
+$admin = new link ($this->uri(array('action'=>'memberlist','shortname'=>$shortname)));
 $admin->link= $this->objLanguage->languageText('mod_simpleregistration_admin', 'simpleregistration');
 
 $admin=$this->objUser->isAdmin() ?$admin->show():"";
 $table->startRow();
-$table->addCell('<br/><br/><br/><br/>'.$home->show().'&nbsp;'.$admin);
+$table->addCell('<br/><br/><br/><br/>'.$home.'&nbsp;'.$admin);
 $table->endRow();
 
 $table->startRow();
@@ -60,15 +66,7 @@ $table->endRow();
 
 
 $table->startRow();
-$table->addCell('<h6><a href="http://openoffice.org">Open Office</a>,
- <a href="http://avoir.uwc.ac.za">Chisimba</a>,
- <a href="http://presentations.wits.ac.za">Realtime tools</a>,
- <a href="http://kim.wits.ac.za/elearndemo">Podcasting,
-<a href="http://www.ubuntu.com">Ubuntu,
-<a href="http://www.gimp.org">GIMP,
-<a href="http://www.blender.org">Blender</a>,
-<a href="http://www.icecast.org">IceCast</a>,
-<a href="http://audacity.sourceforge.net/">Audacity</a></6>');
+$table->addCell($footer);
 $table->endRow();
 
 

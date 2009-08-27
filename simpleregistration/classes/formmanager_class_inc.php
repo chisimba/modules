@@ -1,8 +1,4 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  * Description of formmanager_class_inc
@@ -39,11 +35,24 @@ class formmanager extends object{
    * @param <type> $mode
    * @return <type>
    */
-    public function createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode){
-        
-        $submitUrl = $this->uri(array('action' => 'register','title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
-   'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration')));
-$expressLink =$this->uri(array('action' => 'expresssignin'));
+    public function createRegisterForm(
+        $editfirstname,
+        $editlastname,
+        $editcompany,
+        $editemail,
+        $mode,
+        $allowExternalReg,
+        $shortname
+         ){
+
+
+
+
+        $submitUrl = $this->uri(array('action' => 'register',
+    'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
+   'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
+            'shortname'=>$shortname));
+        $expressLink =$this->uri(array('action' => 'expresssignin','shortname'=>$shortname));
 
 
         $editfirstname=$mode == 'edit' ? "value:'".$editfirstname."',":"";
@@ -53,7 +62,16 @@ $expressLink =$this->uri(array('action' => 'expresssignin'));
         $regFormJS=
     "Ext.onReady(function(){
 
-    Ext.QuickTips.init();
+     Ext.QuickTips.init();
+     new Ext.ToolTip({
+        target: 'needhelp',
+        html: 'Login using your staff number as username. You will be required to login twice to complete your registration ',
+        title: 'My Tip Title',
+        autoHide: false,
+        closable: true,
+        draggable:true
+    });
+
 
     /*
      * ================  Registration form  =======================
@@ -68,20 +86,18 @@ $expressLink =$this->uri(array('action' => 'expresssignin'));
         renderTo: 'registration',
         collapsible: true,
         defaults: {width: 320},
-        width: 350,
-
         bodyStyle:'background-color:transparent',
         border:false,
       items: {
             xtype: 'fieldset',
-            title: 'Wits Staff registration here',
+            title: 'Staff registration here',
             autoHeight: true,
 
-
+       
         buttons: [{
-            text: 'Wits Staff Sign Up',
+            text: 'Staff Sign Up',
             handler: function(){
-            if (form.url)
+            if (wform.url)
             wform.getForm().getEl().dom.action = wform.url;
             wform.getForm().submit();
             }
@@ -89,7 +105,9 @@ $expressLink =$this->uri(array('action' => 'expresssignin'));
         }]
  }
     });
-   var form = new Ext.form.FormPanel({
+";
+        if($allowExternalReg == 'true'){
+            $regFormJS.=" var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,
         bodyStyle:'padding:5px 5px 0',
@@ -100,14 +118,14 @@ $expressLink =$this->uri(array('action' => 'expresssignin'));
         collapsible: true,
         defaults: {width: 320},
         width: 350,
-        
+
         bodyStyle:'background-color:transparent',
         border:false,
       items: {
             xtype: 'fieldset',
             title: 'Students/Visitors registration here',
             autoHeight: true,
-            
+
 
         items: [
              {
@@ -155,11 +173,13 @@ $expressLink =$this->uri(array('action' => 'expresssignin'));
 
         }]
  }
-    });
+    });";
+        }
+        $regFormJS.="
  });
 ";
 
-          //where we render the frame
+        //where we render the frame
         $content='<div id="registration"></div>';
         $content.= "<script type=\"text/javascript\">".$regFormJS."</script>";
 

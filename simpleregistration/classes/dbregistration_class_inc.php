@@ -10,44 +10,32 @@ class dbregistration extends dbTable{
 
     public function init()
     {
-        parent::init('tbl_simpleregistration_registration');  //super
-        $this->table = 'tbl_simpleregistration_registration';
+        parent::init('tbl_simpleregistrationmembers');  //super
+        $this->table = 'tbl_simpleregistrationmembers';
         $this->objUser = $this->getObject ( 'user', 'security' );
 
     }
 
- /*public function updateSchedule(
-        $title,
-        $date,
-        $starttime,
-        $endtime,
-        $id){
-
-        $data = array(
-            'title' => $title,
-            'meeting_date'=>$date,
-            'start_time'=>$starttime,
-            'end_time'=>$endtime,
-        );
-        $scheduleId = $this->update('id',$id, $data);
-        }*/
-
+ 
    
     public function addRegistration(
 
         $firstname,
         $lastname,
         $company,
-        $email){
+        $email,
+        $eventid){
+
         $data = array(
             'first_name' => $firstname,
             'last_name' => $lastname,
+            'event_id' => $eventid,
             'registration_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
             'email'=>$email,
             'company'=>$company,
         );
 
-        if($this->emailExists($email)){
+        if($this->emailExists($email,$eventid)){
             return FALSE;
         }else{
             $regId = $this->insert($data);
@@ -55,10 +43,9 @@ class dbregistration extends dbTable{
         }
     }
 
-    public function getRegistrations()
+    public function getRegistrations($eventid)
     {
-        $sql="select * from ".$this->table;
-
+        $sql="select * from ".$this->table." where event_id ='".$eventid."'";
         $rows=$this->getArray($sql);
         return $rows;
     }
@@ -70,9 +57,9 @@ class dbregistration extends dbTable{
 
         return $rows;
     }
-    public function emailExists($email)
+    public function emailExists($email,$eventid)
     {
-        $sql="select * from " .$this->table." where email = '".$email."'";
+        $sql="select * from " .$this->table." where email = '".$email."' and event_id ='".$eventid."'";
         $rows=$this->getArray($sql);
         return count($rows) > 0 ? TRUE:FALSE;
     }

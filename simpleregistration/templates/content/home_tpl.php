@@ -11,9 +11,21 @@ $table->cellpadding = 5;
 $table->cellpadding = 5;
 $regformObj = $this->getObject('formmanager');
 $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-$title1=$objSysConfig->getValue('LEFT_TITLE1', 'simpleregistration');
-$title2=$objSysConfig->getValue('LEFT_TITLE2', 'simpleregistration');
-$footer=$objSysConfig->getValue('FOOTER', 'simpleregistration');
+$allowExternalReg=$objSysConfig->getValue('ALLOW_EXTERNAL_REG', 'simpleregistration');
+$eventcontent=array();
+
+if(count($content) > 0){
+    $eventcontent=$content[0];
+}else{
+
+}
+
+$objWashout = $this->getObject('washout', 'utilities');
+$title1=$objWashout->parseText($eventcontent['event_lefttitle1']);
+$title2=$objWashout->parseText($eventcontent['event_lefttitle2']);
+$footer=$objWashout->parseText($eventcontent['event_footer']);
+
+
 $message='"'.$this->objLanguage->languageText('mod_simpleregistration_isopen', 'simpleregistration').'"';
 if($mode == 'edit'){
     $message='<font color="red">'.$this->objLanguage->languageText('mod_simpleregistration_emailinuse', 'simpleregistration').'</font>';
@@ -24,11 +36,8 @@ if($mode == 'loginagain'){
 }
 $rightTitle='<h1>'.$this->objLanguage->languageText('mod_simpleregistration_registration', 'simpleregistration').'</h1>';
 $rightTitle.='<h3>'.$message.'</h3>';
-$leftTitle.='<h1>'.$title1.'</h1>';
-$leftTitle.='<h4>'.$title2.'</h4>';
-
-$expressLink =new link($this->uri(array('action'=>'expresssignin')));
-$expressLink->link= '<h3>'.$this->objLanguage->languageText('mod_simpleregistration_express', 'simpleregistration');
+$leftTitle.=$title1.'<br/>';
+$leftTitle.=$title2;
 
 $programLink =new link($this->uri(array('action'=>'expresssignin')));
 $programLink->link= '<h3>The Program</h3>';
@@ -41,19 +50,19 @@ $table->endRow();
 
 $table->startRow();
 $table->addCell('');
-$table->addCell($expressLink->show());//.'<img src="'.$this->getResourceUri('images/line.png').'">');
 $table->endRow();
 
-$objWashout = $this->getObject('washout', 'utilities');
-$content=$objSysConfig->getValue('CONTENT', 'simpleregistration');
+$content=$eventcontent['event_content'];
 $pagecontent= $objWashout->parseText($content);
 
 $table->startRow();
 $table->addCell($pagecontent);
-$table->addCell($regformObj->createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode));
+
+$table->addCell($regformObj->createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode,$allowExternalReg,$shortname));
+
 $table->endRow();
 
-$admin = new link ($this->uri(array('action'=>'admin')));
+$admin = new link ($this->uri(array('action'=>'memberlist','shortname'=>$shortname)));
 $admin->link= $this->objLanguage->languageText('mod_simpleregistration_admin', 'simpleregistration');
 
 
@@ -65,8 +74,12 @@ if($this->objUser->isLoggedIn()){
 
 
 $table->startRow();
+$table->addCell('');
 $table->addCell($footer);
 $table->endRow();
-
+if(count($content) > 0){
 echo '<div id="wrap">'.$error.$table->show().'</div>';
+}else{
+    echo '<font color="red"><h1>No conference with the shortname suggested exist</h1></font>';
+}
 ?>

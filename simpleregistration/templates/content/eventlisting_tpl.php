@@ -1,0 +1,251 @@
+<?php
+$this->loadclass('link','htmlelements');
+$objIcon= $this->newObject('geticon','htmlelements');
+
+
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+$maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/session.css').'"/>';
+$this->appendArrayVar('headerParams', $extbase);
+$this->appendArrayVar('headerParams', $extalljs);
+$this->appendArrayVar('headerParams', $extallcss);
+$this->appendArrayVar('headerParams', $maincss);
+$saveEventUrl = $this->uri(array('action'=>'saveevent'));
+
+$events=$this->dbevents->getMyEvents();
+$total=count($events);
+$data="";
+$index=0;
+foreach($events as $row){
+
+    $deleteLink=new link();
+    $deleteLink->link($this->uri(array('action'=>'deleteevent','id'=>$row['id'])));
+    $objIcon->setIcon('delete');
+    $deleteLink->link=$objIcon->show();
+
+    $contentLink=new link();
+    $contentLink->link($this->uri(array('action'=>'eventcontent','id'=>$row['id'],'eventtitle'=>$row['event_title'])));
+    $contentLink->link=$row['event_title'];
+    $data.="[";
+    $data.="'".$contentLink->show()."',";
+    $data.="'".$row['short_name']."',";
+    $data.="'".$row['event_date']."',";
+    $data.="'".$deleteLink->show()."'";
+    $data.="]\n";
+    $index++;
+    if($index <= $total-1){
+        $data.=',';
+    }
+}
+$mainjs="/*!
+ * Ext JS Library 3.0+
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+Ext.onReady(function(){
+     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+     var myData = [
+
+       ".$data."
+       
+    ];
+
+    /**
+     * Custom function used for column renderer
+     * @param {Object} val
+     */
+    function change(val){
+        if(val > 0){
+            return '<span style=\"color:green;\">' + val + '</span>';
+        }else if(val < 0){
+            return '<span style=\"color:red;\">' + val + '</span>';
+        }
+        return val;
+    }
+
+    /**
+     * Custom function used for column renderer
+     * @param {Object} val
+     */
+    function pctChange(val){
+        if(val > 0){
+            return '<span style=\"color:green;\">' + val + '%</span>';
+        }else if(val < 0){
+            return '<span style=\"color:red;\">' + val + '%</span>';
+        }
+        return val;
+    }
+
+    // create the data store
+    var store = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'eventtitle'},
+           {name: 'shortname'},
+           {name: 'datecreated', type: 'date', dateFormat: 'Y-m-d'},
+           {name: 'edit'}
+        ]
+    });
+
+    // manually load local data
+    store.loadData(myData);
+
+    // create the Grid
+    var grid = new Ext.grid.GridPanel({
+        store: store,
+        columns: [
+            {id:'eventtitle',header: 'Event', width: 160, sortable: true, dataIndex: 'eventtitle'},
+            {header: 'Short Name', dataIndex:'shortname'},
+            {header: 'Date Created', width: 85, sortable: true, renderer: Ext.util.Format.dateRenderer('Y-m-d'), dataIndex: 'datecreated'},
+            {header: 'Edit', dataIndex:'edit'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'eventtitle',
+        height: 350,
+        width: 600,
+        title: 'Event Listing',
+        // config options for stateful behavior
+        stateful: true,
+        stateId: 'grid'
+    });
+
+    // render the grid to the specified div in the page
+    grid.render('eventlisting');
+});
+
+
+var form = new Ext.form.FormPanel({
+        baseCls: 'x-plain',
+
+        labelWidth: 55,
+        bodyStyle:'padding:5px 5px 0',
+        standardSubmit: true,
+         url:'".str_replace("amp;", "", $saveEventUrl)."',
+        defaultType: 'textfield',
+items:[
+ new Ext.form.TextField({
+        fieldLabel: 'Event Title',
+        name: 'eventtitlefield',
+        width: 400,
+        allowBlank: false
+                        }),
+ new Ext.form.TextField({
+        fieldLabel: 'Short name',
+        name: 'shortnamefield',
+        allowBlank: false
+    }),
+ new Ext.form.DateField({
+        fieldLabel: 'Date',
+        name: 'eventdatefield',
+        format:'Y-m-d',
+       allowBlank: false
+
+              })
+  ]
+
+  });
+
+
+   var addEventWin;
+    var button = Ext.get('add-event-btn');
+    button.on('click', function(){
+
+       if(!addEventWin){
+            addEventWin = new Ext.Window({
+                applyTo:'addcomments-win',
+                layout:'fit',
+                title:'Enter Event Details',
+                width:500,
+                height:250,
+                x:250,
+                y:50,
+                closeAction:'hide',
+                plain: true,
+                items: [
+                form
+                ],
+                  buttons: [{
+                    text:'Save',
+                    handler: function(){
+                  if (form.url){
+                      form.getForm().getEl().dom.action = form.url;
+                       }
+                     form.getForm().submit();
+                  }
+                  }
+                  ,{
+                    text: 'Cancel',
+                    handler: function(){
+                       addEventWin.hide();
+                    }
+                  }
+                ]
+
+            });
+        }
+        addEventWin.show(this);
+});
+
+
+
+var contentform = new Ext.form.FormPanel({
+        baseCls: 'x-plain',
+        labelWidth: 55,
+        bodyStyle:'padding:5px 5px 0',
+        standardSubmit: true,
+         url:'".str_replace("amp;", "", $saveEventUrl)."',
+        defaultType: 'textfield',
+    items:[
+     new Ext.form.TextArea({
+        fieldLabel: 'Event Title',
+        name: 'titlefield'
+       }),
+     new Ext.form.TextArea({
+        fieldLabel: 'Date/Time/Venue',
+        name: 'venuefield'
+       }),
+       new Ext.form.TextArea({
+        fieldLabel: 'Main Content',
+        name: 'contentfield'
+
+       }),
+     new Ext.form.TextArea({
+        fieldLabel: 'Left Title1',
+        name: 'lefttitle1field'
+
+       }),
+     new Ext.form.TextArea({
+        fieldLabel: 'Left Title2',
+        name: 'lefttitle2field'
+
+       }),
+]
+
+  });
+";
+$addButton = new button('add','Add Event');
+$addButton->setId('add-event-btn');
+$content = $message;
+
+$renderSurface='<div id="addcomments-win" class="x-hidden">
+        <div class="x-window-header">Add Session</div>
+        </div>';
+$content= '<div id="eventlisting">'.$addButton->show().$renderSurface.'<br /><br /></div>';
+$content.= "<script type=\"text/javascript\">".$mainjs."</script>";
+
+
+// Create an instance of the css layout class
+$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout->setNumColumns(2);
+
+$rightSideColumn .= $content;
+$postLoginMenu  = $this->newObject('postloginmenu','toolbar');
+$cssLayout->setLeftColumnContent( $postLoginMenu->show());
+
+// Add Right Column
+$cssLayout->setMiddleColumnContent($rightSideColumn);
+
+//Output the content to the page
+echo $cssLayout->show();
+?>

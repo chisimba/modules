@@ -11,18 +11,22 @@ $this->appendArrayVar('headerParams', $extallcss);
 
 //data grid from db
 $reg = $this->getObject('dbregistration');
-$dbdata=$reg->getRegistrations();
+$dbdata=$reg->getRegistrations($eventid);
 $total=count($dbdata);
 
 if(!$this->objUser->isAdmin()){
  $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_simpleregistration_alreadysignedup', 'simpleregistration'),
  'title2'=>''));
 }
+$xlsUrl = $this->uri(array('action'=>'xls','eventid'=>$eventid));
 
 $scheduleTitle='<h2>'.$total.' '.$this->objLanguage->languageText('mod_simpleregistration_registeredmembers', 'simpleregistration').'</h2>';
 $scheduleTitle.='
           <p></p>
          ';
+$excelButton = new button('add','Export to Excel');
+$excelButton->setId('xls-btn');
+$scheduleTitle.=$excelButton->show().'';
 //load class
 $this->loadclass('link','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
@@ -166,6 +170,11 @@ $mainjs = "/*!
                     });
                 });
 
+     var addEventWin;
+    var button = Ext.get('xls-btn');
+    button.on('click', function(){
+      window.location.href = '".str_replace("amp;", "",$xlsUrl)."';
+    });
                 // Array data for the grids
                 Ext.grid.Data = [".$data."];";
 
