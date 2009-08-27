@@ -15,7 +15,7 @@ class simpleregistration extends controller {
         $this->objLog = $this->getObject('logactivity', 'logger');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->dbevents = $this->getObject('dbevents');
-        $this->utils = $this->getObject('utils');
+        $this->utils = $this->getObject('utils','simpleregistration');
         $this->dbeventscontent = $this->getObject('dbeventscontent');
         $this->objLog->log();
     }
