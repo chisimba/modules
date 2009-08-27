@@ -52,7 +52,7 @@ class dbblocks extends dbTable
 	    */
         public function init()
         {
-        	try {         
+            try {         
                 parent::init('tbl_cms_blocks');
                 $this->_objUser = & $this->getObject('user', 'security');
                 $this->_objLanguage = & $this->newObject('language', 'language');
@@ -771,6 +771,16 @@ class dbblocks extends dbTable
           */
         public function getPositionBlockForm($pageid, $sectionid, $blockCat)
         {
+
+            //Including Module TextBlcok integration here
+            $objModule =$this->newObject('modules', 'modulecatalogue');
+            if ($objModule->checkIfRegistered('context')) {
+                $objTextBlock =$this->newObject('dbtextblock', 'textblock');
+            } else {
+                $objTextBlock = false;
+            }
+
+
             //Load the checkbox class
             $this->loadClass('checkbox', 'htmlelements');
 
@@ -854,6 +864,13 @@ class dbblocks extends dbTable
             $blocks = $this->getBlockEntries();
             foreach($blocks as $block) {
                 $blockName = $block['blockname'];
+		if ($objTextBlock) {
+                    $txtBlock = $objTextBlock->getBlock($block['id']);
+                    if ($txtBlock['title'] != '') {
+                        $blockName = $txtBlock['title'];
+                    }
+		}
+
                 $blockId = $block['id'];
 
                 $checked = FALSE;
