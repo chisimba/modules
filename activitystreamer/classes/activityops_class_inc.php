@@ -3,9 +3,6 @@
  * Methods to track activities in the Chisimba framework
  * into the Chisimba framework
  * 
- * This module requires a valid Turnitin account/license which can 
- * purhase at http://www.turnitin.com
- *
  * PHP version 5
  *
  * This program is free software; you can redistribute it and/or modify
@@ -72,23 +69,14 @@ class activityops extends object
 	 * @param object $notification
 	 */
 	public function postmade($notification) 
-	{
-		//error_log($notification->getNotificationName ());
-		//error_log(var_dump($notification->getNotificationInfo()));
-		/*
-        if ($notification->getNotificationName () == 'test') {
-            error_log("PHPInfo module was accessed");
-            var_dump($notification);
-        }
-        else {
-            error_log("nothing to see here");
-            
-        }*/
-		
-		//$this->createFeeds($notification);
+	{		
 		
 		//add to database
 		$this->objActDB->insertPost($notification);
+		
+		//send to somewhere with XMPP or something
+		
+		//email it if you like
 
     }
     
