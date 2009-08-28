@@ -24,7 +24,7 @@ $objWashout = $this->getObject('washout', 'utilities');
 $title1=$objWashout->parseText($eventcontent['event_lefttitle1']);
 $title2=$objWashout->parseText($eventcontent['event_lefttitle2']);
 $footer=$objWashout->parseText($eventcontent['event_footer']);
-
+$timevenue=$objWashout->parseText($eventcontent['event_timevenue']);
 
 $message='"'.$this->objLanguage->languageText('mod_simpleregistration_isopen', 'simpleregistration').'"';
 if($mode == 'edit'){
@@ -38,6 +38,7 @@ $rightTitle='<h1>'.$this->objLanguage->languageText('mod_simpleregistration_regi
 $rightTitle.='<h3>'.$message.'</h3>';
 $leftTitle.=$title1.'<br/>';
 $leftTitle.=$title2;
+$rightTitle.=$timevenue;
 
 $programLink =new link($this->uri(array('action'=>'expresssignin')));
 $programLink->link= '<h3>The Program</h3>';
@@ -49,7 +50,7 @@ $table->addCell($rightTitle);
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Wits');
+$table->addCell('');
 $table->endRow();
 
 $content=$eventcontent['event_content'];
