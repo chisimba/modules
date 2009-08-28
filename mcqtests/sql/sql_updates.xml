@@ -14,7 +14,7 @@
 	</update>
 	<update>
 		<table>tbl_test_marked</table>
-		<version>1.0381</version>
+		<version>1.038</version>
 		<description>add field answered</description>
 		<data>
 			<add>
