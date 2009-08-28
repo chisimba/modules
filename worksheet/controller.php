@@ -129,7 +129,7 @@ class worksheet extends controller
      */
     public function isValid($action)
     {
-        $lecturerActions = array('add', 'saveworksheet', 'worksheetinfo', 'managequestions', 'savequestion', 'activate', 'updatestatus', 'viewstudentworksheet', 'editquestion');
+        $lecturerActions = array('add', 'saveworksheet', 'worksheetinfo', 'managequestions', 'savequestion', 'activate', 'updatestatus', 'viewstudentworksheet', 'editquestion', 'preview');
         
         if (in_array($action, $lecturerActions)) {
             if ($this->objUser->isContextLecturer($this->objUser->userid(),$this->contextCode)) {
@@ -456,6 +456,36 @@ class worksheet extends controller
             
             return 'viewworksheet_tpl.php';
         }
+    }
+    
+    /**
+    * Method to view a worksheet - lecturer view
+    * @access private
+    */
+    
+    private function __preview()
+    {
+      
+             
+        $id = $this->getParam('id');
+        
+        $worksheet = $this->objWorksheet->getWorksheet($id);
+        
+        if ($worksheet == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unknownworksheet'));
+        }
+        
+        $this->setVarByRef('id', $id);
+        $this->setVarByRef('worksheet', $worksheet);
+        
+        $questions = $this->objWorksheetQuestions->getQuestions($id);
+        $this->setVarByRef('questions', $questions);
+        $this->setLayoutTemplate(NULL);
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('pageSuppressSearch', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+        return 'preview_tpl.php';
     }
     
     /**

@@ -58,7 +58,7 @@ if (count($worksheets) == 0) {
 				$objIcon->alt = "";
 				$objIcon->title = "";
 				$editLink->link = $objIcon->show();
-				$viewLink = new link ($this->uri(array('action'=>'viewworksheet', 'id'=>$worksheet['id'])));
+				$viewLink = new link ($this->uri(array('action'=>'preview', 'id'=>$worksheet['id'])));
 				$objIcon->setIcon('view');
 				$objIcon->alt = "";
 				$objIcon->title = "";

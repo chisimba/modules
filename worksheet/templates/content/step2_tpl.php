@@ -19,12 +19,14 @@ $script = "jQuery('#form_addquestion').ajaxForm(options);";
 $this->appendArrayVar('bodyOnLoad', $script);
 */
 
+$preview = new link($this->uri(array('action'=>'preview', 'id'=>$worksheet['id'])));
+$preview->link = $this->objLanguage->languageText('mod_worksheet_preview', 'worksheet', 'Preview');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
 
-$header->str = $this->objLanguage->languageText('mod_worksheet_ws_questions', 'worksheet', 'Worksheet Questions').' - '.$worksheet['name'];
+$header->str = $this->objLanguage->languageText('mod_worksheet_ws_questions', 'worksheet', 'Worksheet Questions').' - '.$worksheet['name'] . ' (' . $preview->show() . ')';
 
  
 
@@ -37,7 +39,9 @@ $objStepMenu->setCurrent(2);
 echo $objStepMenu->show();
 
 echo '<br />'.$header->show();
-
+if ($worksheet['activity_status'] != 'inactive') {
+  echo '<br /><strong>'.$this->objLanguage->languageText('mod_worksheet_editquestionnote','worksheet', 'Note: The worksheet must be inactive before adding/editing and removing questions is allowed.') . '</strong><br />';
+}
 echo $this->objWashout->parseText($worksheet['description']);
 
 $objDateTime = $this->getObject('dateandtime', 'utilities');
