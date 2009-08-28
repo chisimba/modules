@@ -10,7 +10,8 @@ if (isset($closeWin) && $closeWin) {
     //<![CDATA[
     function reloadPage()
     {
-        window.opener.location.href = window.opener.location.href;
+        window.opener.location.reload(true);
+        //window.opener.location.href = window.opener.location.href;
         window.close();
     }
     //]]>
@@ -249,6 +250,9 @@ $objTable->endRow();
 $hidden1 = '';
 $count = 0;
 
+if (empty($data)) {
+ $questionCounter = -1;
+}
 // Display questions
 if (!empty($data)) {
     $i = $data[0]['questionorder'];
@@ -277,13 +281,13 @@ if (!empty($data)) {
         $objInput->fldType = 'hidden';
         $hidden = $objInput->show();
 
-        
+
         // Display answers
          if (!empty($line['answers'])) {
              if ($line['questiontype'] == 'freeform' ){
                  $simple = array();
                  foreach($line['answers'] as $key => $cloze ){
-                  
+
                  $simple[] = $cloze['answer'];
                  }
                  $stringOut = implode(';',$simple);
@@ -291,17 +295,17 @@ if (!empty($data)) {
                  $objInput->fldType = 'hidden';
                  $hidden.= $objInput->show();
                  $objRadio = new textinput('ans'.$line['questionorder'], '');
-                 
+
                  $objInput = new textinput('qtype'.$line['questionorder'], 'freeform');
                  $objInput->fldType = 'hidden';
                  $hidden.= $objInput->show();
 
                  }else{
-                 
+
                   $objRadio = new radio('ans'.$questionCounter);
                    //$objRadio = new radio('ans'.$line['id']);
                    $objRadio->setBreakSpace('<br />');
-       
+
                  foreach($line['answers'] as $key => $val) {
                        $ansNum = '<b>&nbsp;'.$alpha[($key+1) ].')</b>&nbsp;&nbsp;';
                        $objRadio->addOption($val['id'], $ansNum.$val['answer']);
@@ -353,7 +357,8 @@ $objInput = new textinput('resultId', $resultId);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
 // Submit buttons
-	if ($questionCounter<$data[0]['count']) {
+
+	if (!empty($data) && $questionCounter<$data[0]['count']) {
 	    $objButton = new button('savebutton', $continueLabel);
 // after the onclick
 //document.getElementById(\'input_savebutton\').disabled=true;
@@ -375,13 +380,13 @@ if ($action == 'continuetest') {
     $objTable->startRow();
     $objTable->addCell($hidden.$objButton->show() , '', '', 'left', '', '');
     $objTable->endRow();
-    
+
 } else {
     $objTable->startRow();
     $objTable->addCell($hidden, '', '', 'right', '', '');
     $objTable->addCell($objButton->show() , '', '', 'right', '', '');
     $objTable->endRow();
- 
+
 }
 // form to submit the test
 $objForm = new form('submittest', $this->uri(''));

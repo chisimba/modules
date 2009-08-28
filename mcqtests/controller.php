@@ -1265,7 +1265,7 @@ class mcqtests extends controller
         if (!empty($data)) {
         foreach ($data as $val){
 
-           if ($val[answered]!= NULL){
+           if ($val['answered']!= NULL){
                       $total = $total+$val['mark'];
                             //$total = $p;
                              }
@@ -1279,7 +1279,7 @@ class mcqtests extends controller
         if (!empty($testId)) {
             $data = $this->dbMarked->getCorrectAnswers($this->userId, $testId);
             if (!empty($data)) {
-                foreach($data as $item) { $b++;
+                foreach($data as $item) { //$b++;
                    if ($item['correct']) {
                        $total = $total+$item['mark'];
                       //$total = $b;
