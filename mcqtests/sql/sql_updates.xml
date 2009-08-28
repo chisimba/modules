@@ -12,4 +12,16 @@
 			</add>
 		</data>
 	</update>
+	<update>
+		<table>tbl_test_marked</table>
+		<version>1.0381</version>
+		<description>add field answered</description>
+		<data>
+			<add>
+				<name>answered</name>
+				<type>text</type>
+				<length>120</length>
+			</add>
+		</data>
+	</update>
 </updates>
