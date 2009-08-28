@@ -25,14 +25,20 @@ class giftops extends object {
      * @param array $data
      * @return string
      */
-    public function displayForm($rname,$data,$action) {
+    public function displayForm($data,$action) {
+        $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+        $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+        $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+        $this->appendArrayVar('headerParams', $extbase);
+        $this->appendArrayVar('headerParams', $extalljs);
+        $this->appendArrayVar('headerParams', $extallcss);
+
         // set up language items
         $dnlabel = $this->objLanguage->languageText('mod_addedit_donor','gift').":";
         $rnlabel = $this->objLanguage->languageText("mod_addedit_receiver","gift").":";
         $gnlabel = $this->objLanguage->languageText("mod_addedit_giftname","gift").":";
         $descriplabel = $this->objLanguage->languageText("mod_addedit_description","gift").":";
         $gvaluelabel = $this->objLanguage->languageText("mod_addedit_value","gift").":";
-        $gstatelabel = $this->objLanguage->languageText("mod_addedit_state","gift").":";
 
         if(sizeof($data) == 0) {
             $objForm = new form('contactdetailsform', $this->uri(array('action' => 'submitAdd')));
@@ -40,7 +46,36 @@ class giftops extends object {
         else {
             $objForm = new form('contactdetailsform', $this->uri(array('action' => 'submitEdit','id' => $data['id'])));
         }
-		
+
+        $mainjs = "Ext.onReady(function(){
+            new Ext.ToolTip({
+            target: 'donortip',
+            html: '".$this->objLanguage->languageText('mod_add_donortip','gift')."',
+            width: 200
+            })
+
+            new Ext.ToolTip({
+            target: 'giftnametip',
+            html: '".$this->objLanguage->languageText('mod_add_giftnametip','gift')."',
+            width: 200
+            })
+
+            new Ext.ToolTip({
+            target: 'descriptiontip',
+            html: '".$this->objLanguage->languageText('mod_add_descriptiontip','gift')."',
+            width: 200
+            })
+
+            new Ext.ToolTip({
+            target: 'valuetip',
+            html: '".$this->objLanguage->languageText('mod_add_valuetip','gift')."',
+            width: 200
+            })
+
+            Ext.QuickTips.init();
+
+        });";
+
         //Setting up input text boxes
         $objInputh1 = new textinput('dnvalue',$data['donor'], '', '74');
         $dnvalue = $objInputh1->show()."<br><br>";
@@ -50,24 +85,12 @@ class giftops extends object {
         $objInputh2b = new textinput('gname',$data['giftname'], '', '74');
         $gnvalue = $objInputh2b->show()."<br><br>";
 			
-        $objInputh3a = new textarea('descripvalue',$data['description'], 15, 54);
+        $objInputh3a = new textarea('descripvalue',$data['description'], 15, 55);
         $descripvalue = $objInputh3a->show()."<br><br>";
 			
         $objInputh3b = new textinput('gvalue',$data['value'], '', '30');
         $gvalue = $objInputh3b->show()."<br><br>";
 			
-        $dropdown=&new dropdown('gstatevalue');
-        $dropdown->addOption(1,$this->objLanguage->languageText("mod_dropdown_active","gift"));
-        $dropdown->addOption(0,$this->objLanguage->languageText("mod_dropdown_notactive","gift"));
-        
-        if($data['listed'] == 1) {
-            $dropdown->setSelected(1);
-        }
-        else {
-            $dropdown->setSelected(0);
-        }
-        $gstatevalue = $dropdown->show()."<br><br>";
-		
         //Buttons OK and cancel
         $this->objSubmitButton=new button('Submit');
         $this->objSubmitButton->setValue($this->objLanguage->languageText("mod_addedit_btnSave","gift"));
@@ -90,36 +113,32 @@ class giftops extends object {
         $objTable->cellpadding = '2';
         $objTable->border='0';
 
+        $width = 100;
+        $valign = 'top';
         $objTable->startRow();
-        $objTable->addCell($dnlabel, '', '', '', '', '');
-        $objTable->addCell($dnvalue, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell($rnlabel, '', '', '', '', '');
-        $objTable->addCell($rname."<br><br>", '', '', '', '', '');
-        $objTable->endRow();
-
-        $objTable->startRow();
-        $objTable->addCell($gnlabel, '', '', '', '', '');
-        $objTable->addCell($gnvalue, '', '', '', '', '');
-        $objTable->addCell(" ", '', '', '', '', '');
+        $objTable->addCell($dnlabel);
+        $objTable->addCell($dnvalue);
+        $objTable->addCell('<div id="donortip">[?]</div>', $width, 'top', 'right');
         $objTable->endRow();
 
         $objTable->startRow();
-        $objTable->addCell($descriplabel, '', 'top', '', '', '');
+        $objTable->addCell($gnlabel);
+        $objTable->addCell($gnvalue);
+        $objTable->addCell('<div id="giftnametip">[?]</div>', $width, 'top', 'right');
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $objTable->addCell($descriplabel, '', 'top');
         $objTable->addCell($descripvalue, '', '', '', '', 'colspan="3"');
+        $objTable->addCell('<div id="descriptiontip">[?]</div>',$width, NULL, 'left');
         $objTable->endRow();
 
         $objTable->startRow();
-        $objTable->addCell($gvaluelabel, '', '', '', '', '');
-        $objTable->addCell($gvalue, '', '', '', '', '');
+        $objTable->addCell($gvaluelabel);
+        $objTable->addCell($gvalue);
+        $objTable->addCell('<div id="valuetip">[?]</div>', $width, 'top', 'right');
         $objTable->endRow();
 
-        $objTable->startRow();
-        $objTable->addCell($gstatelabel, '', '', '', '', '');
-        $objTable->addCell($gstatevalue, '', '', '', '', '');
-        $objTable->endRow();
-		
         $infoTable = $objTable->show();
 			
         //Setting Up Form by adding all objects....
@@ -143,7 +162,8 @@ class giftops extends object {
         $objLayer = new layer();
         $objLayer->padding = '10px';
         $objLayer->str = $pageData;
-        $pageLayer = $objLayer->show();
+        $pageLayer = $objLayer->show().'<script type="text/javascript">'.$mainjs.'</script>';
+
         return $pageLayer;
     }
     

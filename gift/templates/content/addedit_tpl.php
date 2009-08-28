@@ -3,12 +3,12 @@ $action = $this->getParam('action');
 if($action == 'edit') {
     $id  = $this->getParam('id');
     $data = $this->objDbGift->getRow('id',$id);
-    $addEditForm = $this->objGift->displayForm($this->objUser->fullName(),$data,$action);
-    $addEditForm = '<h2>'.$this->objLanguage->languageText('mod_addedit_editHeading','gift').'</h2>'.$addEditForm;
+    $addEditForm = $this->objGift->displayForm($data,$action);
+    $addEditForm = '<h1>'.$this->objLanguage->languageText('mod_addedit_editHeading','gift')." ".$this->objUser->fullName().'</h1>'.$addEditForm;
 }
 else {
-    $addEditForm = $this->objGift->displayForm($this->objUser->fullName(),array(),$action);
-    $addEditForm = '<h2>'.$this->objLanguage->languageText('mod_addedit_addHeading','gift').'</h2>'.$addEditForm;
+    $addEditForm = $this->objGift->displayForm(array(),$action);
+    $addEditForm = '<h1>'.$this->objLanguage->languageText('mod_addedit_addHeading','gift')." ".$this->objUser->fullName().'</h1>'.$addEditForm;
 }
 
 $toSelect = $this->objLanguage->languageText('mod_home_addLink','gift');

@@ -65,7 +65,7 @@ class gift extends controller
         $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
         $this->data = $this->objDbGift->getInfo($qry);
 
-        return "edit_tpl.php";
+        return $this->nextAction('result');
     }
 
     /**
@@ -89,30 +89,6 @@ class gift extends controller
      */
     function edit() {
         return "addedit_tpl.php";
-    }
-
-    /**
-     * Adjusts the archive status of a particular gift and returns to the
-     * home page.  (i.e. if the gift is archived, there is an option to
-     * unarchive it and vice versa)
-     * @return string
-     */
-    function archive() {
-        $id = $this->getParam('id');
-        $result = $this->objDbGift->archive($id);
-
-        if($result) {
-            $this->msg = $this->objLanguage->languageText('mod_archiveSuccess','gift');
-        }
-        else {
-            $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
-        }
-
-        $qry = "SELECT * FROM tbl_gifttable";
-        $data = $this->objDbGift->getInfo($qry);
-        $this->data = $data;
-
-        return "edit_tpl.php";
     }
 
     /**
@@ -141,7 +117,7 @@ class gift extends controller
         $this->data = $this->objDbGift->getInfo($qry);
         $this->recentdata['id'] = $this->getParam('id');
 
-        return "edit_tpl.php";
+        return $this->nextAction('result');
     }
 }
 ?>
