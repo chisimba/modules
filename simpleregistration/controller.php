@@ -349,6 +349,10 @@ class simpleregistration extends controller {
      */
     public function requiresLogin() {
         switch ($this->getParam('action')) {
+            case 'home':
+                return TRUE;
+            case 'memberlist':
+                return TRUE;
             case 'xls':
                 return TRUE;
                case 'eventlisting':
