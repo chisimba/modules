@@ -120,7 +120,7 @@ class dbmarked extends dbtable
         $sql.= " AND marked.questionid = quest.id";
         $sql.= " AND marked.studentid = '$studentId'";
         $sql.= " AND marked.testid = '$testId'";
-        
+
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;
@@ -134,18 +134,18 @@ class dbmarked extends dbtable
 * @param string $studentId The id of the student.
 * @param string $testId The id of the test.
 * @return array data the question id,students correct answer and marks
-    
+
 */
    public function getfreeformAnswers($studentId, $testId)
    {
-   
+
         $sql = "SELECT distinct marked.questionid,marked.answered,quest.mark FROM";
         $sql.= " tbl_test_marked AS marked, tbl_test_answers AS ans, tbl_test_questions AS quest";
-        $sql.= " WHERE ans.answer = marked.answered";
+        $sql.= " WHERE marked.answerid = ans.id";
         $sql.= " AND marked.questionid = quest.id";
         $sql.= " AND marked.studentid = '$studentId'";
         $sql.= " AND marked.testid = '$testId'";
-        
+
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;
