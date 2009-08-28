@@ -49,7 +49,7 @@ $table->addCell($rightTitle);
 $table->endRow();
 
 $table->startRow();
-$table->addCell('');
+$table->addCell('Wits');
 $table->endRow();
 
 $content=$eventcontent['event_content'];
@@ -57,7 +57,6 @@ $pagecontent= $objWashout->parseText($content);
 
 $table->startRow();
 $table->addCell($pagecontent);
-
 $table->addCell($regformObj->createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode,$allowExternalReg,$shortname));
 
 $table->endRow();
