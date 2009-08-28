@@ -58,8 +58,14 @@ if (count($worksheets) == 0) {
 				$objIcon->alt = "";
 				$objIcon->title = "";
 				$editLink->link = $objIcon->show();
-				$table->addCell($editLink->show());
+				$viewLink = new link ($this->uri(array('action'=>'viewworksheet', 'id'=>$worksheet['id'])));
+				$objIcon->setIcon('view');
+				$objIcon->alt = "";
+				$objIcon->title = "";
+        $viewLink->link = $objIcon->show();
+				$table->addCell($viewLink->show() . $editLink->show());
 				$editLink = null;
+				$viewLink = null;
             $table->endRow();
         }
     } else {
