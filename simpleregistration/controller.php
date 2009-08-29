@@ -282,11 +282,15 @@ class simpleregistration extends controller {
         $docRoot=$_SERVER['DOCUMENT_ROOT'].$downloadfolder;
 
         $myFile = $docRoot."listing.xls";
-        /*$fh = fopen($myFile, 'w') or die("can't open file");
+        unlink($myFile);
+        /*
+         * $fh = fopen($myFile, 'w') or die("can't open file");
         foreach($dbdata as $row){
             fwrite($fh,$row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company']);
         }*/
         $file = fopen($myFile, "a");
+        //delete old one
+
         foreach($dbdata as $row){
             fputs($file, $row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company']."\r\n");
         }
