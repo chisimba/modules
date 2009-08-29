@@ -111,7 +111,7 @@ $fileSelect = new textinput('pofile',null,'file');
 
 $objButton = new button("im_but",$this->objLanguage->languageText('word_import'));
 $objButton->setToSubmit();
-$objButton->extra = "disabled='true'";
+//$objButton->extra = "disabled='false'";
 
 $MAX_FILE_SIZE_input = new textinput('MAX_FILE_SIZE','10000000','hidden');
 
@@ -149,7 +149,7 @@ $objForm->addRule('pofile',$this->objLanguage->languageText("mod_translate_filer
 $import = $objH2->show().$objForm->show();
 
 
-$strLang = "$export<hr /><span class='error'>IMPORT FUNCTIONALITY NOT YET COMPLETE</span>$import";
+$strLang = "$export<hr /><span class='error'></span>$import";
 // generate content
 $content = $objH->show().$confirm."<hr />".$strLang;
 

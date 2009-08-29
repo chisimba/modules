@@ -81,6 +81,10 @@ class translate extends controller
                     // english language table is incorrectly entered as tbl_english instead of tbl_en
                     if ($lang['id'] == "1") {
                         $lang['languagecode'] = 'tbl_en';
+                        // if the language table is swahili
+                        if ($lang['id'] =="gen17Srv38Nme37_2172_1251353289") {
+                        $lang['languagecode'] = 'tbl_ks';
+                        }
                     }
                     
                     $type = $this->getParam('exportSelection');
