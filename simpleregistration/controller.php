@@ -276,7 +276,7 @@ class simpleregistration extends controller {
        $dbdata=$reg->getRegistrations($eventid);
        $stringData='';
        foreach($dbdata as $row){
-           $stringData.=$row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company'];
+           $stringData.=$row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company'].'\n';
        }
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $downloadfolder=$objSysConfig->getValue('DOWNLOAD_FOLDER', 'simpleregistration');
@@ -349,24 +349,10 @@ class simpleregistration extends controller {
      */
     public function requiresLogin() {
         switch ($this->getParam('action')) {
-            case 'home':
+            case 'showevent':
+                return FALSE;
+             default:
                 return TRUE;
-            case 'memberlist':
-                return TRUE;
-            case 'xls':
-                return TRUE;
-               case 'eventlisting':
-                return TRUE;
-                case 'register':
-                return TRUE;
-                case 'eventlisting':
-                    return TRUE;
-                    case 'savecontent':
-                        return TRUE;
-                        case 'expresssignin':
-                            return TRUE;
-                            default:
-                                return FALSE;
-                            }
-                        }
-                    }
+            }
+     }
+   }
