@@ -28,7 +28,7 @@ class simpleregistrationutils extends object{
             exit;
         };
 
-        return '<h1><a href="'.$codebase.$downloadfolder.'listing.xls">Click here to download file here</a></h1><br/>'.$homeUrl->show();
+        return '<h1><a href="'.$codebase.$downloadfolder.'listing.xls">Click here to download file</a></h1><br/>'.$homeUrl->show();
 
         
     }
