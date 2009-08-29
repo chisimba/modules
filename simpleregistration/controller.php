@@ -270,14 +270,12 @@ class simpleregistration extends controller {
         $reg->deleteMember($id);
         $this->nextAction('memberlist');
     }
-     function __xls(){
-       $eventid=$this->getParam('eventid');
-       $reg = $this->getObject('dbregistration');
-       $dbdata=$reg->getRegistrations($eventid);
-       $stringData='';
-       foreach($dbdata as $row){
-           $stringData.=$row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company'].'\n';
-       }
+    function __xls(){
+        $eventid=$this->getParam('eventid');
+        $reg = $this->getObject('dbregistration');
+        $dbdata=$reg->getRegistrations($eventid);
+        $stringData='';
+
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $downloadfolder=$objSysConfig->getValue('DOWNLOAD_FOLDER', 'simpleregistration');
 
@@ -285,8 +283,10 @@ class simpleregistration extends controller {
 
         $myFile = $docRoot."listing.xls";
         $fh = fopen($myFile, 'w') or die("can't open file");
-        
-        fwrite($fh, $stringData);
+        foreach($dbdata as $row){
+            fwrite($fh,$row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company']);
+        }
+      
         fclose($fh);
 
         $this->nextAction('download');
@@ -351,8 +351,8 @@ class simpleregistration extends controller {
         switch ($this->getParam('action')) {
             case 'showevent':
                 return FALSE;
-             default:
-                return TRUE;
+                default:
+                    return TRUE;
+                }
             }
-     }
-   }
+        }
