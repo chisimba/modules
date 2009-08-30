@@ -109,23 +109,13 @@ class ads extends controller {
     }
 
     function __searchusers(){
-        $filter= $this->getParam('query');
-        return $this->objDocumentStore->getUsers($filter);
+        $val= $this->getParam('query');
+        $start= $this->getParam('start');
+        $limit= $this->getParam('limit');
+        return $this->objDocumentStore->getUsers($val,$start,$limit);
     }
 
-    public function output($o = null, $contentType = "application/json; charset=utf-8") {
-        $o = $o ? $o : $this->o;
-        //$buff = json_encode($o);
-        $buff='{"success":true,"totalCount":15,"rows":[
-           {"persID":"1","persFirstName":"Joe","persMidName":"F.","persLastName":"Doe"},
-           {"persID":"2","persFirstName":"John","persMidName":"J.","persLastName":"Smith"},
-           {"persID":"3","persFirstName":"Jack","persMidName":"Lee","persLastName":"Jones"},
-           {"persID":"4","persFirstName":"Mary","persMidName":"Ann","persLastName":"Drake"},
-           {"persID":"5","persFirstName":"Ann","persMidName":"C.","persLastName":"Smith"}]}';
-        header("Content-Type: {$contentType}");
-        header("Content-Size: " . strlen($buff));
-        echo $buff;
-    }
+  
 
     function __reviewcourseproposal(){
         return "reviewcourseproposal_tpl.php";
