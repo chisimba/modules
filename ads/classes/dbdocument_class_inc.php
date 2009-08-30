@@ -172,7 +172,7 @@ class dbdocument extends dbtable{
         return $data[0]['status'];
     }
     public function getUsers($filter="a"){
-
+//username,surname,firstname
         $sql="select * from tbl_users where username like '".$filter."%'";
         $rows=$this->getArray($sql);
         $buff=
@@ -180,7 +180,7 @@ class dbdocument extends dbtable{
         $c=0;
         $total=count($rows);
         foreach($rows as $row){
-            $buff.='{"userID":"'.$row['userid'].'","username":"'.$row['username'].'","firstname":"'.$row['surname'].'","lastname":"'.$row['lastname'].'","email":"'.$row['email'].'"}';
+            $buff.='{"userID":"'.$row['userid'].'","username":"'.$row['username'].'","firstname":"'.$row['surname'].'","lastname":"'.$row['firstname'].'","email":"'.$row['emailAddress'].'"}';
             $c++;
             if($c < $total){
                 $buff.=",";

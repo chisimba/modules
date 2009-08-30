@@ -30,7 +30,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
     ,
     stateful:false
     ,
-    url:'http://localhost/chisimba/?module=ads&action=searchusers'
+    url:'http://kim.wits.ac.za/?module=ads&action=searchusers'
     ,
     objName:'username'
     ,
