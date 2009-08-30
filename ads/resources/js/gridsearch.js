@@ -18,10 +18,10 @@
 /*global Ext, Example, WebPage, window */
  
 Ext.ns('Example', 'WebPage');
-Ext.BLANK_IMAGE_URL = './ext/resources/images/default/s.gif';
+Ext.BLANK_IMAGE_URL = location.href+'/core_modules/htmlelements/ext/resources/ext-3.0-rc2/resources/images/default/s.gif';
 Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 Example.version = '1.1';
- 
+
 // {{{
 Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
     layout:'fit'
@@ -30,12 +30,11 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
     ,
     stateful:false
     ,
-    url:'http://kim.wits.ac.za/?module=ads&action=searchusers'
+    url:location.href+"?module=ads&action=searchusers"
     ,
     objName:'username'
     ,
     idName:'userID'
-
     ,
     height:350,
     initComponent:function() {
@@ -90,17 +89,16 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 proxy:new Ext.data.HttpProxy({
                     url:this.url
-                    })
+                })
                 ,
                 baseParams:{
                     cmd:'getData',
                     objName:this.objName
-                    }
+                }
                 ,
                 remoteSort:true
             })
-            // }}}
-            // {{{
+
             ,
             columns:[{
                 header:'username'
@@ -112,6 +110,8 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 width:100
                 ,
                 sortable:true
+                ,
+                editable:false
                 ,
                 editor:new Ext.form.TextField({
                     allowBlank:false
@@ -125,8 +125,9 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 sortable:true
                 ,
-                
-               editor:new Ext.form.TextField({
+                editable:false
+                ,
+                editor:new Ext.form.TextField({
                     allowBlank:false
                 })
             },{
@@ -138,7 +139,9 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 sortable:true
                 ,
-                 editor:new Ext.form.TextField({
+                editable:false
+                ,
+                editor:new Ext.form.TextField({
                     allowBlank:false
                 })
             },{
@@ -150,11 +153,16 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 sortable:true
                 ,
+                editable:false
+                ,
                 editor:new Ext.form.TextField({
                     allowBlank:false
                 })
-            }, this.rowActions]
-            // }}}
+            }, 
+            
+            this.rowActions
+            ]
+            
             ,
             plugins:[new Ext.ux.grid.Search({
                 iconCls:'icon-zoom'
@@ -174,20 +182,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
             }
             ,
             
-            tbar:[{
-                text:'Add Record'
-                ,
-                iconCls:'icon-plus'
-                ,
-                listeners:{
-                    scope:this
-                    ,
-                    click:{
-                        fn:this.addRecord,
-                        buffer:200
-                    }
-                }
-            }]
+            tbar:[]
         }); // eo apply
 
         this.bbar = new Ext.PagingToolbar({
@@ -224,7 +219,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 start:0,
                 limit:10
             }
-            });
+        });
 
     } // eo function onRender
     // }}}
@@ -236,8 +231,9 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
 
     ,
     onRowAction:function(grid, record, action, row, col) {
+        
         switch(action) {
-            case 'icon-minus':
+            case 'email':
                 this.deleteRecord(record);
                 break;
 
@@ -371,7 +367,7 @@ function showSearchWinX(){
     // create and show window
     var win;
     //if(!win){
-     win = new Ext.Window({
+    win = new Ext.Window({
         id:'combo-win'
         ,
         title:'Search users'
@@ -397,32 +393,40 @@ function showSearchWinX(){
             ,
            
             items:[
-                {xtype:'examplegrid1', id:'examplegrid1'}
+            {
+                xtype:'examplegrid1',
+                id:'examplegrid1'
+            }
             ]
         },
 
         buttons:[{
-                text:'Save'
-                ,
-                iconCls:'icon-disk'
-                ,
-                scope:this
-                ,
-                handler:this.commitChanges
-              },{
-                text:'Close'
-                ,
-                iconCls:'icon-undo'
-                ,
-                scope:this
-                ,
-                handler:function() {
-                    //this.store.rejectChanges();
-                    win.hide();
-                   window.location.reload(true);
-                   Ext.MessageBox.alert('Please wait...');
-                }
-            }]
+            text:'Forward'
+            ,
+            iconCls:'icon-disk'
+            ,
+            scope:this
+            ,
+            handler:function() {
+                //this.store.rejectChanges();
+                win.hide();
+                window.location.reload(true);
+                Ext.MessageBox.alert('Please wait...');
+            }
+        },{
+            text:'Close'
+            ,
+            iconCls:'icon-undo'
+            ,
+            scope:this
+            ,
+            handler:function() {
+                //this.store.rejectChanges();
+                win.hide();
+                window.location.reload(true);
+                Ext.MessageBox.alert('Please wait...');
+            }
+        }]
             
     });
     //}
