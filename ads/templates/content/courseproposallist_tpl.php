@@ -29,6 +29,15 @@ $lastEdit = $this->objLanguage->languageText('mod_ads_lastedit', 'ads');
 $edit = $this->objLanguage->languageText('mod_ads_edit', 'ads');
 $faculty = $this->objLanguage->languageText('mod_ads_faculty', 'ads');
 
+$statuscodes=  array(
+              "0"=> 'New',
+              "1"=>'APO Comment',
+              "2"=>'Library comment',
+              "3"=>'Subsidy comment',
+              "4"=>'Faculty subcommittee',
+              "5"=>'Faculty',
+              "6"=> 'APDC');
+
 $addButton = new button('add','Add Proposal');
 $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
 //$addButton->setOnClick("window.location='$returnUrl'");
@@ -67,7 +76,7 @@ $reviewLink=new link();
 $commentLink=new link();
 
 $data = "";
-$numberOfRows = $this->objCourseProposals->getNumberOfCourses();
+$numberOfRows = $this->objCourseProposals->getNumberOfCourses($this->objUser->userId());
 
 foreach($courseProposals as $value) {
     $verarray = $this->objDocumentStore->getVersion($value['id'], $this->objUser->userId());
@@ -75,60 +84,43 @@ foreach($courseProposals as $value) {
     $titleLink->link=$value['title'];
 
     $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$value['id'], 'status'=>$value['status'])));
-    switch($value['status']) {
-        case 0: $statusLink->link='New';
-            break;
-        case 1: $statusLink->link='APO Comment';
-            break;
-        case 2: $statusLink->link='Library comment';
-            break;
-        case 3: $statusLink->link='Subsidy comment';
-            break;
-            case 4: $statusLink->link='Faculty subcommittee';
-                break;
-                case 5: $statusLink->link='Faculty';
-                    break;
-                    case 6: $statusLink->link='APDC';
-                        break;
-                        default: $statusLink->link= 'New';
-                        }
-                        
-                        $deleteLink->link("#");
-                        $editLink->link($this->uri(array('action'=>'editcourseproposal','id'=>$value['id'])));
+    $statusLink->link=$statuscodes[$value['status']];
+    $deleteLink->link("#");
+    $editLink->link($this->uri(array('action'=>'editcourseproposal','id'=>$value['id'])));
 
-                        //review
-                        $reviewLink->link($this->uri(array('action'=>'reviewcourseproposal','id'=>$value['id'])));
+    //review
+    $reviewLink->link($this->uri(array('action'=>'reviewcourseproposal','id'=>$value['id'])));
 
-                        $data .= "['".$titleLink->show();
+    $data .= "['".$titleLink->show();
 
 
-                        $data .= "',";
-                        $data .= "'".$value['creation_date']."',";
-                        $data .= "'".$this->objUser->fullname($value['userid'])."',";
-                        $data .= "'".$statusLink->show()."',";
-                      //  $data .= "'".$verarray['version'] .".00',";
+    $data .= "',";
+    $data .= "'".$value['creation_date']."',";
+    $data .= "'".$this->objUser->fullname($value['userid'])."',";
+    $data .=$this->objUser->isAdmin()? "'".$statusLink->show()."',":"'".$statuscodes[$value['status']]."',";
+    
 
-                        $tmpID = $this->objDocumentStore->getUserId($verarray['currentuser']);
-                        $name = $this->objUser->fullname($tmpID);
-                        //$data .= "'".$name."',";
+    $tmpID = $this->objDocumentStore->getUserId($verarray['currentuser']);
+    $name = $this->objUser->fullname($tmpID);
+    //$data .= "'".$name."',";
 
-                        $objIcon->setIcon('delete');
-                        $objIcon->extra = "id=\"deleteBtn\"";
-                        $deleteLink->link=$objIcon->show();
-                        $data .= "'".$deleteLink->show();
+    $objIcon->setIcon('delete');
+    $objIcon->extra = "id=\"deleteBtn\"";
+    $deleteLink->link=$objIcon->show();
+    $data .= "'".$deleteLink->show();
 
-                        $objIcon->setIcon('edit');
-                        $editLink->link=$objIcon->show();
-                        $data .= $editLink->show();
+    $objIcon->setIcon('edit');
+    $editLink->link=$objIcon->show();
+    $data .= $editLink->show();
 
-                        $objIcon->setIcon('view');
-                        //$objIcon->setAlt('review');
-                        $reviewLink->link=$objIcon->show();
-                        //$data .= $reviewLink->show();
-                        //$objIcon->resetAlt();
+    $objIcon->setIcon('view');
+    //$objIcon->setAlt('review');
+    $reviewLink->link=$objIcon->show();
+    //$data .= $reviewLink->show();
+    //$objIcon->resetAlt();
 
-                        if (strcmp($this->objUser->fullname($verarray['currentuser']),'Administrative User') == 0) {
-                            $commentLink->link($this->uri(array('action'=>'addcomment',
+    if ($this->objUser->isAdmin()) {
+        $commentLink->link($this->uri(array('action'=>'addcomment',
                                                 'id'=>$value['id'],
                                                 'title'=>$value['title'],
                                                 'date'=>$value['creation_date'],
@@ -136,19 +128,19 @@ foreach($courseProposals as $value) {
                                                 'status'=>$status,
                                                 'version'=>$verarray['version'],
                                                 'lastedit'=>$this->objUser->fullname($verarray['currentuser']))));
-                            $objIcon->setIcon('comment');
-                            $commentLink->link = $objIcon->show();
-                            $data .= $commentLink->show();
-                        }
-                        $data .= "',";
+        $objIcon->setIcon('comment');
+        $commentLink->link = $objIcon->show();
+        $data .= $commentLink->show();
+    }
+    $data .= "',";
 
-                        $data .= "'".$value['faculty']."'";
-                        $data .= "]";
-                        if($value['puid'] != $numberOfRows) {
-                            $data .= ",";
-                        }
+    $data .= "'".$value['faculty']."'";
+    $data .= "]";
+    if($value['puid'] != $numberOfRows) {
+        $data .= ",";
+    }
 
-                    }
+}
 $faculty = $objLanguage->languageText('mod_ads_faculty','ads');
 $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
 $submitUrl = $this->uri(array('action'=>'savecourseproposal'));
@@ -289,10 +281,10 @@ $mainjs = "/*!
                             {header: \"".$faculty."\", width: 100, dataIndex: 'faculty'},
                             //{header: \"".$lastEdit."\", width: 50, dataIndex: 'lastEdit'},
                             ";
-                            if($this->objUser->isAdmin()) {
-                                $mainjs .= "{header: \"".$edit."\", width: 70, dataIndex: 'edit'}";
-                            }
-                            $mainjs .="
+if($this->objUser->isAdmin()) {
+    $mainjs .= "{header: \"".$edit."\", width: 70, dataIndex: 'edit'}";
+}
+$mainjs .="
                         ],
 
                         view: new Ext.grid.GroupingView({
@@ -305,7 +297,7 @@ $mainjs = "/*!
                         height: 450,
                         collapsible: true,
                         animCollapse: false,
-                       
+
                         renderTo: 'grouping-grid'
                     });
                 });
@@ -316,7 +308,7 @@ $mainjs = "/*!
                   ".$faculties."
                   ".$proposalForm."
                   ".$addProposalWindowJS."
-               
+
                ";
 
 $delBtnjs = "
@@ -346,10 +338,10 @@ function goDelete(url) {
     window.location.href = url;
 }";
 
-                    echo "<script type=\"text/javascript\">".$mainjs.$delBtnjs."</script>";
-                    $tooltipHelp =& $this->getObject('tooltip','htmlelements');
-                    $tooltipHelp->setCaption('Help');
-                    $tooltipHelp->setText('Some help text...');
-                    $tooltipHelp->setCursor('help');
-                    echo $tooltipHelp->show();
+echo "<script type=\"text/javascript\">".$mainjs.$delBtnjs."</script>";
+$tooltipHelp =& $this->getObject('tooltip','htmlelements');
+$tooltipHelp->setCaption('Help');
+$tooltipHelp->setText('Some help text...');
+$tooltipHelp->setCursor('help');
+echo $tooltipHelp->show();
 ?>

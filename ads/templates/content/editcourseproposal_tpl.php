@@ -40,6 +40,38 @@
     $courseData = $this->objCourseProposals->getCourseProposal($this->id);
     $facultyVal = $courseData['faculty'];
     $unitNameVal = $courseData['title'];
+$faculties=
+    "
+var faculties= [
+        ['Commerce, Law and Management'],
+        ['Engineering and the Built Environment'],
+        ['Health Sciences'],
+        ['Humanities'],
+        ['Science']
+      ]
+
+   var facutlystore = new Ext.data.ArrayStore({
+        fields: ['faculty'],
+        data : faculties
+    });
+    var facultyField = new Ext.form.ComboBox({
+        store: facutlystore,
+        displayField:'faculty',
+        fieldLabel:'Faculty',
+        typeAhead: true,
+        mode: 'local',
+        editable:false,
+        allowBlank: false,
+        value:'".$facultyVal."',
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select faculty...',
+        selectOnFocus:true,
+        name : 'faculty'
+
+    });
+";
+
 
     $script = "
     Ext.onReady(function(){
@@ -56,12 +88,9 @@
             defaults: {width: 230},
             defaultType: 'textfield',
 
-            items: [{
-                    fieldLabel: '".$faculty."',
-                    name: 'faculty',
-                    value: '".$facultyVal."',
-                    allowBlank: false
-                },{
+            items: [
+                    facultyField,
+                    {
                     fieldLabel: '".$unitName."',
                     name: 'title',
                     value: '".$unitNameVal."',
@@ -90,5 +119,5 @@
 
         simple.render('courseProposal');
     });";
-    echo '<script type="text/javascript">'.$script.'</script>';
+    echo '<script type="text/javascript">'.$faculties.$script.'</script>';
 ?>

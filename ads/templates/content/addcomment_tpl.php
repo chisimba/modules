@@ -3,7 +3,7 @@
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('textarea','htmlelements');
 
-$courseID = $this->getParam('id');
+
 $courseProposal = $this->objCourseProposals->getCourseProposal($_POST['id']);
 $verarray = $this->objDocumentStore->getVersion($courseProposal['id'], $this->objUser->userId());
 
@@ -45,7 +45,7 @@ $txtComment = new textarea('admComment','',10,110);
 $submit = new button('submitbutton','Submit');
 $submit->setToSubmit();
 
-$frmComment = new form('Commentform',$this->uri(array('action'=>'savecomment','id'=>$courseID)));
+$frmComment = new form('Commentform',$this->uri(array('action'=>'savecomment','tmpid'=>$tmpcourseid)));
 $frmComment->addToForm($txtComment->show().'<br>');
 $frmComment->addToForm($submit->show());
 

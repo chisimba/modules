@@ -18,6 +18,7 @@ $objHead->type=1;
 $objHead->str=$title;;
 
 $nav = $this->getObject('nav', 'ads');
+
 //Set the content of the left side column
 $leftSideColumn = $nav->getLeftContent();
 // Add Left column
