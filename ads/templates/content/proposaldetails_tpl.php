@@ -54,7 +54,7 @@ $submitForm = new link($this->uri(array('action'=>'submitproposal','courseid'=>$
 $submitUrl = new link($this->uri(array('action'=>'sendProposal','edit'=>true,'id'=>$this->id)));
 $addCommentUrl = new link($this->uri(array('action'=>'addcomment','courseid'=>$this->id)));
 $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>$this->id)));
-$searchusers = new link($this->uri(array('action'=>'searchusers')));
+$searchusers =$this->uri(array('action'=>'searchusers'));
 $currentEditor=$this->objDocumentStore->getCurrentEditor($this->id);
 $maxVersion=$this->objDocumentStore->getMaxVersion($this->id);
 $lastEditDate=$this->objDocumentStore->getLastEditDate($this->id);
@@ -193,7 +193,8 @@ var form = new Ext.form.FormPanel({
     var searchUsersWin;
     var updateStatusWin;
     var button = Ext.get('action-btn');
-    button.on('click', function(){
+//    button.on('click', function(){
+function processActionDD(){
  var actiondd = document.getElementById('actiondd').value;
 
   if(actiondd == \"addcomment\"){
@@ -524,7 +525,7 @@ showSearchWinX();
 
  win.show();*/
 }//end if
-});
+};
 ";
 
 
@@ -556,10 +557,13 @@ $renderSurface='
         <div id="search-xwin" class="x-hidden">
         <div class="x-window-header">Search</div>
         </div>
+
+     
 ';
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
-$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$actionButton->show().$content.'</div';
+$actionsDropDown->addOnChange('processActionDD();');
+$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$content.'<div id="bbbbb">dsdss</div></div';
 
 // Create an instance of the css layout class
 $cssLayout = $this->newObject('csslayout', 'htmlelements');// Set columns to 2
