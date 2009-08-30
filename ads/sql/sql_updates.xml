@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <update>
+        <table>tbl_ads_course_comments</table>
+        <version>0.056</version>
+        <description>Added the status field</description>
+        <data>
+        	<add>
+    			<name>status</name>
+		    	<type>text</type>
+    			<length>32</length>
+		</add>
+		
+	</data>
+	
+    </update>
+</updates>
