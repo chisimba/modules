@@ -32,7 +32,10 @@ class dbcourseproposals extends dbTable{
 
     public function getCourseProposals($userid)
     {
-        $sql="select * from " .$this->table." where deleteStatus <> 1";//." where userid = '".$userid."'";
+        $sql="select distinct cp.* from tbl_ads_course_proposals cp,tbl_ads_documentstore ds
+where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$this->objUser->email()."')
+     and cp.id=ds.coursecode ";
+
         $rows=$this->getArray($sql);
         return $rows;
     }
@@ -45,19 +48,19 @@ class dbcourseproposals extends dbTable{
 
     public function changeTitle($id,$newtitle)
     {
-	$newtitle = addslashes($newtitle);
-	$sql="update ".$this->table." set title='$newtitle' where id = '$id';";
-	$this->_execute($sql);
+        $newtitle = addslashes($newtitle);
+        $sql="update ".$this->table." set title='$newtitle' where id = '$id';";
+        $this->_execute($sql);
     }
-    
+
     public function courseExists($id) {
-      $course = $this->getCourseProposal($id);
-      if (count($course) == 0) {
-        return false;
-      }
-      else {
-        return true;
-      }
+        $course = $this->getCourseProposal($id);
+        if (count($course) == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     public function updateProposalStatus($id, $status) {
