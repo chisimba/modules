@@ -171,16 +171,19 @@ class dbdocument extends dbtable{
 
         return $data[0]['status'];
     }
-    public function getUsers($filter="a"){
-//username,surname,firstname
-        $sql="select * from tbl_users where username like '".$filter."%'";
+    public function getUsers($value,$start,$limit){
+        if($value == ''){
+            $value='a';
+        }
+        $sql="select * from tbl_users where (username like '".$value."%' or surname like '".$value."%' or firstname like '".$value."%')  limit ".$start.",".$limit;
         $rows=$this->getArray($sql);
+        
         $buff=
         '{"success":true,"totalCount":'.count($rows).',"rows":[';
         $c=0;
         $total=count($rows);
         foreach($rows as $row){
-            $buff.='{"userID":"'.$row['userid'].'","username":"'.$row['username'].'","firstname":"'.$row['surname'].'","lastname":"'.$row['firstname'].'","email":"'.$row['emailAddress'].'"}';
+            $buff.='{"userID":"'.$row['userid'].'","username":"'.$row['username'].'","firstname":"'.$row['surname'].'","lastname":"'.$row['firstname'].'","email":"'.$row['emailaddress'].'"}';
             $c++;
             if($c < $total){
                 $buff.=",";
