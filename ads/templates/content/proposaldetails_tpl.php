@@ -65,6 +65,7 @@ $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>
 $homeUrl = $this->uri(array('action'=>'home'));
 $comments= $this->objComment->getAllcomments($this->id);
 
+$showCoursePropHistUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id));
 $items = "{boxLabel: 'New', name: 'proposalstatus', inputValue: '0'";
 if($courseProposal['status'] == 0) {
     $items .= ", checked: true";
@@ -229,13 +230,14 @@ function processActionDD(){
                     text: 'Cancel',
                     handler: function(){
                        addCommentsWin.hide();
+
                     }
                   }
                 ]
 
             });
         }
-       
+
         addCommentsWin.show(this);
       }
 
@@ -269,6 +271,7 @@ function processActionDD(){
                     text: 'Cancel',
                     handler: function(){
                        updateStatusWin.hide();
+                        window.location.href = '".str_replace("amp;", "",$showCoursePropHistUrl)."';
                     }
                   }
                 ]
@@ -318,7 +321,7 @@ $renderSurface='
         <div class="x-window-header">Search</div>
         </div>
 
-     
+
 ';
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
@@ -326,12 +329,12 @@ $actionsDropDown->addOnChange('processActionDD();');
 $renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'</div';
 
 $render='<div id="onecolumn">
-					<div id="content">
-					<div id="contentcontent">
-					'.$renderContent.'
-					</div>
-					</div>
-					</div>';
+                    <div id="content">
+                    <div id="contentcontent">
+                    '.$renderContent.'
+                    </div>
+                    </div>
+                    </div>';
 
 echo $render;
 ?>
