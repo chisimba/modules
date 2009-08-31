@@ -62,6 +62,7 @@ $status=$this->objDocumentStore->getStatus($this->id);
 $iscurrentEdit=$this->objDocumentStore->isCurrentEditor($currentEditor);
 $courseProposal=$this->objCourseProposals->getCourseProposal($this->id);
 $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>$this->id,'status'=>$courseProposal['status'])));
+$homeUrl = $this->uri(array('action'=>'home'));
 $comments= $this->objComment->getAllcomments($this->id);
 
 $items = "{boxLabel: 'New', name: 'proposalstatus', inputValue: '0'";
@@ -112,7 +113,7 @@ $mainjs=
 "
     var wform = new Ext.form.FormPanel({
         baseCls: 'x-plain',
-        width:550,
+        width:750,
         labelWidth: 135,
         bodyStyle:'padding:5px 5px 0',
         standardSubmit: true,
@@ -120,7 +121,7 @@ $mainjs=
         defaultType: 'textfield',
         renderTo: 'surface',
         collapsible: true,
-        defaults: {width: 550},
+        defaults: {width: 750},
         bodyStyle:'background-color:transparent',
         border:false,
         items: {
@@ -192,8 +193,10 @@ var form = new Ext.form.FormPanel({
     var addCommentsWin;
     var searchUsersWin;
     var updateStatusWin;
-    var button = Ext.get('action-btn');
-//    button.on('click', function(){
+    var button = Ext.get('back-btn');
+    button.on('click', function(){
+     window.location.href = '".str_replace("amp;", "",$homeUrl)."';
+    });
 function processActionDD(){
  var actiondd = document.getElementById('actiondd').value;
 
@@ -203,7 +206,7 @@ function processActionDD(){
                 applyTo:'addcomments-win',
                 layout:'fit',
                 title:'Enter Comments',
-                width:500,
+                width:800,
                 height:300,
                 x:250,
                 y:50,
@@ -299,8 +302,8 @@ $actionsDropDown->addOption('updatestatus','Update Status');
 $actionsDropDown->addOption('forward','Forward');
 $actionsDropDown->addOption('forwardtomoderator','Forward to moderator');
 
-$actionButton = new button('action','Take Action');
-$actionButton->setId('action-btn');
+$backButton = new button('back','Back');
+$backButton->setId('back-btn');
 $content = $message;
 $renderSurface='
         <div id="addcomments-win" class="x-hidden">
@@ -320,7 +323,7 @@ $renderSurface='
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 $actionsDropDown->addOnChange('processActionDD();');
-$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$content.'</div';
+$renderContent='<div>'.$actionsDropDown->show().'&nbsp;'.$backButton->show().'<br/>'.$content.'</div';
 
 // Create an instance of the css layout class
 $cssLayout = $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -339,5 +342,14 @@ $cssLayout->setLeftColumnContent($leftSideColumn);
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
-echo $cssLayout->show();
+//echo $cssLayout->show();
+$render='<div id="onecolumn">
+					<div id="content">
+					<div id="contentcontent">
+					'.$renderContent.'
+					</div>
+					</div>
+					</div>';
+//echo '<center>'.$render.'</center>';
+echo $render;
 ?>
