@@ -46,7 +46,8 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 qtip:'Delete Record'
                 ,
-                
+                fieldLabel:'Forward'
+                ,
                 style:'margin:0 0 0 3px'
             }]
         });
@@ -107,7 +108,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 dataIndex:'username'
                 ,
-                width:100
+                width:200
                 ,
                 sortable:true
                 ,
@@ -121,7 +122,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 dataIndex:'firstname'
                 ,
-                width:150
+                width:200
                 ,
                 sortable:true
                 ,
@@ -135,7 +136,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 dataIndex:'lastname'
                 ,
-                width:150
+                width:200
                 ,
                 sortable:true
                 ,
@@ -149,7 +150,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 dataIndex:'email'
                 ,
-                width:100
+                width:200
                 ,
                 sortable:true
                 ,
@@ -373,7 +374,7 @@ function showSearchWinX(){
         title:'Search users'
         
         ,
-        width:500
+        width:700
         ,
         height:350
         ,
