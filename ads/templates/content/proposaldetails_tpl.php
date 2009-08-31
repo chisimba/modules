@@ -230,7 +230,7 @@ function processActionDD(){
                     text: 'Cancel',
                     handler: function(){
                        addCommentsWin.hide();
-
+                        window.location.href = '".str_replace("amp;", "",$showCoursePropHistUrl)."';
                     }
                   }
                 ]
