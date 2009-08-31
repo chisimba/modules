@@ -21,7 +21,7 @@ Ext.onReady(function(){
             {name: 'email', mapping: 'email'}
         ]),
 
-        baseParams: {limit:10, userId: 1}
+        baseParams: {limit:20, userId: 1}
     });
 
     // Custom rendering Template for the View
@@ -38,7 +38,7 @@ Ext.onReady(function(){
      
         height:300,
         autoScroll:true,
-
+        bodyCssClass:  'search-item',
         items: new Ext.DataView({
             tpl: resultTpl,
             store: ds,
@@ -79,7 +79,7 @@ function showSearchWinX(){
         ,x:200
         ,y: 100
         ,
-        height:350
+        height:400
         ,
         closable:false
         ,
@@ -104,19 +104,6 @@ function showSearchWinX(){
         },
 
         buttons:[{
-            text:'Forward'
-            ,
-            iconCls:'icon-disk'
-            ,
-            scope:this
-            ,
-            handler:function() {
-                //this.store.rejectChanges();
-                win.hide();
-                window.location.reload(true);
-                Ext.MessageBox.alert('Please wait...');
-            }
-        },{
             text:'Close'
             ,
             iconCls:'icon-undo'

@@ -19,16 +19,59 @@ $searchfieldjs = '<script language="JavaScript" src="'.$this->getResourceUri('js
 $rowactionsjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/Ext.ux.grid.RowActions.js').'" type="text/javascript"></script>';
 $gridsearchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/LiveSearch.js').'" type="text/javascript"></script>';
 $styleSheet="
-    <style type=\"text/css\">
-        .x-check-group-alt {
-            background: #D1DDEF;
-            border-top:1px dotted #B5B8C8;
-            border-bottom:1px dotted #B5B8C8;
+   <style type=\"text/css\">
+.search-item {
+    font:normal 11px tahoma, arial, helvetica, sans-serif;
+    padding:3px 10px 3px 10px;
+    border:1px solid #fff;
+    border-bottom:1px solid #eeeeee;
+    white-space:normal;
+    color:#555;
+    background:white
+}
+.search-item h3 {
+    display:block;
+    font:inherit;
+    font-weight:bold;
+    color:#222;
+
+}
+
+.search-item h3 span {
+    float: right;
+    font-weight:normal;
+    margin:0 0 5px 5px;
+    width:100px;
+    display:block;
+    clear:none;
+
+}
+        #search-results a {
+            color: #385F95;
+            font:bold 11px tahoma, arial, helvetica, sans-serif;
+            text-decoration:none;
         }
-        div#myForm {
-            padding: 0 3em;
+        #search-results a:hover {
+            text-decoration:underline;
+        }
+        #search-results .search-item {
+            padding:5px;
+        }
+        #search-results p {
+            margin:3px !important;
+        }
+        #search-results {
+            border-bottom:1px solid #ddd;
+            margin: 0 1px;
+            height:300px;
+            overflow:auto;
+           background:#ffffff;
+        }
+        #search-results .x-toolbar {
+            border:0 none;
         }
     </style>
+
     ";
 $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
