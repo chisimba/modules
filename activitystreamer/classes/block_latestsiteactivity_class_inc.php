@@ -86,8 +86,8 @@ class block_latestsiteactivity extends object
     {
     	
         $this->objLanguage = $this->getObject('language', 'language');
-        
-        $this->title = $this->objLanguage->languageText('mod_activitystreamer_latestactivity', 'activitystreamer', 'Latest Activty');
+        $this->objDBActivities = $this->getObject('activitydb');
+        $this->title = $this->objLanguage->languageText('mod_activitystreamer_latestactivity', 'activitystreamer', 'Latest Activities');
     }
     /**
      * Standard block show method.
@@ -96,7 +96,21 @@ class block_latestsiteactivity extends object
      */
     public function show() 
     {
-        return '<div id="siteactivity">Latest activity goes here ...</div>';
+    	//gets the 10 latest entries
+    	$recs = $this->objDBActivities->getSiteActivities();
+    	//var_dump($recs);
+    	$str = "";
+    	if(count($recs) > 0)
+    	{
+    		foreach($recs as $rec)
+    		{
+    			$str .="<div>".$rec['title']."</div>";
+    		}
+    		return $str;
+    	} else {
+    		return '<span class="subdued">No activities logged</span>';
+    	}
+        return "Latest course activity goes here ...";
     }
 }
 ?>

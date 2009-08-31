@@ -48,6 +48,13 @@ class activitydb extends dbTable
        
     }
     
+    /**
+     * Insert an activity to the database
+     *
+     * @param object $notification
+     * @return string
+     */
+    
     public function insertPost($notification)
     {
     	
@@ -67,6 +74,23 @@ class activitydb extends dbTable
             ));
             
        return $messageId;
+    }
+    
+    /**
+     * Get the latest activities
+     *
+     * @param unknown_type $limit
+     * @return unknown
+     */
+    public function getActivities($filter = null, $limit = 10)
+    {
+    	return $this->getAll("$filter limit $limit");
+    }
+    
+    public function getSiteActivities($limit = 10)
+    {
+    	$filter = "WHERE isNull(contextcode)";
+    	return $this->getActivities($filter, $limit);
     }
     
 }

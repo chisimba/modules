@@ -86,7 +86,7 @@ class block_latestcontextactivity extends object
     {
     	
         $this->objLanguage = $this->getObject('language', 'language');
-        
+        $this->objDBActivities = $this->getObject('activitydb');
         $this->title = $this->objLanguage->languageText('mod_activitystreamer_latestactivity', 'activitystreamer', 'Latest Course Activity');
     }
     /**
@@ -96,6 +96,14 @@ class block_latestcontextactivity extends object
      */
     public function show() 
     {
+    	//gets the 10 latest entries
+    	$recs = $this->objDBActivities->getActivities();
+    	if(!count($recs) > 0)
+    	{
+    		
+    	} else {
+    		return '<span class="subdued">No activities logged</span>';
+    	}
         return "Latest course activity goes here ...";
     }
 }
