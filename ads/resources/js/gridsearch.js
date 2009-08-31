@@ -1,22 +1,7 @@
-// vim: sw=4:ts=4:nu:nospell:fdc=4
-/**
- * Ext.ux.grid.Search Plugin Example Application
- *
- * @author    Ing. Jozef Sakáloš
- * @copyright (c) 2008, by Ing. Jozef Sakáloš
- * @date      5. April 2008
- * @version   $Id: gridsearch.js 62 2008-04-30 22:36:42Z jozo $
- *
- * @license gridsearch.js is licensed under the terms of the Open Source
- * LGPL 3.0 license. Commercial use is permitted to the extent that the 
- * code/component(s) do NOT become part of another Open Source or Commercially
- * licensed development library or toolkit without explicit permission.
- * 
- * License details: http://www.gnu.org/licenses/lgpl.html
- */
+
  
 /*global Ext, Example, WebPage, window */
- 
+
 Ext.ns('Example', 'WebPage');
 Ext.BLANK_IMAGE_URL = location.href+'/core_modules/htmlelements/ext/resources/ext-3.0-rc2/resources/images/default/s.gif';
 Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
@@ -37,6 +22,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
     idName:'userID'
     ,
     height:350,
+  
     initComponent:function() {
 
         // create row actions
@@ -46,8 +32,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 qtip:'Delete Record'
                 ,
-                fieldLabel:'Forward'
-                ,
+                
                 style:'margin:0 0 0 3px'
             }]
         });
@@ -83,8 +68,11 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                     ,{
                         name:'email',
                         type:'string'
-                    },this.rowActions
-                    
+                    }
+                    /*,{
+                        name:'select',
+                        type:'string'
+                    }*/
                     ]
                 })
                 ,
@@ -101,6 +89,8 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
             })
 
             ,
+            columnLines: true,
+
             columns:[{
                 header:'username'
                 ,
@@ -150,7 +140,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 ,
                 dataIndex:'email'
                 ,
-                width:200
+                width:100
                 ,
                 sortable:true
                 ,
@@ -159,9 +149,30 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 editor:new Ext.form.TextField({
                     allowBlank:false
                 })
-            }, 
-            
-            this.rowActions
+            },
+            new Ext.grid.RadioColumn({header: 'Forward', inputValue: 1, editable:true,  width: 100, align: 'center'})
+            //this.rowActions
+            // Checkbox
+           /* {
+                header:'Select'
+                ,
+               
+                editable:true
+                ,
+                editor:new Ext.form.Checkbox({
+                     listeners: {
+        // On selection change, set enabled state of the removeButton
+        // which was placed into the GridPanel using the ref config
+        selectionchange: function(sm) {
+            if (sm.getCount()) {
+               alert('here') ;
+            } else {
+
+            }
+        }
+    }
+                })
+            }*/
             ]
             
             ,
@@ -175,8 +186,8 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
                 minChars:3
                 ,
                 autoFocus:true
-            //				,menuStyle:'radio'
-            }), this.rowActions]
+            
+            })]
             ,
             viewConfig:{
                 forceFit:true
@@ -202,19 +213,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
     onRender:function() {
         // call parent
         Example.Grid1.superclass.onRender.apply(this, arguments);
-
-        this.bbar2 = new Ext.Toolbar({
-            renderTo:this.bbar
-            ,
-            items:['Example of second toolbar', '-', {
-                text:'Button'
-                ,
-                iconCls:'icon-key'
-            }, '-'
-            ]
-        });
-
-        // load store
+      // load store
         this.store.load({
             params:{
                 start:0,
@@ -232,7 +231,7 @@ Example.Grid1 = Ext.extend(Ext.grid.EditorGridPanel, {
 
     ,
     onRowAction:function(grid, record, action, row, col) {
-        
+  alert('dfgdgdfgdf')      ;
         switch(action) {
             case 'email':
                 this.deleteRecord(record);
@@ -433,4 +432,38 @@ function showSearchWinX(){
     //}
     win.show();
 }
+
+
+Ext.grid.RadioColumn = function(config){
+    Ext.apply(this, config);
+    if(!this.id){
+        this.id = Ext.id();
+    }
+    this.renderer = this.renderer.createDelegate(this);
+};
+
+Ext.grid.RadioColumn.prototype ={
+    init : function(grid){
+        this.grid = grid;
+        this.grid.on('render', function(){
+            var view = this.grid.getView();
+            view.mainBody.on('mousedown', this.onMouseDown, this);
+        }, this);
+    },
+
+    onMouseDown : function(e, t){
+        alert('oioi');
+        if(t.className && t.className.indexOf('x-grid3-cc-'+this.id) != -1){
+            e.stopEvent();
+            var index = this.grid.getView().findRowIndex(t);
+            var record = this.grid.store.getAt(index);
+            record.set(this.dataIndex, this.inputValue);
+        }
+    },
+
+    renderer : function(v, p, record){
+        p.css += ' x-grid3-check-col-td';
+        return '<div class="x-grid3-check-col'+(v == this.inputValue?'-on':'')+' x-grid3-cc-'+this.id+'"> </div>';
+    }
+};
 // eof

@@ -281,15 +281,15 @@ $mainjs = "/*!
                             {header: \"".$faculty."\", width: 100, dataIndex: 'faculty'},
                             //{header: \"".$lastEdit."\", width: 50, dataIndex: 'lastEdit'},
                             ";
-if($this->objUser->isAdmin()) {
-    $mainjs .= "{header: \"".$edit."\", width: 70, dataIndex: 'edit'}";
-}
-$mainjs .="
+                          if($this->objUser->isAdmin()) {
+                            $mainjs .= "{header: \"".$edit."\", width: 70, dataIndex: 'edit'}";
+                           }
+                          $mainjs .="
                         ],
 
                         view: new Ext.grid.GroupingView({
                             forceFit:true,
-                            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? \"Items\" : \"Item\"]})'
+                            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? \"Proposals\" : \"Proposal\"]})'
                         }),
 
                         frame:false,

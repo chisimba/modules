@@ -15,8 +15,9 @@ $themecombojs = '<script language="JavaScript" src="'.$this->getResourceUri('js/
 $iconmenujs = '<script language="JavaScript" src="'.$this->getResourceUri('js/Ext.ux.IconMenu.js').'" type="text/javascript"></script>';
 $toastjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/Ext.ux.Toast.js').'" type="text/javascript"></script>';
 $searchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/Ext.ux.grid.Search.js').'" type="text/javascript"></script>';
+$searchfieldjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/SearchField.js').'" type="text/javascript"></script>';
 $rowactionsjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/Ext.ux.grid.RowActions.js').'" type="text/javascript"></script>';
-$gridsearchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/gridsearch.js').'" type="text/javascript"></script>';
+$gridsearchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/LiveSearch.js').'" type="text/javascript"></script>';
 $styleSheet="
     <style type=\"text/css\">
         .x-check-group-alt {
@@ -47,6 +48,7 @@ $this->appendArrayVar('headerParams',$iconmenujs);
 $this->appendArrayVar('headerParams',$toastjs);
 $this->appendArrayVar('headerParams',$searchjs);
 $this->appendArrayVar('headerParams',$rowactionsjs);
+$this->appendArrayVar('headerParams',$searchfieldjs);
 $this->appendArrayVar('headerParams',$gridsearchjs);
 
 $nextForm = new link($this->uri(array('action'=>'viewform','courseid'=>$this->id, 'formnumber'=>$this->allForms[0])));
