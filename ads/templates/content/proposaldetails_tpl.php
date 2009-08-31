@@ -207,7 +207,7 @@ function processActionDD(){
                 applyTo:'addcomments-win',
                 layout:'fit',
                 title:'Enter Comments',
-                width:800,
+                width:500,
                 height:300,
                 x:250,
                 y:50,
