@@ -8,7 +8,7 @@ var panel;
 Ext.onReady(function(){
     var ds = new Ext.data.Store({
         proxy: new Ext.data.HttpProxy({
-            url: 'http://localhost/chisimba/?module=ads&action=searchusers'
+            url:location.href+"?module=ads&action=searchusers"
         }),
         reader: new Ext.data.JsonReader({
             root: 'rows',
@@ -29,7 +29,7 @@ Ext.onReady(function(){
         '<tpl for=".">',
         '<div class="search-item">',
             '<h3><span>{firstname} {lastname}</span></h3>',
-            '<a href="http://localhost/chisimba/?module=ads&action=forwarddoc&email={email}" target="_blank">Forward</a>',
+            '<a href="'+location.href+'?module=ads&action=forwarddoc&email={email}" target="_blank">Forward</a>',
             '<p>{excerpt}</p>',
         '</div></tpl>'
     );
