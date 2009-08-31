@@ -28,8 +28,8 @@ Ext.onReady(function(){
     var resultTpl = new Ext.XTemplate(
         '<tpl for=".">',
         '<div class="search-item">',
-            '<h3><span>{firstname} {lastname}</span></h3>',
-            '<a href="'+location.href+'?module=ads&action=forwarddoc&email={email}" target="_blank">Forward</a>',
+            '<h3>{firstname} {lastname}</h3>',
+            '<h3><span><a href="'+location.href+'?module=ads&action=forwarddoc&email={email}" target="_blank">Forward</a></span></h3>',
             '<p>{excerpt}</p>',
         '</div></tpl>'
     );
