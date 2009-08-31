@@ -323,26 +323,8 @@ $renderSurface='
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 $actionsDropDown->addOnChange('processActionDD();');
-$renderContent='<div>'.$actionsDropDown->show().'&nbsp;'.$backButton->show().'<br/>'.$content.'</div';
+$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'</div';
 
-// Create an instance of the css layout class
-$cssLayout = $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout->setNumColumns(2);
-
-$rightSideColumn .= $renderContent;
-$postLoginMenu  = $this->newObject('postloginmenu','toolbar');
-$nav = $this->getObject('nav', 'ads');
-$toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-
-$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->id);
-//$leftSideColumn = $postLoginMenu->show();
-$cssLayout->setLeftColumnContent($leftSideColumn);
-
-// Add Right Column
-$cssLayout->setMiddleColumnContent($rightSideColumn);
-
-//Output the content to the page
-//echo $cssLayout->show();
 $render='<div id="onecolumn">
 					<div id="content">
 					<div id="contentcontent">
@@ -350,6 +332,6 @@ $render='<div id="onecolumn">
 					</div>
 					</div>
 					</div>';
-//echo '<center>'.$render.'</center>';
+
 echo $render;
 ?>
