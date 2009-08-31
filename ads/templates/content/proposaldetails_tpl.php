@@ -320,7 +320,7 @@ $renderSurface='
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 $actionsDropDown->addOnChange('processActionDD();');
-$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$content.'<div id="bbbbb">dsdss</div></div';
+$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$content.'</div';
 
 // Create an instance of the css layout class
 $cssLayout = $this->newObject('csslayout', 'htmlelements');// Set columns to 2
