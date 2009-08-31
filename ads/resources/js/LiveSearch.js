@@ -21,7 +21,7 @@ Ext.onReady(function(){
             {name: 'email', mapping: 'email'}
         ]),
 
-        baseParams: {limit:20, userId: 1}
+        baseParams: {limit:10, userId: 1}
     });
 
     // Custom rendering Template for the View
@@ -62,7 +62,7 @@ Ext.onReady(function(){
         })
     });
 
-    ds.load({params:{start:0, limit:20, userId: 1}});
+    ds.load({params:{start:0, limit:10, userId: 1}});
 });
 
 
@@ -76,11 +76,10 @@ function showSearchWinX(){
         title:'Search users'
         ,
         width:600
-        ,
-         x:200
+        ,x:200
         ,y: 100
         ,
-        height:250
+        height:350
         ,
         closable:false
         ,
