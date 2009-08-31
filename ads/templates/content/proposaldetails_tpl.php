@@ -330,8 +330,9 @@ $rightSideColumn .= $renderContent;
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $nav = $this->getObject('nav', 'ads');
 $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-$leftSideColumn = $postLoginMenu->show();
 
+$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->id);
+//$leftSideColumn = $postLoginMenu->show();
 $cssLayout->setLeftColumnContent($leftSideColumn);
 
 // Add Right Column
