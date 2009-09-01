@@ -5,7 +5,14 @@
  * http://www.extjs.com/license
  */
 var panel;
-Ext.onReady(function(){
+var courseId;
+var sendProposalUrl;
+
+function showSearchWinX(){
+    var args = showSearchWinX.arguments;
+    courseId=args[0];
+    sendProposalUrl=args[1];
+    
     var ds = new Ext.data.Store({
         proxy: new Ext.data.HttpProxy({
             url:location.href+"?module=ads&action=searchusers"
@@ -15,24 +22,42 @@ Ext.onReady(function(){
             totalProperty: 'totalCount',
             id: 'userid'
         }, [
-            {name: 'userId', mapping: 'userid'},
-            {name: 'firstname', mapping: 'firstname'},
-            {name: 'lastname', mapping: 'lastname'},
-            {name: 'email', mapping: 'email'}
+        {
+            name: 'userId',
+            mapping: 'userid'
+        },
+
+        {
+            name: 'firstname',
+            mapping: 'firstname'
+        },
+
+        {
+            name: 'lastname',
+            mapping: 'lastname'
+        },
+
+        {
+            name: 'email',
+            mapping: 'email'
+        }
         ]),
 
-        baseParams: {limit:20, userId: 1}
+        baseParams: {
+            limit:20,
+            userId: 1
+        }
     });
 
     // Custom rendering Template for the View
     var resultTpl = new Ext.XTemplate(
         '<tpl for=".">',
         '<div class="search-item">',
-            '<h3>{firstname} {lastname}</h3>',
-            '<h3><span><a href="'+location.href+'?module=ads&action=forwarddoc&email={email}">Forward</a></span></h3>',
-            '<p>{excerpt}</p>',
+        '<h3>{firstname} {lastname}</h3>',
+        '<p><span><a href="#" onclick="forwardProposal(\''+sendProposalUrl+'\',\'{email}\',\''+courseId+'\');return false;">Forward</a></span></p>',
+            
         '</div></tpl>'
-    );
+        );
 
     panel = new Ext.Panel({
      
@@ -46,11 +71,11 @@ Ext.onReady(function(){
         }),
 
         tbar: [
-            'Search: ', ' ',
-            new Ext.ux.form.SearchField({
-                store: ds,
-                width:320
-            })
+        'Search: ', ' ',
+        new Ext.ux.form.SearchField({
+            store: ds,
+            width:320
+        })
         ],
 
         bbar: new Ext.PagingToolbar({
@@ -62,11 +87,14 @@ Ext.onReady(function(){
         })
     });
 
-    ds.load({params:{start:0, limit:10, userId: 1}});
-});
+    ds.load({
+        params:{
+            start:0,
+            limit:10,
+            userId: 1
+        }
+        });
 
-
-function showSearchWinX(){
     // create and show window
     var win;
     //if(!win){
@@ -76,8 +104,10 @@ function showSearchWinX(){
         title:'Search users'
         ,
         width:600
-        ,x:200
-        ,y: 100
+        ,
+        x:200
+        ,
+        y: 100
         ,
         height:400
         ,
@@ -98,7 +128,7 @@ function showSearchWinX(){
 
             items:[
             
-                panel
+            panel
 
             ]
         },
@@ -122,3 +152,32 @@ function showSearchWinX(){
     //}
     win.show();
 }
+
+function forwardProposal(){
+
+    var args=forwardProposal.arguments;
+    var url=args[0];
+    var email=args[1];
+    var courseid=args[2];
+
+
+  Ext.MessageBox.confirm('Forward Proposal?', 'Are you sure you want to forward the proposal to '+email+'?', function(btn){
+
+  if (btn == 'yes') {
+    window.location.href='?module=ads&action=sendproposal'+'&email='+email+'&courseid='+courseid;
+  }
+
+
+});
+}
+
+function forwardProposalToModerator(){
+  var args=forwardProposalToModerator.arguments;
+  var courseid=args[0];
+  Ext.MessageBox.confirm('Forward Proposal?', 'Are you sure you want to forward the proposal to moderator?', function(btn){
+  if (btn == 'yes') {
+    window.location.href='?module=ads&action=sendproposaltomoderator&courseid='+courseid;
+  }
+});
+}
+

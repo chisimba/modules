@@ -538,19 +538,35 @@ class ads extends controller {
         }
     }
 
+   public function __sendproposaltomoderator(){
+        $this->id = $this->getParam('courseid');
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
+        $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
+        $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
+        $body.='<br/><a href="'.$homeUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id)).'">Document Link</a>';
+
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to', array($modemail));
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullnames);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
+
+        $objMailer->send();
+        $this->objDocumentStore->sendProposal($lname, $fname, $modemail, $phone, $this->id,$this->objUser->email(),false);
+        $this->nextAction('home');
+   }
     public function __sendproposal() {
-        $lname = $this->getParam("lname");
-        $fname = $this->getParam("fname");
+       
         $email = $this->getParam("email");
-        $phone = $this->getParam("phone");
-        $this->id = $this->getParam('id');
-
-        $this->setVarByRef("lname", $lname);
-        $this->setVarByRef("fname", $fname);
-        $this->setVarByRef("email", $email);
-        $this->setVarByRef("phone", $phone);
-
-        return "sendproposal_tpl.php";
+        $phone = 'xxxx';
+        $this->id = $this->getParam('courseid');
+        $lname="x";
+        $fname="y";
+        $submission = $this->objDocumentStore->sendProposal($lname, $fname, $email, $phone, $this->id,$this->objUser->email());
+        $this->nextAction('home');
     }
 
     public function __showcourseprophisttest() {

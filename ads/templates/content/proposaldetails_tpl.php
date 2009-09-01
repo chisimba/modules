@@ -24,7 +24,7 @@ $styleSheet="
     font:normal 11px tahoma, arial, helvetica, sans-serif;
     padding:3px 10px 3px 10px;
     border:1px solid #fff;
-    border-bottom:1px solid #eeeeee;
+    border-bottom:1px solid black;
     white-space:normal;
     color:#555;
     background:white
@@ -108,6 +108,7 @@ $iscurrentEdit=$this->objDocumentStore->isCurrentEditor($currentEditor);
 $courseProposal=$this->objCourseProposals->getCourseProposal($this->id);
 $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>$this->id,'status'=>$courseProposal['status'])));
 $homeUrl = $this->uri(array('action'=>'home'));
+$sendProposalUrl = $this->uri(array('action'=>'sendproposal'));
 $comments= $this->objComment->getAllcomments($this->id);
 
 $showCoursePropHistUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id));
@@ -175,20 +176,25 @@ $mainjs=
             title: 'Course proposal details',
             autoHeight: true,
             items:[
+
                new Ext.form.DisplayField({
-               fieldLabel: 'Current editor:',
+               fieldLabel: 'Facutly',
+               value: '".$courseProposal['faculty']."'
+               }),
+               new Ext.form.DisplayField({
+               fieldLabel: 'Current editor',
                value: '".$currentEditor."'
                }),
                new Ext.form.DisplayField({
-               fieldLabel: 'Last edit date:',
+               fieldLabel: 'Last edit date',
                value: '".$lastEditDate."'
                }),
                new Ext.form.DisplayField({
-               fieldLabel: 'Status:',
+               fieldLabel: 'Status',
                value: '".$statuscodes[$courseProposal['status']]."'
                }),
                new Ext.form.DisplayField({
-               fieldLabel: 'Comments:',
+               fieldLabel: 'Comments',
                value: '<b>".$comments."</b>'
                })
              ]
@@ -331,9 +337,15 @@ function processActionDD(){
     }//end if
 
 if(actiondd == \"forward\"){
-showSearchWinX();
+showSearchWinX('".$this->id."','".$sendProposalUrl."');
+}//end if
+
+
+if(actiondd == \"forwardtomoderator\"){
+forwardProposalToModerator('".$this->id."');
 }//end if
 };
+
 ";
 
 
@@ -343,12 +355,25 @@ $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 $actionsDropDown = new dropdown ('actions');
 $actionsDropDown->cssId = 'actiondd';
 
+$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+$modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
+
 $actionsDropDown->addOption('default','Select action ...');
+
+//eable these if moderator or current editor
+if($currentEditor == $this->objUser->email()
+|| $modemail == $this->objUser->email()
+){
+
 $actionsDropDown->addOption('editproposal','Edit Proposal');
 $actionsDropDown->addOption('addcomment','Add Comment');
-$actionsDropDown->addOption('updatestatus','Update Status');
 $actionsDropDown->addOption('forward','Forward');
 $actionsDropDown->addOption('forwardtomoderator','Forward to moderator');
+
+}
+if($modemail == $this->objUser->email()){
+$actionsDropDown->addOption('updatestatus','Update Status');
+}
 
 $backButton = new button('back','Back');
 $backButton->setId('back-btn');

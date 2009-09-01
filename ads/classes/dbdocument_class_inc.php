@@ -116,23 +116,45 @@ class dbdocument extends dbtable{
         return $fullName;
     }
 
-    public function sendProposal($lname, $fname, $email, $phone, $courseid) {
+    public function sendProposal($lname, $fname, $email, $phone, $courseid,$fromemail,$sendmail=true) {
         $status = true;
 
         // user data for proposal
-        $data = array("lname"=>$lname, "fname"=>$fname, "email"=>$email, "phone"=>$phone, "courseid"=>$courseid);
-        $status = $this->insert($data, "tbl_ads_documentusers");
+        //$data = array("lname"=>$lname, "fname"=>$fname, "email"=>$email, "phone"=>$phone, "courseid"=>$courseid);
+
+        //$status = $this->insert($data, "tbl_ads_documentusers");
 
         // owner of document now changes
         $sql = "select max(version) maxversion from tbl_ads_documentstore where coursecode = '$courseid'";
         $data = $this->getArray($sql);
         $maxversion = $data[0]['maxversion'];
-        $sql = "update $this->tablename set currentuser = '$email', set datemodified = '".strftime('%Y-%m-%d %H:%M:%S', mktime())."' where coursecode = '$courseid' and version = '$maxversion'";
+        $sql = "update $this->tablename set currentuser = '$email', datemodified = '".strftime('%Y-%m-%d %H:%M:%S', mktime())."' where coursecode = '$courseid' and version = '$maxversion'";
+        
         $status = $this->_execute($sql);
-
+        if($status && $sendmail){
+           $this->sendMail($email,$fromemail,$courseid);
+        }
         return $status;
     }
 
+    function sendMail($to,$fromemail,$courseid){
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'ads');
+        $subject=$objSysConfig->getValue('EMAIL_SUBJECT', 'ads');
+        $body=$objSysConfig->getValue('EMAIL_BODY', 'ads');
+        $body.='<br/><a href="'.$homeUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid)).'">Document Link</a>';
+        
+        $emailName=$objSysConfig->getValue('EMAIL_NAME', 'ads');
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to', array($to));
+        $objMailer->setValue('from', $fromemail);
+        //$objMailer->setValue('fromName', $f);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
+        
+        $objMailer->send();
+    }
     public function getLastModified($courseid, $version, $currentuser) {
         $sql = "select datemodified from $this->tablename where coursecode = '$courseid' and version = '$version' and currentuser = '$currentuser'";
         $data = $this->getArray($sql);
@@ -175,15 +197,22 @@ class dbdocument extends dbtable{
         if($value == ''){
             $value='a';
         }
+        $sql="select count(id) as xtotal from tbl_users where (username like '".$value."%' or surname like '".$value."%' or firstname like '".$value."%')";
+        $xrows=$this->getArray($sql);
+        $xtotal=0;
+        if($xrows > 0){
+            $xtotal=$xrows[0]['xtotal'];
+        }
         $sql="select * from tbl_users where (username like '".$value."%' or surname like '".$value."%' or firstname like '".$value."%')  limit ".$start.",".$limit;
         $rows=$this->getArray($sql);
-        
+       
         $buff=
-        '{"success":true,"totalCount":'.count($rows).',"rows":[';
+        '{"totalCount":'.$xtotal.',"rows":[';
         $c=0;
         $total=count($rows);
         foreach($rows as $row){
-            $buff.='{"userID":"'.$row['userid'].'","username":"'.$row['username'].'","firstname":"'.$row['surname'].'","lastname":"'.$row['firstname'].'","email":"'.$row['emailaddress'].'"}';
+           // $forwardUrl =new $this->uri(array('action'=>'forward',"email"=>$row['emailaddress']));
+            $buff.='{"userid":"'.$row['userid'].'","username":"'.$row['username'].'","firstname":"'.$row['surname'].'","lastname":"'.$row['firstname'].'","email":"'.$row['emailaddress'].'"}';//,"select":"'.$forwardUrl.'"}';
             $c++;
             if($c < $total){
                 $buff.=",";
