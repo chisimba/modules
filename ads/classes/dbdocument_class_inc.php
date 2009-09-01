@@ -142,7 +142,7 @@ class dbdocument extends dbtable{
         $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'ads');
         $subject=$objSysConfig->getValue('EMAIL_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_BODY', 'ads');
-        $body.='<br/><a href="'.$homeUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid)).'">Document Link</a>';
+        $body.=' '.$homeUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid));
         
         $emailName=$objSysConfig->getValue('EMAIL_NAME', 'ads');
 

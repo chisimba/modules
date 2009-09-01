@@ -544,7 +544,7 @@ class ads extends controller {
         $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
-        $body.='<br/><a href="'.$homeUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id)).'">Document Link</a>';
+        $body.=' '.$homeUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id));
 
 
         $objMailer = $this->getObject('email', 'mail');
