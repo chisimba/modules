@@ -129,10 +129,10 @@ class dbdocument extends dbtable{
         $data = $this->getArray($sql);
         $maxversion = $data[0]['maxversion'];
         $sql = "update $this->tablename set currentuser = '$email', datemodified = '".strftime('%Y-%m-%d %H:%M:%S', mktime())."' where coursecode = '$courseid' and version = '$maxversion'";
-        
+
         $status = $this->_execute($sql);
         if($status && $sendmail){
-           $this->sendMail($email,$fromemail,$courseid);
+            $this->sendMail($email,$fromemail,$courseid);
         }
         return $status;
     }
@@ -142,8 +142,8 @@ class dbdocument extends dbtable{
         $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'ads');
         $subject=$objSysConfig->getValue('EMAIL_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_BODY', 'ads');
-        $body.=' '.$homeUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid));
-        
+        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid));
+        $body.=' '. str_replace("amp;", "", $linkUrl);
         $emailName=$objSysConfig->getValue('EMAIL_NAME', 'ads');
 
         $objMailer = $this->getObject('email', 'mail');
@@ -152,7 +152,7 @@ class dbdocument extends dbtable{
         //$objMailer->setValue('fromName', $f);
         $objMailer->setValue('subject', $subject);
         $objMailer->setValue('body', $body);
-        
+
         $objMailer->send();
     }
     public function getLastModified($courseid, $version, $currentuser) {
@@ -205,13 +205,13 @@ class dbdocument extends dbtable{
         }
         $sql="select * from tbl_users where (username like '".$value."%' or surname like '".$value."%' or firstname like '".$value."%')  limit ".$start.",".$limit;
         $rows=$this->getArray($sql);
-       
+
         $buff=
         '{"totalCount":'.$xtotal.',"rows":[';
         $c=0;
         $total=count($rows);
         foreach($rows as $row){
-           // $forwardUrl =new $this->uri(array('action'=>'forward',"email"=>$row['emailaddress']));
+            // $forwardUrl =new $this->uri(array('action'=>'forward',"email"=>$row['emailaddress']));
             $buff.='{"userid":"'.$row['userid'].'","username":"'.$row['username'].'","firstname":"'.$row['surname'].'","lastname":"'.$row['firstname'].'","email":"'.$row['emailaddress'].'"}';//,"select":"'.$forwardUrl.'"}';
             $c++;
             if($c < $total){

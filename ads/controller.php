@@ -115,7 +115,7 @@ class ads extends controller {
         return $this->objDocumentStore->getUsers($val,$start,$limit);
     }
 
-  
+
 
     function __reviewcourseproposal(){
         return "reviewcourseproposal_tpl.php";
@@ -538,14 +538,14 @@ class ads extends controller {
         }
     }
 
-   public function __sendproposaltomoderator(){
+    public function __sendproposaltomoderator(){
         $this->id = $this->getParam('courseid');
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
-        $body.=' '.$homeUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id));
-
+        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id));
+        $body.=' '. str_replace("amp;", "", $linkUrl);
 
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($modemail));
@@ -557,9 +557,9 @@ class ads extends controller {
         $objMailer->send();
         $this->objDocumentStore->sendProposal($lname, $fname, $modemail, $phone, $this->id,$this->objUser->email(),false);
         $this->nextAction('home');
-   }
+    }
     public function __sendproposal() {
-       
+
         $email = $this->getParam("email");
         $phone = 'xxxx';
         $this->id = $this->getParam('courseid');
