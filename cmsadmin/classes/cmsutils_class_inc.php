@@ -5411,7 +5411,7 @@
                 $table->endRow();
             }
 
-            //Adding the FCK_EDITOR
+            //Adding the RICH TEXT EDITOR
             if ($editmode) {
 
                 if (isset($arrContent['body'])) {
@@ -5427,6 +5427,7 @@
             $bodyInput->setContent($bodyInputValue);
             $bodyInput->setCMSToolBar();
             $bodyInput->loadCMSTemplates();
+            $bodyInput->id = 'input_body';
 
             $bodyInput->height = '400px';
 
@@ -5436,7 +5437,10 @@
             //add hidden text input
             $table->row_attributes = '';
             $table->startRow();
+			
+			//FCKEditor
             $table->addCell('<div id="bodydiv"><br />'.$h3->show().$bodyInput->show().'</div>','','left','left', null, 'colspan="2"');
+			
             $table->endRow();
 
             //add the main body
@@ -5509,7 +5513,9 @@
             
 	        //Add validation for title            
             $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
+            $errBodyLength = $this->objLanguage->languageText('mod_cmsadmin_enterbodylength', 'cmsadmin');
             $objForm->addRule('title', $errTitle, 'required');
+			$objForm->addRule(array('name'=>'body', 'length'=>64086), $errBodyLength, 'fckmaxlength');
             $objForm->addToForm($tableContainer->show() /*$wrapLayer->show()*/);
             $objForm->addToForm('<input type="hidden" name="must_apply" id="must_apply" value="0">');
 

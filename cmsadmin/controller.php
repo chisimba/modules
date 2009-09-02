@@ -374,7 +374,6 @@ $jQuery->loadSimpleTreePlugin();
                 $this->setVarByRef('topNav',$topNav);
                 $this->setVarByRef('cpanel',$cpanel);
 	
-		        //return 'cms_test_tpl.php';
                 return 'cms_main_tpl.php';
 
                 case 'deleteuserperm':
@@ -1170,7 +1169,7 @@ $jQuery->loadSimpleTreePlugin();
                 $metakey = $this->getParam('keyword',null);
                 $metadesc = $this->getParam('description',null);
                 $ccLicence = $this->getParam('creativecommons',null);                
-                
+               
                 $this->_objContent->addContent( $title,
                                                 $published,
                                                 $override_date,
