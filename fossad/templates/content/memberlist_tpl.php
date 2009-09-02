@@ -24,7 +24,7 @@ $scheduleTitle.='
           <p></p>
          ';
 $xlsUrl = $this->uri(array('action'=>'xls','eventid'=>$eventid));
-$excelButton = new button('add','Export to Excel');
+$excelButton = new button('add','Export to Spreadsheet');
 $excelButton->setId('xls-btn');
 $scheduleTitle.=$excelButton->show().'';
 
