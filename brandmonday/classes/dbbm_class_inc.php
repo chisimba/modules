@@ -138,8 +138,14 @@ class dbbm extends dbTable {
         return $menusers;
     }
     
-    public function getBmTags($mood) {
-        $tags = $this->getArray("SELECT DISTINCT meta_value FROM tbl_tags WHERE module = 'brandmonday' and context = '$mood'");
+    public function getBmTags($mood, $limit = NULL) {
+        if($limit == NULL) {
+            $sql = "SELECT DISTINCT meta_value FROM tbl_tags WHERE module = 'brandmonday' and context = '$mood'";
+        }
+        else {
+            $sql = "SELECT DISTINCT meta_value FROM tbl_tags WHERE module = 'brandmonday' and context = '$mood' ORDER BY meta_value DESC LIMIT 0, {$limit}";
+        }
+        $tags = $this->getArray($sql);
         foreach($tags as $recs) {
             if(strtolower($recs['meta_value']) != 'brandmonday' && strtolower($recs['meta_value']) != 'brandplus' && strtolower($recs['meta_value']) != 'brandminus' && strtolower($recs['meta_value']) != 'fail') {
                 $tagarr[] = $recs['meta_value'];

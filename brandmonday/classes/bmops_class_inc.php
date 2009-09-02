@@ -245,7 +245,7 @@ class bmops extends object {
     public function getAllBsData() { // weight, colour, label
         $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
         $objFlashGraphData->graphType = 'pie';
-        $tagarr = $this->objDbBm->getBmTags('plus');
+        $tagarr = $this->objDbBm->getBmTags('plus', 20);
         $colours = $this->getObject('websafecolours', 'utilities');
         if (empty($tagarr)) {
             return NULL;
@@ -274,7 +274,7 @@ class bmops extends object {
         $tagarr = $this->objDbBm->getBmTagsWeekly('tbl_bmplus');
         foreach($tagarr as $tagarray) {
             if(!empty($tagarray)) {
-                $value = $tagarray[0]['meta_value'];
+                $value = strtolower($tagarray[0]['meta_value']);
                 $ntagarr[] = $value;
             }
         }
@@ -331,7 +331,7 @@ class bmops extends object {
     public function getAllWsData() { // weight, colour, label
         $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
         $objFlashGraphData->graphType = 'pie';
-        $tagarr = $this->objDbBm->getBmTags('minus');
+        $tagarr = $this->objDbBm->getBmTags('minus', 20);
         $colours = $this->getObject('websafecolours', 'utilities');
         if (empty($tagarr)) {
             return NULL;
@@ -360,7 +360,7 @@ class bmops extends object {
         $tagarr = $this->objDbBm->getBmTagsWeekly('tbl_bmminus');
         foreach($tagarr as $tagarray) {
             if(!empty($tagarray)) {
-                $value = $tagarray[0]['meta_value'];
+                $value = strtolower($tagarray[0]['meta_value']);
                 $ntagarr[] = $value;
             }
         }
