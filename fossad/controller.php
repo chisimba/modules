@@ -14,6 +14,7 @@ class fossad extends controller {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLog = $this->getObject('logactivity', 'logger');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->utils = $this->getObject('simpleregistrationutils','fossad');
         $this->objLog->log();
     }
 
@@ -99,7 +100,7 @@ class fossad extends controller {
         $reg = $this->getObject('dbregistration');
         if($reg->addRegistration($firstame,$lastname,$company,$email)){
             $this->sendMail($email);
- 
+
             $this->nextAction("success",array('title1'=>$this->objLanguage->languageText('mod_fossad_registrationsuccess', 'fossad'),
    'title2'=>''));
         }
@@ -111,10 +112,10 @@ class fossad extends controller {
     function __expresssignin(){
         $reg = $this->getObject('dbregistration');
         if($this->objUser->email() == 'Anonymous user (not logged in)'){
-         $this->objUser->logout();
-        return  $this->nextAction('home',  array ('mode' => 'loginagain' ));
-         
-       }
+            $this->objUser->logout();
+            return  $this->nextAction('home',  array ('mode' => 'loginagain' ));
+
+        }
         if($reg->emailExists($this->objUser->email())){
             $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_fossad_alreadysignedup', 'fossad'),
    'title2'=>''));
@@ -176,6 +177,40 @@ class fossad extends controller {
         $objMailer->attach($programattach);
         $objMailer->send();
     }
+    function __download() {
+
+        return "download_tpl.php";
+    }
+    function __xls(){
+        $eventid=$this->getParam('eventid');
+        $reg = $this->getObject('dbregistration');
+        $dbdata=$reg->getRegistrations($eventid);
+        $stringData='';
+
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $downloadfolder=$objSysConfig->getValue('DOWNLOAD_FOLDER', 'simpleregistration');
+
+        $docRoot=$_SERVER['DOCUMENT_ROOT'].$downloadfolder;
+
+        $myFile = $docRoot."listing.xls";
+        unlink($myFile);
+        /*
+         * $fh = fopen($myFile, 'w') or die("can't open file");
+        foreach($dbdata as $row){
+            fwrite($fh,$row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company']);
+        }*/
+        $file = fopen($myFile, "a");
+        //delete old one
+
+        foreach($dbdata as $row){
+            fputs($file, $row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company']."\r\n");
+        }
+        fclose($file);
+        //fclose($fh);
+
+        $this->nextAction('download');
+    }
+
       /**
      * Overridden method to determine whether or not login is required
      *

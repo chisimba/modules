@@ -23,6 +23,11 @@ $scheduleTitle='<h2>'.$total.' '.$this->objLanguage->languageText('mod_fossad_re
 $scheduleTitle.='
           <p></p>
          ';
+$xlsUrl = $this->uri(array('action'=>'xls','eventid'=>$eventid));
+$excelButton = new button('add','Export to Excel');
+$excelButton->setId('xls-btn');
+$scheduleTitle.=$excelButton->show().'';
+
 //load class
 $this->loadclass('link','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
@@ -165,7 +170,11 @@ $mainjs = "/*!
 
                     });
                 });
-
+  var button = Ext.get('xls-btn');
+    button.on('click', function(){
+      window.location.href = '".str_replace("amp;", "",$xlsUrl)."';
+    });
+  
                 // Array data for the grids
                 Ext.grid.Data = [".$data."];";
 

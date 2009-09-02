@@ -62,6 +62,14 @@ class dbregistration extends dbTable{
         $rows=$this->getArray($sql);
         return $rows;
     }
+
+    public function getUserDetails($username)
+    {
+        $sql="select * from  tbl_users where username= '".$username."'";
+        $rows=$this->getArray($sql);
+
+        return $rows;
+    }
     public function emailExists($email)
     {
         $sql="select * from " .$this->table." where email = '".$email."'";
