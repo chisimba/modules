@@ -133,16 +133,47 @@ class brandmonday extends controller {
                 break;
 
             case 'bestserv':
-                echo $this->objBmOps->bestServiceTagCloud();
+                $ret = NULL;
+                $ret .= "<br /><h2>Cloud:</h2><br />";
+                $ret .=  $this->objBmOps->bestServiceTagCloud();
+                $ret .= "<br /><h2>All time:</h2><br />";
+                $ret .= $this->objBmOps->bestServicePieChartAll();
+                $ret .= "<br /><h2>This week:</h2><br />";
+                $ret .= $this->objBmOps->bestServicePieChartWeek();
+                echo $ret;
                 break;
 
             case 'worstserv':
-                echo "worst service";
+                $ret = NULL;
+                $ret .= "<br /><h2>Cloud:</h2><br />";
+                $ret .= $this->objBmOps->worstServiceTagCloud();
+                $ret .= "<br /><h2>All time:</h2><br />";
+                $ret .= $this->objBmOps->worstServicePieChartAll();
+                $ret .= "<br /><h2>This week:</h2><br />";
+                $ret .= $this->objBmOps->worstServicePieChartWeek();
+                echo $ret;
                 break;
 
             case 'mentions':
                 echo $this->objBmOps->mentionsTagCloud();
                 break;
+
+            case 'allbsdata':
+                echo $this->objBmOps->getAllBsData();
+                break;
+
+            case 'weekbsdata':
+                echo $this->objBmOps->getWeekBsData();
+                break;
+
+            case 'allwsdata':
+                echo $this->objBmOps->getAllBsData();
+                break;
+
+            case 'weekwsdata':
+                echo $this->objBmOps->getWeekBsData();
+                break;
+
         }
     }
 

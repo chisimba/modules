@@ -106,12 +106,12 @@ class dbbm extends dbTable {
     }
 
     public function getHappyPeeps() {
-        $plususers = $this->getArray("SELECT DISTINCT from_user FROM tbl_bmplus ORDER BY id");
+        $plususers = $this->getArray("SELECT DISTINCT from_user FROM tbl_bmplus WHERE from_user != 'CapeTown' ORDER BY id");
         return $plususers;
     }
 
     public function getSadPeeps() {
-        $minususers = $this->getArray("SELECT DISTINCT from_user FROM tbl_bmminus ORDER BY id");
+        $minususers = $this->getArray("SELECT DISTINCT from_user FROM tbl_bmminus WHERE from_user != 'CapeTown' ORDER BY id");
         return $minususers;
     }
 
@@ -122,6 +122,13 @@ class dbbm extends dbTable {
     }
 
     public function getServiceTagWeight($mood, $tag) {
+        parent::init('tbl_tags');
+        $cnt = $this->getRecordCount("WHERE module = 'brandmonday' and context = '$mood' and meta_value = '$tag'");
+        return $cnt;
+    }
+
+    public function getServiceTagWeightWeekly($mood, $tag) {
+        parent::init('tbl_tags');
         $cnt = $this->getRecordCount("WHERE module = 'brandmonday' and context = '$mood' and meta_value = '$tag'");
         return $cnt;
     }
@@ -140,6 +147,20 @@ class dbbm extends dbTable {
         }
         return $tagarr;
     }
+
+    public function getBmTagsWeekly($table) {
+        parent::init($table);
+        $time = time();
+        $weekago = $time - 604800;
+        $tweets = $this->getArray("SELECT tweetid FROM $table WHERE tweettime < $time AND tweettime > $weekago");
+        // var_dump($tweets);
+        foreach ($tweets as $ids) {
+            $tweetid = $ids['tweetid'];
+            $tags[] = $this->getArray("SELECT DISTINCT id, meta_value FROM tbl_tags WHERE item_id = '$tweetid' AND meta_value != 'brandplus' AND meta_value != 'brandminus' AND meta_value != 'brandmonday'");
+        }
+        return $tags;
+    }
+
     
     public function parseHashtags($str, $tweetid, $mood)
     {

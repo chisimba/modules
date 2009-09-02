@@ -236,6 +236,65 @@ class bmops extends object {
         }
     }
 
+    public function bestServicePieChartAll() {
+        $objFlashGraph = $this->getObject('flashgraph','utilities');
+        $objFlashGraph->dataSource = $this->uri(array('action'=>'allbsdata'));
+        return $objFlashGraph->show();
+    }
+
+    public function getAllBsData() { // weight, colour, label
+        $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
+        $objFlashGraphData->graphType = 'pie';
+        $tagarr = $this->objDbBm->getBmTags('plus');
+        $colours = $this->getObject('websafecolours', 'utilities');
+        if (empty($tagarr)) {
+            return NULL;
+        }
+        else {
+            $utags = $tagarr;
+            asort($utags);
+            foreach($utags as $tag) {
+                $weight = $this->objDbBm->getServiceTagWeight('plus', $tag);
+                $colour = $colours->getRandomColour();
+                $objFlashGraphData->addPieDataSet($weight, $colour, $tag);
+            }
+            return $objFlashGraphData->show();
+        }
+    }
+
+    public function bestServicePieChartWeek() {
+        $objFlashGraph = $this->getObject('flashgraph','utilities');
+        $objFlashGraph->dataSource = $this->uri(array('action'=>'weekbsdata'));
+        return $objFlashGraph->show();
+    }
+
+    public function getWeekBsData() {
+        $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
+        $objFlashGraphData->graphType = 'pie';
+        $tagarr = $this->objDbBm->getBmTagsWeekly('tbl_bmplus');
+        foreach($tagarr as $tagarray) {
+            if(!empty($tagarray)) {
+                $value = $tagarray[0]['meta_value'];
+                $ntagarr[] = $value;
+            }
+        }
+        $colours = $this->getObject('websafecolours', 'utilities');
+        if (empty($ntagarr)) {
+            return NULL;
+        }
+        else {
+            $utags = $ntagarr;
+            $weights = array_count_values($utags);
+            $utags = array_unique($utags);
+            foreach($utags as $tag) {
+                $weight =  $weights[$tag];
+                $colour = $colours->getRandomColour();
+                $objFlashGraphData->addPieDataSet($weight, $colour, $tag);
+            }
+            return $objFlashGraphData->show();
+        }
+    }
+
     public function worstServiceTagCloud() {
         $this->objTC = $this->newObject('tagcloud', 'utilities');
         $tagarr = $this->objDbBm->getBmTags('minus');
@@ -260,6 +319,65 @@ class bmops extends object {
                 $ret[] = $tag4cloud;
             }
             return $this->objTC->buildCloud($ret);
+        }
+    }
+
+    public function worstServicePieChartAll() {
+        $objFlashGraph = $this->getObject('flashgraph','utilities');
+        $objFlashGraph->dataSource = $this->uri(array('action'=>'allwsdata'));
+        return $objFlashGraph->show();
+    }
+
+    public function getAllWsData() { // weight, colour, label
+        $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
+        $objFlashGraphData->graphType = 'pie';
+        $tagarr = $this->objDbBm->getBmTags('minus');
+        $colours = $this->getObject('websafecolours', 'utilities');
+        if (empty($tagarr)) {
+            return NULL;
+        }
+        else {
+            $utags = $tagarr;
+            asort($utags);
+            foreach($utags as $tag) {
+                $weight = $this->objDbBm->getServiceTagWeight('minus', $tag);
+                $colour = $colours->getRandomColour();
+                $objFlashGraphData->addPieDataSet($weight, $colour, $tag);
+            }
+            return $objFlashGraphData->show();
+        }
+    }
+
+    public function worstServicePieChartWeek() {
+        $objFlashGraph = $this->getObject('flashgraph','utilities');
+        $objFlashGraph->dataSource = $this->uri(array('action'=>'weekwsdata'));
+        return $objFlashGraph->show();
+    }
+
+    public function getWeekWsData() {
+        $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
+        $objFlashGraphData->graphType = 'pie';
+        $tagarr = $this->objDbBm->getBmTagsWeekly('tbl_bmminus');
+        foreach($tagarr as $tagarray) {
+            if(!empty($tagarray)) {
+                $value = $tagarray[0]['meta_value'];
+                $ntagarr[] = $value;
+            }
+        }
+        $colours = $this->getObject('websafecolours', 'utilities');
+        if (empty($ntagarr)) {
+            return NULL;
+        }
+        else {
+            $utags = $ntagarr;
+            $weights = array_count_values($utags);
+            $utags = array_unique($utags);
+            foreach($utags as $tag) {
+                $weight =  $weights[$tag];
+                $colour = $colours->getRandomColour();
+                $objFlashGraphData->addPieDataSet($weight, $colour, $tag);
+            }
+            return $objFlashGraphData->show();
         }
     }
 }
