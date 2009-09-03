@@ -57,7 +57,7 @@ class dbregistration extends dbTable{
 
     public function getRegistrations()
     {
-        $sqla="select * from ".$this->table." order by first_name";
+       $sql="select * from ".$this->table." order by first_name";
 
         $rows=$this->getArray($sql);
         return $rows;
