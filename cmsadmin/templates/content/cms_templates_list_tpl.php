@@ -29,15 +29,18 @@ $objIcon->setIcon('templates_small', 'png', 'icons/cms/');
 $h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_cmsadmin_templates', 'cmsadmin');
 
 $objLayer->str = $h3->show();
-$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+//$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_left';
 $header = $objLayer->show();
 
 $objLayer->str = $topNav;
-$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+//$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_right';
 $header .= $objLayer->show();
 
 $objLayer->str = '';
-$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+//$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->cssClass = 'clearboth';
 $headShow = $objLayer->show();
 
 $display = '<p>'.$header.$headShow.'</p><hr />';
@@ -148,7 +151,7 @@ if (!$noRecords) {
 }
 
 $middleColumnContent .= '&nbsp;'.'<br/>';
-
-echo $middleColumnContent;
+echo '<br><br><br><br>';
+echo '<br>'.$middleColumnContent;
 
 ?>

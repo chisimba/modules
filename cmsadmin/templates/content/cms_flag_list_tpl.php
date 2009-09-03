@@ -40,22 +40,25 @@ $objIcon->setIcon('flag_small', 'png', 'icons/cms/');
 $h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_cmsadmin_flag_heading', 'cmsadmin');
 
 $objLayer->str = $h3->show();
-$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+//$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_right';
 $header = $objLayer->show();
 
 $objLayer->str = $topNav;
-$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
-$header .= $objLayer->show();
+//$objLayer->border .= '; float:right; align:right; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_right';
+$header = $objLayer->show();
 
 $objLayer->str = '';
-$objLayer->border = '; clear:both; margin:0px; padding:0px;';
-$headShow = $objLayer->show();
+//$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->cssClass = 'clearboth';
+$headShow = $objLayer->show(); 
 
 $display = '<p>'.$header.$headShow.'</p><hr />';
 //Show Header
 echo $display;
 // Show Form
-
+echo "<br><br><br><br>";
 echo $objLayer->show();//$tbl->show());
 
 

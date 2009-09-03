@@ -16,23 +16,28 @@ $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_cpanel','cmsadm
 $objH->str = $objIcon->show().'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_cpanel','cmsadmin');
 
 $objLayer->str = $objH->show();
-$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+//$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_left';
 $header = $objLayer->show();
 
 $objLayer->str = $topNav;
-$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+//$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_right';
 $header .= $objLayer->show();
 
 $objLayer->str = '';
-$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+//$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->cssCasa = 'clearboth';
 $headShow = $objLayer->show();
 
 $objLayer->str = $header.$headShow;
 $objLayer->id = 'cms_main';
 
 //echo $objRound->show($header.$headShow);//$tbl->show());
-echo $objLayer->show();
-echo '<hr />';
+echo "<br>".$objLayer->show();
+echo "<hr><hr>";
+echo "<hr><hr><hr><hr><hr>";
+echo "<hr />";
 echo  $cpanel;
 
 ?>

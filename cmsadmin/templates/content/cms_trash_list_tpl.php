@@ -42,15 +42,18 @@ $objIcon->setIcon('trash', 'png', 'icons/cms/');
 $objHead->str = $objIcon->show().'&nbsp;'.$head;
 $objHead->type = 1;
 $objLayer->str = $objHead->show();
-$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+//$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_left';
 $headStr = $objLayer->show();
 
 $objLayer->str = $topNav;
-$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+//$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_right';
 $headStr .= $objLayer->show();
 
 $objLayer->str = '';
-$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+//$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->cssClass = 'clearboth';
 $navStr = $objLayer->show();
 
 $objLayer->id = 'cmsvspacer';

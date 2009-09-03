@@ -97,15 +97,18 @@
 
 
     $objLayer->str = $objH->show();
-    $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+    //$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+    $objLayer->id = 'cms_header_left';
     $header = $objLayer->show();
 
     $objLayer->str = $topNav;
-    $objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+    //$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+    $objLayer->id = 'cms_header_right';
     $header .= $objLayer->show();
 
     $objLayer->str = '';
-    $objLayer->border = '; clear:both; margin:0px; padding:0px;';
+    //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+    $objLayer->cssClass = 'clearboth';
     $headShow = $objLayer->show();
 
     $objLayer->str = '&nbsp;';

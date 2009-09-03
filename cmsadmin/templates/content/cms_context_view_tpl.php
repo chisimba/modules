@@ -19,15 +19,18 @@ $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_cpanel','cmsadm
 $objH->str = $objIcon->show().'&nbsp;'.$objDBContext->getTitle().'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_cpanel','cmsadmin');
 
 $objLayer->str = $objH->show();
-$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+//$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_left';
 $header = $objLayer->show();
 
 $objLayer->str = $this->_objUtils->topNav();
-$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+//$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_right';
 $header .= $objLayer->show();
 
 $objLayer->str = '';
-$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+//$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->cssClass = 'clearboth';
 $headShow = $objLayer->show();
 
 echo $objRound->show($header.$headShow);//$tbl->show());

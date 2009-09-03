@@ -421,7 +421,7 @@ $jQuery->loadSimpleTreePlugin();
                     }
                 return $this->nextAction('flag', array(NULL), 'cmsadmin');
 
-				case 'flag':
+		case 'flag':
                     $topNav = $this->_objUtils->topNav('flag');
                     $arrFlagOptions = $this->_objFlagOptions->getOptions();
                     $arrEmail = $this->_objFlagEmail->getAll();
@@ -437,8 +437,8 @@ $jQuery->loadSimpleTreePlugin();
                     $this->setVarByRef('topNav',$topNav);
                     $this->setVarByRef('arrFlagOptions', $arrFlagOptions);
                     $this->setVarByRef('arrEmail', $arrEmail);
-					return 'cms_flag_list_tpl.php';
-				break;
+		    return 'cms_flag_list_tpl.php';
+		    break;
 
                 case 'flagcontent':
                     $contentId = $this->getParam('id');

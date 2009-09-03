@@ -123,16 +123,19 @@ if($isRegistered){
 $objH->type = '1';
 
 $objLayer->str = $objH->show();
-$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+//$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_left';
 $header = $objLayer->show();
 
 $objLayer->str = $topNav;
-$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+//$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_right';
 $header .= $objLayer->show();
 
 $objLayer->str = '';
-$objLayer->border = '; clear:both; margin:0px; padding:0px;';
-$headShow = $objLayer->show();
+//$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->cssClass = 'clearboth';
+//$headShow = $objLayer->show();
 
 //Get Selectall js
 echo $this->getJavascriptFile('selectall.js');
@@ -222,8 +225,8 @@ $objForm->addToForm($table->show().$hidden);
 //print out the page
 $middleColumnContent = "";
 $middleColumnContent .= $header;//objH->show();
-$middleColumnContent .= '<br />';
-$middleColumnContent .= $objForm->show();
+$middleColumnContent .= '<br /><br><br><br><br>';
+$middleColumnContent .= '<br><br>'.$objForm->show();
 
 if (empty($files)) {
     $middleColumnContent .= '<div class="noRecordsMessage" >'.$this->objLanguage->languageText('mod_cmsadmin_nopagesonfrontpage', 'cmsadmin').'</div>';
