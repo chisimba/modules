@@ -26,6 +26,7 @@ $title2=$objWashout->parseText($eventcontent['event_lefttitle2']);
 $footer=$objWashout->parseText($eventcontent['event_footer']);
 $timevenue=$objWashout->parseText($eventcontent['event_timevenue']);
 
+$message='"'.$this->objLanguage->languageText('mod_simpleregistration_isopen', 'simpleregistration').'"';
 $rightTitle='<h1>'.$this->objLanguage->languageText('mod_simpleregistration_registration', 'simpleregistration').'</h1>';
 $rightTitle.='<h3>'.$message.'</h3>';
 $leftTitle.=$title1.'<br/>';
@@ -36,6 +37,10 @@ $programLink =new link($this->uri(array('action'=>'expresssignin')));
 $programLink->link= '<h3>The Program</h3>';
 
 
+$table->startRow();
+$table->addCell($leftTitle);
+$table->addCell($rightTitle);
+$table->endRow();
 
 $table->startRow();
 $table->addCell('');
