@@ -27,10 +27,10 @@ $footer=$objWashout->parseText($eventcontent['event_footer']);
 $timevenue=$objWashout->parseText($eventcontent['event_timevenue']);
 
 //$message='"'.$this->objLanguage->languageText('mod_simpleregistration_isopen', 'simpleregistration').'"';
-$rightTitle='<h1>'.$this->objLanguage->languageText('mod_simpleregistration_registration', 'simpleregistration').'</h1>';
+/*$rightTitle='<h1>'.$this->objLanguage->languageText('mod_simpleregistration_registration', 'simpleregistration').'</h1>';
 $rightTitle.='<h3>'.$message.'</h3>';
 $leftTitle.='<h3>'.$title2.'</h3>';
-$rightTitle.=$timevenue;
+$rightTitle.=$timevenue;*/
 
 $programLink =new link($this->uri(array('action'=>'expresssignin')));
 $programLink->link= '<h3>The Program</h3>';
