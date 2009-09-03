@@ -203,7 +203,7 @@ class fossad extends controller {
         //delete old one
 
         foreach($dbdata as $row){
-            fputs($file, $row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company']."\r\n");
+            fputs($file, $row['first_name'].','.$row['last_name']."\r\n");
         }
         fclose($file);
         //fclose($fh);
