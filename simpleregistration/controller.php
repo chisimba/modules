@@ -80,7 +80,23 @@ class simpleregistration extends controller {
     function __home() {
         return "eventlisting_tpl.php";
     }
+
+
+
     function __showevent() {
+        $status=$this->getParam('status');
+         $this->shortname=$this->getParam('shortname');
+        if($status == 'closed'){
+           $this->setVarByRef('shortname',$this->shortname);
+           $idrows=$this->dbevents->getEventIdByShortname($this->shortname);
+
+        if(count($idrows) > 0){
+            $content=$this->dbeventscontent->getEventContent($idrows[0]['id']);
+            $this->setVarByRef('content',$content);
+        }
+            return "closed_tpl.php";
+
+        }
         $firstname=$this->getParam('firstname');
         $lastname=$this->getParam('lastname');
         $company=$this->getParam('company');
