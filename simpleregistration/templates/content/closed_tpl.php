@@ -107,20 +107,16 @@ $table->endRow();
 
 $content=$eventcontent['event_content'];
 $pagecontent= $objWashout->parseText($content);
+$disqus=$this->getObject('disquselems','disqus');
 
 $table->startRow();
 $table->addCell($pagecontent);
-//$table->addCell($regformObj->createCommentsForm());
+$table->addCell($disqus->addWidget());
 $table->endRow();
 
 $admin = new link ($this->uri(array('action'=>'memberlist','shortname'=>$shortname)));
 $admin->link= $this->objLanguage->languageText('mod_simpleregistration_admin', 'simpleregistration');
-$disqus=$this->getObject('disquselems','disqus');
 
-
-$table->startRow();
-$table->addCell($disqus->addWidget());
-$table->endRow();
 $mainjs="
 
     var ds = new Ext.data.Store({
