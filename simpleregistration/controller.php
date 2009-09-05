@@ -17,6 +17,7 @@ class simpleregistration extends controller {
         $this->dbevents = $this->getObject('dbevents');
         $this->utils = $this->getObject('simpleregistrationutils','simpleregistration');
         $this->dbeventscontent = $this->getObject('dbeventscontent');
+        $this->dbcomments = $this->getObject('dbcomments');
         $this->objLog->log();
     }
 
@@ -198,6 +199,17 @@ class simpleregistration extends controller {
         $this->nextAction('eventlisting');
     }
 
+
+    function __savecomment(){
+        $comment=$this->getParam("commentsField");
+        echo $comment;
+        die();
+        $shortname=$this->getParam("shortname");
+        $this->dbcomments->addComment($comment);
+        $this->nextAction("commentslist",array("shortname"=>$shortname));
+
+    }
+
    /**
     * The functions require login
     * @return <type>
@@ -365,6 +377,12 @@ class simpleregistration extends controller {
             $objMailer->attach($attach);
         }
         $objMailer->send();
+    }
+
+    public function __addcomments(){
+        $shortname=$this->getParam('shortname');
+        $this->setVarByRef('shortname',$shortname);
+        return "comments_tpl.php";
     }
       /**
      * Overridden method to determine whether or not login is required

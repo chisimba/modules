@@ -188,5 +188,54 @@ class formmanager extends object{
 
 
     }
+
+
+     public function createCommentsForm(){
+$submitUrl = $this->uri(array('action' => 'addcomments'));
+        $commentFormJS=
+    "Ext.onReady(function(){
+
+    /*
+     * ================ comments form  =======================
+     */
+    var wform = new Ext.form.FormPanel({
+        baseCls: 'x-plain',
+        labelWidth: 75,
+        bodyStyle:'padding:5px 5px 0',
+        standardSubmit: true,
+        url:'".str_replace("amp;", "", $submitUrl)."',
+        defaultType: 'textfield',
+        renderTo: 'surface',
+        collapsible: true,
+        defaults: {width: 320},
+        bodyStyle:'background-color:transparent',
+        border:false,
+        items: {
+            xtype: 'fieldset',
+            title: 'We would like to hear from you',
+            autoHeight: true,
+             buttons: [{
+            text: 'Log in to give comments',
+            handler: function(){
+            if (wform.url)
+            wform.getForm().getEl().dom.action = wform.url;
+            wform.getForm().submit();
+            }
+           }]
+     }
+      });
+    });
+";
+
+
+        //where we render the frame
+        $content='<div id="surface"></div>';
+        $content.= "<script type=\"text/javascript\">".$commentFormJS."</script>";
+
+
+        return $content;
+
+
+    }
 }
 ?>
