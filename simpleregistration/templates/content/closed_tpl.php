@@ -115,11 +115,11 @@ $table->endRow();
 
 $admin = new link ($this->uri(array('action'=>'memberlist','shortname'=>$shortname)));
 $admin->link= $this->objLanguage->languageText('mod_simpleregistration_admin', 'simpleregistration');
+$disqus=$this->getObject('disquselems','disqus');
 
 
 $table->startRow();
-$table->addCell('');
-$table->addCell($footer);
+$table->addCell($disqus->addWidget());
 $table->endRow();
 $mainjs="
 
@@ -205,8 +205,7 @@ $mainjs="
 if(count($content) > 0){
 $content= '<div id="wrap">'.$table->show().'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
-$disqus=$this->getObject('disquselems','disqus');
-$content.=$disqus->addWidget();
+
 echo $content;
 }else{
     echo '<font color="red"><h1>No conference with the shortname suggested exist</h1></font>';
