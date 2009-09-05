@@ -117,13 +117,6 @@ $admin = new link ($this->uri(array('action'=>'memberlist','shortname'=>$shortna
 $admin->link= $this->objLanguage->languageText('mod_simpleregistration_admin', 'simpleregistration');
 
 
-if($this->objUser->isLoggedIn()){
-    $table->startRow();
-    $table->addCell($admin->show());
-    $table->endRow();
-}
-
-
 $table->startRow();
 $table->addCell('');
 $table->addCell($footer);
