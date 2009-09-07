@@ -134,8 +134,12 @@ $display = '<p> '.$header.$headShow.'</p> <p class="clearboth"/><br/>';
 echo $display;
 // Show Form
 
-echo $addEditForm;
+//Printing server side error messages if any
+if (isset($cmsErrorMessage)) {
+	echo "<div class='error'><p>Error: $cmsErrorMessage</p></div>";
+}
 
+echo $addEditForm;
 
 /*
 //Get blocks icon

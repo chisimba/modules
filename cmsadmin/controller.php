@@ -175,6 +175,7 @@
 
                 $this->_objBox = $this->newObject('jqboxy', 'htmlelements');
                 
+                $this->_objValidate =  $this->newObject('validate', 'utilities');
                 $this->_objTemplate =  $this->newObject('dbtemplate', 'cmsadmin');
                 $this->_objPreview =  $this->newObject('dbcontentpreview', 'cmsadmin');
                 $this->_objPageMenu =  $this->newObject('dbpagemenu', 'cmsadmin');
@@ -1223,7 +1224,19 @@ $jQuery->loadSimpleTreePlugin();
                     $show_email = $this->getParam('show_email','g');
                     $show_print = $this->getParam('show_print','g');
                     $show_flag = $this->getParam('show_flag','g');
-					
+				
+					//Validation
+					$valid = $this->_objValidate->valRequired($contentId);
+					$this->setVarByRef('cmsErrorMessage', 'Content ID Wasn\'t Specified');
+					if ($valid) {
+						$valid = $this->_objValidate->valRequired($title);
+						$this->setVarByRef('cmsErrorMessage', 'Please specify a title');
+					} else if ($valid) {
+						$valid = $this->_objValidate->valRequired($fullText);
+						$this->setVarByRef('cmsErrorMessage', 'Please enter some text in the body');
+					}
+	
+					if ($valid) {
                     $this->_objContent->editContent($contentId ,
                                                     $title ,
                                                     $sectionId ,
@@ -1244,6 +1257,11 @@ $jQuery->loadSimpleTreePlugin();
                                                     $show_email ,
                                                     $show_print,
 													$show_flag);
+
+						$this->setVarByRef('cmsErrorMessage', '');
+					} else {
+                        return $this->nextAction('addcontent', array('id' => $contentId), 'cmsadmin');
+					}
 
                     $mustApply = $this->getParam('must_apply');
     
@@ -1268,9 +1286,11 @@ $jQuery->loadSimpleTreePlugin();
                     }
                     if (!empty($sectionId) && !$is_front) {
                         return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
-                    } else {
+                    } else if ($is_front) {
                         return $this->nextAction('frontpages', array(), 'cmsadmin');
-                    }
+                    } else {
+                        return $this->nextAction('default', array(), 'cmsadmin');
+					}
                 break;
 
                 case 'viewcontent':
@@ -1306,7 +1326,7 @@ $jQuery->loadSimpleTreePlugin();
                 return $this->nextAction('frontpages');
 
                 case 'deletecontent':
-                $this->_objContent->deleteContent($this->getParam('id'));
+                $this->_objContent->deleteContent($this->getParam('id'), 'controller.php');
                 $sectionId = $this->getParam('sectionid', NULL);
 
                 return $this->nextAction('trashmanager');

@@ -816,8 +816,10 @@
         * @return boolean
         * @access public
         */
-        public function deleteContent($id)
+        public function deleteContent($id, $fromWhere)
         {
+			log_debug('delete called for content item: ' . $id . ' stack trace' . $fromWhere);
+
             //Re-order other pages in section accordingly
             $page = $this->getRow('id', $id);
             $pageOrderNo = $page['ordering'];

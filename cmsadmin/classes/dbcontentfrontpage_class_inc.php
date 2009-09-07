@@ -97,6 +97,7 @@ class dbcontentfrontpage extends dbTable
          */
         public function remove($id)
         {
+			log_debug('called delete from frontpage manager for id ' . $id);
             $result = $this->delete('id', $id);
             
             $this->reorderContent();
