@@ -16,7 +16,7 @@ class dbcoursecomments extends dbTable{
 
     public function addComment($courseid, $comment,$status) {
         $version = $this->objDocumentStore->getMaxVersion($courseid);
-        $data = array('courseid'=>$courseid, 'comment'=>$comment, 'version'=>$version,'status'=>$status);
+        $data = array('courseid'=>$courseid, 'comment'=>$comment, 'version'=>$version,'status'=>$status, 'username'=>$this->objUser->userName(), 'datemodified'=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $this->insert($data);
     }
 

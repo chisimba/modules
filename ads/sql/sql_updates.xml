@@ -2,15 +2,19 @@
 <updates>
     <update>
         <table>tbl_ads_course_comments</table>
-        <version>0.056</version>
-        <description>Added the status field</description>
+        <version>0.062</version>
+        <description>Added the username and date field</description>
         <data>
         	<add>
-    			<name>status</name>
+    			<name>username</name>
 		    	<type>text</type>
     			<length>32</length>
 		</add>
-		
+		<add>
+    			<name>datemodified</name>
+		    	<type>text</type>
+    			<length>30</length>
+		</add>
 	</data>
 	
     </update>
