@@ -33,10 +33,6 @@ $content.= '<div><div id="tree-div" style="padding-top: 2em;"></div>
             <div id="addcomments-win" class="x-hidden"></div>
             <div id="send-win" class="x-hidden">
                 <div class="x-window-header">Send Document To User</div>
-                <div id="send-tab">
-                    <!-- Auto create tab 1 -->
-                    <div class="x-tab" title="Please Fill Out Info"></div>
-                </div>
             </div>
           </div><center>'.$editButton->show().'&nbsp;'.$addCommentsButton->show().'&nbsp;'.$forwardButton->show().'&nbsp;'.$forwardToModeratorButton->show().'</center></div>';
    //where we render the 'popup' window
@@ -217,12 +213,12 @@ $mainjs =  "
 
             function forwardProposal() {
                 var win;
-                var button = Ext.get('show-btn');
+                //var button = Ext.get('show-btn');
                 var myForm = new Ext.FormPanel({
                                 labelWidth: 125,
                                 url:'".str_replace("amp;", "", $submitUrl->show())."',
                                 frame:true,
-                                title: 'User Details',
+                                //title: 'User Details',
                                 bodyStyle:'padding:5px 5px 0',
                                 width: 350,
                                 defaults: {width: 230},

@@ -582,6 +582,18 @@ class ads extends controller {
         echo $response;
         die(); // break does not work. throws an error.
     }
+
+    public function __viewcoursedetails() {
+        $date = $this->getParam('date');
+        $courseid = $this->getParam('courseid');
+        $version = $this->getParam('version');
+
+        $this->setVarByRef("date", $date);
+        $this->setVarByRef("courseid", $courseid);
+        $this->setVarByRef("version", $version);
+
+        return "viewcoursedetails_tpl.php";
+    }
 }
 
 

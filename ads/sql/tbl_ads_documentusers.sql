@@ -7,6 +7,8 @@
                 'fname' => array('type' => 'text', 'length' => 32,'notnull' => TRUE),
                 'email' => array('type' => 'text', 'length' => 32,'notnull' => TRUE),
                 'phone' => array('type' => 'text', 'length' => 32,'notnull' => TRUE),
-                'courseid' => array('type' => 'text', 'length' => 32,'notnull' => TRUE)
+                'courseid' => array('type' => 'text', 'length' => 32,'notnull' => TRUE),
+                'fromemail' => array('type' => 'text', 'length' => 32,'notnull' => TRUE),
+                'datemodified'=>array('type'=>'text','length'=>30,'notnull' => TRUE)
               );
 ?>

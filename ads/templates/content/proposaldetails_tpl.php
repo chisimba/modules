@@ -7,8 +7,11 @@ $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri
 $iconscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/icons.css').'"/>';
 $searchfieldjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/SearchField.js').'" type="text/javascript"></script>';
 $gridsearchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/LiveSearch.js').'" type="text/javascript"></script>';
+$coursehistoryjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/proposaldetails.js').'" type="text/javascript"></script>';
+
 $styleSheet="
    <style type=\"text/css\">
+div#contentcontent, div#tree-div {min-height: 500px;}
 .search-item {
     font:normal 11px tahoma, arial, helvetica, sans-serif;
     padding:3px 10px 3px 10px;
@@ -69,6 +72,7 @@ $this->appendArrayVar('headerParams', $maincss);
 $this->appendArrayVar('headerParams',$styleSheet);
 
 $this->appendArrayVar('headerParams',$iconscss);
+$this->appendArrayVar('headerParams',$coursehistoryjs);
 $this->appendArrayVar('headerParams',$searchjs);
 $this->appendArrayVar('headerParams',$searchfieldjs);
 $this->appendArrayVar('headerParams',$gridsearchjs);
@@ -128,15 +132,15 @@ if($courseProposal['status'] == 0) {
 $items .= "}";
 
 $statuscodes=  array(
-              "0"=> 'New',
-              "1"=>'APO Comment',
-              "2"=>'Library comment',
-              "3"=>'Subsidy comment',
-              "4"=>'Faculty subcommittee',
-              "5"=>'Faculty',
-              "6"=> 'APDC');
+    "0"=> 'New',
+    "1"=>'APO Comment',
+    "2"=>'Library comment',
+    "3"=>'Subsidy comment',
+    "4"=>'Faculty subcommittee',
+    "5"=>'Faculty',
+    "6"=> 'APDC');
 $mainjs=
-"
+    "
     var wform = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         width:750,
@@ -157,7 +161,7 @@ $mainjs=
             items:[
 
                new Ext.form.DisplayField({
-               fieldLabel: 'Facutly',
+               fieldLabel: 'Faculty',
                value: '".$courseProposal['faculty']."'
                }),
                new Ext.form.DisplayField({
@@ -325,11 +329,16 @@ forwardProposalToModerator('".$this->id."');
 }//end if
 };
 
+Ext.onReady(function(){
+    var historyURL = '".str_replace("amp;", "",$this->uri(array('action'=>'gethistorydata', 'courseid'=>$this->id, 'formnumber'=>$this->allforms[0])))."';
+    addTree('".$this->id."', historyURL);
+    showTabs();
+});
 ";
 
 
 
-$content.= "<script type=\"text/javascript\">".$mainjs."</script>";
+//$content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 
 $actionsDropDown = new dropdown ('actions');
 $actionsDropDown->cssId = 'actiondd';
@@ -341,17 +350,17 @@ $actionsDropDown->addOption('default','Select action ...');
 
 //eable these if moderator or current editor
 if($currentEditor == $this->objUser->email()
-|| $modemail == $this->objUser->email()
-){
+    || $modemail == $this->objUser->email()
+) {
 
-$actionsDropDown->addOption('editproposal','Edit Proposal');
-$actionsDropDown->addOption('addcomment','Add Comment');
-$actionsDropDown->addOption('forward','Forward');
-$actionsDropDown->addOption('forwardtomoderator','Forward to moderator');
+    $actionsDropDown->addOption('editproposal','Edit Proposal');
+    $actionsDropDown->addOption('addcomment','Add Comment');
+    $actionsDropDown->addOption('forward','Forward');
+    $actionsDropDown->addOption('forwardtomoderator','Forward to moderator');
 
 }
-if($modemail == $this->objUser->email()){
-$actionsDropDown->addOption('updatestatus','Update Status');
+if($modemail == $this->objUser->email()) {
+    $actionsDropDown->addOption('updatestatus','Update Status');
 }
 
 $backButton = new button('back','Back');
@@ -379,11 +388,14 @@ $renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br
 
 $render='<div id="onecolumn">
                     <div id="content">
-                    <div id="contentcontent">
+                    <div id="tabs"></div>
+                    <div id="tree-div" style="padding-top: 2em;"  class="x-hide-display"></div>
+                    <div id="contentcontent"  class="x-hide-display">
                     '.$renderContent.'
                     </div>
                     </div>
-                    </div>';
+                    </div>
 
+<input type="hidden" name="homeURL" value = "'.str_replace("amp;", "",$this->uri(array())).'">';
 echo $render;
 ?>

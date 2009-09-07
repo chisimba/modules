@@ -120,9 +120,9 @@ class dbdocument extends dbtable{
         $status = true;
 
         // user data for proposal
-        //$data = array("lname"=>$lname, "fname"=>$fname, "email"=>$email, "phone"=>$phone, "courseid"=>$courseid);
+        $data = array("lname"=>$lname, "fname"=>$fname, "email"=>$email, "phone"=>$phone, "courseid"=>$courseid, "fromemail"=>$fromemail, "datemodified"=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
 
-        //$status = $this->insert($data, "tbl_ads_documentusers");
+        $status = $this->insert($data, "tbl_ads_documentusers");
 
         // owner of document now changes
         $sql = "select max(version) maxversion from tbl_ads_documentstore where coursecode = '$courseid'";
@@ -137,7 +137,7 @@ class dbdocument extends dbtable{
         return $status;
     }
 
-    function sendMail($to,$fromemail,$courseid){
+    public function sendMail($to,$fromemail,$courseid){
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'ads');
         $subject=$objSysConfig->getValue('EMAIL_SUBJECT', 'ads');
@@ -176,18 +176,18 @@ class dbdocument extends dbtable{
         $myemail=$objUser->email();
         return $myemail == $email;
     }
-    function getCurrentEditor($courseid){
+    public function getCurrentEditor($courseid){
         $sql="select distinct currentuser from $this->tablename where coursecode='$courseid' and version = (select max(version) from $this->tablename where coursecode='$courseid')";
         $data = $this->getArray($sql);
 
         return $data[0]['currentuser'];
     }
-    function getLastEditDate($courseid){
+    public function getLastEditDate($courseid){
         $sql="select distinct datemodified from $this->tablename where coursecode='$courseid' and version = (select max(version) from $this->tablename where coursecode='$courseid')";
         $data = $this->getArray($sql);
         return $data[0]['datemodified'];
     }
-    function getStatus($courseid){
+    public function getStatus($courseid){
         $sql="select distinct status from $this->tablename where coursecode='$courseid' and version = (select max(version) from $this->tablename where coursecode='$courseid')";
         $data = $this->getArray($sql);
 
@@ -223,6 +223,16 @@ class dbdocument extends dbtable{
         header("Content-Type: {$contentType}");
         header("Content-Size: " . strlen($buff));
         echo $buff;
+    }
+
+    public function getViewData($date, $courseid, $version) {
+        // change date from dd/mm/yyyy format to sql yyyy-mm-dd
+        $tmpDate = substr($date, 6);
+        $tmpDate .= "-".substr($date, 0, 2);
+        $tmpDate .= "-".substr($date, 3, 2);
+        $filter = "where coursecode = '$courseid' and version = '$version' and datemodified like '$tmpDate%'";
+        
+        return $this->getAll($filter);
     }
 }
 

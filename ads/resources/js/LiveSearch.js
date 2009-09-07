@@ -103,7 +103,7 @@ function showSearchWinX(){
         ,
         title:'Search users'
         ,
-        width:600
+        width:500
         ,
         x:200
         ,
