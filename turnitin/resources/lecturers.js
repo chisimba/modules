@@ -13,6 +13,20 @@
 * and utility functions
 *
 */
+
+
+
+var msg = function(title, msg){
+        Ext.Msg.show({
+            title: title,
+            msg: msg,
+            minWidth: 200,
+            modal: true,
+            icon: Ext.Msg.INFO,
+            buttons: Ext.Msg.OK
+        });
+    };
+    
  var win; 
 Ext.apply(Ext.form.VTypes, {
     daterange : function(val, field) {
@@ -184,15 +198,17 @@ var addForm = new Ext.FormPanel({
 		
 		        items: [{
 			                fieldLabel: 'Title',
-			                name: 'title',			                
+			                name: 'title',		
+			                emptyText: 'Title of the paper...',
 			                anchor:'95%',
 			                allowBlank:false
 			            },{
 		        
 			        	xtype:'fieldset',
 			        	fieldLabel: 'Dates',
+			        	
 				        //columnWidth: 0.5,
-				        layout:'column',
+				       // layout:'column',
 				        defaults:{bodyStyle:'padding:10px'},
 
 				        collapsible: true,
@@ -209,33 +225,43 @@ var addForm = new Ext.FormPanel({
 				          		anchor:'95%',
 						        name: 'startdt',
 						        id: 'startdt',
-						        vtype: 'daterange',
+						       // vtype: 'daterange',
+						        //emptyText: 'Start Date...',
+						        blankText: 'The Start Date is a Required Field!',
 						        endDateField: 'enddt'
-				      		}),
+				      		}),/*
 				      		 
 				      		new Ext.form.TimeField({
 				                fieldLabel: '@',
 				                name: 'starttime',
-				                minValue: '8:00am',
-				                maxValue: '6:00pm'
+				                emptyText: 'Start time...',
+				                //minValue: '8:00am',
+				                //maxValue: '6:00pm'
 				                
-				            }),
+				                minValue: '7:00 AM',
+							    maxValue: '11:00 PM',
+							    increment: 30
+
+				                
+				            }),*/
 				            
 					        new Ext.form.DateField({
 						        fieldLabel: 'End Date',
 						        type: 'datefield',
 						        name: 'duedt',
 						        id: 'enddt',
-						        vtype: 'daterange',
+						       //  emptyText: 'Due Date..',
+						        //vtype: 'daterange',
 						        startDateField: 'startdt' // id of the start date field
 					    	}),
-				            
+				            /*
 				           new Ext.form.TimeField({
 				                fieldLabel: '@',
 				                name: 'endtime',
+				                 emptyText: 'Time due...',
 				                minValue: '8:00am',
 				                maxValue: '6:00pm'
-				            })
+				            })*/
         			]},{
 			            xtype:'htmleditor',
 			            id:'instructions',
@@ -256,8 +282,9 @@ var addForm = new Ext.FormPanel({
         text: 'Save',
         
         handler: function(){
+         if(addForm.getForm().isValid()){
             addForm.getForm().submit({
-            	url:'http://localhost/eteach/index.php', 
+            	url:baseuri, 
             	waitMsg:'Creating new Assignment...',
             	timeout:10,
             	params: {
@@ -268,11 +295,11 @@ var addForm = new Ext.FormPanel({
 			       win.hide();
 			       addForm.getForm().reset();
 			       assStore.load({params:{start:0, limit:25}});
-		           Ext.example.msg('Success!', action.result.msg);
+		           msg('Success!', action.result.msg);
 				  
 			    },
 			    failure: function(form, action) {
-			       Ext.example.msg('Error', action.result.msg);
+			       msg('Error', action.result.msg);
 			    	/* switch (action.failureType) {
 			            case Ext.form.Action.CLIENT_INVALID:
 			                Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
@@ -285,6 +312,7 @@ var addForm = new Ext.FormPanel({
 			       }*/
 			    }
 			});
+         }
         }
     });
 var but =  new Ext.Button(action);
@@ -305,7 +333,7 @@ var assStore = new Ext.data.JsonStore({
             {name: 'instructions'}
         ],
         proxy: new Ext.data.HttpProxy({
-            url: 'http://localhost/eteach/index.php?module=turnitin&action=json_getassessments'
+            url: baseuri+'?module=turnitin&action=json_getassessments'
         })
     });
     assStore.setDefaultSort('duedate', 'desc');
@@ -325,7 +353,7 @@ var assStore = new Ext.data.JsonStore({
             {name: 'dateposted'}
         ],
         proxy: new Ext.data.HttpProxy({
-            url: 'http://localhost/eteach/index.php?module=turnitin&action=json_getsubmissions'
+            url: baseuri+'?module=turnitin&action=json_getsubmissions'
         })
     });
     
@@ -487,7 +515,7 @@ Ext.onReady(function(){
 
     // render it
     //assGrid.render('topic-grid');
-
+ 	Ext.QuickTips.init();
     
      var layout = new Ext.Panel({
         //title: 'Employee Salary by Month',
@@ -621,7 +649,7 @@ Ext.onReady(function(){
     	} else {
     		value = value+'%';
     	}
-        return String.format('<a href="#" class="'+cid+'" onClick="window.open(\'http://localhost/eteach/index.php?module=turnitin&action=returnreport&objectid=101049555\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
+        return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseuri+'?module=turnitin&action=returnreport&objectid=101049555\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
         	value, record.data.contextcode);
         	
     }

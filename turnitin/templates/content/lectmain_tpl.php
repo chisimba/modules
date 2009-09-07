@@ -1,25 +1,33 @@
 <?php  
-
-$ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'htmlelements');
-//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/FileUploadField.js', 'htmlelements');
-//$ext .= '<script type="text/javascript" src="http://extjs.com/deploy/dev/examples/ux/fileuploadfield/FileUploadField.js"></script>';
+//do the check to check if TII is accessable
 
 
 
-//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/code-display.js', 'htmlelements');
-//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/ColumnNodeUI.js', 'htmlelements');
-//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/tree/column-tree.js', 'htmlelements');
-//$ext .=$this->getJavaScriptFile('lecturers.js', 'turnitin');
-$ext .=$this->getJavaScriptFile('students.js', 'turnitin');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
-
-
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'htmlelements').'" type="text/css" />';
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
-//$ext .= '<link rel="stylesheet" href=" <link rel="stylesheet" type="text/css" href="http://extjs.com/deploy/dev/examples/ux/fileuploadfield/css/fileuploadfield.css"/>" type="text/css" />';
-$ext .= '<style type="text/css">
+	$objSysConfig  = $this->getObject('altconfig','config');
+	$ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
+	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'htmlelements');
+	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/FileUploadField.js', 'htmlelements');
+	//$ext .= '<script type="text/javascript" src="http://extjs.com/deploy/dev/examples/ux/fileuploadfield/FileUploadField.js"></script>';
+	
+	$this->appendArrayVar('headerParams', '
+	        	<script type="text/javascript">
+	        		var storeUri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'json_getstudentassessments', 'module' => 'turnitin'))).'"; 
+	        		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
+	        	</script>');
+	
+	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/code-display.js', 'htmlelements');
+	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/ColumnNodeUI.js', 'htmlelements');
+	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/tree/column-tree.js', 'htmlelements');
+	$ext .=$this->getJavaScriptFile('lecturers.js', 'turnitin');
+	//$ext .=$this->getJavaScriptFile('students.js', 'turnitin');
+	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+	
+	
+	$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
+	$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'htmlelements').'" type="text/css" />';
+	$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
+	//$ext .= '<link rel="stylesheet" href=" <link rel="stylesheet" type="text/css" href="http://extjs.com/deploy/dev/examples/ux/fileuploadfield/css/fileuploadfield.css"/>" type="text/css" />';
+	$ext .= '<style type="text/css">
 
        
         .empty .x-panel-body {
@@ -81,7 +89,16 @@ $ext .= '<style type="text/css">
     </style>';
 
  $this->appendArrayVar('headerParams', $ext);
+
+ if($errorMessage)
+ {
+ 	print '<h3>The following Turnitin Error was encountered</h3><span class="warning">'.
+ 			$errorMessage.'</span><br/><br/>';
+ }
+ 
 ?>
+
+
 <div id="topic-grid"></div>
 <div id="hello-win" class="x-hidden">
 
@@ -98,5 +115,14 @@ $ext .= '<style type="text/css">
         </div>
     </div>
 </div>
+
+<form action="<?php echo $this->uri(array('action' => 'ajax_sumbitassessment')) ?>" enctype="multipart/form-data" method="POST">
+
+<input type="file" name="file">
+<input type="text" name="assignmenttitle">
+<input type="submit">
+</form>
+
+
 
 

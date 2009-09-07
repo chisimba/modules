@@ -1,5 +1,4 @@
-var uri;
-uri = 'http://localhost/eteach/index.php?';
+
 
 var msg = function(title, msg){
         Ext.Msg.show({
@@ -63,7 +62,7 @@ var assStore = new Ext.data.JsonStore({
             {name: 'contextcode'},
         ],
         proxy: new Ext.data.HttpProxy({
-            url: uri+'module=turnitin&action=json_getstudentassessments'
+            url: storeUri
         })
     });
     assStore.setDefaultSort('duedate', 'desc');
@@ -125,7 +124,7 @@ var assGrid = new Ext.grid.GridPanel({
         },
         // paging bar on the bottom
         bbar: new Ext.PagingToolbar({
-            pageSize: 25,
+            pageSize: 10,
             store: assStore,
             displayInfo: true,
             displayMsg: 'Displaying topics {0} - {1} of {2}',
@@ -157,7 +156,7 @@ Ext.onReady(function(){
 	assGrid.render('topic-grid');
 	
 	// trigger the data store load
-    assStore.load({params:{start:0, limit:25}});
+    assStore.load({params:{start:0, limit:10}});
     
     
 	
@@ -185,12 +184,14 @@ Ext.onReady(function(){
     	} else {
     		value = value+'%';
     	}
-    	
+    	//alert(v);
     	if(v == '')
     	{
     		
-    		return String.format('<a href="#"  onClick="uploadFormPanel(\'{0}\', \'{1}\')" >Submit </a>', 	record.data.assid, record.data.contextcode);
+    		var ret = String.format('<a href="#"  onClick="uploadFormPanel(\'{0}\', \'{1}\');" >Submit </a>', 	record.data.assid, record.data.contextcode);
         	
+    		//alert(ret);
+    		return ret;
         	//return  new Ext.Button('titititle');
         	/*return new Ext.Button({
     			text:'Submit',
@@ -199,8 +200,8 @@ Ext.onReady(function(){
 
     		});*/
     	}else {
-    	
-        	return String.format('<a href="#" class="'+cid+'" onClick="window.open(\'http://localhost/eteach/index.php?module=turnitin&action=returnreport&objectid=101049555\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
+    	//dont forget to change the object id 
+        	return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseUri+'index.php?module=turnitin&action=returnreport&objectid=101049555\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
         	value, record.data.contextcode);
     	}
     }
@@ -259,6 +260,7 @@ function uploadFormPanel(assId, contextCode){
         items: [{
 	            xtype: 'textfield',
 	            width:350,
+	            name: 'assignmenttitle',
 	            emptyText: 'Give your paper a title ...',
 	            fieldLabel: 'Title'
         	},fu
@@ -269,11 +271,12 @@ function uploadFormPanel(assId, contextCode){
             handler: function(){
                 if(fp.getForm().isValid()){
 	                fp.getForm().submit({
-	                    url: uri,//+'?module=turnitin&action=ajax_sumbitassessment',
+	                    url: baseuri +'?module=turnitin&action=ajax_sumbitassessment',
 	                    params:  {'module' : 'turnitin', 'action': 'ajax_sumbitassessment'},
 	                    waitMsg: 'Uploading your paper...',
 	                    success: function(fp, action){
-	                        msg('Success', 'File was successfully uploaded\n'+action.result.msg);
+	                        msg('Success', 'File was successfully uploaded <br/>'+action.result.msg);
+	                       // fp.hide();
 	                    },
 	                    failure: function(fp, action){
 	                    	msg('Error!', action.result.msg);

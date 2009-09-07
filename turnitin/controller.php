@@ -44,6 +44,7 @@ class turnitin extends controller
 			$this->objDBContext = $this->getObject('dbcontext', 'context');
 			$this->objForms = $this->getObject('forms');
 			$this->objTAssDB = $this->getObject('turnitindbass');
+			$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
 			
 			// Supressing Prototype and Setting jQuery Version with Template Variables
 			$this->setVar('SUPPRESS_PROTOTYPE', true); //Can't stop prototype in the public space as this might impact blocks
@@ -67,11 +68,7 @@ class turnitin extends controller
 	{
 		// Set the layout template.
         $this->setLayoutTemplate("layout_tpl.php");
-       
-        $this->eventDispatcher->post($this->objActivityStreamer, "Turnitin", array('title'=>'Site Annoucement',
-    																				'link'=> $this->uri(array()),
-    																				'author' => $this->objUser->fullname(),
-    																				'description'=>' Some is trying to access the TII module'));
+               
 		switch ($action)
 		{
 			//creates a user profile (if one does not exist) and logs the user in (instructor or student)
@@ -184,7 +181,7 @@ class turnitin extends controller
 				//echo "{'success' : 'true', 'msg' : 'ja it works -> ".$this->getParam('title').$this->getParam('startdt').$this->getParam('duedt').$this->getParam('instructions')."'}"; 
 				//echo "{'success' : false, 'errors' : ['clientCode': 'Client not found', 'portOfLoading' : 'This field must not be null']}";   
 				
-				echo $this->doAddAssignment();
+				echo $this->objUtils->doAddAssignment();
 				exit(0);
 				break;
 				
@@ -207,7 +204,7 @@ class turnitin extends controller
 				echo $this->objUtils->doFileUpload();
 				 $this->eventDispatcher->post($this->objActivityStreamer, "turnitin", array('title'=>'Assignment Submitted',
     																				'link'=> $this->uri(array()),
-    																				'contextcode' => $this->objContext->getContextCode(),
+    																				'contextcode' => $this->objDBContext->getContextCode(),
     																				'author' => $this->objUser->fullname(),
     																				'description'=> $this->objUser->fullname()." submitted an assignment to Turnitin"));
 				//echo '{"success":"true"}';

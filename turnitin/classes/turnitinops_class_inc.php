@@ -86,18 +86,18 @@ class turnitinops extends object
         $this->remote_host = $this->_objSysConfig->getValue('apihost', 'turnitin');
         $this->shared_secret_key = $this->_objSysConfig->getValue('sharedkey', 'turnitin');       
         $this->uem = $this->_objSysConfig->getValue('email', 'turnitin');       
-        $this->upw = 'elearn2009';//$this->_objSysConfig->getValue('password', 'turnitin');       
+        $this->upw = $this->_objSysConfig->getValue('password', 'turnitin');       
         
-       
-      //  $this->uem= 'wesleynitsckie@gmail.com';
-		//$this->ufn='Wesley';
-		//$this->uln='Nitsckie';
-	//	$this->upw='364t648y';
-		
+      
         //setup defaults
        	$this->gmtime = $this->getGMT();
        	$this->encrypt=0;
-		$this->diagnostic=1;
+		$this->diagnostic=0;
+		
+		//success codes
+		$this->successCodes = array();
+		$this->successCodes['2'] = array(20, 21, 22);
+		$this->successCodes['1'] = array(10, 11);
     }
     
 	/**
@@ -136,7 +136,7 @@ class turnitinops extends object
 						$this->upw.
 						$this->utp.
 						$this->shared_secret_key;
-		error_log($md5string);			
+		//error_log($md5string);			
 		return md5($md5string);
 	}		
 	
@@ -158,11 +158,16 @@ class turnitinops extends object
 	 */
 	public function getXMLResult($xmlStr)
 	{
-		$xml = new SimpleXMLElement($xmlStr);
-		$message = $xml->returndata->message;
-		$rcode = $xml->returndata->rcode;
-		
-		return array('message' => $message, 'rcode' => $rcode );
+		if($this->diagnostic == 0)
+		{
+			$xml = new SimpleXMLElement($xmlStr);
+			$message = $xml->rmessage;
+			$rcode = $xml->rcode;
+			
+			return array('message' => $message, 'code' => $rcode );
+		}else {
+			return $xmlStr;
+		}
 	}
 	
 	/**
@@ -201,7 +206,7 @@ class turnitinops extends object
 		$url .= "&ptype=".urlencode($this->ptype);
 		$url .= "&pdata=".urlencode($this->pdata);
 		
-		
+		error_log($url);
 		return $url;
 	}
 	
@@ -244,15 +249,15 @@ class turnitinops extends object
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
 		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);		
 	
 		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
         {
 			//setup proxy
 			//curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
-			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
+			curl_setopt($ch, CURLOPT_PROXYPORT, $proxyArr['proxy_port']);
+			curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_protocol'].'://'.$proxyArr['proxy_host']);
         }
         $params = $this->getParams();
        // print $params;
@@ -260,21 +265,9 @@ class turnitinops extends object
         curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
         ob_start();
 		$result=curl_exec ($ch);
-		
-
 		curl_close ($ch);
-		return $result;
-		//$tiixml = new SimpleXMLElement(ob_get_contents());
-    	//ob_end_clean();
-    	//return $tiixml;
-		//return $this->getXMLResult($result);
-		//print $params;
-		//return $result;
-		//$tiixml = new SimpleXMLElement($result);
-		$tiixml = new SimpleXMLElement(ob_get_contents());
-		 ob_end_clean();
-		return $tiixml;
-		//return $result;
+			
+		return $this->getXMLResult($result);		
 	}
 	
 	
@@ -296,16 +289,14 @@ class turnitinops extends object
 		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-		/*
 		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
         {
 			//setup proxy
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			//curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
-			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
+			curl_setopt($ch, CURLOPT_PROXYPORT, $proxyArr['proxy_port']);
+			curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_protocol'].$proxyArr['proxy_host']);
         }
-        */
 		$result=curl_exec ($ch);
 		curl_close ($ch);
 	
@@ -338,7 +329,7 @@ class turnitinops extends object
      * @param array $params
      */
     function createLecturer($params)
-    {    	
+    {    
     	return $this->createUser($params, 2);
     }
     
@@ -362,7 +353,7 @@ class turnitinops extends object
     function createUser($params, $type = 1)
     {
     	$this->fid = 1;
-    	$this->fcmd = 1;
+    	$this->fcmd = 2;
     	$this->utp = $type;
     	
     	$this->upw = $params['password'];    	
@@ -425,9 +416,17 @@ class turnitinops extends object
     	
     	$this->ctl = $params['classtitle'];
     	$this->cpw = $params['classpassword'];
-    	$this->uid = $params['username'];
+    	//$this->uid = $params['username'];
     	//$this->cid = $params['classid'];
     	
+    	//$this->upw = $params['password'];    	
+    	//$this->uid = $params['username'];    	
+    	//$this->ufn = $params['firstname'];
+    	//$this->uln = $params['lastname'];
+    	//$this->uem = $params['email'];   
+    	//$this->tem = $params['instructoremail'];
+    	
+    	//var_dump($params);die;
     	return $this->doPost();
     }
     
@@ -448,15 +447,21 @@ class turnitinops extends object
     	//$this->cid = 2758586;//$params['classid'];
     	
     	
+    		//$this->upw = $params['password'];    	
+    	//$this->uid = $params['username'];    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];   
+    	$this->tem = $params['email'];
     	
-    	//$this->aid = $params['assignmentid'];
     	$this->assign = $params['assignmenttitle'];
-    	//$this->ainst = $params['assignmentinstruct'];
+    	$this->ainst = $params['assignmentinstruct'];
     	$this->dtstart = $params['assignmentdatestart'];
     	$this->dtdue = $params['assignmentdatedue'];
+  
+    	$ret = $this->doPost();
     	
-    	
-    	return $this->doPost();
+    	return $ret;
     }
     
     
@@ -618,12 +623,11 @@ class turnitinops extends object
 		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
         {
 			//setup proxy
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			//curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-			curl_setopt($ch, CURLOPT_PROXYPORT, "8080");
-			curl_setopt($ch, CURLOPT_PROXY, "http://cache.uwc.ac.za");
+			curl_setopt($ch, CURLOPT_PROXYPORT, $proxyArr['proxy_port']);
+			curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_protocol'].'://'.$proxyArr['proxy_host']);
         }
-        
 		
 		$response = curl_exec( $ch );
 		
@@ -670,5 +674,10 @@ class turnitinops extends object
     	
     }
     
+    
+    public function isSuccess($fid, $code)
+    {
+    	return in_array($code, $this->successCodes[$fid]);
+    }
     
 }

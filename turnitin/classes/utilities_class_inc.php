@@ -148,10 +148,29 @@ class utilities extends object
 	 */
 	public function userTemplate()
 	{
-		return "lectmain_tpl.php";
+		//return "lectmain_tpl.php";
+		$this->setVar('errorMessage','');
 		$objContextGroups = $this->getObject('managegroups', 'contextgroups');	
 		if ($this->objUser->isAdmin () || $objContextGroups->isContextLecturer()) 
 		{
+			//create user on TII if he does not exist
+			$res = $this->objTOps->createLecturer($this->getUserParams());
+
+			//create the course on TII if it does not exist and 
+			//make this user the instructor					
+			
+			$res =  $this->objTOps->createClass(array_merge(
+													$this->getUserParams(), 
+													$this->getClassParams()));
+			
+			if(is_array($res))
+			{
+				if(!$this->objTOps->isSuccess(2, $res['code']))
+				{
+					$this->setVar('errorMessage',$res['message']);
+					error_log($res['message']);
+				}
+			}
 			return "lectmain_tpl.php";
 		} else {
 			return "main_tpl.php";
@@ -196,34 +215,12 @@ class utilities extends object
 	 */
 	public function getUserParams()
 	{
-		$username = $this->objUser->userName();
-		$userDetails = $this->objUser->lookupData($username);
-				
 		$params = array();
-		
-		if ($userDetails)
-		{
-			
-			$params['password'] = 'nitsckie';//$username;    	
-			$params['username'] = $username;
-			$params['firstname'] = $userDetails['firstname']; 
-			$params['lastname'] = $userDetails['surname'];
-			$params['email'] = $userDetails['emailaddress'];	
-			
-			
-			//lect
-			/*$params['password'] = 'nitsckie';//$username;    	
-			$params['username'] = 'wesleynitsckie';
-			$params['firstname'] = 'Wesley';
-			$params['lastname'] = 'Nitsckie';
-			$params['email'] = 'wesleynitsckie@gmail.com';			
-			*/
-			$params['password'] = 'student';    	
-			$params['username'] = 'student';
-			$params['firstname'] = 'Student';
-			$params['lastname'] = 'student';
-			$params['email'] = 'student@uwc.ac.za';			
-		}
+		$params['password'] = 'nitsckie';//$username;    	
+		$params['username'] = $this->objUser->userName();
+		$params['firstname'] =  $this->objUser->getFirstname(); 
+		$params['lastname'] =  $this->objUser->getSurname();
+		$params['email'] = $this->objUser->email();
 		
 		return $params;
 	}
@@ -241,13 +238,10 @@ class utilities extends object
 		{
 			$params['classid'] = $this->objDBContext->getContextCode();
 			$params['classtitle'] = $this->objDBContext->getTitle();
-			$params['classpassword'] = 'password';
-			$params['instructoremail'] = 'elearning@uwc.ac.za';
+			$params['classpassword'] = 'classpass';
+			$params['instructoremail'] = '';//$this->objUser->email();
 		}
-		//var_dump($params);die;
-		//$params['classid'] = $this->objDBContext->getContextCode();
-		$params['classtitle'] = "Twitter Class";//$this->objDBContext->getTitle();
-		//$params['classpassword']
+		
 		return $params;
 	}
 	
@@ -273,11 +267,14 @@ class utilities extends object
 	{
 		$successcodes = array(40, 41, 42, 43);
 		$assParams = $this->getAssessmentParams();
-		$rcode = array('rcode'=>42);/*$this->objTOps->createAssessment(array_merge(
+		error_log(var_export($assParams, true));
+		//$rcode = array('rcode'=>46, 'message' => 'bogus message');
+		$res = $this->objTOps->createAssessment(array_merge(
 														$this->getUserParams(), 
 														$this->getClassParams(),
-														$assParams));*/
-		if(in_array($rcode['rcode'], $successcodes ))
+														$assParams));
+		error_log(var_export($res, true));
+		if(in_array($res['code'], $successcodes ))
 		{
 			//add to local database
 			if($this->objTAssDB->addAssignment($this->objDBContext->getContextCode(), $assParams))
@@ -288,7 +285,7 @@ class utilities extends object
 			}
 		} else {
 			
-			return json_encode(array('success' => false, 'msg' => $rcode['rmessage']));
+			return json_encode(array('success' => false, 'msg' => $res['message']));
 		}
 														
 	}
@@ -371,7 +368,7 @@ class utilities extends object
 		    //$msg .= "Type: " . $file["type"] . "<br />";
 		    $msg .= "Size: " . ($file["size"] / 1024) . " Kb<br />";
 			//$content = shell_exec('pdftotext '.$filename.' -'); 
-			return '{"success":"true", "msg": "'.$msg.'"}';
+			return '{"success":"true", "msg": "'.htmlentities($msg).'"}';
 		}
 	
 	}
@@ -402,4 +399,17 @@ class utilities extends object
 	            return 'Unknown upload error';
 	    } 
 	}
+	
+	public function isTIIavailable()
+	{		
+		$result = $this->objTOps->APILogin(array('firstname' => $this->objUser->getFirstname(),
+												'lastname' => $this->objUser->getSurname(),
+												'password' => '123456',
+												'email' => $this->objUser->email()							
+												));				
+		
+		return true;
+	}
+	
+	
 }
