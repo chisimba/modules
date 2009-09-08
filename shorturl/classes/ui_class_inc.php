@@ -110,6 +110,8 @@
             
             if (!empty($arrMaps)){
             
+		$count = 1;
+
                 //Adding Mappings Here
                 foreach ($arrMaps as $map){
                 
@@ -172,8 +174,15 @@
                     */
             
                     $options = $editIcon.$delIcon;
-            
-                    $table_list->startRow();
+
+                    $count = $count* -1;
+
+		    if ($count>0) {
+                        $table_list->startRow('odd');
+		    } else {
+                        $table_list->startRow('even');
+		    }
+		    
 
                     $matchUrl = '<div class="matchchopper"> <a href="' . $matchUrl . '"> ' . $matchUrl . ' </a></div>';
                     $targetUrl = '<div class="urlchopper"> <a href="' . $targetUrl . '"> ' . $targetUrl . ' </a></div>';
@@ -186,7 +195,9 @@
                     
                     $table_list->endRow();
 
+
                 }
+  
             }
 
 
