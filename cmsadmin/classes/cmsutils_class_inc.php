@@ -3981,7 +3981,6 @@
             $objLayer->str = '';
             //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
 	    $objLayer->cssClass = 'clearboth';
-	    $objLayer->bo
             $headShow = $objLayer->show();
             // end header
 
@@ -6989,4 +6988,3 @@ HTSRC;
     }
 
 ?>
-

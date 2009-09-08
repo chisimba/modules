@@ -185,7 +185,7 @@ class simpletreemenu extends object
                         //var_dump('CURR : '.$sec['title']);
                         //var_dump('NODE : '.$node['title']);
 
-                        $html .= '<li id="'.$node['id'].'" ><span>'.$link."</span>\n";
+                        $html .= '<li id="'.$node['id'].md5(date('YMD hms')).'" ><span>'.$link."</span>\n";
                         //If the Section has child sections recurse
                         
                         $contentItem = '';
