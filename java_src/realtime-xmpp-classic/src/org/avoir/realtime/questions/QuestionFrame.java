@@ -979,7 +979,7 @@ public class QuestionFrame extends javax.swing.JFrame implements QuestionFrameLi
         if (validQuestion()) {
             postButton.setIcon(indicator);
             postButton.setEnabled(false);
-        	questionName = JOptionPane.showInputDialog("Question Name", questionName);
+        	//questionName = JOptionPane.showInputDialog("Question Name", questionName);
             RealtimePacket p = new RealtimePacket();
             p.setMode(RealtimePacket.Mode.POST_QUESTION);
             StringBuilder sb = new StringBuilder();
