@@ -774,7 +774,7 @@ class dbblocks extends dbTable
 
             //Including Module TextBlcok integration here
             $objModule =$this->newObject('modules', 'modulecatalogue');
-            if ($objModule->checkIfRegistered('context')) {
+            if ($objModule->checkIfRegistered('textblock')) {
                 $objTextBlock =$this->newObject('dbtextblock', 'textblock');
             } else {
                 $objTextBlock = false;
