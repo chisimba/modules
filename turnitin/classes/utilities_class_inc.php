@@ -91,11 +91,22 @@ class utilities extends object
 		$cnt = 0;
 		foreach($recs as $rec)
 		{
+			$assScore = $this->getScore($rec['submissionid'], $rec);
+			
+			$score = "";
+			$objectid = "";
+			if(is_array($assScore))
+			{
+				$score = $assScore['score'];
+				$objectid = $assScore['objectid'];
+			}
 			$assRec[] = array("title" => $rec['title'],
-							"score" => $rec['score'],
+							"score" => $score,
 							"duedate" => $rec['duedate'],
+							"objectid" => $objectid,
 							"assid" => $rec['duedate'],
 							"contextcode" => $rec['contextcode'],
+							"instructoremail" => $rec['instructoremail'],
 							"assid" => $rec['assid']);
 			$cnt++;
 		}
@@ -110,8 +121,40 @@ class utilities extends object
 	 *
 	 * @return array
 	 */
-	public function formatSubmissions(){
+	public function formatSubmissions()
+	{
+		//$arr = array();
+		$subList = $this->objTOps->getSubmissions(array_merge(
+													$this->getUserParams(), 
+													$this->getClassParams(), 
+													$this->getAssessmentParams()));
 		
+		
+//var_dump($subList);die;
+		if($subList['code']==72)
+		{			
+			//loop the array
+			$i=0;
+			$totalcnt = 0;
+			foreach($subList['object'] as $rec)
+			{
+				$submissions[$i] = $this->formatSingleSubmission($rec);
+				$i++;
+				$totalcnt++;
+			}			
+			
+			$arr['totalCount'] = (string)$totalcnt;
+			$arr['submissions'] = $submissions;
+			return json_encode($arr);
+			
+		} else {
+			$arr['totalCount'] = "0";
+			$arr['submissions'] = array();
+			return json_encode($arr);
+		}
+		/*
+		//print $subList;
+		die;
 		$submission = array("username" => "nitsckie",
 							"firstname" => "Wesley",
 							"lastname" => "Nitsckie",
@@ -119,7 +162,7 @@ class utilities extends object
 							"score" => "50",
 							"dateposted" => "12-12-2009"
 							);
-		$submissions = array();
+		
 		
 		//for($i=0; $i++;$i>10)
 		$i=0;
@@ -140,7 +183,25 @@ class utilities extends object
 		$arr['submissions'] = $submissions;
 		
 		return json_encode($arr);
+		*/
 	}
+	
+	
+	public function formatSingleSubmission($object)
+	{
+		//print $object->firstname;
+		return  array("username" => (string)$object->userid,
+				"firstname" =>  (string)$object->firstname,
+				"lastname" =>  (string)$object->lastname,
+				"title" =>  (string)$object->title,
+				"score" =>  (string)$object->overlap,
+				"objectid" =>  (int)$object->objectID,
+				"dateposted" => "12-12-2009"
+				);
+						
+	}
+	
+	
 	/**
 	 * Call the correct template
 	 *
@@ -173,7 +234,14 @@ class utilities extends object
 			}
 			return "lectmain_tpl.php";
 		} else {
-			return "main_tpl.php";
+			
+			$res = $this->objTOps->createStudent($this->getUserParams());
+			//var_dump($res);
+			$res2 = $this->objTOps->joinClass(array_merge(
+													$this->getUserParams(), 
+													$this->getClassParams()));
+			//var_dump($res2);
+			return "student_tpl.php";
 		}
 	
 	}
@@ -239,7 +307,7 @@ class utilities extends object
 			$params['classid'] = $this->objDBContext->getContextCode();
 			$params['classtitle'] = $this->objDBContext->getTitle();
 			$params['classpassword'] = 'classpass';
-			$params['instructoremail'] = '';//$this->objUser->email();
+			$params['instructoremail'] = $this->objUser->email();
 		}
 		
 		return $params;
@@ -256,13 +324,23 @@ class utilities extends object
 		
 		$params['assignmenttitle'] = $this->getParam('title');
     	$params['assignmentinstruct'] = $this->getParam('instructions');
-    	$params['assignmentdatestart'] = $this->getParam('startdt');
-    	$params['assignmentdatedue'] = $this->getParam('duedt');    	
+    	$params['assignmentdatestart'] = $this->formatTIIDate($this->getParam('startdt'));
+    	$params['assignmentdatedue'] = $this->formatTIIDate($this->getParam('duedt'));    	
+    	$params['instructoremail'] = $this->objUser->email();    	
     	//$params['assignmendatedue'] = "theid";    	
-    	
+    	error_log(var_export($params, true));
     	return $params;
 	}
 	
+	public function formatTIIDate($date)
+	{
+		return str_replace("-","",$date);
+	}
+	/**
+	 * Add an assessment to TII
+	 *
+	 * @return unknown
+	 */
 	public function doAddAssignment()
 	{
 		$successcodes = array(40, 41, 42, 43);
@@ -298,10 +376,16 @@ class utilities extends object
 	public function getSubmissionInfo()
 	{
 		$params = array();
-		
-		$params['papertitle'] = "This is submmitted title";//$this->getParam('papertitle');
-    	$params['papertype'] = 2;
-    	$params['paperdata'] = $this->getParam("filedata");
+		$assId = $this->getParam('assid');
+		if($assId != "")
+		{
+			$rec = $this->objTAssDB->getRow('id', $assId);
+			//var_dump($rec);die;
+			$params['instructoremail'] = $rec['instructoremail'];
+		}
+		//$params['papertitle'] = "This is submmitted title";//$this->getParam('papertitle');
+    	//$params['papertype'] = 2;
+    	//$params['paperdata'] = $this->getParam("filedata");
     	
     	return $params;
 	}
@@ -404,12 +488,41 @@ class utilities extends object
 	{		
 		$result = $this->objTOps->APILogin(array('firstname' => $this->objUser->getFirstname(),
 												'lastname' => $this->objUser->getSurname(),
-												'password' => '123456',
+												'password' => '123456', //make this a config variable
 												'email' => $this->objUser->email()							
 												));				
 		
 		return true;
 	}
 	
+	public function getScore($submissionId, $assRec)
+	{
+		$check = $this->objTOps->checkForSubmission(array_merge(
+											$this->getUserParams(), 
+											$this->getClassParams(),
+											array('assignmenttitle' => $assRec['title'], 'instructoremail' => $assRec['instructoremail'])
+											));
+		
+		
+		//check if the user has submitted an assessment
+		if ($check['xmlobject']->objectID != 0)
+		{			
+			//get the score
+			$scoreObject = $this->objTOps->getScore(array_merge(
+											$this->getUserParams(), 
+											$this->getClassParams(),
+											array('assignmenttitle' => $assRec['title'],
+													'objectid' =>(string) $check['xmlobject']->objectID)
+											));
+			$arr = array ('score' => (int)$scoreObject['xmlobject']->originalityscore, 
+						'objectid' => (string)$check['xmlobject']->objectID);
+		
+			return $arr;
+		} else {
+			return "";
+		}
+		print $check;
+		return "";
+	}
 	
 }

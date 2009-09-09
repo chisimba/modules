@@ -54,14 +54,26 @@ class turnitindbass extends dbTable
     	$recarr['contextcode'] = $contextcode;
     	$recarr['duedate'] = $params['assignmentdatedue'];
     	$recarr['instructions'] = $params['assignmentinstruct'];
+    	$recarr['instructoremail'] = $params['instructoremail'];
     	
-    	if($recarr['title'] == "")
+    	if(($recarr['title'] == "") || $this->assExists($recarr['title'], $contextcode))
         {
             return false;
         }
         else {
             return $this->insert($recarr, 'tbl_turnitin_assignments');
         }
+    }
+    
+    public function assExists($title, $contextCode)
+    {
+    	$rec = $this->getAll("WHERE contextcode='$contextCode' AND title='$title'");
+    	if(count($rec) > 0)
+    	{
+    		return TRUE;
+    	}else{
+    		return FALSE;
+    	}
     }
     
     
@@ -99,10 +111,12 @@ class turnitindbass extends dbTable
     		$bigArr = array();
     		foreach($recs as $rec)
     		{
+    			
     			$newArr = array('title' => $rec['title'],
     							'duedate' => $rec['duedate'],
-    							'score' => '',  //$this->objOps->getScore($contextCode, $userId),
+    							'submissionid' => $rec['submissionid'],
     							'contextcode' => $contextCode,
+    							'instructoremail' => $rec['instructoremail'],
     							'assid' => $rec['id']
     							);
     			$bigArr[] = $newArr;

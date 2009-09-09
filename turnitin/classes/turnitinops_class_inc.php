@@ -159,12 +159,18 @@ class turnitinops extends object
 	public function getXMLResult($xmlStr)
 	{
 		if($this->diagnostic == 0)
-		{
+		{			
 			$xml = new SimpleXMLElement($xmlStr);
 			$message = $xml->rmessage;
 			$rcode = $xml->rcode;
+					
+			$object = ($xml->object) ? $xml->object : null;
+			$objectID = ($xml->objectID) ? $xml->objectID : null;
 			
-			return array('message' => $message, 'code' => $rcode );
+			return array('message' => $message, 
+						 'code' => $rcode, 
+						 'object' => $object,
+						 'xmlobject' => $xml);
 		}else {
 			return $xmlStr;
 		}
@@ -494,12 +500,52 @@ class turnitinops extends object
     
     public function checkForSubmission($params)
     {
+    	$this->fid = 11;
+    	$this->fcmd = 2;
+    	$this->utp = 1; //student
+    	//var_dump($params);die;
+    	$this->assign = $params['assignmenttitle'];
+    	$this->tem = $params['instructoremail'];
+    	$this->ctl = $params['classtitle'];
+    	//$this->cid = null;
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];
     	
+    	$this->diagnostic = 0;
+    	
+    	error_log("going to redirect to TII now...");
+    	
+    	return $this->doPost();
     }
     
     ///////////////////////// 
     /// STUDENT FUNCTIONS////
     /////////////////////////
+    
+    public function redirectSubmit($params)
+    {
+    	$this->fid = 5;
+    	$this->fcmd = 1;
+    	$this->utp = 1; //student
+    	//var_dump($params);die;
+    	$this->assign = $params['assignmenttitle'];
+    	$this->tem = $params['instructoremail'];
+    	$this->ctl = $params['classtitle'];
+    	$this->cid = null;
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];
+    	$this->upw = $params['password'];
+    	
+    	$this->diagnostic = 0;
+    	
+    	//var_dump($params);
+    	//var_dump($this->ctl);die;
+    	error_log("going to redirect to TII now...");
+    	
+    	$this->doGet();
+    }
     
     public function subA($params)
     {
@@ -648,13 +694,13 @@ class turnitinops extends object
     	$this->utp = 1; //student
     	$this->diagnostic = 0;
     	
-    	$this->upw = 'student';//$params['password'];    	
+    	$this->upw = $params['password'];    	
     	//$this->uid = $params['username'];    	
-    	$this->ufn = 'Student';//$params['firstname'];
-    	$this->uln = 'student';//$params['lastname'];
-    	$this->uem = 'student@uwc.ac.za';//$params['email'];	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];	
     	
-    	$this->tem = 'elearning@uwc.ac.za';//$params['instructoremail'];
+    	$this->tem = $params['instructoremail'];
     	$this->assign = $params['assignmenttitle'];
     	$this->ctl = $params['classtitle'];
     	
@@ -680,4 +726,48 @@ class turnitinops extends object
     	return in_array($code, $this->successCodes[$fid]);
     }
     
+    
+    public function getSubmissions($params)
+    {
+    	$this->fid = 10;
+    	$this->fcmd = 2;
+    	$this->utp = 2; 
+    	//var_dump($params);die;
+    	$this->assign = $params['assignmenttitle'];
+    	//$this->tem = $params['instructoremail'];
+    	$this->ctl = $params['classtitle'];
+    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];
+    	
+    	$this->diagnostic = 0;
+    	
+    	error_log("get list of submissions for $this->ctl -> $this->assign");
+    	
+    	return $this->doPost();
+    }
+    
+    public function getScore($params)
+    {
+    	$this->fid = 6;
+    	$this->fcmd = 2;
+    	$this->utp = 1; 
+    	
+    	$this->assign = $params['assignmenttitle'];
+    	//$this->tem = $params['instructoremail'];
+    	$this->ctl = $params['classtitle'];
+    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];
+    	$this->upw = $params['password'];
+    	$this->oid = $params['objectid'];
+    	//var_dump($params);die;
+    	$this->diagnostic = 0;
+    	
+    	error_log("get score for $this->ctl -> $this->assign -> $this->oid");
+    	
+    	return $this->doPost();
+    }
 }

@@ -116,12 +116,6 @@
     </div>
 </div>
 
-<form action="<?php echo $this->uri(array('action' => 'ajax_sumbitassessment')) ?>" enctype="multipart/form-data" method="POST">
-
-<input type="file" name="file">
-<input type="text" name="assignmenttitle">
-<input type="submit">
-</form>
 
 
 

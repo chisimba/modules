@@ -118,7 +118,7 @@ class turnitin extends controller
 				break;
 			//student submit a paper
 			case 'sub':				
-				print $this->objTOps->subA(array_merge(
+				print $this->objTOps->redirectSubmit(array_merge(
 														$this->objUtils->getUserParams(), 
 														$this->objUtils->getClassParams(),  
 														$this->objUtils->getAssessmentParams(),

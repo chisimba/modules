@@ -14,6 +14,10 @@ $fields = array(
     'contextcode' => array(
         'type' => 'text',
         'length' => 32,
+        ),       
+    'submissionid' => array(
+        'type' => 'text',
+        'length' => 32,
         ),
     'title' => array(
         'type' => 'clob',
@@ -21,6 +25,9 @@ $fields = array(
     'instructions' => array(
         'type' => 'clob',
     	),  
+    'instructoremail' => array(
+        'type' => 'clob',
+    	),
     'duedate' => array(
         'type' => 'timestamp',
     	),   

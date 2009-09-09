@@ -60,6 +60,8 @@ var assStore = new Ext.data.JsonStore({
             {name: 'score'},
             {name: 'assid'},
             {name: 'contextcode'},
+            {name: 'objectid'},
+            {name: 'instructoremail'},
         ],
         proxy: new Ext.data.HttpProxy({
             url: storeUri
@@ -184,12 +186,12 @@ Ext.onReady(function(){
     	} else {
     		value = value+'%';
     	}
-    	//alert(v);
+    	
     	if(v == '')
     	{
     		
-    		var ret = String.format('<a href="#"  onClick="uploadFormPanel(\'{0}\', \'{1}\');" >Submit </a>', 	record.data.assid, record.data.contextcode);
-        	
+    		//var ret = String.format('<a href="#"  onClick="uploadFormPanel(\'{0}\', \'{1}\');" >Submit </a>', 	record.data.assid, record.data.contextcode);
+        	var ret = String.format('<a href="#" onclick="window.open(\'{0}?module=turnitin&action=sub&title=mytitle&instructoremail={1}&title={2}&assid={3}\')" >Submit</a>',baseUri, record.data.instructoremail,record.data.title, record.data.assid );
     		//alert(ret);
     		return ret;
         	//return  new Ext.Button('titititle');
@@ -201,8 +203,8 @@ Ext.onReady(function(){
     		});*/
     	}else {
     	//dont forget to change the object id 
-        	return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseUri+'index.php?module=turnitin&action=returnreport&objectid=101049555\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
-        	value, record.data.contextcode);
+        	return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseUri+'?module=turnitin&action=returnreport&objectid={2}\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
+        	value, record.data.contextcode, record.data.objectid);
     	}
     }
     

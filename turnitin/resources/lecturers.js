@@ -186,7 +186,7 @@ Ext.apply(Ext.form.VTypes, {
 */
 var addForm = new Ext.FormPanel({
         		labelWidth: 75, // label settings here cascade unless overridden
-		        url: 'http://localhost/eteach/index.php?module=turnitin&action=ajax_addassignment',
+		        url: baseuri+'?module=turnitin&action=ajax_addassignment',
 		        frame:true,
 		        //layout:'column',
 		        shadow: true,
@@ -225,6 +225,7 @@ var addForm = new Ext.FormPanel({
 				          		anchor:'95%',
 						        name: 'startdt',
 						        id: 'startdt',
+						        format: 'o-m-d',
 						       // vtype: 'daterange',
 						        //emptyText: 'Start Date...',
 						        blankText: 'The Start Date is a Required Field!',
@@ -248,6 +249,7 @@ var addForm = new Ext.FormPanel({
 					        new Ext.form.DateField({
 						        fieldLabel: 'End Date',
 						        type: 'datefield',
+						        format: 'o-m-d',
 						        name: 'duedt',
 						        id: 'enddt',
 						       //  emptyText: 'Due Date..',
@@ -265,6 +267,7 @@ var addForm = new Ext.FormPanel({
         			]},{
 			            xtype:'htmleditor',
 			            id:'instructions',
+			            name:'instructions',
 			            fieldLabel:'Special Instructions',
 			            height:100,
 			            anchor:'98%'
@@ -350,6 +353,7 @@ var assStore = new Ext.data.JsonStore({
             {name: 'lastname'},
             {name: 'title'},
             {name: 'score'},
+            {name: 'objectid'},
             {name: 'dateposted'}
         ],
         proxy: new Ext.data.HttpProxy({
@@ -649,8 +653,8 @@ Ext.onReady(function(){
     	} else {
     		value = value+'%';
     	}
-        return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseuri+'?module=turnitin&action=returnreport&objectid=101049555\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
-        	value, record.data.contextcode);
+        return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseuri+'?module=turnitin&action=returnreport&objectid={2}\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
+        	value, record.data.contextcode, record.data.objectid);
         	
     }
     
