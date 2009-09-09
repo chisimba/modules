@@ -1376,6 +1376,25 @@
             return $arrSection[0];	
         }
 
+        /**
+         * The method re indexes all content (USE WITH CAUSION)
+         */
+        public function indexAllContent()
+        {
+            $objLucene = $this->getObject('indexdata', 'search');
+
+			$contentArr = $this->getAll();
+			foreach ($contentArr as $data) {
+				$docId = 'cms_page_'.$data['id'];
+				$url = $this->uri(array
+						('module' => 'cms', 
+						 'action' => 'showfulltext', 
+						 'id' => $data['id'],
+						 'sectionid'=> $data['sectionid']), 'cms');
+				$objLucene->luceneIndex($docId, $data['created'], $url, $data['title'], $data['title'].$data['body'], $data['introtext'], 'cms', $data['created_by']);
+			}
+
+        }
 
     }
 
