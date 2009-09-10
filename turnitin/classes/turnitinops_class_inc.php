@@ -275,11 +275,12 @@ class turnitinops extends object
         $params = $this->getParams();
        // print $params;
         //die($params);
+        
         curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
         ob_start();
 		$result=curl_exec ($ch);
 		curl_close ($ch);
-			
+		error_log(var_export($result, true));	
 		return $this->getXMLResult($result);		
 	}
 	
