@@ -330,7 +330,11 @@ $jQuery->loadSimpleTreePlugin();
 				case 'ajaxforms':
 					return FALSE;
 				break;
-                
+
+   				case 'indexallcontent':
+					return FALSE;
+				break;
+            
                 case 'flagcontent':
                     return FALSE;
                 break;
@@ -376,6 +380,14 @@ $jQuery->loadSimpleTreePlugin();
                 $this->setVarByRef('cpanel',$cpanel);
 	
                 return 'cms_main_tpl.php';
+
+				case 'removetrashindex':
+					$this->_objContent->removeAllTrashedIndexes();
+				return 'cms_main_tpl.php';
+
+				case 'indexallcontent':
+					$this->_objContent->indexAllContent();
+				return 'cms_main_tpl.php';
 
                 case 'deleteuserperm':
                     $id = $this->getParam('id');
@@ -1234,8 +1246,16 @@ $jQuery->loadSimpleTreePlugin();
 					} else if ($valid) {
 						$valid = $this->_objValidate->valRequired($fullText);
 						$this->setVarByRef('cmsErrorMessage', 'Please enter some text in the body');
+					} else if ($valid) {
+						//Fetching the parent from the db if non submitted
+						if ($sectionId == '') {
+							$contentRecord = $this->_objContent->getContentPage($contentId);
+							$sectionId = $contentRecord['sectionid'];
+						}
+						$valid = $this->_objValidate->valRequired($sectionId);
+						$this->setVarByRef('cmsErrorMessage', 'No section id was specified. Please select a section.');
 					}
-	
+
 					if ($valid) {
                     $this->_objContent->editContent($contentId ,
                                                     $title ,
