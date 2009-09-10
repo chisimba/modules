@@ -94,6 +94,11 @@ class turnitinops extends object
        	$this->encrypt=0;
 		$this->diagnostic=0;
 		
+		//additional properties
+		$this->idsync = 1;
+		$this->s_view_report = 1; // allow students to view the Originality Report (optional, default is set to not allow students to view Originality Reports)
+
+		
 		//success codes
 		$this->successCodes = array();
 		$this->successCodes['2'] = array(20, 21, 22);
@@ -205,10 +210,12 @@ class turnitinops extends object
 		$url .= "&dis=".$this->dis;
 		$url .= "&uid=".urlencode($this->uid);
 		$url .= "&cid=".urlencode($this->cid);
+		$url .= "&idsync=".urlencode($this->idsync);
 		$url .= "&assignid=".urlencode($this->assignid);
 		$url .= "&dtstart=".urlencode($this->dtstart);
 		$url .= "&dtdue=".urlencode($this->dtdue);
 		$url .= "&ptl=".urlencode($this->ptl);
+		$url .= "&s_view_report=".urlencode($this->s_view_report);
 		$url .= "&ptype=".urlencode($this->ptype);
 		$url .= "&pdata=".urlencode($this->pdata);
 		
@@ -363,11 +370,12 @@ class turnitinops extends object
     	$this->utp = $type;
     	
     	$this->upw = $params['password'];    	
-    	//$this->uid = $params['username'];    	
+    	$this->uid = $params['username'];    	
     	$this->ufn = $params['firstname'];
     	$this->uln = $params['lastname'];
     	$this->uem = $params['email'];    	
     	
+    	//$this->diagnostic = 1;
     	return $this->doPost();
     }
     
@@ -385,13 +393,16 @@ class turnitinops extends object
     	$this->utp = 1;
     	    	
     	$this->upw = $params['password'];    	
-    	//$this->uid = $params['username'];    	
+    	$this->uid = $params['username'];    	
     	$this->ufn = $params['firstname'];
     	$this->uln = $params['lastname'];
     	$this->uem = $params['email'];   
     	$this->tem = $params['instructoremail'];
     	$this->ctl = $params['classtitle'];    	
+    	$this->cid = $params['classid'];    	
     	
+    	$this->diagnostic = 0;
+    	//var_dump(($params));die;
     	return $this->doPost();
     }
     
@@ -423,7 +434,8 @@ class turnitinops extends object
     	$this->ctl = $params['classtitle'];
     	$this->cpw = $params['classpassword'];
     	//$this->uid = $params['username'];
-    	//$this->cid = $params['classid'];
+    	$this->cid = $params['classid'];
+    	
     	
     	//$this->upw = $params['password'];    	
     	//$this->uid = $params['username'];    	
@@ -432,7 +444,7 @@ class turnitinops extends object
     	//$this->uem = $params['email'];   
     	//$this->tem = $params['instructoremail'];
     	
-    	//var_dump($params);die;
+    	//$this->diagnostic = 1;
     	return $this->doPost();
     }
     
@@ -547,143 +559,14 @@ class turnitinops extends object
     	$this->doGet();
     }
     
-    public function subA($params)
-    {
-    	$this->fid = 1;
-    	$this->fcmd = 2;
-    	$this->utp = 1; //student
-    	$this->diagnostic = 0;
-    	
-    	$this->upw = 'student';//$params['password'];    	
-    	//$this->uid = $params['username'];    	
-    	$this->ufn = 'Student';//$params['firstname'];
-    	$this->uln = 'student';//$params['lastname'];
-    	$this->uem = 'student@uwc.ac.za';//$params['email'];	
-    	
-    	$this->tem = 'elearning@uwc.ac.za';//$params['instructoremail'];
-    	$this->assign = $params['assignmenttitle'];
-    	$this->ctl = $params['classtitle'];
-    	
-    	
-    	//$result = $this->doPost();
-    
-    	//if ($result->rcode == 11)
-    	//{
-    		$file = "/home/wesley/Downloads/ext-core-3.0/LICENSE.txt";
-    		if (file_exists($file))
-    		{   		
-	    		print "logging success - doing the submit now";
-	    		$this->fid = 5;
-	    		$this->ptl = "new title";
-	    		$this->ptype = 1;	
-	    		$filename = "/home/wesley/Downloads/API_Manual.pdf";
-
-				$content = shell_exec('pdftotext '.$filename.' -');    		
-	    		$this->pdata = $content;
-	    		
-	    		$result = $this->doPost();
-	    		print '<br>'.$result;
-	    		//print '<br>'.$result->rmessage;
-	    		//print '<br>'.$result->rcode;
-    		} else {
-    			print "file dont exist";
-    		}
-    	//} else {
-    	//	print $result->rcode.'<br>'.$result->rmessage;
-    	//}
-    	
-    	print '<br>Done!';
-    	//$die($code);
-    }
+   
     
     public function getCode($xml)
     {    	
     	$tiixml = new SimpleXMLElement($xml);    	
     	return $tiixml->rcode;
     }
-    /**
-     * Method to submit an assessment
-     *
-     * @param array $params
-     */
-    public function submitAssessment($params)
-    {/*
-    	$this->fid = 5;
-    	$this->fcmd = 2;
-    	$this->utp = 1; //student
-    	
-    	$this->upw = $params['password'];    	
-    	//$this->uid = $params['username'];    	
-    	$this->ufn = $params['firstname'];
-    	$this->uln = $params['lastname'];
-    	$this->uem = $params['email'];	
-    	
-    	$this->tem = 'elearning@uwc.ac.za';//$params['instructoremail'];
-    	$this->assign = $params['assignmenttitle'];
-    	$this->ctl = $params['classtitle'];
-    	
-    	$this->ptl = 'my paper';//$params['papertitle'];
-    	//$this->ptype = 1;//$params['papertype'];
-    	//$this->pdata = $params['paperdata'];
-    	//var_dump($params);die;
-    	
-    	//var_dump($this->getParams());die;
-    	return $this->doPost();
-    	*/
-    	//var_dump($params);die;
-    	$postData = array();
-
-		//simulates <input type="file" name="file_name">
-		//$postData[ 'file_name' ] = " [at] test.txt";
-		//$postData[ 'submit' ] = "UPLOAD";
-		$postData[ 'ufn' ] = $params['firstname'];
-		$postData[ 'uem' ] = $params['email'];
-		$postData[ 'uln' ] = $params['lastname'];
-		$postData[ 'gmtime' ] = "";//gmdate();
-		
-		$postData[ 'ptl' ] = "my paper";
-		$postData[ 'ptype' ] = "1";
-		$postData[ 'pdata' ] = " this is sthe content of the paper";
-		
-		
-		
-		
-		//$this->ptl = 'my paper';//$params['papertitle'];
-    	//$this->ptype = 1;//$params['papertype'];
-    	//$this->pdata = $params['paperdata'];
-		print 'tryinto curl it';
-		$url = "http://www.turnitin.com/api.asp";
-		$user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
-		$ch = curl_init();
-		
-		curl_setopt($ch, CURLOPT_URL, $url );
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-		curl_setopt($ch, CURLOPT_POST, 1 );
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
-		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-		//seems no need to tell it enctype='multipart/data' it already knows
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData );
-		
-		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
-        {
-			//setup proxy
-			//curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-			curl_setopt($ch, CURLOPT_PROXYPORT, $proxyArr['proxy_port']);
-			curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_protocol'].'://'.$proxyArr['proxy_host']);
-        }
-		
-		$response = curl_exec( $ch );
-		
-		curl_close ($ch);
-	print 'curl done';
-		//return $this->getXMLResult($result);
-		var_dump($response);
-		return $response;
-		//where test.txt is a file in the same directory!"
-    }
+   
     
     public function getReport($params)
     {

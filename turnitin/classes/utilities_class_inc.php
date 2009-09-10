@@ -68,6 +68,7 @@ class utilities extends object
 			$this->objDBContext = $this->getObject('dbcontext', 'context');
 			$this->objForms = $this->getObject('forms');
 			$this->objTAssDB = $this->getObject('turnitindbass');
+			$this->objEmails = $this->getObject('turnitinemails');
 			
 			// Supressing Prototype and Setting jQuery Version with Template Variables
 			$this->setVar('SUPPRESS_PROTOTYPE', true); //Can't stop prototype in the public space as this might impact blocks
@@ -129,8 +130,6 @@ class utilities extends object
 													$this->getClassParams(), 
 													$this->getAssessmentParams()));
 		
-		
-//var_dump($subList);die;
 		if($subList['code']==72)
 		{			
 			//loop the array
@@ -152,41 +151,15 @@ class utilities extends object
 			$arr['submissions'] = array();
 			return json_encode($arr);
 		}
-		/*
-		//print $subList;
-		die;
-		$submission = array("username" => "nitsckie",
-							"firstname" => "Wesley",
-							"lastname" => "Nitsckie",
-							"title" => "The title of the paper",
-							"score" => "50",
-							"dateposted" => "12-12-2009"
-							);
 		
-		
-		//for($i=0; $i++;$i>10)
-		$i=0;
-		while ($i<100) 
-		{
-			//array_push($submissions, $submission);
-			$submissions[$i] =  array("username" => "nitsckie$i",
-							"firstname" => "Wesley",
-							"lastname" => "Nitsckie",
-							"title" => "The title of the paper",
-							"score" => $i,
-							"dateposted" => "12-12-2009"
-							);
-			$i++;
-		}
-		
-		$arr['totalCount'] = "1";
-		$arr['submissions'] = $submissions;
-		
-		return json_encode($arr);
-		*/
 	}
 	
-	
+	/**
+	 * Enter description here...
+	 *
+	 * @param unknown_type $object
+	 * @return unknown
+	 *
 	public function formatSingleSubmission($object)
 	{
 		//print $object->firstname;
@@ -200,7 +173,7 @@ class utilities extends object
 				);
 						
 	}
-	
+	*/
 	
 	/**
 	 * Call the correct template
@@ -214,16 +187,20 @@ class utilities extends object
 		$objContextGroups = $this->getObject('managegroups', 'contextgroups');	
 		if ($this->objUser->isAdmin () || $objContextGroups->isContextLecturer()) 
 		{
+			
 			//create user on TII if he does not exist
 			$res = $this->objTOps->createLecturer($this->getUserParams());
 
 			//create the course on TII if it does not exist and 
 			//make this user the instructor					
-			
+			//print $res;
+			//insert the instructor email
+			$this->objEmails->addEmail($this->objDBContext->getContextCode(), $this->objUser->email() );
 			$res =  $this->objTOps->createClass(array_merge(
 													$this->getUserParams(), 
-													$this->getClassParams()));
-			
+													$this->getClassParams(),
+													array('instructoremail' => $this->objUser->email())));
+			//print $res;die;
 			if(is_array($res))
 			{
 				if(!$this->objTOps->isSuccess(2, $res['code']))
@@ -240,12 +217,18 @@ class utilities extends object
 			$res2 = $this->objTOps->joinClass(array_merge(
 													$this->getUserParams(), 
 													$this->getClassParams()));
-			//var_dump($res2);
+			//print $res2;
 			return "student_tpl.php";
 		}
 	
 	}
 	
+	/**
+	 * Enter description here...
+	 *
+	 * @param unknown_type $assigments
+	 * @return unknown
+	 */
 	public function formatJsonAssignments($assigments)
 	{
 		//get extra info from turnitin
@@ -273,7 +256,7 @@ class utilities extends object
 	 */
 	public function requiresLogin()
 	{
-		return FALSE;
+		return TRUE;
 	}
 	
 	/**
@@ -283,8 +266,11 @@ class utilities extends object
 	 */
 	public function getUserParams()
 	{
+		$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $defaultpass = $objSysConfig->getValue('defaultpass', 'turnitin');
+        
 		$params = array();
-		$params['password'] = 'nitsckie';//$username;    	
+		$params['password'] = $defaultpass;
 		$params['username'] = $this->objUser->userName();
 		$params['firstname'] =  $this->objUser->getFirstname(); 
 		$params['lastname'] =  $this->objUser->getSurname();
@@ -307,10 +293,23 @@ class utilities extends object
 			$params['classid'] = $this->objDBContext->getContextCode();
 			$params['classtitle'] = $this->objDBContext->getTitle();
 			$params['classpassword'] = 'classpass';
-			$params['instructoremail'] = $this->objUser->email();
+			$params['instructoremail'] = $this->getInstructorEmail();
 		}
 		
 		return $params;
+	}
+	
+	
+	/**
+	 * Get the instructors email
+	 *
+	 * @return unknown
+	 */
+	public function getInstructorEmail()
+	{
+		$email = $this->objEmails->getEmail($this->objDBContext->getContextCode());
+		
+		return $email;
 	}
 	
 	/**
@@ -326,16 +325,25 @@ class utilities extends object
     	$params['assignmentinstruct'] = $this->getParam('instructions');
     	$params['assignmentdatestart'] = $this->formatTIIDate($this->getParam('startdt'));
     	$params['assignmentdatedue'] = $this->formatTIIDate($this->getParam('duedt'));    	
-    	$params['instructoremail'] = $this->objUser->email();    	
+    	$params['instructoremail'] = $this->getInstructorEmail();	
     	//$params['assignmendatedue'] = "theid";    	
     	error_log(var_export($params, true));
     	return $params;
 	}
 	
+	/**
+	 * Format date for TII
+	 *
+	 * @param string $date
+	 * @return string
+	 */
 	public function formatTIIDate($date)
 	{
 		return str_replace("-","",$date);
 	}
+	
+	
+	
 	/**
 	 * Add an assessment to TII
 	 *
@@ -346,7 +354,7 @@ class utilities extends object
 		$successcodes = array(40, 41, 42, 43);
 		$assParams = $this->getAssessmentParams();
 		error_log(var_export($assParams, true));
-		//$rcode = array('rcode'=>46, 'message' => 'bogus message');
+		
 		$res = $this->objTOps->createAssessment(array_merge(
 														$this->getUserParams(), 
 														$this->getClassParams(),
