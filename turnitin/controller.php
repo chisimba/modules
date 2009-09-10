@@ -162,11 +162,8 @@ class turnitin extends controller
 				
 			
 			case 'callback':
-				echo "This is the CALLBACK ...<BR>";
-				$m = var_export($_REQUEST, true);
-				$this->send_alert($m);
-				error_log($m);
-				var_dump($_REQUEST);
+				
+				return 'callback_tpl.php';
 				break;
 			default:
 			case 'main':	
@@ -210,6 +207,23 @@ class turnitin extends controller
 				//echo '{"success":"true"}';
 				exit(0);
 				break;
+		}
+	}
+	
+	
+	/**
+	 * Standard engine function 
+	 * being overridden
+	 *
+	 * @return boolean
+	 */
+	public function requiresLogin()
+	{
+		if($this->getParam('action') == 'callback')
+		{
+			return FALSE;
+		} else {
+			return TRUE;
 		}
 	}
 	
