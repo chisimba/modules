@@ -1426,7 +1426,7 @@ class dbcontent extends dbTable
 			$description = $data['introtext'];
 			if (trim($data['introtext']) == '') {
 				//Will capture top part of body
-				$description = getHead($data['body']);
+				$description = $this->getHead($data['body']);
 			}
 
 			$objLucene->luceneIndex($docId, $data['created'], $url, $data['title'], $data['title'].$data['body'], $description, 'cms', $data['created_by']);
