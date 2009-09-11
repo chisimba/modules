@@ -165,6 +165,7 @@ class turnitinops extends object
 	{
 		if($this->diagnostic == 0)
 		{			
+			error_log(var_export($$xmlStr, true));
 			$xml = new SimpleXMLElement($xmlStr);
 			$message = $xml->rmessage;
 			$rcode = $xml->rcode;
