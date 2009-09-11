@@ -267,6 +267,8 @@ class turnitinops extends object
 	
 		if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '')
         {
+        	error_log('Using proxy......');	
+        	error_log(var_export($proxyArr, true));	
 			//setup proxy
 			//curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
