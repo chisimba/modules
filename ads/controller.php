@@ -22,6 +22,7 @@ class ads extends controller {
         $this->objGetData = $this->getObject('getdata');
         $this->objCourseProposals = $this->getObject('dbcourseproposals');
         $this->objComment = $this->getObject('dbcoursecomments');
+        $this->objFaculty = $this->getObject('dbfaculty');
         //review
         $this->objCourseReviews = $this->getObject('dbcoursereviews');
         $this->objUser = $this->getObject ( 'user', 'security' );
@@ -593,6 +594,19 @@ class ads extends controller {
         $this->setVarByRef("version", $version);
 
         return "viewcoursedetails_tpl.php";
+    }
+
+    public function __savemoderator() {
+        $moderator = $this->getParam('moderator');
+        $faculty  = $this->getParam('faculty');
+        $this->objFaculty->saveModerator($faculty, $moderator);
+        $this->nextAction('home');
+    }
+
+    public function __savefaculty() {
+        $faculty = $this->getParam('addfaculty');
+        $this->objFaculty->saveFaculty($faculty);
+        $this->nextAction('home');
     }
 }
 

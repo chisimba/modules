@@ -78,7 +78,32 @@ class viewforms extends object {
                             case 20: return $this->objLanguage->languageText('mod_formC_C4a', 'ads');
                             case 21: return $this->objLanguage->languageText('mod_formC_C4b_1', 'ads');
                         }
-              case "D": break;
+              case "D": switch($i) {
+                            case 22: return $this->objLanguage->languageText('mod_formD_D1', 'ads');
+                            case 23: return $this->objLanguage->languageText('mod_formD_D2_1', 'ads');
+                            case 24: return $this->objLanguage->languageText('mod_formD_D2_2', 'ads');
+                            case 25: return $this->objLanguage->languageText('mod_formD_D2_3', 'ads');
+                            case 26: return $this->objLanguage->languageText('mod_formD_D3', 'ads');
+                            case 27: return $this->objLanguage->languageText('mod_formD_D4_1', 'ads');
+                            case 28: return $this->objLanguage->languageText('mod_formD_D4_2', 'ads');
+                            case 29: return $this->objLanguage->languageText('mod_formD_D4_3', 'ads');
+                            case 30: return $this->objLanguage->languageText('mod_formD_D4_4', 'ads');
+                            case 31: return $this->objLanguage->languageText('mod_formD_D4_5', 'ads');
+                            case 32: return $this->objLanguage->languageText('mod_formD_D4_6', 'ads');
+                            case 33: return $this->objLanguage->languageText('mod_formD_D4_7', 'ads');
+                            case 34: return $this->objLanguage->languageText('mod_formD_D4_8', 'ads');
+                            case 35: return $this->objLanguage->languageText('mod_formD_D2_1', 'ads');
+                            case 36: return $this->objLanguage->languageText('mod_formD_D5a', 'ads');
+                            case 37: return $this->objLanguage->languageText('mod_formD_D5b', 'ads');
+                            case 38: return $this->objLanguage->languageText('mod_formD_D5c', 'ads');
+                            case 39: return $this->objLanguage->languageText('mod_formD_D5d', 'ads');
+                            case 40: return $this->objLanguage->languageText('mod_formD_D5e', 'ads');
+                            case 41: return $this->objLanguage->languageText('mod_formD_D5f', 'ads');
+                            case 42: return $this->objLanguage->languageText('mod_formD_D5h', 'ads');
+                            case 43: return $this->objLanguage->languageText('mod_formD_D5i', 'ads');
+                            case 44: return $this->objLanguage->languageText('mod_formD_D6', 'ads');
+                            case 45: return $this->objLanguage->languageText('mod_formD_D7', 'ads');
+                        }
               case "E": switch($i) {
                             case 46: return $this->objLanguage->languageText('mod_task2_e1a', 'ads');
                             case 47: return $this->objLanguage->languageText('mod_task2_e1b', 'ads');

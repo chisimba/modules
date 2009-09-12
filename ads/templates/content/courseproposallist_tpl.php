@@ -5,6 +5,8 @@ $objIcon= $this->newObject('geticon','htmlelements');
 
 // objects
 $courseProposals = $this->objCourseProposals->getCourseProposals($this->objUser->userId());
+$allFaculty = $this->objFaculty->getAllFaculty();
+$facultyRC = $this->objFaculty->getFacultyRC();
 
 // scripts
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
@@ -29,6 +31,25 @@ $lastEdit = $this->objLanguage->languageText('mod_ads_lastedit', 'ads');
 $edit = $this->objLanguage->languageText('mod_ads_edit', 'ads');
 $faculty = $this->objLanguage->languageText('mod_ads_faculty', 'ads');
 
+/*$facultyData = "['Commerce, Law and Management'],
+        ['Engineering and the Built Environment'],
+        ['Health Sciences'],
+        ['Humanities'],
+        ['Science']";*/
+
+$facultyData = "";
+$count = 1;
+foreach($allFaculty as $data) {
+    if($count != $facultyRC) {
+        $facultyData .= "['".$data['name']."'],";
+    }
+    else {
+        $facultyData .= "['".$data['name']."']";
+    }
+    
+    $count++;
+}
+
 $statuscodes=  array(
               "0"=> 'New',
               "1"=>'APO Comment',
@@ -39,9 +60,13 @@ $statuscodes=  array(
               "6"=> 'APDC');
 
 $addButton = new button('add','Add Proposal');
+$addModerator = new button('addModerator', 'Add Moderator');
+$addFaculty = new button('addFaculty', 'Add Faculty');
 $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
 //$addButton->setOnClick("window.location='$returnUrl'");
 $addButton->setId('addproposal-btn');
+$addModerator->setId('addmoderator-btn');
+$addFaculty->setId('addfaculty-btn');
 
 //prints out add comment message
 
@@ -57,11 +82,13 @@ $cssLayout->setNumColumns(2);
 
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent($postLoginMenu->show());
-$rightSideColumn =  '<h1>Course/Unit Proposals</h1><div id ="proposal-note">'.$content.$note.'</div><div id="grouping-grid">'.$addButton->show().'<br /><br /></div>';
+$rightSideColumn =  '<h1>Course/Unit Proposals</h1><div id ="proposal-note">';
+$rightSideColumn .=$content.$note;
+$rightSideColumn .='</div><div id="grouping-grid">'.$addFaculty->show()."&nbsp;&nbsp;".$addButton->show()."&nbsp;&nbsp;".$addModerator->show().'<br /><br /></div>';
 //where we render the 'popup' window
-$renderSurface='<div id="addsession-win" class="x-hidden">
-        <div class="x-window-header"></div>
-        </div>';
+$renderSurface='<div id="addsession-win" class="x-hidden"><div class="x-window-header"></div></div>';
+$renderSurface .= '<div id="addmoderator-win" class="x-hidden"><div class="x-window-header"></div></div>';
+$renderSurface .= '<div id="addfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>';
 $rightSideColumn.=$renderSurface;
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 
@@ -143,7 +170,10 @@ foreach($courseProposals as $value) {
 }
 $faculty = $objLanguage->languageText('mod_ads_faculty','ads');
 $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
+$moderatorName = $objLanguage->languageText('mod_ads_moderatorname','ads');
 $submitUrl = $this->uri(array('action'=>'savecourseproposal'));
+$submitModeratorUrl = $this->uri(array('action'=>'savemoderator'));
+$submitFacultyUrl = $this->uri(array('action'=>'savefaculty'));
 $cancelUrl = $this->uri(array('action'=>'NULL'));
 $addProposalWindowJS=
 "
@@ -185,12 +215,8 @@ $addProposalWindowJS=
 
 $faculties=
     "
-var faculties= [
-        ['Commerce, Law and Management'],
-        ['Engineering and the Built Environment'],
-        ['Health Sciences'],
-        ['Humanities'],
-        ['Science']
+   var faculties= [
+        $facultyData
       ]
 
    var facutlystore = new Ext.data.ArrayStore({
@@ -237,6 +263,156 @@ $proposalForm=
                 }
             ]
 
+        });
+ ";
+
+// where trying to use the faculties above in both windows, it only displays in one window.
+// I am guessing we cannot reuse the facutly var so i am creating the facutly variable just
+// for the moderator window below
+
+$modFaculties=
+    "
+   var modFaculties= [
+        $facultyData
+      ]
+
+   var modFacultyStore = new Ext.data.ArrayStore({
+        fields: ['faculty'],
+        data : faculties
+    });
+    var modFacultyField = new Ext.form.ComboBox({
+        store: modFacultyStore,
+        displayField:'faculty',
+        fieldLabel:'Faculty',
+        typeAhead: true,
+        mode: 'local',
+        editable:false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select faculty...',
+        selectOnFocus:true,
+        name : 'faculty'
+
+    });
+";
+
+$addModeratorWindowJS=
+"   var addModeratorWin;
+    var modBtn = Ext.get('addmoderator-btn');
+
+    modBtn.on('click', function() {
+        if(!addModeratorWin){
+            addModeratorWin = new Ext.Window({
+                applyTo:'addmoderator-win',
+                layout:'fit',
+                width:500,
+                height:250,
+                x:250,
+                y:150,
+                closeAction:'destroy',
+                plain: true,
+
+                items: moderatorForm,
+                buttons: [{
+                    text:'Save',
+                    handler: function(){
+                        if (moderatorForm.url)
+                            moderatorForm.getForm().getEl().dom.action = moderatorForm.url;
+
+                        moderatorForm.getForm().submit();
+                    }
+                },{
+                    text: 'Cancel',
+                    handler: function(){
+                       addModeratorWin.hide();
+                    }
+                }]
+            });
+        }
+        addModeratorWin.show(this);
+    });
+";
+
+$moderatorForm =
+ "
+       var moderatorForm = new Ext.FormPanel({
+            standardSubmit: true,
+            labelWidth: 125,
+            url:'".str_replace("amp;", "", $submitModeratorUrl)."',
+            title: 'Add Faculty Moderator',
+            bodyStyle:'padding:5px 5px 0',
+            width: 350,
+            defaults: {width: 230},
+            defaultType: 'textfield',
+
+            items: [
+                     modFacultyField,
+                    {
+                    fieldLabel: '".$moderatorName."',
+                    name: 'moderator',
+                    id: 'moderator_title',
+                    allowBlank: false
+                }
+            ]
+        });
+ ";
+
+$addFacultyWindowJS=
+"   var addFacultyWin;
+    var facultyAddBtn = Ext.get('addfaculty-btn');
+    
+    facultyAddBtn.on('click', function() {
+        if(!addFacultyWin){
+            addFacultyWin = new Ext.Window({
+                applyTo:'addfaculty-win',
+                layout:'fit',
+                width:400,
+                height:150,
+                x:250,
+                y:150,
+                closeAction:'destroy',
+                plain: true,
+
+                items: facultyAddForm,
+                buttons: [{
+                    text:'Save',
+                    handler: function(){
+                        if (facultyAddForm.url)
+                            facultyAddForm.getForm().getEl().dom.action = facultyAddForm.url;
+
+                        facultyAddForm.getForm().submit();
+                    }
+                },{
+                    text: 'Cancel',
+                    handler: function(){
+                       addFacultyWin.hide();
+                    }
+                }]
+            });
+        }
+        addFacultyWin.show(this);
+    });
+";
+
+$facultyAddForm =
+ "
+       var facultyAddForm = new Ext.FormPanel({
+            standardSubmit: true,
+            labelWidth: 100,
+            url:'".str_replace("amp;", "", $submitFacultyUrl)."',
+            title: 'Add Faculty',
+            bodyStyle:'padding:5px 5px 0',
+            width: 350,
+            defaultType: 'textfield',
+
+            items: [{
+                    fieldLabel: '".$faculty."',
+                    name: 'addfaculty',
+                    id: 'addfaculty_title',
+                    allowBlank: false,
+                    width: 250
+            }]
         });
  ";
 
@@ -308,7 +484,11 @@ $mainjs = "/*!
                   ".$faculties."
                   ".$proposalForm."
                   ".$addProposalWindowJS."
-
+                  ".$modFaculties."
+                  ".$moderatorForm."
+                  ".$addModeratorWindowJS."
+                  ".$facultyAddForm."
+                  ".$addFacultyWindowJS."
                ";
 
 $delBtnjs = "
