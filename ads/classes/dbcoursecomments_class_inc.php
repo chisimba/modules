@@ -16,7 +16,7 @@ class dbcoursecomments extends dbTable{
 
     public function addComment($courseid, $comment,$status) {
         $version = $this->objDocumentStore->getMaxVersion($courseid);
-        $data = array('courseid'=>$courseid, 'comment'=>$comment, 'version'=>$version,'status'=>$status, 'username'=>$this->objUser->userName(), 'datemodified'=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
+        $data = array('courseid'=>$courseid, 'comment'=>$comment, 'version'=>$version,'status'=>$status, 'username'=>$this->objUser->userId(), 'datemodified'=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $this->insert($data);
     }
 
@@ -41,14 +41,14 @@ class dbcoursecomments extends dbTable{
         $unformatedComments="";
         $status=0;
         foreach($data as $xc){
-            
+
             if($status != $xc['status']){
                 $status= $xc['status'];
                 $unformatedComments.='<h3>'.$statuscodes[$status].'</h3>';
             }
-            $unformatedComments.=$xc['comment'].'<br/>---------------------<br/>';
+            $unformatedComments.='<h4>'.$this->objUser->fullname($xc['username']).'</h4><h4>'.$xc['datemodified'].'</h4>'.$xc['comment'].'<br/>---------------------<br/>';
         }
-        
+
         $order   = array("\r\n", "\n", "\r");
         $replace = '<br />';
         // Processes \r\n's first so they aren't converted twice.
