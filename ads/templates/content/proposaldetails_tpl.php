@@ -9,6 +9,7 @@ $searchfieldjs = '<script language="JavaScript" src="'.$this->getResourceUri('js
 $gridsearchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/LiveSearch.js').'" type="text/javascript"></script>';
 $coursehistoryjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/proposaldetails.js').'" type="text/javascript"></script>';
 
+
 $styleSheet="
    <style type=\"text/css\">
 div#contentcontent, div#tree-div {min-height: 500px;}
@@ -331,7 +332,11 @@ forwardProposalToModerator('".$this->id."');
 
 Ext.onReady(function(){
     var historyURL = '".str_replace("amp;", "",$this->uri(array('action'=>'gethistorydata', 'courseid'=>$this->id, 'formnumber'=>$this->allforms[0])))."';
-    addTree('".$this->id."', historyURL);
+";
+  if($alert){
+      $mainjs.="  Ext.MessageBox.alert('Status', '".$alert."');";
+  }
+  $mainjs.="addTree('".$this->id."', historyURL);
     showTabs();
 });
 ";

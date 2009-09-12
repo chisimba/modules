@@ -426,6 +426,7 @@ $mainjs = "/*!
 
                     Ext.QuickTips.init();
 
+                   
                     var xg = Ext.grid;
 
                     // shared reader

@@ -8,16 +8,22 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
 
-// scripts
-    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-    $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-    $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
-   // $tip = '<div id="tip1"><img src="'.$this->getResourceUri('ext-3.0-rc2/resources/images/default/window/icon-question.gif','htmlelements').'" ></div>';
-    
-    $this->appendArrayVar('headerParams', $extbase);
-    $this->appendArrayVar('headerParams', $extalljs);
-    $this->appendArrayVar('headerParams', $extallcss);
- //end of scripts
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$formAjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/formajs.js','ads').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+$buttonscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css','ads').'"/>';
+
+$searchfieldjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/SearchField.js').'" type="text/javascript"></script>';
+$gridsearchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/LiveSearch.js').'" type="text/javascript"></script>';
+
+$this->appendArrayVar('headerParams', $extbase);
+$this->appendArrayVar('headerParams', $extalljs);
+$this->appendArrayVar('headerParams', $extallcss);
+$this->appendArrayVar('headerParams', $buttonscss);
+$this->appendArrayVar('headerParams', $formAjs);
+
+
 $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleA','ads'), 2);
 
 
@@ -28,93 +34,45 @@ $messages = array();
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->cellspacing = '20';
+
+$forwardButton = new button('forwardBtn', 'Forward');
+$forwardButton->setId("forwardBtn");
+
+
+
+
 $table->startRow();
 
 $coursename = $this->objCourseProposals->getTitle($this->getParam('courseid'));
 $this->formValue->setValue('A1', $coursename);
 $unitname = new textinput('A1',$this->formValue->getValue('A1'),NULL,75);
 
-//the tips
-$tip1 = "<div id = 'tip1'><h3>[?]</h3></div>";
-$tip2 = "<div id = 'tip2'><h3>[?]</h3></div>";
-$tip3 = "<div id = 'tip3'><h3>[?]</h3></div>";
+$motivationUri=new link($this->uri(array("action"=>"help","formnumber"=>"A","questionnumber"=>"2A")));
+$motivationUri->link='[?]';
 
-$myscript = "Ext.onReady(function(){
-                        new Ext.ToolTip({
-                                title: '<a href=\"#\">Rich Content Tooltip</a>',
-                                id: 'content-anchor-tip',
-                                target: 'tip1',
-                                anchor: 'bottom',
-                                html: null,
-                                width: 100,
-                                autoHide: true,
-                                closable: false,
-                                //contentEl: 'content-tip', // load content from the page
-                                listeners: {
-                                    'render': function(){
-                                        this.header.on('click', function(e){
-                                            e.stopEvent();
-                                            Ext.Msg.alert('Link', 'Link to something interesting.');
-                                            Ext.getCmp('content-anchor-tip').hide();
-                                        }, this, {delegate:'a'});
-                                    }
-                                }
-                        });
-
-                                                 new Ext.ToolTip({
-                                title: '<a href=\"#\">Rich Content Tooltip</a>',
-                                id: 'content-anchor-tip',
-                                target: 'tip2',
-                                anchor: 'bottom',
-                                html: null,
-                                width: 100,
-                                autoHide: true,
-                                closable: false,
-                                //contentEl: 'content-tip', // load content from the page
-                                listeners: {
-                                    'render': function(){
-                                        this.header.on('click', function(e){
-                                            e.stopEvent();
-                                            Ext.Msg.alert('Link', 'Link to something interesting.');
-                                            Ext.getCmp('content-anchor-tip').hide();
-                                        }, this, {delegate:'a'});
-                                    }
-                                }
-                        });
+$question1comment = "<div id = 'question1comment'></div>";
+$question2comment = "<div id = 'question2comment'></div>";
+$question3comment = "<div id = 'question3comment'></div>";
+$question4comment = "<div id = 'question4comment'></div>";
+$question5comment = "<div id = 'question5comment'></div>";
+$courseid=$this->getParam('courseid');
+$sendProposalUrl = $this->uri(array('action'=>'sendproposal'));
+$myscript = " Ext.onReady(function(){
+loadFormAJS('".$courseid."');
+    
+})";
 
 
-                                                 new Ext.ToolTip({
-                                title: '<a href=\"#\">Rich Content Tooltip</a>',
-                                id: 'content-anchor-tip',
-                                target: 'tip3',
-                                anchor: 'bottom',
-                                html: null,
-                                width: 100,
-                                autoHide: true,
-                                closable: false,
-                                //contentEl: 'content-tip', // load content from the page
-                                listeners: {
-                                    'render': function(){
-                                        this.header.on('click', function(e){
-                                            e.stopEvent();
-                                            Ext.Msg.alert('Link', 'Link to something interesting.');
-                                            Ext.getCmp('content-anchor-tip').hide();
-                                        }, this, {delegate:'a'});
-                                    }
-                                }
-                        });
-
-
-                         Ext.QuickTips.init();
-                })";
-$unitnameLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_name', 'ads'). "</b>".'&nbsp;', 'input_unitname');
-
+$ccount=$this->objQuestionComment->getCommentsCount($courseid, "A","A1");
+$commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>":"";
+$unitnameLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_name', 'ads'). "</b>".$commentsAdded.".&nbsp;", 'input_unitname');
 $table->addCell($unitnameLabel->show(), 100, NULL, 'left');
-
-$table->endRow();
 $table->startRow();
 $table->addCell($unitname->show(). "<br />" . $this->formError->getError('A1'));
-$table->addCell($tip1, 100, NULL, 'left');
+$table->endRow();
+$table->endRow();
+$table->startRow();
+$table->addCell($question1comment);
 $table->endRow();
 
 $unitType = new radio ('A2');
@@ -127,34 +85,45 @@ if ($this->formValue->getValue("A2") != "") {
 else {
   $unitType->setSelected('new');
 }
+
+$ccount=$this->objQuestionComment->getCommentsCount($courseid, "A","A2");
+$commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>":"";
 $table->startRow();
-$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_thisisa','ads'). "</b>".'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_thisisa','ads').$commentsAdded. "</b>".'&nbsp;', 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($unitType->showTable());
 $table->endRow();
 
+$table->startRow();
+$table->addCell($question2comment);
+$table->endRow();
 
 $table->startRow();
 $motivation = new textarea('A3', NULL, 10, 75);
-$motivationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_motiv', 'ads'). "</b>".'&nbsp;', 'input_motivation');
+$ccount=$this->objQuestionComment->getCommentsCount($courseid, "A","A3");
+$commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>":"";
+$motivationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_motiv', 'ads').$commentsAdded. "</b>".'&nbsp;', 'input_motivation');
 $motivation->value = $this->formValue->getValue("A3");
 
 $table->addCell($motivationLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($motivation->show() . "<br />" . $this->formError->getError('A3'));
-$table->addCell($tip2, 150, NULL, 'left');
+$table->addCell($motivationtip, 150, NULL, 'left');
 $table->endRow();
 
+$table->startRow();
+$table->addCell($question3comment);
+$table->endRow();
 
 $table->startRow();
 $qualification = new textarea('A4', NULL, 10, 75);
-$qualificationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_qual', 'ads'). "</b>".'&nbsp;', 'input_motivation');
+$ccount=$this->objQuestionComment->getCommentsCount($courseid, "A","A4");
+$commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>":"";
+$qualificationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_qual', 'ads').$commentsAdded. "</b>".'&nbsp;', 'input_motivation');
 
-    $qualification->value = $this->formValue->getValue("A4");
-
-
+$qualification->value = $this->formValue->getValue("A4");
 
 $table->addCell($qualificationLabel->show(), 150, NULL, 'left');
 $table->endRow();
@@ -162,7 +131,9 @@ $table->startRow();
 $table->addCell($qualification->show() . "<br />" . $this->formError->getError('A4'));
 $table->addCell($tip3);
 $table->endRow();
-
+$table->startRow();
+$table->addCell($question4comment);
+$table->endRow();
 
 $unitType2 = new radio ('A5');
 $unitType2->addOption('changetype1', $this->objLanguage->languageText('mod_ads_changetype1', 'ads'));
@@ -176,11 +147,17 @@ if($this->formValue->getValue("A5")=='')
 $unitType2->setSelected('changetype5');
 else
 $unitType2->setSelected($this->formValue->getValue("A5"));
+$ccount=$this->objQuestionComment->getCommentsCount($courseid, "A","A5");
+$commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>":"";
 $table->startRow();
-$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_proposaltype','ads'). "</b>" .'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_proposaltype','ads').$commentsAdded. "</b>" .'&nbsp;', 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($unitType2->showTable());
+$table->endRow();
+
+$table->startRow();
+$table->addCell($question5comment);
 $table->endRow();
 
 $form->addToForm($header->show(). "<br />");
@@ -207,7 +184,7 @@ $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
 $leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
 $cssLayout->setLeftColumnContent($leftSideColumn);
 //$rightSideColumn='<h1>'.$coursedata['title'].'</h1>';
-$rightSideColumn='<div style="padding:10px;">';
+$rightSideColumn='<div id="gtx"></div><div style="padding:10px;">';
 
 //Add the table to the centered layer
 $rightSideColumn .= $form->show();
