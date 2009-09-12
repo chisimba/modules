@@ -334,6 +334,16 @@ $mainjs = "/*!
 
 $delBtnjs = "
 Ext.onReady(function() {
+
+    var addFacBtn = Ext.get('addfaculty-btn');
+    addFacBtn.on('click', function() {
+        url = '".str_replace("amp;", "",$this->uri(array('action'=>'facultylist')))."'
+        goFactList(url);
+    });
+
+    var goFactList = function() {
+        window.location.href = url;
+    }
     var getDelBtn = function(){
         var delBtn = Ext.get('deleteBtn');
         delBtn.on('click', function(){
