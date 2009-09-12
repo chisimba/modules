@@ -22,6 +22,7 @@ class ads extends controller {
         $this->objGetData = $this->getObject('getdata');
         $this->objCourseProposals = $this->getObject('dbcourseproposals');
         $this->objComment = $this->getObject('dbcoursecomments');
+        $this->objQuestionComment = $this->getObject('dbquestioncomments');
         $this->objFaculty = $this->getObject('dbfaculty');
         //review
         $this->objCourseReviews = $this->getObject('dbcoursereviews');
@@ -87,6 +88,16 @@ class ads extends controller {
         }
     }
 
+    function __addquestioncomment(){
+        $comment=$this->getParam("comment");
+        $courseid=$this->getParam("courseid");
+        $formnumber=$this->getParam("formnumber");
+        $question=$this->getParam("question");
+        if($comment != ''){
+        $this->objQuestionComment->addComment($courseid, $formnumber,$question,$comment);
+        }
+        echo $this->objQuestionComment->getComments($courseid, $formnumber,$question);
+    }
     function __addcomment(){
         $this->setVarByRef('tmpcourseid',$this->getParam('courseid'));
         return "addcomment_tpl.php";
@@ -201,6 +212,7 @@ class ads extends controller {
             $this->formValue->setValue($fieldvalue['question'], $fieldvalue['value']);
         }
         $this->submitAction = $this->uri(array("action"=>"submitform", "formnumber"=>$form, "courseid"=>$courseid));
+        //$this->setVarByRef("courseid",$courseid);
         return "form$form" . "_tpl.php";
     }
 
@@ -234,6 +246,7 @@ class ads extends controller {
         }
     }
     function __home() {
+
         return "courseproposallist_tpl.php";
     }
 
@@ -535,12 +548,17 @@ class ads extends controller {
             return $this->nextAction('viewForm', array('courseid'=>$this->id, 'formnumber'=>$this->allForms[0]));
         }
         else {
+            $message=$this->getParam("message");
+            $this->setVarByRef("alert",$message);
             return "proposaldetails_tpl.php";
         }
     }
 
     public function __sendproposaltomoderator(){
         $this->id = $this->getParam('courseid');
+        $phone = 'xxxx';
+        $lname="x";
+        $fname="y";
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
@@ -557,7 +575,8 @@ class ads extends controller {
 
         $objMailer->send();
         $this->objDocumentStore->sendProposal($lname, $fname, $modemail, $phone, $this->id,$this->objUser->email(),false);
-        $this->nextAction('home');
+        $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully to moderator","courseid"=>$this->id));
+
     }
     public function __sendproposal() {
 
@@ -567,7 +586,7 @@ class ads extends controller {
         $lname="x";
         $fname="y";
         $submission = $this->objDocumentStore->sendProposal($lname, $fname, $email, $phone, $this->id,$this->objUser->email());
-        $this->nextAction('home');
+        $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully","courseid"=>$this->id));
     }
 
     public function __showcourseprophisttest() {
