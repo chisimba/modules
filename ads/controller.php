@@ -131,8 +131,8 @@ class ads extends controller {
     function __savecomment() {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $toemail=$this->objCourseProposals->getOwnerEmail($this->getParam('courseid'));
-        $subject=$objSysConfig->getValue('EMAIL_COMMENT_SUBJECT', 'ads');
-        $body=$objSysConfig->getValue('EMAIL_COMMENT_BODY', 'ads');
+        $subject=$objSysConfig->getValue('EMAIL_ADDCOMMENT_SUBJECT', 'ads');
+        $body=$objSysConfig->getValue('EMAIL_ADDCOMMENT_BODY', 'ads');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
         $body.=' '. str_replace("amp;", "", $linkUrl);
 
