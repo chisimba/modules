@@ -20,7 +20,7 @@
     $this->appendArrayVar('headerParams', $extallcss);
     $this->appendArrayVar('headerParams', $maincss);
 
-    $backLink = new link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$this->id)));
+    $backLink = new link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$this->id,'selectedtab'=>'0')));
     $backLink->link = $this->objLanguage->languageText('mod_ads_historylink', 'ads');
     
     // Create an instance of the css layout class

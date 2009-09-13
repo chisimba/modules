@@ -365,7 +365,7 @@ class ads extends controller {
         if ($count == count($this->allForms)) {
             //no more forms, go back to initial page
             $this->formError->setError("general", "Document complete, you may now submit it by clicking the submit link next to it.");
-            return $this->nextAction('showcourseprophist',array("courseid"=>$courseid));
+            return $this->nextAction('showcourseprophist',array("courseid"=>$courseid,'selectedtab'=>'0'));
         }
         else {
             //go to $this->allForms[$count]
@@ -583,7 +583,7 @@ class ads extends controller {
         $objMailer->setValue('body', $body);
         $objMailer->send();
 
-        $this->nextAction('showcourseprophist',array('courseid'=>$this->id));
+        $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0'));
         }
         else {
             $message = "There was an error submitting your information";
@@ -604,6 +604,9 @@ class ads extends controller {
         $this->id = $this->getParam('courseid');
         $data = $this->objDocumentStore->getVersion($this->id, $this->objUser->userId());
         $selectedtab= $this->getParam('selectedtab');
+        if(!$selectedtab){
+            $selectedtab="0";
+        }
         if($data['version'] == 0) {
             return $this->nextAction('viewForm', array('courseid'=>$this->id, 'formnumber'=>$this->allForms[0]));
         }
@@ -624,7 +627,7 @@ class ads extends controller {
         $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
-        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id));
+        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
         $body.=' '. str_replace("amp;", "", $linkUrl);
 
         $objMailer = $this->getObject('email', 'mail');
