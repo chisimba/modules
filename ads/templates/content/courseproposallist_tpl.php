@@ -105,7 +105,7 @@ $numberOfRows = $this->objCourseProposals->getNumberOfCourses($this->objUser->us
 
 foreach($courseProposals as $value) {
     $verarray = $this->objDocumentStore->getVersion($value['id'], $this->objUser->userId());
-    $titleLink->link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$value['id'])));
+    $titleLink->link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$value['id'],'selectedtab'=>'0')));
     $titleLink->link=$value['title'];
 
     $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$value['id'], 'status'=>$value['status'])));
@@ -143,7 +143,7 @@ foreach($courseProposals as $value) {
     $reviewLink->link=$objIcon->show();
     //$data .= $reviewLink->show();
     //$objIcon->resetAlt();
-
+/*
     if ($this->objUser->isAdmin()) {
         $commentLink->link($this->uri(array('action'=>'addcomment',
                                                 'id'=>$value['id'],
@@ -156,7 +156,7 @@ foreach($courseProposals as $value) {
         $objIcon->setIcon('comment');
         $commentLink->link = $objIcon->show();
         $data .= $commentLink->show();
-    }
+    }*/
     $data .= "',";
 
     $data .= "'".$value['faculty']."'";

@@ -24,6 +24,7 @@ class ads extends controller {
         $this->objComment = $this->getObject('dbcoursecomments');
         $this->objQuestionComment = $this->getObject('dbquestioncomments');
         $this->objFaculty = $this->getObject('dbfaculty');
+        $this->objProposalMembers=$this->getObject('dbproposalmembers');
         //review
         $this->objCourseReviews = $this->getObject('dbcoursereviews');
         $this->objUser = $this->getObject ( 'user', 'security' );
@@ -104,13 +105,54 @@ class ads extends controller {
     }
 
     function __updatecomment(){
-        $this->objDocumentStore->updateComment($this->getParam('id'),$this->getParam('admComment'));
-        $this->nextAction('showcourseprophist',array('courseid'=>$this->getParam('courseid')));
+           $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $toemail=$this->objCourseProposals($this->getParam('courseid'));
+        $subject=$objSysConfig->getValue('EMAIL_COMMENT_SUBJECT', 'ads');
+        $body=$objSysConfig->getValue('EMAIL_COMMENT_BODY', 'ads');
+        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
+        $body.=' '. str_replace("amp;", "", $linkUrl);
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to', array($toemail));
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullnames);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
+        $objMailer->send();
+       $this->objDocumentStore->updateComment($this->getParam('id'),$this->getParam('admComment'));
+        $this->nextAction('showcourseprophist',array('courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
     }
 
+
+
     function __savecomment() {
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $toemail=$this->objCourseProposals->getOwnerEmail($this->getParam('courseid'));
+        $subject=$objSysConfig->getValue('EMAIL_COMMENT_SUBJECT', 'ads');
+        $body=$objSysConfig->getValue('EMAIL_COMMENT_BODY', 'ads');
+        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
+        $body.=' '. str_replace("amp;", "", $linkUrl);
+
+        $recepients=array($toemail);
+        
+        $proposalMembersData=$this->objProposalMembers->getMembers($this->getParam('courseid'));
+        $membercount=count($proposalMembersData);
+        if($membercount > 0){
+        foreach($proposalMembersData as $row){
+        $recepients[]=$this->objUser->email($row['userid']);
+        }  
+        }
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to',$recepients);
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullnames);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
+        $objMailer->send();
+
         $this->objComment->addComment($this->getParam('courseid'),$this->getParam('commentField'),$this->getParam('status'));
-        $this->nextAction('showcourseprophist',array('courseid'=>$this->getParam('courseid')));
+        $this->nextAction('showcourseprophist',array('courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
     }
 
     function __viewcomments() {
@@ -523,7 +565,22 @@ class ads extends controller {
         $submitted = $this->objCourseProposals->updateProposalStatus($this->id, $status);
 
         if($submitted) {
-            $this->nextAction('showcourseprophist',array('courseid'=>$this->id));
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $toemail=$this->objCourseProposals->getOwnerEmail($this->getParam('id'));
+        $subject=$objSysConfig->getValue('EMAIL_STATUS_SUBJECT', 'ads');
+        $body=$objSysConfig->getValue('EMAIL_STATUS_BODY', 'ads');
+        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
+        $body.=' '. str_replace("amp;", "", $linkUrl);
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to', array($toemail));
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullnames);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
+        $objMailer->send();
+
+        $this->nextAction('showcourseprophist',array('courseid'=>$this->id));
         }
         else {
             $message = "There was an error submitting your information";
@@ -543,13 +600,14 @@ class ads extends controller {
 
         $this->id = $this->getParam('courseid');
         $data = $this->objDocumentStore->getVersion($this->id, $this->objUser->userId());
-
+        $selectedtab= $this->getParam('selectedtab');
         if($data['version'] == 0) {
             return $this->nextAction('viewForm', array('courseid'=>$this->id, 'formnumber'=>$this->allForms[0]));
         }
         else {
             $message=$this->getParam("message");
             $this->setVarByRef("alert",$message);
+            $this->setVarByRef("selectedtab",$selectedtab);
             return "proposaldetails_tpl.php";
         }
     }
@@ -572,10 +630,38 @@ class ads extends controller {
         $objMailer->setValue('fromName', $this->objUser->fullnames);
         $objMailer->setValue('subject', $subject);
         $objMailer->setValue('body', $body);
+        $objMailer->send();
+
+        $this->objDocumentStore->sendProposal($lname, $fname, $modemail, $phone, $this->id,$this->objUser->email(),false);
+        $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully to moderator","courseid"=>$this->id,'selectedtab'=>'0'));
+
+    }
+   public function __deleteproposalmember(){
+        $memberid=$this->getParam('id');
+        $this->id = $this->getParam('courseid');
+        $this->objProposalMembers->deleteMember($memberid,$this->id);
+        $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'2'));
+   }
+   public function __addproposalmember(){
+        $this->id = $this->getParam('courseid');
+        $email=$this->getParam('email');
+        $userid=$this->getParam('userid');
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $subject=$objSysConfig->getValue('EMAIL_ADDMEMBER_SUBJECT', 'ads');
+        $body=$objSysConfig->getValue('EMAIL_ADDMEMBER_BODY', 'ads');
+        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
+        $body.=' '. str_replace("amp;", "", $linkUrl);
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to', array($email));
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullnames);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
 
         $objMailer->send();
-        $this->objDocumentStore->sendProposal($lname, $fname, $modemail, $phone, $this->id,$this->objUser->email(),false);
-        $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully to moderator","courseid"=>$this->id));
+        $this->objProposalMembers->saveMember($userid, $this->id);
+        $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'2'));
 
     }
     public function __sendproposal() {
@@ -586,7 +672,7 @@ class ads extends controller {
         $lname="x";
         $fname="y";
         $submission = $this->objDocumentStore->sendProposal($lname, $fname, $email, $phone, $this->id,$this->objUser->email());
-        $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully","courseid"=>$this->id));
+        $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully","courseid"=>$this->id,'selectedtab'=>'0'));
     }
 
     public function __showcourseprophisttest() {

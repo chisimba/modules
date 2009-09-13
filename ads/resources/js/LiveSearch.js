@@ -6,16 +6,24 @@
  */
 var panel;
 var courseId;
-var sendProposalUrl;
+var actionUrl;
+var actionWord;
+var actionFunction;
+var renderSurface;
+var searchUrl;
 
 function showSearchWinX(){
     var args = showSearchWinX.arguments;
     courseId=args[0];
-    sendProposalUrl=args[1];
+    actionUrl=args[1];
+    actionWord=args[2];
+    actionFunction=args[3];
+    renderSurface=args[4];
+    searchUrl=args[5];
     
     var ds = new Ext.data.Store({
         proxy: new Ext.data.HttpProxy({
-            url:location.href+"?module=ads&action=searchusers"
+            url:searchUrl
         }),
         reader: new Ext.data.JsonReader({
             root: 'rows',
@@ -23,7 +31,7 @@ function showSearchWinX(){
             id: 'userid'
         }, [
         {
-            name: 'userId',
+            name: 'userid',
             mapping: 'userid'
         },
 
@@ -54,7 +62,7 @@ function showSearchWinX(){
         '<tpl for=".">',
         '<div class="search-item">',
         '<h3>{firstname} {lastname}</h3>',
-        '<p><span><a href="#" onclick="forwardProposal(\''+sendProposalUrl+'\',\'{email}\',\''+courseId+'\');return false;">Forward</a></span></p>',
+        '<p><span><a href="#" onclick="'+actionFunction+'(\''+actionUrl+'\',\'{email}\',\''+courseId+'\',\'{userid}\');return false;">'+actionWord+'</a></span></p>',
             
         '</div></tpl>'
         );
@@ -105,9 +113,9 @@ function showSearchWinX(){
         ,
         width:500
         ,
-        x:200
+        x:10
         ,
-        y: 100
+        y: 10
         ,
         height:400
         ,
@@ -115,7 +123,7 @@ function showSearchWinX(){
         ,
         border:false
         ,
-        applyTo:'search-xwin'
+        applyTo:renderSurface
         // let window code to focus the combo on show
         ,
         defaultButton:'combo'
@@ -179,5 +187,14 @@ function forwardProposalToModerator(){
     window.location.href='?module=ads&action=sendproposaltomoderator&courseid='+courseid;
   }
 });
+}
+
+function addProposalMember(){
+   var args=addProposalMember.arguments;
+   var url=args[0];
+   var email=args[1];
+   var courseid=args[2];
+   var userid=args[3];
+   window.location.href='?module=ads&action=addproposalmember'+'&email='+email+'&courseid='+courseid+"&userid="+userid;
 }
 

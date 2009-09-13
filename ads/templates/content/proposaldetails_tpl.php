@@ -1,4 +1,8 @@
 <?php
+
+$this->loadclass('link','htmlelements');
+$objIcon= $this->newObject('geticon','htmlelements');
+
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
@@ -8,7 +12,7 @@ $iconscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUr
 $searchfieldjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/SearchField.js').'" type="text/javascript"></script>';
 $gridsearchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/LiveSearch.js').'" type="text/javascript"></script>';
 $coursehistoryjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/proposaldetails.js').'" type="text/javascript"></script>';
-
+$comboscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/combos.css').'"/>';
 
 $styleSheet="
    <style type=\"text/css\">
@@ -77,6 +81,8 @@ $this->appendArrayVar('headerParams',$coursehistoryjs);
 $this->appendArrayVar('headerParams',$searchjs);
 $this->appendArrayVar('headerParams',$searchfieldjs);
 $this->appendArrayVar('headerParams',$gridsearchjs);
+$this->appendArrayVar('headerParams',$comboscss);
+
 
 $nextForm = new link($this->uri(array('action'=>'viewform','courseid'=>$this->id, 'formnumber'=>$this->allForms[0])));
 $submitForm = new link($this->uri(array('action'=>'submitproposal','courseid'=>$this->id)));
@@ -95,7 +101,7 @@ $homeUrl = $this->uri(array('action'=>'home'));
 $sendProposalUrl = $this->uri(array('action'=>'sendproposal'));
 $comments= $this->objComment->getAllcomments($this->id);
 
-$showCoursePropHistUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id));
+$showCoursePropHistUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
 $items = "{boxLabel: 'New', name: 'proposalstatus', inputValue: '0'";
 if($courseProposal['status'] == 0) {
     $items .= ", checked: true";
@@ -194,8 +200,10 @@ var form = new Ext.form.FormPanel({
          url:'".str_replace("amp;", "", $saveCommentUrl->href)."',
         defaultType: 'textfield',
         items:[
+           new Ext.form.DisplayField({
+               value: '<h2>Proposal Status:".$statuscodes[$courseProposal['status']]."</h2>'
+               }),
         new Ext.form.TextArea({
-            fieldLabel: 'Comments',
             name: 'commentField',
             id: 'commentsFieldId',
             width: 400,
@@ -233,6 +241,8 @@ var form = new Ext.form.FormPanel({
     button.on('click', function(){
      window.location.href = '".str_replace("amp;", "",$homeUrl)."';
     });
+
+   
 function processActionDD(){
  var actiondd = document.getElementById('actiondd').value;
 
@@ -321,12 +331,12 @@ function processActionDD(){
     }//end if
 
 if(actiondd == \"forward\"){
-showSearchWinX('".$this->id."','".$sendProposalUrl."');
+showSearchWinX('".$this->id."','".$sendProposalUrl."','Forward','forwardProposal','search-xwin','".str_replace("amp;", "", $searchusers)."');
 }//end if
 
 
 if(actiondd == \"forwardtomoderator\"){
-forwardProposalToModerator('".$this->id."');
+showSearchWinX('".$this->id."','".$sendProposalUrl."','Forward','forwardProposalToModerator','search-xwin','".str_replace("amp;", "", $searchusers)."');
 }//end if
 };
 
@@ -336,8 +346,33 @@ Ext.onReady(function(){
   if($alert){
       $mainjs.="  Ext.MessageBox.alert('Status', '".$alert."');";
   }
+  $proposalMembersData=$this->objProposalMembers->getMembers($this->id);
+  $deleteMemberLink=new link();
+  $propData="";
+  $membercount=count($proposalMembersData);
+  $mcount=0;
+  $deleteLink=new link();
+
+  if($membercount > 0){
+
+  foreach($proposalMembersData as $row){
+      $deleteLink->link($this->uri(array('action'=>'deleteproposalmember','id'=>$row['id'],'courseid'=>$this->id)));
+      $objIcon->setIcon('delete');
+      $deleteLink->link=$objIcon->show();
+      $propData.="['".$this->objUser->fullname($row['userid'])."','".$this->objUser->email($row['userid'])."','".$deleteLink->show()."']";
+      $mcount++;
+      if($mcount < $membercount){
+          $propData.=",";
+      }
+  }
+  }
+
   $mainjs.="addTree('".$this->id."', historyURL);
-    showTabs();
+    showTabs('".$selectedtab."');
+    var mData = [".$propData."];
+    showProposalMembers(mData);
+
+
 });
 ";
 
@@ -389,18 +424,37 @@ $renderSurface='
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 $actionsDropDown->addOnChange('processActionDD();');
-$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'</div';
+$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'</div>';
 
+$addMemberButton = new button('addmember','Add New Member');
+$addMemberButton->setId('add-member-btn');
+$searchFieldBody=
+'
+
+ <div id="memberssurface"></div>
+    
+';
 $render='<div id="onecolumn">
                     <div id="content">
-                    <div id="tabs"></div>
+                    <div id="tabs" style="padding-left: 3em;"></div>
                     <div id="tree-div" style="padding-top: 2em;"  class="x-hide-display"></div>
                     <div id="contentcontent"  class="x-hide-display">
                     '.$renderContent.'
                     </div>
+                    <div style="padding-left: 3em;">'.$vsearchFieldBody.'</div>
+                    <div id="memberscontent" class="x-hide-display">&nbsp;'.$addMemberButton->show().'<br/>'.$searchFieldBody.'<br/></div>
                     </div>
                     </div>
 
 <input type="hidden" name="homeURL" value = "'.str_replace("amp;", "",$this->uri(array())).'">';
+$addMemberJS = "jQuery(document).ready(function() {
+                    
+
+                    jQuery(\"#add-member-btn\").click(function() {
+                        showSearchWinX('".$this->id."','".$sendProposalUrl."','Add','addProposalMember','memberssurface','".str_replace("amp;", "", $searchusers)."');
+                    });
+              });";
+
+echo "<script type='text/javascript'>".$addMemberJS."</script>";
 echo $render;
 ?>

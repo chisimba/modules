@@ -36,9 +36,9 @@ class dbcourseproposals extends dbTable{
          $sql=   'select distinct cp.* from tbl_ads_course_proposals cp,tbl_ads_documentstore ds
 where cp.deleteStatus <> 1 ';
         }else{
-        $sql="select distinct cp.* from tbl_ads_course_proposals cp,tbl_ads_documentstore ds
-where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$this->objUser->email()."')
-     and cp.id=ds.coursecode ";
+        $sql="select distinct cp.* from tbl_ads_course_proposals cp,tbl_ads_documentstore ds, tbl_ads_proposalmembers ms
+where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$this->objUser->email()."' or ms.userid = '".$userid."')
+     and cp.id=ds.coursecode and cp.id=ms.courseid and ds.coursecode=ms.courseid";
         }
 
         $rows=$this->getArray($sql);
@@ -82,10 +82,12 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
 
     public function getTitle($id) {
         $data = $this->getRow('id', $id, $this->table);
-
         return $data['title'];
     }
-
+    public function getOwnerEmail($id) {
+        $data = $this->getRow('id', $id, $this->table);
+        return $this->objUser->email($data['userid']);
+    }
     public function editProposal($id,$faculty, $title) {
         $data = array('faculty'=>$faculty, 'title'=>$title);
         $courseProposalStatus = $this->update('id', $id, $data, $this->table);
