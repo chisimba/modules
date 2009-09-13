@@ -123,7 +123,10 @@ class ads extends controller {
         $this->nextAction('showcourseprophist',array('courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
     }
 
+  function __facultylist() {
+  return "facultylist_tpl.php";
 
+  }
 
     function __savecomment() {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');

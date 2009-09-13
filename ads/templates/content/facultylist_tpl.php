@@ -2,7 +2,7 @@
 //load class
 $this->loadclass('link','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
-$grid = $this->objFaculty->getFacultyListing();
+$grid = $this->objFaculty->getAllFaculty();
 
 // scripts
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
