@@ -87,6 +87,7 @@ $rightSideColumn .=$content.$note;
 $rightSideColumn .='</div><div id="grouping-grid">'.$addFaculty->show()."&nbsp;&nbsp;".$addButton->show().'<br /><br /></div>';
 //where we render the 'popup' window
 $renderSurface='<div id="addsession-win" class="x-hidden"><div class="x-window-header"></div></div>';
+$renderSurface.='<div id="editfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>';
 $rightSideColumn.=$renderSurface;
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 
@@ -111,7 +112,7 @@ foreach($courseProposals as $value) {
     $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$value['id'], 'status'=>$value['status'])));
     $statusLink->link=$statuscodes[$value['status']];
     $deleteLink->link("#");
-    $editLink->link($this->uri(array('action'=>'editcourseproposal','id'=>$value['id'])));
+    $editLink->link("#");//$this->uri(array('action'=>'editcourseproposal','id'=>$value['id'])));
 
     //review
     $reviewLink->link($this->uri(array('action'=>'reviewcourseproposal','id'=>$value['id'])));
@@ -135,6 +136,7 @@ foreach($courseProposals as $value) {
     $data .= "'".$deleteLink->show();
 
     $objIcon->setIcon('edit');
+    $objIcon->extra = "id=\"editBtn\"";
     $editLink->link=$objIcon->show();
     $data .= $editLink->show();
 
@@ -369,7 +371,105 @@ function goDelete(url) {
     window.location.href = url;
 }";
 
-echo "<script type=\"text/javascript\">".$mainjs.$delBtnjs."</script>";
+
+$submitUrl = $this->uri(array('action'=>'savecourseproposal','edit'=>true,'id'=>$value['id']) );
+$cancelUrl = $this->uri(array('action'=>'NULL'));
+
+$courseData = $this->objCourseProposals->getCourseProposal($value['id']);
+$facultyVal = $courseData['faculty'];
+$unitNameVal = $courseData['title'];
+
+$editBtnjs = "
+Ext.onReady(function() {
+    var editfaculties= [
+        ['Commerce, Law and Management'],
+        ['Engineering and the Built Environment'],
+        ['Health Sciences'],
+        ['Humanities'],
+        ['Science']
+    ];
+    var editfacultystore = new Ext.data.ArrayStore({
+        fields: ['faculty'],
+        data : editfaculties
+    });
+    var editfacultyField = new Ext.form.ComboBox({
+        store: editfacultystore,
+        displayField:'faculty',
+        fieldLabel:'Faculty',
+        typeAhead: true,
+        mode: 'local',
+        editable:false,
+        allowBlank: false,
+        value:'".$facultyVal."',
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select faculty...',
+        selectOnFocus:true,
+        name : 'faculty'
+    });
+    var editFacultyForm = new Ext.FormPanel({
+        standardSubmit: true,
+        labelWidth: 125,
+        url:'".str_replace("amp;", "", $submitUrl)."',
+        title: 'Edit Course Proposal',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaults: {width: 230},
+        defaultType: 'textfield',
+        items: [
+                facultyField,
+                {
+                fieldLabel: '".$unitName."',
+                name: 'title',
+                value: '".$unitNameVal."',
+                id: 'input_title',
+                allowBlank: false
+            }
+        ]
+    });
+
+    var getEditBtn = function(){
+        var editProposalWin,
+            editButton = Ext.get('editBtn');
+
+        editButton.on('click', function() {
+            if(!editProposalWin){
+                editProposalWin = new Ext.Window({
+                    applyTo:'editfaculty-win',
+                    layout:'fit',
+                    width:500,
+                    height:250,
+                    x:250,
+                    y:150,
+                    closeAction:'destroy',
+                    plain: true,
+
+                   items: editFacultyForm,
+                   buttons: [{
+                        text:'Save',
+                        handler: function(){
+                            if (editFacultyForm.url)
+                                editFacultyForm.getForm().getEl().dom.action = editFacultyForm.url;
+
+                            editFacultyForm.getForm().submit();
+                        }
+                    },{
+                        text: 'Cancel',
+                        handler: function(){
+                           editProposalWin.hide();
+                        }
+                    }]
+                });
+            }
+            editProposalWin.show(this);
+        });
+    }
+
+    // executes after 2 seconds:
+    getEditBtn.defer(2000, this);
+});";
+
+echo "<script type=\"text/javascript\">".$mainjs.$delBtnjs.$faculties.$editBtnjs."</script>";
 $tooltipHelp =& $this->getObject('tooltip','htmlelements');
 $tooltipHelp->setCaption('Help');
 $tooltipHelp->setText('Some help text...');

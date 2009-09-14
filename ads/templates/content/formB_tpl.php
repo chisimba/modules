@@ -7,6 +7,17 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$formBjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/formbjs.js','ads').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+$buttonscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css','ads').'"/>';
+
+$this->appendArrayVar('headerParams', $extbase);
+$this->appendArrayVar('headerParams', $extalljs);
+$this->appendArrayVar('headerParams', $extallcss);
+$this->appendArrayVar('headerParams', $buttonscss);
+$this->appendArrayVar('headerParams', $formBjs);
 
 $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleB','ads'), 2);
 
@@ -14,7 +25,22 @@ $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_r
 
 $form = new form ('rules', $this->submitAction);
 
+$question1comment = "<div id = 'question1comment'></div>";
+$question2comment = "<div id = 'question2comment'></div>";
+$question3acomment = "<div id = 'question3acomment'></div>";
+$question3bcomment = "<div id = 'question3bcomment'></div>";
+$question4acomment = "<div id = 'question4acomment'></div>";
+$question4bcomment = "<div id = 'question4bcomment'></div>";
+$question4ccomment = "<div id = 'question4ccomment'></div>";
+$question5acomment = "<div id = 'question5acomment'></div>";
+$question5bcomment = "<div id = 'question5bcomment'></div>";
+$question6acomment = "<div id = 'question6acomment'></div>";
+$question6bcomment = "<div id = 'question6bcomment'></div>";
+$courseid=$this->getParam('courseid');
+$myscript = " Ext.onReady(function(){
+loadFormBJS('".$courseid."');
 
+})";
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->cellspacing = "10";
@@ -29,6 +55,9 @@ $table->endRow();
 $table->startRow();
 $table->addCell($changetype->show() . "<br />" . $this->formError->getError('B1'));
 $table->endRow();
+$table->startRow();
+$table->addCell($question1comment);
+$table->endRow();
 
 
 $coursedesc = new textarea('B2', NULL, 10, 75);
@@ -41,6 +70,9 @@ $table->endRow();
 $table->startRow();
 $table->addCell($coursedesc->show() . "<br />" . $this->formError->getError('B2'));
 $table->endRow();
+$table->startRow();
+$table->addCell($question2comment);
+$table->endRow();
 
 
 $prereq = new textarea('B3a', NULL, 10, 75);
@@ -51,6 +83,9 @@ $table->addCell($prereqLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($prereq->show() . "<br />" . $this->formError->getError('B3a'));
+$table->endRow();
+$table->startRow();
+$table->addCell($question3acomment);
 $table->endRow();
 
 
@@ -63,6 +98,10 @@ $table->endRow();
 $table->startRow();
 $table->addCell($coreq->show() . "<br />" . $this->formError->getError('B3b'));
 $table->endRow();
+$table->startRow();
+$table->addCell($question3bcomment);
+$table->endRow();
+
 
 $b4a = new radio ('B4a');
 $b4a->addOption('b4a1', $this->objLanguage->languageText('mod_ads_b4a1', 'ads'));
@@ -80,6 +119,9 @@ $table->endRow();
 $table->startRow();
 $table->addCell($b4a->showTable());
 $table->endRow();
+$table->startRow();
+$table->addCell($question4acomment);
+$table->endRow();
 
 
 $b4b = new textarea('B4b', NULL, 10, 75);
@@ -90,6 +132,9 @@ $table->addCell($b4bLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b4b->show() . "<br />" . $this->formError->getError('B4b'));
+$table->endRow();
+$table->startRow();
+$table->addCell($question4bcomment);
 $table->endRow();
 
 
@@ -102,6 +147,9 @@ $table->addCell($b4cLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b4c->show() . "<br />" . $this->formError->getError('B4c'));
+$table->endRow();
+$table->startRow();
+$table->addCell($question4ccomment);
 $table->endRow();
 
 $b5a = new radio ('B5a');
@@ -128,6 +176,9 @@ $table->endRow();
 $table->startRow();
 $table->addCell($b5a->showTable());
 $table->endRow();
+$table->startRow();
+$table->addCell($question5acomment);
+$table->endRow();
 
 
 $b5b = new textarea('B5b', NULL, 10, 75);
@@ -139,6 +190,9 @@ $table->addCell($b5bLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b5b->show() . "<br />" . $this->formError->getError('B5b'));
+$table->endRow();
+$table->startRow();
+$table->addCell($question5bcomment);
 $table->endRow();
 
 
@@ -163,6 +217,9 @@ $table->endRow();
 $table->startRow();
 $table->addCell($b6a->showTable());
 $table->endRow();
+$table->startRow();
+$table->addCell($question6acomment);
+$table->endRow();
 
 
 $b6b = new textarea('B6b', NULL, 10, 75);
@@ -176,6 +233,9 @@ $table->addCell($b6bLabel->show(), 150, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b6b->show() . "<br />" . $this->formError->getError('B6b'));
+$table->endRow();
+$table->startRow();
+$table->addCell($question6bcomment);
 $table->endRow();
 
 $form->addToForm($header->show(). "<br />");
@@ -211,6 +271,8 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
+
+echo "<script type=\"text/javascript\">".$myscript."</script>";
 
 $saveUrl = $this->submitAction;
 $saveFormJS = 'jQuery(document).ready(function() {

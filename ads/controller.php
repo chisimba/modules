@@ -711,13 +711,17 @@ class ads extends controller {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('faculty');
         $this->objFaculty->saveModerator($faculty, $moderator);
-        $this->nextAction('home');
+        $this->nextAction('facultylist');
     }
 
     public function __savefaculty() {
         $faculty = $this->getParam('addfaculty');
         $this->objFaculty->saveFaculty($faculty);
-        $this->nextAction('home');
+        $this->nextAction('facultylist');
+    }
+
+    public function __facultylist() {
+        return "facultylist_tpl.php";
     }
 }
 

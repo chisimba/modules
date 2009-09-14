@@ -4,6 +4,18 @@
 $calcjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/calc.js').'" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $calcjs);
 
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$formDjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/formdjs.js','ads').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+$buttonscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css','ads').'"/>';
+
+$this->appendArrayVar('headerParams', $extbase);
+$this->appendArrayVar('headerParams', $extalljs);
+$this->appendArrayVar('headerParams', $extallcss);
+$this->appendArrayVar('headerParams', $buttonscss);
+$this->appendArrayVar('headerParams', $formDjs);
+
 $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('textinput','htmlelements');
@@ -12,6 +24,20 @@ $this->loadClass('htmlheading','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('checkbox','htmlelements');
 $this->loadClass('htmltable','htmlelements');
+
+$question1comment = "<div id = 'question1comment'></div>";
+$question2comment = "<div id = 'question2comment'></div>";
+$question3comment = "<div id = 'question3comment'></div>";
+$question4comment = "<div id = 'question4comment'></div>";
+$question5comment = "<div id = 'question5comment'></div>";
+$question6comment = "<div id = 'question6comment'></div>";
+$question7comment = "<div id = 'question7comment'></div>";
+
+$courseid=$this->getParam('courseid');
+$myscript = " Ext.onReady(function(){
+loadFormDJS('".$courseid."');
+
+})";
 
 $form = new form("formd",$this->submitAction);
 
@@ -178,13 +204,13 @@ $saveButton->setId("saveBtn");
 $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 $form->addToForm($header->show(). "<br />");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D1','ads')."</b><br>".$D1->show()."<br>".$this->formError->getError('D1')."<br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D2','ads')."</b><br><br>".$D2->show()."<br>".$this->formError->getError('D2')."<br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D3','ads')."</b><br>".$D3->show()."<br>".$this->formError->getError('D3')."<br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D4','ads')."</b>".$D4."<br><br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D5','ads')."</b><br><br>".$D5."<br>".$this->formError->getError('D5')."<br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D6','ads')."</b><br>".$D6->show()."<br>".$this->formError->getError('D6')."<br>");
-$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D7','ads')."</b><br>".$D7->show()."<br>".$this->formError->getError('D7')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D1','ads')."</b><br>".$D1->show().$question1comment."<br>".$this->formError->getError('D1')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D2','ads')."</b><br><br>".$D2->show().$question2comment."<br>".$this->formError->getError('D2')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D3','ads')."</b><br>".$D3->show().$question3comment."<br>".$this->formError->getError('D3')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D4','ads')."</b>".$D4.$question4comment."<br><br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D5','ads')."</b><br><br>".$D5.$question5comment."<br>".$this->formError->getError('D5')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D6','ads')."</b><br>".$D6->show().$question6comment."<br>".$this->formError->getError('D6')."<br>");
+$form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D7','ads')."</b><br>".$D7->show().$question7comment."<br>".$this->formError->getError('D7')."<br>");
 $form->addToForm("<br>".$nextButton->show());
 $form->addToForm("&nbsp;".$saveButton->show());
 $form->addToForm($saveMsg);
@@ -229,5 +255,5 @@ $saveFormJS = 'jQuery(document).ready(function() {
                     });
               });';
 
-echo "<script type='text/javascript'>".$saveFormJS."</script>";
+echo "<script type='text/javascript'>".$saveFormJS.$myscript."</script>";
 ?>

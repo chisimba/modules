@@ -20,8 +20,17 @@
 	  }
 		
 		public function getForm() {
-			$myForm = new form("signinForm", $this->submitAction);		
-      $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleF','ads'), 2);
+			$question1acomment = "<div id = 'question1acomment'></div>";
+                        $question1bcomment = "<div id = 'question1bcomment'></div>";
+                        $question2acomment = "<div id = 'question2acomment'></div>";
+                        $question2bcomment = "<div id = 'question2bcomment'></div>";
+                        $question3acomment = "<div id = 'question3acomment'></div>";
+                        $question3bcomment = "<div id = 'question3bcomment'></div>";
+                        $question4comment = "<div id = 'question4comment'></div>";
+
+
+                        $myForm = new form("signinForm", $this->submitAction);
+                        $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleF','ads'), 2);
 			$q1a_heading = $this->getHeading("f1a");
 			$q1a_radio = $this->getRadio("F1a");
 			$q1b_heading = $this->getHeading("f1b");
@@ -45,28 +54,35 @@
 			$myForm->addToForm($q1a_heading);
 			$myForm->addToForm("<br>");
 			$myForm->addToForm($q1a_radio);
+                        $myForm->addToForm($question1acomment);
 			$myForm->addToForm("<br>");
 			$myForm->addToForm("<br />");
 			$myForm->addToForm($q1b_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q1b_input);
+			$myForm->addToForm($question1bcomment);
 			$myForm->addToForm($q2a_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q2a_radio);
-                        $myForm->addToForm("<br />");
+                        $myForm->addToForm($question2acomment);
+			$myForm->addToForm("<br />");
                         $myForm->addToForm("<br />");
 			$myForm->addToForm($q2b_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q2b_input);
+			$myForm->addToForm($question2bcomment);
 			$myForm->addToForm($q3a_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q3a_input);
+			$myForm->addToForm($question3acomment);
 			$myForm->addToForm($q3b_heading);
                         $myForm->addToForm("<br>");
                         $myForm->addToForm($q3b_input);
+			$myForm->addToForm($question3bcomment);
 			$myForm->addToForm($q4_heading);
                         $myForm->addToForm("<br />");
                         $myForm->addToForm($q4_input);
+			$myForm->addToForm($question4comment);
 			$myForm->addToForm("<br>$mySubmit");
                         $myForm->addToForm("&nbsp;".$saveButton->show());
                         $myForm->addToForm($saveMsg);
