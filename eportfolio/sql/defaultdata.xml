@@ -4,43 +4,36 @@
         <id>init_5889_1203875723</id>
         <userid>8893070328</userid>
         <category>Place</category>
-        <puid>5</puid>
     </tbl_eportfolio_category>
     <tbl_eportfolio_category>
         <id>init_7131_1203445554</id>
         <userid>8893070328</userid>
         <category>Demographics</category>
-        <puid>3</puid>
     </tbl_eportfolio_category>
     <tbl_eportfolio_category>
         <id>init_1763_1203879319</id>
         <userid>8893070328</userid>
         <category>Mode</category>
-        <puid>6</puid>
     </tbl_eportfolio_category>
     <tbl_eportfolio_category>
         <id>init_2837_1203887381</id>
         <userid>8893070328</userid>
         <category>Affiliation</category>
-        <puid>7</puid>
     </tbl_eportfolio_category>
     <tbl_eportfolio_category>
         <id>init_7147_1205515151</id>
         <userid>8893070328</userid>
         <category>Interest</category>
-        <puid>8</puid>
     </tbl_eportfolio_category>
     <tbl_eportfolio_category>
         <id>init_4581_1205515437</id>
         <userid>8893070328</userid>
         <category>Competency</category>
-        <puid>9</puid>
     </tbl_eportfolio_category>
     <tbl_eportfolio_category>
         <id>init_4581_1234815437</id>
         <userid>8893070328</userid>
         <category>Priority</category>
-        <puid>10</puid>
     </tbl_eportfolio_category>
   <!-- Table tbl_eportfolio_categorytypes -->
    <tbl_eportfolio_categorytypes>
@@ -48,133 +41,113 @@
         <categoryid>init_7131_1203445554</categoryid>
         <userid>8893070328</userid>
         <type>Adult</type>
-        <puid>3</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_5416_1203875757</id>
         <categoryid>init_5889_1203875723</categoryid>
         <userid>8893070328</userid>
         <type>Work</type>
-        <puid>4</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_3071_1203875774</id>
         <categoryid>init_5889_1203875723</categoryid>
         <userid>8893070328</userid>
         <type>Home</type>
-        <puid>5</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_4908_1203875798</id>
         <categoryid>init_5889_1203875723</categoryid>
         <userid>8893070328</userid>
         <type>Other</type>
-        <puid>6</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_3018_1203879357</id>
         <categoryid>init_1763_1203879319</categoryid>
         <userid>8893070328</userid>
         <type>Telephone</type>
-        <puid>7</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_3578_1203879392</id>
         <categoryid>init_1763_1203879319</categoryid>
         <userid>8893070328</userid>
         <type>Facsimile</type>
-        <puid>8</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_1280_1203879485</id>
         <categoryid>init_1763_1203879319</categoryid>
         <userid>8893070328</userid>
         <type>Cell Phone</type>
-        <puid>9</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_8241_1203884094</id>
         <categoryid>init_7131_1203445554</categoryid>
         <userid>8893070328</userid>
         <type>Non Adult</type>
-        <puid>10</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_5761_1203887480</id>
         <categoryid>init_2837_1203887381</categoryid>
         <userid>8893070328</userid>
         <type>Educational</type>
-        <puid>11</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_9254_1203887524</id>
         <categoryid>init_2837_1203887381</categoryid>
         <userid>8893070328</userid>
         <type>Professional</type>
-        <puid>12</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_7589_1205515181</id>
         <categoryid>init_7147_1205515151</categoryid>
         <userid>8893070328</userid>
         <type>Recreational</type>
-        <puid>13</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_6785_1205515206</id>
         <categoryid>init_7147_1205515151</categoryid>
         <userid>8893070328</userid>
         <type>Academic</type>
-        <puid>14</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_5447_1205515229</id>
         <categoryid>init_7147_1205515151</categoryid>
         <userid>8893070328</userid>
         <type>Professional</type>
-        <puid>15</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_4287_1205515252</id>
         <categoryid>init_7147_1205515151</categoryid>
         <userid>8893070328</userid>
         <type>Other</type>
-        <puid>16</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_5434_1205515465</id>
         <categoryid>init_4581_1205515437</categoryid>
         <userid>8893070328</userid>
         <type>Award</type>
-        <puid>17</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_7575_1205515495</id>
         <categoryid>init_4581_1205515437</categoryid>
         <userid>8893070328</userid>
         <type>Other</type>
-        <puid>18</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_1284_1589537606</id>
         <categoryid>init_4581_1234815437</categoryid>
         <userid>8893070328</userid>
         <type>High</type>
-        <puid>19</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_1284_1203236458</id>
         <categoryid>init_4581_1234815437</categoryid>
         <userid>8893070328</userid>
         <type>Normal</type>
-        <puid>20</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
         <id>init_1284_1203299958</id>
         <categoryid>init_4581_1234815437</categoryid>
         <userid>8893070328</userid>
         <type>Low</type>
-        <puid>21</puid>
     </tbl_eportfolio_categorytypes> 
 </defaultdata>
-
