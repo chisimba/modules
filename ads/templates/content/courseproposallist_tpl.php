@@ -347,7 +347,7 @@ Ext.onReady(function() {
 function goDelete(url) {
     window.location.href = url;
 }
-});
+
 ":"";
 
 $submitUrl = $this->uri(array('action'=>'savecourseproposal','edit'=>true,'id'=>$value['id']) );
