@@ -118,8 +118,20 @@ class worksheet extends controller
         $this->objWorksheetQuestions = $this->getObject('dbworksheetquestions', 'worksheet');
         $this->objWorksheetAnswers = $this->getObject('dbworksheetanswers', 'worksheet');
         $this->objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
-        
-        
+								//Include the activity streamer
+								//Load Module Catalogue Class
+								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+
+								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}								            
     }
     
     /**
@@ -297,6 +309,19 @@ class worksheet extends controller
         
         $activity_status = 'inactive';
         $closing_date = $date.' '.$time;
+								//activity streamer, create message and post it
+      		$message = $this->objUser->getSurname()." ".$this->objLanguage->languageText('mod_worksheet_newalert', 'worksheet')." ".$this->contextCode;
+      	 $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																		'link'=> $this->uri(array()),
+																		'contextcode' => $this->objContext->getContextCode(),
+																		'author' => $this->objUser->fullname(),
+																		'description'=>$message));
+																		
+								$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																		'link'=> $this->uri(array()),
+																		'contextcode' => null,
+																		'author' => $this->objUser->fullname(),
+																		'description'=>$message));
         
         $id = $this->objWorksheet->insertWorkSheet($this->contextCode, NULL, $title, $activity_status, $percentage, $closing_date, $description );
         
