@@ -39,9 +39,7 @@ $fields = array(
         'notnull' => TRUE
 		),
 	
-    'remarks' => array(
-		'type' => 'clob'
-    )
+    
 );
 
 

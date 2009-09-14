@@ -123,6 +123,7 @@ $reportdateBox->extra ="readonly";
 $territoryDrop = new dropdown('territory');
 $territoryDrop->addFromDB($arrayTerritory, 'name', 'name');
 $territoryDrop->setSelected($record['territory']);
+print_r($arrayTerritory);
 
 $farmsystemDrop = new dropdown('farmingsystem');
 $farmsystemDrop->addFromDB($arrayFarmingsystem, 'name', 'name');
