@@ -23,6 +23,8 @@ $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $buttonscss);
 $this->appendArrayVar('headerParams', $formAjs);
 
+$this->appendArrayVar('headerParams', $searchfieldjs);
+$this->appendArrayVar('headerParams', $gridsearchjs);
 
 $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleA','ads'), 2);
 
@@ -66,7 +68,7 @@ loadFormAJS('".$courseid."');
 $ccount=$this->objQuestionComment->getCommentsCount($courseid, "A","A1");
 $commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>":"";
 $unitnameLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_unit_name', 'ads'). "</b>".$commentsAdded.".&nbsp;", 'input_unitname');
-$table->addCell($unitnameLabel->show(), 100, NULL, 'left');
+$table->addCell($unitnameLabel->show(), 600, NULL, 'left');
 $table->startRow();
 $table->addCell($unitname->show(). "<br />" . $this->formError->getError('A1'));
 $table->endRow();
@@ -89,7 +91,7 @@ else {
 $ccount=$this->objQuestionComment->getCommentsCount($courseid, "A","A2");
 $commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>":"";
 $table->startRow();
-$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_thisisa','ads').$commentsAdded. "</b>".'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_thisisa','ads').$commentsAdded. "</b>".'&nbsp;', 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($unitType->showTable());
@@ -106,7 +108,7 @@ $commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>
 $motivationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ads_motiv', 'ads').$commentsAdded. "</b>".'&nbsp;', 'input_motivation');
 $motivation->value = $this->formValue->getValue("A3");
 
-$table->addCell($motivationLabel->show(), 150, NULL, 'left');
+$table->addCell($motivationLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($motivation->show() . "<br />" . $this->formError->getError('A3'));
@@ -125,7 +127,7 @@ $qualificationLabel = new label("<b>" . $this->objLanguage->languageText('mod_ad
 
 $qualification->value = $this->formValue->getValue("A4");
 
-$table->addCell($qualificationLabel->show(), 150, NULL, 'left');
+$table->addCell($qualificationLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($qualification->show() . "<br />" . $this->formError->getError('A4'));
@@ -150,7 +152,7 @@ $unitType2->setSelected($this->formValue->getValue("A5"));
 $ccount=$this->objQuestionComment->getCommentsCount($courseid, "A","A5");
 $commentsAdded=$ccount > 0 ? "<font color=\"red\">&nbsp;[Comments Added!]</font>":"";
 $table->startRow();
-$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_proposaltype','ads').$commentsAdded. "</b>" .'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>" . $this->objLanguage->languageText('mod_ads_proposaltype','ads').$commentsAdded. "</b>" .'&nbsp;', 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($unitType2->showTable());
@@ -163,16 +165,21 @@ $table->endRow();
 $form->addToForm($header->show(). "<br />");
 $form->addToForm($table->show());
 
-$nextButton = new button ('submitform', 'Next');
+$nextButton = new button ('submitform', 'Next Page');
 $nextButton->setToSubmit();
+
 $saveButton = new button('saveform', 'Save');
 $saveButton->setId("saveBtn");
+
+$forwardButton = new button('forwardForm', 'Forward Proposal');
+$forwardButton->setId("forwardBtn");
 
 $buttons=$nextButton->show();
 $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 $form->addToForm("<br>".$buttons);
 $form->addToForm("&nbsp;".$saveButton->show());
+$form->addToForm("&nbsp;".$forwardButton->show());
 $form->addToForm($saveMsg);
 
 // Create an instance of the css layout class
@@ -193,7 +200,8 @@ $rightSideColumn.= '</div>';
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 echo "<script type=\"text/javascript\">".$myscript."</script>";
-
+$sendProposalUrl = $this->uri(array('action'=>'sendproposal'));
+$searchusers =$this->uri(array('action'=>'searchusers'));
 $saveUrl = $this->submitAction;
 $saveFormJS = 'jQuery(document).ready(function() {
                     jQuery("#saveMsg").hide();
@@ -213,9 +221,13 @@ $saveFormJS = 'jQuery(document).ready(function() {
                                 }
                            });
                     });
-              });';
 
-echo "<script type='text/javascript'>".$saveFormJS."</script>";
+               jQuery("#forwardBtn").click(function() {
+           showSearchWinX(\''.$courseid.'\',\''.$sendProposalUrl.'\',\'Forward\',\'forwardProposal\',\'search-xwin\',\''.str_replace("amp;", "", $searchusers).'\');                  });
+
+     });';
+
+echo "<div id=\"search-xwin\"><script type='text/javascript'>".$saveFormJS."</script></div>";
 //Output the content to the page
 echo $cssLayout->show();
 ?>

@@ -400,7 +400,7 @@ if($currentEditor == $this->objUser->email()
 
 }
 if($modemail == $this->objUser->email()) {
-    $actionsDropDown->addOption('updatestatus','Update Status');
+    $actionsDropDown->addOption('updatestatus','Forward for Comment');
 }
 
 $backButton = new button('back','Back');

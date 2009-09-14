@@ -67,8 +67,9 @@ $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
 $addButton->setId('addproposal-btn');
 $addModerator->setId('addmoderator-btn');
 $addFaculty->setId('addfaculty-btn');
+$commentAdminButton = new button('commentAdmin', 'Comment Admin');
+$commentAdminButton->setId('commentadmin');
 
-//prints out add comment message
 
 if ($this->addCommentMessage){
     $message = "<span id=\"commentSuccess\">".$this->objLanguage->languageText('mod_ads_commentSuccess', 'ads')."</span><br />";
@@ -84,7 +85,8 @@ $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent($postLoginMenu->show());
 $rightSideColumn =  '<h1>Course/Unit Proposals</h1><div id ="proposal-note">';
 $rightSideColumn .=$content.$note;
-$rightSideColumn .='</div><div id="grouping-grid">'.$addFaculty->show()."&nbsp;&nbsp;".$addButton->show().'<br /><br /></div>';
+$adminButtons=$this->objUser->isAdmin()?$addFaculty->show().'&nbsp;&nbsp;'.$commentAdminButton->show():"";
+$rightSideColumn .='</div><div id="grouping-grid">'.$adminButtons."&nbsp;&nbsp;".$addButton->show().'<br /><br /></div>';
 //where we render the 'popup' window
 $renderSurface='<div id="addsession-win" class="x-hidden"><div class="x-window-header"></div></div>';
 $renderSurface.='<div id="editfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>';
@@ -103,7 +105,8 @@ $commentLink=new link();
 
 $data = "";
 $numberOfRows = $this->objCourseProposals->getNumberOfCourses($this->objUser->userId());
-
+$cfac=1;
+$total=count($courseProposals);
 foreach($courseProposals as $value) {
     $verarray = $this->objDocumentStore->getVersion($value['id'], $this->objUser->userId());
     $titleLink->link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$value['id'],'selectedtab'=>'0')));
@@ -112,61 +115,36 @@ foreach($courseProposals as $value) {
     $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$value['id'], 'status'=>$value['status'])));
     $statusLink->link=$statuscodes[$value['status']];
     $deleteLink->link("#");
-    $editLink->link("#");//$this->uri(array('action'=>'editcourseproposal','id'=>$value['id'])));
-
-    //review
-    $reviewLink->link($this->uri(array('action'=>'reviewcourseproposal','id'=>$value['id'])));
-
-    $data .= "['".$titleLink->show();
-
-
-    $data .= "',";
-    $data .= "'".$value['creation_date']."',";
-    $data .= "'".$this->objUser->fullname($value['userid'])."',";
-    $data .=$this->objUser->isAdmin()? "'".$statusLink->show()."',":"'".$statuscodes[$value['status']]."',";
+    $editLink->link("#");
     
+    $reviewLink->link($this->uri(array('action'=>'reviewcourseproposal','id'=>$value['id'])));
+    $data .= "['".$titleLink->show()."',";
+    $data .= "'".$value['creation_date']."',";
 
-    $tmpID = $this->objDocumentStore->getUserId($verarray['currentuser']);
-    $name = $this->objUser->fullname($tmpID);
-    //$data .= "'".$name."',";
-
+    $data .= "'".$this->objUser->fullname($value['userid'])."',";
+    $statusShow=$this->objUser->isAdmin()? "'".$statusLink->show()."',":"'".$statuscodes[$value['status']]."',";
+    $data .=$statusShow;
+    $data .= "'".$value['faculty']."',";
     $objIcon->setIcon('delete');
     $objIcon->extra = "id=\"deleteBtn\"";
     $deleteLink->link=$objIcon->show();
-    $data .= "'".$deleteLink->show();
+    $delShow=$this->objUser->isAdmin()? $deleteLink->show():"";
+    $data .= "'".$delShow;
 
     $objIcon->setIcon('edit');
     $objIcon->extra = "id=\"editBtn\"";
     $editLink->link=$objIcon->show();
-    $data .= $editLink->show();
+    $editShow=$this->objUser->isAdmin()? $editLink->show():"";
+    $data .=$editShow;
 
-    $objIcon->setIcon('view');
-    //$objIcon->setAlt('review');
-    $reviewLink->link=$objIcon->show();
-    //$data .= $reviewLink->show();
-    //$objIcon->resetAlt();
-/*
-    if ($this->objUser->isAdmin()) {
-        $commentLink->link($this->uri(array('action'=>'addcomment',
-                                                'id'=>$value['id'],
-                                                'title'=>$value['title'],
-                                                'date'=>$value['creation_date'],
-                                                'owner'=>$this->objUser->fullname($value['userid']),
-                                                'status'=>$status,
-                                                'version'=>$verarray['version'],
-                                                'lastedit'=>$this->objUser->fullname($verarray['currentuser']))));
-        $objIcon->setIcon('comment');
-        $commentLink->link = $objIcon->show();
-        $data .= $commentLink->show();
-    }*/
-    $data .= "',";
-
-    $data .= "'".$value['faculty']."'";
+    $data .= "'";
+    
     $data .= "]";
-    if($value['puid'] != $numberOfRows) {
+    if($cfac < $total) {
         $data .= ",";
     }
 
+ $cfac++;
 }
 $faculty = $objLanguage->languageText('mod_ads_faculty','ads');
 $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
@@ -263,8 +241,7 @@ $proposalForm=
         });
  ";
 
-$mainjs = "/*!
-                 * Ext JS Library 3.0.0
+$mainjs = "/*!   * Ext JS Library 3.0.0
                  * Copyright(c) 2006-2009 Ext JS, LLC
                  * licensing@extjs.com
                  * http://www.extjs.com/license
@@ -272,18 +249,13 @@ $mainjs = "/*!
                 Ext.onReady(function(){
 
                     Ext.QuickTips.init();
-
-                   
                     var xg = Ext.grid;
-
                     // shared reader
                     var reader = new Ext.data.ArrayReader({}, [
                        {name: 'title'},
                        {name: 'dateCreated'},
                        {name: 'owner'},
                        {name: 'status'},
-                     //{name: 'currVersion'},
-                       //{name: 'lastEdit'},
                        {name: 'edit'},
                        {name: 'faculty'}
                     ]);
@@ -301,12 +273,10 @@ $mainjs = "/*!
                             {header: \"".$dateCreated."\", width: 150},
                             {header: \"".$owner."\", width: 120},
                             {header: \"".$status."\", width: 50, dataIndex: 'status'},
-                            //{header: \"".$currVersion."\", width: 20, dataIndex: 'currVersion'},
-                            {header: \"".$faculty."\", width: 100, dataIndex: 'faculty'},
-                            //{header: \"".$lastEdit."\", width: 50, dataIndex: 'lastEdit'},
+                            {header: \"".$faculty."\", width: 100, dataIndex: 'faculty'}
                             ";
                           if($this->objUser->isAdmin()) {
-                            $mainjs .= "{header: \"".$edit."\", width: 70, dataIndex: 'edit'}";
+                            $mainjs .= ",{header: \"".$edit."\", width: 70, dataIndex: 'edit'}";
                            }
                           $mainjs .="
                         ],
@@ -321,7 +291,7 @@ $mainjs = "/*!
                         height: 450,
                         collapsible: true,
                         animCollapse: false,
-
+                        border:false,
                         renderTo: 'grouping-grid'
                     });
                 });
@@ -329,19 +299,26 @@ $mainjs = "/*!
 
                 // Array data for the grids
                Ext.grid.Data = [".$data."];
-                  ".$faculties."
+                 ".$faculties."
                   ".$proposalForm."
                   ".$addProposalWindowJS."
                ";
 
-$delBtnjs = "
+$delBtnjs =$this->objUser->isAdmin()? "
 Ext.onReady(function() {
-
     var addFacBtn = Ext.get('addfaculty-btn');
     addFacBtn.on('click', function() {
         url = '".str_replace("amp;", "",$this->uri(array('action'=>'facultylist')))."'
         goFactList(url);
     });
+
+    var commentAdminBtn = Ext.get('commentadmin');
+  
+    commentAdminBtn.on('click', function() {
+      window.location.href='".str_replace("amp;", "",$this->uri(array('action'=>'commentadmin')))."'
+     });
+
+
 
     var goFactList = function() {
         window.location.href = url;
@@ -369,8 +346,9 @@ Ext.onReady(function() {
 
 function goDelete(url) {
     window.location.href = url;
-}";
-
+}
+});
+":"";
 
 $submitUrl = $this->uri(array('action'=>'savecourseproposal','edit'=>true,'id'=>$value['id']) );
 $cancelUrl = $this->uri(array('action'=>'NULL'));
@@ -379,7 +357,7 @@ $courseData = $this->objCourseProposals->getCourseProposal($value['id']);
 $facultyVal = $courseData['faculty'];
 $unitNameVal = $courseData['title'];
 
-$editBtnjs = "
+$editBtnjs =$this->objUser->isAdmin()? "
 Ext.onReady(function() {
     var editfaculties= [
         ['Commerce, Law and Management'],
@@ -467,12 +445,8 @@ Ext.onReady(function() {
 
     // executes after 2 seconds:
     getEditBtn.defer(2000, this);
-});";
+});":"";
 
 echo "<script type=\"text/javascript\">".$mainjs.$delBtnjs.$faculties.$editBtnjs."</script>";
-$tooltipHelp =& $this->getObject('tooltip','htmlelements');
-$tooltipHelp->setCaption('Help');
-$tooltipHelp->setText('Some help text...');
-$tooltipHelp->setCursor('help');
-echo $tooltipHelp->show();
+
 ?>

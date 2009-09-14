@@ -21,6 +21,7 @@ function showSearchWinX(){
     renderSurface=args[4];
     searchUrl=args[5];
     
+    
     var ds = new Ext.data.Store({
         proxy: new Ext.data.HttpProxy({
             url:searchUrl

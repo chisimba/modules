@@ -25,6 +25,7 @@ class ads extends controller {
         $this->objQuestionComment = $this->getObject('dbquestioncomments');
         $this->objFaculty = $this->getObject('dbfaculty');
         $this->objProposalMembers=$this->getObject('dbproposalmembers');
+        $this->objCommentAdmin=$this->getObject('dbcommentsadmin');
         //review
         $this->objCourseReviews = $this->getObject('dbcoursereviews');
         $this->objUser = $this->getObject ( 'user', 'security' );
@@ -104,6 +105,9 @@ class ads extends controller {
         return "addcomment_tpl.php";
     }
 
+   function __commentadmin(){
+       return "commentadmin_tpl.php";
+   }
     function __updatecomment(){
            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $toemail=$this->objCourseProposals($this->getParam('courseid'));
@@ -125,7 +129,6 @@ class ads extends controller {
 
   function __facultylist() {
   return "facultylist_tpl.php";
-
   }
 
     function __savecomment() {
@@ -134,10 +137,15 @@ class ads extends controller {
         $subject=$objSysConfig->getValue('EMAIL_ADDCOMMENT_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_ADDCOMMENT_BODY', 'ads');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
-        $body.=' '. str_replace("amp;", "", $linkUrl);
 
-        $recepients=array($toemail);
+        $body.=' '. str_replace("amp;", "", $linkUrl);
+        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
+
         
+        $recepients=array($toemail);
         $proposalMembersData=$this->objProposalMembers->getMembers($this->getParam('courseid'));
         $membercount=count($proposalMembersData);
         if($membercount > 0){
@@ -573,7 +581,12 @@ class ads extends controller {
         $subject=$objSysConfig->getValue('EMAIL_STATUS_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_STATUS_BODY', 'ads');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
+
         $body.=' '. str_replace("amp;", "", $linkUrl);
+        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('id')), $body);
+        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('id')), $body);
+        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
 
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($toemail));
@@ -719,10 +732,32 @@ class ads extends controller {
         $this->objFaculty->saveFaculty($faculty);
         $this->nextAction('facultylist');
     }
-
-    public function __facultylist() {
-        return "facultylist_tpl.php";
+    function getValValue($val){
+        if($val =='{names}'){
+            return $this->objUser->fullname();
+        }
+        if($val == '{proposal}'){
+            return $this->objCourseProposals->getTitle($this->id);
+        }
+        if($val == '{proposal_status}'){
+            return $this->objCourseProposals->getTitle($this->id);
+        }
     }
+    function parseVar($txt){
+        $vals=array(
+        "{names}",
+        "{proposal_status}",
+        "{proposal}",
+        "{comment}"
+          );
+          foreach($vals as $val){
+             $txt= str_replace($val, "", $txt);
+          }
+    }
+
+
+  
+
 }
 
 

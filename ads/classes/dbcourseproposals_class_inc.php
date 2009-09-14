@@ -84,9 +84,25 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
         $data = $this->getRow('id', $id, $this->table);
         return $data['title'];
     }
+     public function getStatus($id) {
+         $statuscodes=  array(
+    "0"=> 'New',
+    "1"=>'APO Comment',
+    "2"=>'Library comment',
+    "3"=>'Subsidy comment',
+    "4"=>'Faculty subcommittee',
+    "5"=>'Faculty',
+    "6"=> 'APDC');
+        $data = $this->getRow('id', $id, $this->table);
+        return $statuscodes[$data['status']];
+    }
     public function getOwnerEmail($id) {
         $data = $this->getRow('id', $id, $this->table);
         return $this->objUser->email($data['userid']);
+    }
+    public function getOwnerNames($id) {
+        $data = $this->getRow('id', $id, $this->table);
+        return $this->objUser->fullname($data['userid']);
     }
     public function editProposal($id,$faculty, $title) {
         $data = array('faculty'=>$faculty, 'title'=>$title);

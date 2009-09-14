@@ -8,7 +8,8 @@ function showTabs() {
         renderTo: 'tabs',
         width:800,
         activeTab: parseInt(selectedTab),
-        frame:true,
+        frame:false,
+        
         defaults:{autoHeight: true},
         items:[
             {contentEl:'contentcontent', title: 'Proposal Summary'},
