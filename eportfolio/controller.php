@@ -2176,9 +2176,9 @@ function createGroups($userid, $title)
             'group_id' => $eportfolioGroupId,
             'subgroup_id' => $newGroupId
         );
-								if(class_exists($this->objLuAdmin,false)){
+
         $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
-        }
+
         $this->_arrSubGroups[$groupName]['id'] = $newGroupId;
         $newGroupId = $this->_objGroupAdmin->addGroupUser($newGroupId, $this->objUser->userId());
     } // End foreach subgroup

@@ -481,7 +481,8 @@ class getall_Eportfolio extends object
                     $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . '&nbsp;:&nbsp;&nbsp;</b>' . $cattype[0]['type'], "", NULL, NULL, NULL, '');
                     $demographicsTable->endRow();
                     $demographicsTable->startRow();
-                    $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . " : </b>" . $this->objDate->formatDate($demographicsItem['birth']) , "", NULL, NULL, NULL, '');
+                    $mybirth = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
+                    $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . " : </b>" . $mybirth[0], "", NULL, NULL, NULL, '');
                     $demographicsTable->endRow();
                     $demographicsTable->startRow();
                     $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_nationality", 'eportfolio') . " : </b>" . $demographicsItem['nationality'], "", NULL, NULL, NULL, '');

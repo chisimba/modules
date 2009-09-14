@@ -53,8 +53,9 @@ $row = array(
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
+$mybirth = explode(" ", $birth);
 //birth text box
-$textinput = new textinput("birth", $birth);
+$textinput = new textinput("birth", $mybirth[0]);
 $textinput->size = 20;
 //$startField = $this->objPopupcal->show('birth', 'no', 'no', $birth);
 $row = array(
