@@ -72,8 +72,16 @@ class wiki extends controller {
         $this->objLock = $this->newObject('wikipagelock', 'wiki');
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
+        $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
-
+								if($this->objModules->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
         $contextExists = $this->objModules->checkIfRegistered('context');
         $this->setSession('context_exists', $contextExists);
         $wikiId = $this->getSession('wiki_id');
@@ -206,7 +214,23 @@ class wiki extends controller {
                 }else{
                     $summary = $sum;
                 }
-
+						         	//add to activity log
+						         	if($this->eventsEnabled)
+						         	{
+						         	  //The message to be posted
+                  $message = $this->objUser->getsurname()." ". $this->objLanguage->languageText('mod_wiki_updatedwikialert', 'wiki')."-".$name;
+                  $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+						 																				'link'=> $this->uri(array()),
+						 																				'contextcode' => $this->objContext->getContextCode(),
+						 																				'author' => $this->objUser->fullname(),
+						 																				'description'=>$message));
+						 																				
+												 				 $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+						 																				'link'=> $this->uri(array()),
+						 																				'contextcode' => null,
+						 																				'author' => $this->objUser->fullname(),
+						 																				'description'=>$message));
+						         	}
                 $data = array();
                 $data['page_name'] = strip_tags($name);
                 $data['main_page'] = $main;
@@ -462,6 +486,23 @@ class wiki extends controller {
                 $name = $this->getParam('name');
                 $desc = $this->getParam('desc');
                 $visibility = $this->getParam('visibility');
+						         	//add to activity log
+						         	if($this->eventsEnabled)
+						         	{
+						         	  //The message to be posted
+                  $addmessage = $this->objUser->surname()." ". $this->objLanguage->languageText('mod_wiki_newwikialert', 'wiki')."-".$name;
+                  $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $addmessage,
+						 																				'link'=> $this->uri(array()),
+						 																				'contextcode' => $this->objContext->getContextCode(),
+						 																				'author' => $this->objUser->fullname(),
+						 																				'description'=>$addmessage));
+						 																				
+												 				 $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $addmessage,
+						 																				'link'=> $this->uri(array()),
+						 																				'contextcode' => null,
+						 																				'author' => $this->objUser->fullname(),
+						 																				'description'=>$addmessage));
+						         	}
                 $this->objDbwiki->addWiki($name, $desc, $visibility);
                 return $this->nextAction('view_page', array(), 'wiki');
                 break;
