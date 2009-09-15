@@ -50,7 +50,7 @@ $changetype = new textarea('B1', NULL, 10, 75);
 $changetypeLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b1', 'ads')."</b>".'&nbsp;', 'change_type');
 $changetype->value = $this->formValue->getValue("B1");
 
-$table->addCell($changetypeLabel->show(), 150, NULL, 'left');
+$table->addCell($changetypeLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($changetype->show() . "<br />" . $this->formError->getError('B1'));
@@ -65,7 +65,7 @@ $coursedescLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b2'
 $coursedesc->value = $this->formValue->getValue("B2");
 
 
-$table->addCell($coursedescLabel->show(), 150, NULL, 'left');
+$table->addCell($coursedescLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($coursedesc->show() . "<br />" . $this->formError->getError('B2'));
@@ -79,7 +79,7 @@ $prereq = new textarea('B3a', NULL, 10, 75);
 $prereqLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b3a', 'ads')."</b>".'&nbsp;', 'pre_req');
 $prereq->value = $this->formValue->getValue("B3a");
 
-$table->addCell($prereqLabel->show(), 150, NULL, 'left');
+$table->addCell($prereqLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($prereq->show() . "<br />" . $this->formError->getError('B3a'));
@@ -93,7 +93,7 @@ $coreq = new textarea('B3b', NULL, 10, 75);
 $coreqLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b3b', 'ads')."</b>".'&nbsp;', 'co_req');
 $coreq->value = $this->formValue->getValue("B3b");
 
-$table->addCell($coreqLabel->show(), 150, NULL, 'left');
+$table->addCell($coreqLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($coreq->show() . "<br />" . $this->formError->getError('B3b'));
@@ -114,7 +114,7 @@ else
 $b4a->setSelected($this->formValue->getValue("B4a"));
 
 $table->startRow();
-$table->addCell("<b>".$this->objLanguage->languageText('mod_ads_b4a','ads')."</b>".'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>".$this->objLanguage->languageText('mod_ads_b4a','ads')."</b>".'&nbsp;', 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b4a->showTable());
@@ -128,7 +128,7 @@ $b4b = new textarea('B4b', NULL, 10, 75);
 $b4bLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b4b', 'ads')."</b>".'&nbsp;', 'b4_b');
 $b4b->value = $this->formValue->getValue("B4b");
 
-$table->addCell($b4bLabel->show(), 150, NULL, 'left');
+$table->addCell($b4bLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b4b->show() . "<br />" . $this->formError->getError('B4b'));
@@ -143,7 +143,7 @@ $b4c = new textarea('B4c', NULL, 10, 75);
 $b4cLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b4c', 'ads')."</b>".'&nbsp;', 'b4_c');
 $b4c->value = $this->formValue->getValue("B4c");
 
-$table->addCell($b4cLabel->show(), 150, NULL, 'left');
+$table->addCell($b4cLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b4c->show() . "<br />" . $this->formError->getError('B4c'));
@@ -171,7 +171,7 @@ else {
 }
 
 $table->startRow();
-$table->addCell("<b>".$this->objLanguage->languageText('mod_ads_b5a','ads')."</b>".'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>".$this->objLanguage->languageText('mod_ads_b5a','ads')."</b>".'&nbsp;', 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b5a->showTable());
@@ -186,7 +186,7 @@ $b5bLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b5b', 'ads
 $b5b->value = $this->formValue->getValue("B5b");
 
 
-$table->addCell($b5bLabel->show(), 150, NULL, 'left');
+$table->addCell($b5bLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b5b->show() . "<br />" . $this->formError->getError('B5b'));
@@ -212,7 +212,7 @@ else {
     $b6a->setSelected($this->formValue->getValue("B6a"));
 }
 $table->startRow();
-$table->addCell("<b>".$this->objLanguage->languageText('mod_ads_b6a','ads')."</b>".'&nbsp;', 150, NULL, 'left');
+$table->addCell("<b>".$this->objLanguage->languageText('mod_ads_b6a','ads')."</b>".'&nbsp;', 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b6a->showTable());
@@ -229,7 +229,7 @@ $b6bLabel = new label("<b>".$this->objLanguage->languageText('mod_ads_b6b', 'ads
 
 
 
-$table->addCell($b6bLabel->show(), 150, NULL, 'left');
+$table->addCell($b6bLabel->show(), 600, NULL, 'left');
 $table->endRow();
 $table->startRow();
 $table->addCell($b6b->show() . "<br />" . $this->formError->getError('B6b'));
