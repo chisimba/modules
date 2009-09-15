@@ -20,5 +20,11 @@ class dbproposalmembers extends dbtable{
         $data = $this->getArray($sql);
         return $data;
     }
+     public function isMember($courseid,$userid) {
+        $sql = "select * from ".$this->tablename." where courseid= '".$courseid."' and userid='".$userid."'";
+        $data = $this->getArray($sql);
+        return count($data) > 0 ? TRUE:FALSE;
+    }
+
 }
 ?>

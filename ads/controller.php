@@ -646,7 +646,13 @@ class ads extends controller {
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
+
         $body.=' '. str_replace("amp;", "", $linkUrl);
+        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
+
 
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($modemail));
@@ -674,6 +680,12 @@ class ads extends controller {
         $body=$objSysConfig->getValue('EMAIL_ADDMEMBER_BODY', 'ads');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
         $body.=' '. str_replace("amp;", "", $linkUrl);
+
+        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
+
 
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($email));

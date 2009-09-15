@@ -4,6 +4,7 @@ class dbfaculty extends dbtable{
     
     public function init(){
         parent::init($this->tablename);
+        $this->objDbcourseproposals=$this->getObject('dbcourseproposals');
     }
 
     public function saveFaculty($faculty) {
@@ -23,7 +24,12 @@ class dbfaculty extends dbtable{
     public function getFacultyRC() {
         return $this->getRecordCount();
     }
-
+     public function isModerator($courseid,$userid) {
+        $faculty=$this->objDbcourseproposals->getFaculty($courseid);
+        $sql = "select * from ".$this->tablename." where name= '".$faculty."' and userid='".$userid."'";
+        $data = $this->getArray($sql);
+        return count($data) > 0 ? TRUE:FALSE;
+    }
     public function getFacultyData() {
         $objDocumentStore = $this->getObject('dbdocument');
         $objUser = $this->getObject('user', 'security');

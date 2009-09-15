@@ -79,7 +79,10 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
 
         return $this->getRecordCount();
     }
-
+    public function getFaculty($id) {
+        $data = $this->getRow('id', $id, $this->table);
+        return $data['faculty'];
+    }
     public function getTitle($id) {
         $data = $this->getRow('id', $id, $this->table);
         return $data['title'];

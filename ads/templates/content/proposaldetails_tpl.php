@@ -390,8 +390,8 @@ $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
 $actionsDropDown->addOption('default','Select action ...');
 
 //eable these if moderator or current editor
-if($currentEditor == $this->objUser->email()
-    || $modemail == $this->objUser->email()
+if($currentEditor == $this->objUser->email() || $this->objUser->isAdmin() ||
+    $this->objFaculty->isModerator($this->id,$this->objUser->email())
 ) {
 
     $actionsDropDown->addOption('editproposal','Edit Proposal');
@@ -399,8 +399,10 @@ if($currentEditor == $this->objUser->email()
     $actionsDropDown->addOption('forward','Forward');
     $actionsDropDown->addOption('forwardtomoderator','Forward to moderator');
 
+}else if($this->objProposalMembers->isMember($this->id,$this->objUser->userid()) ){
+    $actionsDropDown->addOption('addcomment','Add Comment');
 }
-if($modemail == $this->objUser->email()) {
+if($modemail == $this->objUser->email() || $this->objUser->isAdmin()) {
     $actionsDropDown->addOption('updatestatus','Forward for Comment');
 }
 
