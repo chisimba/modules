@@ -337,7 +337,7 @@ showSearchWinX('".$this->id."','".$sendProposalUrl."','Forward','forwardProposal
 
 if(actiondd == \"forwardtomoderator\"){
 //showSearchWinX('".$this->id."','".$sendProposalUrl."','Forward','forwardProposalToModerator','search-xwin','".str_replace("amp;", "", $searchusers)."');
-forwardProposalToModerator($grid, $this->id);
+forwardProposalToModerator($grid,'$this->id');
 }//end if
 };
 
