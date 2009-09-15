@@ -62,7 +62,7 @@ function showSearchWinX(){
     var resultTpl = new Ext.XTemplate(
         '<tpl for=".">',
         '<div class="search-item">',
-        '<h3>{firstname} {lastname}</h3>',
+        '<h3>{firstname} {lastname}</h3><h6>{email}</h6>',
         '<p><span><a href="#" onclick="'+actionFunction+'(\''+actionUrl+'\',\'{email}\',\''+courseId+'\',\'{userid}\');return false;">'+actionWord+'</a></span></p>',
             
         '</div></tpl>'
