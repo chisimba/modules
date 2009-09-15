@@ -72,7 +72,12 @@ if (isset($section)) {
 $layoutData = $this->_objLayouts->getLayout($layout);
 $imageName = $layoutData['imagename'];
 $imgPath = $this->getResourceUri($imageName,'cmsadmin');
-$img = "<img src=\"{$imgPath}\" alt=\"'$imageName'\"/>";
+if ($imageName == "") {
+	$img = ""; //"<img src=\"{$imgPath}\" alt=\"'$imageName'\"/>";
+} else {
+	$img = "<img src=\"{$imgPath}\" alt=\"'$imageName'\"/>";
+}
+
 
 $other = '<b>'.$this->objLanguage->languageText('mod_cmsadmin_treemenuname', 'cmsadmin').':'.'</b>'.'&nbsp;'.$menuText.'<br/>';
 
