@@ -5,6 +5,7 @@ class dbdocument extends dbtable{
     public function init(){
         parent::init($this->tablename);
          $this->objUser = $this->getObject ( 'user', 'security' );
+         $this->objCourseProposals = $this->getObject('dbcourseproposals');
     }
 
     public function addRecord($courseid, $form, $question, $value, $status, $version, $currentuser) {
