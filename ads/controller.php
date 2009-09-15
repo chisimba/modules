@@ -128,7 +128,7 @@ class ads extends controller {
     }
 
   function __facultylist() {
-  return "facultylist_tpl.php";
+    return "facultylist_tpl.php";
   }
 
     function __savecomment() {
@@ -407,6 +407,7 @@ class ads extends controller {
         }
     }
 
+    //======================================Error Checking=======================================
     function errorCheckText($array) {
         foreach ($array as $value) {
             if (!isset($_POST[$value])) {
@@ -631,7 +632,12 @@ class ads extends controller {
     }
 
     public function __sendproposaltomoderator(){
-        $this->id = $this->getParam('courseid');
+        if(strlen(trim($this->getParam('faculty'))) != 0) {
+            $this->id = $this->objCourseProposals->getID($this->getParam('faculty'));
+        }
+        else {
+            $this->id = $this->getParam('courseid');
+        }
         $phone = 'xxxx';
         $lname="x";
         $fname="y";
@@ -652,7 +658,6 @@ class ads extends controller {
 
         $this->objDocumentStore->sendProposal($lname, $fname, $modemail, $phone, $this->id,$this->objUser->email(),false);
         $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully to moderator","courseid"=>$this->id,'selectedtab'=>'0'));
-
     }
    public function __deleteproposalmember(){
         $memberid=$this->getParam('id');
@@ -754,7 +759,11 @@ class ads extends controller {
           }
     }
 
-
+    public function __savestatus() {
+        // save data into the commentadmin table
+        $this->objCommentAdmin->saveStatus($this->getParam('title'), $this->getParam('moderator'));
+        $this->nextAction('commentadmin');
+    }
   
 
 }

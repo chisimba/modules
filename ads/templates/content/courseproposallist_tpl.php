@@ -31,12 +31,6 @@ $lastEdit = $this->objLanguage->languageText('mod_ads_lastedit', 'ads');
 $edit = $this->objLanguage->languageText('mod_ads_edit', 'ads');
 $faculty = $this->objLanguage->languageText('mod_ads_faculty', 'ads');
 
-/*$facultyData = "['Commerce, Law and Management'],
-        ['Engineering and the Built Environment'],
-        ['Health Sciences'],
-        ['Humanities'],
-        ['Science']";*/
-
 $facultyData = "";
 $count = 1;
 foreach($allFaculty as $data) {
@@ -49,6 +43,12 @@ foreach($allFaculty as $data) {
     
     $count++;
 }
+
+/*$facultyData = "['Commerce, Law and Management'],
+        ['Engineering and the Built Environment'],
+        ['Health Sciences'],
+        ['Humanities'],
+        ['Science']";*/
 
 $statuscodes=  array(
               "0"=> 'New',
@@ -67,7 +67,7 @@ $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
 $addButton->setId('addproposal-btn');
 $addModerator->setId('addmoderator-btn');
 $addFaculty->setId('addfaculty-btn');
-$commentAdminButton = new button('commentAdmin', 'Comment Admin');
+$commentAdminButton = new button('commentAdmin', 'Status Admin');
 $commentAdminButton->setId('commentadmin');
 
 
@@ -145,7 +145,7 @@ foreach($courseProposals as $value) {
     }
 
  $cfac++;
-}
+}echo $data;
 $faculty = $objLanguage->languageText('mod_ads_faculty','ads');
 $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
 $submitUrl = $this->uri(array('action'=>'savecourseproposal'));
@@ -256,8 +256,8 @@ $mainjs = "/*!   * Ext JS Library 3.0.0
                        {name: 'dateCreated'},
                        {name: 'owner'},
                        {name: 'status'},
-                       {name: 'edit'},
-                       {name: 'faculty'}
+                       {name: 'faculty'},
+                        {name: 'edit'}
                     ]);
 
                     var grid = new xg.GridPanel({
@@ -395,7 +395,7 @@ Ext.onReady(function() {
         defaults: {width: 230},
         defaultType: 'textfield',
         items: [
-                facultyField,
+                editfacultyField,
                 {
                 fieldLabel: '".$unitName."',
                 name: 'title',

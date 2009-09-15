@@ -100,6 +100,7 @@ $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>
 $homeUrl = $this->uri(array('action'=>'home'));
 $sendProposalUrl = $this->uri(array('action'=>'sendproposal'));
 $comments= $this->objComment->getAllcomments($this->id);
+$grid = $this->objFaculty->getModeratorData();
 
 $showCoursePropHistUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
 $items = "{boxLabel: 'New', name: 'proposalstatus', inputValue: '0'";
@@ -336,7 +337,8 @@ showSearchWinX('".$this->id."','".$sendProposalUrl."','Forward','forwardProposal
 
 
 if(actiondd == \"forwardtomoderator\"){
-showSearchWinX('".$this->id."','".$sendProposalUrl."','Forward','forwardProposalToModerator','search-xwin','".str_replace("amp;", "", $searchusers)."');
+//showSearchWinX('".$this->id."','".$sendProposalUrl."','Forward','forwardProposalToModerator','search-xwin','".str_replace("amp;", "", $searchusers)."');
+forwardProposalToModerator($grid);
 }//end if
 };
 
@@ -418,7 +420,9 @@ $renderSurface='
         <div id="search-xwin" class="x-hidden">
         <div class="x-window-header">Search</div>
         </div>
-
+        <div id="fowardwin" class="x-hidden">
+        <div class="x-window-header">Forward To Moderator</div>
+        </div>
 
 ';
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';

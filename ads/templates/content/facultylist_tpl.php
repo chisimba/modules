@@ -2,19 +2,20 @@
 //load class
 $this->loadclass('link','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
-$grid = $this->objFaculty->getAllFaculty();
+$grid = $this->objFaculty->getFacultyData();
 
 // scripts
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/courseproposal.css').'"/>';
+$facultylistjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/facultylist.js').'" type="text/javascript"></script>';
 
 $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $maincss);
-
+$this->appendArrayVar('headerParams', $facultylistjs);
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -34,7 +35,7 @@ $cssLayout->setLeftColumnContent($postLoginMenu->show());
 $rightSideColumn ='<div id ="facultylist">'.$addFaculty->show()."&nbsp;&nbsp;".$addModerator->show();
 $renderSurface .= '<div id="addmoderator-win" class="x-hidden"><div class="x-window-header"></div></div>';
 $renderSurface .= '<div id="addfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>';
-$renderSurface .= '<div id="facultyListing"></div>';
+$renderSurface .= '<div id="facultylisting"></div>';
 $rightSideColumn .=$renderSurface;
 $rightSideColumn .= '</div>';
 $cssLayout->setMiddleColumnContent($rightSideColumn);
@@ -219,9 +220,8 @@ $mainjs =
         ".$addModeratorWindowJS."
     });
 </script>";
-/*
- * 
- */
 $this->appendArrayVar('headerParams', $mainjs);
-echo $grid;
+
+$tablescript = "<script type=\"text/javascript\">loadTable($grid);</script>";
+$this->appendArrayVar('headerParams', $tablescript);
 ?>

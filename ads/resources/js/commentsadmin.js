@@ -3,10 +3,8 @@ function showCommentAdmin(data){
     var store = new Ext.data.ArrayStore({
         fields: [
            {name: 'comment'},
-           {name: 'moderator'},
-           {name: 'delete'}
-
-        ]
+           {name: 'moderator'}
+       ]
     });
     store.loadData(data);
 
@@ -16,81 +14,45 @@ function showCommentAdmin(data){
         columns: [
             {id:'comment',header: "Comment", width: 400, sortable: true, dataIndex: 'comment'},
             {header: "Moderator", width:300, sortable: true, dataIndex: 'moderator'},
-            {header: "Delete", width: 100, sortable: true, dataIndex: 'delete'}
         ],
         stripeRows: true,
         autoExpandColumn: 'comment',
         height:350,
-        width:500,
-        border:false
-        
-
+        width:500
     });
     grid.render('commentlist');
-
-   
 }
 
-function initCommentaddWin(){
-       var ds = new Ext.data.Store({
-        proxy: new Ext.data.ScriptTagProxy({
-            url: 'http://extjs.com/forum/topics-remote.php'
-        }),
-        reader: new Ext.data.JsonReader({
-            root: 'topics',
-            totalProperty: 'totalCount',
-            id: 'post_id'
-        }, [
-            {name: 'title', mapping: 'topic_title'},
-            {name: 'topicId', mapping: 'topic_id'},
-            {name: 'author', mapping: 'author'},
-            {name: 'lastPost', mapping: 'post_time', type: 'date', dateFormat: 'timestamp'},
-            {name: 'excerpt', mapping: 'post_text'}
-        ])
+function initCommentaddWin(myUrl){
+   var form = new Ext.FormPanel({
+    standardSubmit: true,
+    labelWidth: 125,
+    url:myUrl,
+    frame:true,
+    title: 'Add  New Status',
+    bodyStyle:'padding:5px 5px 0',
+    width: 350,
+    defaults: {width: 230},
+    defaultType: 'textfield',
+
+    items: [{
+            fieldLabel: 'Title',
+            name: 'title',
+            id: 'input_title',
+            allowBlank: false
+          },
+          {
+            fieldLabel: 'Moderator',
+            name: 'moderator',
+            id: 'input_moderator',
+            allowBlank: false
+          }]
     });
-
-    // Custom rendering Template
-    var resultTplc = new Ext.XTemplate(
-        '<tpl for="."><div class=\"search-item\">',
-            '<h3><span>{lastPost:date(\"M j, Y\")}<br />by {author}</span>{title}</h3>',
-            '{excerpt}',
-        '</div></tpl>'
-    );
-           var form = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 125, // label settings here cascade unless overridden
-            url:'".str_replace("amp;", "", $submitUrl)."',
-            frame:true,
-            title: 'Add  New Comment',
-            bodyStyle:'padding:5px 5px 0',
-            width: 350,
-            defaults: {width: 230},
-            defaultType: 'textfield',
-
-            items: [
-                   {
-                    fieldLabel: 'Title',
-                    name: 'title',
-                    id: 'input_title',
-                    allowBlank: false
-                  },
-                    {
-                   fieldLabel: 'Moderator',
-                    name: 'moderator',
-                    id: 'input_moderator',
-                    allowBlank: false
-                  }
-
-            ]
-
-        });
-
 
     var commentAdminlWin;
     var commentButton = Ext.get('addcomment-btn');
 
     commentButton.on('click', function(){
-   
        if(!commentAdminlWin){
             commentAdminlWin = new Ext.Window({
                 applyTo:'addcomment-win',
@@ -108,7 +70,6 @@ function initCommentaddWin(){
                     handler: function(){
                         if (form.url)
                             form.getForm().getEl().dom.action = form.url;
-
                         form.getForm().submit();
                     }
                 },{
@@ -120,23 +81,5 @@ function initCommentaddWin(){
             });
         }
         commentAdminlWin.show(this);
-});
-
-
-    var xvsearch = new Ext.form.ComboBox({
-        store: ds,
-        displayField:'title',
-        typeAhead: false,
-        loadingText: 'Searching...',
-        width: 600,
-        pageSize:10,
-        hideTrigger:true,
-        tpl: resultTplc,
-        applyTo: 'input_moderator',
-        itemSelector: 'div.search-item',
-        onSelect: function(record){ // override default onSelect to do redirect
-            window.location =
-                String.format('http://extjs.com/forum/showthread.php?t={0}&p={1}', record.data.topicId, record.id);
-        }
     });
 }

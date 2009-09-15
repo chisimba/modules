@@ -180,14 +180,35 @@ function forwardProposal(){
 });
 }
 
-function forwardProposalToModerator(){
-  var args=forwardProposalToModerator.arguments;
-  var courseid=args[0];
-  Ext.MessageBox.confirm('Forward Proposal?', 'Are you sure you want to forward the proposal to moderator?', function(btn){
-  if (btn == 'yes') {
-    window.location.href='?module=ads&action=sendproposaltomoderator&courseid='+courseid;
-  }
-});
+function forwardProposalToModerator(data){
+    var fowardWin;
+    var myForm = getMyForm(data);
+    fowardWin = new Ext.Window({
+        id:'fowardWin',
+        title:'Forward To Moderator',
+        width:500,
+        x:10,
+        y: 10,
+        height:400,
+        closable:false,
+        border:false,
+        applyTo:'fowardwin',
+        defaultButton:'combo',
+        items: myForm,
+        buttons:[{
+            text:'Close',
+            iconCls:'icon-undo',
+            scope:this,
+            handler:function() {
+                fowardWin.hide();
+                window.location.reload(true);
+            }
+        }]
+    });
+    fowardWin.show();
+    myForm.getSelectionModel().on('rowselect', function(sm, rowIdx, r) {
+           fowardToModerator(r.get('faculty'));
+    });
 }
 
 function addProposalMember(){
@@ -199,3 +220,36 @@ function addProposalMember(){
    window.location.href='?module=ads&action=addproposalmember'+'&email='+email+'&courseid='+courseid+"&userid="+userid;
 }
 
+function getMyForm(data) {
+    // create the data store
+    var store = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'faculty'},
+           {name: 'moderator'}
+        ]
+    });
+    store.loadData(data);
+
+    // create the Grid
+    var grid = new Ext.grid.GridPanel({
+        store: store,
+        columns: [
+            {id: 'faculty', header: "Faculty", width: 160, sortable: true, dataIndex: 'faculty'},
+            {header: "Moderator", width: 120, sortable: true, dataIndex: 'moderator'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'faculty',
+        height:250,
+        width:400,
+        title:'Moderator List',
+        sm: new Ext.grid.RowSelectionModel({singleSelect: true})
+    });
+
+    return grid;
+}
+
+function fowardToModerator(faculty) {
+    if(confirm("Are you sure you want to foward to the faculty of " + faculty)) {
+        window.location.href = "?module=ads&action=sendproposaltomoderator&faculty="+faculty;
+    }
+}

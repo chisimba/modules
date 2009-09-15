@@ -19,7 +19,7 @@ div#note a:hover {color: #FF0000;}
 .x-panel-btns {
     text-align:right;
 }
-div#facultyListing {
+div#facultylisting, div#commentlist {
     padding-top: 1em;
 }
 

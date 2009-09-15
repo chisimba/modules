@@ -115,5 +115,10 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
 
         return $courseProposalStatus;
     }
+
+    public function getID($title) {
+        $data = $this->getRow('title', $title, $this->table);
+        return $data['id'];
+    }
 }
 ?>

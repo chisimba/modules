@@ -20,15 +20,15 @@ $this->appendArrayVar('headerParams', $commentsadmin);
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 
-$addComment = new button('addModerator', 'Add Comment');
+$saveCommentUrl = new link($this->uri(array('action'=>'savestatus')));
+$addComment = new button('addModerator', 'Add Status');
 $addComment->setId('addcomment-btn');
 
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent($postLoginMenu->show());
 //$rightSideColumn =  '<h1>Faculty Listing</h1>';
-$rightSideColumn ='<div id ="commentlist">'.$addComment->show();
+$rightSideColumn =$addComment->show().'<div id ="commentlist">';
 $renderSurface .= '<div id="addcomment-win" class="x-hidden"><div class="x-window-header"></div></div>';
-$renderSurface .= '<div id="facultyListing"></div>';
 $rightSideColumn .=$renderSurface;
 $rightSideColumn .= '</div>';
 $cssLayout->setMiddleColumnContent($rightSideColumn);
@@ -39,7 +39,15 @@ $count = 1;
 $total=count($allcommentdata);
 
 foreach($allcommentdata as $data) {
-    $commentData.="['".$data['comment_desc']."','".$this->objUser->fullname($data['userid']);
+    //get userid based on email
+    $tmpID = $this->objDocumentStore->getUserId(trim($data['userid']));
+    if(strlen(trim($tmpID)) == 0) {
+        $moderator = "Not Available";
+    }
+    else {
+        $moderator = $this->objUser->fullname($tmpID);
+    }
+    $commentData.="['".$data['comment_desc']."','".$moderator."']";
     if($count < $total){
         $commentData.=",";
     }
@@ -50,14 +58,14 @@ foreach($allcommentdata as $data) {
 $mainjs =
 "<script type=\"text/javascript\">
     Ext.onReady(function(){
-        var mData = [".$commentData."];
+        var mData = [".$commentData."],
+            url = '".str_replace("amp;", "", $saveCommentUrl->href)."';
        showCommentAdmin(mData);
-       initCommentaddWin();
+       initCommentaddWin(url);
     });
 </script>";
 /*
  * 
  */
 $this->appendArrayVar('headerParams', $mainjs);
-echo $grid;
 ?>

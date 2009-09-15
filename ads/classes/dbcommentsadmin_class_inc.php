@@ -25,5 +25,10 @@ class dbcommentsadmin extends dbTable{
         return $data;
     }
 
+    public function saveStatus($title, $moderator) {
+        $data = array('comment_desc'=>$title, 'userid'=>$moderator);
+        $this->insert($data);
+    }
+
 }
 ?>
