@@ -276,7 +276,7 @@ class ads extends controller {
             return "error_tpl.php";
         }
         $courseid = $this->getParam('courseid');
-        if (!$this->objCourseProposals->courseExists($courseid)) {
+                if (!$this->objCourseProposals->courseExists($courseid)) {
             $this->formError->setError("general", "Invalid course number.");
             return "error_tpl.php";
         }
@@ -635,9 +635,8 @@ class ads extends controller {
         if(strlen(trim($this->getParam('faculty'))) != 0) {
             $this->id = $this->objCourseProposals->getID($this->getParam('faculty'));
         }
-        else {
-            $this->id = $this->getParam('courseid');
-        }
+        $this->id = $this->getParam('courseid');
+        
         $phone = 'xxxx';
         $lname="x";
         $fname="y";
