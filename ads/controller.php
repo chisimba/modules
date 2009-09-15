@@ -632,16 +632,18 @@ class ads extends controller {
     }
 
     public function __sendproposaltomoderator(){
-        if(strlen(trim($this->getParam('faculty'))) != 0) {
+        /*if(strlen(trim($this->getParam('faculty'))) != 0) {
             $this->id = $this->objCourseProposals->getID($this->getParam('faculty'));
-        }
+        }*/
         $this->id = $this->getParam('courseid');
         
         $phone = 'xxxx';
         $lname="x";
         $fname="y";
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
+
+        $modemail=$this->objFaculty->getModeratorEmail(getParam('faculty'));
+
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));

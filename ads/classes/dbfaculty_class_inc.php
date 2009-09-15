@@ -20,7 +20,10 @@ class dbfaculty extends dbtable{
     public function getAllFaculty() {
         return $this->getAll("order by name");
     }
-
+    public function getModeratorEmail($name) {
+        $data = $this->getRow('name', $name, $this->tablename);
+        return $data['userid'];
+    }
     public function getFacultyRC() {
         return $this->getRecordCount();
     }
