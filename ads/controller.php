@@ -407,7 +407,6 @@ class ads extends controller {
         }
     }
 
-    //======================================Error Checking=======================================
     function errorCheckText($array) {
         foreach ($array as $value) {
             if (!isset($_POST[$value])) {

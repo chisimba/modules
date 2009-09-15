@@ -1,4 +1,24 @@
-<?php 
+<?php
+
+
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$formGjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/formgjs.js','ads').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+$buttonscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css','ads').'"/>';
+
+$this->appendArrayVar('headerParams', $extbase);
+$this->appendArrayVar('headerParams', $extalljs);
+$this->appendArrayVar('headerParams', $extallcss);
+$this->appendArrayVar('headerParams', $buttonscss);
+$this->appendArrayVar('headerParams', $formGjs);
+
+$courseid=$this->getParam('courseid');
+$myscript = " Ext.onReady(function(){
+loadFormGJS('".$courseid."');
+
+})";
+
 $formg = $this->getObject("dispformg", "ads");
 $formg->setValues($this->formError, $this->formValue, $this->submitAction);
 $sectionG = $formg->getForm();
@@ -25,4 +45,6 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 //Output the content to the page
 echo $cssLayout->show();
 echo $this->formValue->getSaveScript($this->submitAction);
+echo "<script type=\"text/javascript\">".$myscript."</script>";
+
 ?>

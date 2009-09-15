@@ -10,7 +10,31 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$formCjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/formcjs.js','ads').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+$buttonscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css','ads').'"/>';
 
+$this->appendArrayVar('headerParams', $extbase);
+$this->appendArrayVar('headerParams', $extalljs);
+$this->appendArrayVar('headerParams', $extallcss);
+$this->appendArrayVar('headerParams', $buttonscss);
+$this->appendArrayVar('headerParams', $formCjs);
+
+$question1comment = "<div id = 'question1comment'></div>";
+$question2acomment = "<div id = 'question2acomment'></div>";
+$question2bcomment = "<div id = 'question2bcomment'></div>";
+$question3comment = "<div id = 'question3comment'></div>";
+$question4acomment = "<div id = 'question4acomment'></div>";
+$question4b1comment = "<div id = 'question4b1comment'></div>";
+$question4b2comment = "<div id = 'question4b2comment'></div>";
+
+$courseid=$this->getParam('courseid');
+$myscript = " Ext.onReady(function(){
+loadFormCJS('".$courseid."');
+
+})";
 /*declare objects*/
 //$CH = new htmlheading($this->objLanguage->languageText('mod_ads_titleC','ads', 2));
 $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleC','ads'), 2);
@@ -46,19 +70,21 @@ $tbl4b->width = "55%";
 $tbl4b->startRow();
 $tbl4b->addCell($this->objLanguage->languageText('mod_formC_C4b_1','ads'));
 $tbl4b->addCell($C4b_1->show());
+$tbl4b->addCell($question4b1comment);
 $tbl4b->endRow();
 $tbl4b->startRow();
 $tbl4b->addCell($this->objLanguage->languageText('mod_formC_C4b_2','ads'));
 $tbl4b->addCell($C4b_2->show());
+$tbl4b->addcell($question4b2comment);
 $tbl4b->endRow();
 
 $formC = new form('formC',$this->submitAction);
 $formC->addToForm($header->show(). "<br />");
-$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C1','ads')."</b><br>" .$C1->show()."<br>".$this->formError->getError("C1"). "<br>");
-$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2a','ads')."</b><br>".$C2a->showTable()."<br>".$this->formError->getError("C2a")."<br>");
-$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2b','ads')."</b><br>".$C2b->show()."<br>".$this->formError->getError("C2b"));
-$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C3','ads')."</b><br>".$C3->show()."<br>".$this->formError->getError("C3")."<br>");
-$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C4a','ads')."</b><br>".$C4a->showTable()."<br>");
+$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C1','ads')."</b><br>" .$C1->show().$question1comment."<br>".$this->formError->getError("C1"). "<br>");
+$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2a','ads')."</b><br>".$C2a->showTable().$question2acomment."<br>".$this->formError->getError("C2a")."<br>");
+$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2b','ads')."</b><br>".$C2b->show().$question2bcomment."<br>".$this->formError->getError("C2b"));
+$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C3','ads')."</b><br>".$C3->show().$question3comment."<br>".$this->formError->getError("C3")."<br>");
+$formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C4a','ads')."</b><br>".$C4a->showTable().$question4acomment."<br>");
 $formC->addToForm($tbl4b->show());
 
 if(strcmp($this->formError->getError("C4b_1"),$this->formError->getError("C4b_2")) == 0 and strlen($this->formError->getError("C4b_1")) > 0)
@@ -107,6 +133,8 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
+
+echo "<script type=\"text/javascript\">".$myscript."</script>";
 
 $saveUrl = $this->submitAction;
 $saveFormJS = 'jQuery(document).ready(function() {
