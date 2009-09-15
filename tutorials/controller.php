@@ -116,6 +116,20 @@ class tutorials extends controller
         // messaging objects
         $this->objTutDisplay = $this->getObject('tutorialsdisplay', 'tutorials');
         $this->objDbTutorials = $this->getObject('dbtutorials', 'tutorials');
+
+								//Load Module Catalogue Class
+								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+
+								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
     }
 
     /**
@@ -168,8 +182,41 @@ class tutorials extends controller
                     $moderateClose = $this->getParam('moderateClose');
                     $penalty = $this->getParam('penalty');
                     if(empty($id)){
+																						 	//add to activity log
+																						 	if($this->eventsEnabled)
+																						 	{
+																						 		$message = $this->objUser->getsurname(). ' '.$this->objLanguage->languageText('mod_tutorials_added', 'tutorials')."-".$name;
+																						 	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																																			'link'=> $this->uri(array()),
+																																			'contextcode' => $this->objContext->getContextCode(),
+																																			'author' => $this->objUser->fullname(),
+																																			'description'=>$message));																												
+																			$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																																			'link'=> $this->uri(array()),
+																																			'contextcode' => null,
+																																			'author' => $this->objUser->fullname(),
+																																			'description'=>$message));
+																						 	}
+                        //Add the tutorial
                         $tutorialId = $this->objDbTutorials->addTutorial($name, $type, $description, $percentage, $answerOpen, $answerClose, $markOpen, $markClose, $moderateOpen, $moderateClose, $penalty);
                     }else{
+																						 	//add to activity log
+																						 	if($this->eventsEnabled)
+																						 	{
+																						 		$messageed = $this->objUser->getsurname(). ' '.$this->objLanguage->languageText('mod_tutorials_edited', 'tutorials')."-".$name;
+																						 	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $messageed,
+																																			'link'=> $this->uri(array()),
+																																			'contextcode' => $this->objContext->getContextCode(),
+																																			'author' => $this->objUser->fullname(),
+																																			'description'=>$messageed));
+																												
+																			$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $messageed,
+																																			'link'=> $this->uri(array()),
+																																			'contextcode' => null,
+																																			'author' => $this->objUser->fullname(),
+																																			'description'=>$messageed));
+																						 	}                        
+                        //Edit the tutorial
                         $tutorialId = $this->objDbTutorials->editTutorial($id, $name, $type, $description, $percentage, $answerOpen, $answerClose, $markOpen, $markClose, $moderateOpen, $moderateClose, $penalty);
                     }
                     return $this->nextAction('view', array(
