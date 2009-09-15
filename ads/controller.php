@@ -642,7 +642,7 @@ class ads extends controller {
         $fname="y";
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 
-        $modemail=$this->objFaculty->getModeratorEmail(getParam('faculty'));
+        $modemail=$this->objFaculty->getModeratorEmail($this->getParam('faculty'));
 
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
