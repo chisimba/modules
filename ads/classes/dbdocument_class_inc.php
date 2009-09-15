@@ -144,6 +144,10 @@ class dbdocument extends dbtable{
         $body=$objSysConfig->getValue('EMAIL_BODY', 'ads');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid,'selectedtab'=>'0'));
         $body.=' '. str_replace("amp;", "", $linkUrl);
+        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
         $emailName=$objSysConfig->getValue('EMAIL_NAME', 'ads');
 
         $objMailer = $this->getObject('email', 'mail');
