@@ -115,7 +115,11 @@ class ads extends controller {
         $body=$objSysConfig->getValue('EMAIL_COMMENT_BODY', 'ads');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
         $body.=' '. str_replace("amp;", "", $linkUrl);
-
+        $body.=' '. str_replace("amp;", "", $linkUrl);
+        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('courseid')), $body);
+        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($toemail));
         $objMailer->setValue('from', $this->objUser->email());

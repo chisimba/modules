@@ -4,6 +4,7 @@ class dbdocument extends dbtable{
     var $tablename = "tbl_ads_documentstore";
     public function init(){
         parent::init($this->tablename);
+         $this->objUser = $this->getObject ( 'user', 'security' );
     }
 
     public function addRecord($courseid, $form, $question, $value, $status, $version, $currentuser) {
