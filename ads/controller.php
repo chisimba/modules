@@ -320,13 +320,13 @@ class ads extends controller {
             return __home();
         }
         $proposal = $this->objDocumentStore->getProposal($courseid, $verarray['version']);
-        if ($this->errorFree($proposal,$courseid)) {
+        //if ($this->errorFree($proposal,$courseid)) {
             $verarray = $this->objDocumentStore->submitProposal($courseid, $verarray['version']);
             return $this->__home();
-        }
-        else {
+        //}
+        /*else {
             return "error_tpl.php";
-        }
+        }*/
     }
 
     function errorFree($proposal,$courseid) {
