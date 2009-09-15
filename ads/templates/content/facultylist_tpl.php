@@ -224,4 +224,5 @@ $this->appendArrayVar('headerParams', $mainjs);
 
 $tablescript = "<script type=\"text/javascript\">loadTable($grid);</script>";
 $this->appendArrayVar('headerParams', $tablescript);
+//comment
 ?>
