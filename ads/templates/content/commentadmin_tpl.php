@@ -21,6 +21,7 @@ $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 
 $saveCommentUrl = new link($this->uri(array('action'=>'savestatus')));
+$editCommentUrl = new link($this->uri(array('action'=>'updatestatus')));
 $addComment = new button('addModerator', 'Add Status');
 $addComment->setId('addcomment-btn');
 
@@ -47,7 +48,7 @@ foreach($allcommentdata as $data) {
     else {
         $moderator = $this->objUser->fullname($tmpID);
     }
-    $commentData.="['".$data['comment_desc']."','".$moderator."']";
+    $commentData.="['".$data['comment_desc']."','".$moderator."','".$data['id']."']";
     if($count < $total){
         $commentData.=",";
     }
@@ -59,9 +60,10 @@ $mainjs =
 "<script type=\"text/javascript\">
     Ext.onReady(function(){
         var mData = [".$commentData."],
-            url = '".str_replace("amp;", "", $saveCommentUrl->href)."';
-       showCommentAdmin(mData);
-       initCommentaddWin(url);
+            url = '".str_replace("amp;", "", $editCommentUrl->href)."',
+            url2 = '".str_replace("amp;", "", $saveCommentUrl->href)."';
+       showCommentAdmin(mData,url);
+       initCommentaddWin(url2);
     });
 </script>";
 /*

@@ -764,7 +764,11 @@ class ads extends controller {
         $this->objCommentAdmin->saveStatus($this->getParam('title'), $this->getParam('moderator'));
         $this->nextAction('commentadmin');
     }
-  
+    public function __updatestatus() {
+        // save data into the commentadmin table
+        $this->objCommentAdmin->updateStatus($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
+        $this->nextAction('commentadmin');
+    }
 
 }
 

@@ -101,7 +101,6 @@ $homeUrl = $this->uri(array('action'=>'home'));
 $sendProposalUrl = $this->uri(array('action'=>'sendproposal'));
 $comments= $this->objComment->getAllcomments($this->id);
 $grid = $this->objFaculty->getModeratorData();
-
 $showCoursePropHistUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
 $items = "{boxLabel: 'New', name: 'proposalstatus', inputValue: '0'";
 if($courseProposal['status'] == 0) {

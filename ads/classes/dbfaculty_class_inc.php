@@ -28,7 +28,7 @@ class dbfaculty extends dbtable{
         $objDocumentStore = $this->getObject('dbdocument');
         $objUser = $this->getObject('user', 'security');
         $data = $this->getAllFaculty();
-        $rc = $this->getFacultyRC();
+        $rc = count($data);
         $count = 1;
 
         $dataStore = "[";
@@ -48,7 +48,7 @@ class dbfaculty extends dbtable{
                     $dataStore .= "Not Available']";
                 }
                 else {
-                    $dataStore .= $objUser->fullname($objDocumentStore->getUserId(trim($data['userid'])))."']".",";
+                    $dataStore .= $objUser->fullname($objDocumentStore->getUserId(trim($data['userid'])))."']";
                 }
             }
             $count++;
@@ -62,7 +62,7 @@ class dbfaculty extends dbtable{
         $objDocumentStore = $this->getObject('dbdocument');
         $objUser = $this->getObject('user', 'security');
         $data = $this->getAllFaculty();
-        $rc = $this->getFacultyRC();
+        $rc =count($data);
         $count = 1;
 
         $dataStore = "[";
@@ -81,7 +81,7 @@ class dbfaculty extends dbtable{
                     $dataStore .= "Not Available']";
                 }
                 else {
-                    $dataStore .= $objUser->fullname($objDocumentStore->getUserId(trim($data['userid'])))."']".",";
+                    $dataStore .= $objUser->fullname($objDocumentStore->getUserId(trim($data['userid'])))."']";
                 }
             }
             $count++;

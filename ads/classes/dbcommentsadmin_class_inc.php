@@ -18,7 +18,12 @@ class dbcommentsadmin extends dbTable{
         $data = array('comment_desc'=>$comment, 'userid'=>$userid);
         $this->insert($data);
     }
-   
+     public function updateStatus($comment,$userid,$id) {
+        $sql = "update ".$this->table." set comment_desc ='".$comment."',userid='".$userid."'
+               where  id='".$id."'";
+        $this->getArray($sql);
+      
+    }
     public function getComments() {
         $sql = "select * from ".$this->table;
         $data = $this->getArray($sql);

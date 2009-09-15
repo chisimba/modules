@@ -189,7 +189,7 @@ function forwardProposalToModerator(data){
         width:500,
         x:10,
         y: 10,
-        height:400,
+        height:350,
         closable:false,
         border:false,
         applyTo:'fowardwin',
@@ -240,8 +240,9 @@ function getMyForm(data) {
         stripeRows: true,
         autoExpandColumn: 'faculty',
         height:250,
-        width:400,
-        title:'Moderator List',
+        width:460,
+        
+        border:false,
         sm: new Ext.grid.RowSelectionModel({singleSelect: true})
     });
 

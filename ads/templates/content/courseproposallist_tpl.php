@@ -145,7 +145,8 @@ foreach($courseProposals as $value) {
     }
 
  $cfac++;
-}echo $data;
+}
+
 $faculty = $objLanguage->languageText('mod_ads_faculty','ads');
 $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
 $submitUrl = $this->uri(array('action'=>'savecourseproposal'));
