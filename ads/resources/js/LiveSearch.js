@@ -180,7 +180,7 @@ function forwardProposal(){
 });
 }
 
-function forwardProposalToModerator(data){
+function forwardProposalToModerator(data,courseid){
     var fowardWin;
     var myForm = getMyForm(data);
     fowardWin = new Ext.Window({
@@ -207,7 +207,7 @@ function forwardProposalToModerator(data){
     });
     fowardWin.show();
     myForm.getSelectionModel().on('rowselect', function(sm, rowIdx, r) {
-           fowardToModerator(r.get('faculty'));
+           fowardToModerator(r.get('faculty'),courseid);
     });
 }
 
@@ -249,8 +249,8 @@ function getMyForm(data) {
     return grid;
 }
 
-function fowardToModerator(faculty) {
+function fowardToModerator(faculty,courseid) {
     if(confirm("Are you sure you want to foward to the faculty of " + faculty)) {
-        window.location.href = "?module=ads&action=sendproposaltomoderator&faculty="+faculty;
+        window.location.href = "?module=ads&action=sendproposaltomoderator&faculty="+faculty+"&courseid="+courseid;
     }
 }
