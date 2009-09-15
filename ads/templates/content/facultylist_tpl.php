@@ -21,7 +21,7 @@ $this->appendArrayVar('headerParams', $facultylistjs);
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 
-$addModerator = new button('addModerator', 'Add Moderator');
+$addModerator = new button('addModerator', 'Add/Edit Moderator');
 $addFaculty = new button('addFaculty', 'Add Faculty');
 $addModerator->setId('addmoderator-btn');
 $addFaculty->setId('addfaculty-btn');
