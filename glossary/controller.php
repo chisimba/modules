@@ -45,17 +45,30 @@ class glossary extends controller
 
         // Get Context Code & Title
         $this->contextObject = $this->getObject('dbcontext', 'context');
- 		$this->contextCode = $this->contextObject->getContextCode();
- 		$this->contextTitle = $this->contextObject->getTitle();
+								$this->contextCode = $this->contextObject->getContextCode();
+								$this->contextTitle = $this->contextObject->getTitle();
+								//Load Module Catalogue Class
+								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+
+								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
 
         // Set Context Code to 'root' if not in context
- 		if ($this->contextCode == ''){
- 			$this->contextCode = 'root';
-			$this->contextTitle = ' Lobby';
-            $this->setLayoutTemplate("user_layout_tpl.php");
- 		} else {
-            $this->setLayoutTemplate("context_layout_tpl.php");
-        }
+								if ($this->contextCode == ''){
+									$this->contextCode = 'root';
+								 $this->contextTitle = ' Lobby';
+										       $this->setLayoutTemplate("user_layout_tpl.php");
+								} else {
+									$this->setLayoutTemplate("context_layout_tpl.php");
+								}
 
         // Permissions Module
         //$this->objDT = $this->getObject( 'decisiontable','decisiontable' );
@@ -75,7 +88,7 @@ class glossary extends controller
         //Log this module call
         $this->objLog->log();
 
-$this->setVar('pageSuppressXML', TRUE);
+								$this->setVar('pageSuppressXML', TRUE);
     }
 
 	/**
@@ -393,6 +406,22 @@ $this->setVar('pageSuppressXML', TRUE);
         } else {
             $seeAlso = '';
         }
+  	//add to activity log
+  	if($this->eventsEnabled)
+  	{
+  		$message = $this->objUser->getsurname()." ". $this->objLanguage->languageText('mod_glossary_addtermalert', 'glossary')." - ".$term;
+  	 $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+														'link'=> $this->uri(array()),
+														'contextcode' => $this->contextCode,
+														'author' => $this->objUser->fullname(),
+														'description'=>$message));
+														
+				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+														'link'=> $this->uri(array()),
+														'contextcode' => null,
+														'author' => $this->objUser->fullname(),
+														'description'=>$message));
+  	}
 
 		// Insert the term into the database
 		$this->objGlossary->insertSingle(
