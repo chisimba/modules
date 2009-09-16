@@ -103,7 +103,17 @@ class contextcontent extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
 			
-			$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+												$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+												//Load Activity Streamer
+												if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+												{
+													$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+													$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+													$this->eventsEnabled = TRUE;
+												} else {
+													$this->eventsEnabled = FALSE;
+												}
+
             
             $this->objMenuTools = $this->getObject('tools', 'toolbar');
             $this->objConfig = $this->getObject('altconfig', 'config');
@@ -304,6 +314,23 @@ class contextcontent extends controller
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'couldnotcreatechapter'));
         } else {
+           	//add to activity log
+           	if($this->eventsEnabled)
+           	{
+           		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_contextcontent_addednewchapter', 'contextcontent')." ".$this->contextCode;
+           	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+   																				'link'=> $this->uri(array()),
+   																				'contextcode' => $this->contextCode,
+   																				'author' => $this->objUser->fullname(),
+   																				'description'=>$message));
+   																				
+								  				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+   																				'link'=> $this->uri(array()),
+   																				'contextcode' => null,
+   																				'author' => $this->objUser->fullname(),
+   																				'description'=>$message));
+           	}
+        
             return $this->nextAction('viewchapter', array('message'=>'chaptercreated', 'id'=>$chapterId));
         }
     }
@@ -325,6 +352,22 @@ class contextcontent extends controller
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'couldnotcreatechapter'));
         } else {
+            	//add to activity log
+           	if($this->eventsEnabled)
+           	{
+           		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_contextcontent_addednewchapter', 'contextcontent')." ".$this->contextCode;
+           	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+   																				'link'=> $this->uri(array()),
+   																				'contextcode' => $this->contextCode,
+   																				'author' => $this->objUser->fullname(),
+   																				'description'=>$message));
+   																				
+								  				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+   																				'link'=> $this->uri(array()),
+   																				'contextcode' => null,
+   																				'author' => $this->objUser->fullname(),
+   																				'description'=>$message));
+           	}
             return $this->nextAction(NULL, array('message'=>'chaptercreated', 'id'=>$result));
         }
     }
@@ -578,7 +621,7 @@ class contextcontent extends controller
         $pagecontent = stripslashes($this->getParam('pagecontent'));
         $parent = stripslashes($this->getParam('parentnode'));
         $chapter = stripslashes($this->getParam('chapter'));
-        
+        $chapterTitle = $this->objContextChapters->getContextChapterTitle($chapter);
         $titleId = $this->objContentTitles->addTitle('', $menutitle, $pagecontent, $language, $headerscripts);
         
         
@@ -586,7 +629,22 @@ class contextcontent extends controller
         
         $this->setVar('mode', 'add');
         $this->setVar('formaction', 'savepage');
-        
+       	//add to activity log
+       	if($this->eventsEnabled)
+       	{
+       		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent')." ".$this->contextCode." ".$this->objLanguage->languageText('word_chapter', 'contextcontent').": ".$chapterTitle;
+       	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																			'link'=> $this->uri(array()),
+																			'contextcode' => $this->contextCode,
+																			'author' => $this->objUser->fullname(),
+																			'description'=>$message));
+																			
+				  				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																			'link'=> $this->uri(array()),
+																			'contextcode' => null,
+																			'author' => $this->objUser->fullname(),
+																			'description'=>$message));
+       	}        
         return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'pagesaved'));
     }
 
