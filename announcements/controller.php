@@ -321,12 +321,6 @@ class announcements extends controller
     																				'contextcode' => $this->objContext->getContextCode(),
     																				'author' => $this->objUser->fullname(),
     																				'description'=>$message));
-    																				
-           				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-    																				'link'=> $this->uri(array()),
-    																				'contextcode' => null,
-    																				'author' => $this->objUser->fullname(),
-    																				'description'=>$message));
             	}            
             return $this->nextAction('view', array('id'=>$result));
             
