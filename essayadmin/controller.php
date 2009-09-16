@@ -89,6 +89,18 @@ class essayadmin extends controller
             //Log this module call
             $this->objLog->log();
         }
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+								//Load the activity Streamer
+								if($this->objModules->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
+
     }
 
     /**
@@ -224,11 +236,27 @@ class essayadmin extends controller
                 }
                 else {
 	                $this->dbtopic->addTopic($fields,$id);
-				}
+																}
 
                 // set confirmation message
                 $message = $this->objLanguage->languageText('mod_essayadmin_confirmtopic','essayadmin');
                 $this->setSession('confirm', $message);
+						         	//add to activity log
+						         	if($this->eventsEnabled)
+						         	{
+						         		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_essayadmin_hasaddedessay', 'essayadmin').": ".$fields['name']." ".$this->objLanguage->languageText('mod_essayadmin_in', 'essayadmin')." ".$this->objContext->getContextCode();
+						         	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+						 																				'link'=> $this->uri(array()),
+						 																				'contextcode' => $this->objContext->getContextCode(),
+						 																				'author' => $this->objUser->fullname(),
+						 																				'description'=>$message));
+						 																				
+													 				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+						 																				'link'=> $this->uri(array()),
+						 																				'contextcode' => null,
+						 																				'author' => $this->objUser->fullname(),
+						 																				'description'=>$message));
+						         	}
 
                 return $this->nextAction('view', array('id' => $id, 'confirm' => 'yes'));
             }
