@@ -65,6 +65,19 @@ class announcements extends controller
         
         $this->setVar('lecturerContext', $this->lecturerContext);
         $this->setVar('isAdmin', $this->isAdmin);
+								//Load Module Catalogue Class
+								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+
+								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
     }
 
 
@@ -299,7 +312,22 @@ class announcements extends controller
         } else if ($mode == 'add') {
             
             $result = $this->objAnnouncements->addAnnouncement($title, $message, $recipienttarget, $contexts, $email);
-            
+            	//add to activity streamer/log
+            	if($this->eventsEnabled)
+            	{
+            		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_announcements_hasaddeda', 'announcements')." ".$this->objContext->getContextCode()." ".$this->objLanguage->languageText('mod_announcements_announcement', 'announcements').": ".$title;
+            	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+    																				'link'=> $this->uri(array()),
+    																				'contextcode' => $this->objContext->getContextCode(),
+    																				'author' => $this->objUser->fullname(),
+    																				'description'=>$message));
+    																				
+           				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+    																				'link'=> $this->uri(array()),
+    																				'contextcode' => null,
+    																				'author' => $this->objUser->fullname(),
+    																				'description'=>$message));
+            	}            
             return $this->nextAction('view', array('id'=>$result));
             
         }
