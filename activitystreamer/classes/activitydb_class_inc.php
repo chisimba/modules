@@ -84,7 +84,10 @@ class activitydb extends dbTable
      */
     public function getActivities($filter = null, $limit = 10)
     {
-    	return $this->getAll("$filter limit $limit");
+    	//Get the rowcount
+    	$rowcount = $this->getRecordCount();
+    	$offset = $rowcount - $limit;
+    	return $this->getAll("$filter ORDER BY puid DESC LIMIT {$limit}");
     }
     
     public function getSiteActivities($limit = 10)
