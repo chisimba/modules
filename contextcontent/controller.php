@@ -323,12 +323,6 @@ class contextcontent extends controller
    																				'contextcode' => $this->contextCode,
    																				'author' => $this->objUser->fullname(),
    																				'description'=>$message));
-   																				
-								  				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-   																				'link'=> $this->uri(array()),
-   																				'contextcode' => null,
-   																				'author' => $this->objUser->fullname(),
-   																				'description'=>$message));
            	}
         
             return $this->nextAction('viewchapter', array('message'=>'chaptercreated', 'id'=>$chapterId));
@@ -359,12 +353,6 @@ class contextcontent extends controller
            	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
    																				'link'=> $this->uri(array()),
    																				'contextcode' => $this->contextCode,
-   																				'author' => $this->objUser->fullname(),
-   																				'description'=>$message));
-   																				
-								  				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-   																				'link'=> $this->uri(array()),
-   																				'contextcode' => null,
    																				'author' => $this->objUser->fullname(),
    																				'description'=>$message));
            	}
@@ -636,12 +624,6 @@ class contextcontent extends controller
        	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
 																			'link'=> $this->uri(array()),
 																			'contextcode' => $this->contextCode,
-																			'author' => $this->objUser->fullname(),
-																			'description'=>$message));
-																			
-				  				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-																			'link'=> $this->uri(array()),
-																			'contextcode' => null,
 																			'author' => $this->objUser->fullname(),
 																			'description'=>$message));
        	}        
