@@ -190,11 +190,6 @@ class tutorials extends controller
 																																			'link'=> $this->uri(array()),
 																																			'contextcode' => $this->objContext->getContextCode(),
 																																			'author' => $this->objUser->fullname(),
-																																			'description'=>$message));																												
-																			$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-																																			'link'=> $this->uri(array()),
-																																			'contextcode' => null,
-																																			'author' => $this->objUser->fullname(),
 																																			'description'=>$message));
 																						 	}
                         //Add the tutorial
@@ -207,12 +202,6 @@ class tutorials extends controller
 																						 	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $messageed,
 																																			'link'=> $this->uri(array()),
 																																			'contextcode' => $this->objContext->getContextCode(),
-																																			'author' => $this->objUser->fullname(),
-																																			'description'=>$messageed));
-																												
-																			$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $messageed,
-																																			'link'=> $this->uri(array()),
-																																			'contextcode' => null,
 																																			'author' => $this->objUser->fullname(),
 																																			'description'=>$messageed));
 																						 	}                        
