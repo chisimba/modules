@@ -466,12 +466,6 @@ class forum extends controller
 																			'contextcode' => $this->contextCode,
 																			'author' => $this->objUser->fullname(),
 																			'description'=>$message));
-																			
-										$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-																			'link'=> $this->uri(array()),
-																			'contextcode' => null,
-																			'author' => $this->objUser->fullname(),
-																			'description'=>$message));
        	}
 
         $this->setVarByRef('topicsNum', $topicsNum);
