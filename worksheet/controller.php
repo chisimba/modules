@@ -316,13 +316,7 @@ class worksheet extends controller
 																		'contextcode' => $this->objContext->getContextCode(),
 																		'author' => $this->objUser->fullname(),
 																		'description'=>$message));
-																		
-								$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-																		'link'=> $this->uri(array()),
-																		'contextcode' => null,
-																		'author' => $this->objUser->fullname(),
-																		'description'=>$message));
-        
+																		      
         $id = $this->objWorksheet->insertWorkSheet($this->contextCode, NULL, $title, $activity_status, $percentage, $closing_date, $description );
         
         return $this->nextAction('managequestions', array('id'=>$id));
