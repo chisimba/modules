@@ -87,6 +87,21 @@ class mcqtests extends controller
         $this->contextUsers = $this->newObject('managegroups', 'contextgroups');
         $this->objCond = $this->newObject('contextCondition', 'contextpermissions');
 
+								//Load Module Catalogue Class
+								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+
+								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
+
+
         // Log this call if registered
         if (!$this->objModules->checkIfRegistered('logger', 'logger')) {
             //Get the activity logger class
@@ -260,6 +275,17 @@ class mcqtests extends controller
                         $this->setSession('stepmenu2', null);
                         $this->setSession('stepmenu2', $StepMenuArr2);
                         $StepMenuArr = null;
+																						 	//add to activity log
+																						 	if($this->eventsEnabled)
+																						 	{
+																						 		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_mcqtests_newmcq', 'mcqtests')." ".$this->objContext->getContextCode();
+																						 	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																																			'link'=> $this->uri(array()),
+																																			'contextcode' => $this->objContext->getContextCode(),
+																																			'author' => $this->objUser->fullname(),
+																																			'description'=>$message));
+																						 	}
+                        
                         return $this->nextAction('savestep', array('currentstep'=>'3a'));
                         break;
                     case '3a':
