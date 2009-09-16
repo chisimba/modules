@@ -137,6 +137,19 @@ class forum extends controller
         if ($this->showFullName != FALSE) {
             $this->showFullName = TRUE;
         }
+								//Load Module Catalogue Class
+								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+
+								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
     }
 
     public function requiresLogin()
@@ -444,6 +457,22 @@ class forum extends controller
         $allTopics = $this->objTopic->showTopicsInForum($id, $this->userId, $forum['archivedate'], $order, $direction, NULL, $limit);
         $topicsNum = count($allTopics);
 
+       	//add to activity log
+       	if($this->eventsEnabled)
+       	{
+       		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_forum_hasentered', 'forum')." ".$forum['forum_name'];
+       	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																			'link'=> $this->uri(array()),
+																			'contextcode' => $this->contextCode,
+																			'author' => $this->objUser->fullname(),
+																			'description'=>$message));
+																			
+										$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+																			'link'=> $this->uri(array()),
+																			'contextcode' => null,
+																			'author' => $this->objUser->fullname(),
+																			'description'=>$message));
+       	}
 
         $this->setVarByRef('topicsNum', $topicsNum);
         $this->setVarByRef('topics', $allTopics);
