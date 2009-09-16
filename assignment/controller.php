@@ -114,6 +114,19 @@ class assignment extends controller
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
+								//Load Module Catalogue Class
+								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+
+								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
     }
     
     
@@ -262,6 +275,22 @@ class assignment extends controller
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unabletosaveassignment'));
         } else {
+            	//add to activity streamer
+            	if($this->eventsEnabled)
+            	{
+            		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_assignment_addedassignment', 'assignment')." ".$this->contextCode;
+            	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+    																				'link'=> $this->uri(array()),
+    																				'contextcode' => $this->contextCode,
+    																				'author' => $this->objUser->fullname(),
+    																				'description'=>$message));
+    																				
+    				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+    																				'link'=> $this->uri(array()),
+    																				'contextcode' => null,
+    																				'author' => $this->objUser->fullname(),
+    																				'description'=>$message));
+            	}        
             return $this->nextAction('view', array('id'=>$result));
         }
     }
