@@ -87,7 +87,12 @@ class block_latestcontextactivity extends object
     	
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDBActivities = $this->getObject('activitydb');
-        $this->title = $this->objLanguage->languageText('mod_activitystreamer_latestactivity', 'activitystreamer', 'Latest Course Activity');
+        $this->title = $this->objLanguage->languageText('mod_activitystreamer_latestactivity', 'activitystreamer', 'Course Activities');
+        // Load Context Object
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        // Store Context Code
+        $this->contextCode = $this->objContext->getContextCode();
+
     }
     /**
      * Standard block show method.
@@ -97,10 +102,19 @@ class block_latestcontextactivity extends object
     public function show() 
     {
     	//gets the 10 latest entries
-    	$recs = $this->objDBActivities->getActivities();
-    	if(!count($recs) > 0)
+    	if(!empty($this->contextCode)){
+    		$recs = $this->objDBActivities->getActivities($filter = "WHERE contextcode='".$this->contextCode."'");
+    	}else{
+    		$recs = array();
+    	}
+    	$str = "";
+    	if(count($recs) > 0)
     	{
-    		
+    		foreach($recs as $rec)
+    		{
+    			$str .="<div>".$rec['title']."</div>";
+    		}
+    		return $str;
     	} else {
     		return '<span class="subdued">No activities logged</span>';
     	}
