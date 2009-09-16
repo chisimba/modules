@@ -5346,7 +5346,7 @@
 
             if ($editmode) {
                 //Set ordering as hidden field
-                if (!isset($section)) {
+                if (trim($section) == '') {
                     $section = $arrContent['sectionid'];
                 }
 
@@ -5357,6 +5357,7 @@
                 }
                 $sections = $this->getSectionList($section, FALSE);
             }
+		
 
             $tableContainer = new htmlTable();
             $tableContainer->width = "100%";
