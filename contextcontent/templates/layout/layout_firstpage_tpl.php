@@ -47,7 +47,7 @@ $modPath=$this->objAltConfig->getModulePath();
 $replacewith="";
 $docRoot=$_SERVER['DOCUMENT_ROOT'];
 $resourcePath=str_replace($docRoot,$replacewith,$modPath);
-$contentImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/add.png';
+//$contentImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/add.png';
 $newImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
 
 if (count($chapters) > 0) {
@@ -69,17 +69,17 @@ if (count($chapters) > 0) {
         if ($showChapter) {
 
             $bookmarkLink = new link("#{$chapter['chapterid']}"); 
-            $contentimg='<img src="'.$contentImgPath.'">';
+            //$contentimg='<img src="'.$contentImgPath.'">';
             $newimg='<img src="'.$newImgPath.'">';
       	  // Get List of Pages in the Chapter
 	   $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');     
            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
-           $showImg=trim($chapterPages) == '<ul class="htmlliststyle"></ul>' ? "":$contentimg;
+           //$showImg=trim($chapterPages) == '<ul class="htmlliststyle"></ul>' ? "":$contentimg;
             if($ischapterlogged == FALSE) {
             $showImg=$newimg;
             }
             $bookmarkLink->link ='';
-            $bookmarkLink->title = "Scroll to Chapter";
+            $bookmarkLink->title = $this->objLanguage->languageText('mod_contextcontent_scrolltohapter','contextcontent');
             //if ($chapter['pagecount'] == 0) {
             //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
             //} else {

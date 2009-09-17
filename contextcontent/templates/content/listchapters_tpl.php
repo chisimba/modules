@@ -138,18 +138,16 @@ foreach ($chapters as $chapter)
 		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
 		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
        		if ($ischapterlogged == FALSE) {
-		         $content = " ".$streamerimg;
+		         $content = '<h1> '.$streamerimg." ".$chapterLink->show();;
 		        }else{
-		         $content = " ";
+		         $content = '<h1>'.$chapterLink->show();
 		        }
-		        $content .= '<div><h1>'.$chapterLink->show();
 		} else {
        		if ($ischapterlogged == FALSE) {
-		         $content = " ".$streamerimg;
+		         $content = '<h1> '.$streamerimg." ".$chapterLink->show();;
 		        }else{
-		         $content = " ";
+		         $content = '<h1>'.$chapterLink->show();
 		        }
-		        $content .= '<div><h1>'.$chapterLink->show();
 		}
 
 		if ($this->isValid('editchapter')) {
@@ -197,18 +195,17 @@ foreach ($chapters as $chapter)
 		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
 		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
        		if ($ischapterlogged == FALSE) {
-		         $content = " ".$streamerimg;
+		         $content = '<h1> '.$streamerimg." ".$chapter['chaptertitle'];
 		        }else{
-		         $content = " ";
+		         $content = '<h1>'.$chapter['chaptertitle'];
 		        }
-		        $content .= '<h1>'.$chapter['chaptertitle'];
+
 		} else {
        		if ($ischapterlogged == FALSE) {
-		         $content = " ".$streamerimg;
+		         $content = '<h1> '.$streamerimg." ".$chapterLink->show();;
 		        }else{
-		         $content = " ";
+		         $content = '<h1>'.$chapterLink->show();
 		        }
-		        $content .= '<h1>'.$chapterLink->show();
 		}
 
 		if ($this->isValid('editchapter')) {
