@@ -85,7 +85,7 @@ class contextcontent extends controller
             $this->objContentOrder = $this->getObject('db_contextcontent_order');
             $this->objContentTitles = $this->getObject('db_contextcontent_titles');
             $this->objContentInvolvement = $this->getObject('db_contextcontent_involvement');
-
+            $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer');
             //Load Module Catalogue Class
             $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
             
@@ -102,7 +102,7 @@ class contextcontent extends controller
             
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
-			
+												$this->userId = $this->objUser->userId();			
 												$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
 												//Load Activity Streamer
 												if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
@@ -426,6 +426,9 @@ class contextcontent extends controller
         if ($id == '' || $chaptercontentid == '' || $contextchapterid == '') {
             return $this->nextAction(NULL, array('error'=>'noidprovided'));
         } else {
+												//Remove previous records on activity streamer
+												$ischapterlogged = $this->objContextActivityStreamer->deleteRecord($id);
+
             $objChapterContent = $this->getObject('db_contextcontent_chaptercontent');
             
             $chapter = $objChapterContent->getRow('id', $chaptercontentid);
@@ -883,7 +886,10 @@ class contextcontent extends controller
     protected function viewChapter($id)
     {
         $firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
-        
+        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id, $this->contextCode);
+        if ($ischapterlogged==FALSE) {
+									$ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $id, $this->contextCode);        
+        }
         if ($firstPage == FALSE) {
             
             $chapter = $this->objContextChapters->getChapter($id);

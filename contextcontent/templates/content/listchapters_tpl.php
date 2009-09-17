@@ -41,6 +41,14 @@ $objIcon->setIcon('pdf');
 $objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_downloadchapterinpdfformat','contextcontent');
 $objIcon->title = $this->objLanguage->languageText('mod_contextcontent_downloadchapterinpdfformat','contextcontent');
 $pdfIcon = $objIcon->show();
+//The Activity Streamer Icon
+$this->objAltConfig = $this->getObject('altconfig','config');
+$modPath=$this->objAltConfig->getModulePath();
+$replacewith="";
+$docRoot=$_SERVER['DOCUMENT_ROOT'];
+$resourcePath=str_replace($docRoot,$replacewith,$modPath);
+$imgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
+$streamerimg ='<img src="'.$imgPath.'">';
 
 if ($this->isValid('addchapter')) {
     $link = new link ($this->uri(array('action'=>'addchapter')));
@@ -127,12 +135,21 @@ foreach ($chapters as $chapter)
 
 		$chapterLink = new link($this->uri(array('action'=>'viewscorm', 'folderId'=>$chapter['introduction']), $module = 'scorm'));
 		$chapterLink->link = $chapter['chaptertitle'];
-
+		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
 		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-//		        $content = '<div><h1>SCORM -- '.$chapter['chaptertitle'];
-		        $content = '<div><h1>'.$chapterLink->show();
+       		if ($ischapterlogged == FALSE) {
+		         $content = " ".$streamerimg;
+		        }else{
+		         $content = " ";
+		        }
+		        $content .= '<div><h1>'.$chapterLink->show();
 		} else {
-		        $content = '<div><h1>'.$chapterLink->show();
+       		if ($ischapterlogged == FALSE) {
+		         $content = " ".$streamerimg;
+		        }else{
+		         $content = " ";
+		        }
+		        $content .= '<div><h1>'.$chapterLink->show();
 		}
 
 		if ($this->isValid('editchapter')) {
@@ -142,6 +159,7 @@ foreach ($chapters as $chapter)
 		if ($this->isValid('deletechapter')) {
 		        $content .= ' '.$deleteLink->show();
 		}
+
 /*
 		if ($this->isValid('addpage')) {
 		        $content .= ' '.$addPageLink->show();
@@ -176,10 +194,21 @@ foreach ($chapters as $chapter)
 		$chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
 		$chapterLink->link = $chapter['chaptertitle'];
 
+		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
 		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-		        $content = '<h1>'.$chapter['chaptertitle'];
+       		if ($ischapterlogged == FALSE) {
+		         $content = " ".$streamerimg;
+		        }else{
+		         $content = " ";
+		        }
+		        $content .= '<h1>'.$chapter['chaptertitle'];
 		} else {
-		        $content = '<h1>'.$chapterLink->show();
+       		if ($ischapterlogged == FALSE) {
+		         $content = " ".$streamerimg;
+		        }else{
+		         $content = " ";
+		        }
+		        $content .= '<h1>'.$chapterLink->show();
 		}
 
 		if ($this->isValid('editchapter')) {
