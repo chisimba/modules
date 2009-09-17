@@ -67,23 +67,24 @@ if (count($chapters) > 0) {
         }
         
         if ($showChapter) {
+
             $bookmarkLink = new link("#{$chapter['chapterid']}"); 
             $contentimg='<img src="'.$contentImgPath.'">';
             $newimg='<img src="'.$newImgPath.'">';
-  		// Get List of Pages in the Chapter
+      	  // Get List of Pages in the Chapter
 	   $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');     
            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
            $showImg=trim($chapterPages) == '<ul class="htmlliststyle"></ul>' ? "":$contentimg;
             if($ischapterlogged == FALSE) {
             $showImg=$newimg;
             }
-            $bookmarkLink->link =$showImg;
+            $bookmarkLink->link ='';
             $bookmarkLink->title = "Scroll to Chapter";
             //if ($chapter['pagecount'] == 0) {
             //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
             //} else {
                 $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
-                $link->link = $chapter['chaptertitle'];
+                $link->link = $chapter['chaptertitle'].$showImg;
                 $content .= '<li>'.$link->show();
             //}
             
