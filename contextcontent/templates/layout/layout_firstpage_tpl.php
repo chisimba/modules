@@ -76,7 +76,9 @@ if (count($chapters) > 0) {
            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
            //$showImg=trim($chapterPages) == '<ul class="htmlliststyle"></ul>' ? "":$contentimg;
             if($ischapterlogged == FALSE) {
-            $showImg=$newimg;
+             $showImg=$newimg;
+            }else{
+ 												$showImg="";
             }
             $bookmarkLink->link ='';
             $bookmarkLink->title = $this->objLanguage->languageText('mod_contextcontent_scrolltohapter','contextcontent');
