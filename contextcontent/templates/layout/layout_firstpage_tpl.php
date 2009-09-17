@@ -68,7 +68,10 @@ if (count($chapters) > 0) {
         if ($showChapter) {
             $bookmarkLink = new link("#{$chapter['chapterid']}"); 
             $img='<img src="'.$imgPath.'">';
-            $bookmarkLink->link = $img;
+  		// Get List of Pages in the Chapter
+	   $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');         
+           $showImg=trim($chapterPages) == '<ul class="htmlliststyle"></ul>' ? "":$img;
+            $bookmarkLink->link =$showImg;
             $bookmarkLink->title = "Scroll to Chapter";
             //if ($chapter['pagecount'] == 0) {
             //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
