@@ -42,6 +42,12 @@ $content .= $objFieldset->show();
 
 $content .= '<h3>Chapters:</h3>';
 $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
+$this->objAltConfig = $this->getObject('altconfig','config');
+$modPath=$this->objAltConfig->getModulePath();
+$replacewith="";
+$docRoot=$_SERVER['DOCUMENT_ROOT'];
+$resourcePath=str_replace($docRoot,$replacewith,$modPath);
+$imgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/add.png';
 
 if (count($chapters) > 0) {
     
@@ -60,8 +66,9 @@ if (count($chapters) > 0) {
         }
         
         if ($showChapter) {
-            $bookmarkLink = new link("#{$chapter['chapterid']}");
-            $bookmarkLink->link = "->";
+            $bookmarkLink = new link("#{$chapter['chapterid']}"); 
+            $img='<img src="'.$imgPath.'">';
+            $bookmarkLink->link = $img;
             $bookmarkLink->title = "Scroll to Chapter";
             //if ($chapter['pagecount'] == 0) {
             //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
