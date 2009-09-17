@@ -82,7 +82,6 @@ class contextcontent extends controller
             
             // Load Content Classes
             $this->objContentPages = $this->getObject('db_contextcontent_pages');
-            $this->objContentOrder = $this->getObject('db_contextcontent_order');
             $this->objContentTitles = $this->getObject('db_contextcontent_titles');
             $this->objContentInvolvement = $this->getObject('db_contextcontent_involvement');
             $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer');
@@ -646,6 +645,11 @@ class contextcontent extends controller
         }
         
         $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
+        //Log in activity streamer
+        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
+        if ($ischapterlogged==FALSE) {
+									$ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);        
+        }
         
         if ($page == FALSE) {
             //echo 'page does not exist';
@@ -693,8 +697,7 @@ class contextcontent extends controller
     {
         if ($pageId == '') {
             return $this->nextAction(NULL);
-        }
-        
+        }        
         $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
         
         if ($page == FALSE) {
@@ -730,6 +733,8 @@ class contextcontent extends controller
         if ($contextCode != '' && $contextCode != $this->contextCode) {
             return $this->nextAction('switchcontext');
         } else {
+     							//Remove previous records on activity streamer
+					    			$ischapterlogged = $this->objContextActivityStreamer->deleteRecord($pageId);
             $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
             $parentPage = $this->objContentOrder->getPage($parentnode, $this->contextCode);
             

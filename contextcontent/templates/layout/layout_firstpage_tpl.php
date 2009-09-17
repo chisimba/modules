@@ -74,7 +74,6 @@ if (count($chapters) > 0) {
       	  // Get List of Pages in the Chapter
 	   $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');     
            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
-           //$showImg=trim($chapterPages) == '<ul class="htmlliststyle"></ul>' ? "":$contentimg;
             if($ischapterlogged == FALSE) {
              $showImg=$newimg;
             }else{

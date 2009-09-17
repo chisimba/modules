@@ -58,7 +58,7 @@ class db_contextcontent_order extends dbtable
         parent::init('tbl_contextcontent_order');
         $this->objUser =& $this->getObject('user', 'security');
         $this->objConfig =& $this->getObject('altconfig', 'config');
-        
+        $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer');
         $this->loadClass('treemenu','tree');
         $this->loadClass('treenode','tree');
         $this->loadClass('htmllist','tree');
@@ -66,6 +66,10 @@ class db_contextcontent_order extends dbtable
         $this->loadClass('dhtml','tree');
         
         $this->loadClass('link', 'htmlelements');
+        // Load Context Object
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        // Store Context Code
+        $this->contextCode = $this->objContext->getContextCode();
     }
     
     /**
@@ -283,10 +287,26 @@ class db_contextcontent_order extends dbtable
         $treeMenu = new treemenu();
         
         $nodeArray = array();
-        
+								//Icon for activity streamer
+        //$modPath=$this->objAltConfig->getModulePath();
+        $replacewith="";
+        $docRoot=$_SERVER['DOCUMENT_ROOT'];
+        $resourcePath=str_replace($docRoot,$replacewith,$modPath);
+
+        $newImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
+
+        $newimg='<img src="'.$newImgPath.'">';
+
         foreach ($results as $treeItem)
         {
-            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id']), $module));
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
+            if($ischapterlogged == FALSE) {
+             $showImg=$newimg;
+            }else{
+             $showImg="";
+            }        
+
+            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id']), $module),'icon'=>$showImg);
             
             if ($treeItem['id'] == $defaultSelected) {
                 $nodeDetails['cssClass'] = 'confirm';
@@ -326,10 +346,22 @@ class db_contextcontent_order extends dbtable
         
         $icon         = 'folder.gif';
         $expandedIcon = 'folder-expanded.gif';
-        
+        $docRoot=$_SERVER['DOCUMENT_ROOT'];
+        $resourcePath=str_replace($docRoot,$replacewith,$modPath);
+ 
+        $newImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
+
+        $newimg='<img src="'.$newImgPath.'">';
+
+        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
+        if($ischapterlogged == FALSE) {
+          $showImg=$newimg;
+        }else{
+          $showImg="";
+        }         
         foreach ($results as $treeItem)
         {
-            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id']), $module), 'icon' => $icon, 'expandedIcon' => $expandedIcon);
+            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id']), $module), 'icon' => $showImg, 'expandedIcon' => $expandedIcon);
             
             if ($treeItem['id'] == $defaultSelected) {
                 $nodeDetails['cssClass'] = 'confirm';
@@ -371,10 +403,23 @@ class db_contextcontent_order extends dbtable
         $nodeArray = array();
         
         $rootnode =& new treenode (array('text'=>'[- Root -]'));
+        //Activity streamer icon
+        $docRoot=$_SERVER['DOCUMENT_ROOT'];
+        $resourcePath=str_replace($docRoot,$replacewith,$modPath);
+
+        $newImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
+
+        $newimg='<img src="'.$newImgPath.'">';
         
         foreach ($results as $treeItem)
         {
-            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$treeItem['id']);
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
+            if($ischapterlogged == FALSE) {
+             $showImg=$newimg;
+            }else{
+             $showImg="";
+            }
+            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$treeItem['id'], 'icon' => $showImg);
             
             if ($hasDisabledNodes && $treeItem['lft'] >= $this->disabledNode['lft'] && $treeItem['rght'] <= $this->disabledNode['rght']) {
                 $nodeDetails['extra'] = 'disabled="disabled" title="This page is on a lower level than the current page you are editing"';
@@ -1018,12 +1063,28 @@ class db_contextcontent_order extends dbtable
         if ($record['parentid'] == 'root') {
             // Get Siblings
             $firstLevelNodes = $this->getPages($chapter, $context, ' AND parentid=\'root\'');
+            //The Activity Streamer Icon
+            $this->objAltConfig = $this->getObject('altconfig','config');
+            $modPath=$this->objAltConfig->getModulePath();
+            $replacewith="";
+            $docRoot=$_SERVER['DOCUMENT_ROOT'];
+            $resourcePath=str_replace($docRoot,$replacewith,$modPath);
+            
+            $newImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
+
+            $newimg='<img src="'.$newImgPath.'">';
+            
             // Loop through siblings
             foreach ($firstLevelNodes as $treeItem)
             {
-                //var_dump($treeItem);die;
+               $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
+               if($ischapterlogged == FALSE) {
+                 $showImg=$newimg;
+               }else{
+                 $showImg="";
+               }
                 // Create Array with Node Details
-                $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
+                $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])), 'icon' => $showImg);
                 //var_dump($nodeDetails);die;
                 // Add style if current node
                 if ($treeItem['id'] == $id) {
@@ -1043,8 +1104,15 @@ class db_contextcontent_order extends dbtable
                     // Add Childen
                     foreach ($childrenNodes as $childNode)
                     {
+                        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $childNode['id'], $this->contextCode);
+                        if($ischapterlogged == FALSE) {
+                         $showImg=$newimg;
+                        }else{
+                         $showImg="";
+                        }
+
                         // Create Array with Child Node Details
-                        $childNodeDetails = array('text'=>htmlentities($childNode['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$childNode['id'])));
+                        $childNodeDetails = array('text'=>htmlentities($childNode['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$childNode['id'])), 'icon' => $showImg);
                         
                         // Create Child Node
                         $childTreeNode =& new treenode ($childNodeDetails);
