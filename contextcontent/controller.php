@@ -395,7 +395,7 @@ class contextcontent extends controller
     protected function editScormChapter($id)
     {
         $chapter = $this->objContextChapters->getChapter($id);
-        
+        $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($id);
         if ($chapter == FALSE) {
             return $this->nextAction(NULL, array('error'=>'editchapterdoesnotexist'));
         } else {

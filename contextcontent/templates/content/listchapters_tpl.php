@@ -133,7 +133,7 @@ foreach ($chapters as $chapter)
 		$addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
 		$addPageLink->link = $addPageIcon;
 
-		$chapterLink = new link($this->uri(array('action'=>'viewscorm', 'folderId'=>$chapter['introduction']), $module = 'scorm'));
+		$chapterLink = new link($this->uri(array('action'=>'viewscorm', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
 		$chapterLink->link = $chapter['chaptertitle'];
 		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
 		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
