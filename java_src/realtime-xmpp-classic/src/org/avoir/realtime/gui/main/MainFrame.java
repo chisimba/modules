@@ -1581,7 +1581,8 @@ public class MainFrame extends javax.swing.JFrame {
             webbrowserManager = new WebBrowserManager();
         }
 
-        webbrowserManager.showScreenShareViewer(800, 600, "Remote Desktop", true);
+        //webbrowserManager.showScreenShareViewer(800, 600, "Remote Desktop", true);
+        webbrowserManager.showTestView();
     }//GEN-LAST:event_screenViewerMenuItemActionPerformed
 
     private void deskShareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deskShareButtonActionPerformed
