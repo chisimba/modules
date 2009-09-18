@@ -72,8 +72,8 @@ if (count($chapters) > 0) {
             //$contentimg='<img src="'.$contentImgPath.'">';
             $newimg='<img src="'.$newImgPath.'">';
       	  // Get List of Pages in the Chapter
-	   $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');     
-           $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
+								   $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');     
+           $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode); 
             if($ischapterlogged == FALSE) {
              $showImg=$newimg;
             }else{
@@ -84,15 +84,18 @@ if (count($chapters) > 0) {
             //if ($chapter['pagecount'] == 0) {
             //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
             //} else {
+
             	if ($chapter['scorm'] == 'Y') {
                 $link = new link ($this->uri(array('action'=>'viewscorm', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
                 $link->link = $chapter['chaptertitle'].$showImg;
                 $content .= '<li>'.$link->show();
 													}else{
+
                 $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
                 $link->link = $chapter['chaptertitle'].$showImg;
                 $content .= '<li>'.$link->show();
 													}
+
             //}
             
             if (isset($showScrollLinks) && $showScrollLinks) {
