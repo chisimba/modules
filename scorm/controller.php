@@ -72,11 +72,16 @@ class scorm extends controller
             // Load Scorm Classes
             $this->objReadXml =& $this->getObject('readxml_scorm', 'scorm');
             $this->objFiles = $this->getObject('dbfile','filemanager');
-	    $this->objFolders = $this->getObject('dbfolder','filemanager');
- 	    $this->objTreeMenu =& $this->getObject('treemenu', 'tree');
-	    $this->objTreeNode =& $this->loadClass('treenode', 'tree');
-		//remove this objContext
-        $this->objContext = $this->getObject('dbcontext', 'context');
+       	    $this->objFolders = $this->getObject('dbfolder','filemanager');
+ 	          $this->objTreeMenu =& $this->getObject('treemenu', 'tree');
+        	   $this->objTreeNode =& $this->loadClass('treenode', 'tree');
+          		//remove this objContext
+            $this->objContext = $this->getObject('dbcontext', 'context');
+            // Store Context Code
+            $this->contextCode = $this->objContext->getContextCode();
+            $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer','contextcontent');
+            //Store user Id
+            $this->userId = $this->objUser->userId();
     }
 
     /**
@@ -101,9 +106,15 @@ class scorm extends controller
     }
     private function __viewscorm()
     {
-		$folderId = $this->getParam('folderId', NULL);
-		$this->setVarByRef('folderId',$folderId);
-                return 'handle_scorm_tpl.php';
+     		$folderId = $this->getParam('folderId', NULL);
+     		$chapterId = $this->getParam('chapterid', NULL);     		
+       //Log in activity streamer
+       $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapterId, $this->contextCode);
+       if ($ischapterlogged==FALSE) {
+					   $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $chapterId, $this->contextCode);        
+       }
+     		$this->setVarByRef('folderId',$folderId);
+       return 'handle_scorm_tpl.php';
     }
     //Ajax function to get the next page
     private function __getNext()
@@ -141,10 +152,7 @@ class scorm extends controller
         }
 
     }
-    private function __default()
-    {
-                return 'notscormcontent_tpl.php';
-    }
+
     /**
     *
     * Method to convert the action parameter into the name of
@@ -160,7 +168,7 @@ class scorm extends controller
         if ($this->validAction($action)) {
             return '__'.$action;
         } else {
-            return '__default';
+            return '__viewscorm';
         }
     }
 
@@ -212,5 +220,7 @@ class scorm extends controller
                 }
         }
     }
+
+
 }
 ?>
