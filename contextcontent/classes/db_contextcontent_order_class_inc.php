@@ -267,6 +267,9 @@ class db_contextcontent_order extends dbtable
             case 'dhtml': 
                 return $this->generateDHTMLTree($results, $defaultSelected, $module);
                 break;
+             case 'htmllist': 
+                return $this->generateHtmllistTree($results, $defaultSelected, $module);
+                break;
             default:
                 return $this->generateHtmllistTree($results, $defaultSelected, $module);
                 break;
@@ -288,7 +291,8 @@ class db_contextcontent_order extends dbtable
         
         $nodeArray = array();
 								//Icon for activity streamer
-        //$modPath=$this->objAltConfig->getModulePath();
+        $this->objAltConfig = $this->getObject('altconfig','config');
+        $modPath=$this->objAltConfig->getModulePath();
         $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $resourcePath=str_replace($docRoot,$replacewith,$modPath);
@@ -299,7 +303,9 @@ class db_contextcontent_order extends dbtable
 
         foreach ($results as $treeItem)
         {
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
+
+
             if($ischapterlogged == FALSE) {
              $showImg=$newimg;
             }else{
@@ -346,6 +352,9 @@ class db_contextcontent_order extends dbtable
         
         $icon         = 'folder.gif';
         $expandedIcon = 'folder-expanded.gif';
+        $this->objAltConfig = $this->getObject('altconfig','config');
+        $modPath=$this->objAltConfig->getModulePath();
+        $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $resourcePath=str_replace($docRoot,$replacewith,$modPath);
  
@@ -404,6 +413,9 @@ class db_contextcontent_order extends dbtable
         
         $rootnode =& new treenode (array('text'=>'[- Root -]'));
         //Activity streamer icon
+        $this->objAltConfig = $this->getObject('altconfig','config');
+        $modPath=$this->objAltConfig->getModulePath();
+        $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $resourcePath=str_replace($docRoot,$replacewith,$modPath);
 
