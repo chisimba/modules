@@ -88,24 +88,6 @@ public class WebBrowserManager {
     }
 
     public void showScreenShareViewer(final int w, final int h, final String title, final boolean centerScreen) {
-       
-        final JMenu menu = new JMenu("Tools");
-        final JMenuItem zoomIn = new JMenuItem("Zoom In");
-        final JMenuItem zoomOut = new JMenuItem("Zoom Out");
-
-        zoomIn.addActionListener(new ActionListener (){
-            public void actionPerformed(ActionEvent e){
-                CaptureScreen.changImgSize(100, 100);
-            }
-        });
-        zoomOut.addActionListener(new ActionListener (){
-            public void actionPerformed(ActionEvent e){
-                CaptureScreen.changImgSize(-100, -100);
-            }
-        });
-        menu.add(zoomIn);
-        menu.add(zoomOut);
-
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
@@ -117,10 +99,7 @@ public class WebBrowserManager {
                 frame.setSize(w, h);
                 frame.setLocationByPlatform(centerScreen);
                 frame.setVisible(true);
-                webBrowser.setMenuBarVisible(true);
-                //webBrowser.getFileMenu().add(zoomIn);
-                //webBrowser.getFileMenu().add(zoomOut);
-                webBrowser.getMenuBar().add(menu);
+                webBrowser.setMenuBarVisible(false);
                 webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
             }
         });

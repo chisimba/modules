@@ -37,9 +37,11 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -66,6 +68,7 @@ import org.avoir.realtime.gui.room.InviteParticipants;
 import org.avoir.realtime.gui.room.RoomListFrame;
 import org.avoir.realtime.gui.room.RoomMemberListFrame;
 import org.avoir.realtime.gui.room.RoomResourcesList;
+import org.avoir.realtime.gui.screenviewer.webstart.screen.CaptureScreen;
 import org.avoir.realtime.gui.webbrowser.WebBrowserManager;
 import org.avoir.realtime.gui.userlist.UserListFrame;
 import org.avoir.realtime.net.RPacketListener;
@@ -747,6 +750,7 @@ public class MainFrame extends javax.swing.JFrame {
         banUserMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
         screenShareMenuItem = new javax.swing.JMenuItem();
+        screenShareSizeMenuItem = new javax.swing.JMenuItem();
         screenViewerMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         roomResourcesMenuItem = new javax.swing.JMenuItem();
@@ -1232,6 +1236,14 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         toolsMenu.add(screenShareMenuItem);
+
+        screenShareSizeMenuItem.setText("Screen Share Size");
+        screenShareSizeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                screenShareSizeMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(screenShareSizeMenuItem);
 
         screenViewerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
         screenViewerMenuItem.setText("Screen Viewer");
@@ -1836,6 +1848,32 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_slideBuilderMenuItemActionPerformed
 
+    private void screenShareSizeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_screenShareSizeMenuItemActionPerformed
+        final JFrame shareSizeFr = new JFrame("Share Desktop Size Setting");
+        final JSpinner sizeOption = new JSpinner(new SpinnerNumberModel(0,0,100,10));
+        final JButton okButton = new JButton("Set");
+        JLabel percLbl = new JLabel("\t % \t");
+
+        okButton.setSize(30,40);
+        okButton.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e) {
+                CaptureScreen.resetImgSize();
+                int perc = (int) (Double.valueOf(sizeOption.getValue().toString())*1.2);
+                CaptureScreen.changImgSize(perc*4, perc*4);
+                shareSizeFr.setVisible(false);
+            }
+
+        });
+        shareSizeFr.getContentPane().add(sizeOption,BorderLayout.BEFORE_FIRST_LINE);
+        shareSizeFr.getContentPane().add(percLbl, BorderLayout.CENTER);
+        shareSizeFr.getContentPane().add(okButton, BorderLayout.SOUTH);
+        shareSizeFr.pack();
+        shareSizeFr.setLocationRelativeTo(GUIAccessManager.mf);
+        shareSizeFr.setVisible(true);
+
+}//GEN-LAST:event_screenShareSizeMenuItemActionPerformed
+
     public void doZoom() {
         if (zoomControl) {
             zoomControl = false;
@@ -2101,6 +2139,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JToolBar roomToolsToolbar;
     private javax.swing.JMenuBar screenShareItem;
     private javax.swing.JMenuItem screenShareMenuItem;
+    private javax.swing.JMenuItem screenShareSizeMenuItem;
     private javax.swing.JMenuItem screenViewerMenuItem;
     private javax.swing.JMenuItem slideBuilderMenuItem;
     private javax.swing.JPanel statusBar;

@@ -194,4 +194,9 @@ public class CaptureScreen {
         imgX += x;
         imgY += y;
     }
+
+    public static void resetImgSize(){
+        imgX = 600;
+        imgY = 600;
+    }
 }
