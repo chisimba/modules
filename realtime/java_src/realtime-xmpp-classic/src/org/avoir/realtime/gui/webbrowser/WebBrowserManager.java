@@ -24,9 +24,13 @@ import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,10 +61,11 @@ public class WebBrowserManager {
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
     private int fullX = (int) ss.getWidth();
     private int fullY = (int) ss.getHeight();
-    private String zoomScript = "document.write(\"hello\")" ;
+    private String zoomScript = "document.write(\"hello\")";
     private double zoomFactor = 1.0;
 
-    public void showTestView(){
+    //for java 1.6 above
+    public void showTestView() {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
@@ -82,7 +87,8 @@ public class WebBrowserManager {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                final JWebBrowser webBrowser = new JWebBrowser();
+                final ZoomBrowser webBrowser = new ZoomBrowser();
+                frame.addKeyListener(webBrowser);
                 frame.setTitle(title);
                 frame.setAlwaysOnTop(true);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -92,6 +98,7 @@ public class WebBrowserManager {
                 frame.setVisible(true);
                 webBrowser.setMenuBarVisible(false);
                 webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
+                webBrowser.repaint();
             }
         });
         NativeInterface.runEventPump();
@@ -144,5 +151,65 @@ public class WebBrowserManager {
         ss.initMainFrame();
 
 
+    }
+
+    class ZoomBrowser extends JWebBrowser implements KeyListener{
+
+        public ZoomBrowser() {
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            Graphics2D g2 = (Graphics2D) g;
+
+            g2.scale(zoomFactor, zoomFactor);
+        }
+
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_F12){
+                //zoomIn();
+                System.out.println("+");
+                zoomFactor += 0.1;
+                repaint();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_F11){
+                //zoomOut();
+                System.out.println("-");
+                zoomFactor -= 0.1;
+                repaint();
+            }
+        }
+
+        public void keyReleased(KeyEvent e) {
+        }
+
+        public void keyTyped(KeyEvent e) {
+        }
+    }
+
+    class ZoomListener implements KeyListener {
+
+        public ZoomListener() {
+        }
+
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_F12){
+                //zoomIn();
+                System.out.println("+");
+                zoomFactor += 0.1;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_F11){
+                //zoomOut();
+                System.out.println("-");
+                zoomFactor -= 0.1;
+            }
+        }
+
+        public void keyReleased(KeyEvent e) {
+        }
+
+        public void keyTyped(KeyEvent e) {
+        }
     }
 }
