@@ -118,7 +118,7 @@ public class WebBrowserManager {
                 frame.setSize(w, h);
                 frame.setLocationByPlatform(centerScreen);
                 frame.setVisible(true);
-                //webBrowser.setMenuBarVisible(false);
+                webBrowser.setMenuBarVisible(true);
                 //webBrowser.getFileMenu().add(zoomIn);
                 //webBrowser.getFileMenu().add(zoomOut);
                 webBrowser.getMenuBar().add(menu);
