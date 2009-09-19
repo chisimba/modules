@@ -18,6 +18,8 @@ import org.avoir.realtime.gui.screenviewer.webstart.gui.StartScreen;
 
 
 public class CaptureScreen {
+
+    public static int imgX = 600, imgY = 600;
 	
 	private Date startDate;
 
@@ -70,8 +72,8 @@ public class CaptureScreen {
 			//System.out.println("1 buffer start , end , delta "+this.startDate+" "+endTime+" :timeInSeconds: "+timeInSeconds);
 				
 
-			double thumbWidth = 600;
-			double thumbHeight = 600;
+			double thumbWidth = imgX;
+			double thumbHeight = imgY;
 			BufferedImage image = null;
 			Image img = null;
 
@@ -188,4 +190,8 @@ public class CaptureScreen {
 		}
 	}
 
+    public static void changImgSize(int x, int y){
+        imgX += x;
+        imgY += y;
+    }
 }
