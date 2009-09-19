@@ -104,7 +104,7 @@ class blogposts extends object
      */
     public function showPosts($posts, $showsticky = FALSE)
     {
-        $mm = $this->getObject('parse4mindmap', 'filters');
+       // $mm = $this->getObject('parse4mindmap', 'filters');
         $this->objComments = $this->getObject('commentapi', 'blogcomments');
         $this->objTB = $this->getObject("trackback");
         // set the trackback options
