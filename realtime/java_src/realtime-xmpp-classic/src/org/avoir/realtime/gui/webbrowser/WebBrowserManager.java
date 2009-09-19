@@ -109,8 +109,7 @@ public class WebBrowserManager {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                final ZoomBrowser webBrowser = new ZoomBrowser();
-                frame.addKeyListener(webBrowser);
+                final JWebBrowser webBrowser = new JWebBrowser();
                 frame.setTitle(title);
                 frame.setAlwaysOnTop(true);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -177,83 +176,5 @@ public class WebBrowserManager {
 
     }
 
-    class ZoomBrowser extends JWebBrowser implements KeyListener,MouseListener{
-
-        public ZoomBrowser() {
-        }
-
-        public void mouseClicked(MouseEvent e) {
-
-        }
-
-        public void mouseEntered(MouseEvent e) {
-
-        }
-
-        public void mouseExited(MouseEvent e) {
-
-        }
-
-        public void mousePressed(MouseEvent e) {
-           this.requestFocusInWindow();
-        }
-
-        public void mouseReleased(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g;
-
-            g2.scale(zoomFactor, zoomFactor);
-        }
-
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_F12){
-                //zoomIn();
-                System.out.println("+");
-                zoomFactor += 0.1;
-                repaint();
-            }
-            if (e.getKeyCode() == KeyEvent.VK_F11){
-                //zoomOut();
-                System.out.println("-");
-                zoomFactor -= 0.1;
-                repaint();
-            }
-        }
-
-        public void keyReleased(KeyEvent e) {
-        }
-
-        public void keyTyped(KeyEvent e) {
-        }
-    }
-
-    class ZoomListener implements KeyListener {
-
-        public ZoomListener() {
-        }
-
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_F12){
-                //zoomIn();
-                System.out.println("+");
-                zoomFactor += 0.1;
-            }
-            if (e.getKeyCode() == KeyEvent.VK_F11){
-                //zoomOut();
-                System.out.println("-");
-                zoomFactor -= 0.1;
-            }
-        }
-
-        public void keyReleased(KeyEvent e) {
-        }
-
-        public void keyTyped(KeyEvent e) {
-        }
-    }
+   
 }
