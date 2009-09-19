@@ -163,7 +163,7 @@ public class GUIAccessManager {
         GUIAccessManager.setMenuEnabled(enable, "clearMics");
         GUIAccessManager.setMenuEnabled(enable, "nextSlide");
         GUIAccessManager.setMenuEnabled(enable, "prevSlide");
-        GUIAccessManager.setMenuEnabled(enable, "whiteboardtools");
+        GUIAccessManager.setMenuEnabled(true, "whiteboardtools");
         GUIAccessManager.setMenuEnabled(enable, "questionBuilder");
         GUIAccessManager.setMenuEnabled(enable, "slideBuilder");
     }
