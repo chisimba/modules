@@ -40,12 +40,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.screenviewer.webstart.gui.StartScreen;
 import org.avoir.realtime.net.ConnectionManager;
 import org.avoir.realtime.net.packets.RealtimePacket;
+import org.avoir.realtime.gui.screenviewer.webstart.screen.CaptureScreen;
 
 /**
  *
@@ -85,6 +88,23 @@ public class WebBrowserManager {
     }
 
     public void showScreenShareViewer(final int w, final int h, final String title, final boolean centerScreen) {
+       
+        final JMenu menu = new JMenu("Tools");
+        final JMenuItem zoomIn = new JMenuItem("Zoom In");
+        final JMenuItem zoomOut = new JMenuItem("Zoom Out");
+
+        zoomIn.addActionListener(new ActionListener (){
+            public void actionPerformed(ActionEvent e){
+                CaptureScreen.changImgSize(100, 100);
+            }
+        });
+        zoomOut.addActionListener(new ActionListener (){
+            public void actionPerformed(ActionEvent e){
+                CaptureScreen.changImgSize(-100, -100);
+            }
+        });
+        menu.add(zoomIn);
+        menu.add(zoomOut);
 
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -98,9 +118,11 @@ public class WebBrowserManager {
                 frame.setSize(w, h);
                 frame.setLocationByPlatform(centerScreen);
                 frame.setVisible(true);
-                webBrowser.setMenuBarVisible(false);
+                //webBrowser.setMenuBarVisible(false);
+                //webBrowser.getFileMenu().add(zoomIn);
+                //webBrowser.getFileMenu().add(zoomOut);
+                webBrowser.getMenuBar().add(menu);
                 webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
-                webBrowser.repaint();
             }
         });
         NativeInterface.runEventPump();
@@ -182,7 +204,7 @@ public class WebBrowserManager {
 
         @Override
         public void paintComponent(Graphics g) {
-            super.paint(g);
+            super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
 
             g2.scale(zoomFactor, zoomFactor);
