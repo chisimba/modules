@@ -75,6 +75,21 @@ class openzoomops extends object
         // Your code goes here.
     }
     
+    /**
+    * 
+    *  Method to get the <IMG> tag with the size and the openzoom source
+    *  XML file for the dynamic substitution. Images must include all 
+    *  the openzoomified bits.
+    *  
+    *  @param string $width The width of the default image in in pixels
+    *  @param string $height The width of the default image in in pixels
+    *  @param string $imagePath The full path to the source image
+    *  @param string $xmlFile The full path to the XML file for openzoom
+    *  @access public
+    *  @return string The formatted image tag
+    *  
+    *  
+    */
     public function getImage($width, $height, $imagePath, $xmlFile=NULL) {
     	$img = '<img src="' . $imagePath  . '" width="' 
     	  . $width '" height="' . $height '" openzoom:source="' 
@@ -82,9 +97,26 @@ class openzoomops extends object
         return $img;
     }
     
+    /**
+    * 
+    *  Method to get the flash player full web path
+    *  @access public
+    *  @return string The resource path to the player
+    *  
+    */
     public function getPlayer {
     	$player = $this->getResourcePath('flash/OpenZoomViewer.swf');
     	return $player;
+    }
+    
+    public function loadJsLib()
+    {
+        
+    }
+    
+    public function buildJavascript()
+    {
+        
     }
 
 }
