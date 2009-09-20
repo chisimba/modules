@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 $objFile = $this->getObject('dbfile', 'filemanager');
 
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
@@ -74,6 +77,14 @@ $table->addCell($middle, '33%', 'top', 'center');
 $table->addCell($nextPage, '33%', 'top', 'right');
 $table->endRow();
 
+$table2 = $this->newObject('htmltable', 'htmlelements');
+//$table->border='1';
+$table2->startRow();
+$table2->addCell($prevPage, '33%', 'top');
+$table2->addCell('&nbsp;', '33%', 'top', 'center');
+$table2->addCell($nextPage, '33%', 'top', 'right');
+$table2->endRow();
+
 $topTable = $this->newObject('htmltable', 'htmlelements');
 //$topTable->border='1';
 $topTable->startRow();
@@ -118,7 +129,6 @@ if (trim($page['headerscripts']) != '') {
 
 }
 
-echo $topTable->show();
 
 //$tab = $this->getObject('tabpane','htmlelements');
 //$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
@@ -163,12 +173,14 @@ if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid
 }
 */
 $objWashout = $this->getObject('washout', 'utilities');
-echo $objWashout->parseText($page['pagecontent']);
+$content = $objWashout->parseText($page['pagecontent']);
+//echo $content;
 
+//echo '<hr />';
 
-echo '<hr />';
+//echo $table->show();
 
-echo $table->show();
+$form = "";
 
 if (count($chapters) > 1 && $this->isValid('movetochapter')) {
     $this->loadClass('form', 'htmlelements');
@@ -194,8 +206,19 @@ if (count($chapters) > 1 && $this->isValid('movetochapter')) {
     
     $form->addToForm($hiddenInput->show().$label->show().$dropdown->show().' '.$button->show());
     
-    echo $form->show();
+    $form = $form->show();
     
+}
+
+if ($this->isValid('addpage')) {
+  $objTabs = $this->newObject('tabcontent', 'htmlelements');
+  $objTabs->setWidth('98%');
+  $objTabs->addTab("Lecturer View",$topTable->show().$content.'<hr />'.$table->show().$form);
+  $objTabs->addTab("Student View",$topTable->show().$content.'<hr />'.$table2->show());
+  echo $objTabs->show();
+}
+else {
+  echo $topTable->show().$content.'<hr />'.$table->show().$form;
 }
 
 
