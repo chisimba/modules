@@ -13,7 +13,7 @@ $modPath=$this->objAltConfig->getModulePath();
 $replacewith="";
 $docRoot=$_SERVER['DOCUMENT_ROOT'];
 $resourcePath=str_replace($docRoot,$replacewith,$modPath);
-//$contentImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/add.png';
+$contentImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/add.png';
 $newImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
@@ -71,7 +71,7 @@ if (count($chapters) > 0) {
             $bookmarkLink = new link("#{$chapter['chapterid']}"); 
             $bookmarkLink->link ='';
             $bookmarkLink->title = $this->objLanguage->languageText('mod_contextcontent_scrolltohapter','contextcontent');
-            //$contentimg='<img src="'.$contentImgPath.'">';
+            $contentimg='<img src="'.$contentImgPath.'">';
             $newimg='<img src="'.$newImgPath.'">';
       	     // Get List of Pages in the Chapter
 								    //$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');     

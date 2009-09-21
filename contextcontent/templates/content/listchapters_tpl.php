@@ -163,7 +163,7 @@ foreach ($chapters as $chapter)
 		        $content .= ' '.$addPageLink->show();
 		}
 */
-		$content .= '</h1></div><hr />';
+		$content .= '</h1><hr />';
 
 	} else {
 		
@@ -253,6 +253,7 @@ foreach ($chapters as $chapter)
 		        
 		        // Empty variable for use later on
 		        $chapterPages = '';
+
 		} else {
 		        
 		        if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>' && $this->isValid('viewhiddencontent')) {
