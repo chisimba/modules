@@ -11,6 +11,7 @@ import org.avoir.realtime.gui.webbrowser.RWebBrowserListener;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
@@ -40,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
@@ -125,6 +127,11 @@ public class MainFrame extends javax.swing.JFrame {
     final JCheckBoxMenuItem handItem = new JCheckBoxMenuItem("Raise Hand");
     private boolean handRaised = false;
     private SoundMonitor soundMonitor = new SoundMonitor();
+    final JFrame shareSizeFr = new JFrame("Share Desktop Size Setting");
+    final JSpinner sizeOption = new JSpinner(new SpinnerNumberModel(0, 0, 100, 10));
+    private JButton okButton = new JButton("Set");
+    private JLabel percLbl = new JLabel(" % ");
+    private JTextArea screenOptionText = new JTextArea();
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
@@ -242,6 +249,35 @@ public class MainFrame extends javax.swing.JFrame {
         userListPanel.showRoomOwnerAudioVideoWindow();
         applySkin();
         RTimer.init();
+
+        //initialise share screen option frame
+        screenOptionText.setText("Select the percentage size of the desktop screen thumb nail.");
+        screenOptionText.setBounds(110,30,150,160);
+        screenOptionText.setLineWrap(true);
+        screenOptionText.setBackground(Color.WHITE);
+        sizeOption.setBounds(28, 30, 60, 30);
+        okButton.setBounds(28, 100, 80, 25);
+        percLbl.setBounds(90, 30, 40, 30);
+        okButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                CaptureScreen.resetImgSize();
+                Object value = sizeOption.getValue();
+                int perc = (int) (Double.valueOf(value.toString()) * 1.2);
+                CaptureScreen.changImgSize(perc * 4, perc * 4);
+                sizeOption.setValue(value);
+                shareSizeFr.setVisible(false);
+            }
+        });
+        shareSizeFr.getContentPane().setLayout(null);
+        shareSizeFr.getContentPane().setBackground(Color.WHITE);
+        shareSizeFr.add(screenOptionText);
+        shareSizeFr.add(sizeOption);
+        shareSizeFr.add(percLbl);
+        shareSizeFr.add(okButton);
+        shareSizeFr.pack();
+        shareSizeFr.setSize(300, 180);
+        shareSizeFr.setLocationRelativeTo(GUIAccessManager.mf);
 
     }
 
@@ -1836,12 +1872,13 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "You do not have permission to perform this action in this room.");
             return;
         } else {
-        	org.avoir.realtime.gui.QuestionNavigator navi = new org.avoir.realtime.gui.QuestionNavigator(this);
-        	JFrame QManagerFrame=new JFrame("Questions Navigator");
-        	QManagerFrame.setSize((int)(ss.width / 4), (int)(ss.height / 2.5));
-        	QManagerFrame.setLocation((int)(ss.width/2-ss.width / 8),(int)(ss.height/2-ss.height / 5));
-        	QManagerFrame.setContentPane(navi);
-        	QManagerFrame.setVisible(true);        }
+            org.avoir.realtime.gui.QuestionNavigator navi = new org.avoir.realtime.gui.QuestionNavigator(this);
+            JFrame QManagerFrame = new JFrame("Questions Navigator");
+            QManagerFrame.setSize((int) (ss.width / 4), (int) (ss.height / 2.5));
+            QManagerFrame.setLocation((int) (ss.width / 2 - ss.width / 8), (int) (ss.height / 2 - ss.height / 5));
+            QManagerFrame.setContentPane(navi);
+            QManagerFrame.setVisible(true);
+        }
     }//GEN-LAST:event_questionManagerMenuItemActionPerformed
 
     private void slideBuilderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_slideBuilderMenuItemActionPerformed
@@ -1849,27 +1886,6 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_slideBuilderMenuItemActionPerformed
 
     private void screenShareSizeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_screenShareSizeMenuItemActionPerformed
-        final JFrame shareSizeFr = new JFrame("Share Desktop Size Setting");
-        final JSpinner sizeOption = new JSpinner(new SpinnerNumberModel(0,0,100,10));
-        final JButton okButton = new JButton("Set");
-        JLabel percLbl = new JLabel("\t % \t");
-
-        okButton.setSize(30,40);
-        okButton.addActionListener(new ActionListener(){
-
-            public void actionPerformed(ActionEvent e) {
-                CaptureScreen.resetImgSize();
-                int perc = (int) (Double.valueOf(sizeOption.getValue().toString())*1.2);
-                CaptureScreen.changImgSize(perc*4, perc*4);
-                shareSizeFr.setVisible(false);
-            }
-
-        });
-        shareSizeFr.getContentPane().add(sizeOption,BorderLayout.BEFORE_FIRST_LINE);
-        shareSizeFr.getContentPane().add(percLbl, BorderLayout.CENTER);
-        shareSizeFr.getContentPane().add(okButton, BorderLayout.SOUTH);
-        shareSizeFr.pack();
-        shareSizeFr.setLocationRelativeTo(GUIAccessManager.mf);
         shareSizeFr.setVisible(true);
 
 }//GEN-LAST:event_screenShareSizeMenuItemActionPerformed
