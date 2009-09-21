@@ -23,9 +23,64 @@ class activitystreamer extends controller
      * The standard dispatch method for
      *
      */
-    public function dispatch()
+    public function dispatch($action)
     {
-       
+        /*
+         * Convert the action into a method (alternative to
+         * using case selections)
+         */
+        $method = $this->getMethod ( $action );
+        /*
+         * Return the template determined by the method resulting
+         * from action
+         */
+        return $this->$method ();       
     }
-	
+    /**
+     *
+     * Method to convert the action parameter into the name of
+     * a method of this class.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return string the name of the method
+     */
+    protected function getMethod(& $action) {
+        if ($this->validAction ( $action )) {
+            return '__' . $action;
+        } else {
+            return '__home';
+        }
+    }
+
+    /**
+     *
+     * Method to check if a given action is a valid method
+     * of this class preceded by double underscore (__). If it __action
+     * is not a valid method it returns FALSE, if it is a valid method
+     * of this class it returns TRUE.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return boolean TRUE|FALSE
+     *
+     */
+    protected function validAction($action) {
+        if (method_exists ( $this, '__' . $action )) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+     /**
+     * Method to list all he context
+     *
+     * @access protected
+     */
+    protected function __jsonlistactivities()
+    {
+    	$objUtils = $this->getObject('activityutilities','activitystreamer');
+    	echo $objUtils->jsonListActivity($this->getParam('start'), $this->getParam('limit'));
+    	exit(0);
+    }
 }
