@@ -786,8 +786,8 @@ public class MainFrame extends javax.swing.JFrame {
         banUserMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
         screenShareMenuItem = new javax.swing.JMenuItem();
-        screenShareSizeMenuItem = new javax.swing.JMenuItem();
         screenViewerMenuItem = new javax.swing.JMenuItem();
+        screenShareSizeMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         roomResourcesMenuItem = new javax.swing.JMenuItem();
         questionManagerMenuItem = new javax.swing.JMenuItem();
@@ -1273,14 +1273,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
         toolsMenu.add(screenShareMenuItem);
 
-        screenShareSizeMenuItem.setText("Screen Share Size");
-        screenShareSizeMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                screenShareSizeMenuItemActionPerformed(evt);
-            }
-        });
-        toolsMenu.add(screenShareSizeMenuItem);
-
         screenViewerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
         screenViewerMenuItem.setText("Screen Viewer");
         screenViewerMenuItem.setEnabled(false);
@@ -1291,6 +1283,15 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         toolsMenu.add(screenViewerMenuItem);
+
+        screenShareSizeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, 0));
+        screenShareSizeMenuItem.setText("Screen Share Option");
+        screenShareSizeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                screenShareSizeMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(screenShareSizeMenuItem);
         toolsMenu.add(jSeparator2);
 
         roomResourcesMenuItem.setText("Room Resources");
