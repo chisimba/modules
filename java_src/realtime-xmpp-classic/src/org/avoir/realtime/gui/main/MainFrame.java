@@ -1284,7 +1284,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         toolsMenu.add(screenViewerMenuItem);
 
-        screenShareSizeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, 0));
+        screenShareSizeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, 0));
         screenShareSizeMenuItem.setText("Screen Share Options");
         screenShareSizeMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
