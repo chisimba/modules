@@ -143,11 +143,12 @@ $mainjs=
      }
      if(
      $courseProposal['userid'] ==$this->objUser->userid() &&
+     $currentEditor != $ownerEmail &&
      $courseProposal['phase'] == '0'
      ){
           $mainjs.=" new Ext.form.DisplayField({
                fieldLabel: '<b>State</b>',
-               value: '<font color=\"red\"><b>You are the owner of this proposal</b></font>'
+               value: '<font color=\"red\"><b>You are the owner, but cannot edit. Edit rights are with ".$currentEditor."</b></font>'
                }),";
      }
            $mainjs.="new Ext.form.DisplayField({
