@@ -3350,7 +3350,7 @@
             //Add content to the output layer
             $middleColumnContent = "";
             $middleColumnContent .= $header.$headShow;//$tbl->show());
-            $middleColumnContent .= $objForm->show();
+            $middleColumnContent .= "<br><br><br><br>".$objForm->show();
 
             return $middleColumnContent;
         }
