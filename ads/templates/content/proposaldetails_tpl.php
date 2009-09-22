@@ -374,13 +374,7 @@ Ext.onReady(function(){
       }
   }
   }
-  $showMembers= ($currentEditor == $this->objUser->email())?"true":"false";
-  $mainjs.="addTree('".$this->id."', historyURL);
-    showTabs('".$selectedtab."','".$showMembers."');
-    var mData = [".$propData."];
-    showProposalMembers(mData);
-});
-";
+
 
 
 
@@ -393,26 +387,32 @@ $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
 
 $actionsDropDown->addOption('default','Select action ...');
-
-//eable these if moderator or current editor
-//if(($currentEditor == $this->objUser->email() || $this->objUser->isAdmin())
-  //  && ($courseProposal['status'] == 0)
-    //||    $this->objFaculty->isModerator($this->id,$this->objUser->email())
-//) {
-
-
- if($currentEditor == $this->objUser->email() &&  $ownerEmail != $this->objUser->email()){
-   $actionsDropDown->addOption('editproposal','Edit Proposal');
-   $actionsDropDown->addOption('forwardtoowner','Forward to owner');
- }
-
-
- if($ownerEmail == $this->objUser->email() && $courseProposal['phase'] == 0){
+ $showMembers= "false";
+//case 1: owner is current editor in phase 0 and is logged in
+ 
+ if($ownerEmail == $this->objUser->email() &&
+     $courseProposal['phase'] == 0 &&
+     $currentEditor == $this->objUser->email()
+  ){
   $actionsDropDown->addOption('editproposal','Edit Proposal');
   $actionsDropDown->addOption('forward','Forward to workmate');
   $actionsDropDown->addOption('forwardforapocomment','Forward for APO Comments');
   $actionsDropDown->addOption('changetitle','Change Title/Faculty');
+  $showMembers="true";
 }
+ 
+//case  current editor not ower, logged in. phase 0 
+ if($currentEditor != $this->objUser->email() &&
+     $ownerEmail != $this->objUser->email() &&
+     $courseProposal['phase'] == 0){
+
+   $actionsDropDown->addOption('editproposal','Edit Proposal');
+   $actionsDropDown->addOption('forwardtoowner','Forward to owner');
+   $showMembers="false";
+ }
+
+
+ 
 
  if($currentEditor == $this->objUser->email() && $courseProposal['phase'] == 1){
   $actionsDropDown->addOption('editproposal','Edit Proposal');
@@ -423,6 +423,12 @@ $actionsDropDown->addOption('default','Select action ...');
 }
 
 
+  $mainjs.="addTree('".$this->id."', historyURL);
+    showTabs('".$selectedtab."','".$showMembers."');
+    var mData = [".$propData."];
+    showProposalMembers(mData);
+});
+";
 $backButton = new button('back','Back');
 $backButton->setId('back-btn');
 $content = $message;
