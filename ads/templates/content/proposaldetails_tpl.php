@@ -138,9 +138,18 @@ $mainjs=
     ){
           $mainjs.=" new Ext.form.DisplayField({
                fieldLabel: '<b>State</b>',
-               value: '<font color=\"red\"><b>This proposal was forwarded ".$currentEditor." by ".$this->objUser->fullname($courseProposal['userid'])."</b></font>'
+               value: '<font color=\"red\"><b>This proposal was forwarded to '".$currentEditor."' by '".$this->objUser->fullname($courseProposal['userid'])."'</b></font>'
                }),";
-   }
+     }
+     if(
+     $courseProposal['userid'] ==$this->objUser->userid() &&
+     $courseProposal['phase'] == '0'
+     ){
+          $mainjs.=" new Ext.form.DisplayField({
+               fieldLabel: '<b>State</b>',
+               value: '<font color=\"red\"><b>You are the owner of this proposal</b></font>'
+               }),";
+     }
            $mainjs.="new Ext.form.DisplayField({
                fieldLabel: 'Faculty',
                value: '".$objFaculty->getFacultyName($courseProposal['faculty'])."'
