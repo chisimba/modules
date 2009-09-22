@@ -1,0 +1,1168 @@
+<?php
+/**
+ *
+ * Events helper class
+ *
+ * PHP version 5.1.0+
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   events
+ * @author    Paul Scott <pscott@uwc.ac.za>
+ * @copyright 2009 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version
+ * @link      http://avoir.uwc.ac.za
+ */
+
+// security check - must be included in all scripts
+if (! /**
+ * The $GLOBALS is an array used to control access to certain constants.
+ * Here it is used to check if the file is opening in engine, if not it
+ * stops the file from running.
+ *
+ * @global entry point $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ *
+ */
+$GLOBALS ['kewl_entry_point_run']) {
+    die ( "You cannot view this page directly" );
+}
+// end security check
+
+
+/**
+ *
+ * Events helper class
+ *
+ * PHP version 5.1.0+
+ *
+ * @author Paul Scott
+ * @package events
+ *
+ */
+class eventsops extends object {
+
+    /**
+     * @var string $objLanguage String object property for holding the language object
+     *
+     * @access public
+     */
+    public $objLanguage;
+
+    /**
+     * @var string $objConfig String object property for holding the config object
+     *
+     * @access public
+     */
+    public $objConfig;
+
+    /**
+     * @var string $objSysConfig String object property for holding the sysconfig object
+     *
+     * @access public
+     */
+    public $objSysConfig;
+
+    /**
+     * @var string $objWashout String object property for holding the washout object
+     *
+     * @access public
+     */
+    public $objWashout;
+
+    /**
+     * @var string $objUser String object property for holding the user object
+     *
+     * @access public
+     */
+    public $objUser;
+
+    /**
+     * @var string $objCurl String object property for holding the curl object
+     *
+     * @access public
+     */
+    public $objCurl;
+
+    /**
+     * @var string $objLangCode String object property for holding the language code object
+     *
+     * @access public
+     */
+    public $objLangCode;
+
+    public $objTags;
+
+
+    /**
+     * Constructor
+     *
+     * @access public
+     */
+    public function init() {
+        $this->objLanguage  = $this->getObject('language', 'language');
+        $this->objConfig    = $this->getObject('altconfig', 'config');
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->objWashout   = $this->getObject('washout', 'utilities');
+        $this->objUser      = $this->getObject('user', 'security');
+        $this->objCurl      = $this->getObject('curlwrapper', 'utilities');
+        $this->objLangCode  = $this->getObject('languagecode', 'language');
+        $this->objTags      = $this->getObject('dbtags', 'tagging');
+        $this->objCookie    = $this->getObject('cookie', 'utilities');
+        $this->objDbEvents  = $this->getObject('dbevents');
+    }
+
+    /**
+     * Grabs the client IP address
+     *
+     * This function should be used to grab IP addresses, even those behind proxies, to gather data from
+     *
+     * @return string $ip
+     */
+    public function getIpAddr() {
+        if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        }
+        elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            // pass from proxy
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
+
+    /**
+     * Convert IP to an integer
+     *
+     * Method used to create an integer from an IP address so that it can easily be stored, indexed and retrieved in a database table
+     *
+     * @param string $ip
+     * @return integer
+     */
+    public function ip2integer($ip) {
+        $ip_aton = sprintf("%u", ip2long($ip));
+        return $ip_aton;
+    }
+
+    /**
+     * Creates a dropdown list of countries
+     *
+     * This method is a simple local wrapper for the langcode method to generate a dropdown list of country names and codes
+     *
+     * @param string $country
+     * @return string
+     */
+    public function countryDropdown($country = 'ZA') {
+        return $this->objLangCode->countryAlpha($default);
+    }
+
+    /**
+     * Create a header for location
+     *
+     * Method to manipulate the header information for the location set and change methods
+     *
+     * @return string HTML of the header
+     */
+    public function locationHeader() {
+        if($this->objCookie->exists('events_location') ) {
+            $currLocation = $this->objCookie->get('events_location');
+        }
+        else {
+            $currLocation = "(".$this->objLanguage->languageText("mod_events_locnotset", "events").")";
+        }
+        // Change location link
+        $changeloclink = $this->newObject('link', 'htmlelements');
+        $changeloclink->href = $this->uri(array('action' => 'changelocation'));
+        $changeloclink->link = $this->objLanguage->languageText("mod_events_changeloc", "events");
+        // set up the heading
+        $this->loadClass ( 'htmlheading', 'htmlelements' );
+        $header = new htmlheading();
+        $header->type = 1;
+        $header->str = $this->objLanguage->languageText("mod_events_guidefor", "events")." ".$currLocation;
+        $clocheader = new htmlheading();
+        $clocheader->type = 3;
+        $clocheader->str = $changeloclink->show();
+
+        return $header->show()."  ".$clocheader->show();
+    }
+
+    /**
+     * Link list of the availale event categories
+     *
+     * The list is fetched from the database table that stores event types and dynamically generated
+     *
+     * @return string
+     */
+    public function browseEventsBox() {
+        // Set up a featurebox object
+        $objFeaturebox = $this->getObject('featurebox', 'navigation');
+        // Set up a link box of all the categories
+        $this->loadClass ( 'htmlheading', 'htmlelements' );
+        // get the list of categories from the db
+        $cats = $this->objDbEvents->categoryGetList();
+        $list = NULL;
+        foreach($cats as $cat) {
+            $catname = $cat['cat_name'];
+            $catid = $cat['id'];
+            $header = new htmlheading();
+            $catlink = $this->newObject('link', 'htmlelements');
+            $header->type = 4;
+            $header->str = $catname;
+            $catlink->href = $this->uri(array('action' => 'showcat', 'cat' => $catid));
+            $catlink->link = $header->show();
+            $list .= $catlink->show();
+        }
+        return $objFeaturebox->show($this->objLanguage->languageText('mod_events_cats', 'events'), $list);
+    }
+
+    /**
+     * Welcome block
+     *
+     * Block to display welcome messages when logged in, or a sign in link if not
+     *
+     * @return string
+     */
+    public function showWelcomeBox() {
+        $objFeaturebox = $this->getObject('featurebox', 'navigation');
+        $linklist = NULL;
+        if($this->objUser->isLoggedIn() == FALSE) {
+            $signinlink = $this->newObject('alertbox', 'htmlelements');
+            $signuplink = $this->newObject('alertbox', 'htmlelements');
+            $registerlink = $this->newObject('alertbox', 'htmlelements');
+            // Make sure to show the sign up link only if registrations are allowed!
+            if(strtolower($this->objConfig->getallowSelfRegister()) == 'true') {
+                $signuplink = $signuplink->show($this->objLanguage->languageText("mod_events_signup", "events"), $this->uri(array('action' => 'showregister'), 'userregistration'));
+            }
+            else {
+                $signuplink = NULL;
+            }
+            $signinlink = $signinlink->show($this->objLanguage->languageText("mod_events_signin", "events"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_events_toseeevents", "events")."<br /> (".$this->objLanguage->languageText("mod_events_youcanusetwitter", "events").")<br /><hr />";
+            $linklist .= $signinlink;
+            $linklist .= $this->objLanguage->languageText("mod_events_orifyoudonthaveacc", "events").", ".$signuplink;
+        }
+        else {
+            //user is logged in
+            $invitelink = $this->newObject('alertbox', 'htmlelements');
+            $invitelink = $invitelink->show($this->objLanguage->languageText("mod_events_invitefriends", "events"), $this->uri(array('action' => 'invitefriend')));
+
+            $linklist .= $invitelink;
+        }
+        // location link is always visible
+        $changeloclink = $this->newObject('link', 'htmlelements');
+        $changeloclink->href = $this->uri(array('action' => 'changelocation'));
+        $changeloclink->link = $this->objLanguage->languageText("mod_events_changeloc", "events");
+
+        $linklist .= "<br />".$changeloclink->show();
+        return $objFeaturebox->show($this->objLanguage->languageText("mod_events_welcome", "events"),$linklist);
+    }
+
+    /**
+     * Sign in block
+     *
+     * Used in conjunction with the welcome block as a alertbox link. The sign in simply displays the block to sign in to Chisimba
+     *
+     * @return string
+     */
+    public function showSignInBox() {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_events_signin", "events"), $objBlocks->showBlock('login', 'security', 'none'));
+    }
+
+    /**
+     * Sign up block
+     *
+     * Method to generate a sign up (register) block for the module. It uses a linked alertbox to format the response
+     *
+     * @return string
+     */
+    public function showSignUpBox() {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_events_signup", "events"), $objBlocks->showBlock('register', 'security', 'none'));
+    }
+
+    /**
+     * Block to display local weather from the location set in the user cookie.
+     *
+     * The user cookie is read and a weather lookup generated accordingly. This feature requires a network connection
+     *
+     * @return string
+     */
+    public function showLocWeatherBox() {
+        $objFeaturebox = $this->getObject('featurebox', 'navigation');
+        $wtable = NULL;
+        $latlon = $this->objCookie->get('events_latlon');
+        $locarr = explode("|", $latlon);
+        if($locarr[0] != '' && $locarr != '') {
+            $lat = $locarr[0];
+            $lon = $locarr[1];
+            $weather = $this->findNearbyWeather($lat, $lon);
+            if(empty($weather)) {
+                $weather = $this->objLanguage->languageText("mod_events_weathernotfound", "events");
+            }
+            else {
+                $ltemp = $this->objLanguage->languageText("mod_events_temperature", "events");
+                $ldewpoint = $this->objLanguage->languageText("mod_events_dewpoint", "events");
+                $lhumidity = $this->objLanguage->languageText("mod_events_humidity", "events");
+                $lwindspeed = $this->objLanguage->languageText("mod_events_windspeed", "events");
+                $lclouds = $this->objLanguage->languageText("mod_events_cloudcover", "events");
+                $ldatetime = $this->objLanguage->languageText("mod_events_datetime", "events");
+                // format into a table
+                $wtable = $this->newObject('htmltable', 'htmlelements');
+                $wtable->startRow();
+                $wtable->addCell($ltemp);
+                $wtable->addCell($weather['temperature']);
+                $wtable->endRow();
+                $wtable->startRow();
+                $wtable->addCell($ldewpoint);
+                $wtable->addCell($weather['dewpoint']);
+                $wtable->endRow();
+                $wtable->startRow();
+                $wtable->addCell($lhumidity);
+                $wtable->addCell($weather['humidity']);
+                $wtable->endRow();
+                $wtable->startRow();
+                $wtable->addCell($lwindspeed);
+                $wtable->addCell($weather['windspeed']);
+                $wtable->endRow();
+                $wtable->startRow();
+                $wtable->addCell($lclouds);
+                $wtable->addCell($weather['clouds']);
+                $wtable->endRow();
+                $wtable->startRow();
+                $wtable->addCell($ldatetime);
+                $wtable->addCell($weather['datetime']);
+                $wtable->endRow();
+
+                $wtable = $wtable->show();
+            }
+        }
+        if($this->objCookie->exists('events_location') ) {
+            $currLocation = $this->objCookie->get('events_location');
+        }
+        else {
+            $currLocation = "(".$this->objLanguage->languageText("mod_events_locnotset", "events").")";
+        }
+        if($wtable == NULL) {
+            $wtable = $this->objLanguage->languageText("mod_events_pleasesetlocation", "events");
+        }
+        return $objFeaturebox->show($this->objLanguage->languageText("mod_events_locweatherfor", "events")." ".$currLocation, $wtable);
+    }
+
+    /**
+     * Main container function (tabber) box to do the layout for the main template
+     *
+     * Chisimba tabber interface is used to create tabs that are dynamically switchable.
+     *
+     * @return string
+     */
+    public function middleContainer() {
+        // get the tabbed box class
+        $friendcount = 0;
+        $tabs = $this->getObject('tabber', 'htmlelements');
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
+
+        return $tabs->show();
+    }
+
+    /**
+     * Method to get nearby content
+     *
+     * getNearbyContent will return a list of placenames that are found within a certain radius of the saved latlong coordinates
+     * stored in the users cookie variable. The cookie is set when the user chooses their location. Max radius allowed is 300km
+     *
+     * @param $radius (Required) the radius in Km to search for nearby places.
+     */
+    public function getNearbyContent($radius) {
+        $latlon = $this->objCookie->get('events_latlon');
+        $locarr = explode("|", $latlon);
+        $list = NULL;
+        if($locarr[0] != '' && $locarr != '') {
+            $lat = $locarr[0];
+            $lon = $locarr[1];
+            $nearbyplaces = $this->findNearbyRadius($lat, $lon, $radius);
+        }
+        else {
+            $nearbyplaces[]['name'] = $this->objLanguage->languageText("mod_events_nonearbyplacesfound", "events");
+        }
+        if(is_array($nearbyplaces) && @$nearbyplaces['name'] != 'radius too large, radius is limited to maximal 300km') {
+            foreach($nearbyplaces as $place) {
+                $list .= $place['name']."<br />";
+            }
+        }
+        else {
+            $list .= $nearbyplaces['name'];
+        }
+        return $list;
+    }
+
+    /**
+     * Get a list of the most popular events in the system
+     *
+     * The popularity of an event is determined by how many users/friends agree that it is worth attending
+     *
+     * @return string
+     */
+    public function getPopularContent() {
+        return "popular content";
+    }
+
+    /**
+     * Container function for the add event functions
+     *
+     * This method only really checks the sign in state of the user and then displays the appropriate content
+     *
+     * @return string
+     */
+    public function addEventContent() {
+        $ret = NULL;
+        if($this->objUser->isLoggedIn() == FALSE) {
+            $objFeaturebox = $this->getObject('featurebox', 'navigation');
+            $signinlink = $this->newObject('alertbox', 'htmlelements');
+            $signuplink = $this->newObject('alertbox', 'htmlelements');
+            $registerlink = $this->newObject('alertbox', 'htmlelements');
+            // Make sure to show the sign up link only if registrations are allowed!
+            if(strtolower($this->objConfig->getallowSelfRegister()) == 'true') {
+                $signuplink = $signuplink->show($this->objLanguage->languageText("mod_events_signup", "events"), $this->uri(array('action' => 'showregister'), 'userregistration'));
+            }
+            else {
+                $signuplink = NULL;
+            }
+            $signinlink = $signinlink->show($this->objLanguage->languageText("mod_events_signin", "events"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_events_toaddevents", "events")."<br /> (".$this->objLanguage->languageText("mod_events_youcanusetwitter", "events").")<br />";
+            $ret .= $signinlink;
+            $ret .= $this->objLanguage->languageText("mod_events_orifyoudonthaveacc", "events").", ".$signuplink;
+        }
+        else {
+            $ret .= $this->addEditEventForm(NULL);
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Grabs Wikipedia content according to lat lon
+     *
+     * Get relevant (geographically) relevant wikipedia content according to the lat and lon gathered from the cookie data on users machine.
+     *
+     * @return string
+     */
+    public function getWikipediaContent() {
+        $latlon = $this->objCookie->get('events_latlon');
+        $locarr = explode("|", $latlon);
+        $ret = NULL;
+        $word_away = $this->objLanguage->languageText("mod_events_word_away", "events");
+        $moretext = $this->objLanguage->languageText("mod_events_word_more", "events");
+        if($locarr[0] != '' && $locarr != '') {
+            $lat = $locarr[0];
+            $lon = $locarr[1];
+            $articles = $this->findNearbyWikipedia($lat, $lon);
+        }
+        else {
+            $articles[0]['title'] = $this->objLanguage->languageText("mod_events_noarticlesfound", "events");
+            $articles[0]['summary'] = $this->objLanguage->languageText("mod_events_noarticlesfound", "events");
+            $articles[0]['distance'] = 0;
+            $articles[0]['wikipediaUrl'] = $this->uri('');
+        }
+        $wikbox = $this->newObject('featurebox', 'navigation');
+        foreach ($articles as $article) {
+            if(is_object($article)) {
+                $title = $article->title;
+                $summary = $article->summary;
+                $distance = $article->distance;
+                $wikiurl = $article->wikipediaUrl;
+
+                $morelink = $this->newObject('link', 'htmlelements');
+                $morelink->href = "http://".$wikiurl;
+                $morelink->link = $moretext;
+                $morelink->target = "_blank";
+                $morelink = $morelink->show();
+                $ret .= $wikbox->show($title." "."(".$distance."km ".$word_away.") ".$morelink."...", $summary);
+            }
+            else {
+                $ret .= $this->objLanguage->languageText("mod_events_pleasesetlocation", "events");
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * Grabs temporal data
+     *
+     * Temoral data for the evens database are formatted and returned for display
+     *
+     * @return string
+     */
+    public function getTodayContent() {
+        return "todays content";
+    }
+
+    /**
+     * Another temporal function, this time on a broader scale
+     *
+     * @return string
+     */
+    public function getRecentContent() {
+        return "recent content";
+    }
+
+    /**
+     * Grabs content from friends
+     *
+     * @return string
+     */
+    public function getFriendContent() {
+        return "foaf/friend content";
+    }
+
+    /**
+     * Form used to invite friends to the site via mail invite
+     *
+     * @return string
+     */
+    public function showInviteForm() {
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
+        $this->loadClass('htmlarea', 'htmlelements');
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+        $headerinv = new htmlheading();
+        $headerinv->type = 1;
+        $headerinv->str = $this->objLanguage->languageText('phrase_invitemate', 'userregistration').' '.$this->objConfig->getSitename();
+        $ret = NULL;
+        $ret .= $headerinv->show();
+        // start the form
+        $form = new form ('invite', $this->uri(array('action'=>'sendinvite'), 'userregistration'));
+        // add some rules
+        $form->addRule('friend_firstname', $this->objLanguage->languageText("mod_userregistration_needfriendname", "userregistration"), 'required');
+        $form->addRule('friend_email', $this->objLanguage->languageText("mod_userregistration_needfriendemail", "userregistration"), 'email');
+        // friend name
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->startRow();
+        $friendname = new textinput('friend_firstname');
+        $friendnameLabel = new label($this->objLanguage->languageText('friendname', 'userregistration').'&nbsp;', 'input_friendname');
+        $table->addCell($friendnameLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($friendname->show().$required);
+        $table->endRow();
+        // surname
+        $table->startRow();
+        $friendsurname = new textinput('friend_surname');
+        $friendsurnameLabel = new label($this->objLanguage->languageText('friendsurname', 'userregistration').'&nbsp;', 'input_friendsurname');
+        $table->addCell($friendsurnameLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($friendsurname->show());
+        $table->endRow();
+        // email
+        $table->startRow();
+        $friendemail = new textinput('friend_email');
+        $friendemailLabel = new label($this->objLanguage->languageText('friendemail', 'userregistration').'&nbsp;', 'input_friendemail');
+        $table->addCell($friendemailLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($friendemail->show().$required);
+        $table->endRow();
+        // message to include to mate
+        $defmsg = $this->objLanguage->languageText("mod_userregistration_wordhi", "userregistration").", <br /><br /> ".$this->objUser->fullname()." (".$this->objUser->username().") ".$this->objLanguage->languageText("mod_userregistration_hasinvited", "userregistration")." ".$this->objConfig->getSiteName()."! <br /><br /> ".$this->objLanguage->languageText("mod_userregistration_pleaseclick", "userregistration")."<br />";
+        $table->startRow();
+        $friendmsg = $this->newObject('htmlarea', 'htmlelements');
+        $friendmsg->name = 'friend_msg';
+        $friendmsg->value = $defmsg;
+        $friendmsg->width ='50%';
+        $friendmsgLabel = new label($this->objLanguage->languageText('friendmessage', 'userregistration').'&nbsp;', 'input_friendmsg');
+        $table->addCell($friendmsgLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $friendmsg->toolbarSet = 'simple';
+        $table->addCell($friendmsg->show());
+        $table->endRow();
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->legend = ''; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
+        $fieldset->contents = $table->show();
+        // add the form to the fieldset
+        $form->addToForm($fieldset->show());
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_userregistration_completeinvite", "userregistration"));
+        $button->setToSubmit();
+        $form->addToForm('<p align="center"><br />'.$button->show().'</p>');
+        $ret .= $form->show();
+
+        return $ret;
+    }
+
+    /**
+     * Form used to add or edit an event
+     *
+     * Form fields generated to gather all the information required to create a new event in the system
+     *
+     * @param array $editparams (optional)
+     * @return string
+     */
+    public function addEditEventForm($editparams = NULL) {
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
+        $this->loadClass('checkbox', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+        $this->objEHead = $this->newObject('htmlheading', 'htmlelements');
+        $mtable = $this->newObject('htmltable', 'htmlelements');
+        $ftable = $this->newObject('htmltable', 'htmlelements');
+        $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+        $ret = NULL;
+        $css = '<style type="text/css">
+        #map {
+            width: 100%;
+            height: 350px;
+            border: 1px solid black;
+            background-color: white;
+        }
+        </style>';
+        $google = "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$gmapsapikey."' type=\"text/javascript\"></script>";
+        $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
+        $js = "<script type=\"text/javascript\">
+            var lon = 5;
+            var lat = 40;
+            var zoom = 20;
+            var map, layer, drawControl, g;
+
+            OpenLayers.ProxyHost = \"/proxy/?url=\";
+            function init(){
+                g = new OpenLayers.Format.GeoRSS();
+                map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20 });
+                var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
+                var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\",
+                    \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'});
+                map.addLayers([wmsLayer, hybrid]);
+                map.addControl(new OpenLayers.Control.MousePosition());
+                map.addControl( new OpenLayers.Control.MouseDefaults() );
+                map.addControl( new OpenLayers.Control.LayerSwitcher() );
+                map.addControl( new OpenLayers.Control.PanZoomBar() );
+                map.setCenter(new OpenLayers.LonLat(0,0), 2);
+                map.events.register(\"click\", map, function(e) {
+                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                    OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
+                                          + lonlat.lon
+                });
+            }
+            </script>";
+        // add the lot to the headerparams...
+        $this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
+        $this->appendArrayVar('bodyOnLoad', "init();");
+        $form = new form ('eventadd', $this->uri(array('action'=>'eventadd')));
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+        $mtable->cellpadding = 3;
+        // a heading
+        $this->objEHead->type = 2;
+        $this->objEHead->str = $this->objLanguage->languageText("mod_events_addeventheader", "events");
+
+        $this->objHead->type = 3;
+        $this->objHead->str = $this->objLanguage->languageText("mod_events_chooseeventlocation", "events");
+        $mtable->startRow();
+        $mtable->addCell($this->objEHead->show());
+        $mtable->endRow();
+        $mtable->startRow();
+        $mtable->addCell($this->objHead->show());
+        $mtable->endRow();
+        // and now the map
+        $mtable->startRow();
+        $gtlabel = new label($this->objLanguage->languageText("mod_events_geoposition", "events") . ':', 'input_geotags');
+        $gtags = '<div id="map"></div>';
+        $geotags = new textinput('geotag', NULL, NULL);
+        if (isset($editparams['geolat']) && isset($editparams['geolon'])) {
+            $geotags->setValue($editparams['geolat'].", ".$editparams['geolon']);
+        }
+        $mtable->addCell($gtags);
+        $mtable->endRow();
+
+        $ftable->cellpadding = 3;
+        // geo tag box
+        $geotaglabel = new label($this->objLanguage->languageText("mod_events_geotags", "events") . ':', 'input_geotag');
+        $mtable->startRow();
+        $mtable->addCell($geotaglabel->show().$required);
+        $mtable->endRow();
+        $mtable->startRow();
+        $mtable->addCell($geotags->show());
+        $mtable->endRow();
+
+        // put the map into a fieldset
+        $mfieldset = $this->newObject('fieldset', 'htmlelements');
+        $mfieldset->legend = $this->objLanguage->languageText("mod_events_eventlocation", "events");;
+        $mfieldset->contents = $mtable->show();
+
+        // event name
+        $enamelabel = new label($this->objLanguage->languageText("mod_events_eventname", "events") . ':', 'input_ename');
+        $ename = new textinput('eventname', NULL, NULL);
+        $ftable->startRow();
+        $ftable->addCell($enamelabel->show().$required);
+        $ftable->endRow();
+        $ftable->startRow();
+        $ftable->addCell($ename->show());
+        $ftable->endRow();
+        // event category dropdown
+        $ecatlabel = new label($this->objLanguage->languageText("mod_events_eventcategory", "events") . ':', 'input_ecat');
+        $ecat = new dropdown('eventcategory', NULL, NULL);
+        $cats = $this->objDbEvents->categoryGetList();
+        $ecat->addOption();
+        foreach($cats as $cat) {
+            $ecat->addOption($cat['id'], $cat['cat_name']." (".$cat['cat_desc'].")");
+        }
+        $ftable->startRow();
+        $ftable->addCell($ecatlabel->show().$required);
+        $ftable->endRow();
+        $ftable->startRow();
+        $ftable->addCell($ecat->show());
+        $ftable->endRow();
+        // venue name
+        $vnamelabel = new label($this->objLanguage->languageText("mod_events_venuename", "events") . ':', 'input_ename');
+        $vname = new textinput('venuename', NULL, NULL);
+        $ftable->startRow();
+        $ftable->addCell($vnamelabel->show().$required);
+        $ftable->endRow();
+        $ftable->startRow();
+        $ftable->addCell($vname->show());
+        $ftable->endRow();
+        // start date and time
+        $objsDatepick = $this->newObject('datepickajax', 'popupcalendar');
+        $sdatepick = $objsDatepick->show('startdatetime', 'yes', 'yes', NULL);
+        $esdtlabel = new label($this->objLanguage->languageText("mod_events_startdatetime", "events") . ':', 'input_startdatetime');
+        $ftable->startRow();
+        $ftable->addCell($esdtlabel->show());
+        $ftable->endRow();
+        $ftable->startRow();
+        $ftable->addCell($sdatepick);
+        $ftable->endRow();
+        // end date and time
+        $objeDatepick = $this->newObject('datepickajax', 'popupcalendar');
+        $edatepick = $objeDatepick->show('enddatetime', 'yes', 'yes', NULL);
+        $eedtlabel = new label($this->objLanguage->languageText("mod_events_enddatetime", "events") . ':', 'input_enddatetime');
+        $ftable->startRow();
+        $ftable->addCell($eedtlabel->show());
+        $ftable->endRow();
+        $ftable->startRow();
+        $ftable->addCell($edatepick);
+        $ftable->endRow();
+
+        // put the event details into a fieldset
+        $edfieldset = $this->newObject('fieldset', 'htmlelements');
+        $edfieldset->legend = $this->objLanguage->languageText("mod_events_eventdetails", "events");;
+        $edfieldset->contents = $ftable->show();
+
+        $ftable2 = $this->newObject('htmltable', 'htmlelements');
+        // event url
+        $eurllabel = new label($this->objLanguage->languageText("mod_events_eventurl", "events") . ':', 'input_eurl');
+        $eurl = new textinput('eventurl', NULL, NULL);
+        $ftable2->startRow();
+        $ftable2->addCell($eurllabel->show());
+        $ftable2->endRow();
+        $ftable2->startRow();
+        $ftable2->addCell("http://".$eurl->show());
+        $ftable2->endRow();
+        // ticket url
+        $turllabel = new label($this->objLanguage->languageText("mod_events_ticketurl", "events") . ':', 'input_turl');
+        $turl = new textinput('ticketurl', NULL, NULL);
+        $ftable2->startRow();
+        $ftable2->addCell($turllabel->show());
+        $ftable2->endRow();
+        $ftable2->startRow();
+        $ftable2->addCell("http://".$turl->show());
+        $ftable2->endRow();
+        // ticket price
+        $tplabel = new label($this->objLanguage->languageText("mod_events_ticketprice", "events") . ':', 'input_ticketprice');
+        $tflabel = new label($this->objLanguage->languageText("mod_events_ticketfree", "events") . ':', 'input_ticketfree');
+        $ticketprice = new textinput('ticketprice', NULL, NULL, '25%');
+        $ticketfree = new checkbox('ticketfree', NULL, NULL);
+        $ftable2->startRow();
+        $ftable2->addCell($tflabel->show());
+        $ftable2->endRow();
+        $ftable2->startRow();
+        $ftable2->addCell($ticketfree->show()." ".$this->objLanguage->languageText("mod_events_word_or", "events"));
+        $ftable2->endRow();
+        $ftable2->startRow();
+        $ftable2->addCell($tplabel->show());
+        $ftable2->endRow();
+        $ftable2->startRow();
+        $ftable2->addCell($ticketprice->show());
+        $ftable2->endRow();
+
+         // put the event details into a fieldset
+        $edfieldset2 = $this->newObject('fieldset', 'htmlelements');
+        $edfieldset2->legend = $this->objLanguage->languageText("mod_events_eventurlandtickets", "events");;
+        $edfieldset2->contents = $ftable2->show();
+
+        // event description textarea
+        $dtable = $this->newObject('htmltable', 'htmlelements');
+        $edesclabel = new label($this->objLanguage->languageText("mod_events_eventdescription", "events") . ':', 'input_description');
+        $description = $this->newObject('htmlarea', 'htmlelements');
+        $description->setName('description');
+        $description->setRows = 5;
+        $description->setContent($this->objLanguage->languageText("mod_events_briefeventdescription", "events"));
+        $description->setBasicToolBar();
+        $dtable->startRow();
+        $dtable->addCell($edesclabel->show().$required);
+        $dtable->endRow();
+        $dtable->startRow();
+        $dtable->addCell($description->show());
+        $dtable->endRow();
+
+        // put the event details into a fieldset
+        $dfieldset = $this->newObject('fieldset', 'htmlelements');
+        $dfieldset->legend = $this->objLanguage->languageText("mod_events_eventdescription", "events");;
+        $dfieldset->contents = $dtable->show();
+
+        // is this a personal/private event?
+        $ftable3 = $this->newObject('htmltable','htmlelements');
+        $personallabel = new label($this->objLanguage->languageText("mod_events_personal", "events") . ':', 'input_personal');
+        $personal = new checkbox('personal', NULL, NULL);
+        $ftable3->startRow();
+        $ftable3->addCell($personallabel->show());
+        $ftable3->endRow();
+        $ftable3->startRow();
+        $ftable3->addCell($personal->show());
+        $ftable3->endRow();
+        // tags
+        $taglabel = new label($this->objLanguage->languageText("mod_events_eventtags", "events") . ':', 'input_tags');
+        $tags = new textinput('tags', NULL, NULL);
+        $ftable3->startRow();
+        $ftable3->addCell($taglabel->show());
+        $ftable3->endRow();
+        $ftable3->startRow();
+        $ftable3->addCell($tags->show());
+        $ftable3->endRow();
+
+        // self promotional event?
+        $canbringotherslabel = new label($this->objLanguage->languageText("mod_events_canbringothers", "events") . ':', 'input_canbringothers');
+        $yestheycanlabel = $this->objLanguage->languageText("mod_events_yestheycan", "events");
+        $wordguests = $this->objLanguage->languageText("mod_events_word_guests", "events");
+        $limitattendeeslabel = new label($this->objLanguage->languageText("mod_events_limitattendees", "events") . ':', 'input_limitattendees');
+        $unlimitedlabel = new label($this->objLanguage->languageText("mod_events_unlimited", "events") . ':', 'input_unlimited');
+        $howmanylabel = new label($this->objLanguage->languageText("mod_events_howmany", "events") . ':', 'input_howmany');
+        $canbringothers = new checkbox('canbringothers', NULL, NULL);
+        $yestheycan = new dropdown('yestheycan', NULL, NULL);
+        $howmany = new textinput('howmany', NULL, NULL);
+        $i = 1;
+        $yestheycan->addOption();
+        while($i <= 20) {
+            $yestheycan->addOption($i, $i);
+            $i++;
+        }
+        $sptable = $this->newObject('htmltable','htmlelements');
+        $sptable->startRow();
+        $sptable->addCell($canbringotherslabel->show());
+        $sptable->endRow();
+        $sptable->startRow();
+        $sptable->addCell($canbringothers->show()." ".$yestheycanlabel." ".$yestheycan->show()." ".$wordguests);
+        $sptable->endRow();
+        $sptable->startRow();
+        $sptable->addCell($limitattendeeslabel->show());
+        $sptable->endRow();
+        $sptable->startRow();
+        $sptable->addCell($howmanylabel->show()." ".$howmany->show());
+        $sptable->endRow();
+
+        $spfieldset = $this->newObject('fieldset', 'htmlelements');
+        $spfieldset->legend = $this->objLanguage->languageText("mod_events_organizer", "events");
+        $spfieldset->contents = $sptable->show();
+
+        $selfpromolabel = new label($this->objLanguage->languageText("mod_events_selfpromo", "events") . ':', 'input_selfpromotion');
+        $selfpromo = new checkbox('selfpromotion', NULL, NULL);
+        $selfpromo->extra = 'onclick="document.getElementById(\'info\').style.visibility = this.checked ? \'visible\' : \'hidden\'"';
+        // organizer fields
+        $ftable3->startRow();
+        $ftable3->addCell($selfpromolabel->show()." ".$selfpromo->show().'<div id="info" style="visibility:hidden">'.$spfieldset->show().'</div>');
+        $ftable3->endRow();
+
+        // put the event details into a fieldset
+        $edfieldset3 = $this->newObject('fieldset', 'htmlelements');
+        $edfieldset3->legend = $this->objLanguage->languageText("mod_events_organizer", "events");;
+        $edfieldset3->contents = $ftable3->show();
+
+
+        // the rules
+        $form->addRule('eventname', $this->objLanguage->languageText("mod_events_needeventname", "events"), 'required');
+        $form->addRule('geotag', $this->objLanguage->languageText("mod_events_needlocation", "events"), 'required');
+        $form->addRule('eventcategory', $this->objLanguage->languageText("mod_events_needcategory", "events"), 'required');
+        $form->addRule('venuname', $this->objLanguage->languageText("mod_events_needvenue", "events"), 'required');
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->legend = '';
+        $fieldset->contents = $mfieldset->show().$edfieldset->show().$edfieldset2->show().$dfieldset->show().$edfieldset3->show();
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_events_addevent", "events"));
+        $button->setToSubmit();
+        $form->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
+        $ret .= $form->show();
+
+        return $ret;
+    }
+
+    /**
+     * Method used to set geolocation coordinates
+     *
+     * Users are able to set geographic coordinates by either completing a text input or clicking on a map
+     *
+     * @param array $editparams
+     * @param boolean $eventform
+     * @return string
+     */
+    public function geoLocationForm($editparams = NULL, $eventform = FALSE) {
+        $this->loadClass('form', 'htmlelements');
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
+        $ret = NULL;
+        if($this->objModules->checkIfRegistered('simplemap') && $this->objModules->checkIfRegistered('georss'))
+        {
+            $form = new form ('geoloc', $this->uri(array('action'=>'setlocation')));
+            $this->loadClass('label', 'htmlelements');
+            $this->objHead = $this->getObject('htmlheading', 'htmlelements');
+            $this->objHead->type = 3;
+            $this->objHead->str = $this->objLanguage->languageText("mod_events_geoposition", "events");
+            $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+            $css = '<style type="text/css">
+        #map {
+            width: 100%;
+            height: 350px;
+            border: 1px solid black;
+            background-color: white;
+        }
+    </style>';
+
+            $google = "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$gmapsapikey."' type=\"text/javascript\"></script>";
+            $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
+            $js = "<script type=\"text/javascript\">
+        var lon = 5;
+        var lat = 40;
+        var zoom = 17;
+        var map, layer, drawControl, g;
+
+        OpenLayers.ProxyHost = \"/proxy/?url=\";
+        function init(){
+            g = new OpenLayers.Format.GeoRSS();
+            map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20 });
+            var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
+            var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\",
+                \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'});
+
+            map.addLayers([wmsLayer, hybrid]);
+
+            map.addControl(new OpenLayers.Control.MousePosition());
+            map.addControl( new OpenLayers.Control.MouseDefaults() );
+            map.addControl( new OpenLayers.Control.LayerSwitcher() );
+            map.addControl( new OpenLayers.Control.PanZoomBar() );
+
+            map.setCenter(new OpenLayers.LonLat(0,0), 2);
+
+            map.events.register(\"click\", map, function(e) {
+                var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
+                                          + lonlat.lon
+            });
+
+        }
+    </script>";
+
+            // add the lot to the headerparams...
+            $this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
+            $this->appendArrayVar('bodyOnLoad', "init();");
+            // add the table row with the map in it.
+            $ptable = $this->newObject('htmltable', 'htmlelements');
+            $ptable->cellpadding = 3;
+            // a heading
+            $ptable->startRow();
+            //$ptable->addCell('');
+            $ptable->addCell($this->objHead->show()); // , '100%', $valign="top", 'center', null, 'colspan=2','0');
+            $ptable->endRow();
+            // and now the map
+            $ptable->startRow();
+            $gtlabel = new label($this->objLanguage->languageText("mod_events_geoposition", "events") . ':', 'input_geotags');
+            $gtags = '<div id="map"></div>';
+            $geotags = new textinput('geotag', NULL, NULL, '100%');
+            if (isset($editparams['geolat']) && isset($editparams['geolon'])) {
+                $geotags->setValue($editparams['geolat'].", ".$editparams['geolon']);
+            }
+            //$ptable->addCell($gtlabel->show());
+            $ptable->addCell($gtags.$geotags->show());
+            $ptable->endRow();
+
+            $fieldset = $this->newObject('fieldset', 'htmlelements');
+            $fieldset->legend = '';
+            $fieldset->contents = $ptable->show();
+            $button = new button ('submitform', $this->objLanguage->languageText("mod_events_setlocation", "events"));
+            $button->setToSubmit();
+            $form->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
+            $ret .= $form->show();
+        }
+        else {
+            $ret .= "Map cannot be shown";
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Method to find nearby place names from a geo coordinate
+     *
+     * This method returns a list of PLACE NAMES, not coordinates from a given latlon pair
+     *
+     * @param float $lat
+     * @param float $lon
+     * @return array
+     */
+    public function findNearby($lat, $lon) {
+        $url = "http://ws.geonames.org/findNearbyPlaceNameJSON?lat=$lat&lng=$lon";
+        $json = $this->objCurl->exec($url);
+        $objLoc = json_decode($json);
+        if(is_object($objLoc) && !empty($objLoc->geonames)) {
+            $locarr = $objLoc->geonames[0];
+            if($this->objCookie->exists('events_location') ) {
+                $this->objCookie->cookiedelete('events_location');
+                $this->objCookie->cookiedelete('events_latlon');
+                $this->objCookie->set( 'events_location', $locarr->name);
+                $this->objCookie->set( 'events_latlon', $locarr->lat."|".$locarr->lng);
+            }
+            else {
+                $this->objCookie->set( 'events_location', $locarr->name);
+                $this->objCookie->set( 'events_latlon', $locarr->lat."|".$locarr->lng);
+            }
+            return $locarr;
+        }
+        else {
+            return NULL;
+        }
+    }
+
+    /**
+     * Grabs placenames of nearby places in a given radius
+     *
+     * @param float $lat
+     * @param float $lon
+     * @param integer $radius
+     * @return array
+     */
+    public function findNearbyRadius($lat, $lon, $radius = 5) {
+        $locs = NULL;
+        $url = "http://ws.geonames.org/findNearbyPlaceNameJSON?lat=$lat&lng=$lon&radius=$radius";
+        $json = $this->objCurl->exec($url);
+        $objLoc = json_decode($json);
+        if(isset($objLoc->status->message)) {
+            return $locs[] = array('name' => $objLoc->status->message, 'lat' => '', 'lon' => '', 'geonameid' => '', 'countryname' => '', 'countrycode' => '');
+        }
+        elseif(is_object($objLoc)) {
+            // get all the places and lets see whats potting
+            $locarr = $objLoc->geonames;
+            foreach($locarr as $location) {
+                $locs[] = array('name' => $location->name, 'lat' => $location->lat, 'lon' => $location->lng, 'geonameid' => $location->geonameId, 'countryname' => $location->countryName, 'countrycode' => $location->countryCode);
+            }
+        }
+        else {
+            $locs = NULL;
+        }
+        return $locs;
+    }
+
+    /**
+     * Grab the local weather from a given place determined by a latlon key pair
+     *
+     * @param float $lat
+     * @param float $lon
+     * @return string
+     */
+    public function findNearbyWeather($lat, $lon) {
+        $url = "http://ws.geonames.org/findNearByWeatherJSON?lat=$lat&lng=$lon";
+        if(file_exists(md5($url))) {
+            if(time() - filemtime(md5($url)) > 3600) {
+                $json = $this->objCurl->exec($url);
+                $tofile = serialize($json);
+                file_put_contents(md5($url), $tofile);
+            }
+            else {
+                $json = unserialize(file_get_contents(md5($url)));
+            }
+        }
+        else {
+            // the cache file does not exist!
+            $json = $this->objCurl->exec($url);
+            $tofile = serialize($json);
+            file_put_contents(md5($url), $tofile);
+        }
+        $objLocWeather = json_decode($json);
+
+        if(isset($objLocWeather->status->message)) {
+            return array();
+        }
+        elseif(is_object($objLocWeather) && is_object($objLocWeather->weatherObservation)) {
+            $objLocWeather = $objLocWeather->weatherObservation;
+            $temp = $objLocWeather->temperature;
+            $dp = $objLocWeather->dewPoint;
+            $hum =  $objLocWeather->humidity;
+            $ws = $objLocWeather->windSpeed;
+            $clouds = $objLocWeather->clouds;
+            $datetime = $objLocWeather->datetime;
+            $weather = array('temperature' => $temp, 'dewpoint' => $dp, 'humidity' => $hum, 'windspeed' => $ws, 'clouds' => $clouds, 'datetime' => $datetime);
+        }
+        else {
+            $weather = array();
+        }
+        return $weather;
+    }
+
+    /**
+     * Utility function to fetch nearby wikipedia content
+     *
+     * @param float $lat
+     * @param float $lon
+     * @return string
+     */
+    public function findNearbyWikipedia($lat, $lon) {
+        $url = "http://ws.geonames.org/findNearbyWikipediaJSON?lat=$lat&lng=$lon";
+        if(file_exists(md5($url))) {
+            // refresh the wikipedia data once a week, coz surely to goodness it can't be so horribly out of date? Surely?
+            if(time() - filemtime(md5($url)) > 604800) {
+                $json = $this->objCurl->exec($url);
+                $tofile = serialize($json);
+                file_put_contents(md5($url), $tofile);
+            }
+            else {
+                $json = unserialize(file_get_contents(md5($url)));
+            }
+        }
+        else {
+            // the cache file does not exist!
+            $json = $this->objCurl->exec($url);
+            $tofile = serialize($json);
+            file_put_contents(md5($url), $tofile);
+        }
+        // We have the data, now lets do something with it.
+        $objWiki = json_decode($json);
+        if(isset($objLocWeather->status->message)) {
+            return array();
+        }
+        if(isset($objWiki->geonames)) {
+            $articles = $objWiki->geonames;
+            return $articles;
+        }
+        else {
+            $articles[] = array();
+            return $articles;
+        }
+    }
+}
+?>
