@@ -453,10 +453,10 @@ $renderSurface='
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 
-echo 'herer';
+
 $actionsDropDown->addOnChange('processActionDD();');
 $renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'</div>';
-
+echo $content;
 $addMemberButton = new button('addmember','Add New Member');
 $addMemberButton->setId('add-member-btn');
 $addMemberButton->extra='style="padding-left: 3em;"';
