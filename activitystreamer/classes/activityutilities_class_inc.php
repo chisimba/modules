@@ -83,7 +83,7 @@ class activityutilities extends object {
      *
      * @return string
      */    
-    public function jsonListActivity($start = 0, $limit=10)
+    public function jsonListActivity($start = 0, $limit=30)
     {
     	
     	$activities = $this->objDBActivity->getAll("ORDER BY createdon DESC limit $start, $limit");
@@ -100,10 +100,10 @@ class activityutilities extends object {
     			$str .= '{';
     			//$str .= '"id":"'.$context['id'].'",';
     			$str .= '"title":"'.$activity['title'].'",';
-    			$str .= '"description":"'.addslashes($activity['description']).'"';
+    			$str .= '"description":"'.addslashes($activity['description']).'",';
     			$str .= '"contextcode":"'.$activity['contextcode'].'",'; 
     			$str .= '"createdby":"'.htmlentities($this->objUser->fullname($activity['createdby'])).'",'; 
-    			$str .= '"createdon":"'.$activity['createdon'].'",'; 
+    			$str .= '"createdon":"'.$activity['createdon'].'"'; 
     			$str .= '}';
     			if ($cnt < $activityCount)
     			{

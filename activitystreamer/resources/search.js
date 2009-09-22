@@ -32,7 +32,7 @@ var contextdata = new Ext.data.JsonStore({
 
     var grid = new Ext.grid.GridPanel({
         el:'topic-grid',
-        width:700,
+        width:770,
         height:400,
         title:'List of Activities',
         store: contextdata,
@@ -45,10 +45,9 @@ var contextdata = new Ext.data.JsonStore({
         {
             header: "Title",
             dataIndex: 'title',
-            width: 100,            
+            width: 250,            
             sortable: true
         },{
-            id: 'description', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
             header: "Description",
             dataIndex: 'description',
             width: 220,
@@ -61,15 +60,16 @@ var contextdata = new Ext.data.JsonStore({
             hidden: false,
             sortable: true
         },{
+            id: 'createdon', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
             header: "Date Created",
             dataIndex: 'createdon',
-            width: 70,
+            width: 120,
             align: 'right',
             sortable: true
         },{
             header: "Created By",
             dataIndex: 'createdby',
-            width: 100,
+            width: 150,
             align: 'right',
             sortable: true
         }],
