@@ -379,7 +379,7 @@ Ext.onReady(function(){
 
 
 
-//$content.= "<script type=\"text/javascript\">".$mainjs."</script>";
+$content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 
 $actionsDropDown = new dropdown ('actions');
 $actionsDropDown->cssId = 'actiondd';
@@ -456,7 +456,7 @@ $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 
 $actionsDropDown->addOnChange('processActionDD();');
 $renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'</div>';
-echo $content;
+
 $addMemberButton = new button('addmember','Add New Member');
 $addMemberButton->setId('add-member-btn');
 $addMemberButton->extra='style="padding-left: 3em;"';
