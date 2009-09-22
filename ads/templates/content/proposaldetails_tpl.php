@@ -137,7 +137,7 @@ $mainjs=
      $courseProposal['phase'] == '0'
     ){
           $mainjs.=" new Ext.form.DisplayField({
-               fieldLabel: '<b>You have been forwarded this by</b> ',
+               fieldLabel: '<font color=\"red\">><b>You have been forwarded this proposal by</b></font>',
                value: '<b>".$this->objUser->fullname($courseProposal['userid'])."</b>'
                }),";
    }
