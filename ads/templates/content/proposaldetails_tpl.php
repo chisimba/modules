@@ -486,7 +486,7 @@ $addMemberJS = "jQuery(document).ready(function() {
                     
 
                     jQuery(\"#add-member-btn\").click(function() {
-                        showSearchWinX('".$this->id."','".$sendProposalUrl."','Add','addProposalMember','memberssurface','".str_replace("amp;", "", $searchusers)."');
+                        showSearchWinX('".$this->id."','".$sendProposalUrl."','Add','addProposalMember','out-search-xwin','".str_replace("amp;", "", $searchusers)."');
                     });
               });";
 
