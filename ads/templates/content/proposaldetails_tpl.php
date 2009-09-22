@@ -148,7 +148,7 @@ $mainjs=
      ){
           $mainjs.=" new Ext.form.DisplayField({
                fieldLabel: '<b>State</b>',
-               value: '<font color=\"red\"><b>You are the owner, but cannot edit. Edit rights are with ".$currentEditor."</b></font>'
+               value: '<font color=\"red\"><b>You are the owner, but you have no priviledges. These rights are with ".$currentEditor."</b></font>'
                }),";
      }
            $mainjs.="new Ext.form.DisplayField({
@@ -424,7 +424,7 @@ $actionsDropDown->addOption('default','Select action ...');
 }
 
 
-  $mainjs.="addTree('".$this->id."', historyURL);
+ $mainjs.="addTree('".$this->id."', historyURL);
     showTabs('".$selectedtab."','".$showMembers."');
     var mData = [".$propData."];
     showProposalMembers(mData);
@@ -452,6 +452,8 @@ $renderSurface='
 ';
 $content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
+
+echo 'herer';
 $actionsDropDown->addOnChange('processActionDD();');
 $renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'</div>';
 
