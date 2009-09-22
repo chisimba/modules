@@ -13,8 +13,13 @@ class nav extends object{
         if ($action == 'viewform' || $action == 'submitform') {
           $action = 'viewform';
         }
+
         $home = new link ($this->uri(array('action'=>'home')));
         $home->link= $this->objLanguage->languageText('mod_ads_home', 'ads');
+
+        $summary =new link($this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid,'selectedtab'=>'0')));
+        $summary->link="Summary";
+
 
         $sectionA = new link ($this->uri(array('action'=>$action, 'formnumber'=>'A', 'courseid'=>$courseid),"ads"));
         $sectionA->link=   $this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
@@ -52,14 +57,15 @@ class nav extends object{
         );*/
         $list=array(
             "0"=>$home->show(),
-            "1"=>$sectionA->show(),
-            "2"=>$sectionB->show(),
-            "3"=>$sectionC->show(),
-            "4"=>$sectionD->show(),
-            "5"=>$sectionE->show(),
-            "6"=>$sectionF->show(),
-            "7"=>$sectionG->show(),
-            "8"=>$sectionH->show()
+            "1"=>$summary->show(),
+            "2"=>$sectionA->show(),
+            "3"=>$sectionB->show(),
+            "4"=>$sectionC->show(),
+            "5"=>$sectionD->show(),
+            "6"=>$sectionE->show(),
+            "7"=>$sectionF->show(),
+            "8"=>$sectionG->show(),
+            "9"=>$sectionH->show()
         );
         $desc=
         '<ul id="nav-secondary">';

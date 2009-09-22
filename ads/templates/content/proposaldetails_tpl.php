@@ -357,7 +357,7 @@ Ext.onReady(function(){
       }
   }
   }
-  $showMembers=($courseProposal['phase'] > 0 && $currentEditor == $this->objUser->email())?"true":"false";
+  $showMembers= ($currentEditor == $this->objUser->email())?"true":"false";
   $mainjs.="addTree('".$this->id."', historyURL);
     showTabs('".$selectedtab."','".$showMembers."');
     var mData = [".$propData."];
