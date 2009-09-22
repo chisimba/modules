@@ -734,13 +734,15 @@ class eventsops extends object {
         $ftable->addCell($ecat->show());
         $ftable->endRow();
         // venue name
+        $addlink = $this->newObject('alertbox', 'htmlelements');
+        $addlink = $addlink->show($this->objLanguage->languageText("mod_events_addvenue", "events"), $this->uri(array('action' => 'addvenue')));
         $vnamelabel = new label($this->objLanguage->languageText("mod_events_venuename", "events") . ':', 'input_ename');
         $vname = new textinput('venuename', NULL, NULL);
         $ftable->startRow();
         $ftable->addCell($vnamelabel->show().$required);
         $ftable->endRow();
         $ftable->startRow();
-        $ftable->addCell($vname->show());
+        $ftable->addCell($vname->show()." ".$addlink);
         $ftable->endRow();
         // start date and time
         $objsDatepick = $this->newObject('datepickajax', 'popupcalendar');
@@ -772,20 +774,22 @@ class eventsops extends object {
         // event url
         $eurllabel = new label($this->objLanguage->languageText("mod_events_eventurl", "events") . ':', 'input_eurl');
         $eurl = new textinput('eventurl', NULL, NULL);
+        $eurl->setValue("http://");
         $ftable2->startRow();
         $ftable2->addCell($eurllabel->show());
         $ftable2->endRow();
         $ftable2->startRow();
-        $ftable2->addCell("http://".$eurl->show());
+        $ftable2->addCell($eurl->show());
         $ftable2->endRow();
         // ticket url
         $turllabel = new label($this->objLanguage->languageText("mod_events_ticketurl", "events") . ':', 'input_turl');
         $turl = new textinput('ticketurl', NULL, NULL);
+        $turl->setValue("http://");
         $ftable2->startRow();
         $ftable2->addCell($turllabel->show());
         $ftable2->endRow();
         $ftable2->startRow();
-        $ftable2->addCell("http://".$turl->show());
+        $ftable2->addCell($turl->show());
         $ftable2->endRow();
         // ticket price
         $tplabel = new label($this->objLanguage->languageText("mod_events_ticketprice", "events") . ':', 'input_ticketprice');
@@ -1163,6 +1167,154 @@ class eventsops extends object {
             $articles[] = array();
             return $articles;
         }
+    }
+
+    public function addEditVenueForm($editparams = NULL) {
+        // we need a geo lat and lon (got from map), venue name and description
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('checkbox', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $vtable = $this->newObject('htmltable', 'htmlelements');
+        
+        $form = new form ('savevenue', $this->uri(array('action'=>'savevenue')));
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+        $vtable->cellpadding = 3;
+        // heading
+        $this->objHead->type = 3;
+        $this->objHead->str = $this->objLanguage->languageText("mod_events_addvenuelocation", "events");
+        $vtable->startRow();
+        $vtable->addCell($this->objHead->show());
+        $vtable->endRow();
+        // and now the form
+        // venue name
+        $vnlabel = new label($this->objLanguage->languageText("mod_events_venuename", "events") . ':', 'input_venuename');
+        $vname = new textinput('venuename', NULL, NULL);
+        if (isset($editparams['venuename'])) {
+            $vname->setValue($editparams['venuename']);
+        }
+        $vtable->startRow();
+        $vtable->addCell($vnlabel->show().$required);
+        //$vtable->endRow();
+        //$vtable->startRow();
+        $vtable->addCell($vname->show());
+        $vtable->endRow();
+
+        // venue address
+        $valabel = new label($this->objLanguage->languageText("mod_events_venueaddress", "events") . ':', 'input_venueaddress');
+        $vadd = new textinput('venueaddress', NULL, NULL);
+        if (isset($editparams['venueaddress'])) {
+            $vadd->setValue($editparams['venueaddress']);
+        }
+        $vtable->startRow();
+        $vtable->addCell($valabel->show());
+        //$vtable->endRow();
+        //$vtable->startRow();
+        $vtable->addCell($vadd->show());
+        $vtable->endRow();
+
+        // venue city
+        $vclabel = new label($this->objLanguage->languageText("mod_events_venuecity", "events") . ':', 'input_city');
+        $vcity = new textinput('city', NULL, NULL);
+        if (isset($editparams['city'])) {
+            $vcity->setValue($editparams['city']);
+        }
+        $vtable->startRow();
+        $vtable->addCell($vclabel->show().$required);
+        //$vtable->endRow();
+        //$vtable->startRow();
+        $vtable->addCell($vcity->show());
+        $vtable->endRow();
+
+        // venue zip/postal code
+        $vzlabel = new label($this->objLanguage->languageText("mod_events_venuezip", "events") . ':', 'input_zip');
+        $vzip = new textinput('zip', NULL, NULL);
+        if (isset($editparams['zip'])) {
+            $vzip->setValue($editparams['zip']);
+        }
+        $vtable->startRow();
+        $vtable->addCell($vzlabel->show());
+        //$vtable->endRow();
+        //$vtable->startRow();
+        $vtable->addCell($vzip->show());
+        $vtable->endRow();
+  
+        // venue phone
+        $vplabel = new label($this->objLanguage->languageText("mod_events_venuephone", "events") . ':', 'input_phone');
+        $vphone = new textinput('phone', NULL, NULL);
+        if (isset($editparams['phone'])) {
+            $vphone->setValue($editparams['phone']);
+        }
+        $vtable->startRow();
+        $vtable->addCell($vplabel->show());
+        //$vtable->endRow();
+        //$vtable->startRow();
+        $vtable->addCell($vphone->show());
+        $vtable->endRow();
+
+        // venue url
+        $vulabel = new label($this->objLanguage->languageText("mod_events_venueurl", "events") . ':', 'input_url');
+        $vurl = new textinput('url', NULL, NULL);
+        if (isset($editparams['url'])) {
+            $vurl->setValue($editparams['url']);
+        }
+        else {
+            $vurl->setValue("http://");
+        }
+        $vtable->startRow();
+        $vtable->addCell($vulabel->show());
+        //$vtable->endRow();
+        //$vtable->startRow();
+        $vtable->addCell($vurl->show());
+        $vtable->endRow();
+
+        // venue description
+        $vdesclabel = new label($this->objLanguage->languageText("mod_events_venuedescription", "events") . ':', 'input_description');
+        $vdescription = $this->newObject('htmlarea', 'htmlelements');
+        $vdescription->setName('venuedescription');
+        $vdescription->setRows = 5;
+        if (isset($editparams['venuedescription'])) {
+            $vdescription->setContent($editparams['venuedescription']);
+        }
+        else {
+            $vdescription->setContent($this->objLanguage->languageText("mod_events_briefvenuedescription", "events"));
+        }
+        $vdescription->setBasicToolBar();
+        $vtable->startRow();
+        $vtable->addCell($vdesclabel->show());
+        $vtable->endRow();
+        $vtable->startRow();
+        $vtable->addCell($vdescription->show());
+        $vtable->endRow();
+
+        // private venue
+        $vprivlabel = new label($this->objLanguage->languageText("mod_events_venueprivate", "events") . ':', 'input_private');
+        $vpriv = new checkbox('private', NULL, NULL);
+        if (isset($editparams['private'])) {
+            $vpriv->setValue($editparams['private']);
+        }
+        $vtable->startRow();
+        $vtable->addCell($vprivlabel->show());
+        //$vtable->endRow();
+        //$vtable->startRow();
+        $vtable->addCell($vpriv->show());
+        $vtable->endRow();
+
+        // put the event details into a fieldset
+        $vfieldset = $this->newObject('fieldset', 'htmlelements');
+        $vfieldset->legend = $this->objLanguage->languageText("mod_events_venues", "events");;
+        $vfieldset->contents = $vtable->show();
+
+        // the rules
+        $form->addRule('venuename', $this->objLanguage->languageText("mod_events_needvenue", "events"), 'required');
+
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_events_addvenue", "events"));
+        $button->setToSubmit();
+        $form->addToForm($vfieldset->show().'<p align="center"><br />'.$button->show().'</p>');
+        $ret = $form->show();
+
+        return $ret;
     }
 }
 ?>
