@@ -138,7 +138,7 @@ $mainjs=
     ){
           $mainjs.=" new Ext.form.DisplayField({
                fieldLabel: '<b>State</b>',
-               value: '<font color=\"red\"><b>This proposal was forwarded to '".$currentEditor."' by '".$this->objUser->fullname($courseProposal['userid'])."'</b></font>'
+               value: '<font color=\"red\"><b>This proposal was forwarded to \'".$currentEditor."\' by \'".$this->objUser->fullname($courseProposal['userid'])."\'</b></font>'
                }),";
      }
      if(
