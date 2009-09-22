@@ -823,7 +823,7 @@ class ads extends controller {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
         $this->objAPOModerator->saveModerator($faculty, $moderator);
-        $this->nextAction('adminads',array('selectedtab'=>'2'));
+        $this->nextAction('adminads',array('selectedtab'=>'1'));
     }
     public function __savefaculty() {
         $faculty = $this->getParam('addfaculty');
