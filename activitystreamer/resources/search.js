@@ -12,9 +12,9 @@ Ext.onReady(function(){
 var contextdata = new Ext.data.JsonStore({
         root: 'activities',
         totalProperty: 'totalCount',
-        idProperty: 'contextcode',
+        idProperty: 'id',
         remoteSort: false,        
-        fields: ['contextcode', 'title', 'description', 'createdon', 'createdby','module' ],
+        fields: ['id','contextcode', 'title', 'description', 'createdon', 'createdby','module' ],
         proxy: new Ext.data.HttpProxy({ 
             	url: uri
         }),
@@ -53,7 +53,7 @@ var contextdata = new Ext.data.JsonStore({
         // grid columns
         columns:[
         {
-            id: 'title', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            id: 'topic', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
             header: "Activity",
             dataIndex: 'title',
             width: 470,

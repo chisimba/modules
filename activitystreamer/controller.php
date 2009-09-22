@@ -80,7 +80,7 @@ class activitystreamer extends controller
     protected function __jsonlistactivities()
     {
     	$objUtils = $this->getObject('activityutilities','activitystreamer');
-    	echo $objUtils->jsonListActivity();
+    	echo $objUtils->jsonListActivity($this->getParam('start'), $this->getParam('limit'));
     	exit(0);
     }
 }
