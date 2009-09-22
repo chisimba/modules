@@ -731,7 +731,10 @@ class ads extends controller {
         $this->objDocumentStore->sendProposal($lname, $fname, $modemail, $phone, $this->id,$this->objUser->email(),false);
         $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully to moderator","courseid"=>$this->id,'selectedtab'=>'0'));
     }
-   public function __deleteproposalmember(){
+
+
+
+public function __deleteproposalmember(){
         $memberid=$this->getParam('id');
         $this->id = $this->getParam('courseid');
         $this->objProposalMembers->deleteMember($memberid,$this->id);
@@ -819,7 +822,13 @@ class ads extends controller {
         $this->objFacultyModerator->saveModerator($faculty, $moderator);
         $this->nextAction('adminads',array('selectedtab'=>'1'));
     }
-   public function __saveapomoderator() {
+
+   public function __deleteapomoderator() {
+        $moderator = $this->getParam('id');
+        $this->objAPOModerator->deleteModerator($moderator);
+        $this->nextAction('adminads',array('selectedtab'=>'1'));
+    }
+  public function __saveapomoderator() {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
         $this->objAPOModerator->saveModerator($faculty, $moderator);
