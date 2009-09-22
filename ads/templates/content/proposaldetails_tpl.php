@@ -131,9 +131,17 @@ $mainjs=
             xtype: 'fieldset',
             title: 'Course proposal details',
             autoHeight: true,
-            items:[
-
-               new Ext.form.DisplayField({
+            items:[";
+   if($currentEditor == $this->objUser->email() &&
+     $courseProposal['userid'] !=$this->objUser->userid() &&
+     $courseProposal['phase'] == '0'
+    ){
+          $mainjs.=" new Ext.form.DisplayField({
+               fieldLabel: '<h3>You have been forwarded this by</h3> ',
+               value: '<h3>".$this->objUser->fullname($courseProposal['userid'])."</h3>'
+               }),";
+   }
+           $mainjs.="new Ext.form.DisplayField({
                fieldLabel: 'Faculty',
                value: '".$objFaculty->getFacultyName($courseProposal['faculty'])."'
                }),
