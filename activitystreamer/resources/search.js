@@ -38,7 +38,7 @@ var contextdata = new Ext.data.JsonStore({
         return String.format('{0}<br/>by {1}', value.dateFormat('M j, Y, g:i a'), r.data['lastposter']);
     }
     function renderTitledescription(value, p, record){
-        return String.format('<b>{1}: </b><p>{2}</p>',value, record.data.title, record.data.description);
+        return String.format('<b>{1}</b>',value, record.data.title, record.data.description);
     }
     var grid = new Ext.grid.GridPanel({
         el:'topic-grid',
@@ -91,10 +91,10 @@ var contextdata = new Ext.data.JsonStore({
         viewConfig: {
             forceFit:true,
             enableRowBody:true,
-            showPreview:false,
+            showPreview:true,
             getRowClass : function(record, rowIndex, p, store){
                 if(this.showPreview){
-                    p.body = '<p>'+record.data.excerpt+'</p>';
+                    p.body = '<p>'+record.data.description+'</p>';
                     return 'x-grid3-row-expanded';
                 }
                 return 'x-grid3-row-collapsed';
@@ -103,7 +103,7 @@ var contextdata = new Ext.data.JsonStore({
 
         // paging bar on the bottom
         bbar: new Ext.PagingToolbar({
-            pageSize: 10,
+            pageSize: 8,
             store: contextdata,
             displayInfo: true,
             displayMsg: 'Displaying topics {0} - {1} of {2}',
@@ -127,5 +127,5 @@ var contextdata = new Ext.data.JsonStore({
     grid.render();
 
     // trigger the data store load
-    contextdata.load({params:{start:0, limit:10}});
+    contextdata.load({params:{start:0, limit:8}});
 });

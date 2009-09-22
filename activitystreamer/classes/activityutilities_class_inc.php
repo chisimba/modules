@@ -83,7 +83,7 @@ class activityutilities extends object {
      *
      * @return string
      */    
-    public function jsonListActivity($start = 0, $limit=19)
+    public function jsonListActivity($start = 0, $limit=8)
     {
     	$start = (empty($start)) ? 0 : $start;
     	$limit = (empty($limit)) ? 25 : $limit;
