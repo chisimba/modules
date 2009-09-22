@@ -817,18 +817,18 @@ class ads extends controller {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
         $this->objFacultyModerator->saveModerator($faculty, $moderator);
-        $this->nextAction('admin',array('selectedtab'=>'1'));
+        $this->nextAction('adminads',array('selectedtab'=>'1'));
     }
    public function __saveapomoderator() {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
         $this->objAPOModerator->saveModerator($faculty, $moderator);
-        $this->nextAction('admin',array('selectedtab'=>'2'));
+        $this->nextAction('adminads',array('selectedtab'=>'2'));
     }
     public function __savefaculty() {
         $faculty = $this->getParam('addfaculty');
         $this->objFaculty->saveFaculty($faculty);
-        $this->nextAction('admin',array('selectedtab'=>'0'));
+        $this->nextAction('adminads',array('selectedtab'=>'0'));
     }
     function getValValue($val){
         if($val =='{names}'){
