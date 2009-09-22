@@ -402,8 +402,8 @@ $actionsDropDown->addOption('default','Select action ...');
   $showMembers="true";
 }
  
-//case  current editor not ower, logged in. phase 0 
- if($currentEditor != $this->objUser->email() &&
+//case 2  current editor not ower, logged in. phase 0
+ if($currentEditor == $this->objUser->email() &&
      $ownerEmail != $this->objUser->email() &&
      $courseProposal['phase'] == 0){
 
