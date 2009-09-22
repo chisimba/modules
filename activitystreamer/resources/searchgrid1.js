@@ -12,7 +12,7 @@ Ext.onReady(function(){
     var xg = Ext.grid;
 
     // reader
-    var reader = new Ext.data.JsonStore({
+    var contextdata = new Ext.data.JsonStore({
         root: 'activities',
         totalProperty: 'totalCount',
         idProperty: 'contextcode',
@@ -22,7 +22,7 @@ Ext.onReady(function(){
             	url: uri
         })
 	   });
-	   reader.setDefaultSort('createdon', 'desc');
+	   contextdata.setDefaultSort('createdon', 'desc');
     // row expander
     var expander = new Ext.ux.grid.RowExpander({
         tpl : new Ext.Template(
@@ -32,7 +32,16 @@ Ext.onReady(function(){
         )
     });
 
-    var grid1 = new xg.GridPanel({
+    var grid = new xg.GridPanel({
+        columnLines: true,
+        width: 600,
+        height: 300,
+        plugins: expander,
+        collapsible: true,
+        animCollapse: false,
+        el:'topic-grid',
+        title: 'List of Activities',
+        store: contextdata,        
         cm: new xg.ColumnModel({
             defaults: {
                 width: 20,
@@ -57,15 +66,7 @@ Ext.onReady(function(){
                 }
                 return 'x-grid3-row-collapsed';
             }
-        },
-        columnLines: true,
-        width: 600,
-        height: 300,
-        plugins: expander,
-        collapsible: true,
-        animCollapse: false,
-        el:'topic-grid',
-        title: 'Activities',
+        }
         //iconCls: 'icon-grid',
         //renderTo: document.body
     });
@@ -93,5 +94,5 @@ Ext.onReady(function(){
     grid.render();
 
     // trigger the data store load
-    reader.load({params:{start:0, limit:10}});
+    contextdata.load({params:{start:0, limit:10}});
 });

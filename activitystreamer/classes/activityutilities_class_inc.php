@@ -83,36 +83,33 @@ class activityutilities extends object {
      *
      * @return string
      */    
-    public function jsonListActivity($start = 0, $limit=30)
+    public function jsonListActivity($start = 0, $limit=19)
     {
-    	
-    	$activities = $this->objDBActivity->getAll("ORDER BY createdon DESC limit $start, $limit");
-    	$all = $this->objDBActivity->getAll();
-    	
-    	$activityCount = count($activities);
+    	$start = (empty($start)) ? 0 : $start;
+    	$limit = (empty($limit)) ? 25 : $limit;
+
+    	$all = $this->objDBActivity->getArray("SELECT count( id ) as cnt FROM tbl_activity");
+					//$limit = count($all);
+    	$activities = $this->objDBActivity->getAll("ORDER BY createdon DESC limit ".$start.", ".$limit);    	
+    	$activityCount = $all[0]['cnt'];
     	$cnt = 0;
     	$str = '{"totalCount":"'.count($all).'","activities":[';
     	if($activityCount > 0)
     	{
+    	$activitiesArray = array();
     		foreach($activities as $activity)
     		{
-    			$cnt++;
-    			$str .= '{';
-    			//$str .= '"id":"'.$context['id'].'",';
-    			$str .= '"title":"'.$activity['title'].'",';
-    			$str .= '"description":"'.addslashes($activity['description']).'",';
-    			$str .= '"contextcode":"'.$activity['contextcode'].'",'; 
-    			$str .= '"createdby":"'.htmlentities($this->objUser->fullname($activity['createdby'])).'",'; 
-    			$str .= '"createdon":"'.$activity['createdon'].'"'; 
-    			$str .= '}';
-    			if ($cnt < $activityCount)
-    			{
-    				$str .= ',';
-    			}
+    			$arr = array();
+    			$arr['id'] = $activity['id'];
+    			$arr['title'] = $activity['title'];
+    			$arr['description'] = $activity['description'];
+    			$arr['contextcode'] = $activity['contextcode'];
+    			$arr['createdby'] = htmlentities($this->objUser->fullname($activity['createdby']));
+    			$arr['createdon'] = $activity['createdon'];
+    			$activitiesArray[] = $arr;
     		}
     	}    	
-    	$str .= ']}';
-    	return $str;    	
+    	return json_encode(array('totalCount' => $activityCount, 'activities' =>  $activitiesArray));    	
     }
 }
 ?>

@@ -17,7 +17,15 @@ var contextdata = new Ext.data.JsonStore({
         fields: ['contextcode', 'title', 'description', 'createdon', 'createdby','module' ],
         proxy: new Ext.data.HttpProxy({ 
             	url: uri
-        })
+        }),
+        listeners:{ 
+    		'loadexception': function(theO, theN, response){
+    			//alert(response.responseText);
+    		},
+    		'load': function(){
+    				//alert('load');	
+    			}
+    	},
 	});
 	 contextdata.setDefaultSort('createdon', 'desc');
 	 
@@ -29,7 +37,9 @@ var contextdata = new Ext.data.JsonStore({
     function renderLast(value, p, r){
         return String.format('{0}<br/>by {1}', value.dateFormat('M j, Y, g:i a'), r.data['lastposter']);
     }
-
+    function renderTitledescription(value, p, record){
+        return String.format('<b>{1}: </b><p>{2}</p>',value, record.data.title, record.data.description);
+    }
     var grid = new Ext.grid.GridPanel({
         el:'topic-grid',
         width:770,
@@ -43,24 +53,27 @@ var contextdata = new Ext.data.JsonStore({
         // grid columns
         columns:[
         {
-            header: "Title",
+            id: 'title', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            header: "Activity",
             dataIndex: 'title',
-            width: 250,            
+            width: 470,
+            renderer: renderTitledescription,            
             sortable: true
-        },{
+        },/*
+        ,{
             header: "Description",
             dataIndex: 'description',
             width: 220,
             //renderer: renderTopic,
             sortable: true
-        },{
+        },*/
+        {
             header: "Course Code",
             dataIndex: 'contextcode',
             width: 100,
             hidden: false,
             sortable: true
         },{
-            id: 'createdon', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
             header: "Date Created",
             dataIndex: 'createdon',
             width: 120,
