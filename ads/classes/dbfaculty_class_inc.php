@@ -20,6 +20,10 @@ class dbfaculty extends dbtable{
     public function getAllFaculty() {
         return $this->getAll("order by name");
     }
+   public function getFacultyName($id) {
+        $data = $this->getRow('id', $id, $this->tablename);
+        return $data['name'];
+    }
     public function getModeratorEmail($name) {
         $data = $this->getRow('name', $name, $this->tablename);
         return $data['userid'];
@@ -34,37 +38,7 @@ class dbfaculty extends dbtable{
         return count($data) > 0 ? TRUE:FALSE;
     }
     public function getFacultyData() {
-        $objDocumentStore = $this->getObject('dbdocument');
-        $objUser = $this->getObject('user', 'security');
-        $data = $this->getAllFaculty();
-        $rc = count($data);
-        $count = 1;
-
-        $dataStore = "[";
-        foreach($data as $data) {
-            if($count != $rc) {
-                $dataStore .= "['".$data['name']."','";
-                if(strlen(trim($data['userid'])) == 0) {
-                    $dataStore .= "Not Available']".",";
-                }
-                else {
-                    $dataStore .= $objUser->fullname($objDocumentStore->getUserId(trim($data['userid'])))."']".",";
-                }
-            }
-            else {
-                $dataStore .= "['".$data['name']."','";
-                if(strlen(trim($data['userid'])) == 0) {
-                    $dataStore .= "Not Available']";
-                }
-                else {
-                    $dataStore .= $objUser->fullname($objDocumentStore->getUserId(trim($data['userid'])))."']";
-                }
-            }
-            $count++;
-        }
-        $dataStore .= "]";
-
-        return $dataStore;
+        return $this->getAll("order by name");
     }
 
     public function getModeratorData() {

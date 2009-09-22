@@ -46,8 +46,6 @@ $faculty = $this->objLanguage->languageText('mod_ads_faculty', 'ads');
 $moderatorName = $this->objLanguage->languageText('mod_ads_moderatorname','ads');
 
 
-
-
 $facultyData = "";
 $count = 1;
 foreach($allFaculty as $data) {

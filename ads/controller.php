@@ -16,14 +16,18 @@ class ads extends controller {
 
         //These two store error text and form values
         $this->formError = $this->getObject("formerror");
-        $this->formValue = $this->getObject("formvalue");
+         $this->formValue = $this->getObject("formvalue");
 
         $this->objDocumentStore = $this->getObject('dbdocument');
         $this->objGetData = $this->getObject('getdata');
-        $this->objCourseProposals = $this->getObject('dbcourseproposals');
+       
         $this->objComment = $this->getObject('dbcoursecomments');
         $this->objQuestionComment = $this->getObject('dbquestioncomments');
+
         $this->objFaculty = $this->getObject('dbfaculty');
+        $this->objFacultyModerator = $this->getObject('dbfacultymoderator');
+        $this->objAPOModerator = $this->getObject('dbapomoderator');
+        $this->objCourseProposals = $this->getObject('dbcourseproposals');
         $this->objProposalMembers=$this->getObject('dbproposalmembers');
         $this->objCommentAdmin=$this->getObject('dbcommentsadmin');
         //review
@@ -105,7 +109,13 @@ class ads extends controller {
         return "addcomment_tpl.php";
     }
 
-   function __commentadmin(){
+     function __adminads(){
+       $selectedTab=$this->getParam('selectedtab');
+       $this->setVarByRef('selectedtab',$selectedTab);
+       return "admin_tpl.php";
+     }
+     
+     function __commentadmin(){
        return "commentadmin_tpl.php";
    }
     function __updatecomment(){
@@ -166,7 +176,7 @@ class ads extends controller {
         $objMailer->setValue('body', $body);
         $objMailer->send();
 
-        $this->objComment->addComment($this->getParam('courseid'),$this->getParam('commentField'),$this->getParam('status'));
+        $this->objComment->addComment($this->getParam('courseid'),$this->getParam('commentField'),$this->getParam('phase'));
         $this->nextAction('showcourseprophist',array('courseid'=>$this->getParam('courseid'),'selectedtab'=>'0'));
     }
 
@@ -194,14 +204,16 @@ class ads extends controller {
         return "addcourseproposal_tpl.php";
     }
 
-    function __editcourseproposal() {
+    function __updatecourseproposal() {
+        $faculty = $this->getParam('facultyid');
+        $courseTitle= $this->getParam('title');
         $this->id = $this->getParam('id');
-
-        return "editcourseproposal_tpl.php";
+        $courseProposalId=$this->objCourseProposals->editProposal($this->id, $faculty, $courseTitle);
+       return $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'0'));
     }
 
     function __savecourseproposal(){
-        $faculty = $this->getParam('faculty');
+        $faculty = $this->getParam('facultyid');
         $courseTitle= $this->getParam('title');
 
         if($this->getParam('edit')) {
@@ -212,7 +224,7 @@ class ads extends controller {
             $courseProposalId=$this->objCourseProposals->addCourseProposal($faculty, $courseTitle);
         }
         $this->objDocumentStore->addRecord($courseProposalId, "Comment", "", "", "", "0", $this->objUser->email($this->objUser->userId()));
-        return $this->nextAction('overview', array('id'=>$courseProposalId));
+        return $this->nextAction('home', array('id'=>$courseProposalId));
     }
 
     function __savecoursereview(){
@@ -280,7 +292,7 @@ class ads extends controller {
             return "error_tpl.php";
         }
         $courseid = $this->getParam('courseid');
-                if (!$this->objCourseProposals->courseExists($courseid)) {
+         if (!$this->objCourseProposals->courseExists($courseid)) {
             $this->formError->setError("general", "Invalid course number.");
             return "error_tpl.php";
         }
@@ -575,7 +587,6 @@ class ads extends controller {
         $status = $this->getParam('proposalstatus');
         $version= $this->getParam('version');
 
-
         // save status in the database
         $submitted = $this->objCourseProposals->updateProposalStatus($this->id, $status);
 
@@ -603,7 +614,57 @@ class ads extends controller {
         $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0'));
         }
         else {
-            $message = "There was an error submitting your information";
+            $message = "There was an error saving your information";
+            $this->setVarByRef("message", $message);
+            return "viewcourseproposalstatus_tpl.php";
+        }
+    }
+
+
+    public function __updatephase() {
+        $this->id=$this->getParam('id');
+        $status = $this->getParam('phase');
+        // save status in the database
+        $updated = $this->objCourseProposals->updatePhase($this->id, $status);
+
+        if($updated) {
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $toemail1=$this->objCourseProposals->getOwnerEmail($this->getParam('id'));
+        if($status == '1'){
+                $facultyId=$this->objCourseProposals->getFacultyId($this->getParam('id'));
+                
+                $toemail2=$this->objAPOModerator->getAPOModeratorEmail($facultyId);
+                
+        }
+       
+        $phone = 'xxxx';
+        $lname="x";
+        $fname="y";
+        //now change owner to the new apo moderator
+        $this->objDocumentStore->sendProposal($lname, $fname, $toemail2, $phone, $this->id,$this->objUser->email(),false);
+
+        $subject=$objSysConfig->getValue('EMAIL_STATUS_SUBJECT', 'ads');
+        $body=$objSysConfig->getValue('EMAIL_STATUS_BODY', 'ads');
+        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
+
+        $body.=' '. str_replace("amp;", "", $linkUrl);
+        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('id')), $body);
+        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('id')), $body);
+        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to', array($toemail1,$toemail2));
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullnames);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
+        $objMailer->send();
+
+        $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0'));
+        }
+        else {
+            $message = "There was an error saving your information";
             $this->setVarByRef("message", $message);
             return "viewcourseproposalstatus_tpl.php";
         }
@@ -704,8 +765,19 @@ class ads extends controller {
         $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'2'));
 
     }
-    public function __sendproposal() {
 
+
+    public function __forwardtoownerfromapo() {
+        $email = $this->getParam("email");
+        $phone = 'xxxx';
+        $this->id = $this->getParam('courseid');
+        $lname="x";
+        $fname="y";
+        $submission = $this->objDocumentStore->sendProposal($lname, $fname, $email, $phone, $this->id,$this->objUser->email());
+        $updated = $this->objCourseProposals->updatePhase($this->id, '0');
+        $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully","courseid"=>$this->id,'selectedtab'=>'0'));
+    }
+    public function __sendproposal() {
         $email = $this->getParam("email");
         $phone = 'xxxx';
         $this->id = $this->getParam('courseid');
@@ -741,17 +813,22 @@ class ads extends controller {
         return "viewcoursedetails_tpl.php";
     }
 
-    public function __savemoderator() {
+    public function __savefacultymoderator() {
         $moderator = $this->getParam('moderator');
-        $faculty  = $this->getParam('faculty');
-        $this->objFaculty->saveModerator($faculty, $moderator);
-        $this->nextAction('facultylist');
+        $faculty  = $this->getParam('facultyid');
+        $this->objFacultyModerator->saveModerator($faculty, $moderator);
+        $this->nextAction('admin',array('selectedtab'=>'1'));
     }
-
+   public function __saveapomoderator() {
+        $moderator = $this->getParam('moderator');
+        $faculty  = $this->getParam('facultyid');
+        $this->objAPOModerator->saveModerator($faculty, $moderator);
+        $this->nextAction('admin',array('selectedtab'=>'2'));
+    }
     public function __savefaculty() {
         $faculty = $this->getParam('addfaculty');
         $this->objFaculty->saveFaculty($faculty);
-        $this->nextAction('facultylist');
+        $this->nextAction('admin',array('selectedtab'=>'0'));
     }
     function getValValue($val){
         if($val =='{names}'){
@@ -777,36 +854,12 @@ class ads extends controller {
     }
 
     public function __savestatus() {
-        // save data into the commentadmin table
         $this->objCommentAdmin->saveStatus($this->getParam('title'), $this->getParam('moderator'));
-        $this->nextAction('commentadmin');
+        $this->nextAction('admin',array('selectedtab'=>'3'));
     }
     public function __updatestatus() {
-        // save data into the commentadmin table
-        $this->objCommentAdmin->updateStatus($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
-        $this->nextAction('commentadmin');
+       $this->objCommentAdmin->updateStatus($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
+       $this->nextAction('adminaads',array('selectedtab'=>'3'));
     }
 
 }
-
-
-/*
-$this->objUser = $this->newObject('user', 'security');
-$this->userId = $this->objUser->userId();
-$this->userName = $this->objUser->username($this->userId);
-if ($this->objUser->isAdmin())
-{
-$this->userLevel = 'admin';
-}
-elseif ($this->objUser->isLecturer())
-{
-$this->userLevel = 'lecturer';
-}
-elseif ($this->objUser->isStudent())
-{
-$this->userLevel = 'student';
-} else
-{
-$this->userLevel = 'guest';
-}
-*/

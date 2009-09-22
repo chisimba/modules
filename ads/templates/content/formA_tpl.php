@@ -16,6 +16,7 @@ $buttonscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResource
 
 $searchfieldjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/SearchField.js').'" type="text/javascript"></script>';
 $gridsearchjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/LiveSearch.js').'" type="text/javascript"></script>';
+$proposaldetailsjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/proposaldetails.js','ads').'" type="text/javascript"></script>';
 
 $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
@@ -25,6 +26,7 @@ $this->appendArrayVar('headerParams', $formAjs);
 
 $this->appendArrayVar('headerParams', $searchfieldjs);
 $this->appendArrayVar('headerParams', $gridsearchjs);
+$this->appendArrayVar('headerParams', $proposaldetailsjs);
 
 $header = new htmlheading($this->objLanguage->languageText('mod_ads_titleA','ads'), 2);
 

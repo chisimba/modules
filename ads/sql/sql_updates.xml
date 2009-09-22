@@ -1,14 +1,15 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
     <update>
-        <table>tbl_ads_faculty</table>
-        <version>0.073</version>
-        <description>Modify faculty table</description>
+        <table>tbl_ads_course_proposals</table>
+        <version>0.12</version>
+        <description>Modify course proposal table</description>
         <data>
-        	<alter>
-    			<length>50</length>
-                        <name>name</name>
-		</alter>
+        	<add>
+    			<length>5</length>
+                        <name>phase</name>
+                        <type>text</type>
+		</add>
 	</data>
     </update>
 </updates>

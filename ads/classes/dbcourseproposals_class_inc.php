@@ -13,7 +13,7 @@ class dbcourseproposals extends dbTable{
         parent::init('tbl_ads_course_proposals');  //super
         $this->table = 'tbl_ads_course_proposals';
         $this->objUser = $this->getObject ( 'user', 'security' );
-
+       
     }
 
     public function addCourseProposal($faculty, $title){
@@ -24,9 +24,14 @@ class dbcourseproposals extends dbTable{
             'userid' => $this->objUser->userId(),
             'creation_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
             'status' =>'0',
+            'phase' =>'0'
         );
 
         $courseProposalId = $this->insert($data);
+        $objDocumentStore = $this->getObject('dbdocument');
+        $objProposalMembers=$this->getObject('dbproposalmembers');
+        $objDocumentStore->updateRecord($courseProposalId, 'A', 'A1', $title, $this->objUser->email());
+        $objProposalMembers->saveMember($this->objUser->userId(),$courseProposalId);
         return $courseProposalId;
     }
 
@@ -39,9 +44,11 @@ where cp.deleteStatus <> 1 ';
         $sql="select distinct cp.* from tbl_ads_course_proposals cp,tbl_ads_documentstore ds, tbl_ads_proposalmembers ms
 where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$this->objUser->email()."' or ms.userid = '".$userid."')
      and cp.id=ds.coursecode and cp.id=ms.courseid and ds.coursecode=ms.courseid";
+          
         }
 
         $rows=$this->getArray($sql);
+    
         return $rows;
     }
 
@@ -71,7 +78,6 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
     public function updateProposalStatus($id, $status) {
         $data = array('status'=>$status);
         $courseProposalStatus = $this->update('id', $id, $data, $this->table);
-
         return $courseProposalStatus;
     }
 
@@ -88,14 +94,11 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
         return $data['title'];
     }
      public function getStatus($id) {
-         $statuscodes=  array(
-    "0"=> 'New',
-    "1"=>'APO Comment',
-    "2"=>'Library comment',
-    "3"=>'Subsidy comment',
-    "4"=>'Faculty subcommittee',
-    "5"=>'Faculty',
-    "6"=> 'APDC');
+         $statuscodes=
+         array(
+         "0"=> 'Prposal Phase',
+         "1"=>'APO Comment',
+         "2"=>'Faculty Approval');
         $data = $this->getRow('id', $id, $this->table);
         return $statuscodes[$data['status']];
     }
@@ -111,17 +114,23 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
         $data = array('faculty'=>$faculty, 'title'=>$title);
         $courseProposalStatus = $this->update('id', $id, $data, $this->table);
     }
-
+    public function updatePhase($id,$phase) {
+        $data = array('phase'=>$phase);
+        return $this->update('id', $id, $data, $this->table);
+    }
     public function deleteProposal($id) {
         $data = array('deleteStatus'=>'1');
         $courseProposalStatus = $this->update('id', $id, $data, $this->table);
 
         return $courseProposalStatus;
     }
-
     public function getID($title) {
         $data = $this->getRow('title', $title, $this->table);
         return $data['id'];
+    }
+    public function getFacultyId($id) {
+        $data = $this->getRow('id', $id, $this->table);
+        return $data['faculty'];
     }
 }
 ?>

@@ -2,7 +2,21 @@
 function showTabs() {
     var args=showTabs.arguments;
     var selectedTab=args[0];
-   
+    var showMembers=args[1];
+     var tabs=[];
+      if(showMembers == 'true'){
+         tabs= [
+            {contentEl:'contentcontent', title: 'Proposal Summary'},
+            {contentEl: 'tree-div', title: 'Proposal History'},
+            {contentEl: 'memberscontent', title: 'Proposal Comment Editors'}
+        ];
+      }else{
+        tabs= [
+           {contentEl:'contentcontent', title: 'Proposal Summary'},
+           {contentEl: 'tree-div', title: 'Proposal History'}
+
+        ];
+      }
     // basic tabs, first tabs contains the Course details, second tabs contains course history
     var tabs = new Ext.TabPanel({
         renderTo: 'tabs',
@@ -11,11 +25,7 @@ function showTabs() {
         frame:false,
         
         defaults:{autoHeight: true},
-        items:[
-            {contentEl:'contentcontent', title: 'Proposal Summary'},
-            {contentEl: 'tree-div', title: 'Proposal History'},
-            {contentEl: 'memberscontent', title: 'Proposal Comment Editors'}
-        ]
+        items:tabs
     });
 }
 
@@ -168,3 +178,208 @@ function showSearchWin(){
 }
 
 
+function forwardForAPOComment(courseid,version){
+
+Ext.MessageBox.confirm('Forward Proposal?', 'Are you sure you want to forward this proposal for APO Comments?', function(btn){
+
+  if (btn == 'yes') {
+    window.location.href='?module=ads&action=updatephase'+'&phase=1&id='+courseid+'&version='+version;
+  }
+
+});
+}
+
+
+
+
+
+function forwardProposal(){
+    var args=forwardProposal.arguments;
+    var url=args[0];
+    var email=args[1];
+    var courseid=args[2];
+
+  Ext.MessageBox.confirm('Forward Proposal?', 'Are you sure you want to forward the proposal to '+email+'?', function(btn){
+
+  if (btn == 'yes') {
+    window.location.href='?module=ads&action=sendproposal'+'&email='+email+'&courseid='+courseid;
+  }
+});
+}
+
+function forwardToOwner(courseid,email){
+   
+  Ext.MessageBox.confirm('Forward Proposal?', 'Are you sure you want to forward the proposal to owner  ['+email+']?', function(btn){
+
+  if (btn == 'yes') {
+    window.location.href='?module=ads&action=sendproposal'+'&email='+email+'&courseid='+courseid;
+  }
+});
+}
+
+function forwardToOwnerFromAPO(courseid,email){
+
+  Ext.MessageBox.confirm('Forward Proposal?', 'Are you sure you want to forward the proposal to owner  ['+email+']?', function(btn){
+
+  if (btn == 'yes') {
+    window.location.href='?module=ads&action=forwardtoownerfromapo'+'&email='+email+'&courseid='+courseid;
+  }
+});
+}
+function forwardProposalToModerator(data,courseid){
+    var fowardWin;
+    var myForm = getMyForm(data);
+    fowardWin = new Ext.Window({
+        id:'fowardWin',
+        title:'Forward To Moderator',
+        width:500,
+        x:10,
+        y: 10,
+        height:350,
+        closable:false,
+        border:false,
+        applyTo:'fowardwin',
+        defaultButton:'combo',
+        items: myForm,
+        buttons:[{
+            text:'Close',
+            iconCls:'icon-undo',
+            scope:this,
+            handler:function() {
+                fowardWin.hide();
+                window.location.reload(true);
+            }
+        }]
+    });
+    fowardWin.show();
+    myForm.getSelectionModel().on('rowselect', function(sm, rowIdx, r) {
+           fowardToModerator(r.get('faculty'),courseid);
+    });
+}
+
+function addProposalMember(){
+   var args=addProposalMember.arguments;
+   var url=args[0];
+   var email=args[1];
+   var courseid=args[2];
+   var userid=args[3];
+   window.location.href='?module=ads&action=addproposalmember'+'&email='+email+'&courseid='+courseid+"&userid="+userid;
+}
+
+function getMyForm(data) {
+    // create the data store
+    var store = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'faculty'},
+           {name: 'moderator'}
+        ]
+    });
+    store.loadData(data);
+
+    // create the Grid
+    var grid = new Ext.grid.GridPanel({
+        store: store,
+        columns: [
+            {id: 'faculty', header: "Faculty", width: 160, sortable: true, dataIndex: 'faculty'},
+            {header: "Moderator", width: 120, sortable: true, dataIndex: 'moderator'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'faculty',
+        height:250,
+        width:460,
+
+        border:false,
+        sm: new Ext.grid.RowSelectionModel({singleSelect: true})
+    });
+
+    return grid;
+}
+
+function fowardToModerator(faculty,courseid) {
+    if(confirm("Are you sure you want to foward to the faculty of " + faculty)) {
+        window.location.href = "?module=ads&action=sendproposaltomoderator&faculty="+faculty+"&courseid="+courseid;
+    }
+}
+
+
+function showEditProposalWin(faculties,url,selectedFaculty,proposalName){
+  var facutlystore = new Ext.data.ArrayStore({
+        fields:
+         [
+         {name: 'faculty'},
+         {name: 'id'}
+         ],
+        data : faculties
+    });
+    var facultyField = new Ext.form.ComboBox({
+        store: facutlystore,
+        displayField:'faculty',
+        fieldLabel:'Faculty',
+        typeAhead: true,
+        mode: 'local',
+        value: selectedFaculty,
+        editable:false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select faculty...',
+        selectOnFocus:true,
+        valueField: 'id',
+        hiddenName : 'facultyid'
+
+    });
+      var form = new Ext.FormPanel({
+            standardSubmit: true,
+            labelWidth: 125,
+            url:url,
+            frame:true,
+            title: 'Edit Course Proposal',
+            bodyStyle:'padding:5px 5px 0',
+            width: 350,
+            defaults: {width: 230},
+            defaultType: 'textfield',
+
+            items: [
+                     facultyField,
+                    {
+                    fieldLabel: 'Title',
+                    value:proposalName,
+                    name: 'title',
+                    id: 'input_title',
+                    allowBlank: false
+                }
+            ]
+
+        });
+
+    var addProposalWin;
+    if(!addProposalWin){
+            addProposalWin = new Ext.Window({
+                applyTo:'out-search-xwin',
+                layout:'fit',
+                width:500,
+                height:250,
+                x:250,
+                y:150,
+                closeAction:'destroy',
+                plain: true,
+
+               items: form,
+               buttons: [{
+                    text:'Save',
+                    handler: function(){
+                        if (form.url)
+                            form.getForm().getEl().dom.action = form.url;
+
+                        form.getForm().submit();
+                    }
+                },{
+                    text: 'Cancel',
+                    handler: function(){
+                       addProposalWin.hide();
+                    }
+                }]
+            });
+        }
+        addProposalWin.show(this);
+}

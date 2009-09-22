@@ -1,12 +1,8 @@
 <?php
+
 //load class
 $this->loadclass('link','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
-
-// objects
-$courseProposals = $this->objCourseProposals->getCourseProposals($this->objUser->userId());
-$allFaculty = $this->objFaculty->getAllFaculty();
-$facultyRC = $this->objFaculty->getFacultyRC();
 
 // scripts
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
@@ -14,10 +10,16 @@ $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/courseproposal.css').'"/>';
 
+$courseproposaljs = '<script language="JavaScript" src="'.$this->getResourceUri('js/courseproposal.js','ads').'" type="text/javascript"></script>';
+$proposaldetailsjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/proposaldetails.js','ads').'" type="text/javascript"></script>';
+
 $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $maincss);
+
+$this->appendArrayVar('headerParams', $courseproposaljs);
+$this->appendArrayVar('headerParams', $proposaldetailsjs);
 
 // language stuff
 $note = $this->objLanguage->languageText('mod_ads_note', 'ads');
@@ -31,35 +33,35 @@ $lastEdit = $this->objLanguage->languageText('mod_ads_lastedit', 'ads');
 $edit = $this->objLanguage->languageText('mod_ads_edit', 'ads');
 $faculty = $this->objLanguage->languageText('mod_ads_faculty', 'ads');
 
+$objCourseProposals = $this->getObject('dbcourseproposals');
+$objUser = $this->getObject ( 'user', 'security' );
+$courseProposals =$objCourseProposals->getCourseProposals($objUser->userId());
+$objFaculty = $this->getObject('dbfaculty');
+$facultyList = $objFaculty->getAllFaculty();
+
 $facultyData = "";
+$tmpFacultyData = "";
 $count = 1;
-foreach($allFaculty as $data) {
-    if($count != $facultyRC) {
-        $facultyData .= "['".$data['name']."'],";
-    }
-    else {
-        $facultyData .= "['".$data['name']."']";
-    }
-    
-    $count++;
+$total=count($facultyList);
+foreach($facultyList as $data) {
+  $facultyData.="['".$data['name']."','".$data['id']."']";
+  $tmpFacultyData.="[\'".$data['name']."\',\'".$data['id']."\']";
+  if($count < $total){
+      $facultyData.=",";
+      $tmpFacultyData.=",";
+  }
+   $count++;
 }
 
-/*$facultyData = "['Commerce, Law and Management'],
-        ['Engineering and the Built Environment'],
-        ['Health Sciences'],
-        ['Humanities'],
-        ['Science']";*/
-
 $statuscodes=  array(
-              "0"=> 'New',
+              "0"=> 'Proposal Phase',
               "1"=>'APO Comment',
-              "2"=>'Library comment',
-              "3"=>'Subsidy comment',
-              "4"=>'Faculty subcommittee',
-              "5"=>'Faculty',
-              "6"=> 'APDC');
+              "2"=>'Faculty Approval'
+);
 
 $addButton = new button('add','Add Proposal');
+$adminButton = new button('addmin','Admin');
+$adminButton->setId('admin-btn');
 $addModerator = new button('addModerator', 'Add Moderator');
 $addFaculty = new button('addFaculty', 'Faculty List');
 $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
@@ -85,8 +87,8 @@ $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent($postLoginMenu->show());
 $rightSideColumn =  '<h1>Course/Unit Proposals</h1><div id ="proposal-note">';
 $rightSideColumn .=$content.$note;
-$adminButtons=$this->objUser->isAdmin()?$addFaculty->show().'&nbsp;&nbsp;'.$commentAdminButton->show():"";
-$rightSideColumn .='</div><div id="grouping-grid">'.$adminButtons."&nbsp;&nbsp;".$addButton->show().'<br /><br /></div>';
+$adminButtons=$this->objUser->isAdmin()?$adminButton->show():"";
+$rightSideColumn .='</div><div id="grouping-grid">'.$addButton->show()."&nbsp;&nbsp;".$adminButtons.'<br /><br /></div>';
 //where we render the 'popup' window
 $renderSurface='<div id="addsession-win" class="x-hidden"><div class="x-window-header"></div></div>';
 $renderSurface.='<div id="editfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>';
@@ -104,10 +106,10 @@ $reviewLink=new link();
 $commentLink=new link();
 
 $data = "";
-$numberOfRows = $this->objCourseProposals->getNumberOfCourses($this->objUser->userId());
 $cfac=1;
 $total=count($courseProposals);
 foreach($courseProposals as $value) {
+    
     $verarray = $this->objDocumentStore->getVersion($value['id'], $this->objUser->userId());
     $titleLink->link($this->uri(array('action'=>'showcourseprophist', 'courseid'=>$value['id'],'selectedtab'=>'0')));
     $titleLink->link=$value['title'];
@@ -122,21 +124,23 @@ foreach($courseProposals as $value) {
     $data .= "'".$value['creation_date']."',";
 
     $data .= "'".$this->objUser->fullname($value['userid'])."',";
-    $statusShow=$this->objUser->isAdmin()? "'".$statusLink->show()."',":"'".$statuscodes[$value['status']]."',";
+    $statusShow="'".$statuscodes[$value['status']]."',";
     $data .=$statusShow;
-    $data .= "'".$value['faculty']."',";
+    $data .= "'".$this->objFaculty->getFacultyName($value['faculty'])."',";
     $objIcon->setIcon('delete');
-    $objIcon->extra = "id=\"deleteBtn\"";
+    $delValJS="deleteProposal(\'".$value['id']."\');return false;";
+
+    $objIcon->extra = 'onClick="'.$delValJS.'"';
+
     $deleteLink->link=$objIcon->show();
     $delShow=$this->objUser->isAdmin()? $deleteLink->show():"";
     $data .= "'".$delShow;
 
     $objIcon->setIcon('edit');
-    $objIcon->extra = "id=\"editBtn\"";
-    $editLink->link=$objIcon->show();
-    $editShow=$this->objUser->isAdmin()? $editLink->show():"";
-    $data .=$editShow;
-
+    $courseData = $this->objCourseProposals->getCourseProposal($value['id']);
+    $facultyVal = $courseData['faculty'];
+    $unitNameVal = $courseData['title'];
+ 
     $data .= "'";
     
     $data .= "]";
@@ -151,105 +155,15 @@ $faculty = $objLanguage->languageText('mod_ads_faculty','ads');
 $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
 $submitUrl = $this->uri(array('action'=>'savecourseproposal'));
 $cancelUrl = $this->uri(array('action'=>'NULL'));
-$addProposalWindowJS=
-"
-    var addProposalWin;
-    var button = Ext.get('addproposal-btn');
-
-    button.on('click', function(){
-       if(!addProposalWin){
-            addProposalWin = new Ext.Window({
-                applyTo:'addsession-win',
-                layout:'fit',
-                width:500,
-                height:250,
-                x:250,
-                y:150,
-                closeAction:'destroy',
-                plain: true,
-
-               items: form,
-               buttons: [{
-                    text:'Save',
-                    handler: function(){
-                        if (form.url)
-                            form.getForm().getEl().dom.action = form.url;
-
-                        form.getForm().submit();
-                    }
-                },{
-                    text: 'Cancel',
-                    handler: function(){
-                       addProposalWin.hide();
-                    }
-                }]
-            });
-        }
-        addProposalWin.show(this);
-});
-";
-
-$faculties=
-    "
-   var faculties= [
-        $facultyData
-      ]
-
-   var facutlystore = new Ext.data.ArrayStore({
-        fields: ['faculty'],
-        data : faculties
-    });
-    var facultyField = new Ext.form.ComboBox({
-        store: facutlystore,
-        displayField:'faculty',
-        fieldLabel:'Faculty',
-        typeAhead: true,
-        mode: 'local',
-        editable:false,
-        allowBlank: false,
-        forceSelection: true,
-        triggerAction: 'all',
-        emptyText:'Select faculty...',
-        selectOnFocus:true,
-        name : 'faculty'
-
-    });
-";
-
-$proposalForm=
- "
-       var form = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 125, // label settings here cascade unless overridden
-            url:'".str_replace("amp;", "", $submitUrl)."',
-            frame:true,
-            title: 'Add  New Course Proposal',
-            bodyStyle:'padding:5px 5px 0',
-            width: 350,
-            defaults: {width: 230},
-            defaultType: 'textfield',
-
-            items: [
-                     facultyField,
-                    {
-                    fieldLabel: '".$unitName."',
-                    name: 'title',
-                    id: 'input_title',
-                    allowBlank: false
-                }
-            ]
-
-        });
- ";
-
-$mainjs = "/*!   * Ext JS Library 3.0.0
-                 * Copyright(c) 2006-2009 Ext JS, LLC
-                 * licensing@extjs.com
-                 * http://www.extjs.com/license
-                 */
+$mainjs = "
                 Ext.onReady(function(){
-
-                    Ext.QuickTips.init();
+                Ext.QuickTips.init();
+                var faculties= [
+                  $facultyData
+                 ];
+                var url='".str_replace("amp;", "", $submitUrl)."';
+                initAddProposal(faculties,url);
+                    
                     var xg = Ext.grid;
                     // shared reader
                     var reader = new Ext.data.ArrayReader({}, [
@@ -271,9 +185,9 @@ $mainjs = "/*!   * Ext JS Library 3.0.0
 
                         columns: [
                             {id:'".$title."',header: \"".$title."\", width: 200, dataIndex: 'title'},
-                            {header: \"".$dateCreated."\", width: 150},
+                            {header: \"".$dateCreated."\", width: 120},
                             {header: \"".$owner."\", width: 120},
-                            {header: \"".$status."\", width: 50, dataIndex: 'status'},
+                            {header: \"".$status."\", width: 150, dataIndex: 'status'},
                             {header: \"".$faculty."\", width: 100, dataIndex: 'faculty'}
                             ";
                           if($this->objUser->isAdmin()) {
@@ -297,157 +211,21 @@ $mainjs = "/*!   * Ext JS Library 3.0.0
                     });
                 });
 
-
+      
                 // Array data for the grids
                Ext.grid.Data = [".$data."];
-                 ".$faculties."
-                  ".$proposalForm."
-                  ".$addProposalWindowJS."
+                
                ";
-
-$delBtnjs =$this->objUser->isAdmin()? "
-Ext.onReady(function() {
-    var addFacBtn = Ext.get('addfaculty-btn');
-    addFacBtn.on('click', function() {
-        url = '".str_replace("amp;", "",$this->uri(array('action'=>'facultylist')))."'
-        goFactList(url);
-    });
-
-    var commentAdminBtn = Ext.get('commentadmin');
-  
-    commentAdminBtn.on('click', function() {
-      window.location.href='".str_replace("amp;", "",$this->uri(array('action'=>'commentadmin')))."'
-     });
-
-
-
-    var goFactList = function() {
-        window.location.href = url;
-    }
-    var getDelBtn = function(){
-        var delBtn = Ext.get('deleteBtn');
-        delBtn.on('click', function(){
-            Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this course proposal?', showResult);
-        })
-    }
-
-    function showResult(btn){
-        var s = String.format.apply(String, Array.prototype.slice.call(btn, 0)),
-            url = '".str_replace("amp;", "",$this->uri(array('action'=>'deletecourseproposal','id'=>$value['id'])))."';
-
-        if(s == 'y') {
-            // go to the delete page
-            goDelete(url);
-        }
-    };
-
-    // executes after 2 seconds:
-    getDelBtn.defer(2000, this);
-});
-
-function goDelete(url) {
-    window.location.href = url;
-}
-
-":"";
 
 $submitUrl = $this->uri(array('action'=>'savecourseproposal','edit'=>true,'id'=>$value['id']) );
 $cancelUrl = $this->uri(array('action'=>'NULL'));
 
-$courseData = $this->objCourseProposals->getCourseProposal($value['id']);
-$facultyVal = $courseData['faculty'];
-$unitNameVal = $courseData['title'];
 
-$editBtnjs =$this->objUser->isAdmin()? "
-Ext.onReady(function() {
-    var editfaculties= [
-        ['Commerce, Law and Management'],
-        ['Engineering and the Built Environment'],
-        ['Health Sciences'],
-        ['Humanities'],
-        ['Science']
-    ];
-    var editfacultystore = new Ext.data.ArrayStore({
-        fields: ['faculty'],
-        data : editfaculties
-    });
-    var editfacultyField = new Ext.form.ComboBox({
-        store: editfacultystore,
-        displayField:'faculty',
-        fieldLabel:'Faculty',
-        typeAhead: true,
-        mode: 'local',
-        editable:false,
-        allowBlank: false,
-        value:'".$facultyVal."',
-        forceSelection: true,
-        triggerAction: 'all',
-        emptyText:'Select faculty...',
-        selectOnFocus:true,
-        name : 'faculty'
-    });
-    var editFacultyForm = new Ext.FormPanel({
-        standardSubmit: true,
-        labelWidth: 125,
-        url:'".str_replace("amp;", "", $submitUrl)."',
-        title: 'Edit Course Proposal',
-        bodyStyle:'padding:5px 5px 0',
-        width: 350,
-        defaults: {width: 230},
-        defaultType: 'textfield',
-        items: [
-                editfacultyField,
-                {
-                fieldLabel: '".$unitName."',
-                name: 'title',
-                value: '".$unitNameVal."',
-                id: 'input_title',
-                allowBlank: false
-            }
-        ]
-    });
-
-    var getEditBtn = function(){
-        var editProposalWin,
-            editButton = Ext.get('editBtn');
-
-        editButton.on('click', function() {
-            if(!editProposalWin){
-                editProposalWin = new Ext.Window({
-                    applyTo:'editfaculty-win',
-                    layout:'fit',
-                    width:500,
-                    height:250,
-                    x:250,
-                    y:150,
-                    closeAction:'destroy',
-                    plain: true,
-
-                   items: editFacultyForm,
-                   buttons: [{
-                        text:'Save',
-                        handler: function(){
-                            if (editFacultyForm.url)
-                                editFacultyForm.getForm().getEl().dom.action = editFacultyForm.url;
-
-                            editFacultyForm.getForm().submit();
-                        }
-                    },{
-                        text: 'Cancel',
-                        handler: function(){
-                           editProposalWin.hide();
-                        }
-                    }]
-                });
-            }
-            editProposalWin.show(this);
-        });
-    }
-
-    // executes after 2 seconds:
-    getEditBtn.defer(2000, this);
-});":"";
-
-echo "<script type=\"text/javascript\">".$mainjs.$delBtnjs.$faculties.$editBtnjs."</script>";
+$btnListenerJS = "jQuery(document).ready(function() {
+                   jQuery(\"#admin-btn\").click(function() {
+                         window.location.href='".str_replace("amp;", "",$this->uri(array('action'=>'adminads','selectedtab'=>'0')))."'
+                    });
+              });";
+echo "<script type=\"text/javascript\">".$btnListenerJS.$mainjs."</script>";
 
 ?>

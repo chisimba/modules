@@ -94,8 +94,8 @@ function initCommentaddWin(){
         layout:'fit',
         width:500,
         height:250,
-        x:250,
-        y:150,
+        x:25,
+        y:15,
         closeAction:'destroy',
         plain: true,
 
@@ -164,8 +164,8 @@ function editCommentaddWin(){
         layout:'fit',
         width:500,
         height:250,
-        x:250,
-        y:150,
+        x:25,
+        y:15,
         closeAction:'destroy',
         plain: true,
 

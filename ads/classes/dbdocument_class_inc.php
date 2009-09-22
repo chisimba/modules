@@ -144,6 +144,7 @@ class dbdocument extends dbtable{
         $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'ads');
         $subject=$objSysConfig->getValue('EMAIL_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_BODY', 'ads');
+
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid,'selectedtab'=>'0'));
         $body.=' '. str_replace("amp;", "", $linkUrl);
         $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);

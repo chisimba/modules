@@ -28,13 +28,10 @@ class dbcoursecomments extends dbTable{
     }
     public function getAllComments($courseid) {
         $statuscodes=  array(
-              "0"=> 'New',
+              "0"=> 'Proposal Phase',
               "1"=>'APO Comment',
-              "2"=>'Library comment',
-              "3"=>'Subsidy comment',
-              "4"=>'Faculty subcommittee',
-              "5"=>'Faculty',
-              "6"=> 'APDC');
+              "2"=>'Faculty Approval');
+;
         $sql = "select * from ".$this->table." where courseid = '".$courseid."' order by status";
         $data = $this->getArray($sql);
         $comments="";
