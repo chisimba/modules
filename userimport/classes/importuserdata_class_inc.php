@@ -28,6 +28,7 @@ class importuserdata extends object
         $this->objConfig=$this->getObject('altconfig','config');
         $this->objUser=$this->getObject('user','security');
         $this->objUserAdmin=$this->getObject('useradmin_model','security');
+        $this->objUserAdmin2=$this->getObject('useradmin_model2','security');
         $this->objPassword=$this->getObject('passwords','useradmin');
     }
 
@@ -193,12 +194,16 @@ class importuserdata extends object
             //return 'exists';
             // We want to add the user to courses, etc, so we still pass the info along.
         } else {
-            // Check to see that the username is unique
-            // If its already taken, we try another one
-            if ($this->objUserAdmin->valueExists('username',$username)){
-                $username=str_replace(' ','',strtolower($firstname[0].$firstname[1].$surname));
+            // Check if the user exists
+            $cId=$this->checkForUser($username,$firstname,$surname,$email);
+            if ($cId==FALSE){
+                // Check to see that the username is unique
+                // If its already taken, we try another one
                 if ($this->objUserAdmin->valueExists('username',$username)){
-                    $username=str_replace(' ','',strtolower($firstname[0].$surname.rand(100,999)));
+                    $username=str_replace(' ','',strtolower($firstname[0].$firstname[1].$surname));
+                    if ($this->objUserAdmin->valueExists('username',$username)){
+                        $username=str_replace(' ','',strtolower($firstname[0].$surname.rand(100,999)));
+                    }
                 }
             }
         
@@ -235,7 +240,9 @@ class importuserdata extends object
             $line['howCreated']='import';
 
             // Add this user by calling the useradmin object.
-            $id=$this->objUserAdmin->addUser($line);
+            //$id=$this->objUserAdmin->addUser($line);
+            $id=$this->objUserAdmin2->addUser($userId, $username, $line['password'],$line['title'], $line['firstname'], $surname, $email, $line['sex'],'','', $userId, 'userimport','1');
+
                                                                                                     
             // Add the staff number
             $staffnumber=$userId;
