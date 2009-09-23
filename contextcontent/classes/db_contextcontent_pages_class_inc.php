@@ -101,7 +101,8 @@ class db_contextcontent_pages extends dbtable
                     'language' => $language,
                     'original' => 'Y',
                     'creatorid' => $this->objUser->userId(),
-                    'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+                    'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                    'datemodified' => strftime('%Y-%m-%d %H:%M:%S', mktime())
                 ));
         } else {
             return FALSE;
