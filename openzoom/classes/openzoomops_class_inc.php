@@ -90,10 +90,11 @@ class openzoomops extends object
     *  
     *  
     */
-    public function getImage($width, $height, $imagePath, $xmlFile=NULL) {
-    	$img = '<img src="' . $imagePath  . '" width="' 
-    	  . $width '" height="' . $height '" openzoom:source="' 
-    	  . $xmlFile . '"/>';
+    public function getImage($width, $height, $imagePath, $xmlFile) {
+    	$img = '<img src="' . $imagePath  . '" width="'
+    	  . $width . '" height="' . $height . '" openzoom:source="' 
+    	  . $xmlFile . '" openzoom:viewerpath="' . $this->getPlayer()
+    	  . '" />';
         return $img;
     }
     
@@ -104,14 +105,18 @@ class openzoomops extends object
     *  @return string The resource path to the player
     *  
     */
-    public function getPlayer {
-    	$player = $this->getResourcePath('flash/OpenZoomViewer.swf');
+    public function getPlayer() {
+    	$player = $this->getResourceUri('flash/');
+    	//die($player);
     	return $player;
     }
     
     public function loadJsLib()
     {
-        
+        $js = '<script src="' 
+          . $this->getResourceUri('js/jquery.openzoom.js') 
+    	  . '" type="text/javascript">';
+        return $this->appendArrayVar('headerParams', $js);
     }
     
     public function buildJavascript()
