@@ -83,4 +83,15 @@ class activitystreamer extends controller
     	echo $objUtils->jsonListActivity($this->getParam('start'), $this->getParam('limit'));
     	exit(0);
     }
+     /**
+     * Method to list all the context chapters and pages
+     *
+     * @access protected
+     */
+    protected function __jsoncourseactivities()
+    {
+    	$objUtils = $this->getObject('activityutilities','activitystreamer');
+    	echo $objUtils->jsonCourseActivies($this->getParam('start'), $this->getParam('limit'));
+    	exit(0);
+    }
 }
