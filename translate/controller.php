@@ -81,6 +81,10 @@ class translate extends controller
                     // english language table is incorrectly entered as tbl_english instead of tbl_en
                     if ($lang['id'] == "1") {
                         $lang['languagecode'] = 'tbl_en';
+                        
+/*
+$sql='SELECT * FROM 
+*/                        
                         // if the language table is swahili
                         if ($lang['id'] =="gen17Srv38Nme37_2172_1251353289") {
                         $lang['languagecode'] = 'tbl_ks';
@@ -106,6 +110,14 @@ class translate extends controller
                     set_time_limit(180);
                     $lang = $this->getParam('imlanguage');
                     $type = $this->getParam('importSelection');
+                    
+                    $name=$_POST['name'];
+                    $meta=$_POST['meta'];
+		    $error_text=$_POST['error_text'];
+		    $values=array('name'=>$name,'meta'=>$meta,'error_text'=>$error_text);
+		    $objDbform=$this->newObject('dbform','translate');
+		    //echo  var_dump($values);die();
+		    $objDbform->addfields($values);
                     
                     $uploadFile = $this->PODirectory.basename($_FILES['pofile']['name']);
                     if (!move_uploaded_file($_FILES['pofile']['tmp_name'], $uploadFile)) {
@@ -133,7 +145,7 @@ class translate extends controller
                     return $this->nextAction(null,array('feedback'=>'import','imlanguage'=>$lang));
 
                 default: 
-                    return "main_tpl.php";
+                    return "form_tpl.php";
             }
     }
 
