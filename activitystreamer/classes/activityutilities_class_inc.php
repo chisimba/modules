@@ -128,55 +128,43 @@ class activityutilities extends object {
     	$start = (empty($start)) ? 0 : $start;
     	$limit = (empty($limit)) ? 25 : $limit;
      if(!empty($this->contextCode)){
-    	 $all = $this->objContextStreamer->getArray("SELECT count( id ) as cnt FROM tbl_contextcontent_activitystreamer");
-    	 $activities = $this->objContextStreamer->getAll("WHERE contextcode='".$this->contextCode."' ORDER BY datecreated DESC limit ".$start.", ".$limit);
-    	 $contextChapters = $this->objContextChapters->getArray("SELECT chapterid FROM tbl_contextcontent_chaptercontext where contextcode='".$this->contextCode."'");
-    	 $chapterIds = array();
-    	 foreach($contextChapters as $contextChapter){
-    	   $chapterIds[] = $contextChapter['chapterid'];
-    	 }
-    	 $pageOrder = $this->objContentOrder->getArray("SELECT id FROM tbl_contextcontent_order where contextcode='".$this->contextCode."'");
+    	 $all = $this->objContentOrder->getArray("SELECT count( tbl_contextcontent_order.id ) as cnt
+FROM tbl_contextcontent_order
+INNER JOIN tbl_contextcontent_titles ON ( tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id )
+INNER JOIN tbl_contextcontent_pages ON ( tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id )
+WHERE tbl_contextcontent_order.contextcode = '".$this->contextCode."'");
+
+    	 $activities = $this->objContentOrder->getArray("SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.titleid, tbl_contextcontent_pages.menutitle, tbl_contextcontent_order.contextcode, rght, tbl_contextcontent_pages.creatorid, tbl_contextcontent_pages.datecreated, tbl_contextcontent_pages.modifierid, tbl_contextcontent_pages.datemodified
+FROM tbl_contextcontent_order
+INNER JOIN tbl_contextcontent_titles ON ( tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id )
+INNER JOIN tbl_contextcontent_pages ON ( tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id )
+WHERE tbl_contextcontent_order.contextcode = '".$this->contextCode."' 
+ORDER BY tbl_contextcontent_pages.datemodified DESC, tbl_contextcontent_pages.datecreated DESC
+LIMIT ".$start.", ".$limit);
+
     	 $activityCount = $all[0]['cnt'];
-    	 $cnt = 0;
     	 $str = '{"totalCount":"'.count($all).'","activities":[';
     	 if($activityCount > 0)
     	 {
     	 $activitiesArray = array();
     		 foreach($activities as $activity)
     		 {
-        //Check if record is a chapter
-        if(in_array($activity['contextitemid'],$chapterIds)){
-         //Get the chapter title
-         $chapterTitle = $this->objContextChapters->getContextChapterTitle($activity['contextitemid']);
-         //Check if scorm
-         $isChapterScorm = $this->objContextChapters->getArray("SELECT scorm FROM tbl_contextcontent_chaptercontext where chapterid='".$activity['contextitemid']."'");
     			  $arr = array();
     			  $arr['id'] = $activity['id'];
-    			  $arr['title'] = $chapterTitle;
+    			  $arr['title'] = $activity['menutitle'];
     			  $arr['contextcode'] = $activity['contextcode'];
-    			  if($isChapterScorm[0]=='Y'){
-         $chapterInfo = $this->objChapterContent->getChapterContent($activity['contextitemid']);
-    			   $arr['contextpath'] = "module=contextcontent&action=viewscorm&folderId=".$chapterInfo['introduction']."&chapterid=".$activity['contextitemid'];
+    			  $arr['contextpath'] = "module=contextcontent&action=viewpage&id=".$activity['id'];
+    			  if(!empty($activity['modifierid'])){
+    			   $arr['createdby'] = htmlentities($this->objUser->fullname($activity['modifierid']));
     			  }else{
-    			   $arr['contextpath'] = "module=contextcontent&action=viewchapter&id=".$activity['contextitemid'];
+    			   $arr['createdby'] = htmlentities($this->objUser->fullname($activity['creatorid']));
     			  }
-    			  $arr['createdby'] = htmlentities($this->objUser->fullname($activity['userid']));
-    			  $arr['datecreated'] = $activity['datecreated'];
+    			  if(!empty($activity['datemodified'])){
+     			  $arr['datecreated'] = $activity['datemodified'];
+         }else{
+          $arr['datecreated'] = $activity['datecreated'];
+         }
     		 	 $activitiesArray[] = $arr;
-    		 	}else{
-         //Get titleid
-         $getPageTitleId = $this->objContentOrder->getArray('SELECT titleid FROM tbl_contextcontent_order WHERE id="'.$activity['contextitemid'].'"');
-         //Get page title
-         $pageTitle = $this->objContentPages->getArray("SELECT menutitle FROM tbl_contextcontent_pages WHERE titleid='".$getPageTitleId[0]['titleid']."'");
-    			  $arr = array();
-    			  $arr['id'] = $activity['id'];
-    			  $arr['title'] = $pageTitle[0]['menutitle'];
-    			  $arr['contextcode'] = $activity['contextcode'];
-    			  $arr['contextpath'] = "module=contextcontent&action=viewpage&id=".$activity['contextitemid'];
-    			  $arr['createdby'] = htmlentities($this->objUser->fullname($activity['userid']));
-    			  $arr['datecreated'] = $activity['datecreated'];
-    		 	 $activitiesArray[] = $arr;
-    		 	}
     		 }
     	 }    	
     	 return json_encode(array('totalCount' => $activityCount, 'activities' =>  $activitiesArray));    	
