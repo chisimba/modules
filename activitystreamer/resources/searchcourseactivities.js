@@ -44,7 +44,7 @@ var contextdata = new Ext.data.JsonStore({
         el:'courseactivities-topic-grid',
         width:700,
         height:400,
-        title:'Course Updates',
+        title:'Course Updates - List of course pages from the most recently added/updated downwards',
         store: contextdata,
         trackMouseOver:false,
         disableSelection:true,
