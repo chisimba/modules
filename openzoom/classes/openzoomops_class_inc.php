@@ -123,6 +123,29 @@ class openzoomops extends object
     {
         
     }
+    
+    public function getXmlFileFromUrl($url)
+    {
+        $base = "../../../../";
+        $url=str_replace("http://", "", $url);
+        $url=str_replace(".jpg", "", $url);
+        $pieces = explode("/", $url);
+        $ignore = TRUE;
+        $path = "";
+        $numOfPieces = count($pieces);
+        $counter = 0;
+        foreach ($pieces as $piece) {
+            $counter++;
+            if ($piece == 'usrfiles') {
+                $ignore = FALSE;
+            }
+            if (!$ignore) {
+                $path .= $piece . "/";
+            }
+        }
+        //$path = "usrfiles/users/7924090825/openzoom/testing/me/image.xml";
+        return $base . $path . "image.xml";
+    }
 
 }
 ?>
