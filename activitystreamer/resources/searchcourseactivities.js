@@ -93,8 +93,8 @@ var contextdata = new Ext.data.JsonStore({
             pageSize: 5,
             store: contextdata,
             displayInfo: true,
-            displayMsg: 'Displaying topics {0} - {1} of {2}',
-            emptyMsg: "No topics to display",
+            displayMsg: 'Displaying pages {0} - {1} of {2}',
+            emptyMsg: "No pages to display",
             items:[
                 '-', {
                 pressed: false,
