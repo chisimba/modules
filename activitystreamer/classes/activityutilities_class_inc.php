@@ -122,11 +122,11 @@ class activityutilities extends object {
      *
      * @return string
      */    
-    public function jsonCourseActivies($start = 0, $limit=8)
+    public function jsonCourseActivies($start = 0, $limit=5)
     {
 
     	$start = (empty($start)) ? 0 : $start;
-    	$limit = (empty($limit)) ? 25 : $limit;
+    	$limit = (empty($limit)) ? 5 : $limit;
      if(!empty($this->contextCode)){
     	 $all = $this->objContentOrder->getArray("SELECT count( tbl_contextcontent_order.id ) as cnt
 FROM tbl_contextcontent_order

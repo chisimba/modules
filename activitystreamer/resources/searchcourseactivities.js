@@ -43,7 +43,7 @@ var contextdata = new Ext.data.JsonStore({
     var grid = new Ext.grid.GridPanel({
         el:'courseactivities-topic-grid',
         width:700,
-        height:400,
+        height:200,
         title:'Course Updates - List of course pages from the most recently added/updated downwards',
         store: contextdata,
         trackMouseOver:false,
@@ -90,7 +90,7 @@ var contextdata = new Ext.data.JsonStore({
 
         // paging bar on the bottom
         bbar: new Ext.PagingToolbar({
-            pageSize: 8,
+            pageSize: 5,
             store: contextdata,
             displayInfo: true,
             displayMsg: 'Displaying topics {0} - {1} of {2}',
@@ -114,5 +114,5 @@ var contextdata = new Ext.data.JsonStore({
     grid.render();
 
     // trigger the data store load
-    contextdata.load({params:{start:0, limit:8}});
+    contextdata.load({params:{start:0, limit:5}});
 });
