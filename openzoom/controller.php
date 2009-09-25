@@ -149,7 +149,6 @@ class openzoom extends controller
         return "dump_tpl.php";
     }
 
-
     /**
     *
     * Method to return an error when the action is not a valid
