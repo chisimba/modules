@@ -41,7 +41,7 @@ var contextdata = new Ext.data.JsonStore({
         return String.format('<b>{1}</b>',value, record.data.title, record.data.description);
     }
     var grid = new Ext.grid.GridPanel({
-        el:'topic-grid',
+        el:'activity-topic-grid',
         width:770,
         height:400,
         title:'List of Activities',

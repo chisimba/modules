@@ -111,7 +111,7 @@ class block_browseactivities extends object
         		var uri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'jsonlistactivities', 'module' => 'activitystreamer'))).'"; 
         		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php"; </script>');
 								//Div to render content
-        $str = '<div id="topic-grid"></div>';
+        $str = '<div id="activity-topic-grid"></div>';
         return $str;
 
     }

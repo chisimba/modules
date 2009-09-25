@@ -41,7 +41,7 @@ var contextdata = new Ext.data.JsonStore({
         return String.format('<a href="'+baseuri+'?{1}"><b>{0}</b></a>', record.data.title, record.data.contextpath, record.data.contextcode);
     }
     var grid = new Ext.grid.GridPanel({
-        el:'topic-grid',
+        el:'courseactivities-topic-grid',
         width:700,
         height:400,
         title:'Course Updates',
