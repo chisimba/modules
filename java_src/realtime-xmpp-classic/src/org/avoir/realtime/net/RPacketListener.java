@@ -84,6 +84,7 @@ public class RPacketListener implements PacketListener {
     private static ArrayList<FileChooserListener> fileChooserListeners = new ArrayList<FileChooserListener>();
     private static ArrayList<SlidesNavigator> slidesNavigatorListeners = new ArrayList<SlidesNavigator>();
     private static ArrayList<QuestionNavigator> qnNavigatorListeners = new ArrayList<QuestionNavigator>();
+    private static ArrayList<org.avoir.realtime.gui.AnswerNavigator> anNavigatorListeners = new ArrayList<org.avoir.realtime.gui.AnswerNavigator>();
     private static ArrayList<QuestionFrameListener> questionImageDownloadListeners = new ArrayList<QuestionFrameListener>();
     private static ArrayList<SlideShowListener> slideShowListeners = new ArrayList<SlideShowListener>();
     private static RPacketListener instance;
@@ -140,7 +141,15 @@ public class RPacketListener implements PacketListener {
     public static void removeQuestionNavigatorFileVewListener(QuestionNavigator nav) {
         qnNavigatorListeners.remove(nav);
     }
+    
+    public static void addAnswerNavigatorFileVewListener(org.avoir.realtime.gui.AnswerNavigator nav) {
+        anNavigatorListeners.add(nav);
+    }
 
+    public static void removeAnswerNavigatorFileVewListener(org.avoir.realtime.gui.AnswerNavigator nav) {
+        anNavigatorListeners.remove(nav);
+    }
+    
     public static void addQuestionImageDownloadListener(QuestionFrame fr) {
         questionImageDownloadListeners.add(fr);
     }
@@ -390,6 +399,13 @@ public class RPacketListener implements PacketListener {
                 for (int i = 0; i < qnNavigatorListeners.size(); i++) {
                     qnNavigatorListeners.get(i).processFileView(fileView);
                 }
+            } else if (mode.equals("answers-file-view")) {
+                ArrayList<RealtimeFile> fileView = RealtimePacketProcessor.getFileViewArrayList(packet.getContent());
+
+                for (int i = 0; i < anNavigatorListeners.size(); i++) {
+                    anNavigatorListeners.get(i).processFileView(fileView);
+                }
+                System.out.println(packet.getContent());
             } else if (mode.equals("slideshows-file-view")) {
                 ArrayList<RealtimeFile> fileView = RealtimePacketProcessor.getFileViewArrayList(packet.getContent());
 
