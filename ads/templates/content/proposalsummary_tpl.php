@@ -200,7 +200,7 @@ $disablePhaseForwardButton='false';
 $forwardPhaseText='Forward';
      $forwarddata="'".$this->id."','".$maxVersion."','".$ownerEmail."'";
      $disablePhaseForwardButton='false';
-     $forwardactions="['0','Forward to Faculty subcommittee'],['1','Forward to APO'],['2','Forward to owner'],'3','Forward to Faculty board']";
+     $forwardactions="['0','Forward to Faculty subcommittee'],['1','Forward to APO'],['2','Forward to owner'],['3','Forward to Faculty board']";
 }
 
 $searchdata="'".$this->id."','".str_replace("amp;", "", $sendProposalUrl)."','Send to','forwardProposal','usersearch-surface','".str_replace("amp;", "", $searchusers)."','".$courseProposal['phase']."'";
