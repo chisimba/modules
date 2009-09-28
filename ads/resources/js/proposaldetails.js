@@ -3,17 +3,19 @@ function showTabs() {
     var args=showTabs.arguments;
     var selectedTab=args[0];
     var showMembers=args[1];
+
      var tabs=[];
       if(showMembers == 'true'){
          tabs= [
-            {contentEl:'contentcontent', title: 'Proposal Summary'},
-            {contentEl: 'tree-div', title: 'Proposal History'},
-            {contentEl: 'memberscontent', title: 'Proposal Comment Editors'}
+            {contentEl: 'contentcontent', title: 'Summary'},
+            {contentEl: 'memberscontent', title: 'Individual Comments'},
+            {contentEl: 'apoforwards', title: 'Departmental Comments'}
+
         ];
       }else{
         tabs= [
-           {contentEl:'contentcontent', title: 'Proposal Summary'},
-           {contentEl: 'tree-div', title: 'Proposal History'}
+           {contentEl:'contentcontent', title: 'Summary'},
+           {contentEl: 'apoforwards', title: 'Departmental Comments'}
 
         ];
       }
@@ -27,6 +29,7 @@ function showTabs() {
         defaults:{autoHeight: true},
         items:tabs
     });
+    alert('show tabls');
 }
 
 function addTree() {
@@ -109,50 +112,34 @@ function showProposalMembers(data){
         
     });
     grid.render('memberscontent');
-
-   var ds = new Ext.data.Store({
-        proxy: new Ext.data.ScriptTagProxy({
-            url: 'http://extjs.com/forum/topics-remote.php'
-        }),
-        reader: new Ext.data.JsonReader({
-            root: 'topics',
-            totalProperty: 'totalCount',
-            id: 'post_id'
-        }, [
-            {name: 'title', mapping: 'topic_title'},
-            {name: 'topicId', mapping: 'topic_id'},
-            {name: 'author', mapping: 'author'},
-            {name: 'lastPost', mapping: 'post_time', type: 'date', dateFormat: 'timestamp'},
-            {name: 'excerpt', mapping: 'post_text'}
-        ])
-    });
-
-    // Custom rendering Template
-    var resultTplc = new Ext.XTemplate(
-        '<tpl for="."><div class=\"search-item\">',
-            '<h3><span>{lastPost:date(\"M j, Y\")}<br />by {author}</span>{title}</h3>',
-            '{excerpt}',
-        '</div></tpl>'
-    );
-
-    var xvsearch = new Ext.form.ComboBox({
-        store: ds,
-        displayField:'title',
-        typeAhead: false,
-        loadingText: 'Searching...',
-        width: 600,
-        pageSize:10,
-        hideTrigger:true,
-        tpl: resultTplc,
-        applyTo: 'xxxsearch',
-        itemSelector: 'div.search-item',
-        onSelect: function(record){ // override default onSelect to do redirect
-            window.location =
-                String.format('http://extjs.com/forum/showthread.php?t={0}&p={1}', record.data.topicId, record.id);
-        }
-    });
 }
+function showUnitForwards(data){
+   // create the data store
+    var store = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'type'},
+           {name: 'email'}
+        ]
+    });
+    store.loadData(data);
+    // create the Grid
+    var grid = new Ext.grid.GridPanel({
+        store: store,
+        columns: [
+            {id:'type',header: "Type", width: 400, sortable: true, dataIndex: 'type'},
+            {header: "Contact Person", width:400, sortable: true, dataIndex: 'email'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'type',
+        height:550,
+        width:800,
+        frame:false,
+        border:false
 
+    });
+    grid.render('apoforwards');
+
+}
 var searchWin;
 function showSearchWin(){
         Ext.onReady(function() {
@@ -212,7 +199,7 @@ function forwardToOwner(courseid,email){
   Ext.MessageBox.confirm('Forward Proposal?', 'Are you sure you want to forward the proposal to owner  ['+email+']?', function(btn){
 
   if (btn == 'yes') {
-    window.location.href='?module=ads&action=sendproposal'+'&email='+email+'&courseid='+courseid;
+    window.location.href='?module=ads&action=forwardtoowner'+'&email='+email+'&courseid='+courseid;
   }
 });
 }
@@ -382,4 +369,77 @@ function showEditProposalWin(faculties,url,selectedFaculty,proposalName){
             });
         }
         addProposalWin.show(this);
+}
+
+function showForwardForCommentsWin(commenttypes,url){
+  var cmstore = new Ext.data.ArrayStore({
+        fields:
+         [
+         {name: 'apocommenttype'},
+         {name: 'id'}
+         ],
+        data : commenttypes
+    });
+    var commentTypeField = new Ext.form.ComboBox({
+        store: cmstore,
+        displayField:'apocommenttype',
+        fieldLabel:'Comment Type',
+        typeAhead: true,
+        mode: 'local',
+        editable:false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select comment type...',
+        selectOnFocus:true,
+        valueField: 'id',
+        hiddenName : 'commenttypeid'
+
+    });
+      var form = new Ext.FormPanel({
+            standardSubmit: true,
+            labelWidth: 125,
+            url:url,
+            frame:true,
+            title: 'Edit Course Proposal',
+            bodyStyle:'padding:5px 5px 0',
+            width: 350,
+            defaults: {width: 230},
+            defaultType: 'textfield',
+
+            items: [
+                   commentTypeField
+            ]
+
+        });
+
+    var win;
+    if(!win){
+            win = new Ext.Window({
+                applyTo:'out-search-xwin',
+                layout:'fit',
+                width:500,
+                height:250,
+                x:250,
+                y:150,
+                closeAction:'destroy',
+                plain: true,
+
+               items: form,
+               buttons: [{
+                   text:'Forward',
+                    handler: function(){
+                        if (form.url)
+                            form.getForm().getEl().dom.action = form.url;
+                            form.getForm().submit();
+                    }
+                },{
+                    text: 'Cancel',
+                    handler: function(){
+                       win.hide();
+                    }
+                }]
+            });
+        }
+        win.show(this);
 }

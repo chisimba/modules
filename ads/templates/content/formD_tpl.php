@@ -203,7 +203,11 @@ $saveButton = new button('saveform', 'Save');
 $saveButton->setId("saveBtn");
 $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
-$form->addToForm($header->show(). "<br />");
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$readonlyWarn=$editable == 'false' ?"<font color=\"red\"><h1>This is a read-only document</h1></font>":"";
+
+$form->addToForm($header->show(). "<br />".$readonlyWarn);
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D1','ads')."</b><br>".$D1->show().$question1comment."<br>".$this->formError->getError('D1')."<br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D2','ads')."</b><br><br>".$D2->show().$question2comment."<br>".$this->formError->getError('D2')."<br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D3','ads')."</b><br>".$D3->show().$question3comment."<br>".$this->formError->getError('D3')."<br>");
@@ -212,8 +216,10 @@ $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D5','ads')."<
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D6','ads')."</b><br>".$D6->show().$question6comment."<br>".$this->formError->getError('D6')."<br>");
 $form->addToForm("<b>".$this->objLanguage->languageText('mod_formD_D7','ads')."</b><br>".$D7->show().$question7comment."<br>".$this->formError->getError('D7')."<br>");
 $form->addToForm("<br>".$nextButton->show());
+if($this->editable !='false'){
 $form->addToForm("&nbsp;".$saveButton->show());
 $form->addToForm($saveMsg);
+}
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -221,7 +227,9 @@ $cssLayout->setNumColumns(2);
 
 $nav = $this->getObject('nav', 'ads');
 $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'),$editable);
 $cssLayout->setLeftColumnContent($leftSideColumn);
 $rightSideColumn='<div style="padding:10px;">';
 

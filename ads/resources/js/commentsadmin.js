@@ -13,6 +13,9 @@ function showCommentAdmin(data, url){
         },
          {
             name: 'id'
+        },
+        {
+            name:'delete'
         }
         ]
     });
@@ -25,21 +28,26 @@ function showCommentAdmin(data, url){
         {
             id:'comment',
             header: "Comment",
-            width: 400,
+            width: 200,
             sortable: true,
             dataIndex: 'comment'
         },
 
         {
             header: "Moderator",
-            width:300,
+            width:200,
             sortable: true,
             dataIndex: 'moderator'
+        },        {
+          header: "Delete",
+            width:100,
+            sortable: true,
+            dataIndex: 'delete'
         }
         ],
-        sm: new Ext.grid.RowSelectionModel({
-            singleSelect: true
-        }),
+      //  sm: new Ext.grid.RowSelectionModel({
+        //    singleSelect: true
+       // }),
         stripeRows: true,
         autoExpandColumn: 'comment',
         height:350,
@@ -47,7 +55,7 @@ function showCommentAdmin(data, url){
     });
     grid.render('commentlist');
     grid.getSelectionModel().on('rowselect', function(sm, rowIdx, r) {
-        editCommentaddWin(url,r.get('comment'),r.get('moderator'),r.get('id'));
+    //    editCommentaddWin(url,r.get('comment'),r.get('moderator'),r.get('id'));
         
     });
 }

@@ -238,7 +238,11 @@ $table->startRow();
 $table->addCell($question6bcomment);
 $table->endRow();
 
-$form->addToForm($header->show(). "<br />");
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$readonlyWarn=$editable == 'false' ?"<font color=\"red\"><h1>This is a read-only document</h1></font>":"";
+
+$form->addToForm($header->show(). "<br />".$readonlyWarn);
 $form->addToForm($table->show());
 
 $nextButton = new button ('submitform', 'Next');
@@ -248,9 +252,10 @@ $saveButton->setId("saveBtn");
 $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 $form->addToForm("<br>".$nextButton->show());
+if($this->editable !='false'){
 $form->addToForm("&nbsp;".$saveButton->show());
 $form->addToForm($saveMsg);
-
+}
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -258,7 +263,9 @@ $cssLayout->setNumColumns(2);
 
 $nav = $this->getObject('nav', 'ads');
 $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'),$editable);
 $cssLayout->setLeftColumnContent($leftSideColumn);
 //$rightSideColumn='<h1>'.$coursedata['title'].'</h1>';
 $rightSideColumn='<div style="padding:10px;">';

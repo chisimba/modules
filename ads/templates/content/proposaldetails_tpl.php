@@ -34,7 +34,11 @@ $submitUrl = new link($this->uri(array('action'=>'sendProposal','edit'=>true,'id
 $addCommentUrl = new link($this->uri(array('action'=>'addcomment','courseid'=>$this->id)));
 //$saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>$this->id)));
 
+$addApoExtraCommentUrl = new link($this->uri(array('action'=>'addapoextracomment','courseid'=>$this->id)));
+
 $editProposalTitleUrl = $this->uri(array('action'=>'updatecourseproposal','id'=>$this->id));
+$viewproposal = new link($this->uri(array('action'=>'viewform','courseid'=>$this->id, 'formnumber'=>$this->allForms[0],'editable'=>'false')));
+
 $searchusers =$this->uri(array('action'=>'searchusers'));
 
 $ownerEmail=$this->objCourseProposals->getOwnerEmail($this->id);
@@ -44,18 +48,19 @@ $currentEditor=$this->objDocumentStore->getCurrentEditor($this->id);
 $maxVersion=$this->objDocumentStore->getMaxVersion($this->id);
 $lastEditDate=$this->objDocumentStore->getLastEditDate($this->id);
 $status=$this->objDocumentStore->getStatus($this->id);
-$iscurrentEdit=$this->objDocumentStore->isCurrentEditor($currentEditor);
+
 $courseProposal=$this->objCourseProposals->getCourseProposal($this->id);
 $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>$this->id,'phase'=>$courseProposal['phase'])));
 $homeUrl = $this->uri(array('action'=>'home'));
 $sendProposalUrl = $this->uri(array('action'=>'sendproposal'));
 $comments= $this->objComment->getAllcomments($this->id);
 $grid = $this->objFaculty->getModeratorData();
+
+
 $showCoursePropHistUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
 
 $objFaculty = $this->getObject('dbfaculty');
 $facultyList = $objFaculty->getAllFaculty();
-
 
 $facultyData = "";
 $tmpFacultyData = "";
@@ -68,6 +73,32 @@ foreach($facultyList as $data) {
       $facultyData.=",";
       $tmpFacultyData.=",";
   }
+   $count++;
+}
+
+
+$commentTypeData=$this->objCommentAdmin->getComments();
+$count = 1;
+$commentData="";
+$total=count($commentTypeData);
+foreach($commentTypeData as $data) {
+  $commentData.="['".$data['comment_desc']."','".$data['id']."']";
+    if($count < $total){
+      $commentData.=",";
+    }
+   $count++;
+}
+$apoforwards=$this->objProposalMembers->getAPoExtraMembers($this->id);
+$count = 1;
+$forwardData="";
+$total=count($apoforwards);
+foreach($apoforwards as $data) {
+  $forwardData.="['".$this->objCommentAdmin->getAPOExtraCommentType($data['apo_type']).
+
+  "','".$this->objUser->fullname($data['userid'])."']";
+    if($count < $total){
+      $forwardData.=",";
+    }
    $count++;
 }
 
@@ -151,6 +182,26 @@ $mainjs=
                value: '<font color=\"red\"><b>You are the owner, but you have no priviledges. These rights are with ".$currentEditor."</b></font>'
                }),";
      }
+
+   if(
+     $courseProposal['userid'] ==$this->objUser->userid() &&
+     $currentEditor == $ownerEmail
+     ){
+          $mainjs.=" new Ext.form.DisplayField({
+               fieldLabel: '<b>State</b>',
+               value: '<font color=\"red\"><b>You are the owner, and you have full access to the document</b></font>'
+               }),";
+     }
+ if($currentEditor != $this->objUser->email() &&
+    $ownerEmail != $this->objUser->email() &&
+    $this->objProposalMembers->isMember($this->id,$this->objUser->userid()) &&
+    $courseProposal['phase'] == 0
+   ){
+ $mainjs.=" new Ext.form.DisplayField({
+               fieldLabel: '<b>State</b>',
+               value: '<font color=\"red\"><b>You are allowed to add comments to this document</b></font>'
+               }),";
+ }
            $mainjs.="new Ext.form.DisplayField({
                fieldLabel: 'Faculty',
                value: '".$objFaculty->getFacultyName($courseProposal['faculty'])."'
@@ -191,12 +242,12 @@ var form = new Ext.form.FormPanel({
            new Ext.form.DisplayField({
                value: '<h2>Proposal Status:".$statuscodes[$courseProposal['phase']]."</h2>'
                }),
-        new Ext.form.TextArea({
-            name: 'commentField',
-            id: 'commentsFieldId',
-            width: 400,
-            height: 200
-          })
+          {
+           xtype:'htmleditor',
+           name: 'commentField',
+            id: 'commentsFieldId'
+           
+         }
           ]
 
       });
@@ -218,10 +269,7 @@ var form = new Ext.form.FormPanel({
         items:[
          radioGroup
           ]
-
       });
-
-
     var addCommentsWin;
     var searchUsersWin;
     var updateStatusWin;
@@ -237,11 +285,11 @@ function processActionDD(){
   if(actiondd == \"addcomment\"){
        if(!addCommentsWin){
             addCommentsWin = new Ext.Window({
-                applyTo:'addcomments-win',
+                applyTo:'out-search-xwin',
                 layout:'fit',
                 title:'Enter Comments',
-                width:500,
-                height:300,
+                width:600,
+                height:450,
                 x:250,
                 y:50,
                 closeAction:'hide',
@@ -299,8 +347,8 @@ function processActionDD(){
                         sform.getForm().submit();
 
                   }
-                  }
-                  ,{
+                  },
+                    {
                     text: 'Cancel',
                     handler: function(){
                        updateStatusWin.hide();
@@ -318,6 +366,9 @@ function processActionDD(){
       window.location.href = '".str_replace("amp;", "",$nextForm->href)."';
     }//end if
 
+if(actiondd == \"viewproposal\"){
+ window.location.href = '".str_replace("amp;", "",$viewproposal->href)."';
+}//end if
 if(actiondd == \"forward\"){
 showSearchWinX('".$this->id."','".$sendProposalUrl."','Forward','forwardProposal','out-search-xwin','".str_replace("amp;", "", $searchusers)."');
 }//end if
@@ -338,11 +389,14 @@ if(actiondd == \"forwardtoownerfromapo\"){
 forwardToOwnerFromAPO('".$this->id."','".$ownerEmail."');
 }
 
-if(actiondd == \"changetitle\"){
 
-var faculties= [
-$facultyData
-               ];
+if(actiondd == \"forwardforextraapocomments\"){
+var commentD=[$commentData];
+var url='".str_replace("amp;", "", $addApoExtraCommentUrl->href)."';
+showForwardForCommentsWin(commentD,url);
+}
+if(actiondd == \"changetitle\"){
+var faculties= [$facultyData];
 var url='".str_replace("amp;", "", $editProposalTitleUrl)."';
 showEditProposalWin(faculties,url,'".$objFaculty->getFacultyName($courseProposal['faculty'])."','".$courseProposal['title']."');
 }
@@ -375,12 +429,7 @@ Ext.onReady(function(){
       }
   }
   }
-
-
-
-
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
-
 $actionsDropDown = new dropdown ('actions');
 $actionsDropDown->cssId = 'actiondd';
 
@@ -389,6 +438,19 @@ $modemail=$objSysConfig->getValue('EMAIL_MODERATOR', 'ads');
 
 $actionsDropDown->addOption('default','Select action ...');
  $showMembers= "false";
+ $showApoForwards="false";
+ //admin give everything
+
+ if($this->objUser->isAdmin()){
+  $actionsDropDown->addOption('editproposal','Edit Proposal');
+  $actionsDropDown->addOption('forward','Forward to workmate');
+  $actionsDropDown->addOption('forwardforapocomment','Forward for APO Comments');
+  $actionsDropDown->addOption('forwardtoowner','Forward to owner');
+  $actionsDropDown->addOption('changetitle','Change Title/Faculty');
+  $actionsDropDown->addOption('addcomment','Add Comment');
+  $actionsDropDown->addOption('forwardforfacultyapproval','Forward for Faculty Approval');
+  $showMembers="true";
+ }else{
 //case 1: owner is current editor in phase 0 and is logged in
  
  if($ownerEmail == $this->objUser->email() &&
@@ -408,26 +470,34 @@ $actionsDropDown->addOption('default','Select action ...');
      $courseProposal['phase'] == 0){
 
    $actionsDropDown->addOption('editproposal','Edit Proposal');
+   $actionsDropDown->addOption('addcomment','Add Comment');
    $actionsDropDown->addOption('forwardtoowner','Forward to owner');
    $showMembers="false";
  }
-
-
- 
-
+//case 3, phase 0 and ismember and is not current editor and is not owner
+ if($currentEditor != $this->objUser->email() &&
+    $ownerEmail != $this->objUser->email() &&
+    $this->objProposalMembers->isMember($this->id,$this->objUser->userid())
+   ){
+   $actionsDropDown->addOption('viewproposal','View Proposal');
+   $actionsDropDown->addOption('addcomment','Add Comment');
+ }
  if($currentEditor == $this->objUser->email() && $courseProposal['phase'] == 1){
   $actionsDropDown->addOption('editproposal','Edit Proposal');
   $actionsDropDown->addOption('addcomment','Add Comment');
-  $actionsDropDown->addOption('forward','Forward for comments');
   $actionsDropDown->addOption('forwardforfacultyapproval','Forward for Faculty Approval');
   $actionsDropDown->addOption('forwardtoownerfromapo','Forward to owner');
-}
-
-
- $mainjs.="addTree('".$this->id."', historyURL);
-    showTabs('".$selectedtab."','".$showMembers."');
+    $showMembers="true";
+    $showApoForwards="true";
+ }
+ }
+ $mainjs.="
+    showTabs('".$selectedtab."','".$showMembers."','".$showApoForwards."');
     var mData = [".$propData."];
     showProposalMembers(mData);
+    var forwarddt=[".$forwardData."];
+    showUnitForwards(forwarddt);
+
 });
 ";
 $backButton = new button('back','Back');
@@ -450,46 +520,70 @@ $renderSurface='
         </div>
 
 ';
-$content= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'   </div>';
+$content.= '<div id="surface"><h1>'.$courseProposal['title'].'</h1>'.$renderSurface.'';
+$content.= '<font color="red"><h2>Current Stage:'.$statuscodes[$courseProposal['phase']].'</h2></font></div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 
 
 $actionsDropDown->addOnChange('processActionDD();');
-$renderContent='<div>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'</div>';
+$renderContent='<div >
+<h3>What do you want to do with this proposal?</h3>'.$actionsDropDown->show().'<br/>'.$backButton->show().'<br/>'.$content.'
 
-$addMemberButton = new button('addmember','Add New Member');
+</div>';
+
+$addMemberButton = new button('addmember','Add');
 $addMemberButton->setId('add-member-btn');
-$addMemberButton->extra='style="padding-left: 3em;"';
+$addMemberButton->extra='style=\"margin-top: 2em;margin-bottom: 2em;';
+
+$addForwardButton = new button('addmember','Add');
+$addForwardButton->setId('forwardforextraapocomments');
+$addForwardButton->extra='style="padding-left: 3em;"';
+$showAddForwardButton=$currentEditor == $this->objUser->email() ? $addForwardButton->show(): "";
 $searchFieldBody=
-'
-
- <div id="memberssurface"></div>
-    
+' <div id="memberssurface"></div>    
 ';
-$render='<div id="onecolumn">
-                    <div id="out-search-xwin" class="x-hidden">
-                    <div class="x-window-header">Search</div>
-                    </div>
-                    <div id="content">
-                    <div id="tabs" style="padding-left: 3em;"></div>
-                    <div id="tree-div" style="padding-top: 2em;"  class="x-hide-display"></div>
-                    <div id="contentcontent"  class="x-hide-display">
-                    '.$renderContent.'
-                    </div>
-                    <div style="padding-left: 3em;">'.$vsearchFieldBody.'</div>
-                    <div id="memberscontent" class="x-hide-display">&nbsp;'.$addMemberButton->show().'<br/>'.$searchFieldBody.'<br/></div>
-                    </div>
-                    </div>
 
-<input type="hidden" name="homeURL" value = "'.str_replace("amp;", "",$this->uri(array())).'">';
+
+$nav = $this->getObject('nav', 'ads');
+$leftContent= $nav->getLeftContent('A', 'viewform', $this->id,$editable);
+$middleContent='<div id="tabs" style="padding-left: 3em;"></div>';
+$middleContent.="<script type=\"text/javascript\">".$mainjs."</script>";
+// Create an instance of the css layout class
+$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout->setNumColumns(2);
+$cssLayout->setLeftColumnContent($leftContent);
+$cssLayout->setMiddleColumnContent($middleContent);
+//echo $cssLayout->show();
 $addMemberJS = "jQuery(document).ready(function() {
-                    
-
                     jQuery(\"#add-member-btn\").click(function() {
                         showSearchWinX('".$this->id."','".$sendProposalUrl."','Add','addProposalMember','out-search-xwin','".str_replace("amp;", "", $searchusers)."');
+                    });
+                    jQuery(\"#forwardforextraapocomments\").click(function() {
+                       var commentD=[$commentData];
+                       var url='".str_replace("amp;", "", $addApoExtraCommentUrl->href)."';
+                       showForwardForCommentsWin(commentD,url);
                     });
               });";
 
 echo "<script type='text/javascript'>".$addMemberJS."</script>";
-echo $render;
+
+$initJS="
+Ext.onReady(function(){
+
+    // basic tabs 1, built from existing content
+    var tabs = new Ext.TabPanel({
+        renderTo: 'tabs',
+        width:450,
+        activeTab: 0,
+        frame:true,
+        defaults:{autoHeight: true},
+        items:[
+            {contentEl:'cont', title: 'Short Tex'}
+
+        ]
+    });
+
+";
+$summaryContent='<script type="text/javascript">'.$initJS.'</script>';
+echo $summaryContent;
 ?>

@@ -20,7 +20,11 @@ loadFormEJS('".$courseid."');
 
 $forme = $this->getObject("dispforme", "ads");
 $forme->setValues($this->formError, $this->formValue, $this->submitAction);
-$sectionE = $forme->getForm();
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$readonlyWarn=$editable == 'false' ?"<font color=\"red\"><h1>This is a read-only document</h1></font>":"";
+
+$sectionE =$readonlyWarn. $forme->getForm();
 $content= "<div>".$sectionE."</div>";
 
 
@@ -30,7 +34,9 @@ $cssLayout->setNumColumns(2);
 
 $nav = $this->getObject('nav', 'ads');
 $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'),$editable);
 $cssLayout->setLeftColumnContent($leftSideColumn);
 //$rightSideColumn='<h1>'.$coursedata['title'].'</h1>';
 $rightSideColumn='<div style="padding:10px;">';

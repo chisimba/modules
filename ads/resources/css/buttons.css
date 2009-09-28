@@ -8,7 +8,12 @@
 .commentadd {
     background-image: url(images/comment_add.png) !important;
 }
-
+.email {
+    background-image: url(images/email.png) !important;
+}
+.group {
+    background-image: url(images/group.png) !important;
+}
 .commentcollapse {
     background-image: url(images/comment_delete.png) !important;
 }

@@ -6,6 +6,7 @@ class dbdocument extends dbtable{
         parent::init($this->tablename);
          $this->objUser = $this->getObject ( 'user', 'security' );
          $this->objCourseProposals = $this->getObject('dbcourseproposals');
+         $this->objEmailTemplates=$this->getObject('dbemailtemplates');
     }
 
     public function addRecord($courseid, $form, $question, $value, $status, $version, $currentuser) {
@@ -117,7 +118,11 @@ class dbdocument extends dbtable{
 
         return $fullName;
     }
-
+    public function getUserIdByEmail($email){
+     $sql="select userid from tbl_users where emailAddress ='$email'";
+     $data = $this->getArray($sql);
+     return $data[0]['userid'];
+    }
     public function sendProposal($lname, $fname, $email, $phone, $courseid,$fromemail,$sendmail=true) {
         $status = true;
 
@@ -134,25 +139,22 @@ class dbdocument extends dbtable{
 
         $status = $this->_execute($sql);
         if($status && $sendmail){
-            $this->sendMail($email,$fromemail,$courseid);
+            $this->sendMail($email,$fromemail,$courseid,'forwardtoworkmate');
         }
         return $status;
     }
 
-    public function sendMail($to,$fromemail,$courseid){
-        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $contactemail=$objSysConfig->getValue('CONTACT_EMAIL', 'ads');
-        $subject=$objSysConfig->getValue('EMAIL_SUBJECT', 'ads');
-        $body=$objSysConfig->getValue('EMAIL_BODY', 'ads');
+    public function sendMail($to,$fromemail,$courseid,$code){
+        $body= $this->objEmailTemplates->getTemplateContent($code);
+        $subject= $this->objEmailTemplates->getTemplateSubject($code);
 
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$courseid,'selectedtab'=>'0'));
         $body.=' '. str_replace("amp;", "", $linkUrl);
-        $body.=str_replace("{from_names}", $this->objUser->fullname(), $body);
-        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('courseid')), $body);
-        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('courseid')), $body);
-        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
-        $emailName=$objSysConfig->getValue('EMAIL_NAME', 'ads');
-
+        
+        $body=str_replace("{from_names}", $this->objUser->fullname(), $body);
+        $body=str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('courseid')), $body);
+        $body=str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('courseid')), $body);
+        $body=str_replace("{comment}", $this->getParam('commentField'), $body);
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($to));
         $objMailer->setValue('from', $fromemail);

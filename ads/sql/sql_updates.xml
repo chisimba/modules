@@ -1,15 +1,41 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
     <update>
-        <table>tbl_ads_course_proposals</table>
-        <version>0.12</version>
-        <description>Modify course proposal table</description>
+        <table>tbl_ads_proposalmembers</table>
+        <version>0.21</version>
+        <description>Modify course proposal members table</description>
         <data>
         	<add>
-    			<length>5</length>
-                        <name>phase</name>
+    			<length>1</length>
+                        <name>unit</name>
                         <type>text</type>
 		</add>
+
+        	<add>
+                     <length>32</length>
+                     <name>unit_type</name>
+                     <type>text</type>
+		</add>
+        	<add>
+                     <name>phase</name>
+                     <type>integer</type>
+		</add>
+
+	</data>
+    </update>
+
+
+    <update>
+        <table>tbl_ads_course_comments</table>
+        <version>0.21</version>
+        <description>Modify course proposal comments table</description>
+        <data>
+        	<add>
+                     <length>32</length>
+                     <name>unit_type</name>
+                     <type>text</type>
+		</add>
+
 	</data>
     </update>
 </updates>

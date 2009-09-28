@@ -56,7 +56,8 @@ foreach($facultyList as $data) {
 $statuscodes=  array(
               "0"=> 'Proposal Phase',
               "1"=>'APO Comment',
-              "2"=>'Faculty Approval'
+    "2"=>'Faculty Subcommittee Approval',
+    "3"=>'Faculty Board Approval'
 );
 
 $addButton = new button('add','Add Proposal');
@@ -115,7 +116,7 @@ foreach($courseProposals as $value) {
     $titleLink->link=$value['title'];
 
     $statusLink->link($this->uri(array('action'=>'viewcourseproposalstatus','id'=>$value['id'], 'status'=>$value['status'])));
-    $statusLink->link=$statuscodes[$value['status']];
+    $statusLink->link=$statuscodes[$value['phase']];
     $deleteLink->link("#");
     $editLink->link("#");
     
@@ -124,7 +125,7 @@ foreach($courseProposals as $value) {
     $data .= "'".$value['creation_date']."',";
 
     $data .= "'".$this->objUser->fullname($value['userid'])."',";
-    $statusShow="'".$statuscodes[$value['status']]."',";
+    $statusShow="'".$statuscodes[$value['phase']]."',";
     $data .=$statusShow;
     $data .= "'".$this->objFaculty->getFacultyName($value['faculty'])."',";
     $objIcon->setIcon('delete');

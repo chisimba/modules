@@ -27,6 +27,7 @@ $this->appendArrayVar('headerParams',$commentsadminjs);
 
 $facultyList = $this->objFaculty->getFacultyData();
 $facultyModeratorList=$this->objFacultyModerator->getModeratorData();
+$subFacultyModeratorList=$this->objSubFacultyModerator->getModeratorData();
 $apoModeratorList=$this->objAPOModerator->getModeratorData();
 // language stuff
 $faculty = $this->objLanguage->languageText('mod_ads_faculty', 'ads');
@@ -66,12 +67,29 @@ foreach($facultyModeratorList as $data) {
    $count++;
 }
 
+$subFacultyModeratorData = "";
+$count = 1;
+$deleteSubFacultyModeratorLink=new link();
+$total=count($subFacultyModeratorList);
+foreach($subFacultyModeratorList as $data) {
+   $deleteSubFacultyModeratorLink->link($this->uri(array('action'=>'deletesubfacultymoderator','id'=>$data['id'])));
+   $objIcon->setIcon('delete');
+   $deleteSubFacultyModeratorLink->link=$objIcon->show();
+
+    $subFacultyModeratorData.="['".$data['userid']."','".$this->objFaculty->getFacultyName($data['facultyid'])."','".$deleteSubFacultyModeratorLink->show()."']";
+
+  if($count < $total){
+      $subFacultyModeratorData.=",";
+  }
+   $count++;
+}
+
 $apoModeratorData = "";
 $count = 1;
 $deleteAPOModeratorLink=new link();
 $total=count($apoModeratorList);
 foreach($apoModeratorList as $data) {
-   $deleteAPOModeratorLink->link($this->uri(array('action'=>'deleteapomoderator','id'=>$data['id'])));
+   $deleteAPOModeratorLink->link($this->uri(array('action'=>'deleteapomoderatortype','id'=>$data['id'])));
    $objIcon->setIcon('delete');
 
     $deleteAPOModeratorLink->link=$objIcon->show();
@@ -89,17 +107,21 @@ $allcommentdata=$this->objCommentAdmin->getComments();
 $commentData = "";
 $count = 1;
 $total=count($allcommentdata);
-
+$deleteApoCommentExtraLink=new link();
 foreach($allcommentdata as $data) {
-    //get userid based on email
+    /*//get userid based on email
     $tmpID = $this->objDocumentStore->getUserId(trim($data['userid']));
     if(strlen(trim($tmpID)) == 0) {
         $moderator = "Not Available";
     }
     else {
         $moderator = $this->objUser->fullname($tmpID);
-    }
-    $commentData.="['".$data['comment_desc']."','".$moderator."','".$data['id']."']";
+    }*/
+    $moderator=$data['userid'];
+    $deleteApoCommentExtraLink->link($this->uri(array('action'=>'deleteapoextracommenttype','id'=>$data['id'])));
+    $objIcon->setIcon('delete');
+    $deleteApoCommentExtraLink->link=$objIcon->show();
+    $commentData.="['".$data['comment_desc']."','".$moderator."','".$data['id']."','".$deleteApoCommentExtraLink->show()."']";
     if($count < $total){
         $commentData.=",";
     }
@@ -108,6 +130,7 @@ foreach($allcommentdata as $data) {
 
 
 $saveFacultyModeratorUrl = $this->uri(array('action'=>'savefacultymoderator'));
+$saveSubFacultyModeratorUrl = $this->uri(array('action'=>'savesubfacultymoderator'));
 $saveAPOModeratorUrl = $this->uri(array('action'=>'saveapomoderator'));
 $saveFacultyUrl = $this->uri(array('action'=>'savefaculty'));
 
@@ -119,14 +142,20 @@ $addFacultyModeratorButton = new button('addFacultyModerator', 'Add Faculty Mode
 $addFacultyModeratorButton->setId('addfacultymoderator-btn');
 $addFacultyModeratorButton->extra="style=\"margin-top: 2em;margin-bottom: 2em;\"";
 
+$addSubFacultyModeratorButton = new button('addFacultyModerator', 'Add Moderator');
+$addSubFacultyModeratorButton->setId('addsubfacultymoderator-btn');
+$addSubFacultyModeratorButton->extra="style=\"margin-top: 2em;margin-bottom: 2em;\"";
+
 $addAPOModeratorButton = new button('addAPOModerator', 'Add APO Moderator');
 $addAPOModeratorButton->setId('addapomoderator-btn');
 $addAPOModeratorButton->extra="style=\"margin-top: 2em;margin-bottom: 2em;\"";
 
 
-$saveCommentUrl = new link($this->uri(array('action'=>'savestatus')));
-$editCommentUrl = new link($this->uri(array('action'=>'updatestatus')));
-$addCommentButton = new button('addModerator', 'Add Status');
+$saveCommentUrl = new link($this->uri(array('action'=>'saveapoextracommenttype')));
+$editCommentUrl = new link($this->uri(array('action'=>'updateapoextracommenttype')));
+$saveEmailTemplateUrl = new link($this->uri(array('action'=>'saveemailtemplate')));
+
+$addCommentButton = new button('addModerator', 'Add Custom Unit');
 $addCommentButton->setId('addcomment-btn');
 $addCommentButton->extra="style=\"margin-top: 2em;margin-bottom: 2em;\"";
 
@@ -137,6 +166,11 @@ $render='<div id="onecolumn">
                     <div id="facultylist" style="padding-left: 3em;" class="x-hide-display">
                     <div id="addfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>
                      '.$addFacultyButton->show().'
+                    </div>
+
+                    <div id="subfacultymoderators" style="padding-left: 3em;" class="x-hide-display">
+                    <div id="addsubfacultymoderator-win" class="x-hidden"><div class="x-window-header"></div></div>
+                    '.$addSubFacultyModeratorButton->show().'
                     </div>
 
                     <div id="facultymoderators" style="padding-left: 3em;" class="x-hide-display">
@@ -154,11 +188,24 @@ $render='<div id="onecolumn">
                     '.$addCommentButton->show().'
                     </div>
 
-                    </div>
+                    <div id="emailtemplates" style="padding-left: 3em;" class="x-hide-display">
+                     </div>
                     </div>';
 
 
 echo $render;
+$forwardtoworkmatetemplatecontent= $this->objEmailTemplates->getTemplateContent('forwardtoworkmate');
+$forwardtoworkmatetemplatesubject= $this->objEmailTemplates->getTemplateSubject('forwardtoworkmate');
+
+$forwardtoownertemplatecontent= $this->objEmailTemplates->getTemplateContent('forwardtoowner');
+$forwardtoownertemplatesubject= $this->objEmailTemplates->getTemplateSubject('forwardtoowner');
+
+$addmembertemplatecontent= $this->objEmailTemplates->getTemplateContent('addmember');
+$addmembertemplatesubject= $this->objEmailTemplates->getTemplateSubject('addmember');
+
+$addcommenttemplatecontent= $this->objEmailTemplates->getTemplateContent('addcomment');
+$addcommenttemplatesubject= $this->objEmailTemplates->getTemplateSubject('addcomment');
+
 $mainjs = "/*!   * Ext JS Library 3.0.0
                  * Copyright(c) 2006-2009 Ext JS, LLC
                  * licensing@extjs.com
@@ -175,16 +222,33 @@ $mainjs = "/*!   * Ext JS Library 3.0.0
                 var facultyModeratorListData=[".$facultyModeratorData."];
                 showFacultyModeratorList(facultyModeratorListData,'".str_replace("amp;", "", $saveFacultyModeratorUrl)."',facultyListData);
 
+                var subFacultyModeratorListData=[".$subFacultyModeratorData."];
+                showSubFacultyModeratorList(subFacultyModeratorListData,'".str_replace("amp;", "", $saveSubFacultyModeratorUrl)."',facultyListData);
+
                 var apoModeratorListData=[".$apoModeratorData."];
                 showAPOModeratorList(apoModeratorListData,'".str_replace("amp;", "", $saveAPOModeratorUrl)."',facultyListData);
 
+                 var contents=[
+                '".$forwardtoworkmatetemplatesubject."',
+                '".$forwardtoworkmatetemplatecontent."',
 
-                var mData = [".$commentData."],
+                '".$forwardtoownertemplatesubject."',
+                '".$forwardtoownertemplatecontent."',
+
+                 '".$addmembertemplatesubject."',
+                 '".$addmembertemplatecontent."',
+
+                 '".$addcommenttemplatesubject."',
+                 '".$addcommenttemplatecontent."'
+                 ];
+
+                 var mData = [".$commentData."],
                  url = '".str_replace("amp;", "", $editCommentUrl->href)."',
                  url2 = '".str_replace("amp;", "", $saveCommentUrl->href)."';
+                 url3 = '".str_replace("amp;", "", $saveEmailTemplateUrl->href)."';
                  showCommentAdmin(mData,url);
                  initCommentaddWin(url2);
-
+                 initEmailTemplates(url3,contents);
                 });
          ";
 echo "<script type=\"text/javascript\">".$mainjs."</script>";

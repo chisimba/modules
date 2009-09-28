@@ -43,8 +43,6 @@ $forwardButton = new button('forwardBtn', 'Forward');
 $forwardButton->setId("forwardBtn");
 
 
-
-
 $table->startRow();
 
 $coursename = $this->objCourseProposals->getTitle($this->getParam('courseid'));
@@ -164,7 +162,12 @@ $table->startRow();
 $table->addCell($question5comment);
 $table->endRow();
 
-$form->addToForm($header->show(). "<br />");
+$toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$readonlyWarn=$editable == 'false' ?"<font color=\"red\"><h1>This is a read-only document</h1></font>":"";
+
+$form->addToForm($header->show(). "<br />".$readonlyWarn);
 $form->addToForm($table->show());
 
 $nextButton = new button ('submitform', 'Next Page');
@@ -180,17 +183,17 @@ $buttons=$nextButton->show();
 $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 $form->addToForm("<br>".$buttons);
+if($this->editable !='false'){
 $form->addToForm("&nbsp;".$saveButton->show());
 $form->addToForm("&nbsp;".$forwardButton->show());
 $form->addToForm($saveMsg);
-
+}
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 
 $nav = $this->getObject('nav', 'ads');
-$toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
+$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'),$editable);
 $cssLayout->setLeftColumnContent($leftSideColumn);
 //$rightSideColumn='<h1>'.$coursedata['title'].'</h1>';
 $rightSideColumn='<div id="gtx"></div><div style="padding:10px;">';
@@ -205,6 +208,7 @@ echo "<script type=\"text/javascript\">".$myscript."</script>";
 $sendProposalUrl = $this->uri(array('action'=>'sendproposal'));
 $searchusers =$this->uri(array('action'=>'searchusers'));
 $saveUrl = $this->submitAction;
+
 $saveFormJS = 'jQuery(document).ready(function() {
                     jQuery("#saveMsg").hide();
 

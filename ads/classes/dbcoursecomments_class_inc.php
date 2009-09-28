@@ -12,11 +12,17 @@ class dbcoursecomments extends dbTable{
         $this->table = 'tbl_ads_course_comments';
         $this->objUser = $this->getObject( 'user', 'security' );
         $this->objDocumentStore = $this->getObject('dbdocument');
+        $this->objCommentAdmin=$this->getObject('dbcommentsadmin');
     }
 
     public function addComment($courseid, $comment,$status) {
         $version = $this->objDocumentStore->getMaxVersion($courseid);
-        $data = array('courseid'=>$courseid, 'comment'=>$comment, 'version'=>$version,'status'=>$status, 'username'=>$this->objUser->userId(), 'datemodified'=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
+        $userid=$this->objUser->userId();
+        $objMembers = $this->getObject('dbproposalmembers');
+        $data=$objMembers->getUnitMember($userid);
+        $data = array('unit_type'=>$data['unit_type'], 'courseid'=>$courseid, 'comment'=>$comment, 'version'=>$version,'status'=>$status, 'username'=>$userid, 'datemodified'=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
+       
+       // $data = array('courseid'=>$courseid, 'comment'=>$comment, 'version'=>$version,'status'=>$status, 'username'=>$userid, 'datemodified'=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $this->insert($data);
     }
 
@@ -31,19 +37,22 @@ class dbcoursecomments extends dbTable{
               "0"=> 'Proposal Phase',
               "1"=>'APO Comment',
               "2"=>'Faculty Approval');
-;
-        $sql = "select * from ".$this->table." where courseid = '".$courseid."' order by status";
+
+        $sql = "select * from ".$this->table." where courseid = '".$courseid."' order by status, unit_type desc";
         $data = $this->getArray($sql);
         $comments="";
         $unformatedComments="";
-        $status=0;
+        $status=-1;
         foreach($data as $xc){
 
             if($status != $xc['status']){
                 $status= $xc['status'];
-                $unformatedComments.='<h3>'.$statuscodes[$status].'</h3>';
+                $unformatedComments.='<font color="red"><h2>'.$statuscodes[$status].' comments:</h2></font>';
             }
-            $unformatedComments.='<h4>'.$this->objUser->fullname($xc['username']).'</h4><h4>'.$xc['datemodified'].'</h4>'.$xc['comment'].'<br/>---------------------<br/>';
+          
+            $unitType=$this->objCommentAdmin->getCommentType($xc['unit_type']);
+           $unitType='<font color="green"><h4>'.$unitType.'</h4></font>';
+            $unformatedComments.='<h4>'.$this->objUser->fullname($xc['username']).'</h4><h4>'.$xc['datemodified'].'</h4>'.$unitType.''.$xc['comment'].'<br/>---------------------<br/>';
         }
 
         $order   = array("\r\n", "\n", "\r");

@@ -1,6 +1,6 @@
 <?php
-class dbfacultymoderator extends dbtable{
-    var $tablename = "tbl_ads_facultymoderators";
+class dbsubfacultymoderator extends dbtable{
+    var $tablename = "tbl_ads_subfacultymoderators";
     
     public function init(){
         parent::init($this->tablename);
@@ -20,9 +20,7 @@ class dbfacultymoderator extends dbtable{
         $data = $this->getRow('facultyid', $name, $this->tablename);
         return $data['userid'];
     }
-    public function getFacultyRC() {
-        return $this->getRecordCount();
-    }
+
      public function isModerator($courseid,$userid) {
         $faculty=$this->objDbcourseproposals->getFaculty($courseid);
         $sql = "select * from ".$this->tablename." where name= '".$faculty."' and userid='".$userid."'";

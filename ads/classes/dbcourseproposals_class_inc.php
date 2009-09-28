@@ -13,6 +13,7 @@ class dbcourseproposals extends dbTable{
         parent::init('tbl_ads_course_proposals');  //super
         $this->table = 'tbl_ads_course_proposals';
         $this->objUser = $this->getObject ( 'user', 'security' );
+        $this->objProposalMembers=$this->getObject('dbproposalmembers');
        
     }
 
@@ -41,10 +42,9 @@ class dbcourseproposals extends dbTable{
          $sql=   'select distinct cp.* from tbl_ads_course_proposals cp,tbl_ads_documentstore ds
 where cp.deleteStatus <> 1 ';
         }else{
-        $sql="select distinct cp.* from tbl_ads_course_proposals cp,tbl_ads_documentstore ds, tbl_ads_proposalmembers ms
+       $sql="select distinct cp.* from tbl_ads_course_proposals cp,tbl_ads_documentstore ds, tbl_ads_proposalmembers ms
 where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$this->objUser->email()."' or ms.userid = '".$userid."')
      and cp.id=ds.coursecode and cp.id=ms.courseid and ds.coursecode=ms.courseid";
-          
         }
 
         $rows=$this->getArray($sql);
@@ -52,6 +52,7 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
         return $rows;
     }
 
+  
     public function getCourseProposal($id)
     {
         $rows=$this->getRow('id', $id, $this->table);

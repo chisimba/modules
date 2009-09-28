@@ -18,11 +18,20 @@ class dbcommentsadmin extends dbTable{
         $data = array('comment_desc'=>$comment, 'userid'=>$userid);
         $this->insert($data);
     }
-     public function updateStatus($comment,$userid,$id) {
+     public function updateCommentType($comment,$userid,$id) {
         $sql = "update ".$this->table." set comment_desc ='".$comment."',userid='".$userid."'
                where  id='".$id."'";
         $this->getArray($sql);
       
+    }
+    public function getAPOExtraCommentTypeEmail($id){
+            $row=$this->getRow('id', $id);
+            return $row['userid'];
+    }
+
+    public function getCommentType($id){
+            $row=$this->getRow('id', $id);
+            return $row['comment_desc'];
     }
     public function getComments() {
         $sql = "select * from ".$this->table;
@@ -30,10 +39,12 @@ class dbcommentsadmin extends dbTable{
         return $data;
     }
 
-    public function saveStatus($title, $moderator) {
+    public function saveApoExtraCommentType($title, $moderator) {
         $data = array('comment_desc'=>$title, 'userid'=>$moderator);
         $this->insert($data);
     }
-
+   public function deleteApoExtraCommentType($id){
+       $this-> delete('id', $id);
+   }
 }
 ?>

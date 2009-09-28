@@ -11,7 +11,7 @@ var actionWord;
 var actionFunction;
 var renderSurface;
 var searchUrl;
-
+var phase;
 function showSearchWinX(){
     var args = showSearchWinX.arguments;
     courseId=args[0];
@@ -20,6 +20,7 @@ function showSearchWinX(){
     actionFunction=args[3];
     renderSurface=args[4];
     searchUrl=args[5];
+    phase=args[6];
     
     
     var ds = new Ext.data.Store({
@@ -63,7 +64,7 @@ function showSearchWinX(){
         '<tpl for=".">',
         '<div class="search-item">',
         '<h3>{firstname} {lastname}</h3><h6>{email}</h6>',
-        '<p><span><a href="#" onclick="'+actionFunction+'(\''+actionUrl+'\',\'{email}\',\''+courseId+'\',\'{userid}\');return false;">'+actionWord+'</a></span></p>',
+        '<p><span><a href="#" onclick="'+actionFunction+'(\''+actionUrl+'\',\'{email}\',\''+courseId+'\',\'{userid}\',\''+phase+'\');return false;">'+actionWord+'</a></span></p>',
             
         '</div></tpl>'
         );
@@ -114,9 +115,9 @@ function showSearchWinX(){
         ,
         width:500
         ,
-        x:10
+        x:250
         ,
-        y: 10
+        y: 150
         ,
         height:400
         ,

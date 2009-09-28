@@ -15,8 +15,7 @@ $cssLayout->setNumColumns(2);
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent( $postLoginMenu->show());
 // Add Left column
-$cssLayout->setLeftColumnContent($leftSideColumn);
-
+//$cssLayout->setLeftColumnContent($leftSideColumn);
 
 // Add Left column
 $cssLayout->setLeftColumnContent($leftSideColumn);

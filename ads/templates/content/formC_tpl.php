@@ -79,7 +79,11 @@ $tbl4b->addcell($question4b2comment);
 $tbl4b->endRow();
 
 $formC = new form('formC',$this->submitAction);
-$formC->addToForm($header->show(). "<br />");
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$readonlyWarn=$editable == 'false' ?"<font color=\"red\"><h1>This is a read-only document</h1></font>":"";
+
+$formC->addToForm($header->show(). "<br />".$readonlyWarn);
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C1','ads')."</b><br>" .$C1->show().$question1comment."<br>".$this->formError->getError("C1"). "<br>");
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2a','ads')."</b><br>".$C2a->showTable().$question2acomment."<br>".$this->formError->getError("C2a")."<br>");
 $formC->addToForm("<b>".$this->objLanguage->languageText('mod_formC_C2b','ads')."</b><br>".$C2b->show().$question2bcomment."<br>".$this->formError->getError("C2b"));
@@ -107,8 +111,10 @@ $saveButton->setId("saveBtn");
 $saveMsg = "<span id='saveMsg' style='padding-left: 10px;color:#F00;font-size: 12pt;'></span>";
 
 $formC->addToForm("<br>".$nextButton->show());
+if($this->editable !='false'){
 $formC->addToForm("&nbsp;".$saveButton->show());
 $formC->addToForm($saveMsg);
+}
 
 $header = new htmlheading();
 $header->type = 3;
@@ -120,7 +126,9 @@ $cssLayout->setNumColumns(2);
 
 $nav = $this->getObject('nav', 'ads');
 $toSelect=$this->objLanguage->languageText('mod_ads_section_a_overview', 'ads');
-$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'));
+$currentEditor=$this->objDocumentStore->getCurrentEditor($this->getParam('courseid'));
+$editable=$currentEditor == $this->objUser->email() ? 'true':'false';
+$leftSideColumn = $nav->getLeftContent($toSelect, $this->getParam('action'), $this->getParam('courseid'),$editable);
 $cssLayout->setLeftColumnContent($leftSideColumn);
 //$rightSideColumn='<h1>'.$coursedata['title'].'</h1>';
 $rightSideColumn='<div style="padding:10px;">';
