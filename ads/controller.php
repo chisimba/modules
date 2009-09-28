@@ -705,6 +705,7 @@ class ads extends controller {
 
         $body= $this->objEmailTemplates->getTemplateContent('updatephase');
         $subject= $this->objEmailTemplates->getTemplateSubject('updatephase');
+        
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
 
         $body.=' '. str_replace("amp;", "", $linkUrl);
