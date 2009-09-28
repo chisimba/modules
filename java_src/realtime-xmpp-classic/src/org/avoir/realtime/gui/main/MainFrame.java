@@ -791,6 +791,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         roomResourcesMenuItem = new javax.swing.JMenuItem();
         questionManagerMenuItem = new javax.swing.JMenuItem();
+        answerManagerMenuItem = new javax.swing.JMenuItem();
         slideBuilderMenuItem = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JSeparator();
         jMenu1 = new javax.swing.JMenu();
@@ -1314,6 +1315,16 @@ public class MainFrame extends javax.swing.JFrame {
         });
         toolsMenu.add(questionManagerMenuItem);
 
+        answerManagerMenuItem.setText("Answer Manager");
+        answerManagerMenuItem.setEnabled(true);
+        answerManagerMenuItem.setName("answerBuilder"); 
+        answerManagerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	answerManagerMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(answerManagerMenuItem);
+        
         slideBuilderMenuItem.setText("Slide Builder");
         slideBuilderMenuItem.setEnabled(false);
         slideBuilderMenuItem.setName("slideBuilder"); // NOI18N
@@ -1882,6 +1893,19 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_questionManagerMenuItemActionPerformed
 
+    private void answerManagerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        if (!ConnectionManager.isOwner) {
+            JOptionPane.showMessageDialog(null, "You do not have permission to perform this action in this room.");
+            return;
+        } else {
+        	org.avoir.realtime.gui.AnswerNavigator navi = new org.avoir.realtime.gui.AnswerNavigator(this);
+        	JFrame AManagerFrame=new JFrame("Answers Navigator");
+        	AManagerFrame.setSize((int)(ss.width / 4), (int)(ss.height / 2.5));
+        	AManagerFrame.setLocation((int)(ss.width/2-ss.width / 8),(int)(ss.height/2-ss.height / 5));
+        	AManagerFrame.setContentPane(navi);
+        	AManagerFrame.setVisible(true);        }
+    }
+    
     private void slideBuilderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_slideBuilderMenuItemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_slideBuilderMenuItemActionPerformed
@@ -2150,6 +2174,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem prevslideMenuItem;
     private javax.swing.JMenuItem privateChatMenuItem;
     private javax.swing.JMenuItem questionManagerMenuItem;
+    private javax.swing.JMenuItem answerManagerMenuItem;
     private javax.swing.JMenuItem raiseHandMenuItem;
     private javax.swing.JMenuItem roomListMenuItem;
     private javax.swing.JMenuItem roomResourcesMenuItem;
