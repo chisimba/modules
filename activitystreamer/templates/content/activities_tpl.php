@@ -26,21 +26,6 @@
         		var uri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'jsonlistactivities', 'module' => 'activitystreamer'))).'"; 
         		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php"; </script>');
 								//Div to render content
-        $str = '<div id="activity-topic-grid"></div>';
-        $objPopup = new windowpop();
-        $objPopup->set('location', $this->uri(array(
-            'action' => 'singlereflection',
-            'reflectId' => $item['id']
-        ) , 'eportfolio'));
-        $objPopup->set('linktext', $commentIcon);
-        $objPopup->set('width', '600');
-        $objPopup->set('height', '350');
-        $objPopup->set('left', '200');
-        $objPopup->set('top', '200');
-        $objPopup->set('scrollbars', 'yes');
-        $objPopup->set('resizable', 'yes');
-        $objPopup->putJs(); // you only need to do this once per page
-        //echo $objPopup->show();
-        
+        $str = '<div id="activity-topic-grid"></div>';        
         echo $objHeading->show().$str;
 ?>
