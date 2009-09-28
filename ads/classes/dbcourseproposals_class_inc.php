@@ -99,7 +99,8 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
          array(
          "0"=> 'Prposal Phase',
          "1"=>'APO Comment',
-         "2"=>'Faculty Approval');
+         "2"=>'Faculty subcommittee approval',
+         "3=>'Faculty board approval'");
         $data = $this->getRow('id', $id, $this->table);
         return $statuscodes[$data['status']];
     }

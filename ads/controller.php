@@ -184,9 +184,9 @@ class ads extends controller {
      $updatephasecontent=$this->getParam('updatephasefieldcontent');
      $updatephasesubject=$this->getParam('updatephasefieldsubject');
      if($this->objEmailTemplates->templateExists('updatephase')){
-         $this->objEmailTemplates->updateTemplate('updatephase',$addcommentcontent,$addcommentsubject);
+         $this->objEmailTemplates->updateTemplate('updatephase',$updatephasecontent,$updatephasesubject);
      }else{
-          $this->objEmailTemplates->addTemplate('updatephase',$addcommentcontent,$addcommentsubject);
+          $this->objEmailTemplates->addTemplate('updatephase',$updatephasecontent,$updatephasesubject);
      }
     $this->nextAction('adminads',array('selectedtab'=>'5'));
    }
