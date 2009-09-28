@@ -32,7 +32,7 @@ class dbcourseproposals extends dbTable{
         $objDocumentStore = $this->getObject('dbdocument');
         $objProposalMembers=$this->getObject('dbproposalmembers');
         $objDocumentStore->updateRecord($courseProposalId, 'A', 'A1', $title, $this->objUser->email());
-        $objProposalMembers->saveMember($this->objUser->userId(),$courseProposalId);
+        $objProposalMembers->saveMember($this->objUser->userId(),$courseProposalId,'0');
         return $courseProposalId;
     }
 
