@@ -648,8 +648,10 @@ class ads extends controller {
         if($submitted) {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $toemail=$this->objCourseProposals->getOwnerEmail($this->getParam('id'));
-        $subject=$objSysConfig->getValue('EMAIL_STATUS_SUBJECT', 'ads');
-        $body=$objSysConfig->getValue('EMAIL_STATUS_BODY', 'ads');
+
+        $body= $this->objEmailTemplates->getTemplateContent('updatephase');
+        $subject= $this->objEmailTemplates->getTemplateSubject('updatephase');
+
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
 
         $body.=' '. str_replace("amp;", "", $linkUrl);
@@ -780,6 +782,7 @@ class ads extends controller {
 
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
+        
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
 
         $body.=' '. str_replace("amp;", "", $linkUrl);
