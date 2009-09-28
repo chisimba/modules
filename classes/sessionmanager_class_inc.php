@@ -71,10 +71,15 @@ class sessionmanager extends object{
                         // Create an instance of the css layout class
             $cssLayout =$this->getObject('csslayout', 'htmlelements');// Set columns to 2
             $security=$this->getObject('security');
+            $this->loadclass('link','htmlelements');
             $objBlocks = $this->getObject('blocks', 'blocks');
             $cssLayout->setNumColumns(2);
-            //Add the table to the centered layer
-            $rightSideColumn .=  '<h1>Please Login</h1>In order to use live presentations, please login first';
+            $registerLink=new link();
+            
+            $registerLink->link($this->uri(array('action'=>'showregister'),'userregistration'));
+            $registerLink->link="New user? Register here";
+            $rightSideColumn .=  '<h1>Please Login</h1>In order to use live presentations, please login first<br/>
+            '.$registerLink->show();
 
             $cssLayout->setLeftColumnContent( $objBlocks->showBlock('login', 'security'));
 
