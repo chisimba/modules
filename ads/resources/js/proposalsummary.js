@@ -19,7 +19,7 @@ forwardactions){
         cls: 'btn-panel',
         menu: undefined,
         split: true,
-        bodyStyle:'margin-bottom:2em;',
+        bodyStyle:'margin-top:2em;margin-bottom:2em;',
         constructor: function(buttons){
             for(var i = 0, b; b = buttons[i]; i++){
                 b.menu = this.menu;
