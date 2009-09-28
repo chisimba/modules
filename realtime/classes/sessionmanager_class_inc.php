@@ -74,9 +74,8 @@ class sessionmanager extends object{
             $objBlocks = $this->getObject('blocks', 'blocks');
             $cssLayout->setNumColumns(2);
             //Add the table to the centered layer
-            $rightSideColumn .=  $security->getLoginErrorMessage();
+            $rightSideColumn .=  '<h1>Please Login</h1>In order to use live presentations, please login first';
 
-            $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
             $cssLayout->setLeftColumnContent( $objBlocks->showBlock('login', 'security'));
 
             // Add Right Column
