@@ -94,4 +94,22 @@ class activitystreamer extends controller
     	echo $objUtils->jsonCourseActivies($this->getParam('start'), $this->getParam('limit'));
     	exit(0);
     }
+     /**
+     * Method to list all the context chapters and pages
+     *
+     * @access protected
+     */
+    public function __showactivities()
+    {
+    	 $objUtils = $this->getObject('activityutilities','activitystreamer');
+    	 $objActivities = $this->getObject('block_browseactivities','activitystreamer');
+      $objBlocks = $this->getObject('blocks','blocks');
+      $this->setVar('pageSuppressToolbar', TRUE);
+      $this->setVar('pageSuppressBanner', TRUE);
+      $this->setVar('pageSuppressSearch', TRUE);
+      $this->setVar('suppressFooter', TRUE);
+
+    	 return 'activities_tpl.php';
+    }
+
 }

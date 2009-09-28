@@ -89,10 +89,10 @@ class activityutilities extends object {
      *
      * @return string
      */    
-    public function jsonListActivity($start = 0, $limit=8)
+    public function jsonListActivity($start = 0, $limit=5)
     {
     	$start = (empty($start)) ? 0 : $start;
-    	$limit = (empty($limit)) ? 25 : $limit;
+    	$limit = (empty($limit)) ? 5 : $limit;
 
     	$all = $this->objDBActivity->getArray("SELECT count( id ) as cnt FROM tbl_activity");
 					//$limit = count($all);

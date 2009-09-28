@@ -76,7 +76,9 @@ class block_browseactivities extends object
         try {
             $this->objLanguage =  $this->getObject('language', 'language');
             $this->objUser =  $this->getObject('user', 'security');
-            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_activitystreamer', 'activitystreamer', NULL, 'Activity Streamer'));
+            $this->objConfig =  $this->getObject('altconfig', 'config');
+            $objPopup = &$this->loadClass('windowpop', 'htmlelements');
+            $this->title = $this->objConfig->getSiteName()." ".ucwords($this->objLanguage->code2Txt('mod_modulecatalogue_newupdates', 'modulecatalogue', NULL, 'latest updates'));
             
             $this->loadClass('checkbox', 'htmlelements');
         } catch (customException $e) {
@@ -112,6 +114,21 @@ class block_browseactivities extends object
         		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php"; </script>');
 								//Div to render content
         $str = '<div id="activity-topic-grid"></div>';
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+            'action' => 'singlereflection',
+            'reflectId' => $item['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
+        //echo $objPopup->show();
+        
         return $str;
 
     }
