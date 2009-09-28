@@ -233,10 +233,13 @@ public class Navigator extends JPanel implements ActionListener, FileChooserList
         //add(p, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         addAccessTypes();
-    
     if (mode.equals("questions")) {
-    populateNodes("questions");
-    add(p, BorderLayout.NORTH);
+    	populateNodes("questions");
+    	add(p, BorderLayout.NORTH);
+    }
+    if (mode.equals("answers")) {
+        populateNodes("answers");
+        add(p, BorderLayout.NORTH);
     }
    /* if (mode.equals("slideshows")) {
     populateNodes("slideshows");
@@ -318,7 +321,9 @@ public class Navigator extends JPanel implements ActionListener, FileChooserList
             if (files.get(i).isPublicAccessible()) {
                 addObject(publicNode, files.get(i), true);
             } else {
-                addObject(privateNode, files.get(i), true);
+            // DefaultMutableTreeNode tmp = 
+            	addObject(privateNode, files.get(i), true);
+            // addObject(tmp,"asd",true);
             }
         }
         if (mode.equals("slideshows")) {
