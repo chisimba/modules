@@ -619,6 +619,21 @@ function initEmailTemplates(url,contents){
         width:500,
         name: 'addcommentfieldcontent',
         allowBlank: false
+        }),
+          {
+         fieldLabel: 'Subject',
+         value: contents[8],
+         width:500,
+         name: 'updatephasefieldsubject',
+         allowBlank: false
+        },
+        new Ext.form.TextArea({
+        fieldLabel: 'Update Phase',
+        value: contents[9],
+        height: 200,
+        width:500,
+        name: 'updatephasefieldcontent',
+        allowBlank: false
         })
         ],
          buttons: [{

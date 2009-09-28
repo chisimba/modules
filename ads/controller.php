@@ -180,7 +180,15 @@ class ads extends controller {
      }else{
           $this->objEmailTemplates->addTemplate('addcomment',$addcommentcontent,$addcommentsubject);
      }
-    $this->nextAction('adminads',array('selectedtab'=>'4'));
+
+     $updatephasecontent=$this->getParam('updatephasefieldcontent');
+     $updatephasesubject=$this->getParam('updatephasefieldsubject');
+     if($this->objEmailTemplates->templateExists('updatephase')){
+         $this->objEmailTemplates->updateTemplate('updatephase',$addcommentcontent,$addcommentsubject);
+     }else{
+          $this->objEmailTemplates->addTemplate('updatephase',$addcommentcontent,$addcommentsubject);
+     }
+    $this->nextAction('adminads',array('selectedtab'=>'5'));
    }
 
     function __savecomment() {
@@ -695,8 +703,8 @@ class ads extends controller {
         //now change owner to the new apo moderator
         $this->objDocumentStore->sendProposal($lname, $fname, $toemail2, $phone, $this->id,$this->objUser->email(),false);
 
-        $subject=$objSysConfig->getValue('EMAIL_STATUS_SUBJECT', 'ads');
-        $body=$objSysConfig->getValue('EMAIL_STATUS_BODY', 'ads');
+        $body= $this->objEmailTemplates->getTemplateContent('updatephase');
+        $subject= $this->objEmailTemplates->getTemplateSubject('updatephase');
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
 
         $body.=' '. str_replace("amp;", "", $linkUrl);

@@ -206,6 +206,9 @@ $addmembertemplatesubject= $this->objEmailTemplates->getTemplateSubject('addmemb
 $addcommenttemplatecontent= $this->objEmailTemplates->getTemplateContent('addcomment');
 $addcommenttemplatesubject= $this->objEmailTemplates->getTemplateSubject('addcomment');
 
+$updatephasetemplatecontent= $this->objEmailTemplates->getTemplateContent('updatephase');
+$updatephasetemplatesubject= $this->objEmailTemplates->getTemplateSubject('updatephase');
+
 $mainjs = "/*!   * Ext JS Library 3.0.0
                  * Copyright(c) 2006-2009 Ext JS, LLC
                  * licensing@extjs.com
@@ -239,7 +242,10 @@ $mainjs = "/*!   * Ext JS Library 3.0.0
                  '".$addmembertemplatecontent."',
 
                  '".$addcommenttemplatesubject."',
-                 '".$addcommenttemplatecontent."'
+                 '".$addcommenttemplatecontent."',
+
+                 '".$updatephasetemplatesubject."',
+                 '".$updatephasetemplatecontent."'
                  ];
 
                  var mData = [".$commentData."],
