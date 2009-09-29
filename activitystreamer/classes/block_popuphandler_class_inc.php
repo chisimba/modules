@@ -78,7 +78,7 @@ class block_popuphandler extends object
             $this->objUser =  $this->getObject('user', 'security');
             $this->objConfig =  $this->getObject('altconfig', 'config');
             $objPopup = &$this->loadClass('windowpop', 'htmlelements');
-            $this->title = $this->objConfig->getSiteName()." ".ucwords($this->objLanguage->code2Txt('mod_modulecatalogue_newupdates', 'modulecatalogue', NULL, 'latest updates'));
+            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_siteupdates', 'modulecatalogue', NULL, 'Site Updates'));
             
             $this->loadClass('checkbox', 'htmlelements');
         } catch (customException $e) {
@@ -92,7 +92,7 @@ class block_popuphandler extends object
     */
     public function show()
     {
-
+        $objSysConfig  = $this->getObject('altconfig','config');
         $objPopup = new windowpop();
         $objPopup->set('location', $this->uri(array(
             'action' => 'showactivities') , 'activitystreamer'));
@@ -106,8 +106,43 @@ class block_popuphandler extends object
         $objPopup->set('resizable', 'yes');
         $objPopup->putJs(); // you only need to do this once per page
         //echo $objPopup->show();
+
+        //Ext stuff
+        $ext = "";
+        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
+        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
+        $ext .=$this->getJavaScriptFile('button.js', 'activitystreamer');
+        $ext .=$this->getJavaScriptFile('search.js', 'activitystreamer');
+        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+       
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'htmlelements').'" type="text/css" />';
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
+        $this->appendArrayVar('headerParams', $ext);
+								
+        $this->appendArrayVar('headerParams', '
+        	<script type="text/javascript">
+        		var uri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'jsonlistactivities', 'module' => 'activitystreamer'))).'"; 
+        		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php"; </script>');
         
-        return $objPopup->show();
+
+        //The Block
+        //$objBlock = $this->getObject ( 'block_browseactivities', $module='activitystreamer' );
+        //$objBlock->show();
+        $str = '<input type="button" id="show-btn" value="Hello World" /><br /><br />
+        <div id="hello-win" class="x-hidden">
+    <div class="x-window-header">Hello Dialog</div>
+    <div id="hello-tabs">
+        <!-- Auto create tab 1 -->
+        <div class="x-tab" title="'.$this->objConfig->getSiteName()." ".$this->title.'" id="activity-topic-grid">
+        </div>
+        <!-- Auto create tab 2 -->
+        <div class="x-tab" title="Hello World 2">
+            <p>... World!</p>
+        </div>
+    </div>
+</div>';
+        return $str.$objPopup->show();
 
     }
 }

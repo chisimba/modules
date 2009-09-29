@@ -77,7 +77,8 @@ class block_browseactivities extends object
             $this->objLanguage =  $this->getObject('language', 'language');
             $this->objUser =  $this->getObject('user', 'security');
             $this->objConfig =  $this->getObject('altconfig', 'config');
-            $this->title = $this->objConfig->getSiteName()." ".ucwords($this->objLanguage->code2Txt('mod_modulecatalogue_newupdates', 'modulecatalogue', NULL, 'latest updates'));
+            //$this->objConfig->getSiteName()
+            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_siteupdates', 'modulecatalogue', NULL, 'Site Updates'));
             
             $this->loadClass('checkbox', 'htmlelements');
         } catch (customException $e) {
@@ -97,7 +98,8 @@ class block_browseactivities extends object
         $objSysConfig  = $this->getObject('altconfig','config');
         
         //Ext stuff
-        $ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
+        $ext = "";
+        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
         $ext .=$this->getJavaScriptFile('search.js', 'activitystreamer');
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
