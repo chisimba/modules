@@ -81,7 +81,7 @@ class twitoaster extends controller {
                 //var_dump(json_decode($this->objOps->userUpdate('Second test to #twitoaster')));
                 //var_dump(json_decode($this->objOps->showConvo(4467277193)));
                 //var_dump(json_decode($this->objOps->convoUser(NULL, 'paulscott56')));
-                var_dump(json_decode($this->objOps->convoSearch('chisimba')));
+                //var_dump(json_decode($this->objOps->convoSearch('chisimba')));
                 break;
 
             case 'viewall' :

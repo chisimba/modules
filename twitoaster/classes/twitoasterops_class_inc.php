@@ -141,7 +141,6 @@ class twitoasterops extends object {
      */
     public function verifyKey($format = 'json') {
         $apikey = $this->objSysConfig->getValue('apikey', 'twitoaster');
-        $apikey = 'BN8NE26IVI29TV26BRT0PRTT'; 
         $url = "http://api.twitoaster.com/user/verify_api_key.$format?api_key=$apikey";
         $ret = $this->objCurl->exec($url);
 
@@ -150,7 +149,6 @@ class twitoasterops extends object {
 
     public function userUpdate($status, $extended = FALSE, $format = 'json') {
         $apikey = $this->objSysConfig->getValue('apikey', 'twitoaster');
-        $apikey = 'BN8NE26IVI29TV26BRT0PRTT'; 
         $url = "http://api.twitoaster.com/user/update.$format";
         $postargs = array('api_key' => $apikey, 'status' => $status);
         $ret = $this->objCurl->postCurl($url, $postargs);
