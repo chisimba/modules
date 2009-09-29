@@ -78,7 +78,7 @@ class block_browseactivities extends object
             $this->objUser =  $this->getObject('user', 'security');
             $this->objConfig =  $this->getObject('altconfig', 'config');
             //$this->objConfig->getSiteName()
-            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_siteupdates', 'modulecatalogue', NULL, 'Site Updates'));
+            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_siteupdates', 'activitystreamer', NULL, 'Site Updates'));
             
             $this->loadClass('checkbox', 'htmlelements');
         } catch (customException $e) {
@@ -102,6 +102,7 @@ class block_browseactivities extends object
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
         $ext .=$this->getJavaScriptFile('search.js', 'activitystreamer');
+        $ext .=$this->getJavaScriptFile('button.js', 'activitystreamer');
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
        
         $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
@@ -114,7 +115,19 @@ class block_browseactivities extends object
         		var uri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'jsonlistactivities', 'module' => 'activitystreamer'))).'"; 
         		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php"; </script>');
 								//Div to render content
-        $str = '<div id="activity-topic-grid"></div>';
+        $str = '<input type="button" id="show-btn" value="Site Activities" /><br /><br />
+        <div id="hello-win" class="x-hidden">
+    <div class="x-window-header"></div>
+    <div id="hello-tabs">
+        <!-- Auto create tab 1 -->
+        <div class="x-tab" title="'.$this->objConfig->getSiteName()." ".$this->title.'" id="activity-topic-grid">
+        </div>
+        <!-- Auto create tab 2 -->
+        <!--<div class="x-tab" title="Tab 2">
+            <p>... Tab 2!</p>
+        </div>-->
+    </div>
+</div>';
         
         return $str;
 

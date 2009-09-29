@@ -15,7 +15,7 @@ Ext.onReady(function(){
                 applyTo:'hello-win',
                 layout:'fit',
                 width:800,
-                height:300,
+                height:320,
                 closeAction:'hide',
                 plain: true,
 
@@ -27,10 +27,10 @@ Ext.onReady(function(){
                     border:false
                 }),
 
-                buttons: [{
+                buttons: [/*{
                     text:'Submit',
                     disabled:true
-                },{
+                },*/{
                     text: 'Close',
                     handler: function(){
                         win.hide();

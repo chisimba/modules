@@ -78,7 +78,7 @@ class block_popuphandler extends object
             $this->objUser =  $this->getObject('user', 'security');
             $this->objConfig =  $this->getObject('altconfig', 'config');
             $objPopup = &$this->loadClass('windowpop', 'htmlelements');
-            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_siteupdates', 'modulecatalogue', NULL, 'Site Updates'));
+            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_siteupdates', 'activitystreamer', NULL, 'Site Updates'));
             
             $this->loadClass('checkbox', 'htmlelements');
         } catch (customException $e) {
@@ -92,7 +92,6 @@ class block_popuphandler extends object
     */
     public function show()
     {
-        $objSysConfig  = $this->getObject('altconfig','config');
         $objPopup = new windowpop();
         $objPopup->set('location', $this->uri(array(
             'action' => 'showactivities') , 'activitystreamer'));
@@ -107,6 +106,8 @@ class block_popuphandler extends object
         $objPopup->putJs(); // you only need to do this once per page
         //echo $objPopup->show();
 
+        $objUtils = $this->getObject('activityutilities', 'activitystreamer');
+        $objSysConfig  = $this->getObject('altconfig','config');
         //Ext stuff
         $ext = "";
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
@@ -129,17 +130,17 @@ class block_popuphandler extends object
         //The Block
         //$objBlock = $this->getObject ( 'block_browseactivities', $module='activitystreamer' );
         //$objBlock->show();
-        $str = '<input type="button" id="show-btn" value="Hello World" /><br /><br />
+        $str = '<input type="button" id="show-btn" value="Site Activities" /><br /><br />
         <div id="hello-win" class="x-hidden">
-    <div class="x-window-header">Hello Dialog</div>
+    <div class="x-window-header"></div>
     <div id="hello-tabs">
         <!-- Auto create tab 1 -->
         <div class="x-tab" title="'.$this->objConfig->getSiteName()." ".$this->title.'" id="activity-topic-grid">
         </div>
         <!-- Auto create tab 2 -->
-        <div class="x-tab" title="Hello World 2">
-            <p>... World!</p>
-        </div>
+        <!--<div class="x-tab" title="Tab 2">
+            <p>... Tab 2!</p>
+        </div>-->
     </div>
 </div>';
         return $str.$objPopup->show();
