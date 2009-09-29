@@ -20,6 +20,7 @@
 package org.avoir.realtime.common;
 
 import org.avoir.realtime.common.util.GeneralUtil;
+import java.util.ArrayList;
 
 /**
  *
@@ -38,6 +39,7 @@ public class RealtimeFile {
     private boolean imageSlide;
     private boolean urlSlide;
     private String name;
+    private ArrayList<RealtimeFile> files;
 
 
     public RealtimeFile(String fileName, String filePath, boolean directory, boolean publicAccessible) {
@@ -47,6 +49,14 @@ public class RealtimeFile {
         this.publicAccessible = publicAccessible;
     }
 
+    public ArrayList<RealtimeFile> getFiles(){
+    	return files;
+    }
+    
+    public void setFiles(ArrayList<RealtimeFile> files){
+    	this.files=files;
+    }
+    
     public String getName() {
         return name;
     }
