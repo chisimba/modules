@@ -252,7 +252,7 @@ public class Navigator extends JPanel implements ActionListener, FileChooserList
         return roomResources;
     }
 
-    private void addAccessTypes() {
+    protected void addAccessTypes() {
         privateNode = addObject(rootNode, "Mine", true);
         publicNode = addObject(rootNode, "Public", true);
     //if (mode.equals("slideshows")) {
@@ -321,9 +321,7 @@ public class Navigator extends JPanel implements ActionListener, FileChooserList
             if (files.get(i).isPublicAccessible()) {
                 addObject(publicNode, files.get(i), true);
             } else {
-            // DefaultMutableTreeNode tmp = 
             	addObject(privateNode, files.get(i), true);
-            // addObject(tmp,"asd",true);
             }
         }
         if (mode.equals("slideshows")) {
