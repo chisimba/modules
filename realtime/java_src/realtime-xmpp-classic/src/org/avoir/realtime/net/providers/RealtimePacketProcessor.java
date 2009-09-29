@@ -708,12 +708,45 @@ public class RealtimePacketProcessor {
                     String filename = XmlUtils.readString(element, "file-name");
                     String filePath = XmlUtils.readString(element, "file-path");
                     String isDirectory = XmlUtils.readString(element, "is-directory");
+                    String xmlContents2 = XmlUtils.readString(element, "answers");
+                    ArrayList<RealtimeFile> files2 = new ArrayList<RealtimeFile>();
+                    if(xmlContents2!=null){
+                        xmlContents2 = "<rs>" + xmlContents2 + "</rs>";
+                        Document doc2 = documentBuilder.parse(
+                                new ByteArrayInputStream(xmlContents2.getBytes(Constants.PREFERRED_ENCODING)));
+
+                        NodeList usersNodeList2 = doc.getElementsByTagName("file");
+                    	for (int j = 0; j < usersNodeList2.getLength(); j++) {
+                            Node node2 = usersNodeList2.item(i);
+                            if (node2.getNodeType() == Node.ELEMENT_NODE) {
+                                org.w3c.dom.Element element2 = (org.w3c.dom.Element) node2;
+                                String filename2 = XmlUtils.readString(element2, "file-name");
+                                String filePath2 = XmlUtils.readString(element2, "file-path");
+                                String isDirectory2 = XmlUtils.readString(element2, "is-directory");
+                                String access2 = XmlUtils.readString(element2, "access");
+                                boolean publicAccess2 = true;
+                                if (access2.equals("private")) {
+                                    publicAccess2 = false;
+                                }
+                                RealtimeFile f2 = new RealtimeFile(filename2, filePath2, new Boolean(isDirectory2), publicAccess2);
+                                if (detectVersion) {
+                                    int ver2 = XmlUtils.readInt(element, "version");
+                                    f2.setVersion(ver2);
+                                }
+                                files2.add(f2);
+                            }
+                        }
+                    }
                     String access = XmlUtils.readString(element, "access");
                     boolean publicAccess = true;
                     if (access.equals("private")) {
                         publicAccess = false;
                     }
                     RealtimeFile f = new RealtimeFile(filename, filePath, new Boolean(isDirectory), publicAccess);
+                    if(xmlContents2!=null){
+                    	f.setFiles(files2);
+                    }
+                    
                     if (detectVersion) {
                         int ver = XmlUtils.readInt(element, "version");
                         f.setVersion(ver);
