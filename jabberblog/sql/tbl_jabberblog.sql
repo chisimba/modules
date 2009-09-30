@@ -25,6 +25,9 @@ $fields = array(
     'datesent' => array(
         'type' => 'timestamp',
         ),
+    'twitthreadid' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
     );
-
 ?>

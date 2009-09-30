@@ -57,6 +57,7 @@ class jabberblog extends controller {
     public $objModules;
     public $objDbTags;
     public $objViewer;
+    public $objTwtOps;
 
     /**
      *
@@ -84,6 +85,10 @@ class jabberblog extends controller {
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
                 $this->objTwitterLib = $this->getObject ( 'twitterlib', 'twitter' );
+            }
+            if ($this->objModules->checkIfRegistered ( 'twitoaster' )) {
+                // Get other places to upstream content to
+                $this->objTwtOps = $this->getObject ( 'twitoasterops', 'twitoaster' );
             }
 
             // Get the sysconfig variables for the Jabber user to set up the connection.
@@ -220,19 +225,29 @@ class jabberblog extends controller {
                                         $poster = explode('/', $pl['from']);
                                         $poster = $poster[0];
                                         if($poster == $this->jposter) {
-                                            $add = $this->objDbIm->addRecord ( $pl );
+                                            // $add = $this->objDbIm->addRecord ( $pl );
                                             // Update Twitter
-                                            if ($this->objTwitterLib && $pl ['body'] && $add) {
+                                            if ($this->objTwtOps || $this->objTwitterLib && $pl ['body']) {
                                                 // check for 140 char length restriction.
                                                 if(strlen($pl['body']) < 100 ) {
-                                                    //log_debug( $pl ['body'].": ".$this->uri(''));
-                                                    $this->objTwitterLib->updateStatus ( $pl ['body'].": ".$this->uri('') );
+                                                    // $this->objTwitterLib->updateStatus ( $pl ['body'].": ".$this->uri('') );
+                                                    $returnobj = json_decode($this->objTwtOps->userUpdate( $pl ['body'].": ".$this->uri('') ) );
+                                                    $thread = $returnobj->thread;
+                                                    $threadid = $thread->id;
+                                                    // store the threadid somewhere
+                                                    $pl['twitthreadid'] = $threadid;
+
                                                 }
                                                 else {
-                                                    //log_debug($this->objLanguage->languageText("mod_jabberblog_newpost", "jabberblog").': '.$this->uri(''));
-                                                    $this->objTwitterLib->updateStatus ( $this->objLanguage->languageText("mod_jabberblog_newpost", "jabberblog").': '.$this->uri('') );
+                                                    // $this->objTwitterLib->updateStatus ( $this->objLanguage->languageText("mod_jabberblog_newpost", "jabberblog").': '.$this->uri('') );
+                                                    $returnobj = json_decode($this->objTwtOps->userUpdate( $this->objLanguage->languageText("mod_jabberblog_newpost", "jabberblog").": ".$this->uri('') ) );
+                                                    $thread = $returnobj->thread;
+                                                    $threadid = $thread->id;
+                                                    // store the threadid somewhere
+                                                    $pl['twitthreadid'] = $threadid;
                                                 }
                                             }
+                                            $add = $this->objDbIm->addRecord ( $pl );
                                             // send a message to the poster
                                             $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_msgadded', 'jabberblog'));
                                             // send out a mass message to the subscribers letting them know a new post is here

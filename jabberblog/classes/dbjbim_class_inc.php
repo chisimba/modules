@@ -55,6 +55,7 @@ class dbjbim extends dbTable {
         $recarr ['msgtype'] = $pl ['type'];
         $recarr ['msgfrom'] = $userSplit2 [0];
         $recarr ['msgbody'] = $pl ['body'];
+        $recarr ['twitthreadid'] = $pl['twitthreadid'];
         // Check for empty messages
         if ($recarr ['msgbody'] == "") {
             return;

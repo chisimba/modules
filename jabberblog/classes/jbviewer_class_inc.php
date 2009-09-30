@@ -64,6 +64,7 @@ class jbviewer extends object {
     public $uImage;
     public $objWashout;
     public $teeny;
+    public $objTwtOps;
 
     /**
      *
@@ -85,6 +86,7 @@ class jbviewer extends object {
         $this->uImage = $this->objUser->getSmallUserImage ( $this->jposteruid );
         $this->objWashout = $this->getObject ( 'washout', 'utilities' );
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
+        $this->objTwtOps = $this->getObject ( 'twitoasterops', 'twitoaster');
     }
 
     public function renderSingle($msg) {
@@ -101,7 +103,47 @@ class jbviewer extends object {
         $msgbody = $this->renderAtTags( $msgbody );
 
         $msgid = $msg ['id'];
-        $commenttxt = $this->objComment->showJblogComments ( $msgid );
+        $commenttxt = NULL;
+        if(isset($msg['twitthreadid']) && $msg['twitthreadid'] != '') {
+            // show twitter comments
+            $data = json_decode($this->objTwtOps->showConvo($msg['twitthreadid']));
+            $stats = $data->thread->stats;
+            $totalreplies = $stats->total_replies;
+            $replydata = $data->replies;
+            if(!is_array($replydata)) {
+               $replydata = array();
+            }
+            // Add in a heading
+            $objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $this->loadClass ( 'htmlheading', 'htmlelements' );
+            $header = new htmlHeading ( );
+            $header->str = $this->objLanguage->languageText("mod_blogcomments_twittercomments4post", "jabberblog");
+            $header->type = 3;
+            $commenttxt .= $header->show();
+
+            foreach($replydata as $replies) {
+                $content = $replies->content;
+                $dt = $replies->created_at->datetime_gmt;
+                $name = "@".$replies->user->screen_name;
+                $tlink = $this->newObject ( 'link', 'htmlelements' );
+                $tlink->href = "http://twitter.com/".$replies->user->screen_name;
+                $tlink->link = $name;
+                $image = $replies->user->profile_image_url;
+                $header = $tlink->show()." at ".$dt;
+
+                $ctable = $this->newObject('htmltable', 'htmlelements');
+                $ctable->cellpadding = 2;
+                $ctable->startRow();
+                $ctable->addCell("<img src='".$image."' /> ".$content);
+                //$ctable->addCell($content);
+                $ctable->endRow();
+                $fbody = $ctable->show();
+            
+                $commenttxt .= $objFeatureBox->showComment($header, $this->objWashout->parseText($fbody));
+            }
+        }
+        // Show regular website comments
+        $commenttxt .= $this->objComment->showJblogComments ( $msgid );
         $comment = $this->objComment->commentAddForm ( $msgid, 'jabberblog', 'tbl_jabberblog', $postuserid = NULL, $editor = TRUE, $featurebox = FALSE, $showtypes = FALSE, $captcha = FALSE, $comment = NULL, $useremail = NULL );
         $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
         $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment );
@@ -131,8 +173,17 @@ class jbviewer extends object {
             $tlink->href = "http://twitter.com/home/?status=".$this->objLanguage->languageText ( "mod_jabberblog_interestingpost", "jabberblog" ).": ".$this->teeny->create(urlencode($this->uri ( array ('postid' => $msgid, 'action' => 'viewsingle' ) )));
             $tlink->link = $this->objLanguage->languageText ( "mod_jabberblog_tweetthis", "jabberblog" );
             // get the comment count
+            if(isset($msg['twitthreadid']) && $msg['twitthreadid'] != '') {
+                // show twitter comments
+                $data = json_decode($this->objTwtOps->showConvo($msg['twitthreadid']));
+                $stats = $data->thread->stats;
+                $totalreplies = $stats->total_replies;
+                $data = NULL;
+                $stats = NULL;
+            }
             $comments = $this->objComment->getCount ( $msgid );
-
+            $comments = $comments + $totalreplies;
+            $totalreplies = 0;
             // alt featurebox
             $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
             $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")"." ".$tlink->show(), nl2br ( $msgbody ) . "<br />" );
@@ -233,7 +284,7 @@ class jbviewer extends object {
     }
 
     public function renderHashTags($str) {
-    	$str = stripslashes($str);
+        $str = stripslashes($str);
         preg_match_all('/\#([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
         $counter = 0;
         foreach ($results[1] as $item) {
@@ -266,7 +317,7 @@ class jbviewer extends object {
     }
 
     public function renderAtTags($str) {
-    	$str = stripslashes($str);
+        $str = stripslashes($str);
         preg_match_all('/\@([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
         $counter = 0;
         foreach ($results[1] as $item) {
