@@ -96,13 +96,16 @@ class block_browseactivities extends object
 
         $objUtils = $this->getObject('activityutilities', 'activitystreamer');
         $objSysConfig  = $this->getObject('altconfig','config');
-        
+        $this->appendArrayVar('headerParams', '
+        	<script type="text/javascript">
+        		var uri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'jsonlistactivities', 'module' => 'activitystreamer'))).'"; 
+        		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php"; </script>');        
         //Ext stuff
         $ext = "";
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
-        $ext .=$this->getJavaScriptFile('search.js', 'activitystreamer');
         $ext .=$this->getJavaScriptFile('button.js', 'activitystreamer');
+        //$ext .=$this->getJavaScriptFile('search.js', 'activitystreamer');
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
        
         $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
@@ -110,14 +113,10 @@ class block_browseactivities extends object
         $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
         $this->appendArrayVar('headerParams', $ext);
         
-        $this->appendArrayVar('headerParams', '
-        	<script type="text/javascript">
-        		var uri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'jsonlistactivities', 'module' => 'activitystreamer'))).'"; 
-        		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php"; </script>');
 								//Div to render content
         $str = '<input type="button" id="show-btn" value="Site Activities" /><br /><br />
         <div id="hello-win" class="x-hidden">
-    <div class="x-window-header"></div>
+    <div class="x-window-header">'.$this->objConfig->getSiteName()." ".$this->title.'</div>
     <div id="hello-tabs">
         <!-- Auto create tab 1 -->
         <div class="x-tab" title="'.$this->objConfig->getSiteName()." ".$this->title.'" id="activity-topic-grid">
