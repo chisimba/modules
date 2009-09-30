@@ -24,9 +24,9 @@ public class AnswerNavigator extends Navigator{
     }
     
     public void processFileView(ArrayList<RealtimeFile> files) {
-    	addObject(rootNode, "M23ine", true);
-    	javax.swing.tree.DefaultMutableTreeNode qap = addObject(privateNode, "Mi4ne", true);
-    	addObject(qap, "pu", true);
+    	//addObject(rootNode, "M23ine", true);
+    	//javax.swing.tree.DefaultMutableTreeNode qap = addObject(privateNode, "Mi4ne", true);
+    	//addObject(qap, "pu", true);
     	clear();
         addAccessTypes();
         if(files!=null){
@@ -37,8 +37,7 @@ public class AnswerNavigator extends Navigator{
 		            ArrayList<RealtimeFile> files2 = files.get(i).getFiles();
 		            if(files2!=null){
 		            	for (int j = 0; j < files2.size(); j++) {
-		            		javax.swing.tree.DefaultMutableTreeNode q = addObject(questionnode[i], files2.get(j), true);
-		            		addObject(q, files2.get(j), true);
+		            		addObject(questionnode[i], files2.get(j), true);
 		            	}
 		            } 
 	            }
@@ -47,8 +46,7 @@ public class AnswerNavigator extends Navigator{
 	            	ArrayList<RealtimeFile> files2 = files.get(i).getFiles();
 		            if(files2!=null){
 		            	for (int j = 0; j < files2.size(); j++) {
-		            		javax.swing.tree.DefaultMutableTreeNode q = addObject(questionnode[i], files2.get(j), true);
-		            		addObject(q, files2.get(j), true);
+		            		addObject(questionnode[i], files2.get(j), true);
 	            		}
 		            }
 	            }
