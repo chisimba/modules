@@ -138,6 +138,10 @@ class twitoasterops extends object {
 
     /**
      * Tests if supplied API Key is valid
+     *
+     * HTTP method is GET and parameter(s) must be UTF-8 & URL encoded.
+     *
+     * @param $format string (Optional) php_serial, json, xml
      */
     public function verifyKey($format = 'json') {
         $apikey = $this->objSysConfig->getValue('apikey', 'twitoaster');
@@ -147,6 +151,15 @@ class twitoasterops extends object {
         return $ret;
     }
 
+    /**
+     * Updates the Twitter user's status through Twitoaster (creates a new thread). Requires authentication. 
+     *
+     * HTTP method is POST and parameter(s) must be UTF-8 & URL encoded.
+     *
+     * @param $status string (Required) status string
+     * @param $extended boolean (Optional) whether or not to use the 420 char extended status.
+     * @param $format string (Optional) format php_serial, json, xml
+     */
     public function userUpdate($status, $extended = FALSE, $format = 'json') {
         $apikey = $this->objSysConfig->getValue('apikey', 'twitoaster');
         $url = "http://api.twitoaster.com/user/update.$format";
@@ -156,6 +169,14 @@ class twitoasterops extends object {
         return $ret;
     }
 
+   /**
+    * Returns the conversation containing the requested tweet. If the tweet can't be found in any Twitoaster conversation, a 404 error is returned. 
+    *
+    * HTTP method is GET and parameter(s) must be UTF-8 & URL encoded. 
+    *
+    * @param $id
+    * @param $format string (Optional) format php_serial, json, xml
+    */
     public function showConvo($id, $format = 'json') {
         $url = "http://api.twitoaster.com/conversation/show.$format?id=$id";
         $ret = $this->objCurl->exec($url);
@@ -163,6 +184,17 @@ class twitoasterops extends object {
         return $ret;
     }
 
+   /**
+    * Returns the 20 most recent conversations started by the requested user. The user has to be registered on Twitoaster. Otherwise, a 404 error is returned. 
+    *
+    * HTTP method is GET and parameter(s) must be UTF-8 & URL encoded. 
+    * 
+    * @param $userid integer (Optional) twitter user id
+    * @param $screen_name string (Optional) twitter screen name
+    * @param $page integer (Optioanal) Page nuber to show
+    * @param $show_replies boolean (Optional) whether to show replies or not
+    * @param $format string (Optional) format php_serial, json, xml
+    */
     public function convoUser($userid = NULL, $screen_name = NULL, $page = NULL, $show_replies = TRUE, $format = 'json') {
         $url = "http://api.twitoaster.com/conversation/user.$format?";
         if(isset($userid)) {
@@ -183,6 +215,14 @@ class twitoasterops extends object {
         return $ret;
     }
 
+   /**
+    * Returns the 20 most recent (or revelant) conversations that match the specified query. If none, a 404 error is returned.
+    *
+    * HTTP method is GET and parameter(s) must be UTF-8 & URL encoded. 
+    *
+    * @param $query string (Required) Search query. The NOT (!), OR (|) and PHRASE (") operators are supported.  
+    * @param $format string (Optional) format php_serial, json, xml
+    */
     public function convoSearch($query, $format = 'json') {
         $url = "http://api.twitoaster.com/conversation/search.$format?query=$query";
         $ret = $this->objCurl->exec($url);

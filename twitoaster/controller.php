@@ -78,10 +78,26 @@ class twitoaster extends controller {
             case NULL :
                 //var_dump(json_decode($this->objOps->showUser('paulscott56')));
                 //var_dump(json_decode($this->objOps->verifyKey('json')));
-                //var_dump(json_decode($this->objOps->userUpdate('Second test to #twitoaster')));
+                
                 //var_dump(json_decode($this->objOps->showConvo(4467277193)));
                 //var_dump(json_decode($this->objOps->convoUser(NULL, 'paulscott56')));
                 //var_dump(json_decode($this->objOps->convoSearch('chisimba')));
+
+                //$returnobj = json_decode($this->objOps->userUpdate('Please do me a favour and reply to this... Thanks!'));
+                //$thread = $returnobj->thread;
+                //$threadid = $thread->id;
+                $threadid = 4465619943;
+                $data = json_decode($this->objOps->showConvo($threadid));
+                $stats = $data->thread->stats;
+                $totalreplies = $stats->total_replies;
+                $replydata = $data->replies;
+                foreach($replydata as $replies) {
+                    $content = $replies->content;
+                    $dt = $replies->created_at->datetime_gmt;
+                    $name = $replies->user->screen_name;
+                    $image = $replies->user->profile_image_url;
+echo "<img src='$image' /> $name says: $content at $dt <br />";
+                }
                 break;
 
             case 'viewall' :
