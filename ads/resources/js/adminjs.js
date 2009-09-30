@@ -14,6 +14,7 @@ function showTabs() {
         defaults:{autoHeight: true},
         items:[
             {contentEl:'facultylist', title: 'Faculty List'},
+            {contentEl:'schoollist', title: 'School List'},
             {contentEl: 'apomoderators', title: 'APO Moderators'},
             {contentEl: 'commentlist', title: 'Custom Units'},
              {contentEl: 'subfacultymoderators', title: 'Faculty Subcommittee Moderators'},
@@ -120,6 +121,133 @@ function showFacultyList(data,url){
             });
         }
         addFacultyWin.show(this);
+    });
+}
+function showSchoolList(facultyData, data, url) {
+
+    var schoolFacultyStore = new Ext.data.ArrayStore({
+        fields:[{
+            name: 'faculty'
+        },{
+            name: 'id'
+        }],
+        data : facultyData
+    });
+    
+    var schoolFacultyField = new Ext.form.ComboBox({
+        store: schoolFacultyStore,
+        displayField:'faculty',
+        fieldLabel:'Faculty',
+        typeAhead: true,
+        mode: 'local',
+        //value: selectedFaculty,
+        editable:false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select faculty...',
+        selectOnFocus:true,
+        valueField: 'id',
+        hiddenName : 'facultyid'
+
+    });
+    
+    var schoolStore = new Ext.data.ArrayStore({
+        fields: [{
+            name: 'schoolname'
+        },{
+            name: 'faculty'
+        },{
+            name: 'delete'
+        }]
+    });
+    schoolStore.loadData(data);
+
+    // create the Grid
+    var schoolGrid = new Ext.grid.GridPanel({
+        store: schoolStore,
+        columns: [
+        {
+            id:'schoolname',
+            header: "School",
+            width: 500,
+            sortable: true,
+            dataIndex: 'schoolname'
+        },{
+            header: "Faculty",
+            width:100,
+            sortable: true,
+            dataIndex: 'faculty'
+        },{
+            header: "Delete",
+            width:100,
+            sortable: true,
+            dataIndex: 'delete'
+        }],
+        sm: new Ext.grid.RowSelectionModel({
+            singleSelect: true
+        }),
+        stripeRows: true,
+        autoExpandColumn: 'schoolname',
+        height:350,
+        width:500
+    });
+    schoolGrid.render('schoollist');
+
+
+    var schoolAddForm = new Ext.FormPanel({
+            standardSubmit: true,
+            labelWidth: 100,
+            url:url,
+            title: 'Add School',
+            bodyStyle:'padding:5px 5px 0',
+            width: 350,
+            defaultType: 'textfield',
+
+            items: [
+                    schoolFacultyField,
+                    {
+                    fieldLabel: 'School',
+                    name: 'addschool',
+                    id: 'addschool_title',
+                    allowBlank: false,
+                    width: 250
+            }]
+        });
+
+    var addSchoolWin;
+    var schoolAddBtn = Ext.get('addschool-btn');
+
+    schoolAddBtn.on('click', function() {
+        if(!addSchoolWin){
+            addSchoolWin = new Ext.Window({
+                applyTo:'addschool-win',
+                layout:'fit',
+                width:400,
+                height:200,
+                x:250,
+                y:150,
+                closeAction:'destroy',
+                plain: true,
+
+                items: schoolAddForm,
+                buttons: [{
+                    text:'Save',
+                    handler: function(){
+                        if (schoolAddForm.url)
+                            schoolAddForm.getForm().getEl().dom.action = schoolAddForm.url;
+
+                        schoolAddForm.getForm().submit();
+                    }
+                },{
+                    text: 'Cancel',
+                    handler: function(){
+                       addSchoolWin.hide();
+                    }
+                }]
+            });
+        }
+        addSchoolWin.show(this);
     });
 }
 function showFacultyModeratorList(data,url,modFaculties){

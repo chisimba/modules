@@ -26,6 +26,7 @@ $this->appendArrayVar('headerParams',$facultylistjs);
 $this->appendArrayVar('headerParams',$commentsadminjs);
 
 $facultyList = $this->objFaculty->getFacultyData();
+$schoolList = $this->objSchool->getSchoolData();
 $facultyModeratorList=$this->objFacultyModerator->getModeratorData();
 $subFacultyModeratorList=$this->objSubFacultyModerator->getModeratorData();
 $apoModeratorList=$this->objAPOModerator->getModeratorData();
@@ -46,6 +47,36 @@ foreach($facultyList as $data) {
   
   if($count < $total){
       $facultyData.=",";
+  }
+   $count++;
+}
+
+$schoolData = "";
+$count = 1;
+$deleteSchoolLink=new link();
+$total=count($schoolList);
+foreach($schoolList as $data) {
+   $deleteSchoolLink->link($this->uri(array('action'=>'deleteschool','school'=>$data['schoolname'], 'facultyname'=>$data['faculty'],'id'=>$data['id'])));
+   $objIcon->setIcon('delete');
+   $deleteSchoolLink->link=$objIcon->show();
+
+    $schoolData.="['".$data['schoolname']."','".$data['faculty']."','".$deleteSchoolLink->show()."']";
+
+  if($count < $total){
+      $schoolData.=",";
+  }
+   $count++;
+}
+
+$facultyListing = $this->objFaculty->getAllFaculty();
+
+$tmpFacultyData = "";
+$count = 1;
+$total=count($facultyListing);
+foreach($facultyListing as $data) {
+   $tmpFacultyData.="['".$data['name']."','".$data['id']."']";
+  if($count < $total){
+      $tmpFacultyData.=",";
   }
    $count++;
 }
@@ -133,10 +164,15 @@ $saveFacultyModeratorUrl = $this->uri(array('action'=>'savefacultymoderator'));
 $saveSubFacultyModeratorUrl = $this->uri(array('action'=>'savesubfacultymoderator'));
 $saveAPOModeratorUrl = $this->uri(array('action'=>'saveapomoderator'));
 $saveFacultyUrl = $this->uri(array('action'=>'savefaculty'));
+$saveSchoolUrl = $this->uri(array('action'=>'saveschool'));
 
 $addFacultyButton = new button('addFaculty', 'Add Faculty');
 $addFacultyButton->setId('addfaculty-btn');
 $addFacultyButton->extra="style=\"margin-top: 2em;margin-bottom: 2em;\"";
+
+$addSchoolButton= new button('addSchool', 'Add School');
+$addSchoolButton->setId('addschool-btn');
+$addSchoolButton->extra="style=\"margin-top: 2em;margin-bottom: 2em;\"";
 
 $addFacultyModeratorButton = new button('addFacultyModerator', 'Add Faculty Moderator');
 $addFacultyModeratorButton->setId('addfacultymoderator-btn');
@@ -167,6 +203,13 @@ $render='<div id="onecolumn">
                     <div id="addfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>
                      '.$addFacultyButton->show().'
                     </div>
+
+
+                    <div id="schoollist" style="padding-left: 3em;" class="x-hide-display">
+                        <div id="addschool-win" class="x-hidden"><div class="x-window-header"></div></div>
+                    '.$addSchoolButton->show().'
+                    </div>
+
 
                     <div id="subfacultymoderators" style="padding-left: 3em;" class="x-hide-display">
                     <div id="addsubfacultymoderator-win" class="x-hidden"><div class="x-window-header"></div></div>
@@ -221,6 +264,10 @@ $mainjs = "/*!   * Ext JS Library 3.0.0
 
                 var facultyListData=[".$facultyData."];
                 showFacultyList(facultyListData,'".str_replace("amp;", "", $saveFacultyUrl)."');
+
+                var facultySchoolData=[".$tmpFacultyData."];
+                var schoolListData=[".$schoolData."];
+                showSchoolList(facultySchoolData, schoolListData,'".str_replace("amp;", "", $saveSchoolUrl)."');
 
                 var facultyModeratorListData=[".$facultyModeratorData."];
                 showFacultyModeratorList(facultyModeratorListData,'".str_replace("amp;", "", $saveFacultyModeratorUrl)."',facultyListData);
