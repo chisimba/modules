@@ -16,6 +16,7 @@ import org.avoir.realtime.net.RPacketListener;
  * @author developer
  */
 public class AnswerNavigator extends Navigator{
+	javax.swing.tree.DefaultMutableTreeNode questionnode[];
 
     public AnswerNavigator(MainFrame xmf) {
         super(xmf, "answers", "Answers Navigator");
@@ -23,25 +24,36 @@ public class AnswerNavigator extends Navigator{
     }
     
     public void processFileView(ArrayList<RealtimeFile> files) {
-        clear();
+    	addObject(rootNode, "M23ine", true);
+    	javax.swing.tree.DefaultMutableTreeNode qap = addObject(privateNode, "Mi4ne", true);
+    	addObject(qap, "pu", true);
+    	clear();
         addAccessTypes();
-
-        for (int i = 0; i < files.size(); i++) {
-
-            if (files.get(i).isPublicAccessible()) {
-            	javax.swing.tree.DefaultMutableTreeNode questionnode = addObject(publicNode, files.get(i), true);
-            	ArrayList<RealtimeFile> files2 = files.get(i).getFiles();
-            	for (int j = 0; j < files2.size(); j++) {
-                	addObject(questionnode, files2.get(j), true);
-            	}
-            } else {
-            	javax.swing.tree.DefaultMutableTreeNode questionnode = addObject(privateNode, files.get(i), true);
-            	ArrayList<RealtimeFile> files2 = files.get(i).getFiles();
-            	for (int j = 0; j < files2.size(); j++) {
-                	addObject(questionnode, files2.get(j), true);
-            	}
-            }
-        }
+        if(files!=null){
+        	questionnode=new javax.swing.tree.DefaultMutableTreeNode[files.size()];
+	        for (int i = 0; i < files.size(); i++) {
+	            if (files.get(i).isPublicAccessible()) {
+		            questionnode[i] = addObject(publicNode, files.get(i), true);
+		            ArrayList<RealtimeFile> files2 = files.get(i).getFiles();
+		            if(files2!=null){
+		            	for (int j = 0; j < files2.size(); j++) {
+		            		javax.swing.tree.DefaultMutableTreeNode q = addObject(questionnode[i], files2.get(j), true);
+		            		addObject(q, files2.get(j), true);
+		            	}
+		            } 
+	            }
+	            else {
+	            	questionnode[i] = addObject(privateNode, files.get(i), true);
+	            	ArrayList<RealtimeFile> files2 = files.get(i).getFiles();
+		            if(files2!=null){
+		            	for (int j = 0; j < files2.size(); j++) {
+		            		javax.swing.tree.DefaultMutableTreeNode q = addObject(questionnode[i], files2.get(j), true);
+		            		addObject(q, files2.get(j), true);
+	            		}
+		            }
+	            }
+	        }
+	    }
     }
 
 }
