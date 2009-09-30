@@ -1503,7 +1503,7 @@ public function showBody($isPreview = false)
 	$strBody .= $showDateText;
 
 	//parse for mindmaps
-	$page['body'] = $objMindMap->parse($page['body']);
+	//$page['body'] = $objMindMap->parse($page['body']);
 	//parse for mathml as well
 	$page['body'] = $objMath->parseAll($page['body']);
 	$strBody .= stripslashes($page['body']);
