@@ -317,9 +317,11 @@ public class DefaultPacketProcessor {
         sb.append("<is-directory>").append(file.isDirectory() + "").append("</is-directory>");
         //if getting answers list, go into sub folder and get all files inside too
         if (file.isDirectory()&&fileType=="answers"){
-        	sb.append("<answers>");
-        	for (int j = 0; j < privateList.length; j++) {
-                String path2 = Constants.FILES_DIR + "/" + fileType + "/" + username + "/" + file.getName() + "/" + privateList[i];
+            File ansDir = new File(Constants.FILES_DIR + "/" + fileType + "/" + username + "/" + file.getName() + "/");
+            String[] ansList = ansDir.list();
+            sb.append("<answers>");
+        	for (int j = 0; j < ansList.length; j++) {
+                String path2 = Constants.FILES_DIR + "/" + fileType + "/" + username + "/" + file.getName() + "/" + ansList[i];
                 File file2 = new File(path2);
                 sb.append("<file>");
                 sb.append("<file-name>").append(file2.getName()).append("</file-name>");
