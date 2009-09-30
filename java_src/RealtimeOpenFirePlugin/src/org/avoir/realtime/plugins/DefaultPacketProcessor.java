@@ -315,23 +315,6 @@ public class DefaultPacketProcessor {
         sb.append("<file-name>").append(file.getName()).append("</file-name>");
         sb.append("<file-path>").append(path).append("</file-path>");
         sb.append("<is-directory>").append(file.isDirectory() + "").append("</is-directory>");
-        //if getting answers list, go into sub folder and get all files inside too
-        if (file.isDirectory()&&fileType=="answers"){
-            File ansDir = new File(Constants.FILES_DIR + "/" + fileType + "/" + username + "/" + file.getName() + "/");
-            String[] ansList = ansDir.list();
-            sb.append("<answers>");
-        	for (int j = 0; j < ansList.length; j++) {
-                String path2 = Constants.FILES_DIR + "/" + fileType + "/" + username + "/" + file.getName() + "/" + ansList[i];
-                File file2 = new File(path2);
-                sb.append("<file>");
-                sb.append("<file-name>").append(file2.getName()).append("</file-name>");
-                sb.append("<file-path>").append(path2).append("</file-path>");
-                sb.append("<is-directory>").append(file2.isDirectory() + "").append("</is-directory>");
-                sb.append("<access>").append("private").append("</access>");
-                sb.append("</file>");
-        	}
-        	sb.append("</answers>");
-        }
         sb.append("<access>").append("private").append("</access>");
         sb.append("</file>");
       }
@@ -340,15 +323,40 @@ public class DefaultPacketProcessor {
     File publicFileDir = new File(Constants.FILES_DIR + "/" + fileType + "/");
 
     String[] publicList = publicFileDir.list();
-
+    System.out.println(publicList + " l:"+publicList.length);
     if (publicList != null) {
       for (int i = 0; i < publicList.length; i++) {
         File file = new File(Constants.FILES_DIR + "/" + fileType + "/" + publicList[i]);
         if (!file.isDirectory()) { //jump dirs
+          System.out.println("inside!");
           sb.append("<file>");
           sb.append("<file-name>").append(file.getName()).append("</file-name>");
           sb.append("<file-path>").append(file.getAbsolutePath()).append("</file-path>");
           sb.append("<is-directory>").append(file.isDirectory()).append("</is-directory>");
+          sb.append("<access>").append("public").append("</access>");
+          sb.append("</file>");
+        }
+        else if(fileType.equals("answers")){     	//if getting answers list, go into sub folder and get all files inside too
+          System.out.println("nam:"+file.getName());
+          sb.append("<file>");
+          sb.append("<file-name>").append(file.getName()).append("</file-name>");
+          sb.append("<file-path>").append(file.getAbsolutePath()).append("</file-path>");
+          sb.append("<is-directory>").append(file.isDirectory()).append("</is-directory>");
+          sb.append("<answers>");
+          File ansDir = new File(Constants.FILES_DIR + "/" + fileType + "/" + file.getName() + "/");
+          String[] ansList = ansDir.list();
+          for (int j = 0; j < ansList.length; j++) {
+              String path2 = Constants.FILES_DIR + "/" + fileType + "/" + file.getName() + "/" + ansList[j];
+              System.out.println("path2:" +path2);
+              File file2 = new File(path2);
+              sb.append("<file>");
+              sb.append("<file-name>").append(file2.getName()).append("</file-name>");
+              sb.append("<file-path>").append(path2).append("</file-path>");
+              sb.append("<is-directory>").append(file2.isDirectory() + "").append("</is-directory>");
+              sb.append("<access>").append("private").append("</access>");
+              sb.append("</file>");
+           	}
+          sb.append("</answers>");
           sb.append("<access>").append("public").append("</access>");
           sb.append("</file>");
         }
