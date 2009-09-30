@@ -1117,7 +1117,7 @@ function _layoutList($arrSection, $module)
 	$str = '';
 	$introStr = '';
 	$objFeatureBox = $this->newObject('featurebox', 'navigation');
-	$objMindMap = $this->getObject('parse4mindmap', 'filters');
+	//$objMindMap = $this->getObject('parse4mindmap', 'filters');
 	$objMath = $this->getObject('parse4mathml', 'filters');
 	$orderType = $arrSection['ordertype'];
 
@@ -1251,7 +1251,7 @@ public function showBody($isPreview = false)
 	$sectionId = $page['sectionid'];
 	$section = $this->_objSections->getSection($sectionId);
 
-	$objMindMap = $this->getObject('parse4mindmap', 'filters');
+	//$objMindMap = $this->getObject('parse4mindmap', 'filters');
 	$objMath = $this->getObject('parse4mathml', 'filters');
 
 	//Build Footer Items
