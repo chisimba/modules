@@ -49,6 +49,10 @@ class dbuserimport extends dbTable
     function addBatch($adminId,$courseCode,$newInfo,$importMethod,$batchCode='auto')
     {
         $this->objContextGroups=$this->getObject('managegroups','contextgroups');
+        $this->objAdminGroups=$this->getObject('groupadminmodel','groupadmin'); 
+        $this->objGroupOps=$this->getObject('groupops','groupadmin');
+
+        $contextId=$this->objAdminGroups->getId($courseCode);
         $now=date('Y-m-d');
         if ($batchCode=='auto'){
             $batchCode=$importMethod.date('Ymdhis').rand(10,99);
@@ -65,10 +69,16 @@ class dbuserimport extends dbTable
              'batchId'=>$batchCode
              );
             $returnId=$this->insert($sql);
-            $students['Students'][]=$line['id'];
+            $students['Students'][]=$line['userId'];
         }
         if ($courseCode!='lobby'){
-            $this->objContextGroups->importGroupMembers($courseCode,$students);
+            //$this->objContextGroups->importGroupMembers($courseCode,$students);
+            // Add to context
+            foreach ($students['Students'] as $line){
+                $usrdata = $this->objGroupOps->getUserByUserId($line);
+                $permUserId = $usrdata['perm_user_id'];
+                $this->objAdminGroups->addGroupUser( $contextId, $permUserId);
+            }
         }
         // Uncomment below when doing a bulk-import of users
         $this->addToUserGroup($students['Students'],'Students');
