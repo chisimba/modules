@@ -15,6 +15,10 @@ $fields = array(
      'type'  =>  'text',
      'length'=>  50
     ),
+    'school'  => array(
+     'type'  =>  'text',
+     'length'=>  32
+    ),
     'title'  => array(
      'type'  =>  'text',
      'length'=>  255
@@ -33,6 +37,11 @@ $fields = array(
         'notnull' => TRUE
     ),
     'deleteStatus' => array(
+        'type' => 'integer',
+        'length' => 4,
+        'notnull' => TRUE
+    ),
+    'phase' => array(
         'type' => 'integer',
         'length' => 4,
         'notnull' => TRUE

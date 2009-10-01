@@ -93,5 +93,7 @@ function checkInput9() {
     if(isNaN(totNotHrs2)) {totNotHrs2 = 0;}
 
     var totNotHrs = totNotHrs1 + totNotHrs2;
+    var totsaqa = parseInt(totNotHrs)/10;
     jQuery("#totNotTime2").text(totNotHrs);
+    jQuery("#totsaqa").text(totsaqa);
 }

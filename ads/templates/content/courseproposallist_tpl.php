@@ -37,8 +37,9 @@ $objCourseProposals = $this->getObject('dbcourseproposals');
 $objUser = $this->getObject ( 'user', 'security' );
 $courseProposals =$objCourseProposals->getCourseProposals($objUser->userId());
 $objFaculty = $this->getObject('dbfaculty');
+$objSchool = $this->getObject('dbfacultyschool');
 $facultyList = $objFaculty->getAllFaculty();
-
+$schoolList = $objSchool->getSchoolData();
 $facultyData = "";
 $tmpFacultyData = "";
 $count = 1;
@@ -49,6 +50,17 @@ foreach($facultyList as $data) {
   if($count < $total){
       $facultyData.=",";
       $tmpFacultyData.=",";
+  }
+   $count++;
+}
+
+$schoolData = "";
+$count = 1;
+$total=count($schoolList);
+foreach($schoolList as $data) {
+  $schoolData.="['".$data['schoolname']."','".$data['id']."']";
+  if($count < $total){
+      $schoolData.=",";
   }
    $count++;
 }
@@ -159,11 +171,14 @@ $cancelUrl = $this->uri(array('action'=>'NULL'));
 $mainjs = "
                 Ext.onReady(function(){
                 Ext.QuickTips.init();
+                var schools = [
+                    $schoolData
+                ];
                 var faculties= [
                   $facultyData
                  ];
                 var url='".str_replace("amp;", "", $submitUrl)."';
-                initAddProposal(faculties,url);
+                initAddProposal(schools,faculties,url);
                     
                     var xg = Ext.grid;
                     // shared reader

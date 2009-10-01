@@ -7,6 +7,7 @@
                     'version'=> array('type' => 'integer','length' => 11,'notnull' => TRUE),
                     'status'  => array('type'  =>  'text','length'=> 999,'notnull' => TRUE),
                     'username' => array('type'  =>  'text','length'=> 32,'notnull' => TRUE),
-                    'datemodified'=>array('type'=>'text','length'=>30,'notnull' => TRUE)
+                    'datemodified'=>array('type'=>'text','length'=>30,'notnull' => TRUE),
+                    'unit_type'  => array('type'  =>  'integer','length'=> 4,'notnull' => TRUE),
               );
 ?>

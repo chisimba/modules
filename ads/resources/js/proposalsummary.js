@@ -277,7 +277,7 @@ function addProposalMember(){
    window.location.href='?module=ads&action=addproposalmember'+'&email='+email+'&phase='+phase+'&courseid='+courseid+"&userid="+userid;
 }
 
-function showEditProposalWin(faculties,url,selectedFaculty,proposalName){
+function showEditProposalWin(faculties,schools,url,selectedFaculty,selectedSchool,proposalName){
   var facutlystore = new Ext.data.ArrayStore({
         fields:
          [
@@ -286,6 +286,14 @@ function showEditProposalWin(faculties,url,selectedFaculty,proposalName){
          ],
         data : faculties
     });
+    var schoolstore = new Ext.data.ArrayStore({
+        fields: [
+            {name: 'school'},
+            {name: 'id'}
+        ],
+        data: schools
+    });
+
     var facultyField = new Ext.form.ComboBox({
         store: facutlystore,
         displayField:'faculty',
@@ -303,6 +311,23 @@ function showEditProposalWin(faculties,url,selectedFaculty,proposalName){
         hiddenName : 'facultyid'
 
     });
+
+    var schoolField = new Ext.form.ComboBox({
+        store:schoolstore,
+        displayField:'school',
+        fieldLabel:'School',
+        typeAhead: true,
+        mode: 'local',
+        value:selectedSchool,
+        editable: false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction:'all',
+        emptyText: 'Select school...',
+        selectOnFocus: true,
+        valueField:'id',
+        hiddenName: 'schoolname'
+    });
       var form = new Ext.FormPanel({
             standardSubmit: true,
             labelWidth: 125,
@@ -316,6 +341,7 @@ function showEditProposalWin(faculties,url,selectedFaculty,proposalName){
 
             items: [
                      facultyField,
+                     schoolField,
                     {
                     fieldLabel: 'Title',
                     value:proposalName,

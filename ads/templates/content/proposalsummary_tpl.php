@@ -47,6 +47,7 @@ $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>
 //faculties
 $objFaculty = $this->getObject('dbfaculty');
 $facultyList = $objFaculty->getAllFaculty();
+$schoolList = $this->objSchool->getSchoolData();
 
 $facultyData = "";
 $tmpFacultyData = "";
@@ -58,6 +59,17 @@ foreach($facultyList as $data) {
   if($count < $total){
       $facultyData.=",";
       $tmpFacultyData.=",";
+  }
+   $count++;
+}
+
+$schoolData = "";
+$count = 1;
+$total=count($schoolList);
+foreach($schoolList as $data) {
+  $schoolData.="['".$data['schoolname']."','".$data['id']."']";
+  if($count < $total){
+      $schoolData.=",";
   }
    $count++;
 }
@@ -285,14 +297,16 @@ $editTitleLink->link=$objIcon->show();
 $editVars="
 <script type=\"text/javascript\">
 var editFaculties=[".$facultyData."];
+var editSchools=[$schoolData];
 var editFacultyurl='".str_replace("amp;", "", $editProposalTitleUrl)."';
 var selectedFaculty='".$objFaculty->getFacultyName($courseProposal['faculty'])."';
+var selectedSchool='".$this->objSchool->getSchoolName($courseProposal['school'])."';
 var editProposalName='".$courseProposal['title']."';
 </script>
 ";
 echo $editVars;
 
-$editValJS="showEditProposalWin(editFaculties,editFacultyurl,selectedFaculty,editProposalName);return false;";
+$editValJS="showEditProposalWin(editFaculties,editSchools,editFacultyurl,selectedFaculty,selectedSchool,editProposalName);return false;";
 $editTitleLink->extra='onClick="'.$editValJS.'"';
 $showEditTitleLink=$ownerEmail == $this->objUser->email() ? $editTitleLink->show():"";
 

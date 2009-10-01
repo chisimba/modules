@@ -21,5 +21,10 @@
             $sql = "update $this->tablename set deletestatus = 1 where faculty = '$faculty' and schoolname = '$school'";
             $this->getArray($sql);
         }
+
+        public function getSchoolName($id) {
+            $data = $this->getRow('id', $id);
+            return $data['schoolname'];
+        }
     }
 ?>

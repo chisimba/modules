@@ -252,13 +252,15 @@ class ads extends controller {
         $faculty = $this->getParam('facultyid');
         $courseTitle= $this->getParam('title');
         $this->id = $this->getParam('id');
-        $courseProposalId=$this->objCourseProposals->editProposal($this->id, $faculty, $courseTitle);
-       return $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'0'));
+        $school = $this->getParam('schoolname');
+        $courseProposalId=$this->objCourseProposals->editProposal($this->id, $faculty, $school, $courseTitle);
+        return $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'0'));
     }
 
     function __savecourseproposal(){
         $faculty = $this->getParam('facultyid');
         $courseTitle= $this->getParam('title');
+        $school = $this->getParam('schoolname');
         if ($form == "") {
             $form = $this->getParam('formnumber');
         }
@@ -266,10 +268,10 @@ class ads extends controller {
 
         if($this->getParam('edit')) {
             $this->id = $this->getParam('id');
-            $courseProposalId=$this->objCourseProposals->editProposal($this->id, $faculty, $courseTitle);
+            $courseProposalId=$this->objCourseProposals->editProposal($this->id, $faculty, $school, $courseTitle);
         }
         else {
-            $courseProposalId=$this->objCourseProposals->addCourseProposal($faculty, $courseTitle);
+            $courseProposalId=$this->objCourseProposals->addCourseProposal($faculty, $school, $courseTitle);
         }
         $this->objDocumentStore->addRecord($courseProposalId, "Comment", "", "", "", "0", $this->objUser->email($this->objUser->userId()));
         return $this->nextAction('home', array('id'=>$courseProposalId));

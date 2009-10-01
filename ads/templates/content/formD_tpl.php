@@ -181,7 +181,7 @@ $D5 = $this->objLanguage->languageText('mod_formD_D5_S','ads')."
 	</tr>
 	<tr>
 	<td><b>".$this->objLanguage->languageText('mod_formD_D5_5','ads')."</b></td>
-	<td></td>
+	<td id=\"totsaqa\" style=\"text-align:right;padding:0 0.8em;\"></td>
 	</tr>
 	</table>
 	";

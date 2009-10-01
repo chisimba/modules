@@ -49,7 +49,7 @@ function initGrid(cols){
     }
 
 
-function initAddProposal(faculties,url){
+function initAddProposal(schools, faculties,url){
   var facutlystore = new Ext.data.ArrayStore({
         fields:
          [
@@ -58,6 +58,15 @@ function initAddProposal(faculties,url){
          ],
         data : faculties
     });
+
+    var schoolstore = new Ext.data.ArrayStore({
+        fields: [
+            {name: 'school'},
+            {name: 'id'}
+        ],
+        data: schools
+    });
+    
     var facultyField = new Ext.form.ComboBox({
         store: facutlystore,
         displayField:'faculty',
@@ -74,28 +83,46 @@ function initAddProposal(faculties,url){
         hiddenName : 'facultyid'
 
     });
-      var form = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 125,
-            url:url,
-            frame:true,
-            title: 'Add  New Course Proposal',
-            bodyStyle:'padding:5px 5px 0',
-            width: 350,
-            defaults: {width: 230},
-            defaultType: 'textfield',
 
-            items: [
-                     facultyField,
-                    {
-                    fieldLabel: 'Title',
-                    name: 'title',
-                    id: 'input_title',
-                    allowBlank: false
-                }
-            ]
+    var schoolField = new Ext.form.ComboBox({
+        store:schoolstore,
+        displayField:'school',
+        fieldLabel:'School',
+        typeAhead: true,
+        mode: 'local',
+        editable: false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction:'all',
+        emptyText: 'Select school...',
+        selectOnFocus: true,
+        valueField:'id',
+        hiddenName: 'schoolname'
+    });
+    
+    var form = new Ext.FormPanel({
+        standardSubmit: true,
+        labelWidth: 125,
+        url:url,
+        frame:true,
+        title: 'Add  New Course Proposal',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaults: {width: 230},
+        defaultType: 'textfield',
 
-        });
+        items: [
+                 facultyField,
+                 schoolField,
+                {
+                fieldLabel: 'Title',
+                name: 'title',
+                id: 'input_title',
+                allowBlank: false
+            }
+        ]
+
+    });
 
     var addProposalWin;
     var button = Ext.get('addproposal-btn');

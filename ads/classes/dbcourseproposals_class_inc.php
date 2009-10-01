@@ -17,10 +17,11 @@ class dbcourseproposals extends dbTable{
        
     }
 
-    public function addCourseProposal($faculty, $title){
+    public function addCourseProposal($faculty, $school, $title){
 
         $data = array(
             'faculty' => $faculty,
+            'school' => $school,
             'title' => $title,
             'userid' => $this->objUser->userId(),
             'creation_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
@@ -112,8 +113,8 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
         $data = $this->getRow('id', $id, $this->table);
         return $this->objUser->fullname($data['userid']);
     }
-    public function editProposal($id,$faculty, $title) {
-        $data = array('faculty'=>$faculty, 'title'=>$title);
+    public function editProposal($id,$faculty, $school, $title) {
+        $data = array('faculty'=>$faculty, 'school' => $school, 'title'=>$title);
         $courseProposalStatus = $this->update('id', $id, $data, $this->table);
     }
     public function updatePhase($id,$phase) {
