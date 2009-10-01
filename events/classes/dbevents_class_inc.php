@@ -175,7 +175,17 @@ class dbevents extends dbtable {
             'ticket_free'   => $ticket_free,
         );
 
-        return $this->insert($eventarr);
+        return $this->addEventArray($eventarr);
+    }
+
+    public function addEventArray($eventArr) {
+        $this->changeTable('tbl_events_events');
+        return $this->insert($eventArr);
+    }
+    
+    public function addEventPromo($orgarr) {
+        $this->changeTable('tbl_events_promoters');
+        return $this->insert($orgarr);
     }
 
     /**
@@ -223,6 +233,11 @@ class dbevents extends dbtable {
         );
         
         return $this->update('id', $event_id, $eventarr);
+    }
+
+    public function updateEventWithVenueId($eventid, $venueid) {
+        $this->changeTable('tbl_events_events');
+        return $this->update('id', $eventid, array('venue_id' => $venueid));
     }
 
     /**
@@ -439,7 +454,29 @@ class dbevents extends dbtable {
      * @param $private (1 or 0, Optional, Defaults to 0) A flag indicating whether the venue should be public (0), or shown only to your friends (1).
      */
     public function venueAdd($venuename, $venueaddress, $venuecity, $venuezip, $venuephone, $venueurl, $venuedescription, $private = 0) {
-    
+        $insarr = array('userid' => $this->objUser->userId(), 'venuename' => $venuename, 'venueaddress' => $venueaddress, 'city' => $venuecity, 'zip' => $venuezip, 'phone' => $venuephone, 
+                        'url' => $venueurl, 'venuedescription' => $venuedescription, 'private' => $private);
+        return $this->venueAddArray($insarr);
+    }
+
+    /**
+     * venueAddArray
+     *
+     * Add a new venue to the database. You must pass authentication parameters for this function.
+     *
+     * @param $insarr (Required) The array of venue data.
+     */
+    public function venueAddArray($insarr) {
+        parent::init('tbl_events_venues');
+        return $this->insert($insarr);
+    }
+
+    public function venueCheckExists($venuename) {
+        $venuename = addslashes($venuename);
+        parent::init('tbl_events_venues');
+        $ret = $this->getAll("WHERE venuename like '%$venuename%'");
+
+        return $ret;
     }
 
     /**

@@ -547,7 +547,7 @@ class eventsops extends object {
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
-        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'events', 'Required').'</span>';
         $headerinv = new htmlheading();
         $headerinv->type = 1;
         $headerinv->str = $this->objLanguage->languageText('phrase_invitemate', 'userregistration').' '.$this->objConfig->getSitename();
@@ -628,87 +628,13 @@ class eventsops extends object {
         $this->objEHead = $this->newObject('htmlheading', 'htmlelements');
         $mtable = $this->newObject('htmltable', 'htmlelements');
         $ftable = $this->newObject('htmltable', 'htmlelements');
-        $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
         $ret = NULL;
-        $css = '<style type="text/css">
-        #map {
-            width: 100%;
-            height: 350px;
-            border: 1px solid black;
-            background-color: white;
-        }
-        </style>';
-        $google = "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$gmapsapikey."' type=\"text/javascript\"></script>";
-        $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
-        $js = "<script type=\"text/javascript\">
-            var lon = 5;
-            var lat = 40;
-            var zoom = 20;
-            var map, layer, drawControl, g;
-
-            OpenLayers.ProxyHost = \"/proxy/?url=\";
-            function init(){
-                g = new OpenLayers.Format.GeoRSS();
-                map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20 });
-                var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
-                var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\",
-                    \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'});
-                map.addLayers([wmsLayer, hybrid]);
-                map.addControl(new OpenLayers.Control.MousePosition());
-                map.addControl( new OpenLayers.Control.MouseDefaults() );
-                map.addControl( new OpenLayers.Control.LayerSwitcher() );
-                map.addControl( new OpenLayers.Control.PanZoomBar() );
-                map.setCenter(new OpenLayers.LonLat(0,0), 2);
-                map.events.register(\"click\", map, function(e) {
-                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
-                    OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
-                                          + lonlat.lon
-                });
-            }
-            </script>";
-        // add the lot to the headerparams...
-        $this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
-        $this->appendArrayVar('bodyOnLoad', "init();");
         $form = new form ('eventadd', $this->uri(array('action'=>'eventadd')));
-        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'events', 'Required').'</span>';
         $mtable->cellpadding = 3;
         // a heading
         $this->objEHead->type = 2;
         $this->objEHead->str = $this->objLanguage->languageText("mod_events_addeventheader", "events");
-
-        $this->objHead->type = 3;
-        $this->objHead->str = $this->objLanguage->languageText("mod_events_chooseeventlocation", "events");
-        $mtable->startRow();
-        $mtable->addCell($this->objEHead->show());
-        $mtable->endRow();
-        $mtable->startRow();
-        $mtable->addCell($this->objHead->show());
-        $mtable->endRow();
-        // and now the map
-        $mtable->startRow();
-        $gtlabel = new label($this->objLanguage->languageText("mod_events_geoposition", "events") . ':', 'input_geotags');
-        $gtags = '<div id="map"></div>';
-        $geotags = new textinput('geotag', NULL, NULL);
-        if (isset($editparams['geolat']) && isset($editparams['geolon'])) {
-            $geotags->setValue($editparams['geolat'].", ".$editparams['geolon']);
-        }
-        $mtable->addCell($gtags);
-        $mtable->endRow();
-
-        $ftable->cellpadding = 3;
-        // geo tag box
-        $geotaglabel = new label($this->objLanguage->languageText("mod_events_geotags", "events") . ':', 'input_geotag');
-        $mtable->startRow();
-        $mtable->addCell($geotaglabel->show().$required);
-        $mtable->endRow();
-        $mtable->startRow();
-        $mtable->addCell($geotags->show());
-        $mtable->endRow();
-
-        // put the map into a fieldset
-        $mfieldset = $this->newObject('fieldset', 'htmlelements');
-        $mfieldset->legend = $this->objLanguage->languageText("mod_events_eventlocation", "events");;
-        $mfieldset->contents = $mtable->show();
 
         // event name
         $enamelabel = new label($this->objLanguage->languageText("mod_events_eventname", "events") . ':', 'input_ename');
@@ -734,15 +660,16 @@ class eventsops extends object {
         $ftable->addCell($ecat->show());
         $ftable->endRow();
         // venue name
-        $addlink = $this->newObject('alertbox', 'htmlelements');
-        $addlink = $addlink->show($this->objLanguage->languageText("mod_events_addvenue", "events"), $this->uri(array('action' => 'addvenue')));
-        $vnamelabel = new label($this->objLanguage->languageText("mod_events_venuename", "events") . ':', 'input_ename');
+        // the venue name dropdown will be populated from the nearby places of the location or the location set on the map currently
+        //$addlink = $this->newObject('alertbox', 'htmlelements');
+        //$addlink = $addlink->show($this->objLanguage->languageText("mod_events_addvenue", "events"), $this->uri(array('action' => 'addvenue')));
+        $vnamelabel = new label($this->objLanguage->languageText("mod_events_venuename", "events") . ':', 'input_venuename');
         $vname = new textinput('venuename', NULL, NULL);
         $ftable->startRow();
         $ftable->addCell($vnamelabel->show().$required);
         $ftable->endRow();
         $ftable->startRow();
-        $ftable->addCell($vname->show()." ".$addlink);
+        $ftable->addCell($vname->show());
         $ftable->endRow();
         // start date and time
         $objsDatepick = $this->newObject('datepickajax', 'popupcalendar');
@@ -910,7 +837,7 @@ class eventsops extends object {
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend = '';
-        $fieldset->contents = $mfieldset->show().$edfieldset->show().$edfieldset2->show().$dfieldset->show().$edfieldset3->show();
+        $fieldset->contents = /*$mfieldset->show().*/$edfieldset->show().$edfieldset2->show().$dfieldset->show().$edfieldset3->show();
         $button = new button ('submitform', $this->objLanguage->languageText("mod_events_addevent", "events"));
         $button->setToSubmit();
         $form->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
@@ -1169,7 +1096,7 @@ class eventsops extends object {
         }
     }
 
-    public function addEditVenueForm($editparams = NULL) {
+    public function addEditVenueForm($eventid, $editparams = NULL) {
         // we need a geo lat and lon (got from map), venue name and description
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('checkbox', 'htmlelements');
@@ -1179,7 +1106,7 @@ class eventsops extends object {
         $vtable = $this->newObject('htmltable', 'htmlelements');
         
         $form = new form ('savevenue', $this->uri(array('action'=>'savevenue')));
-        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'events', 'Required').'</span>';
         $vtable->cellpadding = 3;
         // heading
         $this->objHead->type = 3;
@@ -1300,21 +1227,208 @@ class eventsops extends object {
         //$vtable->startRow();
         $vtable->addCell($vpriv->show());
         $vtable->endRow();
+        $this->loadClass('hiddeninput', 'htmlelements');
+        $eventidinput = new hiddeninput('input_eventid', $eventid);
 
         // put the event details into a fieldset
         $vfieldset = $this->newObject('fieldset', 'htmlelements');
-        $vfieldset->legend = $this->objLanguage->languageText("mod_events_venues", "events");;
-        $vfieldset->contents = $vtable->show();
+        $vfieldset->legend = $this->objLanguage->languageText("mod_events_addvenues", "events");;
+        $vfieldset->contents = $vtable->show().$eventidinput->show();
 
         // the rules
-        $form->addRule('venuename', $this->objLanguage->languageText("mod_events_needvenue", "events"), 'required');
+        //$form->addRule('venuename', $this->objLanguage->languageText("mod_events_needvenue", "events"), 'required');
 
         $button = new button ('submitform', $this->objLanguage->languageText("mod_events_addvenue", "events"));
         $button->setToSubmit();
-        $form->addToForm($vfieldset->show().'<p align="center"><br />'.$button->show().'</p>');
+        $form->addToForm($this->geotagMap().$vfieldset->show().'<p align="center"><br />'.$button->show().'</p>');
         $ret = $form->show();
 
         return $ret;
+    }
+
+    public function formatVenues($venuelist) {
+        if(!isset($venuelist) || empty($venuelist)) {
+            return NULL;
+        }
+        else {
+            $ret = NULL;
+            // need a radio group for venue chooser
+            $this->loadClass('radio', 'htmlelements');
+            
+            foreach($venuelist as $venue) {
+                $radio = new radio('venue_radio');
+                $vname = ucwords($venue['venuename']);
+                $vadd = $venue['venueaddress'];
+                $vcity = $venue['city'];
+                $vzip = $venue['zip'];
+                $vphone = $venue['phone'];
+                $vurl = $venue['url'];
+                $radio->addOption($venue['id'],$vname);
+                // build up a display line with a radio button selector
+                $rtable = $this->newObject('htmltable', 'htmlelements');
+                $rtable->startRow();
+                $rtable->addCell($radio->show());
+                $rtable->addCell($vadd." ".$vcity);
+                $rtable->endRow();
+                $fb = $this->newObject('featurebox', 'navigation');
+                $ret[] = $fb->show($vname, $rtable->show());
+            }
+        }
+
+        return $ret;
+    }
+
+    public function venueSelector($venueArr, $eventid) {
+        $ret = NULL;
+        $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+        $this->loadClass('form', 'htmlelements');
+        $form = new form ('selectvenue', $this->uri(array('action'=>'selectvenue')));
+        $vtable = $this->newObject('htmltable', 'htmlelements');
+        
+        $form = new form ('venueselect', $this->uri(array('action'=>'venueselect')));
+        $vtable->cellpadding = 3;
+        // heading
+        $this->objHead->type = 3;
+        $this->objHead->str = $this->objLanguage->languageText("mod_events_selectvenuelocation", "events");
+        $vtable->startRow();
+        $vtable->addCell($this->objHead->show());
+        $vtable->endRow();
+        if(empty($venueArr)) {
+            $venueArr = array();
+        }
+        foreach($venueArr as $venuebox) {
+            $vtable->startRow();
+            $vtable->addCell($venuebox);
+            $vtable->endRow();
+        }
+        $this->loadClass('hiddeninput', 'htmlelements');
+        $eventidinput = new hiddeninput('input_eventid', $eventid);
+
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_events_selectvenue", "events"));
+        $button->setToSubmit();
+        $vfieldset = $this->newObject('fieldset', 'htmlelements');
+        $vfieldset->legend = $this->objLanguage->languageText("mod_events_selectvenues", "events");;
+        $vfieldset->contents = $vtable->show().$eventidinput->show();
+        $form->addToForm($vfieldset->show().'<p align="center"><br />'.$button->show().'</p>');
+        $ret .= $form->show();
+
+        return $ret;
+    }
+
+    public function geotagMap() {
+        $mtable = $this->newObject('htmltable', 'htmlelements');
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'events', 'Required').'</span>';
+        $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+        $ret = NULL;
+        $css = '<style type="text/css">
+        #map {
+            width: 100%;
+            height: 350px;
+            border: 1px solid black;
+            background-color: white;
+        }
+        #searchField {
+            width: 200px;
+        }
+        #results {
+            border: 1px solid #666;
+            border-bottom: 0px;
+            font-size: 10px;
+            font-family: arial;
+            padding: 0px;
+            display: none;
+        }
+        #results div {
+            border-bottom: 1px solid #666;
+            padding: 3px;
+        }
+        #results .selected {
+            background-color: #666;
+            color: #fff;
+        }
+        #results .unselected {
+            background-color: #fff;
+            color: #666;
+        }
+        </style>';
+        $google = NULL;
+        $olsrc = NULL;
+        $js = NULL;
+        $google = "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$gmapsapikey."' type=\"text/javascript\"></script>";
+        $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
+        $js = "<script type=\"text/javascript\">
+            var lon = 5;
+            var lat = 40;
+            var zoom = 20;
+            var map, layer, drawControl, g;
+
+            OpenLayers.ProxyHost = \"/proxy/?url=\";
+            function init(){
+                g = new OpenLayers.Format.GeoRSS();
+                map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20 });
+                var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
+                var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\",
+                    \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'});
+                map.addLayers([wmsLayer, hybrid]);
+                map.addControl(new OpenLayers.Control.MousePosition());
+                map.addControl( new OpenLayers.Control.MouseDefaults() );
+                map.addControl( new OpenLayers.Control.LayerSwitcher() );
+                map.addControl( new OpenLayers.Control.PanZoomBar() );
+                map.setCenter(new OpenLayers.LonLat(0,0), 2);
+                map.events.register(\"click\", map, function(e) {
+                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                    OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
+                                          + lonlat.lon
+                });
+            }
+            </script>"; 
+        
+        $acjs = "<script type=\"text/javascript\">
+                 $(function(){
+                     setAutoComplete(\"input_venuename\", \"results\", \"index.php?module=events&action=venuelist&part=\");
+                 });
+                 </script>";
+        
+        // add the lot to the headerparams...
+        $this->appendArrayVar('headerParams', $css.$google.$olsrc.$js); //.$acjq.$acacsrc.$acdims.$acjs.);
+        $this->appendArrayVar('bodyOnLoad', "init();");
+
+        $this->objHead->type = 3;
+        $this->objHead->str = $this->objLanguage->languageText("mod_events_chooseeventlocation", "events");
+        //$mtable->startRow();
+        //$mtable->addCell($this->objEHead->show());
+        //$mtable->endRow();
+        $mtable->startRow();
+        $mtable->addCell($this->objHead->show());
+        $mtable->endRow();
+        // and now the map
+        $mtable->startRow();
+        $gtlabel = new label($this->objLanguage->languageText("mod_events_geoposition", "events") . ':', 'input_geotags');
+        $gtags = '<div id="map"></div>';
+        $geotags = new textinput('geotag', NULL, NULL);
+        if (isset($editparams['geolat']) && isset($editparams['geolon'])) {
+            $geotags->setValue($editparams['geolat'].", ".$editparams['geolon']);
+        }
+        $mtable->addCell($gtags);
+        $mtable->endRow();
+
+        $ftable->cellpadding = 3;
+        // geo tag box
+        $geotaglabel = new label($this->objLanguage->languageText("mod_events_geotags", "events") . ':', 'input_geotag');
+        $mtable->startRow();
+        $mtable->addCell($geotaglabel->show().$required);
+        $mtable->endRow();
+        $mtable->startRow();
+        $mtable->addCell($geotags->show());
+        $mtable->endRow();
+
+        // put the map into a fieldset
+        $mfieldset = $this->newObject('fieldset', 'htmlelements');
+        $mfieldset->legend = $this->objLanguage->languageText("mod_events_venuelocation", "events");;
+        $mfieldset->contents = $mtable->show();
+
+        return $mfieldset->show();
+
     }
 }
 ?>

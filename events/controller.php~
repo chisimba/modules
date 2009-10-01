@@ -62,6 +62,7 @@ class events extends controller
     public $objConfig;
     public $objOps;
     public $objCurl;
+    public $objDbTags;
     
     /**
      * Initialises the instance variables.
@@ -82,6 +83,8 @@ class events extends controller
             $this->objAJTags    = $this->getObject('ajaxtags', 'tagging');
             $this->objOps       = $this->getObject('eventsops');
             $this->objCookie    = $this->getObject('cookie', 'utilities');
+            $this->objDbTags    = $this->getObject('dbtags', 'tagging');
+            // $this->setPageTemplate('null_page_tpl.php');
         } 
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -140,12 +143,22 @@ class events extends controller
                 break;
 
             case 'eventadd' :
-                $geotag = $this->getParam('geotag', NULL);
                 $eventname = $this->getParam('eventname', NULL);
                 $eventcat = $this->getParam('eventcategory', NULL);
                 $venuename = $this->getParam('venuename', NULL);
                 $startdatetime = $this->getParam('startdatetime', NULL);
+                // split to start date and time
+                $startarr = explode(" ", $startdatetime);
+                if(is_array($startarr) && !empty($startarr) && $startarr[0] != '') {
+                    $startdate = trim($startarr[0]);
+                    $starttime = trim($startarr[1]); 
+                }
                 $enddatetime = $this->getParam('enddatetime', NULL);
+                $endarr = explode(" ", $enddatetime);
+                if(is_array($endarr) && !empty($endarr) && $endarr[0] != '') {
+                    $enddate = trim($endarr[0]);
+                    $endtime = trim($endarr[1]); 
+                }
                 $eventurl = $this->getParam('eventurl', NULL);
                 $ticketurl = $this->getParam('ticketurl', NULL);
                 $ticketprice = $this->getParam('ticketprice', NULL);
@@ -155,43 +168,99 @@ class events extends controller
                 $tags = $this->getParam('tags', NULL);
                 $selfpromo = $this->getParam('selfpromotion', NULL);
                 // check that stuff is not NULL
-                if($geotag == NULL || $eventname == NULL || $eventcat == NULL || $description == NULL) {
+                if($eventname == NULL || $eventcat == NULL || $description == NULL) {
                     $message = $this->getObject('timeoutmessage', 'htmlelements');
                     $message->setMessage( $this->objLanguage->languageText("mod_events_requiredfieldsmissing", "events" ) );
                     $this->setVarByRef('message', $message);
                     return 'main_tpl.php';
                 }
+                
+                // Add the event to the database, the event will be updated by the venue script afterwards with the venue info
+                $insarr =  array('userid' => $this->objUser->userId(), 'name' => $eventname, 'venue_id' => NULL, 'category_id' => $eventcat, 
+                                 'start_date' => $startdate, 'end_date' => $enddate, 'start_time' =>  $starttime, 'end_time' => $endtime,  
+                                 'description' => $description, 'url' => $eventurl, 'personal' => $personal, 'selfpromotion' => $selfpromo, 
+                                 'ticket_url' => $ticketurl, 'ticket_price' => $ticketprice, 'ticket_free' => $ticketfree);
+                // insert the event info
+                $eventret = $this->objDbEvents->addEventArray($insarr);
+                $tagarray = explode(",", $tags);
+                // send the tags to the tags database
+                $this->objDbTags->insertTags($tagarray, $this->objUser->userId(), $eventret, 'events', $this->uri(''), NULL);
                 if($selfpromo == 'on') {
                     // organizer thing
                     $canbringothers = $this->getParam('canbringothers', NULL);
                     $yestheycan = $this->getParam('yestheycan', NULL);
                     $howmany = $this->getParam('howmany', NULL);
-                    $orgarr = array('userid' => $userid, 'canbringothers' => $canbringothers, 'numberguests' => $yestheycan, 'limitedto' => $howmany);
+                    $orgarr = array('userid' => $this->objUser->userId(), 'event_id' => $eventret, 'canbringothers' => $canbringothers, 'numberguests' => $yestheycan, 'limitedto' => $howmany);
+                    $this->objDbEvents->addEventPromo($orgarr);
                 }
 
-                // split the geotag into geo lat and lon
-                $geoarr = explode(",", $geotag);
-                $geolat = trim($geoarr[0]);
-                $geolon = trim($geoarr[1]);
+                // now we can check if the venue has been defined before or not and get some details there...
+                $venuelist = $this->objDbEvents->venueCheckExists($venuename);
+                $venlist = $this->objOps->formatVenues($venuelist);
+                $venueform = $this->objOps->venueSelector($venlist, $eventret);
+                $this->setVarByRef('venueform', $venueform);
+                $this->setVarByRef('eventid', $eventret);
+                return 'venue_tpl.php';
+                break;
 
-                
-                
+            case 'venuelist' :
+                log_debug("Checking venue list");
+                $part = $this->getParam('part', NULL);
+                $colors = array('black', 'blue', 'brown', 'green', 'grey',
+                'gold', 'navy', 'orange', 'pink', 'silver',
+                'violet', 'yellow', 'red');
+                // check the parameter
+                if(isset($part) && $part != '') {
+                    log_debug("Got me a $part request");
+                    $results = array();
+                    foreach($colors as $color) {
+                        if( strpos($color, $this->getParam('part')) === 0 ) {
+                            $results[] = $color;
+                        }
+                    }
+                    echo json_encode($results);
+                }
                 break;
 
             case 'addvenue' :
                 echo $this->objOps->addEditVenueForm();
                 break;
 
+            case 'venueselect' :
+                $venueid = $this->getParam('venue_radio');
+                $eventid = $this->getParam('input_eventid');
+                $this->objDbEvents->updateEventWithVenueId($eventid, $venueid);
+                $this->nextAction('');
+                break;
+
             case 'savevenue' :
+                $eventid = $this->getParam('input_eventid');
                 $venuename = $this->getParam('venuename');
                 $venueaddress = $this->getParam('venueaddress');
                 $city = $this->getParam('city');
                 $zip = $this->getParam('zip');
                 $phone = $this->getParam('phone');
                 $url = $this->getParam('url');
-                $venuedescription = $this->getParam('venuedescription');
+                if($url == 'http://') {
+                    $url = '';
+                }
+                $description = $this->getParam('venuedescription');
                 $private = $this->getParam('private');
-
+                if($private == 'on') {
+                    $private = 1;
+                }
+                else {
+                    $private = 0;
+                }
+                $geo = $this->getParam('geotag');
+                $geo = explode(",", $geo);
+                $lat = trim($geo[0]);
+                $lon = trim($geo[1]);
+                // This is always an insert as it is always new. Remember to update the record later with the geolatlon when the main event form is sent!
+                $insarr = array('userid' => $this->objUser->userId(), 'venuename' => $venuename, 'venueaddress' => $venueaddress, 'city' => $city, 'zip' => $zip, 'phone' => $phone, 'url' => $url, 'venuedescription' => $description, 'geolat' => $lat, 'geolon' => $lon, 'privatevenue' => $private);
+                $venueid = $this->objDbEvents->venueAddArray($insarr);
+                $this->objDbEvents->updateEventWithVenueId($eventid, $venueid);
+                $this->nextAction('');
                 break;
 
             default:

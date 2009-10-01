@@ -34,10 +34,12 @@ $fields = array(
         'type' => 'date',
         ),
     'start_time' => array(
-        'type' => 'timestamp',
+        'type' => 'text',
+        'length' => 50,
         ),
     'end_time' => array(
-        'type' => 'timestamp',
+        'type' => 'text',
+        'length' => 50,
         ),
     'description' => array(
         'type' => 'clob',
