@@ -82,8 +82,8 @@ class brandmonday extends controller {
                 }
 
                 $lastupdate = file_get_contents($path);
-                $minusurl = "http://search.twitter.com/search.json?q=&ands=BrandMinus&phrase=&ors=&nots=BrandPlus&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C500km&since_id=$lastupdate&rpp=100";
-                $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C500km&since_id=$lastupdate&rpp=100"; //"http://search.twitter.com/search.json?q=%23BrandPlus+AND+%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C100km";
+                $minusurl = "http://search.twitter.com/search.json?q=&ands=BrandMinus&phrase=&ors=&nots=BrandPlus&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C2000km&since_id=$lastupdate&rpp=100";
+                $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C2000km&since_id=$lastupdate&rpp=100"; //"http://search.twitter.com/search.json?q=%23BrandPlus+AND+%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C100km";
                 $menurl = "http://search.twitter.com/search.json?q=%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C500km&since_id=$lastupdate";
 
                 $resMinus = $this->objCurl->exec($minusurl);
@@ -173,6 +173,53 @@ class brandmonday extends controller {
             case 'weekwsdata':
                 echo $this->objBmOps->getWeekWsData();
                 break;
+
+            case 'feed':
+                $this->objFeedCreator = $this->getObject('feeder', 'feed');
+                //get the feed format parameter from the querystring
+                $mood = $this->getParam('mood', 'plus');
+                $format = 'RSS2.0'; // $this->getParam('feedselector');
+                //grab the feed items
+                $posts = $this->objBmOps->getLastPosts(50, $mood);
+
+                //set up the feed...
+                $fullname = "#BrandMonday";
+                //title of the feed
+                $feedtitle = htmlentities($fullname);
+                //description
+                $feedDescription = "RSS2.0 Feed of the #BrandMonday stream";
+
+                //link back to the blog
+                $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=brandmonday";
+                //sanitize the link
+                $feedLink = htmlentities($feedLink);
+                //set up the url
+                $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=brandmonday&action=feed";
+                $feedURL = htmlentities($feedURL);
+                //set up the feed
+                $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
+                //loop through the posts and create feed items from them
+                foreach($posts as $feeditems) {
+                    foreach($feeditems as $feeditem) {
+                        //use the post title as the feed item title
+                        $itemTitle = $feeditem['from_user'];
+                        $itemLink = $this->uri('');
+                        //description
+                        $itemDescription = stripslashes($feeditem['tweet']);
+                        //where are we getting this from
+                        $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=brandmonday";
+                        //feed author
+                        $auth = $feeditem['from_user'];
+                        $itemAuthor = htmlentities($auth."<$auth@capetown.peeps.co.za>");
+                        //add this item to the feed
+                        $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
+                    }
+                }
+                //check which format was chosen and output according to that
+                $feed = $this->objFeedCreator->output(); //defaults to RSS2.0
+                echo htmlentities($feed);
+                break;
+
 
         }
     }

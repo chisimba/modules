@@ -380,5 +380,9 @@ class bmops extends object {
             return $objFlashGraphData->show();
         }
     }
+
+    public function getLastPosts($num, $mood) {
+        return $this->objDbBm->getLast($num, $mood);
+    }
 }
 ?>

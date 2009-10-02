@@ -321,6 +321,24 @@ class viewer extends object {
         return $ret;
     }
 
+    public function rssBlock() {
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $text = "Feeds"; //$this->objLanguage->languageText("mod_brandmonday_rss", "brandmonday");
+        $ret = NULL;
+        $happylink = $this->newObject('link', 'htmlelements');
+        $happylink->href = $this->uri(array('action' => 'feed'));
+        $happylink->link = "#BrandPlus RSS Feed";
+        $sadlink = $this->newObject('link', 'htmlelements');
+        $sadlink->href = $this->uri(array('action' => 'feed', 'mood' => 'uncool'));
+        $sadlink->link = "#BrandMinus RSS Feed";
+            
+        $rss = $happylink->show()."<br />";
+        $rss .= $sadlink->show();
+        $ret .= $objFeatureBox->show($text, $rss);
+        
+        return $ret;
+    }
+
 
 }
 ?>

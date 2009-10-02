@@ -143,7 +143,7 @@ class dbbm extends dbTable {
             $sql = "SELECT DISTINCT meta_value FROM tbl_tags WHERE module = 'brandmonday' and context = '$mood'";
         }
         else {
-            $sql = "SELECT DISTINCT meta_value FROM tbl_tags WHERE module = 'brandmonday' and context = '$mood' DESC LIMIT 0, {$limit}";
+            $sql = "SELECT DISTINCT meta_value FROM tbl_tags WHERE module = 'brandmonday' and context = '$mood' ORDER BY meta_value DESC LIMIT 0, {$limit}";
         }
         $tags = $this->getArray($sql);
         foreach($tags as $recs) {
@@ -162,7 +162,7 @@ class dbbm extends dbTable {
         // var_dump($tweets);
         foreach ($tweets as $ids) {
             $tweetid = $ids['tweetid'];
-            $tags[] = $this->getArray("SELECT DISTINCT meta_value FROM tbl_tags WHERE item_id = '$tweetid' AND meta_value != 'brandplus' AND meta_value != 'brandminus' AND meta_value != 'brandmonday'");
+            $tags[] = $this->getArray("SELECT DISTINCT meta_value FROM tbl_tags WHERE item_id = '$tweetid' AND meta_value != 'brandplus' AND meta_value != 'brandminus' AND meta_value != 'brandmonday' AND meta_value != 'wtf' AND meta_value != 'fail'  AND meta_value != 'ftw'");
         }
         return $tags;
     }
@@ -224,7 +224,15 @@ class dbbm extends dbTable {
         return $str;
     }
 
-
+    public function getLast($num, $mood) {
+        if($mood == 'plus') {
+            $table = 'tbl_bmplus';
+        }
+        else {
+            $table = 'tbl_bmminus';
+        } 
+        return $this->getRange($table, 0, $num);
+    }
 
 
 
