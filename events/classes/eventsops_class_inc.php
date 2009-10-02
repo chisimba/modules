@@ -376,9 +376,10 @@ class eventsops extends object {
         // get the tabbed box class
         $friendcount = 0;
         $tabs = $this->getObject('tabber', 'htmlelements');
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
+
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
@@ -1104,7 +1105,7 @@ class eventsops extends object {
         $this->objHead = $this->newObject('htmlheading', 'htmlelements');
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $vtable = $this->newObject('htmltable', 'htmlelements');
-        
+
         $form = new form ('savevenue', $this->uri(array('action'=>'savevenue')));
         $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'events', 'Required').'</span>';
         $vtable->cellpadding = 3;
@@ -1166,7 +1167,7 @@ class eventsops extends object {
         //$vtable->startRow();
         $vtable->addCell($vzip->show());
         $vtable->endRow();
-  
+
         // venue phone
         $vplabel = new label($this->objLanguage->languageText("mod_events_venuephone", "events") . ':', 'input_phone');
         $vphone = new textinput('phone', NULL, NULL);
@@ -1254,7 +1255,7 @@ class eventsops extends object {
             $ret = NULL;
             // need a radio group for venue chooser
             $this->loadClass('radio', 'htmlelements');
-            
+
             foreach($venuelist as $venue) {
                 $radio = new radio('venue_radio');
                 $vname = ucwords($venue['venuename']);
@@ -1263,15 +1264,60 @@ class eventsops extends object {
                 $vzip = $venue['zip'];
                 $vphone = $venue['phone'];
                 $vurl = $venue['url'];
+                $vdesc = $venue['venuedescription'];
+                $privacy = $venue['privatevenue'];
+                $objIcon = $this->getObject('geticon', 'htmlelements');
+
+                if($privacy != 0 && $venue['userid'] != $this->objUser->userId()) {
+                    continue;
+                }
+                // build up a nice display of the venue info
+                $ventable = $this->newObject('htmltable', 'htmlelements');
+                $ventable->startRow();
+                $ventable->addCell($this->objLanguage->languageText("mod_events_vname", "events").": ");
+                $ventable->addCell($vname);
+                $ventable->endRow();
+                $ventable->startRow();
+                $ventable->addCell($this->objLanguage->languageText("mod_events_vaddress", "events").": ");
+                $ventable->addCell($vadd);
+                $ventable->endRow();
+                $ventable->startRow();
+                $ventable->addCell($this->objLanguage->languageText("mod_events_vcity", "events").": ");
+                $ventable->addCell($vcity);
+                $ventable->endRow();
+                $ventable->startRow();
+                $ventable->addCell($this->objLanguage->languageText("mod_events_vzip", "events").": ");
+                $ventable->addCell($vzip);
+                $ventable->endRow();
+                $ventable->startRow();
+                $ventable->addCell($this->objLanguage->languageText("mod_events_vphone", "events").": ");
+                $ventable->addCell($vphone);
+                $ventable->endRow();
+                // build the URL into the fb header
+                $vlink = $this->newObject('link', 'htmlelements');
+                // var_dump($vurl);
+                if($vurl == '' ||$vurl == NULL) {
+                    $vurl = $this->uri('');
+                }
+                $vlink->href = $vurl;
+                $vlink->link = $vname;
+                $vlink->target = "_blank";
+                if($privacy == 1) {
+                    $objIcon->setIcon('locked', 'png', 'icons/events/');
+                }
+                else {
+                    $objIcon->setIcon('unlocked', 'png', 'icons/events/');
+                }
                 $radio->addOption($venue['id'],$vname);
                 // build up a display line with a radio button selector
                 $rtable = $this->newObject('htmltable', 'htmlelements');
                 $rtable->startRow();
                 $rtable->addCell($radio->show());
-                $rtable->addCell($vadd." ".$vcity);
+                $rtable->addCell($objIcon->show());
+                $rtable->addCell($ventable->show());
                 $rtable->endRow();
                 $fb = $this->newObject('featurebox', 'navigation');
-                $ret[] = $fb->show($vname, $rtable->show());
+                $ret[] = $fb->show($vlink->show(), $rtable->show());
             }
         }
 
@@ -1284,7 +1330,7 @@ class eventsops extends object {
         $this->loadClass('form', 'htmlelements');
         $form = new form ('selectvenue', $this->uri(array('action'=>'selectvenue')));
         $vtable = $this->newObject('htmltable', 'htmlelements');
-        
+
         $form = new form ('venueselect', $this->uri(array('action'=>'venueselect')));
         $vtable->cellpadding = 3;
         // heading
@@ -1381,14 +1427,14 @@ class eventsops extends object {
                                           + lonlat.lon
                 });
             }
-            </script>"; 
-        
+            </script>";
+
         $acjs = "<script type=\"text/javascript\">
                  $(function(){
                      setAutoComplete(\"input_venuename\", \"results\", \"index.php?module=events&action=venuelist&part=\");
                  });
                  </script>";
-        
+
         // add the lot to the headerparams...
         $this->appendArrayVar('headerParams', $css.$google.$olsrc.$js); //.$acjq.$acacsrc.$acdims.$acjs.);
         $this->appendArrayVar('bodyOnLoad', "init();");

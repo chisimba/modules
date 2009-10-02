@@ -63,7 +63,7 @@ class events extends controller
     public $objOps;
     public $objCurl;
     public $objDbTags;
-    
+
     /**
      * Initialises the instance variables.
      *
@@ -85,7 +85,7 @@ class events extends controller
             $this->objCookie    = $this->getObject('cookie', 'utilities');
             $this->objDbTags    = $this->getObject('dbtags', 'tagging');
             // $this->setPageTemplate('null_page_tpl.php');
-        } 
+        }
         catch ( customException $e ) {
             customException::cleanUp ();
             exit ();
@@ -103,7 +103,7 @@ class events extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL:
-            
+
             case 'main' :
                 return 'main_tpl.php';
                 break;
@@ -151,7 +151,7 @@ class events extends controller
                 $startarr = explode(" ", $startdatetime);
                 if(is_array($startarr) && !empty($startarr) && $startarr[0] != '') {
                     $startdate = trim($startarr[0]);
-                    $starttime = trim($startarr[1]); 
+                    $starttime = trim($startarr[1]);
                 }
                 else {
                     $startdate = NULL;
@@ -161,7 +161,7 @@ class events extends controller
                 $endarr = explode(" ", $enddatetime);
                 if(is_array($endarr) && !empty($endarr) && $endarr[0] != '') {
                     $enddate = trim($endarr[0]);
-                    $endtime = trim($endarr[1]); 
+                    $endtime = trim($endarr[1]);
                 }
                 else {
                     $enddate = NULL;
@@ -182,12 +182,12 @@ class events extends controller
                     $this->setVarByRef('message', $message);
                     return 'main_tpl.php';
                 }
-                
+
                 // Add the event to the database, the event will be updated by the venue script afterwards with the venue info
-                $insarr =  array('userid' => $this->objUser->userId(), 'name' => $eventname, 'venue_id' => NULL, 'category_id' => $eventcat, 
-                                 'start_date' => $startdate, 'end_date' => $enddate, 'start_time' =>  $starttime, 'end_time' => $endtime,  
-                                 'description' => $description, 'url' => $eventurl, 'personal' => $personal, 'selfpromotion' => $selfpromo, 
-                                 'ticket_url' => $ticketurl, 'ticket_price' => $ticketprice, 'ticket_free' => $ticketfree);
+                $insarr =  array('userid' => $this->objUser->userId(), 'name' => $eventname, 'venue_id' => NULL, 'category_id' => $eventcat,
+                                 'start_date' => $startdate, 'end_date' => $enddate, 'start_time' =>  $starttime, 'end_time' => $endtime,
+                                 'description' => $description, 'url' => $eventurl, 'personal' => $personal, 'selfpromotion' => $selfpromo,
+                                 'ticket_url' => $ticketurl, 'ticket_price' => $ticketprice, 'ticket_free' => $ticketfree, 'creationtime' => time(),);
                 // insert the event info
                 $eventret = $this->objDbEvents->addEventArray($insarr);
                 $tagarray = explode(",", $tags);

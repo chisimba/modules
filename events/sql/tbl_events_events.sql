@@ -67,7 +67,11 @@ $fields = array(
     'ticket_free' => array(
         'type' => 'text',
         'length' => 2,
-        ),    
+        ),
+    'creationtime' => array(
+        'type' => 'text',
+        'length' =>50,
+        ),
     );
 //create other indexes here...
 
