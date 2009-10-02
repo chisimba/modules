@@ -85,10 +85,26 @@ class dbContacts extends dbTable
 		return $this->getRecordCount();
 	}
 
-	public function listAll(){
-	    $userrec = $this->getAll();
-	    return $userrec;
+	public function listAll($alph, $start, $num){
+
+		$sql = "SELECT * FROM tbl_mxit_words ";
+		$sql .= "WHERE tbl_mxit_words.word LIKE '$alph%' ";
+		$sql .= "ORDER BY word ASC LIMIT {$start}, {$num} ";
+		$userrec = $this->getArray($sql);
+		return $userrec;
+		
 	}
+
+	/**
+     * Return a single record in the tbl_mxit_words.
+     *
+     * @param $word is the word taken from the tbl_mxit_words
+     */
+	public function getDefinition($word){
+		$onerec = $this->getRow('word', $word);
+		return $onerec;
+    }
+   
     /**
      * Return a single record in the tbl_mxit_words.
      *
@@ -98,7 +114,6 @@ class dbContacts extends dbTable
 		$onerec = $this->getRow('id', $id);
         return $onerec;
     }
-
 
     /**
      * Insert a record in the tbl_mxit_words.
