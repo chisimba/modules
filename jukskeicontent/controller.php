@@ -11,6 +11,11 @@ class jukskeicontent extends controller {
   }
   
   public function dispatch($action) {
+    switch($action) {
+      case "viewtopic": return "viewtopic_tpl.php";
+      case "home": return "home_tpl.php";
+      case "viewarticle": return "viewarticle_tpl.php";
+    }
     return "home_tpl.php";
   }
   
