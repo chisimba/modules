@@ -41,7 +41,7 @@ class georss extends controller
         switch ($action) {
             default:
             	$file = $this->getResourcePath('georss.xml');
-            	chmod($file, 0777);
+            	@chmod($file, 0777);
             	if(filemtime($file) > 43200)
             	{
             		// go and update the feed...
