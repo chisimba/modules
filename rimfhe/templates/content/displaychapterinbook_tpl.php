@@ -65,22 +65,22 @@ echo $display;
 //update notification
 $updateComment = $this->getParam('comment');
 if(!empty($updateComment)){
-	echo '<span style="color:#D00000 ">'.$updateComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000 ">'.$updateComment.'</span>';
+    echo '<br /><br />';
 }
 
 //delete notification
 $deleteComment = $this->getParam('deletecomment');
 if(!empty($deleteComment)){
-	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+    echo '<br /><br />';
 }
 
 //Set up fields heading
 $table->startHeaderRow();
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_booktitle2', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_isbn', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editors','rimfhe'));	
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editors','rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_chaptertitle', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rimfhe'));
@@ -89,47 +89,47 @@ $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_chapterlastpa
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));	
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));
 $table->endHeaderRow();
 
 $rowcount = 0;
 
 //setup the tables rows  and loop though the records
-if ( count($arrDisplayBooks) > 0) {	
-	
-	foreach($arrDisplayBooks as $chapterinbook) {
-	 //Set odd even row colour
-	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
-	$tableRow = array();
-	
-	$tableRow[] = $chapterinbook['booktitle'];
-	$tableRow[] = $chapterinbook['isbn'];
-	$tableRow[] = $chapterinbook['bookeditors'];	
-	$tableRow[] = $chapterinbook['publisher'];
-	$tableRow[] = $chapterinbook['chaptertitle'];
-	$tableRow[] = $chapterinbook['authorname'];
-	$tableRow[] = $chapterinbook['chapterfirstpageno'];
-	$tableRow[] = $chapterinbook['chapterlastpageno'];
-	$tableRow[] = $chapterinbook['pagetotal'];
-	$tableRow[] = $chapterinbook['peerreviewed'];
-	$editlink = new link($this->uri(array('action'=>'Edit Chapter In Book', 'id'=> $chapterinbook['id'])));
-	$editlink->link = $editIcon;
-	$tableRow[] = $editlink->show();
+if ( count($arrDisplayBooks) > 0) {
 
-	$delArray = array('action' => 'deletechapterinbook', 'confirm'=>'yes', 'id'=>$chapterinbook['id']);
-	$title = $chapterinbook['chaptertitle'];
-	$rep = array('TITLE' => $title);
-	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
-	$deleteIcon = $objIcon->getDeleteIconWithConfirm($chapterinbook['id'], $delArray,'rimfhe',$deletephrase);
-	$tableRow[] = $deleteIcon;
-		
-	$table->addRow($tableRow, $oddOrEven);
-	
-	$rowcount = ($rowcount == 0) ? 1 : 0;
-	}	
+    foreach($arrDisplayBooks as $chapterinbook) {
+        //Set odd even row colour
+        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+        $tableRow = array();
+
+        $tableRow[] = $chapterinbook['booktitle'];
+        $tableRow[] = $chapterinbook['isbn'];
+        $tableRow[] = $chapterinbook['bookeditors'];
+        $tableRow[] = $chapterinbook['publisher'];
+        $tableRow[] = $chapterinbook['chaptertitle'];
+        $tableRow[] = $chapterinbook['authorname'];
+        $tableRow[] = $chapterinbook['chapterfirstpageno'];
+        $tableRow[] = $chapterinbook['chapterlastpageno'];
+        $tableRow[] = $chapterinbook['pagetotal'];
+        $tableRow[] = $chapterinbook['peerreviewed'];
+        $editlink = new link($this->uri(array('action'=>'Edit Chapter In Book', 'id'=> $chapterinbook['id'])));
+        $editlink->link = $editIcon;
+        $tableRow[] = $editlink->show();
+
+        $delArray = array('action' => 'deletechapterinbook', 'confirm'=>'yes', 'id'=>$chapterinbook['id']);
+        $title = $chapterinbook['chaptertitle'];
+        $rep = array('TITLE' => $title);
+        $deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+        $deleteIcon = $objIcon->getDeleteIconWithConfirm($chapterinbook['id'], $delArray,'rimfhe',$deletephrase);
+        $tableRow[] = $deleteIcon;
+
+        $table->addRow($tableRow, $oddOrEven);
+
+        $rowcount = ($rowcount == 0) ? 1 : 0;
+    }
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';	
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
 }
 echo $table->show();
 echo '<p>'.'&nbsp;'.'</p>';

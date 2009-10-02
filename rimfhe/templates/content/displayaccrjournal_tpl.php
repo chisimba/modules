@@ -21,8 +21,8 @@ $objLayer = $this->newObject('layer', 'htmlelements');
 $authortable =  $this->newObject('htmltable', 'htmlelements');
 
 /*****
- *New Stuff Added
- */
+*New Stuff Added
+*/
 $objIcon = $this->newObject('geticon', 'htmlelements');
 //Edit record
 $objIcon->setIcon('edit');
@@ -30,11 +30,11 @@ $objIcon->alt = 'Edit';
 $objIcon->title = 'Edit';
 $editIcon = $objIcon->show();
 
-//Delete record Icon 
-$objIcon->setIcon('delete'); 
-$objIcon->alt = 'Delete'; 
-$objIcon->title = 'Delete'; 
-$deleteIcon = $objIcon->show();  
+//Delete record Icon
+$objIcon->setIcon('delete');
+$objIcon->alt = 'Delete';
+$objIcon->title = 'Delete';
+$deleteIcon = $objIcon->show();
 
 //Add Record Icon
 $objIcon->setIcon('add');
@@ -49,8 +49,8 @@ $addlink = new link($this->uri(array('action'=>'DOE Accredoted Journal Articles'
 $addlink->link = 'Add New Journal Articles';
 
 /*
- *End New Stuf
- */
+*End New Stuf
+*/
 
 $table = new htmltable();
 $table->cellspacing = '2';
@@ -75,15 +75,15 @@ echo $display;
 //update notification
 $updateComment = $this->getParam('comment');
 if(!empty($updateComment)){
-	echo '<span style="color:#D00000">'.$updateComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000">'.$updateComment.'</span>';
+    echo '<br /><br />';
 }
 
 //delete notification
 $deleteComment = $this->getParam('deletecomment');
 if(!empty($deleteComment)){
-	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+    echo '<br /><br />';
 }
 
 //Set up fields heading
@@ -104,44 +104,44 @@ $table->endHeaderRow();
 $rowcount = 0;
 
 //setup the tables rows  and loop though the records
-if ( count($arrJournal) > 0) {	
-	
-	foreach($arrJournal as $journal) {
-	 //Set odd even row colour
-	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
-	$tableRow = array();
-	
-	$tableRow[] = $journal['journalname'];
-	$tableRow[] = $journal['journalcategory'];
-	$tableRow[] = $journal['articletitle'];
-	$tableRow[] = $journal['publicationyear'];
-	$tableRow[] = $journal['volume'];
-	$tableRow[] = $journal['firstpageno'];
-	$tableRow[] = $journal['lastpageno'];
-	$tableRow[] = $journal['pagetotal'];
-	$tableRow[] = $journal['authorname'];
-	$tableRow[] = $journal['fractionalweightedavg'];
-	
-	$editlink = new link($this->uri(array('action'=>'Edit Journal Articles', 'id'=> $journal['id'])));
-	$editlink->link = $editIcon;
-	$tableRow[] = $editlink->show();
+if ( count($arrJournal) > 0) {
 
-	$delArray = array('action' => 'deletejournalarticle', 'confirm'=>'yes', 'id'=>$journal['id']);
-	$title = $journal['articletitle'];
-	$rep = array('TITLE' => $title);
-	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
-	$deleteIcon = $objIcon->getDeleteIconWithConfirm($journal['id'], $delArray,'rimfhe',$deletephrase);
-	$tableRow[] = $deleteIcon;
+    foreach($arrJournal as $journal) {
+        //Set odd even row colour
+        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+        $tableRow = array();
 
-	$table->addRow($tableRow, $oddOrEven);
-	
-	$rowcount = ($rowcount == 0) ? 1 : 0;
-	
-	}	
+        $tableRow[] = $journal['journalname'];
+        $tableRow[] = $journal['journalcategory'];
+        $tableRow[] = $journal['articletitle'];
+        $tableRow[] = $journal['publicationyear'];
+        $tableRow[] = $journal['volume'];
+        $tableRow[] = $journal['firstpageno'];
+        $tableRow[] = $journal['lastpageno'];
+        $tableRow[] = $journal['pagetotal'];
+        $tableRow[] = $journal['authorname'];
+        $tableRow[] = $journal['fractionalweightedavg'];
+
+        $editlink = new link($this->uri(array('action'=>'Edit Journal Articles', 'id'=> $journal['id'])));
+        $editlink->link = $editIcon;
+        $tableRow[] = $editlink->show();
+
+        $delArray = array('action' => 'deletejournalarticle', 'confirm'=>'yes', 'id'=>$journal['id']);
+        $title = $journal['articletitle'];
+        $rep = array('TITLE' => $title);
+        $deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+        $deleteIcon = $objIcon->getDeleteIconWithConfirm($journal['id'], $delArray,'rimfhe',$deletephrase);
+        $tableRow[] = $deleteIcon;
+
+        $table->addRow($tableRow, $oddOrEven);
+
+        $rowcount = ($rowcount == 0) ? 1 : 0;
+
+    }
 }
 else{
     echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
-	
+
 }
 echo $table->show();
 echo '<p>'.'&nbsp;'.'</p>';

@@ -52,35 +52,35 @@ $rowcount = 0;
 //setup the tables rows  and loop though the records
 if (count($arrDisplayStaff) > 0) {
 
-	//Loop through $arrDisplayStaff and set data in rows
-	foreach($arrDisplayStaff as $staffmember) {
-	    //Set odd even row colour
-	 $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+    //Loop through $arrDisplayStaff and set data in rows
+    foreach($arrDisplayStaff as $staffmember) {
+        //Set odd even row colour
+        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
 
-	//Setuo table rows
-	$tableRow = array();
-	$tableRow[] = $staffmember['surname'];
-	$tableRow[] = $staffmember['initials'];
-	$tableRow[] = $staffmember['firstname'];
-	$tableRow[] = $staffmember['tiltle'];
-	$tableRow[] = $staffmember['rank'];
-	$tableRow[] = $staffmember['appointmenttype'];
-	$tableRow[] = $staffmember['department'];
-	$tableRow[] = $staffmember['faculty'];
-	$tableRow[] = $staffmember['staffnumber'];
-	$tableRow[] = $staffmember['email'];
-	
-	//add to table
-	$table->addRow($tableRow, $oddOrEven);
-	
-	    $rowcount = ($rowcount == 0) ? 1 : 0;
-	}
+        //Setuo table rows
+        $tableRow = array();
+        $tableRow[] = $staffmember['surname'];
+        $tableRow[] = $staffmember['initials'];
+        $tableRow[] = $staffmember['firstname'];
+        $tableRow[] = $staffmember['tiltle'];
+        $tableRow[] = $staffmember['rank'];
+        $tableRow[] = $staffmember['appointmenttype'];
+        $tableRow[] = $staffmember['department'];
+        $tableRow[] = $staffmember['faculty'];
+        $tableRow[] = $staffmember['staffnumber'];
+        $tableRow[] = $staffmember['email'];
+
+        //add to table
+        $table->addRow($tableRow, $oddOrEven);
+
+        $rowcount = ($rowcount == 0) ? 1 : 0;
+    }
 }
 else{
-	//When no data has been entered
+    //When no data has been entered
     echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
-	
+
 }
- echo $table->show();
+echo $table->show();
 
 ?>

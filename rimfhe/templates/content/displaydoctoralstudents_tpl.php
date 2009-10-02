@@ -1,7 +1,7 @@
 <?php
 /*
- * This template displays Graduate Doctoral Students
- */
+* This template displays Graduate Doctoral Students
+*/
 
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
@@ -77,72 +77,72 @@ echo $display;
 //update notification
 $updateComment = $this->getParam('comment');
 if(!empty($updateComment)){
-	echo '<span style="color:#D00000">'.$updateComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000">'.$updateComment.'</span>';
+    echo '<br /><br />';
 }
 
 //delete notification
 $deleteComment = $this->getParam('deletecomment');
 if(!empty($deleteComment)){
-	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+    echo '<br /><br />';
 }
 
 //Set up fields heading
-	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));	
-	$table->addHeaderCell($this->objLanguage->languageText('word_gender', 'system', 'Gender'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_studentnumber', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_thesistitle', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_supervisor', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_degree', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));
-	$table->endHeaderRow();
-	
+$table->startHeaderRow();
+$table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));
+$table->addHeaderCell($this->objLanguage->languageText('word_gender', 'system', 'Gender'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_studentnumber', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_thesistitle', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_supervisor', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_degree', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));
+$table->endHeaderRow();
+
 $rowcount = 0;
 
 //setup the tables rows  and loop though the records
-if ( count($arrDisplayDoctoral) > 0) {	
+if ( count($arrDisplayDoctoral) > 0) {
 
-	foreach($arrDisplayDoctoral as $doctoralstudents) {
-	 //Set odd even row colour
-	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
-	$tableRow = array();
-	
-	$tableRow[] = $doctoralstudents['surname'];
-	$tableRow[] = $doctoralstudents['initials'];
-	$tableRow[] = $doctoralstudents['firstname'];	
-	$tableRow[] = $doctoralstudents['gender'];
-	$tableRow[] = $doctoralstudents['regnumber'];
-	$tableRow[] = $doctoralstudents['deptschoool'];
-	$tableRow[] = $doctoralstudents['faculty'];
-	$tableRow[] = $doctoralstudents['thesistitle'];
-	$tableRow[] = $doctoralstudents['supervisorname'];
-	$tableRow[] = $doctoralstudents['degree'];
-	$editlink = new link($this->uri(array('action'=>'Edit Graduating Doctoral Student', 'id'=> $doctoralstudents['id'])));
-	$editlink->link = $editIcon;
-	$tableRow[] = $editlink->show();
+    foreach($arrDisplayDoctoral as $doctoralstudents) {
+        //Set odd even row colour
+        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+        $tableRow = array();
 
-	$delArray = array('action' => 'deletedoctoralstudents', 'confirm'=>'yes', 'id'=>$doctoralstudents['id']);
-	$title = $doctoralstudents['thesistitle'];
-	$rep = array('TITLE' => $title);
-	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
-	$deleteIcon = $objIcon->getDeleteIconWithConfirm($doctoralstudents['id'], $delArray,'rimfhe',$deletephrase);
-	$tableRow[] = $deleteIcon;		
+        $tableRow[] = $doctoralstudents['surname'];
+        $tableRow[] = $doctoralstudents['initials'];
+        $tableRow[] = $doctoralstudents['firstname'];
+        $tableRow[] = $doctoralstudents['gender'];
+        $tableRow[] = $doctoralstudents['regnumber'];
+        $tableRow[] = $doctoralstudents['deptschoool'];
+        $tableRow[] = $doctoralstudents['faculty'];
+        $tableRow[] = $doctoralstudents['thesistitle'];
+        $tableRow[] = $doctoralstudents['supervisorname'];
+        $tableRow[] = $doctoralstudents['degree'];
+        $editlink = new link($this->uri(array('action'=>'Edit Graduating Doctoral Student', 'id'=> $doctoralstudents['id'])));
+        $editlink->link = $editIcon;
+        $tableRow[] = $editlink->show();
 
-	$table->addRow($tableRow, $oddOrEven);
-	
-	$rowcount = ($rowcount == 0) ? 1 : 0;
-	}	
+        $delArray = array('action' => 'deletedoctoralstudents', 'confirm'=>'yes', 'id'=>$doctoralstudents['id']);
+        $title = $doctoralstudents['thesistitle'];
+        $rep = array('TITLE' => $title);
+        $deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+        $deleteIcon = $objIcon->getDeleteIconWithConfirm($doctoralstudents['id'], $delArray,'rimfhe',$deletephrase);
+        $tableRow[] = $deleteIcon;
+
+        $table->addRow($tableRow, $oddOrEven);
+
+        $rowcount = ($rowcount == 0) ? 1 : 0;
+    }
 }
 else{
     echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
-	
+
 }
 echo $table->show();
 echo '<p>'.'&nbsp;'.'</p>';

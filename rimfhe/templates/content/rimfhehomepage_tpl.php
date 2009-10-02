@@ -41,11 +41,11 @@ echo $display;
 
 //setup the tables rows  and loop though the records
 
-$bodyContent = $this->objLanguage->languageText('word_title', 'rifhme', '<p> Welcome to Research Information Management System </p> 
+$bodyContent = $this->objLanguage->languageText('word_title', 'rifhme', '<p> Welcome to Research Information Management System </p>
 <p>
 This system is used to capture and submit the Institution\'s Research output record to the National Department of Education (DoE).</p>
 <p> The institution\' Staff Members  should log in here and update there details.</p>');
- echo $bodyContent;
+echo $bodyContent;
 ?>
 
 

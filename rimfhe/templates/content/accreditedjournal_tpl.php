@@ -6,48 +6,48 @@ if(!$GLOBALS['kewl_entry_point_run']){
 // end security check
 
 if(!isset($mode)){
-$mode = '';
+    $mode = '';
 }
 $this->loadClass('htmlheading', 'htmlelements');
 /*
- *The Tilte of The Page
- */
- $pageHeading = new htmlheading();
- $pageHeading->type = 2;
+*The Tilte of The Page
+*/
+$pageHeading = new htmlheading();
+$pageHeading->type = 2;
 
 /*
- * New Changes
- */
+* New Changes
+*/
 if($mode =='edit'){
-$editMode= 'update';
-$pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingeditjournalarticles', 'rimfhe');
+    $editMode= 'update';
+    $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingeditjournalarticles', 'rimfhe');
 }
 else{
-$pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingjournalarticles', 'rimfhe');
-$editMode= '';
+    $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingjournalarticles', 'rimfhe');
+    $editMode= '';
 }
 
 /*
- * End New Changes
- */
+* End New Changes
+*/
 
 echo '<br />'.$pageHeading->show();
 
 /*
- *The heading of the Form
- */
+*The heading of the Form
+*/
 
- $formheader = new htmlheading();
- $formheader->type = 3;
- $formheader->str = $this->objLanguage->languageText('mod_rimfhe_forminstruction', 'rimfhe');
+$formheader = new htmlheading();
+$formheader->type = 3;
+$formheader->str = $this->objLanguage->languageText('mod_rimfhe_forminstruction', 'rimfhe');
 
 //All fields are Required
 $header2 = $this->objLanguage->languageText('mod_rimfhe_requiredauthor', 'rimfhe');
 
 // Show if no Error
 if($mode!='fixerror'){
- echo $formheader->show();
- echo '<span style="color:red;font-size:12px;">'.$header2.'<br /><br /></span>';
+    echo $formheader->show();
+    echo '<span style="color:red;font-size:12px;">'.$header2.'<br /><br /></span>';
 }
 
 //load the required form elements
@@ -55,7 +55,7 @@ $this->formElements->sendElements();
 
 //Instantiate a new form object
 $accreditedJournal = new form ('accreditedjournal', $this->uri(array('action'=>'accreditedjournal', 'editmode' => $editMode), 'rimfhe'));
-//assign laguage objects to variables		
+//assign laguage objects to variables
 $journalName = $this->objLanguage->languageText('mod_rimfhe_journalname', 'rimfhe');
 $journalCategory= $this->objLanguage->languageText('mod_rimfhe_categorey', 'rimfhe');
 $articleTitle= $this->objLanguage->languageText('mod_rimfhe_atitcletitle', 'rimfhe');
@@ -71,7 +71,7 @@ $author1label= $this->objLanguage->languageText('mod_rimfhe_author1affiliation',
 $author2label= $this->objLanguage->languageText('mod_rimfhe_author2affiliation', 'rimfhe');
 $author3label= $this->objLanguage->languageText('mod_rimfhe_author3affiliation', 'rimfhe');
 $author4label= $this->objLanguage->languageText('mod_rimfhe_author4affiliation', 'rimfhe');
-	
+
 //create table
 $table =new htmltable('accreditedjournal');
 $table->width ='80%';
@@ -79,23 +79,23 @@ $table->startRow();
 
 //hidden id field to be used for update purposes
 if($mode == 'edit'){
-$txtId = new textinput("journalid", $arrEdit['id'], 'hidden');
-$table->startRow();
-$table->addCell(NULL, 150, NULL, 'left');
-$table->addCell($txtId->show(), 150, NULL, 'left');
-$table->endRow();
+    $txtId = new textinput("journalid", $arrEdit['id'], 'hidden');
+    $table->startRow();
+    $table->addCell(NULL, 150, NULL, 'left');
+    $table->addCell($txtId->show(), 150, NULL, 'left');
+    $table->endRow();
 }
 
 //Input and label for Journal Name
 $objjournalName = new textinput('journalname');
 $journalNameLabel = new label($journalName,'journalname');
 $table->addCell($journalNameLabel->show(), 150, NULL, 'left');
-	if($mode == 'fixerror'){
-		$objjournalName->value =$this->getParam('journalname');
-	}
-	if($mode == 'edit'){
-		$objjournalName->value =$arrEdit['journalname'];
-	}
+if($mode == 'fixerror'){
+    $objjournalName->value =$this->getParam('journalname');
+}
+if($mode == 'edit'){
+    $objjournalName->value =$arrEdit['journalname'];
+}
 $table->addCell($objjournalName->show(), 150, NULL, 'left');
 $table->addCell(NULL, 150, NULL, 'left');
 $table->endRow();
@@ -106,13 +106,14 @@ $objCategory = new dropdown('category');
 $categoryLabel = new label($journalCategory.'&nbsp;', 'category');
 $categories=array("ISI Listing", "IBSS Listing", "Approved SA Listing");
 foreach ($categories as $category)
-{   	$objCategory->addOption($category,$category);
-	if($mode == 'fixerror'){
-		$objCategory->setSelected($this->getParam('category'));
-	}
-	if($mode == 'edit'){
-		$objCategory->setSelected($arrEdit['journalcategory']);
-	}
+{
+    $objCategory->addOption($category,$category);
+    if($mode == 'fixerror'){
+        $objCategory->setSelected($this->getParam('category'));
+    }
+    if($mode == 'edit'){
+        $objCategory->setSelected($arrEdit['journalcategory']);
+    }
 }
 $table->addCell($categoryLabel->show(), 150, NULL, 'left');
 $table->addCell($objCategory->show(), 150, NULL, 'left');
@@ -124,27 +125,27 @@ $table->endRow();
 $table->startRow();
 $objarticleTitle = new textinput('articletitle');
 $articleTiltleLabel = new label($articleTitle,'articletitle');
-	if($mode == 'fixerror'){
-		$objarticleTitle->value =$this->getParam('articletitle');
-	}
-	if($mode == 'edit'){
-		$objarticleTitle->value =$arrEdit['articletitle'];
-	}
+if($mode == 'fixerror'){
+    $objarticleTitle->value =$this->getParam('articletitle');
+}
+if($mode == 'edit'){
+    $objarticleTitle->value =$arrEdit['articletitle'];
+}
 $table->addCell($articleTiltleLabel->show(), 150, NULL, 'left');
 $table->addCell($objarticleTitle->show(), 150, NULL, 'left');
 $table->endRow();
-		
+
 
 //Input for Year of Publication
 $table->startRow();
 $objPublicationYr = new textinput ('publicationyear');
 $pubYearsLabel = new label($publicationYear.'&nbsp;', 'publicationyear');
-	if($mode == 'fixerror'){
-		$objPublicationYr->value =$this->getParam('publicationyear');
-	}	
-	if($mode == 'edit'){
-		$objPublicationYr->value =$arrEdit['publicationyear'];
-	}	
+if($mode == 'fixerror'){
+    $objPublicationYr->value =$this->getParam('publicationyear');
+}
+if($mode == 'edit'){
+    $objPublicationYr->value =$arrEdit['publicationyear'];
+}
 $table->addCell($pubYearsLabel->show(), 150, NULL, 'left');
 $table->addCell($objPublicationYr ->show(), 150, NULL, 'left');
 $table->endRow();
@@ -153,12 +154,12 @@ $table->endRow();
 $table->startRow();
 $objVolume = new textinput ('volume');
 $volumeLabel = new label($volume.'&nbsp;', 'volume');
-	if($mode == 'fixerror'){
-		$objVolume->value =$this->getParam('volume');
-	}
-	if($mode == 'edit'){
-		$objVolume->value =$arrEdit['volume'];
-	}				
+if($mode == 'fixerror'){
+    $objVolume->value =$this->getParam('volume');
+}
+if($mode == 'edit'){
+    $objVolume->value =$arrEdit['volume'];
+}
 $table->addCell($volumeLabel->show(), 150, NULL, 'left');
 $table->addCell($objVolume ->show(), 150, NULL, 'left');
 $table->endRow();
@@ -166,13 +167,13 @@ $table->endRow();
 //Input and label for Article Fisrt Page Numbers
 $table->startRow();
 $objFirstPage = new textinput ('firstpage');
-	$firstPageLabel = new label($firstPabeNo.'&nbsp;', 'firstpage');
-	if($mode == 'fixerror'){
-		$objFirstPage->value =$this->getParam('firstpage');
-	}
-	if($mode == 'edit'){
-		$objFirstPage->value =$arrEdit['firstpageno'];
-	}		
+$firstPageLabel = new label($firstPabeNo.'&nbsp;', 'firstpage');
+if($mode == 'fixerror'){
+    $objFirstPage->value =$this->getParam('firstpage');
+}
+if($mode == 'edit'){
+    $objFirstPage->value =$arrEdit['firstpageno'];
+}
 $table->addCell($firstPageLabel->show(), 150, NULL, 'left');
 $table->addCell($objFirstPage ->show(), 150, NULL, 'left');
 $table->endRow();
@@ -181,79 +182,79 @@ $table->endRow();
 $table->startRow();
 $objLastPage = new textinput ('lastpage');
 $lastPageLabel = new label($lastPageNo.'&nbsp;', 'lastpage');
-	if($mode == 'fixerror'){
-		$objLastPage->value =$this->getParam('lastpage');
-	}
-	if($mode == 'edit'){
-		$objLastPage->value =$arrEdit['lastpageno'];
-	}		
+if($mode == 'fixerror'){
+    $objLastPage->value =$this->getParam('lastpage');
+}
+if($mode == 'edit'){
+    $objLastPage->value =$arrEdit['lastpageno'];
+}
 $table->addCell($lastPageLabel->show(), 150, NULL, 'left');
 $table->addCell($objLastPage ->show(), 150, NULL, 'left');
 $table->endRow();
 
 /*
- * the Authors names are stored with HTML tgas in the Database
- * based on the Authors Affiliation.
- * Carry out some PHP operations to reverse tags and 
- * distinguish affiliations
- */
+* the Authors names are stored with HTML tgas in the Database
+* based on the Authors Affiliation.
+* Carry out some PHP operations to reverse tags and
+* distinguish affiliations
+*/
 
 // split Authors
 if($mode == 'edit'){
-	list($editAuthor1, $editAuthor2, $editAuthor3, $editAuthor4) = explode("<br />", $arrEdit['authorname']);
+    list($editAuthor1, $editAuthor2, $editAuthor3, $editAuthor4) = explode("<br />", $arrEdit['authorname']);
 
-	// Match HTML tags (<b>) and ()
-	//First Author
-	if (preg_match("/<b>/",$editAuthor1)) {
-		$editAuthor1 = strip_tags($editAuthor1);
-		$authorAffiliate1 = 'UWC Staff Member';
-	} 
-	elseif (preg_match("/<span>/",$editAuthor1)) {
-		$editAuthor1 = strip_tags($editAuthor1);
-		$authorAffiliate1 = 'UWC Student';
-	} 
-	else {
-		$authorAffiliate1 = 'External Author';
-	}
-	
-	//Second Author
-	if (preg_match("/<b>/",$editAuthor2)) {
-		$editAuthor2 = strip_tags($editAuthor2);
-		$authorAffiliate2 = 'UWC Staff Member';
-	}
-	elseif (preg_match("/<span>/",$editAuthor2)) {
-		$editAuthor2 = strip_tags($editAuthor2);
-		$authorAffiliate2 = 'UWC Student';
-	}  
-	else {
-		$authorAffiliate2 = 'External Author';
-	}
+    // Match HTML tags (<b>) and ()
+    //First Author
+    if (preg_match("/<b>/",$editAuthor1)) {
+        $editAuthor1 = strip_tags($editAuthor1);
+        $authorAffiliate1 = 'UWC Staff Member';
+    }
+    elseif (preg_match("/<span>/",$editAuthor1)) {
+        $editAuthor1 = strip_tags($editAuthor1);
+        $authorAffiliate1 = 'UWC Student';
+    }
+    else {
+        $authorAffiliate1 = 'External Author';
+    }
 
-	//Third Author
-	if (preg_match("/<b>/",$editAuthor3)) {
-		$editAuthor3 = strip_tags($editAuthor3);
-		$authorAffiliate3 = 'UWC Staff Member';
-	}
-	elseif (preg_match("/<span>/",$editAuthor3)) {
-		$editAuthor3 = strip_tags($editAuthor3);
-		$authorAffiliate3 = 'UWC Student';
-	}  
-	else {
-		$authorAffiliate3 = 'External Author';
-	}
+    //Second Author
+    if (preg_match("/<b>/",$editAuthor2)) {
+        $editAuthor2 = strip_tags($editAuthor2);
+        $authorAffiliate2 = 'UWC Staff Member';
+    }
+    elseif (preg_match("/<span>/",$editAuthor2)) {
+        $editAuthor2 = strip_tags($editAuthor2);
+        $authorAffiliate2 = 'UWC Student';
+    }
+    else {
+        $authorAffiliate2 = 'External Author';
+    }
 
-	//Fourth Author
-	if (preg_match("/<b>/",$editAuthor4)) {
-		$editAuthor34= strip_tags($editAuthor4);
-		$authorAffiliate4 = 'UWC Staff Member';
-	} 
-	elseif (preg_match("/<span>/",$editAuthor4)) {
-		$editAuthor4 = strip_tags($editAuthor4);
-		$authorAffiliate4 = 'UWC Student';
-	} 
-	else {
-		$authorAffiliate4 = 'External Author';
-	}
+    //Third Author
+    if (preg_match("/<b>/",$editAuthor3)) {
+        $editAuthor3 = strip_tags($editAuthor3);
+        $authorAffiliate3 = 'UWC Staff Member';
+    }
+    elseif (preg_match("/<span>/",$editAuthor3)) {
+        $editAuthor3 = strip_tags($editAuthor3);
+        $authorAffiliate3 = 'UWC Student';
+    }
+    else {
+        $authorAffiliate3 = 'External Author';
+    }
+
+    //Fourth Author
+    if (preg_match("/<b>/",$editAuthor4)) {
+        $editAuthor34= strip_tags($editAuthor4);
+        $authorAffiliate4 = 'UWC Staff Member';
+    }
+    elseif (preg_match("/<span>/",$editAuthor4)) {
+        $editAuthor4 = strip_tags($editAuthor4);
+        $authorAffiliate4 = 'UWC Student';
+    }
+    else {
+        $authorAffiliate4 = 'External Author';
+    }
 }
 
 
@@ -261,12 +262,12 @@ if($mode == 'edit'){
 $table->startRow();
 $objAuthor1 = new textinput ('author1');
 $Author1lLabel = new label($author1.'&nbsp;', 'author1');
-	if($mode == 'fixerror'){
-		$objAuthor1->value =$this->getParam('author1');
-	}
-	if($mode == 'edit'){
-		$objAuthor1->value =$editAuthor1;
-	}			
+if($mode == 'fixerror'){
+    $objAuthor1->value =$this->getParam('author1');
+}
+if($mode == 'edit'){
+    $objAuthor1->value =$editAuthor1;
+}
 $table->addCell($Author1lLabel->show(), 150, NULL, 'left');
 $table->addCell($objAuthor1->show(), 150, NULL, 'left');
 $table->endRow();
@@ -278,14 +279,14 @@ $affiliate1Label = new label($author1label, 'author1affiliate');
 $categories=array("UWC Staff Member", "UWC Student", "External Author");
 foreach ($categories as $category)
 {
-   
+
     $objAffiliate1->addOption($category,$category);
-	if($mode == 'fixerror'){
-		$objAffiliate1->setSelected($this->getParam('author1affiliate'));
-	}
-	if($mode == 'edit'){
-		$objAffiliate1->setSelected($authorAffiliate1);
-	}	
+    if($mode == 'fixerror'){
+        $objAffiliate1->setSelected($this->getParam('author1affiliate'));
+    }
+    if($mode == 'edit'){
+        $objAffiliate1->setSelected($authorAffiliate1);
+    }
 }
 $table->addCell($affiliate1Label->show(), 150, NULL, 'left');
 $table->addCell($objAffiliate1->show(), 150, NULL, 'left');
@@ -294,13 +295,13 @@ $table->endRow();
 //Input and label for Author 2
 $table->startRow();
 $objAuthor2 = new textinput ('author2');
-$Author2lLabel = new label($author2.'&nbsp;', 'author2');	
-	if($mode == 'fixerror'){
-		$objAuthor2->value =$this->getParam('author2');
-	}
-	if($mode == 'edit'){
-		$objAuthor2->value =$editAuthor2;
-	}
+$Author2lLabel = new label($author2.'&nbsp;', 'author2');
+if($mode == 'fixerror'){
+    $objAuthor2->value =$this->getParam('author2');
+}
+if($mode == 'edit'){
+    $objAuthor2->value =$editAuthor2;
+}
 $table->addCell($Author2lLabel->show(), 150, NULL, 'left');
 $table->addCell($objAuthor2->show(), 150, NULL, 'left');
 $table->endRow();
@@ -312,14 +313,14 @@ $affiliate2Label = new label($author2label, 'author2affiliate');
 $categories=array("UWC Staff Member", "UWC Student", "External Author");
 foreach ($categories as $category)
 {
-   
+
     $objAffiliate2->addOption($category,$category);
-	if($mode == 'fixerror'){
-		$objAffiliate2->setSelected($this->getParam('author2affiliate'));
-	}
-	if($mode == 'edit'){
-		$objAffiliate2->setSelected($authorAffiliate2);
-	}	
+    if($mode == 'fixerror'){
+        $objAffiliate2->setSelected($this->getParam('author2affiliate'));
+    }
+    if($mode == 'edit'){
+        $objAffiliate2->setSelected($authorAffiliate2);
+    }
 }
 
 $table->addCell($affiliate2Label->show(), 150, NULL, 'left');
@@ -329,13 +330,13 @@ $table->endRow();
 //Input and label for Author 3
 $table->startRow();
 $objAuthor3 = new textinput ('author3');
-$Author3lLabel = new label($author3.'&nbsp;', 'author3');	
-	if($mode == 'fixerror'){
-		$objAuthor3->value =$this->getParam('author3');
-	}
-	if($mode == 'edit'){
-		$objAuthor3->value =$editAuthor3;
-	}	
+$Author3lLabel = new label($author3.'&nbsp;', 'author3');
+if($mode == 'fixerror'){
+    $objAuthor3->value =$this->getParam('author3');
+}
+if($mode == 'edit'){
+    $objAuthor3->value =$editAuthor3;
+}
 $table->addCell($Author3lLabel->show(), 150, NULL, 'left');
 $table->addCell($objAuthor3->show(), 150, NULL, 'left');
 $table->endRow();
@@ -346,14 +347,14 @@ $objAffiliate3 = new dropdown('author3affiliate');
 $affiliate3Label = new label($author3label, 'author3affiliate');
 $categories=array("UWC Staff Member", "UWC Student", "External Author");
 foreach ($categories as $category)
-{   
+{
     $objAffiliate3->addOption($category,$category);
-	if($mode == 'fixerror'){
-		$objAffiliate3->setSelected($this->getParam('author3affiliate'));
-	}
-	if($mode == 'edit'){
-		$objAffiliate3->setSelected($authorAffiliate3);
-	}	
+    if($mode == 'fixerror'){
+        $objAffiliate3->setSelected($this->getParam('author3affiliate'));
+    }
+    if($mode == 'edit'){
+        $objAffiliate3->setSelected($authorAffiliate3);
+    }
 }
 $table->addCell($affiliate3Label->show(), 150, NULL, 'left');
 $table->addCell($objAffiliate3->show(), 150, NULL, 'left');
@@ -363,12 +364,12 @@ $table->endRow();
 $table->startRow();
 $objAuthor4 = new textinput ('author4');
 $Author4lLabel = new label($author4.'&nbsp;', 'author4');
-	if($mode == 'fixerror'){
-		$objAuthor4->value =$this->getParam('author4');
-	}
-	if($mode == 'edit'){
-		$objAuthor4->value =$editAuthor4;
-	}	
+if($mode == 'fixerror'){
+    $objAuthor4->value =$this->getParam('author4');
+}
+if($mode == 'edit'){
+    $objAuthor4->value =$editAuthor4;
+}
 $table->addCell($Author4lLabel->show(), 150, NULL, 'left');
 $table->addCell($objAuthor4->show(), 150, NULL, 'left');
 $table->endRow();
@@ -380,14 +381,14 @@ $affiliate4Label = new label($author4label, 'author4affiliate');
 $categories=array("UWC Staff Member", "UWC Student", "External Author");
 foreach ($categories as $category)
 {
-   
+
     $objAffiliate4->addOption($category,$category);
-	if($mode == 'fixerror'){
-		$objAffiliate4->setSelected($this->getParam('author4affiliate'));
-	}
-	if($mode == 'edit'){
-		$objAffiliate4->setSelected($authorAffiliate4);
-	}	
+    if($mode == 'fixerror'){
+        $objAffiliate4->setSelected($this->getParam('author4affiliate'));
+    }
+    if($mode == 'edit'){
+        $objAffiliate4->setSelected($authorAffiliate4);
+    }
 }
 
 $table->addCell($affiliate4Label->show(), 150, NULL, 'left');
@@ -417,18 +418,18 @@ $table->endRow();
 
 //submit button
 $table->startRow();
-$table->addCell(NULL, 150, NULL, 'left');	
+$table->addCell(NULL, 150, NULL, 'left');
 $button = new button ('submitform', 'Submit Details');
 $button->setToSubmit();
 $table->addCell($button->show(), 150, NULL, 'left');
 $table->endRow();
-		
+
 //display table
 $accreditedJournal->addToForm($table->show());
 
 //Code to display errors
-	$messages=array();
-	if ($mode == 'fixerror') {	
+$messages=array();
+if ($mode == 'fixerror') {
     foreach ($problems as $problem)
     {
         $messages[] = $this->explainProblemsInfo($problem);
@@ -439,36 +440,36 @@ if ($mode == 'fixerror' && count($messages) > 0) {
     echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
 
     echo '<ul>';
-        foreach ($messages as $message)
-        {
-            if ($message != '') {
-                echo '<li class="error">'.$message.'</li>';
-            }
+    foreach ($messages as $message)
+    {
+        if ($message != '') {
+            echo '<li class="error">'.$message.'</li>';
         }
+    }
 
     echo '</ul></li></ul>';
-   }
+}
 //display form
 echo $accreditedJournal->show();
 ?>
 <script type="text/javascript">
 //<![CDATA[
 function init () {
-	$('input_redraw').onclick = function () {
-		redraw();
-	}
+    $('input_redraw').onclick = function () {
+        redraw();
+    }
 }
 function redraw () {
-	var url = 'index.php';
-	var pars = 'module=security&action=generatenewcaptcha';
-	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
+    var url = 'index.php';
+    var pars = 'module=security&action=generatenewcaptcha';
+    var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
 }
 function showLoad () {
-	$('load').style.display = 'block';
+    $('load').style.display = 'block';
 }
 function showResponse (originalRequest) {
-	var newData = originalRequest.responseText;
-	$('captchaDiv').innerHTML = newData;
+    var newData = originalRequest.responseText;
+    $('captchaDiv').innerHTML = newData;
 }
 //]]>
 </script>

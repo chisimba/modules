@@ -1,7 +1,7 @@
 <?php
 /*
- * This template displays Entire Books
- */
+* This template displays Entire Books
+*/
 
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
@@ -24,8 +24,8 @@ $objLayer = $this->newObject('layer', 'htmlelements');
 $authortable =  $this->newObject('htmltable', 'htmlelements');
 
 /*****
- *New Stuff Added
- */
+*New Stuff Added
+*/
 $objIcon = $this->newObject('geticon', 'htmlelements');
 //Edit Icon
 $objIcon->setIcon('edit');
@@ -52,8 +52,8 @@ $addlink = new link($this->uri(array('action'=>'Entire Book/Monogragh')));
 $addlink->link = $this->objLanguage->languageText('mod_rimfhe_booktitle', 'rimfhe');
 
 /*
- *End New Stuf
- */
+*End New Stuf
+*/
 
 $table = new htmltable();
 $table->cellspacing = '2';
@@ -79,15 +79,15 @@ echo $display;
 //update notification
 $updateComment = $this->getParam('comment');
 if(!empty($updateComment)){
-	echo '<span style="color:#D00000">'.$updateComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000">'.$updateComment.'</span>';
+    echo '<br /><br />';
 }
 
 //delete notification
 $deleteComment = $this->getParam('deletecomment');
 if(!empty($deleteComment)){
-	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+    echo '<br /><br />';
 }
 
 //Set up fields heading
@@ -101,47 +101,47 @@ $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_lastchapterpa
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rimfhe'), 80);
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe') , 80);
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));	
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));
 $table->endHeaderRow();
 
 $rowcount = 0;
 
 //setup the tables rows  and loop though the records
-if ( count($arrDisplayBooks) > 0) {	
-	
-	foreach($arrDisplayBooks as $entirebook) {
-	 //Set odd even row colour
-	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
-	$tableRow = array();
-	
-	$tableRow[] = $entirebook['booktitle'];
-	$tableRow[] = $entirebook['isbn'];
-	$tableRow[] = $entirebook['publishinghouse'];
-	$tableRow[] = $entirebook['authorname'];
-	$tableRow[] = $entirebook['firstchapterpageno'];
-	$tableRow[] = $entirebook['lastchapterpageno'];
-	$tableRow[] = $entirebook['totalpages'];
-	$tableRow[] = $entirebook['peerreviewed'];
-	$editlink = new link($this->uri(array('action'=>'Edit Book', 'id'=> $entirebook['id'])));
-	$editlink->link = $editIcon;
-	$tableRow[] = $editlink->show();
+if ( count($arrDisplayBooks) > 0) {
 
-	$delArray = array('action' => 'deleteentirebook', 'confirm'=>'yes', 'id'=>$entirebook['id']);
-	$title = $entirebook['booktitle'];
-	$rep = array('TITLE' => $title);
-	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
-	$deleteIcon = $objIcon->getDeleteIconWithConfirm($entirebook['id'], $delArray,'rimfhe',$deletephrase);
-	$tableRow[] = $deleteIcon;
-		
-	$table->addRow($tableRow, $oddOrEven);
-	
-	$rowcount = ($rowcount == 0) ? 1 : 0;
-	}	
+    foreach($arrDisplayBooks as $entirebook) {
+        //Set odd even row colour
+        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+        $tableRow = array();
+
+        $tableRow[] = $entirebook['booktitle'];
+        $tableRow[] = $entirebook['isbn'];
+        $tableRow[] = $entirebook['publishinghouse'];
+        $tableRow[] = $entirebook['authorname'];
+        $tableRow[] = $entirebook['firstchapterpageno'];
+        $tableRow[] = $entirebook['lastchapterpageno'];
+        $tableRow[] = $entirebook['totalpages'];
+        $tableRow[] = $entirebook['peerreviewed'];
+        $editlink = new link($this->uri(array('action'=>'Edit Book', 'id'=> $entirebook['id'])));
+        $editlink->link = $editIcon;
+        $tableRow[] = $editlink->show();
+
+        $delArray = array('action' => 'deleteentirebook', 'confirm'=>'yes', 'id'=>$entirebook['id']);
+        $title = $entirebook['booktitle'];
+        $rep = array('TITLE' => $title);
+        $deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+        $deleteIcon = $objIcon->getDeleteIconWithConfirm($entirebook['id'], $delArray,'rimfhe',$deletephrase);
+        $tableRow[] = $deleteIcon;
+
+        $table->addRow($tableRow, $oddOrEven);
+
+        $rowcount = ($rowcount == 0) ? 1 : 0;
+    }
 }
 else{
     $table->startRow();
-	$table->addCell('<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe' ).'</div>',NULL,NULL,NULL,NULL,'colspan="10"');
-	$table->endRow();
+    $table->addCell('<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe' ).'</div>',NULL,NULL,NULL,NULL,'colspan="10"');
+    $table->endRow();
 }
 
 echo $table->show();

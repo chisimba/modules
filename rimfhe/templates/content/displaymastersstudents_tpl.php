@@ -1,7 +1,7 @@
 <?php
-/* 
- * This template displays the Gradute masters Students
- */
+/*
+* This template displays the Gradute masters Students
+*/
 
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
@@ -59,10 +59,10 @@ $objMastersStudSummary = new link($this->uri(array('action'=>'Graduating Masters
 $objMastersStudSummary->link='View Masters Students Output Summary';
 
 /*
- *End New Stuf
- */
+*End New Stuf
+*/
 
-	
+
 $table = new htmltable();
 $table->cellspacing = '2';
 $table->cellpadding = '5';
@@ -86,22 +86,22 @@ echo $display;
 //update notification
 $updateComment = $this->getParam('comment');
 if(!empty($updateComment)){
-	echo '<span style="color:#D00000">'.$updateComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000">'.$updateComment.'</span>';
+    echo '<br /><br />';
 }
 
 //delete notification
 $deleteComment = $this->getParam('deletecomment');
 if(!empty($deleteComment)){
-	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
-	echo '<br /><br />';
+    echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+    echo '<br /><br />';
 }
 
 //Set up fields heading
 $table->startHeaderRow();
 $table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));	
+$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));
 $table->addHeaderCell($this->objLanguage->languageText('word_gender', 'system', 'Gender'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_studentnumber', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
@@ -116,42 +116,42 @@ $table->endHeaderRow();
 $rowcount = 0;
 
 //setup the tables rows  and loop though the records
-if ( count($arrDisplayMasters) > 0) {	
+if ( count($arrDisplayMasters) > 0) {
 
-	foreach($arrDisplayMasters as $mastersstudents) {
+    foreach($arrDisplayMasters as $mastersstudents) {
 
-	 //Set odd even row colour
-	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
-	$tableRow = array();
-	
-	$tableRow[] = $mastersstudents['surname'];
-	$tableRow[] = $mastersstudents['initials'];
-	$tableRow[] = $mastersstudents['firstname'];	
-	$tableRow[] = $mastersstudents['gender'];
-	$tableRow[] = $mastersstudents['regnumber'];
-	$tableRow[] = $mastersstudents['deptschoool'];
-	$tableRow[] = $mastersstudents['faculty'];
-	$tableRow[] = $mastersstudents['thesistitle'];
-	$tableRow[] = $mastersstudents['supervisorname'];
-	$tableRow[] = $mastersstudents['degree'];
-	$editlink = new link($this->uri(array('action'=>'Edit Graduating Masters Student', 'id'=> $mastersstudents['id'])));
-	$editlink->link = $editIcon;
-	$tableRow[] = $editlink->show();
+        //Set odd even row colour
+        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+        $tableRow = array();
 
-	$delArray = array('action' => 'deletemastersstudent', 'confirm'=>'yes', 'id'=>$mastersstudents['id']);
-	$title = $mastersstudents['thesistitle'];
-	$rep = array('TITLE' => $title);
-	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
-	$deleteIcon = $objIcon->getDeleteIconWithConfirm($mastersstudents['id'], $delArray,'rimfhe',$deletephrase);
-	$tableRow[] = $deleteIcon;
+        $tableRow[] = $mastersstudents['surname'];
+        $tableRow[] = $mastersstudents['initials'];
+        $tableRow[] = $mastersstudents['firstname'];
+        $tableRow[] = $mastersstudents['gender'];
+        $tableRow[] = $mastersstudents['regnumber'];
+        $tableRow[] = $mastersstudents['deptschoool'];
+        $tableRow[] = $mastersstudents['faculty'];
+        $tableRow[] = $mastersstudents['thesistitle'];
+        $tableRow[] = $mastersstudents['supervisorname'];
+        $tableRow[] = $mastersstudents['degree'];
+        $editlink = new link($this->uri(array('action'=>'Edit Graduating Masters Student', 'id'=> $mastersstudents['id'])));
+        $editlink->link = $editIcon;
+        $tableRow[] = $editlink->show();
 
-	$table->addRow($tableRow, $oddOrEven);
-	
-	$rowcount = ($rowcount == 0) ? 1 : 0;
-	}	
+        $delArray = array('action' => 'deletemastersstudent', 'confirm'=>'yes', 'id'=>$mastersstudents['id']);
+        $title = $mastersstudents['thesistitle'];
+        $rep = array('TITLE' => $title);
+        $deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+        $deleteIcon = $objIcon->getDeleteIconWithConfirm($mastersstudents['id'], $delArray,'rimfhe',$deletephrase);
+        $tableRow[] = $deleteIcon;
+
+        $table->addRow($tableRow, $oddOrEven);
+
+        $rowcount = ($rowcount == 0) ? 1 : 0;
+    }
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';	
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
 }
 
 echo $table->show();
