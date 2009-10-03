@@ -71,7 +71,7 @@ This is the article smart student three wrote.
 <div class="jukskeislideshow">
 <div class="jukskeiinner">
 [slideshare id=1980831&doc=iabchoustonvisual-kmlprint-090910180423-phpapp01]
-<h2 class="jukskeislideshowcaption">ëWhen the river floods we donít go to schoolí</h2>
+<h2 class="jukskeislideshowcaption">'When the river floods we donít go to school'</h2>
 <h3 class="jukskeislideshowtitle">SLIDESHOW | . Quisque sagiPs aliquam nisl Fncidunt Fncidunt.
 Phasellus sed eros arcu. In hac habiÅ] tasse platea dictumst. Ut dolor
 metus, scelerisque dapibus trisFque fermentum, condimentum at
