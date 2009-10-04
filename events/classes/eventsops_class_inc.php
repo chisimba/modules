@@ -377,10 +377,10 @@ class eventsops extends object {
         $friendcount = 0;
         $tabs = $this->getObject('tabber', 'htmlelements');
 
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
@@ -400,6 +400,7 @@ class eventsops extends object {
         $latlon = $this->objCookie->get('events_latlon');
         $locarr = explode("|", $latlon);
         $list = NULL;
+        $this->loadClass('htmlheading', 'htmlelements');
         if($locarr[0] != '' && $locarr != '') {
             $lat = $locarr[0];
             $lon = $locarr[1];
@@ -410,7 +411,10 @@ class eventsops extends object {
         }
         if(is_array($nearbyplaces) && @$nearbyplaces['name'] != 'radius too large, radius is limited to maximal 300km') {
             foreach($nearbyplaces as $place) {
-                $list .= $place['name']."<br />";
+                $headernp = new htmlheading();
+                $headernp->type = 3;
+                $headernp->str = $place['name'];
+                $list .= $headernp->show()."<br />";
             }
         }
         else {
@@ -427,7 +431,7 @@ class eventsops extends object {
      * @return string
      */
     public function getPopularContent() {
-        return "popular content";
+        return $this->formatEventIntro(NULL);
     }
 
     /**
@@ -964,16 +968,6 @@ class eventsops extends object {
         $objLoc = json_decode($json);
         if(is_object($objLoc) && !empty($objLoc->geonames)) {
             $locarr = $objLoc->geonames[0];
-            if($this->objCookie->exists('events_location') ) {
-                $this->objCookie->cookiedelete('events_location');
-                $this->objCookie->cookiedelete('events_latlon');
-                $this->objCookie->set( 'events_location', $locarr->name);
-                $this->objCookie->set( 'events_latlon', $locarr->lat."|".$locarr->lng);
-            }
-            else {
-                $this->objCookie->set( 'events_location', $locarr->name);
-                $this->objCookie->set( 'events_latlon', $locarr->lat."|".$locarr->lng);
-            }
             return $locarr;
         }
         else {
@@ -1095,6 +1089,18 @@ class eventsops extends object {
             $articles[] = array();
             return $articles;
         }
+    }
+
+    public function getHeiracrchy($geoid) {
+        $url = "http://ws.geonames.org/hierarchyJSON?geonameId=$geoid";
+        $objHeir = json_decode($this->objCurl->exec($url));
+        if(is_object($objHeir) && isset($objHeir)) {
+            $objHeir = $objHeir->geonames;
+            return $objHeir;
+        }
+        else {
+            return NULL;
+        } 
     }
 
     public function addEditVenueForm($eventid, $editparams = NULL) {
@@ -1475,6 +1481,15 @@ class eventsops extends object {
 
         return $mfieldset->show();
 
+    }
+
+    public function formatEventIntro($event) {
+        $currLocation = "Events for...";
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        if($this->objCookie->exists('events_location') ) {
+            $currLocation = $this->objCookie->get('events_location');
+        }
+        return $currLocation;
     }
 }
 ?>

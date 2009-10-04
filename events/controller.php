@@ -63,6 +63,7 @@ class events extends controller
     public $objOps;
     public $objCurl;
     public $objDbTags;
+    public $objUtils;
 
     /**
      * Initialises the instance variables.
@@ -84,6 +85,7 @@ class events extends controller
             $this->objOps       = $this->getObject('eventsops');
             $this->objCookie    = $this->getObject('cookie', 'utilities');
             $this->objDbTags    = $this->getObject('dbtags', 'tagging');
+            $this->objUtils     = $this->getObject('eventsutils');
             // $this->setPageTemplate('null_page_tpl.php');
         }
         catch ( customException $e ) {
@@ -138,7 +140,18 @@ class events extends controller
                 $locarr = explode(",", $locstr);
                 $lat = trim($locarr[0]);
                 $lon = trim($locarr[1]);
-                $this->objOps->findNearby($lat, $lon);
+                $locarr = $this->objOps->findNearby($lat, $lon);
+                if($this->objCookie->exists('events_location') ) {
+                    $this->objCookie->cookiedelete('events_location');
+                    $this->objCookie->cookiedelete('events_latlon');
+                    $this->objCookie->cookiedelete('events_geoid');
+                    $this->objCookie->set( 'events_location', $locarr->name, time()+60*60*24*30);
+                    $this->objCookie->set( 'events_latlon', $locarr->lat."|".$locarr->lng, time()+60*60*24*30);
+                }
+                else {
+                    $this->objCookie->set( 'events_location', $locarr->name, time()+60*60*24*30);
+                    $this->objCookie->set( 'events_latlon', $locarr->lat."|".$locarr->lng, time()+60*60*24*30);
+                }
                 $this->nextAction('');
                 break;
 
@@ -211,25 +224,6 @@ class events extends controller
                 return 'venue_tpl.php';
                 break;
 
-            case 'venuelist' :
-                log_debug("Checking venue list");
-                $part = $this->getParam('part', NULL);
-                $colors = array('black', 'blue', 'brown', 'green', 'grey',
-                'gold', 'navy', 'orange', 'pink', 'silver',
-                'violet', 'yellow', 'red');
-                // check the parameter
-                if(isset($part) && $part != '') {
-                    log_debug("Got me a $part request");
-                    $results = array();
-                    foreach($colors as $color) {
-                        if( strpos($color, $this->getParam('part')) === 0 ) {
-                            $results[] = $color;
-                        }
-                    }
-                    echo json_encode($results);
-                }
-                break;
-
             case 'addvenue' :
                 echo $this->objOps->addEditVenueForm();
                 break;
@@ -268,6 +262,17 @@ class events extends controller
                 $insarr = array('userid' => $this->objUser->userId(), 'venuename' => $venuename, 'venueaddress' => $venueaddress, 'city' => $city, 'zip' => $zip, 'phone' => $phone, 'url' => $url, 'venuedescription' => $description, 'geolat' => $lat, 'geolon' => $lon, 'privatevenue' => $private);
                 $venueid = $this->objDbEvents->venueAddArray($insarr);
                 $this->objDbEvents->updateEventWithVenueId($eventid, $venueid);
+                // do a lookup and see where this place is, then fill out heirarchy to country scale (or more?)
+                $locarr = $this->objOps->findNearby($lat, $lon);
+                $heir = $this->objOps->getHeiracrchy($locarr->geonameId);
+                foreach($heir as $h) {
+                    // insert record to db with venue id as key
+                    $h->venueid = $venueid;
+                    $h->userid = $this->objUser->userId();
+                    // we now need to convert the object to an array for dbTable::insert();
+                    $h = $this->objUtils->object2array($h);
+                    $this->objDbEvents->venueInsertHeirarchy($h);
+                }
                 $this->nextAction('');
                 break;
 

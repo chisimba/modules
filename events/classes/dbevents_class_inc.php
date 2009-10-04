@@ -108,7 +108,7 @@ class dbevents extends dbtable {
         parent::init('tbl_events_event');
         $this->objLanguage  = $this->getObject('language', 'language');
         $this->objConfig    = $this->getObject('altconfig', 'config');
-        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objWashout   = $this->getObject('washout', 'utilities');
         $this->objUser      = $this->getObject('user', 'security');
         $this->objCurl      = $this->getObject('curlwrapper', 'utilities');
@@ -359,6 +359,10 @@ class dbevents extends dbtable {
 
     }
 
+    public function getEventList() {
+    
+    }
+
     /**
      * Metro functions
      */
@@ -542,6 +546,11 @@ class dbevents extends dbtable {
      */
     public function venueSearch($search_text, $location, $radius, $country_id, $state_id, $metro_id, $per_page, $page, $sort) {
 
+    }
+
+    public function venueInsertHeirarchy($heirarchy) {
+        parent::init('tbl_events_venue_location');
+        return $this->insert($heirarchy);
     }
 
     /**
