@@ -235,6 +235,10 @@ class events extends controller
                 $this->nextAction('');
                 break;
 
+            case 'test' : 
+                var_dump($this->objDbEvents->metroSearch('V', 'ZA', 'Western Cape', 'South '));
+                break;
+
             case 'savevenue' :
                 $eventid = $this->getParam('input_eventid');
                 $venuename = $this->getParam('venuename');
@@ -258,8 +262,10 @@ class events extends controller
                 $geo = explode(",", $geo);
                 $lat = trim($geo[0]);
                 $lon = trim($geo[1]);
-                // This is always an insert as it is always new. Remember to update the record later with the geolatlon when the main event form is sent!
-                $insarr = array('userid' => $this->objUser->userId(), 'venuename' => $venuename, 'venueaddress' => $venueaddress, 'city' => $city, 'zip' => $zip, 'phone' => $phone, 'url' => $url, 'venuedescription' => $description, 'geolat' => $lat, 'geolon' => $lon, 'privatevenue' => $private);
+                // This is always an insert as it is always new. 
+                $insarr = array('userid' => $this->objUser->userId(), 'venuename' => $venuename, 'venueaddress' => $venueaddress, 
+                                'city' => $city, 'zip' => $zip, 'phone' => $phone, 'url' => $url, 'venuedescription' => $description, 
+                                'geolat' => $lat, 'geolon' => $lon, 'privatevenue' => $private);
                 $venueid = $this->objDbEvents->venueAddArray($insarr);
                 $this->objDbEvents->updateEventWithVenueId($eventid, $venueid);
                 // do a lookup and see where this place is, then fill out heirarchy to country scale (or more?)

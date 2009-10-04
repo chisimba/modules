@@ -374,35 +374,84 @@ class dbevents extends dbtable {
      *
      */
     public function metroGetCountryList() {
-
-    }
-
-    public function metroGetStateList($country_id) {
-
-    }
-
-    public function metroGetList($state_id) {
-
-    }
-
-    public function metroGetInfo($metro_id) {
-        // metro id can be a comma sep list!
-
-    }
-
-    public function metroGetMyList($token) {
-
+        $this->changeTable('tbl_events_venue_location');
+        $ret = $this->getArray("SELECT DISTINCT(countrycode), countryname FROM tbl_events_venue_location where countryname != 'NULL'");
+        return $ret;
     }
 
     /**
+     * Get state or province list of a country currently with events or activity in the database
      *
-     *
-     * @param $search_text (Optional) The search text to use. Supports quoted strings and empty parameter (to display all). Please restrict by another parameter when using blank values.
-     * @param $country_id (Numeric, Optional) The country_id of the event, used to narrow down the responses. To get a country_id, try the metroGetCountryList function.
-     * @param $state_id (Numeric, Optional) The state_id of the event, used to narrow down the responses. To get a state_id, try the metroGetStateList function.
+     * Retrieve a list of all active provinces/states in the database.
+     * 
+     * @param $countryCode string (Required) Uppercase 2 letter country code that you want to query
      */
-    public function metroSearch($search_text = '', $country_id, $state_id) {
+    public function metroGetStateList($countryCode) {
+        $this->changeTable('tbl_events_venue_location');
+        $ret = $this->getArray("SELECT DISTINCT(name) FROM tbl_events_venue_location WHERE fcode = 'ADM1' and countrycode = '$countryCode';");
+        return $ret;
+    }
 
+    /**
+     * Get a list of metros in a state or province currently with events or activity in the database
+     *
+     * Retrieve a list of all active metros in the database.
+     * 
+     * @param $statename string (Required) state name that you want to query. e.g. Western Cape
+     */
+    public function metroGetList($statename) {
+        $this->changeTable('tbl_events_venue_location');
+        $ret = $this->getArray("SELECT DISTINCT(name) FROM tbl_events_venue_location WHERE fcode = 'PPL' and adminname1 = '$statename';");
+        return $ret;
+    }
+
+    /**
+     * Get available information about a metro with events or activity in the database
+     *
+     * Retrieve some information (geographical) of particular active metros in the database.
+     * 
+     * @param $metroname string (Required) the metro name(s) (this can be a comma seperated list) that you want to query. e.g. Vasco,Torrano,
+     */
+    public function metroGetInfo($metroname) {
+        // metro id can be a comma sep list!
+        $metroname = explode(",", $metroname);
+        $this->changeTable('tbl_events_venue_location');
+        foreach($metroname as $metname) {
+            $ret[] = $this->getAll("WHERE name = '$metname'");
+        }
+        return $ret;
+    }
+
+    /**
+     * Get a list of metros associated with the currently logged in user with events or activity in the database
+     *
+     * Retrieve some information (geographical) of particular active metros in the database.
+     * 
+     */
+    public function metroGetMyList() {
+        $this->changeTable('tbl_events_venue_location');
+        if($this->objUser->isLoggedIn()) {
+            $userid = $this->objUser->$userid();
+            return $this->getAll("WHERE userid = '$userid'");
+        }
+        else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Search for a given metro
+     *
+     * @param $search_text (Required) The search text to use. Supports quoted strings and empty parameter (to display all). Please restrict by another parameter when using blank values.
+     * @param $country_id (Optional) The country_id of the event, used to narrow down the responses. To get a country_id, try the metroGetCountryList function.
+     * @param $state_id (Optional) The state_id of the event, used to narrow down the responses. To get a state_id, try the metroGetStateList function.
+     */
+    public function metroSearch($search_text, $countryCode = '', $statename = '', $countryname = '') {
+        $this->changeTable('tbl_events_venue_location');
+        $ret = $this->getAll("WHERE fcodename LIKE '%%$search_text%%' OR countryname LIKE '%%$search_text%%' OR countrycode LIKE '%%$search_text%%' OR fclname LIKE '%%$search_text%%' 
+                              OR name LIKE '%%$search_text%%' OR admincode1 LIKE '%%$search_text%%' OR adminname1 LIKE '%%$search_text%%' OR countrycode = '$countryCode' OR
+                              adminname1 = '$statename' OR countryname = '$countryname'");
+        return $ret;
     }
 
     public function metroGetForLatLong($lat, $lon) {
