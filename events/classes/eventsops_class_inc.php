@@ -384,6 +384,7 @@ class eventsops extends object {
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
 
         return $tabs->show();
     }
@@ -432,6 +433,10 @@ class eventsops extends object {
      */
     public function getPopularContent() {
         return $this->formatEventIntro(NULL);
+    }
+    
+    public function getSearchContent() {
+        return "It looks like you are in ".$this->getSession('country').". I have fetched the relevant details for you and set the currency to ZAR";
     }
 
     /**

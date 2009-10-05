@@ -64,6 +64,7 @@ class events extends controller
     public $objCurl;
     public $objDbTags;
     public $objUtils;
+    public $ip2Country;
 
     /**
      * Initialises the instance variables.
@@ -86,6 +87,7 @@ class events extends controller
             $this->objCookie    = $this->getObject('cookie', 'utilities');
             $this->objDbTags    = $this->getObject('dbtags', 'tagging');
             $this->objUtils     = $this->getObject('eventsutils');
+            $this->ip2Country   = $this->getObject('iptocountry', 'utilities');
             // $this->setPageTemplate('null_page_tpl.php');
         }
         catch ( customException $e ) {
@@ -107,6 +109,13 @@ class events extends controller
             case NULL:
 
             case 'main' :
+                $ip = $this->objOps->getIpAddr();
+                $ccode = $this->ip2Country->getCountryByIP($ip);
+                $country = $this->ip2Country->getCountryNameByIp($ip);
+                // get the country info from the service if it doesn't exist.
+                $countryinfo = $this->objDbEvents->metroGetCountryInfo($ccode);
+                $countryinfo = $countryinfo[0];
+                $this->setVarByRef('countryinfo', $countryinfo);
                 return 'main_tpl.php';
                 break;
 
@@ -236,7 +245,8 @@ class events extends controller
                 break;
 
             case 'test' : 
-                var_dump($this->objDbEvents->metroSearch('V', 'ZA', 'Western Cape', 'South '));
+                header("Content-Type: application/json");
+                echo $this->objDbEvents->getEventInfo('gen21Srv31Nme28_90310_1254733224');
                 break;
 
             case 'savevenue' :

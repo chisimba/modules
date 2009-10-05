@@ -113,16 +113,7 @@ class eventsutils extends object {
      * @access public
      */
     public function init() {
-        $this->objLanguage  = $this->getObject('language', 'language');
-        $this->objConfig    = $this->getObject('altconfig', 'config');
-        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
-        $this->objWashout   = $this->getObject('washout', 'utilities');
-        $this->objUser      = $this->getObject('user', 'security');
-        $this->objCurl      = $this->getObject('curlwrapper', 'utilities');
-        $this->objLangCode  = $this->getObject('languagecode', 'language');
-        $this->objTags      = $this->getObject('dbtags', 'tagging');
-        $this->objCookie    = $this->getObject('cookie', 'utilities');
-        $this->objDbEvents  = $this->getObject('dbevents');
+        
     }
 
     public function array2object($array) {

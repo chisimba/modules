@@ -98,6 +98,7 @@ class dbevents extends dbtable {
     public $objCurl;
 
     public $objLangCode;
+    public $objUtils;
 
     /**
      * Constructor
@@ -114,6 +115,7 @@ class dbevents extends dbtable {
         $this->objCurl      = $this->getObject('curlwrapper', 'utilities');
         $this->objLangCode  = $this->getObject('languagecode', 'language');
         $this->objTags      = $this->getObject('dbtags', 'tagging');
+        $this->objUtils     = $this->getObject('eventsutils');
     }
 
     /**
@@ -126,14 +128,30 @@ class dbevents extends dbtable {
      * If you want to get information for a private event, you will need auth
      *
      * @param $eventid The Event ID
-     * @param $flag (optional) Flag string Can be p, P, t, T (p = photos, P = performers, t = tags, T = tickets)
-     * @param $token (optional) Token to get private events
      */
-    public function getEventInfo($eventid, $flag = NULL) {
+    public function getEventInfo($eventid) {
         $this->changeTable('tbl_events_events');
+        $event = new StdClass();
         $eventdata = $this->getAll("WHERE id = '$eventid'");
-        // retrieve the event metadata and user comments etc as well
-
+        $eventdata = $eventdata[0];
+        // now we make the eventdata an object and a property of the overall object
+        $eventobj = $this->objUtils->array2object($eventdata);
+        $event->event = $eventobj;
+        // now lets get the venue data
+        $this->changeTable('tbl_events_venues');
+        $vid = $eventdata['venue_id'];
+        $vdata = $this->getAll("WHERE id = '$vid'");
+        $vdata = $vdata[0];
+        // add the venue info
+        $event->venue = $this->objUtils->array2object($vdata);
+        // now the venue metadata
+        $this->changeTable('tbl_events_venue_location');
+        $vmeta = $this->getAll("WHERE venueid = '$vid'");
+        $event->venuelocation = $this->objUtils->array2object($vmeta);
+        
+        // retrieve the user comments, pictures, tweets, flickr, MXit blah blah whatever etc as well
+        
+        return json_encode($event);
     }
 
     /**
@@ -378,6 +396,34 @@ class dbevents extends dbtable {
         $ret = $this->getArray("SELECT DISTINCT(countrycode), countryname FROM tbl_events_venue_location where countryname != 'NULL'");
         return $ret;
     }
+    
+    /**
+     * Get country information from a given 2 letter country code
+     *
+     * Retrieve a list of all active countries in the database or query service to get country information, insert, then return the info
+     * 
+     * @param $countrycode (Required) 2 letter Country code e.g. 'ZA'
+     */
+    public function metroGetCountryInfo($countrycode) {
+        $this->changeTable('tbl_events_countryinfo');
+        if($countrycode == NULL) {
+            $countrycode = 'ZA';
+        }
+        if($this->getRecordCount("WHERE countrycode = '$countrycode'") > 0) {
+            return $this->getAll("WHERE countrycode = '$countrycode'");
+        }
+        else {
+            $url = "http://ws.geonames.org/countryInfoJSON?country=$countrycode";
+            $json = $this->objCurl->exec($url);
+            $objCinfo = json_decode($json);
+            $arr = $this->objUtils->object2array($objCinfo);
+            foreach($arr['geonames'] as $place) {
+                $place = $this->objUtils->object2array($place);
+                $this->insert($place);
+            }
+            return $this->getAll("WHERE countrycode = '$countrycode'");
+        }
+     }
 
     /**
      * Get state or province list of a country currently with events or activity in the database
