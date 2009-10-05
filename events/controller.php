@@ -245,8 +245,9 @@ class events extends controller
                 break;
 
             case 'test' : 
-                header("Content-Type: application/json");
-                echo $this->objDbEvents->getEventInfo('gen21Srv31Nme28_90310_1254733224');
+                //header("Content-Type: application/json");
+                //echo $this->objDbEvents->getEventInfo('gen21Srv31Nme28_90310_1254733224');
+                $this->objOps->grabTwitterBySearch('Chisimba');
                 break;
 
             case 'savevenue' :

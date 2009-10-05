@@ -201,6 +201,11 @@ class dbevents extends dbtable {
         $this->changeTable('tbl_events_events');
         return $this->insert($eventArr);
     }
+    
+    public function eventSocialTag($eventid) {
+        $this->changeTable('tbl_events_eventtag');
+        
+    }
 
     public function addEventPromo($orgarr) {
         $this->changeTable('tbl_events_promoters');
@@ -929,6 +934,46 @@ class dbevents extends dbtable {
      */
     public function groupAdminRemoveEvent($token, $group_id, $event_id) {
 
+    }
+    
+    public function twitterSmartUpdate($res) {
+        foreach($res->results as $result) {
+            if(!$this->tweetExists($result->id)) {
+                if(!isset($result->location)) {
+                    $result->location = NULL;
+                }
+                $this->insert(array('tweet' => $result->text, 'createdat' => $result->created_at, 'from_user' => $result->from_user, 
+                                    'tweetid' => $result->id, 'lang' => $result->iso_language_code, 'source' => $result->source, 
+                                    'image' => $result->profile_image_url, 'location' => $result->location, 'tweettime' => strtotime($result->created_at)), 'tbl_events_tweets');
+                $this->parseHashTags($result->text, $result->id);
+            }
+        }
+    }
+
+    public function parseHashtags($str, $tweetid)
+    {
+        $str = stripslashes($str);
+        preg_match_all('/\#([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
+        $counter = 0;
+        foreach ($results[1] as $item)
+        {
+            $memetag = array($item);
+            // add the $item to tbl_tags
+            $this->objTags->insertHashTags($memetag, 1, $tweetid, 'events', $this->uri(''));
+            $counter++;
+        }
+        return $str;
+    }
+    
+    public function tweetExists ($tweetid) {
+        parent::init('tbl_events_tweets');
+        $cnt = $this->getRecordCount("WHERE tweetid = '$tweetid'");
+        if($cnt > 0) {
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
     }
 
     /**

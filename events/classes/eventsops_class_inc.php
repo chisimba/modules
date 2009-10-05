@@ -1496,5 +1496,31 @@ class eventsops extends object {
         }
         return $currLocation;
     }
+
+    public function grabTwitterBySearch($hashtag) {
+        $path = $this->objConfig->getModulePath()."events/tweetupdate";
+        if(!file_exists($path)) {
+            touch($path);
+            chmod($path, 0777);
+        }
+        $lastupdate = file_get_contents($path);
+        if($lastupdate == '') {
+            $url = "http://search.twitter.com/search.json?q=&ands=$hashtag&phrase=&ors=&nots=&lang=all&from=&to=&ref=&refresh_url=$lastupdate&rpp=100";
+        }
+        else {
+            $url = "http://search.twitter.com/search.json?$lastupdate";
+        }
+        $res = $this->objCurl->exec($url);
+        $res = json_decode($res);
+        $this->objDbEvents->twitterSmartUpdate($res);
+        if(file_exists($path)) {
+            unlink($path);
+            touch($path);
+            chmod($path, 0777);
+            if(is_object($res)) {
+                file_put_contents($path, $res->refresh_url);
+            }
+        }
+    }
 }
 ?>
