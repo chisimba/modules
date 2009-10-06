@@ -39,7 +39,7 @@ var form = new Ext.form.FormPanel({
         new Ext.form.HtmlEditor({
         fieldLabel: 'Date/Time/Venue',
         value: '".str_replace($order, $replace, $eventcontent['event_timevenue'])."',
-        width: 600,
+        width: 900,
         height: 200,
         name: 'venuefield'
         }),
@@ -47,14 +47,14 @@ var form = new Ext.form.FormPanel({
         new Ext.form.HtmlEditor({
         fieldLabel: 'Main Content',
         value: '".str_replace($order, $replace, $eventcontent['event_content'])."',
-        width: 600,
+        width: 900,
         height: 300,
         name: 'contentfield'
        }),
 
        new Ext.form.HtmlEditor({
         fieldLabel: 'Left Title1',
-        width: 600,
+        width: 900,
         value: '".str_replace($order, $replace,$eventcontent['event_lefttitle1'])."',
         name: 'lefttitle1field'
        }),
@@ -62,43 +62,43 @@ var form = new Ext.form.FormPanel({
         new Ext.form.HtmlEditor({
         fieldLabel: 'Left Title2',
         value: '".str_replace($order, $replace,$eventcontent['event_lefttitle2'])."',
-        width: 600,
+        width: 900,
         name: 'lefttitle2field'
        }),
         new Ext.form.HtmlEditor({
         fieldLabel: 'Footer',
         value: '".str_replace($order, $replace,$eventcontent['event_footer'])."',
-        width: 600,
+        width: 900,
         name: 'footerfield'
        }),
         new Ext.form.HtmlEditor({
         fieldLabel: 'Email Contact',
         value: '".str_replace($order, $replace,$eventcontent['event_emailcontact'])."',
-        width: 600,
+        width: 900,
         name: 'emailcontactfield'
        }),
         new Ext.form.HtmlEditor({
         fieldLabel: 'Email Subject',
         value: '".str_replace($order, $replace,$eventcontent['event_emailsubject'])."',
-        width: 600,
+        width: 900,
         name: 'emailsubjectfield'
        }),
         new Ext.form.HtmlEditor({
         fieldLabel: 'Email Name',
         value: '".str_replace($order, $replace,$eventcontent['event_emailname'])."',
-        width: 600,
+        width: 900,
         name: 'emailnamefield'
        }),
         new Ext.form.HtmlEditor({
         fieldLabel: 'Email Content',
         value: '".str_replace($order, $replace,$eventcontent['event_emailcontent'])."',
-        width: 600,
+        width: 900,
         name: 'emailcontentfield'
        }),
      new Ext.form.HtmlEditor({
         fieldLabel: 'Email Attachments',
         value: '".str_replace($order, $replace,$eventcontent['event_emailattachments'])."',
-        width: 600,
+        width: 900,
         name: 'emailattachmentfield'
        })
 ],
