@@ -239,8 +239,8 @@ class simpleregistration extends controller {
         $emailname=$this->getParam('emailnamefield');
         $emailcontent=$this->getParam('emailcontentfield');
         $emailattachments=$this->getParam('emailattachmentfield');
-        $staffreg=$this->getParam('event_staffreg');
-        $visitorreg=$this->getParam('event_visitorreg');
+        $staffreg=$this->getParam('staffregfield');
+        $visitorreg=$this->getParam('visitorregfield');
         $mode=$this->getParam('mode');
         if($mode == "new"){
             $this->dbeventscontent->addEventContent(
