@@ -104,13 +104,13 @@ var form = new Ext.form.FormPanel({
    new Ext.form.TextField({
         fieldLabel: 'Show Staff Registration',
         value: '".str_replace($order, $replace,$eventcontent['event_staffreg'])."',
-        width: 20,
+        width: 100,
         name: 'staffregfield'
        }),
    new Ext.form.TextField({
         fieldLabel: 'Show Visitor Registration',
         value: '".str_replace($order, $replace,$eventcontent['event_visitorreg'])."',
-        width: 20,
+        width: 100,
         name: 'visitorregfield'
        })
 ],
