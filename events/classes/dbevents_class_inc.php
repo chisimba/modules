@@ -148,7 +148,14 @@ class dbevents extends dbtable {
         $this->changeTable('tbl_events_venue_location');
         $vmeta = $this->getAll("WHERE venueid = '$vid'");
         $event->venuelocation = $this->objUtils->array2object($vmeta);
-        
+        // hashtag
+        $hashtag = $this->eventGetHashtag($eventdata['id']);
+        if(!empty($hashtag)) {
+            $event->hashtag = $hashtag[0];
+        }
+        else {
+            $event->hashtag = NULL;
+        }
         // retrieve the user comments, pictures, tweets, flickr, MXit blah blah whatever etc as well
         
         return json_encode($event);
@@ -205,7 +212,7 @@ class dbevents extends dbtable {
     public function eventAddHashtag($eventid, $tag) {
         $this->changeTable('tbl_events_eventtag');
         $count = $this->getRecordCount("WHERE mediatag = '$tag'");
-        if($count = 0) {
+        if($count == '0') {
             $this->insert(array('eventid' =>$eventid, 'mediatag' => $tag));
             return TRUE;
         }
@@ -214,11 +221,17 @@ class dbevents extends dbtable {
         }
     }
     
+    public function eventGetHashtag($eventid) {
+        $this->changeTable('tbl_events_eventtag');
+        return $this->getAll("WHERE eventid = '$eventid'");
+    }
+    
     public function addTwtId($threadid, $eventid) {
         $this->changeTable('tbl_events_events');
         $event = $this->getAll("WHERE id = '$eventid'");
         $event[0]['twitoasterid'] = $threadid;
-        $this->update('id', $eventid, $event); 
+        $this->update('id', $eventid, $event[0]);
+        return TRUE; 
     }
 
     public function addEventPromo($orgarr) {

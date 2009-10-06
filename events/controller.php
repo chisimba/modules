@@ -251,10 +251,10 @@ class events extends controller
 
             case 'test' : 
                 //header("Content-Type: application/json");
-                //echo $this->objDbEvents->getEventInfo('gen21Srv31Nme28_63710_1254767817');
+                //echo $this->objDbEvents->getEventInfo('gen21Srv31Nme28_62509_1254836051');
                 //$this->objOps->grabTwitterBySearch('Chisimba');
                 //$this->objUtils->createMediaTag('Brand monday party!');
-                $this->objDbEvents->addTwtId(123, 'gen21Srv31Nme28_63710_1254767817');
+                var_dump($this->objDbEvents->addTwtId(123, 'gen21Srv31Nme28_62509_1254836051'));
                 break;
 
             case 'savevenue' :
@@ -312,19 +312,21 @@ class events extends controller
                 if($this->objDbEvents->eventAddHashtag($eventid, $tag) == TRUE) {
                     // send the tweet with your new meme and have fun
                     $eventinfo = $this->objDbEvents->getEventInfo($eventid);
+                    $eventinfo = json_decode($eventinfo);
                     $eventname = $eventinfo->event->name;
                     $eventuri = $this->uri(array('action' => 'viewsingle', 'id' => $eventid), 'events');
                     // tinyurl the uri now to save space
-                    $eventuri = $this->teeny->create(urlencode($eventuri));
+                    $eventuri = $this->objTeeny->create(urlencode($eventuri));
                     // a message
                     $tweet = $this->objLanguage->languageText ( "mod_events_newevent", "events" ).": ".ucwords($eventname)." ".$eventuri;
-                    $returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
-                    $thread = $returnobj->thread;
-                    $threadid = $thread->id;
-                    //$threadid = rand(0, 99999);
+                    log_debug($tweet);
+                    //$returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
+                    //$thread = $returnobj->thread;
+                    //$threadid = $thread->id;
+                    $threadid = rand(0, 99999);
                     // now update the event with the tweetid to track twitter conversations on this tweet.
                     $this->objDbEvents->addTwtId($threadid, $eventid);
-                    $this->nextAction('');
+                    $this->nextAction('test');
                  }
                  else {
                      $message = $this->getObject('timeoutmessage', 'htmlelements');
