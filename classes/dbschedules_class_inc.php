@@ -71,7 +71,7 @@ class dbschedules extends dbTable{
         return $rows;
     }
   
-
+  
     public function isScheduleOwner($id)
     {
         $sql="select owner from " .$this->table." where id = '".$id."'";

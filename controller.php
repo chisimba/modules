@@ -174,7 +174,7 @@ class realtime extends controller
         $this->objLink= $this->getObject('link', 'htmlelements');
         //Get configuration class
         $this->objConfig =$this->getObject('config','config');
-
+        $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
         $this->objAltConfig = $this->getObject('altconfig','config');
 
         //Get language class
@@ -215,6 +215,7 @@ class realtime extends controller
         $this->sessionId="default";
         $this->sessionTitle="Default Session";
         $this->jnlpId=$this->realtimeManager->randomString(20);
+        $this->objUrl = $this->getObject('url', 'strings');
     }
 
 
@@ -280,7 +281,7 @@ class realtime extends controller
         return "home_tpl.php";
     }
 
-    function __addroommember(){
+    function __showdetails(){
         $id=$this->getParam('id');
         $this->setVarByRef('sessionid',$id);
         return "sessionmembers_tpl.php";
@@ -301,6 +302,13 @@ class realtime extends controller
         $this->setVarByRef('sessionid',$sessionid);
         return "sessionmembers_tpl.php";
     }
+
+   function __deleteschedule(){
+        $sessionid=$this->getParam('sessionid');
+        $this->objDbSchedules->deleteSchedule($sessionid);
+        $this->nextAction(NULL);
+    }
+
     /**
      * Ssave the newly created  session details into the database
      */
@@ -338,6 +346,174 @@ class realtime extends controller
         $this->objDbScheduleMembers->deleteSession($id);
         $this->nextAction(NULL);
     }
+  function __registerexisting(){
+   $sessionid=$this->getParam('sessionid');
+   $userid=$this->objUser->userid();
+   $this->objDbScheduleMembers->addRoomMember($userid,$sessionid);
+   return $this->nextAction('home');
+  }
 
+  function __register(){
+      return $this->saveNewUser($this->getParam('sessionid'));
+  }
+    public function requiresLogin($action)
+    {
+
+        $required = array('registerexisting','deleteroommember', 'deletesession', 'home', 'saveschedule', 'showdetails',  'updatesesion');
+
+        if (in_array($action, $required)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+  function __showregister(){
+      $id=$this->getParam('sessionid');
+      $this->setVarByRef('sessionid',$id);
+      return "registrationhome_tpl.php";
+  }
+   /**
+     * Method to add a new user
+     */
+    protected function saveNewUser($sessionid)
+    {
+        if (!$_POST) { // Check that user has submitted a page
+
+            return $this->nextAction(NULL);
+        }
+        // Generate User Id
+        $userId = $this->objUserAdmin->generateUserId();
+        // Capture all Submitted Fields
+        $captcha = $this->getParam('request_captcha');
+        $username = $this->getParam('register_username');
+        $password = $this->getParam('register_password');
+        $repeatpassword = $this->getParam('register_confirmpassword');
+        $title = $this->getParam('register_title');
+        $firstname = $this->getParam('register_firstname');
+        $surname = $this->getParam('register_surname');
+        $email = $this->getParam('register_email');
+        $repeatemail = $this->getParam('register_confirmemail');
+        $sex = $this->getParam('register_sex');
+        $cellnumber = $this->getParam('register_cellnum');
+        $staffnumber = $this->getParam('register_staffnum');
+        $country = $this->getParam('country');
+        $accountstatus = 1; // Default Status Active
+        // Create an array of fields that cannot be empty
+        $checkFields = array(
+            $captcha,
+            $username,
+            $firstname,
+            $surname,
+            $email,
+            $repeatemail,
+            $password,
+            $repeatpassword
+        );
+        // Create an Array to store problems
+        $problems = array();
+        // Check that username is available
+        if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
+            $problems[] = 'usernametaken';
+        }
+        //check that the email address is unique
+        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
+            $problems[] = 'emailtaken';
+        }
+        // Check for any problems with password
+        if ($password == '') {
+            $problems[] = 'nopasswordentered';
+        } else if ($repeatpassword == '') {
+            $problems[] = 'norepeatpasswordentered';
+        } else if ($password != $repeatpassword) {
+            $problems[] = 'passwordsdontmatch';
+        }
+        // Check that all required field are not empty
+        if (!$this->checkFields($checkFields)) {
+            $problems[] = 'missingfields';
+        }
+        // Check that email address is valid
+        if (!$this->objUrl->isValidFormedEmailAddress($email)) {
+            $problems[] = 'emailnotvalid';
+        }
+        // Check whether user matched captcha
+        if (md5(strtoupper($captcha)) != $this->getParam('captcha')) {
+            $problems[] = 'captchadoesntmatch';
+        }
+        // If there are problems, present from to user to fix
+        if (count($problems) > 0) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            $this->setVarByRef('sessionid',$sessionid);
+                      
+            return 'registrationhome_tpl.php';
+        } else {
+            // Else add to database
+            $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber, 'useradmin', $accountstatus);
+            // Email Details to User
+            $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
+            $this->setSession('id', $pkid);
+            //$this->setSession('password', $password);
+            $this->setSession('time', $password);
+           $this->objDbScheduleMembers->addRoomMember($userId,$sessionid);
+
+            return $this->nextAction('home');
+        }
+    }
+    /**
+     * Method to display the error messages/problems in the user registration
+     * @param string $problem Problem Code
+     * @return string Explanation of Problem
+     */
+    protected function explainProblemsInfo($problem)
+    {
+        switch ($problem) {
+            case 'usernametaken':
+                return 'The username you have chosen has been taken already.';
+            case 'emailtaken':
+                return 'The supplied email address has been taken already.';
+            case 'passwordsdontmatch':
+                return 'The passwords you have entered do not match.';
+                //case 'missingfields': return 'Some of the required fields are missing.';
+
+            case 'emailnotvalid':
+                return 'The email address you enter is not a valid format.';
+            case 'captchadoesntmatch':
+                return 'The image code you entered was incorrect';
+            case 'nopasswordentered':
+                return 'No password was entered';
+            case 'norepeatpasswordentered':
+                return 'No Repeat password was entered';
+        }
+    }
+    /**
+     * Method to check that all required fields are entered
+     * @param array $checkFields List of fields to check
+     * @return boolean Whether all fields are entered or not
+     */
+    private function checkFields($checkFields)
+    {
+        $allFieldsOk = TRUE;
+        $this->messages = array();
+        foreach($checkFields as $field) {
+            if ($field == '') {
+                $allFieldsOk = FALSE;
+            }
+        }
+        return $allFieldsOk;
+    }
+    /**
+     * Method to inform the user that their registration has been successful
+     */
+    protected function detailsSent()
+    {
+        $user = $this->objUserAdmin->getUserDetails($this->getSession('id'));
+        if ($user == FALSE) {
+            return $this->nextAction(NULL, NULL, '_default');
+        } else {
+            $this->setVarByRef('user', $user);
+        }
+        return 'confirm_tpl.php';
+    }
 }
 ?>
