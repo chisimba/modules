@@ -254,7 +254,7 @@ class events extends controller
                 //echo $this->objDbEvents->getEventInfo('gen21Srv31Nme28_62509_1254836051');
                 //$this->objOps->grabTwitterBySearch('Chisimba');
                 //$this->objUtils->createMediaTag('Brand monday party!');
-                var_dump($this->objDbEvents->addTwtId(123, 'gen21Srv31Nme28_62509_1254836051'));
+                //var_dump($this->objDbEvents->addTwtId(123, 'gen21Srv31Nme28_62509_1254836051'));
                 break;
 
             case 'savevenue' :
@@ -318,7 +318,7 @@ class events extends controller
                     // tinyurl the uri now to save space
                     $eventuri = $this->objTeeny->create(urlencode($eventuri));
                     // a message
-                    $tweet = $this->objLanguage->languageText ( "mod_events_newevent", "events" ).": ".ucwords($eventname)." ".$eventuri;
+                    $tweet = $this->objLanguage->languageText ( "mod_events_newevent", "events" ).": ".ucwords($eventname)." ".$eventuri." #".$tag;
                     log_debug($tweet);
                     //$returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
                     //$thread = $returnobj->thread;
