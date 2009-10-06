@@ -21,8 +21,8 @@ if(count($content) > 0){
 
 $savecontentUrl = $this->uri(array('action'=>'savecontent','eventid'=>$eventid,'mode'=>$mode));
 $homeUrl = $this->uri(array('action'=>'eventlisting'));
-$order   = array();//"\r\n", "\n", "\r");
-$replace =''; //'<br />';
+$order   = array("\r\n", "\n", "\r");
+$replace ='<br />';
 
 $mainjs="
 Ext.onReady(function(){
