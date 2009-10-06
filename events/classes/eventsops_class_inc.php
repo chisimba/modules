@@ -1487,6 +1487,49 @@ class eventsops extends object {
         return $mfieldset->show();
 
     }
+    
+    public function addSocialTagForm($eventid) {
+        $ret = NULL;
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->objHead = $this->newObject('htmlheading', 'htmlelements');
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $vtable = $this->newObject('htmltable', 'htmlelements');
+        
+        $form = new form ('savesoctags', $this->uri(array('action'=>'savesoctags', 'eventid' => $eventid)));
+        $vtable = $this->newObject('htmltable', 'htmlelements');
+
+        $vtable->cellpadding = 3;
+        // heading
+        $this->objHead->type = 3;
+        $this->objHead->str = $this->objLanguage->languageText("mod_events_addsoctag", "events");
+        $whatisthis = $this->newObject('alertbox', 'htmlelements');
+        $whatisthat = $whatisthis->show($this->objLanguage->languageText("mod_events_whatisthat", "events"), $this->uri(array('action' => 'hashtagvideo')));
+                
+        $vtable->startRow();
+        $vtable->addCell($this->objHead->show());
+        $vtable->addCell($whatisthat);
+        $vtable->endRow();
+        
+        $this->loadClass('textinput', 'htmlelements');
+        $taglabel = new label($this->objLanguage->languageText("mod_events_socialtag", "events") . ':', 'input_hashtag');
+        $tag = new textinput('hashtag', NULL, NULL);
+        $vtable->startRow();
+        $vtable->addCell($taglabel->show());
+        $vtable->addCell("#".$tag->show());
+        $vtable->endRow();
+        
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_events_share", "events"));
+        $button->setToSubmit();
+        
+        $vfieldset = $this->newObject('fieldset', 'htmlelements');
+        $vfieldset->legend = $this->objLanguage->languageText("mod_events_selectsoclabels", "events");;
+        $vfieldset->contents = $vtable->show();
+        $form->addToForm($vfieldset->show().'<p align="center"><br />'.$button->show().'</p>');
+        $ret .= $form->show();
+
+        return $ret;
+    }
 
     public function formatEventIntro($event) {
         $currLocation = "Events for...";

@@ -65,6 +65,9 @@ class events extends controller
     public $objDbTags;
     public $objUtils;
     public $ip2Country;
+    public $objWashout;
+    public $objTwtOps;
+    public $objTeeny;
 
     /**
      * Initialises the instance variables.
@@ -75,20 +78,22 @@ class events extends controller
     {
         try {
             $this->requiresLogin();
-            $this->objLanguage  = $this->getObject ( 'language', 'language' );
-            $this->objConfig    = $this->getObject('altconfig', 'config');
+            $this->objLanguage   = $this->getObject ( 'language', 'language' );
+            $this->objConfig     = $this->getObject('altconfig', 'config');
             // Get the sysconfig variables for the Jabber user to set up the connection.
-            $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
-            $this->objUser      = $this->getObject('user', 'security');
-            $this->objCurl      = $this->getObject('curlwrapper', 'utilities');
-            $this->objDbEvents  = $this->getObject('dbevents');
-            $this->objAJTags    = $this->getObject('ajaxtags', 'tagging');
-            $this->objOps       = $this->getObject('eventsops');
-            $this->objCookie    = $this->getObject('cookie', 'utilities');
-            $this->objDbTags    = $this->getObject('dbtags', 'tagging');
-            $this->objUtils     = $this->getObject('eventsutils');
-            $this->ip2Country   = $this->getObject('iptocountry', 'utilities');
-            // $this->setPageTemplate('null_page_tpl.php');
+            $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+            $this->objUser       = $this->getObject('user', 'security');
+            $this->objCurl       = $this->getObject('curlwrapper', 'utilities');
+            $this->objDbEvents   = $this->getObject('dbevents');
+            $this->objAJTags     = $this->getObject('ajaxtags', 'tagging');
+            $this->objOps        = $this->getObject('eventsops');
+            $this->objCookie     = $this->getObject('cookie', 'utilities');
+            $this->objDbTags     = $this->getObject('dbtags', 'tagging');
+            $this->objUtils      = $this->getObject('eventsutils');
+            $this->ip2Country    = $this->getObject('iptocountry', 'utilities');
+            $this->objWashout    = $this->getObject('washout', 'utilities');
+            $this->objTwtOps = $this->getObject('twitoasterops', 'twitoaster');
+            $this->objTeeny      = $this->getObject ( 'tiny', 'tinyurl');
         }
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -241,13 +246,15 @@ class events extends controller
                 $venueid = $this->getParam('venue_radio');
                 $eventid = $this->getParam('input_eventid');
                 $this->objDbEvents->updateEventWithVenueId($eventid, $venueid);
-                $this->nextAction('');
+                $this->nextAction('selectmediatag', array('eventid' => $eventid));
                 break;
 
             case 'test' : 
                 //header("Content-Type: application/json");
-                //echo $this->objDbEvents->getEventInfo('gen21Srv31Nme28_90310_1254733224');
-                $this->objOps->grabTwitterBySearch('Chisimba');
+                //echo $this->objDbEvents->getEventInfo('gen21Srv31Nme28_63710_1254767817');
+                //$this->objOps->grabTwitterBySearch('Chisimba');
+                //$this->objUtils->createMediaTag('Brand monday party!');
+                $this->objDbEvents->addTwtId(123, 'gen21Srv31Nme28_63710_1254767817');
                 break;
 
             case 'savevenue' :
@@ -290,7 +297,47 @@ class events extends controller
                     $h = $this->objUtils->object2array($h);
                     $this->objDbEvents->venueInsertHeirarchy($h);
                 }
-                $this->nextAction('');
+                $this->nextAction('selectmediatag', array('eventid' => $eventid));
+                break;
+                
+            case 'selectmediatag' : 
+                $eventid = $this->getParam('eventid');
+                $this->setVarByRef('eventid', $eventid);
+                return 'hashtag_tpl.php';
+                break;
+                
+            case 'savesoctags' :
+                $eventid = $this->getParam('eventid');
+                $tag = $this->getParam('hashtag');
+                if($this->objDbEvents->eventAddHashtag($eventid, $tag) == TRUE) {
+                    // send the tweet with your new meme and have fun
+                    $eventinfo = $this->objDbEvents->getEventInfo($eventid);
+                    $eventname = $eventinfo->event->name;
+                    $eventuri = $this->uri(array('action' => 'viewsingle', 'id' => $eventid), 'events');
+                    // tinyurl the uri now to save space
+                    $eventuri = $this->teeny->create(urlencode($eventuri));
+                    // a message
+                    $tweet = $this->objLanguage->languageText ( "mod_events_newevent", "events" ).": ".ucwords($eventname)." ".$eventuri;
+                    $returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
+                    $thread = $returnobj->thread;
+                    $threadid = $thread->id;
+                    //$threadid = rand(0, 99999);
+                    // now update the event with the tweetid to track twitter conversations on this tweet.
+                    $this->objDbEvents->addTwtId($threadid, $eventid);
+                    $this->nextAction('');
+                 }
+                 else {
+                     $message = $this->getObject('timeoutmessage', 'htmlelements');
+                     $message->setMessage( $this->objLanguage->languageText("mod_events_hashtagnotunique", "events" ) );
+                     $this->setVarByRef('message', $message);
+                     $this->setVarByRef('eventid', $eventid);
+                     return 'hashtag_tpl.php';
+                 }
+                
+                break;
+                
+            case 'hashtagvideo' :
+                echo $this->objWashout->parseText("[YOUTUBE]http://www.youtube.com/watch?v=aAHitI26MmE[/YOUTUBE]");
                 break;
 
             default:

@@ -72,6 +72,10 @@ $fields = array(
         'type' => 'text',
         'length' =>50,
         ),
+    'twitoasterid' => array (
+        'type' => 'text',
+        'length' => 50,
+        ),
     );
 //create other indexes here...
 

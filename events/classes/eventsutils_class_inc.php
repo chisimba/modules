@@ -140,5 +140,11 @@ class eventsutils extends object {
         }
         return $array;
     }
+
+    public function createMediaTag($eventname) {
+        $num = rand(0,99);
+        $name = metaphone($eventname, 5);
+        return $name;
+    }
 }
 ?>

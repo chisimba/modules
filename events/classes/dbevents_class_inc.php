@@ -202,9 +202,23 @@ class dbevents extends dbtable {
         return $this->insert($eventArr);
     }
     
-    public function eventSocialTag($eventid) {
+    public function eventAddHashtag($eventid, $tag) {
         $this->changeTable('tbl_events_eventtag');
-        
+        $count = $this->getRecordCount("WHERE mediatag = '$tag'");
+        if($count = 0) {
+            $this->insert(array('eventid' =>$eventid, 'mediatag' => $tag));
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
+    }
+    
+    public function addTwtId($threadid, $eventid) {
+        $this->changeTable('tbl_events_events');
+        $event = $this->getAll("WHERE id = '$eventid'");
+        $event[0]['twitoasterid'] = $threadid;
+        $this->update('id', $eventid, $event); 
     }
 
     public function addEventPromo($orgarr) {
