@@ -52,12 +52,13 @@ class viewerutils extends object
            
             $objTrim = $this->getObject('trimstr', 'strings');
             $objStories=$this->getObject('storyparser');
-            $topics=$objStories->getTopics($parentid);
-              if($parentid == ''){
+            
+            if($parentid == ''){
             $category=$this->objDbSysconfig->getValue('TOPIC_CATEGORY','jukskei');
             $data= $objStories->getHomePageContent($category);
             $parentid=$data[0]['id'];
              }
+             $topics=$objStories->getTopics($parentid);
             $content='';
             $homepagetitlelinks='';
             foreach($topics as $topic){
