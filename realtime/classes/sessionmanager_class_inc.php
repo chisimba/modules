@@ -59,11 +59,13 @@ class sessionmanager extends object{
         $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
         $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
         $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/session.css').'"/>';
+        $schedulejs = '<script language="JavaScript" src="'.$this->getResourceUri('js/schedule.js').'" type="text/javascript"></script>';
 
         $this->appendArrayVar('headerParams', $extbase);
         $this->appendArrayVar('headerParams', $extalljs);
         $this->appendArrayVar('headerParams', $extallcss);
         $this->appendArrayVar('headerParams', $maincss);
+        $this->appendArrayVar('headerParams', $schedulejs);
     }
     public function showSessionList($presentationId,$presentationName,$xxslidesDir)
     {
@@ -98,8 +100,8 @@ class sessionmanager extends object{
         $scheduleTitle='<h2>Live Sessions</h2>';
         $scheduleTitle.='
           <p>Here you will find a listing of live sessions owned by you or of
-          which you are a member.</p>
-          <p>
+          which you are a member.<br/>
+          
          Select one to join. You can start you own sessions by clicking on the
          <font color="green"><b>Add Session</b></font> button.
          </p>
@@ -129,7 +131,7 @@ class sessionmanager extends object{
 
         $addButton = new button('add','Add Session');
         //$addButton->setOnClick("showAddSessionWindow();");
-        $addButton->setId('show-btn');
+        $addButton->setId('add-session-btn');
 
         //prints out add comment message
         if ($this->addCommentMessage){
@@ -146,7 +148,7 @@ class sessionmanager extends object{
         //data grid from db
         $dbdata=$this->objDbScheduleMembers->getSessionsThatAmAMember();
         $total=count($dbdata);
-        $index=0;
+        $index=1;
         foreach($dbdata as $row){
             $xsessionData=$this->objDbSchedules->getSchedule($row['sessionid']);
             foreach($xsessionData as $sessionData){
@@ -187,7 +189,7 @@ class sessionmanager extends object{
             $objIcon->setIcon('edit');
             $editLink->link=$objIcon->show();
 
-            $detailsLink->link($this->uri(array('action'=>'addroommember','id'=>$row['sessionid'])));
+            $detailsLink->link($this->uri(array('action'=>'showdetails','id'=>$row['sessionid'])));
             $detailsLink->link='Details';
 
             $editDeleteLink=$this->objDbSchedules->isScheduleOwner($row['id'])? $editLink->show().$deleteLink->show():"N/A";
@@ -196,14 +198,16 @@ class sessionmanager extends object{
             $data.= "'<a href=\"".$roomUrl."\">".$sessionTitle."</a>',";
             $data.="'".$creationDate."',";
             $data.="'".$detailsL."',";
-            $data.="'".$this->objUser->fullname($sessionOwner)."',";
+            $data.="'".$this->objUser->fullname($sessionOwner)."'";
 
             $data.="]";
-            $index++;
-            if($index <= $total-1){
+            
+            if($index < $total){
                 $data.=',';
             }
+            $index++;
         }
+      
 
         $submitUrl = $this->uri(array('action' => 'saveschedule'));
 
@@ -215,8 +219,7 @@ class sessionmanager extends object{
         $edit='Edit';
 
 
-
-        $mainjs = "/*!
+        $mainjs = "/*!realtime
                  * Ext JS Library 3.0.0
                  * Copyright(c) 2006-2009 Ext JS, LLC
                  * licensing@extjs.com
@@ -225,309 +228,11 @@ class sessionmanager extends object{
                 Ext.onReady(function(){
 
                     Ext.QuickTips.init();
-
-
-
-                    var xg = Ext.grid;
-
-                    // shared reader
-                    var reader = new Ext.data.ArrayReader({}, [
-                       {name: 'title'},
-                       {name: 'creationdate'},
-                       {name: 'details'},
-                       {name: 'owner'},
-
-
-                    ]);
-
-
-                   Ext.ToolTip.prototype.onTargetOver =
-                        Ext.ToolTip.prototype.onTargetOver.createInterceptor(function(e) {
-                            this.baseTarget = e.getTarget();
-                        });
-                    Ext.ToolTip.prototype.onMouseMove =
-                        Ext.ToolTip.prototype.onMouseMove.createInterceptor(function(e) {
-                            if (!e.within(this.baseTarget)) {
-                                this.onTargetOver(e);
-                                return false;
-                            }
-                        });
-
-                    var grid = new xg.GridPanel({
-                        store: new Ext.data.GroupingStore({
-                            reader: reader,
-                            data: xg.Data,
-                            sortInfo:{field: 'title', direction: \"ASC\"},
-                            groupField:'owner'
-                        }),
-
-                        columns: [
-                            {id:'".$title."',header: \"".$title."\", width: 300, dataIndex: 'title'},
-                            {header: \"".$dateCreated."\", width: 150, dataIndex: 'creationdate'},
-                            {header: \"".$details."\", width: 50, dataIndex: 'details'},
-                            {header: \"".$owner."\", width: 100, dataIndex: 'owner'}
-
-                        ],
-
-                        view: new Ext.grid.GroupingView({
-                            forceFit:true,
-                            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? \"Items\" : \"Item\"]})'
-                        }),
-
-                        frame:false,
-                        width: 700,
-                        height: 350,
-                        x: 20,
-                        collapsible: false,
-                        animCollapse: false,
-
-                        renderTo: 'grouping-grid',
-                        listeners: {
-                                    render: function(g) {
-                                        g.on(\"beforetooltipshow\", function(grid, row, col) {
-                                            var tipText=\"\";
-                                            if(col == 0){
-                                              tipText=\"Click here to enter live session.\";
-                                            }
-                                            if(col == 1){
-                                              tipText=\"The date this session was created.\";
-                                            }
-                                            if(col == 2){
-                                              tipText=\"Click here to view more details on the session.\";
-                                            }
-                                            if(col == 3){
-                                              tipText=\"The owner of the session.\";
-                                            }
-
-                                            grid.tooltip.body.update(tipText);
-                                        });
-                                    }
-                                },
-
-
-                        onRender: function() {
-                                Ext.grid.GridPanel.prototype.onRender.apply(this, arguments);
-                                this.addEvents(\"beforetooltipshow\");
-                                this.tooltip = new Ext.ToolTip({
-                                    renderTo: Ext.getBody(),
-                                    target: this.view.mainBody,
-                                    listeners: {
-                                        beforeshow: function(qt) {
-                                            var v = this.getView();
-                                            var row = v.findRowIndex(qt.baseTarget);
-                                            var cell = v.findCellIndex(qt.baseTarget);
-                                            this.fireEvent(\"beforetooltipshow\", this, row, cell);
-                                        },
-                                        scope: this
-                                    }
-                                });
-                            }
-
-
-                    });
-                });
-
-                // Array data for the grids
-                Ext.grid.Data = [".$data."];
-var hours= [
-        ['00:00 am'],
-        ['01:30 am'],
-        ['02:00 am'],
-        ['02:30 am'],
-        ['03:00 am'],
-        ['03:30 am'],
-        ['04:00 am'],
-        ['04:30 am'],
-        ['05:00 am'],
-        ['05:30 am'],
-        ['06:00 am'],
-        ['06:30 am'],
-        ['07:00 am'],
-        ['07:30 am'],
-        ['08:00 am'],
-        ['08:30 am'],
-        ['09:00 am'],
-        ['09:30 am'],
-        ['10:00 am'],
-        ['10:30 am'],
-        ['11:00 am'],
-        ['11:30 am'],
-        ['12:00 pm'],
-        ['12:30 pm'],
-        ['01:00 pm'],
-        ['01:30 pm'],
-        ['02:00 pm'],
-        ['02:30 pm'],
-        ['03:00 pm'],
-        ['03:30 pm'],
-        ['04:00 pm'],
-        ['04:30 pm'],
-        ['05:00 pm'],
-        ['05:30 pm'],
-        ['06:00 pm'],
-        ['06:30 pm'],
-        ['07:00 pm'],
-        ['07:30 pm'],
-        ['08:00 pm'],
-        ['08:30 pm'],
-        ['09:00 pm'],
-        ['09:30 pm'],
-        ['10:00 pm'],
-        ['10:30 pm'],
-        ['11:00 pm'],
-        ['11:30 pm']];
-    var startDateField=new Ext.form.DateField(
-    {
-        fieldLabel:'Date',
-        emptyText:'Select date ...',
-        width: 200,
-        format:'Y-m-d',
-        allowBlank:false,
-        editable:false,
-        name: 'date'
-    }
-    );
-   var timefromstore = new Ext.data.ArrayStore({
-        fields: ['timefrom'],
-        data : hours
-    });
-    var timeFromField = new Ext.form.ComboBox({
-        store: timefromstore,
-        displayField:'timefrom',
-        fieldLabel:'Time',
-        typeAhead: true,
-        mode: 'local',
-        editable:false,
-        forceSelection: true,
-        triggerAction: 'all',
-        emptyText:'Select time from...',
-        selectOnFocus:true,
-        name : 'starttime'
-
-    });
-    var timetostore = new Ext.data.ArrayStore({
-        fields: ['timeto'],
-        data :hours
-    });
-    var timeToField = new Ext.form.ComboBox({
-        store: timetostore,
-        displayField:'timeto',
-        fieldLabel:'Time',
-        typeAhead: true,
-        mode: 'local',
-        forceSelection: true,
-        editable:false,
-        triggerAction: 'all',
-        emptyText:'Select time to...',
-        selectOnFocus:true,
-        name: 'endtime'
-    });
-
-
-    var form = new Ext.form.FormPanel({
-        baseCls: 'x-plain',
-        labelWidth: 55,
-        bodyStyle:'padding:5px 5px 0',
-        standardSubmit: true,
-        url:'".str_replace("amp;", "", $submitUrl)."',
-        defaultType: 'textfield',
-
-        items: [{
-            fieldLabel: 'Title',
-            name: 'title',
-            text: 'Default',
-            allowBlank:false,
-            anchor:'100%'  // anchor width by percentage
-        },
-
-        startDateField,timeFromField, timeToField
-        ]
-    });
-
-    var addSessionWin;
-    var button = Ext.get('show-btn');
-
-    button.on('click', function(){
-       if(!addSessionWin){
-            addSessionWin = new Ext.Window({
-                applyTo:'addsession-win',
-                layout:'fit',
-                width:500,
-                height:250,
-                x:250,
-                y:50,
-                closeAction:'destroy',
-                plain: true,
-
-               items: form,
-      listeners: {
-            hide: function() {
-               //alert('hide');
-            },
-            collapse: function() {
-              // alert('collapse');
-            }
-         },
-
-                buttons: [{
-                    text:'Save',
-                    handler: function(){
-                        if (form.url)
-                            form.getForm().getEl().dom.action = form.url;
-
-                        form.getForm().submit();
-                    }
-                },{
-                    text: 'Close',
-                    handler: function(){
-                       addSessionWin.hide();
-                    }
-                }]
-            });
-        }
-        addSessionWin.show(this);
-});
-var detailsWin;
-function showDetailsWindow(){
-       if(!detailsWin){
-            detailsWin = new Ext.Window({
-                applyTo:'addsession-win',
-                layout:'fit',
-                width:400,
-                height:250,
-                x:250,
-                y:50,
-                closeAction:'destroy',
-                plain: true,
-
-               items: { html: \"My content was added during construction.\"},
-      listeners: {
-            hide: function() {
-               //alert('hide');
-            },
-            collapse: function() {
-              // alert('collapse');
-            }
-         },
-
-                buttons: [{
-                    text:'Save',
-                    handler: function(){
-                        if (form.url)
-                            form.getForm().getEl().dom.action = form.url;
-
-                        form.getForm().submit();
-                    }
-                },{
-                    text: 'Close',
-                    handler: function(){
-                       detailsWin.hide();
-                    }
-                }]
-            });
-        }
-         detailsWin.show(this);
-}
+                       var data=[$data];
+                        var url='".str_replace("amp;", "", $submitUrl)."';
+                        initAddScheduleFrame(url);
+                       showSessions(data);
+                   });
 ";
 
         $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
@@ -572,9 +277,6 @@ function showDetailsWindow(){
         $inviteUrl=$this->objAltConfig->getSiteRoot();
 
 
-        $addButton = new button('add','Add Member');
-        $addButton->setId('add-btn');
-
         $listButton = new button('add','Back to Session List');
         $returnUrl = $this->uri(array('action' => 'home'));
         $listButton->setOnClick("window.location='$returnUrl'");
@@ -586,17 +288,43 @@ function showDetailsWindow(){
 
         $content = $message;
         $content= '<div id="form-panel">'.$scheduleTitle.$listButton->show().'<br/></div>';
-        $content.='<hr><h3>Session Members</h3>'. $addButton->show().$renderSurface.'</br><div id="grouping-grid"></div>';
+        $content.= $renderSurface.'</br><div id="grouping-grid"></div>';
 
 
         $data='';
+        $sessionTitle='y';
+        $meetingDate='x';
+        $timeFrom='v';
+        $timeTo='b';
         $xsessionData=$this->objDbSchedules->getSchedule($sessionid);
+       
+        $editLink=new link();
+        $editLink->link($this->uri(array('action'=>'editschedule','id'=>$sessionid)));
+        $objIcon->setIcon('edit');
+        $editLink->link=$objIcon->show();
+        $editLink->extra='onClick="showEditSessionWin();return false;"';
+
+        $deleteLink=new link();
+        $deleteLink->link($this->uri(array('action'=>'deleteschedule','id'=>$sessionid)));
+        $objIcon->setIcon('delete');
+        $deleteLink->link=$objIcon->show();
+        $vars="
+<script language=\"JavaScript\">
+         var sessionid='$sessionid';
+</script>
+         ";
+        $this->appendArrayVar('headerParams', $vars);
+        $deleteLink->extra='onClick="deleteSchedule(sessionid);return false;"';
+
+        $showEdit=$this->objDbSchedules->isScheduleOwner($sessionid)?$editLink->show().$deleteLink->show():"";
+
         foreach($xsessionData as $sessionData){
             $sessionTitle=$sessionData['title'];
             $meetingDate=$sessionData['meeting_date'];
             $timeFrom=$sessionData['start_time'];
             $timeTo=$sessionData['end_time'];
         }
+        $sessionTitle.=$showEdit;
         //data grid from db
         $dbdata=$this->objDbScheduleMembers->getScheduleMembers($sessionid);
         $total=count($dbdata);
@@ -626,7 +354,7 @@ function showDetailsWindow(){
         foreach($usrdata as $row){
             $userlist.="[";
             $userlist.="'".$row['userid']."',";
-            $userlist.="'".$row['surname']." ".$row['firstname']."',";
+            $userlist.="'".$row['surname']." ".$row['firstname']."'";
             $userlist.="]";
             $index++;
             if($index <= $total-1){
@@ -641,316 +369,32 @@ function showDetailsWindow(){
         $group='Group';
         $edit='Edit';
 
-
+        $registerUrl = $this->uri(array('action' => 'showregister','sessionid'=>$sessionid));
+        $registerUrl2 = $this->uri(array('action' => 'registerexisting','sessionid'=>$sessionid));
 
         $mainjs = "
                 Ext.onReady(function(){
-                Ext.QuickTips.init();
-                var xg = Ext.grid;
+                var meetingDate='$meetingDate';
+                var timeFrom='$timeFrom';
+                var timeTo='$timeTo';
+                var addmemberUrl='".str_replace("amp;", "", $submitUrl2)."';
+                var editUrl='".str_replace("amp;", "", $updateSession)."';
+                var sessionTitle='$sessionTitle';
+                var deleteUrl='".str_replace("amp;", "", $deleteSession)."';
+                var registerUrl='".str_replace("amp;", "", $registerUrl)."';
+                var registerUrl2='".str_replace("amp;", "", $registerUrl2)."';
+                var userlist=[$userlist];
+                initAddMember(userlist,addmemberUrl);
+                initEditScheduleFrame(meetingDate,timeFrom,timeTo,editUrl,sessionTitle,deleteUrl);
 
-                var hours= [
-                                    ['00:00 am'],
-                                    ['01:30 am'],
-                                    ['02:00 am'],
-                                    ['02:30 am'],
-                                    ['03:00 am'],
-                                    ['03:30 am'],
-                                    ['04:00 am'],
-                                    ['04:30 am'],
-                                    ['05:00 am'],
-                                    ['05:30 am'],
-                                    ['06:00 am'],
-                                    ['06:30 am'],
-                                    ['07:00 am'],
-                                    ['07:30 am'],
-                                    ['08:00 am'],
-                                    ['08:30 am'],
-                                    ['09:00 am'],
-                                    ['09:30 am'],
-                                    ['10:00 am'],
-                                    ['10:30 am'],
-                                    ['11:00 am'],
-                                    ['11:30 am'],
-                                    ['12:00 pm'],
-                                    ['12:30 pm'],
-                                    ['01:00 pm'],
-                                    ['01:30 pm'],
-                                    ['02:00 pm'],
-                                    ['02:30 pm'],
-                                    ['03:00 pm'],
-                                    ['03:30 pm'],
-                                    ['04:00 pm'],
-                                    ['04:30 pm'],
-                                    ['05:00 pm'],
-                                    ['05:30 pm'],
-                                    ['06:00 pm'],
-                                    ['06:30 pm'],
-                                    ['07:00 pm'],
-                                    ['07:30 pm'],
-                                    ['08:00 pm'],
-                                    ['08:30 pm'],
-                                    ['09:00 pm'],
-                                    ['09:30 pm'],
-                                    ['10:00 pm'],
-                                    ['10:30 pm'],
-                                    ['11:00 pm'],
-                                    ['11:30 pm']];
+                var sessiondata=[meetingDate,timeFrom,timeTo,editUrl,sessionTitle,deleteUrl,registerUrl,registerUrl2];
 
-    var startDateField=new Ext.form.DateField(
-    {
-        fieldLabel:'Date',
-        emptyText:'Select date ...',
-        width: 200,
-        format:'Y-m-d',
-        allowBlank:false,
-        editable:false,
-        value:'".$meetingDate."',
-        name: 'date'
-    }
-    );
-
-    var timefromstore = new Ext.data.ArrayStore({
-        fields: ['timefrom'],
-        data : hours
-    });
-
-
-    var timeFromField = new Ext.form.ComboBox({
-        store: timefromstore,
-        displayField:'timefrom',
-        fieldLabel:'Time',
-        typeAhead: true,
-        mode: 'local',
-        editable:false,
-        forceSelection: true,
-        triggerAction: 'all',
-        emptyText:'Select time from...',
-        selectOnFocus:true,
-        value:'".$timeFrom."',
-        name : 'starttime'
-
-    });
-
-
-    var timetostore = new Ext.data.ArrayStore({
-        fields: ['timeto'],
-        data :hours
-    });
-
-
-    var timeToField = new Ext.form.ComboBox({
-        store: timetostore,
-        displayField:'timeto',
-        fieldLabel:'Time',
-        typeAhead: true,
-        mode: 'local',
-        forceSelection: true,
-        editable:false,
-        triggerAction: 'all',
-        emptyText:'Select time to...',
-        selectOnFocus:true,
-        value: '".$timeTo."',
-        name: 'endtime'
-    });
-
-
-    var form = new Ext.form.FormPanel({
-        baseCls: 'x-plain',
-        labelWidth: 55,
-        bodyStyle:'padding:5px 5px 0',
-        standardSubmit: true,
-        url:'".str_replace("amp;", "", $updateSession)."',
-        defaultType: 'textfield',
-       
-        items: [
-          {
-            fieldLabel: 'Title',
-            name: 'title',
-            value: '".$sessionTitle."',
-            allowBlank:false,
-            anchor:'50%'  // anchor width by percentage
-          },
-          startDateField,timeFromField,timeToField],
-          buttons: [{
-                    text:'Update',
-                    handler: function(){
-                        if (form.url){
-                            form.getForm().getEl().dom.action = form.url;
-                        }
-                        form.getForm().submit();
-                    }
-                   },
-
-                   {
-                    text:'Delete',
-                    handler: function(){
-                        Ext.MessageBox.confirm('Confirm', 'Are you sure you want to do that?', deleteSession);
-
-                    }
-                   }]});
-
-                    function deleteSession(btn){
-                        if(btn == 'yes'){
-                        form.getForm().getEl().dom.action ='".str_replace("amp;", "", $deleteSession)."';
-                        form.getForm().submit();
-                       }
-                   };
-
-                    // shared reader
-                    var reader = new Ext.data.ArrayReader({}, [
-                       {name: 'names'},
-                       {name: 'group'},
-                       {name: 'edit'}
-                    ]);
-
-
-                    var panel = new Ext.Panel({
-                        renderTo: 'sidebar',
-                        title: 'Session',
-                        width:600,
-                        height:180,
-                        activeTab: 0,
-                        frame:true,
-                        defaults:{autoHeight: true},
-                        items: form,
-                        renderTo: 'form-panel'
-                        });
-
-                    var grid = new xg.GridPanel({
-                        store: new Ext.data.GroupingStore({
-                        reader: reader,
-                        data: xg.Data,
-                        sortInfo:{field: 'names', direction: \"ASC\"},
-                        groupField:'group'
-                        }),
-
-                        columns: [
-                            {id:'".$title."',header: \"".$title."\", width: 300, dataIndex: 'names'},
-                            {header: \"".$group."\", width: 100, dataIndex: 'group'},
-                            {header: \"".$edit."\", width: 100, dataIndex: 'edit'}
-                        ],
-
-                        view: new Ext.grid.GroupingView({
-                            forceFit:true,
-                            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? \"Items\" : \"Item\"]})'
-                        }),
-
-                        frame:false,
-                        width: 600,
-                        height: 350,
-                        x: 20,
-                        collapsible: false,
-                        animCollapse: false,
-
-                        renderTo: 'grouping-grid'
-                    });
+                var membersdata=[$data];
+                showSessionDetails(sessiondata,membersdata);
                 });
+               ";
 
-                // Array data for the grids
-                Ext.grid.Data = [".$data."];
-
-    var userdatastore = new Ext.data.ArrayStore({
-        fields: ['userid','name'],
-        data : [".$userlist."]
-    });
-    var userField = new Ext.form.ComboBox({
-        store: userdatastore,
-        displayField:'name',
-        valueField: 'userid',
-        fieldLabel:'Names',
-        typeAhead: true,
-        mode: 'local',
-        editable:true,
-        allowBlank:false,
-        forceSelection: true,
-        triggerAction: 'all',
-        emptyText:'Select user...',
-        selectOnFocus:true,
-        hiddenName : 'userfield'
-
-    });
-    var form = new Ext.form.FormPanel({
-        baseCls: 'x-plain',
-        labelWidth: 55,
-        bodyStyle:'padding:5px 5px 0',
-        standardSubmit: true,
-        url:'".str_replace("amp;", "", $submitUrl2)."',
-        defaultType: 'textfield',
-        items: userField
-
-    });
-
-    var addSessionWin;
-    var button2 = Ext.get('add-btn');
-
-    button2.on('click', function(){
-       if(!addSessionWin){
-            addSessionWin = new Ext.Window({
-                applyTo:'addsession-win',
-                layout:'fit',
-                width:500,
-                height:250,
-                x:250,
-                y:50,
-                closeAction:'destroy',
-                plain: true,
-
-               items: form,
-
-                buttons: [{
-                    text:'Save',
-                    handler: function(){
-                        if (form.url){
-                            form.getForm().getEl().dom.action = form.url;
-                          }
-                        form.getForm().submit();
-                    }
-                },{
-                    text: 'Close',
-                    handler: function(){
-                       addSessionWin.hide();
-                    }
-                }]
-            });
-        }
-        addSessionWin.show(this);
-});
-var detailsWin;
-function showDetailsWindow(){
-       if(!detailsWin){
-            detailsWin = new Ext.Window({
-                applyTo:'addsession-win',
-                layout:'fit',
-                width:400,
-                height:250,
-                x:250,
-                y:50,
-                closeAction:'destroy',
-                plain: true,
-
-               items: { html: \"My content was added during construction.\"},
-
-                buttons: [{
-                    text:'Save',
-                    handler: function(){
-                        if (form.url)
-                            form.getForm().getEl().dom.action = form.url;
-
-                        form.getForm().submit();
-                    }
-                },{
-                    text: 'Close',
-                    handler: function(){
-                       detailsWin.hide();
-                    }
-                }]
-            });
-        }
-         detailsWin.show(this);
-}
-";
-
-        $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
+        $content.= "<div id=\"buttons-layer\"></div><script type=\"text/javascript\">".$mainjs."</script>";
 
 
         return $content;
