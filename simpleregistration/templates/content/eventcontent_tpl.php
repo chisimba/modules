@@ -21,8 +21,8 @@ if(count($content) > 0){
 
 $savecontentUrl = $this->uri(array('action'=>'savecontent','eventid'=>$eventid,'mode'=>$mode));
 $homeUrl = $this->uri(array('action'=>'eventlisting'));
-$order   = array("\r\n", "\n", "\r");
-$replace = '<br />';
+$order   = array();//"\r\n", "\n", "\r");
+$replace =''; //'<br />';
 
 $mainjs="
 Ext.onReady(function(){
@@ -36,7 +36,7 @@ var form = new Ext.form.FormPanel({
         url:'".str_replace("amp;", "", $savecontentUrl)."',
         defaultType: 'textfield',
         items: [
-        new Ext.form.TextArea({
+        new Ext.form.HtmlEditor({
         fieldLabel: 'Date/Time/Venue',
         value: '".str_replace($order, $replace, $eventcontent['event_timevenue'])."',
         width: 600,
@@ -44,7 +44,7 @@ var form = new Ext.form.FormPanel({
         name: 'venuefield'
         }),
 
-        new Ext.form.TextArea({
+        new Ext.form.HtmlEditor({
         fieldLabel: 'Main Content',
         value: '".str_replace($order, $replace, $eventcontent['event_content'])."',
         width: 600,
@@ -52,50 +52,50 @@ var form = new Ext.form.FormPanel({
         name: 'contentfield'
        }),
 
-       new Ext.form.TextArea({
+       new Ext.form.HtmlEditor({
         fieldLabel: 'Left Title1',
         width: 600,
         value: '".str_replace($order, $replace,$eventcontent['event_lefttitle1'])."',
         name: 'lefttitle1field'
        }),
 
-        new Ext.form.TextArea({
+        new Ext.form.HtmlEditor({
         fieldLabel: 'Left Title2',
         value: '".str_replace($order, $replace,$eventcontent['event_lefttitle2'])."',
         width: 600,
         name: 'lefttitle2field'
        }),
-        new Ext.form.TextArea({
+        new Ext.form.HtmlEditor({
         fieldLabel: 'Footer',
         value: '".str_replace($order, $replace,$eventcontent['event_footer'])."',
         width: 600,
         name: 'footerfield'
        }),
-        new Ext.form.TextArea({
+        new Ext.form.HtmlEditor({
         fieldLabel: 'Email Contact',
         value: '".str_replace($order, $replace,$eventcontent['event_emailcontact'])."',
         width: 600,
         name: 'emailcontactfield'
        }),
-        new Ext.form.TextArea({
+        new Ext.form.HtmlEditor({
         fieldLabel: 'Email Subject',
         value: '".str_replace($order, $replace,$eventcontent['event_emailsubject'])."',
         width: 600,
         name: 'emailsubjectfield'
        }),
-        new Ext.form.TextArea({
+        new Ext.form.HtmlEditor({
         fieldLabel: 'Email Name',
         value: '".str_replace($order, $replace,$eventcontent['event_emailname'])."',
         width: 600,
         name: 'emailnamefield'
        }),
-        new Ext.form.TextArea({
+        new Ext.form.HtmlEditor({
         fieldLabel: 'Email Content',
         value: '".str_replace($order, $replace,$eventcontent['event_emailcontent'])."',
         width: 600,
         name: 'emailcontentfield'
        }),
-     new Ext.form.TextArea({
+     new Ext.form.HtmlEditor({
         fieldLabel: 'Email Attachments',
         value: '".str_replace($order, $replace,$eventcontent['event_emailattachments'])."',
         width: 600,
