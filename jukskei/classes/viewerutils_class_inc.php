@@ -48,15 +48,16 @@ class viewerutils extends object
             return $content;
     }
     public function getTopicsContent($parentid){
-             if($parentid == ''){
-            $category=$this->objDbSysconfig->getValue('TOPIC_CATEGORY','jukskei');
-            $data= $objStories->getHomePageContent($category);
-            $parentid=$data[0]['id'];
-             }
+           
            
             $objTrim = $this->getObject('trimstr', 'strings');
             $objStories=$this->getObject('storyparser');
             $topics=$objStories->getTopics($parentid);
+              if($parentid == ''){
+            $category=$this->objDbSysconfig->getValue('TOPIC_CATEGORY','jukskei');
+            $data= $objStories->getHomePageContent($category);
+            $parentid=$data[0]['id'];
+             }
             $content='';
             $homepagetitlelinks='';
             foreach($topics as $topic){
