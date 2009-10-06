@@ -21,6 +21,9 @@ if(count($content) > 0){
 
 $savecontentUrl = $this->uri(array('action'=>'savecontent','eventid'=>$eventid,'mode'=>$mode));
 $homeUrl = $this->uri(array('action'=>'eventlisting'));
+$order   = array("\r\n", "\n", "\r");
+$replace = '<br />';
+
 $mainjs="
 Ext.onReady(function(){
 
@@ -35,7 +38,7 @@ var form = new Ext.form.FormPanel({
         items: [
         new Ext.form.TextArea({
         fieldLabel: 'Date/Time/Venue',
-        value: '".$eventcontent['event_timevenue']."',
+        value: '".str_replace($order, $replace, $eventcontent['event_timevenue'])."',
         width: 600,
         height: 200,
         name: 'venuefield'
@@ -43,7 +46,7 @@ var form = new Ext.form.FormPanel({
 
         new Ext.form.TextArea({
         fieldLabel: 'Main Content',
-        value: '".$eventcontent['event_content']."',
+        value: '".str_replace($order, $replace, $eventcontent['event_content'])."',
         width: 600,
         height: 300,
         name: 'contentfield'
@@ -52,49 +55,49 @@ var form = new Ext.form.FormPanel({
        new Ext.form.TextArea({
         fieldLabel: 'Left Title1',
         width: 600,
-        value: '".$eventcontent['event_lefttitle1']."',
+        value: '".str_replace($order, $replace,$eventcontent['event_lefttitle1'])."',
         name: 'lefttitle1field'
        }),
 
         new Ext.form.TextArea({
         fieldLabel: 'Left Title2',
-        value: '".$eventcontent['event_lefttitle2']."',
+        value: '".str_replace($order, $replace,$eventcontent['event_lefttitle2'])."',
         width: 600,
         name: 'lefttitle2field'
        }),
         new Ext.form.TextArea({
         fieldLabel: 'Footer',
-        value: '".$eventcontent['event_footer']."',
+        value: '".str_replace($order, $replace,$eventcontent['event_footer'])."',
         width: 600,
         name: 'footerfield'
        }),
         new Ext.form.TextArea({
         fieldLabel: 'Email Contact',
-        value: '".$eventcontent['event_emailcontact']."',
+        value: '".str_replace($order, $replace,$eventcontent['event_emailcontact'])."',
         width: 600,
         name: 'emailcontactfield'
        }),
         new Ext.form.TextArea({
         fieldLabel: 'Email Subject',
-        value: '".$eventcontent['event_emailsubject']."',
+        value: '".str_replace($order, $replace,$eventcontent['event_emailsubject'])."',
         width: 600,
         name: 'emailsubjectfield'
        }),
         new Ext.form.TextArea({
         fieldLabel: 'Email Name',
-        value: '".$eventcontent['event_emailname']."',
+        value: '".str_replace($order, $replace,$eventcontent['event_emailname'])."',
         width: 600,
         name: 'emailnamefield'
        }),
         new Ext.form.TextArea({
         fieldLabel: 'Email Content',
-        value: '".$eventcontent['event_emailcontent']."',
+        value: '".str_replace($order, $replace,$eventcontent['event_emailcontent'])."',
         width: 600,
         name: 'emailcontentfield'
        }),
      new Ext.form.TextArea({
         fieldLabel: 'Email Attachments',
-        value: '".$eventcontent['event_emailattachments']."',
+        value: '".str_replace($order, $replace,$eventcontent['event_emailattachments'])."',
         width: 600,
         name: 'emailattachmentfield'
        })
@@ -125,7 +128,7 @@ $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout->setNumColumns(2);
+$cssLayout->setNumColumns(1);
 
 $rightSideColumn .= $content;
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
