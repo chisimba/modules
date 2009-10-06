@@ -54,7 +54,7 @@ if (isset($currentChapter)) {
     
     $heading->str = $currentChapterTitle;
     $heading->type = 3;
-    
+/*    
     $form = new form ('searchform', $this->uri(array('action'=>'search')));
     $form->method = 'GET';
     
@@ -75,14 +75,14 @@ if (isset($currentChapter)) {
     
     $objFieldset->setLegend($label->show());
     $objFieldset->contents = $form->show();
-    
+*/    
     $header = new htmlHeading();
     $header->str = ucwords($this->objLanguage->code2Txt('mod_contextcontent_name', 'contextcontent', NULL, '[-context-] Content'));
     $header->type = 2;
     
     $left = $header->show();
 
-    $left .= $objFieldset->show();
+//    $left .= $objFieldset->show();
     
     $pageId = isset($currentPage) ? $currentPage : '';
     $left .= $heading->show();
@@ -133,10 +133,15 @@ if (isset($currentChapter)) {
     
     $left .= '<hr /><p>'.$returnLink->show().'</p>';
     
-    
+    //Add toolbar
+    $toolbar = $this->getObject('contextsidebar', 'context');
+    $objFieldset = $this->newObject('fieldset', 'htmlelements');    
+    $objFieldset->contents = $toolbar->show();
     $cssLayout = $this->newObject('csslayout', 'htmlelements');
+    $cssLayout->setNumColumns(3);
     $cssLayout->setLeftColumnContent($left);
     $cssLayout->setMiddleColumnContent($this->getContent());
+    $cssLayout->setRightColumnContent($objFieldset->show());
     echo $cssLayout->show();
 
 } else {

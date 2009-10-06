@@ -17,6 +17,7 @@ $contentImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcon
 $newImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(3);
 
 $form = new form ('searchform', $this->uri(array('action'=>'search')));
 $form->method = 'GET';
@@ -25,27 +26,29 @@ $hiddenInput = new hiddeninput('module', 'contextcontent');
 $form->addToForm($hiddenInput->show());
 
 $hiddenInput = new hiddeninput('action', 'search');
-$form->addToForm($hiddenInput->show());
+//$form->addToForm($hiddenInput->show());
 
 $textinput = new textinput ('contentsearch', $this->getParam('contentsearch'));
 $button = new button ('searchgo', 'Go');
 $button->setToSubmit();
+//Add toolbar
+$toolbar = $this->getObject('contextsidebar', 'context');
 
-$form->addToForm($textinput->show().' '.$button->show());
+//$form->addToForm($textinput->show().' '.$button->show());
 
 $objFieldset = $this->newObject('fieldset', 'htmlelements');
 $label = new label ('Search for:', 'input_contentsearch');
 
-$objFieldset->setLegend($label->show());
-$objFieldset->contents = $form->show();
+//$objFieldset->setLegend($label->show());
+//$objFieldset->contents = $form->show();
 
 $header = new htmlHeading();
 $header->str = ucwords($this->objLanguage->code2Txt('mod_contextcontent_name', 'contextcontent', NULL, '[-context-] Content'));
 $header->type = 2;
+$content = "";
+//$content .= $header->show();
 
-$content = $header->show();
-
-$content .= $objFieldset->show();
+//$content .= $objFieldset->show();
 
 $content .= '<h3>Chapters:</h3>';
 $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
@@ -111,10 +114,9 @@ if ($this->isValid('addchapter')) {
     $content .=  '<br /><p>'.$link->show().'</p>';
 }
 
-
+$objFieldset->contents = $toolbar->show();
 $cssLayout->setLeftColumnContent($content);
-
 $cssLayout->setMiddleColumnContent($this->getContent());
-
+$cssLayout->setRightColumnContent($objFieldset->show());
 echo $cssLayout->show();
 ?>
