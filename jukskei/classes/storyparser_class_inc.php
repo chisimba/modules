@@ -17,7 +17,7 @@ class storyparser  extends dbTable {
         $this->table = 'tbl_stories';
     }
     public function getTopics($parentid){
-        $sql="select * from tbl_cms_sections where parentid='$parentid'";
+        $sql="select * from tbl_cms_sections where parentid='$parentid' and trash='0' and published='1'";
         $data = $this->getArray($sql);
         return $data;
     }
