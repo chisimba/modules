@@ -135,7 +135,7 @@ class dbdocument extends dbtable{
         $sql = "select max(version) maxversion from tbl_ads_documentstore where coursecode = '$courseid'";
         $data = $this->getArray($sql);
         $maxversion = $data[0]['maxversion'];
-        $sql = "update $this->tablename set currentuser = '$email', datemodified = '".strftime('%Y-%m-%d %H:%M:%S', mktime())."' where coursecode = '$courseid' and version = '$maxversion'";
+        $sql = "update $this->tablename set currentuser = '$email', datemodified = '".strftime('%d-%m-%Y %H:%M:%S', mktime())."' where coursecode = '$courseid' and version = '$maxversion'";
 
         $status = $this->_execute($sql);
         if($status && $sendmail){

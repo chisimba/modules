@@ -6,5 +6,6 @@
                     'userid' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'unit' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'unit_type' => array('type' => 'text','length' => 32),
-                    'phase' => array('type' => 'text','length' => 32, 'notnull'=>TRUE));
+                    'phase' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
+                    'date_forwarded' =>  array('type'  =>  'timestamp'));
 ?>

@@ -48,6 +48,7 @@ $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>
 $objFaculty = $this->getObject('dbfaculty');
 $facultyList = $objFaculty->getAllFaculty();
 $schoolList = $this->objSchool->getSchoolData();
+$historyData = $this->objCourseProposals->getHistoryData($this->id);
 
 $facultyData = "";
 $tmpFacultyData = "";
@@ -122,6 +123,7 @@ foreach($commentTypeData as $data) {
   $proposalMembersData=$this->objProposalMembers->getMembers($this->id,$courseProposal['phase']);
   $deleteMemberLink=new link();
   $propData="";
+  $hisData = "";
   $membercount=count($proposalMembersData);
   $mcount=0;
   $deleteLink=new link();
@@ -140,6 +142,31 @@ foreach($commentTypeData as $data) {
       }
   }
   }
+
+    // history grid data
+    $count = 1;
+    $membercount = count($historyData);
+    foreach($historyData as $data){
+        if($data['phase']== 0){
+                $data['phase'] = 'Proposal Phase';
+            }
+            elseif($data['phase']== 1){
+                $data['phase'] = 'APO Comment';
+            }
+            elseif($data['phase']== 2){
+                $data['phase'] = 'Faculty subcommittee approval';
+            }
+            elseif($data['phase']== 3){
+                $data['phase'] = 'Faculty board approval';
+            }
+        $date = date_create($data['date_forwarded']);
+        $hisData.="['".$data['phase']."','".date_format($date, 'd/m/Y')."','".$this->objUser->fullname($data['userid'])."']";
+        
+        if($count < $membercount){
+            $hisData.=",";
+        }
+        $count++;
+    }
 
 if(!$selectedtab){
     $selectedtab="0";
@@ -249,8 +276,9 @@ forwardactions
 );
 
 var mData = [".$propData."];
+var hData = [".$hisData."];
 showProposalMembers(mData);
-
+showHistory(hData);
 var forwardData=[".$forwardData."];
 showUnitCommentEditors(forwardData);
 var tabs = new Ext.TabPanel({
@@ -263,7 +291,8 @@ var tabs = new Ext.TabPanel({
         items:[
             {contentEl:'summary', title: 'Summary'},
             {contentEl:'commenteditors', title: 'Comment Editors'},
-            {contentEl:'unitcommenteditors', title: 'Faculty/Department Comment Editors'}
+            {contentEl:'unitcommenteditors', title: 'Faculty/Department Comment Editors'},
+            {contentEl:'historyGrid', title:'History'}
         ]
     });
 
@@ -323,7 +352,7 @@ $middleContent='
            
             </p>
         </div>
-
+        <div id="historyGrid"  class="x-hide-display"></div>
         <div id="commenteditors" class="x-hide-display">
           '.$showAddMemberButton.'
             <p></p>

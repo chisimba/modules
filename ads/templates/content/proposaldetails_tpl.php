@@ -495,6 +495,7 @@ $actionsDropDown->addOption('default','Select action ...');
     showTabs('".$selectedtab."','".$showMembers."','".$showApoForwards."');
     var mData = [".$propData."];
     showProposalMembers(mData);
+    showHistory(mData);
     var forwarddt=[".$forwardData."];
     showUnitForwards(forwarddt);
 

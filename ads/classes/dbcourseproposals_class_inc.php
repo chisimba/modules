@@ -135,5 +135,15 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
         $data = $this->getRow('id', $id, $this->table);
         return $data['faculty'];
     }
+
+    public function getHistoryData($courseid){
+        $sql="select phase,date_forwarded,userid
+              from tbl_ads_proposalmembers
+              where courseid = '$courseid'";
+
+        $data=$this->getArray($sql);
+        
+        return $data;
+    }
 }
 ?>

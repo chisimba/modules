@@ -266,6 +266,34 @@ function showProposalMembers(data){
     });
     grid.render('commenteditors');
 }
+function showHistory(myData){
+   
+    // create the data store
+    var store = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'phase'},
+           {name: 'date'},
+           {name: 'forwardedTo'}
+        ]
+    });
+    store.loadData(myData);
+
+    // create the Grid
+    var grid = new Ext.grid.GridPanel({
+        store: store,
+        columns: [
+            {id:'phase',header: "Phase", width: 200, sortable: true, dataIndex: 'phase'},
+            {header: "Date", width: 100, sortable: true, dataIndex: 'date'},
+            {header: "Forwarded To: ", width: 150, sortable: true, dataIndex: 'forwardedTo'}
+        ],
+        stripeRows: true,
+        height:350,
+        width:600,
+        title:'Array Grid'
+    });
+    grid.render('historyGrid');
+
+}
 
 function addProposalMember(){
    var args=addProposalMember.arguments;

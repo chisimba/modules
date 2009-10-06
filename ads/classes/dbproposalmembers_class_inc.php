@@ -9,7 +9,7 @@ class dbproposalmembers extends dbtable{
 
     public function saveMember($userid,$courseid,$unit,$unittype,$phase) {
         if(!$this->isMember($courseid, $userid)){
-        $data = array('userid'=>$userid,"courseid"=>$courseid,"unit"=>$unit,"unit_type"=>$unittype,"phase"=>$phase);
+        $data = array('userid'=>$userid,"courseid"=>$courseid,"unit"=>$unit,"unit_type"=>$unittype,"phase"=>$phase, "date_forwarded"=> strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $this->insert($data);
         }
     }

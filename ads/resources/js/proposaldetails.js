@@ -9,8 +9,8 @@ function showTabs() {
          tabs= [
             {contentEl: 'contentcontent', title: 'Summary'},
             {contentEl: 'memberscontent', title: 'Individual Comments'},
-            {contentEl: 'apoforwards', title: 'Departmental Comments'}
-
+            {contentEl: 'apoforwards', title: 'Departmental Comments'},
+            {contentEl: 'history', title: 'History'}
         ];
       }else{
         tabs= [
@@ -140,6 +140,37 @@ function showUnitForwards(data){
     grid.render('apoforwards');
 
 }
+
+function showHistory(data){
+    //create the data store
+    data = [];
+    var store = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'date'},
+           {name: 'phase'},
+           {name: 'forwardedTo'}
+        ]
+    });
+    store.loadData(data);
+
+    // create the Grid
+        var grid = new Ext.grid.GridPanel({
+            //store: store,
+            columns: [
+                {id:'date',header: "Date", width: 400, sortable: true, dataIndex: 'date'},
+                {header: "Phases", width:300, sortable: true, dataIndex: 'phase'},
+                {header: "Forwarded To", width: 100, sortable: true, dataIndex: 'forwardedTo'}
+            ],
+            stripeRows: true,
+            autoExpandColumn: 'id',
+            height:550,
+            width:800,
+            frame:false,
+            border:false
+        });
+        grid.render('history');
+}
+
 var searchWin;
 function showSearchWin(){
         Ext.onReady(function() {
