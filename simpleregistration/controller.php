@@ -239,6 +239,8 @@ class simpleregistration extends controller {
         $emailname=$this->getParam('emailnamefield');
         $emailcontent=$this->getParam('emailcontentfield');
         $emailattachments=$this->getParam('emailattachmentfield');
+        $staffreg=$this->getParam('event_staffreg');
+        $visitorreg=$this->getParam('event_visitorreg');
         $mode=$this->getParam('mode');
         if($mode == "new"){
             $this->dbeventscontent->addEventContent(
@@ -253,7 +255,10 @@ class simpleregistration extends controller {
                 $emailname,
                 $emailsubject,
                 $emailcontent,
-                $emailattachments);
+                $emailattachments,
+            $staffreg,
+            $visitorreg
+        );
 
         }
 
@@ -270,7 +275,9 @@ class simpleregistration extends controller {
                 $emailname,
                 $emailsubject,
                 $emailcontent,
-                $emailattachments);
+                $emailattachments,
+                $staffreg,
+            $visitorreg);
         }
         $this->nextAction('eventlisting');
     }

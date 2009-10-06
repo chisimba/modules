@@ -43,7 +43,9 @@ class dbeventscontent extends dbTable{
         $emailname,
         $emailsubject,
         $emailcontent,
-        $emailattachments
+        $emailattachments,
+        $staffreg,
+        $visitorreg
     ){
 
         $data = array(
@@ -57,7 +59,9 @@ class dbeventscontent extends dbTable{
             'event_emailsubject'=>$emailsubject,
             'event_emailname'=>$emailname,
             'event_emailcontent'=>$emailcontent,
-            'event_emailattachments'=>$emailattachments
+            'event_emailattachments'=>$emailattachments,
+            'event_staffreg'=>$staffreg,
+            'event_visitorreg'=>$visitorreg
         );
         return $this->insert($data);
 
@@ -75,7 +79,9 @@ class dbeventscontent extends dbTable{
         $emailname,
         $emailsubject,
         $emailcontent,
-        $emailattachments
+        $emailattachments,
+        $staffreg,
+        $visitorreg
     ){
 
         $data = array(
@@ -88,7 +94,9 @@ class dbeventscontent extends dbTable{
             'event_emailsubject'=>$emailsubject,
             'event_emailname'=>$emailname,
             'event_emailcontent'=>$emailcontent,
-            'event_emailattachments'=>$emailattachments
+            'event_emailattachments'=>$emailattachments,
+            'event_staffreg'=>$staffreg,
+            'event_visitorreg'=>$visitorreg
         );
         return $this->update('event_id',$eventid, $data);;
 

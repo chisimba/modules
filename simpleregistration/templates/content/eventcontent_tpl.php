@@ -100,6 +100,18 @@ var form = new Ext.form.FormPanel({
         value: '".str_replace($order, $replace,$eventcontent['event_emailattachments'])."',
         width: 900,
         name: 'emailattachmentfield'
+       }),
+   new Ext.form.TextField({
+        fieldLabel: 'Show Staff Registration',
+        value: '".str_replace($order, $replace,$eventcontent['event_staffreg'])."',
+        width: 20,
+        name: 'staffregfield'
+       }),
+   new Ext.form.TextField({
+        fieldLabel: 'Show Visitor Registration',
+        value: '".str_replace($order, $replace,$eventcontent['event_visitorreg'])."',
+        width: 20,
+        name: 'visitorregfield'
        })
 ],
                   buttons: [{

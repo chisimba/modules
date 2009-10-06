@@ -41,6 +41,7 @@ class formmanager extends object{
         $editcompany,
         $editemail,
         $mode,
+        $allowStaffReg,
         $allowExternalReg,
         $shortname
          ){
@@ -71,12 +72,13 @@ class formmanager extends object{
         closable: true,
         draggable:true
     });
-
-
+";
+if($allowStaffReg == 'true'){
     /*
      * ================  Registration form  =======================
      */
-    var wform = new Ext.form.FormPanel({
+
+  $regFormJS.="  var wform = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,
         bodyStyle:'padding:5px 5px 0',
@@ -106,6 +108,9 @@ class formmanager extends object{
  }
     });
 ";
+
+}
+
         if($allowExternalReg == 'true'){
             $regFormJS.=" var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',

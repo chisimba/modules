@@ -11,7 +11,8 @@ $table->cellpadding = 5;
 $table->cellpadding = 5;
 $regformObj = $this->getObject('formmanager');
 $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-$allowExternalReg=$objSysConfig->getValue('ALLOW_EXTERNAL_REG', 'simpleregistration');
+$allowStaffReg=$eventcontent['event_staffreg'];
+$allowExternalReg=$eventcontent['event_visitorreg'];//$objSysConfig->getValue('ALLOW_EXTERNAL_REG', 'simpleregistration');
 $eventcontent=array();
 
 if(count($content) > 0){
@@ -58,7 +59,7 @@ $pagecontent= $objWashout->parseText($content);
 
 $table->startRow();
 $table->addCell($pagecontent);
-$table->addCell($regformObj->createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode,$allowExternalReg,$shortname));
+$table->addCell($regformObj->createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode,$allowStaffReg,$allowExternalReg,$shortname));
 
 $table->endRow();
 
