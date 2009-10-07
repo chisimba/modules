@@ -18,9 +18,9 @@ class dbschedulemembers extends dbTable{
         $linkUrl = $this->uri(array("action"=>'home'));
         $link=' '. str_replace("amp;", "", $linkUrl);
 
-        $body= "Thank you for registering for $fromemail. To access the session, please click here $link.";
+        $body= "Thank you for registering for $fromemail live. To access the session, please click here $link.";
         $body.= ' To successfully join the live session, please make sure you have latest java from http://java.com and flash player from http://www.adobe.com/go/EN_US-H-GET-FLASH.';
-        $subject="$fromemail registration";
+        $subject="Live webinar: $fromemail registration";
 
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($to));
