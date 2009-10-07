@@ -124,9 +124,11 @@ class events extends controller
                 return 'main_tpl.php';
                 break;
 
-            case 'callbackuri' :
-                // decide what nextAction to take
-                $this->nextAction('view');
+            case 'viewsingle' :
+                $eventid = $this->getParam('eventid', NULL);
+                $eventdata = $this->objDbEvents->getEventInfo($eventid);
+                header("Content-Type: application/json");
+                echo $eventdata;
                 break;
 
             case 'view' :
@@ -255,6 +257,7 @@ class events extends controller
                 //$this->objOps->grabTwitterBySearch('Chisimba');
                 //$this->objUtils->createMediaTag('Brand monday party!');
                 //var_dump($this->objDbEvents->addTwtId(123, 'gen21Srv31Nme28_62509_1254836051'));
+                echo "All done";
                 break;
 
             case 'savevenue' :
@@ -319,14 +322,14 @@ class events extends controller
                     $eventuri = $this->objTeeny->create(urlencode($eventuri));
                     // a message
                     $tweet = $this->objLanguage->languageText ( "mod_events_newevent", "events" ).": ".ucwords($eventname)." ".$eventuri." #".$tag;
-                    log_debug($tweet);
+                    // log_debug($tweet);
                     //$returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
                     //$thread = $returnobj->thread;
                     //$threadid = $thread->id;
                     $threadid = rand(0, 99999);
                     // now update the event with the tweetid to track twitter conversations on this tweet.
                     $this->objDbEvents->addTwtId($threadid, $eventid);
-                    $this->nextAction('test');
+                    $this->nextAction('viewsingle', array('eventid' => $eventid));
                  }
                  else {
                      $message = $this->getObject('timeoutmessage', 'htmlelements');

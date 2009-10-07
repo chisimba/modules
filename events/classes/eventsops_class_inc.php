@@ -436,7 +436,7 @@ class eventsops extends object {
     }
     
     public function getSearchContent() {
-        return "It looks like you are in ".$this->getSession('country').". I have fetched the relevant details for you and set the currency to ZAR";
+        return "It looks like you are in ".$this->getSession('country').". I have fetched the relevant details for you.";
     }
 
     /**
