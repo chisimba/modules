@@ -44,7 +44,7 @@ class dbschedulemembers extends dbTable{
             return FALSE;
         }else{
             $sc=$this->getObject('dbschedules');
-            $sessiondata=$this->getSchedule($sessionid);
+            $sessiondata=$sc->getSchedule($sessionid);
             $scheduleId = $this->insert($data);
             $this->sendMail($this->objUser->email($userid), $sessiondata['title'],$scheduleId);
             return $scheduleId;
