@@ -138,6 +138,7 @@ Ext.onReady(function(){
                 layout:'fit',
                 width:800,
                 height:320,
+                autoHeight:true,
                 closeAction:'hide',
                 plain: true,
 
