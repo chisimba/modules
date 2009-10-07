@@ -15,10 +15,12 @@ class dbschedulemembers extends dbTable{
         $this->objUser = $this->getObject ( 'user', 'security' );
     }
     public function sendMail($to,$fromemail,$id){
-        $linkUrl = $this->uri(array(array('action'=>'showevent','id'=>$id)));
+        $linkUrl = $this->uri(array());
         $link=' '. str_replace("amp;", "", $linkUrl);
 
-        $body= "Thank you for registering for $fromemail. To view this event, please click here : $link";
+        $body= "Thank you for registering for $fromemail. To successfully join the live 
+        session, please make sure you have latest java from http://java.com and flash 
+        player from http://www.adobe.com/go/EN_US-H-GET-FLASH. To access the session, please click here : $link";
         $subject="$fromemail registration";
 
         $objMailer = $this->getObject('email', 'mail');
