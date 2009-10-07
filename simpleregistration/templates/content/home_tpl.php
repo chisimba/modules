@@ -78,9 +78,10 @@ $table->startRow();
 $table->addCell('');
 $table->addCell($footer);
 $table->endRow();
-if(count($content) > 0){
+
+//if(count($content) > 0){
 echo '<div id="wrap">'.$error.$table->show().'</div>';
-}else{
+/*}else{
     echo '<font color="red"><h1>No conference with the shortname suggested exist</h1></font>';
-}
+}*/
 ?>

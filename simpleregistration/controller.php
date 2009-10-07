@@ -113,12 +113,14 @@ class simpleregistration extends controller {
         $this->shortname=$this->getParam('shortname');
         $this->setVarByRef('shortname',$this->shortname);
         $idrows=$this->dbevents->getEventIdByShortname($this->shortname);
-
+/*
         if(count($idrows) > 0){
             $content=$this->dbeventscontent->getEventContent($idrows[0]['id']);
-
             $this->setVarByRef('content',$content);
         }
+        */
+        $content=$this->dbeventscontent->getEventContent($this->getParam('id'));
+        $this->setVarByRef('content',$content);
         return "home_tpl.php";
     }
     /**

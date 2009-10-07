@@ -20,6 +20,8 @@ if(count($content) > 0){
 }
 
 $savecontentUrl = $this->uri(array('action'=>'savecontent','eventid'=>$eventid,'mode'=>$mode));
+$previewLink = new link($this->uri(array('action'=>'showevent','id'=>$eventid)));
+$previewLink->link=$title;
 $homeUrl = $this->uri(array('action'=>'eventlisting'));
 $order   = array("\r\n", "\n", "\r");
 $replace ='<br />';
@@ -36,6 +38,7 @@ var form = new Ext.form.FormPanel({
         url:'".str_replace("amp;", "", $savecontentUrl)."',
         defaultType: 'textfield',
         items: [
+
         new Ext.form.HtmlEditor({
         fieldLabel: 'Date/Time/Venue',
         value: '".str_replace($order, $replace, $eventcontent['event_timevenue'])."',
@@ -134,8 +137,9 @@ var form = new Ext.form.FormPanel({
   });
 ";
 
-$content= '<div id="eventcontent"><h1>'.$title.'</h1><br /><br /></div>';
+$content= '<div id="eventcontent"><h1>'.$previewLink->show().'</h1><br /><br /></div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
+
 
 
 // Create an instance of the css layout class

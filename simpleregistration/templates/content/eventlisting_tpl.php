@@ -24,14 +24,20 @@ foreach($events as $row){
     $objIcon->setIcon('delete');
     $deleteLink->link=$objIcon->show();
 
-    $contentLink=new link();
-    $contentLink->link($this->uri(array('action'=>'eventcontent','id'=>$row['id'],'eventtitle'=>$row['event_title'])));
-    $contentLink->link=$row['event_title'];
+    $editLink=new link();
+    $editLink->link($this->uri(array('action'=>'eventcontent','id'=>$row['id'],'eventtitle'=>$row['event_title'])));
+    $objIcon->setIcon('edit');
+    $editLink->link=$objIcon->show();
+
+    $previewLink=new link();
+    $previewLink->link($this->uri(array('action'=>'showevent','id'=>$row['id'])));
+    $previewLink->link=$row['event_title'];
+
     $data.="[";
-    $data.="'".$contentLink->show()."',";
+    $data.="'".$previewLink->show()."',";
     $data.="'".$row['short_name']."',";
     $data.="'".$row['event_date']."',";
-    $data.="'".$deleteLink->show()."'";
+    $data.="'".$editLink->show().$deleteLink->show()."'";
     $data.="]\n";
     $index++;
     if($index <= $total-1){
