@@ -18,9 +18,8 @@ class dbschedulemembers extends dbTable{
         $linkUrl = $this->uri(array());
         $link=' '. str_replace("amp;", "", $linkUrl);
 
-        $body= "Thank you for registering for $fromemail. To successfully join the live 
-        session, please make sure you have latest java from http://java.com and flash 
-        player from http://www.adobe.com/go/EN_US-H-GET-FLASH. To access the session, please click here : $link";
+        $body= "Thank you for registering for $fromemail. To access the session, please click here : $link";
+        $body.= 'NB: To successfully join the live session, please make sure you have latest java from http://java.com and flash player from http://www.adobe.com/go/EN_US-H-GET-FLASH.';
         $subject="$fromemail registration";
 
         $objMailer = $this->getObject('email', 'mail');
@@ -48,7 +47,7 @@ class dbschedulemembers extends dbTable{
             $sc=$this->getObject('dbschedules');
             $sessiondata=$sc->getSchedule($sessionid);
             $scheduleId = $this->insert($data);
-            $this->sendMail($this->objUser->email($userid), $sessiondata['title'],$scheduleId);
+            $this->sendMail($this->objUser->email($userid), $sessiondata[0]['title'],$scheduleId);
             return $scheduleId;
         }
     }
