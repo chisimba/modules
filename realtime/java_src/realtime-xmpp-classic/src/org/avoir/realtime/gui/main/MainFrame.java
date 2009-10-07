@@ -791,7 +791,6 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         roomResourcesMenuItem = new javax.swing.JMenuItem();
         questionManagerMenuItem = new javax.swing.JMenuItem();
-        answerManagerMenuItem = new javax.swing.JMenuItem();
         slideBuilderMenuItem = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JSeparator();
         jMenu1 = new javax.swing.JMenu();
@@ -1262,6 +1261,11 @@ public class MainFrame extends javax.swing.JFrame {
         screenShareItem.add(meetingsMenuItem);
 
         toolsMenu.setText("Tools");
+        toolsMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toolsMenuActionPerformed(evt);
+            }
+        });
 
         screenShareMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F10, 0));
         screenShareMenuItem.setText("Screen Share");
@@ -1315,16 +1319,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
         toolsMenu.add(questionManagerMenuItem);
 
-        answerManagerMenuItem.setText("Answer Manager");
-        answerManagerMenuItem.setEnabled(true);
-        answerManagerMenuItem.setName("answerBuilder"); 
-        answerManagerMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	answerManagerMenuItemActionPerformed(evt);
-            }
-        });
-        toolsMenu.add(answerManagerMenuItem);
-        
         slideBuilderMenuItem.setText("Slide Builder");
         slideBuilderMenuItem.setEnabled(false);
         slideBuilderMenuItem.setName("slideBuilder"); // NOI18N
@@ -1915,6 +1909,10 @@ public class MainFrame extends javax.swing.JFrame {
 
 }//GEN-LAST:event_screenShareSizeMenuItemActionPerformed
 
+    private void toolsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolsMenuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_toolsMenuActionPerformed
+
     public void doZoom() {
         if (zoomControl) {
             zoomControl = false;
@@ -2174,7 +2172,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem prevslideMenuItem;
     private javax.swing.JMenuItem privateChatMenuItem;
     private javax.swing.JMenuItem questionManagerMenuItem;
-    private javax.swing.JMenuItem answerManagerMenuItem;
     private javax.swing.JMenuItem raiseHandMenuItem;
     private javax.swing.JMenuItem roomListMenuItem;
     private javax.swing.JMenuItem roomResourcesMenuItem;

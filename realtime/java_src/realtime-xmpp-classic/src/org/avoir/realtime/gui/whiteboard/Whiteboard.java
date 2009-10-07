@@ -1054,7 +1054,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         }
         graphics2D = g2;
         if (fullScreen) {
-            g2.drawString("Press Esc", 0, fullScreenY - 20);
+            g2.drawString("Press Esc to exit", 0, fullScreenY - 20);
         }
         g2.setColor(Color.WHITE);
         g2.draw(whiteboardSize);

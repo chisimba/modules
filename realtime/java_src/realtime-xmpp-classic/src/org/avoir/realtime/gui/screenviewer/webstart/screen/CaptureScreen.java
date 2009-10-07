@@ -190,11 +190,18 @@ public class CaptureScreen {
 		}
 	}
 
+    /*
+     * This method is called when the presenter is requested to set the scale of the thumbnail.
+     *
+     */
     public static void changImgSize(int x, int y){
         imgX += x;
         imgY += y;
     }
 
+    /*
+     * This method resets the thumnail scales to 600X600
+     */
     public static void resetImgSize(){
         imgX = 600;
         imgY = 600;

@@ -23,16 +23,8 @@ import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,8 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.avoir.realtime.gui.main.GUIAccessManager;
@@ -63,14 +53,11 @@ public class WebBrowserManager {
     private String warning = "Closing this will stop these functions from " +
             " working until you restart the application.\n Do you still want to close?";
     private JFrame frame = new JFrame();
-    private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
-    private int fullX = (int) ss.getWidth();
-    private int fullY = (int) ss.getHeight();
-    private String zoomScript = "document.write(\"hello\")";
-    private double zoomFactor = 1.0;
 
-    //for java 1.6 above
-    public void showTestView() {
+    /*
+     * This method is only compatible in java 1.6 or above
+     */
+    public void showScreenShareViewer() {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
