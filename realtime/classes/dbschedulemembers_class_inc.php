@@ -43,17 +43,15 @@ class dbschedulemembers extends dbTable{
 
             return FALSE;
         }else{
-            $sessiondata=$this->getSessionMeta($sessionid);
+            $sc=$this->getObject('dbschedules');
+            $sessiondata=$this->getSchedule($sessionid);
             $scheduleId = $this->insert($data);
-            $this->sendMail($this->objUser->email($userid), $sessiondata['event_title'],$scheduleId);
+            $this->sendMail($this->objUser->email($userid), $sessiondata['title'],$scheduleId);
             return $scheduleId;
         }
     }
 
-    public function getSessionMeta($id){
-        $data=$this->getRow('id',$id,'tbl_simpleregistrationevents');
-        return $data;
-    }
+ 
     public function sessionExists($userid,$sessionid)
     {
         $sql="select * from " .$this->table." where userid = '".$userid."' and sessionid = '".$sessionid."'";
