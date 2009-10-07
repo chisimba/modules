@@ -338,6 +338,19 @@ class viewer extends object {
         
         return $ret;
     }
+    
+    public function tweetThisBox() {
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        
+        $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
+        // set up a link for Tweet this
+        $tlink = $this->newObject ( 'link', 'htmlelements' );
+        $tlink->href = "http://twitter.com/home/?status=".urlencode($this->objLanguage->languageText ( "mod_brandmonday_accessgranted", "brandmonday" )).": ".$this->teeny->create(urlencode($this->uri('')));
+        $tlink->link = $this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" );
+        $str = $tlink->show()."<br />".$this->objLanguage->languageText("mod_brandmonday_tweetthisblurb", "brandmonday");
+        
+        return $objFeatureBox->show($this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" ), $str);
+    }
 
 
 }

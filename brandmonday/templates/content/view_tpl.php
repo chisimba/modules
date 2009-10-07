@@ -31,6 +31,7 @@ $middleColumn .= $this->objViewer->renderCompView($resPlus, $resMinus, $resMenti
 
 $rightColumn .= $this->objViewer->aboutBlock();
 $rightColumn .= $this->objViewer->disclaimerBlock();
+$rightColumn .= $this->objViewer->tweetThisBox();
 $rightColumn .= $this->objViewer->adBlocks();
 
 $leftColumn .= $this->objViewer->chisimbaBlock();

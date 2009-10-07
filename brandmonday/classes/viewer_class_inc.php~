@@ -323,7 +323,7 @@ class viewer extends object {
 
     public function rssBlock() {
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $text = $this->objLanguage->languageText("mod_brandmonday_rss", "brandmonday");
+        $text = "Feeds"; //$this->objLanguage->languageText("mod_brandmonday_rss", "brandmonday");
         $ret = NULL;
         $happylink = $this->newObject('link', 'htmlelements');
         $happylink->href = $this->uri(array('action' => 'feed'));
@@ -337,6 +337,19 @@ class viewer extends object {
         $ret .= $objFeatureBox->show($text, $rss);
         
         return $ret;
+    }
+    
+    public function tweetThisBox() {
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        
+        $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
+        // set up a link for Tweet this
+        $tlink = $this->newObject ( 'link', 'htmlelements' );
+        $tlink->href = "http://twitter.com/home/?status=".$this->objLanguage->languageText ( "mod_brandmonday_accessgranted", "brandmonday" ).": ".$this->teeny->create(urlencode($this->uri('')));
+        $tlink->link = $this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" );
+        $str = $tlink->show()."<br />".$this->objLanguage->languageText("mod_brandmonday_tweetthisblurb", "brandmonday");
+        
+        return $objFeatureBox->show($this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" ), $str);
     }
 
 

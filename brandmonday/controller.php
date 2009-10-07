@@ -75,40 +75,42 @@ class brandmonday extends controller {
 
             default: 
                 $this->requiresLogin('default');
-                $path = $this->objConfig->getSiteRootPath()."bmupdate";
+                $path = $this->objConfig->getModulePath()."brandmonday/update";
                 if(!file_exists($path)) {
                     touch($path);
                     chmod($path, 0777);
                 }
-
                 $lastupdate = file_get_contents($path);
-                $minusurl = "http://search.twitter.com/search.json?q=&ands=BrandMinus&phrase=&ors=&nots=BrandPlus&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C2000km&since_id=$lastupdate&rpp=100";
-                $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&lang=all&from=&to=&ref=&geocode=-33.55%2C18.22%2C2000km&since_id=$lastupdate&rpp=100"; //"http://search.twitter.com/search.json?q=%23BrandPlus+AND+%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C100km";
-                $menurl = "http://search.twitter.com/search.json?q=%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C500km&since_id=$lastupdate";
-
+                $lastupdate = explode("|", $lastupdate);
+                if($lastupdate[0] == '' || $lastupdate[1] == '' || $lastupdate[2] == '') {
+                    $minusurl = "http://search.twitter.com/search.json?q=&ands=BrandMinus&phrase=&ors=&nots=BrandPlus&lang=all&from=&to=&ref=&since_id=$lastupdate&rpp=100";
+                    $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&lang=all&from=&to=&ref=&since_id=$lastupdate&rpp=100"; //"http://search.twitter.com/search.json?q=%23BrandPlus+AND+%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C100km";
+                    $menurl = "http://search.twitter.com/search.json?q=%23BrandMonday&lang=all&since_id=$lastupdate";
+                }
+                else {
+                    $minusurl = "http://search.twitter.com/search.json?".$lastupdate[0];
+                    $plusurl = "http://search.twitter.com/search.json?".$lastupdate[1];
+                    $menurl = "http://search.twitter.com/search.json?".$lastupdate[2];
+                }
                 $resMinus = $this->objCurl->exec($minusurl);
                 $resMinus = json_decode($resMinus);
-
-                $resMentions = $this->objCurl->exec($menurl);
-                $resMentions = json_decode($resMentions);
-
                 $resPlus = $this->objCurl->exec($plusurl);
                 $resPlus = json_decode($resPlus);
-
-                if(is_object($resMinus) && $lastupdate <= $resMinus->since_id) {
-                    // do "smart" update on db, so we only get the tweets that don't yet exist
-                    $this->objDbBm->smartUpdate($resMinus, $resPlus, $resMentions);
-                }
-                
+                $resMentions = $this->objCurl->exec($menurl);
+                $resMentions = json_decode($resMentions);
+                $pluslast = $resPlus->refresh_url;
+                $minlast = $resMinus->refresh_url;
+                $menlast = $resMentions->refresh_url;
+                $this->objDbBm->smartUpdate($resMinus, $resPlus, $resMentions);
                 if(file_exists($path)) {
                     unlink($path);
                     touch($path);
                     chmod($path, 0777);
-                    if(is_object($resMinus)) {
-                        file_put_contents($path, $resMinus->since_id);
+                    if(is_object($resMinus) && is_object($resPlus) && is_object($resMentions)) {
+                        file_put_contents($path, $resMinus->refresh_url."|".$resPlus->refresh_url."|".$resMentions->refresh_url);
                     }
                 }
-               
+
                 $resMinus = $this->objDbBm->getRange('tbl_bmminus', 0, 100);
                 $resPlus = $this->objDbBm->getRange('tbl_bmplus', 0, 100);
                 $resMentions = $this->objDbBm->getRange('tbl_bmmentions', 0, 100);

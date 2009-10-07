@@ -57,14 +57,14 @@ class dbbm extends dbTable {
         // first the plus
         foreach($resPlus->results as $res) {
             if(!$this->tweetExists('tbl_bmplus', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location, 'tweettime' => strtotime($res->created_at)), 'tbl_bmplus');
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, /* 'location' => $res->location,*/ 'tweettime' => strtotime($res->created_at)), 'tbl_bmplus');
                 $this->parseHashTags($res->text, $res->id, 'plus');
                 $this->analyseWords('tbl_bmplus_words', $res->text);
             }
         }
         foreach($resMinus->results as $res) {
             if(!$this->tweetExists('tbl_bmminus', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location, 'tweettime' => strtotime($res->created_at)), 'tbl_bmminus');
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, /*'location' => $res->location,*/ 'tweettime' => strtotime($res->created_at)), 'tbl_bmminus');
                 $this->parseHashTags($res->text, $res->id, 'minus');
                 $this->analyseWords('tbl_bmminus_words', $res->text);
             }
@@ -74,7 +74,7 @@ class dbbm extends dbTable {
                 $res->to_user = NULL;
             }
             if(!$this->tweetExists('tbl_bmmentions', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->location, 'tweettime' => strtotime($res->created_at)), 'tbl_bmmentions');
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, /*'location' => $res->location,*/ 'tweettime' => strtotime($res->created_at)), 'tbl_bmmentions');
                 // $this->parseHashTags($res->text, $res->id);
             }
         }
