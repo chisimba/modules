@@ -153,7 +153,7 @@ $mainjs = " Ext.onReady(function(){
                        {name: 'endtime'},
                        {name: 'enrolled'},
                        {name: 'session'},
-                       {name: 'edit'},
+                       {name: 'edit'}
                     ]);
 
                     var grid = new xg.GridPanel({
@@ -172,7 +172,7 @@ $mainjs = " Ext.onReady(function(){
                             {header: \"".$endTime."\", width: 20, dataIndex: 'endtime'},
                             {header: \"".$session."\", width: 20, dataIndex: 'session'},
                             {header: \"".$enrolled."\", width: 20, dataIndex: 'enrolled'},
-                            {header: \"".$edit."\", width: 20, dataIndex: 'edit'},
+                            {header: \"".$edit."\", width: 20, dataIndex: 'edit'}
                         ],
 
                         view: new Ext.grid.GroupingView({
