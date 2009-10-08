@@ -73,7 +73,7 @@ $index=1;
 foreach($xchapters as $c){
     $chapters.="['".$c["chapter"]."']";
   if($index < $total){
-     $data.=",";
+     $chapters.=",";
    }
 $index++;
 }
