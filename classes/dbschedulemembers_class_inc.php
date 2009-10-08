@@ -55,10 +55,10 @@ class dbschedulemembers extends dbTable{
  
     public function sessionExists($userid,$sessionid)
     {
-        $sql="select * from " .$this->table." where userid = '".$userid."' and sessionid = '".$sessionid."'";
-        $rows=$this->getArray($sql);
-
-        return count($rows) > 0 ? TRUE:FALSE;
+      //  $sql="select * from " .$this->table." where userid = '".$userid."' and sessionid = '".$sessionid."'";
+      //  $rows=$this->getArray($sql);
+       return $this->valueExists('userid', $userid, $this->table) && $this->valueExists('sessionid', $sessionid, $this->table);
+       // return count($rows) > 0 ? TRUE:FALSE;
     }
 
     public function getSessionsThatAmAMember(){
