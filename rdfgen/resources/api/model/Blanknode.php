@@ -20,97 +20,99 @@ require_once RDFAPI_INCLUDE_DIR . 'model/Resource.php';
  * @package model
  * @access	public
  *
- */
-class BlankNode extends Resource {
-	
-	/**
-	 * Constructor
-	 * You can supply a label or You supply a model and a unique ID is gernerated.
-	 *
-	 * @param	mixed	$namespace_or_uri_or_model
-	 * @param 	string $localName
-	 * @access	public
-	 */
-	function BlankNode($namespace_or_uri_or_model, $localName = NULL) {
+ */ 
+ class BlankNode extends Resource {
+  
+   /**
+    * Constructor
+	* You can supply a label or You supply a model and a unique ID is gernerated.
+    *
+    * @param	mixed	$namespace_or_uri_or_model
+ 	* @param 	string $localName
+	* @access	public
+    */
+    function BlankNode($namespace_or_uri_or_model , $localName = NULL) {
 		
-		if (is_a ( $namespace_or_uri_or_model, 'Model' )) {
+        if (is_a($namespace_or_uri_or_model, 'Model')) {
 			// generate identifier
-			$id = $namespace_or_uri_or_model->getUniqueResourceURI ( BNODE_PREFIX );
+			$id = $namespace_or_uri_or_model->getUniqueResourceURI(BNODE_PREFIX);
 			
 			$this->uri = $id;
-		
+
 		} else {
 			// set identifier
 			if ($localName == NULL) {
 				$this->uri = $namespace_or_uri_or_model;
-			} else {
+		  	} else {
 				$this->uri = $namespace_or_uri_or_model . $localName;
-			}
-		}
-	}
+	  	    }
+		 }
+    }
+
+  /**
+   * Returns the ID of the blank node.
+   *
+   * @return 	string
+   * @access	public  
+   */	
+  function getID() {
+  			return $this->uri;
+   }
+
+  /**
+   * Returns the ID of the blank node.
+   *
+   * @return 	string
+   * @access	public  
+   */	
+  function getLabel() {
+  		return $this->uri;
+   }
+
+  /**
+   * Dumps bNode.
+   *
+   * @access	public 
+   * @return	string 
+   */  
+  function toString() {
+
+        return 'bNode("' . $this->uri . '")';
+  }
 	
-	/**
-	 * Returns the ID of the blank node.
-	 *
-	 * @return 	string
-	 * @access	public  
-	 */
-	function getID() {
-		return $this->uri;
-	}
+  /**
+   * Checks if two blank nodes are equal.
+   * Two blank nodes are equal, if they have the same temporary ID.
+   *
+   * @access	public 
+   * @param		object	resource $that
+   * @return	boolean 
+   */  
+   function equals ($that) {
 	
-	/**
-	 * Returns the ID of the blank node.
-	 *
-	 * @return 	string
-	 * @access	public  
-	 */
-	function getLabel() {
-		return $this->uri;
-	}
+	    if ($this == $that) {
+	      return true;
+	    }
+        if (($that == NULL) or !(is_a($that, 'BlankNode'))) {
+	      return false;
+	    }
+	    	
+		if ($this->getURI() == $that->getURI()) {
+	      return true;
+	    }
 	
-	/**
-	 * Dumps bNode.
-	 *
-	 * @access	public 
-	 * @return	string 
-	 */
-	function toString() {
-		
-		return 'bNode("' . $this->uri . '")';
+	    return false;
 	}
-	
-	/**
-	 * Checks if two blank nodes are equal.
-	 * Two blank nodes are equal, if they have the same temporary ID.
-	 *
-	 * @access	public 
-	 * @param		object	resource $that
-	 * @return	boolean 
-	 */
-	function equals($that) {
-		
-		if ($this == $that) {
-			return true;
-		}
-		if (($that == NULL) or ! (is_a ( $that, 'BlankNode' ))) {
-			return false;
-		}
-		
-		if ($this->getURI () == $that->getURI ()) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 *   Doing string magic in PHP5
-	 *   @return string String representation of this Blank Node
-	 */
-	function __toString() {
-		return $this->toString ();
-	}
+
+
+    /**
+    *   Doing string magic in PHP5
+    *   @return string String representation of this Blank Node
+    */
+    function __toString()
+    {
+        return $this->toString();
+    }
 
 } // end: BlankNode 
 

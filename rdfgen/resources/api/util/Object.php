@@ -4,7 +4,6 @@
 // Class: Object
 // ----------------------------------------------------------------------------------
 
-
 /**
  * An abstract object.
  * Root object with some general methods, that should be overloaded. 
@@ -17,21 +16,22 @@
  * @package utility
  *
  **/
-class RDFObject {
-	
-	/**
-	 * Serializes a object into a string
-	 *
-	 * @access	public
-	 * @return	string		
-	 */
+ class Object {
+
+  /**
+   * Serializes a object into a string
+   *
+   * @access	public
+   * @return	string		
+   */    
 	function toString() {
-		$objectvars = get_object_vars ( $this );
-		foreach ( $objectvars as $key => $value )
-			$content .= $key . "='" . $value . "'; ";
-		return "Instance of " . get_class ( $this ) . "; Properties: " . $content;
+    	$objectvars = get_object_vars($this);
+		foreach($objectvars as $key => $value) 
+			$content .= $key ."='". $value. "'; ";
+		return "Instance of " . get_class($this) ."; Properties: ". $content;
 	}
 
-}
+ }
+
 
 ?>

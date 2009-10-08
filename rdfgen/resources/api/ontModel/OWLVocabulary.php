@@ -4,306 +4,366 @@
 // Class: OWLVocabulary
 // ----------------------------------------------------------------------------------
 
-
 /**
- * OWL vocabulary items
- *
- * @version  $Id: OWLVocabulary.php 320 2006-11-21 09:38:51Z tgauss $
- * @author Daniel Westphal <mail at d-westphal dot de>
- *
- *
- * @package 	ontModel
- * @access	public
- **/
-class OWLVocabulary extends OntVocabulary {
-	
+* OWL vocabulary items
+*
+* @version  $Id: OWLVocabulary.php 320 2006-11-21 09:38:51Z tgauss $
+* @author Daniel Westphal <mail at d-westphal dot de>
+*
+*
+* @package 	ontModel
+* @access	public
+**/
+class OWLVocabulary extends OntVocabulary 
+{
+
 	/**
-	 * Answer the resource that represents the class 'class' in this vocabulary.
-	 *
-	 * @return	object ResResource 
-	 * @access	public
-	 */
-	function ONTCLASS() {
-		return new ResResource ( OWL_NS . 'Class' );
+	* Answer the resource that represents the class 'class' in this vocabulary.
+	*
+   	* @return	object ResResource 
+   	* @access	public
+   	*/
+	function ONTCLASS()
+	{
+		return new ResResource(OWL_NS.'Class');	
+	}
+
+	/**
+	* Answer the predicate that denotes the domain of a property.
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function DOMAIN()
+	{
+		return new ResProperty(RDF_SCHEMA_URI.RDFS_DOMAIN);	
 	}
 	
-	/**
-	 * Answer the predicate that denotes the domain of a property.
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function DOMAIN() {
-		return new ResProperty ( RDF_SCHEMA_URI . RDFS_DOMAIN );
+	 
+ 	/**
+	* Answer the predicate that denotes comment annotation on an ontology element.
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function COMMENT()
+	{
+		return new ResProperty(RDF_SCHEMA_URI.RDFS_COMMENT);	
 	}
 	
-	/**
-	 * Answer the predicate that denotes comment annotation on an ontology element.
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function COMMENT() {
-		return new ResProperty ( RDF_SCHEMA_URI . RDFS_COMMENT );
-	}
-	
-	/**
-	 * Answer the predicate that denotes isDefinedBy annotation on an ontology element
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function IS_DEFINED_BY() {
-		return new ResProperty ( RDF_SCHEMA_URI . RDFS_IS_DEFINED_BY );
-	}
-	
-	/**
-	 * Answer the predicate that denotes label annotation on an ontology element
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function LABEL() {
-		return new ResProperty ( RDF_SCHEMA_URI . RDFS_LABEL );
+ 	/**
+	* Answer the predicate that denotes isDefinedBy annotation on an ontology element
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function IS_DEFINED_BY()
+	{
+		return new ResProperty(RDF_SCHEMA_URI.RDFS_IS_DEFINED_BY);
 	}
 	
 	/**
-	 * Answer the predicate that denotes the domain of a property.
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function RANGE() {
-		return new ResProperty ( RDF_SCHEMA_URI . RDFS_RANGE );
+	* Answer the predicate that denotes label annotation on an ontology element
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function LABEL()
+	{
+		return new ResProperty(RDF_SCHEMA_URI.RDFS_LABEL);
 	}
 	
 	/**
-	 * Answer the predicate that denotes seeAlso annotation on an ontology element
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function SEE_ALSO() {
-		return new ResProperty ( RDF_SCHEMA_URI . RDFS_SEE_ALSO );
+	* Answer the predicate that denotes the domain of a property.
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function RANGE()
+	{
+		return new ResProperty(RDF_SCHEMA_URI.RDFS_RANGE);
 	}
 	
 	/**
-	 * Answer the predicate that denotes that one class is a sub-class of another.
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function SUB_CLASS_OF() {
-		return new ResProperty ( RDF_SCHEMA_URI . RDFS_SUBCLASSOF );
+	* Answer the predicate that denotes seeAlso annotation on an ontology element
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function SEE_ALSO()
+	{
+		return new ResProperty(RDF_SCHEMA_URI.RDFS_SEE_ALSO);
 	}
 	
 	/**
-	 * Answer the predicate that denotes that one property is a sub-property of another.
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function SUB_PROPERTY_OF() {
-		return new ResProperty ( RDF_SCHEMA_URI . RDFS_SUBPROPERTYOF );
+	* Answer the predicate that denotes that one class is a sub-class of another.
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function SUB_CLASS_OF()
+	{
+		return new ResProperty(RDF_SCHEMA_URI.RDFS_SUBCLASSOF);
 	}
 	
-	function ANNOTATION_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'AnnotationProperty' );
+	/**
+	* Answer the predicate that denotes that one property is a sub-property of another.
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function SUB_PROPERTY_OF()
+	{
+		return new ResProperty(RDF_SCHEMA_URI.RDFS_SUBPROPERTYOF);
 	}
 	
-	function ALL_DIFFERENT() {
-		return new ResProperty ( OWL_NS . 'AllDifferent' );
+	
+	
+	function ANNOTATION_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'AnnotationProperty');	
+	}
+
+	function ALL_DIFFERENT()
+	{
+		return new ResProperty(OWL_NS . 'AllDifferent');	
 	}
 	
-	function ALL_VALUES_FROM() {
-		return new ResProperty ( OWL_NS . 'allValuesFrom' );
+	function ALL_VALUES_FROM()
+	{
+		return new ResProperty(OWL_NS . 'allValuesFrom');
+	}
+
+	function BACKWARD_COMPATIBLE_WITH()
+	{
+		return new ResProperty(OWL_NS . 'backwardCompatibleWith');
 	}
 	
-	function BACKWARD_COMPATIBLE_WITH() {
-		return new ResProperty ( OWL_NS . 'backwardCompatibleWith' );
+	function CARDINALITY()
+	{
+		return new ResProperty(OWL_NS . 'cardinality');
+	}
+
+	function COMPLEMENT_OF()
+	{
+		return new ResProperty(OWL_NS . 'complementOf');
 	}
 	
-	function CARDINALITY() {
-		return new ResProperty ( OWL_NS . 'cardinality' );
+	function DATATYPE()
+	{
+		return new ResProperty(OWL_NS . 'Datatype');
 	}
 	
-	function COMPLEMENT_OF() {
-		return new ResProperty ( OWL_NS . 'complementOf' );
+	function DATATYPE_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'DatatypeProperty');
 	}
-	
-	function DATATYPE() {
-		return new ResProperty ( OWL_NS . 'Datatype' );
+
+	function DATA_RANGE()
+	{
+		return new ResProperty(OWL_NS . 'DataRange');
 	}
-	
-	function DATATYPE_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'DatatypeProperty' );
+
+	function DATATYPE_RESTRICTION()
+	{
+		return new ResProperty(OWL_NS . 'DatatypeRestriction');
 	}
-	
-	function DATA_RANGE() {
-		return new ResProperty ( OWL_NS . 'DataRange' );
+
+	function DEPRECATED_CLASS()
+	{
+		return new ResProperty(OWL_NS . 'DeprecatedClass');
 	}
-	
-	function DATATYPE_RESTRICTION() {
-		return new ResProperty ( OWL_NS . 'DatatypeRestriction' );
+
+	function DEPRECATED_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'DeprecatedProperty');
 	}
-	
-	function DEPRECATED_CLASS() {
-		return new ResProperty ( OWL_NS . 'DeprecatedClass' );
+
+	function DISTINCT_MEMBERS()
+	{
+		return new ResProperty(OWL_NS . 'distinctMembers');
 	}
-	
-	function DEPRECATED_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'DeprecatedProperty' );
+
+	function DIFFERENT_FROM()
+	{
+		return new ResProperty(OWL_NS . 'differentFrom');
 	}
-	
-	function DISTINCT_MEMBERS() {
-		return new ResProperty ( OWL_NS . 'distinctMembers' );
+
+	function DISJOINT_WITH()
+	{
+		return new ResProperty(OWL_NS . 'disjointWith');
 	}
-	
-	function DIFFERENT_FROM() {
-		return new ResProperty ( OWL_NS . 'differentFrom' );
+
+	function EQUIVALENT_CLASS()
+	{
+		return new ResProperty(OWL_NS . 'equivalentClass');
 	}
-	
-	function DISJOINT_WITH() {
-		return new ResProperty ( OWL_NS . 'disjointWith' );
+
+	function EQUIVALENT_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'equivalentProperty');
 	}
-	
-	function EQUIVALENT_CLASS() {
-		return new ResProperty ( OWL_NS . 'equivalentClass' );
+
+	function FUNCTIONAL_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'FunctionalProperty');
 	}
-	
-	function EQUIVALENT_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'equivalentProperty' );
+
+	function HAS_VALUE()
+	{
+		return new ResProperty(OWL_NS . 'hasValue');
 	}
-	
-	function FUNCTIONAL_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'FunctionalProperty' );
+
+	function INCOMPATIBLE_WITH()
+	{
+		return new ResProperty(OWL_NS . 'incompatibleWith');
 	}
-	
-	function HAS_VALUE() {
-		return new ResProperty ( OWL_NS . 'hasValue' );
+
+	function IMPORTS()
+	{
+		return new ResProperty(OWL_NS . 'imports');
 	}
-	
-	function INCOMPATIBLE_WITH() {
-		return new ResProperty ( OWL_NS . 'incompatibleWith' );
+
+	function INTERSECTION_OF()
+	{
+		return new ResProperty(OWL_NS . 'intersectionOf');
 	}
-	
-	function IMPORTS() {
-		return new ResProperty ( OWL_NS . 'imports' );
+
+	function INVERSE_FUNCTIONAL_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'InverseFunctionalProperty');
 	}
-	
-	function INTERSECTION_OF() {
-		return new ResProperty ( OWL_NS . 'intersectionOf' );
+
+	function INVERSE_OF()
+	{
+		return new ResProperty(OWL_NS . 'inverseOf');
 	}
-	
-	function INVERSE_FUNCTIONAL_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'InverseFunctionalProperty' );
+
+	function MAX_CARDINALITY()
+	{
+		return new ResProperty(OWL_NS . 'maxCardinality');
 	}
-	
-	function INVERSE_OF() {
-		return new ResProperty ( OWL_NS . 'inverseOf' );
+
+	function MIN_CARDINALITY()
+	{
+		return new ResProperty(OWL_NS . 'minCardinality');
 	}
-	
-	function MAX_CARDINALITY() {
-		return new ResProperty ( OWL_NS . 'maxCardinality' );
+
+	function NOTHING()
+	{
+		return new ResProperty(OWL_NS . 'Nothing');
 	}
-	
-	function MIN_CARDINALITY() {
-		return new ResProperty ( OWL_NS . 'minCardinality' );
+
+	function OBJECT_CLASS()
+	{
+		return new ResProperty(OWL_NS . 'ObjectClass');
 	}
-	
-	function NOTHING() {
-		return new ResProperty ( OWL_NS . 'Nothing' );
+
+	function OBJECT_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'ObjectProperty');
 	}
-	
-	function OBJECT_CLASS() {
-		return new ResProperty ( OWL_NS . 'ObjectClass' );
+
+	function OBJECT_RESTRICTION()
+	{
+		return new ResProperty(OWL_NS . 'ObjectRestriction');
 	}
-	
-	function OBJECT_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'ObjectProperty' );
+
+	function ONE_OF()
+	{
+		return new ResProperty(OWL_NS . 'oneOf');
 	}
-	
-	function OBJECT_RESTRICTION() {
-		return new ResProperty ( OWL_NS . 'ObjectRestriction' );
+
+	function ON_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'onProperty');
 	}
-	
-	function ONE_OF() {
-		return new ResProperty ( OWL_NS . 'oneOf' );
+
+	function ONTOLOGY()
+	{
+		return new ResProperty(OWL_NS . 'Ontology');
+		
 	}
-	
-	function ON_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'onProperty' );
+
+	function PRIOR_VERSION()
+	{
+		return new ResProperty(OWL_NS . 'priorVersion');
 	}
-	
-	function ONTOLOGY() {
-		return new ResProperty ( OWL_NS . 'Ontology' );
-	
+
+	function PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'Property');
 	}
-	
-	function PRIOR_VERSION() {
-		return new ResProperty ( OWL_NS . 'priorVersion' );
+
+	function RESTRICTION()
+	{
+		return new ResProperty(OWL_NS . 'Restriction');
 	}
-	
-	function PROPERTY() {
-		return new ResProperty ( OWL_NS . 'Property' );
+
+	function SAME_AS()
+	{
+		return new ResProperty(OWL_NS . 'sameAs');
 	}
-	
-	function RESTRICTION() {
-		return new ResProperty ( OWL_NS . 'Restriction' );
+
+	function SAME_CLASS_AS()
+	{
+		return new ResProperty(OWL_NS . 'sameClassAs');
 	}
-	
-	function SAME_AS() {
-		return new ResProperty ( OWL_NS . 'sameAs' );
+
+	function SAME_INDIVIDUAL_AS()
+	{
+		return new ResProperty(OWL_NS . 'sameIndividualAs');
 	}
-	
-	function SAME_CLASS_AS() {
-		return new ResProperty ( OWL_NS . 'sameClassAs' );
+
+	function SAME_PROPERTY_AS()
+	{
+		return new ResProperty(OWL_NS . 'samePropertyAs');
 	}
-	
-	function SAME_INDIVIDUAL_AS() {
-		return new ResProperty ( OWL_NS . 'sameIndividualAs' );
+
+	function SOME_VALUES_FROM()
+	{
+		return new ResProperty(OWL_NS . 'someValuesFrom');
 	}
-	
-	function SAME_PROPERTY_AS() {
-		return new ResProperty ( OWL_NS . 'samePropertyAs' );
+
+	function SYMMETRIC_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'SymmetricProperty');
 	}
-	
-	function SOME_VALUES_FROM() {
-		return new ResProperty ( OWL_NS . 'someValuesFrom' );
+
+	function THING()
+	{
+		return new ResProperty(OWL_NS . 'Thing');
 	}
-	
-	function SYMMETRIC_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'SymmetricProperty' );
+
+	function TRANSITIVE_PROPERTY()
+	{
+		return new ResProperty(OWL_NS . 'TransitiveProperty');
 	}
-	
-	function THING() {
-		return new ResProperty ( OWL_NS . 'Thing' );
+
+	function UNION_OF()
+	{
+		return new ResProperty(OWL_NS . 'unionOf');
 	}
-	
-	function TRANSITIVE_PROPERTY() {
-		return new ResProperty ( OWL_NS . 'TransitiveProperty' );
+
+	function VERSION_INFO()
+	{
+		return new ResProperty(OWL_NS . 'versionInfo');
 	}
-	
-	function UNION_OF() {
-		return new ResProperty ( OWL_NS . 'unionOf' );
-	}
-	
-	function VERSION_INFO() {
-		return new ResProperty ( OWL_NS . 'versionInfo' );
-	}
-	
-	function NAMESPACE() {
+
+	function NAMESPACE()
+	{
 		return OWL_NS;
 	}
-	
+
 	/**
-	 * Answer the predicate that denotes the rdf:type property.
-	 *
-	 * @return	object ResProperty 
-	 * @access	public
-	 */
-	function TYPE() {
-		return new ResProperty ( RDF_NAMESPACE_URI . RDF_TYPE );
+	* Answer the predicate that denotes the rdf:type property.
+	*
+   	* @return	object ResProperty 
+   	* @access	public
+   	*/
+	function TYPE()
+	{
+		return new ResProperty(RDF_NAMESPACE_URI.RDF_TYPE);
 	}
-}
+} 
 ?>

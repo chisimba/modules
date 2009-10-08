@@ -11,8 +11,9 @@
 
 
 // Include Constants and base Object
-require_once (RDFAPI_INCLUDE_DIR . 'constants.php');
-require_once (RDFAPI_INCLUDE_DIR . 'util/Object.php');
-include_once (RDFAPI_INCLUDE_DIR . PACKAGE_MODEL);
+require_once( RDFAPI_INCLUDE_DIR . 'constants.php' );
+require_once( RDFAPI_INCLUDE_DIR . 'util/Object.php' );
+include_once( RDFAPI_INCLUDE_DIR . PACKAGE_MODEL);
+
 
 ?>

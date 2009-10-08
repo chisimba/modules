@@ -5,11 +5,11 @@
 //
 // Description               : Syntax Sparql Result package
 //
-// Author: Tobias Gauï¿½	<tobias.gauss@web.de>
+// Author: Tobias Gauß	<tobias.gauss@web.de>
 //
 // ----------------------------------------------------------------------------------
 
 
 // Include Syntax classes
-require_once (RDFAPI_INCLUDE_DIR . 'syntax/SparqlResultParser.php');
+require_once( RDFAPI_INCLUDE_DIR . 'syntax/SparqlResultParser.php' );
 ?>
