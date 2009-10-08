@@ -92,7 +92,8 @@ $data='';
 
 //data grid from db
 $dbdata=$this->objDbSchedules->getSchedules($this->contextCode);
-
+$total=count($dbdata);
+$index=1;
 foreach($dbdata as $row){
     $deleteLink=new link();
     $editLink=new link();
@@ -134,7 +135,10 @@ foreach($dbdata as $row){
     $data.="'".$row['participants']."',";
     $data.="'".$row['category']."',";
     $data.="'".$editDeleteLink."',";
-    $data.="],";
+    $data.="]";
+   if($index < $total){
+     $data.=",";
+   }
 }
 
 //contruct the ext js window
