@@ -68,8 +68,14 @@ $content='<div id="addsession-win" class="x-hidden">
 
 $chapters="[";
 $xchapters=$this->objDbSchedules->getChapters($this->contextCode);
+$total=count($xchapters);
+$index=1;
 foreach($xchapters as $c){
-    $chapters.="['".$c["chapter"]."'],";
+    $chapters.="['".$c["chapter"]."']";
+  if($index < $total){
+     $data.=",";
+   }
+$index++;
 }
 $chapters.="]";
 
@@ -139,6 +145,7 @@ foreach($dbdata as $row){
    if($index < $total){
      $data.=",";
    }
+$index++;
 }
 
 //contruct the ext js window
@@ -334,7 +341,7 @@ var hours=
             xtype: 'textarea',
             fieldLabel: 'About',
             name: 'desc',
-            anchor: '100% -53'  // anchor width by percentage and height by raw adjustment
+            anchor: '100% -53'  
         }]
     });
 
@@ -366,6 +373,7 @@ function showAddSessionWindow(){
                     text: 'Close',
                     handler: function(){
                         win.hide();
+                        window.location.reload();
                     }
                 }]
             });
