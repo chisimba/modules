@@ -341,7 +341,8 @@ var hours=
             xtype: 'textarea',
             fieldLabel: 'About',
             name: 'desc',
-            anchor: '100% -53'  
+            width: 400,
+            height: 150       
         }]
     });
 
@@ -356,7 +357,7 @@ function showAddSessionWindow(){
                 height:350,
                 x:250,
                 y:150,
-                closeAction:'hide',
+                closeAction:'destroy',
                 plain: true,
 
                 items: form,
