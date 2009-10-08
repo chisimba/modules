@@ -85,7 +85,7 @@ $addButton->setId('add-session');
 $addButtonShow=$this->objUser->isLecturer()? $addButton->show():"";
 $toolbar = $this->getObject('contextsidebar','context');
 $cssLayout->setLeftColumnContent($toolbar->show());
-$rightSideColumn = .$content.'<h1>'.$this->objContext->getTitle($this->contextcode).'</h1><div id="grouping-grid">'.$addButtonShow.'<br/><br /></div>';
+$rightSideColumn = $content.'<h1>'.$this->objContext->getTitle($this->contextcode).'</h1><div id="grouping-grid">'.$addButtonShow.'<br/><br /></div>';
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 $submitUrl = $this->uri(array('action' => 'saveschedule'));
 $data='';
