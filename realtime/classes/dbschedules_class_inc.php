@@ -29,7 +29,7 @@ class dbschedules extends dbTable{
             'meeting_date'=>$date,
             'start_time'=>$starttime,
             'end_time'=>$endtime,
-            'type'=>$type
+            'session_type'=>$type
         );
         $scheduleId = $this->update('id',$id, $data);
         }
@@ -47,7 +47,7 @@ class dbschedules extends dbTable{
             'meeting_date'=>$date,
             'start_time'=>$starttime,
             'end_time'=>$endtime,
-            'type'=>$type
+            'session_type'=>$type
         );
 
         if($this->titleExists($title)){
@@ -67,7 +67,7 @@ class dbschedules extends dbTable{
 
     public function getSchedules()
     {
-        $sql="select * from tbl_realtime_schedules sc where sc.owner = '".$this->objUser->userId()."' or type='public'";
+        $sql="select * from tbl_realtime_schedules sc where sc.owner = '".$this->objUser->userId()."' or session_type='public'";
               
         $rows=$this->getArray($sql);
         return $rows;
