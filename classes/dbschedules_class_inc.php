@@ -69,7 +69,6 @@ class dbschedules extends dbTable{
     public function getSchedules()
     {
         $sql="select * from tbl_realtime_schedules sc where sc.owner = '".$this->objUser->userId()."' or session_type='public'";
-              
         $rows=$this->getArray($sql);
         return $rows;
     }
