@@ -82,10 +82,6 @@ class sessionmanager extends object{
             $registerLink->link="New user? Register here";
             $rightSideColumn .=  '<h1>Please Login</h1>In order to use live presentations, please login first<br/>
             '.$registerLink->show();
-            $registerLink2->link($this->uri(array('action'=>'signinagain')));
-            $registerLink2->link='<font color="red"><h1>Seeing blank page? Sign in again here</h1></font>';
-
-            $rightSideColumn.=$registerLink2->show();
             $cssLayout->setLeftColumnContent( $objBlocks->showBlock('login', 'security'));
 
             // Add Right Column
@@ -109,6 +105,10 @@ class sessionmanager extends object{
          <font color="green"><b>Add Session</b></font> button.
          </p>
          ';
+                    $registerLink2->link($this->uri(array('action'=>'signinagain')));
+            $registerLink2->link='<font color="red"><h1>Seeing blank page? Sign in again here</h1></font>';
+            $scheduleTitle.=$registerLink2->show();
+
         //load class
         $this->loadclass('link','htmlelements');
         $objIcon= $this->newObject('geticon','htmlelements');
