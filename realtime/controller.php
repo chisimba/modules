@@ -310,11 +310,13 @@ class realtime extends controller {
         $date=$this->getParam('date');
         $starttime=$this->getParam('starttime');
         $endtime=$this->getParam('endtime');
+        $type=$this->getParam('typefield');
         $this->objDbSchedules->addSchedule(
             $sessionTitle,
             $date,
             $starttime,
-            $endtime
+            $endtime,
+            $type
         );
         $this->nextAction(NULL);
     }
@@ -324,12 +326,14 @@ class realtime extends controller {
         $starttime=$this->getParam('starttime');
         $endtime=$this->getParam('endtime');
         $id=$this->getParam('sessionid');
+        $type=$this->getParam('typefield');
+
         $this->objDbSchedules->updateSchedule(
             $sessionTitle,
             $date,
             $starttime,
             $endtime,
-            $id
+            $id,$type
         );
         $this->nextAction(NULL);
     }
