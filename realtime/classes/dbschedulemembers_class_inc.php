@@ -62,7 +62,8 @@ class dbschedulemembers extends dbTable{
     }
 
     public function getSessionsThatAmAMember(){
-        $sql="select * from " .$this->table." where userid ='".$this->objUser->userId()."'";
+        $sql="select * from tbl_realtime_schedule_members ms, tbl_realtime_schedules sc
+         where (ms.userid ='".$this->objUser->userId()."' or sc.session_type='Public') and ms.sessionid=sc.id ";
         $rows=$this->getArray($sql);
         return $rows;
     }
