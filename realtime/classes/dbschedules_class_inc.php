@@ -54,6 +54,7 @@ class dbschedules extends dbTable{
             return FALSE;
         }else{
         $scheduleId = $this->insert($data);
+        if($scheduleId)
         $this->members->addRoomMember($this->objUser->userId(),$scheduleId);
         return $scheduleId;
         }
