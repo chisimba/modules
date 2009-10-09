@@ -48,8 +48,11 @@
                                     ['11:30 pm']];
 var addMemberForm;
 var editform;
-
-function initEditScheduleFrame(meetingDate,timeFrom,timeTo,url,sessionTitle,deleteUrl){
+    var types= [
+        ['Private'],
+        ['Public'],
+    ];
+function initEditScheduleFrame(meetingDate,timeFrom,timeTo,url,sessionTitle,sessiontype){
     var startDateField=new Ext.form.DateField(
     {
         fieldLabel:'Date',
@@ -69,7 +72,26 @@ function initEditScheduleFrame(meetingDate,timeFrom,timeTo,url,sessionTitle,dele
         data : hours
     });
 
+    var typestore = new Ext.data.ArrayStore({
+        fields: ['type'],
+        data : types
+    });
+ var typefield = new Ext.form.ComboBox({
+        store: typestore,
+        displayField:'type',
+        fieldLabel:'Type',
+        typeAhead: true,
+        mode: 'local',
+        editable:false,
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select session type...',
+        selectOnFocus:true,
+        value:sessiontype,
+          anchor:'50%',
+        name : 'typefield'
 
+    });
     var timeFromField = new Ext.form.ComboBox({
         store: timefromstore,
         displayField:'timefrom',
@@ -87,7 +109,7 @@ function initEditScheduleFrame(meetingDate,timeFrom,timeTo,url,sessionTitle,dele
 
     });
 
-
+ 
     var timetostore = new Ext.data.ArrayStore({
         fields: ['timeto'],
         data :hours
@@ -127,7 +149,7 @@ function initEditScheduleFrame(meetingDate,timeFrom,timeTo,url,sessionTitle,dele
             allowBlank:false,
             anchor:'80%'  // anchor width by percentage
           },
-          startDateField,timeFromField,timeToField]
+          startDateField,timeFromField,timeToField,typefield]
     });
  
 }
@@ -185,7 +207,25 @@ function initAddScheduleFrame(url){
         data : hours
     });
 
+    var typestore = new Ext.data.ArrayStore({
+        fields: ['type'],
+        data : types
+    });
+ var typefield = new Ext.form.ComboBox({
+        store: typestore,
+        displayField:'type',
+        fieldLabel:'Type',
+        typeAhead: true,
+        mode: 'local',
+        editable:false,
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select session type...',
+        selectOnFocus:true,
+        anchor:'50%',
+        name : 'typefield'
 
+    });
     var timeFromField = new Ext.form.ComboBox({
         store: timefromstore,
         displayField:'timefrom',
@@ -241,7 +281,7 @@ function initAddScheduleFrame(url){
             allowBlank:false,
             anchor:'80%'  // anchor width by percentage
           },
-          startDateField,timeFromField,timeToField]
+          startDateField,timeFromField,timeToField,typefield]
 
 });
 

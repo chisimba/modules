@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <update>
+        <table>tbl_realtime_schedules</table>
+        <version>2.2</version>
+        <description>Modify course proposal members table</description>
+        <data>
+        	<add>
+    			<length>10</length>
+                        <name>type</name>
+                        <type>text</type>
+		</add>
+
+
+	</data>
+    </update>
+
+
+    <update>
+        <table>tbl_ads_course_comments</table>
+        <version>0.21</version>
+        <description>Modify course proposal comments table</description>
+        <data>
+        	<add>
+                     <length>32</length>
+                     <name>unit_type</name>
+                     <type>text</type>
+		</add>
+
+	</data>
+    </update>
+
+    <update>
+        <table>tbl_ads_course_proposals</table>
+        <version>0.23</version>
+        <description>Added school field to the course proposals table</description>
+        <data>
+        	<add>
+                     <length>32</length>
+                     <name>school</name>
+                     <type>text</type>
+		</add>
+
+	</data>
+    </update>
+</updates>

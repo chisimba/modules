@@ -108,7 +108,7 @@ class sessionmanager extends object{
         $registerLink2=new link();
          $registerLink2->link($this->uri(array('action'=>'signinagain')));
          $registerLink2->link='<h4><font color="red">Seeing blank page? Sign in again here</font></h4>';
-          $scheduleTitle.=$registerLink2->show();
+         // $scheduleTitle.=$registerLink2->show();
 
         //load class
         $this->loadclass('link','htmlelements');
@@ -327,6 +327,7 @@ class sessionmanager extends object{
             $meetingDate=$sessionData['meeting_date'];
             $timeFrom=$sessionData['start_time'];
             $timeTo=$sessionData['end_time'];
+            $sessiontype=$sessionData['type'];
         }
         $sessionTitle.=$showEdit;
         //data grid from db
@@ -388,8 +389,9 @@ class sessionmanager extends object{
                 var registerUrl='".str_replace("amp;", "", $registerUrl)."';
                 var registerUrl2='".str_replace("amp;", "", $registerUrl2)."';
                 var userlist=[$userlist];
+                var sessiontype='$sessiontype';
                 initAddMember(userlist,addmemberUrl);
-                initEditScheduleFrame(meetingDate,timeFrom,timeTo,editUrl,sessionTitle,deleteUrl);
+                initEditScheduleFrame(meetingDate,timeFrom,timeTo,editUrl,sessionTitle,sessiontype);
 
                 var sessiondata=[meetingDate,timeFrom,timeTo,editUrl,sessionTitle,deleteUrl,registerUrl,registerUrl2];
 
