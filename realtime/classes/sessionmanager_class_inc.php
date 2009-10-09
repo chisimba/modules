@@ -107,7 +107,7 @@ class sessionmanager extends object{
          ';
         $registerLink2=new link();
          $registerLink2->link($this->uri(array('action'=>'signinagain')));
-         $registerLink2->link='<font color="red"><h1>Seeing blank page? Sign in again here</h1></font>';
+         $registerLink2->link='<h4><font color="red">Seeing blank page? Sign in again here</font></h4>';
           $scheduleTitle.=$registerLink2->show();
 
         //load class
