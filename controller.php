@@ -1,126 +1,124 @@
 <?php
 
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
-    /**
-    * Realtime Controller
-    * This class controls all functionality to run the realtime module.
-    * @package realtime
-    * @author David Wafula
-    * @version $Id$
-    */
-class realtime extends controller
-{
-        /**
-        * @var object $objUser: The user class in the security module
-        * @access public
-        */
+/**
+ * Realtime Controller
+ * This class controls all functionality to run the realtime module.
+ * @package realtime
+ * @author David Wafula
+ * @version $Id$
+ */
+class realtime extends controller {
+/**
+ * @var object $objUser: The user class in the security module
+ * @access public
+ */
     public $objUser;
 
-        /**
-        * @var string $userId: The user id of the currently logged in user
-        * @access public
-        */
+    /**
+     * @var string $userId: The user id of the currently logged in user
+     * @access public
+     */
     public $userId;
 
-        /**
-        * @var string $userName: The username of the currently logged in user
-        * @access public
-        */
+    /**
+     * @var string $userName: The username of the currently logged in user
+     * @access public
+     */
     public $userName;
 
-        /**
-        * @var string $userLevel: The user's access level
-        * @access public
-        */
+    /**
+     * @var string $userLevel: The user's access level
+     * @access public
+     */
     public $userLevel;
 
-        /**
-        * @var object $objConfig: The altconfig class in the config module
-        * @access public
-        */
+    /**
+     * @var object $objConfig: The altconfig class in the config module
+     * @access public
+     */
     public $objConfig;
 
-        /**
-        * @var object $objLog: The logactivity class in the logger module
-        * @access public
-        */
+    /**
+     * @var object $objLog: The logactivity class in the logger module
+     * @access public
+     */
     public $objLog;
 
 
-        /**
-         * @access public
-         * @var contexctcode
-         */
+    /**
+     * @access public
+     * @var contexctcode
+     */
     public $contextCode;
 
-        /**
-         * This points to module root path
-         * @var <type>
-         */
+    /**
+     * This points to module root path
+     * @var <type>
+     */
     public $moduleRootPath;
 
-        /**
-         * config object
-         * @var <type>
-         */
+    /**
+     * config object
+     * @var <type>
+     */
     public $objAltConfig;
 
-        /**
-         * Link object
-         * @var <type>
-         */
+    /**
+     * Link object
+     * @var <type>
+     */
     public $objLink;
 
-        /**
-         * JOD doc converter path
-         * @var <type>
-         */
+    /**
+     * JOD doc converter path
+     * @var <type>
+     */
     public $jodconverterPath;
 
-        /**
-         * Files object
-         * @var <type>
-         */
+    /**
+     * Files object
+     * @var <type>
+     */
     public $objFiles;
 
-        /**
-         *  convert obj
-         * @var <type>
-         */
+    /**
+     *  convert obj
+     * @var <type>
+     */
     public $converter;
 
-        /**
-         * Upload path
-         * @var <type>
-         */
+    /**
+     * Upload path
+     * @var <type>
+     */
     public $uploadPath;
-        /**
-         *For starting the slide server
-         * @var <type>
-         */
+    /**
+     *For starting the slide server
+     * @var <type>
+     */
     public  $realtimeManager;
 
-        /**
-         * link to requirements test
-         * @var String
-         */
+    /**
+     * link to requirements test
+     * @var String
+     */
     public $reqTest;
 
-        /**
-         *unique session id
-         * @var String
-         */
+    /**
+     *unique session id
+     * @var String
+     */
     public $sessionId;
 
-        /**
-         * This is the session title
-         * @var String
-         */
+    /**
+     * This is the session title
+     * @var String
+     */
     public $sessionTitle;
 
     /**
@@ -130,10 +128,10 @@ class realtime extends controller
     public $room='default';
 
 
-/**
- * flag to shw whether we are starting a presentation or joining one
- * @var <type>
- */
+    /**
+     * flag to shw whether we are starting a presentation or joining one
+     * @var <type>
+     */
     public $ispresenter='yes';
 
     /**
@@ -154,21 +152,20 @@ class realtime extends controller
      */
 
     public $joinMeetingId="none";
-/**
-   *Holds reference to class dbschedules used to manipulating entries
-   * in tbl_virtualclassroon_schedules table
-   * @var <type>
-   */
+    /**
+     *Holds reference to class dbschedules used to manipulating entries
+     * in tbl_virtualclassroon_schedules table
+     * @var <type>
+     */
     public $objDbSchedules;
 
 
-/**
- *holds reference to schedule members
- * @var <type>
- */
+    /**
+     *holds reference to schedule members
+     * @var <type>
+     */
     public $objDbScheduleMembers;
-    function init()
-    {
+    function init() {
         $this->objDbSchedules=$this->getObject('dbschedules');
         $this->objDbScheduleMembers=$this->getObject('dbschedulemembers');
         $this->objLink= $this->getObject('link', 'htmlelements');
@@ -193,19 +190,15 @@ class realtime extends controller
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->userName = $this->objUser->username($this->userId);
-        if ($this->objUser->isAdmin())
-        {
+        if ($this->objUser->isAdmin()) {
             $this->userLevel = 'admin';
         }
-        elseif ($this->objUser->isLecturer())
-        {
+        elseif ($this->objUser->isLecturer()) {
             $this->userLevel = 'lecturer';
         }
-        elseif ($this->objUser->isStudent())
-        {
+        elseif ($this->objUser->isStudent()) {
             $this->userLevel = 'student';
-        } else
-        {
+        } else {
             $this->userLevel = 'guest';
         }
         $this->objContext = $this->getObject('dbcontext', 'context');
@@ -233,16 +226,16 @@ class realtime extends controller
         return $this->$method();
     }
 
-  /**
-  *
-  * Method to convert the action parameter into the name of
-  * a method of this class.
-  *
-  * @access private
-  * @param string $action The action parameter passed byref
-  * @return string the name of the method
-  *
-  */
+    /**
+     *
+     * Method to convert the action parameter into the name of
+     * a method of this class.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return string the name of the method
+     *
+     */
     function getMethod(& $action) {
         if ($this->validAction($action)) {
             return '__'.$action;
@@ -252,18 +245,18 @@ class realtime extends controller
         }
     }
 
-  /**
-  *
-  * Method to check if a given action is a valid method
-  * of this class preceded by double underscore (__). If it __action
-  * is not a valid method it returns FALSE, if it is a valid method
-  * of this class it returns TRUE.
-  *
-  * @access private
-  * @param string $action The action parameter passed byref
-  * @return boolean TRUE|FALSE
-  *
-  */
+    /**
+     *
+     * Method to check if a given action is a valid method
+     * of this class preceded by double underscore (__). If it __action
+     * is not a valid method it returns FALSE, if it is a valid method
+     * of this class it returns TRUE.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return boolean TRUE|FALSE
+     *
+     */
     function validAction(& $action) {
         if (method_exists($this, '__'.$action)) {
             return TRUE;
@@ -281,13 +274,13 @@ class realtime extends controller
         return "home_tpl.php";
     }
 
-    function __showdetails(){
+    function __showdetails() {
         $id=$this->getParam('id');
         $this->setVarByRef('sessionid',$id);
         return "sessionmembers_tpl.php";
 
     }
-    function __deleteroommember(){
+    function __deleteroommember() {
         $userid=$this->getParam('userid');
         $sessionid=$this->getParam('sessionid');
         $this->objDbScheduleMembers->deleteRoomMember($userid);
@@ -295,7 +288,7 @@ class realtime extends controller
         return "sessionmembers_tpl.php";
 
     }
-    function __saveroommember(){
+    function __saveroommember() {
         $sessionid=$this->getParam('sessionid');
         $userid=$this->getParam('userfield');
         $this->objDbScheduleMembers->addRoomMember($userid,$sessionid);
@@ -303,7 +296,7 @@ class realtime extends controller
         return "sessionmembers_tpl.php";
     }
 
-   function __deleteschedule(){
+    function __deleteschedule() {
         $sessionid=$this->getParam('sessionid');
         $this->objDbSchedules->deleteSchedule($sessionid);
         $this->nextAction(NULL);
@@ -312,7 +305,7 @@ class realtime extends controller
     /**
      * Ssave the newly created  session details into the database
      */
-    function __saveschedule(){
+    function __saveschedule() {
         $sessionTitle=$this->getParam('title');
         $date=$this->getParam('date');
         $starttime=$this->getParam('starttime');
@@ -325,7 +318,7 @@ class realtime extends controller
         );
         $this->nextAction(NULL);
     }
-   function __updatesession(){
+    function __updatesession() {
         $sessionTitle=$this->getParam('title');
         $date=$this->getParam('date');
         $starttime=$this->getParam('starttime');
@@ -340,24 +333,28 @@ class realtime extends controller
         );
         $this->nextAction(NULL);
     }
-    function __deletesession(){
+    function __deletesession() {
         $id=$this->getParam('sessionid');
         $this->objDbSchedules->deleteSchedule($id);
         $this->objDbScheduleMembers->deleteSession($id);
         $this->nextAction(NULL);
     }
-  function __registerexisting(){
-   $sessionid=$this->getParam('sessionid');
-   $userid=$this->objUser->userid();
-   $this->objDbScheduleMembers->addRoomMember($userid,$sessionid);
-   return $this->nextAction('home');
-  }
+    function __registerexisting() {
+        $sessionid=$this->getParam('sessionid');
+        $userid=$this->objUser->userid();
+        $this->objDbScheduleMembers->addRoomMember($userid,$sessionid);
+        return $this->nextAction('home');
+    }
+    function __signinagain() {
+        $this->objUser->logout();
+        $sessionid=$this->getParam('sessionid');
+        return  $this->nextAction('registerexisting',  array ('sessionid' => $sessionid ));
+    }
 
-  function __register(){
-      return $this->saveNewUser($this->getParam('sessionid'));
-  }
-    public function requiresLogin($action)
-    {
+    function __register() {
+        return $this->saveNewUser($this->getParam('sessionid'));
+    }
+    public function requiresLogin($action) {
 
         $required = array('registerexisting','deleteroommember', 'deletesession', 'home', 'saveschedule', 'showdetails',  'updatesesion');
 
@@ -368,16 +365,15 @@ class realtime extends controller
         }
     }
 
-  function __showregister(){
-      $id=$this->getParam('sessionid');
-      $this->setVarByRef('sessionid',$id);
-      return "registrationhome_tpl.php";
-  }
-   /**
+    function __showregister() {
+        $id=$this->getParam('sessionid');
+        $this->setVarByRef('sessionid',$id);
+        return "registrationhome_tpl.php";
+    }
+    /**
      * Method to add a new user
      */
-    protected function saveNewUser($sessionid)
-    {
+    protected function saveNewUser($sessionid) {
         if (!$_POST) { // Check that user has submitted a page
 
             return $this->nextAction(NULL);
@@ -424,10 +420,10 @@ class realtime extends controller
         if ($password == '') {
             $problems[] = 'nopasswordentered';
         } else if ($repeatpassword == '') {
-            $problems[] = 'norepeatpasswordentered';
-        } else if ($password != $repeatpassword) {
-            $problems[] = 'passwordsdontmatch';
-        }
+                $problems[] = 'norepeatpasswordentered';
+            } else if ($password != $repeatpassword) {
+                    $problems[] = 'passwordsdontmatch';
+                }
         // Check that all required field are not empty
         if (!$this->checkFields($checkFields)) {
             $problems[] = 'missingfields';
@@ -445,17 +441,17 @@ class realtime extends controller
             $this->setVar('mode', 'addfixup');
             $this->setVarByRef('problems', $problems);
             $this->setVarByRef('sessionid',$sessionid);
-                      
+
             return 'registrationhome_tpl.php';
         } else {
-            // Else add to database
+        // Else add to database
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber, 'useradmin', $accountstatus);
             // Email Details to User
             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
             $this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             $this->setSession('time', $password);
-           $this->objDbScheduleMembers->addRoomMember($userId,$sessionid);
+            $this->objDbScheduleMembers->addRoomMember($userId,$sessionid);
 
             return $this->nextAction('home');
         }
@@ -465,8 +461,7 @@ class realtime extends controller
      * @param string $problem Problem Code
      * @return string Explanation of Problem
      */
-    protected function explainProblemsInfo($problem)
-    {
+    protected function explainProblemsInfo($problem) {
         switch ($problem) {
             case 'usernametaken':
                 return 'The username you have chosen has been taken already.';
@@ -474,7 +469,7 @@ class realtime extends controller
                 return 'The supplied email address has been taken already.';
             case 'passwordsdontmatch':
                 return 'The passwords you have entered do not match.';
-                //case 'missingfields': return 'Some of the required fields are missing.';
+            //case 'missingfields': return 'Some of the required fields are missing.';
 
             case 'emailnotvalid':
                 return 'The email address you enter is not a valid format.';
@@ -491,8 +486,7 @@ class realtime extends controller
      * @param array $checkFields List of fields to check
      * @return boolean Whether all fields are entered or not
      */
-    private function checkFields($checkFields)
-    {
+    private function checkFields($checkFields) {
         $allFieldsOk = TRUE;
         $this->messages = array();
         foreach($checkFields as $field) {
@@ -505,8 +499,7 @@ class realtime extends controller
     /**
      * Method to inform the user that their registration has been successful
      */
-    protected function detailsSent()
-    {
+    protected function detailsSent() {
         $user = $this->objUserAdmin->getUserDetails($this->getSession('id'));
         if ($user == FALSE) {
             return $this->nextAction(NULL, NULL, '_default');
