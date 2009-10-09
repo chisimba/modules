@@ -2,12 +2,12 @@
 <updates>
     <update>
         <table>tbl_realtime_schedules</table>
-        <version>2.3</version>
+        <version>2.4</version>
         <description>Modify course proposal members table</description>
         <data>
         	<add>
-    			<length>10</length>
-                        <name>type</name>
+    			<length>20</length>
+                        <name>session_type</name>
                         <type>text</type>
 		</add>
 
