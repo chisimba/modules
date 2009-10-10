@@ -337,7 +337,7 @@ class sessionmanager extends object{
             $timeTo=$sessionData['end_time'];
             $sessiontype=$sessionData['type'];
         }
-        $sessionTitle.=$showEdit;
+        //$sessionTitle.=$showEdit;
         //data grid from db
         $dbdata=$this->objDbScheduleMembers->getScheduleMembers($sessionid);
         $total=count($dbdata);
@@ -398,10 +398,11 @@ class sessionmanager extends object{
                 var registerUrl2='".str_replace("amp;", "", $registerUrl2)."';
                 var userlist=[$userlist];
                 var sessiontype='$sessiontype';
+                var showEdit='$showEdit';
                 initAddMember(userlist,addmemberUrl);
-                initEditScheduleFrame(meetingDate,timeFrom,timeTo,editUrl,sessionTitle,sessiontype);
+                initEditScheduleFrame(meetingDate,timeFrom,timeTo,editUrl,sessionTitle,sessiontype,showEdit);
 
-                var sessiondata=[meetingDate,timeFrom,timeTo,editUrl,sessionTitle,deleteUrl,registerUrl,registerUrl2];
+                var sessiondata=[meetingDate,timeFrom,timeTo,editUrl,sessionTitle,deleteUrl,registerUrl,registerUrl2,sessiontype];
 
                 var membersdata=[$data];
                 showSessionDetails(sessiondata,membersdata);

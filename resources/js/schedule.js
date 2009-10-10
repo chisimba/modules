@@ -52,7 +52,7 @@ var editform;
         ['Private'],
         ['Public'],
     ];
-function initEditScheduleFrame(meetingDate,timeFrom,timeTo,url,sessionTitle,sessiontype){
+function initEditScheduleFrame(meetingDate,timeFrom,timeTo,url,sessionTitle,sessiontype,showEdit){
     var startDateField=new Ext.form.DateField(
     {
         fieldLabel:'Date',
@@ -181,6 +181,7 @@ function showEditSessionWin(){
         text: 'Close',
         handler: function(){
         editSessionWin.hide();
+        window.location.reload(true);
         }
         }]
         });
@@ -434,13 +435,23 @@ var grid = new xg.GridPanel({
       });
   var buttons= new ButtonPanel(
 
-        [{
+       [
+       {
             
             text:'Add Member',
             handler: function(){
            showAddMemberWin();
             }
-        }]
+        },
+           {
+
+            text:'Edit Session',
+            handler: function(){
+           showEditSessionWin();
+            }
+        }
+
+       ]
     );
 
 var form = new Ext.form.FormPanel({
@@ -458,7 +469,13 @@ var form = new Ext.form.FormPanel({
             fieldLabel: '<b>Session Title<b>',
             value: '<h3>'+sessiondata[4]+'</h3>'
             }),
+            
             new Ext.form.DisplayField({
+            fieldLabel: '<b>Session Type<b>',
+            value: '<h3>'+sessiondata[8]+'</h3>'
+            }),
+            new Ext.form.DisplayField({
+
             fieldLabel: '<b>Date<b>',
             value: sessiondata[0]
             }),
