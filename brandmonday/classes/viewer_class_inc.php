@@ -126,7 +126,7 @@ class viewer extends object {
             $msgtbl->cellspacing = 3;
             $msgtbl->startRow();
             $msgtbl->addCell($image, 1);
-            $msgtbl->addCell($txt);
+            $msgtbl->addCell($this->objWashout->parseText($txt));
             $msgtbl->endRow();
 
             $plusmessages .= $msgtbl->show();
@@ -149,7 +149,7 @@ class viewer extends object {
             $msgtbl2->cellspacing = 3;
             $msgtbl2->startRow();
             $msgtbl2->addCell($image, 1);
-            $msgtbl2->addCell($txt);
+            $msgtbl2->addCell($this->objWashout->parseText($txt));
             $msgtbl2->endRow();
 
             $minusmessages .= $msgtbl2->show();
@@ -172,7 +172,7 @@ class viewer extends object {
             $msgtbl3->cellspacing = 3;
             $msgtbl3->startRow();
             $msgtbl3->addCell($image, 1);
-            $msgtbl3->addCell($txt);
+            $msgtbl3->addCell($this->objWashout->parseText($txt));
             $msgtbl3->endRow();
 
             $menmessages .= $msgtbl3->show();
@@ -347,9 +347,15 @@ class viewer extends object {
         $tlink = $this->newObject ( 'link', 'htmlelements' );
         $tlink->href = "http://twitter.com/home/?status=".urlencode($this->objLanguage->languageText ( "mod_brandmonday_accessgranted", "brandmonday" )).": ".$this->teeny->create(urlencode($this->uri('')));
         $tlink->link = $this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" );
+        $tlink->target = "_blank";
         $str = $tlink->show()."<br />".$this->objLanguage->languageText("mod_brandmonday_tweetthisblurb", "brandmonday");
         
         return $objFeatureBox->show($this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" ), $str);
+    }
+    
+    public function loginBlock() {
+        $objLogin = $this->getObject('logininterface', 'security');
+        return $objLogin->renderLoginBox('brandmonday');
     }
 
 

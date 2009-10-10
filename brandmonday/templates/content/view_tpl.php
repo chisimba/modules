@@ -37,7 +37,8 @@ $rightColumn .= $this->objViewer->adBlocks();
 $leftColumn .= $this->objViewer->chisimbaBlock();
 $leftColumn .= $this->objViewer->awardsBlock();
 $leftColumn .= $this->objViewer->rssBlock();
-$leftColumn .= $this->objViewer->tweetBlock();
+$leftColumn .= $this->objViewer->loginBlock();
+// $leftColumn .= $this->objViewer->tweetBlock();
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );

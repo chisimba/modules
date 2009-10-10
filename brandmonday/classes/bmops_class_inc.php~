@@ -272,6 +272,7 @@ class bmops extends object {
         $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
         $objFlashGraphData->graphType = 'pie';
         $tagarr = $this->objDbBm->getBmTagsWeekly('tbl_bmplus');
+var_dump($tagarr); die();
         foreach($tagarr as $tagarray) {
             if(!empty($tagarray)) {
                 $value = strtolower($tagarray[0]['meta_value']);
@@ -381,8 +382,8 @@ class bmops extends object {
         }
     }
 
-    public function getLastPosts($num) {
-        return $this->objDbBm->getLast($num);
+    public function getLastPosts($num, $mood) {
+        return $this->objDbBm->getLast($num, $mood);
     }
 }
 ?>

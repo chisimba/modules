@@ -37,6 +37,7 @@ CONFIG: chistext|[img]http://avoir.uwc.ac.za/usrfiles/filemanager_thumbnails/gen
 CONFIG: chishead|Powered by|mod_brandmonday_chishead
 CONFIG: abouttext|BrandMonday is an aggregator of data from twitter about brands|mod_brandmonday_abouttext
 CONFIG: abouthead|About #BrandMonday|mod_brandmonday_abouthead
+CONFIG: exclusions|uneducated,spam,fail,you,stupid,work,lame,bluemonday,win,brandmonday,capetown,fail,brandplus,brandminus,wtf,ftw,ftl|mod_brandmonday_conf_excludes
 
 TEXT: mod_brandmonday_bmtweets|brandmonday tweets|#BrandMonday: Tweet about Brands on Mondays
 TEXT: mod_brandmonday_bminit|initiative of|an Initiative of
@@ -44,6 +45,7 @@ TEXT: mod_brandmonday_bminit2|via twitter|via Twitter
 TEXT: mod_brandmonday_bp|brandplus|#BrandPlus
 TEXT: mod_brandmonday_bm|brandminus|#BrandMinus
 TEXT: mod_brandmonday_mentions|mentions|Mentions
+TEXT: mod_brandmonday_conf_excludes|exclude words|Words to be excluded (comma seperated, no spaces)
 
 COMMENT: Config stuff for all the bits and doodads
 TEXT: mod_brandmonday_fbtext|featured blogger text|Featured Blogger text
@@ -73,4 +75,4 @@ TEXT: mod_brandmonday_disclaimer|disclaimer header|Disclaimer
 COMMENT: Tweet this box
 TEXT: mod_brandmonday_accessgranted|Acces granted|#YourCompanyName just signed up for #BrandMonday; tweet about our service and tag it #BrandPlus or #BrandMinus
 TEXT: mod_brandmonday_tweetthis|Get involved|Get your company involved!
-TEXT: mod_brandmonday_tweetthisblurb|Remember to change the #YourCompanyName to your actual company or service name. Please make sure that you use a hash in front of the name to start a social meme for your brand!
+TEXT: mod_brandmonday_tweetthisblurb|blurb|Remember to change the #YourCompanyName to your actual company or service name. Please make sure that you use a hash in front of the name to start a social meme for your brand!

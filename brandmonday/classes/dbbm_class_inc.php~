@@ -48,9 +48,14 @@ class dbbm extends dbTable {
      * Constructor
      *
      */
+     
+    public $excludeList;
+    
     public function init() {
         parent::init ( 'tbl_bmmentions' );
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->excludeList = $this->objSysConfig->getValue('exclusions', 'brandmonday');
+        $this->excludeList = explode(",", $this->excludeList);
     }
 
     public function smartUpdate($resMinus, $resPlus, $resMentions) {
@@ -147,7 +152,8 @@ class dbbm extends dbTable {
         }
         $tags = $this->getArray($sql);
         foreach($tags as $recs) {
-            if(strtolower($recs['meta_value']) != 'brandmonday' && strtolower($recs['meta_value']) != 'brandplus' && strtolower($recs['meta_value']) != 'brandminus' && strtolower($recs['meta_value']) != 'fail' && strtolower($recs['meta_value']) != 'wtf' && strtolower($recs['meta_value']) != 'ftw' && strtolower($recs['meta_value']) != 'ftl') {
+            if(!in_array(strtolower($recs['meta_value']), $this->excludeList)) {
+            //if(strtolower($recs['meta_value']) != 'brandmonday' && strtolower($recs['meta_value']) != 'brandplus' && strtolower($recs['meta_value']) != 'brandminus' && strtolower($recs['meta_value']) != 'fail' && strtolower($recs['meta_value']) != 'wtf' && strtolower($recs['meta_value']) != 'ftw' && strtolower($recs['meta_value']) != 'ftl') {
                 $tagarr[] = $recs['meta_value'];
             }
         }
@@ -162,7 +168,11 @@ class dbbm extends dbTable {
         // var_dump($tweets);
         foreach ($tweets as $ids) {
             $tweetid = $ids['tweetid'];
-            $tags[] = $this->getArray("SELECT DISTINCT meta_value FROM tbl_tags WHERE item_id = '$tweetid' AND meta_value != 'brandplus' AND meta_value != 'brandminus' AND meta_value != 'brandmonday' AND meta_value != 'wtf' AND meta_value != 'fail'  AND meta_value != 'ftw'");
+            $sql = "SELECT DISTINCT meta_value FROM tbl_tags WHERE item_id = '$tweetid'"; // AND meta_value != 'brandplus' AND meta_value != 'brandminus' AND meta_value != 'brandmonday' AND meta_value != 'wtf' AND meta_value != 'fail'  AND meta_value != 'ftw'";
+            foreach($this->excludeList as $word) {
+                $sql .= " AND meta_value != $word ";
+            }
+            $tags[] = $this->getArray($sql); 
         }
         return $tags;
     }

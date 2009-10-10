@@ -126,7 +126,7 @@ class viewer extends object {
             $msgtbl->cellspacing = 3;
             $msgtbl->startRow();
             $msgtbl->addCell($image, 1);
-            $msgtbl->addCell($txt);
+            $msgtbl->addCell($this->objWashout->parseText($txt));
             $msgtbl->endRow();
 
             $plusmessages .= $msgtbl->show();
@@ -345,11 +345,17 @@ class viewer extends object {
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
         // set up a link for Tweet this
         $tlink = $this->newObject ( 'link', 'htmlelements' );
-        $tlink->href = "http://twitter.com/home/?status=".$this->objLanguage->languageText ( "mod_brandmonday_accessgranted", "brandmonday" ).": ".$this->teeny->create(urlencode($this->uri('')));
+        $tlink->href = "http://twitter.com/home/?status=".urlencode($this->objLanguage->languageText ( "mod_brandmonday_accessgranted", "brandmonday" )).": ".$this->teeny->create(urlencode($this->uri('')));
         $tlink->link = $this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" );
+        $tlink->target = "_blank";
         $str = $tlink->show()."<br />".$this->objLanguage->languageText("mod_brandmonday_tweetthisblurb", "brandmonday");
         
         return $objFeatureBox->show($this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" ), $str);
+    }
+    
+    public function loginBlock() {
+        $objLogin = $this->getObject('logininterface', 'security');
+        return $objLogin->renderLoginBox('brandmonday');
     }
 
 
