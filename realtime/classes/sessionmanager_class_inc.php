@@ -335,7 +335,7 @@ class sessionmanager extends object{
             $meetingDate=$sessionData['meeting_date'];
             $timeFrom=$sessionData['start_time'];
             $timeTo=$sessionData['end_time'];
-            $sessiontype=$sessionData['type'];
+            $sessiontype=$sessionData['session_type'];
         }
         //$sessionTitle.=$showEdit;
         //data grid from db
