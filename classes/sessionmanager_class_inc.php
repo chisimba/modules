@@ -162,9 +162,9 @@ class sessionmanager extends object{
                 $sessionOwner=$sessionData['owner'];
                 $creationDate=$sessionData['creation_date'];
             }
-            if($index == 1){
-             $prevTitle=$sessionTitle;
-            }
+         //   if($index == 1){
+         //    $prevTitle=$sessionTitle;
+         //   }
            if($prevTitle != $sessionTitle){
 
             $prevTitle=$sessionTitle;
