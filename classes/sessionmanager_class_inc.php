@@ -153,14 +153,21 @@ class sessionmanager extends object{
         $dbdata=$this->objDbScheduleMembers->getSessionsThatAmAMember();
         $total=count($dbdata);
         $index=1;
+        $prevTitle='';
         foreach($dbdata as $row){
             $xsessionData=$this->objDbSchedules->getSchedule($row['sessionid']);
+
             foreach($xsessionData as $sessionData){
                 $sessionTitle=$sessionData['title'];
                 $sessionOwner=$sessionData['owner'];
                 $creationDate=$sessionData['creation_date'];
-                
             }
+            if($index == 1){
+             $prevTitle=$sessionTitle;
+            }
+           if($prevTitle != $sessionTitle){
+
+            $prevTitle=$sessionTitle;
             $deleteLink=new link();
             $editLink=new link();
             $detailsLink=new link();
@@ -209,7 +216,8 @@ class sessionmanager extends object{
             if($index < $total){
                 $data.=',';
             }
-            $index++;
+         }
+          $index++;
         }
       
 

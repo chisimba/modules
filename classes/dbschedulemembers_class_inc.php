@@ -62,14 +62,9 @@ class dbschedulemembers extends dbTable{
     }
 
     public function getSessionsThatAmAMember(){
-        $sql="select * from tbl_realtime_schedule_members ms, tbl_realtime_schedules sc
-         where ms.userid ='".$this->objUser->userId()."' and ms.sessionid=sc.id ";
-        $rows=$this->getArray($sql);
-        return $rows+$this->getPublicSessionsNotOwnerByMe();
-    }
-
-    public function getPublicSessionsNotOwnerByMe(){
-        $sql="select title from tbl_realtime_schedules where session_type='public' and owner <> '".$this->objUser->userid()."'";
+        $sql="select  * from tbl_realtime_schedule_members ms, tbl_realtime_schedules sc
+         where (ms.userid ='".$this->objUser->userId()."' and ms.sessionid=sc.id) or 
+         (sc.session_type='Public' and ms.sessionid=sc.id)";
         $rows=$this->getArray($sql);
         return $rows;
     }
