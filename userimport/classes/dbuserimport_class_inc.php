@@ -52,7 +52,7 @@ class dbuserimport extends dbTable
         $this->objAdminGroups=$this->getObject('groupadminmodel','groupadmin'); 
         $this->objGroupOps=$this->getObject('groupops','groupadmin');
 
-        $contextId=$this->objAdminGroups->getId($courseCode);
+        $contextId=$this->objAdminGroups->getId($courseCode.'^Students');
         $now=date('Y-m-d');
         if ($batchCode=='auto'){
             $batchCode=$importMethod.date('Ymdhis').rand(10,99);
