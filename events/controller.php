@@ -92,7 +92,7 @@ class events extends controller
             $this->objUtils      = $this->getObject('eventsutils');
             $this->ip2Country    = $this->getObject('iptocountry', 'utilities');
             $this->objWashout    = $this->getObject('washout', 'utilities');
-            $this->objTwtOps = $this->getObject('twitoasterops', 'twitoaster');
+            $this->objTwtOps     = $this->getObject('twitoasterops', 'twitoaster');
             $this->objTeeny      = $this->getObject ( 'tiny', 'tinyurl');
         }
         catch ( customException $e ) {
@@ -343,6 +343,18 @@ class events extends controller
                 
             case 'hashtagvideo' :
                 echo $this->objWashout->parseText("[YOUTUBE]http://www.youtube.com/watch?v=aAHitI26MmE[/YOUTUBE]");
+                break;
+                
+            case 'rsvp' :
+                $userid = $this->getParam('userid', NULL);
+                $ans = $this->getParam('ans', NULL);
+                $eventid = $this->getParam('eventid', NULL);
+                if($userid == NULL || $ans == NULL || $eventid == NULL) {
+                    $message = $this->objLanguage->languageText("mod_events_needsignin", "events");
+                }
+                $rsvparr = array('ans' => $ans, 'userid' => $userid, 'eventid' => $eventid);
+                $this->objDbEvents->userDoRSVP($rsvparr);
+                $this->nextAction('');
                 break;
 
             default:

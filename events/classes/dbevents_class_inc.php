@@ -156,9 +156,44 @@ class dbevents extends dbtable {
         else {
             $event->hashtag = NULL;
         }
+        // grab a list of all the people attending the event
+        $pplattend = $this->eventGetAttendees($eventid);
+        $event->attendees = $this->objUtils->array2object($pplattend);
         // retrieve the user comments, pictures, tweets, flickr, MXit blah blah whatever etc as well
         
         return json_encode($event);
+    }
+    
+    public function eventGetRange($start, $num) {
+        $this->changeTable('tbl_events_events');
+        $range = $this->getAll ( "ORDER BY creationtime ASC LIMIT {$start}, {$num}" );
+        return $range;
+    }
+
+    public function eventGetRecordCount () {
+        $this->changeTable('tbl_events_events');
+        return $this->getRecordCount();
+    }
+    
+    public function eventGetLatest($number) {
+        $this->changeTable('tbl_events_events');
+        $end = $this->eventGetRecordCount();
+        $start = $end - $number;
+        if($start < 0) {
+            $start = 0;
+        }
+        return $this->eventGetRange($start, $number);
+    }
+    
+    public function eventGetAttendees($eventid) {
+        $this->changeTable('tbl_events_rsvp');
+        $useratt = $this->getAll("WHERE eventid = '$eventid' AND ans = 'yes'");
+        if(empty($useratt) || $useratt == NULL) {
+            return FALSE;
+        }
+        else {
+            return $useratt;
+        }
     }
 
     /**
@@ -694,6 +729,11 @@ class dbevents extends dbtable {
         return $this->getAll();
     }
 
+    public function categoryGetDetails($catid) {
+        $this->changeTable('tbl_events_cats');
+        return $this->getAll("WHERE id = '$catid'");
+    }
+
     /**
      * Watchlist API
      */
@@ -818,6 +858,35 @@ class dbevents extends dbtable {
      */
     public function userGetMyFriendsEvents($token, $per_page = 100, $page = 1) {
 
+    }
+    
+    public function userCheckAttend($userid, $eventid) {
+        $this->changeTable('tbl_events_rsvp');
+        $useratt = $this->getAll("WHERE userid = '$userid' AND eventid = '$eventid'");
+        if(empty($useratt) || $useratt == NULL) {
+            return FALSE;
+        }
+        else {
+            return $useratt;
+        }
+    }
+    
+    public function userDoRSVP($rsvparr) {
+        $this->changeTable('tbl_events_rsvp');
+        if($rsvparr['ans'] != 'swap') {
+            return $this->insert($rsvparr);
+        }
+        else {
+            $det = $this->userCheckAttend($rsvparr['userid'], $rsvparr['eventid']);
+            $det = $det[0];
+            if($det['ans'] == 'yes') {
+                $rsvparr['ans'] = 'no';
+            }
+            elseif($det['ans'] == 'no') {
+                $rsvparr['ans'] = 'yes';
+            }
+            return $this->update('id', $det['id'], $rsvparr);
+        }
     }
 
     /**

@@ -105,6 +105,7 @@ class eventsops extends object {
     public $objLangCode;
 
     public $objTags;
+    public $objUtils;
 
 
     /**
@@ -123,6 +124,7 @@ class eventsops extends object {
         $this->objTags      = $this->getObject('dbtags', 'tagging');
         $this->objCookie    = $this->getObject('cookie', 'utilities');
         $this->objDbEvents  = $this->getObject('dbevents');
+        $this->objUtils     = $this->getObject('eventsutils');
     }
 
     /**
@@ -169,6 +171,11 @@ class eventsops extends object {
      */
     public function countryDropdown($country = 'ZA') {
         return $this->objLangCode->countryAlpha($default);
+    }
+    
+    public function fbComment() {
+        $script = "<script src=\"http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US\" type=\"text/javascript\"></script><script type=\"text/javascript\">FB.init(\"0793e611b2e1fd2d786329a6ee703947\");</script><fb:comments> </fb:comments>";
+        return $script;
     }
 
     /**
@@ -377,14 +384,15 @@ class eventsops extends object {
         $friendcount = 0;
         $tabs = $this->getObject('tabber', 'htmlelements');
 
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
+        //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_fb", "events"), 'content' => $this->fbComment(), 'onclick' => ''));
 
         return $tabs->show();
     }
@@ -534,7 +542,92 @@ class eventsops extends object {
      * @return string
      */
     public function getRecentContent() {
-        return "recent content";
+        $events = $this->objDbEvents->eventGetLatest(10);
+        $userid = $this->objUser->userId();
+        $today = strtotime(date('Y-m-d'));
+        $ret = NULL;
+        foreach($events as $event) {
+            $startdate = strtotime($event['start_date']);
+            // skip personal events, unless you or your friends network are the person
+            if($event['personal'] == 'on') {
+               if($userid != $event['userid']) {
+                   continue;
+               }
+            }
+            // skip events that have already happened. We keep today's events on until tomorrow in case folks are just late
+            if($startdate < $today) {
+                continue;
+            }
+            // send the data to a formatting prettifying function
+            $ret .= $this->formatEventSummary($event);
+        }
+        // if ret is still null, there are no events... sigh
+        if($ret == NULL) {
+            $this->loadClass('htmlheading', 'htmlelements');
+            $headerno = new htmlheading();
+            $headerno->type = 1;
+            $headerno->str = $this->objLanguage->languageText("mod_events_nothingtoshow", "events");
+            $ret .= $headerno->show();
+        }
+        return $ret;
+    }
+    
+    public function formatEventSummary($event) {
+        $objFb = $this->newObject('featurebox', 'navigation');
+        $etbl = $this->newObject('htmltable', 'htmlelements');
+        $morelink = $this->newObject('link', 'htmlelements');
+        $morelink->href = $this->uri(array('action' => 'viewsingle', 'eventid' => $event['id']));
+        $morelink->link = $this->objLanguage->languageText("mod_events_moreeventinfo", "events");
+        $morelink = $morelink->show();
+        $catinfo = $this->objDbEvents->categoryGetDetails($event['category_id']);
+        $etbl->startRow();
+        $etbl->addCell($event['start_date']."<br />".$this->goYesNo($event['id']));
+        $etbl->addCell($catinfo[0]['cat_name']);
+        $etbl->addCell($this->objUtils->truncateDescription($event['description'], 200, ".", "...[$morelink]"));
+        $etbl->endRow();
+        return $objFb->show($event['name'], $etbl->show());
+    }
+    
+    public function goYesNo($eventid) {
+        $userid = $this->objUser->userId();
+        // check if the user has already RSVp'd to this event
+        $rsvp = $this->objDbEvents->userCheckAttend($userid, $eventid);
+        if($rsvp == FALSE) {
+            // I will be attending this event!
+            $yeslink = $this->newObject('link', 'htmlelements');
+            $yeslink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'yes', 'eventid' => $eventid));
+            $yeslink->link = $this->objLanguage->languageText("mod_events_yesattending", "events");
+            $yeslink = $yeslink->show();
+            // and the not going link
+            $nolink = $this->newObject('link', 'htmlelements');
+            $nolink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'no', 'eventid' => $eventid));
+            $nolink->link = $this->objLanguage->languageText("mod_events_notattending", "events");
+            $nolink = $nolink->show();
+            if($this->objUser->isLoggedIn()) {
+                return $yeslink." | ".$nolink;
+            }
+            else {
+                $signinlink = $this->newObject('alertbox', 'htmlelements');
+                $signinlink = $signinlink->show($this->objLanguage->languageText("mod_events_signin", "events"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_events_needsignintorsvp", "events");
+                return $signinlink; //$this->objLanguage->languageText("mod_events_needsignin", "events");
+            }
+        }
+        else {
+            // user has RSVP'ed, so give an opportunity to change minds?
+            $cmlink = $this->newObject('link', 'htmlelements');
+            $cmlink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'swap', 'eventid' => $eventid));
+            $cmlink->link = $this->objLanguage->languageText("mod_events_cmattending", "events");
+            $cmlink = $cmlink->show();
+            if($rsvp[0]['ans'] == 'yes') {
+                $switcher = $this->objLanguage->languageText("mod_events_yesattending", "events");
+            }
+            else {
+                $switcher = $this->objLanguage->languageText("mod_events_notattending", "events");
+            }
+            
+            return $switcher." (".($cmlink).")";
+        }
+        
     }
 
     /**
@@ -689,7 +782,7 @@ class eventsops extends object {
         $ftable->addCell($esdtlabel->show());
         $ftable->endRow();
         $ftable->startRow();
-        $ftable->addCell($sdatepick);
+        $ftable->addCell($sdatepick.$required);
         $ftable->endRow();
         // end date and time
         $objeDatepick = $this->newObject('datepickajax', 'popupcalendar');
@@ -844,6 +937,7 @@ class eventsops extends object {
         $form->addRule('geotag', $this->objLanguage->languageText("mod_events_needlocation", "events"), 'required');
         $form->addRule('eventcategory', $this->objLanguage->languageText("mod_events_needcategory", "events"), 'required');
         $form->addRule('venuname', $this->objLanguage->languageText("mod_events_needvenue", "events"), 'required');
+        $form->addRule('sdatepick', $this->objLanguage->languageText("mod_events_needstartdate", "events"), 'required');
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend = '';
@@ -1160,7 +1254,7 @@ class eventsops extends object {
             $vcity->setValue($editparams['city']);
         }
         $vtable->startRow();
-        $vtable->addCell($vclabel->show().$required);
+        $vtable->addCell($vclabel->show());
         //$vtable->endRow();
         //$vtable->startRow();
         $vtable->addCell($vcity->show());
