@@ -14,13 +14,6 @@ $middleColumn = NULL;
 if(isset($message) && !empty($message) && $message != '' && is_object($message)) {
     $middleColumn .= $message->show();
 }
-//$venues = $this->objOps->formatVenues($venuelist);
-//if(empty($venues)) {
-//    $venues = array();
-//}
-//foreach($venues as $venue) {
-//    $middleColumn .= $venue;
-//} 
 
 $middleColumn .= $venueform;
 $middleColumn .= $this->objOps->addEditVenueForm($eventid, NULL);

@@ -573,24 +573,31 @@ class eventsops extends object {
     }
     
     public function formatEventSummary($event) {
+        $startdate = strtotime($event['start_date']);
+        $datedisplay = '<div class="post-date-bg">';
+        $month = date('M', $startdate);
+        $datedisplay .= '<span>'.$month.'</span><br />';
+        $day = date('d', $startdate);
+        $year = date('Y', $startdate);
+        $datedisplay .= '<span class="date">'.$day.'</span><br /><span>'.$year.'</span></div>';
+
         $objFb = $this->newObject('featurebox', 'navigation');
         $etbl = $this->newObject('htmltable', 'htmlelements');
-        $morelink = $this->newObject('link', 'htmlelements');
-        $morelink->href = $this->uri(array('action' => 'viewsingle', 'eventid' => $event['id']));
-        $morelink->link = $this->objLanguage->languageText("mod_events_moreeventinfo", "events");
-        $morelink = $morelink->show();
+        $etbl->callpadding = 10;
+        $etbl->cellspacing = 5;
         $catinfo = $this->objDbEvents->categoryGetDetails($event['category_id']);
         $etbl->startRow();
-        $etbl->addCell($event['start_date']."<br />".$this->goYesNo($event['id']));
-        $etbl->addCell($catinfo[0]['cat_name']);
-        $etbl->addCell($this->objUtils->truncateDescription($event['description'], 200, ".", "...[$morelink]"));
+        $etbl->addCell($datedisplay, '15%', "top");
+        $etbl->addCell($this->goYesNo($event['id']),'15%', "top");
+        $etbl->addCell($catinfo[0]['cat_name'], '20%', "top");
+        $etbl->addCell($this->objUtils->truncateDescription($event['id'], $event['description'], 200, ".", "..."), '50%', "top");
         $etbl->endRow();
         return $objFb->show($event['name'], $etbl->show());
     }
     
     public function goYesNo($eventid) {
         $userid = $this->objUser->userId();
-        // check if the user has already RSVp'd to this event
+        // check if the user has already RSVP'd to this event
         $rsvp = $this->objDbEvents->userCheckAttend($userid, $eventid);
         if($rsvp == FALSE) {
             // I will be attending this event!
@@ -763,9 +770,6 @@ class eventsops extends object {
         $ftable->addCell($ecat->show());
         $ftable->endRow();
         // venue name
-        // the venue name dropdown will be populated from the nearby places of the location or the location set on the map currently
-        //$addlink = $this->newObject('alertbox', 'htmlelements');
-        //$addlink = $addlink->show($this->objLanguage->languageText("mod_events_addvenue", "events"), $this->uri(array('action' => 'addvenue')));
         $vnamelabel = new label($this->objLanguage->languageText("mod_events_venuename", "events") . ':', 'input_venuename');
         $vname = new textinput('venuename', NULL, NULL);
         $ftable->startRow();

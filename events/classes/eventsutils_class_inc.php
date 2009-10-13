@@ -97,13 +97,6 @@ class eventsutils extends object {
      */
     public $objCurl;
 
-    /**
-     * @var string $objLangCode String object property for holding the language code object
-     *
-     * @access public
-     */
-    public $objLangCode;
-
     public $objTags;
 
 
@@ -113,7 +106,7 @@ class eventsutils extends object {
      * @access public
      */
     public function init() {
-        
+        $this->objLanguage = $this->getObject('language', 'language');
     }
 
     public function array2object($array) {
@@ -172,10 +165,14 @@ class eventsutils extends object {
          return $input; 
     }
     
-    public function truncateDescription($string, $limit, $break=".", $pad="...") { 
+    public function truncateDescription($eventid, $string, $limit, $break=".", $pad="...") { 
+        $morelink = $this->newObject('link', 'htmlelements');
+        $morelink->href = $this->uri(array('action' => 'viewsingle', 'eventid' => $eventid));
+        $morelink->link = $this->objLanguage->languageText("mod_events_moreeventinfo", "events");
+        $morelink = $morelink->show();
         // return with no change if string is shorter than $limit  
         if(strlen($string) <= $limit) {
-            return $string; 
+            return $string." [$morelink]"; 
         }
         // is $break present between $limit and the end of the string?  
         if(false !== ($breakpoint = strpos($string, $break, $limit))) { 
@@ -183,7 +180,8 @@ class eventsutils extends object {
                 $string = substr($string, 0, $breakpoint) . $pad; 
             } 
         } 
-        return $this->restoreTags($string); 
+        $string = $this->restoreTags($string); 
+        return $string." [$morelink]";
     }
 }
 ?>
