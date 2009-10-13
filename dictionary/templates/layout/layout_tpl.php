@@ -19,8 +19,8 @@ if($objDBContext->isInContext())
     $cm = "";//$this->getMenu();
 }
 
-
-$cssLayout->setLeftColumnContent($cm);
+$leftMenu=& $this->getObject('contextsidebar', 'context');
+$cssLayout->setLeftColumnContent($leftMenu->show());
 
 
 $cssLayout->setMiddleColumnContent($this->getContent());
