@@ -266,6 +266,12 @@ class dbAnnouncements extends dbTable
     private function sendEmail($title, $message, $recipients)
     {
         $recipients = array_unique($recipients);
+       
+        $list = "";
+        foreach($recipients as $recipient)
+        {
+        	$list .=$recipient['emailaddress'].',';
+        }
 
 		$body = $message;
 		$to = '';

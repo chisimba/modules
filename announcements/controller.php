@@ -42,19 +42,19 @@ class announcements extends controller
     * Constructor for the Module
     */
     public function init()
-    {
-        $this->objUser = $this->getObject('user', 'security');
+    { 
+    	$this->objUser = $this->getObject('user', 'security');         
         $this->objContext = $this->getObject('dbcontext','context');
-        $this->objDate = $this->newObject('dateandtime', 'utilities');
+        $this->objDate = $this->getObject('dateandtime', 'utilities');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
         //feed creator subsystem
         $this->objFeedCreator = $this->getObject('feeder', 'feed');
 
         $this->objAnnouncements = $this->getObject('dbannouncements');
-        
+       
         $this->userId = $this->objUser->userId();
-        
+       
         $objUserContext = $this->getObject('usercontext', 'context');
         $this->userContext = $objUserContext->getUserContext($this->userId);
         $this->lecturerContext = $objUserContext->getContextWhereLecturer($this->userId);
@@ -66,18 +66,18 @@ class announcements extends controller
         $this->setVar('lecturerContext', $this->lecturerContext);
         $this->setVar('isAdmin', $this->isAdmin);
 								//Load Module Catalogue Class
-								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+		$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 
-								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
 
-								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
-								{
-									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
-									$this->eventsEnabled = TRUE;
-								} else {
-									$this->eventsEnabled = FALSE;
-								}
+		if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+		{
+			$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+			$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+			$this->eventsEnabled = TRUE;
+		} else {
+			$this->eventsEnabled = FALSE;
+		}
     }
 
 
