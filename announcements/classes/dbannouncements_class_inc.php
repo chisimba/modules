@@ -274,7 +274,7 @@ class dbAnnouncements extends dbTable
         }
 
 		$body = $message;
-		$to = '';
+		$to = $list;
 		$separator = '';
 		foreach ($recipients as $recipient) {
     		$to .= $separator . $recipient;
