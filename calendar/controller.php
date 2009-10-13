@@ -28,7 +28,7 @@ class calendar extends controller
         $this->dateFunctions = $this->getObject('dateandtime', 'utilities');
         $this->objICal = $this->getObject('ical');
         $this->objCalendarInterface = $this->getObject('calendarinterface');
-
+		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
         // User Details
         $this->objUser =& $this->getObject('user', 'security');
         $this->setVarByRef('fullname', $this->objUser->fullname());
@@ -49,13 +49,9 @@ class calendar extends controller
         $this->setVarByRef('courseTitle', $this->contextTitle);
         $this->setVarByRef('isInContext', $this->isInContext);
 
-        $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
-        $this->isContextLecturer = $objContextCondition->isContextMember('Lecturers');
-
-        //$this->objDT = &$this->getObject( 'decisiontable','decisiontable' );
-        //$this->objDT->create('calendar');
-        //$this->objDT->retrieve('calendar');
-
+       // $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
+        $this->isContextLecturer = $this->objContextGroups->isContextLecturer();
+       
         // Give User Lecturer Rights if User is Admin
         //if ($this->isValid('manage_course_event')) {
         if ($this->objUser->isCourseAdmin()) {
@@ -84,20 +80,10 @@ class calendar extends controller
 
 
         // Load Language Class
-        $this->objLanguage = &$this->getObject('language', 'language');
-        $this->setVarByRef('objLanguage', $this->objLanguage);
-
-        //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
-        //Log this module call
-        $this->objLog->log();
+        $this->objLanguage = $this->getObject('language', 'language');
 
         $this->objAttachments =& $this->getObject('attachments');
 
-        // Load File Upload Class for attachments
-//        $this->objUploader =& $this->getObject('fileupload'/*, 'filestore'*/);
-//        $this->objTempAttachments =& $this->getObject('dbtempattachments', 'calendarbase');
-//        $this->objEventAttachments =& $this->getObject('dbeventattachments', 'calendarbase');
     }
 
     /**
@@ -156,7 +142,7 @@ class calendar extends controller
     * Method to show events for the current month. This is the default action
     */
     function showEvents()
-    {
+    { 
         $month = $this->getParam('month', date('m'));
         $year = $this->getParam('year', date('Y'));
         $this->setVarByRef('month', $month);
