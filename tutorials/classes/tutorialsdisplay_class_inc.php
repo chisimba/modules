@@ -806,7 +806,7 @@ class tutorialsdisplay extends object
         $lblMarkClose = $this->objLanguage->languageText('mod_tutorials_markclose', 'tutorials');
         $lblModerateOpen = $this->objLanguage->languageText('mod_tutorials_moderatestart', 'tutorials');
         $lblModerateClose = $this->objLanguage->languageText('mod_tutorials_moderateclose', 'tutorials');
-        $lblQuestion = $this->objLanguage->languageText('word_question', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
         $lblNo = $this->objLanguage->languageText('word_no');
         $lblAllocated = $this->objLanguage->languageText('phrase_allocatedmark');
         $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
