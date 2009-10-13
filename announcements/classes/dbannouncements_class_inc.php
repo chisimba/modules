@@ -277,12 +277,6 @@ class dbAnnouncements extends dbTable
         $to = $list;
 
 		$body = $message;
-//		$to = '';
-//		$separator = '';
-//		foreach ($recipients as $recipient) {
-//    		$to .= $separator . $recipient['emailaddress'];
-//    		$separator = ', ';
-//        }
 		$subject = $title;
 		$from  = $this->objUser->email();
 
