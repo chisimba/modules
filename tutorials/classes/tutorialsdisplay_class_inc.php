@@ -18,7 +18,7 @@ class tutorialsdisplay extends object
     * @access private
     */
     private $objIcon;
-     
+
     /**
     * @var object $objPopupcal: The datepickajax class in the popupcalendar module
     * @access private
@@ -30,19 +30,19 @@ class tutorialsdisplay extends object
     * @access private
     */
     private $objLanguage;
-     
+
     /**
     * @var object $objUser: The user class of the security module
     * @access private
     */
     private $objUser;
-     
+
     /**
     * @var object $objDatetime: The dateandtime class of the utilities module
     * @access private
     */
     private $objDatetime;
-     
+
     /**
     * @var object $objContext: The dbcontexr class in the context module
     * @access private
@@ -128,7 +128,7 @@ class tutorialsdisplay extends object
     * @return
     */
     public function init()
-    {   
+    {
         // load html element classes
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
@@ -148,7 +148,7 @@ class tutorialsdisplay extends object
         $this->objMsg = $this->newObject('timeoutmessage','htmlelements');
         $this->objTabbedbox = $this->newObject('tabbedbox','htmlelements');
         $this->objGroupadmin = $this->newObject('groupadminmodel','groupadmin');
-        
+
         // system classes
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user', 'security');
@@ -156,15 +156,15 @@ class tutorialsdisplay extends object
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
         $this->objConfig = $this->getObject('altconfig', 'config');
-        
+
         // system variables
-        $this->userId = $this->objUser->userId(); 
-        $this->isLecturer = $this->objUser->isContextLecturer();  
-        $this->isStudent = $this->objUser->isContextStudent();  
+        $this->userId = $this->objUser->userId();
+        $this->isLecturer = $this->objUser->isContextLecturer();
+        $this->isStudent = $this->objUser->isContextStudent();
         $this->contextCode = $this->objContext->getContextCode();
         $this->menuText = $this->objContext->getMenuText($this->contextCode);
-        
-        // tutorials classes     
+
+        // tutorials classes
         $this->objDbTutorials = $this->getObject('dbtutorials', 'tutorials');
 
         // assessment modules
@@ -211,7 +211,7 @@ class tutorialsdisplay extends object
         $lblList = $this->objLanguage->code2Txt('mod_tutorials_liststudents', 'tutorials', $array);
         $lblModerate = $this->objLanguage->languageText('phrase_moderatetutorial');
         $lblInstructions = $this->objLanguage->languageText('word_instructions');
-                
+
         // set up add tutorial icon
         $this->objIcon->title = $lblAdd;
         $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
@@ -229,9 +229,9 @@ class tutorialsdisplay extends object
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading.'&#160;'.$icoAdd.'&#160;'.$icoInstructions;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // display instructions
         if($instructions != FALSE){
             // set up delete icon
@@ -246,19 +246,19 @@ class tutorialsdisplay extends object
             $this->objTabbedbox->addBoxContent($instructions['instructions']);
             $content .= $this->objTabbedbox->show();
         }
-    
+
         // set up links
         $this->objLink = new link($this->uri(array(
             'action'=>'tutorial',
         ), 'tutorials'));
         $this->objLink->link = $lblAdd;
         $lnkAdd = $this->objLink->show();
-        
+
         if($this->assignment){
             $this->objLink = new link($this->uri(array(), 'assignmentadmin'));
             $this->objLink->link = $lblAssignments;
             $lnkAssignments = $this->objLink->show();
-            
+
             $links = $lnkAdd.'&#160;|&#160;'.$lnkAssignments;
         }else{
             $links = $lnkAdd;
@@ -278,7 +278,7 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('', '', '', '', 'tuts-header', '');
         $this->objTable->endRow();
         $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
-        
+
         if($tutorials == FALSE){
             $this->objTable->startRow();
             $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', 'colspan="6"');
@@ -286,7 +286,7 @@ class tutorialsdisplay extends object
         }else{
             foreach($tutorials as $tutorial){
                 $status = $this->tutStatus($tutorial['id']);
-                
+
                 // get data
                 $questions = $this->objDbTutorials->getQuestions($tutorial['id']);
                 if(empty($questions)){
@@ -294,7 +294,7 @@ class tutorialsdisplay extends object
                 }else{
                     $count = count($questions);
                 }
-                
+
                 // set up view link
                 $this->objLink = new link($this->uri(array(
                     'action' => 'view',
@@ -302,14 +302,14 @@ class tutorialsdisplay extends object
                 ), 'tutorials'));
                 $this->objLink->link = $tutorial['name'];
                 $lnkName = $this->objLink->show();
-                
+
                 // set up edit icon
                 $this->objIcon->title=$lblEdit;
                 $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
                     'action' => 'tutorial',
                     'id' => $tutorial['id'],
                 ), 'tutorials'));
-                
+
                 // set up delete icon
                 $deleteArray = array(
                     'action' => 'deletetutorial',
@@ -328,7 +328,7 @@ class tutorialsdisplay extends object
                 }else{
                     $icoList = '';
                 }
-                
+
                 // set up moderate Icon
                 if($status['value'] >= 6 and $tutorial['tutorial_type'] == 1){
                     $this->objIcon->title = $lblModerate;
@@ -340,7 +340,7 @@ class tutorialsdisplay extends object
                 }else{
                     $icoModerate = '';
                 }
-                
+
                 $this->objTable->startRow();
                 $this->objTable->addCell($lnkName, '', '', '', '', '');
                 $this->objTable->addCell($count, '', '', '', '', '');
@@ -351,18 +351,18 @@ class tutorialsdisplay extends object
                 $this->objTable->endRow();
             }
         }
-        $content .= $this->objTable->show();        
+        $content .= $this->objTable->show();
 
         $this->objTable = new htmltable();
         $this->objTable->startRow();
         $this->objTable->addCell($links, '', '', 'center', '' ,'');
         $this->objTable->endRow();
-        
-        $content .= $this->objTable->show();        
-        
+
+        $content .= $this->objTable->show();
+
         return $content;
     }
-    
+
     /**
     * Method to output the tutorial status
     *
@@ -416,7 +416,7 @@ class tutorialsdisplay extends object
         $array['date'] = $this->objDatetime->formatDate($tut['moderation_close'], FALSE);
         $lblModClose = $this->objLanguage->code2Txt('mod_tutorials_modclose', 'tutorials', $array);
         $lblCompleted = $this->objLanguage->languageText('word_completed');
-        
+
         $status = array();
         if($type == 0){
             if($date < $answerOpen){
@@ -465,10 +465,10 @@ class tutorialsdisplay extends object
         }
         $status['text'] = '<b>'.$content.'</b>';
         $status['value'] = $value;
-        
-        return $status;        
+
+        return $status;
     }
-    
+
     /**
     * Method to output the add/edit tutorial page
     *
@@ -485,9 +485,9 @@ class tutorialsdisplay extends object
             $style = 'style="display: none" ';
             $percentage = 0;
             $answerOpen = date('Y-m-d H:i');
-            $answerClose = date('Y-m-d H:i');            
+            $answerClose = date('Y-m-d H:i');
             $markOpen = date('Y-m-d H:i');
-            $markClose = date('Y-m-d H:i');            
+            $markClose = date('Y-m-d H:i');
             $moderateOpen = date('Y-m-d H:i');
             $moderateClose = date('Y-m-d H:i');
             $penalty = 0;
@@ -503,15 +503,15 @@ class tutorialsdisplay extends object
             }
             $percentage = $tutorial['percentage'];
             $answerOpen = $tutorial['answer_open'];
-            $answerClose = $tutorial['answer_close'];            
+            $answerClose = $tutorial['answer_close'];
             $markOpen = $tutorial['marking_open'];
-            $markClose = $tutorial['marking_close'];            
+            $markClose = $tutorial['marking_close'];
             $moderateOpen = $tutorial['moderation_open'];
             $moderateClose = $tutorial['moderation_close'];
-            $penalty = $tutorial['penalty'];   
+            $penalty = $tutorial['penalty'];
             $description = $tutorial['description'];
         }
-        
+
         // set up language elements
         $lblAdd = $this->objLanguage->languageText('mod_tutorials_add', 'tutorials');
         $lblEdit = $this->objLanguage->languageText('mod_tutorials_edit', 'tutorials');
@@ -540,7 +540,7 @@ class tutorialsdisplay extends object
         $lblPenaltyNumeric = $this->objLanguage->languageText('mod_tutorials_penaltynumeric', 'tutorials');
         $lblPenaltyLess = $this->objLanguage->languageText('mod_tutorials_penaltyless', 'tutorials');
         $lblPenaltyGreater = $this->objLanguage->languageText('mod_tutorials_penaltygreater', 'tutorials');
-                
+
         // set up page heading
         if(empty($id)){
             $lblHeading = $lblAdd;
@@ -550,27 +550,27 @@ class tutorialsdisplay extends object
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up htmlelements
         $this->objInput = new textinput('name', $name, '', '70');
         $inpName = $this->objInput->show();
-        
+
         $this->objDrop = new dropdown('type');
         $this->objDrop->addOption(0, $lblStandard.'&#160;');
         $this->objDrop->addOption(1, $lblInteractive.'&#160;');
         $this->objDrop->setselected($type);
         $this->objDrop->extra = 'onchange="if(this.value == \'0\'){Element.hide(\'markOpen\');Element.hide(\'markClose\');Element.hide(\'moderateOpen\');Element.hide(\'moderateClose\');Element.hide(\'penalty\');adjustLayout();}else{Element.show(\'markOpen\');Element.show(\'markClose\');Element.show(\'moderateOpen\');Element.show(\'moderateClose\');Element.show(\'penalty\');adjustLayout();}"';
         $drpType = $this->objDrop->show();
-        
+
         $this->objInput = new textinput('percentage', $percentage, '', '4');
         $this->objInput->extra='MAXLENGTH=5';
         $inpPercentage = $this->objInput->show();
-        
+
         $this->objText = new textarea('description', $description, '5', '68');
         $txtDescription = $this->objText->show();
-        
+
         $inpAnswerOpen = $this->objPopupcal->show('answerOpen', 'yes', 'no', $answerOpen);
         $inpAnswerClose = $this->objPopupcal->show('answerClose', 'yes', 'no', $answerClose);
         $inpMarkOpen = $this->objPopupcal->show('markOpen', 'yes', 'no', $markOpen);
@@ -581,7 +581,7 @@ class tutorialsdisplay extends object
         $this->objInput = new textinput('penalty', $penalty, '', '4');
         $this->objInput->extra='MAXLENGTH=5';
         $inpPenalty = $this->objInput->show();
-        
+
         $this->objButton=new button('submit',$lblSubmit);
         $this->objButton->setToSubmit();
         $btnSubmit = $this->objButton->show();
@@ -589,7 +589,7 @@ class tutorialsdisplay extends object
         $this->objButton=new button('cancel',$lblCancel);
         $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
         $btnCancel = $this->objButton->show();
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellpadding = '5';
@@ -646,9 +646,9 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('<b>'.$lblDescription.'&#160:</b>', '33%', '', '', 'tuts-header', '');
         $this->objTable->addCell($txtDescription, '', '', '', '', '');
         $this->objTable->endRow();
-        
+
         $tblDisplay = $this->objTable->show();
-        
+
         // set up forms
         $this->objForm=new form('frmTutorials',$this->uri(array(
             'action'=>'savetutorial',
@@ -669,17 +669,17 @@ class tutorialsdisplay extends object
             'name' => 'penalty',
             'maxnumber' => 33.33,
         ), $lblPenaltyGreater, 'maxnumber');
-        
+
         $content .= $this->objForm->show();
-    
+
         $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
-        $content .= $this->objForm->show();        
+        $content .= $this->objForm->show();
 
         $this->objLink = new link($this->uri(array(),'tutorials'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
         $content .= '<br />'.$lnkReturn;
-            
+
         return $content;
     }
 
@@ -694,7 +694,7 @@ class tutorialsdisplay extends object
         // get data
         $instructions = $this->objDbTutorials->getInstructions();
         $date = $this->objDatetime->formatDate(date('Y-m-d H:i:s'));
-        
+
         // set up language elements
         $array['coursename'] = $this->menuText;
         $lblHeading = $this->objLanguage->code2Txt('mod_tutorials_administration', 'tutorials', $array);
@@ -707,25 +707,25 @@ class tutorialsdisplay extends object
         $array = array();
         $array['date'] = $date;
         $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnhome', 'tutorials');
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblInstructions;
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         // set up htmlelements
         $this->objEditor->init('instructions', $instructions['instructions'], '300px', '70%', NULL);
         $this->objEditor->setDefaultToolBarSetWithoutSave();
         $edtInstructions = $this->objEditor->show();
-        
+
         $this->objButton=new button('submit',$lblSubmit);
         $this->objButton->setToSubmit();
         $btnSubmit = $this->objButton->show();
@@ -733,7 +733,7 @@ class tutorialsdisplay extends object
         $this->objButton=new button('cancel',$lblCancel);
         $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
         $btnCancel = $this->objButton->show();
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -746,28 +746,28 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('', '', '', '', '', '');
         $this->objTable->endRow();
         $this->objTable->startRow();
-        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', '');        
+        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', '');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // set up forms
         $this->objForm=new form('frmInstructions',$this->uri(array(
             'action' => 'saveinstructions',
         ), 'tutorials'));
         $this->objForm->addToForm($tblDisplay);
         $content .= $this->objForm->show();
-    
+
         $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
-        $content .= $this->objForm->show();        
+        $content .= $this->objForm->show();
 
         $this->objLink = new link($this->uri(array(), 'tutorials'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
         $content .= '<br />'.$lnkReturn;
-            
+
         return $content;
     }
-    
+
     /**
     * Method to output the view tutorial page
     *
@@ -787,7 +787,7 @@ class tutorialsdisplay extends object
         $moderateClose = $this->objDatetime->formatDate($tutorial['moderation_close']);
         $questions = $this->objDbTutorials->getQuestions($id);
         $status = $this->tutStatus($id);
-        
+
         // set up language elements
         $lblView = $this->objLanguage->languageText('mod_tutorials_view', 'tutorials');
         $lblEdit = $this->objLanguage->languageText('mod_tutorials_edit', 'tutorials');
@@ -806,7 +806,7 @@ class tutorialsdisplay extends object
         $lblMarkClose = $this->objLanguage->languageText('mod_tutorials_markclose', 'tutorials');
         $lblModerateOpen = $this->objLanguage->languageText('mod_tutorials_moderatestart', 'tutorials');
         $lblModerateClose = $this->objLanguage->languageText('mod_tutorials_moderateclose', 'tutorials');
-        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblQuestion = $this->objLanguage->languageText('word_question', 'tutorials');
         $lblNo = $this->objLanguage->languageText('word_no');
         $lblAllocated = $this->objLanguage->languageText('phrase_allocatedmark');
         $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
@@ -819,20 +819,20 @@ class tutorialsdisplay extends object
         $lblStatus = $this->objLanguage->languageText('phrase_activitystatus');
         $lblImport = $this->objLanguage->languageText('phrase_importquestions');
         $lblPenalty = $this->objLanguage->languageText('mod_tutorials_penalty', 'tutorials');
-                
+
         if($tutorial['tutorial_type'] == 0){
             $type = $lblStandard;
         }else{
             $type = $lblInteractive;
         }
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblView;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // display table
         $this->objTable = new htmltable();
         $this->objTable->cellpadding = '5';
@@ -894,7 +894,7 @@ class tutorialsdisplay extends object
         $this->objTable->addCell($status['text'], '', '', '', '', '');
         $this->objTable->endRow();
         $tblTutorials = $this->objTable->show();
-                
+
         // set up icons
         $this->objIcon->title=$lblEdit;
         $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
@@ -920,7 +920,7 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('', '10%', '', '', 'tuts-header', '');
         $this->objTable->endRow();
         $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
-        
+
         if($questions == FALSE){
             $this->objTable->startRow();
             $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', 'colspan="4"');
@@ -935,7 +935,7 @@ class tutorialsdisplay extends object
                     'tutId' => $question['tutorial_id'],
                     'id' => $question['id'],
                 ), 'tutorials'));
-                
+
                 // set up delete icon
                 $deleteArray = array(
                     'action' => 'deletequestion',
@@ -943,7 +943,7 @@ class tutorialsdisplay extends object
                     'id' => $question['id'],
                 );
                 $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'tutorials', $lblConfirm);
-                
+
                 // set up move down icon
                 $this->objIcon->title = $lblDown;
                 $this->objIcon->extra = '';
@@ -963,7 +963,7 @@ class tutorialsdisplay extends object
                     'id' => $question['id'],
                     'dir' => 'up',
                 )), 'mvup');
-                
+
                 if(count($questions) > 1){
                     if($question['question_order'] == 1){
                         $icoMove = $icoDown.'&#160;&#160;&#160;';
@@ -983,9 +983,9 @@ class tutorialsdisplay extends object
                 $this->objTable->addCell($icoMove.'&#160;'.$icoEdit.'&#160;'.$icoDelete, '', '', 'right', '', '');
                 $this->objTable->endRow();
             }
-        }        
+        }
         $tblQuestions = $this->objTable->show();
-        
+
         // set up add questions icon
         $this->objIcon->title = $lblAdd;
         $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
@@ -1003,7 +1003,7 @@ class tutorialsdisplay extends object
         }else{
             $icoDelete = '';
         }
-                
+
         // set up import questions icon
         $this->objIcon->title = $lblImport;
         $this->objIcon->extra = '';
@@ -1023,7 +1023,7 @@ class tutorialsdisplay extends object
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
         $content .= '<br />'.$lnkReturn;
-            
+
         return $content;
     }
 
@@ -1036,7 +1036,7 @@ class tutorialsdisplay extends object
     * @param string $e: The type of error if applicable
     * @param string $q: The question text
     * @param string $m: The model answer text
-    * @param string $w: The question value  
+    * @param string $w: The question value
     * @return string $content: The template output string
     */
     public function showAddEditQuestions($tutId, $id, $e = NULL, $q = NULL, $m = NULL, $w = NULL)
@@ -1065,7 +1065,7 @@ class tutorialsdisplay extends object
             $model = $m;
             $worth = $w;
         }
-        
+
         // set up language elements
         $lblAdd = $this->objLanguage->languageText('mod_tutorials_addquestion', 'tutorials');
         $lblEdit = $this->objLanguage->languageText('mod_tutorials_editquestion', 'tutorials');
@@ -1082,7 +1082,7 @@ class tutorialsdisplay extends object
         $lblWorthGreater = $this->objLanguage->languageText('mod_tutorials_worthgtzero', 'tutorials');
         $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnview', 'tutorials');
         $lblQuestion = $this->objLanguage->languageText('word_question');
-                        
+
         if($e == 'question'){
             $body = 'alert("'.$lblQuestionRequired.'")';
             $this->appendArrayVar('bodyOnLoad', $body);
@@ -1090,7 +1090,7 @@ class tutorialsdisplay extends object
             $body = 'alert("'.$lblModelRequired.'")';
             $this->appendArrayVar('bodyOnLoad', $body);
         }
-        
+
         // set up page heading
         if(empty($id)){
             $lblHeading = $lblAdd;
@@ -1100,21 +1100,21 @@ class tutorialsdisplay extends object
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up htmlelements
         $this->objEditor->init('question', $question, '500px', '100%', NULL);
         $this->objEditor->setDefaultToolBarSetWithoutSave();
         $edtQuestion = $this->objEditor->show();
-        
+
         $this->objEditor->init('model', $model, '500px', '100%', NULL);
         $this->objEditor->setDefaultToolBarSetWithoutSave();
         $edtModel = $this->objEditor->show();
-        
+
         $this->objInput = new textinput('worth', $worth);
         $inpWorth = $this->objInput->show();
-        
+
         $this->objButton=new button('submit',$lblSubmit);
         $this->objButton->setToSubmit();
         $btnSubmit = $this->objButton->show();
@@ -1130,7 +1130,7 @@ class tutorialsdisplay extends object
         $this->objButton=new button('cancel',$lblCancel);
         $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
         $btnCancel = $this->objButton->show();
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -1148,13 +1148,13 @@ class tutorialsdisplay extends object
         $this->objTable->endRow();
         $this->objTable->row_attributes = '';
         $this->objTable->startRow();
-        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $this->objTable->startRow();
-        $this->objTable->addCell($btnSubmit.'&#160;'.$btnSubmitAdd.$btnCancel, '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell($btnSubmit.'&#160;'.$btnSubmitAdd.$btnCancel, '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // set up forms
         $this->objForm=new form('frmQuestions',$this->uri(array(
             'action' => 'savequestion',
@@ -1168,14 +1168,14 @@ class tutorialsdisplay extends object
             'name' => 'worth',
             'minnumber' => 1,
         ), $lblWorthGreater, 'minnumber');
-        
+
         $tabContent = $this->objForm->show();
-    
+
         $this->objForm=new form('frmCancel',$this->uri(array(
             'action' => 'view',
             'id' => $tutId,
         ), 'tutorials'));
-        $tabContent .= $this->objForm->show();        
+        $tabContent .= $this->objForm->show();
 
         // tabbed box
         $this->objTabbedbox=new tabbedbox();
@@ -1190,10 +1190,10 @@ class tutorialsdisplay extends object
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
         $content .= '<br />'.$lnkReturn;
-            
+
         return $content;
     }
-    
+
     /**
     * Method to output the student tutorial home page
     *
@@ -1205,7 +1205,7 @@ class tutorialsdisplay extends object
         // get data
         $tutorials = $this->objDbTutorials->getContextTuts($this->contextCode);
         $instructions = $this->objDbTutorials->getInstructions();
-        
+
         // set up language elements
         $lblStudents = $this->objLanguage->languageText('word_students');
         $lblHeading = $this->objLanguage->languageText('mod_tutorials_name', 'tutorials');
@@ -1227,14 +1227,14 @@ class tutorialsdisplay extends object
         $lblNotReady = $this->objLanguage->languageText('mod_tutorials_notready', 'tutorials');
         $lblUnavailable = $this->objLanguage->languageText('mod_tutorials_markingunavailable', 'tutorials');
         $lblNoAccess = $this->objLanguage->code2Txt('mod_tutorials_noaccess', 'tutorials', NULL);
-                
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading.': '.$this->menuText;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         if($instructions != FALSE){
             // tabbed box
             $this->objTabbedbox=new tabbedbox();
@@ -1242,13 +1242,13 @@ class tutorialsdisplay extends object
             $this->objTabbedbox->addBoxContent($instructions['instructions']);
             $content .= $this->objTabbedbox->show();
         }
-    
+
         // set up links
         if($this->assignment){
             $this->objLink = new link($this->uri(array(), 'assignment'));
             $this->objLink->link = $lblAssignment;
             $lnkAssignments = $this->objLink->show();
-            
+
             $links = $lnkAssignments;
         }else{
             $links = '';
@@ -1268,7 +1268,7 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('', '', '', '', 'tuts-header', '');
         $this->objTable->endRow();
         $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
-        
+
         if($tutorials == FALSE){
             $this->objTable->startRow();
             $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', 'colspan="6"');
@@ -1284,7 +1284,7 @@ class tutorialsdisplay extends object
                     $markedFor = $this->objDbTutorials->getMarkedStudents($tutorial['id'], $this->userId);
                     $lecturer = $this->objDbTutorials->checkLecturerMarked($tutorial['id'], $this->userId);
                     $modComplete = $this->objDbTutorials->moderationComplete($tutorial['id']);
-                
+
                     $qCount = empty($questions) ? 0 : count($questions);
 
                     // set up view link
@@ -1294,33 +1294,33 @@ class tutorialsdisplay extends object
                     ), 'tutorials'));
                     $this->objLink->link = $tutorial['name'];
                     $lnkView = $this->objLink->show();
-    
+
                     // set up answer link
                     $this->objLink = new link($this->uri(array(
                         'action' => 'answer',
                         'id' => $tutorial['id'],
                     ), 'tutorials'));
                     $this->objLink->link = $lblAnswer;
-                    $lnkAnswer = $this->objLink->show();                
-                    
+                    $lnkAnswer = $this->objLink->show();
+
                     // set up mark link
                     $this->objLink = new link($this->uri(array(
                         'action' => 'mark',
                         'id' => $tutorial['id'],
                     ), 'tutorials'));
                     $this->objLink->link = $lblMark;
-                    $lnkMark = $this->objLink->show();                
-                
+                    $lnkMark = $this->objLink->show();
+
                     $link = '';
                     $name = $tutorial['name'];
                     switch($status['value']){
                         case 2:
                             if($results['has_submitted'] == 0){
                                 if($questions != FALSE){
-                                    $link = $lnkAnswer; 
+                                    $link = $lnkAnswer;
                                 }
                             }else{
-                                $link = $lblAnswerComplete;                            
+                                $link = $lblAnswerComplete;
                             }
                             break;
                         case 4:
@@ -1336,7 +1336,7 @@ class tutorialsdisplay extends object
                             }
                             break;
                         case 6:
-                        case 7:                        
+                        case 7:
                             $lecturer = $this->objDbTutorials->checkLecturerMarked($tutorial['id'], $this->userId);
                             if($markedBy == 3 or $lecturer == TRUE){
                                 $name = $lnkView;
@@ -1345,14 +1345,14 @@ class tutorialsdisplay extends object
                                 if($late == FALSE){
                                     $penalty = ($tutorial['penalty'] * (3 - $markedFor));
                                     $mark = $mark - round(($mark * ($penalty / 100)), 0);
-                                }                                    
+                                }
                                 $mark = $mark.'%';
-                                $link = $lblMarkObtained.' - '.$mark;                                
+                                $link = $lblMarkObtained.' - '.$mark;
                             }elseif($results['has_submitted'] != 1){
                                 $link = $lblMarkObtained.' - 0%';
                             }else{
-                                $link = $lblNotReady;   
-                            }                            
+                                $link = $lblNotReady;
+                            }
                             break;
                     }
 
@@ -1378,12 +1378,12 @@ class tutorialsdisplay extends object
         $this->objTable->startRow();
         $this->objTable->addCell($links, '', '', 'center', '' ,'colspan="6"');
         $this->objTable->endRow();
-        
-        $content .= $this->objTable->show();        
-        
+
+        $content .= $this->objTable->show();
+
         return $content;
     }
-    
+
     /**
     * Method to output the answer tutorial page
     *
@@ -1393,7 +1393,7 @@ class tutorialsdisplay extends object
     * @return string $content: The template output string
     */
     public function showAnswer($id, $order)
-    {   
+    {
         // add highlight labels
         $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
         echo $objHighlightLabels->show();
@@ -1403,7 +1403,7 @@ class tutorialsdisplay extends object
         $questions = $this->objDbTutorials->getQuestions($id);
         $question = $questions[$order - 1];
         $answer = $this->objDbTutorials->getAnswer($question['id'], $this->userId);
-                
+
         // set up language elements
         $lblHeading = $this->objLanguage->languageText('mod_tutorials_answertut', 'tutorials');
         $lblQuestion = $this->objLanguage->languageText('word_question');
@@ -1423,16 +1423,16 @@ class tutorialsdisplay extends object
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $string = $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $string .= $header;
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -1446,22 +1446,22 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('<b>'.$lblMark.':</b><br />'.$question['question_value'], '', '', '', '', '');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // tabbed box
         $label = '<b>'.$lblQuestion.'  '.$order.'  '.strtolower($lblOf).'  '.count($questions).'</b>';
         $this->objTabbedbox=new tabbedbox();
         $this->objTabbedbox->addTabLabel($label);
         $this->objTabbedbox->addBoxContent($tblDisplay);
         $string .= $this->objTabbedbox->show();
-        
+
         // set up form elements
         $this->objInput = new textinput('inpSubmit', '', 'hidden', '');
         $inpHidden = $this->objInput->show();
-        
+
         $this->objEditor->init('answer', $answer['answer'], '500px', '100%', NULL);
         $this->objEditor->setDefaultToolBarSetWithoutSave();
         $edtAnswer = $this->objEditor->show();
-        
+
         $this->objButton=new button('next',$lblNext);
         $this->objButton->setToSubmit();
         $btnNext = $this->objButton->show();
@@ -1481,14 +1481,14 @@ class tutorialsdisplay extends object
         $this->objButton=new button('cancel',$lblCancel);
         $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
         $btnCancel = $this->objButton->show();
-        
+
         $this->objCheck = new checkbox('inpConfirm');
         $this->objCheck->setValue('yes');
         $chkConfirm = $this->objCheck->show();
-        
+
         $this->objLabel = new label($lblConfirm, 'input_inpConfirm');
         $lblCheck = $this->objLabel->show();
-        
+
         if(count($questions) == 1){
             $buttons = $btnSubmit.'&#160;'.$btnExit.'&#160;'.$btnCancel;
         }elseif($order == 1){
@@ -1498,7 +1498,7 @@ class tutorialsdisplay extends object
         }else{
             $buttons = $btnNext.'&#160;'.$btnPrevious.'&#160;'.$btnExit.'&#160;'.$btnCancel;
         }
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -1510,18 +1510,18 @@ class tutorialsdisplay extends object
         $this->objTable->endRow();
         $this->objTable->row_attributes = '';
         $this->objTable->startRow();
-        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $this->objTable->startRow();
         if($order == count($questions)){
             $this->objTable->startRow();
-            $this->objTable->addCell($chkConfirm.'&#160;'.$lblCheck, '', '', '', '', 'colspan="2"');        
-            $this->objTable->endRow();            
+            $this->objTable->addCell($chkConfirm.'&#160;'.$lblCheck, '', '', '', '', 'colspan="2"');
+            $this->objTable->endRow();
         }
-        $this->objTable->addCell($buttons, '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell($buttons, '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // set up forms
         $this->objForm=new form('frmAnswer',$this->uri(array(
             'action' => 'saveanswer',
@@ -1531,26 +1531,26 @@ class tutorialsdisplay extends object
         ), 'tutorials'));
         $this->objForm->addToForm($inpHidden.$tblDisplay);
         $tabContent = $this->objForm->show();
-    
+
         $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
-        $tabContent .= $this->objForm->show();        
+        $tabContent .= $this->objForm->show();
 
         // tabbed box
         $this->objTabbedbox=new tabbedbox();
         $this->objTabbedbox->addTabLabel('<b>'.$lblAnswer.'</b>');
         $this->objTabbedbox->addBoxContent($tabContent);
         $string .= $this->objTabbedbox->show();
-        
+
         $string .= $this->_showStudentLinks($id, 'answer');
 
         $this->objLayer = new layer();
         $this->objLayer->padding = '10px';
         $this->objLayer->addToStr($string);
-        $content = $this->objLayer->show();        
-        
-        return $content;  
+        $content = $this->objLayer->show();
+
+        return $content;
     }
-    
+
     /**
     * Method to list links for a student
     *
@@ -1563,10 +1563,10 @@ class tutorialsdisplay extends object
     {
         // get data
         $data = $this->objDbTutorials->getStudentLinkData($id);
-       
+
         // set up language elements
         $lblGoto = $this->objLanguage->languageText('mod_tutorials_gotoquestion', 'tutorials');
-        
+
         if($data != FALSE){
             $links = '';
             foreach($data as $key => $line){
@@ -1585,7 +1585,7 @@ class tutorialsdisplay extends object
         }
         return '';
     }
-    
+
     /**
     * Method to list links for a marker
     *
@@ -1598,10 +1598,10 @@ class tutorialsdisplay extends object
     {
         // get data
         $data = $this->objDbTutorials->getMarkerLinkData($id, $studentId);
-        
+
         // set up language elements
         $lblGoto = $this->objLanguage->languageText('mod_tutorials_gotoquestion', 'tutorials');
-        
+
         if($data != FALSE){
             $links = '';
             foreach($data as $key => $line){
@@ -1629,7 +1629,7 @@ class tutorialsdisplay extends object
         }
         return '';
     }
-    
+
     /**
     * Method to show the list of students
     *
@@ -1641,7 +1641,7 @@ class tutorialsdisplay extends object
     {
         $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
         $this->appendArrayVar('headerParams', $headerParams);
-        
+
         // get data
         $tutorial = $this->objDbTutorials->getTutorial($id);
         $groupId = $this->objGroupadmin->getLeafId(array(
@@ -1654,7 +1654,7 @@ class tutorialsdisplay extends object
             'surname',
         ));
         $date = date('Y-m-d H:i:s');
-        
+
         // set up language elements
         $lblStudents = $this->objLanguage->languageText('word_students');
         $array['readonlys'] = $lblStudents;
@@ -1678,21 +1678,21 @@ class tutorialsdisplay extends object
         $lblMarking = $this->objLanguage->languageText('word_marking');
         $lblMarked = $this->objLanguage->languageText('word_marked');
         $lblCompleted = $this->objLanguage->languageText('word_completed');
-        $lblAnswer = $this->objLanguage->languageText('mod_tutorials_answerlist', 'tutorials');       
-        $lblExport = $this->objLanguage->languageText('mod_tutorials_exportresults', 'tutorials');       
+        $lblAnswer = $this->objLanguage->languageText('mod_tutorials_answerlist', 'tutorials');
+        $lblExport = $this->objLanguage->languageText('mod_tutorials_exportresults', 'tutorials');
         $array['date'] = $this->objDatetime->formatDate($date, FALSE);
-        $lblTrue = $this->objLanguage->code2Txt('mod_tutorials_true', 'tutorials', $array);       
+        $lblTrue = $this->objLanguage->code2Txt('mod_tutorials_true', 'tutorials', $array);
         $lblFalse = $this->objLanguage->languageText('mod_tutorials_false', 'tutorials');
-        $lblArchive = $this->objLanguage->languageText('mod_tutorials_archive', 'tutorials');       
-        $lblArchiveConfirm = $this->objLanguage->languageText('mod_tutorials_confirmarchive', 'tutorials');       
-        
+        $lblArchive = $this->objLanguage->languageText('mod_tutorials_archive', 'tutorials');
+        $lblArchiveConfirm = $this->objLanguage->languageText('mod_tutorials_confirmarchive', 'tutorials');
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblList;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up answer list icon
         $this->objIcon->title = $lblAnswer;
         $this->objIcon->extra = '';
@@ -1700,7 +1700,7 @@ class tutorialsdisplay extends object
             'action' => 'answerlist',
             'id' => $id,
         )), 'onlineresume');
-        
+
         // set up export icon
         $this->objIcon->title = $lblExport;
         $this->objIcon->extra = '';
@@ -1733,13 +1733,13 @@ class tutorialsdisplay extends object
         $this->objLink->extra = 'onclick="javascript:if(!confirm(\''.$lblArchiveConfirm.'\')){return false;};"';
         $icoArchive = $this->objLink->show();
         $icon .= ' '.$icoArchive;
-        
+
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'].$icon;
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         if($status === '1'){
             $this->objMsg->setMessage($lblTrue);
             $this->objMsg->setTimeOut(10000);
@@ -1749,7 +1749,7 @@ class tutorialsdisplay extends object
             $this->objMsg->setTimeOut(10000);
             $content .= '<p>'.$this->objMsg->show().'</p>';
         }
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->id = "folderList";
@@ -1763,14 +1763,14 @@ class tutorialsdisplay extends object
         $this->objTable->addCell($lblSurname, '', '', '', 'tuts-header', '');
         $this->objTable->addCell($lblStatus ,'', '', '', 'tuts-header', '');
         if($tutorial['tutorial_type'] == 1){
-            $this->objTable->addCell($lblMarking ,'', '', '', 'tuts-header', '');            
-            $this->objTable->addCell($lblMarked ,'', '', '', 'tuts-header', '');            
+            $this->objTable->addCell($lblMarking ,'', '', '', 'tuts-header', '');
+            $this->objTable->addCell($lblMarked ,'', '', '', 'tuts-header', '');
         }
         $this->objTable->addCell($lblMark ,'', '', '', 'tuts-header', '');
         $this->objTable->addCell($lblLate, '', '', '', 'tuts-header', '');
         $this->objTable->addCell('' ,'', '', '', 'tuts-header', '');
         $this->objTable->endRow();
-        
+
         if($students == FALSE){
             $this->objTable->startRow();
             $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', 'colspan="9"');
@@ -1782,7 +1782,7 @@ class tutorialsdisplay extends object
                 $markedBy = $this->objDbTutorials->countCompletedMarked($id, $student['userid']);
                 $markedFor = $this->objDbTutorials->getMarkedStudents($id, $student['userid']);
                 $lecturer = $this->objDbTutorials->checkLecturerMarked($id, $student['userid']);
-                
+
                 if($late != FALSE){
                     $answerOpen = $this->objDatetime->formatDate($late['answer_open']);
                     $answerClose = $this->objDatetime->formatDate($late['answer_close']);
@@ -1791,7 +1791,7 @@ class tutorialsdisplay extends object
                 }else{
                     $lateText = '';
                 }
-                
+
                 // set up marking link
                 $this->objIcon->title = $lblLate;
                 $this->objIcon->extra = '';
@@ -1831,7 +1831,7 @@ class tutorialsdisplay extends object
                                      if($late == FALSE){
                                         $penalty = ($tutorial['penalty'] * (3 - $markedFor));
                                         $mark = $mark - round($mark * ($penalty / 100), 0);
-                                    }                                    
+                                    }
                                     $mark = $mark.'%';
                                 }
                             }
@@ -1839,8 +1839,8 @@ class tutorialsdisplay extends object
                             $mark = '<font class="error"><b>'.$lblNotMarked.'</b></font>';
                         }
                     }
-                } 
-                
+                }
+
                 $this->objTable->startRow();
                 $this->objTable->addCell($student['userid'], '', '', '', '', '');
                 $this->objTable->addCell($student['firstname'], '', '', '', '', '');
@@ -1865,7 +1865,7 @@ class tutorialsdisplay extends object
                     }else{
                         $lblMarked .= $marked;
                     }
-                    
+
                     $this->objTable->addCell($lblMarking, '', '', '', '', '');
                     $this->objTable->addCell($lblMarked, '', '', '', '', '');
                 }
@@ -1876,16 +1876,16 @@ class tutorialsdisplay extends object
             }
         }
         $tblDisplay = $this->objTable->show();
-        $content .= $tblDisplay;        
+        $content .= $tblDisplay;
 
         $this->objLink = new link($this->uri(array(),'tutorials'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
         $content .= '<br />'.$lnkReturn;
-            
+
         return $content;
     }
-    
+
     /**
     * Method to show the marking page
     *
@@ -1922,7 +1922,7 @@ class tutorialsdisplay extends object
             $comment = $c;
             $mark = $m;
         }
-               
+
         // set up language elements
         $lblHeading = $this->objLanguage->languageText('mod_tutorials_marktut', 'tutorials');
         $lblQuestion = $this->objLanguage->languageText('word_question');
@@ -1949,42 +1949,42 @@ class tutorialsdisplay extends object
         $lblRange = $this->objLanguage->code2Txt('mod_tutorials_markrrange', 'tutorials', $array);
         $lblConfirm = $this->objLanguage->languageText('phrase_submissionconfirmed');
         $lblConfirmSubmission = $this->objLanguage->languageText('mod_tutorials_confirmsubmission', 'tutorials');
-        
+
         if($e == TRUE){
             $body = 'alert("'.$lblCommentRequired.'")';
             $this->appendArrayVar('bodyOnLoad', $body);
         }
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $string = $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $string .= $header;
-        
+
         if($isStudent == FALSE){
             // set up page heading
             $this->objHeading = new htmlHeading();
             $this->objHeading->str = ucfirst($lblStudent).': '.$name;
             $this->objHeading->type = 3;
-            $header = $this->objHeading->show();        
+            $header = $this->objHeading->show();
             $string .= $header;
-        
+
             // set up page heading
             $this->objHeading = new htmlHeading();
             $this->objHeading->str = $lblStudentNo.': '.$studentId;
             $this->objHeading->type = 3;
-            $header = $this->objHeading->show();        
+            $header = $this->objHeading->show();
             $string .= $header;
         }
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -2001,14 +2001,14 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('<b>'.$lblModel.':</b><br />'.$question['model_answer'], '', '', '', '', '');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // tabbed box
         $label = '<b>'.$lblQuestion.'  '.$order.'</b>';
         $this->objTabbedbox=new tabbedbox();
         $this->objTabbedbox->addTabLabel($label);
         $this->objTabbedbox->addBoxContent($tblDisplay);
         $string .= $this->objTabbedbox->show();
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -2019,22 +2019,22 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('<b>'.$lblAnswer.':</b><br />'.$answer['answer'], '', '', '', '', '');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // tabbed box
         $label = '<b>'.$lblAnswer.'</b>';
         $this->objTabbedbox=new tabbedbox();
         $this->objTabbedbox->addTabLabel($label);
         $this->objTabbedbox->addBoxContent($tblDisplay);
         $string .= $this->objTabbedbox->show();
-        
+
         // set up form elements
         $this->objInput = new textinput('inpSubmit', '', 'hidden', '');
         $inpHidden = $this->objInput->show();
-        
+
         $this->objEditor->init('comment', $comment, '300px', '100%', NULL);
         $this->objEditor->setDefaultToolBarSetWithoutSave();
         $edtComment = $this->objEditor->show();
-        
+
         $this->objDrop = new dropdown('mark');
         for($i = 0; $i <= $question['question_value']; $i++){
             $this->objDrop->addOption($i, $i.'&#160;');
@@ -2061,14 +2061,14 @@ class tutorialsdisplay extends object
         $this->objButton=new button('cancel',$lblCancel);
         $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
         $btnCancel = $this->objButton->show();
-        
+
         $this->objCheck = new checkbox('inpConfirm');
         $this->objCheck->setValue('yes');
         $chkConfirm = $this->objCheck->show();
-        
+
         $this->objLabel = new label($lblConfirm, 'input_inpConfirm');
         $lblCheck = $this->objLabel->show();
-        
+
         if(count($questions) == 1){
             $buttons = $btnSubmit.'&#160;'.$btnExit.'&#160;'.$btnCancel;
         }elseif($order == 1){
@@ -2078,7 +2078,7 @@ class tutorialsdisplay extends object
         }else{
             $buttons = $btnNext.'&#160;'.$btnPrevious.'&#160;'.$btnExit.'&#160;'.$btnCancel;
         }
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -2093,18 +2093,18 @@ class tutorialsdisplay extends object
         $this->objTable->endRow();
         $this->objTable->row_attributes = '';
         $this->objTable->startRow();
-        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         if($order == count($questions)){
             $this->objTable->startRow();
-            $this->objTable->addCell($chkConfirm.'&#160;'.$lblCheck, '', '', '', '', 'colspan="2"');        
-            $this->objTable->endRow();            
+            $this->objTable->addCell($chkConfirm.'&#160;'.$lblCheck, '', '', '', '', 'colspan="2"');
+            $this->objTable->endRow();
         }
         $this->objTable->startRow();
-        $this->objTable->addCell($buttons, '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell($buttons, '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // set up forms
         $this->objForm=new form('frmMark',$this->uri(array(
             'action' => 'savemarking',
@@ -2114,30 +2114,30 @@ class tutorialsdisplay extends object
             'order' => $order,
         ), 'tutorials'));
         $this->objForm->addToForm($inpHidden.$tblDisplay);
-        $tabContent = $this->objForm->show();        
+        $tabContent = $this->objForm->show();
 
         $this->objForm=new form('frmCancel',$this->uri(array(
             'action' => 'liststudents',
             'id' => $id,
         ), 'tutorials'));
-        $tabContent .= $this->objForm->show();        
+        $tabContent .= $this->objForm->show();
 
         // tabbed box
         $this->objTabbedbox=new tabbedbox();
         $this->objTabbedbox->addTabLabel('<b>'.$lblMarking.'</b>');
         $this->objTabbedbox->addBoxContent($tabContent);
         $string .= $this->objTabbedbox->show();
-        
+
         $string .= $this->_showMarkerLinks($id, $studentId);
 
         $this->objLayer = new layer();
         $this->objLayer->padding = '10px';
         $this->objLayer->addToStr($string);
-        $content = $this->objLayer->show();        
-        
-        return $content;  
+        $content = $this->objLayer->show();
+
+        return $content;
     }
-    
+
     /**
     * Method to show the student view page
     *
@@ -2158,7 +2158,7 @@ class tutorialsdisplay extends object
         $modComplete = $this->objDbTutorials->moderationComplete($id);
         $late = $this->objDbTutorials->getLate($id, $this->userId);
         $markedFor = $this->objDbTutorials->getMarkedStudents($id, $this->userId);
-        
+
         // set up language elements
         $lblView = $this->objLanguage->languageText('mod_tutorials_view', 'tutorials');
         $lblMarkObtained = $this->objLanguage->languageText('phrase_markobtained');
@@ -2188,7 +2188,7 @@ class tutorialsdisplay extends object
             $body = 'alert("'.$lblReason.'")';
             $this->appendArrayVar('bodyOnLoad', $body);
         }
-        
+
         if($status['value'] < 6){
             $mark = '<font class="error">'.$lblNotReady.'</font>';
         }else{
@@ -2198,47 +2198,47 @@ class tutorialsdisplay extends object
                 $mark = '0';
             }
         }
-                
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblView;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblMarkObtained.': '.$mark.'%';
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         if($tutorial['tutorial_type'] == 1 and $tutorial['penalty'] > 0 and $late == FALSE and $markedFor < 3){
             // set up page heading
             $penalty = ($tutorial['penalty'] * (3 - $markedFor));
-            $penalty = round($mark * ($penalty / 100), 0);            
+            $penalty = round($mark * ($penalty / 100), 0);
             $this->objHeading = new htmlHeading();
             $this->objHeading->str = $lblPenalty.': '.$penalty.'%';
             $this->objHeading->type = 3;
-            $header = $this->objHeading->show();        
+            $header = $this->objHeading->show();
             $content .= $header;
-        
+
             // set up page heading
             $mark = $mark - $penalty;
             $this->objHeading = new htmlHeading();
             $this->objHeading->str = $lblFinal.' '.strtolower($lblMark).': '.$mark.'%';
             $this->objHeading->type = 3;
-            $header = $this->objHeading->show();        
+            $header = $this->objHeading->show();
             $content .= $header;
         }
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -2255,14 +2255,14 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('<b>'.$lblModel.':</b><br />'.$question['model_answer'], '', '', '', '', '');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // tabbed box
         $label = '<b>'.$lblQuestion.'  '.$order.'  '.strtolower($lblOf).'  '.count($questions).'</b>';
         $this->objTabbedbox=new tabbedbox();
         $this->objTabbedbox->addTabLabel($label);
         $this->objTabbedbox->addBoxContent($tblDisplay);
         $content .= $this->objTabbedbox->show();
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -2273,14 +2273,14 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('<b>'.$lblAnswer.':</b><br />'.$answer['answer'], '', '', '', '', '');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // tabbed box
         $label = '<b>'.$lblAnswer.'</b>';
         $this->objTabbedbox=new tabbedbox();
         $this->objTabbedbox->addTabLabel($label);
         $this->objTabbedbox->addBoxContent($tblDisplay);
         $content .= $this->objTabbedbox->show();
-        
+
         if($tutorial['tutorial_type'] == 0){
             // set up display table
             $this->objTable = new htmltable();
@@ -2312,7 +2312,7 @@ class tutorialsdisplay extends object
                     $this->objTable->addCell('<b>'.$lblComment.':</b><br />'.$line['markers_comment'], '', '', '', '', '');
                 }else{
                     $this->objTable->addCell('<b>'.$lblModComment.':</b><br />'.$line['markers_comment'], '', '', '', '', '');
-                    
+
                 }
                 $this->objTable->endRow();
                 $tblDisplay = $this->objTable->show();
@@ -2326,7 +2326,7 @@ class tutorialsdisplay extends object
                 }
                 $this->objTabbedbox->addBoxContent($tblDisplay);
                 $tabDisplay = $this->objTabbedbox->show();
-                
+
                 if(($lecturer == FALSE and $line['is_moderator'] == 0) or $line['is_moderator'] == 1){
                     $this->objLayer = new layer();
                     $this->objLayer->padding = '10px';
@@ -2336,24 +2336,24 @@ class tutorialsdisplay extends object
                         $this->objLayer->background_color = 'rgb(100,255,100)';
                     }
                     $this->objLayer->addToStr($tabDisplay);
-                    $display .= $this->objLayer->show();        
+                    $display .= $this->objLayer->show();
                 }
-            }            
+            }
         }
-        
+
         // tabbed box
         $this->objTabbedbox=new tabbedbox();
         $this->objTabbedbox->addTabLabel('<b>'.$lblMarking.'</b>');
         $this->objTabbedbox->addBoxContent($display);
         $content .= $this->objTabbedbox->show();
-        
+
         if($status['value'] == 6 and empty($answer['moderation_reason'])){
             if($lecturer == FALSE){
                 // set up htmlelements
                 $this->objEditor->init('reason', '', '300px', '60%', NULL);
                 $this->objEditor->setDefaultToolBarSetWithoutSave();
                 $edtReason = $this->objEditor->show();
-        
+
                 $this->objButton=new button('submit',$lblSubmit);
                 $this->objButton->setToSubmit();
                 $btnSubmit = $this->objButton->show();
@@ -2361,7 +2361,7 @@ class tutorialsdisplay extends object
                 $this->objButton=new button('cancel',$lblCancel);
                 $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
                 $btnCancel = $this->objButton->show();
-        
+
                 // set up display table
                 $this->objTable = new htmltable();
                 $this->objTable->cellspacing = '2';
@@ -2373,13 +2373,13 @@ class tutorialsdisplay extends object
                 $this->objTable->endRow();
                 $this->objTable->row_attributes = '';
                 $this->objTable->startRow();
-                $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+                $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');
                 $this->objTable->endRow();
                 $this->objTable->startRow();
-                $this->objTable->addCell($btnSubmit.' '.$btnCancel, '', '', '', '', 'colspan="2"');        
+                $this->objTable->addCell($btnSubmit.' '.$btnCancel, '', '', '', '', 'colspan="2"');
                 $this->objTable->endRow();
                 $tblDisplay = $this->objTable->show();
-        
+
                 // set up forms
                 $this->objForm=new form('frmAnswer',$this->uri(array(
                     'action' => 'saverequest',
@@ -2389,14 +2389,14 @@ class tutorialsdisplay extends object
                 ), 'tutorials'));
                 $this->objForm->addToForm($tblDisplay);
                 $tabContent = $this->objForm->show();
-    
+
                 $this->objForm=new form('frmCancel',$this->uri(array(
                     'action' => 'view',
                     'id' => $id,
                     'order' => $order,
                 ), 'tutorials'));
-                $tabContent .= $this->objForm->show();       
-                       
+                $tabContent .= $this->objForm->show();
+
                 $this->objTabbedbox=new tabbedbox();
                 $this->objTabbedbox->addTabLabel('<b>'.$lblRequest.'</b>');
                 $this->objTabbedbox->addBoxContent($tabContent);
@@ -2415,24 +2415,24 @@ class tutorialsdisplay extends object
                 $this->objTable->endRow();
                 $this->objTable->row_attributes = '';
                 $tblDisplay = $this->objTable->show();
-        
+
                 $this->objTabbedbox=new tabbedbox();
                 $this->objTabbedbox->addTabLabel('<b>'.$lblRequest.'</b>');
                 $this->objTabbedbox->addBoxContent($tblDisplay);
                 $content .= $this->objTabbedbox->show();
             }
         }
-        
+
         $content .= $this->_showStudentLinks($id, 'view');
 
         $this->objLink = new link($this->uri(array(),'tutorials'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
-        $content .= '<br /><br />'.$lnkReturn;            
-        
-        return $content;  
+        $content .= '<br /><br />'.$lnkReturn;
+
+        return $content;
     }
-    
+
     /**
     * Method to show the late submissions page
     *
@@ -2447,15 +2447,15 @@ class tutorialsdisplay extends object
         $late = $this->objDbTutorials->getLate($id, $studentId);
         $name = $this->objUser->fullname($studentId);
         $result = $this->objDbTutorials->getResult($id, $studentId);
-        
+
         if($late != FALSE){
             $answerOpen = $late['answer_open'];
             $answerClose = $late['answer_close'];
         }else{
             $answerOpen = date('Y-m-d H:i');
-            $answerClose = date('Y-m-d H:i');            
+            $answerClose = date('Y-m-d H:i');
         }
-        
+
         // set up language elements
         $lblLate = $this->objLanguage->languageText('mod_tutorials_late', 'tutorials');
         $lblStudent = $this->objLanguage->code2Txt('word_student');
@@ -2471,12 +2471,12 @@ class tutorialsdisplay extends object
         $lblAdd = $this->objLanguage->languageText('mod_tutorials_addlate', 'tutorials');
         $lblEdit = $this->objLanguage->languageText('mod_tutorials_editlate', 'tutorials');
         $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
-        
+
         $icons = '';
         if($late != FALSE){
             if($mode == 'edit'){
                 $icons = '';
-            }else{    
+            }else{
                 if($result == FALSE){
                     // set up edit icon
                     $this->objIcon->title=$lblEdit;
@@ -2487,7 +2487,7 @@ class tutorialsdisplay extends object
                         'mode' => 'edit',
                     ), 'tutorials'));
                     $icons = $icoEdit;
-                
+
                     // set up delete icon
                     $deleteArray = array(
                         'action' => 'deletelate',
@@ -2495,9 +2495,9 @@ class tutorialsdisplay extends object
                         'id' => $late['id'],
                     );
                     $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'tutorials', $lblConfirm);
-                    $icons .= ' '.$icoDelete;                
+                    $icons .= ' '.$icoDelete;
                 }
-            }                
+            }
         }else{
             if($mode == 'add'){
                 $icons = '';
@@ -2513,35 +2513,35 @@ class tutorialsdisplay extends object
                 $icons = $icoAdd;
             }
         }
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblLate.' '.$icons;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = ucfirst($lblStudent).': '.$name;
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblStudentNo.': '.$studentId;
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         if($late == FALSE and $mode != 'add'){
             // display table
             $this->objTable = new htmltable();
@@ -2552,7 +2552,7 @@ class tutorialsdisplay extends object
             $this->objTable->startRow();
             $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', 'left', 'noRecordsMessage', '');
             $this->objTable->endRow();
-            
+
             $content .= $this->objTable->show();
         }elseif(!empty($mode)){// set up htmlelements
             $inpAnswerOpen = $this->objPopupcal->show('answerOpen', 'yes', 'no', $answerOpen);
@@ -2565,7 +2565,7 @@ class tutorialsdisplay extends object
             $this->objButton=new button('cancel',$lblCancel);
             $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
             $btnCancel = $this->objButton->show();
-        
+
             // set up display table
             $this->objTable = new htmltable();
             $this->objTable->cellspacing = '2';
@@ -2579,16 +2579,16 @@ class tutorialsdisplay extends object
             $this->objTable->startRow();
             $this->objTable->addCell('<b>'.$lblAnswerClose.'&#160:</b>', '33%', '', '', '', '');
             $this->objTable->addCell($inpAnswerClose, '', '', '', '', '');
-            $this->objTable->endRow();       
+            $this->objTable->endRow();
             $this->objTable->row_attributes = '';
             $this->objTable->startRow();
-            $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+            $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');
             $this->objTable->endRow();
             $this->objTable->startRow();
-            $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');        
+            $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');
             $this->objTable->endRow();
             $tblDisplay = $this->objTable->show();
-        
+
             // set up forms
             $this->objForm=new form('frmLate',$this->uri(array(
                 'action'=>'savelate',
@@ -2597,16 +2597,16 @@ class tutorialsdisplay extends object
             ), 'tutorials'));
             $this->objForm->addToForm($tblDisplay);
             $content .= $this->objForm->show();
-    
+
             $this->objForm=new form('frmCancel',$this->uri(array(
                 'action' => 'liststudents',
                 'id' => $id,
             ), 'tutorials'));
-            $content .= $this->objForm->show();        
+            $content .= $this->objForm->show();
         }else{
             $answerOpen = $this->objDatetime->formatDate($late['answer_open']);
             $answerClose = $this->objDatetime->formatDate($late['answer_close']);
-            
+
             // set up display table
             $this->objTable = new htmltable();
             $this->objTable->cellspacing = '2';
@@ -2620,10 +2620,10 @@ class tutorialsdisplay extends object
             $this->objTable->startRow();
             $this->objTable->addCell('<b>'.$lblAnswerClose.'&#160:</b>', '33%', '', '', '', '');
             $this->objTable->addCell($answerClose, '', '', '', '', '');
-            $this->objTable->endRow();       
+            $this->objTable->endRow();
             $content .= $this->objTable->show();
         }
-            
+
         $this->objLink = new link($this->uri(array(
             'action' => 'liststudents',
             'id' => $id,
@@ -2631,10 +2631,10 @@ class tutorialsdisplay extends object
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
         $content .= '<br />'.$lnkReturn;
-            
+
         return $content;
     }
-    
+
     /**
     * Method to show the import questions page
     *
@@ -2649,7 +2649,7 @@ class tutorialsdisplay extends object
 
         // get data
         $tutorial = $this->objDbTutorials->getTutorial($id);
-        
+
         // set up language elements
         $lblImport = $this->objLanguage->languageText('phrase_importquestions');
         $lblOverwrite = $this->objLanguage->languageText('mod_tutorials_overwrite', 'tutorials');
@@ -2659,21 +2659,21 @@ class tutorialsdisplay extends object
         $lblSubmit = $this->objLanguage->languageText('word_submit');
         $lblCancel = $this->objLanguage->languageText('word_cancel');
         $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnview', 'tutorials');
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblImport;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         // set up htmlelements
         $this->objRadio = new radio('overwrite');
         $this->objRadio->addOption('1', $lblYes);
@@ -2681,10 +2681,10 @@ class tutorialsdisplay extends object
         $this->objRadio->setSelected('1');
         $this->objRadio->setBreakSpace('<br />');
         $radOverwrite = $this->objRadio->show();
-        
+
         $this->objInput = new textinput('file', '', 'file', '70');
         $inpImport = $this->objInput->show();
-        
+
         $this->objButton=new button('submit',$lblSubmit);
         $this->objButton->setToSubmit();
         $btnSubmit = $this->objButton->show();
@@ -2692,7 +2692,7 @@ class tutorialsdisplay extends object
         $this->objButton=new button('cancel',$lblCancel);
         $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
         $btnCancel = $this->objButton->show();
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -2711,13 +2711,13 @@ class tutorialsdisplay extends object
 
         $this->objTable->row_attributes = '';
         $this->objTable->startRow();
-        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $this->objTable->startRow();
-        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // set up forms
         $this->objForm=new form('frmImport',$this->uri(array(
             'action'=>'saveimport',
@@ -2726,12 +2726,12 @@ class tutorialsdisplay extends object
         $this->objForm->addToForm($tblDisplay);
         $this->objForm->extra = 'enctype="multipart/form-data"';
         $content .= $this->objForm->show();
-    
+
         $this->objForm=new form('frmCancel',$this->uri(array(
             'action' => 'view',
             'id' => $id,
         ), 'tutorials'));
-        $content .= $this->objForm->show();        
+        $content .= $this->objForm->show();
 
         $this->objLink = new link($this->uri(array(
            'action' => 'view',
@@ -2740,10 +2740,10 @@ class tutorialsdisplay extends object
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
         $content .= '<br />'.$lnkReturn;
-            
+
         return $content;
     }
-    
+
     /**
     * Method to do the actual question import
     *
@@ -2769,7 +2769,7 @@ class tutorialsdisplay extends object
             }
         }
         unlink($file['file']['tmp_name']);
-    } 
+    }
 
     /**
     * Method to show the moderation page
@@ -2790,7 +2790,7 @@ class tutorialsdisplay extends object
         $tutorial = $this->objDbTutorials->getTutorial($id);
         $question = $this->objDbTutorials->getQuestionById($moderation[0]['question_id']);
         $answer = $moderation[0];
-        $marking = $this->objDbTutorials->getMarkingForStudentAnswer($moderation[0]['id'], $studentId);    
+        $marking = $this->objDbTutorials->getMarkingForStudentAnswer($moderation[0]['id'], $studentId);
         if($e == TRUE){
             $comment = $c;
             $mark = $m;
@@ -2831,7 +2831,7 @@ class tutorialsdisplay extends object
             $body = 'alert("'.$lblCommentRequired.'");document.getElementById("comment___Frame").focus();';
             $this->appendArrayVar('bodyOnLoad', $body);
         }
-        
+
         // set up page heading
         if($moderation != FALSE){
             $heading = $lblModerate.' - '.$lblLeft.': '.count($moderation);
@@ -2841,32 +2841,32 @@ class tutorialsdisplay extends object
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $heading;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         if($moderation != FALSE){
             // set up page heading
             $this->objHeading = new htmlHeading();
             $this->objHeading->str = ucfirst($lblStudent).': '.$name;
             $this->objHeading->type = 3;
-            $header = $this->objHeading->show();        
+            $header = $this->objHeading->show();
             $content .= $header;
-        
+
             // set up page heading
             $this->objHeading = new htmlHeading();
             $this->objHeading->str = $lblStudentNo.': '.$studentId;
             $this->objHeading->type = 3;
-            $header = $this->objHeading->show();        
+            $header = $this->objHeading->show();
             $content .= $header;
         }
-        
+
         if($moderation == FALSE){
             // set up display table
             $this->objTable = new htmltable();
@@ -2878,9 +2878,9 @@ class tutorialsdisplay extends object
             $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', '');
             $this->objTable->endRow();
             $content .= $this->objTable->show();
-        
-           
-        }else{            
+
+
+        }else{
             // set up display table
             $this->objTable = new htmltable();
             $this->objTable->cellspacing = '2';
@@ -2897,14 +2897,14 @@ class tutorialsdisplay extends object
             $this->objTable->addCell('<b>'.$lblModel.':</b><br />'.$question['model_answer'], '', '', '', '', '');
             $this->objTable->endRow();
             $tblDisplay = $this->objTable->show();
-        
+
             // tabbed box
             $label = '<b>'.$lblQuestion.'  '.$question['question_order'].'</b>';
             $this->objTabbedbox=new tabbedbox();
             $this->objTabbedbox->addTabLabel($label);
             $this->objTabbedbox->addBoxContent($tblDisplay);
             $content .= $this->objTabbedbox->show();
-        
+
             // set up display table
             $this->objTable = new htmltable();
             $this->objTable->cellspacing = '2';
@@ -2915,14 +2915,14 @@ class tutorialsdisplay extends object
             $this->objTable->addCell('<b>'.$lblAnswer.':</b><br />'.$answer['answer'], '', '', '', '', '');
             $this->objTable->endRow();
             $tblDisplay = $this->objTable->show();
-        
+
             // tabbed box
             $label = '<b>'.$lblStudent.'&#160;'.strtolower($lblAnswer).'</b>';
             $this->objTabbedbox=new tabbedbox();
             $this->objTabbedbox->addTabLabel($label);
             $this->objTabbedbox->addBoxContent($tblDisplay);
             $content .= $this->objTabbedbox->show();
-        
+
             $display = '';
             $students = '';
             $marks = '';
@@ -2953,19 +2953,19 @@ class tutorialsdisplay extends object
                 $this->objTabbedbox->addTabLabel('<b>'.ucfirst($lblStudent).' '.($key + 1).'</b><br />'.$name.'<br />'.$line['marker_id']);
                 $this->objTabbedbox->addBoxContent($tblDisplay);
                 $tabDisplay = $this->objTabbedbox->show();
-                
+
                 $this->objLayer = new layer();
                 $this->objLayer->padding = '10px';
                 $this->objLayer->addToStr($tabDisplay);
-                $display .= $this->objLayer->show();        
-            }            
-        
+                $display .= $this->objLayer->show();
+            }
+
             // tabbed box
             $this->objTabbedbox=new tabbedbox();
             $this->objTabbedbox->addTabLabel('<b>'.$lblMarking.'</b>');
             $this->objTabbedbox->addBoxContent($display);
             $content .= $this->objTabbedbox->show();
-        
+
             // set up display table
             $this->objTable = new htmltable();
             $this->objTable->cellspacing = '2';
@@ -2976,7 +2976,7 @@ class tutorialsdisplay extends object
             $this->objTable->addCell($answer['moderationReason'], '', '', '', '', '');
             $this->objTable->endRow();
             $tblDisplay = $this->objTable->show();
-        
+
             // tabbed box
             $this->objTabbedbox=new tabbedbox();
             $this->objTabbedbox->addTabLabel('<b>'.$lblReason.'</b>');
@@ -2987,7 +2987,7 @@ class tutorialsdisplay extends object
             $this->objEditor->init('comment', $comment, '300px', '60%', NULL);
             $this->objEditor->setDefaultToolBarSetWithoutSave();
             $edtComment = $this->objEditor->show();
-            
+
             $this->objDrop = new dropdown('mark');
             for($i = 0; $i <= $question['question_value']; $i++){
                 $this->objDrop->addOption($i, $i.'&#160;');
@@ -3002,7 +3002,7 @@ class tutorialsdisplay extends object
             $this->objButton=new button('cancel',$lblCancel);
             $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
             $btnCancel = $this->objButton->show();
-        
+
             // set up display table
             $this->objTable = new htmltable();
             $this->objTable->cellspacing = '2';
@@ -3017,13 +3017,13 @@ class tutorialsdisplay extends object
             $this->objTable->endRow();
             $this->objTable->row_attributes = '';
             $this->objTable->startRow();
-            $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+            $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');
             $this->objTable->endRow();
             $this->objTable->startRow();
-            $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');        
+            $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');
             $this->objTable->endRow();
             $tblDisplay = $this->objTable->show();
-        
+
             // set up forms
             $this->objForm = new form('frmMod',$this->uri(array(
                 'action' => 'savemod',
@@ -3036,9 +3036,9 @@ class tutorialsdisplay extends object
             ), 'tutorials'));
             $this->objForm->addToForm($tblDisplay);
 
-            $tabContent = $this->objForm->show();            
+            $tabContent = $this->objForm->show();
             $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
-            $tabContent .= $this->objForm->show();        
+            $tabContent .= $this->objForm->show();
 
             // tabbed box
             $this->objTabbedbox = new tabbedbox();
@@ -3046,15 +3046,15 @@ class tutorialsdisplay extends object
             $this->objTabbedbox->addBoxContent($tabContent);
             $content .= $this->objTabbedbox->show();
         }
-        
+
         $this->objLink = new link($this->uri(array(),'tutorials'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
-        $content .= '<br /><br />'.$lnkReturn;            
-        
-        return $content;  
+        $content .= '<br /><br />'.$lnkReturn;
+
+        return $content;
     }
-    
+
     /**
     * Method to show the answers list page
     *
@@ -3070,7 +3070,7 @@ class tutorialsdisplay extends object
         $questions = $this->objDbTutorials->getQuestions($id);
         $question = $questions[$order - 1];
         $answers = $this->objDbTutorials->getAnswers($question['id'], $num);
-        
+
         // set up language elements
         $lblList = $this->objLanguage->languageText('mod_tutorials_answerlist', 'tutorials');
         $lblTutorial = $this->objLanguage->languageText('word_tutorial');
@@ -3086,21 +3086,21 @@ class tutorialsdisplay extends object
         $lblAnswers = $this->objLanguage->languageText('word_answers');
         $lblAnswer = $this->objLanguage->languageText('word_answer');
         $lblOf = $this->objLanguage->languageText('word_of');
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblList;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         if($questions == FALSE){
             // set up display table
             $this->objTable = new htmltable();
@@ -3112,13 +3112,13 @@ class tutorialsdisplay extends object
             $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', '');
             $this->objTable->endRow();
             $tblDisplay = $this->objTable->show();
-                
+
             // tabbed box
             $label = '<b>'.$lblQuestion.'</b>';
             $this->objTabbedbox=new tabbedbox();
             $this->objTabbedbox->addTabLabel($label);
             $this->objTabbedbox->addBoxContent($tblDisplay);
-            $content .= $this->objTabbedbox->show();                
+            $content .= $this->objTabbedbox->show();
 
             // set up display table
             $this->objTable = new htmltable();
@@ -3130,14 +3130,14 @@ class tutorialsdisplay extends object
             $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', '');
             $this->objTable->endRow();
             $tblDisplay = $this->objTable->show();
-                
+
             // tabbed box
             $label = '<b>'.$lblAnswers.'</b>';
             $this->objTabbedbox=new tabbedbox();
             $this->objTabbedbox->addTabLabel($label);
             $this->objTabbedbox->addBoxContent($tblDisplay);
-            $content .= $this->objTabbedbox->show();                
-        }else{            
+            $content .= $this->objTabbedbox->show();
+        }else{
             // set up navigation icons
             if($order == 1){
                 // first
@@ -3145,13 +3145,13 @@ class tutorialsdisplay extends object
                 $this->objIcon->extra = '';
                 $this->objIcon->setIcon('first_grey');
                 $icons = $this->objIcon->show();
-                
+
                 // previous
                 $this->objIcon->title = $lblPrevious;
                 $this->objIcon->extra = '';
                 $this->objIcon->setIcon('prev_grey');
                 $icons .= '&#160;'.$this->objIcon->show();
-                
+
                 // next
                 $this->objIcon->title = $lblNext;
                 $this->objIcon->extra = '';
@@ -3161,7 +3161,7 @@ class tutorialsdisplay extends object
                     'order' => ($order + 1),
                 )), 'next');
                 $icons .= '&#160;'.$icoNext;
-                
+
                 // last
                 $this->objIcon->title = $lblLast;
                 $this->objIcon->extra = '';
@@ -3181,7 +3181,7 @@ class tutorialsdisplay extends object
                     'order' => 1,
                 )), 'first');
                 $icons = '&#160;'.$icoFirst;
-                
+
                 // previous
                 $this->objIcon->title = $lblPrevious;
                 $this->objIcon->extra = '';
@@ -3197,7 +3197,7 @@ class tutorialsdisplay extends object
                 $this->objIcon->extra = '';
                 $this->objIcon->setIcon('next_grey');
                 $icons .= $this->objIcon->show();
-                
+
                 // last
                 $this->objIcon->title = $lblLast;
                 $this->objIcon->extra = '';
@@ -3213,7 +3213,7 @@ class tutorialsdisplay extends object
                     'order' => 1,
                 )), 'first');
                 $icons = '&#160;'.$icoFirst;
-                
+
                 // previous
                 $this->objIcon->title = $lblPrevious;
                 $this->objIcon->extra = '';
@@ -3233,7 +3233,7 @@ class tutorialsdisplay extends object
                     'order' => ($order + 1),
                 )), 'next');
                 $icons .= '&#160;'.$icoNext;
-                
+
                 // last
                 $this->objIcon->title = $lblLast;
                 $this->objIcon->extra = '';
@@ -3244,12 +3244,12 @@ class tutorialsdisplay extends object
                 )), 'last');
                 $icons .= '&#160;'.$icoLast;
             }
-            
+
             // set up display table
             $this->objTable = new htmltable();
             $this->objTable->cellspacing = '2';
             $this->objTable->cellpadding = '5';
-            
+
             $this->objTable->startRow();
             $this->objTable->addCell($icons, '', '', '', '', '');
             $this->objTable->endRow();
@@ -3264,14 +3264,14 @@ class tutorialsdisplay extends object
             $this->objTable->addCell('<b>'.$lblMarkAllocated.':</b><br />'.$question['question_value'], '', '', '', '', '');
             $this->objTable->endRow();
             $tblDisplay = $this->objTable->show();
-        
+
             // tabbed box
             $label = '<b>'.$lblQuestion.'&#160;'.$order.'&#160;'.strtolower($lblOf).'&#160;'.count($questions).'</b>';
             $this->objTabbedbox=new tabbedbox();
             $this->objTabbedbox->addTabLabel($label);
             $this->objTabbedbox->addBoxContent($tblDisplay);
             $content .= $this->objTabbedbox->show();
-            
+
             if($answers == FALSE){
                 // set up display table
                 $this->objTable = new htmltable();
@@ -3283,13 +3283,13 @@ class tutorialsdisplay extends object
                 $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', '');
                 $this->objTable->endRow();
                 $tblDisplay = $this->objTable->show();
-                
+
                 // tabbed box
                 $label = '<b>'.$lblAnswers.'</b>';
                 $this->objTabbedbox=new tabbedbox();
                 $this->objTabbedbox->addTabLabel($label);
                 $this->objTabbedbox->addBoxContent($tblDisplay);
-                $content .= $this->objTabbedbox->show();                
+                $content .= $this->objTabbedbox->show();
             }else{
                 // set up navigation icons
                 $group = 10;
@@ -3302,19 +3302,19 @@ class tutorialsdisplay extends object
                     $this->objIcon->extra = '';
                     $this->objIcon->setIcon('first_grey');
                     $icons = $this->objIcon->show();
-                
+
                     // previous
                     $this->objIcon->title = $lblPrevious;
                     $this->objIcon->extra = '';
                     $this->objIcon->setIcon('prev_grey');
                     $icons .= '&#160;'.$this->objIcon->show();
-                
+
                     // next
                     $this->objIcon->title = $lblNext;
                     $this->objIcon->extra = '';
                     $this->objIcon->setIcon('next_grey');
                     $icons .= $this->objIcon->show();
-                
+
                     // last
                     $this->objIcon->title = $lblLast;
                     $this->objIcon->extra = '';
@@ -3326,13 +3326,13 @@ class tutorialsdisplay extends object
                     $this->objIcon->extra = '';
                     $this->objIcon->setIcon('first_grey');
                     $icons = $this->objIcon->show();
-                
+
                     // previous
                     $this->objIcon->title = $lblPrevious;
                     $this->objIcon->extra = '';
                     $this->objIcon->setIcon('prev_grey');
                     $icons .= '&#160;'.$this->objIcon->show();
-                
+
                     // next
                     $this->objIcon->title = $lblNext;
                     $this->objIcon->extra = '';
@@ -3343,7 +3343,7 @@ class tutorialsdisplay extends object
                         'num' => $next,
                     )), 'next');
                     $icons .= '&#160;'.$icoNext;
-                
+
                     // last
                     $this->objIcon->title = $lblLast;
                     $this->objIcon->extra = '';
@@ -3365,7 +3365,7 @@ class tutorialsdisplay extends object
                         'num' => 1,
                     )), 'first');
                     $icons = '&#160;'.$icoFirst;
-                    
+
                     // previous
                     $this->objIcon->title = $lblPrevious;
                     $this->objIcon->extra = '';
@@ -3382,7 +3382,7 @@ class tutorialsdisplay extends object
                     $this->objIcon->extra = '';
                     $this->objIcon->setIcon('next_grey');
                     $icons .= $this->objIcon->show();
-                
+
                     // last
                     $this->objIcon->title = $lblLast;
                     $this->objIcon->extra = '';
@@ -3399,7 +3399,7 @@ class tutorialsdisplay extends object
                         'num' => 1,
                     )), 'first');
                     $icons = '&#160;'.$icoFirst;
-                
+
                     // previous
                     $this->objIcon->title = $lblPrevious;
                     $this->objIcon->extra = '';
@@ -3410,7 +3410,7 @@ class tutorialsdisplay extends object
                         'num' => $prev,
                     )), 'prev');
                     $icons .= '&#160;'.$icoPrevious;
-    
+
                     // next
                     $this->objIcon->title = $lblNext;
                     $this->objIcon->extra = '';
@@ -3421,7 +3421,7 @@ class tutorialsdisplay extends object
                         'num' => $next,
                     )), 'next');
                     $icons .= '&#160;'.$icoNext;
-                    
+
                     // last
                     $this->objIcon->title = $lblLast;
                     $this->objIcon->extra = '';
@@ -3433,7 +3433,7 @@ class tutorialsdisplay extends object
                     )), 'last');
                     $icons .= '&#160;'.$icoLast;
                 }
-            
+
                 // set up display table
                 $string = $icons;
                 foreach($answers as $key => $answer){
@@ -3446,38 +3446,38 @@ class tutorialsdisplay extends object
                     $this->objTable->addCell($answer['answer'], '', '', '', '', '');
                     $this->objTable->endRow();
                     $tblDisplay = $this->objTable->show();
-                
+
                     // tabbed box
                     $label = '<b>'.$lblAnswer.' '.($num + $key).'</b>';
                     $this->objTabbedbox=new tabbedbox();
                     $this->objTabbedbox->addTabLabel($label);
                     $this->objTabbedbox->addBoxContent($tblDisplay);
-                    $tabDisplay = $this->objTabbedbox->show();                
-                    
+                    $tabDisplay = $this->objTabbedbox->show();
+
                     $this->objLayer = new layer();
                     $this->objLayer->padding = '10px';
                     $this->objLayer->addToStr($tabDisplay);
-                    $string .= $this->objLayer->show();        
+                    $string .= $this->objLayer->show();
                 }
-                
+
                 // tabbed box
                 $label = '<b>'.$lblAnswers.'</b>';
                 $this->objTabbedbox=new tabbedbox();
                 $this->objTabbedbox->addTabLabel($label);
                 $this->objTabbedbox->addBoxContent($string);
-                $content .= $this->objTabbedbox->show();                
-            }            
+                $content .= $this->objTabbedbox->show();
+            }
         }
-        
+
         $this->objLink = new link($this->uri(array(
             'action' => 'liststudents',
             'id' => $id,
         ),'tutorials'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
-        $content .= '<br /><br />'.$lnkReturn;            
-        
-        return $content;  
+        $content .= '<br /><br />'.$lnkReturn;
+
+        return $content;
     }
 
     /**
@@ -3494,7 +3494,7 @@ class tutorialsdisplay extends object
 
         // get data
         $tutorial = $this->objDbTutorials->getTutorial($id);
-        
+
         // set up language elements
         $lblTutorial = $this->objLanguage->languageText('word_tutorial');
         $lblType = $this->objLanguage->languageText('mod_tutorials_exporttype', 'tutorials');
@@ -3504,21 +3504,21 @@ class tutorialsdisplay extends object
         $lblSubmit = $this->objLanguage->languageText('word_submit');
         $lblCancel = $this->objLanguage->languageText('word_cancel');
         $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnlist', 'tutorials');
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblExport;
         $this->objHeading->type = 1;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content = $header;
-        
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
         $this->objHeading->type = 3;
-        $header = $this->objHeading->show();        
+        $header = $this->objHeading->show();
         $content .= $header;
-        
+
         // set up htmlelements
         $this->objRadio = new radio('type');
         $this->objRadio->addOption('1', $lblResults);
@@ -3526,7 +3526,7 @@ class tutorialsdisplay extends object
         $this->objRadio->setSelected('1');
         $this->objRadio->setBreakSpace('<br />');
         $radType = $this->objRadio->show();
-               
+
         $this->objButton=new button('submit',$lblSubmit);
         $this->objButton->setToSubmit();
         $btnSubmit = $this->objButton->show();
@@ -3534,7 +3534,7 @@ class tutorialsdisplay extends object
         $this->objButton=new button('cancel',$lblCancel);
         $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
         $btnCancel = $this->objButton->show();
-        
+
         // set up display table
         $this->objTable = new htmltable();
         $this->objTable->cellspacing = '2';
@@ -3550,13 +3550,13 @@ class tutorialsdisplay extends object
 
         $this->objTable->row_attributes = '';
         $this->objTable->startRow();
-        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $this->objTable->startRow();
-        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');        
+        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
-        
+
         // set up forms
         $this->objForm=new form('frmExport',$this->uri(array(
             'action'=>'doexport',
@@ -3564,12 +3564,12 @@ class tutorialsdisplay extends object
         ), 'tutorials'));
         $this->objForm->addToForm($tblDisplay);
         $content .= $this->objForm->show();
-    
+
         $this->objForm=new form('frmCancel',$this->uri(array(
             'action' => 'view',
             'id' => $id,
         ), 'tutorials'));
-        $content .= $this->objForm->show();        
+        $content .= $this->objForm->show();
 
         $this->objLink = new link($this->uri(array(
            'action' => 'liststudents',
@@ -3578,7 +3578,7 @@ class tutorialsdisplay extends object
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
         $content .= '<br />'.$lnkReturn;
-            
+
         return $content;
     }
 
@@ -3696,13 +3696,13 @@ class tutorialsdisplay extends object
                     }
                 }
                 return $status;
-            }            
+            }
         }else{
-            
+
         }
         return FALSE;
     }
-    
+
     /**
     * Method to send the results via email
     *
@@ -3710,24 +3710,24 @@ class tutorialsdisplay extends object
     * @param string $id: The id of the tutorial
     * @return void
     */
-    public function emailResults($id) 
+    public function emailResults($id)
     {
         // set up email object
         $this->objEmail = $this->getObject('dbemail', 'internalmail');
         $this->objAttachments = $this->getObject('dbattachments', 'internalmail');
-        
+
         // get data
         $tutorial = $this->objDbTutorials->getTutorial($id);
-        
+
         // set up language elements
         $lblSubject = $this->objLanguage->languageText('mod_tutorials_resultssubject', 'tutorials');
         $array = array();
         $array['item'] = $tutorial['name'];
         $lblBody = $this->objLanguage->code2Txt('mod_tutorials_resultsbody', 'tutorials', $array);
-        
+
         $emailId = $this->objEmail->sendMail($this->userId, $lblSubject, $lblBody, '1');
         $this->objAttachments->addAttachments($emailId, 'text/csv');
-        
+
         $this->fileLocation = $this->objConfig->getValue('KEWL_CONTENT_BASEPATH').'attachments/';
         $this->attachLocation = $this->fileLocation.$this->userId."/";
 
@@ -3755,19 +3755,19 @@ class tutorialsdisplay extends object
     * @param string $comment: The moderators comment
     * @return void
     */
-    public function emailModeration($id, $order, $emailList, $marks, $mark, $comment) 
+    public function emailModeration($id, $order, $emailList, $marks, $mark, $comment)
     {
         // set up email object
         $this->objEmail = $this->getObject('dbemail', 'internalmail');
-        
+
         // get data
         $tutorial = $this->objDbTutorials->getTutorial($id);
         $emails = explode('|', $emailList);
         $studentMarks = explode('|', $marks);
-        
+
         // set up language elements
         $lblSubject = $this->objLanguage->languageText('mod_tutorials_moderatesubject', 'tutorials');
-        
+
         foreach($emails as $key => $email){
             if($mark != $studentMarks[$key]){
                 $array = array();
@@ -3777,7 +3777,7 @@ class tutorialsdisplay extends object
                 $array['moderator'] = $mark;
                 $array['reason'] = $comment;
                 $lblBody = $this->objLanguage->code2Txt('mod_tutorials_moderatebody', 'tutorials', $array);
-        
+
                 $emailId = $this->objEmail->sendMail($email, $lblSubject, $lblBody, '0');
             }
         }
