@@ -99,7 +99,7 @@ class dbAnnouncements extends dbTable
                     $this->addMessageToContext($messageId, $context);
                     $emailList = array_merge($emailList, $this->getContextRecipients($context));
 
-                    $this->addAnnouncementToSearchIndex($id, $title, $message, $context);
+                    $this->addAnnouncementToSearchIndex($messageId, $title, $message, $context);
                 }
 
                 // Optimize Search
@@ -266,15 +266,19 @@ class dbAnnouncements extends dbTable
     private function sendEmail($title, $message, $recipients)
     {
         $recipients = array_unique($recipients);
+               
+		$body = $message;	
+		$to = $recipients;
+		$subject = $title;
+		$from  = $this->objUser->email();		
+		
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+		$headers .= 'From: '.$from . "\r\n" .
+			'Reply-To: '.$from . "\r\n" .
+			'X-Mailer: PHP/' . phpversion();
 
-        $objMailer = $this->getObject('email', 'mail');
-        $objMailer->setValue('from', $this->objUser->email());
-        $objMailer->setValue('fromName', $this->objUser->fullname());
-        $objMailer->setValue('subject', $title);
-        $objMailer->setValue('bcc', $recipients);
-        $objMailer->setValue('body', $message);
-
-        $objMailer->send(TRUE);
+		return mail($to, $subject, $body, $headers);
     }
 
     /**
