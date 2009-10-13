@@ -50,7 +50,7 @@ var addMemberForm;
 var editform;
     var types= [
         ['Private'],
-        ['Public'],
+        ['Public']
     ];
 function initEditScheduleFrame(meetingDate,timeFrom,timeTo,url,sessionTitle,sessiontype,showEdit){
     var startDateField=new Ext.form.DateField(
