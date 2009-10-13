@@ -266,12 +266,17 @@ class dbAnnouncements extends dbTable
     private function sendEmail($title, $message, $recipients)
     {
         $recipients = array_unique($recipients);
-               
-		$body = $message;	
-		$to = $recipients;
+
+		$body = $message;
+		$to = '';
+		$separator = '';
+		foreach ($recipients as $recipient) {
+    		$to .= $separator . $recipient;
+    		$separator = ', ';
+        }
 		$subject = $title;
-		$from  = $this->objUser->email();		
-		
+		$from  = $this->objUser->email();
+
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 		$headers .= 'From: '.$from . "\r\n" .
