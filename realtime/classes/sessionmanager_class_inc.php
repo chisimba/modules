@@ -220,7 +220,7 @@ class sessionmanager extends object{
          }
           $index++;
         }
-      $data.=',';
+     
         $lastChar = $data[strlen($data)-1];
         $len=strlen($data);
          if($lastChar == ','){
