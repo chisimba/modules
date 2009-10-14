@@ -60,6 +60,16 @@ class dbassignmentsubmit extends dbtable
     }
 
     /**
+     * Gets the count of student submissions
+     * @param string assignmentId
+     * @return integer # rows in table
+     */
+    public function getCountStudentSubmissions($assignmentId)
+    {
+        return $this->getRecordCount("WHERE assignmentid='{$assignmentId}'");
+    }
+
+    /**
      * this gets student submissions
      * @param <type> $assignmentId
      * @param <type> $orderBy

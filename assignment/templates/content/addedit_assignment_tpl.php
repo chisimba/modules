@@ -40,22 +40,36 @@ $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type'));
 
 if ($mode == 'edit') {
+    $canChangeType = $this->objAssignmentSubmit->getCountStudentSubmissions($assignment['id']) == 0;
+}
+else { // Mode is add so we can always change the type of the assignment
+    $canChangeType = true;
+}
+if (!$canChangeType) {
+//if ($mode == 'edit') {
     $textinput = new textinput('type');
     $textinput->size = 20;
     $textinput->value = $assignment['format'];
     $textinput->fldType = "hidden";
+    $_text = $this->objLanguage->languageText('mod_assignment_cannotchangetype', 'assignment').'<br />';
     if ($assignment['format'] == '0') {
-        $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online').'</strong>'.$textinput->show());
+        $_text .= '<strong>'.$this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online').'</strong>';
     } else {
-        $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload').'</strong>'.$textinput->show());
+        $_text .= '<strong>'.$this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload').'</strong>';
     }
-    
-} else {
+    $table->addCell($_text.$textinput->show());
+//} else {
+}
+else {
     $radio = new radio ('type');
     $radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
     $radio->addOption(1, $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
+    if ($mode == 'edit') {
+        $radio->setSelected($assignment['format']);
+    }
     $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
     $table->addCell($radio->show());
+//}
 }
 $table->endRow();
 
@@ -162,7 +176,7 @@ $objEditor->setDefaultToolBarSetWithoutSave();
 if ($mode == 'edit') {
     $objEditor->value = $assignment['description'];
 }
-    
+
 $form = new form ('addeditassignment', $this->uri(array('action'=>$action)));
 
 if ($mode == 'edit') {
