@@ -212,6 +212,7 @@ class sessionmanager extends object{
             $data.="'".$this->objUser->fullname($sessionOwner)."'";
 
             $data.="]";
+
             
             if($index < $total){
                 $data.=',';
@@ -219,8 +220,12 @@ class sessionmanager extends object{
          }
           $index++;
         }
-      
-
+      $data.=',';
+        $lastChar = $data[strlen($data)-1];
+        $len=strlen($data);
+         if($lastChar == ','){
+             $data=substr($data, 0, (strlen ($data)) - (strlen (strrchr($data,','))));
+         }
         $submitUrl = $this->uri(array('action' => 'saveschedule'));
 
         $title='Title';
