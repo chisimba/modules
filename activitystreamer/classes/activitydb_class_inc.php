@@ -69,8 +69,8 @@ class activitydb extends dbTable
                 'title' => $content['title'],
                 'createdon' => $this->now(),
                 'createdby' => $this->objUser->userId(),
-                'contextcode' => $content['contextcode']
-                
+                'contextcode' => $content['contextcode'],
+                'link'        => $content['link'],
             ));
             
        return $messageId;
