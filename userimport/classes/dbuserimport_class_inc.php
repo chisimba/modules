@@ -189,7 +189,7 @@ class dbuserimport extends dbTable
         $sql="select tbl_users.userId, tbl_users.username, firstname,surname,title,sex,emailAddress from tbl_users,tbl_importusers "
         ."where tbl_importusers.batchId='$batchCode' and tbl_users.userId=tbl_importusers.userId";
         if ($batchCode=='ALL'){
-            $sql="select userId, username, PASSWORD as cryptpassword, firstname,surname,title,sex,emailAddress from tbl_users";
+            $sql="select userId, username, pass as cryptpassword, firstname,surname,title,sex,emailAddress from tbl_users";
         }
         $list=$this->getArray($sql);
 
@@ -240,7 +240,7 @@ class dbuserimport extends dbTable
         $this->objContextGroups=$this->getObject('managegroups','contextgroups');
         $this->export='';
         // Getting the data via a call to the groupmanagement classes
-        $fields=array("tbl_users.userId AS userId", "username", "PASSWORD as cryptpassword", "firstname",
+        $fields=array("tbl_users.userId AS userId", "username", "pass as cryptpassword", "firstname",
           "surname","title","sex","emailAddress");
 
         $list=$this->objContextGroups->contextUsers($role,$contextCode,$fields);
