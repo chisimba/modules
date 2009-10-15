@@ -253,16 +253,6 @@ class eventsops extends object {
         // get the list of categories from the db
         $cats = $this->objDbEvents->categoryGetList();
         $list = NULL;
-        // do a 0 cat first (home link)
-        $catname = $this->objLanguage->languageText("mod_events_home", "events");
-        $catid = 0;
-        $header = new htmlheading();
-        $catlink = $this->newObject('link', 'htmlelements');
-        $header->type = 4;
-        $header->str = $catname;
-        $catlink->href = $this->uri(array('action' => 'showcat', 'cat' => $catid));
-        $catlink->link = $header->show();
-        $list .= $catlink->show();
         foreach($cats as $cat) {
             $catname = $cat['cat_name'];
             $catid = $cat['id'];

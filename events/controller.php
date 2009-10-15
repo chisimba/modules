@@ -70,6 +70,9 @@ class events extends controller
     public $objTeeny;
     public $objSocial;
     public $dbFoaf;
+    public $objModuleCat;
+    public $objActStream;
+    public $eventsEnabled;
 
     /**
      * Initialises the instance variables.
@@ -98,6 +101,15 @@ class events extends controller
             $this->objTeeny      = $this->getObject ( 'tiny', 'tinyurl');
             $this->objSocial     = $this->getObject('eventssocial');
             $this->dbFoaf        = $this->getObject('dbfoaf', 'foaf');
+            $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
+            if($this->objModuleCat->checkIfRegistered('activitystreamer'))
+            {
+                $this->objActStream = $this->getObject('activityops','activitystreamer');
+                $this->eventDispatcher->addObserver(array($this->objActStream, 'postmade' ));
+                $this->eventsEnabled = TRUE;
+            } else {
+                $this->eventsEnabled = FALSE;
+            }
         }
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -172,6 +184,18 @@ class events extends controller
                     $this->objCookie->set( 'events_location', $locarr->name, time()+60*60*24*30);
                     $this->objCookie->set( 'events_latlon', $locarr->lat."|".$locarr->lng, time()+60*60*24*30);
                 }
+                // let everyone know where you are
+                $title = $this->objLanguage->languageText("mod_events_setlocation", "events");
+                $link = $this->uri(array('action' => 'viewlocation', 'lat' => $locarr->lat, 'lon' => $locarr->lng));
+                $contextCode = NULL;
+                if($this->objUser->isloggedIn()) {
+                    $author = $this->objUser->fullName();
+                }
+                else {
+                    $author = $this->objLanguage->languageText("mod_events_wordguest", "events");
+                }
+                $message = $author." ".$this->objLanguage->languageText("mod_events_locationsetto", "events")." ".$locarr->name;
+                $this->eventDispatcher->post($this->objActStream, 'events', array('title' => $title, 'link' => $link, 'contextcode' => $contextCode, 'author' => $author, 'description' => $message));
                 $this->nextAction('');
                 break;
 
@@ -400,6 +424,16 @@ class events extends controller
                 $eventid = $this->getParam('eventid');
                 $tag = $this->getParam('hashtag');
                 $mode = $this->getParam('mode');
+                // activity stream
+                $title = $this->objLanguage->languageText("mod_events_neweventadded", "events");
+                $link = $this->uri(array('action' => 'viewsingle', 'eventid' => $eventid));
+                $contextCode = NULL;
+                if($this->objUser->isloggedIn()) {
+                    $author = $this->objUser->fullName();
+                }
+                else {
+                    $author = $this->objLanguage->languageText("mod_events_wordguest", "events");
+                }
                 if($this->objDbEvents->eventAddHashtag($eventid, $tag) == TRUE) {
                     // send the tweet with your new meme and have fun
                     $eventinfo = $this->objDbEvents->getEventInfo($eventid);
@@ -417,9 +451,15 @@ class events extends controller
                     $threadid = rand(0, 99999);
                     // now update the event with the tweetid to track twitter conversations on this tweet.
                     $this->objDbEvents->addTwtId($threadid, $eventid);
+                    // let everyone know
+                    $message = $author." ".$this->objLanguage->languageText("mod_events_addednewevent", "events");
+                    $this->eventDispatcher->post($this->objActStream, 'events', array('title' => $title, 'link' => $link, 'contextcode' => $contextCode, 'author' => $author, 'description' => $message));
                     $this->nextAction('viewsingle', array('eventid' => $eventid));
                  }
                  elseif($mode == 'update') {
+                     // let everyone know
+                     $message = $author." ".$this->objLanguage->languageText("mod_events_updatedevent", "events");
+                     $this->eventDispatcher->post($this->objActStream, 'events', array('title' => $title, 'link' => $link, 'contextcode' => $contextCode, 'author' => $author, 'description' => $message));
                      $this->nextAction('viewsingle', array('eventid' => $eventid));
                  }
                  else {
@@ -429,7 +469,6 @@ class events extends controller
                      $this->setVarByRef('eventid', $eventid);
                      return 'hashtag_tpl.php';
                  }
-                
                 break;
                 
             case 'hashtagvideo' :
@@ -440,11 +479,32 @@ class events extends controller
                 $userid = $this->getParam('userid', NULL);
                 $ans = $this->getParam('ans', NULL);
                 $eventid = $this->getParam('eventid', NULL);
+                // activity stream
+                $title = $this->objLanguage->languageText("mod_events_rsvpadded", "events");
+                $link = $this->uri(array('action' => 'viewsingle', 'eventid' => $eventid));
+                $contextCode = NULL;
+                if($this->objUser->isloggedIn()) {
+                    $author = $this->objUser->fullName();
+                }
+                else {
+                    $author = $this->objLanguage->languageText("mod_events_wordguest", "events");
+                }
                 if($userid == NULL || $ans == NULL || $eventid == NULL) {
                     $message = $this->objLanguage->languageText("mod_events_needsignin", "events");
                 }
                 $rsvparr = array('ans' => $ans, 'userid' => $userid, 'eventid' => $eventid);
                 $this->objDbEvents->userDoRSVP($rsvparr);
+                // let everyone know
+                if($ans == 'yes') {
+                    $message = $author." ".$this->objLanguage->languageText("mod_events_rsvpeventgoing", "events");
+                }
+                elseif($ans == 'no') {
+                    $message = $author." ".$this->objLanguage->languageText("mod_events_rsvpeventnotgoing", "events");
+                }
+                else {
+                    $message = $author." ".$this->objLanguage->languageText("mod_events_rsvpeventchangedmind", "events");
+                }
+                $this->eventDispatcher->post($this->objActStream, 'events', array('title' => $title, 'link' => $link, 'contextcode' => $contextCode, 'author' => $author, 'description' => $message));
                 $this->nextAction('');
                 break;
             
@@ -464,6 +524,9 @@ class events extends controller
                 
             case 'showcat' :
                 $catid = $this->getParam('cat');
+                if($catid == 0) {
+                    $this->nextAction('');
+                }
                 $eventdata = $this->objDbEvents->eventGetLatestByCat($catid, $number = 20);
                 var_dump($eventdata); die();
                 break;
@@ -481,6 +544,14 @@ class events extends controller
                 $myid = $this->objUser->userId();
                 $this->dbFoaf->insertFriend(array('userid' => $myid, 'fuserid' => $fid));
                 $this->nextAction('');
+                break;
+                
+            case 'viewlocation' :
+                $lat = $this->getParam('lat');
+                $lon = $this->getParam('lon');
+                $this->setVarByRef('lat', $lat);
+                $this->setVarByRef('lon', $lon);
+                return 'viewloc_tpl.php';
                 break;
 
             default:

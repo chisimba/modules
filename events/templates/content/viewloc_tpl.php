@@ -14,17 +14,14 @@ $middleColumn = NULL;
 if(isset($message) && !empty($message) && $message != '' && is_object($message)) {
     $middleColumn .= $message->show();
 }
-$middleColumn .= $this->objOps->locationHeader();
-$middleColumn .= $this->objOps->middleContainer();
+
+$middleColumn .= $this->objOps->viewLocMap($lat, $lon);
 
 $leftColumn = NULL;
 $rightColumn = NULL;
 
 $leftColumn .= $this->objOps->browseEventsBox();
 $rightColumn .= $this->objOps->showWelcomeBox();
-$objBlocks = $this->getObject('blocks', 'blocks');
-$rightColumn .= $objBlocks->showBlock('lastten', 'activitystreamer');
-//$rightColumn .= $this->objOps->showLocWeatherBox();
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );

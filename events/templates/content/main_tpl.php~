@@ -23,7 +23,7 @@ $rightColumn = NULL;
 $leftColumn .= $this->objOps->browseEventsBox();
 $rightColumn .= $this->objOps->showWelcomeBox();
 $objBlocks = $this->getObject('blocks', 'blocks');
-$rightColumn .= $objBlocks->showBlock('lastten', 'activitystreamer');
+$rightColumn .= $objBlocks->showBlock('popuphandler', 'activitystreamer');
 //$rightColumn .= $this->objOps->showLocWeatherBox();
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
