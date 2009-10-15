@@ -106,6 +106,11 @@ class eventsops extends object {
 
     public $objTags;
     public $objUtils;
+    public $objFoafOps;
+    public $friendcount = 0;
+    public $foafProfile;
+    public $objSocial;
+    
 
 
     /**
@@ -114,17 +119,42 @@ class eventsops extends object {
      * @access public
      */
     public function init() {
-        $this->objLanguage  = $this->getObject('language', 'language');
-        $this->objConfig    = $this->getObject('altconfig', 'config');
-        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
-        $this->objWashout   = $this->getObject('washout', 'utilities');
-        $this->objUser      = $this->getObject('user', 'security');
-        $this->objCurl      = $this->getObject('curlwrapper', 'utilities');
-        $this->objLangCode  = $this->getObject('languagecode', 'language');
-        $this->objTags      = $this->getObject('dbtags', 'tagging');
-        $this->objCookie    = $this->getObject('cookie', 'utilities');
-        $this->objDbEvents  = $this->getObject('dbevents');
-        $this->objUtils     = $this->getObject('eventsutils');
+        $this->objLanguage   = $this->getObject('language', 'language');
+        $this->objConfig     = $this->getObject('altconfig', 'config');
+        $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->objWashout    = $this->getObject('washout', 'utilities');
+        $this->objUser       = $this->getObject('user', 'security');
+        $this->objCurl       = $this->getObject('curlwrapper', 'utilities');
+        $this->objLangCode   = $this->getObject('languagecode', 'language');
+        $this->objTags       = $this->getObject('dbtags', 'tagging');
+        $this->objCookie     = $this->getObject('cookie', 'utilities');
+        $this->objDbEvents   = $this->getObject('dbevents');
+        $this->objUtils      = $this->getObject('eventsutils');
+        $this->objFoafOps    = $this->getObject('foafops', 'foaf');
+        //the object needed to create FOAF files (RDF)
+        $this->objFoaf       = $this->getObject('foafcreator', 'foaf');
+        //Object to parse and display FOAF RDF
+        $this->objFoafParser = $this->getObject('foafparser', 'foaf');
+        $this->dbFoaf        = $this->getObject('dbfoaf', 'foaf');
+        $this->objSocial     = $this->getObject('eventssocial');
+        $this->setupFoaf();
+    }
+    
+    public function setupFoaf() {
+        if($this->objUser->isLoggedIn()) {
+            $this->objFoafOps->newPerson($this->objUser->userId());
+            //add in other details if they exist
+            $this->objFoafOps->myFoaf($this->objUser->userId());
+            $this->objFoafOps->writeFoaf();
+            $midcontent = $this->objFoafOps->foaf2Object($this->objUser->userId());
+            $this->foafProfile = $midcontent;
+            if(is_array($midcontent->foaf) && !empty($midcontent->foaf) && array_key_exists('knows', $midcontent->foaf)) {
+                $this->friendcount = count($midcontent->foaf['knows']);
+            }
+         }
+         else {
+             return NULL;
+         }
     }
 
     /**
@@ -381,16 +411,17 @@ class eventsops extends object {
      */
     public function middleContainer() {
         // get the tabbed box class
-        $friendcount = 0;
         $tabs = $this->getObject('tabber', 'htmlelements');
 
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
+        //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
+        if($this->objUser->isLoggedIn()) {
+            $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$this->friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
+        }
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_fb", "events"), 'content' => $this->fbComment(), 'onclick' => ''));
 
@@ -444,7 +475,19 @@ class eventsops extends object {
     }
     
     public function getSearchContent() {
-        return "It looks like you are in ".$this->getSession('country').". I have fetched the relevant details for you.";
+        $ret = NULL;
+        if($this->objUser->isLoggedIn()) {
+            // search for friemds
+            $ret .= $this->objSocial->searchFriendsForm();
+        }
+        else {
+            // search for events
+            $headerinfo = new htmlheading();
+            $headerinfo->type = 3;
+            $headerinfo->str = $this->objLanguage->languageText("mod_events_headersearchnologin", "events");
+            $ret .= $headerinfo->show();
+        }
+        return $ret;
     }
 
     /**
@@ -592,7 +635,24 @@ class eventsops extends object {
         $etbl->addCell($catinfo[0]['cat_name'], '20%', "top");
         $etbl->addCell($this->objUtils->truncateDescription($event['id'], $event['description'], 200, ".", "..."), '50%', "top");
         $etbl->endRow();
-        return $objFb->show($event['name'], $etbl->show());
+        // check if the user is the logged in user and set up the edit/delete stuff
+        if($this->objUser->userId() == $event['userid']) {
+            $this->objIcon = $this->getObject('geticon', 'htmlelements');
+            $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                'action' => 'eventedit',
+                'id' => $event['id'],
+                'module' => 'events'
+            )));
+            $delIcon = $this->objIcon->getDeleteIconWithConfirm($event['id'], array(
+                'module' => 'events',
+                'action' => 'eventdelete',
+                'id' => $event['id']
+            ) , 'events');
+            return $objFb->show($event['name']." ".$edIcon." ".$delIcon, $etbl->show());
+        }
+        else {
+            return $objFb->show($event['name'], $etbl->show());
+        }
     }
     
     public function goYesNo($eventid) {
@@ -643,7 +703,28 @@ class eventsops extends object {
      * @return string
      */
     public function getFriendContent() {
-        return "foaf/friend content";
+        $foaf = $this->foafProfile->foaf;
+        $ret = NULL;
+        //var_dump($foaf); die();
+        if(is_array($foaf) && !empty($foaf) && array_key_exists('knows', $foaf)) {
+            $ret .= $this->objSocial->searchFriendsForm();
+            $friends = $foaf['knows'];
+            foreach($friends as $pal) {
+                // var_dump($pal); die();
+                $objFb = $this->newObject('featurebox', 'navigation');
+                $ret .= $objFb->show($pal['name'], "<img src='".$pal['img'][0]."' />");
+            }
+        }
+        if($ret == NULL) {
+            // there is no social stuff at all to display and the tabber needs a string to carry on
+            $headersoc = new htmlheading();
+            $headersoc->type = 2;
+            $headersoc->str = $this->objLanguage->languageText("mod_events_nosocialfound", "events");
+            $ret .= $headersoc->show();
+            // display a form to add a friend or suggest some friends to the user
+            $ret .= $this->objSocial->searchFriendsForm();
+        }
+        return $ret;
     }
 
     /**
@@ -739,7 +820,12 @@ class eventsops extends object {
         $mtable = $this->newObject('htmltable', 'htmlelements');
         $ftable = $this->newObject('htmltable', 'htmlelements');
         $ret = NULL;
-        $form = new form ('eventadd', $this->uri(array('action'=>'eventadd')));
+        if(isset($editparams)) {
+            $form = new form ('eventupdate', $this->uri(array('action'=>'eventupdate')));
+        }
+        else {
+            $form = new form ('eventadd', $this->uri(array('action'=>'eventadd')));
+        }
         $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'events', 'Required').'</span>';
         $mtable->cellpadding = 3;
         // a heading
@@ -749,6 +835,9 @@ class eventsops extends object {
         // event name
         $enamelabel = new label($this->objLanguage->languageText("mod_events_eventname", "events") . ':', 'input_ename');
         $ename = new textinput('eventname', NULL, NULL);
+        if(isset($editparams['name'])) {
+            $ename->setValue($editparams['name']);
+        }
         $ftable->startRow();
         $ftable->addCell($enamelabel->show().$required);
         $ftable->endRow();
@@ -763,6 +852,9 @@ class eventsops extends object {
         foreach($cats as $cat) {
             $ecat->addOption($cat['id'], $cat['cat_name']." (".$cat['cat_desc'].")");
         }
+        if(isset($editparams['category_id'])) {
+            $ecat->setSelected($editparams['category_id']);
+        }
         $ftable->startRow();
         $ftable->addCell($ecatlabel->show().$required);
         $ftable->endRow();
@@ -772,6 +864,9 @@ class eventsops extends object {
         // venue name
         $vnamelabel = new label($this->objLanguage->languageText("mod_events_venuename", "events") . ':', 'input_venuename');
         $vname = new textinput('venuename', NULL, NULL);
+        if(isset($editparams['venuename'])) {
+            $vname->setValue($editparams['venuename']);
+        }
         $ftable->startRow();
         $ftable->addCell($vnamelabel->show().$required);
         $ftable->endRow();
@@ -780,7 +875,12 @@ class eventsops extends object {
         $ftable->endRow();
         // start date and time
         $objsDatepick = $this->newObject('datepickajax', 'popupcalendar');
-        $sdatepick = $objsDatepick->show('startdatetime', 'yes', 'yes', NULL);
+        if(isset($editparams['start_date'])) {
+            $sdatepick = $objsDatepick->show('startdatetime', 'yes', 'yes', $editparams['start_date']." ".$editparams['start_time']);
+        }
+        else {
+            $sdatepick = $objsDatepick->show('startdatetime', 'yes', 'yes', NULL);
+        }
         $esdtlabel = new label($this->objLanguage->languageText("mod_events_startdatetime", "events") . ':', 'input_startdatetime');
         $ftable->startRow();
         $ftable->addCell($esdtlabel->show());
@@ -790,7 +890,12 @@ class eventsops extends object {
         $ftable->endRow();
         // end date and time
         $objeDatepick = $this->newObject('datepickajax', 'popupcalendar');
-        $edatepick = $objeDatepick->show('enddatetime', 'yes', 'yes', NULL);
+        if(isset($editparams['end_date'])) {
+            $edatepick = $objeDatepick->show('enddatetime', 'yes', 'yes', $editparams['end_date']." ".$editparams['end_time']);
+        }
+        else {
+            $edatepick = $objeDatepick->show('enddatetime', 'yes', 'yes', NULL);
+        }
         $eedtlabel = new label($this->objLanguage->languageText("mod_events_enddatetime", "events") . ':', 'input_enddatetime');
         $ftable->startRow();
         $ftable->addCell($eedtlabel->show());
@@ -808,7 +913,12 @@ class eventsops extends object {
         // event url
         $eurllabel = new label($this->objLanguage->languageText("mod_events_eventurl", "events") . ':', 'input_eurl');
         $eurl = new textinput('eventurl', NULL, NULL);
-        $eurl->setValue("http://");
+        if(isset($editparams['url'])) {
+            $eurl->setValue($editparams['url']);
+        }
+        else {
+            $eurl->setValue("http://");
+        }
         $ftable2->startRow();
         $ftable2->addCell($eurllabel->show());
         $ftable2->endRow();
@@ -818,7 +928,12 @@ class eventsops extends object {
         // ticket url
         $turllabel = new label($this->objLanguage->languageText("mod_events_ticketurl", "events") . ':', 'input_turl');
         $turl = new textinput('ticketurl', NULL, NULL);
-        $turl->setValue("http://");
+        if(isset($editparams['ticket_url'])) {
+            $turl->setValue($editparams['ticket_url']);
+        }
+        else {
+            $turl->setValue("http://");
+        }
         $ftable2->startRow();
         $ftable2->addCell($turllabel->show());
         $ftable2->endRow();
@@ -828,8 +943,16 @@ class eventsops extends object {
         // ticket price
         $tplabel = new label($this->objLanguage->languageText("mod_events_ticketprice", "events") . ':', 'input_ticketprice');
         $tflabel = new label($this->objLanguage->languageText("mod_events_ticketfree", "events") . ':', 'input_ticketfree');
-        $ticketprice = new textinput('ticketprice', NULL, NULL, '25%');
-        $ticketfree = new checkbox('ticketfree', NULL, NULL);
+        $ticketprice = new textinput('ticketprice', NULL, NULL);
+        if(isset($editparams['ticket_price'])) {
+            $ticketprice->setValue($editparams['ticket_price']);
+        }
+        if(isset($editparams['ticket_free'])) {
+            $ticketfree = new checkbox('ticketfree', NULL, TRUE);
+        }
+        else {
+            $ticketfree = new checkbox('ticketfree', NULL, NULL);
+        }
         $ftable2->startRow();
         $ftable2->addCell($tflabel->show());
         $ftable2->endRow();
@@ -854,7 +977,12 @@ class eventsops extends object {
         $description = $this->newObject('htmlarea', 'htmlelements');
         $description->setName('description');
         $description->setRows = 5;
-        $description->setContent($this->objLanguage->languageText("mod_events_briefeventdescription", "events"));
+        if(isset($editparams['description'])) {
+            $description->setContent($editparams['description']);
+        }
+        else {
+            $description->setContent($this->objLanguage->languageText("mod_events_briefeventdescription", "events"));
+        }
         $description->setBasicToolBar();
         $dtable->startRow();
         $dtable->addCell($edesclabel->show().$required);
@@ -871,7 +999,12 @@ class eventsops extends object {
         // is this a personal/private event?
         $ftable3 = $this->newObject('htmltable','htmlelements');
         $personallabel = new label($this->objLanguage->languageText("mod_events_personal", "events") . ':', 'input_personal');
-        $personal = new checkbox('personal', NULL, NULL);
+        if(isset($editparams['personal'])) {
+            $personal = new checkbox('personal', NULL, TRUE);
+        }
+        else {
+            $personal = new checkbox('personal', NULL, NULL);
+        }
         $ftable3->startRow();
         $ftable3->addCell($personallabel->show());
         $ftable3->endRow();
@@ -881,6 +1014,10 @@ class eventsops extends object {
         // tags
         $taglabel = new label($this->objLanguage->languageText("mod_events_eventtags", "events") . ':', 'input_tags');
         $tags = new textinput('tags', NULL, NULL);
+        $t = $this->objDbEvents->eventGetTags($editparams['id']);
+        if($t != '') {
+            $tags->setValue($t);
+        }
         $ftable3->startRow();
         $ftable3->addCell($taglabel->show());
         $ftable3->endRow();
@@ -895,9 +1032,28 @@ class eventsops extends object {
         $limitattendeeslabel = new label($this->objLanguage->languageText("mod_events_limitattendees", "events") . ':', 'input_limitattendees');
         $unlimitedlabel = new label($this->objLanguage->languageText("mod_events_unlimited", "events") . ':', 'input_unlimited');
         $howmanylabel = new label($this->objLanguage->languageText("mod_events_howmany", "events") . ':', 'input_howmany');
-        $canbringothers = new checkbox('canbringothers', NULL, NULL);
-        $yestheycan = new dropdown('yestheycan', NULL, NULL);
         $howmany = new textinput('howmany', NULL, NULL);
+        $yestheycan = new dropdown('yestheycan', NULL, NULL);
+
+        if(isset($editparams)) {
+            $promo = $this->objDbEvents->getEventPromo($editparams['id']);
+            if(!empty($promo)) {
+                $promo = $promo[0];
+                if($promo['canbringothers'] == 'on') {
+                    $canbringothers = new checkbox('canbringothers', NULL, TRUE);
+                }
+                if($promo['canbringothers'] == 'on') {
+                    $yestheycan->setSelected($promo['numberguests']);
+                }
+                $howmany->setValue($promo['limitedto']);
+            }
+            else {
+                $canbringothers = new checkbox('canbringothers', NULL, NULL);
+            }
+        }
+        else {
+            $canbringothers = new checkbox('canbringothers', NULL, NULL);
+        }
         $i = 1;
         $yestheycan->addOption();
         while($i <= 20) {
@@ -934,7 +1090,15 @@ class eventsops extends object {
         $edfieldset3 = $this->newObject('fieldset', 'htmlelements');
         $edfieldset3->legend = $this->objLanguage->languageText("mod_events_organizer", "events");;
         $edfieldset3->contents = $ftable3->show();
-
+        
+        if(isset($editparams)) {
+            $this->loadClass('hiddeninput', 'htmlelements');
+            $eventidinput = new hiddeninput('input_eventid', $editparams['id']);
+            $eventidinput = $eventidinput->show();
+        }
+        else {
+            $eventidinput = NULL;
+        }
 
         // the rules
         $form->addRule('eventname', $this->objLanguage->languageText("mod_events_needeventname", "events"), 'required');
@@ -945,8 +1109,13 @@ class eventsops extends object {
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend = '';
-        $fieldset->contents = /*$mfieldset->show().*/$edfieldset->show().$edfieldset2->show().$dfieldset->show().$edfieldset3->show();
-        $button = new button ('submitform', $this->objLanguage->languageText("mod_events_addevent", "events"));
+        $fieldset->contents = /*$mfieldset->show().*/$edfieldset->show().$edfieldset2->show().$dfieldset->show().$edfieldset3->show().$eventidinput;
+        if(isset($editparams)) {
+            $button = new button ('submitform', $this->objLanguage->languageText("mod_events_editevent", "events"));
+        }
+        else {
+            $button = new button ('submitform', $this->objLanguage->languageText("mod_events_addevent", "events"));
+        }
         $button->setToSubmit();
         $form->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
         $ret .= $form->show();
@@ -1587,14 +1756,19 @@ class eventsops extends object {
     }
     
     public function addSocialTagForm($eventid) {
+        $otag = $this->objDbEvents->eventGetHashtag($eventid);
         $ret = NULL;
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->objHead = $this->newObject('htmlheading', 'htmlelements');
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $vtable = $this->newObject('htmltable', 'htmlelements');
-        
-        $form = new form ('savesoctags', $this->uri(array('action'=>'savesoctags', 'eventid' => $eventid)));
+        if(!empty($otag)) {
+            $form = new form ('savesoctags', $this->uri(array('action'=>'savesoctags', 'eventid' => $eventid, 'mode' => 'update')));
+        }
+        else {
+            $form = new form ('savesoctags', $this->uri(array('action'=>'savesoctags', 'eventid' => $eventid)));
+        }
         $vtable = $this->newObject('htmltable', 'htmlelements');
 
         $vtable->cellpadding = 3;
@@ -1612,6 +1786,9 @@ class eventsops extends object {
         $this->loadClass('textinput', 'htmlelements');
         $taglabel = new label($this->objLanguage->languageText("mod_events_socialtag", "events") . ':', 'input_hashtag');
         $tag = new textinput('hashtag', NULL, NULL);
+        if(!empty($otag)) {
+            $tag->setValue($otag[0]['mediatag']);
+        }
         $vtable->startRow();
         $vtable->addCell($taglabel->show());
         $vtable->addCell("#".$tag->show());

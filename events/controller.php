@@ -68,6 +68,8 @@ class events extends controller
     public $objWashout;
     public $objTwtOps;
     public $objTeeny;
+    public $objSocial;
+    public $dbFoaf;
 
     /**
      * Initialises the instance variables.
@@ -94,6 +96,8 @@ class events extends controller
             $this->objWashout    = $this->getObject('washout', 'utilities');
             $this->objTwtOps     = $this->getObject('twitoasterops', 'twitoaster');
             $this->objTeeny      = $this->getObject ( 'tiny', 'tinyurl');
+            $this->objSocial     = $this->getObject('eventssocial');
+            $this->dbFoaf        = $this->getObject('dbfoaf', 'foaf');
         }
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -239,6 +243,89 @@ class events extends controller
                 $this->setVarByRef('eventid', $eventret);
                 return 'venue_tpl.php';
                 break;
+                
+            case 'eventupdate' :
+                $eventid = $this->getParam('input_eventid');
+                $eventname = $this->getParam('eventname', NULL);
+                $eventcat = $this->getParam('eventcategory', NULL);
+                $venuename = $this->getParam('venuename', NULL);
+                $startdatetime = $this->getParam('startdatetime', NULL);
+                // split to start date and time
+                $startarr = explode(" ", $startdatetime);
+                if(is_array($startarr) && !empty($startarr) && $startarr[0] != '') {
+                    $startdate = trim($startarr[0]);
+                    $starttime = trim($startarr[1]);
+                }
+                else {
+                    $startdate = NULL;
+                    $starttime = NULL;
+                }
+                $enddatetime = $this->getParam('enddatetime', NULL);
+                $endarr = explode(" ", $enddatetime);
+                if(is_array($endarr) && !empty($endarr) && $endarr[0] != '') {
+                    $enddate = trim($endarr[0]);
+                    $endtime = trim($endarr[1]);
+                }
+                else {
+                    $enddate = NULL;
+                    $endtime = NULL;
+                }
+                $eventurl = $this->getParam('eventurl', NULL);
+                $ticketurl = $this->getParam('ticketurl', NULL);
+                $ticketprice = $this->getParam('ticketprice', NULL);
+                $ticketfree = $this->getParam('ticketfree', NULL);
+                $description = $this->getParam('description', NULL);
+                $personal = $this->getParam('personal', NULL);
+                $tags = $this->getParam('tags', NULL);
+                $selfpromo = $this->getParam('selfpromotion', NULL);
+                // check that stuff is not NULL
+                if($eventname == NULL || $eventcat == NULL || $description == NULL) {
+                    $message = $this->getObject('timeoutmessage', 'htmlelements');
+                    $message->setMessage( $this->objLanguage->languageText("mod_events_requiredfieldsmissing", "events" ) );
+                    $this->setVarByRef('message', $message);
+                    return 'main_tpl.php';
+                }
+                // check the venue id
+                $venueid = $this->objDbEvents->venueGetByName($venuename);
+                if(empty($venueid)) {
+                    // note we will need the venue creator and selector interface again...
+                    $venuid = NULL;
+                }
+                else {
+                    $venueid = $venueid[0]['id'];
+                }
+                // Add the event to the database, the event will be updated by the venue script afterwards with the venue info
+                $editarr =  array('id' => $eventid, 'userid' => $this->objUser->userId(), 'name' => $eventname, 'venue_id' => $venueid, 'category_id' => $eventcat,
+                                 'start_date' => $startdate, 'end_date' => $enddate, 'start_time' =>  $starttime, 'end_time' => $endtime,
+                                 'description' => $description, 'url' => $eventurl, 'personal' => $personal, 'selfpromotion' => $selfpromo,
+                                 'ticket_url' => $ticketurl, 'ticket_price' => $ticketprice, 'ticket_free' => $ticketfree, 'creationtime' => time(),);
+                
+                // now udate the record!
+                $this->objDbEvents->eventUpdateArr($editarr);
+                // send the tags to the tags database
+                $this->objDbEvents->eventAddReplaceTags($this->objUser->userId(), $eventid, $tags);
+                if($selfpromo == 'on') {
+                    // organizer thing
+                    $canbringothers = $this->getParam('canbringothers', NULL);
+                    $yestheycan = $this->getParam('yestheycan', NULL);
+                    $howmany = $this->getParam('howmany', NULL);
+                    $orgarr = array('userid' => $this->objUser->userId(), 'event_id' => $eventid, 'canbringothers' => $canbringothers, 'numberguests' => $yestheycan, 'limitedto' => $howmany);
+                    $this->objDbEvents->updateEventPromo($eventid, $orgarr);
+                }
+                // ok all is updated, but now we gotta check if the venue has changed or not. If it has, we need to update that whole lot too
+                if($venueid == NULL) {
+                    $venuelist = $this->objDbEvents->venueCheckExists($venuename);
+                    $venlist = $this->objOps->formatVenues($venuelist);
+                    $venueform = $this->objOps->venueSelector($venlist, $eventid);
+                    $this->setVarByRef('venueform', $venueform);
+                    $this->setVarByRef('eventid', $eventid);
+                    return 'venue_tpl.php';
+                    break;
+                }
+                else {
+                    $this->nextAction('');
+                }
+                break;
 
             case 'addvenue' :
                 echo $this->objOps->addEditVenueForm();
@@ -312,6 +399,7 @@ class events extends controller
             case 'savesoctags' :
                 $eventid = $this->getParam('eventid');
                 $tag = $this->getParam('hashtag');
+                $mode = $this->getParam('mode');
                 if($this->objDbEvents->eventAddHashtag($eventid, $tag) == TRUE) {
                     // send the tweet with your new meme and have fun
                     $eventinfo = $this->objDbEvents->getEventInfo($eventid);
@@ -330,6 +418,9 @@ class events extends controller
                     // now update the event with the tweetid to track twitter conversations on this tweet.
                     $this->objDbEvents->addTwtId($threadid, $eventid);
                     $this->nextAction('viewsingle', array('eventid' => $eventid));
+                 }
+                 elseif($mode == 'update') {
+                     $this->nextAction('viewsingle', array('eventid' => $eventid));
                  }
                  else {
                      $message = $this->getObject('timeoutmessage', 'htmlelements');
@@ -354,6 +445,41 @@ class events extends controller
                 }
                 $rsvparr = array('ans' => $ans, 'userid' => $userid, 'eventid' => $eventid);
                 $this->objDbEvents->userDoRSVP($rsvparr);
+                $this->nextAction('');
+                break;
+            
+            case 'eventdelete' :
+                $id = $this->getParam('id');
+                $this->objDbEvents->eventDelete($id);
+                $this->nextAction('');
+                break;
+                
+            case 'eventedit' :
+                $eventid = $this->getParam('id');
+                $eventdata = $this->objDbEvents->eventGet($eventid);
+                // Send the data to the edit form
+                $this->setVarByRef('eventdata', $eventdata);
+                return 'eventedit_tpl.php';
+                break;
+                
+            case 'showcat' :
+                $catid = $this->getParam('cat');
+                $eventdata = $this->objDbEvents->eventGetLatestByCat($catid, $number = 20);
+                var_dump($eventdata); die();
+                break;
+                
+            case 'searchfriends' :
+                $name = $this->getParam('friend_name');
+                $res = $this->objDbEvents->userSearch($name);
+                $poss = $this->objSocial->formatFriendSearch($res);
+                $this->setVarByRef('poss', $poss);
+                return 'friendselect_tpl.php';
+                break;
+                
+            case 'makefriend' :
+                $fid = $this->getParam('fuserid');
+                $myid = $this->objUser->userId();
+                $this->dbFoaf->insertFriend(array('userid' => $myid, 'fuserid' => $fid));
                 $this->nextAction('');
                 break;
 

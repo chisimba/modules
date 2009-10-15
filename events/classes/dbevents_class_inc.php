@@ -164,12 +164,37 @@ class dbevents extends dbtable {
         return json_encode($event);
     }
     
+    public function eventGet($eventid) {
+        $this->changeTable('tbl_events_events');
+        $eventdata = $this->getAll("WHERE id = '$eventid'");
+        $eventdata = $eventdata[0];
+        // get the Venue name from the venue table and replace the ID in the eventdata array for edit
+        $this->changeTable('tbl_events_venues');
+        $vid = $eventdata['venue_id'];
+        $vdata = $this->getAll("WHERE id = '$vid'");
+        $vdata = $vdata[0];
+        $eventdata['venuename'] = $vdata['venuename'];
+        $cat = $this->categoryGetDetails($eventdata['category_id']);
+        $cat = $cat[0];
+        $eventdata['cat_name'] = $cat['cat_name'];
+        $eventdata['cat_desc'] = $cat['cat_desc'];
+        // get the event tags
+        
+        return $eventdata;
+    }
+    
     public function eventGetRange($start, $num) {
         $this->changeTable('tbl_events_events');
         $range = $this->getAll ( "ORDER BY creationtime ASC LIMIT {$start}, {$num}" );
         return $range;
     }
 
+    public function eventGetRangeByCat($start, $num, $cat) {
+        $this->changeTable('tbl_events_events');
+        $range = $this->getAll ( "WHERE category_id = '$cat' ORDER BY creationtime ASC LIMIT {$start}, {$num}" );
+        return $range;
+    }
+    
     public function eventGetRecordCount () {
         $this->changeTable('tbl_events_events');
         return $this->getRecordCount();
@@ -185,6 +210,16 @@ class dbevents extends dbtable {
         return $this->eventGetRange($start, $number);
     }
     
+    public function eventGetLatestByCat($cat, $number = 20) {
+        $this->changeTable('tbl_events_events');
+        $end = $this->eventGetRecordCount();
+        $start = $end - $number;
+        if($start < 0) {
+            $start = 0;
+        }
+        return $this->eventGetRangeByCat($start, $number, $cat);
+    }
+    
     public function eventGetAttendees($eventid) {
         $this->changeTable('tbl_events_rsvp');
         $useratt = $this->getAll("WHERE eventid = '$eventid' AND ans = 'yes'");
@@ -194,6 +229,11 @@ class dbevents extends dbtable {
         else {
             return $useratt;
         }
+    }
+    
+    public function eventDelete($id) {
+        $this->changeTable('tbl_events_events');
+        return $this->delete('id', $id, 'tbl_events_events'); 
     }
 
     /**
@@ -273,6 +313,16 @@ class dbevents extends dbtable {
         $this->changeTable('tbl_events_promoters');
         return $this->insert($orgarr);
     }
+    
+    public function getEventPromo($eventid) {
+        $this->changeTable('tbl_events_promoters');
+        return $this->getAll("WHERE event_id = '$eventid'");
+    }
+
+    public function updateEventPromo($eventid, $orgarr) {
+        $this->changeTable('tbl_events_promoters');
+        return $this->update('id', $eventid, $orgarr);
+    }
 
     /**
      * Edit an event
@@ -325,6 +375,11 @@ class dbevents extends dbtable {
         $this->changeTable('tbl_events_events');
         return $this->update('id', $eventid, array('venue_id' => $venueid));
     }
+    
+    public function eventUpdateArr($eventarr) {
+        $this->changeTable('tbl_events_events');
+        return $this->update('id', $eventarr['id'], $eventarr);
+    }
 
     /**
      * Add/Replace tags on an event
@@ -348,7 +403,7 @@ class dbevents extends dbtable {
         $uri = $this->uri(array('module' => 'events', 'action' => 'viewtags', 'eventid' => $event_id));
         $tagarr = explode(",", $tags);
 
-        return $this->objTags->insertTags($tagarray, $userid, $event_id, 'events', $uri, NULL);
+        return $this->objTags->insertTags($tagarr, $userid, $event_id, 'events', $uri, NULL);
     }
 
     /**
@@ -366,6 +421,17 @@ class dbevents extends dbtable {
                 $this->objTags->deleteTags($thetags['id'], 'events');
             }
         }
+    }
+    
+    public function eventGetTags($eventid) {
+        $alltags = $this->objTags->getPostTags($eventid, 'events');
+        foreach ( $alltags as $thetags ) {
+            $tags[] = $thetags['meta_value'];
+        }
+        if(!isset($tags)) {
+            $tags = array();
+        }
+        return implode(",",$tags);
     }
 
     /**
@@ -391,11 +457,16 @@ class dbevents extends dbtable {
      * @param $backfill (String, Optional) If the first page of results returned has fewer than per_page results, try expanding the search.
      * @param $variety (Boolean (1, or 0), Optional ) Attempt to provide more varied results. Currently, this is implemented as not showing more than one event of each category. This will greatly reduce the amount of results returned.
      * @param $rollup (String, Optional) Used to display all future events of an event. By default only the last event of an event is displayed.
-     * @param $token (Optional) An authentication token.
      */
-    public function eventSearch($search_text = NULL, $location = NULL, $radius = NULL, $place_id = NULL, $country_id, $state_id, $metro_id = NULL, $venue_id = NULL, $woeid = NULL, $category_id = NULL,
-                                $min_date = NULL, $max_date = NULL, $tags = NULL, $ticket_sources = NULL, $per_page = 100, $page = 1, $sort = 'start-date-asc', $backfill = NULL, $variety = 0, $rollup = NULL, $token = NULL) {
-
+    public function eventSearch($search_text = NULL, $location = NULL, $radius = NULL, $place_id = NULL, $country_id, $state_id, $metro_id = NULL, $venue_id = NULL, $woeid = NULL, 
+                                $category_id = NULL, $min_date = NULL, $max_date = NULL, $tags = NULL, $ticket_sources = NULL, $per_page = 100, $page = 1, 
+                                $sort = 'start-date-asc', $backfill = NULL, $variety = 0, $rollup = NULL) {
+        // OK this function is already in need of refactoring, and I haven't written it yet. Will be splitting it to a bunch of eventSearch*() functions rather...
+    }
+    
+    public function eventSearchDescText($keyword) {
+        $this->changeTable('tbl_events_events');
+        return $this->getAll("WHERE description LIKE '%%$keyword%%'");
     }
 
     /**
@@ -679,6 +750,11 @@ class dbevents extends dbtable {
 
     }
 
+    public function venueGetByName($venuename) {
+        $this->changeTable('tbl_events_venues');
+        return $this->getAll("WHERE venuename = '$venuename'");
+    }
+
     /**
      * Get a venue list
      *
@@ -842,7 +918,7 @@ class dbevents extends dbtable {
      * @param $user_id (Required) The user_id requested.
      * @param $show (Optional, Default: 'upcoming') May be 'upcoming', 'all', or 'past' to retrieve corresponding events.
      */
-    public function userGetWatchlist($token, $user_id, $show) {
+    public function userGetWatchlist($userid, $show) {
 
     }
 
@@ -852,11 +928,10 @@ class dbevents extends dbtable {
      * Retrieve the events being watched/attended by a user's friends.
      * These events can either be public or created by a person who calls the user a friend.
      *
-     * @param $token (Required) An authentication token required to see the user's friends events.
      * @param $per_page (Numeric, Optional, Default = 100) Number of results to return per page. Max is 100 per page.
      * @param $page (Numeric, Optional, Default = 1) The page number of results to return.
      */
-    public function userGetMyFriendsEvents($token, $per_page = 100, $page = 1) {
+    public function userGetMyFriendsEvents($per_page = 100, $page = 1) {
 
     }
     
@@ -887,6 +962,14 @@ class dbevents extends dbtable {
             }
             return $this->update('id', $det['id'], $rsvparr);
         }
+    }
+    
+    public function userSearch($name) {
+        $this->changeTable('tbl_users');
+        // userName, firstname, surname or emailaddress
+        $res = $this->getAll("WHERE username LIKE '%%$name%%' OR firstname LIKE '%%$name%%' OR surname LIKE '%%$name%%' OR emailaddress LIKE '%%$name%%'");
+        
+        return $res;
     }
 
     /**
