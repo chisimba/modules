@@ -267,12 +267,8 @@ foreach ($chapters as $chapter)
 		        
 		        // Empty variable for use later on
 		        $chapterPages = '';
-		        } else {
-		        $chapterPages = '<div style="display:none" id="toc_'.$chapter['chapterid'].'"><p><strong>Content:</strong></p>'.$chapterPages.'</div>';
-
-		        $chapterOptions[] = '<a href="javascript:showHideChapter(\'toc_'.$chapter['chapterid'].'\');"><strong>'.$this->objLanguage->languageText('mod_contextcontent_showhidecontents','contextcontent').' ...</strong></a>';
-		        
-		        $content .= $chapterPages;
+		        } else {		        
+		         $chapterOptions[] = '<div id="toc_'.$chapter['chapterid'].'"  style="display:none">'.$chapterPages.'</div><a href="#" onclick="Effect.toggle(\'toc_'.$chapter['chapterid'].'\', \'slide\'); return false;"><strong>'.$this->objLanguage->languageText('mod_contextcontent_showhidecontents','contextcontent').' ...</strong></a>';
 		        }
 		} 
 	       
@@ -346,15 +342,3 @@ if ($this->isValid('addchapter')) {
 
 
 ?>
-<script type="text/javascript">
-//<![CDATA[
-    
-    function showHideChapter(chapterId)
-    {
-        Effect.toggle(chapterId, 'appear', {oncomplete: function() {
-                adjustLayout();
-            }});
-        var oTime = window.setTimeout('adjustLayout()',1000); 
-    }
-//]]>
-</script>
