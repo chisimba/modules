@@ -186,7 +186,7 @@ class events extends controller
                 }
                 // let everyone know where you are
                 $title = $this->objLanguage->languageText("mod_events_setlocation", "events");
-                $link = $this->uri(array('action' => 'viewlocation', 'lat' => $locarr->lat, 'lon' => $locarr->lng));
+                $link = $this->uri(array('action' => 'viewlocation', 'lat' => $lat, 'lon' => $lon));
                 $contextCode = NULL;
                 if($this->objUser->isloggedIn()) {
                     $author = $this->objUser->fullName();
