@@ -1,12 +1,21 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /** 
  * @requires OpenLayers/Control.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Control.LayerSwitcher
+ * The LayerSwitcher control displays a table of contents for the map. This 
+ * allows the user interface to switch between BaseLasyers and to show or hide
+ * Overlays. By default the switcher is shown minimized on the right edge of 
+ * the map, the user may expand it by clicking on the handle.
  *
+ * To create the LayerSwitcher outside of the map, pass the Id of a html div 
+ * as the first argument to the constructor.
+ * 
  * Inherits from:
  *  - <OpenLayers.Control>
  */
@@ -111,10 +120,13 @@ OpenLayers.Control.LayerSwitcher =
         this.clearLayersArray("base");
         this.clearLayersArray("data");
         
-        this.map.events.unregister("addlayer", this, this.redraw);
-        this.map.events.unregister("changelayer", this, this.redraw);
-        this.map.events.unregister("removelayer", this, this.redraw);
-        this.map.events.unregister("changebaselayer", this, this.redraw);
+        this.map.events.un({
+            "addlayer": this.redraw,
+            "changelayer": this.redraw,
+            "removelayer": this.redraw,
+            "changebaselayer": this.redraw,
+            scope: this
+        });
         
         OpenLayers.Control.prototype.destroy.apply(this, arguments);
     },
@@ -128,10 +140,13 @@ OpenLayers.Control.LayerSwitcher =
     setMap: function(map) {
         OpenLayers.Control.prototype.setMap.apply(this, arguments);
 
-        this.map.events.register("addlayer", this, this.redraw);
-        this.map.events.register("changelayer", this, this.redraw);
-        this.map.events.register("removelayer", this, this.redraw);
-        this.map.events.register("changebaselayer", this, this.redraw);
+        this.map.events.on({
+            "addlayer": this.redraw,
+            "changelayer": this.redraw,
+            "removelayer": this.redraw,
+            "changebaselayer": this.redraw,
+            scope: this
+        });
     },
 
     /**
@@ -169,7 +184,7 @@ OpenLayers.Control.LayerSwitcher =
     clearLayersArray: function(layersType) {
         var layers = this[layersType + "Layers"];
         if (layers) {
-            for(var i=0; i < layers.length; i++) {
+            for(var i=0, len=layers.length; i<len ; i++) {
                 var layer = layers[i];
                 OpenLayers.Event.stopObservingElement(layer.inputElem);
                 OpenLayers.Event.stopObservingElement(layer.labelSpan);
@@ -193,7 +208,7 @@ OpenLayers.Control.LayerSwitcher =
              (this.map.layers.length != this.layerStates.length) ) {
             redraw = true;
         } else {
-            for (var i=0; i < this.layerStates.length; i++) {
+            for (var i=0, len=this.layerStates.length; i<len; i++) {
                 var layerState = this.layerStates[i];
                 var layer = this.map.layers[i];
                 if ( (layerState.name != layer.name) || 
@@ -235,8 +250,9 @@ OpenLayers.Control.LayerSwitcher =
         // We save this before redrawing, because in the process of redrawing
         // we will trigger more visibility changes, and we want to not redraw
         // and enter an infinite loop.
-        this.layerStates = new Array(this.map.layers.length);
-        for (var i = 0; i < this.map.layers.length; i++) {
+        var len = this.map.layers.length;
+        this.layerStates = new Array(len);
+        for (var i=0; i <len; i++) {
             var layer = this.map.layers[i];
             this.layerStates[i] = {
                 'name': layer.name, 
@@ -248,7 +264,7 @@ OpenLayers.Control.LayerSwitcher =
 
         var layers = this.map.layers.slice();
         if (!this.ascending) { layers.reverse(); }
-        for( var i = 0; i < layers.length; i++) {
+        for(var i=0, len=layers.length; i<len; i++) {
             var layer = layers[i];
             var baseLayer = layer.isBaseLayer;
 
@@ -267,7 +283,7 @@ OpenLayers.Control.LayerSwitcher =
     
                 // create input element
                 var inputElem = document.createElement("input");
-                inputElem.id = "input_" + layer.name;
+                inputElem.id = this.id + "_input_" + layer.name;
                 inputElem.name = (baseLayer) ? "baseLayers" : layer.name;
                 inputElem.type = (baseLayer) ? "radio" : "checkbox";
                 inputElem.value = layer.name;
@@ -281,7 +297,7 @@ OpenLayers.Control.LayerSwitcher =
                     'inputElem': inputElem,
                     'layer': layer,
                     'layerSwitcher': this
-                }
+                };
                 OpenLayers.Event.observe(inputElem, "mouseup", 
                     OpenLayers.Function.bindAsEventListener(this.onInputClick,
                                                             context)
@@ -379,7 +395,7 @@ OpenLayers.Control.LayerSwitcher =
     updateMap: function() {
 
         // set the newly selected base layer        
-        for(var i=0; i < this.baseLayers.length; i++) {
+        for(var i=0, len=this.baseLayers.length; i<len; i++) {
             var layerEntry = this.baseLayers[i];
             if (layerEntry.inputElem.checked) {
                 this.map.setBaseLayer(layerEntry.layer, false);
@@ -387,7 +403,7 @@ OpenLayers.Control.LayerSwitcher =
         }
 
         // set the correct visibilities for the overlays
-        for(var i=0; i < this.dataLayers.length; i++) {
+        for(var i=0, len=this.dataLayers.length; i<len; i++) {
             var layerEntry = this.dataLayers[i];   
             layerEntry.layer.setVisibility(layerEntry.inputElem.checked);
         }
@@ -481,7 +497,7 @@ OpenLayers.Control.LayerSwitcher =
 
         // layers list div        
         this.layersDiv = document.createElement("div");
-        this.layersDiv.id = "layersDiv";
+        this.layersDiv.id = this.id + "_layersDiv";
         this.layersDiv.style.paddingTop = "5px";
         this.layersDiv.style.paddingLeft = "10px";
         this.layersDiv.style.paddingBottom = "5px";
@@ -496,7 +512,7 @@ OpenLayers.Control.LayerSwitcher =
 
 
         this.baseLbl = document.createElement("div");
-        this.baseLbl.innerHTML = "<u>Base Layer</u>";
+        this.baseLbl.innerHTML = OpenLayers.i18n("baseLayer");
         this.baseLbl.style.marginTop = "3px";
         this.baseLbl.style.marginLeft = "3px";
         this.baseLbl.style.marginBottom = "3px";
@@ -509,7 +525,7 @@ OpenLayers.Control.LayerSwitcher =
                      
 
         this.dataLbl = document.createElement("div");
-        this.dataLbl.innerHTML = "<u>Overlays</u>";
+        this.dataLbl.innerHTML = OpenLayers.i18n("overlays");
         this.dataLbl.style.marginTop = "3px";
         this.dataLbl.style.marginLeft = "3px";
         this.dataLbl.style.marginBottom = "3px";

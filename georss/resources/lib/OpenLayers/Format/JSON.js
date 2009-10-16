@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * Note:
@@ -11,7 +11,9 @@
 
 /**
  * @requires OpenLayers/Format.js
- *
+ */
+
+/**
  * Class: OpenLayers.Format.JSON
  * A parser to read/write JSON safely.  Create a new instance with the
  *     <OpenLayers.Format.JSON> constructor.
@@ -93,8 +95,9 @@ OpenLayers.Format.JSON = OpenLayers.Class(OpenLayers.Format, {
          *     characters.
          */
         try {
-            if(/^("(\\.|[^"\\\n\r])*?"|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/.
-                    test(json)) {
+            if (/^[\],:{}\s]*$/.test(json.replace(/\\["\\\/bfnrtu]/g, '@').
+                                replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+                                replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
                 /**
                  * In the second stage we use the eval function to compile the
@@ -123,6 +126,11 @@ OpenLayers.Format.JSON = OpenLayers.Class(OpenLayers.Format, {
                     }
                     object = walk('', object);
                 }
+
+                if(this.keepData) {
+                    this.data = object;
+                }
+
                 return object;
             }
         } catch(e) {
@@ -149,7 +157,11 @@ OpenLayers.Format.JSON = OpenLayers.Class(OpenLayers.Format, {
         var json = null;
         var type = typeof value;
         if(this.serialize[type]) {
-            json = this.serialize[type].apply(this, [value]);
+            try {
+                json = this.serialize[type].apply(this, [value]);
+            } catch(err) {
+                OpenLayers.Console.error("Trouble serializing: " + err);
+            }
         }
         return json;
     },
@@ -263,7 +275,7 @@ OpenLayers.Format.JSON = OpenLayers.Class(OpenLayers.Format, {
             var pieces = ['['];
             this.level += 1;
     
-            for(var i=0; i<array.length; ++i) {
+            for(var i=0, len=array.length; i<len; ++i) {
                 // recursive calls need to allow for sub-classing
                 json = OpenLayers.Format.JSON.prototype.write.apply(this,
                                                     [array[i], this.pretty]);
@@ -284,7 +296,7 @@ OpenLayers.Format.JSON = OpenLayers.Class(OpenLayers.Format, {
          * Method: serialize.string
          * Transform a string into a JSON string.
          *
-         * Parameters
+         * Parameters:
          * string - {String} The string to be serialized
          * 
          * Returns:

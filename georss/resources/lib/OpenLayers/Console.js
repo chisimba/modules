@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * Namespace: OpenLayers.Console
@@ -86,6 +86,21 @@ OpenLayers.Console = {
      * object - {Object}
      */
     error: function() {},
+    
+    /**
+     * APIFunction: userError
+     * A single interface for showing error messages to the user. The default
+     * behavior is a Javascript alert, though this can be overridden by
+     * reassigning OpenLayers.Console.userError to a different function.
+     *
+     * Expects a single error message
+     * 
+     * Parameters:
+     * object - {Object}
+     */
+    userError: function(error) {
+        alert(error);
+    },
 
     /**
      * APIFunction: assert
@@ -218,10 +233,10 @@ OpenLayers.Console = {
      * If Firebug Lite is included (before this script), re-route all
      * OpenLayers.Console calls to the console object.
      */
-    if(window.console) {
-        var scripts = document.getElementsByTagName("script");
-        for(var i=0; i<scripts.length; ++i) {
-            if(scripts[i].src.indexOf("firebug.js") != -1) {
+    var scripts = document.getElementsByTagName("script");
+    for(var i=0, len=scripts.length; i<len; ++i) {
+        if(scripts[i].src.indexOf("firebug.js") != -1) {
+            if(console) {
                 OpenLayers.Util.extend(OpenLayers.Console, console);
                 break;
             }

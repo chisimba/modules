@@ -1,7 +1,10 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
+/**
+ * @requires OpenLayers/Console.js
+ */
 
 /**
  * Namespace: Util
@@ -15,7 +18,7 @@ OpenLayers.Util = {};
 OpenLayers.Util.getElement = function() {
     var elements = [];
 
-    for (var i = 0; i < arguments.length; i++) {
+    for (var i=0, len=arguments.length; i<len; i++) {
         var element = arguments[i];
         if (typeof element == 'string') {
             element = document.getElementById(element);
@@ -29,16 +32,17 @@ OpenLayers.Util.getElement = function() {
 };
 
 /** 
- * Maintain $() from prototype
+ * Maintain existing definition of $.
  */
-if ($ == null) {
-    var $ = OpenLayers.Util.getElement;
+if(typeof window.$  === "undefined") {
+    window.$ = OpenLayers.Util.getElement;
 }
 
 /**
  * APIFunction: extend
  * Copy all properties of a source object to a destination object.  Modifies
- *     the passed in destination object.
+ *     the passed in destination object.  Any properties on the source object
+ *     that are set to undefined will not be (re)set on the destination object.
  *
  * Parameters:
  * destination - {Object} The object that will be modified
@@ -48,16 +52,32 @@ if ($ == null) {
  * {Object} The destination object.
  */
 OpenLayers.Util.extend = function(destination, source) {
-    if(destination && source) {
+    destination = destination || {};
+    if(source) {
         for(var property in source) {
-            destination[property] = source[property];
+            var value = source[property];
+            if(value !== undefined) {
+                destination[property] = value;
+            }
         }
+
         /**
          * IE doesn't include the toString property when iterating over an object's
          * properties with the for(property in object) syntax.  Explicitly check if
          * the source has its own toString property.
          */
-        if(source.hasOwnProperty && source.hasOwnProperty('toString')) {
+
+        /*
+         * FF/Windows < 2.0.0.13 reports "Illegal operation on WrappedNative
+         * prototype object" when calling hawOwnProperty if the source object
+         * is an instance of window.Event.
+         */
+
+        var sourceIsEvt = typeof window.Event == "function"
+                          && source instanceof window.Event;
+
+        if(!sourceIsEvt
+           && source.hasOwnProperty && source.hasOwnProperty('toString')) {
             destination.toString = source.toString;
         }
     }
@@ -78,7 +98,7 @@ OpenLayers.Util.extend = function(destination, source) {
  * {Array} A reference to the array
  */
 OpenLayers.Util.removeItem = function(array, item) {
-    for(var i=0; i < array.length; i++) {
+    for(var i = array.length - 1; i >= 0; i--) {
         if(array[i] == item) {
             array.splice(i,1);
             //break;more than once??
@@ -96,9 +116,11 @@ OpenLayers.Util.removeItem = function(array, item) {
  * array - {Array}
  */
 OpenLayers.Util.clearArray = function(array) {
-    var msg = "OpenLayers.Util.clearArray() is Deprecated." +
-              " Please use 'array.length = 0' instead.";
-    OpenLayers.Console.warn(msg);
+    OpenLayers.Console.warn(
+        OpenLayers.i18n(
+            "methodDeprecated", {'newMethod': 'array = []'}
+        )
+    );
     array.length = 0;
 };
 
@@ -112,12 +134,14 @@ OpenLayers.Util.clearArray = function(array) {
  * 
  * Returns:
  * {Integer} The index at, which the object was found in the array.
- *           If not found, returns -1.v
+ *           If not found, returns -1.
  */
 OpenLayers.Util.indexOf = function(array, obj) {
 
-    for(var i=0; i < array.length; i++) {
-        if (array[i] == obj) return i;
+    for(var i=0, len=array.length; i<len; i++) {
+        if (array[i] == obj) {
+            return i;
+        }
     }
     return -1;   
 };
@@ -164,9 +188,12 @@ OpenLayers.Util.modifyDOMElement = function(element, id, px, sz, position,
     if (overflow) {
         element.style.overflow = overflow;
     }
-    if (opacity) {
-        element.style.opacity = opacity;
+    if (parseFloat(opacity) >= 0.0 && parseFloat(opacity) < 1.0) {
         element.style.filter = 'alpha(opacity=' + (opacity * 100) + ')';
+        element.style.opacity = opacity;
+    } else if (parseFloat(opacity) == 1.0) {
+        element.style.filter = '';
+        element.style.opacity = '';
     }
 };
 
@@ -174,9 +201,8 @@ OpenLayers.Util.modifyDOMElement = function(element, id, px, sz, position,
  * Function: createDiv
  * Creates a new div and optionally set some standard attributes.
  * Null may be passed to each parameter if you do not wish to
- * set a particular attribute.d
- * 
- * Note: zIndex is NOT set
+ * set a particular attribute.
+ * Note - zIndex is NOT set on the resulting div.
  * 
  * Parameters:
  * id - {String} An identifier for this element.  If no id is
@@ -230,9 +256,9 @@ OpenLayers.Util.createDiv = function(id, px, sz, imgURL, position,
  * imgURL - {String} The url to use as the image source.
  * position - {String} The style.position value.
  * border - {String} The border to place around the image.
+ * opacity - {Float} Fractional value (0.0 - 1.0)
  * delayDisplay - {Boolean} If true waits until the image has been
  *                          loaded.
- * opacity - {Float} Fractional value (0.0 - 1.0)
  * 
  * Returns:
  * {DOMElement} A DOM Image created with the specified attributes.
@@ -275,11 +301,10 @@ OpenLayers.Util.createImage = function(id, px, sz, imgURL, position, border,
 
 /**
  * Function: setOpacity
- * Deprecated.
- * This function has been deprecated. Instead, please use 
- *     OpenLayers.Util.modifyDOMElement() 
+ * *Deprecated*.  This function has been deprecated. Instead, please use 
+ *     <OpenLayers.Util.modifyDOMElement> 
  *     or 
- *     OpenLayers.Util.modifyAlphaImageDiv()
+ *     <OpenLayers.Util.modifyAlphaImageDiv>
  * 
  * Set the opacity of a DOM Element
  *     Note that for this function to work in IE, elements must "have layout"
@@ -293,10 +318,12 @@ OpenLayers.Util.createImage = function(id, px, sz, imgURL, position, border,
 OpenLayers.Util.setOpacity = function(element, opacity) {
     OpenLayers.Util.modifyDOMElement(element, null, null, null,
                                      null, null, null, opacity);
-}
+};
 
 /**
  * Function: onImageLoad
+ * Bound to image load events.  For all images created with <createImage> or
+ *     <createAlphaImageDiv>, this function will be bound to the load event.
  */
 OpenLayers.Util.onImageLoad = function() {
     // The complex check here is to solve issues described in #480.
@@ -315,7 +342,7 @@ OpenLayers.Util.onImageLoad = function() {
     //
     if (!this.viewRequestID ||
         (this.map && this.viewRequestID == this.map.viewRequestID)) { 
-        this.style.backgroundColor = null;
+        this.style.backgroundColor ="transparent";
         this.style.display = "";  
     }
 };
@@ -328,7 +355,7 @@ OpenLayers.Util.onImageLoad = function() {
 OpenLayers.Util.onImageLoadErrorColor = "pink";
 
 /**
- * Property: onImageLoadErrorColor
+ * Property: IMAGE_RELOAD_ATTEMPTS
  * {Integer} How many times should we try to reload an image before giving up?
  *           Default is 0
  */
@@ -339,13 +366,38 @@ OpenLayers.IMAGE_RELOAD_ATTEMPTS = 0;
  */
 OpenLayers.Util.onImageLoadError = function() {
     this._attempts = (this._attempts) ? (this._attempts + 1) : 1;
-    if(this._attempts <= OpenLayers.IMAGE_RELOAD_ATTEMPTS) {
-        this.src = this.src;
+    if (this._attempts <= OpenLayers.IMAGE_RELOAD_ATTEMPTS) {
+        var urls = this.urls;
+        if (urls && urls instanceof Array && urls.length > 1){
+            var src = this.src.toString();
+            var current_url, k;
+            for (k = 0; current_url = urls[k]; k++){
+                if(src.indexOf(current_url) != -1){
+                    break;
+                }
+            }
+            var guess = Math.floor(urls.length * Math.random());
+            var new_url = urls[guess];
+            k = 0;
+            while(new_url == current_url && k++ < 4){
+                guess = Math.floor(urls.length * Math.random());
+                new_url = urls[guess];
+            }
+            this.src = src.replace(current_url, new_url);
+        } else {
+            this.src = this.src;
+        }
     } else {
         this.style.backgroundColor = OpenLayers.Util.onImageLoadErrorColor;
     }
     this.style.display = "";
 };
+
+/**
+ * Property: alphaHackNeeded
+ * {Boolean} true if the png alpha hack is necessary and possible, false otherwise.
+ */
+OpenLayers.Util.alphaHackNeeded = null;
 
 /**
  * Function: alphaHack
@@ -354,26 +406,28 @@ OpenLayers.Util.onImageLoadError = function() {
  * Explorer.
  * 
  * Returns:
- * {Boolean} true if alpha has is necessary and possible, false otherwise.
+ * {Boolean} true if the png alpha hack is necessary and possible, false otherwise.
  */
 OpenLayers.Util.alphaHack = function() {
-    var arVersion = navigator.appVersion.split("MSIE");
-    var version = parseFloat(arVersion[1]);
-    var filter = false;
+    if (OpenLayers.Util.alphaHackNeeded == null) {
+        var arVersion = navigator.appVersion.split("MSIE");
+        var version = parseFloat(arVersion[1]);
+        var filter = false;
     
-    // IEs4Lin dies when trying to access document.body.filters, because 
-    // the property is there, but requires a DLL that can't be provided. This
-    // means that we need to wrap this in a try/catch so that this can
-    // continue.
+        // IEs4Lin dies when trying to access document.body.filters, because 
+        // the property is there, but requires a DLL that can't be provided. This
+        // means that we need to wrap this in a try/catch so that this can
+        // continue.
     
-    try { 
-        filter = document.body.filters;
-    } catch (e) {
-    }    
+        try { 
+            filter = !!(document.body.filters);
+        } catch (e) {}    
     
-    return ( filter &&
-                      (version >= 5.5) && (version < 7) );
-}
+        OpenLayers.Util.alphaHackNeeded = (filter && 
+                                           (version >= 5.5) && (version < 7));
+    }
+    return OpenLayers.Util.alphaHackNeeded;
+};
 
 /** 
  * Function: modifyAlphaImageDiv
@@ -392,7 +446,8 @@ OpenLayers.Util.modifyAlphaImageDiv = function(div, id, px, sz, imgURL,
                                                position, border, sizing, 
                                                opacity) {
 
-    OpenLayers.Util.modifyDOMElement(div, id, px, sz);
+    OpenLayers.Util.modifyDOMElement(div, id, px, sz, position,
+                                     null, null, opacity);
 
     var img = div.childNodes[0];
 
@@ -401,14 +456,11 @@ OpenLayers.Util.modifyAlphaImageDiv = function(div, id, px, sz, imgURL,
     }
     OpenLayers.Util.modifyDOMElement(img, div.id + "_innerImage", null, sz, 
                                      "relative", border);
-    if (opacity) {
-        div.style.opacity = opacity;
-        div.style.filter = 'alpha(opacity=' + (opacity * 100) + ')';
-    }
     
     if (OpenLayers.Util.alphaHack()) {
-
-        div.style.display = "inline-block";
+        if(div.style.display != "none") {
+            div.style.display = "inline-block";
+        }
         if (sizing == null) {
             sizing = "scale";
         }
@@ -416,12 +468,12 @@ OpenLayers.Util.modifyAlphaImageDiv = function(div, id, px, sz, imgURL,
         div.style.filter = "progid:DXImageTransform.Microsoft" +
                            ".AlphaImageLoader(src='" + img.src + "', " +
                            "sizingMethod='" + sizing + "')";
-        if (div.style.opacity) {
+        if (parseFloat(div.style.opacity) >= 0.0 && 
+            parseFloat(div.style.opacity) < 1.0) {
             div.style.filter += " alpha(opacity=" + div.style.opacity * 100 + ")";
         }
 
-        img.style.filter = "progid:DXImageTransform.Microsoft" +
-                                ".Alpha(opacity=0)";
+        img.style.filter = "alpha(opacity=0)";
     }
 };
 
@@ -434,8 +486,10 @@ OpenLayers.Util.modifyAlphaImageDiv = function(div, id, px, sz, imgURL,
  * imgURL - {String}
  * position - {String}
  * border - {String}
- * sizing {String} 'crop', 'scale', or 'image'. Default is "scale"
- * delayDisplay{Boolean}
+ * sizing - {String} 'crop', 'scale', or 'image'. Default is "scale"
+ * opacity - {Float} Fractional value (0.0 - 1.0)
+ * delayDisplay - {Boolean} If true waits until the image has been
+ *                          loaded.
  * 
  * Returns:
  * {DOMElement} A DOM Div created with a DOM Image inside it. If the hack is 
@@ -487,20 +541,47 @@ OpenLayers.Util.upperCaseObject = function (object) {
 
 /** 
  * Function: applyDefaults
- * Takes a hashtable and copies any keys that don't exist from
- *     another hashtable, by analogy with OpenLayers.Util.extend() from
+ * Takes an object and copies any properties that don't exist from
+ *     another properties, by analogy with OpenLayers.Util.extend() from
  *     Prototype.js.
  * 
  * Parameters:
- * to - {Object}
- * from - {Object}
+ * to - {Object} The destination object.
+ * from - {Object} The source object.  Any properties of this object that
+ *     are undefined in the to object will be set on the to object.
+ *
+ * Returns:
+ * {Object} A reference to the to object.  Note that the to argument is modified
+ *     in place and returned by this function.
  */
 OpenLayers.Util.applyDefaults = function (to, from) {
+    to = to || {};
+    /*
+     * FF/Windows < 2.0.0.13 reports "Illegal operation on WrappedNative
+     * prototype object" when calling hawOwnProperty if the source object is an
+     * instance of window.Event.
+     */
+    var fromIsEvt = typeof window.Event == "function"
+                    && from instanceof window.Event;
+
     for (var key in from) {
-        if (to[key] == null) {
+        if (to[key] === undefined ||
+            (!fromIsEvt && from.hasOwnProperty
+             && from.hasOwnProperty(key) && !to.hasOwnProperty(key))) {
             to[key] = from[key];
         }
     }
+    /**
+     * IE doesn't include the toString property when iterating over an object's
+     * properties with the for(property in object) syntax.  Explicitly check if
+     * the source has its own toString property.
+     */
+    if(!fromIsEvt && from && from.hasOwnProperty
+       && from.hasOwnProperty('toString') && !to.hasOwnProperty('toString')) {
+        to.toString = from.toString;
+    }
+    
+    return to;
 };
 
 /**
@@ -518,7 +599,7 @@ OpenLayers.Util.applyDefaults = function (to, from) {
  *          of being URL escaped (foo%3Abar). 
  */
 OpenLayers.Util.getParameterString = function(params) {
-    paramsArray = [];
+    var paramsArray = [];
     
     for (var key in params) {
       var value = params[key];
@@ -527,7 +608,7 @@ OpenLayers.Util.getParameterString = function(params) {
         if (typeof value == 'object' && value.constructor == Array) {
           /* value is an array; encode items and separate with "," */
           var encodedItemArray = [];
-          for (var itemIndex=0; itemIndex<value.length; itemIndex++) {
+          for (var itemIndex=0, len=value.length; itemIndex<len; itemIndex++) {
             encodedItemArray.push(encodeURIComponent(value[itemIndex]));
           }
           encodedValue = encodedItemArray.join(",");
@@ -578,7 +659,7 @@ OpenLayers.Util.getImagesLocation = function() {
 OpenLayers.Util.Try = function() {
     var returnValue = null;
 
-    for (var i = 0; i < arguments.length; i++) {
+    for (var i=0, len=arguments.length; i<len; i++) {
       var lambda = arguments[i];
       try {
         returnValue = lambda();
@@ -587,7 +668,7 @@ OpenLayers.Util.Try = function() {
     }
 
     return returnValue;
-}
+};
 
 
 /** 
@@ -627,7 +708,7 @@ OpenLayers.Util.getNodes=function(p, tagName) {
  */
 OpenLayers.Util._getNodes=function(nodes, tagName) {
     var retArray = [];
-    for (var i=0;i<nodes.length;i++) {
+    for (var i=0, len=nodes.length; i<len; i++) {
         if (nodes[i].nodeName==tagName) {
             retArray.push(nodes[i]);
         }
@@ -681,10 +762,12 @@ OpenLayers.Util.getXmlNodeValue = function(node) {
     OpenLayers.Util.Try( 
         function() {
             val = node.text;
-            if (!val)
+            if (!val) {
                 val = node.textContent;
-            if (!val)
+            }
+            if (!val) {
                 val = node.firstChild.nodeValue;
+            }
         }, 
         function() {
             val = node.textContent;
@@ -714,6 +797,51 @@ OpenLayers.Util.mouseLeft = function (evt, div) {
 };
 
 /**
+ * Property: precision
+ * {Number} The number of significant digits to retain to avoid
+ * floating point precision errors.
+ *
+ * We use 14 as a "safe" default because, although IEEE 754 double floats
+ * (standard on most modern operating systems) support up to about 16
+ * significant digits, 14 significant digits are sufficient to represent
+ * sub-millimeter accuracy in any coordinate system that anyone is likely to
+ * use with OpenLayers.
+ *
+ * If DEFAULT_PRECISION is set to 0, the original non-truncating behavior
+ * of OpenLayers <2.8 is preserved. Be aware that this will cause problems
+ * with certain projections, e.g. spherical Mercator.
+ *
+ */
+OpenLayers.Util.DEFAULT_PRECISION = 14;
+
+/**
+ * Function: toFloat
+ * Convenience method to cast an object to a Number, rounded to the
+ * desired floating point precision.
+ *
+ * Parameters:
+ * number    - {Number} The number to cast and round.
+ * precision - {Number} An integer suitable for use with
+ *      Number.toPrecision(). Defaults to OpenLayers.Util.DEFAULT_PRECISION.
+ *      If set to 0, no rounding is performed.
+ *
+ * Returns:
+ * {Number} The cast, rounded number.
+ */
+OpenLayers.Util.toFloat = function (number, precision) {
+    if (precision == null) {
+        precision = OpenLayers.Util.DEFAULT_PRECISION;
+    }
+    var number;
+    if (precision == 0) {
+        number = parseFloat(number);
+    } else {
+        number = parseFloat(parseFloat(number).toPrecision(precision));
+    }
+    return number;
+};
+
+/**
  * Function: rad
  * 
  * Parameters:
@@ -726,13 +854,18 @@ OpenLayers.Util.rad = function(x) {return x*Math.PI/180;};
 
 /**
  * Function: distVincenty
+ * Given two objects representing points with geographic coordinates, this
+ *     calculates the distance between those points on the surface of an
+ *     ellipsoid.
  * 
  * Parameters:
- * p1 - {Float}
- * p2 - {Float}
+ * p1 - {<OpenLayers.LonLat>} (or any object with both .lat, .lon properties)
+ * p2 - {<OpenLayers.LonLat>} (or any object with both .lat, .lon properties)
  * 
  * Returns:
- * {Float}
+ * {Float} The distance (in km) between the two input points as measured on an
+ *     ellipsoid.  Note that the input point objects must be in geographic
+ *     coordinates (decimal degrees) and the return distance is in kilometers.
  */
 OpenLayers.Util.distVincenty=function(p1, p2) {
     var a = 6378137, b = 6356752.3142,  f = 1/298.257223563;
@@ -747,7 +880,9 @@ OpenLayers.Util.distVincenty=function(p1, p2) {
         var sinLambda = Math.sin(lambda), cosLambda = Math.cos(lambda);
         var sinSigma = Math.sqrt((cosU2*sinLambda) * (cosU2*sinLambda) +
         (cosU1*sinU2-sinU1*cosU2*cosLambda) * (cosU1*sinU2-sinU1*cosU2*cosLambda));
-        if (sinSigma==0) return 0;  // co-incident points
+        if (sinSigma==0) {
+            return 0;  // co-incident points
+        }
         var cosSigma = sinU1*sinU2 + cosU1*cosU2*cosLambda;
         var sigma = Math.atan2(sinSigma, cosSigma);
         var alpha = Math.asin(cosU1 * cosU2 * sinLambda / sinSigma);
@@ -758,7 +893,9 @@ OpenLayers.Util.distVincenty=function(p1, p2) {
         lambda = L + (1-C) * f * Math.sin(alpha) *
         (sigma + C*sinSigma*(cos2SigmaM+C*cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)));
     }
-    if (iterLimit==0) return NaN  // formula failed to converge
+    if (iterLimit==0) {
+        return NaN;  // formula failed to converge
+    }
     var uSq = cosSqAlpha * (a*a - b*b) / (b*b);
     var A = 1 + uSq/16384*(4096+uSq*(-768+uSq*(320-175*uSq)));
     var B = uSq/1024 * (256+uSq*(-128+uSq*(74-47*uSq)));
@@ -783,11 +920,8 @@ OpenLayers.Util.distVincenty=function(p1, p2) {
  * {Object} An object of key/value pairs from the query string.
  */
 OpenLayers.Util.getParameters = function(url) {
-    //if no url specified, take it from the location bar
-    url = url || window.location.href
-    if(url == null) {
-        url = window.location.href;
-    }
+    // if no url specified, take it from the location bar
+    url = url || window.location.href;
 
     //parse out parameters portion of url string
     var paramsString = "";
@@ -800,7 +934,7 @@ OpenLayers.Util.getParameters = function(url) {
         
     var parameters = {};
     var pairs = paramsString.split(/[&;]/);
-    for(var i = 0; i < pairs.length; ++i) {
+    for(var i=0, len=pairs.length; i<len; ++i) {
         var keyValue = pairs[i].split('=');
         if (keyValue[0]) {
             var key = decodeURIComponent(keyValue[0]);
@@ -808,7 +942,7 @@ OpenLayers.Util.getParameters = function(url) {
 
             //decode individual values
             value = value.split(",");
-            for(var j=0; j < value.length; j++) {
+            for(var j=0, jlen=value.length; j<jlen; j++) {
                 value[j] = decodeURIComponent(value[j]);
             }
 
@@ -825,8 +959,8 @@ OpenLayers.Util.getParameters = function(url) {
 
 /**
  * Function: getArgs
- * Deprecated - Will be removed in 3.0. 
- *     Please use instead OpenLayers.Util.getParameters
+ * *Deprecated*.  Will be removed in 3.0.  Please use instead
+ *     <OpenLayers.Util.getParameters>
  * 
  * Parameters:
  * url - {String} Optional url used to extract the query string.
@@ -836,10 +970,11 @@ OpenLayers.Util.getParameters = function(url) {
  * {Object} An object of key/value pairs from the query string.
  */
 OpenLayers.Util.getArgs = function(url) {
-    var err = "The getArgs() function is deprecated and will be removed " +
-            "with the 3.0 version of OpenLayers. Please instead use " +
-            "OpenLayers.Util.getParameters().";
-    OpenLayers.Console.warn(err);
+    OpenLayers.Console.warn(
+        OpenLayers.i18n(
+            "methodDeprecated", {'newMethod': 'OpenLayers.Util.getParameters'}
+        )
+    );
     return OpenLayers.Util.getParameters(url);
 };
 
@@ -852,13 +987,15 @@ OpenLayers.Util.lastSeqID = 0;
 
 /**
  * Function: createUniqueID
+ * Create a unique identifier for this session.  Each time this function
+ *     is called, a counter is incremented.  The return will be the optional
+ *     prefix (defaults to "id_") appended with the counter value.
  * 
  * Parameters:
- * prefix {String} String to prefix unique id. 
- *                 If null, default is "id_"
+ * prefix {String} Optionsal string to prefix unique id. Default is "id_".
  * 
  * Returns:
- * {String} A unique id string, built on the passed in prefix
+ * {String} A unique id string, built on the passed in prefix.
  */
 OpenLayers.Util.createUniqueID = function(prefix) {
     if (prefix == null) {
@@ -871,6 +1008,11 @@ OpenLayers.Util.createUniqueID = function(prefix) {
 /**
  * Constant: INCHES_PER_UNIT
  * {Object} Constant inches per unit -- borrowed from MapServer mapscale.c
+ * derivation of nautical miles from http://en.wikipedia.org/wiki/Nautical_mile
+ * Includes the full set of units supported by CS-MAP (http://trac.osgeo.org/csmap/)
+ * and PROJ.4 (http://trac.osgeo.org/proj/)
+ * The hardcoded table is maintain in a CS-MAP source code module named CSdataU.c
+ * The hardcoded table of PROJ.4 units are in pj_units.c.
  */
 OpenLayers.INCHES_PER_UNIT = { 
     'inches': 1.0,
@@ -878,10 +1020,94 @@ OpenLayers.INCHES_PER_UNIT = {
     'mi': 63360.0,
     'm': 39.3701,
     'km': 39370.1,
-    'dd': 4374754
+    'dd': 4374754,
+    'yd': 36
 };
 OpenLayers.INCHES_PER_UNIT["in"]= OpenLayers.INCHES_PER_UNIT.inches;
 OpenLayers.INCHES_PER_UNIT["degrees"] = OpenLayers.INCHES_PER_UNIT.dd;
+OpenLayers.INCHES_PER_UNIT["nmi"] = 1852 * OpenLayers.INCHES_PER_UNIT.m;
+
+// Units from CS-Map
+OpenLayers.METERS_PER_INCH = 0.02540005080010160020;
+OpenLayers.Util.extend(OpenLayers.INCHES_PER_UNIT, {
+    "Inch": OpenLayers.INCHES_PER_UNIT.inches,
+    "Meter": 1.0 / OpenLayers.METERS_PER_INCH,   //EPSG:9001
+    "Foot": 0.30480060960121920243 / OpenLayers.METERS_PER_INCH,   //EPSG:9003
+    "IFoot": 0.30480000000000000000 / OpenLayers.METERS_PER_INCH,   //EPSG:9002
+    "ClarkeFoot": 0.3047972651151 / OpenLayers.METERS_PER_INCH,   //EPSG:9005
+    "SearsFoot": 0.30479947153867624624 / OpenLayers.METERS_PER_INCH,   //EPSG:9041
+    "GoldCoastFoot": 0.30479971018150881758 / OpenLayers.METERS_PER_INCH,   //EPSG:9094
+    "IInch": 0.02540000000000000000 / OpenLayers.METERS_PER_INCH,
+    "MicroInch": 0.00002540000000000000 / OpenLayers.METERS_PER_INCH,
+    "Mil": 0.00000002540000000000 / OpenLayers.METERS_PER_INCH,
+    "Centimeter": 0.01000000000000000000 / OpenLayers.METERS_PER_INCH,
+    "Kilometer": 1000.00000000000000000000 / OpenLayers.METERS_PER_INCH,   //EPSG:9036
+    "Yard": 0.91440182880365760731 / OpenLayers.METERS_PER_INCH,
+    "SearsYard": 0.914398414616029 / OpenLayers.METERS_PER_INCH,   //EPSG:9040
+    "IndianYard": 0.91439853074444079983 / OpenLayers.METERS_PER_INCH,   //EPSG:9084
+    "IndianYd37": 0.91439523 / OpenLayers.METERS_PER_INCH,   //EPSG:9085
+    "IndianYd62": 0.9143988 / OpenLayers.METERS_PER_INCH,   //EPSG:9086
+    "IndianYd75": 0.9143985 / OpenLayers.METERS_PER_INCH,   //EPSG:9087
+    "IndianFoot": 0.30479951 / OpenLayers.METERS_PER_INCH,   //EPSG:9080
+    "IndianFt37": 0.30479841 / OpenLayers.METERS_PER_INCH,   //EPSG:9081
+    "IndianFt62": 0.3047996 / OpenLayers.METERS_PER_INCH,   //EPSG:9082
+    "IndianFt75": 0.3047995 / OpenLayers.METERS_PER_INCH,   //EPSG:9083
+    "Mile": 1609.34721869443738887477 / OpenLayers.METERS_PER_INCH,
+    "IYard": 0.91440000000000000000 / OpenLayers.METERS_PER_INCH,   //EPSG:9096
+    "IMile": 1609.34400000000000000000 / OpenLayers.METERS_PER_INCH,   //EPSG:9093
+    "NautM": 1852.00000000000000000000 / OpenLayers.METERS_PER_INCH,   //EPSG:9030
+    "Lat-66": 110943.316488932731 / OpenLayers.METERS_PER_INCH,
+    "Lat-83": 110946.25736872234125 / OpenLayers.METERS_PER_INCH,
+    "Decimeter": 0.10000000000000000000 / OpenLayers.METERS_PER_INCH,
+    "Millimeter": 0.00100000000000000000 / OpenLayers.METERS_PER_INCH,
+    "Dekameter": 10.00000000000000000000 / OpenLayers.METERS_PER_INCH,
+    "Decameter": 10.00000000000000000000 / OpenLayers.METERS_PER_INCH,
+    "Hectometer": 100.00000000000000000000 / OpenLayers.METERS_PER_INCH,
+    "GermanMeter": 1.0000135965 / OpenLayers.METERS_PER_INCH,   //EPSG:9031
+    "CaGrid": 0.999738 / OpenLayers.METERS_PER_INCH,
+    "ClarkeChain": 20.1166194976 / OpenLayers.METERS_PER_INCH,   //EPSG:9038
+    "GunterChain": 20.11684023368047 / OpenLayers.METERS_PER_INCH,   //EPSG:9033
+    "BenoitChain": 20.116782494375872 / OpenLayers.METERS_PER_INCH,   //EPSG:9062
+    "SearsChain": 20.11676512155 / OpenLayers.METERS_PER_INCH,   //EPSG:9042
+    "ClarkeLink": 0.201166194976 / OpenLayers.METERS_PER_INCH,   //EPSG:9039
+    "GunterLink": 0.2011684023368047 / OpenLayers.METERS_PER_INCH,   //EPSG:9034
+    "BenoitLink": 0.20116782494375872 / OpenLayers.METERS_PER_INCH,   //EPSG:9063
+    "SearsLink": 0.2011676512155 / OpenLayers.METERS_PER_INCH,   //EPSG:9043
+    "Rod": 5.02921005842012 / OpenLayers.METERS_PER_INCH,
+    "IntnlChain": 20.1168 / OpenLayers.METERS_PER_INCH,   //EPSG:9097
+    "IntnlLink": 0.201168 / OpenLayers.METERS_PER_INCH,   //EPSG:9098
+    "Perch": 5.02921005842012 / OpenLayers.METERS_PER_INCH,
+    "Pole": 5.02921005842012 / OpenLayers.METERS_PER_INCH,
+    "Furlong": 201.1684023368046 / OpenLayers.METERS_PER_INCH,
+    "Rood": 3.778266898 / OpenLayers.METERS_PER_INCH,
+    "CapeFoot": 0.3047972615 / OpenLayers.METERS_PER_INCH,
+    "Brealey": 375.00000000000000000000 / OpenLayers.METERS_PER_INCH,
+    "ModAmFt": 0.304812252984505969011938 / OpenLayers.METERS_PER_INCH,
+    "Fathom": 1.8288 / OpenLayers.METERS_PER_INCH,
+    "NautM-UK": 1853.184 / OpenLayers.METERS_PER_INCH,
+    "50kilometers": 50000.0 / OpenLayers.METERS_PER_INCH,
+    "150kilometers": 150000.0 / OpenLayers.METERS_PER_INCH
+});
+
+//unit abbreviations supported by PROJ.4
+OpenLayers.Util.extend(OpenLayers.INCHES_PER_UNIT, {
+    "mm": OpenLayers.INCHES_PER_UNIT["Meter"] / 1000.0,
+    "cm": OpenLayers.INCHES_PER_UNIT["Meter"] / 100.0,
+    "dm": OpenLayers.INCHES_PER_UNIT["Meter"] * 100.0,
+    "km": OpenLayers.INCHES_PER_UNIT["Meter"] * 1000.0,
+    "kmi": OpenLayers.INCHES_PER_UNIT["nmi"],    //International Nautical Mile
+    "fath": OpenLayers.INCHES_PER_UNIT["Fathom"], //International Fathom
+    "ch": OpenLayers.INCHES_PER_UNIT["IntnlChain"],  //International Chain
+    "link": OpenLayers.INCHES_PER_UNIT["IntnlLink"], //International Link
+    "us-in": OpenLayers.INCHES_PER_UNIT["inches"], //U.S. Surveyor's Inch
+    "us-ft": OpenLayers.INCHES_PER_UNIT["Foot"],	//U.S. Surveyor's Foot
+    "us-yd": OpenLayers.INCHES_PER_UNIT["Yard"],	//U.S. Surveyor's Yard
+    "us-ch": OpenLayers.INCHES_PER_UNIT["GunterChain"], //U.S. Surveyor's Chain
+    "us-mi": OpenLayers.INCHES_PER_UNIT["Mile"],   //U.S. Surveyor's Statute Mile
+    "ind-yd": OpenLayers.INCHES_PER_UNIT["IndianYd37"],  //Indian Yard
+    "ind-ft": OpenLayers.INCHES_PER_UNIT["IndianFt37"],  //Indian Foot
+    "ind-ch": 20.11669506 / OpenLayers.METERS_PER_INCH  //Indian Chain
+});
 
 /** 
  * Constant: DOTS_PER_INCH
@@ -890,7 +1116,7 @@ OpenLayers.INCHES_PER_UNIT["degrees"] = OpenLayers.INCHES_PER_UNIT.dd;
 OpenLayers.DOTS_PER_INCH = 72;
 
 /**
- * Function: normalzeScale
+ * Function: normalizeScale
  * 
  * Parameters:
  * scale - {float}
@@ -957,10 +1183,8 @@ OpenLayers.Util.getScaleFromResolution = function (resolution, units) {
 
 /**
  * Function: safeStopPropagation
- * Deprecated.
- * 
- * This function has been deprecated. Please use directly 
- *     OpenLayers.Event.stop() passing 'true' as the 2nd 
+ * *Deprecated*. This function has been deprecated. Please use directly 
+ *     <OpenLayers.Event.stop> passing 'true' as the 2nd 
  *     argument (preventDefault)
  * 
  * Safely stop the propagation of an event *without* preventing
@@ -980,7 +1204,7 @@ OpenLayers.Util.safeStopPropagation = function(evt) {
  * Parameters:
  * forElement - {DOMElement}
  * 
- * Returns:´
+ * Returns:
  * {Array} two item array, L value then T value.
  */
 OpenLayers.Util.pagePosition = function(forElement) {
@@ -991,12 +1215,7 @@ OpenLayers.Util.pagePosition = function(forElement) {
     while(element) {
 
         if(element == document.body) {
-            // FIXME: IE, when passed 'window' as the forElement, treats it as
-            // equal to document.body, but window.style fails, so getStyle
-            // fails, so we are paranoid and check this here. This check should
-            // probably move into element.getStyle in 2.6.
-            if(child && child.style && 
-               OpenLayers.Element.getStyle(child, 'position') == 'absolute') {
+            if(OpenLayers.Element.getStyle(child, 'position') == 'absolute') {
                 break;
             }
         }
@@ -1009,10 +1228,8 @@ OpenLayers.Util.pagePosition = function(forElement) {
             // wrapping this in a try/catch because IE chokes on the offsetParent
             element = element.offsetParent;
         } catch(e) {
-            OpenLayers.Console.error(
-                "OpenLayers.Util.pagePosition failed: element with id " +
-                element.id + " may be misplaced."
-            );
+            OpenLayers.Console.error(OpenLayers.i18n(
+                                  "pagePositionFailed",{'elemId':element.id}));
             break;
         }
     }
@@ -1062,39 +1279,16 @@ OpenLayers.Util.isEquivalentUrl = function(url1, url2, options) {
         ignoreHash: true
     });
 
-    urlObj1 = OpenLayers.Util.createUrlObject(url1, options);
-    urlObj2 = OpenLayers.Util.createUrlObject(url2, options);
+    var urlObj1 = OpenLayers.Util.createUrlObject(url1, options);
+    var urlObj2 = OpenLayers.Util.createUrlObject(url2, options);
 
-    //compare all keys (host, port, etc)
+    //compare all keys except for "args" (treated below)
     for(var key in urlObj1) {
-        if (options.test) {
-            alert(key + "\n1:" + urlObj1[key] + "\n2:" + urlObj2[key]);
+        if(key !== "args") {
+            if(urlObj1[key] != urlObj2[key]) {
+                return false;
+            }
         }
-        var val1 = urlObj1[key];
-        var val2 = urlObj2[key];
-        
-        switch(key) {
-            case "args":
-                //do nothing, they'll be treated below
-                break;
-            case "host":
-            case "port":
-            case "protocol":
-                if ((val1 == "") || (val2 == "")) {
-                    //these will be blank for relative urls, so no need to 
-                    // compare them here -- call break. 
-                    // 
-                    break;
-                } 
-                // otherwise continue with default compare
-                //
-            default: 
-                if ( (key != "args") && (urlObj1[key] != urlObj2[key]) ) {
-                    return false;
-                }
-                break;
-        }
-        
     }
 
     // compare search args - irrespective of order
@@ -1129,7 +1323,21 @@ OpenLayers.Util.isEquivalentUrl = function(url1, url2, options) {
 OpenLayers.Util.createUrlObject = function(url, options) {
     options = options || {};
 
-    var urlObject = {};
+    // deal with relative urls first
+    if(!(/^\w+:\/\//).test(url)) {
+        var loc = window.location;
+        var port = loc.port ? ":" + loc.port : "";
+        var fullUrl = loc.protocol + "//" + loc.host.split(":").shift() + port;
+        if(url.indexOf("/") === 0) {
+            // full pathname
+            url = fullUrl + url;
+        } else {
+            // relative to current path
+            var parts = loc.pathname.split("/");
+            parts.pop();
+            url = fullUrl + parts.join("/") + "/" + url;
+        }
+    }
   
     if (options.ignoreCase) {
         url = url.toLowerCase(); 
@@ -1138,24 +1346,25 @@ OpenLayers.Util.createUrlObject = function(url, options) {
     var a = document.createElement('a');
     a.href = url;
     
-  //host (without port)
-    urlObject.host = a.host;
-    var port = a.port;
-    if (port.length <= 0) {
-        var newHostLength = urlObject.host.length - (port.length);
-        urlObject.host = urlObject.host.substring(0, newHostLength); 
-    }
+    var urlObject = {};
+    
+    //host (without port)
+    urlObject.host = a.host.split(":").shift();
 
-  //protocol
+    //protocol
     urlObject.protocol = a.protocol;  
 
-  //port
-    urlObject.port = ((port == "80") && (options.ignorePort80)) ? "" : port;
-                                                                     
-  //hash
-    urlObject.hash = (options.ignoreHash) ? "" : a.hash;  
+    //port (get uniform browser behavior with port 80 here)
+    if(options.ignorePort80) {
+        urlObject.port = (a.port == "80" || a.port == "0") ? "" : a.port;
+    } else {
+        urlObject.port = (a.port == "" || a.port == "0") ? "80" : a.port;
+    }
+
+    //hash
+    urlObject.hash = (options.ignoreHash || a.hash === "#") ? "" : a.hash;  
     
-  //args
+    //args
     var queryString = a.search;
     if (!queryString) {
         var qMark = url.indexOf("?");
@@ -1163,66 +1372,9 @@ OpenLayers.Util.createUrlObject = function(url, options) {
     }
     urlObject.args = OpenLayers.Util.getParameters(queryString);
 
-
-  //pathname (this part allows for relative <-> absolute comparison)
-    if ( ((urlObject.protocol == "file:") && (url.indexOf("file:") != -1)) || 
-         ((urlObject.protocol != "file:") && (urlObject.host != "")) ) {
-
-        urlObject.pathname = a.pathname;  
-
-        //Test to see if the pathname includes the arguments (Opera)
-        var qIndex = urlObject.pathname.indexOf("?");
-        if (qIndex != -1) {
-            urlObject.pathname = urlObject.pathname.substring(0, qIndex);
-        }
-
-    } else {
-        var relStr = OpenLayers.Util.removeTail(url);
-
-        var backs = 0;
-        do {
-            var index = relStr.indexOf("../");
-
-            if (index == 0) {
-                backs++
-                relStr = relStr.substr(3);
-            } else if (index >= 0) {
-                var prevChunk = relStr.substr(0,index - 1);
-                
-                var slash = prevChunk.indexOf("/");
-                prevChunk = (slash != -1) ? prevChunk.substr(0, slash +1)
-                                          : "";
-                
-                var postChunk = relStr.substr(index + 3);                
-                relStr = prevChunk + postChunk;
-            }
-        } while(index != -1)
-
-        var windowAnchor = document.createElement("a");
-        var windowUrl = window.location.href;
-        if (options.ignoreCase) {
-            windowUrl = windowUrl.toLowerCase();
-        }
-        windowAnchor.href = windowUrl;
-
-      //set protocol of window
-        urlObject.protocol = windowAnchor.protocol;
-
-        var splitter = (windowAnchor.pathname.indexOf("/") != -1) ? "/" : "\\";
-        var dirs = windowAnchor.pathname.split(splitter);
-        dirs.pop(); //remove filename
-        while ((backs > 0) && (dirs.length > 0)) {
-            dirs.pop();
-            backs--;
-        }
-        relStr = dirs.join("/") + "/"+ relStr;
-        urlObject.pathname = relStr;
-    }
+    //pathname (uniform browser behavior with leading "/")
+    urlObject.pathname = (a.pathname.charAt(0) == "/") ? a.pathname : "/" + a.pathname;
     
-    if ((urlObject.protocol == "file:") || (urlObject.protocol == "")) {
-        urlObject.host = "localhost";
-    }
-
     return urlObject; 
 };
  
@@ -1288,4 +1440,177 @@ OpenLayers.Util.getBrowserName = function() {
     }
     
     return browserName;
+};
+
+
+
+    
+/**
+ * Method: getRenderedDimensions
+ * Renders the contentHTML offscreen to determine actual dimensions for
+ *     popup sizing. As we need layout to determine dimensions the content
+ *     is rendered -9999px to the left and absolute to ensure the 
+ *     scrollbars do not flicker
+ *     
+ * Parameters:
+ * contentHTML
+ * size - {<OpenLayers.Size>} If either the 'w' or 'h' properties is 
+ *     specified, we fix that dimension of the div to be measured. This is 
+ *     useful in the case where we have a limit in one dimension and must 
+ *     therefore meaure the flow in the other dimension.
+ * options - {Object}
+ *     displayClass - {String} Optional parameter.  A CSS class name(s) string
+ *         to provide the CSS context of the rendered content.
+ *     containerElement - {DOMElement} Optional parameter. Insert the HTML to 
+ *         this node instead of the body root when calculating dimensions. 
+ * 
+ * Returns:
+ * {OpenLayers.Size}
+ */
+OpenLayers.Util.getRenderedDimensions = function(contentHTML, size, options) {
+    
+    var w, h;
+    
+    // create temp container div with restricted size
+    var container = document.createElement("div");
+    container.style.visibility = "hidden";
+        
+    var containerElement = (options && options.containerElement) 
+    	? options.containerElement : document.body;
+
+    //fix a dimension, if specified.
+    if (size) {
+        if (size.w) {
+            w = size.w;
+            container.style.width = w + "px";
+        } else if (size.h) {
+            h = size.h;
+            container.style.height = h + "px";
+        }
+    }
+
+    //add css classes, if specified
+    if (options && options.displayClass) {
+        container.className = options.displayClass;
+    }
+    
+    // create temp content div and assign content
+    var content = document.createElement("div");
+    content.innerHTML = contentHTML;
+    
+    // we need overflow visible when calculating the size
+    content.style.overflow = "visible";
+    if (content.childNodes) {
+        for (var i=0, l=content.childNodes.length; i<l; i++) {
+            if (!content.childNodes[i].style) continue;
+            content.childNodes[i].style.overflow = "visible";
+        }
+    }
+    
+    // add content to restricted container 
+    container.appendChild(content);
+    
+    // append container to body for rendering
+    containerElement.appendChild(container);
+    
+    // Opera and IE7 can't handle a node with position:aboslute if it inherits
+    // position:absolute from a parent.
+    var parentHasPositionAbsolute = false;
+    var parent = container.parentNode;
+    while (parent && parent.tagName.toLowerCase()!="body") {
+        var parentPosition = OpenLayers.Element.getStyle(parent, "position");
+        if(parentPosition == "absolute") {
+            parentHasPositionAbsolute = true;
+            break;
+        } else if (parentPosition && parentPosition != "static") {
+            break;
+        }
+        parent = parent.parentNode;
+    }
+
+    if(!parentHasPositionAbsolute) {
+        container.style.position = "absolute";
+    }
+    
+    // calculate scroll width of content and add corners and shadow width
+    if (!w) {
+        w = parseInt(content.scrollWidth);
+    
+        // update container width to allow height to adjust
+        container.style.width = w + "px";
+    }        
+    // capture height and add shadow and corner image widths
+    if (!h) {
+        h = parseInt(content.scrollHeight);
+    }
+
+    // remove elements
+    container.removeChild(content);
+    containerElement.removeChild(container);
+    
+    return new OpenLayers.Size(w, h);
+};
+
+/**
+ * APIFunction: getScrollbarWidth
+ * This function has been modified by the OpenLayers from the original version,
+ *     written by Matthew Eernisse and released under the Apache 2 
+ *     license here:
+ * 
+ *     http://www.fleegix.org/articles/2006/05/30/getting-the-scrollbar-width-in-pixels
+ * 
+ *     It has been modified simply to cache its value, since it is physically 
+ *     impossible that this code could ever run in more than one browser at 
+ *     once. 
+ * 
+ * Returns:
+ * {Integer}
+ */
+OpenLayers.Util.getScrollbarWidth = function() {
+    
+    var scrollbarWidth = OpenLayers.Util._scrollbarWidth;
+    
+    if (scrollbarWidth == null) {
+        var scr = null;
+        var inn = null;
+        var wNoScroll = 0;
+        var wScroll = 0;
+    
+        // Outer scrolling div
+        scr = document.createElement('div');
+        scr.style.position = 'absolute';
+        scr.style.top = '-1000px';
+        scr.style.left = '-1000px';
+        scr.style.width = '100px';
+        scr.style.height = '50px';
+        // Start with no scrollbar
+        scr.style.overflow = 'hidden';
+    
+        // Inner content div
+        inn = document.createElement('div');
+        inn.style.width = '100%';
+        inn.style.height = '200px';
+    
+        // Put the inner div in the scrolling div
+        scr.appendChild(inn);
+        // Append the scrolling div to the doc
+        document.body.appendChild(scr);
+    
+        // Width of the inner div sans scrollbar
+        wNoScroll = inn.offsetWidth;
+    
+        // Add the scrollbar
+        scr.style.overflow = 'scroll';
+        // Width of the inner div width scrollbar
+        wScroll = inn.offsetWidth;
+    
+        // Remove the scrolling div from the doc
+        document.body.removeChild(document.body.lastChild);
+    
+        // Pixel width of the scroller
+        OpenLayers.Util._scrollbarWidth = (wNoScroll - wScroll);
+        scrollbarWidth = OpenLayers.Util._scrollbarWidth;
+    }
+
+    return scrollbarWidth;
 };

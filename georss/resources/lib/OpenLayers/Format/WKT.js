@@ -1,11 +1,13 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * @requires OpenLayers/Format.js
  * @requires OpenLayers/Feature/Vector.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Format.WKT
  * Class for reading and writing Well-Known Text.  Create a new instance
  * with the <OpenLayers.Format.WKT> constructor.
@@ -60,7 +62,22 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
             if(this.parse[type]) {
                 features = this.parse[type].apply(this, [str]);
             }
-        }
+            if (this.internalProjection && this.externalProjection) {
+                if (features && 
+                    features.CLASS_NAME == "OpenLayers.Feature.Vector") {
+                    features.geometry.transform(this.externalProjection,
+                                                this.internalProjection);
+                } else if (features &&
+                           type != "geometrycollection" &&
+                           typeof features == "object") {
+                    for (var i=0, len=features.length; i<len; i++) {
+                        var component = features[i];
+                        component.geometry.transform(this.externalProjection,
+                                                     this.internalProjection);
+                    }
+                }
+            }
+        }    
         return features;
     },
 
@@ -88,7 +105,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
         if(isCollection) {
             pieces.push('GEOMETRYCOLLECTION(');
         }
-        for(var i=0; i<collection.length; ++i) {
+        for(var i=0, len=collection.length; i<len; ++i) {
             if(isCollection && i>0) {
                 pieces.push(',');
             }
@@ -97,6 +114,11 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
             if(!this.extract[type]) {
                 return null;
             }
+            if (this.internalProjection && this.externalProjection) {
+                geometry = geometry.clone();
+                geometry.transform(this.internalProjection, 
+                                   this.externalProjection);
+            }                       
             data = this.extract[type].apply(this, [geometry]);
             pieces.push(type.toUpperCase() + '(' + data + ')');
         }
@@ -128,7 +150,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
          */
         'multipoint': function(multipoint) {
             var array = [];
-            for(var i=0; i<multipoint.components.length; ++i) {
+            for(var i=0, len=multipoint.components.length; i<len; ++i) {
                 array.push(this.extract.point.apply(this, [multipoint.components[i]]));
             }
             return array.join(',');
@@ -142,7 +164,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
          */
         'linestring': function(linestring) {
             var array = [];
-            for(var i=0; i<linestring.components.length; ++i) {
+            for(var i=0, len=linestring.components.length; i<len; ++i) {
                 array.push(this.extract.point.apply(this, [linestring.components[i]]));
             }
             return array.join(',');
@@ -156,7 +178,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
          */
         'multilinestring': function(multilinestring) {
             var array = [];
-            for(var i=0; i<multilinestring.components.length; ++i) {
+            for(var i=0, len=multilinestring.components.length; i<len; ++i) {
                 array.push('(' +
                            this.extract.linestring.apply(this, [multilinestring.components[i]]) +
                            ')');
@@ -171,7 +193,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
          */
         'polygon': function(polygon) {
             var array = [];
-            for(var i=0; i<polygon.components.length; ++i) {
+            for(var i=0, len=polygon.components.length; i<len; ++i) {
                 array.push('(' +
                            this.extract.linestring.apply(this, [polygon.components[i]]) +
                            ')');
@@ -187,7 +209,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
          */
         'multipolygon': function(multipolygon) {
             var array = [];
-            for(var i=0; i<multipolygon.components.length; ++i) {
+            for(var i=0, len=multipolygon.components.length; i<len; ++i) {
                 array.push('(' +
                            this.extract.polygon.apply(this, [multipolygon.components[i]]) +
                            ')');
@@ -224,7 +246,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
         'multipoint': function(str) {
             var points = OpenLayers.String.trim(str).split(',');
             var components = [];
-            for(var i=0; i<points.length; ++i) {
+            for(var i=0, len=points.length; i<len; ++i) {
                 components.push(this.parse.point.apply(this, [points[i]]).geometry);
             }
             return new OpenLayers.Feature.Vector(
@@ -241,7 +263,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
         'linestring': function(str) {
             var points = OpenLayers.String.trim(str).split(',');
             var components = [];
-            for(var i=0; i<points.length; ++i) {
+            for(var i=0, len=points.length; i<len; ++i) {
                 components.push(this.parse.point.apply(this, [points[i]]).geometry);
             }
             return new OpenLayers.Feature.Vector(
@@ -259,7 +281,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
             var line;
             var lines = OpenLayers.String.trim(str).split(this.regExes.parenComma);
             var components = [];
-            for(var i=0; i<lines.length; ++i) {
+            for(var i=0, len=lines.length; i<len; ++i) {
                 line = lines[i].replace(this.regExes.trimParens, '$1');
                 components.push(this.parse.linestring.apply(this, [line]).geometry);
             }
@@ -278,10 +300,10 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
             var ring, linestring, linearring;
             var rings = OpenLayers.String.trim(str).split(this.regExes.parenComma);
             var components = [];
-            for(var i=0; i<rings.length; ++i) {
+            for(var i=0, len=rings.length; i<len; ++i) {
                 ring = rings[i].replace(this.regExes.trimParens, '$1');
                 linestring = this.parse.linestring.apply(this, [ring]).geometry;
-                linearring = new OpenLayers.Geometry.LinearRing(linestring.components)
+                linearring = new OpenLayers.Geometry.LinearRing(linestring.components);
                 components.push(linearring);
             }
             return new OpenLayers.Feature.Vector(
@@ -299,7 +321,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
             var polygon;
             var polygons = OpenLayers.String.trim(str).split(this.regExes.doubleParenComma);
             var components = [];
-            for(var i=0; i<polygons.length; ++i) {
+            for(var i=0, len=polygons.length; i<len; ++i) {
                 polygon = polygons[i].replace(this.regExes.trimParens, '$1');
                 components.push(this.parse.polygon.apply(this, [polygon]).geometry);
             }
@@ -319,7 +341,7 @@ OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {
             str = str.replace(/,\s*([A-Za-z])/g, '|$1');
             var wktArray = OpenLayers.String.trim(str).split('|');
             var components = [];
-            for(var i=0; i<wktArray.length; ++i) {
+            for(var i=0, len=wktArray.length; i<len; ++i) {
                 components.push(OpenLayers.Format.WKT.prototype.read.apply(this,[wktArray[i]]));
             }
             return components;

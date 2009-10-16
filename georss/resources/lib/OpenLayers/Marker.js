@@ -1,12 +1,14 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Events.js
  * @requires OpenLayers/Icon.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Marker
  * Instances of OpenLayers.Marker are a combination of a 
  * <OpenLayers.LonLat> and an <OpenLayers.Icon>.  
@@ -60,9 +62,9 @@ OpenLayers.Marker = OpenLayers.Class({
     
     /** 
      * Constructor: OpenLayers.Marker
-     * Paraemeters:
-     * icon - {<OpenLayers.Icon>}  the icon for this marker
+     * Parameters:
      * lonlat - {<OpenLayers.LonLat>} the position of this marker
+     * icon - {<OpenLayers.Icon>}  the icon for this marker
      */
     initialize: function(lonlat, icon) {
         this.lonlat = lonlat;
@@ -87,6 +89,9 @@ OpenLayers.Marker = OpenLayers.Class({
      * know which layer it is attached to.)
      */
     destroy: function() {
+        // erase any drawn features
+        this.erase();
+
         this.map = null;
 
         this.events.destroy();
@@ -113,6 +118,16 @@ OpenLayers.Marker = OpenLayers.Class({
         return this.icon.draw(px);
     }, 
 
+    /** 
+    * Method: erase
+    * Erases any drawn elements for this marker.
+    */
+    erase: function() {
+        if (this.icon != null) {
+            this.icon.erase();
+        }
+    }, 
+
     /**
     * Method: moveTo
     * Move the marker to the new location.
@@ -125,6 +140,17 @@ OpenLayers.Marker = OpenLayers.Class({
             this.icon.moveTo(px);
         }           
         this.lonlat = this.map.getLonLatFromLayerPx(px);
+    },
+
+    /**
+     * APIMethod: isDrawn
+     * 
+     * Returns:
+     * {Boolean} Whether or not the marker is drawn.
+     */
+    isDrawn: function() {
+        var isDrawn = (this.icon && this.icon.isDrawn());
+        return isDrawn;   
     },
 
     /**
@@ -170,6 +196,16 @@ OpenLayers.Marker = OpenLayers.Class({
     setOpacity: function(opacity) {
         this.icon.setOpacity(opacity);
     },
+
+    /**
+     * Method: setUrl
+     * Change URL of the Icon Image.
+     * 
+     * url - {String} 
+     */
+    setUrl: function(url) {
+        this.icon.setUrl(url);
+    },    
 
     /** 
      * Method: display

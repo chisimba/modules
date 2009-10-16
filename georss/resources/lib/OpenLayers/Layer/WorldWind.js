@@ -1,11 +1,13 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Layer/Grid.js
- *
+ */
+
+/**
  * Class: OpenLayers.Layer.WorldWind
  * 
  * Inherits from:
@@ -52,16 +54,19 @@ OpenLayers.Layer.WorldWind = OpenLayers.Class(OpenLayers.Layer.Grid, {
         var newArguments = [];
         newArguments.push(name, url, params, options);
         OpenLayers.Layer.Grid.prototype.initialize.apply(this, newArguments);
-        this.params = (params ? params : {});
-        if (params) {
-            OpenLayers.Util.applyDefaults(
-                           this.params, 
-                           this.DEFAULT_PARAMS
-                           );
-        }
+        this.params = OpenLayers.Util.applyDefaults(
+            this.params, this.DEFAULT_PARAMS
+        );
     },
     /**
      * Method: addTile
+     * 
+     * Parameters:
+     * bounds - {<OpenLayers.Bounds>}
+     * position - {<OpenLayers.Pixel>}
+     * 
+     * Returns:
+     * {<OpenLayers.Tile.Image>} The added OpenLayers.Tile.Image
      */
     addTile:function(bounds,position) {
         return new OpenLayers.Tile.Image(this, position, bounds, 

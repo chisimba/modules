@@ -1,13 +1,18 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Control.js
+ */
+
+/**
+ * Class: OpenLayers.Control.PanZoom
+ * The PanZoom is a visible control, composed of a
+ * <OpenLayers.Control.PanPanel> and a <OpenLayers.Control.ZoomPanel>. By
+ * default it is drawn in the upper left corner of the map.
  *
- * Class: OpenLayers.PanZoom
- * 
  * Inherits from:
  *  - <OpenLayers.Control>
  */
@@ -15,9 +20,20 @@ OpenLayers.Control.PanZoom = OpenLayers.Class(OpenLayers.Control, {
 
     /** 
      * APIProperty: slideFactor
-     * {Integer}
+     * {Integer} Number of pixels by which we'll pan the map in any direction 
+     *     on clicking the arrow buttons.  If you want to pan by some ratio
+     *     of the map dimensions, use <slideRatio> instead.
      */
     slideFactor: 50,
+
+    /** 
+     * APIProperty: slideRatio
+     * {Number} The fraction of map width/height by which we'll pan the map            
+     *     on clicking the arrow buttons.  Default is null.  If set, will
+     *     override <slideFactor>. E.g. if slideRatio is .5, then the Pan Up
+     *     button will pan up half the map height. 
+     */
+    slideRatio: null,
 
     /** 
      * Property: buttons
@@ -48,11 +64,7 @@ OpenLayers.Control.PanZoom = OpenLayers.Class(OpenLayers.Control, {
      */
     destroy: function() {
         OpenLayers.Control.prototype.destroy.apply(this, arguments);
-        while(this.buttons.length) {
-            var btn = this.buttons.shift();
-            btn.map = null;
-            OpenLayers.Event.stopObservingElement(btn);
-        }
+        this.removeButtons();
         this.buttons = null;
         this.position = null;
     },
@@ -108,7 +120,7 @@ OpenLayers.Control.PanZoom = OpenLayers.Class(OpenLayers.Control, {
     _addButton:function(id, img, xy, sz) {
         var imgLocation = OpenLayers.Util.getImagesLocation() + img;
         var btn = OpenLayers.Util.createAlphaImageDiv(
-                                    "OpenLayers_Control_PanZoom_" + id, 
+                                    this.id + "_" + id, 
                                     xy, sz, imgLocation, "absolute");
 
         //we want to add the outer div
@@ -122,11 +134,46 @@ OpenLayers.Control.PanZoom = OpenLayers.Class(OpenLayers.Control, {
             OpenLayers.Function.bindAsEventListener(this.doubleClick, btn));
         btn.action = id;
         btn.map = this.map;
-        btn.slideFactor = this.slideFactor;
+    
+        if(!this.slideRatio){
+            var slideFactorPixels = this.slideFactor;
+            var getSlideFactor = function() {
+                return slideFactorPixels;
+            };
+        } else {
+            var slideRatio = this.slideRatio;
+            var getSlideFactor = function(dim) {
+                return this.map.getSize()[dim] * slideRatio;
+            };
+        }
+
+        btn.getSlideFactor = getSlideFactor;
 
         //we want to remember/reference the outer div
         this.buttons.push(btn);
         return btn;
+    },
+    
+    /**
+     * Method: _removeButton
+     * 
+     * Parameters:
+     * btn - {Object}
+     */
+    _removeButton: function(btn) {
+        OpenLayers.Event.stopObservingElement(btn);
+        btn.map = null;
+        this.div.removeChild(btn);
+        OpenLayers.Util.removeItem(this.buttons, btn);
+    },
+    
+    /**
+     * Method: removeButtons
+     */
+    removeButtons: function() {
+        for(var i=this.buttons.length-1; i>=0; --i) {
+            this._removeButton(this.buttons[i]);
+        }
     },
     
     /**
@@ -150,20 +197,22 @@ OpenLayers.Control.PanZoom = OpenLayers.Class(OpenLayers.Control, {
      * evt - {Event} 
      */
     buttonDown: function (evt) {
-        if (!OpenLayers.Event.isLeftClick(evt)) return;
+        if (!OpenLayers.Event.isLeftClick(evt)) {
+            return;
+        }
 
         switch (this.action) {
             case "panup": 
-                this.map.pan(0, -50);
+                this.map.pan(0, -this.getSlideFactor("h"));
                 break;
             case "pandown": 
-                this.map.pan(0, 50);
+                this.map.pan(0, this.getSlideFactor("h"));
                 break;
             case "panleft": 
-                this.map.pan(-50, 0);
+                this.map.pan(-this.getSlideFactor("w"), 0);
                 break;
             case "panright": 
-                this.map.pan(50, 0);
+                this.map.pan(this.getSlideFactor("w"), 0);
                 break;
             case "zoomin": 
                 this.map.zoomIn(); 

@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
@@ -59,6 +59,7 @@ OpenLayers.Icon = OpenLayers.Class({
      *
      * url - {String} 
      * size - {<OpenLayers.Size>} 
+     * offset - {<OpenLayers.Pixel>}
      * calculateOffset - {Function} 
      */
     initialize: function(url, size, offset, calculateOffset) {
@@ -77,6 +78,9 @@ OpenLayers.Icon = OpenLayers.Class({
      * references and memory leaks
      */
     destroy: function() {
+        // erase any drawn elements
+        this.erase();
+
         OpenLayers.Event.stopObservingElement(this.imageDiv.firstChild); 
         this.imageDiv.innerHTML = "";
         this.imageDiv = null;
@@ -98,11 +102,25 @@ OpenLayers.Icon = OpenLayers.Class({
     /**
      * Method: setSize
      * 
+     * Parameters:
      * size - {<OpenLayers.Size>} 
      */
     setSize: function(size) {
         if (size != null) {
             this.size = size;
+        }
+        this.draw();
+    },
+    
+    /**
+     * Method: setUrl
+     * 
+     * Parameters:
+     * url - {String} 
+     */
+    setUrl: function(url) {
+        if (url != null) {
+            this.url = url;
         }
         this.draw();
     },
@@ -128,6 +146,16 @@ OpenLayers.Icon = OpenLayers.Class({
         return this.imageDiv;
     }, 
 
+    /** 
+     * Method: erase
+     * Erase the underlying image element.
+     *
+     */
+    erase: function() {
+        if (this.imageDiv != null && this.imageDiv.parentNode != null) {
+            OpenLayers.Element.remove(this.imageDiv);
+        }
+    }, 
     
     /** 
      * Method: setOpacity
@@ -177,6 +205,22 @@ OpenLayers.Icon = OpenLayers.Class({
      */
     display: function(display) {
         this.imageDiv.style.display = (display) ? "" : "none"; 
+    },
+    
+
+    /**
+     * APIMethod: isDrawn
+     * 
+     * Returns:
+     * {Boolean} Whether or not the icon is drawn.
+     */
+    isDrawn: function() {
+        // nodeType 11 for ie, whose nodes *always* have a parentNode
+        // (of type document fragment)
+        var isDrawn = (this.imageDiv && this.imageDiv.parentNode && 
+                       (this.imageDiv.parentNode.nodeType != 11));    
+
+        return isDrawn;   
     },
 
     CLASS_NAME: "OpenLayers.Icon"

@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * @requires OpenLayers/Format/XML.js
@@ -11,7 +11,10 @@
  * @requires OpenLayers/Geometry/MultiLineString.js
  * @requires OpenLayers/Geometry/Polygon.js
  * @requires OpenLayers/Geometry/MultiPolygon.js
- *
+ * @requires OpenLayers/Console.js
+ */
+
+/**
  * Class: OpenLayers.Format.GML
  * Read/Wite GML. Create a new instance with the <OpenLayers.Format.GML>
  *     constructor.  Supports the GML simple features profile.
@@ -48,7 +51,7 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
     layerName: "features",
     
     /**
-     * APIProperty: geometry
+     * APIProperty: geometryName
      * {String} Name of geometry element.  Defaults to "geometry".
      */
     geometryName: "geometry",
@@ -70,6 +73,13 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
      * {Boolean} Extract attributes from GML.
      */
     extractAttributes: true,
+    
+    /**
+     * APIProperty: xy
+     * {Boolean} Order of the GML coordinate true:(x,y) or false:(y,x)
+     * Changing is not recommended, a new Format should be instantiated.
+     */ 
+    xy: true,
     
     /**
      * Constructor: OpenLayers.Format.GML
@@ -127,10 +137,10 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
      * node - {DOMElement} A GML feature node. 
      */
     parseFeature: function(node) {
-        // only accept on geometry per feature - look for highest "order"
+        // only accept one geometry per feature - look for highest "order"
         var order = ["MultiPolygon", "Polygon",
                      "MultiLineString", "LineString",
-                     "MultiPoint", "Point"];
+                     "MultiPoint", "Point", "Envelope", "Box"];
         var type, nodeList, geometry, parser;
         for(var i=0; i<order.length; ++i) {
             type = order[i];
@@ -140,9 +150,13 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
                 var parser = this.parseGeometry[type.toLowerCase()];
                 if(parser) {
                     geometry = parser.apply(this, [nodeList[0]]);
+                    if (this.internalProjection && this.externalProjection) {
+                        geometry.transform(this.externalProjection, 
+                                           this.internalProjection); 
+                    }                       
                 } else {
-                    OpenLayers.Console.error("Unsupported geometry type: " +
-                                             type);
+                    OpenLayers.Console.error(OpenLayers.i18n(
+                                "unsupportedGeometryType", {'geomType':type}));
                 }
                 // stop looking for different geometry types
                 break;
@@ -155,6 +169,13 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
             attributes = this.parseAttributes(node);
         }
         var feature = new OpenLayers.Feature.Vector(geometry, attributes);
+        
+        feature.gml = {
+            featureType: node.firstChild.nodeName.split(":")[1],
+            featureNS: node.firstChild.namespaceURI,
+            featureNSPrefix: node.firstChild.prefix
+        };
+                
         // assign fid - this can come from a "fid" or "id" attribute
         var childNode = node.firstChild;
         var fid;
@@ -197,7 +218,7 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
              * 2) <gml:coordinates>x, y, z</gml:coordinates>
              * 3) <gml:coord><gml:X>x</gml:X><gml:Y>y</gml:Y></gml:coord>
              */
-            var nodeList;
+            var nodeList, coordString;
             var coords = [];
 
             // look for <gml:pos>
@@ -240,8 +261,15 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
             if(coords.length == 2) {
                 coords[2] = null;
             }
-            return new OpenLayers.Geometry.Point(coords[0], coords[1],
+            
+            if (this.xy) {
+                return new OpenLayers.Geometry.Point(coords[0], coords[1],
                                                  coords[2]);
+            }
+            else{
+                return new OpenLayers.Geometry.Point(coords[1], coords[0],
+                                                 coords[2]);
+            }
         },
         
         /**
@@ -295,7 +323,7 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
             // look for <gml:posList>
             nodeList = this.getElementsByTagNameNS(node, this.gmlns, "posList");
             if(nodeList.length > 0) {
-                coordString = this.concatChildValues(nodeList[0]);
+                coordString = this.getChildValue(nodeList[0]);
                 coordString = coordString.replace(this.regExes.trimSpace, "");
                 coords = coordString.split(this.regExes.splitSpace);
                 var dim = parseInt(nodeList[0].getAttribute("dimension"));
@@ -305,7 +333,11 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
                     x = coords[j];
                     y = coords[j+1];
                     z = (dim == 2) ? null : coords[j+2];
-                    points.push(new OpenLayers.Geometry.Point(x, y, z));
+                    if (this.xy) {
+                        points.push(new OpenLayers.Geometry.Point(x, y, z));
+                    } else {
+                        points.push(new OpenLayers.Geometry.Point(y, x, z));
+                    }
                 }
             }
 
@@ -314,7 +346,7 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
                 nodeList = this.getElementsByTagNameNS(node, this.gmlns,
                                                        "coordinates");
                 if(nodeList.length > 0) {
-                    coordString = this.concatChildValues(nodeList[0]);
+                    coordString = this.getChildValue(nodeList[0]);
                     coordString = coordString.replace(this.regExes.trimSpace,
                                                       "");
                     coordString = coordString.replace(this.regExes.trimComma,
@@ -325,9 +357,15 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
                         if(coords.length == 2) {
                             coords[2] = null;
                         }
-                        points.push(new OpenLayers.Geometry.Point(coords[0],
+                        if (this.xy) {
+                            points.push(new OpenLayers.Geometry.Point(coords[0],
                                                                   coords[1],
                                                                   coords[2]));
+                        } else {
+                            points.push(new OpenLayers.Geometry.Point(coords[1],
+                                                                  coords[0],
+                                                                  coords[2]));
+                        }
                     }
                 }
             }
@@ -426,6 +464,64 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
                 }
             }
             return new OpenLayers.Geometry.MultiPolygon(components);
+        },
+        
+        envelope: function(node) {
+            var components = [];
+            var coordString;
+            var envelope;
+            
+            var lpoint = this.getElementsByTagNameNS(node, this.gmlns, "lowerCorner");
+            if (lpoint.length > 0) {
+                var coords = [];
+                
+                if(lpoint.length > 0) {
+                    coordString = lpoint[0].firstChild.nodeValue;
+                    coordString = coordString.replace(this.regExes.trimSpace, "");
+                    coords = coordString.split(this.regExes.splitSpace);
+                }
+                
+                if(coords.length == 2) {
+                    coords[2] = null;
+                }
+                if (this.xy) {
+                    var lowerPoint = new OpenLayers.Geometry.Point(coords[0], coords[1],coords[2]);
+                } else {
+                    var lowerPoint = new OpenLayers.Geometry.Point(coords[1], coords[0],coords[2]);
+                }
+            }
+            
+            var upoint = this.getElementsByTagNameNS(node, this.gmlns, "upperCorner");
+            if (upoint.length > 0) {
+                var coords = [];
+                
+                if(upoint.length > 0) {
+                    coordString = upoint[0].firstChild.nodeValue;
+                    coordString = coordString.replace(this.regExes.trimSpace, "");
+                    coords = coordString.split(this.regExes.splitSpace);
+                }
+                
+                if(coords.length == 2) {
+                    coords[2] = null;
+                }
+                if (this.xy) {
+                    var upperPoint = new OpenLayers.Geometry.Point(coords[0], coords[1],coords[2]);
+                } else {
+                    var upperPoint = new OpenLayers.Geometry.Point(coords[1], coords[0],coords[2]);
+                }
+            }
+            
+            if (lowerPoint && upperPoint) {
+                components.push(new OpenLayers.Geometry.Point(lowerPoint.x, lowerPoint.y));
+                components.push(new OpenLayers.Geometry.Point(upperPoint.x, lowerPoint.y));
+                components.push(new OpenLayers.Geometry.Point(upperPoint.x, upperPoint.y));
+                components.push(new OpenLayers.Geometry.Point(lowerPoint.x, upperPoint.y));
+                components.push(new OpenLayers.Geometry.Point(lowerPoint.x, lowerPoint.y));
+                
+                var ring = new OpenLayers.Geometry.LinearRing(components);
+                envelope = new OpenLayers.Geometry.Polygon([ring]);
+            }
+            return envelope; 
         }
     },
     
@@ -462,6 +558,12 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
                                                 this.regExes.trimSpace, "");
                                 attributes[name] = value;
                             }
+                        } else {
+                            // If child has no childNodes (grandchildren),
+                            // set an attribute with null value.
+                            // e.g. <prefix:fieldname/> becomes
+                            // {fieldname: null}
+                            attributes[child.nodeName.split(":").pop()] = null;
                         }
                     }
                 }
@@ -537,6 +639,11 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
      * APIMethod: buildGeometryNode
      */
     buildGeometryNode: function(geometry) {
+        if (this.externalProjection && this.internalProjection) {
+            geometry = geometry.clone();
+            geometry.transform(this.internalProjection, 
+                               this.externalProjection);
+        }    
         var className = geometry.CLASS_NAME;
         var type = className.substring(className.lastIndexOf(".") + 1);
         var builder = this.buildGeometry[type.toLowerCase()];
@@ -704,14 +811,32 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
                 gml.appendChild(polyMember);
             }
             return gml;
+
+        },
+ 
+        /**
+         * Method: buildGeometry.bounds
+         * Given an OpenLayers bounds, create a GML box.
+         *
+         * Parameters:
+         * bounds - {<OpenLayers.Geometry.Bounds>} A bounds object.
+         *
+         * Returns:
+         * {DOMElement} A GML box node.
+         */
+        bounds: function(bounds) {
+            var gml = this.createElementNS(this.gmlns, "gml:Box");
+            gml.appendChild(this.buildCoordinatesNode(bounds));
+            return gml;
         }
     },
 
     /**
      * Method: buildCoordinates
      * builds the coordinates XmlNode
+     * (code)
      * <gml:coordinates decimal="." cs="," ts=" ">...</gml:coordinates>
-     *
+     * (end)
      * Parameters: 
      * geometry - {<OpenLayers.Geometry>} 
      *
@@ -724,11 +849,17 @@ OpenLayers.Format.GML = OpenLayers.Class(OpenLayers.Format.XML, {
         coordinatesNode.setAttribute("decimal", ".");
         coordinatesNode.setAttribute("cs", ",");
         coordinatesNode.setAttribute("ts", " ");
-        
-        var points = (geometry.components) ? geometry.components : [geometry];
+
         var parts = [];
-        for(var i=0; i<points.length; i++) {
-            parts.push(points[i].x + "," + points[i].y);
+
+        if(geometry instanceof OpenLayers.Bounds){
+            parts.push(geometry.left + "," + geometry.bottom);
+            parts.push(geometry.right + "," + geometry.top);
+        } else {
+            var points = (geometry.components) ? geometry.components : [geometry];
+            for(var i=0; i<points.length; i++) {
+                parts.push(points[i].x + "," + points[i].y);                
+            }            
         }
 
         var txtNode = this.createTextNode(parts.join(" "));

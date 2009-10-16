@@ -1,16 +1,18 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Control.js
  * @requires OpenLayers/Handler/Drag.js
  * @requires OpenLayers/Handler/Feature.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Control.DragFeature
- * Move a feature with a drag.  Create a new control with the
- *     <OpenLayers.Control.DragFeature> constructor.
+ * The DragFeature control moves a feature with a drag of the mouse. Create a
+ * new control with the <OpenLayers.Control.DragFeature> constructor.
  *
  * Inherits From:
  *  - <OpenLayers.Control>
@@ -75,22 +77,10 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
     feature: null,
 
     /**
-     * Property: dragHandler
-     * {<OpenLayers.Handler.Drag>}
-     */
-    dragHandler: null,
-
-    /**
      * Property: dragCallbacks
      * {Object} The functions that are sent to the drag handler for callback.
      */
     dragCallbacks: {},
-
-    /**
-     * Property: featureHandler
-     * {<OpenLayers.Handler.Feature>}
-     */
-    featureHandler: null,
 
     /**
      * Property: featureCallbacks
@@ -117,20 +107,24 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
     initialize: function(layer, options) {
         OpenLayers.Control.prototype.initialize.apply(this, [options]);
         this.layer = layer;
-        this.dragCallbacks = OpenLayers.Util.extend({down: this.downFeature,
-                                                     move: this.moveFeature,
-                                                     up: this.upFeature,
-                                                     out: this.cancel,
-                                                     done: this.doneDragging
-                                                    }, this.dragCallbacks);
-        this.dragHandler = new OpenLayers.Handler.Drag(this, this.dragCallbacks);
-        this.featureCallbacks = OpenLayers.Util.extend({over: this.overFeature,
-                                                        out: this.outFeature
-                                                       }, this.featureCallbacks);
-        var handlerOptions = {geometryTypes: this.geometryTypes};
-        this.featureHandler = new OpenLayers.Handler.Feature(this, this.layer,
-                                                        this.featureCallbacks,
-                                                        handlerOptions);
+        this.handlers = {
+            drag: new OpenLayers.Handler.Drag(
+                this, OpenLayers.Util.extend({
+                    down: this.downFeature,
+                    move: this.moveFeature,
+                    up: this.upFeature,
+                    out: this.cancel,
+                    done: this.doneDragging
+                }, this.dragCallbacks)
+            ),
+            feature: new OpenLayers.Handler.Feature(
+                this, this.layer, OpenLayers.Util.extend({
+                    over: this.overFeature,
+                    out: this.outFeature
+                }, this.featureCallbacks),
+                {geometryTypes: this.geometryTypes}
+            )
+        };
     },
     
     /**
@@ -139,8 +133,6 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
      */
     destroy: function() {
         this.layer = null;
-        this.dragHandler.destroy();
-        this.featureHandler.destroy();
         OpenLayers.Control.prototype.destroy.apply(this, []);
     },
 
@@ -152,7 +144,7 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
      * {Boolean} Successfully activated the control and feature handler.
      */
     activate: function() {
-        return (this.featureHandler.activate() &&
+        return (this.handlers.feature.activate() &&
                 OpenLayers.Control.prototype.activate.apply(this, arguments));
     },
 
@@ -165,11 +157,14 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
      */
     deactivate: function() {
         // the return from the handlers is unimportant in this case
-        this.dragHandler.deactivate();
-        this.featureHandler.deactivate();
+        this.handlers.drag.deactivate();
+        this.handlers.feature.deactivate();
         this.feature = null;
         this.dragging = false;
         this.lastPixel = null;
+        OpenLayers.Element.removeClass(
+            this.map.viewPortDiv, this.displayClass + "Over"
+        );
         return OpenLayers.Control.prototype.deactivate.apply(this, arguments);
     },
 
@@ -182,12 +177,11 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
      * feature - {<OpenLayers.Feature.Vector>} The selected feature.
      */
     overFeature: function(feature) {
-        if(!this.dragHandler.dragging) {
+        if(!this.handlers.drag.dragging) {
             this.feature = feature;
-            this.dragHandler.activate();
+            this.handlers.drag.activate();
             this.over = true;
-            // TBD replace with CSS classes
-            this.map.div.style.cursor = "move";
+            OpenLayers.Element.addClass(this.map.viewPortDiv, this.displayClass + "Over");
         } else {
             if(this.feature.id == feature.id) {
                 this.over = true;
@@ -228,18 +222,14 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
 
     /**
      * Method: upFeature
-     * Called when the drag handler detects a mouse-up.  Also calls the
-     *     optional onComplete method.
+     * Called when the drag handler detects a mouse-up.
      * 
      * Parameters:
      * pixel - {<OpenLayers.Pixel>} Location of the mouse event.
      */
     upFeature: function(pixel) {
         if(!this.over) {
-            this.dragHandler.deactivate();
-            this.feature = null;
-            // TBD replace with CSS classes
-            this.map.div.style.cursor = "default";
+            this.handlers.drag.deactivate();
         }
     },
 
@@ -263,11 +253,12 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
      * feature - {<OpenLayers.Feature.Vector>} The feature that the mouse left.
      */
     outFeature: function(feature) {
-        if(!this.dragHandler.dragging) {
+        if(!this.handlers.drag.dragging) {
             this.over = false;
-            this.dragHandler.deactivate();
-            // TBD replace with CSS classes
-            this.map.div.style.cursor = "default";
+            this.handlers.drag.deactivate();
+            OpenLayers.Element.removeClass(
+                this.map.viewPortDiv, this.displayClass + "Over"
+            );
             this.feature = null;
         } else {
             if(this.feature.id == feature.id) {
@@ -281,7 +272,7 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
      * Called when the drag handler detects a mouse-out (from the map viewport).
      */
     cancel: function() {
-        this.dragHandler.deactivate();
+        this.handlers.drag.deactivate();
         this.over = false;
     },
 
@@ -293,8 +284,8 @@ OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {
      * map - {<OpenLayers.Map>} The control's map.
      */
     setMap: function(map) {
-        this.dragHandler.setMap(map);
-        this.featureHandler.setMap(map);
+        this.handlers.drag.setMap(map);
+        this.handlers.feature.setMap(map);
         OpenLayers.Control.prototype.setMap.apply(this, arguments);
     },
 

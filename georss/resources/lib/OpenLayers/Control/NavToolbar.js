@@ -1,13 +1,26 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * @requires OpenLayers/Control/Panel.js
  * @requires OpenLayers/Control/Navigation.js
  * @requires OpenLayers/Control/ZoomBox.js
- *
+ */
+
+/**
  * Class: OpenLayers.Control.NavToolbar
+ * This Toolbar is an alternative to the Navigation control that displays
+ *     the state of the control, and provides a UI for changing state to
+ *     use the zoomBox via a Panel control.
+ *
+ * If you wish to change the properties of the Navigation control used
+ *     in the NavToolbar, see: 
+ *     http://trac.openlayers.org/wiki/Toolbars#SubclassingNavToolbar 
+ * 
+ * 
+ * Inherits from:
+ *  - <OpenLayers.Control.Panel>
  */
 OpenLayers.Control.NavToolbar = OpenLayers.Class(OpenLayers.Control.Panel, {
 

@@ -1,11 +1,13 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Handler/Drag.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Handler.RegularPolygon
  * Handler to draw a regular polygon on the map.  Polygon is displayed on mouse
  *     down, moves or is modified on mouse move, and is finished on mouse up.
@@ -63,6 +65,18 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
     persist: false,
 
     /**
+     * APIProperty: irregular
+     * {Boolean} Draw an irregular polygon instead of a regular polygon.
+     *     Default is false.  If true, the initial mouse down will represent
+     *     one corner of the polygon bounds and with each mouse movement, the
+     *     polygon will be stretched so the opposite corner of its bounds
+     *     follows the mouse position.  This property takes precedence over
+     *     the radius property.  If set to true, the radius property will
+     *     be ignored.
+     */
+    irregular: false,
+
+    /**
      * Property: angle
      * {Float} The angle from the origin (mouse down) to the current mouse
      *     position, in radians.  This is measured counterclockwise from the
@@ -101,16 +115,19 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      *
      * Parameters:
      * control - {<OpenLayers.Control>} The control that owns this handler
-     * callbacks - {Array} An object with a 'done' property whos value is a
-     *     function to be called when the polygon drawing is finished.
-     *     The callback should expect to recieve a single argument,
-     *     the polygon geometry.  If the callbacks object contains a
-     *     'cancel' property, this function will be called when the
-     *     handler is deactivated while drawing.  The cancel should
-     *     expect to receive a geometry.
+     * callbacks - {Object} An object with a properties whose values are
+     *     functions.  Various callbacks described below.
      * options - {Object} An object with properties to be set on the handler.
      *     If the options.sides property is not specified, the number of sides
      *     will default to 4.
+     *
+     * Named callbacks:
+     * create - Called when a sketch is first created.  Callback called with
+     *     the creation point geometry and sketch feature.
+     * done - Called when the sketch drawing is finished.  The callback will
+     *     recieve a single argument, the sketch geometry.
+     * cancel - Called when the handler is deactivated while drawing.  The
+     *     cancel callback will receive a geometry.
      */
     initialize: function(control, callbacks, options) {
         this.style = OpenLayers.Util.extend(OpenLayers.Feature.Vector.style['default'], {});
@@ -142,7 +159,14 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         var activated = false;
         if(OpenLayers.Handler.prototype.activate.apply(this, arguments)) {
             // create temporary vector layer for rendering geometry sketch
-            var options = {displayInLayerSwitcher: false};
+            var options = {
+                displayInLayerSwitcher: false,
+                // indicate that the temp vector layer will never be out of range
+                // without this, resolution properties must be specified at the
+                // map-level for this temporary layer to init its resolutions
+                // correctly
+                calculateInRange: function() { return true; }
+            };
             this.layer = new OpenLayers.Layer.Vector(this.CLASS_NAME, options);
             this.map.addLayer(this.layer);
             activated = true;
@@ -164,18 +188,26 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
             if(this.dragging) {
                 this.cancel();
             }
-            this.map.removeLayer(this.layer, false);
-            this.layer.destroy();
-            if (this.feature) {
-                this.feature.destroy();
-            }    
+            // If a layer's map property is set to null, it means that that
+            // layer isn't added to the map. Since we ourself added the layer
+            // to the map in activate(), we can assume that if this.layer.map
+            // is null it means that the layer has been destroyed (as a result
+            // of map.destroy() for example.
+            if (this.layer.map != null) {
+                this.layer.destroy(false);
+                if (this.feature) {
+                    this.feature.destroy();
+                }
+            }
+            this.layer = null;
+            this.feature = null;
             deactivated = true;
         }
         return deactivated;
     },
     
     /**
-     * Method: downFeature
+     * Method: down
      * Start drawing a new feature
      *
      * Parameters:
@@ -186,7 +218,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         var maploc = this.map.getLonLatFromPixel(evt.xy);
         this.origin = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);
         // create the new polygon
-        if(!this.fixedRadius) {
+        if(!this.fixedRadius || this.irregular) {
             // smallest radius should not be less one pixel in map units
             // VML doesn't behave well with smaller
             this.radius = this.map.getResolution();
@@ -196,7 +228,8 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         }
         this.feature = new OpenLayers.Feature.Vector();
         this.createGeometry();
-        this.layer.addFeatures([this.feature]);
+        this.callback("create", [this.origin, this.feature]);
+        this.layer.addFeatures([this.feature], {silent: true});
         this.layer.drawFeature(this.feature, this.style);
     },
     
@@ -210,7 +243,10 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
     move: function(evt) {
         var maploc = this.map.getLonLatFromPixel(evt.xy);
         var point = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);
-        if(this.fixedRadius) {
+        if(this.irregular) {
+            var ry = Math.sqrt(2) * Math.abs(point.y - this.origin.y) / 2;
+            this.radius = Math.max(this.map.getResolution() / 2, ry);
+        } else if(this.fixedRadius) {
             this.origin = point;
         } else {
             this.calculateAngle(point, evt);
@@ -218,6 +254,18 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
                                    point.distanceTo(this.origin));
         }
         this.modifyGeometry();
+        if(this.irregular) {
+            var dx = point.x - this.origin.x;
+            var dy = point.y - this.origin.y;
+            var ratio;
+            if(dy == 0) {
+                ratio = dx / (this.radius * Math.sqrt(2));
+            } else {
+                ratio = dx / dy;
+            }
+            this.feature.geometry.resize(1, this.origin, ratio);
+            this.feature.geometry.move(dx / 2, dy / 2);
+        }
         this.layer.drawFeature(this.feature, this.style);
     },
 
@@ -230,6 +278,12 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
      */
     up: function(evt) {
         this.finalize();
+        // the mouseup method of superclass doesn't call the
+        // "done" callback if there's been no move between
+        // down and up
+        if (this.start == this.last) {
+            this.callback("done", [evt.xy]);
+        }
     },
 
     /**
@@ -269,6 +323,7 @@ OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         // if the number of sides ever changes, create a new geometry
         if(ring.components.length != (this.sides + 1)) {
             this.createGeometry();
+            ring = this.feature.geometry.components[0];
         }
         for(var i=0; i<this.sides; ++i) {
             point = ring.components[i];

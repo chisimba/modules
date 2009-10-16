@@ -1,12 +1,15 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
-
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * @requires OpenLayers/Util.js
  * @requires OpenLayers/Events.js
- * 
+ * @requires OpenLayers/Tween.js
+ * @requires OpenLayers/Console.js
+ */
+
+/**
  * Class: OpenLayers.Map
  * Instances of OpenLayers.Map are interactive maps embedded in a web page.
  * Create a new map with the <OpenLayers.Map> constructor.
@@ -21,15 +24,67 @@ OpenLayers.Map = OpenLayers.Class({
      * Constant: Z_INDEX_BASE
      * {Object} Base z-indexes for different classes of thing 
      */
-    Z_INDEX_BASE: { BaseLayer: 100, Overlay: 325, Popup: 750, Control: 1000 },
+    Z_INDEX_BASE: {
+        BaseLayer: 100,
+        Overlay: 325,
+        Feature: 725,
+        Popup: 750,
+        Control: 1000
+    },
 
     /**
      * Constant: EVENT_TYPES
-     * {Array(String)} supported application event types
+     * {Array(String)} Supported application event types.  Register a listener
+     *     for a particular event with the following syntax:
+     * (code)
+     * map.events.register(type, obj, listener);
+     * (end)
+     *
+     * Listeners will be called with a reference to an event object.  The
+     *     properties of this event depends on exactly what happened.
+     *
+     * All event objects have at least the following properties:
+     *  - *object* {Object} A reference to map.events.object.
+     *  - *element* {DOMElement} A reference to map.events.element.
+     *
+     * Browser events have the following additional properties:
+     *  - *xy* {<OpenLayers.Pixel>} The pixel location of the event (relative
+     *      to the the map viewport).
+     *  - other properties that come with browser events
+     *
+     * Supported map event types:
+     *  - *preaddlayer* triggered before a layer has been added.  The event
+     *      object will include a *layer* property that references the layer  
+     *      to be added.
+     *  - *addlayer* triggered after a layer has been added.  The event object
+     *      will include a *layer* property that references the added layer.
+     *  - *removelayer* triggered after a layer has been removed.  The event
+     *      object will include a *layer* property that references the removed
+     *      layer.
+     *  - *changelayer* triggered after a layer name change, order change, or
+     *      visibility change (due to resolution thresholds).  Listeners will
+     *      receive an event object with *layer* and *property* properties.  The
+     *      *layer* property will be a reference to the changed layer.  The
+     *      *property* property will be a key to the changed property (name,
+     *      visibility, or order).
+     *  - *movestart* triggered after the start of a drag, pan, or zoom
+     *  - *move* triggered after each drag, pan, or zoom
+     *  - *moveend* triggered after a drag, pan, or zoom completes
+     *  - *zoomend* triggered after a zoom completes
+     *  - *addmarker* triggered after a marker has been added
+     *  - *removemarker* triggered after a marker has been removed
+     *  - *clearmarkers* triggered after markers have been cleared
+     *  - *mouseover* triggered after mouseover the map
+     *  - *mouseout* triggered after mouseout the map
+     *  - *mousemove* triggered after mousemove the map
+     *  - *dragstart* Does not work.  Register for movestart instead.
+     *  - *drag* Does not work.  Register for move instead.
+     *  - *dragend* Does not work.  Register for moveend instead.
+     *  - *changebaselayer* triggered after the base layer changes
      */
     EVENT_TYPES: [ 
-        "addlayer", "removelayer", "changelayer", "movestart", "move", 
-        "moveend", "zoomend", "popupopen", "popupclose",
+        "preaddlayer", "addlayer", "removelayer", "changelayer", "movestart",
+        "move", "moveend", "zoomend", "popupopen", "popupclose",
         "addmarker", "removemarker", "clearmarkers", "mouseover",
         "mouseout", "mousemove", "dragstart", "drag", "dragend",
         "changebaselayer"],
@@ -41,17 +96,69 @@ OpenLayers.Map = OpenLayers.Class({
     id: null,
     
     /**
+     * Property: fractionalZoom
+     * {Boolean} For a base layer that supports it, allow the map resolution
+     *     to be set to a value between one of the values in the resolutions
+     *     array.  Default is false.
+     *
+     * When fractionalZoom is set to true, it is possible to zoom to
+     *     an arbitrary extent.  This requires a base layer from a source
+     *     that supports requests for arbitrary extents (i.e. not cached
+     *     tiles on a regular lattice).  This means that fractionalZoom
+     *     will not work with commercial layers (Google, Yahoo, VE), layers
+     *     using TileCache, or any other pre-cached data sources.
+     *
+     * If you are using fractionalZoom, then you should also use
+     *     <getResolutionForZoom> instead of layer.resolutions[zoom] as the
+     *     former works for non-integer zoom levels.
+     */
+    fractionalZoom: false,
+    
+    /**
      * APIProperty: events
      * {<OpenLayers.Events>} An events object that handles all 
      *                       events on the map
      */
     events: null,
+    
+    /**
+     * APIProperty: allOverlays
+     * {Boolean} Allow the map to function with "overlays" only.  Defaults to
+     *     false.  If true, the lowest layer in the draw order will act as
+     *     the base layer.  In addition, if set to true, all layers will
+     *     have isBaseLayer set to false when they are added to the map.
+     *
+     * Note:
+     * If you set map.allOverlays to true, then you *cannot* use
+     *     map.setBaseLayer or layer.setIsBaseLayer.  With allOverlays true,
+     *     the lowest layer in the draw layer is the base layer.  So, to change
+     *     the base layer, use <setLayerIndex> or <raiseLayer> to set the layer
+     *     index to 0.
+     */
+    allOverlays: false,
 
     /**
      * APIProperty: div
-     * {DOMElement} The element that contains the map
+     * {DOMElement|String} The element that contains the map (or an id for
+     *     that element).  If the <OpenLayers.Map> constructor is called
+     *     with two arguments, this should be provided as the first argument.
+     *     Alternatively, the map constructor can be called with the options
+     *     object as the only argument.  In this case (one argument), a
+     *     div property may or may not be provided.  If the div property
+     *     is not provided, the map can be rendered to a container later
+     *     using the <render> method.
+     *     
+     * Note: If you calling <render> after map construction, do not use
+     *     <maxResolution>  auto.  Instead, divide your <maxExtent> by your
+     *     maximum expected dimension.
      */
     div: null,
+    
+    /**
+     * Property: dragging
+     * {Boolean} The map is currently being dragged.
+     */
+    dragging: false,
 
     /**
      * Property: size
@@ -79,14 +186,21 @@ OpenLayers.Map = OpenLayers.Class({
     layerContainerDiv: null,
 
     /**
-     * Property: layers
+     * APIProperty: layers
      * {Array(<OpenLayers.Layer>)} Ordered list of layers in the map
      */
     layers: null,
 
     /**
      * Property: controls
-     * {Array(<OpenLayers.Control>)} List of controls associated with the map
+     * {Array(<OpenLayers.Control>)} List of controls associated with the map.
+     *
+     * If not provided in the map options at construction, the map will
+     *     be given the following controls by default:
+     *  - <OpenLayers.Control.Navigation>
+     *  - <OpenLayers.Control.PanZoom>
+     *  - <OpenLayers.Control.ArgParser>
+     *  - <OpenLayers.Control.Attribution>
      */
     controls: null,
 
@@ -110,10 +224,23 @@ OpenLayers.Map = OpenLayers.Class({
     center: null,
 
     /**
+     * Property: resolution
+     * {Float} The resolution of the map.
+     */
+    resolution: null,
+
+    /**
      * Property: zoom
      * {Integer} The current zoom level of the map
      */
     zoom: 0,    
+
+    /**
+     * Property: panRatio
+     * {Float} The ratio of the current extent within
+     *         which panning will tween.
+     */
+    panRatio: 1.5,    
 
     /**
      * Property: viewRequestID
@@ -142,7 +269,7 @@ OpenLayers.Map = OpenLayers.Class({
      * APIProperty: projection
      * {String} Set in the map options to override the default projection 
      *          string this map - also set maxExtent, maxResolution, and 
-     *          units if appropriate.
+     *          units if appropriate.  Default is "EPSG:4326".
      */
     projection: "EPSG:4326",    
         
@@ -232,24 +359,75 @@ OpenLayers.Map = OpenLayers.Class({
      *          stylesheets or style declarations directly in your page.
      */
     theme: null,
+    
+    /** 
+     * APIProperty: displayProjection
+     * {<OpenLayers.Projection>} Requires proj4js support.Projection used by
+     *     several controls to display data to user. If this property is set,
+     *     it will be set on any control which has a null displayProjection
+     *     property at the time the control is added to the map. 
+     */
+    displayProjection: null,
 
     /**
      * APIProperty: fallThrough
      * {Boolean} Should OpenLayers allow events on the map to fall through to
      *           other elements on the page, or should it swallow them? (#457)
-     *           Default is to swallow them.
+     *           Default is to fall through.
      */
-    fallThrough: false,
+    fallThrough: true,
+    
+    /**
+     * Property: panTween
+     * {OpenLayers.Tween} Animated panning tween object, see panTo()
+     */
+    panTween: null,
 
     /**
+     * APIProperty: eventListeners
+     * {Object} If set as an option at construction, the eventListeners
+     *     object will be registered with <OpenLayers.Events.on>.  Object
+     *     structure must be a listeners object as shown in the example for
+     *     the events.on method.
+     */
+    eventListeners: null,
+
+    /**
+     * APIProperty: panMethod
+     * {Function} The Easing function to be used for tweening.  Default is
+     * OpenLayers.Easing.Expo.easeOut. Setting this to 'null' turns off
+     * animated panning.
+     */
+    panMethod: OpenLayers.Easing.Expo.easeOut,
+    
+    /**
+     * Property: panDuration
+     * {Integer} The number of steps to be passed to the
+     * OpenLayers.Tween.start() method when the map is
+     * panned.
+     * Default is 50.
+     */
+    panDuration: 50,
+    
+    /**
+     * Property: paddingForPopups
+     * {<OpenLayers.Bounds>} Outside margin of the popup. Used to prevent 
+     *     the popup from getting too close to the map border.
+     */
+    paddingForPopups : null,
+    
+    /**
      * Constructor: OpenLayers.Map
-     * Constructor for a new OpenLayers.Map instance.
+     * Constructor for a new OpenLayers.Map instance.  There are two possible
+     *     ways to call the map constructor.  See the examples below.
      *
      * Parameters:
      * div - {String} Id of an element in your page that will contain the map.
+     *     May be omitted if the <div> option is provided or if you intend
+     *     to use <render> later.
      * options - {Object} Optional object with properties to tag onto the map.
      *
-     * Examples:
+     * Examples (method one):
      * (code)
      * // create a map with default options in an element with the id "map1"
      * var map = new OpenLayers.Map("map1");
@@ -258,20 +436,64 @@ OpenLayers.Map = OpenLayers.Class({
      * var options = {
      *     maxExtent: new OpenLayers.Bounds(-200000, -200000, 200000, 200000),
      *     maxResolution: 156543,
-     *     units: 'meters',
+     *     units: 'm',
      *     projection: "EPSG:41001"
      * };
      * var map = new OpenLayers.Map("map2", options);
      * (end)
+     *
+     * Examples (method two - single argument):
+     * (code)
+     * // create a map with non-default options
+     * var map = new OpenLayers.Map({
+     *     div: "map_id",
+     *     maxExtent: new OpenLayers.Bounds(-200000, -200000, 200000, 200000),
+     *     maxResolution: 156543,
+     *     units: 'm',
+     *     projection: "EPSG:41001"
+     * });
+     *
+     * // create a map without a reference to a container - call render later
+     * var map = new OpenLayers.Map({
+     *     maxExtent: new OpenLayers.Bounds(-200000, -200000, 200000, 200000),
+     *     maxResolution: 156543,
+     *     units: 'm',
+     *     projection: "EPSG:41001"
+     * });
      */    
     initialize: function (div, options) {
         
-        //set the default options
-        this.setOptions(options);
+        // If only one argument is provided, check if it is an object.
+        if(arguments.length === 1 && typeof div === "object") {
+            options = div;
+            div = options && options.div;
+        }
+
+        // Simple-type defaults are set in class definition. 
+        //  Now set complex-type defaults 
+        this.tileSize = new OpenLayers.Size(OpenLayers.Map.TILE_WIDTH,
+                                            OpenLayers.Map.TILE_HEIGHT);
+        
+        this.maxExtent = new OpenLayers.Bounds(-180, -90, 180, 90);
+        
+        this.paddingForPopups = new OpenLayers.Bounds(15, 15, 15, 15);
+
+        this.theme = OpenLayers._getScriptLocation() + 
+                             'theme/default/style.css'; 
+
+        // now override default options 
+        OpenLayers.Util.extend(this, options);
 
         this.id = OpenLayers.Util.createUniqueID("OpenLayers.Map_");
 
         this.div = OpenLayers.Util.getElement(div);
+        if(!this.div) {
+            this.div = document.createElement("div");
+            this.div.style.height = "1px";
+            this.div.style.width = "1px";
+        }
+        
+        OpenLayers.Element.addClass(this.div, 'olMap');
 
         // the viewPortDiv is the outermost div we modify
         var id = this.div.id + "_OpenLayers_ViewPort";
@@ -293,8 +515,12 @@ OpenLayers.Map = OpenLayers.Class({
         this.events = new OpenLayers.Events(this, 
                                             this.div, 
                                             this.EVENT_TYPES, 
-                                            this.fallThrough);
+                                            this.fallThrough, 
+                                            {includeXY: true});
         this.updateSize();
+        if(this.eventListeners instanceof Object) {
+            this.events.on(this.eventListeners);
+        }
  
         // update the map size and location before the map moves
         this.events.register("movestart", this, this.updateSize);
@@ -308,8 +534,10 @@ OpenLayers.Map = OpenLayers.Class({
             // Else updateSize on catching the window's resize
             //  Note that this is ok, as updateSize() does nothing if the 
             //  map's size has not actually changed.
+            this.updateSizeDestroy = OpenLayers.Function.bind(this.updateSize, 
+                this);
             OpenLayers.Event.observe(window, 'resize',
-                            OpenLayers.Function.bind(this.updateSize, this));
+                            this.updateSizeDestroy);
         }
         
         // only append link stylesheet if the theme property is set
@@ -317,7 +545,7 @@ OpenLayers.Map = OpenLayers.Class({
             // check existing links for equivalent url
             var addNode = true;
             var nodes = document.getElementsByTagName('link');
-            for(var i=0; i<nodes.length; ++i) {
+            for(var i=0, len=nodes.length; i<len; ++i) {
                 if(OpenLayers.Util.isEquivalentUrl(nodes.item(i).href,
                                                    this.theme)) {
                     addNode = false;
@@ -349,7 +577,7 @@ OpenLayers.Map = OpenLayers.Class({
             }
         }
 
-        for(var i=0; i < this.controls.length; i++) {
+        for(var i=0, len=this.controls.length; i<len; i++) {
             this.addControlToMap(this.controls[i]);
         }
 
@@ -360,7 +588,24 @@ OpenLayers.Map = OpenLayers.Class({
 
         // always call map.destroy()
         OpenLayers.Event.observe(window, 'unload', this.unloadDestroy);
-
+    },
+    
+    /**
+     * APIMethod: render
+     * Render the map to a specified container.
+     * 
+     * Parameters:
+     * div - {String|DOMElement} The container that the map should be rendered
+     *     to. If different than the current container, the map viewport
+     *     will be moved from the current to the new container.
+     */
+    render: function(div) {
+        this.div = OpenLayers.Util.getElement(div);
+        OpenLayers.Element.addClass(this.div, 'olMap');
+        this.events.attachToElement(this.div);
+        this.viewPortDiv.parentNode.removeChild(this.viewPortDiv);
+        this.div.appendChild(this.viewPortDiv);
+        this.updateSize();
     },
 
     /**
@@ -369,6 +614,14 @@ OpenLayers.Map = OpenLayers.Class({
      *     so that if map is manually destroyed, we can unregister this.
      */
     unloadDestroy: null,
+    
+    /**
+     * Method: updateSizeDestroy
+     * When the map is destroyed, we need to stop listening to updateSize
+     *    events: this method stores the function we need to unregister in 
+     *    non-IE browsers.
+     */
+    updateSizeDestroy: null,
 
     /**
      * APIMethod: destroy
@@ -384,6 +637,21 @@ OpenLayers.Map = OpenLayers.Class({
         OpenLayers.Event.stopObserving(window, 'unload', this.unloadDestroy);
         this.unloadDestroy = null;
 
+        if (this.updateSizeDestroy) {
+            OpenLayers.Event.stopObserving(window, 'resize', 
+                                           this.updateSizeDestroy);
+        } else {
+            this.events.unregister("resize", this, this.updateSize);
+        }    
+        
+        this.paddingForPopups = null;    
+
+        if (this.controls != null) {
+            for (var i = this.controls.length - 1; i>=0; --i) {
+                this.controls[i].destroy();
+            } 
+            this.controls = null;
+        }
         if (this.layers != null) {
             for (var i = this.layers.length - 1; i>=0; --i) {
                 //pass 'false' to destroy so that map wont try to set a new 
@@ -392,17 +660,15 @@ OpenLayers.Map = OpenLayers.Class({
             } 
             this.layers = null;
         }
-        if (this.controls != null) {
-            for (var i = this.controls.length - 1; i>=0; --i) {
-                this.controls[i].destroy();
-            } 
-            this.controls = null;
-        }
         if (this.viewPortDiv) {
             this.div.removeChild(this.viewPortDiv);
         }
         this.viewPortDiv = null;
 
+        if(this.eventListeners) {
+            this.events.un(this.eventListeners);
+            this.eventListeners = null;
+        }
         this.events.destroy();
         this.events = null;
 
@@ -416,19 +682,6 @@ OpenLayers.Map = OpenLayers.Class({
      * options - {Object} Hashtable of options to tag to the map
      */
     setOptions: function(options) {
-
-        // Simple-type defaults are set in class definition. 
-        //  Now set complex-type defaults 
-        this.tileSize = new OpenLayers.Size(OpenLayers.Map.TILE_WIDTH,
-                                            OpenLayers.Map.TILE_HEIGHT);
-        
-        this.maxExtent = new OpenLayers.Bounds(-180, -90, 180, 90);
-
-        this.theme = OpenLayers._getScriptLocation() + 
-                             'theme/default/style.css'; 
-
-        // now add the options declared by the user
-        //  (these will override defaults)
         OpenLayers.Util.extend(this, options);
     },
 
@@ -442,6 +695,135 @@ OpenLayers.Map = OpenLayers.Class({
      getTileSize: function() {
          return this.tileSize;
      },
+
+
+    /**
+     * APIMethod: getBy
+     * Get a list of objects given a property and a match item.
+     *
+     * Parameters:
+     * array - {String} A property on the map whose value is an array.
+     * property - {String} A property on each item of the given array.
+     * match - {String | Object} A string to match.  Can also be a regular
+     *     expression literal or object.  In addition, it can be any object
+     *     with a method named test.  For reqular expressions or other, if
+     *     match.test(map[array][i][property]) evaluates to true, the item will
+     *     be included in the array returned.  If no items are found, an empty
+     *     array is returned.
+     *
+     * Returns:
+     * {Array} An array of items where the given property matches the given
+     *     criteria.
+     */
+    getBy: function(array, property, match) {
+        var test = (typeof match.test == "function");
+        var found = OpenLayers.Array.filter(this[array], function(item) {
+            return item[property] == match || (test && match.test(item[property]));
+        });
+        return found;
+    },
+
+    /**
+     * APIMethod: getLayersBy
+     * Get a list of layers with properties matching the given criteria.
+     *
+     * Parameter:
+     * property - {String} A layer property to be matched.
+     * match - {String | Object} A string to match.  Can also be a regular
+     *     expression literal or object.  In addition, it can be any object
+     *     with a method named test.  For reqular expressions or other, if
+     *     match.test(layer[property]) evaluates to true, the layer will be
+     *     included in the array returned.  If no layers are found, an empty
+     *     array is returned.
+     *
+     * Returns:
+     * {Array(<OpenLayers.Layer>)} A list of layers matching the given criteria.
+     *     An empty array is returned if no matches are found.
+     */
+    getLayersBy: function(property, match) {
+        return this.getBy("layers", property, match);
+    },
+
+    /**
+     * APIMethod: getLayersByName
+     * Get a list of layers with names matching the given name.
+     *
+     * Parameter:
+     * match - {String | Object} A layer name.  The name can also be a regular
+     *     expression literal or object.  In addition, it can be any object
+     *     with a method named test.  For reqular expressions or other, if
+     *     name.test(layer.name) evaluates to true, the layer will be included
+     *     in the list of layers returned.  If no layers are found, an empty
+     *     array is returned.
+     *
+     * Returns:
+     * {Array(<OpenLayers.Layer>)} A list of layers matching the given name.
+     *     An empty array is returned if no matches are found.
+     */
+    getLayersByName: function(match) {
+        return this.getLayersBy("name", match);
+    },
+
+    /**
+     * APIMethod: getLayersByClass
+     * Get a list of layers of a given class (CLASS_NAME).
+     *
+     * Parameter:
+     * match - {String | Object} A layer class name.  The match can also be a
+     *     regular expression literal or object.  In addition, it can be any
+     *     object with a method named test.  For reqular expressions or other,
+     *     if type.test(layer.CLASS_NAME) evaluates to true, the layer will
+     *     be included in the list of layers returned.  If no layers are
+     *     found, an empty array is returned.
+     *
+     * Returns:
+     * {Array(<OpenLayers.Layer>)} A list of layers matching the given class.
+     *     An empty array is returned if no matches are found.
+     */
+    getLayersByClass: function(match) {
+        return this.getLayersBy("CLASS_NAME", match);
+    },
+
+    /**
+     * APIMethod: getControlsBy
+     * Get a list of controls with properties matching the given criteria.
+     *
+     * Parameter:
+     * property - {String} A control property to be matched.
+     * match - {String | Object} A string to match.  Can also be a regular
+     *     expression literal or object.  In addition, it can be any object
+     *     with a method named test.  For reqular expressions or other, if
+     *     match.test(layer[property]) evaluates to true, the layer will be
+     *     included in the array returned.  If no layers are found, an empty
+     *     array is returned.
+     *
+     * Returns:
+     * {Array(<OpenLayers.Control>)} A list of controls matching the given
+     *     criteria.  An empty array is returned if no matches are found.
+     */
+    getControlsBy: function(property, match) {
+        return this.getBy("controls", property, match);
+    },
+
+    /**
+     * APIMethod: getControlsByClass
+     * Get a list of controls of a given class (CLASS_NAME).
+     *
+     * Parameter:
+     * match - {String | Object} A control class name.  The match can also be a
+     *     regular expression literal or object.  In addition, it can be any
+     *     object with a method named test.  For reqular expressions or other,
+     *     if type.test(control.CLASS_NAME) evaluates to true, the control will
+     *     be included in the list of controls returned.  If no controls are
+     *     found, an empty array is returned.
+     *
+     * Returns:
+     * {Array(<OpenLayers.Control>)} A list of controls matching the given class.
+     *     An empty array is returned if no matches are found.
+     */
+    getControlsByClass: function(match) {
+        return this.getControlsBy("CLASS_NAME", match);
+    },
 
   /********************************************************/
   /*                                                      */
@@ -465,10 +847,11 @@ OpenLayers.Map = OpenLayers.Class({
      */
     getLayer: function(id) {
         var foundLayer = null;
-        for (var i = 0; i < this.layers.length; i++) {
+        for (var i=0, len=this.layers.length; i<len; i++) {
             var layer = this.layers[i];
             if (layer.id == id) {
                 foundLayer = layer;
+                break;
             }
         }
         return foundLayer;
@@ -488,21 +871,38 @@ OpenLayers.Map = OpenLayers.Class({
     },
 
     /**
+     * Method: resetLayersZIndex
+     * Reset each layer's z-index based on layer's array index
+     */
+    resetLayersZIndex: function() {
+        for (var i=0, len=this.layers.length; i<len; i++) {
+            var layer = this.layers[i];
+            this.setLayerZIndex(layer, i);
+        }
+    },
+
+    /**
     * APIMethod: addLayer
     *
     * Parameters:
     * layer - {<OpenLayers.Layer>} 
     */    
     addLayer: function (layer) {
-        for(var i=0; i < this.layers.length; i++) {
+        for(var i=0, len=this.layers.length; i <len; i++) {
             if (this.layers[i] == layer) {
-                var msg = "You tried to add the layer: " + layer.name + 
-                          " to the map, but it has already been added";
+                var msg = OpenLayers.i18n('layerAlreadyAdded', 
+                                                      {'layerName':layer.name});
                 OpenLayers.Console.warn(msg);
                 return false;
             }
-        }    
+        }
+        if(this.allOverlays) {
+            layer.isBaseLayer = false;
+        }
+
+        this.events.triggerEvent("preaddlayer", {layer: layer});
         
+        layer.div.className = "olLayerDiv";
         layer.div.style.overflow = "";
         this.setLayerZIndex(layer, this.layers.length);
 
@@ -514,7 +914,7 @@ OpenLayers.Map = OpenLayers.Class({
         this.layers.push(layer);
         layer.setMap(this);
 
-        if (layer.isBaseLayer)  {
+        if (layer.isBaseLayer || (this.allOverlays && !this.baseLayer))  {
             if (this.baseLayer == null) {
                 // set the first baselaye we add as the baselayer
                 this.setBaseLayer(layer);
@@ -525,17 +925,18 @@ OpenLayers.Map = OpenLayers.Class({
             layer.redraw();
         }
 
-        this.events.triggerEvent("addlayer");
+        this.events.triggerEvent("addlayer", {layer: layer});
+        layer.afterAdd();
     },
 
     /**
     * APIMethod: addLayers 
     *
     * Parameters:
-    * layers - Array({<OpenLayers.Layer>}) 
+    * layers - {Array(<OpenLayers.Layer>)} 
     */    
     addLayers: function (layers) {
-        for (var i = 0; i <  layers.length; i++) {
+        for (var i=0, len=layers.length; i<len; i++) {
             this.addLayer(layers[i]);
         }
     },
@@ -583,17 +984,22 @@ OpenLayers.Map = OpenLayers.Class({
         layer.map = null;
 
         // if we removed the base layer, need to set a new one
-        if (setNewBaseLayer && (this.baseLayer == layer)) {
+        if(this.baseLayer == layer) {
             this.baseLayer = null;
-            for(i=0; i < this.layers.length; i++) {
-                var iLayer = this.layers[i];
-                if (iLayer.isBaseLayer) {
-                    this.setBaseLayer(iLayer);
-                    break;
+            if(setNewBaseLayer) {
+                for(var i=0, len=this.layers.length; i<len; i++) {
+                    var iLayer = this.layers[i];
+                    if (iLayer.isBaseLayer || this.allOverlays) {
+                        this.setBaseLayer(iLayer);
+                        break;
+                    }
                 }
             }
         }
-        this.events.triggerEvent("removelayer");
+
+        this.resetLayersZIndex();
+
+        this.events.triggerEvent("removelayer", {layer: layer});
     },
 
     /**
@@ -642,10 +1048,19 @@ OpenLayers.Map = OpenLayers.Class({
         if (base != idx) {
             this.layers.splice(base, 1);
             this.layers.splice(idx, 0, layer);
-            for (var i = 0; i < this.layers.length; i++) {
+            for (var i=0, len=this.layers.length; i<len; i++) {
                 this.setLayerZIndex(this.layers[i], i);
             }
-            this.events.triggerEvent("changelayer");
+            this.events.triggerEvent("changelayer", {
+                layer: layer, property: "order"
+            });
+            if(this.allOverlays) {
+                if(idx === 0) {
+                    this.setBaseLayer(layer);
+                } else if(this.baseLayer !== this.layers[0]) {
+                    this.setBaseLayer(this.layers[0]);
+                }
+            }
         }
     },
 
@@ -658,7 +1073,7 @@ OpenLayers.Map = OpenLayers.Class({
      *
      * Paremeters:
      * layer - {<OpenLayers.Layer>} 
-     * idx - {int} 
+     * delta - {int} 
      */
     raiseLayer: function (layer, delta) {
         var idx = this.getLayerIndex(layer) + delta;
@@ -675,7 +1090,7 @@ OpenLayers.Map = OpenLayers.Class({
      */
     setBaseLayer: function(newBaseLayer) {
         var oldExtent = null;
-        if(this.baseLayer) {
+        if (this.baseLayer) {
             oldExtent = this.baseLayer.getExtent();
         }
 
@@ -685,34 +1100,44 @@ OpenLayers.Map = OpenLayers.Class({
             if (OpenLayers.Util.indexOf(this.layers, newBaseLayer) != -1) {
 
                 // make the old base layer invisible 
-                if (this.baseLayer != null) {
+                if (this.baseLayer != null && !this.allOverlays) {
                     this.baseLayer.setVisibility(false);
                 }
 
-                // set new baselayer and make it visible
+                // set new baselayer
                 this.baseLayer = newBaseLayer;
                 
                 // Increment viewRequestID since the baseLayer is 
                 // changing. This is used by tiles to check if they should 
                 // draw themselves.
                 this.viewRequestID++;
-                this.baseLayer.visibility = true;
+                if(!this.allOverlays) {
+                    this.baseLayer.visibility = true;
+                }
 
                 //redraw all layers
                 var center = this.getCenter();
                 if (center != null) {
-                    if (oldExtent == null) {
-                        // simply set center but force zoom change
-                        this.setCenter(center, this.getZoom(), false, true);
-                    } else {
-                        // zoom to oldExtent *and* force zoom change
-                        this.setCenter(oldExtent.getCenterLonLat(), 
-                                       this.getZoomForExtent(oldExtent, true),
-                                       false, true);
-                    }
+
+                    //either get the center from the old Extent or just from
+                    // the current center of the map. 
+                    var newCenter = (oldExtent) 
+                        ? oldExtent.getCenterLonLat()
+                        : center;
+
+                    //the new zoom will either come from the old Extent or 
+                    // from the current resolution of the map                                                
+                    var newZoom = (oldExtent) 
+                        ? this.getZoomForExtent(oldExtent, true)
+                        : this.getZoomForResolution(this.resolution, true);
+
+                    // zoom and force zoom change
+                    this.setCenter(newCenter, newZoom, false, true);
                 }
 
-                this.events.triggerEvent("changebaselayer");
+                this.events.triggerEvent("changebaselayer", {
+                    layer: this.baseLayer
+                });
             }        
         }
     },
@@ -751,6 +1176,13 @@ OpenLayers.Map = OpenLayers.Class({
         // If a control doesn't have a div at this point, it belongs in the
         // viewport.
         control.outsideViewport = (control.div != null);
+        
+        // If the map has a displayProjection, and the control doesn't, set 
+        // the display projection.
+        if (this.displayProjection && !control.displayProjection) {
+            control.displayProjection = this.displayProjection;
+        }    
+        
         control.setMap(this);
         var div = control.draw(px);
         if (div) {
@@ -775,7 +1207,7 @@ OpenLayers.Map = OpenLayers.Class({
      */    
     getControl: function (id) {
         var returnControl = null;
-        for(var i=0; i < this.controls.length; i++) {
+        for(var i=0, len=this.controls.length; i<len; i++) {
             var control = this.controls[i];
             if (control.id == id) {
                 returnControl = control;
@@ -797,8 +1229,8 @@ OpenLayers.Map = OpenLayers.Class({
     removeControl: function (control) {
         //make sure control is non-null and actually part of our map
         if ( (control) && (control == this.getControl(control.id)) ) {
-            if (!control.outsideViewport) {
-                this.viewPortDiv.removeChild(control.div)
+            if (control.div && (control.div.parentNode == this.viewPortDiv)) {
+                this.viewPortDiv.removeChild(control.div);
             }
             OpenLayers.Util.removeItem(this.controls, control);
         }
@@ -824,7 +1256,7 @@ OpenLayers.Map = OpenLayers.Class({
 
         if (exclusive) {
             //remove all other popups from screen
-            for(var i=0; i < this.popups.length; i++) {
+            for (var i = this.popups.length - 1; i >= 0; --i) {
                 this.removePopup(this.popups[i]);
             }
         }
@@ -890,18 +1322,19 @@ OpenLayers.Map = OpenLayers.Class({
      */
     updateSize: function() {
         // the div might have moved on the page, also
-        this.events.element.offsets = null;
+        this.events.clearMouseCache();
         var newSize = this.getCurrentSize();
         var oldSize = this.getSize();
-        if (oldSize == null)
+        if (oldSize == null) {
             this.size = oldSize = newSize;
+        }
         if (!newSize.equals(oldSize)) {
             
             // store the new size
             this.size = newSize;
 
             //notify layers of mapresize
-            for(var i=0; i < this.layers.length; i++) {
+            for(var i=0, len=this.layers.length; i<len; i++) {
                 this.layers[i].onMapResize();                
             }
 
@@ -996,7 +1429,11 @@ OpenLayers.Map = OpenLayers.Class({
      * {<OpenLayers.LonLat>}
      */
     getCenter: function () {
-        return this.center;
+        var center = null;
+        if (this.center) {
+            center = this.center.clone();
+        }
+        return center;
     },
 
 
@@ -1017,29 +1454,96 @@ OpenLayers.Map = OpenLayers.Class({
      * Parameters:
      * dx - {Integer}
      * dy - {Integer}
+     * options - {Object} Options to configure panning:
+     *  - *animate* {Boolean} Use panTo instead of setCenter. Default is true.
+     *  - *dragging* {Boolean} Call setCenter with dragging true.  Default is
+     *    false.
      */
-    pan: function(dx, dy) {
-
+    pan: function(dx, dy, options) {
+        options = OpenLayers.Util.applyDefaults(options, {
+            animate: true,
+            dragging: false
+        });
         // getCenter
         var centerPx = this.getViewPortPxFromLonLat(this.getCenter());
 
         // adjust
         var newCenterPx = centerPx.add(dx, dy);
         
-        // only call setCenter if there has been a change
-        if (!newCenterPx.equals(centerPx)) {
+        // only call setCenter if not dragging or there has been a change
+        if (!options.dragging || !newCenterPx.equals(centerPx)) {
             var newCenterLonLat = this.getLonLatFromViewPortPx(newCenterPx);
-            this.setCenter(newCenterLonLat);
+            if (options.animate) {
+                this.panTo(newCenterLonLat);
+            } else {
+                this.setCenter(newCenterLonLat, null, options.dragging);
+            }    
         }
 
    },
+   
+   /** 
+     * APIMethod: panTo
+     * Allows user to pan to a new lonlat
+     * If the new lonlat is in the current extent the map will slide smoothly
+     * 
+     * Parameters:
+     * lonlat - {<OpenLayers.Lonlat>}
+     */
+    panTo: function(lonlat) {
+        if (this.panMethod && this.getExtent().scale(this.panRatio).containsLonLat(lonlat)) {
+            if (!this.panTween) {
+                this.panTween = new OpenLayers.Tween(this.panMethod);
+            }
+            var center = this.getCenter();
+
+            // center will not change, don't do nothing
+            if (lonlat.lon == center.lon &&
+                lonlat.lat == center.lat) {
+                return;
+            }
+
+            var from = {
+                lon: center.lon,
+                lat: center.lat
+            };
+            var to = {
+                lon: lonlat.lon,
+                lat: lonlat.lat
+            };
+            this.panTween.start(from, to, this.panDuration, {
+                callbacks: {
+                    start: OpenLayers.Function.bind(function(lonlat) {
+                        this.events.triggerEvent("movestart");
+                    }, this),
+                    eachStep: OpenLayers.Function.bind(function(lonlat) {
+                        lonlat = new OpenLayers.LonLat(lonlat.lon, lonlat.lat);
+                        this.moveTo(lonlat, this.zoom, {
+                            'dragging': true,
+                            'noEvent': true
+                        });
+                    }, this),
+                    done: OpenLayers.Function.bind(function(lonlat) {
+                        lonlat = new OpenLayers.LonLat(lonlat.lon, lonlat.lat);
+                        this.moveTo(lonlat, this.zoom, {
+                            'noEvent': true
+                        });
+                        this.events.triggerEvent("moveend");
+                    }, this)
+                }
+            });
+        } else {
+            this.setCenter(lonlat);
+        }
+    },
 
     /**
      * APIMethod: setCenter
+     * Set the map center (and optionally, the zoom level).
      * 
      * Parameters:
-     * lonlat - {<OpenLayers.LonLat>}
-     * zoom - {Integer}
+     * lonlat - {<OpenLayers.LonLat>} The new center location.
+     * zoom - {Integer} Optional zoom level.
      * dragging - {Boolean} Specifies whether or not to trigger 
      *                      movestart/end events
      * forceZoomChange - {Boolean} Specifies whether or not to trigger zoom 
@@ -1047,8 +1551,37 @@ OpenLayers.Map = OpenLayers.Class({
      *
      * TBD: reconsider forceZoomChange in 3.0
      */
-    setCenter: function (lonlat, zoom, dragging, forceZoomChange) {
+    setCenter: function(lonlat, zoom, dragging, forceZoomChange) {
+        this.moveTo(lonlat, zoom, {
+            'dragging': dragging,
+            'forceZoomChange': forceZoomChange,
+            'caller': 'setCenter'
+        });
+    },
 
+    /**
+     * Method: moveTo
+     *
+     * Parameters:
+     * lonlat - {<OpenLayers.LonLat>}
+     * zoom - {Integer}
+     * options - {Object}
+     */
+    moveTo: function(lonlat, zoom, options) {
+        if (!options) { 
+            options = {};
+        }    
+        // dragging is false by default
+        var dragging = options.dragging;
+        // forceZoomChange is false by default
+        var forceZoomChange = options.forceZoomChange;
+        // noEvent is false by default
+        var noEvent = options.noEvent;
+
+        if (this.panTween && options.caller == "setCenter") {
+            this.panTween.stop();
+        }    
+             
         if (!this.center && !this.isValidLonLat(lonlat)) {
             lonlat = this.maxExtent.getCenterLonLat();
         }
@@ -1061,10 +1594,7 @@ OpenLayers.Map = OpenLayers.Class({
             if(zoom == null) { 
                 zoom = this.getZoom(); 
             }
-            var resolution = null;
-            if(this.baseLayer != null) {
-                resolution = this.baseLayer.resolutions[zoom];
-            }
+            var resolution = this.getResolutionForZoom(zoom);
             var extent = this.calculateBounds(lonlat, resolution); 
             if(!this.restrictedExtent.containsBounds(extent)) {
                 var maxCenter = this.restrictedExtent.getCenterLonLat(); 
@@ -1101,7 +1631,9 @@ OpenLayers.Map = OpenLayers.Class({
         // if neither center nor zoom will change, no need to do anything
         if (zoomChanged || centerChanged || !dragging) {
 
-            if (!dragging) { this.events.triggerEvent("movestart"); }
+            if (!this.dragging && !noEvent) {
+                this.events.triggerEvent("movestart");
+            }
 
             if (centerChanged) {
                 if ((!zoomChanged) && (this.center)) { 
@@ -1121,6 +1653,7 @@ OpenLayers.Map = OpenLayers.Class({
 
             if (zoomChanged) {
                 this.zoom = zoom;
+                this.resolution = this.getResolutionForZoom(zoom);
                 // zoom level has changed, increment viewRequestID.
                 this.viewRequestID++;
             }    
@@ -1128,38 +1661,53 @@ OpenLayers.Map = OpenLayers.Class({
             var bounds = this.getExtent();
             
             //send the move call to the baselayer and all the overlays    
-            this.baseLayer.moveTo(bounds, zoomChanged, dragging);
+
+            if(this.baseLayer.visibility) {
+                this.baseLayer.moveTo(bounds, zoomChanged, dragging);
+                if(dragging) {
+                    this.baseLayer.events.triggerEvent("move");
+                } else {
+                    this.baseLayer.events.triggerEvent("moveend",
+                        {"zoomChanged": zoomChanged}
+                    );
+                }
+            }
             
             bounds = this.baseLayer.getExtent();
             
-            for (var i = 0; i < this.layers.length; i++) {
+            for (var i=0, len=this.layers.length; i<len; i++) {
                 var layer = this.layers[i];
-                if (!layer.isBaseLayer) {
-                    
-                    var moveLayer;
+                if (layer !== this.baseLayer && !layer.isBaseLayer) {
                     var inRange = layer.calculateInRange();
                     if (layer.inRange != inRange) {
-                        // Layer property has changed. We are going 
-                        // to call moveLayer so that the layer can be turned
-                        // off or on.   
+                        // the inRange property has changed. If the layer is
+                        // no longer in range, we turn it off right away. If
+                        // the layer is no longer out of range, the moveTo
+                        // call below will turn on the layer.
                         layer.inRange = inRange;
-                        moveLayer = true;
-                        this.events.triggerEvent("changelayer");
-                    } else {
-                        // If nothing has changed, then we only move the layer
-                        // if it is visible and inrange.
-                        moveLayer = (layer.visibility && layer.inRange);
+                        if (!inRange) {
+                            layer.display(false);
+                        }
+                        this.events.triggerEvent("changelayer", {
+                            layer: layer, property: "visibility"
+                        });
                     }
-
-                    if (moveLayer) {
+                    if (inRange && layer.visibility) {
                         layer.moveTo(bounds, zoomChanged, dragging);
+                        if(dragging) {
+                            layer.events.triggerEvent("move");
+                        } else {
+                            layer.events.triggerEvent("moveend",
+                                {"zoomChanged": zoomChanged}
+                            );
+                        }
                     }
                 }                
             }
             
             if (zoomChanged) {
                 //redraw popups
-                for (var i = 0; i < this.popups.length; i++) {
+                for (var i=0, len=this.popups.length; i<len; i++) {
                     this.popups[i].updatePosition();
                 }
             }    
@@ -1170,7 +1718,13 @@ OpenLayers.Map = OpenLayers.Class({
         }
 
         // even if nothing was done, we want to notify of this
-        if (!dragging) { this.events.triggerEvent("moveend"); }
+        if (!dragging && !noEvent) {
+            this.events.triggerEvent("moveend");
+        }
+        
+        // Store the map dragging state for later use
+        this.dragging = !!dragging; 
+
     },
 
     /** 
@@ -1186,8 +1740,8 @@ OpenLayers.Map = OpenLayers.Class({
         var newPx = this.getViewPortPxFromLonLat(lonlat);
 
         if ((originPx != null) && (newPx != null)) {
-            this.layerContainerDiv.style.left = (originPx.x - newPx.x) + "px";
-            this.layerContainerDiv.style.top  = (originPx.y - newPx.y) + "px";
+            this.layerContainerDiv.style.left = Math.round(originPx.x - newPx.x) + "px";
+            this.layerContainerDiv.style.top  = Math.round(originPx.y - newPx.y) + "px";
         }
     },
 
@@ -1236,11 +1790,30 @@ OpenLayers.Map = OpenLayers.Class({
     
     /**
      * APIMethod: getProjection
+     * This method returns a string representing the projection. In 
+     *     the case of projection support, this will be the srsCode which
+     *     is loaded -- otherwise it will simply be the string value that
+     *     was passed to the projection at startup.
+     *
+     * FIXME: In 3.0, we will remove getProjectionObject, and instead
+     *     return a Projection object from this function. 
      * 
      * Returns:
-     * {String} The Projection of the base layer.
+     * {String} The Projection string from the base layer or null. 
      */
     getProjection: function() {
+        var projection = this.getProjectionObject();
+        return projection ? projection.getCode() : null;
+    },
+    
+    /**
+     * APIMethod: getProjectionObject
+     * Returns the projection obect from the baselayer.
+     *
+     * Returns:
+     * {<OpenLayers.Projection>} The Projection of the base layer.
+     */
+    getProjectionObject: function() {
         var projection = null;
         if (this.baseLayer != null) {
             projection = this.baseLayer.projection;
@@ -1264,13 +1837,25 @@ OpenLayers.Map = OpenLayers.Class({
         
     /**
      * APIMethod: getMaxExtent
+     *
+     * Parameters:
+     * options - {Object} 
      * 
+     * Allowed Options:
+     * restricted - {Boolean} If true, returns restricted extent (if it is 
+     *     available.)
+     *
      * Returns:
-     * {<OpenLayers.Bounds>}
+     * {<OpenLayers.Bounds>} The maxExtent property as set on the current 
+     *     baselayer, unless the 'restricted' option is set, in which case
+     *     the 'restrictedExtent' option from the map is returned (if it
+     *     is set).
      */
-    getMaxExtent: function () {
+    getMaxExtent: function (options) {
         var maxExtent = null;
-        if (this.baseLayer != null) {
+        if(options && options.restricted && this.restrictedExtent){
+            maxExtent = this.restrictedExtent;
+        } else if (this.baseLayer != null) {
             maxExtent = this.baseLayer.maxExtent;
         }        
         return maxExtent;
@@ -1333,6 +1918,21 @@ OpenLayers.Map = OpenLayers.Class({
         return resolution;
     },
 
+    /**
+     * APIMethod: getUnits
+     * 
+     * Returns:
+     * {Float} The current units of the map. 
+     *         If no baselayer is set, returns null.
+     */
+    getUnits: function () {
+        var units = null;
+        if (this.baseLayer != null) {
+            units = this.baseLayer.units;
+        }
+        return units;
+    },
+
      /**
       * APIMethod: getScale
       * 
@@ -1371,6 +1971,24 @@ OpenLayers.Map = OpenLayers.Class({
             zoom = this.baseLayer.getZoomForExtent(bounds, closest);
         }
         return zoom;
+    },
+
+    /**
+     * APIMethod: getResolutionForZoom
+     * 
+     * Parameter:
+     * zoom - {Float}
+     * 
+     * Returns:
+     * {Float} A suitable resolution for the specified zoom.  If no baselayer
+     *     is set, returns null.
+     */
+    getResolutionForZoom: function(zoom) {
+        var resolution = null;
+        if(this.baseLayer) {
+            resolution = this.baseLayer.getResolutionForZoom(zoom);
+        }
+        return resolution;
     },
 
     /**
@@ -1447,8 +2065,13 @@ OpenLayers.Map = OpenLayers.Class({
      * 
      * Parameters:
      * bounds - {<OpenLayers.Bounds>}
+     * closest - {Boolean} Find the zoom level that most closely fits the 
+     *     specified bounds. Note that this may result in a zoom that does 
+     *     not exactly contain the entire extent.
+     *     Default is false.
+     * 
      */
-    zoomToExtent: function(bounds) {
+    zoomToExtent: function(bounds, closest) {
         var center = bounds.getCenterLonLat();
         if (this.baseLayer.wrapDateLine) {
             var maxExtent = this.getMaxExtent();
@@ -1472,15 +2095,28 @@ OpenLayers.Map = OpenLayers.Class({
             //
             center = bounds.getCenterLonLat().wrapDateLine(maxExtent);
         }
-        this.setCenter(center, this.getZoomForExtent(bounds));
+        this.setCenter(center, this.getZoomForExtent(bounds, closest));
     },
 
     /** 
      * APIMethod: zoomToMaxExtent
      * Zoom to the full extent and recenter.
+     *
+     * Parameters:
+     * options - 
+     * 
+     * Allowed Options:
+     * restricted - {Boolean} True to zoom to restricted extent if it is 
+     *     set. Defaults to true.
      */
-    zoomToMaxExtent: function() {
-        this.zoomToExtent(this.getMaxExtent());
+    zoomToMaxExtent: function(options) {
+        //restricted is true by default
+        var restricted = (options) ? options.restricted : true;
+
+        var maxExtent = this.getMaxExtent({
+            'restricted': restricted 
+        });
+        this.zoomToExtent(maxExtent);
     },
 
     /** 
@@ -1489,8 +2125,13 @@ OpenLayers.Map = OpenLayers.Class({
      * 
      * Parameters:
      * scale - {float}
+     * closest - {Boolean} Find the zoom level that most closely fits the 
+     *     specified scale. Note that this may result in a zoom that does 
+     *     not exactly contain the entire extent.
+     *     Default is false.
+     * 
      */
-    zoomToScale: function(scale) {
+    zoomToScale: function(scale, closest) {
         var res = OpenLayers.Util.getResolutionFromScale(scale, 
                                                          this.baseLayer.units);
         var size = this.getSize();
@@ -1502,7 +2143,7 @@ OpenLayers.Map = OpenLayers.Class({
                                            center.lat - h_deg / 2,
                                            center.lon + w_deg / 2,
                                            center.lat + h_deg / 2);
-        this.zoomToExtent(extent);
+        this.zoomToExtent(extent, closest);
     },
     
   /********************************************************/
@@ -1519,7 +2160,7 @@ OpenLayers.Map = OpenLayers.Class({
   //
 
     /**
-     * APIMethod: getLonLatFromViewPortPx
+     * Method: getLonLatFromViewPortPx
      * 
      * Parameters:
      * viewPortPx - {<OpenLayers.Pixel>}
@@ -1578,17 +2219,23 @@ OpenLayers.Map = OpenLayers.Class({
 
     /**
      * APIMethod: getPixelFromLonLat
+     * Returns a pixel location given a map location.  The map location is
+     *     translated to an integer pixel location (in viewport pixel
+     *     coordinates) by the current base layer.
      * 
      * Parameters:
-     * lonlat - {<OpenLayers.LonLat>}
+     * lonlat - {<OpenLayers.LonLat>} A map location.
      * 
      * Returns: 
      * {<OpenLayers.Pixel>} An OpenLayers.Pixel corresponding to the 
-     *                      <OpenLayers.LonLat> translated into view port 
-     *                      pixels by the current base layer.
+     *     <OpenLayers.LonLat> translated into view port pixels by the current
+     *     base layer.
      */
     getPixelFromLonLat: function (lonlat) {
-        return this.getViewPortPxFromLonLat(lonlat);
+        var px = this.getViewPortPxFromLonLat(lonlat);
+        px.x = Math.round(px.x);
+        px.y = Math.round(px.y);
+        return px;
     },
 
 
@@ -1645,7 +2292,7 @@ OpenLayers.Map = OpenLayers.Class({
   //
 
     /**
-     * APIMethod: getLonLatFromLayerPx
+     * Method: getLonLatFromLayerPx
      * 
      * Parameters:
      * px - {<OpenLayers.Pixel>}
@@ -1672,7 +2319,7 @@ OpenLayers.Map = OpenLayers.Class({
      */
     getLayerPxFromLonLat: function (lonlat) {
        //adjust for displacement of layerContainerDiv
-       var px = this.getViewPortPxFromLonLat(lonlat);
+       var px = this.getPixelFromLonLat(lonlat);
        return this.getLayerPxFromViewPortPx(px);         
     },
 

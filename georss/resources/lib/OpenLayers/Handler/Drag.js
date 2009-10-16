@@ -1,10 +1,12 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * @requires OpenLayers/Handler.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Handler.Drag
  * The drag handler is used to deal with sequences of browser events related
  *     to dragging.  The handler is used by controls that want to know when
@@ -16,7 +18,9 @@
  *     when the drag begins, with each move, and when the drag is done.  In
  *     addition, controls can have callbacks keyed to 'up' and 'out' if they
  *     care to differentiate between the types of events that correspond with
- *     the end of a drag sequence.
+ *     the end of a drag sequence.  If no drag actually occurs (no mouse move)
+ *     the 'down' and 'up' callbacks will be called, but not the 'done'
+ *     callback.
  *
  * Create a new drag handler with the <OpenLayers.Handler.Drag> constructor.
  *
@@ -32,6 +36,13 @@ OpenLayers.Handler.Drag = OpenLayers.Class(OpenLayers.Handler, {
      */
     started: false,
     
+    /**
+     * Property: stopDown
+     * {Boolean} Stop propagation of mousedown events from getting to listeners
+     *     on the same element.  Default is true.
+     */
+    stopDown: true,
+
     /** 
      * Property: dragging 
      * {Boolean} 
@@ -55,6 +66,23 @@ OpenLayers.Handler.Drag = OpenLayers.Class(OpenLayers.Handler, {
      * {Function}
      */
     oldOnselectstart: null,
+    
+    /**
+     * Property: interval
+     * {Integer} In order to increase performance, an interval (in 
+     *     milliseconds) can be set to reduce the number of drag events 
+     *     called. If set, a new drag event will not be set until the 
+     *     interval has passed. 
+     *     Defaults to 0, meaning no interval. 
+     */
+    interval: 0,
+    
+    /**
+     * Property: timeoutId
+     * {String} The id of the timeout used for the mousedown interval.
+     *     This is "private", and should be left alone.
+     */
+    timeoutId: null,
 
     /**
      * Constructor: OpenLayers.Handler.Drag
@@ -149,18 +177,19 @@ OpenLayers.Handler.Drag = OpenLayers.Class(OpenLayers.Handler, {
             this.started = true;
             this.start = evt.xy;
             this.last = evt.xy;
-            // TBD replace with CSS classes
-            this.map.div.style.cursor = "move";
+            OpenLayers.Element.addClass(
+                this.map.viewPortDiv, "olDragDown"
+            );
             this.down(evt);
             this.callback("down", [evt.xy]);
             OpenLayers.Event.stop(evt);
             
             if(!this.oldOnselectstart) {
-                this.oldOnselectstart = document.onselectstart;
-                document.onselectstart = function() {return false;}
+                this.oldOnselectstart = (document.onselectstart) ? document.onselectstart : function() { return true; };
+                document.onselectstart = function() {return false;};
             }
             
-            propagate = false;
+            propagate = !this.stopDown;
         } else {
             this.started = false;
             this.start = null;
@@ -180,19 +209,28 @@ OpenLayers.Handler.Drag = OpenLayers.Class(OpenLayers.Handler, {
      * {Boolean} Let the event propagate.
      */
     mousemove: function (evt) {
-        if (this.started) {
-            if(evt.xy.x != this.last.x || evt.xy.y != this.last.y) {
-                this.dragging = true;
-                this.move(evt);
-                this.callback("move", [evt.xy]);
-                if(!this.oldOnselectstart) {
-                    this.oldOnselectstart = document.onselectstart;
-                    document.onselectstart = function() {return false;}
-                }
-                this.last = evt.xy;
+        if (this.started && !this.timeoutId && (evt.xy.x != this.last.x || evt.xy.y != this.last.y)) {
+            if (this.interval > 0) {
+                this.timeoutId = setTimeout(OpenLayers.Function.bind(this.removeTimeout, this), this.interval);
             }
+            this.dragging = true;
+            this.move(evt);
+            this.callback("move", [evt.xy]);
+            if(!this.oldOnselectstart) {
+                this.oldOnselectstart = document.onselectstart;
+                document.onselectstart = function() {return false;};
+            }
+            this.last = this.evt.xy;
         }
         return true;
+    },
+    
+    /**
+     * Method: removeTimeout
+     * Private. Called by mousemove() to remove the drag timeout.
+     */
+    removeTimeout: function() {
+        this.timeoutId = null;
     },
 
     /**
@@ -207,13 +245,17 @@ OpenLayers.Handler.Drag = OpenLayers.Class(OpenLayers.Handler, {
      */
     mouseup: function (evt) {
         if (this.started) {
+            var dragged = (this.start != this.last);
             this.started = false;
             this.dragging = false;
-            // TBD replace with CSS classes
-            this.map.div.style.cursor = "";
+            OpenLayers.Element.removeClass(
+                this.map.viewPortDiv, "olDragDown"
+            );
             this.up(evt);
             this.callback("up", [evt.xy]);
-            this.callback("done", [evt.xy]);
+            if(dragged) {
+                this.callback("done", [evt.xy]);
+            }
             document.onselectstart = this.oldOnselectstart;
         }
         return true;
@@ -231,16 +273,20 @@ OpenLayers.Handler.Drag = OpenLayers.Class(OpenLayers.Handler, {
      */
     mouseout: function (evt) {
         if (this.started && OpenLayers.Util.mouseLeft(evt, this.map.div)) {
+            var dragged = (this.start != this.last);
             this.started = false; 
             this.dragging = false;
-            // TBD replace with CSS classes
-            this.map.div.style.cursor = "";
+            OpenLayers.Element.removeClass(
+                this.map.viewPortDiv, "olDragDown"
+            );
             this.out(evt);
             this.callback("out", []);
+            if(dragged) {
+                this.callback("done", [evt.xy]);
+            }
             if(document.onselectstart) {
                 document.onselectstart = this.oldOnselectstart;
             }
-            this.callback("done", [evt.xy])
         }
         return true;
     },
@@ -293,6 +339,9 @@ OpenLayers.Handler.Drag = OpenLayers.Class(OpenLayers.Handler, {
             this.start = null;
             this.last = null;
             deactivated = true;
+            OpenLayers.Element.removeClass(
+                this.map.viewPortDiv, "olDragDown"
+            );
         }
         return deactivated;
     },

@@ -1,11 +1,14 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD licence.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * licence.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Layer/Grid.js
- * 
+ * @requires OpenLayers/Tile/Image.js
+ */
+
+/**
  * Class: OpenLayers.Layer.TMS
  * 
  * Inherits from:
@@ -32,12 +35,18 @@ OpenLayers.Layer.TMS = OpenLayers.Class(OpenLayers.Layer.Grid, {
     tileOrigin: null,
 
     /**
+     * APIProperty: serverResolutions
+     * {Array} A list of all resolutions available on the server.  Only set this 
+     *     property if the map resolutions differs from the server.
+     */
+    serverResolutions: null,
+
+    /**
      * Constructor: OpenLayers.Layer.TMS
      * 
      * Parameters:
      * name - {String}
      * url - {String}
-     * params - {Object}
      * options - {Object} Hashtable of extra options to tag onto the layer
      */
     initialize: function(name, url, options) {
@@ -81,7 +90,7 @@ OpenLayers.Layer.TMS = OpenLayers.Class(OpenLayers.Layer.Grid, {
     },    
     
     /**
-     * Method: getUrl
+     * Method: getURL
      * 
      * Parameters:
      * bounds - {<OpenLayers.Bounds>}
@@ -96,7 +105,9 @@ OpenLayers.Layer.TMS = OpenLayers.Class(OpenLayers.Layer.Grid, {
         var res = this.map.getResolution();
         var x = Math.round((bounds.left - this.tileOrigin.lon) / (res * this.tileSize.w));
         var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
-        var z = this.map.getZoom();
+        var z = this.serverResolutions != null ?
+            OpenLayers.Util.indexOf(this.serverResolutions, res) :
+            this.map.getZoom();
         var path = this.serviceVersion + "/" + this.layername + "/" + z + "/" + x + "/" + y + "." + this.type; 
         var url = this.url;
         if (url instanceof Array) {
@@ -111,6 +122,7 @@ OpenLayers.Layer.TMS = OpenLayers.Class(OpenLayers.Layer.Grid, {
      * 
      * Parameters:
      * bounds - {<OpenLayers.Bounds>}
+     * position - {<OpenLayers.Pixel>}
      * 
      * Returns:
      * {<OpenLayers.Tile.Image>} The added OpenLayers.Tile.Image

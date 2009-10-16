@@ -1,12 +1,14 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Layer/EventPane.js
  * @requires OpenLayers/Layer/FixedZoomLevels.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Layer.Yahoo
  * 
  * Inherits from:
@@ -24,9 +26,9 @@ OpenLayers.Layer.Yahoo = OpenLayers.Class(
     
     /** 
      * Constant: MAX_ZOOM_LEVEL
-     * {Integer} 15
+     * {Integer} 17
      */
-    MAX_ZOOM_LEVEL: 15,
+    MAX_ZOOM_LEVEL: 17,
 
     /** 
      * Constant: RESOLUTIONS
@@ -49,7 +51,9 @@ OpenLayers.Layer.Yahoo = OpenLayers.Class(
         0.00034332275390625, 
         0.000171661376953125, 
         0.0000858306884765625, 
-        0.00004291534423828125
+        0.00004291534423828125,
+        0.00002145767211914062,
+        0.00001072883605957031
     ],
 
     /**
@@ -92,6 +96,13 @@ OpenLayers.Layer.Yahoo = OpenLayers.Class(
             this.mapObject = new YMap(this.div, this.type, size);
             this.mapObject.disableKeyControls();
             this.mapObject.disableDragMap();
+
+            //can we do smooth panning? (moveByXY is not an API function)
+            if ( !this.mapObject.moveByXY || 
+                 (typeof this.mapObject.moveByXY != "function" ) ) {
+
+                this.dragPanMapObject = null;
+            }                
         } catch(e) {}
     },
 
@@ -130,9 +141,9 @@ OpenLayers.Layer.Yahoo = OpenLayers.Class(
     fixYahooEventPane: function() {
         var yahooEventPane = OpenLayers.Util.getElement("ygddfdiv");
         if (yahooEventPane != null) {
-            if (yahooEventPane.parentNode != null)
+            if (yahooEventPane.parentNode != null) {
                 yahooEventPane.parentNode.removeChild(yahooEventPane);
-
+            }
             this.map.events.unregister("moveend", this, 
                                        this.fixYahooEventPane);
         }
@@ -146,23 +157,9 @@ OpenLayers.Layer.Yahoo = OpenLayers.Class(
      *          it working.
      */
     getWarningHTML:function() {
-
-        var html = "";
-        html += "The Yahoo Layer was unable to load correctly.<br>";
-        html += "<br>";
-        html += "To get rid of this message, select a new BaseLayer "
-        html += "in the layer switcher in the upper-right corner.<br>";
-        html += "<br>";
-        html += "Most likely, this is because the Yahoo library";
-        html += " script was either not correctly included.<br>";
-        html += "<br>";
-        html += "Developers: For help getting this working correctly, ";
-        html += "<a href='http://trac.openlayers.org/wiki/Yahoo' "
-        html +=  "target='_blank'>";
-        html +=     "click here";
-        html += "</a>";
-
-        return html;
+        return OpenLayers.i18n(
+            "getLayerWarning", {'layerType':'Yahoo', 'layerLib':'Yahoo'}
+        );
     },
 
   /********************************************************/
@@ -248,6 +245,20 @@ OpenLayers.Layer.Yahoo = OpenLayers.Class(
         return this.mapObject.getCenterLatLon();
     },
 
+    /**
+     * APIMethod: dragPanMapObject
+     * 
+     * Parameters:
+     * dX - {Integer}
+     * dY - {Integer}
+     */
+    dragPanMapObject: function(dX, dY) {
+        this.mapObject.moveByXY({
+            'x': -dX,
+            'y': dY
+        });
+    },
+    
     /** 
      * APIMethod: getMapObjectZoom
      * 

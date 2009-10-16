@@ -1,13 +1,16 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Layer/SphericalMercator.js
  * @requires OpenLayers/Layer/EventPane.js
  * @requires OpenLayers/Layer/FixedZoomLevels.js
- * 
+ * @requires OpenLayers/Console.js
+ */
+
+/**
  * Class: OpenLayers.Layer.Google
  * 
  * Inherits from:
@@ -68,17 +71,38 @@ OpenLayers.Layer.Google = OpenLayers.Class(
     /**
      * APIProperty: sphericalMercator
      * {Boolean} Should the map act as a mercator-projected map? This will
-     * cause all interactions with the map to be in the actual map projection,
-     * which allows support for vector drawing, overlaying other maps, etc. 
+     *     cause all interactions with the map to be in the actual map 
+     *     projection, which allows support for vector drawing, overlaying 
+     *     other maps, etc. 
      */
     sphericalMercator: false, 
+    
+    /**
+     * Property: dragObject
+     * {GDraggableObject} Since 2.93, Google has exposed the ability to get
+     *     the maps GDraggableObject. We can now use this for smooth panning
+     */
+    dragObject: null, 
+
+    /**
+     * Property: termsOfUse
+     * {DOMElement} Div for Google's copyright and terms of use link
+     */
+    termsOfUse: null, 
+
+    /**
+     * Property: poweredBy
+     * {DOMElement} Div for Google's powered by logo and link
+     */
+    poweredBy: null, 
 
     /** 
      * Constructor: OpenLayers.Layer.Google
      * 
      * Parameters:
-     * name - {String}
-     * options - {Object}
+     * name - {String} A name for the layer.
+     * options - {Object} An optional object whose properties will be set
+     *     on the layer.
      */
     initialize: function(name, options) {
         OpenLayers.Layer.EventPane.prototype.initialize.apply(this, arguments);
@@ -102,25 +126,43 @@ OpenLayers.Layer.Google = OpenLayers.Class(
         try {
             // create GMap, hide nav controls
             this.mapObject = new GMap2( this.div );
+            
+            //since v 2.93 getDragObject is now available.
+            if(typeof this.mapObject.getDragObject == "function") {
+                this.dragObject = this.mapObject.getDragObject();
+            } else {
+                this.dragPanMapObject = null;
+            }
 
-            // move the ToS and branding stuff up to the pane
-            // thanks a *mil* Erik for thinking of this
-            var poweredBy = this.div.lastChild;
-            this.div.removeChild(poweredBy);
-            this.pane.appendChild(poweredBy);
-            poweredBy.className = "olLayerGooglePoweredBy gmnoprint";
-            poweredBy.style.left = "";
-            poweredBy.style.bottom = "";
+            // move the ToS and branding stuff up to the container div
+            this.termsOfUse = this.div.lastChild;
+            this.div.removeChild(this.termsOfUse);
+            if (this.isFixed) {
+                this.map.viewPortDiv.appendChild(this.termsOfUse);
+            } else {
+                this.map.layerContainerDiv.appendChild(this.termsOfUse);
+            }
+            this.termsOfUse.style.zIndex = "1100";
+            this.termsOfUse.style.display = this.div.style.display;
+            this.termsOfUse.style.right = "";
+            this.termsOfUse.style.bottom = "";
+            this.termsOfUse.className = "olLayerGoogleCopyright";
 
-            var termsOfUse = this.div.lastChild;
-            this.div.removeChild(termsOfUse);
-            this.pane.appendChild(termsOfUse);
-            termsOfUse.className = "olLayerGoogleCopyright";
-            termsOfUse.style.right = "";
-            termsOfUse.style.bottom = "";
+            this.poweredBy = this.div.lastChild;
+            this.div.removeChild(this.poweredBy);
+            if (this.isFixed) {
+                this.map.viewPortDiv.appendChild(this.poweredBy);
+            } else {
+                this.map.layerContainerDiv.appendChild(this.poweredBy);
+            }
+            this.poweredBy.style.zIndex = "1100";
+            this.poweredBy.style.display = this.div.style.display;
+            this.poweredBy.style.right = "";
+            this.poweredBy.style.bottom = "";
+            this.poweredBy.className = "olLayerGooglePoweredBy gmnoprint"; 
 
         } catch (e) {
-            // do not crash
+            OpenLayers.Console.error(e);
         }
                
     },
@@ -151,6 +193,13 @@ OpenLayers.Layer.Google = OpenLayers.Class(
      */
     setMapType: function() {
         if (this.mapObject.getCenter() != null) {
+            
+            // Support for custom map types.
+            if (OpenLayers.Util.indexOf(this.mapObject.getMapTypes(),
+                                        this.type) == -1) {
+                this.mapObject.addMapType(this.type);
+            }    
+
             this.mapObject.setMapType(this.type);
             this.map.events.unregister("moveend", this, this.setMapType);
         }
@@ -163,9 +212,59 @@ OpenLayers.Layer.Google = OpenLayers.Class(
      * evt - {Event}
      */
     onMapResize: function() {
-        this.mapObject.checkResize();  
+        // workaround for resizing of invisible or not yet fully loaded layers
+        // where GMap2.checkResize() does not work. We need to load the GMap
+        // for the old div size, then checkResize(), and then call
+        // layer.moveTo() to trigger GMap.setCenter() (which will finish
+        // the GMap initialization).
+        if(this.visibility && this.mapObject.isLoaded()) {
+            this.mapObject.checkResize();
+        } else {
+            if(!this._resized) {
+                var layer = this;
+                var handle = GEvent.addListener(this.mapObject, "load", function() {
+                    GEvent.removeListener(handle);
+                    delete layer._resized;
+                    layer.mapObject.checkResize();
+                    layer.moveTo(layer.map.getCenter(), layer.map.getZoom());
+                })
+            }
+            this._resized = true;
+        }
     },
 
+    /**
+     * Method: display
+     * Hide or show the layer
+     *
+     * Parameters:
+     * display - {Boolean}
+     */
+    display: function(display) {
+        OpenLayers.Layer.EventPane.prototype.display.apply(this, arguments);
+        this.termsOfUse.style.display = this.div.style.display;
+        this.poweredBy.style.display = this.div.style.display;
+    },
+
+    /**
+     * APIMethod: removeMap
+     * On being removed from the map, also remove termsOfUse and poweredBy divs
+     * 
+     * Parameters:
+     * map - {<OpenLayers.Map>}
+     */
+    removeMap: function(map) {
+        if (this.termsOfUse && this.termsOfUse.parentNode) {
+            this.termsOfUse.parentNode.removeChild(this.termsOfUse);
+            this.termsOfUse = null;
+        }
+        if (this.poweredBy && this.poweredBy.parentNode) {
+            this.poweredBy.parentNode.removeChild(this.poweredBy);
+            this.poweredBy = null;
+        }
+        OpenLayers.Layer.EventPane.prototype.removeMap.apply(this, arguments);
+    },
+    
     /**
      * APIMethod: getZoomForExtent
      * 
@@ -292,24 +391,7 @@ OpenLayers.Layer.Google = OpenLayers.Class(
      *          it working.
      */
     getWarningHTML:function() {
-
-        var html = "";
-        html += "The Google Layer was unable to load correctly.<br>";
-        html += "<br>";
-        html += "To get rid of this message, select a new BaseLayer "
-        html += "in the layer switcher in the upper-right corner.<br>";
-        html += "<br>";
-        html += "Most likely, this is because the Google Maps library";
-        html += " script was either not included, or does not contain the";
-        html += " correct API key for your site.<br>";
-        html += "<br>";
-        html += "Developers: For help getting this working correctly, ";
-        html += "<a href='http://trac.openlayers.org/wiki/Google' "
-        html +=  "target='_blank'>";
-        html +=     "click here";
-        html += "</a>";
-        
-        return html;
+        return OpenLayers.i18n("googleWarning");
     },
 
 
@@ -334,6 +416,17 @@ OpenLayers.Layer.Google = OpenLayers.Class(
         this.mapObject.setCenter(center, zoom); 
     },
    
+    /**
+     * APIMethod: dragPanMapObject
+     * 
+     * Parameters:
+     * dX - {Integer}
+     * dY - {Integer}
+     */
+    dragPanMapObject: function(dX, dY) {
+        this.dragObject.moveBy(new GSize(-dX, dY));
+    },
+
     /**
      * APIMethod: getMapObjectCenter
      * 

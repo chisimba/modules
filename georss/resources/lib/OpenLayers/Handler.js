@@ -1,11 +1,12 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
-
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * @requires OpenLayers/Events.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Handler
  * Base class to construct a higher-level handler for event sequences.  All
  *     handlers have activate and deactivate methods.  In addition, they have
@@ -155,7 +156,7 @@ OpenLayers.Handler = OpenLayers.Class({
         }
         // register for event handlers defined on this class.
         var events = OpenLayers.Events.prototype.BROWSER_EVENTS;
-        for (var i = 0; i < events.length; i++) {
+        for (var i=0, len=events.length; i<len; i++) {
             if (this[events[i]]) {
                 this.register(events[i], this[events[i]]); 
             }
@@ -177,7 +178,7 @@ OpenLayers.Handler = OpenLayers.Class({
         }
         // unregister event handlers defined on this class.
         var events = OpenLayers.Events.prototype.BROWSER_EVENTS;
-        for (var i = 0; i < events.length; i++) {
+        for (var i=0, len=events.length; i<len; i++) {
             if (this[events[i]]) {
                 this.unregister(events[i], this[events[i]]); 
             }
@@ -197,7 +198,7 @@ OpenLayers.Handler = OpenLayers.Class({
     *     the callback (defined by the control).
     */
     callback: function (name, args) {
-        if (this.callbacks[name]) {
+        if (name && this.callbacks[name]) {
             this.callbacks[name].apply(this.control, args);
         }
     },

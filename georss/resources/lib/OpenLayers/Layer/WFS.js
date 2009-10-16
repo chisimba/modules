@@ -1,12 +1,16 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
+ * @requires OpenLayers/Tile/WFS.js
  * @requires OpenLayers/Layer/Vector.js
  * @requires OpenLayers/Layer/Markers.js
- *
+ * @requires OpenLayers/Console.js
+ */
+
+/**
  * Class: OpenLayers.Layer.WFS
  * 
  * Inherits from:
@@ -51,10 +55,34 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
      *     sent, this should be a subclass of OpenLayers.Feature
      */
     featureClass: null,
+    
+    /**
+      * APIProperty: format
+      * {<OpenLayers.Format>} The format you want the data to be parsed with.
+      * Must be passed in the constructor. Should be a class, not an instance.
+      * This option can only be used if no featureClass is passed / vectorMode
+      * is false: if a featureClass is passed, then this parameter is ignored.
+      */
+    format: null,
+
+    /** 
+     * Property: formatObject
+     * {<OpenLayers.Format>} Internally created/managed format object, used by
+     * the Tile to parse data.
+     */
+    formatObject: null,
+
+    /**
+     * APIProperty: formatOptions
+     * {Object} Hash of options which should be passed to the format when it is
+     * created. Must be passed in the constructor.
+     */
+    formatOptions: null, 
 
     /**
      * Property: vectorMode
-     * {Boolean} Should be calculated automatically.
+     * {Boolean} Should be calculated automatically. Determines whether the
+     *     layer is in vector mode or marker mode.
      */
     vectorMode: true, 
     
@@ -115,11 +143,10 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
             this.options.geometry_column = "the_geom";
         }    
         
-        this.params = params;
-        OpenLayers.Util.applyDefaults(
-                       this.params, 
-                       OpenLayers.Util.upperCaseObject(this.DEFAULT_PARAMS)
-                       );
+        this.params = OpenLayers.Util.applyDefaults(
+            params, 
+            OpenLayers.Util.upperCaseObject(this.DEFAULT_PARAMS)
+        );
         this.url = url;
     },    
     
@@ -133,6 +160,24 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
         } else {    
             OpenLayers.Layer.Markers.prototype.destroy.apply(this, arguments);
         }    
+        if (this.tile) {
+            this.tile.destroy();
+        }
+        this.tile = null;
+
+        this.ratio = null;
+        this.featureClass = null;
+        this.format = null;
+
+        if (this.formatObject && this.formatObject.destroy) {
+            this.formatObject.destroy();
+        }
+        this.formatObject = null;
+        
+        this.formatOptions = null;
+        this.vectorMode = null;
+        this.encodeBBOX = null;
+        this.extractAttributes = null;
     },
     
     /**
@@ -144,6 +189,18 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
     setMap: function(map) {
         if (this.vectorMode) {
             OpenLayers.Layer.Vector.prototype.setMap.apply(this, arguments);
+            
+            var options = {
+              'extractAttributes': this.extractAttributes
+            };
+            
+            OpenLayers.Util.extend(options, this.formatOptions);
+            if (this.map && !this.projection.equals(this.map.getProjectionObject())) {
+                options.externalProjection = this.projection;
+                options.internalProjection = this.map.getProjectionObject();
+            }    
+            
+            this.formatObject = this.format ? new this.format(options) : new OpenLayers.Format.GML(options);
         } else {    
             OpenLayers.Layer.Markers.prototype.setMap.apply(this, arguments);
         }    
@@ -181,17 +238,7 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
     //DEPRECATED - REMOVE IN 3.0
         // don't load data if current zoom level doesn't match
         if (this.options.minZoomLevel) {
-            
-            var err = "The minZoomLevel property is only intended for use " +
-                    "with the FixedZoomLevels-descendent layers. That this " +
-                    "wfs layer checks for minZoomLevel is a relic of the" +
-                    "past. We cannot, however, remove it without possibly " +
-                    "breaking OL based applications that may depend on it." +
-                    " Therefore we are deprecating it -- the minZoomLevel " +
-                    "check below will be removed at 3.0. Please instead " +
-                    "use min/max resolution setting as described here: " +
-                    "http://trac.openlayers.org/wiki/SettingZoomLevels";
-            OpenLayers.Console.warn(err);
+            OpenLayers.Console.warn(OpenLayers.i18n('minZoomLevelError'));
             
             if (this.map.getZoom() < this.options.minZoomLevel) {
                 return null;
@@ -209,8 +256,7 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
         var outOfBounds = (!firstRendering &&
                            !this.tile.bounds.containsBounds(bounds));
 
-        if ( (zoomChanged || firstRendering || (!dragging && outOfBounds))
-             && this.inRange) {
+        if (zoomChanged || firstRendering || (!dragging && outOfBounds)) {
             //determine new tile bounds
             var center = bounds.getCenterLonLat();
             var tileWidth = bounds.getWidth() * this.ratio;
@@ -233,8 +279,29 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
             //formulate request url string
             var url = this.getFullRequestString();
         
-            var params = {BBOX: this.encodeBBOX ? tileBounds.toBBOX() 
-                                                : tileBounds.toArray()};
+            var params = null;
+
+            // Cant combine "filter" and "BBOX". This is a cheap hack to help
+            // people out who can't migrate to the WFS protocol immediately.
+            var filter = this.params.filter || this.params.FILTER;
+            if (filter) {
+                params = {FILTER: filter};
+            }
+            else {
+                params = {BBOX: this.encodeBBOX ? tileBounds.toBBOX() 
+                                                    : tileBounds.toArray()};
+            }
+            
+            if (this.map && !this.projection.equals(this.map.getProjectionObject())) {
+                var projectedBounds = tileBounds.clone();
+                projectedBounds.transform(this.map.getProjectionObject(), 
+                                          this.projection);
+                if (!filter){
+                    params.BBOX = this.encodeBBOX ? projectedBounds.toBBOX() 
+                                                : projectedBounds.toArray();
+                }
+            }                                  
+
             url += "&" + OpenLayers.Util.getParameterString(params);
 
             if (!this.tile) {
@@ -290,6 +357,7 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
             }
         };
         tile.events.register("loadend", tile, tile.onLoadEnd);
+        tile.events.register("unload", tile, tile.onLoadEnd);
     },
     
     /** 
@@ -301,8 +369,13 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
      * tile - {<OpenLayers.Tile>}
      */
     removeTileMonitoringHooks: function(tile) {
-        tile.events.unregister("loadstart", tile, tile.onLoadStart);
-        tile.events.unregister("loadend", tile, tile.onLoadEnd);
+        tile.unload();
+        tile.events.un({
+            "loadstart": tile.onLoadStart,
+            "loadend": tile.onLoadEnd,
+            "unload": tile.onLoadEnd,
+            scope: tile
+        });
     },
 
     /**
@@ -320,6 +393,20 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
     },
     
     /**
+     * Method: display
+     * Call the display method of the appropriate parent class. 
+     */
+    display: function() {
+        if(this.vectorMode) {
+            OpenLayers.Layer.Vector.prototype.display.apply(this, 
+                                                                arguments);
+        } else {
+            OpenLayers.Layer.Markers.prototype.display.apply(this, 
+                                                                 arguments);
+        }
+    },
+    
+    /**
      * APIMethod: mergeNewParams
      * Modify parameters for the layer and redraw.
      * 
@@ -329,7 +416,7 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
     mergeNewParams:function(newParams) {
         var upperParams = OpenLayers.Util.upperCaseObject(newParams);
         var newArguments = [upperParams];
-        OpenLayers.Layer.HTTPRequest.prototype.mergeNewParams.apply(this, 
+        return OpenLayers.Layer.HTTPRequest.prototype.mergeNewParams.apply(this, 
                                                                  newArguments);
     },
 
@@ -373,10 +460,11 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
      *
      * Parameters:
      * newParams - {Object} 
+     * altUrl - {String} Use this as the url instead of the layer's url
      */
-    getFullRequestString:function(newParams) {
-        var projection = this.map.getProjection();
-        this.params.SRS = (projection == "none") ? null : projection;
+    getFullRequestString:function(newParams, altUrl) {
+        var projectionCode = this.projection.getCode() || this.map.getProjection();
+        this.params.SRS = (projectionCode == "none") ? null : projectionCode;
 
         return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(
                                                     this, arguments);
@@ -388,31 +476,24 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
      */
     commit: function() {
         if (!this.writer) {
-            this.writer = new OpenLayers.Format.WFS({},this);
+            var options = {};
+            if (this.map && !this.projection.equals(this.map.getProjectionObject())) {
+                options.externalProjection = this.projection;
+                options.internalProjection = this.map.getProjectionObject();
+            }    
+            
+            this.writer = new OpenLayers.Format.WFS(options,this);
         }
 
         var data = this.writer.write(this.features);
-        
-        var url = this.url;
-        if (OpenLayers.ProxyHost &&
-            OpenLayers.String.startsWith(this.url, "http")) {
-            url = OpenLayers.ProxyHost + escape(this.url);
-        }
 
-        var success = OpenLayers.Function.bind(this.commitSuccess, this);
-
-        var failure = OpenLayers.Function.bind(this.commitFailure, this);
-        
-        data = OpenLayers.Ajax.serializeXMLToString(data);
-        
-        // from prototype.js
-        new OpenLayers.Ajax.Request(url, 
-                         {   method: 'post', 
-                             postBody: data,
-                             onComplete: success, 
-                             onFailure: failure
-                          }
-                         );
+        OpenLayers.Request.POST({
+            url: this.url,
+            data: data,
+            success: this.commitSuccess,
+            failure: this.commitFailure,
+            scope: this
+        });
     },
 
     /**
@@ -425,7 +506,7 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
     commitSuccess: function(request) {
         var response = request.responseText;
         if (response.indexOf('SUCCESS') != -1) {
-            this.commitReport('WFS Transaction: SUCCESS', response);
+            this.commitReport(OpenLayers.i18n("commitSuccess", {'response':response}));
             
             for(var i = 0; i < this.features.length; i++) {
                 this.features[i].state = null;
@@ -434,7 +515,7 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
             // foreach features: set state to null
         } else if (response.indexOf('FAILED') != -1 ||
             response.indexOf('Exception') != -1) {
-            this.commitReport('WFS Transaction: FAILED', response);
+            this.commitReport(OpenLayers.i18n("commitFailed", {'response':response}));
         }
     },
     
@@ -457,7 +538,7 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
      * response - {String} full XML response
      */
     commitReport: function(string, response) {
-        alert(string);
+        OpenLayers.Console.userError(string);
     },
 
     
@@ -476,6 +557,41 @@ OpenLayers.Layer.WFS = OpenLayers.Class(
             }    
             this.tile.draw();
         }
+    },
+    
+    /** 
+     * APIMethod: getDataExtent
+     * Calculates the max extent which includes all of the layer data.
+     * 
+     * Returns:
+     * {<OpenLayers.Bounds>}
+     */
+    getDataExtent: function () {
+        var extent; 
+        //get all additions from superclasses
+        if (this.vectorMode) {
+            extent = OpenLayers.Layer.Vector.prototype.getDataExtent.apply(this);
+        } else {
+            extent = OpenLayers.Layer.Markers.prototype.getDataExtent.apply(this);
+        }    
+
+        return extent;
+    },
+    
+    /** 
+     * APIMethod: setOpacity 
+     * Call the setOpacity method of the appropriate parent class to set the
+     *     opacity.  
+     * 
+     * Parameter: 
+     * opacity - {Float} 
+     */
+    setOpacity: function (opacity) {
+        if (this.vectorMode) {
+            OpenLayers.Layer.Vector.prototype.setOpacity.apply(this, [opacity]);
+        } else {
+            OpenLayers.Layer.Markers.prototype.setOpacity.apply(this, [opacity]);
+        }    
     },
 
     CLASS_NAME: "OpenLayers.Layer.WFS"

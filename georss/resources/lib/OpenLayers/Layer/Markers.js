@@ -1,11 +1,13 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 
 /**
  * @requires OpenLayers/Layer.js
- * 
+ */
+
+/**
  * Class: OpenLayers.Layer.Markers
  * 
  * Inherits from:
@@ -20,8 +22,8 @@ OpenLayers.Layer.Markers = OpenLayers.Class(OpenLayers.Layer, {
     isBaseLayer: false,
     
     /** 
-     * Property: markers 
-     * Array({<OpenLayers.Marker>}) internal marker list 
+     * APIProperty: markers 
+     * {Array(<OpenLayers.Marker>)} internal marker list 
      */
     markers: null,
 
@@ -57,7 +59,22 @@ OpenLayers.Layer.Markers = OpenLayers.Class(OpenLayers.Layer, {
         OpenLayers.Layer.prototype.destroy.apply(this, arguments);
     },
 
-    
+    /**
+     * APIMethod: setOpacity
+     * Sets the opacity for all the markers.
+     * 
+     * Parameter:
+     * opacity - {Float}
+     */
+    setOpacity: function(opacity) {
+        if (opacity != this.opacity) {
+            this.opacity = opacity;
+            for (var i=0, len=this.markers.length; i<len; i++) {
+                this.markers[i].setOpacity(this.opacity);
+            }
+        }
+    },
+
     /** 
      * Method: moveTo
      *
@@ -70,7 +87,7 @@ OpenLayers.Layer.Markers = OpenLayers.Class(OpenLayers.Layer, {
         OpenLayers.Layer.prototype.moveTo.apply(this, arguments);
 
         if (zoomChanged || !this.drawn) {
-            for(i=0; i < this.markers.length; i++) {
+            for(var i=0, len=this.markers.length; i<len; i++) {
                 this.drawMarker(this.markers[i]);
             }
             this.drawn = true;
@@ -85,6 +102,11 @@ OpenLayers.Layer.Markers = OpenLayers.Class(OpenLayers.Layer, {
      */
     addMarker: function(marker) {
         this.markers.push(marker);
+
+        if (this.opacity != null) {
+            marker.setOpacity(this.opacity);
+        }
+
         if (this.map && this.map.getExtent()) {
             marker.map = this.map;
             this.drawMarker(marker);
@@ -98,11 +120,9 @@ OpenLayers.Layer.Markers = OpenLayers.Class(OpenLayers.Layer, {
      * marker - {<OpenLayers.Marker>} 
      */
     removeMarker: function(marker) {
-        OpenLayers.Util.removeItem(this.markers, marker);
-        if ((marker.icon != null) && (marker.icon.imageDiv != null) &&
-            (marker.icon.imageDiv.parentNode == this.div) ) {
-            this.div.removeChild(marker.icon.imageDiv);    
-            marker.drawn = false;
+        if (this.markers && this.markers.length) {
+            OpenLayers.Util.removeItem(this.markers, marker);
+            marker.erase();
         }
     },
 
@@ -132,10 +152,11 @@ OpenLayers.Layer.Markers = OpenLayers.Class(OpenLayers.Layer, {
         if (px == null) {
             marker.display(false);
         } else {
-            var markerImg = marker.draw(px);
-            if (!marker.drawn) {
+            if (!marker.isDrawn()) {
+                var markerImg = marker.draw(px);
                 this.div.appendChild(markerImg);
-                marker.drawn = true;
+            } else if(marker.icon) {
+                marker.icon.moveTo(px);
             }
         }
     },
@@ -152,7 +173,7 @@ OpenLayers.Layer.Markers = OpenLayers.Class(OpenLayers.Layer, {
         
         if ( this.markers && (this.markers.length > 0)) {
             var maxExtent = new OpenLayers.Bounds();
-            for(var i=0; i < this.markers.length; i++) {
+            for(var i=0, len=this.markers.length; i<len; i++) {
                 var marker = this.markers[i];
                 maxExtent.extend(marker.lonlat);
             }

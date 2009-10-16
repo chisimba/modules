@@ -1,11 +1,14 @@
-/* Copyright (c) 2006-2007 MetaCarta, Inc., published under the BSD license.
- * See http://svn.openlayers.org/trunk/openlayers/release-license.txt 
- * for the full text of the license. */
+/* Copyright (c) 2006-2008 MetaCarta, Inc., published under the Clear BSD
+ * license.  See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+ * full text of the license. */
 
 /**
  * @requires OpenLayers/Layer/Vector.js
- * @requires OpenLayers/Ajax.js
- * 
+ * @requires OpenLayers/Request/XMLHttpRequest.js
+ * @requires OpenLayers/Console.js
+ */
+
+/**
  * Class: OpenLayers.Layer.GML
  * Create a vector layer by parsing a GML file. The GML file is
  *     passed in as a parameter.
@@ -26,6 +29,13 @@ OpenLayers.Layer.GML = OpenLayers.Class(OpenLayers.Layer.Vector, {
       * {<OpenLayers.Format>} The format you want the data to be parsed with.
       */
     format: null,
+
+    /**
+     * APIProperty: formatOptions
+     * {Object} Hash of options which should be passed to the format when it is
+     * created. Must be passed in the constructor.
+     */
+    formatOptions: null, 
     
     /**
      * Constructor: OpenLayers.Layer.GML
@@ -81,7 +91,6 @@ OpenLayers.Layer.GML = OpenLayers.Class(OpenLayers.Layer.Vector, {
         // loaded after the GML is paited.
         // See http://trac.openlayers.org/ticket/404
         if(this.visibility && !this.loaded){
-            this.events.triggerEvent("loadstart");
             this.loadGML();
         }
     },
@@ -91,11 +100,30 @@ OpenLayers.Layer.GML = OpenLayers.Class(OpenLayers.Layer.Vector, {
      */
     loadGML: function() {
         if (!this.loaded) {
-            var results = OpenLayers.loadURL(this.url, null, this, this.requestSuccess, this.requestFailure);
+            this.events.triggerEvent("loadstart");
+            OpenLayers.Request.GET({
+                url: this.url,
+                success: this.requestSuccess,
+                failure: this.requestFailure,
+                scope: this
+            });
             this.loaded = true;
         }    
     },    
-        
+    
+    /**
+     * Method: setUrl
+     * Change the URL and reload the GML
+     *
+     * Parameters:
+     * url - {String} URL of a GML file.
+     */
+    setUrl:function(url) {
+        this.url = url;
+        this.destroyFeatures();
+        this.loaded = false;
+        this.loadGML();
+    },
     
     /**
      * Method: requestSuccess
@@ -108,11 +136,19 @@ OpenLayers.Layer.GML = OpenLayers.Class(OpenLayers.Layer.Vector, {
     requestSuccess:function(request) {
         var doc = request.responseXML;
         
-        if (!doc || request.fileType!="XML") {
+        if (!doc || !doc.documentElement) {
             doc = request.responseText;
         }
-
-        var gml = this.format ? new this.format() : new OpenLayers.Format.GML();
+        
+        var options = {};
+        
+        OpenLayers.Util.extend(options, this.formatOptions);
+        if (this.map && !this.projection.equals(this.map.getProjectionObject())) {
+            options.externalProjection = this.projection;
+            options.internalProjection = this.map.getProjectionObject();
+        }    
+        
+        var gml = this.format ? new this.format(options) : new OpenLayers.Format.GML(options);
         this.addFeatures(gml.read(doc));
         this.events.triggerEvent("loadend");
     },
@@ -126,7 +162,7 @@ OpenLayers.Layer.GML = OpenLayers.Class(OpenLayers.Layer.Vector, {
      * request - {String} 
      */
     requestFailure: function(request) {
-        alert("Error in loading GML file "+this.url);
+        OpenLayers.Console.userError(OpenLayers.i18n("errorLoadingGML", {'url':this.url}));
         this.events.triggerEvent("loadend");
     },
 
