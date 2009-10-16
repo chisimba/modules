@@ -14,9 +14,14 @@ $middleColumn = NULL;
 if(isset($message) && !empty($message) && $message != '' && is_object($message)) {
     $middleColumn .= $message->show();
 }
-$middleColumn .= $this->objOps->locationHeader();
-$middleColumn .= $this->objOps->middleContainer();
-$middleColumn .= $this->objOps->goGears();
+$catname = $catname[0];
+$this->loadClass('htmlheading', 'htmlelements');
+$headercat = new htmlheading();
+$headercat->type = 1;
+$headercat->str = $this->objLanguage->languageText("mod_events_eventsforcat", "events").": ".$catname['cat_name']." (".$catname['cat_desc'].")";
+
+$middleColumn .= $headercat->show();;
+$middleColumn .= $eventdata;
 
 $leftColumn = NULL;
 $rightColumn = NULL;

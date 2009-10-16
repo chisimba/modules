@@ -111,8 +111,6 @@ class eventsops extends object {
     public $foafProfile;
     public $objSocial;
     
-
-
     /**
      * Constructor
      *
@@ -589,6 +587,37 @@ class eventsops extends object {
         return "todays content";
     }
 
+    public function getCatContent($catid, $number = 20) {
+        $events = $this->objDbEvents->eventGetLatestByCat($catid, $number);
+        $userid = $this->objUser->userId();
+        $today = strtotime(date('Y-m-d'));
+        $ret = NULL;
+        foreach($events as $event) {
+            $startdate = strtotime($event['start_date']);
+            // skip personal events, unless you or your friends network are the person
+            if($event['personal'] == 'on') {
+               if($userid != $event['userid']) {
+                   continue;
+               }
+            }
+            // skip events that have already happened. We keep today's events on until tomorrow in case folks are just late
+            if($startdate < $today) {
+                continue;
+            }
+            // send the data to a formatting prettifying function
+            $ret .= $this->formatEventSummary($event);
+        }
+        // if ret is still null, there are no events... sigh
+        if($ret == NULL) {
+            $this->loadClass('htmlheading', 'htmlelements');
+            $headerno = new htmlheading();
+            $headerno->type = 1;
+            $headerno->str = $this->objLanguage->languageText("mod_events_nothingtoshow", "events");
+            $ret .= $headerno->show();
+        }
+        return $ret;
+    }
+    
     /**
      * Another temporal function, this time on a broader scale
      *
@@ -1146,6 +1175,16 @@ class eventsops extends object {
         $this->loadClass('form', 'htmlelements');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
         $ret = NULL;
+        $lat = 0;
+        $lon = 0;
+        $zoom = 2;
+        $currLocation = $this->objCookie->get('events_latlon');
+        $currloc = explode("|", $currLocation);
+        if(!empty($currloc) && isset($currloc[0]) && isset($currloc[1])) {
+            $lat = $currloc[0];
+            $lon = $currloc[1];
+            $zoom = 10;
+        } 
         if($this->objModules->checkIfRegistered('simplemap') && $this->objModules->checkIfRegistered('georss'))
         {
             $form = new form ('geoloc', $this->uri(array('action'=>'setlocation')));
@@ -1185,7 +1224,7 @@ class eventsops extends object {
             map.addControl( new OpenLayers.Control.LayerSwitcher() );
             map.addControl( new OpenLayers.Control.PanZoomBar() );
 
-            map.setCenter(new OpenLayers.LonLat(0,0), 2);
+            map.setCenter(new OpenLayers.LonLat($lon,$lat), $zoom);
 
             map.events.register(\"click\", map, function(e) {
                 var lonlat = map.getLonLatFromViewPortPx(e.xy);
@@ -1914,6 +1953,25 @@ class eventsops extends object {
         $this->appendArrayVar('bodyOnLoad', "init();");
         $gtags = '<div id="map"></div>';
         return $gtags;
+    }
+
+    public function goGears() {
+        $gears = "<script type='text/javascript' src='".$this->getJavascriptFile("gears_init.js", "georss")."'></script>
+<script type=\"text/javascript\">
+var geo = google.gears.factory.create('beta.geolocation');
+
+function updatePosition(position) {
+  alert('Current lat/lon is: ' + position.latitude + ',' + position.longitude);
+}
+
+function handleError(positionError) {
+  alert('Attempt to get location failed: ' + positionError.message);
+}
+
+geo.getCurrentPosition(updatePosition, handleError);
+</script>";
+    return $gears;
+    
     }
 }
 ?>

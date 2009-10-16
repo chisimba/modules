@@ -527,8 +527,11 @@ class events extends controller
                 if($catid == 0) {
                     $this->nextAction('');
                 }
-                $eventdata = $this->objDbEvents->eventGetLatestByCat($catid, $number = 20);
-                var_dump($eventdata); die();
+                $eventdata = $this->objOps->getCatContent($catid, 20);
+                $catname = $this->objDbEvents->categoryGetDetails($catid);
+                $this->setVarByRef('catname', $catname);
+                $this->setVarByRef('eventdata', $eventdata);
+                return 'catevent_tpl.php';
                 break;
                 
             case 'searchfriends' :
