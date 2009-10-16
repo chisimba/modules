@@ -426,7 +426,7 @@ class eventsops extends object {
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
+        //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
         if($this->objUser->isLoggedIn()) {
             $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$this->friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
         }
@@ -588,7 +588,34 @@ class eventsops extends object {
     }
 
     public function getCatContent($catid, $number = 20) {
-        $eventdata = $this->objDbEvents->eventGetLatestByCat($catid, $number);
+        $events = $this->objDbEvents->eventGetLatestByCat($catid, $number);
+        $userid = $this->objUser->userId();
+        $today = strtotime(date('Y-m-d'));
+        $ret = NULL;
+        foreach($events as $event) {
+            $startdate = strtotime($event['start_date']);
+            // skip personal events, unless you or your friends network are the person
+            if($event['personal'] == 'on') {
+               if($userid != $event['userid']) {
+                   continue;
+               }
+            }
+            // skip events that have already happened. We keep today's events on until tomorrow in case folks are just late
+            if($startdate < $today) {
+                continue;
+            }
+            // send the data to a formatting prettifying function
+            $ret .= $this->formatEventSummary($event);
+        }
+        // if ret is still null, there are no events... sigh
+        if($ret == NULL) {
+            $this->loadClass('htmlheading', 'htmlelements');
+            $headerno = new htmlheading();
+            $headerno->type = 1;
+            $headerno->str = $this->objLanguage->languageText("mod_events_nothingtoshow", "events");
+            $ret .= $headerno->show();
+        }
+        return $ret;
     }
     
     /**
@@ -1835,14 +1862,15 @@ class eventsops extends object {
         return $currLocation;
     }
 
-    public function grabTwitterBySearch($hashtag) {
-        $path = $this->objConfig->getModulePath()."events/tweetupdate";
+    public function grabTwitterBySearch($hashtag, $eventid) {
+        $path = $this->objConfig->getModulePath()."events/".$hashtag."tweetupdate";
         if(!file_exists($path)) {
             touch($path);
             chmod($path, 0777);
         }
         $lastupdate = file_get_contents($path);
         if($lastupdate == '') {
+            $hashtag = urlencode("#".$hashtag);
             $url = "http://search.twitter.com/search.json?q=&ands=$hashtag&phrase=&ors=&nots=&lang=all&from=&to=&ref=&refresh_url=$lastupdate&rpp=100";
         }
         else {
@@ -1850,13 +1878,15 @@ class eventsops extends object {
         }
         $res = $this->objCurl->exec($url);
         $res = json_decode($res);
-        $this->objDbEvents->twitterSmartUpdate($res);
+        $this->objDbEvents->twitterSmartUpdate($res, $eventid);
         if(file_exists($path)) {
             unlink($path);
             touch($path);
             chmod($path, 0777);
             if(is_object($res)) {
-                file_put_contents($path, $res->refresh_url);
+                if(isset($res->refresh_url)) {
+                    file_put_contents($path, $res->refresh_url);
+                }
             }
         }
     }

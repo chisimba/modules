@@ -99,6 +99,7 @@ class dbevents extends dbtable {
 
     public $objLangCode;
     public $objUtils;
+    public $objTwitOps;
 
     /**
      * Constructor
@@ -116,6 +117,7 @@ class dbevents extends dbtable {
         $this->objLangCode  = $this->getObject('languagecode', 'language');
         $this->objTags      = $this->getObject('dbtags', 'tagging');
         $this->objUtils     = $this->getObject('eventsutils');
+        $this->objTwitOps   = $this->getObject('twitoasterops', 'twitoaster');
     }
 
     /**
@@ -152,6 +154,7 @@ class dbevents extends dbtable {
         $hashtag = $this->eventGetHashtag($eventdata['id']);
         if(!empty($hashtag)) {
             $event->hashtag = $hashtag[0];
+            $this->grabTwitterBySearch($event->hashtag['mediatag'], $eventid);
         }
         else {
             $event->hashtag = NULL;
@@ -160,7 +163,11 @@ class dbevents extends dbtable {
         $pplattend = $this->eventGetAttendees($eventid);
         $event->attendees = $this->objUtils->array2object($pplattend);
         // retrieve the user comments, pictures, tweets, flickr, MXit blah blah whatever etc as well
-        
+        $tweets = json_decode($this->objTwitOps->showConvo($eventdata['twitoasterid'], 'json'));
+        $event->tweets->twitoaster = $tweets;
+        // other tweets
+        $stweets = $this->getTweetsByEvent($eventid);
+        $event->tweets->twittersearch = $this->objUtils->array2object($stweets);
         return json_encode($event);
     }
     
@@ -464,7 +471,10 @@ class dbevents extends dbtable {
         // OK this function is already in need of refactoring, and I haven't written it yet. Will be splitting it to a bunch of eventSearch*() functions rather...
     }
     
-    
+    public function eventSearchDescText($keyword) {
+        $this->changeTable('tbl_events_events');
+        return $this->getAll("WHERE description LIKE '%%$keyword%%'");
+    }
 
     /**
      * Get a watchlist for an event
@@ -1111,15 +1121,47 @@ class dbevents extends dbtable {
     public function groupAdminRemoveEvent($token, $group_id, $event_id) {
 
     }
+
+    public function grabTwitterBySearch($hashtag, $eventid) {
+        $path = $this->objConfig->getModulePath()."events/".$hashtag."tweetupdate";
+        if(!file_exists($path)) {
+            touch($path);
+            chmod($path, 0777);
+        }
+        $lastupdate = file_get_contents($path);
+        if($lastupdate == '') {
+            $hashtag = urlencode("#".$hashtag);
+            $url = "http://search.twitter.com/search.json?q=&ands=$hashtag&phrase=&ors=&nots=&lang=all&from=&to=&ref=&refresh_url=$lastupdate&rpp=100";
+        }
+        else {
+            $url = "http://search.twitter.com/search.json?$lastupdate";
+        }
+        $res = $this->objCurl->exec($url);
+        $res = json_decode($res);
+        $this->twitterSmartUpdate($res, $eventid);
+        if(file_exists($path)) {
+            unlink($path);
+            touch($path);
+            chmod($path, 0777);
+            if(is_object($res)) {
+                if(isset($res->refresh_url)) {
+                    file_put_contents($path, $res->refresh_url);
+                }
+            }
+        }
+    }
     
-    public function twitterSmartUpdate($res) {
+    public function twitterSmartUpdate($res, $eventid) {
         foreach($res->results as $result) {
             if(!$this->tweetExists($result->id)) {
                 if(!isset($result->location)) {
                     $result->location = NULL;
                 }
-                $this->insert(array('tweet' => $result->text, 'createdat' => $result->created_at, 'from_user' => $result->from_user, 
-                                    'tweetid' => $result->id, 'lang' => $result->iso_language_code, 'source' => $result->source, 
+                if(!isset($result->iso_language_code)) {
+                    $result->iso_language_code = NULL;
+                }
+                $this->insert(array('eventid' => $eventid, 'tweet' => $result->text, 'createdat' => $result->created_at, 'from_user' => $result->from_user, 
+                                    'tweetid' => $result->id, 'lang' => $lang, 'source' => $result->source, 
                                     'image' => $result->profile_image_url, 'location' => $result->location, 'tweettime' => strtotime($result->created_at)), 'tbl_events_tweets');
                 $this->parseHashTags($result->text, $result->id);
             }
@@ -1150,6 +1192,12 @@ class dbevents extends dbtable {
         else {
             return FALSE;
         }
+    }
+    
+    public function getTweetsByEvent($eventid) {
+        $this->changeTable('tbl_events_tweets');
+        $ret = $this->getAll("WHERE eventid = '$eventid'");
+        return $ret;
     }
 
     /**

@@ -143,6 +143,7 @@ class events extends controller
             case 'viewsingle' :
                 $eventid = $this->getParam('eventid', NULL);
                 $eventdata = $this->objDbEvents->getEventInfo($eventid);
+                
                 header("Content-Type: application/json");
                 echo $eventdata;
                 break;
@@ -368,7 +369,9 @@ class events extends controller
                 //$this->objOps->grabTwitterBySearch('Chisimba');
                 //$this->objUtils->createMediaTag('Brand monday party!');
                 //var_dump($this->objDbEvents->addTwtId(123, 'gen21Srv31Nme28_62509_1254836051'));
-                echo "All done";
+                $this->objCollecta = $this->getObject('collecta', 'utilities');
+                header("Content-Type: application/json");
+                echo $this->objCollecta->search("Chisimba", array('format' => 'json'));
                 break;
 
             case 'savevenue' :
