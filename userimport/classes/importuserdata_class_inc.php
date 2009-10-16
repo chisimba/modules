@@ -147,14 +147,25 @@ class importuserdata extends object
     function importUser($line)
     {
         // copy the array to local variables
-        $userId=$line['userId'];
+        if (isset($line['userId'])){
+             $userId=$line['userId'];
+        }
+        //Check for different versions of same info
+        if (isset($line['userid'])){
+             $userId=$line['userid'];
+        }
         $username=$line['username'];
         $surname=$line['surname'];
         if (isset($line['firstName']) && !(isset($line['firstname'])) ){
             $line['firstname']=$line['firstName'];
         }   
         $firstname=$line['firstname'];
-        $email=$line['emailAddress'];
+        if (isset($line['emailAddress'])){
+            $email=$line['emailAddress'];
+        }
+        if (isset($line['emailaddress'])){
+            $email=$line['emailaddress'];
+        }
         
 
         // Now some checks - some of the fields could be blank,
@@ -199,9 +210,9 @@ class importuserdata extends object
             if ($cId==FALSE){
                 // Check to see that the username is unique
                 // If its already taken, we try another one
-                if ($this->objUserAdmin->valueExists('username',$username)){
+                if ($this->objUserAdmin->valueExists('username',addslashes($username))){
                     $username=str_replace(' ','',strtolower($firstname[0].$firstname[1].$surname));
-                    if ($this->objUserAdmin->valueExists('username',$username)){
+                    if ($this->objUserAdmin->valueExists('username',addslashes($username))){
                         $username=str_replace(' ','',strtolower($firstname[0].$surname.rand(100,999)));
                     }
                 }
@@ -241,7 +252,7 @@ class importuserdata extends object
 
             // Add this user by calling the useradmin object.
             //$id=$this->objUserAdmin->addUser($line);
-            $id=$this->objUserAdmin2->addUser($userId, $username, $line['password'],$line['title'], $line['firstname'], $surname, $email, $line['sex'],'','', $userId, 'userimport','1');
+            $id=$this->objUserAdmin2->addUser($userId, addslashes($username), $line['password'],$line['title'], $line['firstname'], $surname, addslashes($email), $line['sex'],'','', $userId, 'userimport','1');
 
                                                                                                     
             // Add the staff number
@@ -278,7 +289,7 @@ class importuserdata extends object
     */
     function checkForUser($username,$firstname,$surname,$email)
     {
-        $data=$this->objUser->getAll("where username='".addslashes($username)."' and firstname='".addslashes($firstname)."' and surname='".addslashes($surname)."' and emailAddress='$email'");
+        $data=$this->objUser->getAll("where username='".addslashes($username)."' and firstname='".addslashes($firstname)."' and surname='".addslashes($surname)."' and emailAddress='".addslashes($email)."'");
         $count=count($data);
         if ($count==0){
             return FALSE;
