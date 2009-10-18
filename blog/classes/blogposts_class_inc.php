@@ -96,6 +96,47 @@ class blogposts extends object
             $this->mail2blog = FALSE;
         }
     }
+
+    /**
+     * method to clean up posts messed up by MS mail clients
+     * added by davidwaf
+     *
+     */
+     function cleanPost($post){
+        $lines=split("<br />",$post);
+        $results="";
+         foreach($lines as $line){
+            $line=trim($line);
+            if(trim($line) != '=20' ) {
+            if(strlen(trim($line)) < 1){
+            $results.=$line.'<br/>';
+            }else{
+
+            $results.=trim($line);
+            }
+           
+           }
+         }
+        $results2="";
+        $lines2=split("<br/>",$results);
+        foreach($lines2 as $line2){
+            $line2=trim($line2);
+            if(strlen(trim($line2)) < 1){
+            $results2.=$line2.'<br/>';
+            }else{
+            $pos = strrpos($line2, "</a>");
+            if ($pos === false) { // note: three equal signs
+            //not found
+            }else{
+             $line2=str_replace('</a>','',$line2);
+             $line2.='</a>';
+            }
+            $results2.=trim($line2).'<br/>';
+            }  
+         }      
+      return $results2;
+     }
+
     /**
      * Method to display the posts per user
      *
@@ -104,7 +145,7 @@ class blogposts extends object
      */
     public function showPosts($posts, $showsticky = FALSE)
     {
-       // $mm = $this->getObject('parse4mindmap', 'filters');
+        $cleanPost=$this->sysConfig->getValue('blog_clean_ms_chars', 'blog');
         $this->objComments = $this->getObject('commentapi', 'blogcomments');
         $this->objTB = $this->getObject("trackback");
         // set the trackback options
@@ -130,6 +171,9 @@ class blogposts extends object
                 // get the washout class and parse for all the bits and pieces
                 $washer = $this->getObject('washout', 'utilities');
                 $post['post_content'] = $washer->parseText($post['post_content']);
+                 if($cleanPost  == 'true'){
+                $post['post_content'] = $this->cleanPost($post['post_content']);
+                }
                 //$post['post_content']=quoted_printable_decode($post['post_content']);
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 // build the top level stuff
