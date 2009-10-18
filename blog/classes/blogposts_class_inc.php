@@ -112,7 +112,7 @@ class blogposts extends object
             $results.=$line.'<br/>';
             }else{
 
-            $results.=trim($line);
+            $results.=trim($line).' ';
             }
            
            }
@@ -134,6 +134,8 @@ class blogposts extends object
             $results2.=trim($line2).'<br/>';
             }  
          }      
+      $results2=str_replace('=20','',$results2);
+      $results2=str_replace('= ','',$results2);
       return $results2;
      }
 
