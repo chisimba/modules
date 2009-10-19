@@ -573,7 +573,7 @@ function showMultipleForwardOptions(forwarddata,actions,searchdata){
                  form
                 ],
                   buttons: [{
-                    text:'Save',
+                    text:'Forward',
                     handler: function(){
                          if(Ext.getCmp('forwardfield').value == 'Forward to workmate'){
                           showSearchWinX(searchdata[0],searchdata[1],searchdata[2],searchdata[3],searchdata[4],searchdata[5]);
