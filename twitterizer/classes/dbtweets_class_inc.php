@@ -63,7 +63,7 @@ class dbtweets extends dbTable {
     }
 
     public function getRange($start, $num) {
-        $range = $this->getAll ( "ORDER BY createdat ASC LIMIT {$start}, {$num}" );
+        $range = $this->getAll ( "ORDER BY puid ASC LIMIT {$start}, {$num}" );
         return array_reverse($range);
     }
 
@@ -77,7 +77,7 @@ class dbtweets extends dbTable {
     }
 
     public function getAllPosts() {
-        return array_reverse($this->getAll());
+        return $this->getAll("ORDER BY createdat ASC");
     }
 
     public function getSingle($id) {
