@@ -9,6 +9,26 @@ if(!isset($mode)){
     $mode = '';
 }
 $this->loadClass('htmlheading', 'htmlelements');
+$objSysConfig  = $this->getObject('altconfig','config');
+//Ext stuff
+$ext =$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
+
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+$this->appendArrayVar('headerParams', '
+	<script type="text/javascript">
+		var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'rimfhe', 'action' => 'ajaxgetjournals'))).'"; 
+		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
+ </script>');
+$ext .=$this->getJavaScriptFile('extjsgetjournals.js', 'rimfhe');
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'htmlelements').'" type="text/css" />';
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('combos.css', 'rimfhe').'" type="text/css" />';
+
+$this->appendArrayVar('headerParams', $ext);
+
+//$this->appendArrayVar('headerParams', $this->javaScriptFile('ajaxgetjournals.js'));
 /*
 *The Tilte of The Page
 */
@@ -56,12 +76,12 @@ $this->formElements->sendElements();
 //Instantiate a new form object
 $accreditedJournal = new form ('accreditedjournal', $this->uri(array('action'=>'accreditedjournal', 'editmode' => $editMode), 'rimfhe'));
 //assign laguage objects to variables
-$journalName = $this->objLanguage->languageText('mod_rimfhe_journalname', 'rimfhe');
 $journalCategory= $this->objLanguage->languageText('mod_rimfhe_categorey', 'rimfhe');
+$journalName = $this->objLanguage->languageText('mod_rimfhe_journalname', 'rimfhe');
 $articleTitle= $this->objLanguage->languageText('mod_rimfhe_atitcletitle', 'rimfhe');
 $publicationYear= $this->objLanguage->languageText('mod_rimfhe_year', 'rimfhe');
 $volume= $this->objLanguage->languageText('mod_rimfhe_volume', 'rimfhe');
-$firstPabeNo= $this->objLanguage->languageText('mod_rimfhe_firstpage', 'rimfhe');
+$firstPageNo= $this->objLanguage->languageText('mod_rimfhe_firstpage', 'rimfhe');
 $lastPageNo= $this->objLanguage->languageText('mod_rimfhe_lastpage', 'rimfhe');
 $author1= $this->objLanguage->languageText('mod_rimfhe_author1', 'rimfhe');
 $author2= $this->objLanguage->languageText('mod_rimfhe_author2', 'rimfhe');
@@ -71,7 +91,7 @@ $author1label= $this->objLanguage->languageText('mod_rimfhe_author1affiliation',
 $author2label= $this->objLanguage->languageText('mod_rimfhe_author2affiliation', 'rimfhe');
 $author3label= $this->objLanguage->languageText('mod_rimfhe_author3affiliation', 'rimfhe');
 $author4label= $this->objLanguage->languageText('mod_rimfhe_author4affiliation', 'rimfhe');
-
+//$fractionWeight=$this->objLanguage->languageText('mod_rimfhe_fraction', 'rimfhe'));
 //create table
 $table =new htmltable('accreditedjournal');
 $table->width ='80%';
@@ -86,19 +106,7 @@ if($mode == 'edit'){
     $table->endRow();
 }
 
-//Input and label for Journal Name
-$objjournalName = new textinput('journalname');
-$journalNameLabel = new label($journalName,'journalname');
-$table->addCell($journalNameLabel->show(), 150, NULL, 'left');
-if($mode == 'fixerror'){
-    $objjournalName->value =$this->getParam('journalname');
-}
-if($mode == 'edit'){
-    $objjournalName->value =$arrEdit['journalname'];
-}
-$table->addCell($objjournalName->show(), 150, NULL, 'left');
-$table->addCell(NULL, 150, NULL, 'left');
-$table->endRow();
+
 
 //Input and label for Journal Category
 $table->startRow();
@@ -119,11 +127,28 @@ $table->addCell($categoryLabel->show(), 150, NULL, 'left');
 $table->addCell($objCategory->show(), 150, NULL, 'left');
 $table->endRow();
 
+//Input and label for Journal Name
+$objjournalName = new textinput('journalname');
+$objjournalName->size = 40;
+$objjournalName->extra = 'id="search"';
+$journalNameLabel = new label($journalName,'journalname');
 
+$table->addCell($journalNameLabel->show(), 150, NULL, 'left');
+if($mode == 'fixerror'){
+    $objjournalName->value =$this->getParam('journalname');
+}
+if($mode == 'edit'){
+    $objjournalName->value =$arrEdit['journalname'];
+}
+
+$table->addCell($objjournalName->show().'<div id="search_suggest"></div>', 150, NULL, 'left');
+$table->addCell(NULL, 150, NULL, 'left');
+$table->endRow();
 
 //Input and label for Title of Article
 $table->startRow();
 $objarticleTitle = new textinput('articletitle');
+
 $articleTiltleLabel = new label($articleTitle,'articletitle');
 if($mode == 'fixerror'){
     $objarticleTitle->value =$this->getParam('articletitle');
@@ -167,7 +192,7 @@ $table->endRow();
 //Input and label for Article Fisrt Page Numbers
 $table->startRow();
 $objFirstPage = new textinput ('firstpage');
-$firstPageLabel = new label($firstPabeNo.'&nbsp;', 'firstpage');
+$firstPageLabel = new label($firstPageNo.'&nbsp;', 'firstpage');
 if($mode == 'fixerror'){
     $objFirstPage->value =$this->getParam('firstpage');
 }

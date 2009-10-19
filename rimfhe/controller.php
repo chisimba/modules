@@ -52,6 +52,7 @@ Public fuction to instantiate required  objestc
         $this->objDoctoralStudents= $this->getObject('dbdoctoralstudents', 'rimfhe');
         $this->objMastersStudents= $this->getObject('dbmastersstudents', 'rimfhe');
         $this->preLoginInterface= $this->getObject('loginInterface', 'security');
+        $this->objDBJournal= $this->getObject('dbrimfhe_journal', 'rimfhe');
     }//end init
 
     /*public function requiresLogin($action)
@@ -274,6 +275,19 @@ Public fuction to instantiate required  objestc
                     $this->setVarByRef('totalDoctoralStudents', $totalDoctoralStudents);
                     $this->setVarByRef('totalMastersStudents', $totalMastersStudents);
                     return 'universitysummary_tpl.php';
+                case 'ajaxgetjournals':
+                    $this->setLayoutTemplate(NULL);
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    $this->setVar('pageSuppressBanner', TRUE);
+                    $this->setVar('pageSuppressSearch', TRUE);
+                    $this->setVar('suppressFooter', TRUE);
+                    //Get journal, journcatid
+                    //$journal = $this->getParam('journal');
+                    //$journcatid = $this->getParam('journcatid');                    
+                    $myJournals= $this->objDBJournal->jsongetAllJournals();
+                    echo $myJournals;
+                    exit(0);
+                    break;
 
                 case 'confirnregistration':
                     return 'staffregistrationconfirm_tpl.php';

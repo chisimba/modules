@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+
+    <update>
+        <table>tbl_rimfhe_journal</table>
+        <version>0.24</version>
+        <description>Added column issn.</description>
+        <data>
+           	<add>
+       			<name>issn</name>
+    	    	<type>text</type>
+       			<length>200</length>
+       			<notnull>FALSE</notnull>
+       			<default>NULL</default>
+    		</add>
+    	</data>
+	</update>
+	
+</updates>
