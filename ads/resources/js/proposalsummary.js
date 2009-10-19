@@ -289,7 +289,7 @@ function showHistory(myData){
         stripeRows: true,
         height:350,
         width:600,
-        title:'Array Grid'
+        title:'Document Flow History'
     });
     grid.render('historyGrid');
 
