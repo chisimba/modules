@@ -36,10 +36,9 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
-
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $this->objLanguage->languageText('phrase_registeron', 'liftclub', 'Register on').' '.$this->objConfig->getSitename();
+$header->str = $this->objLanguage->languageText("phrase_registeron", 'liftclub').' '.$this->objConfig->getSitename();
 
 echo '<div style="padding:10px;">'.$header->show();
 
@@ -264,7 +263,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $streetname = new textinput('street_name');
 $streetname->extra = "maxlength=350";
-$streetnameLabel = new label($this->objLanguage->languageText('mod_liftclub_streetname', 'liftclub').'&nbsp;', 'input_street_name');
+$streetnameLabel = new label($this->objLanguage->languageText('mod_liftclub_streetname', 'liftclub', "Street Name").'&nbsp;', 'input_street_name');
 
 if ($mode == 'addfixup') {
     $streetname->value = $this->getParam('street_name');
@@ -282,7 +281,7 @@ $table->endRow();
 $table->startRow();
 $suburb = new textinput('suburb');
 $suburb->extra = "maxlength=350";
-$suburbLabel = new label($this->objLanguage->languageText('mod_liftclub_suburb', 'liftclub').'&nbsp;', 'input_suburb');
+$suburbLabel = new label($this->objLanguage->languageText('mod_liftclub_suburb', 'liftclub', "Suburb").'&nbsp;', 'input_suburb');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('suburb');
@@ -300,7 +299,7 @@ $table->endRow();
 $table->startRow();
 $citytown = new textinput('citytown');
 $citytown->extra = "maxlength=350";
-$citytownLabel = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub').'&nbsp;', 'input_citytown');
+$citytownLabel = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub', "City/Town").'&nbsp;', 'input_citytown');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('citytown');
@@ -318,7 +317,7 @@ $table->endRow();
 $table->startRow();
 $province = new textinput('province');
 $province->extra = "maxlength=350";
-$provinceLabel = new label($this->objLanguage->languageText('mod_liftclub_province', 'liftclub').'&nbsp;', 'input_province');
+$provinceLabel = new label($this->objLanguage->languageText('mod_liftclub_province', 'liftclub', "Province").'&nbsp;', 'input_province');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('province');
@@ -336,7 +335,7 @@ $table->endRow();
 $table->startRow();
 $neighbour = new textinput('neighbour');
 $neighbour->extra = "maxlength=350";
-$neighbourLabel = new label($this->objLanguage->languageText('mod_liftclub_neighbour', 'liftclub').'&nbsp;', 'input_neighbour');
+$neighbourLabel = new label($this->objLanguage->languageText('mod_liftclub_neighbour', 'liftclub', "Neighbour").'&nbsp;', 'input_neighbour');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('neighbour');
@@ -359,7 +358,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $institution = new textinput('institution');
 $institution->extra = "maxlength=350";
-$institutionLabel = new label($this->objLanguage->languageText('mod_liftclub_institution', 'liftclub').'&nbsp;', 'input_institution');
+$institutionLabel = new label($this->objLanguage->languageText("mod_liftclub_institution", "liftclub", "Institution").'&nbsp;:', 'input_institution');
 
 if ($mode == 'addfixup') {
     $institution->value = $this->getParam('institution');
@@ -373,7 +372,7 @@ $table->endRow();
 $table->startRow();
 $streetname2 = new textinput('street_name2');
 $streetname2->extra = "maxlength=350";
-$streetnameLabel2 = new label($this->objLanguage->languageText('mod_liftclub_streetname', 'liftclub').'&nbsp;', 'input_street_name2');
+$streetnameLabel2 = new label($this->objLanguage->languageText('mod_liftclub_streetname', 'liftclub', "Street Name").'&nbsp;', 'input_street_name2');
 
 if ($mode == 'addfixup') {
     $streetname2->value = $this->getParam('street_name2');
@@ -391,7 +390,7 @@ $table->endRow();
 $table->startRow();
 $suburb2 = new textinput('suburb2');
 $suburb2->extra = "maxlength=350";
-$suburbLabel2 = new label($this->objLanguage->languageText('mod_liftclub_suburb', 'liftclub').'&nbsp;', 'input_suburb2');
+$suburbLabel2 = new label($this->objLanguage->languageText('mod_liftclub_suburb', 'liftclub', "Suburb").'&nbsp;', 'input_suburb2');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('suburb2');
@@ -409,7 +408,7 @@ $table->endRow();
 $table->startRow();
 $citytown2 = new textinput('citytown2');
 $citytown2->extra = "maxlength=350";
-$citytown2Label = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub').'&nbsp;', 'input_citytown2');
+$citytownLabel2 = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub', "City/Town").'&nbsp;', 'input_citytown2');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('citytown2');
@@ -427,7 +426,7 @@ $table->endRow();
 $table->startRow();
 $province2 = new textinput('province2');
 $province2->extra = "maxlength=350";
-$provinceLabel2 = new label($this->objLanguage->languageText('mod_liftclub_province', 'liftclub').'&nbsp;', 'input_province2');
+$provinceLabel2 = new label($this->objLanguage->languageText('mod_liftclub_province', 'liftclub',"Province").'&nbsp;', 'input_province2');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('province2');
@@ -445,7 +444,7 @@ $table->endRow();
 $table->startRow();
 $neighbour2 = new textinput('neighbour2');
 $neighbour2->extra = "maxlength=350";
-$neighbourLabel2 = new label($this->objLanguage->languageText('mod_liftclub_neighbour', 'liftclub').'&nbsp;', 'input_neighbour2');
+$neighbourLabel2 = new label($this->objLanguage->languageText('mod_liftclub_neighbour', 'liftclub',"Neighbour").'&nbsp;', 'input_neighbour2');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('neighbour2');
@@ -458,7 +457,7 @@ $table->endRow();
 
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend = $this->objLanguage->languageText('phrase_to', 'liftclub', 'From (Home or Trip Destination)');
+$fieldset->legend = $this->objLanguage->languageText('phrase_to', 'liftclub', 'To (Home or Trip Destination)');
 $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
