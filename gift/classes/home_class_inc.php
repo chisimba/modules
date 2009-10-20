@@ -26,8 +26,8 @@ class home extends object{
     public function getLeftContent($toSelect, $action){
 
         $homelink = new link($this->uri(NULL));
-        $addgift  = new link($this->uri(array("action"=>"add")));
-        $editgift = new link($this->uri(array("action"=>"result")));
+        $addgift  = new link($this->uri(array("action"=>"addx")));
+        $editgift = new link($this->uri(array("action"=>"resultx")));
 
         $homelink->link = $this->objLanguage->languageText('mod_home_homeLink','gift');;
         $addgift->link  = $this->objLanguage->languageText('mod_home_addLink','gift');
