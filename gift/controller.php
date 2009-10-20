@@ -77,9 +77,9 @@ class gift extends controller
     function result() {
         $recipient = $this->objUser->fullName();     // Recipient name
 	
-        $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
+        $qry = "SELECT * FROM tbl_gifttable";// WHERE recipient = '$recipient'";
         $this->data = $this->objDbGift->getInfo($qry);
-
+		
         return "edit_tpl.php";
     }
 

@@ -6,6 +6,7 @@ class dbgift extends dbtable
      */
     public function init() {
         parent::init("tbl_gifttable");
+		
     }
 
     /**
@@ -89,6 +90,18 @@ class dbgift extends dbtable
     private function _getListedValue($id) {
         $result = $this->getRow('id',$id);
         return $result['listed'];
+    }
+	
+	 public function getGifts()
+    {
+        $sql="select * from tbl_gifttable";//." where userid = '".$userid."'";
+        $rows=$this->getArray($sql);
+        return $rows;
+    }
+	
+	public function getNumberOfGifts() {
+
+        return $this->getRecordCount();
     }
 
 }
