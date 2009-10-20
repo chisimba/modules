@@ -1,13 +1,12 @@
 <?php
-class dbgift extends dbtable
-{
-    /**
-     * Assign the table name in dbtable to be the table specified below
-     */
+class dbgift extends dbtable {
+/**
+ * Assign the table name in dbtable to be the table specified below
+ */
     public function init() {
         parent::init("tbl_gifttable");
-       $this->objUser     = $this->getObject("user","security");
-   }
+        $this->objUser     = $this->getObject("user","security");
+    }
 
     /**
      * Submitted information from the Add Gift form is saved as a new record
@@ -40,7 +39,7 @@ class dbgift extends dbtable
      */
     public function updateInfo($donor,$recipient,$giftname,$description,$value,$listed,$id) {
         $data=array("donor"=>$donor,"recipient"=>$recipient,"giftname"=>$giftname,"description"=>$description,"value"=>$value,"listed"=>$listed);
-		
+
         $result = $this->update('id',$id,$data);
         return $result;
     }
@@ -91,15 +90,16 @@ class dbgift extends dbtable
         $result = $this->getRow('id',$id);
         return $result['listed'];
     }
-	
-	 public function getGifts()
-    {
+
+    public function getGifts() {
         $sql="select * from tbl_gifttable";//." where userid = '".$userid."'";
         $rows=$this->getArray($sql);
         return $rows;
     }
-	
-	public function getNumberOfGifts() {
+
+    public function getNumberOfGifts() {
+        return $this->getRecordCount();
+    }
 
     function getMyGifts() {
         $recipient = $this->objUser->fullname();     // Recipient name
@@ -110,8 +110,6 @@ class dbgift extends dbtable
         return $data;
     }
 
-        return $this->getRecordCount();
-    }
 
 }
 ?>
