@@ -54,8 +54,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @version   Release: @package_version@
  * @link      http://avoir.uwc.ac.za
  */
-class scorm extends controller
-{
+class scorm extends controller {
     public $objLanguage;
     public $objUser;
     public $objReadXml;
@@ -63,35 +62,46 @@ class scorm extends controller
     public $objTreeNode;
     public $objTreeMenu;
     /**
-    * Constructor
-    */
-    public function init()
-    {
-            $this->objLanguage = $this->getObject('language', 'language');
-            $this->objUser = $this->getObject('user', 'security');
-            // Load Scorm Classes
-            $this->objReadXml =& $this->getObject('readxml_scorm', 'scorm');
-            $this->objFiles = $this->getObject('dbfile','filemanager');
-       	    $this->objFolders = $this->getObject('dbfolder','filemanager');
- 	          $this->objTreeMenu =& $this->getObject('treemenu', 'tree');
-        	   $this->objTreeNode =& $this->loadClass('treenode', 'tree');
-          		//remove this objContext
-            $this->objContext = $this->getObject('dbcontext', 'context');
-            // Store Context Code
-            $this->contextCode = $this->objContext->getContextCode();
-            $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer','contextcontent');
-            //Store user Id
-            $this->userId = $this->objUser->userId();
+     * Constructor
+     */
+    public function init() {
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
+        // Load Scorm Classes
+        $this->objReadXml =& $this->getObject('readxml_scorm', 'scorm');
+        $this->objFiles = $this->getObject('dbfile','filemanager');
+        $this->objFolders = $this->getObject('dbfolder','filemanager');
+        $this->objTreeMenu =& $this->getObject('treemenu', 'tree');
+        $this->objTreeNode =& $this->loadClass('treenode', 'tree');
+        //remove this objContext
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objContextChapter = $this->getObject('db_contextcontent_contextchapter', 'contextcontent');
+        // Store Context Code
+        $this->contextCode = $this->objContext->getContextCode();
+        $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer','contextcontent');
+        //Store user Id
+        $this->userId = $this->objUser->userId();
+
+
+        $this->appendArrayVar('headerParams', $extbase);
+        $this->appendArrayVar('headerParams', $extalljs);
+        $this->appendArrayVar('headerParams', $extallcss);
+
     }
 
     /**
-    * Dispatch Method to run required action
-    * @param string $action
-    */
-    public function dispatch($action)
-    {
+     * Dispatch Method to run required action
+     * @param string $action
+     */
+    public function dispatch($action) {
+    //check if in context, if not, give in
+
+        if(!$this->objContext->isInContext()) {
+           return "notincontext_tpl.php";
+        }
+
         // Method to set the layout template for the given action
-        //$this->setLayoutTemplate('scorm_layout.php');
+        //$this->setLayoutTemplate('scorm_layout.php');me
 
         /*
         * Convert the action into a method (alternative to
@@ -104,67 +114,66 @@ class scorm extends controller
         */
         return $this->$method();
     }
-    private function __viewscorm()
-    {
-     		$folderId = $this->getParam('folderId', NULL);
-     		$chapterId = $this->getParam('chapterid', NULL);     		
-       //Log in activity streamer
-       $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapterId, $this->contextCode);
-       if ($ischapterlogged==FALSE) {
-					   $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $chapterId, $this->contextCode);        
-       }
-     		$this->setVarByRef('folderId',$folderId);
-       return 'handle_scorm_tpl.php';
+    private function __viewscorm() {
+        $folderId = $this->getParam('folderId', NULL);
+        if($folderId == null){
+            return $this->nextAction('home',NULL,'contextcontent');
+        }
+        $chapterId = $this->getParam('chapterid',$this->objContextChapter->getChapterId($this->contextCode ));
+        //Log in activity streamer
+        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapterId, $this->contextCode);
+        if ($ischapterlogged==FALSE) {
+            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $chapterId, $this->contextCode);
+        }
+        $this->setVarByRef('folderId',$folderId);
+        return 'handle_scorm_tpl.php';
     }
     //Ajax function to get the next page
-    private function __getNext()
-    {
+    private function __getNext() {
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
 
         $page = $this->getParam('page');
         $folderpath = $this->getParam('folderpath');
-	if(!empty($folderpath)){
-		$myResult = $this->objReadXml->xmlNextPage($page,$folderpath);
-	}
+        if(!empty($folderpath)) {
+            $myResult = $this->objReadXml->xmlNextPage($page,$folderpath);
+        }
         if (!empty($myResult)) {
-                echo $myResult;
+            echo $myResult;
         } else {
-                echo 'omega';
+            echo 'omega';
         }
 
     }
     //Ajax function to get the next page
-    private function __getPrev()
-    {
+    private function __getPrev() {
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
 
         $page = $this->getParam('page');
         $folderpath = $this->getParam('folderpath');
-	if(!empty($folderpath)){
-		$myResult = $this->objReadXml->xmlPrevPage($page,$folderpath);
-	}
+        if(!empty($folderpath)) {
+            $myResult = $this->objReadXml->xmlPrevPage($page,$folderpath);
+        }
         if (!empty($myResult)) {
-                echo $myResult;
+            echo $myResult;
         } else {
-                echo 'alpha';
+            echo 'alpha';
         }
 
     }
 
     /**
-    *
-    * Method to convert the action parameter into the name of
-    * a method of this class.
-    *
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return string the name of the method
-    *
-    */
-    private function getMethod(& $action)
-    {
+     *
+     * Method to convert the action parameter into the name of
+     * a method of this class.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return string the name of the method
+     *
+     */
+    private function getMethod(& $action) {
         if ($this->validAction($action)) {
             return '__'.$action;
         } else {
@@ -173,19 +182,18 @@ class scorm extends controller
     }
 
     /**
-    *
-    * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (__). If it __action
-    * is not a valid method it returns FALSE, if it is a valid method
-    * of this class it returns TRUE.
-    *
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return boolean TRUE|FALSE
-    *
-    */
-    private function validAction(& $action)
-    {
+     *
+     * Method to check if a given action is a valid method
+     * of this class preceded by double underscore (__). If it __action
+     * is not a valid method it returns FALSE, if it is a valid method
+     * of this class it returns TRUE.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return boolean TRUE|FALSE
+     *
+     */
+    private function validAction(& $action) {
         if (method_exists($this, '__'.$action)) {
             return TRUE;
         } else {
@@ -196,24 +204,22 @@ class scorm extends controller
      * Ajax function to detect whether a context code has been taken already or not
      * By Paul Mungai
      */
-    private function __checkfolder()
-    {
+    private function __checkfolder() {
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
         $code = $this->getParam('code');
 
-        switch(strtolower($code))
-        {
+        switch(strtolower($code)) {
             case NULL:
                 break;
             case 'root':
                 echo 'reserved';
                 break;
             default:
-		$filename = 'imsmanifest.xml';
-		$folderPath = $this->objFolders->getFolder($code);
-		$verifyFolder = $this->objFiles->getFileFolder($filename, $folderPath['folderpath']);
-	        if ($verifyFolder[0]['filename']=='imsmanifest.xml') {
+                $filename = 'imsmanifest.xml';
+                $folderPath = $this->objFolders->getFolder($code);
+                $verifyFolder = $this->objFiles->getFileFolder($filename, $folderPath['folderpath']);
+                if ($verifyFolder[0]['filename']=='imsmanifest.xml') {
                     echo 'ok';
                 } else {
                     echo 'notok';
