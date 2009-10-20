@@ -38,7 +38,7 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $this->objLanguage->languageText("phrase_registeron", 'liftclub').' '.$this->objConfig->getSitename();
+$header->str = $this->objLanguage->languageText("phrase_registeron", 'liftclub', "Register On").' '.$this->objConfig->getSitename();
 
 echo '<div style="padding:10px;">'.$header->show();
 
