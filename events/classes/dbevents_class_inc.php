@@ -1201,7 +1201,7 @@ class dbevents extends dbtable {
     
     public function getTweetsByEvent($eventid) {
         $this->changeTable('tbl_events_tweets');
-        $ret = $this->getAll("WHERE eventid = '$eventid'");
+        $ret = $this->getAll("WHERE eventid = '$eventid' ORDER BY tweettime ASC");
         return $ret;
     }
 

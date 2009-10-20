@@ -110,6 +110,7 @@ class eventsops extends object {
     public $friendcount = 0;
     public $foafProfile;
     public $objSocial;
+    public $objTwitOps;
     
     /**
      * Constructor
@@ -135,6 +136,7 @@ class eventsops extends object {
         $this->objFoafParser = $this->getObject('foafparser', 'foaf');
         $this->dbFoaf        = $this->getObject('dbfoaf', 'foaf');
         $this->objSocial     = $this->getObject('eventssocial');
+        $this->objTwitOps    = $this->getObject('twitoasterops', 'twitoaster');
         $this->setupFoaf();
     }
     
@@ -719,10 +721,37 @@ class eventsops extends object {
         $etbl->addCell($datedisplay.$this->goYesNo($event['id'])."<br />".$catinfo[0]['cat_name']."<br /> (".$catinfo[0]['cat_desc'].") <br /><br />".$descrip, '50%', "top");
         $etbl->addCell($this->viewLocMap($venue['geolat'], $venue['geolon'], 10), '50%', "middle");
         $etbl->endRow();
+        // tweets
+        $hashtag = $this->objDbEvents->eventGetHashtag($event['id']);
+        if(!empty($hashtag)) {
+            $eventhashtag = $hashtag[0]['mediatag'];
+            $this->objDbEvents->grabTwitterBySearch($eventhashtag, $event['id']);
+            $tweets = $this->objDbEvents->getTweetsByEvent($event['id']);
+        }
+        else {
+            $eventhashtag = NULL;
+            $tweets = array();
+        }
+        // twitoaster conversation
+        $twits = json_decode($this->objTwitOps->showConvo($event['twitoasterid'], 'json'));
+        // $twits = $this->objUtils->object2array($twits);
+        $twitoaster = $this->objSocial->renderTwitoaster($twits);
+        // header
+        $headertweet = new htmlheading();
+        $headertweet->type = 2;
+        $headertweet->str = $this->objLanguage->languageText("mod_events_tweets", "events")." (#".$eventhashtag.")";
+        $headertwitoaster = new htmlheading();
+        $headertwitoaster->type = 2;
+        $headertwitoaster->str = $this->objLanguage->languageText("mod_events_twitoaster", "events");
         $etbl->startRow();
-        $etbl->addCell('Tweets and shit');
-        $etbl->addCell('');
+        $etbl->addCell($headertweet->show());
+        $etbl->addCell($headertwitoaster->show());
         $etbl->endRow();
+        $etbl->startRow();
+        $etbl->addCell($this->objSocial->renderTweets($tweets));
+        $etbl->addCell($twitoaster);
+        $etbl->endRow();
+        
         // check if the user is the logged in user and set up the edit/delete stuff
         if($this->objUser->userId() == $event['userid']) {
             $this->objIcon = $this->getObject('geticon', 'htmlelements');

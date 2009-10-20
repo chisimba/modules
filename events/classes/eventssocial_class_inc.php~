@@ -101,7 +101,6 @@ class eventssocial extends object {
 
     public $objDbAct;
 
-
     /**
      * Constructor
      *
@@ -111,6 +110,7 @@ class eventssocial extends object {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser     = $this->getObject('user', 'security');
         $this->objDbAct    = $this->getObject('activitydb', 'activitystreamer');
+        $this->objWashout  = $this->getObject('washout', 'utilities');
     }
     
     public function searchFriendsForm() {
@@ -247,6 +247,80 @@ class eventssocial extends object {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_block_latestblogs", "blog") , $str);
             return $ret;
+        }
+    }
+    
+    public function renderTweets($tweets) {
+        $ret = NULL;
+        foreach($tweets as $pos) {
+            $user = $pos['from_user'];
+            $pic = $pos['image'];
+            $usrlink = $this->newObject('link', 'htmlelements');
+            $usrlink->href = "http://twitter.com/$user";
+            $usrlink->link = $user;
+            $txt = "<b>".$usrlink->show()."</b> ".$this->objWashout->parseText($pos['tweet'])."<br />".$pos['createdat'];
+            $image = "<a href='http://twitter.com/".$user."'><img src='$pic' height='48', width='48' /></a>";
+            // bust out a table to format the lot, then bang it in a feturebox
+            $msgtbl = $this->newObject('htmltable', 'htmlelements');
+            $msgtbl->cellpadding = 3;
+            $msgtbl->cellspacing = 3;
+            $msgtbl->startRow();
+            $msgtbl->addCell($image, 1);
+            $msgtbl->addCell($txt);
+            $msgtbl->endRow();
+
+            $ret .= $msgtbl->show();
+        }
+        //header ( "Content-Type: text/html;charset=utf-8" );
+        return $ret;
+    }
+    
+    public function renderTwitoaster($objTwits) {
+        //var_dump($objTwits);
+        $ret = NULL;
+        // some basic thread info first
+        $content = $objTwits->thread->content;
+        $createdat = $objTwits->thread->created_at->datetime_gmt;
+        $user = $objTwits->thread->user->screen_name;
+        $pic = $objTwits->thread->user->profile_image_url;
+        $usrlink = $this->newObject('link', 'htmlelements');
+        $usrlink->href = "http://twitter.com/$user";
+        $usrlink->link = $user;
+        $txt = "<b>".$usrlink->show()."</b> ".$this->objWashout->parseText($content)."<br />".$createdat;
+        $image = "<a href='http://twitter.com/".$user."'><img src='$pic' height='48', width='48' /></a>";
+        // bust out a table to format the lot, then bang it in a feturebox
+        $msgtbl = $this->newObject('htmltable', 'htmlelements');
+        $msgtbl->cellpadding = 3;
+        $msgtbl->cellspacing = 3;
+        $msgtbl->startRow();
+        $msgtbl->addCell($image, 1);
+        $msgtbl->addCell($txt);
+        $msgtbl->endRow();
+        $ret .= $msgtbl->show();
+        
+        if(!empty($objTwits->replies)) {
+            $replies = $objTwits->replies;
+            foreach($replies as $reply) {
+                $content = $reply->content;
+                $createdat = $reply->created_at->datetime_gmt;
+                $user = $reply->user->screen_name;
+                $pic = $reply->user->profile_image_url;
+                $usrlink = $this->newObject('link', 'htmlelements');
+                $usrlink->href = "http://twitter.com/$user";
+                $usrlink->link = $user;
+                $txt = "<b>".$usrlink->show()."</b> ".$this->objWashout->parseText($content)."<br />".$createdat;
+                $image = "<a href='http://twitter.com/".$user."'><img src='$pic' height='48', width='48' /></a>";
+                // bust out a table to format the lot, then bang it in a feturebox
+                $msgtbl = $this->newObject('htmltable', 'htmlelements');
+                $msgtbl->cellpadding = 3;
+                $msgtbl->cellspacing = 3;
+                $msgtbl->startRow();
+                $msgtbl->addCell($image, 1);
+                $msgtbl->addCell($txt);
+                $msgtbl->endRow();
+                
+                $ret .= $msgtbl->show();
+            }
         }
     }
 }

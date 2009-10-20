@@ -756,7 +756,6 @@ class dbevents extends dbtable {
      *
      * @param $venue_id (Required) The venue_id number of the venue to look within. To find venue_id's, use venueGetList.
      *                             You can also pass multiple venue_id's separated by commas to getInfo on multiple venues.
-     * @param $token (Optional) An authentication token. Optional for viewing private venues.
      */
     public function venueGetInfo($venue_id) {
         $this->changeTable('tbl_events_venues');
@@ -1202,7 +1201,7 @@ class dbevents extends dbtable {
     
     public function getTweetsByEvent($eventid) {
         $this->changeTable('tbl_events_tweets');
-        $ret = $this->getAll("WHERE eventid = '$eventid'");
+        $ret = $this->getAll("WHERE eventid = '$eventid' ORDER BY tweettime DESC");
         return $ret;
     }
 
