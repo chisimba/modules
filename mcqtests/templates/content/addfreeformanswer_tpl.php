@@ -55,16 +55,16 @@ echo '<strong>'.$questionLabel.':</strong>&nbsp;&nbsp;'.$objWashout->parseText($
 	$objTable->startRow();
 	$objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
 	$objTable->endRow();
-	
+
 
    $j = 1;
- 
+
 	for($i=0; $i <= 3; $i++) {
-	  
+
 		$j = $i+1;
       $objText = new textarea('answer'.$j,'', 2, 80);
-		
-        
+
+
         if (isset($answers[$i])) {
             $objText->value = $answers[$i]['answer'];
         }
@@ -74,12 +74,12 @@ echo '<strong>'.$questionLabel.':</strong>&nbsp;&nbsp;'.$objWashout->parseText($
 		$objTable->row_attributes = 'height="15"';
 		$objTable->startRow();
 		$objTable->addCell('', '', '', '', '', 'colspan="3"');
-		if ($i == 0){   
+		if ($i == 0){
       $objTable->startRow();
-      $objTable->addCell('<b>Altertive Answers</b>','','','','colspan="3"');
+      $objTable->addCell('<b>'.$this->objLanguage->languageText('mod_mcqtests_alternativeanswers', 'mcqtests').'</b>','','','','colspan="3"');
       $objTable->endRow();
       }
-	 
+
 	 }
 //else{
 	//  foreach($answers as $answer) {
@@ -92,7 +92,7 @@ echo '<strong>'.$questionLabel.':</strong>&nbsp;&nbsp;'.$objWashout->parseText($
 		//$objTable->startRow();
 		//$objTable->addCell('', '', '', '', '', 'colspan="3"');
 	//$objTable->endRow();
-		
+
 	//}
 //}
 //}
@@ -104,11 +104,11 @@ echo '<strong>'.$questionLabel.':</strong>&nbsp;&nbsp;'.$objWashout->parseText($
    $objInput = new textinput('questionId', $data['id']);
    $objInput->fldType = 'hidden';
    $hidden.= $objInput->show();
-   
+
       $objInput = new textinput('qtype','freeform');
    $objInput->fldType = 'hidden';
    $hidden.= $objInput->show();
-   if ($mode == 'edit') {
+   if ($mode == 'edit' && !empty($answer)) {
       $objInput = new textinput('answerId', $answer['id']);
       $objInput->fldType = 'hidden';
       $hidden.= $objInput->show();
@@ -132,6 +132,6 @@ echo '<strong>'.$questionLabel.':</strong>&nbsp;&nbsp;'.$objWashout->parseText($
    $objForm->addToForm($objTable->show());
    $objForm->addToForm($objTableButtons->show());
    $str = $objForm->show();
-   
+
 echo $str;
 ?>

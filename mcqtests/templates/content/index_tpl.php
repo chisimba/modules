@@ -1,4 +1,6 @@
 <?php
+//echo $this->objLanguage->languageText('mod_mcqtests_alternativeanswers', 'mcqtests');
+
 /**
  * Template for test home page. Lists the current tests.
  * @package mcqtests

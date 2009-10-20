@@ -285,7 +285,7 @@ class mcqtests extends controller
 																																			'author' => $this->objUser->fullname(),
 																																			'description'=>$message));
 																						 	}
-                        
+
                         return $this->nextAction('savestep', array('currentstep'=>'3a'));
                         break;
                     case '3a':
@@ -977,10 +977,9 @@ class mcqtests extends controller
             $fields['commenttext'] = $answers['comment'.$i];
             $fields['answerorder'] = $order++;
            // var_dump($answers['correctans']);
-           if($questiontype == 'freeform' && $f == 1)
-           {
-           $fields['correct']= 1;
-           $f++;
+           if($questiontype == 'freeform') {
+               $fields['correct']= 1;
+               $f++;
            }else
             if($answers['correctans'] == $i){
                 $fields['correct'] = 1;
@@ -1018,17 +1017,58 @@ class mcqtests extends controller
         $totalmark = $this->dbQuestions->sumTotalmark($testId);
         $qNum = $this->getParam('qnum');
         if (empty($qNum)) {
-            $data = $this->dbQuestions->getQuestionCorrectAnswer($testId);
+            $tempData = $this->dbQuestions->getQuestionCorrectAnswer($testId);
         } else {
-            $data = $this->dbQuestions->getQuestionCorrectAnswer($testId, $qNum);
+            $tempData = $this->dbQuestions->getQuestionCorrectAnswer($testId, $qNum);
+        }
+        // Remove alternative answers for free form questions.
+        $data = array();
+        if (!empty($tempData)) {
+            foreach($tempData as $key => $line) {
+                if ($line['questiontype'] == 'freeform' && $line['answerorder'] != 1) {
+                    continue;
+                }
+                else {
+                    $data[$key] = $line;
+                }
+            }
         }
         if (!empty($data)) {
             foreach($data as $key => $line) {
-                $marked = $this->dbMarked->getMarked($studentId, $line['questionid'], $testId);
-                $data[$key]['studcorrect'] = $marked[0]['correct'];
-                $data[$key]['studans'] = $marked[0]['answer'];
-                $data[$key]['studorder'] = $marked[0]['answerorder'];
-                $data[$key]['studcomment'] = $marked[0]['commenttext'];
+                $_questiontype = $line['questiontype'];
+                switch ($_questiontype) {
+                    case 'mcq':
+                    case 'tf':
+                        $marked = $this->dbMarked->getMarked($studentId, $line['questionid'], $testId);
+                        $data[$key]['studcorrect'] = $marked[0]['correct'];
+                        $data[$key]['studans'] = $marked[0]['answer'];
+                        $data[$key]['studorder'] = $marked[0]['answerorder'];
+                        $data[$key]['studcomment'] = $marked[0]['commenttext'];
+                        $data[$key]['visible'] = true;
+                        break;
+                    case 'freeform':
+//                        if ($line['answerorder'] != 1) {
+//                            unset($data[$key]);
+//                            continue;
+//                        }
+                        $data[$key]['alternativeanswers'] = $this->dbAnswers->getAlternativeAnswers($testId, $line['questionid']);
+                        $marked = $this->dbMarked->getMarkedFreeForm($studentId, $line['questionid'], $testId);
+                        $data[$key]['studcorrect'] = $marked[0]['correct'];
+                        $data[$key]['studans'] = $marked[0]['answer'];
+                        $data[$key]['studorder'] = $marked[0]['answerorder'];
+                        $data[$key]['studcomment'] = $marked[0]['commenttext'];
+                        $markedAnswer = $this->dbMarked->getMarkedFreeFormAnswer($studentId, $line['questionid'], $testId);
+                        if ($markedAnswer) {
+                            $data[$key]['answered'] = $markedAnswer[0]['answered'];
+                        }
+                        else {
+                            $data[$key]['answered'] = NULL;
+                        }
+                        break;
+                    default:
+                        trigger_error("Unknown question type", E_USER_ERROR);
+                        exit(0);
+                }
             }
         }
 

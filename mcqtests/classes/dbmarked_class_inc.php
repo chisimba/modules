@@ -86,6 +86,45 @@ class dbmarked extends dbtable
     }
 
     /**
+     * Method to get a students answer to a specified free form question.
+     *
+     * @access public
+     * @param string $studentId The id of the student.
+     * @param string $questionId The id of the specified question.
+     * @param string $testId The id of the test.
+     * @return array $data The students answer.
+     */
+    public function getMarkedFreeForm($studentId, $questionId, $testId)
+    {
+        $sql = "SELECT DISTINCT answers.* FROM ".$this->table." AS marked,";
+        $sql.= " tbl_test_answers AS answers";
+        $sql.= " WHERE marked.answered = answers.answer";
+        $sql.= " AND marked.studentid='$studentId'";
+        $sql.= " AND marked.questionid='$questionId'";
+        $sql.= " AND marked.testid='$testId'";
+        $sql.= " ORDER BY marked.updated DESC";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+             return $data;
+        }
+        return FALSE;
+    }
+    public function getMarkedFreeFormAnswer($studentId, $questionId, $testId)
+    {
+        $sql = "SELECT answered FROM {$this->table}";
+        $sql .= " WHERE ";
+        $sql.= " studentid='$studentId'";
+        $sql.= " AND questionid='$questionId'";
+        $sql.= " AND testid='$testId'";
+        //$sql.= " ORDER BY marked.updated DESC";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+             return $data;
+        }
+        return FALSE;
+    }
+
+    /**
      * Method to get the answers selected by the user for a test.
      *
      * @access public
@@ -141,7 +180,7 @@ class dbmarked extends dbtable
 
         $sql = "SELECT distinct marked.questionid,marked.answered,quest.mark FROM";
         $sql.= " tbl_test_marked AS marked, tbl_test_answers AS ans, tbl_test_questions AS quest";
-        $sql.= " WHERE marked.answerid = ans.id";
+        $sql.= " WHERE marked.answered = ans.answer";
         $sql.= " AND marked.questionid = quest.id";
         $sql.= " AND marked.studentid = '$studentId'";
         $sql.= " AND marked.testid = '$testId'";

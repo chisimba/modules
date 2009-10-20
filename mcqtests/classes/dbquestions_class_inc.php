@@ -250,24 +250,24 @@ class dbquestions extends dbtable
         }
         return FALSE;
     }
-    
+
     public function getTotalMarks($testId)
     {
         $mark = 0;
         $questions = $this->getQuestions($testId);
-        
+
         //var_dump($questions);
-        
+
         if (count($questions) > 0 && $questions != FALSE) {
             foreach ($questions as $question)
             {
                 $mark += $question['mark'];
             }
         }
-        
+
         return $mark;
     }
-    
+
     /**
      * Method to get the preview of a question
      * @param array $question Array containing details of the question

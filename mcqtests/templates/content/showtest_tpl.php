@@ -25,6 +25,7 @@ $markLabel = $this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests');
 $questionLabel = $this->objLanguage->languageText('mod_mcqtests_question', 'mcqtests');
 $commentLabel = $this->objLanguage->languageText('mod_mcqtests_comment', 'mcqtests');
 $correctAnsLabel = $this->objLanguage->languageText('mod_mcqtests_correctans', 'mcqtests');
+$altAnsLabel = $this->objLanguage->languageText('mod_mcqtests_altans', 'mcqtests');
 $noAnsLabel = $this->objLanguage->languageText('mod_mcqtests_unanswered', 'mcqtests');
 $yourAnsLabel = $this->objLanguage->languageText('mod_mcqtests_answer', 'mcqtests');
 $exitLabel = $this->objLanguage->languageText('word_exit');
@@ -73,49 +74,98 @@ if (!empty($data)) {
     $objIcon->setIcon('redcross');
     $crossIcon = $objIcon->show();
     foreach($data as $line) {
-        $ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['answerorder']].')';
-        $content = '<b>'.$correctAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['answer'].'<br />';
-        if (!$line['studcorrect']) {
-            if (!empty($line['studorder']) && !empty($line['studans'])) {
-                $ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['studorder']].')';
-                $content.= '<b>'.$yourAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['studans'].'<br />';
-            } else {
-                $content.= $noAnsLabel;
-            }
-            $icon = $crossIcon;
-        } else {
-            $icon = $tickIcon;
+//        if ($line['questiontype'] == 'freeform' && $line['answerorder'] != 1) {
+//            // Skip row as it is an alternative answer
+//            continue;
+//        }
+        switch ($line['questiontype']) {
+            case 'mcq':
+            case 'tf':
+                $ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['answerorder']].')';
+                $content = '<b>'.$correctAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['answer'].'<br />';
+                break;
+            case 'freeform':
+                //$ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['answerorder']].')';
+                $content = '<b>'.$correctAnsLabel.':'./*$ansNum.*/'</b>&nbsp;&nbsp;&nbsp;'.$line['answer'].'<br />';
+                if ($line['alternativeanswers']) {
+                    foreach ($line['alternativeanswers'] as $altAnswer) {
+                        $content .= '<b>'.$altAnsLabel.':</b>&nbsp;&nbsp;&nbsp;'.$altAnswer['answer'].'<br />';
+                    }
+                }
+                break;
+            default:
+                ;
         }
-        if (!empty($line['studcomment'])) {
-            $content.= '<b>'.$commentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$line['studcomment'].'<br />';
+        switch ($line['questiontype']) {
+            case 'mcq':
+            case 'tf':
+                if (!$line['studcorrect']) {
+                    if (!empty($line['studorder']) && !empty($line['studans'])) {
+                        $ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['studorder']].')';
+                        $content.= '<b>'.$yourAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['studans'].'<br />';
+                    } else {
+                        $content.= $noAnsLabel;
+                    }
+                    $icon = $crossIcon;
+                } else {
+                    $icon = $tickIcon;
+                }
+                break;
+            case 'freeform':
+                if (!empty($line['answered'])) {
+                    //$ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['studorder']].')';
+                    $content.= '<b>'.$yourAnsLabel.':'./*$ansNum.*/'</b>&nbsp;&nbsp;&nbsp;'.$line['answered'].'<br />';
+                } else {
+                    $content.= $noAnsLabel;
+                }
+                if (!$line['studcorrect']) {
+                    $icon = $crossIcon;
+                } else {
+                    $icon = $tickIcon;
+                }
+                break;
+            default:
+                ;
         }
+//        echo '<pre>';
+//        var_dump($line);
+//        echo '</pre>';
+        if (!empty($line['commenttext'])) { //studcomment
+            $content.= '<b>'.$commentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$line['commenttext'].'<br />';
+        }
+
         $objLayer = new layer();
+        //$objLayer->align = 'left';
+        //$objLayer->left = '; float:left'; //margin-right: 20px;
+        //$objLayer->cssClass = 'forumTopic';
+        $parsedQuestion = $this->objWashout->parseText($line['question']);
+        $objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>'.$parsedQuestion.$content;
+        ; //&nbsp;&nbsp;&nbsp;
+        $contentLayer = $objLayer->show();
+
+//        $objLayer = new layer();
+//        $objLayer->cssClass = 'forumContent';
+//        $objLayer->str = $question;
+//        $answers = $objLayer->show();
+//
+//        $objLayer = new layer();
+//        $objLayer->cssClass = 'topicContainer';
+//        $objLayer->str = $answers;
+//        $str.= $objLayer->show();
+//        $objLayer = new layer();
+
+//        $objLayer->cssClass = 'forumBase';
+//        $objLayer->str = '';
+//        $str.= $objLayer->show() .'<br />';
+
+        $objLayer = new layer();
+        //$objLayer->align = 'right';
+        //$objLayer->cssClass = 'forumTopic';
         $objLayer->str = $icon;
-        $objLayer->align = 'right';
-        $objLayer->cssClass = 'forumTopic';
         $iconLayer = $objLayer->show();
 
-        $objLayer = new layer();
-        $objLayer->left = '; margin-right: 20px; float:left';
-        $objLayer->cssClass = 'forumTopic';
-        $parsedQuestion = $this->objWashout->parseText($line['question']);
-        $objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>&nbsp;&nbsp;&nbsp;'.$parsedQuestion;
-        $question = $objLayer->show() .$iconLayer;
+        $str .= '<table width="100%"><tr><td width="90%" valign="top">'.$contentLayer.'</td><td width="10%" valign="top">'.$iconLayer.'</td></tr></table>';
 
-        $objLayer = new layer();
-        $objLayer->cssClass = 'forumContent';
-        $objLayer->str = $content;
-        $answers = $objLayer->show();
-
-        $objLayer = new layer();
-        $objLayer->cssClass = 'topicContainer';
-        $objLayer->str = $question.$answers;
-        $str.= $objLayer->show();
-        $objLayer = new layer();
-
-        $objLayer->cssClass = 'forumBase';
-        $objLayer->str = '';
-        $str.= $objLayer->show() .'<br />';
         $qNum = $line['questionorder'];
     }
 }

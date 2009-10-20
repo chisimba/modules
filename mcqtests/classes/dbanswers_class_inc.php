@@ -96,7 +96,7 @@ class dbanswers extends dbtable
         }
         return FALSE;
     }
-    
+
     /**
      * Method to get the answers for a specific question
      *
@@ -109,7 +109,7 @@ class dbanswers extends dbtable
         $answers = $this->getAll("WHERE questionid = '$questionId' ORDER BY answerorder");
         return $answers;
     }
-    
+
     /**
      * Method to remove existing answers
      *
@@ -121,17 +121,29 @@ class dbanswers extends dbtable
     {
         return $this->delete('questionid', $questionId);
     }
-    
+
     public function getCorrectAnswer($questionId)
     {
         $answers = $this->getAll("WHERE questionid = '$questionId' AND correct='1' ORDER BY answerorder");
-        
+
         if (count($answers) == 0) {
             return 0;
         } else {
             return $answers[0]['answerorder'];
         }
     }
-    
+
+    public function getAlternativeAnswers($testId, $questionId)
+    {
+        $sql = "SELECT answer
+        FROM tbl_test_answers
+        WHERE testid='{$testId}'
+        AND questionid='{$questionId}'
+        AND answerorder <> 1
+        ORDER BY answerorder ASC";
+        $data = $this->getArray($sql);
+        return empty($data)?FALSE:$data;
+    }
+
 } // end of class
 ?>
