@@ -6,8 +6,8 @@ class dbgift extends dbtable
      */
     public function init() {
         parent::init("tbl_gifttable");
-		
-    }
+       $this->objUser     = $this->getObject("user","security");
+   }
 
     /**
      * Submitted information from the Add Gift form is saved as a new record
@@ -100,6 +100,15 @@ class dbgift extends dbtable
     }
 	
 	public function getNumberOfGifts() {
+
+    function getMyGifts() {
+        $recipient = $this->objUser->fullname();     // Recipient name
+
+        $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
+        $data = $this->getInfo($qry);
+
+        return $data;
+    }
 
         return $this->getRecordCount();
     }

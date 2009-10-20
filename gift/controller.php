@@ -44,11 +44,11 @@ class gift extends controller
      * @return string
      */
     function submitAdd() {
-        $donor = $this->getParam('dnvalue');             // Donor name
+        $donor = $this->getParam('valuefield');             // Donor name
         $recipient = $this->objUser->fullName();         // Recipient name
-        $name = $this->getParam('gname');                // Gift's name
-        $description = $this->getParam('descripvalue');  // Description
-        $value = $this->getParam('gvalue');              // Gift's value
+        $name = $this->getParam('giftnamefield');                // Gift's name
+        $description = $this->getParam('descfield');  // Description
+        $value = $this->getParam('valuefield');              // Gift's value
         $listed = $this->getParam('gstatevalue');        // Archived status
 		
         $result = $this->objDbGift->addInfo($donor,$recipient,$name,$description,$value,$listed);
@@ -65,7 +65,7 @@ class gift extends controller
         $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
         $this->data = $this->objDbGift->getInfo($qry);
 
-        return $this->nextAction('result');
+        return $this->nextAction('home');
     }
 
     /**
