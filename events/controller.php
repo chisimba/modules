@@ -143,7 +143,19 @@ class events extends controller
             case 'viewsingle' :
                 $eventid = $this->getParam('eventid', NULL);
                 $eventdata = $this->objDbEvents->getEventInfo($eventid);
+                $this->setVarByRef('eventdata', $eventdata);
+                return 'viewsingle_tpl.php';
+                break;
                 
+            case 'eventdesconly' :
+                $eventid = $this->getParam('eventid');
+                $data = $this->objDbEvents->eventGetDescription($eventid);
+                echo $this->objWashout->parseText($data[0]['description']);
+                break;
+            
+            case 'vieweventjson' :
+                $eventid = $this->getParam('eventid', NULL);
+                $eventdata = $this->objDbEvents->getEventInfo($eventid);
                 header("Content-Type: application/json");
                 echo $eventdata;
                 break;
@@ -549,6 +561,13 @@ class events extends controller
                 $fid = $this->getParam('fuserid');
                 $myid = $this->objUser->userId();
                 $this->dbFoaf->insertFriend(array('userid' => $myid, 'fuserid' => $fid));
+                // update the activity streamer
+                $title = $this->objLanguage->languageText("mod_events_newconnection", "events");
+                $link = $this->uri(array('action' => '#'));
+                $contextCode = NULL;
+                $author = $this->objUser->fullName($myid);
+                $message = $author." ".$this->objLanguage->languageText("mod_events_isnofriendswith", "events")." ".$this->objUser->fullName($fid);
+                $this->eventDispatcher->post($this->objActStream, 'events', array('title' => $title, 'link' => $link, 'contextcode' => $contextCode, 'author' => $author, 'description' => $message));
                 $this->nextAction('');
                 break;
                 

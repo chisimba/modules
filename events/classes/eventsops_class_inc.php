@@ -485,8 +485,8 @@ class eventsops extends object {
     public function getSearchContent() {
         $ret = NULL;
         if($this->objUser->isLoggedIn()) {
-            // search for friemds
-            $ret .= $this->objSocial->searchFriendsForm();
+            // gets to look through private events too
+            $ret .= '';
         }
         else {
             // search for events
@@ -694,44 +694,131 @@ class eventsops extends object {
         }
     }
     
+    public function formatEventFull($event) {
+        // make the object an array
+        $event = $this->objUtils->object2array($event);
+        $venue = $this->objDbEvents->venueGetInfo($event['venue_id']);
+        $venue = $venue[0];
+        $startdate = strtotime($event['start_date']);
+        $datedisplay = '<div class="post-date-bg">';
+        $month = date('M', $startdate);
+        $datedisplay .= '<span>'.$month.'</span><br />';
+        $day = date('d', $startdate);
+        $year = date('Y', $startdate);
+        $datedisplay .= '<span class="date">'.$day.'</span><br /><span>'.$year.'</span></div>';
+
+        // an alertbox to hold *very* long text i.e. more than 500 chars long
+        $morelink = '';
+        $descrip = $this->objUtils->truncateBigDescription($event['id'], $this->objWashout->parseText($event['description']), 1000, " ", "..." );
+        $objFb = $this->newObject('featurebox', 'navigation');
+        $etbl = $this->newObject('htmltable', 'htmlelements');
+        $etbl->callpadding = 10;
+        $etbl->cellspacing = 5;
+        $catinfo = $this->objDbEvents->categoryGetDetails($event['category_id']);
+        $etbl->startRow();
+        $etbl->addCell($datedisplay.$this->goYesNo($event['id'])."<br />".$catinfo[0]['cat_name']."<br /> (".$catinfo[0]['cat_desc'].") <br /><br />".$descrip, '50%', "top");
+        $etbl->addCell($this->viewLocMap($venue['geolat'], $venue['geolon'], 10), '50%', "middle");
+        $etbl->endRow();
+        $etbl->startRow();
+        $etbl->addCell('Tweets and shit');
+        $etbl->addCell('');
+        $etbl->endRow();
+        // check if the user is the logged in user and set up the edit/delete stuff
+        if($this->objUser->userId() == $event['userid']) {
+            $this->objIcon = $this->getObject('geticon', 'htmlelements');
+            $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                'action' => 'eventedit',
+                'id' => $event['id'],
+                'module' => 'events'
+            )));
+            $delIcon = $this->objIcon->getDeleteIconWithConfirm($event['id'], array(
+                'module' => 'events',
+                'action' => 'eventdelete',
+                'id' => $event['id']
+            ) , 'events');
+            return $objFb->show($event['name']." ".$edIcon." ".$delIcon, $etbl->show());
+        }
+        else {
+            return $objFb->show($event['name'], $etbl->show());
+        }
+    }
+    
     public function goYesNo($eventid) {
         $userid = $this->objUser->userId();
+        // get the event details 
+        $event = $this->objDbEvents->eventGet($eventid);
         // check if the user has already RSVP'd to this event
         $rsvp = $this->objDbEvents->userCheckAttend($userid, $eventid);
+        $objIcon = $this->newObject('geticon', 'htmlelements');
         if($rsvp == FALSE) {
-            // I will be attending this event!
-            $yeslink = $this->newObject('link', 'htmlelements');
-            $yeslink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'yes', 'eventid' => $eventid));
-            $yeslink->link = $this->objLanguage->languageText("mod_events_yesattending", "events");
-            $yeslink = $yeslink->show();
-            // and the not going link
-            $nolink = $this->newObject('link', 'htmlelements');
-            $nolink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'no', 'eventid' => $eventid));
-            $nolink->link = $this->objLanguage->languageText("mod_events_notattending", "events");
-            $nolink = $nolink->show();
-            if($this->objUser->isLoggedIn()) {
-                return $yeslink." | ".$nolink;
+            // first check if a private event
+            if($event['personal'] == 'on') {
+                $objIcon->setIcon('locked_small', 'png', 'icons/events/');
+                $objIcon->alt = $this->objLanguage->languageText("mod_events_privateevent", "events");
+                $lock = $objIcon->show();
+                $objIcon->setIcon('getinvited', 'png', 'icons/events/');
+                $objIcon->alt = $this->objLanguage->languageText("mod_events_getinvited", "events");
+                $getinvited = $objIcon->show();
+                $gilink = $this->newObject('link', 'htmlelements');
+                $gilink->href = $this->uri(array('action' => 'rsvpgetinvite', 'userid' => $userid, 'ans' => 'inv', 'eventid' => $eventid));
+                $gilink->link = $getinvited; // $this->objLanguage->languageText("mod_events_getinvited", "events");
+                $gilink = $gilink->show();
+                return $lock.$gilink; //"<br />".$this->objLanguage->languageText("mod_events_privateevent", "events")."<br />".$gilink;
             }
             else {
-                $signinlink = $this->newObject('alertbox', 'htmlelements');
-                $signinlink = $signinlink->show($this->objLanguage->languageText("mod_events_signin", "events"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_events_needsignintorsvp", "events");
-                return $signinlink; //$this->objLanguage->languageText("mod_events_needsignin", "events");
+                $objIcon->setIcon('unlocked_small', 'png', 'icons/events/');
+                $objIcon->alt = $this->objLanguage->languageText("mod_events_publicevent", "events");
+                // I will be attending this event!
+                $yeslink = $this->newObject('link', 'htmlelements');
+                $yeslink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'yes', 'eventid' => $eventid));
+                $yeslink->link = $this->objLanguage->languageText("mod_events_yesattending", "events");
+                $yeslink = $yeslink->show();
+                // and the not going link
+                $nolink = $this->newObject('link', 'htmlelements');
+                $nolink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'no', 'eventid' => $eventid));
+                $nolink->link = $this->objLanguage->languageText("mod_events_notattending", "events");
+                $nolink = $nolink->show();
+                if($this->objUser->isLoggedIn()) {
+                    return $objIcon->show()."<br />".$this->objLanguage->languageText("mod_events_publicevent", "events")."<br />".$yeslink." | ".$nolink;
+                }
+                else {
+                    $signinlink = $this->newObject('alertbox', 'htmlelements');
+                    $signinlink = $signinlink->show($this->objLanguage->languageText("mod_events_signin", "events"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_events_needsignintorsvp", "events");
+                    return $objIcon->show().$signinlink; //."<br />".$this->objLanguage->languageText("mod_events_publicevent", "events")."<br />"
+                }
             }
         }
         else {
-            // user has RSVP'ed, so give an opportunity to change minds?
-            $cmlink = $this->newObject('link', 'htmlelements');
-            $cmlink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'swap', 'eventid' => $eventid));
-            $cmlink->link = $this->objLanguage->languageText("mod_events_cmattending", "events");
-            $cmlink = $cmlink->show();
-            if($rsvp[0]['ans'] == 'yes') {
-                $switcher = $this->objLanguage->languageText("mod_events_yesattending", "events");
+            if($event['personal'] == 'on') {
+                $objIcon->setIcon('locked_small', 'png', 'icons/events/');
+                $objIcon->alt = $this->objLanguage->languageText("mod_events_privateevent", "events");
             }
             else {
-                $switcher = $this->objLanguage->languageText("mod_events_notattending", "events");
+                $objIcon->setIcon('unlocked_small', 'png', 'icons/events/');
+                $objIcon->alt = $this->objLanguage->languageText("mod_events_publicevent", "events");
+            }
+            $privacy = $objIcon->show();
+            // user has RSVP'ed, so give an opportunity to change minds?
+            $objIcon->setIcon('changemind', 'png', 'icons/events/');
+            $objIcon->alt = $this->objLanguage->languageText("mod_events_cmattending", "events");
+            $cmicon = $objIcon->show();
+            $cmlink = $this->newObject('link', 'htmlelements');
+            $cmlink->href = $this->uri(array('action' => 'rsvp', 'userid' => $userid, 'ans' => 'swap', 'eventid' => $eventid));
+            $cmlink->link = $cmicon; //$this->objLanguage->languageText("mod_events_cmattending", "events");
+            $cmlink = $cmlink->show();
+            if($rsvp[0]['ans'] == 'yes') {
+                $objIcon->setIcon('yesattending', 'png', 'icons/events/');
+                $objIcon->alt = $this->objLanguage->languageText("mod_events_yesattending", "events");
+                $switcher = $objIcon->show();
+            }
+            else {
+                $objIcon->setIcon('notattending', 'png', 'icons/events/');
+                $objIcon->alt = $this->objLanguage->languageText("mod_events_notattending", "events");
+                $switcher = $objIcon->show();
+                //$switcher = $this->objLanguage->languageText("mod_events_notattending", "events");
             }
             
-            return $switcher." (".($cmlink).")";
+            return $privacy.$switcher.$cmlink;
         }
         
     }
@@ -1862,7 +1949,7 @@ class eventsops extends object {
         return $currLocation;
     }
     
-    public function viewLocMap($lat, $lon) {
+    public function viewLocMap($lat, $lon, $zoom = 15) {
         $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
         $css = '<style type="text/css">
         #map {
@@ -1879,7 +1966,7 @@ class eventsops extends object {
         $js = "<script type=\"text/javascript\">
         var lon = 5;
         var lat = 40;
-        var zoom = 17;
+        var zoom = $zoom;
         var map, layer, drawControl, g;
 
         OpenLayers.ProxyHost = \"/proxy/?url=\";
@@ -1911,7 +1998,7 @@ class eventsops extends object {
             map.addControl( new OpenLayers.Control.LayerSwitcher() );
             map.addControl( new OpenLayers.Control.PanZoomBar() );
 
-            map.setCenter(point, 15);
+            map.setCenter(point, $zoom);
 
             map.events.register(\"click\", map, function(e) {
                 var lonlat = map.getLonLatFromViewPortPx(e.xy);

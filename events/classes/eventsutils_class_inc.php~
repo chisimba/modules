@@ -97,13 +97,6 @@ class eventsutils extends object {
      */
     public $objCurl;
 
-    /**
-     * @var string $objLangCode String object property for holding the language code object
-     *
-     * @access public
-     */
-    public $objLanguage;
-
     public $objTags;
 
 
@@ -177,6 +170,25 @@ class eventsutils extends object {
         $morelink->href = $this->uri(array('action' => 'viewsingle', 'eventid' => $eventid));
         $morelink->link = $this->objLanguage->languageText("mod_events_moreeventinfo", "events");
         $morelink = $morelink->show();
+        // return with no change if string is shorter than $limit  
+        if(strlen($string) <= $limit) {
+            return $string." [$morelink]"; 
+        }
+        // is $break present between $limit and the end of the string?  
+        if(false !== ($breakpoint = strpos($string, $break, $limit))) { 
+            if($breakpoint < strlen($string) - 1) { 
+                $string = substr($string, 0, $breakpoint) . $pad; 
+            } 
+        } 
+        $string = $this->restoreTags($string); 
+        return $string." [$morelink]";
+    }
+    
+    public function truncateBigDescription($eventid, $string, $limit, $break=".", $pad="...") { 
+        $morelink = $this->newObject('alertbox', 'htmlelements');
+        //$morelink->href = $this->uri(array('action' => 'viewsingle', 'eventid' => $eventid));
+        //$morelink->link = $this->objLanguage->languageText("mod_events_moreeventinfo", "events");
+        $morelink = $morelink->show($this->objLanguage->languageText("mod_events_moreeventinfo", "events"), $this->uri(array('action' => 'eventdesconly', 'eventid' => $eventid)));
         // return with no change if string is shorter than $limit  
         if(strlen($string) <= $limit) {
             return $string." [$morelink]"; 

@@ -242,6 +242,11 @@ class dbevents extends dbtable {
         $this->changeTable('tbl_events_events');
         return $this->delete('id', $id, 'tbl_events_events'); 
     }
+    
+    public function eventGetDescription($eventid) {
+        $this->changeTable('tbl_events_events');
+        return $this->getArray("SELECT description from tbl_events_events WHERE id = '$eventid'");
+    }
 
     /**
      * Add a new event to the database. This method requires authentication.
@@ -751,10 +756,10 @@ class dbevents extends dbtable {
      *
      * @param $venue_id (Required) The venue_id number of the venue to look within. To find venue_id's, use venueGetList.
      *                             You can also pass multiple venue_id's separated by commas to getInfo on multiple venues.
-     * @param $token (Optional) An authentication token. Optional for viewing private venues.
      */
-    public function venueGetInfo($venue_id, $token) {
-
+    public function venueGetInfo($venue_id) {
+        $this->changeTable('tbl_events_venues');
+        return $this->getAll("WHERE id = '$venue_id'");
     }
 
     public function venueGetByName($venuename) {
