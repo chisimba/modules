@@ -60,6 +60,9 @@ function initGrid(cols,url){
 
         {
             name: 'value'
+        },
+        {
+            name: 'edit'
         }
         ]
     });
@@ -95,11 +98,16 @@ function initGrid(cols,url){
             header: "Value",
             width: 100,
             dataIndex: 'value'
+        },
+         {
+            header: "Edit",
+            width: 50,
+            dataIndex: 'edit'
         }
         ],
         stripeRows: true,
          height:300,
-        width:700,
+        width:750,
         frame:false,
         border:false
 
@@ -153,6 +161,7 @@ function showAddGiftWin(url){
                fieldLabel: 'Descption',
                width:350,
                height:150,
+               
                name: 'descfield'
                }),
 

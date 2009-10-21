@@ -22,15 +22,18 @@ $addGift = $this->uri(array('action'=>'submitadd'));
 $data='';
 
 $dbdata=$this->objDbGift->getMyGifts();
+$objIcon->setIcon('edit');
 
 foreach($dbdata as $row) {
+    $editGift =new link($this->uri(array('action'=>'submitedit','id'=>$row['id'])));
+    $editGift->link=$objIcon->show();
     $data.="[";
     $data.="'".$row['giftname']."',";
     $data.="'".$row['description']."',";
     $data.="'".$row['donor']."',";
     $data.="'".$row['recipient']."',";
-    $data.="'".$row['value']."'";
-
+    $data.="'".$row['value']."',";
+    $data.="'".$editGift->show()."'";
     $data.="],";
 }
 $lastChar = $data[strlen($data)-1];
