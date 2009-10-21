@@ -59,6 +59,12 @@ $addNewsStoryLink->link = 'Add News Story';
 $adminOptions[] = '<li>'.$addNewsStoryLink->show().'</li>';
 }
 
+if ($this->isValid('viewarchives')){
+$addNewsStoryLink = new link ($this->uri(array('action'=>'viewarchives')));
+$addNewsStoryLink->link = 'Views News Archives';
+$adminOptions[] = '<li>'.$addNewsStoryLink->show().'</li>';
+}
+
 if (count($adminOptions) > 0) {
 
 $leftContent .= '<h3>News Options</h3>';
