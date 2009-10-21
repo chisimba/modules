@@ -139,6 +139,9 @@ class dbevents extends dbtable {
         // now we make the eventdata an object and a property of the overall object
         $eventobj = $this->objUtils->array2object($eventdata);
         $event->event = $eventobj;
+        // the organiser data
+        $prmo = $this->eventGetPromoters($eventid);
+        $event->promoters = $this->objUtils->array2object($prmo);
         // now lets get the venue data
         $this->changeTable('tbl_events_venues');
         $vid = $eventdata['venue_id'];
@@ -166,7 +169,7 @@ class dbevents extends dbtable {
         $tweets = json_decode($this->objTwitOps->showConvo($eventdata['twitoasterid'], 'json'));
         $event->tweets->twitoaster = $tweets;
         // other tweets
-        $stweets = $this->getTweetsByEvent($eventid);
+        $stweets = $this->getTweetsByEvent($eventid, 10);
         $event->tweets->twittersearch = $this->objUtils->array2object($stweets);
         return json_encode($event);
     }
@@ -236,6 +239,11 @@ class dbevents extends dbtable {
         else {
             return $useratt;
         }
+    }
+    
+    public function eventGetPromoters($eventid) {
+        $this->changeTable('tbl_events_promoters');
+        return $this->getAll("WHERE event_id = '$eventid'");
     }
     
     public function eventDelete($id) {
@@ -1199,9 +1207,9 @@ class dbevents extends dbtable {
         }
     }
     
-    public function getTweetsByEvent($eventid) {
+    public function getTweetsByEvent($eventid, $limit = 100) {
         $this->changeTable('tbl_events_tweets');
-        $ret = $this->getAll("WHERE eventid = '$eventid' ORDER BY tweettime DESC");
+        $ret = $this->getAll("WHERE eventid = '$eventid' ORDER BY tweettime ASC LIMIT $limit");
         return $ret;
     }
 

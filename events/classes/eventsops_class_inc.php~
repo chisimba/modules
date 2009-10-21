@@ -411,6 +411,58 @@ class eventsops extends object {
         }
         return $objFeaturebox->show($this->objLanguage->languageText("mod_events_locweatherfor", "events")." ".$currLocation, $wtable);
     }
+ 
+    /**
+     * Block to display local weather from the location set in the user cookie.
+     *
+     * The user cookie is read and a weather lookup generated accordingly. This feature requires a network connection
+     *
+     * @return string
+     */
+    public function showPlaceWeatherBox($lat, $lon) {
+        $objFeaturebox = $this->getObject('featurebox', 'navigation');
+        $wtable = NULL;
+        $weather = $this->findNearbyWeather($lat, $lon);
+        if(empty($weather)) {
+            $weather = $this->objLanguage->languageText("mod_events_weathernotfound", "events");
+        }
+        else {
+            $ltemp = $this->objLanguage->languageText("mod_events_temperature", "events");
+            $ldewpoint = $this->objLanguage->languageText("mod_events_dewpoint", "events");
+            $lhumidity = $this->objLanguage->languageText("mod_events_humidity", "events");
+            $lwindspeed = $this->objLanguage->languageText("mod_events_windspeed", "events");
+            $lclouds = $this->objLanguage->languageText("mod_events_cloudcover", "events");
+            $ldatetime = $this->objLanguage->languageText("mod_events_datetime", "events");
+            // format into a table
+            $wtable = $this->newObject('htmltable', 'htmlelements');
+            $wtable->startRow();
+            $wtable->addCell($ltemp);
+            $wtable->addCell($weather['temperature']);
+            $wtable->endRow();
+            $wtable->startRow();
+            $wtable->addCell($ldewpoint);
+            $wtable->addCell($weather['dewpoint']);
+            $wtable->endRow();
+            $wtable->startRow();
+            $wtable->addCell($lhumidity);
+            $wtable->addCell($weather['humidity']);
+            $wtable->endRow();
+            $wtable->startRow();
+            $wtable->addCell($lwindspeed);
+            $wtable->addCell($weather['windspeed']);
+            $wtable->endRow();
+            $wtable->startRow();
+            $wtable->addCell($lclouds);
+            $wtable->addCell($weather['clouds']);
+            $wtable->endRow();
+            $wtable->startRow();
+            $wtable->addCell($ldatetime);
+            $wtable->addCell($weather['datetime']);
+            $wtable->endRow();
+            $wtable = $wtable->show();
+        }
+        return $objFeaturebox->show($this->objLanguage->languageText("mod_events_locweather", "events"), $wtable);
+    }
 
     /**
      * Main container function (tabber) box to do the layout for the main template
@@ -577,6 +629,40 @@ class eventsops extends object {
         }
         return $ret;
     }
+    
+    /**
+     * Grabs Wikipedia content according to lat lon
+     *
+     * Get relevant (geographically) relevant wikipedia content according to the lat and lon gathered from the cookie data on users machine.
+     *
+     * @return string
+     */
+    public function getWikipediaContentByLatLon($lat, $lon) {
+        $ret = NULL;
+        $word_away = $this->objLanguage->languageText("mod_events_word_away", "events");
+        $moretext = $this->objLanguage->languageText("mod_events_word_more", "events");
+        $articles = $this->findNearbyWikipedia($lat, $lon);
+        $wikbox = $this->newObject('featurebox', 'navigation');
+        foreach ($articles as $article) {
+            if(is_object($article)) {
+                $title = $article->title;
+                $summary = $article->summary;
+                $distance = $article->distance;
+                $wikiurl = $article->wikipediaUrl;
+
+                $morelink = $this->newObject('link', 'htmlelements');
+                $morelink->href = "http://".$wikiurl;
+                $morelink->link = $moretext;
+                $morelink->target = "_blank";
+                $morelink = $morelink->show();
+                $ret .= $wikbox->show($title." "."(".$distance."km ".$word_away.") ".$morelink."...", $summary);
+            }
+            else {
+                $ret .= $this->objLanguage->languageText("mod_events_noarticlesfound", "events");
+            }
+        }
+        return $ret;
+    }
 
     /**
      * Grabs temporal data
@@ -697,10 +783,11 @@ class eventsops extends object {
     }
     
     public function formatEventFull($event) {
+        $allevent = $event;
         // make the object an array
-        $event = $this->objUtils->object2array($event);
-        $venue = $this->objDbEvents->venueGetInfo($event['venue_id']);
-        $venue = $venue[0];
+        $event = $this->objUtils->object2array($allevent->event);
+        $venue = $this->objUtils->object2array($allevent->venue); //$this->objDbEvents->venueGetInfo($event['venue_id']);
+        // $venue = $venue[0];
         $startdate = strtotime($event['start_date']);
         $datedisplay = '<div class="post-date-bg">';
         $month = date('M', $startdate);
@@ -708,10 +795,24 @@ class eventsops extends object {
         $day = date('d', $startdate);
         $year = date('Y', $startdate);
         $datedisplay .= '<span class="date">'.$day.'</span><br /><span>'.$year.'</span></div>';
-
+        
+        // tweets
+        $hashtag = $allevent->hashtag;
+        if(!empty($hashtag)) {
+            $eventhashtag = $hashtag->mediatag;
+            $tweets = $allevent->tweets->twittersearch;
+        }
+        else {
+            $eventhashtag = NULL;
+            $tweets = array();
+        }
+        // twitoaster conversation
+        $twits = $allevent->tweets->twitoaster; 
+        $twitoaster = $this->objSocial->renderTwitoaster($twits);
+        
         // an alertbox to hold *very* long text i.e. more than 500 chars long
         $morelink = '';
-        $descrip = $this->objUtils->truncateBigDescription($event['id'], $this->objWashout->parseText($event['description']), 1000, " ", "..." );
+        $descrip = $this->objWashout->parseText($event['description']); //$this->objUtils->truncateBigDescription($event['id'], $this->objWashout->parseText($event['description']), 1000, " ", "..." );
         $objFb = $this->newObject('featurebox', 'navigation');
         $etbl = $this->newObject('htmltable', 'htmlelements');
         $etbl->callpadding = 10;
@@ -721,37 +822,10 @@ class eventsops extends object {
         $etbl->addCell($datedisplay.$this->goYesNo($event['id'])."<br />".$catinfo[0]['cat_name']."<br /> (".$catinfo[0]['cat_desc'].") <br /><br />".$descrip, '50%', "top");
         $etbl->addCell($this->viewLocMap($venue['geolat'], $venue['geolon'], 10), '50%', "middle");
         $etbl->endRow();
-        // tweets
-        $hashtag = $this->objDbEvents->eventGetHashtag($event['id']);
-        if(!empty($hashtag)) {
-            $eventhashtag = $hashtag[0]['mediatag'];
-            $this->objDbEvents->grabTwitterBySearch($eventhashtag, $event['id']);
-            $tweets = $this->objDbEvents->getTweetsByEvent($event['id']);
-        }
-        else {
-            $eventhashtag = NULL;
-            $tweets = array();
-        }
-        // twitoaster conversation
-        $twits = json_decode($this->objTwitOps->showConvo($event['twitoasterid'], 'json'));
-        // $twits = $this->objUtils->object2array($twits);
-        $twitoaster = $this->objSocial->renderTwitoaster($twits)
-        // header
-        $headertweet = new htmlheading();
-        $headertweet->type = 2;
-        $headertweet->str = $this->objLanguage->languageText("mod_events_tweets", "events")." (#".$eventhashtag.")";
-        $headertwitoaster = new htmlheading();
-        $headertwitoaster->type = 2;
-        $headertwitoaster->str = $this->objLanguage->languageText("mod_events_twitoaster", "events");
         $etbl->startRow();
-        $etbl->addCell($headertweet->show());
-        $etbl->addCell($headertwitoaster->show());
+        $etbl->addCell($this->showPlaceWeatherBox($venue['geolat'], $venue['geolon'])."<br />".$this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag));
+        $etbl->addCell($this->getWikipediaContentByLatLon($venue['geolat'], $venue['geolon'])."<br />".$twitoaster);
         $etbl->endRow();
-        $etbl->startRow();
-        $etbl->addCell($this->objSocial->renderTweets($tweets));
-        $etbl->addCell($twitoaster);
-        $etbl->endRow();
-        
         // check if the user is the logged in user and set up the edit/delete stuff
         if($this->objUser->userId() == $event['userid']) {
             $this->objIcon = $this->getObject('geticon', 'htmlelements');
@@ -1986,6 +2060,7 @@ class eventsops extends object {
             height: 350px;
             border: 1px solid black;
             background-color: white;
+            z-index:-5;
         }
         </style>';
 

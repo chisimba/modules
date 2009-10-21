@@ -250,15 +250,15 @@ class eventssocial extends object {
         }
     }
     
-    public function renderTweets($tweets) {
+    public function renderTweets($tweets, $eventhashtag) {
         $ret = NULL;
         foreach($tweets as $pos) {
-            $user = $pos['from_user'];
-            $pic = $pos['image'];
+            $user = $pos->from_user;
+            $pic = $pos->image;
             $usrlink = $this->newObject('link', 'htmlelements');
             $usrlink->href = "http://twitter.com/$user";
             $usrlink->link = $user;
-            $txt = "<b>".$usrlink->show()."</b> ".$this->objWashout->parseText($pos['tweet'])."<br />".$pos['createdat'];
+            $txt = "<b>".$usrlink->show()."</b> ".$this->objWashout->parseText($pos->tweet)."<br />".$pos->createdat;
             $image = "<a href='http://twitter.com/".$user."'><img src='$pic' height='48', width='48' /></a>";
             // bust out a table to format the lot, then bang it in a feturebox
             $msgtbl = $this->newObject('htmltable', 'htmlelements');
@@ -271,13 +271,20 @@ class eventssocial extends object {
 
             $ret .= $msgtbl->show();
         }
-        //header ( "Content-Type: text/html;charset=utf-8" );
-        return $ret;
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_events_tweets", "events")." (#".$eventhashtag.")", $ret);
     }
     
     public function renderTwitoaster($objTwits) {
-        //var_dump($objTwits);
         $ret = NULL;
+        if(!is_object($objTwits)) {
+            $objFeatureBox = $this->newObject('featurebox', 'navigation');
+            return $objFeatureBox->show($this->objLanguage->languageText("mod_events_twitoaster", "events"), "No conversations found");
+        }
+        if(!is_object($objTwits) || isset($objTwits->error)) {
+            $objFeatureBox = $this->newObject('featurebox', 'navigation');
+            return $objFeatureBox->show($this->objLanguage->languageText("mod_events_twitoaster", "events"), $objTwits->error->message);
+        }
         // some basic thread info first
         $content = $objTwits->thread->content;
         $createdat = $objTwits->thread->created_at->datetime_gmt;
@@ -322,6 +329,8 @@ class eventssocial extends object {
                 $ret .= $msgtbl->show();
             }
         }
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_events_twitoaster", "events"), $ret);
     }
 }
 ?>

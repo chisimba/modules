@@ -522,6 +522,21 @@ class events extends controller
                 $this->eventDispatcher->post($this->objActStream, 'events', array('title' => $title, 'link' => $link, 'contextcode' => $contextCode, 'author' => $author, 'description' => $message));
                 $this->nextAction('');
                 break;
+                
+            case 'rsvpgetinvite' :
+                $eventid = $this->getParam('eventid', NULL);
+                $ans = $this->getParam('ans', NULL);
+                $userid = $this->getParam('userid', $this->objUser->userId());
+                if($ans != 'inv' || $eventid == '' || $eventid == NULL) {
+                    $this->nextAction('');
+                }
+                else {
+                    // get the event organiser's details, or at least the person that added the event details
+                    $edata = $this->objDbEvents->getEventInfo($eventid);
+                    header("Content-Type: application/json");
+                    echo $edata; die();
+                }
+                break;
             
             case 'eventdelete' :
                 $id = $this->getParam('id');
@@ -578,7 +593,13 @@ class events extends controller
                 $this->setVarByRef('lon', $lon);
                 return 'viewloc_tpl.php';
                 break;
-
+                
+            case 'placeweather' :
+                $lat = $this->getParam('lat');
+                $lon = $this->getParam('lon');
+                echo $this->objOps->showPlaceWeatherBox($lat, $lon);
+                break;
+                
             default:
                 $this->nextAction('');
                 break;
