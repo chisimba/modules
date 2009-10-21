@@ -252,6 +252,9 @@ class eventssocial extends object {
     
     public function renderTweets($tweets, $eventhashtag) {
         $ret = NULL;
+        if(!isset($tweets)) {
+            $tweets = array();
+        }
         foreach($tweets as $pos) {
             $user = $pos->from_user;
             $pic = $pos->image;
