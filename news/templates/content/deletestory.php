@@ -10,8 +10,12 @@ $this->loadClass('link', 'htmlelements');
 $header = new htmlheading();
 $header->type = 1;
 $header->cssClass = 'warning';
-$header->str = $this->objLanguage->languageText('mod_news_confirmdeletestory', 'news', 'Are you sure you want to delete this story?');
-
+if ($mode != 'archive') {
+    $header->str = $this->objLanguage->languageText('mod_news_confirmdeletestory', 'news', 'Are you sure you want to delete this story?');
+}
+else{
+    $header->str = $this->objLanguage->languageText('mod_news_confirmdarchivestory', 'news', 'Are you sure you want to archive this story?');
+    }
 echo $header->show();
 
 $table = $this->newObject('htmltable', 'htmlelements');
