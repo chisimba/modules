@@ -316,22 +316,22 @@ $table->addCell('&nbsp;', 5);
 $table->addCell($citytown->show().$required);
 $table->endRow();
 
-$table->startRow();
-$province = new textinput('province');
-$province->extra = "maxlength=350";
+$provinceDropdown = new dropdown('province');
 $provinceLabel = new label($this->objLanguage->languageText('mod_liftclub_province', 'liftclub', "Province").'&nbsp;', 'input_province');
-
-if ($mode == 'addfixup') {
-    $citytown->value = $this->getParam('province');
-
-    if ($this->getParam('province') == '' || strlen($this->getParam('province')) > 4) {
-        $messages[] = $this->objLanguage->languageText('enterprovince', 'system', 'Please enter Province');
-    }
+$provinces=array("province_easterncape", "province_freestate", "province_guateng", "province_kwazulunatal", "province_mpumalanga", "province_limpopoprovince", "province_northwestprovince", "province_notherncape", "province_westerncape");
+foreach ($provinces as $myprovince)
+{
+    $_province=trim($this->objLanguage->languageText($myprovince, 'liftclub'));
+    $provinceDropdown->addOption($_province,$_province);
 }
 
+if ($mode == 'addfixup') {
+    $provinceDropdown->setSelected($this->getParam('province'));
+}
+$table->startRow();
 $table->addCell($provinceLabel->show(), 150, NULL, 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($province->show().$required);
+$table->addCell($provinceDropdown->show());
 $table->endRow();
 
 $table->startRow();
@@ -425,22 +425,22 @@ $table->addCell('&nbsp;', 5);
 $table->addCell($citytown2->show().$required);
 $table->endRow();
 
-$table->startRow();
-$province2 = new textinput('province2');
-$province2->extra = "maxlength=350";
-$provinceLabel2 = new label($this->objLanguage->languageText('mod_liftclub_province', 'liftclub',"Province").'&nbsp;', 'input_province2');
-
-if ($mode == 'addfixup') {
-    $citytown->value = $this->getParam('province2');
-
-    if ($this->getParam('province2') == '' || strlen($this->getParam('province2')) > 4) {
-        $messages[] = $this->objLanguage->languageText('enterprovince', 'system', 'Please enter Province');
-    }
+$provinceDropdown2 = new dropdown('province2');
+$provinceLabel2 = new label($this->objLanguage->languageText('mod_liftclub_province', 'liftclub', "Province").'&nbsp;', 'input_province2');
+//$provinces=array("province_easterncape", "province_freestate", "province_guateng", "province_kwazulunatal", "province_mpumalanga", "province_limpopoprovince", "province_northwestprovince", "province_notherncape", "province_westerncape");
+foreach ($provinces as $myprovince)
+{
+    $_province=trim($this->objLanguage->languageText($myprovince, 'liftclub'));
+    $provinceDropdown2->addOption($_province,$_province);
 }
 
+if ($mode == 'addfixup') {
+    $provinceDropdown2->setSelected($this->getParam('province2'));
+}
+$table->startRow();
 $table->addCell($provinceLabel2->show(), 150, NULL, 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($province2->show().$required);
+$table->addCell($provinceDropdown2->show());
 $table->endRow();
 
 $table->startRow();
