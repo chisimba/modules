@@ -30,6 +30,11 @@ class news extends controller
         $this->objNewsCategories = $this->getObject('dbnewscategories');
         $this->objNewsMenu = $this->getObject('dbnewsmenu');
         $this->objNewsStories = $this->getObject('dbnewsstories');
+        
+        $this->objArchivesStories = $this->getObject('dbarchivesstories');
+        $this->objArchivesTags = $this->getObject('dbarchivestags');
+        $this->objArchivesKeywords = $this->getObject('dbarchiveskeywords');
+     
         $this->objKeywords = $this->getObject('dbnewskeywords');
         $this->objTags = $this->getObject('dbnewstags');
         $this->objComments = $this->getObject('dbnewscomments');
@@ -101,7 +106,7 @@ class news extends controller
     */
     private function putLayoutTemplate($action)
     {
-        $twoCols = array('admin', 'addcategory', 'managecategories', 'viewlocation', 'addstory', 'editstory', 'themecloud', 'tagcloud', 'viewtimeline', 'viewbykeyword', 'viewcategory', 'viewlocation',  'viewstories', 'showmap', 'editmenuitem', 'liststories', 'addmenuitem', 'search', 'deletestory', 'deletecategory');
+        $twoCols = array('admin', 'addcategory', 'managecategories', 'viewlocation', 'addstory', 'viewarchives','archivestory', 'editstory', 'themecloud', 'tagcloud', 'viewtimeline', 'viewbykeyword', 'viewcategory', 'viewlocation',  'viewstories', 'showmap', 'editmenuitem', 'liststories', 'addmenuitem', 'search', 'deletestory', 'deletecategory');
 
         if (in_array($action, $twoCols)) {
             $this->setLayoutTemplate('2collayout.php');
@@ -550,6 +555,153 @@ class news extends controller
     }
 
     /**
+    * Method to archive a story
+    *
+    */
+    private function __archivestory()
+    {
+        $id = $this->getParam('id');
+        $story = $this->objNewsStories->getStory($id);
+        
+        //First adding the story into archives
+        $this->setVar('mode', 'archive');
+
+
+        $categories = $this->objNewsCategories->getCategories('categoryname');
+        $this->setVarByRef('categories', $categories);
+        if (count($categories) == 0) {
+            return 'nocategories.php';
+        }
+
+        
+        if ($story == FALSE) {
+            return $this->nextAction('home', array('error'=>'nostorytodelete'));
+        } else{
+            $storyTitle = $story['storytitle'];
+            $storyDate = $story['storydate'];
+            $storyCategory = $story['storycategory'];
+            $storyLocation = $story['location'];
+            $storyText = $story['storytext'];
+            $storySource = $story['storysource'];
+            $storyImage = $story['imageselect'];
+            $sticky = $story['sticky'];
+            $tags = $this->objTags->getStoryTags($id);
+            //$keyTags =  array($tags['keytag1'], $tags['keytag2'], $tags['keytag3']);
+            $keyTags = $this->objKeywords->getStoryKeywords($id);
+
+            //print_r($tags);
+            //die();
+            $publishdate = $story['dateavailable'];
+
+            if ($publishdate == 'now')  {
+                $publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+            } else {
+                $publishdate = $this->getParam('storydatepublish').' '.$this->getParam('time');
+            }
+
+            $status = 'archive';
+
+            $storyId = $this->objArchivesStories->addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky, $status);
+
+
+            $category = $this->objNewsCategories->getCategory($storyCategory);
+ 
+            if ($category != FALSE) {
+                $this->objArchivesStories->serializeStoryOrder($storyCategory, str_replace('_', ' ', $category['itemsorder']));
+            }
+
+           // return $this->nextAction('viewstory', array('id'=>$storyId));
+
+
+        }
+        //------------------END adding archives----------------------
+
+
+        //Now deleting from the active table
+        $id = $this->getParam('id');
+
+        $story = $this->objNewsStories->getStory($id);
+        //print_r($story);
+        //die();
+        if ($story == FALSE) {
+            return $this->nextAction('home', array('error'=>'nostorytodelete'));
+        } else {
+            $mode = 'archive';
+            $this->setVarByRef('mode', $mode);
+            $this->setVarByRef('story', $story);
+
+            $randomNumber = rand(0, 50000);
+            $this->setSession('deletestory_'.$story['id'], $randomNumber);
+            $this->setVarByRef('deleteValue', $randomNumber);
+
+            return 'deletestory.php';
+       }
+       //----------END deleting news story---------------
+    }
+
+
+    /**
+    * Method to list archived stories
+    *
+    */
+    private function __viewarchives()
+    {
+       return 'viewarchives.php';
+    }
+
+    
+    /**
+    * Method to restore archived stories
+    *
+    */
+    private function __restorearchives()
+    {
+
+        $id = $this->getParam('id');
+	$restore_story = $this->objArchivesStories->getArchivedStories($id);
+	$this->setVar('mode', 'restore');
+	$this->setVarByRef('archive', $restore_story);
+
+        if ($restore_story == FALSE) {
+            return $this->nextAction('home', array('error'=>'nostory'));
+        } else {
+            //$storyTitle = $restore_story['storytitle'];
+//print_r($restore_story);
+//echo "@@####".$storyTitle."@@####";
+//echo "@@####".$restore_story['storytitle']."@@####";
+
+//die();
+       foreach($restore_story as $story){
+            $storyTitle = $story['storytitle'];
+            $storyDate = $story['storydate'];
+            $storyCategory = $story['storycategory'];
+            $storyLocation = $story['storylocation'];
+            $storyText = $story['storytext'];
+            $storySource = $story['storysource'];
+            $storyImage = $story['storyimage'];
+            $sticky = $story['sticky'];
+            //print_r($story);
+//            die();
+            $tags = $this->objArchivesTags->getStoryTags($id);
+            //$keyTags =  array($tags['keytag1'], $tags['keytag2'], $tags['keytag3']);
+            $keyTags = $this->objArchivesKeywords->getStoryKeywords($id);
+            //$publishdate = $story['publishon'];
+            $publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+            $status = 'restored';
+//	$this->objNewsMenu->updateText($id, $text);
+
+            $this->objArchivesStories->updateStatus($id,$status);
+            //print_r($storyCategory);
+            //die();
+            $storyId = $this->objNewsStories->addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky);
+            
+       
+          } 
+       return 'viewarchives.php';
+        }
+    }
+
+    /**
     * Method to edit a story
     *
     */
@@ -626,7 +778,8 @@ class news extends controller
     /**
     *
     *
-    */
+    *
+            $tags = $this->objTags->getStoryTags($id);/
     private function __ajaxkeywords()
     {
         $start = $this->getParam($this->getParam('tag'));
