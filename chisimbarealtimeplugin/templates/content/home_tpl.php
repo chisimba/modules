@@ -196,7 +196,8 @@ $mainjs = " Ext.onReady(function(){
                             groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? \"Items\" : \"Item\"]})'
                         }),
 
-                        frame:true,
+                        frame:false,
+                        border:false,
                         width: 750,
                         height: 250,
                         collapsible: true,
