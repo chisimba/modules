@@ -69,7 +69,7 @@ Public fuction to instantiate required  objestc
     public function dispatch()
     {
         $action =$this ->getParam('action');
-
+error_log($action);
         $this->setLayoutTemplate('default_layout_tpl.php');
         //if form is submitted
         if($_POST){
@@ -115,9 +115,15 @@ Public fuction to instantiate required  objestc
                     return 'staffregistration_tpl.php';
 
                 case 'DOE Accredoted Journal Articles':
+                    //$this->setLayoutTemplate(NULL);
+                    //$this->setVar('pageSuppressToolbar', TRUE);
+                    //$this->setVar('pageSuppressBanner', TRUE);
+                    //$this->setVar('pageSuppressSearch', TRUE);
+                    //$this->setVar('suppressFooter', TRUE);
                     return 'accreditedjournal_tpl.php';
 
                 case 'Accredted Journal Articles Info':
+                    $this->setLayoutTemplate(NULL);
                     $arrJournal=array();
                     $arrJournal = $this->objAccreditedJournal->getAllJournalAuthor();
                     $this->setVarByRef('arrJournal', $arrJournal);
@@ -275,7 +281,7 @@ Public fuction to instantiate required  objestc
                     $this->setVarByRef('totalDoctoralStudents', $totalDoctoralStudents);
                     $this->setVarByRef('totalMastersStudents', $totalMastersStudents);
                     return 'universitysummary_tpl.php';
-                case 'ajaxgetjournals':
+                case 'ajaxgetalljournals':
                     $this->setLayoutTemplate(NULL);
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->setVar('pageSuppressBanner', TRUE);
@@ -283,8 +289,37 @@ Public fuction to instantiate required  objestc
                     $this->setVar('suppressFooter', TRUE);
                     //Get journal, journcatid
                     //$journal = $this->getParam('journal');
-                    //$journcatid = $this->getParam('journcatid');                    
+                    //$journcatid = $this->getParam('journcatid');   
+                    error_log(var_export($_REQUEST, true));
+                    
                     $myJournals= $this->objDBJournal->jsongetAllJournals();
+                    echo $myJournals;
+                    exit(0);
+                    break;
+                case 'ajaxgetjournals':
+                    $this->setLayoutTemplate(NULL);
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    $this->setVar('pageSuppressBanner', TRUE);
+                    $this->setVar('pageSuppressSearch', TRUE);
+                    $this->setVar('suppressFooter', TRUE);
+                    //Get journal, journcatid
+                    $journal = $this->getParam('journal');
+                    $journcatid = $this->getParam('journcatid');   
+                    error_log(var_export($_REQUEST, true));
+                    if (empty($journal) && empty($journcatid)){
+                    $myJournals= $this->objDBJournal->jsongetAllJournals();
+                    }else{
+                     if($journcatid=='ISI Listing'){
+                      $journcatid = 1;
+                     }
+                     if($journcatid=='IBSS Listing'){
+                      $journcatid = 2;
+                     }
+                     if($journcatid=='Approved SA Listing'){
+                      $journcatid = 3;
+                     }
+                     $myJournals= $this->objDBJournal->jsongetJournals($journcatid ,$journal);
+                    }
                     echo $myJournals;
                     exit(0);
                     break;

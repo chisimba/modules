@@ -10,28 +10,29 @@ if(!isset($mode)){
 }
 $this->loadClass('htmlheading', 'htmlelements');
 $objSysConfig  = $this->getObject('altconfig','config');
-//Ext stuff
-$ext =$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
-
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
 $this->appendArrayVar('headerParams', '
 	<script type="text/javascript">
 		var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'rimfhe', 'action' => 'ajaxgetjournals'))).'"; 
 		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
-$ext .=$this->getJavaScriptFile('extjsgetjournals.js', 'rimfhe');
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'htmlelements').'" type="text/css" />';
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('combos.css', 'rimfhe').'" type="text/css" />';
 
+//Ext stuff
+$ext = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
+$ext .=$this->getJavaScriptFile('extjsgetjournals.js', 'rimfhe');
+//$ext .=$this->getJavaScriptFile('forum-search.js', 'rimfhe');
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('combos.css', 'rimfhe').'"type="text/css" />';
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $ext);
 
-//$this->appendArrayVar('headerParams', $this->javaScriptFile('ajaxgetjournals.js'));
+$bodypar = $this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+
+
 /*
 *The Tilte of The Page
 */
+
 $pageHeading = new htmlheading();
 $pageHeading->type = 2;
 
@@ -129,10 +130,11 @@ $table->endRow();
 
 //Input and label for Journal Name
 $objjournalName = new textinput('journalname');
-$objjournalName->size = 40;
-$objjournalName->extra = 'id="search"';
+$objjournalName->size = 41;
+$objjournalName->extra = 'disabled = "true"';
+$objjournalName2 = new textinput('journalname2');
+$objjournalName2->size = 40;
 $journalNameLabel = new label($journalName,'journalname');
-
 $table->addCell($journalNameLabel->show(), 150, NULL, 'left');
 if($mode == 'fixerror'){
     $objjournalName->value =$this->getParam('journalname');
@@ -142,7 +144,7 @@ if($mode == 'edit'){
 }
 
 $table->addCell($objjournalName->show().'<div id="search_suggest"></div>', 150, NULL, 'left');
-$table->addCell(NULL, 150, NULL, 'left');
+$table->addCell(NULL, 350, NULL, 'left');
 $table->endRow();
 
 //Input and label for Title of Article
@@ -450,8 +452,8 @@ $table->addCell($button->show(), 150, NULL, 'left');
 $table->endRow();
 
 //display table
-$accreditedJournal->addToForm($table->show());
-
+//$accreditedJournal->addToForm($table->show());//$objjournalName->show()
+$accreditedJournal->addToForm($objCategory->show().$objjournalName2->show().$objjournalName->show());
 //Code to display errors
 $messages=array();
 if ($mode == 'fixerror') {
