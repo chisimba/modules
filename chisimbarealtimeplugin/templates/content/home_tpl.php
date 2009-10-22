@@ -71,12 +71,17 @@ $xchapters=$this->objDbSchedules->getChapters($this->contextCode);
 $total=count($xchapters);
 $index=1;
 foreach($xchapters as $c){
-    $chapters.="['".$c["chapter"]."']";
+    $chapters.="['".addslashes($c["chapter"])."']";
   if($index < $total){
      $chapters.=",";
    }
 $index++;
 }
+$lastChar = $chapters[strlen($chapters)-1];
+$len=strlen($chapters);
+ if($lastChar == ','){
+     $chapters=substr($chapters, 0, (strlen ($chapters)) - (strlen (strrchr($chapters,','))));
+ }
 $chapters.="]";
 
 // Create an instance of the css layout class
