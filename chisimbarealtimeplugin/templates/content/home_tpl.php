@@ -139,12 +139,12 @@ foreach($dbdata as $row){
     $editDeleteLink=$this->objUser->isLecturer($this->contextcode) ? $editLink->show().$deleteLink->show():"Open";
     $data.="[";
     $data.= "'<a href=\"".$roomUrl."\">".$row['title']."</a>',";
-    $data.="'".$this->objUser->fullname($row['owner'])."',";
+    $data.="'".addslashes($this->objUser->fullname($row['owner']))."',";
     $data.="'".$row['start_date']."',";
     $data.="'".$row['start_time']."',";
     $data.="'".$row['end_time']."',";
     $data.="'".$row['participants']."',";
-    $data.="'".$row['category']."',";
+    $data.="'".addslashes($row['category'])."',";
     $data.="'".$editDeleteLink."',";
     $data.="]";
    if($index < $total){
