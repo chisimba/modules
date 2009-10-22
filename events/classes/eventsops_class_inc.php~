@@ -477,7 +477,7 @@ class eventsops extends object {
 
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
+        //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
@@ -628,6 +628,17 @@ class eventsops extends object {
             }
         }
         return $ret;
+    }
+    
+    public function markasfavourite($eventid) {
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $objIcon->setIcon('favourite', 'png', 'icons/events/');
+        $objIcon->alt = $this->objLanguage->languageText("mod_events_favouritemark", "events");
+        $favlink = $this->newObject('link', 'htmlelements');
+        $favlink->href = $this->uri(array('action' => 'makefavourite', 'eventid' => $eventid));
+        $favlink->link = $objIcon->show();
+        
+        return $favlink->show();
     }
     
     /**
@@ -820,7 +831,7 @@ class eventsops extends object {
         $catinfo = $this->objDbEvents->categoryGetDetails($event['category_id']);
         $etbl->startRow();
         $etbl->addCell($datedisplay.$this->goYesNo($event['id'])."<br />".$catinfo[0]['cat_name']."<br /> (".$catinfo[0]['cat_desc'].") <br /><br />".$descrip, '50%', "top");
-        $etbl->addCell($this->viewLocMap($venue['geolat'], $venue['geolon'], 10), '50%', "middle");
+        $etbl->addCell($this->viewLocMap($venue['geolat'], $venue['geolon'], 10), '50%', "top");
         $etbl->endRow();
         $etbl->startRow();
         $etbl->addCell($this->showPlaceWeatherBox($venue['geolat'], $venue['geolon'])."<br />".$this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag));

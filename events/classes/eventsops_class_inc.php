@@ -477,7 +477,7 @@ class eventsops extends object {
 
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
+        //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
@@ -630,6 +630,17 @@ class eventsops extends object {
         return $ret;
     }
     
+    public function markasfavourite($eventid) {
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $objIcon->setIcon('favourite', 'png', 'icons/events/');
+        $objIcon->alt = $this->objLanguage->languageText("mod_events_favouritemark", "events");
+        $favlink = $this->newObject('link', 'htmlelements');
+        $favlink->href = $this->uri(array('action' => 'makefavourite', 'eventid' => $eventid));
+        $favlink->link = $objIcon->show();
+        
+        return $favlink->show();
+    }
+    
     /**
      * Grabs Wikipedia content according to lat lon
      *
@@ -757,7 +768,7 @@ class eventsops extends object {
         $etbl->cellspacing = 5;
         $catinfo = $this->objDbEvents->categoryGetDetails($event['category_id']);
         $etbl->startRow();
-        $etbl->addCell($datedisplay, '15%', "top");
+        $etbl->addCell($datedisplay."<br />".$this->markasfavourite($event['id']), '15%', "top");
         $etbl->addCell($this->goYesNo($event['id']),'15%', "top");
         $etbl->addCell($catinfo[0]['cat_name'], '20%', "top");
         $etbl->addCell($this->objUtils->truncateDescription($event['id'], $event['description'], 200, ".", "..."), '50%', "top");

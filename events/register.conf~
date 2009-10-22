@@ -163,7 +163,6 @@ TEXT: mod_events_newconnection|new connection|New connection made!
 TEXT: mod_events_isnofriendswith|is now friends with|is now connected to
 TEXT: mod_events_favouriteadded|favourite added|Favourite added!
 TEXT: mod_events_madefavourite|made favourite|marked an event as a favourite
-TEXT: mod_events_favouritemark|mark as favourite|Mark as a favourite!
 
 
 COMMENT: Activity stream elements
