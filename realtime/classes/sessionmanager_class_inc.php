@@ -158,13 +158,11 @@ class sessionmanager extends object{
             $xsessionData=$this->objDbSchedules->getSchedule($row['sessionid']);
 
             foreach($xsessionData as $sessionData){
-                $sessionTitle=$sessionData['title'];
-                $sessionOwner=$sessionData['owner'];
+                $sessionTitle=addslashes($sessionData['title']);
+                $sessionOwner=addslashes($sessionData['owner']);
                 $creationDate=$sessionData['creation_date'];
             }
-         //   if($index == 1){
-         //    $prevTitle=$sessionTitle;
-         //   }
+
            if($prevTitle != $sessionTitle){
 
             $prevTitle=$sessionTitle;
@@ -208,8 +206,8 @@ class sessionmanager extends object{
             $data.="[";
             $data.= "'<a href=\"".$roomUrl."\">".$sessionTitle."</a>',";
             $data.="'".$creationDate."',";
-            $data.="'".$detailsL."',";
-            $data.="'".$this->objUser->fullname($sessionOwner)."'";
+            $data.="'".addslashes($detailsL)."',";
+            $data.="'".addslashes($this->objUser->fullname($sessionOwner))."'";
 
             $data.="]";
 
