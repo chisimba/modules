@@ -339,7 +339,7 @@ var hours=
             fieldLabel: 'Title',
             name: 'title',
             allowBlank:false,
-            anchor:'100%'  // anchor width by percentage
+            anchor:'80%'  // anchor width by percentage
         },
         
         categoryField,startDateField,timeFromField, timeToField,
