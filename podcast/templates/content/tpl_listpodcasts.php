@@ -96,7 +96,7 @@ if (count($podcasts) == 0) {
          
          
         if(!empty($courses)){
-            $content .= "<strong>".$this->objLanguage->languageText('mod_podcast_listcourse','podcast')."</strong>";
+            $content .= "<strong>".$this->objLanguage->abstractText($this->objLanguage->languageText('mod_podcast_listcourse','podcast'))."</strong>";
             $content .="<ul>";
             foreach ($courses as $key => $value)
             {
