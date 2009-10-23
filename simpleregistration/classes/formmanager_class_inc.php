@@ -87,6 +87,7 @@ if($allowStaffReg == 'true'){
         defaultType: 'textfield',
         renderTo: 'registration',
         collapsible: true,
+        buttonAlign:'left',
         defaults: {width: 320},
         bodyStyle:'background-color:transparent',
         border:false,
