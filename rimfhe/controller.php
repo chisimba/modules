@@ -303,11 +303,20 @@ error_log($action);
                     $this->setVar('pageSuppressSearch', TRUE);
                     $this->setVar('suppressFooter', TRUE);
                     //Get journal, journcatid
-                    $journal = $this->getParam('journal');
-                    $journcatid = $this->getParam('journcatid');   
+                    $journal = $this->getParam('journalname');
+                    $journalcat = $this->getParam('journalcat');
+																				$ctstart = $this->getParam('start');
+																				if (empty($ctstart)){
+																					$ctstart = 0;
+																				} 
+																				$ctlimit = $this->getParam('limit');
+																				if (empty($ctlimit)){
+																					$ctlimit = 20;
+																				} 
+                    $journcatid = $this->getParam('myjourncatid'); 
                     error_log(var_export($_REQUEST, true));
-                    if (empty($journal) && empty($journcatid)){
-                    $myJournals= $this->objDBJournal->jsongetAllJournals();
+                    if (empty($journal)){              
+                    $myJournals= $this->objDBJournal->jsongetAllJournals($ctstart, $ctlimit);
                     }else{
                      if($journcatid=='ISI Listing'){
                       $journcatid = 1;
@@ -318,7 +327,7 @@ error_log($action);
                      if($journcatid=='Approved SA Listing'){
                       $journcatid = 3;
                      }
-                     $myJournals= $this->objDBJournal->jsongetJournals($journcatid ,$journal);
+                     $myJournals= $this->objDBJournal->jsongetJournals($journal, $ctstart, $ctlimit);
                     }
                     echo $myJournals;
                     exit(0);

@@ -5,6 +5,15 @@
  * http://www.extjs.com/license
  */
 Ext.onReady(function(){
+    var fulluri = null;
+				function updateHttpProxy (){
+					var searchCategory = jQuery("#input_category").val();
+					var searchText = jQuery("#input_journalname2").val();
+				 proxyuri = uri+'&query='+searchText;
+				 dataStoreParts.proxy = new Ext.data.HttpProxy({
+				  url: proxyuri
+				 });
+				}    
     var dataRecordParts = new Ext.data.Record.create([  
      {name: 'jid'},  
      {name: 'jname'}  
@@ -16,14 +25,34 @@ Ext.onReady(function(){
      },
      dataRecordParts  
     );      
-    var dataProxyParts = new Ext.data.HttpProxy({  
-     url: uri
-    });
+    /*var dataProxyParts = new Ext.data.HttpProxy({  
+     url: uri,  method: 'GET'
+    });*/
     
     var dataStoreParts = new Ext.data.Store({
-     proxy: dataProxyParts,  
-     reader: dataReaderParts, 
+        autoLoad:true,
+        listeners:{ 
+    		'loadexception': function(theO, theN, response){
+							var searchCategory = jQuery("#input_category").val();
+							var searchText = jQuery("#input_journalname2").val();
+							//var fulluri = uri+'&journal='+searchText+'&journcatid='+searchCategory;
+    		 },
+    		'load': function(){
+							 var searchCategory = jQuery("#input_category").val();
+							 var searchText = jQuery("#input_journalname2").val();
+							 //uri = uri+'&myjournal='+searchText+'&myjourncatid='+searchCategory;
+        //alert(searchText);
+    			}
+    	},
+    	proxy: new Ext.data.HttpProxy({
+             url: uri, method: 'GET'
+        }),
+//     baseParams = {proxy:'Accounting', journalcat:'searchCategory'},
+     reader: dataReaderParts
     });
+    //dataStoreParts.load = {params:{query:'searchText'}};
+    //dataStoreParts.baseParams = {query:jQuery("#input_journalname2").val(), journalcat:jQuery("#input_category").val()};
+    //dataStoreParts.on("beforeload", updateHttpProxy);
     // Custom rendering Template
     var resultTpl = new Ext.XTemplate(
         '<tpl for="."><div class="search-item">',
@@ -33,14 +62,18 @@ Ext.onReady(function(){
     
     var jsearch = new Ext.form.ComboBox({
         store: dataStoreParts,
+        id: 'jsearchid',
         displayField:'jname',
+        hiddenName: 'journal',
+        textField: 'jname',
         typeAhead: false,
         emptyText: 'Start typing...',
         loadingText: 'Searching...',
-        width: 350,
-        pageSize:10,
+        width: 352,
+        pageSize:20,
         hideTrigger:false,
         tpl: resultTpl,
+        valueField: 'jid',
         applyTo: 'input_journalname2',
         itemSelector: 'div.search-item',
         onSelect: function(record){ // override default onSelect to do redirect]
@@ -50,22 +83,4 @@ Ext.onReady(function(){
             this.collapse();
         }        
     });
-    /*
-				var parts = new Ext.form.ComboBox({  
-				 store: dataStoreParts,  
-				 fieldLabel: 'Journal Name',   
-				 displayField:'jname',  
-				 valueField: 'Journal Id',  
-				 hiddenName: 'jid',  
-				 allowBlank: false,  
-				 pageSize: 5,  
-				 minChars: 2,  
-				 hideTrigger: true,  
-				 typeAhead: true,  
-				 mode: 'remote',   
-				 triggerAction: 'all',   
-				 emptyText: 'Select a Part...',   
-				 selectOnFocus: false,  
-				 width: 260  
-				 }); */
 });
