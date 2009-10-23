@@ -47,7 +47,7 @@ $table->addCell($pagecontent);
 $table->addCell($this->objLanguage->languageText('mod_simpleregistration_contactemail', 'simpleregistration').'<br>'.$contactemail);
 $table->endRow();
 
-$admin = new link ($this->uri(array('action'=>'memberlist','shortname'=>$shortname)));
+$admin = new link ($this->uri(array('action'=>'memberlist','eventid'=>$eventid)));
 $admin->link= $this->objLanguage->languageText('mod_simpleregistration_admin', 'simpleregistration');
 
 $admin=$this->objUser->isAdmin() ?$admin->show():"";
