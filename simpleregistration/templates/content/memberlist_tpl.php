@@ -24,7 +24,7 @@ $scheduleTitle='<h2>'.$total.' '.$this->objLanguage->languageText('mod_simplereg
 $scheduleTitle.='
           <p></p>
          ';
-$excelButton = new button('add','Export to Excel');
+$excelButton = new button('add','Export to Spreadsheet');
 $excelButton->setId('xls-btn');
 $scheduleTitle.=$excelButton->show().'';
 //load class

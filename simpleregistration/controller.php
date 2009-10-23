@@ -313,9 +313,7 @@ class simpleregistration extends controller {
      *  Sends the email to the newly registered member
      */
     function sendMail($to,$eventid) {
-        $xcontent=$this->dbeventscontent->getEventContent($eventid);
-        $content=array();
-        $content=$xcontent[0];
+        $content=$this->dbeventscontent->getEventContent($eventid);
         $contactemail=$content['event_emailcontact'];
         $subject=$content['event_emailsubject'];
         $body=$content['event_emailcontent'];
