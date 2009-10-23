@@ -22,7 +22,7 @@ if(count($content) > 0){
 $savecontentUrl = $this->uri(array('action'=>'savecontent','eventid'=>$eventid,'mode'=>$mode));
 $previewLink = new link($this->uri(array('action'=>'showevent','id'=>$eventid)));
 $previewLink->link=$title;
-$homeUrl = $this->uri(array('action'=>'eventlisting'));
+$homeUrl = $this->uri(array('action'=>'eventcontent','id'=>$eventid,'eventtitle'=>$title));
 $order   = array("\r\n", "\n", "\r");
 $replace ='<br />';
 
