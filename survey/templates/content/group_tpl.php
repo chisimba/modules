@@ -94,7 +94,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $inGroup=$this->groups->getUserGroup($user['userid'],$surveyId);
         $arrUserGroupList[$inGroup][]=$user;
     }
-print_r($arrUserGroupList);
+
 // set up add user icon
     $objIcon->title=$addUsersLabel;
     $addUsersIcon=$objIcon->getAddIcon($this->uri(array('action'=>'search','survey_id'=>$surveyId)));
