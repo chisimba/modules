@@ -285,8 +285,6 @@ Public fuction to instantiate required  objestc
                     //Get journal, journcatid
                     //$journal = $this->getParam('journal');
                     //$journcatid = $this->getParam('journcatid');   
-                    $start = $this->getParam('pageSize');
-                    $limit = $this->getParam('pageSize');
                     error_log(var_export($_REQUEST, true));
                     
                     $myJournals= $this->objDBJournal->jsongetAllJournals($start,$limit);
@@ -294,14 +292,19 @@ Public fuction to instantiate required  objestc
                     exit(0);
                     break;
                 case 'ajaxgetjournals':
+                    //query coming from the ext lib. combobox auto complete. The post var is called query.
+                    if (isset($_GET['query'])){
+                     $journal = $_GET['query'];
+                    }else{
+                     $journal = $this->getParam('query');
+                    }
                     $this->setLayoutTemplate(NULL);
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->setVar('pageSuppressBanner', TRUE);
                     $this->setVar('pageSuppressSearch', TRUE);
                     $this->setVar('suppressFooter', TRUE);
                     //Get journal, journcatid
-                    $journal = $this->getParam('query');
-                    $journalcat = $this->getParam('journalcat');
+                    //$journalcat = $this->getParam('journalcat');
                     $myJournals= $this->objDBJournal->jsongetJournals($journal);
                     echo $myJournals;
                     exit(0);

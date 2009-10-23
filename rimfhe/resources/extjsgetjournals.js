@@ -27,7 +27,7 @@ Ext.onReady(function(){
      dataRecordParts  
     );      
     var dataProxyParts = new Ext.data.HttpProxy({  
-     url: uri, method: 'GET'
+     url: uri//, method: 'GET'
     });
     
     var dataStoreParts = new Ext.data.Store({

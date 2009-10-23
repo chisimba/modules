@@ -38,9 +38,9 @@ class dbrimfhe_journal extends dbtable
             return FALSE;
         }
     }
-    function getJournals($journal=Null) 
+    function getJournals($journal) 
     {
-         return $this->getAll(" WHERE journal like '%".$journal."%' ");
+         return $this->getAll("WHERE journal LIKE '%".$journal."%'");
     }
  
      function jsongetJournals($journal) 
@@ -51,8 +51,8 @@ class dbrimfhe_journal extends dbtable
         $searchArray = array();
         foreach($myJournals as $thisJournal){
           $infoArray = array();
-          $infoArray['id'] = $thisJournal['id'];
-          $infoArray['name'] = $thisJournal['journal'];
+          $infoArray['jid'] = $thisJournal['id'];
+          $infoArray['jname'] = $thisJournal['journal'];
           $searchArray[] = $infoArray;
         }
         return json_encode(array('journalcount' => $journalCount, 'searchresults' =>  $searchArray));
