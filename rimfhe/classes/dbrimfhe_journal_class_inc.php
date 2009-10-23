@@ -62,10 +62,14 @@ class dbrimfhe_journal extends dbtable
         }
         return json_encode(array('journalcount' => $journalCount, 'searchresults' =>  $searchArray));
     }
-     function jsongetAllJournals($start, $limit) 
+     function jsongetAllJournals($start=Null, $limit=Null) 
     {
-        $myJournals = $this->getAll(" LIMIT ". $start.", ".$limit);
-       	$journalCount = ( count ( $myJournals ) );
+        if(empty($start) && empty($limit)){
+         $myJournals = $this->getAll();
+       	}else{
+         $myJournals = $this->getAll(" LIMIT ". $start.", ".$limit);
+        }
+        $journalCount = ( count ( $myJournals ) );
         $str = '{"journalcount":"'.$journalCount.'","searchedjournals":[';
         $searchArray = array();
         foreach($myJournals as $thisJournal){

@@ -51,8 +51,8 @@ Public fuction to instantiate required  objestc
         $this->objChapterInBook= $this->getObject('dbchapterinbook', 'rimfhe');
         $this->objDoctoralStudents= $this->getObject('dbdoctoralstudents', 'rimfhe');
         $this->objMastersStudents= $this->getObject('dbmastersstudents', 'rimfhe');
-        $this->preLoginInterface= $this->getObject('loginInterface', 'security');
         $this->objDBJournal= $this->getObject('dbrimfhe_journal', 'rimfhe');
+        $this->preLoginInterface= $this->getObject('loginInterface', 'security');
     }//end init
 
     /*public function requiresLogin($action)
@@ -69,7 +69,7 @@ Public fuction to instantiate required  objestc
     public function dispatch()
     {
         $action =$this ->getParam('action');
-error_log($action);
+
         $this->setLayoutTemplate('default_layout_tpl.php');
         //if form is submitted
         if($_POST){
@@ -115,15 +115,9 @@ error_log($action);
                     return 'staffregistration_tpl.php';
 
                 case 'DOE Accredoted Journal Articles':
-                    //$this->setLayoutTemplate(NULL);
-                    //$this->setVar('pageSuppressToolbar', TRUE);
-                    //$this->setVar('pageSuppressBanner', TRUE);
-                    //$this->setVar('pageSuppressSearch', TRUE);
-                    //$this->setVar('suppressFooter', TRUE);
                     return 'accreditedjournal_tpl.php';
 
                 case 'Accredted Journal Articles Info':
-                    $this->setLayoutTemplate(NULL);
                     $arrJournal=array();
                     $arrJournal = $this->objAccreditedJournal->getAllJournalAuthor();
                     $this->setVarByRef('arrJournal', $arrJournal);
@@ -281,6 +275,7 @@ error_log($action);
                     $this->setVarByRef('totalDoctoralStudents', $totalDoctoralStudents);
                     $this->setVarByRef('totalMastersStudents', $totalMastersStudents);
                     return 'universitysummary_tpl.php';
+
                 case 'ajaxgetalljournals':
                     $this->setLayoutTemplate(NULL);
                     $this->setVar('pageSuppressToolbar', TRUE);
@@ -305,34 +300,7 @@ error_log($action);
                     //Get journal, journcatid
                     $journal = $this->getParam('journalname');
                     $journalcat = $this->getParam('journalcat');
-																				$ctstart = $this->getParam('start');
-																				if (empty($ctstart)){
-																					$ctstart = 0;
-																				} 
-																				$ctlimit = $this->getParam('limit');
-																				if (empty($ctlimit)){
-																					$ctlimit = 20;
-																				} 
-                    $journcatid = $this->getParam('myjourncatid'); 
-                    error_log(var_export($_REQUEST, true));
-                    if (empty($journal)){              
-                    $myJournals= $this->objDBJournal->jsongetAllJournals($ctstart, $ctlimit);
-                    }else{
-                     if($journcatid=='ISI Listing'){
-                      $journcatid = 1;
-                     }
-                     if($journcatid=='IBSS Listing'){
-                      $journcatid = 2;
-                     }
-                     if($journcatid=='Approved SA Listing'){
-                      $journcatid = 3;
-                     }
-                     $myJournals= $this->objDBJournal->jsongetJournals($journal, $ctstart, $ctlimit);
-                    }
-                    echo $myJournals;
-                    exit(0);
-                    break;
-
+                    
                 case 'confirnregistration':
                     return 'staffregistrationconfirm_tpl.php';
 

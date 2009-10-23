@@ -60,6 +60,8 @@ $surname = $this->objLanguage->languageText('word_surname', 'system');
 $initials= $this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe');
 $firstname= $this->objLanguage->languageText('phrase_firstname', 'system');
 $gender= $this->objLanguage->languageText('word_gender', 'system', 'Gender');
+$nationality= $this->objLanguage->languageText('mod_rimfhe_nationality', 'rimfhe');
+$race= $this->objLanguage->languageText('mod_rimfhe_race', 'rimfhe');
 $registrationNumber= $this->objLanguage->languageText('mod_rimfhe_studentnumber', 'rimfhe');
 $dept= $this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe');
 $faculty= $this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe');
@@ -153,6 +155,42 @@ foreach ($types as $type)
 }
 $table->addCell($genderLabel->show(), 150, NULL, 'left');
 $table->addCell($objGender->show(), 150, NULL, 'left');
+$table->endRow();
+//Nationality
+$table->startRow();
+$objNationality = new dropdown('nationality');
+$nationalityLabel = new label($nationality.'&nbsp;', 'nationality');
+$types=array("South African", "Non-South African");
+foreach ($types as $type)
+{
+    $objNationality->addOption($type,$type);
+    if($mode == 'fixerror'){
+        $objNationality->setSelected($this->getParam('nationality'));
+    }
+    if($mode == 'edit'){
+        $objNationality->setSelected($arrEdit['nationality']);
+    }
+}
+$table->addCell($nationalityLabel->show(), 150, NULL, 'left');
+$table->addCell($objNationality->show(), 150, NULL, 'left');
+$table->endRow();
+//race
+$table->startRow();
+$objRace = new dropdown('race');
+$raceLabel = new label($race.'&nbsp;', 'race');
+$types=array("Black", "Coloured","Indian","White","Other");
+foreach ($types as $type)
+{
+    $objRace->addOption($type,$type);
+    if($mode == 'fixerror'){
+        $objRace->setSelected($this->getParam('race'));
+    }
+    if($mode == 'edit'){
+        $objRace->setSelected($arrEdit['race']);
+    }
+}
+$table->addCell($raceLabel->show(), 150, NULL, 'left');
+$table->addCell($objRace->show(), 150, NULL, 'left');
 $table->endRow();
 
 //Input and label for Department/Scool/Division

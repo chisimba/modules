@@ -17,6 +17,8 @@ $objIcon =  $this->newObject('geticon', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $objLayer =$this->newObject('layer','htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
@@ -94,6 +96,8 @@ $table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system')
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));
 $table->addHeaderCell($this->objLanguage->languageText('word_gender', 'system', 'Gender'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_nationality', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_race', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_studentnumber', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
@@ -118,6 +122,8 @@ if ( count($arrDisplayDoctoral) > 0) {
         $tableRow[] = $doctoralstudents['initials'];
         $tableRow[] = $doctoralstudents['firstname'];
         $tableRow[] = $doctoralstudents['gender'];
+        $tableRow[] = $doctoralstudents['nationality'];
+        $tableRow[] = $doctoralstudents['race'];
         $tableRow[] = $doctoralstudents['regnumber'];
         $tableRow[] = $doctoralstudents['deptschoool'];
         $tableRow[] = $doctoralstudents['faculty'];

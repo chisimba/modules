@@ -38,7 +38,7 @@ $header2 = $this->objLanguage->languageText('mod_rimfhe_requiredauthor', 'rimfhe
 // Show if no Error
 if($mode!='fixerror'){
     echo '<br />'.$formheader->show();
-    echo '<br /><span style="color:red;font-size:12px;">'.$header2.'<br /></span>';
+    echo '<br /><span style="color:red;font-size:12px;">*'.$header2.'<br /></span>';
 }
 //load the required form elements
 $this->formElements->sendElements();
@@ -378,7 +378,7 @@ if($mode == 'edit'){
 $table->addCell($lastPageLabel->show(), 150, NULL, 'left');
 $table->addCell($objLastPage ->show(), 150, NULL, 'left');
 $table->endRow();
-
+$content1 = $this->objLanguage->languageText('mod_rimfhe_peerinstruction', 'rimfhe');
 //Input and label for Peer Review
 $table->startRow();
 $objPeerReview = new dropdown('peerreview');
@@ -395,8 +395,11 @@ foreach ($answers as $answer)
     }
 }
 $table->addCell($peerRevLabel->show(), 150, NULL, 'left');
-$table->addCell($objPeerReview->show(), 150, NULL, 'left');
+$table->addCell($objPeerReview->show().'<span style="color:red;font-size:12px;"> *'.$content1.'</span>', 150, NULL, 'left');
 $table->endRow();
+
+
+
 
 //captcha
 $table->startRow();
@@ -480,3 +483,4 @@ function showResponse (originalRequest) {
 }
 //]]>
 </script>
+

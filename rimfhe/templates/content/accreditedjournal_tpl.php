@@ -12,7 +12,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 $objSysConfig  = $this->getObject('altconfig','config');
 $this->appendArrayVar('headerParams', '
 	<script type="text/javascript">
-		var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'rimfhe', 'action' => 'ajaxgetjournals'))).'"; 
+		var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'rimfhe', 'action' => 'ajaxgetalljournals'))).'"; 
 		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
 
@@ -21,8 +21,8 @@ $ext = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resour
 $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
 $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
 //$ext .=$this->getJavaScriptFile('forum-searches.js', 'rimfhe');
-$ext .=$this->getJavaScriptFile('extjsgetjournals.js', 'rimfhe');
-//$ext .=$this->getJavaScriptFile('forum-search.js', 'rimfhe');
+//$ext .=$this->getJavaScriptFile('extjsgetjournals.js', 'rimfhe');
+$ext .=$this->getJavaScriptFile('forum-search.js', 'rimfhe');
 $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('combos.css', 'rimfhe').'"type="text/css" />';
 $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $ext);
@@ -144,7 +144,7 @@ if($mode == 'edit'){
     $objjournalName->value =$arrEdit['journalname'];
 }
 
-$table->addCell($objjournalName->show().'<div id="search_suggest"></div>', 150, NULL, 'left');
+$table->addCell($objjournalName2->show().$objjournalName->show(), 150, NULL, 'left');
 $table->addCell(NULL, 350, NULL, 'left');
 $table->endRow();
 
@@ -453,8 +453,8 @@ $table->addCell($button->show(), 150, NULL, 'left');
 $table->endRow();
 
 //display table
-//$accreditedJournal->addToForm($table->show());//$objjournalName->show()
-$accreditedJournal->addToForm($objCategory->show().$objjournalName2->show().$objjournalName->show());
+$accreditedJournal->addToForm($table->show());//$objjournalName->show()
+//$accreditedJournal->addToForm($objCategory->show().$objjournalName2->show().$objjournalName->show());
 //Code to display errors
 $messages=array();
 if ($mode == 'fixerror') {

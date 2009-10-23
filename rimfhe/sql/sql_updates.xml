@@ -3,7 +3,7 @@
 
     <update>
         <table>tbl_rimfhe_journal</table>
-        <version>0.24</version>
+        <version>0.23</version>
         <description>Added column issn.</description>
         <data>
            	<add>
@@ -15,5 +15,32 @@
     		</add>
     	</data>
 	</update>
-	
+	<update>
+        <table>tbl_rimfhe_graduatedocstud</table>
+        <version>0.24</version>
+        <description>Added column nationality.</description>
+        <data>
+           	<add>
+       			<name>nationality</name>
+    	    	<type>text</type>
+       			<length>20</length>
+       			<notnull>TRUE</notnull>
+       			<default>NULL</default>
+    		</add>
+    	</data>
+	</update>
+<update>
+        <table>tbl_rimfhe_graduatedocstud</table>
+        <version>0.24</version>
+        <description>Added column race.</description>
+        <data>
+           	<add>
+       			<name>race</name>
+    	    	<type>text</type>
+       			<length>20</length>
+       			<notnull>TRUE</notnull>
+       			<default>NULL</default>
+    		</add>
+    	</data>
+	</update>
 </updates>

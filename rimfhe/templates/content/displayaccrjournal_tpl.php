@@ -17,7 +17,6 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
-
 $authortable =  $this->newObject('htmltable', 'htmlelements');
 
 /*****
@@ -87,8 +86,8 @@ if(!empty($deleteComment)){
 }
 
 //Set up fields heading
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_journalname', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_categorey', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_journalname', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_atitcletitle', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_year', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_volume', 'rimfhe'));
@@ -111,8 +110,9 @@ if ( count($arrJournal) > 0) {
         $oddOrEven = ($rowcount == 0) ? "even" : "odd";
         $tableRow = array();
 
-        $tableRow[] = $journal['journalname'];
+       
         $tableRow[] = $journal['journalcategory'];
+        $tableRow[] = $journal['journalname'];
         $tableRow[] = $journal['articletitle'];
         $tableRow[] = $journal['publicationyear'];
         $tableRow[] = $journal['volume'];
@@ -120,7 +120,7 @@ if ( count($arrJournal) > 0) {
         $tableRow[] = $journal['lastpageno'];
         $tableRow[] = $journal['pagetotal'];
         $tableRow[] = $journal['authorname'];
-        $tableRow[] = $journal['fractionalweightedavg'];
+        $tableRow[] = $journal['fractweightedavg'];
 
         $editlink = new link($this->uri(array('action'=>'Edit Journal Articles', 'id'=> $journal['id'])));
         $editlink->link = $editIcon;
@@ -148,3 +148,4 @@ echo '<p>'.'&nbsp;'.'</p>';
 echo '<p>'.$addlink->show().'</p>';
 echo '<p>'.'&nbsp;'.'</p>';
 ?>
+
