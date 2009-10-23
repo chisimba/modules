@@ -205,13 +205,6 @@ class simpleregistration extends controller {
      */
     function __memberlist() {
         $eventid=$this->getParam('eventid');
-
-        $idrows=$this->dbevents->getEventIdByeventid($eventid);
-        $eventid='';
-        if(count($idrows) > 0) {
-            $eventid=$idrows[0]['id'];
-        }
-
         $this->setVarByRef('eventid',$eventid);
         return "memberlist_tpl.php";
     }
