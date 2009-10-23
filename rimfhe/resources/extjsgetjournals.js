@@ -5,13 +5,14 @@
  * http://www.extjs.com/license
  */
 Ext.onReady(function(){
-    var fulluri = null;
+    var proxyuri = null;
 				function updateHttpProxy (){
 					var searchCategory = jQuery("#input_category").val();
 					var searchText = jQuery("#input_journalname2").val();
 				 proxyuri = uri+'&query='+searchText;
 				 dataStoreParts.proxy = new Ext.data.HttpProxy({
-				  url: proxyuri
+				  //url: proxyuri
+				  url: uri, method: 'POST', params: {query:jQuery("#input_journalname2").val(), journalcat:jQuery("#input_category").val()}
 				 });
 				}    
     var dataRecordParts = new Ext.data.Record.create([  
@@ -45,14 +46,15 @@ Ext.onReady(function(){
     			}
     	},
     	proxy: new Ext.data.HttpProxy({
-             url: uri, method: 'GET'
-        }),
-//     baseParams = {proxy:'Accounting', journalcat:'searchCategory'},
+    	   url: uri, method: 'GET'
+        //url: uri, method: 'POST', params: {query:jQuery("#input_journalname2").val(), journalcat:jQuery("#input_category").val()}
+     }),
+     //baseParams = {query:'Accounting', journalcat:'searchCategory'},
      reader: dataReaderParts
     });
     //dataStoreParts.load = {params:{query:'searchText'}};
     //dataStoreParts.baseParams = {query:jQuery("#input_journalname2").val(), journalcat:jQuery("#input_category").val()};
-    //dataStoreParts.on("beforeload", updateHttpProxy);
+    dataStoreParts.on("reload", updateHttpProxy);
     // Custom rendering Template
     var resultTpl = new Ext.XTemplate(
         '<tpl for="."><div class="search-item">',
