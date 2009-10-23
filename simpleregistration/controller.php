@@ -85,7 +85,7 @@ class simpleregistration extends controller {
 
     function __showevent() {
         $status=$this->getParam('status');
-        $this->eventid=$this->getParam('id');
+        $this->eventid=$this->getParam('eventid');
         if($status == 'closed') {
             $this->setVarByRef('eventid',$this->eventid);
             $content=$this->dbeventscontent->getEventContent($eventid);
@@ -98,16 +98,15 @@ class simpleregistration extends controller {
         $company=$this->getParam('company');
         $email=$this->getParam('email');
 
-        $mode=$this->getParam('id');
+        $mode=$this->getParam('mode');
         $this->setVarByRef('editfirstname',$firstname);
         $this->setVarByRef('editlastname',$lastname);
         $this->setVarByRef('editcompany',$company);
         $this->setVarByRef('editemail',$email);
         $this->setVarByRef('mode',$mode);
 
-        $this->eventid=$this->getParam($this->getParam('id'));
         $this->setVarByRef('eventid',$this->eventid);
-        $content=$this->dbeventscontent->getEventContent($this->getParam('id'));
+        $content=$this->dbeventscontent->getEventContent($this->eventid);
         $this->setVarByRef('eventcontent',$content);
         return "home_tpl.php";
     }

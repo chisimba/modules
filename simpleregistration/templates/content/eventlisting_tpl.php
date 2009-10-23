@@ -30,7 +30,7 @@ foreach($events as $row){
     $editLink->link=$objIcon->show();
 
     $previewLink=new link();
-    $previewLink->link($this->uri(array('action'=>'showevent','id'=>$row['id'])));
+    $previewLink->link($this->uri(array('action'=>'showevent','eventid'=>$row['id'])));
     $previewLink->link=$row['event_title'];
 
     $data.="[";
