@@ -21,8 +21,8 @@ $ext = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resour
 $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
 $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
 //$ext .=$this->getJavaScriptFile('forum-searches.js', 'rimfhe');
-//$ext .=$this->getJavaScriptFile('extjsgetjournals.js', 'rimfhe');
-$ext .=$this->getJavaScriptFile('forum-search.js', 'rimfhe');
+$ext .=$this->getJavaScriptFile('extjsgetjournals.js', 'rimfhe');
+//$ext .=$this->getJavaScriptFile('forum-search.js', 'rimfhe');
 $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('combos.css', 'rimfhe').'"type="text/css" />';
 $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
 $this->appendArrayVar('headerParams', $ext);

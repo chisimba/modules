@@ -285,9 +285,11 @@ Public fuction to instantiate required  objestc
                     //Get journal, journcatid
                     //$journal = $this->getParam('journal');
                     //$journcatid = $this->getParam('journcatid');   
+                    $start = $this->getParam('pageSize');
+                    $limit = $this->getParam('pageSize');
                     error_log(var_export($_REQUEST, true));
                     
-                    $myJournals= $this->objDBJournal->jsongetAllJournals();
+                    $myJournals= $this->objDBJournal->jsongetAllJournals($start,$limit);
                     echo $myJournals;
                     exit(0);
                     break;
@@ -298,8 +300,12 @@ Public fuction to instantiate required  objestc
                     $this->setVar('pageSuppressSearch', TRUE);
                     $this->setVar('suppressFooter', TRUE);
                     //Get journal, journcatid
-                    $journal = $this->getParam('journalname');
+                    $journal = $this->getParam('query');
                     $journalcat = $this->getParam('journalcat');
+                    $myJournals= $this->objDBJournal->jsongetJournals($journal);
+                    echo $myJournals;
+                    exit(0);
+                    break;
                     
                 case 'confirnregistration':
                     return 'staffregistrationconfirm_tpl.php';

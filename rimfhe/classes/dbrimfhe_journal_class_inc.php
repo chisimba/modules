@@ -38,19 +38,14 @@ class dbrimfhe_journal extends dbtable
             return FALSE;
         }
     }
-    function getJournals($journal, $start, $limit) 
+    function getJournals($journal=Null) 
     {
-        $journcatid=Null;
-        if($journcatid==Null){
-         return $this->getAll(" WHERE journal like '%".$journal."%' LIMIT ". $start.", ".$limit);
-        }else{
-         //return $this->getAll(" WHERE journcatid = '" . $journcatid . "' and journal like '%".$journal."%'");
-        }
+         return $this->getAll(" WHERE journal like '%".$journal."%' ");
     }
  
-     function jsongetJournals($journal, $start, $limit) 
+     function jsongetJournals($journal) 
     {
-        $myJournals = $this->getJournals($journal, $start, $limit);
+        $myJournals = $this->getJournals($journal);
        	$journalCount = ( count ( $myJournals ) );
         $str = '{"journalcount":"'.$journalCount.'","searchedjournals":[';
         $searchArray = array();

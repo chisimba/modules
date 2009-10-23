@@ -12,7 +12,7 @@ Ext.onReady(function(){
 				 proxyuri = uri+'&query='+searchText;
 				 dataStoreParts.proxy = new Ext.data.HttpProxy({
 				  //url: proxyuri
-				  url: uri, method: 'POST', params: {query:jQuery("#input_journalname2").val(), journalcat:jQuery("#input_category").val()}
+				  url: uri, method: 'GET'//, params: {query:jQuery("#input_journalname2").val(), journalcat:jQuery("#input_category").val()}
 				 });
 				}    
     var dataRecordParts = new Ext.data.Record.create([  
@@ -26,12 +26,12 @@ Ext.onReady(function(){
      },
      dataRecordParts  
     );      
-    /*var dataProxyParts = new Ext.data.HttpProxy({  
-     url: uri,  method: 'GET'
-    });*/
+    var dataProxyParts = new Ext.data.HttpProxy({  
+     url: uri, method: 'GET'
+    });
     
     var dataStoreParts = new Ext.data.Store({
-        autoLoad:true,
+        /*autoLoad:true,
         listeners:{ 
     		'loadexception': function(theO, theN, response){
 							var searchCategory = jQuery("#input_category").val();
@@ -48,13 +48,14 @@ Ext.onReady(function(){
     	proxy: new Ext.data.HttpProxy({
     	   url: uri, method: 'GET'
         //url: uri, method: 'POST', params: {query:jQuery("#input_journalname2").val(), journalcat:jQuery("#input_category").val()}
-     }),
+     }),*/
      //baseParams = {query:'Accounting', journalcat:'searchCategory'},
+     proxy: dataProxyParts,
      reader: dataReaderParts
     });
     //dataStoreParts.load = {params:{query:'searchText'}};
     //dataStoreParts.baseParams = {query:jQuery("#input_journalname2").val(), journalcat:jQuery("#input_category").val()};
-    dataStoreParts.on("reload", updateHttpProxy);
+    //dataStoreParts.on("reload", updateHttpProxy);
     // Custom rendering Template
     var resultTpl = new Ext.XTemplate(
         '<tpl for="."><div class="search-item">',
@@ -64,18 +65,18 @@ Ext.onReady(function(){
     
     var jsearch = new Ext.form.ComboBox({
         store: dataStoreParts,
-        id: 'jsearchid',
+        //id: 'jsearchid',
         displayField:'jname',
-        hiddenName: 'journal',
-        textField: 'jname',
+        //hiddenName: 'journal',
+        //textField: 'jname',
         typeAhead: false,
         emptyText: 'Start typing...',
         loadingText: 'Searching...',
         width: 352,
-        pageSize:20,
+        pageSize:10,
         hideTrigger:false,
         tpl: resultTpl,
-        valueField: 'jid',
+        //valueField: 'jid',
         applyTo: 'input_journalname2',
         itemSelector: 'div.search-item',
         onSelect: function(record){ // override default onSelect to do redirect]
