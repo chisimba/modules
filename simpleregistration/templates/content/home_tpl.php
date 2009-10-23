@@ -1,7 +1,8 @@
 
 <?php
 if($this->objUser->isLoggedIn()){
-//    $this->nextAction('expresssignin');
+
+$this->nextAction('expresssignin',array('eventid'=>$eventid));
 }
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/simpleregistration.css').'"/>';
 $this->appendArrayVar('headerParams', $maincss);
