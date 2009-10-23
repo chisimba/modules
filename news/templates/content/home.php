@@ -1,6 +1,8 @@
 <?php
 
-
+echo '<pre>';
+var_dump($topStories);
+echo '</pre>';
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
@@ -26,7 +28,7 @@ if ($this->objSysConfig->getValue('mod_news_homeintroduction', 'news')) {
 $middle .= $topStories;
 
 if (count($categories) > 0) {
-    
+
     $table = $this->newObject('htmltable', 'htmlelements');
     //print_r($topStoriesId);
     $counter = 0;
@@ -35,17 +37,17 @@ if (count($categories) > 0) {
         if ($category['blockonfrontpage'] == 'Y') {
             $nonTopStories = $this->objNewsStories->getNonTopStoriesFormatted($category['id'], $topStoriesId);
             if ($nonTopStories != '') {
-                
+
                 if ($counter%2 == 0) {
                     $middle .= '<br clear="all" />';
                 }
                 $middle .= '<div style="width:50%; float:left; "><h3>'.$category['categoryname'].'</h3>';
                 $middle .= $nonTopStories.'</div>';
-                
+
                 $counter++;
             }
         }
-        
+
     }
 }
 
