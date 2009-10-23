@@ -107,10 +107,8 @@ class dbeventscontent extends dbTable{
      * @return <type>
      */
     public function getEventContent($eventid){
-        $sql=
-        "select * from ".$this->table." where event_id = '".$eventid."'";
-        $rows=$this->getArray($sql);
-        return $rows;
+        $row=$this->getRow('event_id', $eventid);
+        return $row;
     }
 
 }

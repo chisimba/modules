@@ -5,13 +5,13 @@
  *
  * @author david
  */
-class formmanager extends object{
+class formmanager extends object {
 
-   /**
-    * initialize the object, and set the necessary ext js scripts
-    */
-    public function init(){
-        // scripts
+/**
+ * initialize the object, and set the necessary ext js scripts
+ */
+    public function init() {
+    // scripts
         $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
         $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
         $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
@@ -25,16 +25,16 @@ class formmanager extends object{
         $this->objLanguage = $this->getObject('language', 'language');
     }
 
-  /**
-   * Create an Ext Js based form. If mode is 'edit', then the form is pre-populated
-   * with values
-   * @param <type> $editfirstname
-   * @param <type> $editlastname
-   * @param <type> $editcompany
-   * @param <type> $editemail
-   * @param <type> $mode
-   * @return <type>
-   */
+    /**
+     * Create an Ext Js based form. If mode is 'edit', then the form is pre-populated
+     * with values
+     * @param <type> $editfirstname
+     * @param <type> $editlastname
+     * @param <type> $editcompany
+     * @param <type> $editemail
+     * @param <type> $mode
+     * @return <type>
+     */
     public function createRegisterForm(
         $editfirstname,
         $editlastname,
@@ -44,14 +44,11 @@ class formmanager extends object{
         $allowStaffReg,
         $allowExternalReg,
         $eventid
-         ){
-
-
-
+    ) {
 
         $submitUrl = $this->uri(array('action' => 'register',
-    'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
-   'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
+            'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
+            'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
             'eventid'=>$eventid));
         $expressLink =$this->uri(array('action' => 'expresssignin','eventid'=>$eventid));
 
@@ -61,7 +58,7 @@ class formmanager extends object{
         $editcompany=$mode == 'edit' ? "value:'".$editcompany."',":"";
         $editemail=$mode == 'edit' ? "value:'".$editemail."',":"";
         $regFormJS=
-    "Ext.onReady(function(){
+            "Ext.onReady(function(){
 
      Ext.QuickTips.init();
      new Ext.ToolTip({
@@ -73,12 +70,12 @@ class formmanager extends object{
         draggable:true
     });
 ";
-if($allowStaffReg == 'true'){
+        if($allowStaffReg == 'true') {
     /*
      * ================  Registration form  =======================
      */
 
-  $regFormJS.="  var wform = new Ext.form.FormPanel({
+            $regFormJS.="  var wform = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,
         bodyStyle:'padding:5px 5px 0',
@@ -110,9 +107,9 @@ if($allowStaffReg == 'true'){
     });
 ";
 
-}
+        }
 
-        if($allowExternalReg == 'true'){
+        if($allowExternalReg == 'true') {
             $regFormJS.=" var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,
@@ -196,10 +193,10 @@ if($allowStaffReg == 'true'){
     }
 
 
-     public function createCommentsForm(){
-$submitUrl = $this->uri(array('action' => 'addcomments'));
+    public function createCommentsForm() {
+        $submitUrl = $this->uri(array('action' => 'addcomments'));
         $commentFormJS=
-    "Ext.onReady(function(){
+            "Ext.onReady(function(){
 
     /*
      * ================ comments form  =======================

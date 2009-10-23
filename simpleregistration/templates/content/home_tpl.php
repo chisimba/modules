@@ -5,14 +5,6 @@ if($this->objUser->isLoggedIn()){
 }
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/simpleregistration.css').'"/>';
 $this->appendArrayVar('headerParams', $maincss);
-$eventcontent=array();
-
-if(count($content) > 0){
-    $eventcontent=$content[0];
-}else{
-
-}
-
 $table=$this->getObject('htmltable','htmlelements');
 $table->cellpadding = 5;
 $table->cellpadding = 5;

@@ -17,9 +17,6 @@ $table->cellpadding = 5;
 $regformObj = $this->getObject('formmanager');
 
 $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-if(count($content) > 0){
-    $eventcontent=$content[0];
-}
 
 $objWashout = $this->getObject('washout', 'utilities');
 $title1=$objWashout->parseText($eventcontent['event_lefttitle1']);

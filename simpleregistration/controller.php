@@ -85,15 +85,11 @@ class simpleregistration extends controller {
 
     function __showevent() {
         $status=$this->getParam('status');
-        $this->eventid=$this->getParam('eventid');
+        $this->eventid=$this->getParam('id');
         if($status == 'closed') {
             $this->setVarByRef('eventid',$this->eventid);
-            $idrows=$this->dbevents->getEventIdByShortname($this->shortname);
-
-            if(count($idrows) > 0) {
-                $content=$this->dbeventscontent->getEventContent($idrows[0]['id']);
-                $this->setVarByRef('content',$content);
-            }
+            $content=$this->dbeventscontent->getEventContent($eventid);
+            $this->setVarByRef('content',$content);
             return "closed_tpl.php";
 
         }
@@ -109,17 +105,10 @@ class simpleregistration extends controller {
         $this->setVarByRef('editemail',$email);
         $this->setVarByRef('mode',$mode);
 
-        $this->eventid=$this->getParam('eventid');
+        $this->eventid=$this->getParam($this->getParam('id'));
         $this->setVarByRef('eventid',$this->eventid);
-        $idrows=$this->dbevents->getEventIdByShortname($this->eventid);
-/*
-        if(count($idrows) > 0){
-            $content=$this->dbeventscontent->getEventContent($idrows[0]['id']);
-            $this->setVarByRef('content',$content);
-        }
-        */
         $content=$this->dbeventscontent->getEventContent($this->getParam('id'));
-        $this->setVarByRef('content',$content);
+        $this->setVarByRef('eventcontent',$content);
         return "home_tpl.php";
     }
     /**
@@ -146,37 +135,23 @@ class simpleregistration extends controller {
     }
 
     function __expresssignin() {
-        $eventid=$this->getParam('$eventid');
+        $eventid=$this->getParam('eventid');
         $reg = $this->getObject('dbregistration');
         $lastname=$this->objUser->getFirstName();
         $email=$this->objUser->email();
-        if($this->objUser->email() == 'Anonymous user (not logged in)') {
 
-            if($reg->emailExists($this->objUser->email(),$eventid)) {
-                $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_simpleregistration_alreadysignedup', 'simpleregistration'),
-                    'title2'=>'','eventid'=>$eventid));
-            }else {
-                $this->nextAction('register',array('firstname'=>$this->objUser->getSurname(),
-                    'lastname'=>$lastname,
-                    'company'=>$this->objConfig->getSiteName(),
-                    'emailfield'=>$email,
-                    'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
-                    'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
-                    'eventid'=>$eventid));
-            }
+        if($reg->emailExists($this->objUser->email(),$eventid)) {
+            $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_simpleregistration_alreadysignedup', 'simpleregistration'),
+                'title2'=>'','eventid'=>$eventid));
         }else {
-            if($reg->emailExists($this->objUser->email(),$eventid)) {
-                $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_simpleregistration_alreadysignedup', 'simpleregistration'),
-                    'title2'=>'','eventid'=>$eventid));
-            }else {
-                $this->nextAction('register',array('firstname'=>$this->objUser->getSurname(),
-                    'lastname'=>$lastname,
-                    'company'=>$this->objConfig->getSiteName(),
-                    'emailfield'=>$email,
-                    'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
-                    'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
-                    'eventid'=>$eventid));
-            }
+            $this->nextAction('register',array('firstname'=>$this->objUser->getSurname(),
+                'lastname'=>$lastname,
+                'company'=>$this->objConfig->getSiteName(),
+                'emailfield'=>$email,
+                'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
+                'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
+                'eventid'=>$eventid));
+
         }
     }
 
@@ -331,7 +306,7 @@ class simpleregistration extends controller {
         $eventid=$this->getParam('eventid');
         $content=$this->dbeventscontent->getEventContent($eventid);
         $this->setVarByRef('eventid',$eventid);
-        $this->setVarByRef('content',$content);
+        $this->setVarByRef('eventcontent',$content);
         return "success_tpl.php";
     }
 
