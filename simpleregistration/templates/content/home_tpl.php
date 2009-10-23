@@ -5,14 +5,6 @@ if($this->objUser->isLoggedIn()){
 }
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/simpleregistration.css').'"/>';
 $this->appendArrayVar('headerParams', $maincss);
-
-$table=$this->getObject('htmltable','htmlelements');
-$table->cellpadding = 5;
-$table->cellpadding = 5;
-$regformObj = $this->getObject('formmanager');
-$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-$allowStaffReg=$eventcontent['event_staffreg'];
-$allowExternalReg=$eventcontent['event_visitorreg'];//$objSysConfig->getValue('ALLOW_EXTERNAL_REG', 'simpleregistration');
 $eventcontent=array();
 
 if(count($content) > 0){
@@ -20,6 +12,15 @@ if(count($content) > 0){
 }else{
 
 }
+
+$table=$this->getObject('htmltable','htmlelements');
+$table->cellpadding = 5;
+$table->cellpadding = 5;
+$regformObj = $this->getObject('formmanager');
+$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+$allowStaffReg=$eventcontent['event_staffreg'];
+
+$allowExternalReg=$eventcontent['event_visitorreg'];//$objSysConfig->getValue('ALLOW_EXTERNAL_REG', 'simpleregistration');
 
 $objWashout = $this->getObject('washout', 'utilities');
 $title1=$objWashout->parseText($eventcontent['event_lefttitle1']);
