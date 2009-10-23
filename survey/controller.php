@@ -621,9 +621,8 @@ class survey extends controller {
 				// calls the survey template to take the survey if no pages or
 				// calls the page survey template to take the survey
 				$surveyId = $this->getParam ( 'survey_id' );
-
-				$surveyData = $this->dbSurvey->listSurveys($surveyId);
-				$surveyData = $surveyData[0];
+                                $dbsurveyData=$this->dbSurvey->getSurvey($surveyId);
+			        $surveyData = $dbsurveyData[0];
 				if ($surveyData['survey_active'] != '1') {
 					//The survey is in active, informing the respondant
 					return 'survey_inactive_tpl.php';
