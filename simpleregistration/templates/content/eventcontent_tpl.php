@@ -40,7 +40,7 @@ var form = new Ext.form.FormPanel({
         items: [
 
         new Ext.form.HtmlEditor({
-        fieldLabel: 'Date/Time/Venue',
+        fieldLabel: 'Registration instructions',
         value: '".str_replace($order, $replace, $eventcontent['event_timevenue'])."',
         width: 900,
         height: 200,

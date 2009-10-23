@@ -1,14 +1,13 @@
 <?php
 
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 
 class simpleregistration extends controller {
-    var $shortname;
+    var $eventid;
     function init() {
         $this->objUser = $this->getObject ( 'user', 'security' );
         $this->objLanguage = $this->getObject('language', 'language');
@@ -34,16 +33,16 @@ class simpleregistration extends controller {
         return $this->$method();
     }
 
-  /**
-  *
-  * Method to convert the action parameter into the name of
-  * a method of this class.
-  *
-  * @access private
-  * @param string $action The action parameter passed byref
-  * @return string the name of the method
-  *
-  */
+    /**
+     *
+     * Method to convert the action parameter into the name of
+     * a method of this class.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return string the name of the method
+     *
+     */
     function getMethod(& $action) {
         if ($this->validAction($action)) {
             return '__'.$action;
@@ -53,18 +52,18 @@ class simpleregistration extends controller {
         }
     }
 
-  /**
-  *
-  * Method to check if a given action is a valid method
-  * of this class preceded by double underscore (__). If it __action
-  * is not a valid method it returns FALSE, if it is a valid method
-  * of this class it returns TRUE.
-  *
-  * @access private
-  * @param string $action The action parameter passed byref
-  * @return boolean TRUE|FALSE
-  *
-  */
+    /**
+     *
+     * Method to check if a given action is a valid method
+     * of this class preceded by double underscore (__). If it __action
+     * is not a valid method it returns FALSE, if it is a valid method
+     * of this class it returns TRUE.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return boolean TRUE|FALSE
+     *
+     */
     function validAction(& $action) {
         if (method_exists($this, '__'.$action)) {
             return TRUE;
@@ -74,10 +73,10 @@ class simpleregistration extends controller {
         }
     }
 
-   /**
-    * default home page
-    * @return <type>
-    */
+    /**
+     * default home page
+     * @return <type>
+     */
     function __home() {
         return "eventlisting_tpl.php";
     }
@@ -86,15 +85,15 @@ class simpleregistration extends controller {
 
     function __showevent() {
         $status=$this->getParam('status');
-         $this->shortname=$this->getParam('shortname');
-        if($status == 'closed'){
-           $this->setVarByRef('shortname',$this->shortname);
-           $idrows=$this->dbevents->getEventIdByShortname($this->shortname);
+        $this->eventid=$this->getParam('eventid');
+        if($status == 'closed') {
+            $this->setVarByRef('eventid',$this->eventid);
+            $idrows=$this->dbevents->getEventIdByShortname($this->shortname);
 
-        if(count($idrows) > 0){
-            $content=$this->dbeventscontent->getEventContent($idrows[0]['id']);
-            $this->setVarByRef('content',$content);
-        }
+            if(count($idrows) > 0) {
+                $content=$this->dbeventscontent->getEventContent($idrows[0]['id']);
+                $this->setVarByRef('content',$content);
+            }
             return "closed_tpl.php";
 
         }
@@ -110,9 +109,9 @@ class simpleregistration extends controller {
         $this->setVarByRef('editemail',$email);
         $this->setVarByRef('mode',$mode);
 
-        $this->shortname=$this->getParam('shortname');
-        $this->setVarByRef('shortname',$this->shortname);
-        $idrows=$this->dbevents->getEventIdByShortname($this->shortname);
+        $this->eventid=$this->getParam('eventid');
+        $this->setVarByRef('eventid',$this->eventid);
+        $idrows=$this->dbevents->getEventIdByShortname($this->eventid);
 /*
         if(count($idrows) > 0){
             $content=$this->dbeventscontent->getEventContent($idrows[0]['id']);
@@ -133,62 +132,50 @@ class simpleregistration extends controller {
         $company=$this->getParam('company');
         $email=$this->getParam('emailfield');
         $reg = $this->getObject('dbregistration');
-        $shortname=$this->getParam('shortname');
+        $eventid=$this->getParam('eventid');
 
-        $idrows=$this->dbevents->getEventIdByShortname($shortname);
-        $eventid='';
-        if(count($idrows) > 0){
-            $eventid=$idrows[0]['id'];
-        }
-        if($reg->addRegistration($firstame,$lastname,$company,$email,$eventid)){
+        if($reg->addRegistration($firstame,$lastname,$company,$email,$eventid)) {
 
             $this->sendMail($email,$eventid);
             $this->nextAction("success",array('title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
-   'title2'=>'','shortname'=>$shortname));
+                'title2'=>'','eventid'=>$eventid));
         }
-        else{
+        else {
             $this->nextAction('home',array('firstname'=>$firstame,'lastname'=>$lastname,'company'=>$company,'email'=>$email,"mode"=>'edit'));
         }
     }
 
-    function __expresssignin(){
-        $shortname=$this->getParam('shortname');
+    function __expresssignin() {
+        $eventid=$this->getParam('$eventid');
         $reg = $this->getObject('dbregistration');
         $lastname=$this->objUser->getFirstName();
         $email=$this->objUser->email();
+        if($this->objUser->email() == 'Anonymous user (not logged in)') {
 
-        $idrows=$this->dbevents->getEventIdByShortname($shortname);
-        $eventid='';
-        if(count($idrows) > 0){
-            $eventid=$idrows[0]['id'];
-        }
-        if($this->objUser->email() == 'Anonymous user (not logged in)'){
-
-
-            if($reg->emailExists($this->objUser->email(),$eventid)){
+            if($reg->emailExists($this->objUser->email(),$eventid)) {
                 $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_simpleregistration_alreadysignedup', 'simpleregistration'),
-   'title2'=>'','shortname'=>$shortname));
-            }else{
+                    'title2'=>'','eventid'=>$eventid));
+            }else {
                 $this->nextAction('register',array('firstname'=>$this->objUser->getSurname(),
-   'lastname'=>$lastname,
-   'company'=>$this->objConfig->getSiteName(),
-   'emailfield'=>$email,
-   'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
-   'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
-                    'shortname'=>$shortname));
+                    'lastname'=>$lastname,
+                    'company'=>$this->objConfig->getSiteName(),
+                    'emailfield'=>$email,
+                    'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
+                    'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
+                    'eventid'=>$eventid));
             }
-        }else{
-            if($reg->emailExists($this->objUser->email(),$eventid)){
+        }else {
+            if($reg->emailExists($this->objUser->email(),$eventid)) {
                 $this->nextAction('success',array('title1'=>$this->objLanguage->languageText('mod_simpleregistration_alreadysignedup', 'simpleregistration'),
-   'title2'=>'','shortname'=>$shortname));
-            }else{
+                    'title2'=>'','eventid'=>$eventid));
+            }else {
                 $this->nextAction('register',array('firstname'=>$this->objUser->getSurname(),
-   'lastname'=>$lastname,
-   'company'=>$this->objConfig->getSiteName(),
-   'emailfield'=>$email,
-   'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
-   'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
-                    'shortname'=>$shortname));
+                    'lastname'=>$lastname,
+                    'company'=>$this->objConfig->getSiteName(),
+                    'emailfield'=>$email,
+                    'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
+                    'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
+                    'eventid'=>$eventid));
             }
         }
     }
@@ -196,32 +183,32 @@ class simpleregistration extends controller {
     function __saveevent() {
         $eventtitle=$this->getParam('eventtitlefield');
         $eventdate=$this->getParam('eventdatefield');
-        $shortname=$this->getParam('shortnamefield');
-        $this->dbevents->addEvent($eventtitle,$shortname,$eventdate);
+        $sn=$this->getParam('shortnamefield');
+        $this->dbevents->addEvent($eventtitle,$sn,$eventdate);
         $this->nextAction('eventlisting');
     }
 
 
-    function __savecomment(){
+    function __savecomment() {
         $comment=$this->getParam("commentsField");
         echo $comment;
         die();
-        $shortname=$this->getParam("shortname");
+        $eventid=$this->getParam("eventid");
         $this->dbcomments->addComment($comment);
-        $this->nextAction("commentslist",array("shortname"=>$shortname));
+        $this->nextAction("commentslist",array("eventid"=>$eventid));
 
     }
 
-   /**
-    * The functions require login
-    * @return <type>
-    */
+    /**
+     * The functions require login
+     * @return <type>
+     */
     function __memberlist() {
-        $shortname=$this->getParam('shortname');
+        $eventid=$this->getParam('eventid');
 
-        $idrows=$this->dbevents->getEventIdByShortname($shortname);
+        $idrows=$this->dbevents->getEventIdByeventid($eventid);
         $eventid='';
-        if(count($idrows) > 0){
+        if(count($idrows) > 0) {
             $eventid=$idrows[0]['id'];
         }
 
@@ -244,7 +231,7 @@ class simpleregistration extends controller {
         $staffreg=$this->getParam('staffregfield');
         $visitorreg=$this->getParam('visitorregfield');
         $mode=$this->getParam('mode');
-        if($mode == "new"){
+        if($mode == "new") {
             $this->dbeventscontent->addEventContent(
                 $eventid,
                 $venue,
@@ -258,13 +245,13 @@ class simpleregistration extends controller {
                 $emailsubject,
                 $emailcontent,
                 $emailattachments,
-            $staffreg,
-            $visitorreg
-        );
+                $staffreg,
+                $visitorreg
+            );
 
         }
 
-        if($mode == "edit"){
+        if($mode == "edit") {
             $this->dbeventscontent->updateEventContent(
                 $eventid,
                 $venue,
@@ -279,7 +266,7 @@ class simpleregistration extends controller {
                 $emailcontent,
                 $emailattachments,
                 $staffreg,
-            $visitorreg);
+                $visitorreg);
         }
         $this->nextAction('eventlisting');
     }
@@ -301,13 +288,13 @@ class simpleregistration extends controller {
     function __eventlisting() {
         return "eventlisting_tpl.php";
     }
-    function __deletemember(){
+    function __deletemember() {
         $id=$this->getParam('id');
         $reg = $this->getObject('dbregistration');
         $reg->deleteMember($id);
         $this->nextAction('memberlist');
     }
-    function __xls(){
+    function __xls() {
         $eventid=$this->getParam('eventid');
         $reg = $this->getObject('dbregistration');
         $dbdata=$reg->getRegistrations($eventid);
@@ -328,7 +315,7 @@ class simpleregistration extends controller {
         $file = fopen($myFile, "a");
         //delete old one
 
-        foreach($dbdata as $row){
+        foreach($dbdata as $row) {
             fputs($file, $row['first_name'].'    '.$row['last_name'].'   '.$row['email'].'   '.$row['company']."\r\n");
         }
         fclose($file);
@@ -343,28 +330,22 @@ class simpleregistration extends controller {
      *
      * Registration is a success, inform users
      */
-    function __success(){
+    function __success() {
         $title1=$this->getParam('title1');
         $title2=$this->getParam('title2');
         $this->setVarByRef('rightTitle1',$title1);
         $this->setVarByRef('rightTitle2',$title2);
-        $shortname=$this->getParam('shortname');
-
-        $idrows=$this->dbevents->getEventIdByShortname($shortname);
-
-        if(count($idrows) > 0){
-            $content=$this->dbeventscontent->getEventContent($idrows[0]['id']);
-            $this->setVarByRef('shortname',$shortname);
-            $this->setVarByRef('content',$content);
-        }
-
+        $eventid=$this->getParam('eventid');
+        $content=$this->dbeventscontent->getEventContent($eventid);
+        $this->setVarByRef('eventid',$eventid);
+        $this->setVarByRef('content',$content);
         return "success_tpl.php";
     }
 
     /**
      *  Sends the email to the newly registered member
      */
-    function sendMail($to,$eventid){
+    function sendMail($to,$eventid) {
         $xcontent=$this->dbeventscontent->getEventContent($eventid);
         $content=array();
         $content=$xcontent[0];
@@ -382,18 +363,18 @@ class simpleregistration extends controller {
         $objMailer->setValue('fromName', $emailName);
         $objMailer->setValue('subject', $subject);
         $objMailer->setValue('body', $body);
-        foreach($attachs as $attach){
+        foreach($attachs as $attach) {
             $objMailer->attach($attach);
         }
         $objMailer->send();
     }
 
-    public function __addcomments(){
-        $shortname=$this->getParam('shortname');
-        $this->setVarByRef('shortname',$shortname);
+    public function __addcomments() {
+        $eventid=$this->getParam('eventid');
+        $this->setVarByRef('eventid',$eventid);
         return "comments_tpl.php";
     }
-      /**
+    /**
      * Overridden method to determine whether or not login is required
      *
      * @return FALSE
@@ -402,8 +383,8 @@ class simpleregistration extends controller {
         switch ($this->getParam('action')) {
             case 'showevent':
                 return FALSE;
-                default:
-                    return TRUE;
-                }
-            }
+            default:
+                return TRUE;
+        }
+    }
         }

@@ -43,7 +43,7 @@ class formmanager extends object{
         $mode,
         $allowStaffReg,
         $allowExternalReg,
-        $shortname
+        $eventid
          ){
 
 
@@ -52,8 +52,8 @@ class formmanager extends object{
         $submitUrl = $this->uri(array('action' => 'register',
     'title1'=>$this->objLanguage->languageText('mod_simpleregistration_registrationsuccess', 'simpleregistration'),
    'title2'=>$this->objLanguage->languageText('mod_simpleregistration_success', 'simpleregistration'),
-            'shortname'=>$shortname));
-        $expressLink =$this->uri(array('action' => 'expresssignin','shortname'=>$shortname));
+            'eventid'=>$eventid));
+        $expressLink =$this->uri(array('action' => 'expresssignin','eventid'=>$eventid));
 
 
         $editfirstname=$mode == 'edit' ? "value:'".$editfirstname."',":"";

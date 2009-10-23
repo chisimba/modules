@@ -60,7 +60,7 @@ $pagecontent= $objWashout->parseText($content);
 
 $table->startRow();
 $table->addCell($pagecontent);
-$table->addCell($regformObj->createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode,$allowStaffReg,$allowExternalReg,$shortname));
+$table->addCell($regformObj->createRegisterForm($editfirstname,$editlastname,$editcompany,$editemail,$mode,$allowStaffReg,$allowExternalReg,$eventid));
 
 $table->endRow();
 
