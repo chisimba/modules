@@ -1,9 +1,5 @@
 <?php
 
-echo '<pre>';
-var_dump($topStories);
-echo '</pre>';
-
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
