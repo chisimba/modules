@@ -460,10 +460,10 @@ class events extends controller
                     // a message
                     $tweet = $this->objLanguage->languageText ( "mod_events_newevent", "events" ).": ".ucwords($eventname)." ".$eventuri." #".$tag;
                     // log_debug($tweet);
-                    //$returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
-                    //$thread = $returnobj->thread;
-                    //$threadid = $thread->id;
-                    $threadid = rand(0, 99999);
+                    $returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
+                    $thread = $returnobj->thread;
+                    $threadid = $thread->id;
+                    //$threadid = rand(0, 99999);
                     // now update the event with the tweetid to track twitter conversations on this tweet.
                     $this->objDbEvents->addTwtId($threadid, $eventid);
                     // let everyone know

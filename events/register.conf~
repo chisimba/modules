@@ -3,7 +3,7 @@ MODULE_NAME: Social Events
 MODULE_DESCRIPTION: Social application to manage, organise and participate in events
 MODULE_AUTHORS: Paul Scott
 MODULE_RELEASEDATE: 2009 09 10
-MODULE_VERSION: 0.002
+MODULE_VERSION: 0.003
 MODULE_PATH: events
 MODULE_ISADMIN: 0
 MODULE_ISVISIBLE: 1
@@ -11,7 +11,7 @@ MODULE_HASADMINPAGE: 0
 MODULE_LANGTERMS: events
 MODULE_STATUS: pre-alpha
 
-UPDATE_DESCRIPTION: Start
+UPDATE_DESCRIPTION: Favourites added
 
 TAGS: events|social|user
 
@@ -149,6 +149,13 @@ TEXT: mod_events_publicevent|public event|Public or Open event
 TEXT: mod_events_tweets|tweets|Tweets
 TEXT: mod_events_latesttweets|tweets|Latest Tweets
 TEXT: mod_events_twitoaster|twitoaster|Twitoaster conversations
+TEXT: mod_events_needgeotag|need geotag|Please click the venue location on the map!
+TEXT: mod_events_attendees|attendees list|Attendees list
+TEXT: mod_events_noattendeesyet|no attendees yet|No attendees yet!
+TEXT: mod_events_ticketinfo|Ticket info|Ticket information
+TEXT: mod_events_noticketinfo|no ticket info set|No ticket information available...
+TEXT: mod_events_tickurl|Ticket url|Ticket URL
+TEXT: mod_events_ticketsarefree|tickets are free|Free
 
 COMMENT: Social text strings
 TEXT: mod_events_nosocialfound|no social found|You have not added any friends to your profile yet!
@@ -163,6 +170,7 @@ TEXT: mod_events_newconnection|new connection|New connection made!
 TEXT: mod_events_isnofriendswith|is now friends with|is now connected to
 TEXT: mod_events_favouriteadded|favourite added|Favourite added!
 TEXT: mod_events_madefavourite|made favourite|marked an event as a favourite
+TEXT: mod_events_favouritemark|mark as favourite|Mark as a favourite!
 
 
 COMMENT: Activity stream elements

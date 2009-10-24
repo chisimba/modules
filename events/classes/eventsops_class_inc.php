@@ -641,6 +641,59 @@ class eventsops extends object {
         return $favlink->show();
     }
     
+    public function showAttendeesBox($eventdata) {
+        $ret = NULL;
+        $objFB = $this->newObject('featurebox', 'navigation');
+        $attarray = $this->objUtils->object2array($eventdata->attendees);
+        if(empty($attarray)) {
+            $ret .= "<em>".$this->objLanguage->languageText("mod_events_noattendeesyet", "events")."</em>";
+            return $objFB->show($this->objLanguage->languageText("mod_events_attendees", "events"), $ret);
+        }
+        foreach($attarray as $att) {
+            if($att->ans == 'no') {
+                continue;
+            }
+            else {
+                $ret .= $this->objUser->getSmallUserImage($att->userid, $this->objUser->username($att->userid))."<br />".$this->objUser->fullName($att->userid)."<br /><hr />";
+            }
+        }
+        return $objFB->show($this->objLanguage->languageText("mod_events_attendees", "events"), $ret);
+    }
+    
+    public function showFavouritesBox($eventdata) {
+    
+    }
+    
+    public function showTicketBox($eventdata) {
+        $ret = NULL;
+        $ttable = NULL;
+        $objFb = $this->newObject('featurebox', 'navigation');
+        $tfree = $eventdata->event->ticket_free;
+        $tprice = $eventdata->event->ticket_price;
+        $ticketurl = $eventdata->event->ticket_url;
+        $exturl = $eventdata->event->url;
+        if($exturl == 'http://') {
+            $exturl = NULL;
+        }
+        if($ticketurl == 'http://') {
+            $ticketurl = NULL;
+        }
+        if($tfree == NULL && $tprice == NULL && $ticketurl == NULL && $exturl == NULL) {
+            $ret .= $objFb->show($this->objLanguage->languageText("mod_events_ticketinfo", "events"), "<em>".$this->objLanguage->languageText("mod_events_noticketinfo", "events")."</em>");
+        }
+        else {
+            if($tfree == 'on') {
+                $tprice = $this->objLanguage->languageText("mod_events_ticketsarefree", "events");
+            }
+            $ttable .= $this->objLanguage->languageText("mod_events_tickurl", "events").": <br />".$this->objWashout->parseText($ticketurl)."<br />";
+            $ttable .= $this->objLanguage->languageText("mod_events_ticketprice", "events").": <br />".$tprice."<br />";
+            $ttable .= $this->objLanguage->languageText("mod_events_exturl", "events").": <br />".$this->objWashout->parseText($exturl)."<br />";
+            
+            $ret .= $objFb->show($this->objLanguage->languageText("mod_events_ticketinfo", "events"), $ttable);
+        }
+        return $ret;
+    }
+    
     /**
      * Grabs Wikipedia content according to lat lon
      *
@@ -650,6 +703,7 @@ class eventsops extends object {
      */
     public function getWikipediaContentByLatLon($lat, $lon) {
         $ret = NULL;
+        $disp = $this->newObject('featurebox', 'navigation');
         $word_away = $this->objLanguage->languageText("mod_events_word_away", "events");
         $moretext = $this->objLanguage->languageText("mod_events_word_more", "events");
         $articles = $this->findNearbyWikipedia($lat, $lon);
@@ -669,10 +723,10 @@ class eventsops extends object {
                 $ret .= $wikbox->show($title." "."(".$distance."km ".$word_away.") ".$morelink."...", $summary);
             }
             else {
-                $ret .= $this->objLanguage->languageText("mod_events_noarticlesfound", "events");
+                $ret .= $disp->show("Wikipedia", $this->objLanguage->languageText("mod_events_noarticlesfound", "events"));
             }
         }
-        return $ret;
+        return $disp->show("Wikipedia", $ret);
     }
 
     /**
@@ -830,7 +884,7 @@ class eventsops extends object {
         $etbl->cellspacing = 5;
         $catinfo = $this->objDbEvents->categoryGetDetails($event['category_id']);
         $etbl->startRow();
-        $etbl->addCell($datedisplay.$this->goYesNo($event['id'])."<br />".$catinfo[0]['cat_name']."<br /> (".$catinfo[0]['cat_desc'].") <br /><br />".$descrip, '50%', "top");
+        $etbl->addCell($datedisplay.$this->markasfavourite($event['id']).$this->goYesNo($event['id'])."<br />".$catinfo[0]['cat_name']."<br /> (".$catinfo[0]['cat_desc'].") <br /><br />".$descrip, '50%', "top");
         $etbl->addCell($this->viewLocMap($venue['geolat'], $venue['geolon'], 10), '50%', "top");
         $etbl->endRow();
         $etbl->startRow();
@@ -1764,7 +1818,7 @@ class eventsops extends object {
         $vfieldset->contents = $vtable->show().$eventidinput->show();
 
         // the rules
-        //$form->addRule('venuename', $this->objLanguage->languageText("mod_events_needvenue", "events"), 'required');
+        $form->addRule('geotag', $this->objLanguage->languageText("mod_events_needgeotag", "events"), 'required');
 
         $button = new button ('submitform', $this->objLanguage->languageText("mod_events_addvenue", "events"));
         $button->setToSubmit();
@@ -1998,7 +2052,7 @@ class eventsops extends object {
         $mfieldset = $this->newObject('fieldset', 'htmlelements');
         $mfieldset->legend = $this->objLanguage->languageText("mod_events_venuelocation", "events");;
         $mfieldset->contents = $mtable->show();
-
+        
         return $mfieldset->show();
 
     }

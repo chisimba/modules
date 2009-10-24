@@ -17,7 +17,7 @@ $fields = array(
     ),
     'tweet' => array(
         'type' => 'text',
-        'length' => 140
+        'length' => 255
     ),
     'createdat' => array(
         'type' => 'text',
