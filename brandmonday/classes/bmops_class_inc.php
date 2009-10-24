@@ -245,7 +245,10 @@ class bmops extends object {
     public function getAllBsData() { // weight, colour, label
         $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
         $objFlashGraphData->graphType = 'pie';
-        $tagarr = $this->objDbBm->getBmTags('plus', 20);
+        $tagarr = $this->objDbBm->getBmTags('plus', NULL);
+        $num = count($tagarr);
+        $last = $num - 20;
+        $tagarr = array_slice($tagarr, 0, 20);
         $colours = $this->getObject('websafecolours', 'utilities');
         if (empty($tagarr)) {
             return NULL;
@@ -331,7 +334,10 @@ class bmops extends object {
     public function getAllWsData() { // weight, colour, label
         $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
         $objFlashGraphData->graphType = 'pie';
-        $tagarr = $this->objDbBm->getBmTags('minus', 20);
+        $tagarr = $this->objDbBm->getBmTags('minus', NULL);
+        $num = count($tagarr);
+        $last = $num - 20;
+        $tagarr = array_slice($tagarr, 0, 20);
         $colours = $this->getObject('websafecolours', 'utilities');
         if (empty($tagarr)) {
             return NULL;

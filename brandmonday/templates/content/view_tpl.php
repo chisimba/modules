@@ -26,7 +26,12 @@ $headertag2 = new htmlHeading ( );
 $headertag2->str = $this->objLanguage->languageText ( 'mod_brandmonday_bminit', 'brandmonday' )." ".$cptLink." ".$this->objLanguage->languageText ( 'mod_brandmonday_bminit2', 'brandmonday' );
 $headertag2->type = 3;
 
-$middleColumn .= $header->show().$headertag2->show();
+$this->objShare = $this->getObject('share', 'toolbar');
+$this->objShare->setup($this->uri(''), '#BrandMonday', '#BrandMonday tweets about brands ');
+
+//$middleColumn .= $header->show().
+$middleColumn .= $headertag2->show();
+$middleColumn .= $this->objShare->show();
 $middleColumn .= $this->objViewer->renderCompView($resPlus, $resMinus, $resMentions);
 
 $rightColumn .= $this->objViewer->aboutBlock();
