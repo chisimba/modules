@@ -158,7 +158,7 @@ function showAddGiftWin(url){
                 },
 
             new Ext.form.TextArea({
-               fieldLabel: 'Descption',
+               fieldLabel: 'Description',
                width:350,
                height:150,
                
@@ -221,5 +221,96 @@ function showAddGiftWin(url){
         }
 
         addGiftWin.show(this);
+
+}
+
+function showEditGiftWin(url,giftname,description,donor,val){
+    
+	var form = new Ext.form.FormPanel({
+        baseCls: 'x-plain',
+        labelWidth: 75,
+        bodyStyle:'padding:5px 5px 0',
+        standardSubmit: true,
+        url:url,
+        defaultType: 'textfield',
+        items:[
+               {
+                    fieldLabel: 'Gift Name',
+                    name: 'gname',
+                    width:350,
+                    allowBlank: false,
+                    value:giftname
+                    
+                },
+
+            new Ext.form.TextArea({
+               fieldLabel: 'Descption',
+               width:350,
+               height:150,
+               
+               name: 'descripvalue',
+               value:description
+               }),
+
+              {
+                fieldLabel: 'Donor',
+                name: 'dnvalue',
+                width:350,
+                allowBlank: false,
+                value:donor
+                },
+              {
+                    fieldLabel: 'Value',
+                    name: 'gvalue',
+                    width:350,
+                    allowBlank: false,
+                    value:val
+                }
+
+          ]
+
+      });
+			
+	
+         var editGiftWin;
+
+           if(!editGiftWin){
+            
+            editGiftWin = new Ext.Window({
+                applyTo:'edit-gift-surface',
+                layout:'fit',
+                title:'Edit Gift',
+                width:500,
+                height:350,
+                x:250,
+                y:50,
+                closeAction:'hide',
+                plain: true,
+                items: [
+                 form
+                ],
+                  buttons: [{
+                    text:'Save',
+                    handler: function(){
+                  if (form.url){
+                            form.getForm().getEl().dom.action = form.url;
+                          }
+                        form.getForm().submit();
+
+                  }
+                  }
+                  ,{
+                    text: 'Cancel',
+                    handler: function(){
+                       editGiftWin.hide();
+                        window.location.reload(true);
+                    }
+                  }
+                ]
+
+            });
+        }
+
+       editGiftWin.show(this);
 
 }

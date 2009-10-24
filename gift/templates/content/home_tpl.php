@@ -19,14 +19,26 @@ $this->appendArrayVar('headerParams', $maincss);
 $this->appendArrayVar('headerParams', $listingjs);
 $addGift = $this->uri(array('action'=>'submitadd'));
 
+
+
 $data='';
 
 $dbdata=$this->objDbGift->getMyGifts();
 $objIcon->setIcon('edit');
 
 foreach($dbdata as $row) {
-    $editGift =new link($this->uri(array('action'=>'submitedit','id'=>$row['id'])));
+    $editGift =new link($this->uri(array('action'=>'submitedit','id'=>$row['id']))."#");
+    $editGiftUrl = $this->uri(array('action'=>'submitedit','id'=>$row['id']));
     $editGift->link=$objIcon->show();
+    $gift =$row['giftname'];
+    $decrb =$row['description'];
+    $don =$row['donor'];
+    $val =$row['value'];
+	//    $action ="showEditGiftWin($row,$gift,$decrb,$don,$val);return false";
+    // $action="showAddGiftWin($data);return false;";
+    $action ="showEditGiftWin(\'".$editGiftUrl."\',\'".$gift."\',\'".$decrb."\',\'".$don."\',\'".$val."\');return false";
+    $editGift->extra = 'onClick="'.$action.'"';
+    
     $data.="[";
     $data.="'".$row['giftname']."',";
     $data.="'".$row['description']."',";
@@ -74,6 +86,7 @@ $rightSideColumn.=$heading->show().$body.'<br/>'.$notice;
 $rightSideColumn .='
 
 <div id="add-gift-surface"></div>
+<div id="edit-gift-surface"></div>
 <div id="grouping-grid"></div>';
 
 // Add Right Column

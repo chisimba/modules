@@ -44,7 +44,7 @@ class gift extends controller
      * @return string
      */
     function submitAdd() {
-        $donor = $this->getParam('valuefield');             // Donor name
+        $donor = $this->getParam('donorfield');             // Donor name
         $recipient = $this->objUser->fullName();         // Recipient name
         $name = $this->getParam('giftnamefield');                // Gift's name
         $description = $this->getParam('descfield');  // Description
@@ -103,21 +103,23 @@ class gift extends controller
         $description = $this->getParam('descripvalue');
         $value = $this->getParam('gvalue');
         $listed = $this->getParam('gstatevalue');
+        $id =$this->getParam('id');
+        
+        $result = $this->objDbGift->updateInfo($donor,$recipient,$name,$description,$value,$listed,$id);
 		
-        $result = $this->objDbGift->updateInfo($donor,$recipient,$name,$description,$value,$listed,$this->getParam('id'));
-
         if($result) {
             $this->msg = $this->objLanguage->languageText('mod_updateInfoSuccess','gift');
         }
         else {
             $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
         }
-
+		
         $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
         $this->data = $this->objDbGift->getInfo($qry);
         $this->recentdata['id'] = $this->getParam('id');
 
         return $this->nextAction('result');
+        
     }
 }
 ?>
