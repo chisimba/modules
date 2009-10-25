@@ -186,12 +186,10 @@ class eventsutils extends object {
     
     public function truncateBigDescription($eventid, $string, $limit, $break=".", $pad="...") { 
         $morelink = $this->newObject('alertbox', 'htmlelements');
-        //$morelink->href = $this->uri(array('action' => 'viewsingle', 'eventid' => $eventid));
-        //$morelink->link = $this->objLanguage->languageText("mod_events_moreeventinfo", "events");
         $morelink = $morelink->show($this->objLanguage->languageText("mod_events_moreeventinfo", "events"), $this->uri(array('action' => 'eventdesconly', 'eventid' => $eventid)));
         // return with no change if string is shorter than $limit  
         if(strlen($string) <= $limit) {
-            return $string." [$morelink]"; 
+            return $string; 
         }
         // is $break present between $limit and the end of the string?  
         if(false !== ($breakpoint = strpos($string, $break, $limit))) { 

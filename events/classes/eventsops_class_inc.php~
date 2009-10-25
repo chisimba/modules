@@ -643,6 +643,20 @@ class eventsops extends object {
     
     public function showAttendeesBox($eventdata) {
         $ret = NULL;
+        $attcount = 0;
+        $attlist = NULL;
+        $promoters = $eventdata->promoters;
+        $promoters = $this->objUtils->object2array($promoters);
+        if(!is_null($promoters) && isset($promoters[0])) {
+            $promo = $this->objUtils->object2array($promoters[0]);
+            $maxppl = $promo['limitedto'];
+            if($promo['canbringothers'] == 'on') {
+                $numguests = $promo['numberguests'];
+            }
+        }
+        else {
+            $maxppl = "No limit";
+        }
         $objFB = $this->newObject('featurebox', 'navigation');
         $attarray = $this->objUtils->object2array($eventdata->attendees);
         if(empty($attarray)) {
@@ -654,9 +668,12 @@ class eventsops extends object {
                 continue;
             }
             else {
-                $ret .= $this->objUser->getSmallUserImage($att->userid, $this->objUser->username($att->userid))."<br />".$this->objUser->fullName($att->userid)."<br /><hr />";
+                $attcount++;
+                $attlist .= $this->objUser->getSmallUserImage($att->userid, $this->objUser->username($att->userid))."<br />".$this->objUser->fullName($att->userid)."<br /><hr />";
             }
         }
+        $attends = $attcount." / ".$maxppl;
+        $ret .= $attends."<br />".$attlist;
         return $objFB->show($this->objLanguage->languageText("mod_events_attendees", "events"), $ret);
     }
     
@@ -684,14 +701,7 @@ class eventsops extends object {
         else {
             if($tfree == 'on') {
                 $tprice = $this->objLanguage->languageText("mod_events_ticketsarefree", "events");
-            } 
-            // Make up a nicely formatted ticket info block
-            /*$ttable = $this->newObject('htmltable', 'htmlelements');
-            $ttable->startRow();
-            $ttable->addCell($this->objLanguage->languageText("mod_events_ticketurl", "events"));
-            $ttable->addCell($ticketurl);
-            $ttable->endRow();
-            */
+            }
             $ttable .= $this->objLanguage->languageText("mod_events_tickurl", "events").": <br />".$this->objWashout->parseText($ticketurl)."<br />";
             $ttable .= $this->objLanguage->languageText("mod_events_ticketprice", "events").": <br />".$tprice."<br />";
             $ttable .= $this->objLanguage->languageText("mod_events_exturl", "events").": <br />".$this->objWashout->parseText($exturl)."<br />";

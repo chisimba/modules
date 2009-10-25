@@ -131,6 +131,9 @@ class eventsutils extends object {
         else {
             $array = $object;
         }
+        if(!isset($array)) {
+            $array = array();
+        }
         return $array;
     }
 

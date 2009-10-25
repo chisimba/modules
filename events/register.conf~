@@ -156,6 +156,8 @@ TEXT: mod_events_ticketinfo|Ticket info|Ticket information
 TEXT: mod_events_noticketinfo|no ticket info set|No ticket information available...
 TEXT: mod_events_tickurl|Ticket url|Ticket URL
 TEXT: mod_events_ticketsarefree|tickets are free|Free
+TEXT: mod_events_exturl|external URL|External URL
+TEXT: mod_events_nolimit|unlimited|No limit
 
 COMMENT: Social text strings
 TEXT: mod_events_nosocialfound|no social found|You have not added any friends to your profile yet!
