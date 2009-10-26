@@ -131,11 +131,11 @@ $table->endRow();
 
 //Input and label for Journal Name
 $objjournalName1 = new textinput('journalname1');
-$objjournalName1->size = 41;
+$objjournalName1->size = 71;
 $objjournalName1->extra = 'disabled = "true"';
 $objjournalName = new textinput('journalname',null, 'hidden', '10');
 $objjournalName2 = new textinput('journalname2');
-$objjournalName2->size = 40;
+$objjournalName2->size = 70;
 $journalNameLabel = new label($journalName,'journalname1');
 $table->addCell($journalNameLabel->show(), 150, 'top', 'left');
 if($mode == 'fixerror'){

@@ -36,7 +36,7 @@ Ext.onReady(function(){
         typeAhead: false,
         emptyText: 'Start typing (at least 4 letters)...',
         loadingText: 'Searching...',
-        width: 352,
+        width: 372,
         pageSize:10,
         hideTrigger:false,
         hiddenName: 'query2',
