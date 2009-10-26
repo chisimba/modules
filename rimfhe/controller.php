@@ -291,7 +291,7 @@ Public fuction to instantiate required  objestc
                     echo $myJournals;
                     exit(0);
                     break;
-                case 'ajaxgetjournals':
+                case 'jsongetjournals':
                     //query coming from the ext lib. combobox auto complete. The post var is called query.
                     if (isset($_GET['query'])){
                      $journal = $_GET['query'];

@@ -12,7 +12,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 $objSysConfig  = $this->getObject('altconfig','config');
 $this->appendArrayVar('headerParams', '
 	<script type="text/javascript">
-		var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'rimfhe', 'action' => 'ajaxgetjournals'))).'"; 
+		var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'rimfhe', 'action' => 'jsongetjournals'))).'"; 
 		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
 
