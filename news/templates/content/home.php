@@ -1,5 +1,10 @@
 <?php
 
+echo '<pre>';
+echo '$topStories::';
+var_dump($topStories);
+echo '</pre>';
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
@@ -32,6 +37,10 @@ if (count($categories) > 0) {
     {
         if ($category['blockonfrontpage'] == 'Y') {
             $nonTopStories = $this->objNewsStories->getNonTopStoriesFormatted($category['id'], $topStoriesId);
+            echo '<pre>';
+            echo '$nonTopStories::';
+            var_dump($nonTopStories);
+            echo '</pre>';
             if ($nonTopStories != '') {
 
                 if ($counter%2 == 0) {
