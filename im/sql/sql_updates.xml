@@ -80,6 +80,7 @@
             </add>
         </data>
     </update>
+    <update>
         <table>tbl_im_presence</table>
         <version>0.195</version>
         <description>Added new field</description>
