@@ -86,7 +86,7 @@
         <description>Added new field</description>
         <data>
             <add>
-                <name>newds_reply</name>
+                <name>needs_reply</name>
                 <type>integer</type>                
             </add>
         </data>
