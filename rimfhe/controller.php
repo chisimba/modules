@@ -307,12 +307,6 @@ Public fuction to instantiate required  objestc
                     }else{
                      $journid = $this->getParam('journalcat');
                     }
-                    if($journid=="ISI Listing")
-                    $journid = 1;
-                    if($journid=="IBSS Listing")
-                    $journid = 2;
-                    if($journid=="Approved SA Listing")
-                    $journid = 3;
                     $this->setLayoutTemplate(NULL);
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->setVar('pageSuppressBanner', TRUE);
