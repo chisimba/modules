@@ -77,5 +77,28 @@ class dbLiftclub_cities extends dbTable
     {
         $this->delete("id", $id);
     }
+    function getCities($city, $start, $limit) 
+    {
+         if(!empty($start) && !empty($limit)){
+		         return $this->getAll("WHERE city LIKE '%".$city."%' LIMIT ".$start." , ".$limit);
+         }else{
+		         return $this->getAll("WHERE city LIKE '%".$city."%'");
+         }
+    }
+ 
+     function jsongetCities($city, $start, $limit) 
+    {
+        $myCities = $this->getCities($city, $start, $limit);
+       	$cityCount = ( count ( $myCities ) );
+        $str = '{"citycount":"'.$cityCount.'","searchedcities":[';
+        $searchArray = array();
+        foreach($myCities as $thisCity){
+          $infoArray = array();
+          $infoArray['id'] = $thisCity['id'];
+          $infoArray['city'] = $thisCity['city'];
+          $searchArray[] = $infoArray;
+        }
+        return json_encode(array('citycount' => $cityCount, 'searchresults' =>  $searchArray));
+    }
 }
 ?>

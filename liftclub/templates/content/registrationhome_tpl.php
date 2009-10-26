@@ -38,6 +38,22 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
+$this->appendArrayVar('headerParams', '
+	<script type="text/javascript">
+		var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'liftclub', 'action' => 'jsongetcities'))).'"; 
+ </script>');
+
+//Ext stuff
+$ext = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
+$ext .=$this->getJavaScriptFile('extjsgetcity.js', 'liftclub');
+$ext .=$this->getJavaScriptFile('extjsgetcityb.js', 'liftclub');
+//$ext .=$this->getJavaScriptFile('forum-search.js', 'rimfhe');
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('combos.css', 'liftclub').'"type="text/css" />';
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+$this->appendArrayVar('headerParams', $ext);
+
 $header = new htmlheading();
 $header->type = 1;
 $header->str = $this->objLanguage->languageText("phrase_registeron", 'liftclub', "Register On").' '.$this->objConfig->getSitename();
@@ -299,21 +315,26 @@ $table->addCell($suburb->show().$required);
 $table->endRow();
 
 $table->startRow();
-$citytown = new textinput('citytown');
-$citytown->extra = "maxlength=350";
-$citytownLabel = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub', "City/Town").'&nbsp;', 'input_citytown');
+$citytown = new textinput('citytown',null,'hidden');
+$citytown->size = 10;
+$citytownb = new textinput('citytownb');
+$citytownb->size = 40;
+$citytowna = new textinput('citytowna');
+$citytowna->size = 41;
+$citytowna->extra = 'disabled = "true"';
+$citytownLabel = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub', "City/Town").'&nbsp;', 'input_citytownb');
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('citytown');
 
-    if ($this->getParam('citytown') == '' || strlen($this->getParam('citytown')) > 4) {
+    if ($this->getParam('citytown') == '' || strlen($this->getParam('citytown')) < 1) {
         $messages[] = $this->objLanguage->languageText('entercitytown', 'system', 'Please enter City/Town');
     }
 }
 
-$table->addCell($citytownLabel->show(), 150, NULL, 'right');
+$table->addCell($citytownLabel->show(), 150, 'top', 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($citytown->show().$required);
+$table->addCell($citytownb->show().$citytowna->show().$citytown->show().$required);
 $table->endRow();
 
 $provinceDropdown = new dropdown('province');
@@ -340,7 +361,7 @@ $neighbour->extra = "maxlength=350";
 $neighbourLabel = new label($this->objLanguage->languageText('mod_liftclub_neighbour', 'liftclub', "Neighbour").'&nbsp;', 'input_neighbour');
 
 if ($mode == 'addfixup') {
-    $citytown->value = $this->getParam('neighbour');
+    $neighbour->value = $this->getParam('neighbour');
 }
 
 $table->addCell($neighbourLabel->show(), 150, NULL, 'right');
@@ -395,7 +416,7 @@ $suburb2->extra = "maxlength=350";
 $suburbLabel2 = new label($this->objLanguage->languageText('mod_liftclub_suburb', 'liftclub', "Suburb").'&nbsp;', 'input_suburb2');
 
 if ($mode == 'addfixup') {
-    $citytown->value = $this->getParam('suburb2');
+    $suburb2->value = $this->getParam('suburb2');
 
     if ($this->getParam('suburb2') == '' || strlen($this->getParam('suburb2')) > 4) {
         $messages[] = $this->objLanguage->languageText('entersuburb', 'system', 'Please enter Suburb');
@@ -408,21 +429,27 @@ $table->addCell($suburb2->show().$required);
 $table->endRow();
 
 $table->startRow();
-$citytown2 = new textinput('citytown2');
+$citytown2 = new textinput('citytown2',null,'hidden');
 $citytown2->extra = "maxlength=350";
-$citytownLabel2 = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub', "City/Town").'&nbsp;', 'input_citytown2');
+$citytown2a = new textinput('citytown2a');
+$citytown2a->size = 41;
+$citytown2a->extra = 'maxlength=350 disabled = "true"';
+$citytown2b = new textinput('citytown2b');
+$citytown2b->size = 40;
+$citytown2b->extra = 'maxlength=350';
+$citytownLabel2 = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub', "City/Town").'&nbsp;', 'input_citytown2a');
 
 if ($mode == 'addfixup') {
-    $citytown->value = $this->getParam('citytown2');
+    $citytown2->value = $this->getParam('citytown2');
 
     if ($this->getParam('citytown2') == '' || strlen($this->getParam('citytown2')) > 4) {
         $messages[] = $this->objLanguage->languageText('entercitytown', 'system', 'Please enter City/Town');
     }
 }
 
-$table->addCell($citytownLabel2->show(), 150, NULL, 'right');
+$table->addCell($citytownLabel2->show(), 150, 'top', 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($citytown2->show().$required);
+$table->addCell($citytown2b->show().$citytown2a->show().$citytown2->show().$required);
 $table->endRow();
 
 $provinceDropdown2 = new dropdown('province2');
@@ -449,7 +476,7 @@ $neighbour2->extra = "maxlength=350";
 $neighbourLabel2 = new label($this->objLanguage->languageText('mod_liftclub_neighbour', 'liftclub',"Neighbour").'&nbsp;', 'input_neighbour2');
 
 if ($mode == 'addfixup') {
-    $citytown->value = $this->getParam('neighbour2');
+    $neighbour2->value = $this->getParam('neighbour2');
 }
 
 $table->addCell($neighbourLabel2->show(), 150, NULL, 'right');

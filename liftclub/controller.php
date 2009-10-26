@@ -37,6 +37,7 @@ class liftclub extends controller
         $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
         $this->objUser = $this->getObject('user', 'security');
         $this->objUrl = $this->getObject('url', 'strings');
+        $this->objDBCities = $this->getObject('dbliftclub_cities', 'liftclub');
     }
     /**
      * Method to turn off login requirement for all actions in this module
@@ -102,6 +103,28 @@ class liftclub extends controller
                     $objMailer->setValue('body', strip_tags($msg));
                     $objMailer->send();
                     $this->nextAction('', array() , '_default');
+                case 'jsongetcities':
+                    //query coming from the ext lib. combobox auto complete. The post var is called query.
+                    if (isset($_GET['query'])){
+                     $city = $_GET['query'];
+                     $start =  $_GET['start'];
+                     $limit =  $_GET['limit'];
+                    }else{
+                     $city = $this->getParam('query');
+                     $start = $this->getParam('start');
+                     $limit = $this->getParam('limit');
+                    }
+                    $this->setLayoutTemplate(NULL);
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    $this->setVar('pageSuppressBanner', TRUE);
+                    $this->setVar('pageSuppressSearch', TRUE);
+                    $this->setVar('suppressFooter', TRUE);
+                    //Get journal, journcatid
+                    //$journalcat = $this->getParam('journalcat');
+                    $myCities= $this->objDBCities->jsongetCities($city, $start, $limit);
+                    echo $myCities;
+                    exit(0);
+                    break; 
             }
         }
     }
