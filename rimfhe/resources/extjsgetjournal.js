@@ -34,7 +34,7 @@ Ext.onReady(function(){
         store: dataStoreParts,
         displayField:'jname',
         typeAhead: false,
-        emptyText: 'Start typing...',
+        emptyText: 'Start typing (at least 4 letters)...',
         loadingText: 'Searching...',
         width: 352,
         pageSize:10,
