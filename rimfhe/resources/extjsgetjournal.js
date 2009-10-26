@@ -6,6 +6,14 @@
  */
 Ext.onReady(function(){  
     var dataStoreParts = new Ext.data.Store({
+     listeners:{ 
+    		'loadexception': function(theO, theN, response){
+							 var searchCategory = jQuery("#input_category").val();
+    		},
+    		'load': function(){
+							 var searchCategory = jQuery("#input_category").val();
+    		}
+    	},
      proxy: new Ext.data.HttpProxy({  
      url: uri, method: 'GET'
     }),
@@ -31,16 +39,14 @@ Ext.onReady(function(){
         width: 352,
         pageSize:10,
         hideTrigger:false,
-        hiddenName: 'query',
+        hiddenName: 'query2',
         triggerAction: 'all',
         tpl: resultTpl,
         applyTo: 'input_journalname2',
         itemSelector: 'div.search-item',
-        selectOnFocus:true,
         onSelect: function(record){ // override default onSelect to do redirect]
-            var currentData = record.data.jname;
-            jQuery("input[id='input_journalname']").val(record.data.jname);
-            //jQuery("input[id='input_journalname2']").val(record.data.titlej);
+            jQuery("input[id='input_journalname']").val(record.data.jid);
+            jQuery("input[id='input_journalname1']").val(record.data.jname);
             this.collapse();
         }        
     });

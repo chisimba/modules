@@ -130,12 +130,13 @@ $table->addCell($objCategory->show(), 150, NULL, 'left');
 $table->endRow();
 
 //Input and label for Journal Name
-$objjournalName = new textinput('journalname');
-$objjournalName->size = 41;
-$objjournalName->extra = 'disabled = "true"';
+$objjournalName1 = new textinput('journalname1');
+$objjournalName1->size = 41;
+$objjournalName1->extra = 'disabled = "true"';
+$objjournalName = new textinput('journalname',null, 'hidden', '10');
 $objjournalName2 = new textinput('journalname2');
 $objjournalName2->size = 40;
-$journalNameLabel = new label($journalName,'journalname');
+$journalNameLabel = new label($journalName,'journalname1');
 $table->addCell($journalNameLabel->show(), 150, 'top', 'left');
 if($mode == 'fixerror'){
     $objjournalName->value =$this->getParam('journalname');
@@ -144,8 +145,8 @@ if($mode == 'edit'){
     $objjournalName->value =$arrEdit['journalname'];
 }
 
-$table->addCell($objjournalName2->show().$objjournalName->show(), 150, NULL, 'left');
-$table->addCell(NULL, 350, NULL, 'left');
+$table->addCell($objjournalName2->show()." ".$objjournalName1->show()." ".$objjournalName->show(), 150, NULL, 'left');
+$table->addCell(NULL, 110, NULL, 'left');
 $table->endRow();
 
 //Input and label for Title of Article

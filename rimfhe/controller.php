@@ -295,9 +295,24 @@ Public fuction to instantiate required  objestc
                     //query coming from the ext lib. combobox auto complete. The post var is called query.
                     if (isset($_GET['query'])){
                      $journal = $_GET['query'];
+                     $start =  $_GET['start'];
+                     $limit =  $_GET['limit'];
                     }else{
                      $journal = $this->getParam('query');
+                     $start = $this->getParam('start');
+                     $limit = $this->getParam('limit');
                     }
+                    if (isset($_GET['journalcat'])){
+                     $journid = $_GET['journalcat'];
+                    }else{
+                     $journid = $this->getParam('journalcat');
+                    }
+                    if($journid=="ISI Listing")
+                    $journid = 1;
+                    if($journid=="IBSS Listing")
+                    $journid = 2;
+                    if($journid=="Approved SA Listing")
+                    $journid = 3;
                     $this->setLayoutTemplate(NULL);
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->setVar('pageSuppressBanner', TRUE);
@@ -305,7 +320,7 @@ Public fuction to instantiate required  objestc
                     $this->setVar('suppressFooter', TRUE);
                     //Get journal, journcatid
                     //$journalcat = $this->getParam('journalcat');
-                    $myJournals= $this->objDBJournal->jsongetJournals($journal);
+                    $myJournals= $this->objDBJournal->jsongetJournals($journid,$journal, $start, $limit);
                     echo $myJournals;
                     exit(0);
                     break;
