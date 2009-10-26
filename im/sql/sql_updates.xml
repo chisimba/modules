@@ -80,6 +80,16 @@
             </add>
         </data>
     </update>
+        <table>tbl_im_presence</table>
+        <version>0.195</version>
+        <description>Added new field</description>
+        <data>
+            <add>
+                <name>newds_reply</name>
+                <type>integer</type>                
+            </add>
+        </data>
+    </update>
 
 
 </updates>
