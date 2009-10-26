@@ -158,7 +158,7 @@ $right .= '<div id="editmode">'.$editOnButton->show().'</div>';
 }
 
 
-$right .= '<div id="rightblocks">'.$rightBlocksStr.'</div>';
+$right .= '<div id="rightblocks">'.$rightBlocks.'</div>';
 
 $left = '';
 
@@ -168,7 +168,7 @@ $left .= $leftContent;
 
 
 
-$left .= '<div id="leftblocks">'.$leftBlocksStr.'</div>';
+$left .= '<div id="leftblocks">'.$leftBlocks.'</div>';
 
 if ($objUser->isAdmin()) {
 
@@ -190,6 +190,9 @@ $left .= '</div>';
 $button = new button ('addmiddleblock', $objLanguage->languageText('mod_prelogin_addblock', 'system', 'Add Block'));
 $button->cssId = 'middlebutton';
 $objContextBlocks = $this->getObject('dbcontextblocks', 'context');
+if (!(isset($this->contextCode))){
+   $this->contextCode='lobby';
+}
 $middleBlocks = $objContextBlocks->getContextBlocks($this->contextCode, 'middle');
 
 $cssLayout->middleColumnContent = '<div id="middleblocks">'.$middleBlocks.'</div>';
