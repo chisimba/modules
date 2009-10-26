@@ -109,10 +109,9 @@ if ( count($arrJournal) > 0) {
         //Set odd even row colour
         $oddOrEven = ($rowcount == 0) ? "even" : "odd";
         $tableRow = array();
-
-       
+        $journalname = $this->objDBJournal->listSingle($journal['journalname']);      
         $tableRow[] = $journal['journalcategory'];
-        $tableRow[] = $journal['journalname'];
+        $tableRow[] = $journalname[0]['journal'];
         $tableRow[] = $journal['articletitle'];
         $tableRow[] = $journal['publicationyear'];
         $tableRow[] = $journal['volume'];

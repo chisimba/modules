@@ -142,6 +142,8 @@ if($mode == 'fixerror'){
     $objjournalName->value =$this->getParam('journalname');
 }
 if($mode == 'edit'){
+    $journalname = $this->objDBJournal->listSingle($arrEdit['journalname']);
+    $objjournalName1->value =$journalname[0]['journal'];
     $objjournalName->value =$arrEdit['journalname'];
 }
 
@@ -274,7 +276,7 @@ if($mode == 'edit'){
 
     //Fourth Author
     if (preg_match("/<b>/",$editAuthor4)) {
-        $editAuthor34= strip_tags($editAuthor4);
+        $editAuthor4= strip_tags($editAuthor4);
         $authorAffiliate4 = 'UWC Staff Member';
     }
     elseif (preg_match("/<span>/",$editAuthor4)) {
