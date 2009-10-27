@@ -36,7 +36,7 @@ class viewerutils extends object
            
             <ul class="paneltabs">             
            
-            '.$link->show().'
+            '.$data[0]['description'].'
             
             </ul>
             <br/>
