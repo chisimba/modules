@@ -29,8 +29,9 @@ class jukskeitoolbar extends object
 
         $menuOptions = array(
             array('action'=>'about', 'text'=>'About the project', 'actioncheck'=>array('about'), 'module'=>'jukskei', 'status'=>'both'),
-             array('action'=>'wits', 'text'=>'Wits Journalism', 'actioncheck'=>array('wits'), 'module'=>'jukskei', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
+            array('action'=>'wits', 'text'=>'Wits Journalism', 'actioncheck'=>array('wits'), 'module'=>'jukskei', 'status'=>'both'),
+            array('action'=>NULL, 'text'=>'Content Admin', 'actioncheck'=>array(), 'module'=>'cmsadmin', 'status'=>'admin'),
+            array('action'=>NULL, 'text'=>'Site Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
             array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
             array('action'=>'login', 'text'=>'Login', 'actioncheck'=>array('login'), 'module'=>'jukskei', 'status'=>'login'),
             array('action'=>'login', 'text'=>'Register', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
@@ -96,7 +97,7 @@ class jukskeitoolbar extends object
 
 
         // Return Toolbar
-        return '<div id="modernbricksmenum"><ul>'.$home.$str.'</ul>';
+        return '<div id="modernbricksmenum" style="float:right;"><ul>'.$home.$str.'</ul></div>';
 
 
     }
