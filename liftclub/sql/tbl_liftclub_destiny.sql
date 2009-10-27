@@ -15,6 +15,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
+	'institution' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
 	'street' => array(
 		'type' => 'text',
 		'length' => 255,

@@ -286,7 +286,7 @@ $streetnameLabel = new label($this->objLanguage->languageText('mod_liftclub_stre
 if ($mode == 'addfixup') {
     $streetname->value = $this->getParam('street_name');
 
-    if ($this->getParam('street_name') == '' || strlen($this->getParam('street_name')) > 4) {
+    if ($this->getParam('street_name') == '') {
         $messages[] = $this->objLanguage->languageText('enterstreetname', 'system', 'Please enter Street Name');
     }
 }
@@ -302,9 +302,9 @@ $suburb->extra = "maxlength=350";
 $suburbLabel = new label($this->objLanguage->languageText('mod_liftclub_suburb', 'liftclub', "Suburb").'&nbsp;', 'input_suburb');
 
 if ($mode == 'addfixup') {
-    $citytown->value = $this->getParam('suburb');
+    $suburb->value = $this->getParam('suburb');
 
-    if ($this->getParam('suburb') == '' || strlen($this->getParam('suburb')) > 4) {
+    if ($this->getParam('suburb') == '') {
         $messages[] = $this->objLanguage->languageText('entersuburb', 'system', 'Please enter Suburb');
     }
 }
@@ -326,7 +326,8 @@ $citytownLabel = new label($this->objLanguage->languageText('mod_liftclub_cityto
 
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('citytown');
-
+    $townname = $this->objDBCities->listSingle($this->getParam('citytown'));
+    $citytowna->value = $townname[0]["city"];
     if ($this->getParam('citytown') == '' || strlen($this->getParam('citytown')) < 1) {
         $messages[] = $this->objLanguage->languageText('entercitytown', 'system', 'Please enter City/Town');
     }
@@ -400,7 +401,7 @@ $streetnameLabel2 = new label($this->objLanguage->languageText('mod_liftclub_str
 if ($mode == 'addfixup') {
     $streetname2->value = $this->getParam('street_name2');
 
-    if ($this->getParam('street_name2') == '' || strlen($this->getParam('street_name2')) > 4) {
+    if ($this->getParam('street_name2') == '') {
         $messages[] = $this->objLanguage->languageText('enterstreetname', 'system', 'Please enter Street Name');
     }
 }
@@ -418,7 +419,7 @@ $suburbLabel2 = new label($this->objLanguage->languageText('mod_liftclub_suburb'
 if ($mode == 'addfixup') {
     $suburb2->value = $this->getParam('suburb2');
 
-    if ($this->getParam('suburb2') == '' || strlen($this->getParam('suburb2')) > 4) {
+    if ($this->getParam('suburb2') == '') {
         $messages[] = $this->objLanguage->languageText('entersuburb', 'system', 'Please enter Suburb');
     }
 }
@@ -441,8 +442,9 @@ $citytownLabel2 = new label($this->objLanguage->languageText('mod_liftclub_cityt
 
 if ($mode == 'addfixup') {
     $citytown2->value = $this->getParam('citytown2');
-
-    if ($this->getParam('citytown2') == '' || strlen($this->getParam('citytown2')) > 4) {
+    $townname2 = $this->objDBCities->listSingle($this->getParam('citytown2'));
+    $citytown2a->value = $townname2[0]["city"];
+    if ($this->getParam('citytown2') == '') {
         $messages[] = $this->objLanguage->languageText('entercitytown', 'system', 'Please enter City/Town');
     }
 }
@@ -501,7 +503,7 @@ if ($mode == 'addfixup') {
     $traveltimes->value = $this->getParam('traveltimes');
 
     if ($this->getParam('traveltimes') == '') {
-        $messages[] = $this->objLanguage->languageText('entertraveltimes', 'system', 'Please Specify the Travel Times');
+        $messages[] = $this->objLanguage->languageText('entertraveltimes', 'liftclub', 'Please Specify the Travel Times');
     }
 }
 
@@ -511,42 +513,106 @@ $table->addCell($traveltimes->show().$required);
 $table->endRow();
 
 $table->startRow();
-$monday = new checkbox('monday');
-$mondayLabel = new label($this->objLanguage->languageText('mod_liftclub_monday', 'liftclub', "Monday").'&nbsp;', 'input_monday');
-$tuesday = new checkbox('tuesday');
-$tuesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_tuesday', 'liftclub', "Tuesday").'&nbsp;', 'input_tuesday');
-$wednesday = new checkbox('wednesday');
-$wednesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_wednesday', 'liftclub', "Wednesday").'&nbsp;', 'input_wednesday');
-$thursday = new checkbox('thursday');
-$thursdayLabel = new label($this->objLanguage->languageText('mod_liftclub_thursday', 'liftclub', "Thursday").'&nbsp;', 'input_thursday');
-$friday = new checkbox('friday');
-$fridayLabel = new label($this->objLanguage->languageText('mod_liftclub_friday', 'liftclub', "Friday").'&nbsp;', 'input_friday');
-$saturday = new checkbox('saturday');
-$saturdayLabel = new label($this->objLanguage->languageText('mod_liftclub_saturday', 'liftclub', "Saturday").'&nbsp;', 'input_saturday');
-$sunday = new checkbox('sunday');
-$sundayLabel = new label($this->objLanguage->languageText('mod_liftclub_sunday', 'liftclub', "Sunday").'&nbsp;', 'input_sunday');
-
 if ($mode == 'addfixup') {
-    $monday->value = $this->getParam('monday');
-    $tuesday->value = $this->getParam('tuesday');
-    $wednesday->value = $this->getParam('wednesday');
-    $thursday->value = $this->getParam('thursday');
-    $friday->value = $this->getParam('friday');
-    $saturday->value = $this->getParam('saturday');
-    $sunday->value = $this->getParam('sunday');
+ if($this->getParam('monday')=='Y'){
+  $monday = new checkbox('monday',null,true);
+ }else{
+  $monday = new checkbox('monday',null,false);
+ }
+ 	$monday->SetValue('Y');
+}else{
+ $monday = new checkbox('monday',null,false);
+ $monday->SetValue('Y');
 }
+
+$mondayLabel = new label($this->objLanguage->languageText('mod_liftclub_monday', 'liftclub', "Monday").'&nbsp;', 'input_monday');
+if ($mode == 'addfixup') {
+ if($this->getParam('tuesday')=='Y'){  
+  $tuesday = new checkbox('tuesday',null,true);
+ }else{
+  $tuesday = new checkbox('tuesday',null,false);
+ }
+ 	$tuesday->SetValue('Y');
+}else{
+ $tuesday = new checkbox('tuesday',null,false);
+ $tuesday->SetValue('Y');
+}
+$tuesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_tuesday', 'liftclub', "Tuesday").'&nbsp;', 'input_tuesday');
+if ($mode == 'addfixup') {
+ if($this->getParam('wednesday')=='Y'){
+  $wednesday = new checkbox('wednesday',null,true);
+ }else{
+  $wednesday = new checkbox('wednesday',null,false);
+ }
+ 	$wednesday->SetValue('Y');
+}else{
+ $wednesday = new checkbox('wednesday',null,false);
+ $wednesday->SetValue('Y');
+}
+$wednesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_wednesday', 'liftclub', "Wednesday").'&nbsp;', 'input_wednesday');
+if ($mode == 'addfixup') {
+ if($this->getParam('thursday')=='Y'){
+  $thursday = new checkbox('thursday',null,true);
+ }else{
+  $thursday = new checkbox('thursday',null,false);
+ }
+ 	$thursday->SetValue('Y');
+}else{
+ $thursday = new checkbox('thursday',null,false);
+ $thursday->SetValue('Y');
+}
+$thursdayLabel = new label($this->objLanguage->languageText('mod_liftclub_thursday', 'liftclub', "Thursday").'&nbsp;', 'input_thursday');
+if ($mode == 'addfixup') {
+ if($this->getParam('friday')=='Y'){
+  $friday = new checkbox('friday',null,true);
+ }else{
+  $friday = new checkbox('friday',null,false);
+ }
+ 	$friday->SetValue('Y');
+}else{
+ $friday = new checkbox('friday',null,false);
+ $friday->SetValue('Y');
+}
+$fridayLabel = new label($this->objLanguage->languageText('mod_liftclub_friday', 'liftclub', "Friday").'&nbsp;', 'input_friday');
+if ($mode == 'addfixup') {
+ if($this->getParam('saturday')=='Y'){
+  $saturday = new checkbox('saturday',null,true);
+ }else{
+  $saturday = new checkbox('saturday',null,false);
+ }
+ 	$saturday->SetValue('Y');
+}else{
+ $saturday = new checkbox('saturday',null,false);
+ $saturday->SetValue('Y');
+}
+$saturdayLabel = new label($this->objLanguage->languageText('mod_liftclub_saturday', 'liftclub', "Saturday").'&nbsp;', 'input_saturday');
+if ($mode == 'addfixup') {
+ if($this->getParam('sunday')=='Y'){
+  $sunday = new checkbox('sunday',null,true);
+ }else{
+  $sunday = new checkbox('sunday',null,false);
+ }
+ 	$sunday->SetValue('Y');
+}else{
+ $sunday = new checkbox('sunday',null,false);
+ $sunday->SetValue('Y');
+}
+$sundayLabel = new label($this->objLanguage->languageText('mod_liftclub_sunday', 'liftclub', "Sunday").'&nbsp;', 'input_sunday');
 
 $table->addCell($this->objLanguage->languageText('mod_liftclub_days', 'liftclub', "Days"), 150, NULL, 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($mondayLabel->show()." ".$monday->show().$tuesdayLabel->show()." ".$tuesday->show().$wednesdayLabel->show()." ".$wednesday->show().$thursdayLabel->show()." ".$thursday->show().$fridayLabel->show()." ".$friday->show().$saturdayLabel->show()." ".$sunday->show().$sundayLabel->show()." ".$saturday->show().$required);
+$table->addCell("<i>".$monday->show().$mondayLabel->show()." ".$tuesday->show().$tuesdayLabel->show()." ".$wednesday->show().$wednesdayLabel->show()." ".$thursday->show().$thursdayLabel->show()." ".$friday->show().$fridayLabel->show()." ".$saturday->show().$saturdayLabel->show()." ".$sunday->show().$sundayLabel->show()." "."</i>".$required);
 $table->endRow();
 
 $daysvaryRadio = new radio ('daysvary');
 $daysvaryRadio->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
 $daysvaryRadio->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
 $daysvaryRadio->setBreakSpace(' &nbsp; ');
-
+// && empty($this->getParam('tuesday')) && empty($this->getParam('wednesday')) && empty($this->getParam('thursday')) && empty($this->getParam('friday')) && empty($this->getParam('saturday')) && empty($this->getParam('sunday'))
 if ($mode == 'addfixup') {
+				if ($this->getParam('monday')==''&& $this->getParam('tuesday')=='' && $this->getParam('wednesday')=='' && $this->getParam('thursday')=="" && $this->getParam('friday')=="" && $this->getParam('saturday')=="" && $this->getParam('sunday')==""){
+						$messages[] = $this->objLanguage->languageText('enteroneday', 'liftclub', 'Please Specify at least one day of the week');
+				}
     $daysvaryRadio->setSelected($this->getParam('daysvary'));
 } else {
     $daysvaryRadio->setSelected('N');
@@ -616,7 +682,7 @@ $table->addCell($acceptoffersRadio->show(),"","bottom");
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend = $this->objLanguage->languageText('phrase_tripdetails', 'liftclub', 'Trip Details');
+$fieldset->legend = $this->objLanguage->languageText('mod_liftclub_additionalinfo', 'liftclub', 'Additional Information');
 $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
@@ -642,7 +708,7 @@ $table->addCell($notificationsRadio->show(),"","bottom");
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend = $this->objLanguage->languageText('phrase_tripdetails', 'liftclub', 'Trip Details');
+$fieldset->legend = $this->objLanguage->languageText('mod_liftclub_accountsettings', 'liftclub', 'Account Settings');
 $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
@@ -662,7 +728,7 @@ $form->addToForm($fieldset->show());
 $button = new button ('submitform', 'Complete Registration');
 $button->setToSubmit();
 
-$form->addToForm('<p align="center"><br />'.$button->show().'</p>');
+$form->addToForm('<p align="center"><br />'.$button->show().'</p><br/ ><br/ >');
 
 if ($mode == 'addfixup') {
 

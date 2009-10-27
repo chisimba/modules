@@ -35,9 +35,12 @@ class liftclub extends controller
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
-        $this->objUser = $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security'); 
         $this->objUrl = $this->getObject('url', 'strings');
         $this->objDBCities = $this->getObject('dbliftclub_cities', 'liftclub');
+        $this->objDBOrigin = $this->getObject('dbliftclub_origin', 'liftclub');
+        $this->objDBDestiny = $this->getObject('dbliftclub_destiny', 'liftclub');
+        $this->objDBDetails = $this->getObject('dbliftclub_details', 'liftclub');
     }
     /**
      * Method to turn off login requirement for all actions in this module
@@ -170,7 +173,36 @@ class liftclub extends controller
         $cellnumber = $this->getParam('register_cellnum');
         $staffnumber = $this->getParam('register_staffnum');
         $country = $this->getParam('country');
-        $accountstatus = 1; // Default Status Active
+        //From (Home or Trip Origin)
+        $streetname = $this->getParam('street_name');
+        $suburb = $this->getParam('suburb');
+        $citytown = $this->getParam('citytown');
+        $province = $this->getParam('province'); 
+        $neighbour = $this->getParam('neighbour');                       
+        //To (Home or Trip Destination)  
+        $institution = $this->getParam('institution');                       
+        $streetname2 = $this->getParam('street_name2');
+        $suburb2 = $this->getParam('suburb2');
+        $citytown2 = $this->getParam('citytown2');
+        $province2 = $this->getParam('province2'); 
+        $neighbour2 = $this->getParam('neighbour2');                       
+        //Trip Details
+        $traveltimes = $this->getParam('traveltimes');
+        $monday = $this->getParam('monday');
+        $tuesday = $this->getParam('tuesday');
+        $wednesday = $this->getParam('wednesday');
+        $thursday = $this->getParam('thursday');
+        $friday = $this->getParam('friday');
+        $saturday = $this->getParam('saturday');
+        $sunday = $this->getParam('sunday');
+        $daysvary = $this->getParam('daysvary');
+        $smoke = $this->getParam('smoke');
+        //Additional Information
+        $additionalinfo = $this->getParam('additionalinfo');
+        $acceptoffers = $this->getParam('acceptoffers');
+        //Account Settings
+        $notifications = $this->getParam('notifications');
+        $accountstatus = 1; // Default Status Active 
         // Create an array of fields that cannot be empty
         $checkFields = array(
             $captcha,
@@ -180,9 +212,16 @@ class liftclub extends controller
             $email,
             $repeatemail,
             $password,
-            $repeatpassword
+            $repeatpassword,
+            $streetname,
+            $suburb,
+            $citytown,
+            $streetname2,
+            $suburb2,
+            $citytown2,
+            $traveltimes
         );
-        // Create an Array to store problems
+        // Create an Array to store problems  
         $problems = array();
         // Check that username is available
         if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
@@ -199,6 +238,38 @@ class liftclub extends controller
             $problems[] = 'norepeatpasswordentered';
         } else if ($password != $repeatpassword) {
             $problems[] = 'passwordsdontmatch';
+        }
+        // Check for any problems with streetname
+        if ($streetname == '') {
+            $problems[] = 'nostreetnameentered';
+        }
+        // Check for any problems with suburb
+        if ($suburb == '') {
+            $problems[] = 'nosuburbentered';
+        }
+        // Check for any problems with citytown
+        if ($citytown == '') {
+            $problems[] = 'nocitytownentered';
+        }
+        // Check for any problems with streetname
+        if ($streetname2 == '') {
+            $problems[] = 'nostreetnameentered2';
+        }
+        // Check for any problems with suburb
+        if ($suburb2 == '') {
+            $problems[] = 'nosuburbentered2';
+        }
+        // Check for any problems with citytown
+        if ($citytown2 == '') {
+            $problems[] = 'nocitytownentered2';
+        }
+        // Check for any problems with travel times
+        if ($traveltimes == '') {
+            $problems[] = 'notraveltimesentered';
+        }
+        // Check for any problems with lift days
+        if ($this->getParam('monday')=='' && $this->getParam('tuesday')=='' && $this->getParam('wednesday')=='' && $this->getParam('thursday')=="" && $this->getParam('friday')=="" && $this->getParam('saturday')=="" && $this->getParam('sunday')=="") {
+            $problems[] = 'noliftdaysentered';
         }
         // Check that all required field are not empty
         if (!$this->checkFields($checkFields)) {
@@ -222,6 +293,10 @@ class liftclub extends controller
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber, 'useradmin', $accountstatus);
             // Email Details to User
             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
+            $userId = $this->objUser->getItemFromPkId($pkid,$field='userid');            
+            $origin = $this->objDBOrigin->insertSingle($userId, $streetname, $suburb, $citytown, $province, $neighbour);
+            $destiny = $this->objDBDestiny->insertSingle($userId, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
+            $details = $this->objDBDetails->insertSingle($userId, $times, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
             $this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             $this->setSession('time', $password);
@@ -252,6 +327,22 @@ class liftclub extends controller
                 return 'No password was entered';
             case 'norepeatpasswordentered':
                 return 'No Repeat password was entered';
+            case 'nostreetnameentered':
+                return 'No Street name was entered for (Home or Trip Origin)';            
+            case 'nosuburbentered':
+                return 'No Suburb was entered for (Home or Trip Origin)';            
+            case 'nocitytownentered':
+                return 'No City/Town was entered for (Home or Trip Origin)';            
+            case 'nostreetnameentered2':
+                return 'No Street name was entered for (Home or Trip Destination)';            
+            case 'nosuburbentered2':
+                return 'No Suburb was entered for (Home or Trip Destination)';            
+            case 'nocitytownentered2':
+                return 'No City/Town was entered for (Home or Trip Destination)';            
+            case 'notraveltimesentered':
+                return 'No Travel Time was entered';
+            case 'noliftdaysentered':
+                return 'No Day was selected for (Trip Details)';            
         }
     }
     /**
