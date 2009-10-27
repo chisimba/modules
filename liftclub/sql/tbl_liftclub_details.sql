@@ -24,37 +24,48 @@ $fields = array(
 		'length' => 500,
 		),	
 	'specialoffer' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'emailnotifications' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'daysvary' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'smoke' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'monday' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'tuesday' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'wednesday' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'thursday' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'friday' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'saturday' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		),
 	'sunday' => array(
-		'type' => 'boolean'
+		'type' => 'text',
+		'length' => 2,
 		)
 	);
 ?>

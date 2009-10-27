@@ -289,6 +289,7 @@ class liftclub extends controller
             $this->setVarByRef('problems', $problems);
             return 'registrationhome_tpl.php';
         } else {
+
             // Else add to database
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber, 'useradmin', $accountstatus);
             // Email Details to User
