@@ -32,8 +32,7 @@ class viewerutils extends object
             $content='';
             
             $content='
-            <h1>'.$homepagetitle.'</h1>
-           
+          
             <ul class="paneltabs">             
            
             '.$data[0]['description'].'
