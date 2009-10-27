@@ -490,7 +490,7 @@ class wiki extends controller {
 						         	if($this->eventsEnabled)
 						         	{
 						         	  //The message to be posted
-                  $addmessage = $this->objUser->surname()." ". $this->objLanguage->languageText('mod_wiki_newwikialert', 'wiki')."-".$name;
+                  $addmessage = $this->objUser->username()." ". $this->objLanguage->languageText('mod_wiki_newwikialert', 'wiki')."-".$name;
                   $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $addmessage,
 						 																				'link'=> $this->uri(array()),
 						 																				'contextcode' => $this->objContext->getContextCode(),
