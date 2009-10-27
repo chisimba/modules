@@ -1,0 +1,14 @@
+<updates>
+    <update>
+        <table>tbl_liftclub_destiny</table>
+        <version>0.13</version>
+        <description>Added a field for Institution</description>
+        <data>
+            <add>
+                <name>institution</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+        </data>
+    </update>
+</updates>
