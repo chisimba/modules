@@ -1505,10 +1505,14 @@ public function showBody($isPreview = false)
 	//parse for mindmaps
 	//$page['body'] = $objMindMap->parse($page['body']);
 	//parse for mathml as well
+	$table_bookmark = '';
+	if ($this->_objSysConfig->getValue('SHOW_BOOKMARKS', 'cmsadmin') != 'n') {
+		$table_bookmark = "<p /><center>".$tblnl->show() . "</center>";
+	}
 	$page['body'] = $objMath->parseAll($page['body']);
 	$strBody .= stripslashes($page['body']);
 	$objLayer = new layer();
-	$objLayer->str = $strHeader.$strBody ."<p /><center>".$tblnl->show() . "</center><hr/><p/>";
+	$objLayer->str = $strHeader.$strBody ."$table_bookmark<hr /><p />";
 	$objLayer->id = 'cmscontent';
 
 	return $objLayer->show();

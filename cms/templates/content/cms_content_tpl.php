@@ -3,8 +3,8 @@
 echo $content;
 if($fromadmin)
 {
-    $objLanguage =& $this->newObject('language', 'language');
-    $objBackToAdminLink =& $this->newObject('link', 'htmlelements');
+    $objLanguage = $this->newObject('language', 'language');
+    $objBackToAdminLink = $this->newObject('link', 'htmlelements');
     $objBackToAdminLink->link($this->uri(array('action'=>'viewsection', 'id'=>$sectionId), 'cmsadmin'));
     $objBackToAdminLink-> link = $objLanguage->languageText('mod_cms_backtoadmin', 'cms');
 
