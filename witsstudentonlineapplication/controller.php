@@ -82,5 +82,7 @@ function __shownextofkindetailsform(){
     return "nextofkindetails_tpl.php";
 }
 
+function __test(){
+}
 }
 ?>
