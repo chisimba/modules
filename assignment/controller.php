@@ -107,6 +107,10 @@ class assignment extends controller
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user','security');
         $this->objContext = $this->getObject('dbcontext','context');
+        if($this->objContext->isInContext()){
+            $this->contextCode = $this->objContext->getContextCode();
+            $this->context = $this->objContext->getTitle();
+        }
         $this->objIcon= $this->newObject('geticon','htmlelements');
 	$this->loadclass('link','htmlelements');
         $this->objLink=new link();
@@ -135,7 +139,7 @@ class assignment extends controller
         $restrictedActions = array ('add', 'edit', 'saveassignment', 'updateassignment', 'delete', 'markassignments', 'saveuploadmark', 'saveonlinemark');
 
         if (in_array($action, $restrictedActions)) {
-            if ($this->objUser->isCourseAdmin()) {
+            if ($this->objUser->isCourseAdmin($this->contextCode)) {
                 return TRUE;
             } else {
                 return FALSE;
@@ -156,10 +160,7 @@ class assignment extends controller
      */
     public function dispatch($action)
     {
-        if($this->objContext->isInContext()){
-            $this->contextCode = $this->objContext->getContextCode();
-            $this->context = $this->objContext->getTitle();
-        }/*else {
+        /*else {
             return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
         }
         */
