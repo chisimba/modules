@@ -160,7 +160,7 @@ foreach($commentTypeData as $data) {
                 $data['phase'] = 'Faculty board approval';
             }
         $date = date_create($data['date_forwarded']);
-        $hisData.="['".$data['phase']."','".date_format($date, 'd/m/Y')."','".$this->objUser->fullname($data['userid'])."']";
+        $hisData.="['".$data['phase']."','".date_format($date, 'd/m/Y h:m:s')."','".$this->objUser->fullname($data['userid'])."']";
         
         if($count < $membercount){
             $hisData.=",";

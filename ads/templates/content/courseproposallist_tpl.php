@@ -66,19 +66,23 @@ foreach($schoolList as $data) {
 }
 
 $statuscodes=  array(
-              "0"=> 'Proposal Phase',
-              "1"=>'APO Comment',
-    "2"=>'Faculty Subcommittee Approval',
-    "3"=>'Faculty Board Approval'
+                "0"=> 'Proposal Phase',
+                "1"=>'APO Comment',
+                "2"=>'Faculty Subcommittee Approval',
+                "3"=>'Faculty Board Approval'
 );
 
 $addButton = new button('add','Add Proposal');
 $adminButton = new button('addmin','Admin');
 $adminButton->setId('admin-btn');
+$reportButton= new button('viewreport', 'View Report');
+$reportUrl = $this->uri(array('action' => 'viewreport'));
+$reportButton->setId('viewreport-btn');
+$reportButton->setOnClick("window.location='$reportUrl'");
 $addModerator = new button('addModerator', 'Add Moderator');
 $addFaculty = new button('addFaculty', 'Faculty List');
 $returnUrl = $this->uri(array('action' => 'addcourseproposal'));
-//$addButton->setOnClick("window.location='$returnUrl'");
+//$addButton->setOnClick("window.location='$reportUrl'");
 $addButton->setId('addproposal-btn');
 $addModerator->setId('addmoderator-btn');
 $addFaculty->setId('addfaculty-btn');
@@ -101,7 +105,7 @@ $cssLayout->setLeftColumnContent($postLoginMenu->show());
 $rightSideColumn =  '<h1>Course/Unit Proposals</h1><div id ="proposal-note">';
 $rightSideColumn .=$content.$note;
 $adminButtons=$this->objUser->isAdmin()?$adminButton->show():"";
-$rightSideColumn .='</div><div id="grouping-grid">'.$addButton->show()."&nbsp;&nbsp;".$adminButtons.'<br /><br /></div>';
+$rightSideColumn .='</div><div id="grouping-grid">'.$addButton->show()."&nbsp;&nbsp;".$adminButtons."&nbsp;&nbsp;".$reportButton->show().'<br /><br /></div>';
 //where we render the 'popup' window
 $renderSurface='<div id="addsession-win" class="x-hidden"><div class="x-window-header"></div></div>';
 $renderSurface.='<div id="editfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>';

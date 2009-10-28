@@ -248,6 +248,10 @@ class ads extends controller {
         return "addcourseproposal_tpl.php";
     }
 
+    function __viewreport(){
+        return "viewreport_tpl.php";
+    }
+
     function __updatecourseproposal() {
         $faculty = $this->getParam('facultyid');
         $courseTitle= $this->getParam('title');
