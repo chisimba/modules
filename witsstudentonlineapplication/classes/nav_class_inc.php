@@ -16,7 +16,7 @@ class nav extends object{
 
         $home = new link ($this->uri(array('action'=>'home')));
         $homeIcon='<img src="'.$this->getResourceUri('imgs/house.png').'">';
-        $home->link='<font color="green">'.$homeIcon.'Home</font>';
+        $home->link='<font color="green">'.$homeIcon.' Home</font>';
 
         $contactdetails =new link($this->uri(array('action'=>'showcontactdetailsform')));
         $contactdetailsimg='<img src="'.$this->getResourceUri('imgs/telephone.png').'"> Contact details';
