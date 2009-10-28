@@ -1,5 +1,8 @@
 <?php
 
+echo '$this->objUser->isCourseAdmin()::'.($this->objUser->isCourseAdmin()?'TRUE':'FALSE');
+echo '$this->isValid(\'edit\')'.($this->isValid('edit')?'TRUE':'FALSE');
+
 $openLabel = $this->objLanguage->languageText('mod_assignment_open','assignment');
 $closedLabel = $this->objLanguage->languageText('mod_assignment_closed','assignment');
 $viewLabel = $this->objLanguage->languageText('mod_assignment_view','assignment');
@@ -21,11 +24,11 @@ $objHead->str=$this->objLanguage->languageText('mod_assignment_assignments', 'as
 $objHead->type=1;
 
 if ($this->isValid('add')) {
-    
+
     $objIcon->setIcon('add');
     $link = new link ($this->uri(array('action'=>'add')));
     $link->link = $objIcon->show();
-    
+
     $objHead->str .= ' '.$link->show();
 }
 
@@ -48,69 +51,69 @@ if ($this->isValid('edit') && count($assignments) > 0) {
 $objTable->endHeaderRow();
 
 if (count($assignments) == 0) {
-    
-    
-    
+
+
+
     $objTable->startRow();
     $objTable->addCell($this->objLanguage->languageText('mod_assignment_noassignments', 'assignment', 'No Assignments'),'','','','noRecordsMessage','colspan="6"');
     $objTable->endRow();
-    
-    
+
+
 } else {
-    
+
     $i = 0;
     $status = '';
-    
+
     $objIcon->setIcon('edit');
     $editIcon = $objIcon->show();
-    
+
     $objIcon->setIcon('delete');
     $deleteIcon = $objIcon->show();
-    
+
     $counter = 0;
-    
-    
+
+
     foreach ($assignments as $assignment)
     {
         $class = ($i++%2 == 0) ? 'odd' : 'even';
-        
+
         if($assignment['closing_date'] > date('Y-m-d H:i')) {
             if(($assignment['opening_date'] < date('Y-m-d H:i')) || $assignment['opening_date'] == NULL) {
                 $status = $openLabel;
             } else {
                 $status = $this->objLanguage->languageText('mod_assignment_notopenforentry', 'assignment', 'Not Open for Entry');
             }
-            
+
         } else {
             $status = $closedLabel;
         }
-        
+
         $objLink = new link($this->uri(array('action'=>'view', 'id'=>$assignment['id'])));
         $objLink->title = $viewLabel.' '.$assignment['name'];
         $objLink->link = $assignment['name'];
-        
-        
+
+
         // Display whether the assignment is online or uploadable
         if($assignment['format'] == 1){
             $format = $uploadLabel;
         }else{
             $format = $onlineLabel;
         }
-        
+
         $okToShow = FALSE;
-        
+
         if(($assignment['opening_date'] < date('Y-m-d H:i')) || $assignment['opening_date'] == NULL) {
             $okToShow = TRUE;
         }
-        
+
         if ($this->isValid('edit')) {
             $okToShow = TRUE;
         }
-        
+
         if ($okToShow) {
-            
+
             $counter++;
-            
+
             $objTable->startRow();
             $objTable->addCell($objLink->show(),'20%','','',$class);
             $objTable->addCell($format,'13%','','',$class);
@@ -118,20 +121,20 @@ if (count($assignments) == 0) {
             $objTable->addCell($this->objUser->fullname($assignment['userid']),'15%','','',$class);
             $objTable->addCell($this->objDate->formatDate($assignment['closing_date']),'15%','','',$class);
             $objTable->addCell($status,'8%','','',$class);
-            
+
             if ($this->isValid('edit')) {
                 $editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$assignment['id'])));
                 $editLink->link = $editIcon;
-                
+
                 $deleteLink = new link ($this->uri(array('action'=>'delete', 'id'=>$assignment['id'])));
                 $deleteLink->link = $deleteIcon;
-                
+
                 $objTable->addCell($editLink->show().'&nbsp;'.$deleteLink->show(), '60');
             }
             $objTable->endRow();
         }
     }
-    
+
     if ($counter == 0) {
         $objTable->startRow();
         $objTable->addCell($this->objLanguage->languageText('mod_assignment_noassignments', 'assignment', 'No Assignments'),'','','','noRecordsMessage','colspan="6"');
@@ -145,7 +148,7 @@ echo $objTable->show();
 if ($this->isValid('add')) {
     $link = new link ($this->uri(array('action'=>'add')));
     $link->link = $this->objLanguage->languageText('mod_assignment_addassignment', 'assignment', 'Add Assignment');
-    
+
     echo '<p>'.$link->show().'</p>';
 }
 
