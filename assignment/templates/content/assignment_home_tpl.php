@@ -1,8 +1,5 @@
 <?php
 
-echo '$this->objUser->isCourseAdmin()::'.($this->objUser->isCourseAdmin()?'TRUE':'FALSE');
-echo '$this->isValid(\'edit\')'.($this->isValid('edit')?'TRUE':'FALSE');
-
 $openLabel = $this->objLanguage->languageText('mod_assignment_open','assignment');
 $closedLabel = $this->objLanguage->languageText('mod_assignment_closed','assignment');
 $viewLabel = $this->objLanguage->languageText('mod_assignment_view','assignment');
