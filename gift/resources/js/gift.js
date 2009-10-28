@@ -1,5 +1,8 @@
 function initGrid(cols,url){
-        ButtonPanel = Ext.extend(Ext.Panel, {
+	/// Array data for the grids
+    //var gifts = [cols];
+	
+		ButtonPanel = Ext.extend(Ext.Panel, {
 
         layout:'table',
         defaultType: 'button',
@@ -39,37 +42,33 @@ function initGrid(cols,url){
         ]
 
  );
+		// shared reader
+		   var reader = new Ext.data.ArrayReader({}, [
+		      {name: 'giftname'},
+		      {name: 'description'},
+		      {name: 'donor'},
+		      {name: 'recipient'},
+		      {name: 'value'},
+		      {name: 'edit'}
+		   ]);
     // create the data store
-    var store = new Ext.data.ArrayStore({
-        fields: [
-        {
-            name: 'giftname'
-        },
-
-        {
-            name: 'description'
-        },
-
-        {
-            name: 'donor'
-        },
-
-        {
-            name: 'recipient'
-        },
-
-        {
-            name: 'value'
-        },
-        {
-            name: 'edit'
-        }
-        ]
+    var store = new Ext.data.GroupingStore({
+    	sortInfo:{field: 'giftname', direction: 'ASC'},
+        groupField:'donor',		
+    	reader: reader,
+    	groupOnSort:true
+    	
+    	
     });
+    //load data
     store.loadData(cols);
     // create the Grid
     var grid = new Ext.grid.GridPanel({
         store: store,
+        view: new Ext.grid.GroupingView({
+            forceFit:true,
+            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})'
+        }),
         columns: [
         {
             id:'giftname',
@@ -80,12 +79,14 @@ function initGrid(cols,url){
 
         {
             header: "Description",
-            width: 120
+            width: 120,
+            dataIndex: 'description'
         },
 
         {
             header:"Donor",
-            width: 120
+            width: 120,
+            dataIndex: 'donor'
         },
 
         {
@@ -101,13 +102,13 @@ function initGrid(cols,url){
         },
          {
             header: "Edit",
-            width: 50,
+            width: 100,
             dataIndex: 'edit'
         }
         ],
         stripeRows: true,
          height:300,
-        width:750,
+        width:800,
         frame:false,
         border:false
 
