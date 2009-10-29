@@ -155,6 +155,41 @@ class jukskei extends controller
         return 'articles_tpl.php';
     }
 
+    function __admin(){
+        return "admin_tpl.php";
+    }
+    function __viewsections(){
+        $data=
+        "
+[{
+    topic:'ColumnTree Example',
+    owner:'Admin',
+    uiProvider:'col',
+    cls:'master-task',
+    iconCls:'task-folder',
+    children:[
+    {
+        topic:'Abstract rendering in TreeNodeUI',
+        owner:'admin',
+        uiProvider:'col',
+        leaf:true,
+        iconCls:'task'
+    },
+   {
+        topic:'Test and make sure it works',
+        owner:'1 hour',
+        uiProvider:'col',
+        leaf:true,
+        iconCls:'task'
+    }
+]
+
+}]
+";
+        echo $data;
+        die();
+    }
+
 }
 
 

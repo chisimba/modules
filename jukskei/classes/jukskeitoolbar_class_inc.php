@@ -28,14 +28,14 @@ class jukskeitoolbar extends object
         $userIsLoggedIn = $objUser->isLoggedIn();
 
         $menuOptions = array(
-            array('action'=>'about', 'text'=>'About the project', 'actioncheck'=>array('about'), 'module'=>'jukskei', 'status'=>'both'),
-            array('action'=>'wits', 'text'=>'Wits Journalism', 'actioncheck'=>array('wits'), 'module'=>'jukskei', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'Content Admin', 'actioncheck'=>array(), 'module'=>'cmsadmin', 'status'=>'admin'),
-            array('action'=>NULL, 'text'=>'Site Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
-            array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
-            array('action'=>'login', 'text'=>'Login', 'actioncheck'=>array('login'), 'module'=>'jukskei', 'status'=>'login'),
-            array('action'=>'login', 'text'=>'Register', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
-            array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
+            array('action'=>'about', 'text'=>'ABOUT THE PROJECT', 'actioncheck'=>array('about'), 'module'=>'jukskei', 'status'=>'both'),
+            array('action'=>'wits', 'text'=>'WITS JOURNALISM', 'actioncheck'=>array('wits'), 'module'=>'jukskei', 'status'=>'both'),
+            array('action'=>NULL, 'text'=>'CONTENT ADMIN', 'actioncheck'=>array(), 'module'=>'cmsadmin', 'status'=>'admin'),
+            array('action'=>NULL, 'text'=>'SITE ADMIN', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
+            array('action'=>NULL, 'text'=>'MY DETAILS', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
+            array('action'=>'login', 'text'=>'LOGIN', 'actioncheck'=>array('login'), 'module'=>'jukskei', 'status'=>'login'),
+            array('action'=>'login', 'text'=>'REGISTER', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
+            array('action'=>'logoff', 'text'=>'LOGOUT', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
         );
 
         $usedDefault = FALSE;
@@ -93,7 +93,7 @@ class jukskeitoolbar extends object
         $usedDefault = $usedDefault ? FALSE: TRUE;
 
         // Add Home Link
-        $home = $this->generateItem(NULL, '_default', 'Home', $usedDefault);
+        $home = $this->generateItem(NULL, '_default', 'HOME', $usedDefault);
 
 
         // Return Toolbar
