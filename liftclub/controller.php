@@ -36,7 +36,7 @@ class liftclub extends controller
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
         $this->objUser = $this->getObject('user', 'security'); 
-        $this->objUrl = $this->getObject('url', 'strings');
+        $this->objUrl = $this->getObject('url', 'strings');								
         $this->objDBCities = $this->getObject('dbliftclub_cities', 'liftclub');
         $this->objDBOrigin = $this->getObject('dbliftclub_origin', 'liftclub');
         $this->objDBDestiny = $this->getObject('dbliftclub_destiny', 'liftclub');
@@ -197,15 +197,30 @@ class liftclub extends controller
         //Trip Details
         $needtype = $this->getSession('needtype');
         $userneed = $this->getSession('userneed');     
-        $traveltimes = $this->getParam('traveltimes');
-        $monday = $this->getParam('monday');
-        $tuesday = $this->getParam('tuesday');
-        $wednesday = $this->getParam('wednesday');
-        $thursday = $this->getParam('thursday');
-        $friday = $this->getParam('friday');
-        $saturday = $this->getParam('saturday');
-        $sunday = $this->getParam('sunday');
-        $daysvary = $this->getParam('daysvary');
+
+        if($this->getSession('needtype')!=='Trip'){
+         $daterequired = null;
+		       $traveltimes = $this->getParam('traveltimes');
+		       $monday = $this->getParam('monday');
+		       $tuesday = $this->getParam('tuesday');
+		       $wednesday = $this->getParam('wednesday');
+		       $thursday = $this->getParam('thursday');
+		       $friday = $this->getParam('friday');
+		       $saturday = $this->getParam('saturday');
+		       $sunday = $this->getParam('sunday');
+		       $daysvary = $this->getParam('daysvary');
+        }else{
+         $daterequired =$this->getParam('daterequired');
+		       $traveltimes = null;
+		       $monday = null;
+		       $tuesday = null;
+		       $wednesday = null;
+		       $thursday = null;
+		       $friday = null;
+		       $saturday = null;
+		       $sunday = null;
+		       $daysvary = null;
+        }
         $smoke = $this->getParam('smoke');
         //Additional Information
         $additionalinfo = $this->getParam('additionalinfo');
@@ -274,16 +289,18 @@ class liftclub extends controller
             $problems[] = 'nocitytownentered2';
         }
         // Check for any problems with travel times
-        if ($traveltimes == '') {
-            $problems[] = 'notraveltimesentered';
-        }
-        // Check for any problems with lift days
-        if ($this->getParam('monday')=='' && $this->getParam('tuesday')=='' && $this->getParam('wednesday')=='' && $this->getParam('thursday')=="" && $this->getParam('friday')=="" && $this->getParam('saturday')=="" && $this->getParam('sunday')=="") {
-            $problems[] = 'noliftdaysentered';
-        }
+        if($this->getSession('needtype')!=='Trip'){
+				     if ($traveltimes == '') {
+				          $problems[] = 'notraveltimesentered';
+				     }        
+		       // Check for any problems with lift days
+		       if ($this->getParam('monday')=='' && $this->getParam('tuesday')=='' && $this->getParam('wednesday')=='' && $this->getParam('thursday')=="" && $this->getParam('friday')=="" && $this->getParam('saturday')=="" && $this->getParam('sunday')=="") {
+		           $problems[] = 'noliftdaysentered';
+		       }
         // Check that all required field are not empty
         if (!$this->checkFields($checkFields)) {
             $problems[] = 'missingfields';
+        }
         }
         // Check that email address is valid
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
@@ -299,7 +316,6 @@ class liftclub extends controller
             $this->setVarByRef('problems', $problems);
             return 'registrationhome_tpl.php';
         } else {
-
             // Else add to database
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber, 'useradmin', $accountstatus);
             // Email Details to User
@@ -307,7 +323,7 @@ class liftclub extends controller
             $userId = $this->objUser->getItemFromPkId($pkid,$field='userid');            
             $origin = $this->objDBOrigin->insertSingle($userId, $streetname, $suburb, $citytown, $province, $neighbour);
             $destiny = $this->objDBDestiny->insertSingle($userId, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
-            $details = $this->objDBDetails->insertSingle($userId, $times, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+            $details = $this->objDBDetails->insertSingle($userId, $times, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
             $this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             $this->setSession('time', $password);

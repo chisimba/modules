@@ -493,137 +493,161 @@ $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
+
 //Add Trip details
-$table = $this->newObject('htmltable', 'htmlelements');
-$table->startRow();
-$traveltimes = new textinput('traveltimes');
-$traveltimesLabel = new label($this->objLanguage->languageText('mod_liftclub_traveltimes', 'liftclub', "Travel Times").'&nbsp;', 'input_traveltimes');
+	$table = $this->newObject('htmltable', 'htmlelements');
+if($this->getSession('needtype')=='Trip'){
+	$table->startRow();
+	$dateRequired = $this->newObject('datepicker','htmlelements');
+ $dateRequired->setName('daterequired');
+ $dateRequired->setDateFormat('YYYY-MM-DD');
+	if ($mode == 'addfixup') {
+     $dateRequired->setDefaultDate($this->getParam('daterequired'));
 
-if ($mode == 'addfixup') {
-    $traveltimes->value = $this->getParam('traveltimes');
+		   if ($this->getParam('daterequired') == '') {
+		       $messages[] = $this->objLanguage->languageText('enterdaterequired', 'liftclub', 'Please Specify the Date Required');
+		   }
+	}
 
-    if ($this->getParam('traveltimes') == '') {
-        $messages[] = $this->objLanguage->languageText('entertraveltimes', 'liftclub', 'Please Specify the Travel Times');
-    }
-}
+	$table->addCell($this->objLanguage->languageText('mod_liftclub_daterequired', 'liftclub', "Date Required"), 150, 'top', 'right');
+	$table->addCell('&nbsp;', 5);
+	$table->addCell($dateRequired->show().$required,null,'bottom','left');
+	$table->endRow();
+	$table->addCell('&nbsp;', 150, 'top', 'right');
+	$table->addCell('&nbsp;', 5);
+	$table->addCell('&nbsp;');
+	$table->endRow();
 
-$table->addCell($traveltimesLabel->show(), 150, NULL, 'right');
-$table->addCell('&nbsp;', 5);
-$table->addCell($traveltimes->show().$required);
-$table->endRow();
-
-$table->startRow();
-if ($mode == 'addfixup') {
- if($this->getParam('monday')=='Y'){
-  $monday = new checkbox('monday',null,true);
- }else{
-  $monday = new checkbox('monday',null,false);
- }
- 	$monday->SetValue('Y');
 }else{
- $monday = new checkbox('monday',null,false);
- $monday->SetValue('Y');
-}
+	$table->startRow();
+	$traveltimes = new textinput('traveltimes');
+	$traveltimesLabel = new label($this->objLanguage->languageText('mod_liftclub_traveltimes', 'liftclub', "Travel Times").'&nbsp;', 'input_traveltimes');
 
-$mondayLabel = new label($this->objLanguage->languageText('mod_liftclub_monday', 'liftclub', "Monday").'&nbsp;', 'input_monday');
-if ($mode == 'addfixup') {
- if($this->getParam('tuesday')=='Y'){  
-  $tuesday = new checkbox('tuesday',null,true);
- }else{
-  $tuesday = new checkbox('tuesday',null,false);
- }
- 	$tuesday->SetValue('Y');
-}else{
- $tuesday = new checkbox('tuesday',null,false);
- $tuesday->SetValue('Y');
-}
-$tuesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_tuesday', 'liftclub', "Tuesday").'&nbsp;', 'input_tuesday');
-if ($mode == 'addfixup') {
- if($this->getParam('wednesday')=='Y'){
-  $wednesday = new checkbox('wednesday',null,true);
- }else{
-  $wednesday = new checkbox('wednesday',null,false);
- }
- 	$wednesday->SetValue('Y');
-}else{
- $wednesday = new checkbox('wednesday',null,false);
- $wednesday->SetValue('Y');
-}
-$wednesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_wednesday', 'liftclub', "Wednesday").'&nbsp;', 'input_wednesday');
-if ($mode == 'addfixup') {
- if($this->getParam('thursday')=='Y'){
-  $thursday = new checkbox('thursday',null,true);
- }else{
-  $thursday = new checkbox('thursday',null,false);
- }
- 	$thursday->SetValue('Y');
-}else{
- $thursday = new checkbox('thursday',null,false);
- $thursday->SetValue('Y');
-}
-$thursdayLabel = new label($this->objLanguage->languageText('mod_liftclub_thursday', 'liftclub', "Thursday").'&nbsp;', 'input_thursday');
-if ($mode == 'addfixup') {
- if($this->getParam('friday')=='Y'){
-  $friday = new checkbox('friday',null,true);
- }else{
-  $friday = new checkbox('friday',null,false);
- }
- 	$friday->SetValue('Y');
-}else{
- $friday = new checkbox('friday',null,false);
- $friday->SetValue('Y');
-}
-$fridayLabel = new label($this->objLanguage->languageText('mod_liftclub_friday', 'liftclub', "Friday").'&nbsp;', 'input_friday');
-if ($mode == 'addfixup') {
- if($this->getParam('saturday')=='Y'){
-  $saturday = new checkbox('saturday',null,true);
- }else{
-  $saturday = new checkbox('saturday',null,false);
- }
- 	$saturday->SetValue('Y');
-}else{
- $saturday = new checkbox('saturday',null,false);
- $saturday->SetValue('Y');
-}
-$saturdayLabel = new label($this->objLanguage->languageText('mod_liftclub_saturday', 'liftclub', "Saturday").'&nbsp;', 'input_saturday');
-if ($mode == 'addfixup') {
- if($this->getParam('sunday')=='Y'){
-  $sunday = new checkbox('sunday',null,true);
- }else{
-  $sunday = new checkbox('sunday',null,false);
- }
- 	$sunday->SetValue('Y');
-}else{
- $sunday = new checkbox('sunday',null,false);
- $sunday->SetValue('Y');
-}
-$sundayLabel = new label($this->objLanguage->languageText('mod_liftclub_sunday', 'liftclub', "Sunday").'&nbsp;', 'input_sunday');
+	if ($mode == 'addfixup') {
+		   $traveltimes->value = $this->getParam('traveltimes');
 
-$table->addCell($this->objLanguage->languageText('mod_liftclub_days', 'liftclub', "Days"), 150, NULL, 'right');
-$table->addCell('&nbsp;', 5);
-$table->addCell("<i>".$monday->show().$mondayLabel->show()." ".$tuesday->show().$tuesdayLabel->show()." ".$wednesday->show().$wednesdayLabel->show()." ".$thursday->show().$thursdayLabel->show()." ".$friday->show().$fridayLabel->show()." ".$saturday->show().$saturdayLabel->show()." ".$sunday->show().$sundayLabel->show()." "."</i>".$required);
-$table->endRow();
+		   if ($this->getParam('traveltimes') == '') {
+		       $messages[] = $this->objLanguage->languageText('entertraveltimes', 'liftclub', 'Please Specify the Travel Times');
+		   }
+	}
 
-$daysvaryRadio = new radio ('daysvary');
-$daysvaryRadio->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
-$daysvaryRadio->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
-$daysvaryRadio->setBreakSpace(' &nbsp; ');
-// && empty($this->getParam('tuesday')) && empty($this->getParam('wednesday')) && empty($this->getParam('thursday')) && empty($this->getParam('friday')) && empty($this->getParam('saturday')) && empty($this->getParam('sunday'))
-if ($mode == 'addfixup') {
-				if ($this->getParam('monday')==''&& $this->getParam('tuesday')=='' && $this->getParam('wednesday')=='' && $this->getParam('thursday')=="" && $this->getParam('friday')=="" && $this->getParam('saturday')=="" && $this->getParam('sunday')==""){
-						$messages[] = $this->objLanguage->languageText('enteroneday', 'liftclub', 'Please Specify at least one day of the week');
-				}
-    $daysvaryRadio->setSelected($this->getParam('daysvary'));
-} else {
-    $daysvaryRadio->setSelected('N');
+	$table->addCell($traveltimesLabel->show(), 150, NULL, 'right');
+	$table->addCell('&nbsp;', 5);
+	$table->addCell($traveltimes->show().$required);
+	$table->endRow();
+
+	$table->startRow();
+	if ($mode == 'addfixup') {
+		if($this->getParam('monday')=='Y'){
+		 $monday = new checkbox('monday',null,true);
+		}else{
+		 $monday = new checkbox('monday',null,false);
+		}
+			$monday->SetValue('Y');
+	}else{
+		$monday = new checkbox('monday',null,false);
+		$monday->SetValue('Y');
+	}
+
+	$mondayLabel = new label($this->objLanguage->languageText('mod_liftclub_monday', 'liftclub', "Monday").'&nbsp;', 'input_monday');
+	if ($mode == 'addfixup') {
+		if($this->getParam('tuesday')=='Y'){  
+		 $tuesday = new checkbox('tuesday',null,true);
+		}else{
+		 $tuesday = new checkbox('tuesday',null,false);
+		}
+			$tuesday->SetValue('Y');
+	}else{
+		$tuesday = new checkbox('tuesday',null,false);
+		$tuesday->SetValue('Y');
+	}
+	$tuesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_tuesday', 'liftclub', "Tuesday").'&nbsp;', 'input_tuesday');
+	if ($mode == 'addfixup') {
+		if($this->getParam('wednesday')=='Y'){
+		 $wednesday = new checkbox('wednesday',null,true);
+		}else{
+		 $wednesday = new checkbox('wednesday',null,false);
+		}
+			$wednesday->SetValue('Y');
+	}else{
+		$wednesday = new checkbox('wednesday',null,false);
+		$wednesday->SetValue('Y');
+	}
+	$wednesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_wednesday', 'liftclub', "Wednesday").'&nbsp;', 'input_wednesday');
+	if ($mode == 'addfixup') {
+		if($this->getParam('thursday')=='Y'){
+		 $thursday = new checkbox('thursday',null,true);
+		}else{
+		 $thursday = new checkbox('thursday',null,false);
+		}
+			$thursday->SetValue('Y');
+	}else{
+		$thursday = new checkbox('thursday',null,false);
+		$thursday->SetValue('Y');
+	}
+	$thursdayLabel = new label($this->objLanguage->languageText('mod_liftclub_thursday', 'liftclub', "Thursday").'&nbsp;', 'input_thursday');
+	if ($mode == 'addfixup') {
+		if($this->getParam('friday')=='Y'){
+		 $friday = new checkbox('friday',null,true);
+		}else{
+		 $friday = new checkbox('friday',null,false);
+		}
+			$friday->SetValue('Y');
+	}else{
+		$friday = new checkbox('friday',null,false);
+		$friday->SetValue('Y');
+	}
+	$fridayLabel = new label($this->objLanguage->languageText('mod_liftclub_friday', 'liftclub', "Friday").'&nbsp;', 'input_friday');
+	if ($mode == 'addfixup') {
+		if($this->getParam('saturday')=='Y'){
+		 $saturday = new checkbox('saturday',null,true);
+		}else{
+		 $saturday = new checkbox('saturday',null,false);
+		}
+			$saturday->SetValue('Y');
+	}else{
+		$saturday = new checkbox('saturday',null,false);
+		$saturday->SetValue('Y');
+	}
+	$saturdayLabel = new label($this->objLanguage->languageText('mod_liftclub_saturday', 'liftclub', "Saturday").'&nbsp;', 'input_saturday');
+	if ($mode == 'addfixup') {
+		if($this->getParam('sunday')=='Y'){
+		 $sunday = new checkbox('sunday',null,true);
+		}else{
+		 $sunday = new checkbox('sunday',null,false);
+		}
+			$sunday->SetValue('Y');
+	}else{
+		$sunday = new checkbox('sunday',null,false);
+		$sunday->SetValue('Y');
+	}
+	$sundayLabel = new label($this->objLanguage->languageText('mod_liftclub_sunday', 'liftclub', "Sunday").'&nbsp;', 'input_sunday');
+
+	$table->addCell($this->objLanguage->languageText('mod_liftclub_days', 'liftclub', "Days"), 150, NULL, 'right');
+	$table->addCell('&nbsp;', 5);
+	$table->addCell("<i>".$monday->show().$mondayLabel->show()." ".$tuesday->show().$tuesdayLabel->show()." ".$wednesday->show().$wednesdayLabel->show()." ".$thursday->show().$thursdayLabel->show()." ".$friday->show().$fridayLabel->show()." ".$saturday->show().$saturdayLabel->show()." ".$sunday->show().$sundayLabel->show()." "."</i>".$required);
+	$table->endRow();
+
+	$daysvaryRadio = new radio ('daysvary');
+	$daysvaryRadio->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
+	$daysvaryRadio->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
+	$daysvaryRadio->setBreakSpace(' &nbsp; ');
+	// && empty($this->getParam('tuesday')) && empty($this->getParam('wednesday')) && empty($this->getParam('thursday')) && empty($this->getParam('friday')) && empty($this->getParam('saturday')) && empty($this->getParam('sunday'))
+	if ($mode == 'addfixup') {
+					if ($this->getParam('monday')==''&& $this->getParam('tuesday')=='' && $this->getParam('wednesday')=='' && $this->getParam('thursday')=="" && $this->getParam('friday')=="" && $this->getParam('saturday')=="" && $this->getParam('sunday')==""){
+							$messages[] = $this->objLanguage->languageText('enteroneday', 'liftclub', 'Please Specify at least one day of the week');
+					}
+		   $daysvaryRadio->setSelected($this->getParam('daysvary'));
+	} else {
+		   $daysvaryRadio->setSelected('N');
+	}
+
+	$table->startRow();
+	$table->addCell($this->objLanguage->languageText('mod_liftclub_daysvary', 'liftclub', 'Days may vary').'&nbsp;', 150, NULL, 'right');
+	$table->addCell('&nbsp;', 5);
+	$table->addCell($daysvaryRadio->show());
+	$table->endRow();
 }
-
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_liftclub_daysvary', 'liftclub', 'Days may vary').'&nbsp;', 150, NULL, 'right');
-$table->addCell('&nbsp;', 5);
-$table->addCell($daysvaryRadio->show());
-$table->endRow();
-
 $smokeRadio = new radio ('smoke');
 $smokeRadio->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
 $smokeRadio->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
