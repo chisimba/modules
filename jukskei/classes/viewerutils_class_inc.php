@@ -35,7 +35,7 @@ class viewerutils extends object
           
             <ul class="paneltabs">             
            
-            '.$data[0]['description'].'
+            '.$this->objWashout->parseText($data[0]['description']).'
             
             </ul>
             <br/>
