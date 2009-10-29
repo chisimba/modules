@@ -17,7 +17,7 @@ function showTabs() {
             {contentEl:'schoollist', title: 'School List'},
             {contentEl: 'apomoderators', title: 'APO Moderators'},
             {contentEl: 'commentlist', title: 'Custom Units'},
-             {contentEl: 'subfacultymoderators', title: 'Faculty Subcommittee Moderators'},
+            {contentEl: 'subfacultymoderators', title: 'Faculty Subcommittee Moderators'},
             {contentEl: 'facultymoderators', title: 'Faculty Moderators'},
             {contentEl: 'emailtemplates', title: 'Email Templates'}
         ]
@@ -168,14 +168,14 @@ function showSchoolList(facultyData, data, url) {
         store: schoolStore,
         columns: [
         {
-            id:'schoolname',
+            id: 'schoolname',
             header: "School",
-            width: 500,
+            width: 200,
             sortable: true,
             dataIndex: 'schoolname'
         },{
             header: "Faculty",
-            width:100,
+            width:200,
             sortable: true,
             dataIndex: 'faculty'
         },{
@@ -281,14 +281,14 @@ function showFacultyModeratorList(data,url,modFaculties){
         {
             id:'faculty',
             header: "Faculty",
-            width: 250,
+            width: 200,
             sortable: true,
             dataIndex: 'faculty'
         },
 
         {
             header: "Delete",
-            width:100,
+            width:50,
             sortable: true,
             dataIndex: 'delete'
         }

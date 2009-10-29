@@ -26,5 +26,30 @@
             $data = $this->getRow('id', $id);
             return $data['schoolname'];
         }
+
+        public function getSchools($faculty){
+            $objFaculty = $this->getObject('dbfaculty');
+            $myFaculty = $objFaculty->getFacultyName($faculty);
+            $sql="select id, schoolname from $this->tablename where faculty like '".$myFaculty."%'";
+            $xrows=$this->getArray($sql);
+            
+            $xtotal = count($xrows);
+            $buff='{"totalCount":'.$xtotal.',"rows":[';
+            $c=0;
+            $total=count($xrows);
+            foreach($xrows as $row){
+                // $forwardUrl =new $this->uri(array('action'=>'forward',"email"=>$row['emailaddress']));
+                $buff.='{"schoolid":"'.$row['id'].'","schoolname":"'.$row['schoolname'].'"}';
+                $c++;
+                if($c < $total){
+                    $buff.=",";
+                }
+            }
+            $buff.=']}';
+            $contentType = "application/json; charset=utf-8";
+            header("Content-Type: {$contentType}");
+            header("Content-Size: " . strlen($buff));
+            echo $buff;
+        }
     }
 ?>

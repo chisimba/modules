@@ -115,7 +115,7 @@ class dbdocument extends dbtable{
         $sql = "select fName, lName from tbl_ads_documentusers where email = '$email' and courseid = '$courseid'";
         $data = $this->getArray($sql);
         $fullName = $data[0]['lName'].$data[0]['fName'];
-
+        
         return $fullName;
     }
     public function getUserIdByEmail($email){
@@ -189,7 +189,15 @@ class dbdocument extends dbtable{
         $sql="select distinct currentuser from $this->tablename where coursecode='$courseid' and version = (select max(version) from $this->tablename where coursecode='$courseid')";
         $data = $this->getArray($sql);
 
-        return $data[0]['currentuser'];
+        $user = $data[0]['currentuser'];
+        // get the full name of this email address. if it doesn't exist, return the email address
+        $tmp = strstr(strtolower($this->objUser->fullname($this->getUserId($user))), "error");
+        if(strlen($tmp) == 0) {
+            return $this->objUser->fullname($this->getUserId($user));
+        }
+        else {
+            return $user;
+        }
     }
     public function getLastEditDate($courseid){
         $sql="select distinct datemodified from $this->tablename where coursecode='$courseid' and version = (select max(version) from $this->tablename where coursecode='$courseid')";

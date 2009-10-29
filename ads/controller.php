@@ -853,7 +853,7 @@ class ads extends controller {
         $submission = $this->objDocumentStore->sendProposal($lname, $fname, $email, $phone, $this->id,$this->objUser->email(),false);
         $this->objDocumentStore->sendMail($email,$this->objUser->email(),$this->id,'forwardtoowner');
         $userid=$this->objDocumentStore->getUserIdByEmail($email);
-
+        
         $this->objProposalMembers->saveMember($userid,$this->id,'n','','0');
         //down grade to proposal phase
         $updated = $this->objCourseProposals->updatePhase($this->id, '0');
@@ -909,24 +909,24 @@ class ads extends controller {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
         $this->objFacultyModerator->saveModerator($faculty, $moderator);
-        $this->nextAction('adminads',array('selectedtab'=>'1'));
+        $this->nextAction('adminads',array('selectedtab'=>'5'));
     }
     public function __savesubfacultymoderator() {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
         $this->objSubFacultyModerator->saveModerator($faculty, $moderator);
-        $this->nextAction('adminads',array('selectedtab'=>'3'));
+        $this->nextAction('adminads',array('selectedtab'=>'4'));
     }
    public function __deleteapomoderator() {
         $moderator = $this->getParam('id');
         $this->objAPOModerator->deleteModerator($moderator);
-        $this->nextAction('adminads',array('selectedtab'=>'1'));
+        $this->nextAction('adminads',array('selectedtab'=>'2'));
     }
   public function __saveapomoderator() {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
         $this->objAPOModerator->saveModerator($faculty, $moderator);
-        $this->nextAction('adminads',array('selectedtab'=>'1'));
+        $this->nextAction('adminads',array('selectedtab'=>'2'));
     }
     public function __savefaculty() {
         $faculty = $this->getParam('addfaculty');
@@ -958,22 +958,22 @@ class ads extends controller {
 
     public function __saveapoextracommenttype() {
         $this->objCommentAdmin->saveApoExtraCommentType($this->getParam('title'), $this->getParam('moderator'));
-        $this->nextAction('adminads',array('selectedtab'=>'2'));
+        $this->nextAction('adminads',array('selectedtab'=>'3'));
     }
 
     public function __updatestatus() {
        $this->objCommentAdmin->updateStatus($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
-       $this->nextAction('adminaads',array('selectedtab'=>'3'));
+       $this->nextAction('adminaads',array('selectedtab'=>'4'));
     }
     
     public function __updateapoextracommenttype() {
        $this->objCommentAdmin->updateApoExtraCommentType($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
-       $this->nextAction('adminads',array('selectedtab'=>'2'));
+       $this->nextAction('adminads',array('selectedtab'=>'3'));
 
     }
       public function __deleteapoextracommenttype() {
        $this->objCommentAdmin->deleteApoExtraCommentType($this->getParam('id'));
-       $this->nextAction('adminads',array('selectedtab'=>'2'));
+       $this->nextAction('adminads',array('selectedtab'=>'3'));
     }
 
     public function __saveschool() {
@@ -985,5 +985,16 @@ class ads extends controller {
     public function __deleteschool() {
         $this->objSchool->deleteSchool($this->getParam('facultyname'), $this->getParam('school'));
         $this->nextAction('adminads', array('selectedtab'=>'1'));
+    }
+
+    public function __deletesubfacultymoderator() {
+        $moderator = $this->getParam('id');
+        $this->objSubFacultyModerator->deleteModerator($moderator);
+        $this->nextAction('adminads',array('selectedtab'=>'4'));
+    }
+
+    public function __getSchools() {
+        $faculty = $this->getParam('faculty');
+        return $this->objSchool->getSchools($faculty);
     }
 }

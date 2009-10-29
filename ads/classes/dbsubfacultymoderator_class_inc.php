@@ -7,7 +7,6 @@ class dbsubfacultymoderator extends dbtable{
        
     }
 
-
     public function saveModerator($faculty, $moderator) {
         $data = array('facultyid'=>$faculty,'userid'=>$moderator);
         $this->insert($data);
@@ -16,6 +15,12 @@ class dbsubfacultymoderator extends dbtable{
     public function getModerators() {
         return $this->getAll("order by userid");
     }
+
+    public function deleteModerator($id) {
+       $sql = "delete from ".$this->tablename." where id='".$id."'";
+       $data = $this->getArray($sql);
+    }
+    
     public function getModeratorEmail($name) {
         $data = $this->getRow('facultyid', $name, $this->tablename);
         return $data['userid'];

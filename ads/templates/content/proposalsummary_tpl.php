@@ -77,6 +77,7 @@ foreach($schoolList as $data) {
 
 //proposal meta info
 $faculty=$this->objFaculty->getFacultyName($courseProposal['faculty']);
+$school = $this->objSchool->getSchoolName($courseProposal['school']);
 $owner=$this->objUser->fullname($courseProposal['userid']);
 $currentEditor=$this->objDocumentStore->getCurrentEditor($this->id);
 $ownerEmail=$this->objCourseProposals->getOwnerEmail($this->id);
@@ -247,7 +248,7 @@ $searchdata="'".$this->id."','".str_replace("amp;", "", $sendProposalUrl)."','Se
 $mainjs="
 
 Ext.onReady(function(){
-var summaryData=['".$faculty."','".$owner."','".$currentEditor."','".$lastEditDate."','".$phase."'];
+var summaryData=['".$faculty."','".$school."','".$owner."','".$currentEditor."','".$lastEditDate."','".$phase."'];
 
 var comments='".$comments."';
 var phaseTitle='".$phase."';
@@ -329,7 +330,7 @@ var editFaculties=[".$facultyData."];
 var editSchools=[$schoolData];
 var editFacultyurl='".str_replace("amp;", "", $editProposalTitleUrl)."';
 var selectedFaculty='".$objFaculty->getFacultyName($courseProposal['faculty'])."';
-var selectedSchool='".$this->objSchool->getSchoolName($courseProposal['school'])."';
+var selectedSchool='".$courseProposal['school']."';
 var editProposalName='".$courseProposal['title']."';
 </script>
 ";

@@ -109,20 +109,24 @@ var summaryform = new Ext.form.FormPanel({
                value: data[0]
                }),
                new Ext.form.DisplayField({
-               fieldLabel: 'Owner',
-               value: data[1]
+                  fieldLabel: 'School' ,
+                  value: data[1]
                }),
                new Ext.form.DisplayField({
-               fieldLabel: '<b>Current editor</b>',
+               fieldLabel: 'Owner',
                value: data[2]
                }),
                new Ext.form.DisplayField({
-               fieldLabel: 'Last edit date',
+               fieldLabel: '<b>Current editor</b>',
                value: data[3]
                }),
                new Ext.form.DisplayField({
-               fieldLabel: '<b>Status</b>',
+               fieldLabel: 'Last edit date',
                value: data[4]
+               }),
+               new Ext.form.DisplayField({
+               fieldLabel: '<b>Status</b>',
+               value: data[5]
                }),
                new Ext.form.DisplayField({
                fieldLabel: 'Comments',

@@ -172,6 +172,7 @@ $faculty = $objLanguage->languageText('mod_ads_faculty','ads');
 $unitName = $objLanguage->languageText('mod_ads_unitname','ads');
 $submitUrl = $this->uri(array('action'=>'savecourseproposal'));
 $cancelUrl = $this->uri(array('action'=>'NULL'));
+$schoolUrl = $this->uri(array('action' => 'getSchools'));
 $mainjs = "
                 Ext.onReady(function(){
                 Ext.QuickTips.init();
@@ -182,7 +183,8 @@ $mainjs = "
                   $facultyData
                  ];
                 var url='".str_replace("amp;", "", $submitUrl)."';
-                initAddProposal(schools,faculties,url);
+                var schoolurl='".str_replace("amp;", "", $schoolUrl)."';
+                initAddProposal(schools,faculties,url,schoolurl);
                     
                     var xg = Ext.grid;
                     // shared reader

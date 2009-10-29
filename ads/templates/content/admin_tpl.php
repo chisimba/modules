@@ -120,7 +120,7 @@ $count = 1;
 $deleteAPOModeratorLink=new link();
 $total=count($apoModeratorList);
 foreach($apoModeratorList as $data) {
-   $deleteAPOModeratorLink->link($this->uri(array('action'=>'deleteapomoderatortype','id'=>$data['id'])));
+   $deleteAPOModeratorLink->link($this->uri(array('action'=>'deleteapomoderator','id'=>$data['id'])));
    $objIcon->setIcon('delete');
 
     $deleteAPOModeratorLink->link=$objIcon->show();

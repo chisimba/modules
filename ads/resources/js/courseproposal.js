@@ -49,7 +49,7 @@ function initGrid(cols){
     }
 
 
-function initAddProposal(schools, faculties,url){
+function initAddProposal(schools, faculties,url,schoolurl){
   var facutlystore = new Ext.data.ArrayStore({
         fields:
          [
@@ -59,12 +59,19 @@ function initAddProposal(schools, faculties,url){
         data : faculties
     });
 
-    var schoolstore = new Ext.data.ArrayStore({
-        fields: [
-            {name: 'school'},
-            {name: 'id'}
-        ],
-        data: schools
+    var schoolstore = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({url: schoolurl,method: "GET"}),
+        reader: new Ext.data.JsonReader({
+                    totalProperty: 'totalCount',
+                    root:'rows'
+                },
+                [{
+                        name: 'schoolid'
+                    }, 
+                    {
+                        name: 'schoolname'
+                    }
+                ])
     });
     
     var facultyField = new Ext.form.ComboBox({
@@ -86,7 +93,7 @@ function initAddProposal(schools, faculties,url){
 
     var schoolField = new Ext.form.ComboBox({
         store:schoolstore,
-        displayField:'school',
+        displayField:'schoolname',
         fieldLabel:'School',
         typeAhead: true,
         mode: 'local',
@@ -96,7 +103,7 @@ function initAddProposal(schools, faculties,url){
         triggerAction:'all',
         emptyText: 'Select school...',
         selectOnFocus: true,
-        valueField:'id',
+        valueField:'schoolid',
         hiddenName: 'schoolname'
     });
     
@@ -123,6 +130,11 @@ function initAddProposal(schools, faculties,url){
         ]
 
     });
+
+    facultyField.on('change', function() {
+        schoolField.reset();
+        schoolField.store.load({params:{faculty:facultyField.getValue()}});
+    })
 
     var addProposalWin;
     var button = Ext.get('addproposal-btn');
