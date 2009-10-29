@@ -247,7 +247,19 @@ function initNextOfKinDetailsForm(){
                 }]
             }]
 
-        }
+        },
+        {
+            xtype: 'fieldset',
+            title: 'Email',
+            autoHeight: true,
+            items:[
+                new Ext.form.TextField({
+                fieldLabel: 'Email',	
+                anchor:'90%',
+                allowBlank:false
+                })
+            ]
+          }
 
         ],
 

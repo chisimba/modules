@@ -6,14 +6,14 @@ $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 
 //load our js
-$contactdetailsjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/contactdetails.js').'" type="text/javascript"></script>';
+$contactdetails2js = '<script language="JavaScript" src="'.$this->getResourceUri('js/contactdetails2.js').'" type="text/javascript"></script>';
 $buttonscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css').'"/>';
 
 $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $buttonscss);
-$this->appendArrayVar('headerParams', $contactdetailsjs);
+$this->appendArrayVar('headerParams', $contactdetails2js);
 
 $surface='
 <div id="surface"></div>
@@ -23,7 +23,7 @@ $surface='
 
 $mainjs="
 Ext.onReady(function(){
-initContactDetailsForm();
+initContactDetails2Form();
 });
 ";
 $nav=$this->getObject('nav');

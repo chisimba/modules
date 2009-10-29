@@ -70,13 +70,24 @@ public function init()
 
 
 function __home(){
-    return "nextofkindetails_tpl.php";
+    return "personaldetails_tpl.php";
+}
+
+function __showgeneralinformationform(){
+    return "generalinformation_tpl.php";
+}
+
+function __showpersonaldetailsform(){
+    return "personaldetails_tpl.php";
 }
 
 function __showcontactdetailsform(){
  return "contactdetails_tpl.php";
 }
 
+function __showcontactdetails2form(){
+ return "contactdetails2_tpl.php";
+}
 
 function __shownextofkindetailsform(){
     return "nextofkindetails_tpl.php";

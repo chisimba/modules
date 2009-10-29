@@ -6,7 +6,7 @@ $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 
 //load our js
-$nextofkinjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/nextofkindetails.js').'" type="text/javascript"></script>';
+$personaldetailsjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/personaldetails.js').'" type="text/javascript"></script>';
 $buttonscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css').'"/>';
 
 
@@ -14,7 +14,7 @@ $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $buttonscss);
-$this->appendArrayVar('headerParams', $nextofkinjs);
+$this->appendArrayVar('headerParams', $personaldetailsjs);
 
 $surface='
 <div id="surface"></div>
@@ -24,7 +24,7 @@ $surface='
 
 $mainjs="
 Ext.onReady(function(){
-initNextOfKinDetailsForm();
+initPersonalDetailsForm();
 });
 ";
 $nav=$this->getObject('nav');
