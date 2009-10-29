@@ -64,7 +64,7 @@ class dbLiftclub_details extends dbTable
      * @param string $saturday saturday
      * @param string $sunday sunday
      */
-    function insertSingle($userid, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday)
+    function insertSingle($userid, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday)
     {
         $id = $this->insert(array(
             'times' => $times,
@@ -74,6 +74,9 @@ class dbLiftclub_details extends dbTable
             'emailnotifications' => $emailnotifications,
             'daysvary' => $daysvary,
             'smoke' => $smoke,
+            'userneed' => $userneed,
+            'needtype' => $needtype,
+            'daterequired' => $daterequired,
             'monday' => $monday,
             'tuesday' => $tuesday,
             'wednesday' => $wednesday,
@@ -100,7 +103,7 @@ class dbLiftclub_details extends dbTable
      * @param string $saturday saturday
      * @param string $sunday sunday
      */
-    function updateSingle($id, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday)
+    function updateSingle($id, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday)
     {
         $this->update("id", $id, array(
             'times' => $times,
@@ -109,6 +112,9 @@ class dbLiftclub_details extends dbTable
             'emailnotifications' => $emailnotifications,
             'daysvary' => $daysvary,
             'smoke' => $smoke,
+            'userneed' => $userneed,
+            'needtype' => $needtype,
+            'daterequired' => $daterequired,
             'monday' => $monday,
             'tuesday' => $tuesday,
             'wednesday' => $wednesday,

@@ -66,8 +66,10 @@ class liftclub extends controller
             return $this->showDisabledMessage();
         } else {
             switch ($action) {
-                case 'showregister':
+                case 'startregister':
                 default:
+                    return 'registrationstart_tpl.php';
+                case 'showregister':
                     return $this->registrationHome();
                 case 'confirm':
                     $id = $this->getParam('newId');
@@ -145,8 +147,14 @@ class liftclub extends controller
     protected function registrationHome() 
     {
         $userstring = $this->getParam('user');
+        $userneed = $this->getParam('userneed');
+        $this->setSession('userneed', $userneed);
+        $needtype = $this->getParam('needtype');
+        $this->setSession('needtype', $needtype);
         $this->setVar('userstring', $userstring);
         $this->setVar('mode', 'add');
+        $this->setVar('userneed', $userneed);
+        $this->setVar('needtype', $needtype);       
         return 'registrationhome_tpl.php';
     }
     /**
@@ -187,6 +195,8 @@ class liftclub extends controller
         $province2 = $this->getParam('province2'); 
         $neighbour2 = $this->getParam('neighbour2');                       
         //Trip Details
+        $needtype = $this->getSession('needtype');
+        $userneed = $this->getSession('userneed');     
         $traveltimes = $this->getParam('traveltimes');
         $monday = $this->getParam('monday');
         $tuesday = $this->getParam('tuesday');
@@ -297,7 +307,7 @@ class liftclub extends controller
             $userId = $this->objUser->getItemFromPkId($pkid,$field='userid');            
             $origin = $this->objDBOrigin->insertSingle($userId, $streetname, $suburb, $citytown, $province, $neighbour);
             $destiny = $this->objDBDestiny->insertSingle($userId, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
-            $details = $this->objDBDetails->insertSingle($userId, $times, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+            $details = $this->objDBDetails->insertSingle($userId, $times, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
             $this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             $this->setSession('time', $password);

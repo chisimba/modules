@@ -39,6 +39,17 @@ $fields = array(
 		'type' => 'text',
 		'length' => 2,
 		),
+		'userneed' => array(
+		'type' => 'text',
+		'length' => 15,
+		),
+		'needtype' => array(
+		'type' => 'text',
+		'length' => 15,
+		),
+		'daterequired' => array(
+		'type' => 'date',
+		),
 	'monday' => array(
 		'type' => 'text',
 		'length' => 2,
