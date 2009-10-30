@@ -30,7 +30,7 @@ class jukskeitoolbar extends object
         $menuOptions = array(
             array('action'=>'about', 'text'=>'ABOUT THE PROJECT', 'actioncheck'=>array('about'), 'module'=>'jukskei', 'status'=>'both'),
             array('action'=>'wits', 'text'=>'WITS JOURNALISM', 'actioncheck'=>array('wits'), 'module'=>'jukskei', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'CONTENT ADMIN', 'actioncheck'=>array(), 'module'=>'cmsadmin', 'status'=>'admin'),
+            array('action'=>NULL, 'text'=>'CONTENT ADMIN', 'actioncheck'=>array(), 'module'=>'stories', 'status'=>'admin'),
             array('action'=>NULL, 'text'=>'SITE ADMIN', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
             array('action'=>NULL, 'text'=>'MY DETAILS', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
             array('action'=>'login', 'text'=>'LOGIN', 'actioncheck'=>array('login'), 'module'=>'jukskei', 'status'=>'login'),

@@ -158,6 +158,12 @@ class jukskei extends controller
     function __admin(){
         return "admin_tpl.php";
     }
+
+    function __viewstory(){
+        $storyid=$this->getParam('storyid');
+        $this->setVarByRef('storyid',$storyid);
+        return "story_tpl.php";
+    }
     function __viewsections(){
         $data=
         "

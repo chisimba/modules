@@ -24,18 +24,15 @@ class viewerutils extends object
 
             $objTrim = $this->getObject('trimstr', 'strings');
             $objStories=$this->getObject('storyparser');
-            $homepagetitle=$this->objDbSysconfig->getValue('DEFAULT_TITLE','jukskei');
             $category=$this->objDbSysconfig->getValue('TOPIC_CATEGORY','jukskei');
-            $data= $objStories->getHomePageContent($category);
-            $link=new link($this->uri(array('action'=>'viewtopics','parentid'=>$data[0]['id'])));
-            $link->link=$this->objWashout->parseText($data[0]['description']);
+            $data= $objStories->getStory($category);
             $content='';
             
             $content='
           
             <ul class="paneltabs">             
            
-            '.$this->objWashout->parseText($data[0]['description']).'
+            '.$this->objWashout->parseText($data['maintext']).'
             
             </ul>
             <br/>
@@ -192,6 +189,31 @@ cell content can go in here
               </div>';
         return $str;
 }
+
+    public function getContent($id){
+
+            $objTrim = $this->getObject('trimstr', 'strings');
+            $objStories=$this->getObject('storyparser');
+            $data= $objStories->getStory($id);
+            
+            $content='';
+            $content='
+
+            <ul class="paneltabs">
+
+            '.$this->objWashout->parseText($data['maintext']).'
+
+            </ul>
+            <br/>
+              ';
+            $content.='<div class="sectionstats">';
+            $content.='<div class="subcolumns">';
+            $content.='</div">';
+            $content.='</div">';
+            return $content;
+    }
+
+
 }
 
 ?>
