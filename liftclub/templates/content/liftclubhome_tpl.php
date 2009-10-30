@@ -18,7 +18,7 @@ $modifyLink =new link($this->uri(array('action'=>'modifydetails')));
 $modifyLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 $modifyLink->title = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 if($this->objUser->userId()!==null){
-echo $registerLink->show()." | ".$modifyLink->show();
+echo $modifyLink->show();
 }else{
 echo $registerLink->show();
 }
