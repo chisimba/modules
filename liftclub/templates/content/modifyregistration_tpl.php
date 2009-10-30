@@ -69,7 +69,7 @@ $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
 echo '<p>'.$str.'<br />';
 echo $this->objLanguage->languageText('mod_liftclub_pleaseenterdetails', 'liftclub', 'Please enter your details, email address and desired user name in the form below.').'</p>';
 
-$form = new form ('register', $this->uri(array('action'=>'register')));
+$form = new form ('register', $this->uri(array('action'=>'updateregister', 'id'=>$id, 'originid'=>$originid, 'destinyid'=>$destinyid, 'detailsid'=>$detailsid)));
 
 $messages = array();
 
@@ -523,6 +523,8 @@ if($this->getSession('needtype')=='Trip'){
 	$dateRequired = $this->newObject('datepicker','htmlelements');
  $dateRequired->setName('daterequired');
  $dateRequired->setDateFormat('YYYY-MM-DD');
+ if($tripdaterequired !== null)
+  $dateRequired->setDefaultDate($tripdaterequired);
 	if ($mode == 'addfixup') {
      $dateRequired->setDefaultDate($this->getParam('daterequired'));
 
@@ -544,7 +546,7 @@ if($this->getSession('needtype')=='Trip'){
 	$table->startRow();
 	$traveltimes = new textinput('traveltimes');
 	$traveltimesLabel = new label($this->objLanguage->languageText('mod_liftclub_traveltimes', 'liftclub', "Travel Times").'&nbsp;', 'input_traveltimes');
-
+ $traveltimes->value = $triptimes;
 	if ($mode == 'addfixup') {
 		   $traveltimes->value = $this->getParam('traveltimes');
 
@@ -568,7 +570,9 @@ if($this->getSession('needtype')=='Trip'){
 			$monday->SetValue('Y');
 	}else{
 		$monday = new checkbox('monday',null,false);
-		$monday->SetValue('Y');
+		if($daymon == 'Y')
+		 $monday = new checkbox('monday',null,true);
+		 $monday->SetValue('Y');
 	}
 
 	$mondayLabel = new label($this->objLanguage->languageText('mod_liftclub_monday', 'liftclub', "Monday").'&nbsp;', 'input_monday');
@@ -581,7 +585,9 @@ if($this->getSession('needtype')=='Trip'){
 			$tuesday->SetValue('Y');
 	}else{
 		$tuesday = new checkbox('tuesday',null,false);
-		$tuesday->SetValue('Y');
+		if($daytues == 'Y')
+		 $tuesday = new checkbox('tuesday',null,true);
+		 $tuesday->SetValue('Y');
 	}
 	$tuesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_tuesday', 'liftclub', "Tuesday").'&nbsp;', 'input_tuesday');
 	if ($mode == 'addfixup') {
@@ -593,7 +599,9 @@ if($this->getSession('needtype')=='Trip'){
 			$wednesday->SetValue('Y');
 	}else{
 		$wednesday = new checkbox('wednesday',null,false);
-		$wednesday->SetValue('Y');
+		if($daywednes == 'Y')
+		 $wednesday = new checkbox('wednesday',null,true);
+		 $wednesday->SetValue('Y');
 	}
 	$wednesdayLabel = new label($this->objLanguage->languageText('mod_liftclub_wednesday', 'liftclub', "Wednesday").'&nbsp;', 'input_wednesday');
 	if ($mode == 'addfixup') {
@@ -605,7 +613,9 @@ if($this->getSession('needtype')=='Trip'){
 			$thursday->SetValue('Y');
 	}else{
 		$thursday = new checkbox('thursday',null,false);
-		$thursday->SetValue('Y');
+		if($daythurs == 'Y')
+   $thursday = new checkbox('thursday',null,true);
+   $thursday->SetValue('Y');
 	}
 	$thursdayLabel = new label($this->objLanguage->languageText('mod_liftclub_thursday', 'liftclub', "Thursday").'&nbsp;', 'input_thursday');
 	if ($mode == 'addfixup') {
@@ -617,6 +627,8 @@ if($this->getSession('needtype')=='Trip'){
 			$friday->SetValue('Y');
 	}else{
 		$friday = new checkbox('friday',null,false);
+		if($dayfri == 'Y')
+		 $friday = new checkbox('friday',null,true);		
 		$friday->SetValue('Y');
 	}
 	$fridayLabel = new label($this->objLanguage->languageText('mod_liftclub_friday', 'liftclub', "Friday").'&nbsp;', 'input_friday');
@@ -629,6 +641,8 @@ if($this->getSession('needtype')=='Trip'){
 			$saturday->SetValue('Y');
 	}else{
 		$saturday = new checkbox('saturday',null,false);
+		if($daysatur == 'Y')
+		 $saturday = new checkbox('saturday',null,true);
 		$saturday->SetValue('Y');
 	}
 	$saturdayLabel = new label($this->objLanguage->languageText('mod_liftclub_saturday', 'liftclub', "Saturday").'&nbsp;', 'input_saturday');
@@ -641,6 +655,8 @@ if($this->getSession('needtype')=='Trip'){
 			$sunday->SetValue('Y');
 	}else{
 		$sunday = new checkbox('sunday',null,false);
+		if($daysun == 'Y')
+		 $sunday = new checkbox('sunday',null,true);
 		$sunday->SetValue('Y');
 	}
 	$sundayLabel = new label($this->objLanguage->languageText('mod_liftclub_sunday', 'liftclub', "Sunday").'&nbsp;', 'input_sunday');
@@ -662,6 +678,8 @@ if($this->getSession('needtype')=='Trip'){
 		   $daysvaryRadio->setSelected($this->getParam('daysvary'));
 	} else {
 		   $daysvaryRadio->setSelected('N');
+   	if($varydays !== null)
+	    $daysvaryRadio->setSelected($varydays);
 	}
 
 	$table->startRow();
@@ -674,11 +692,12 @@ $smokeRadio = new radio ('smoke');
 $smokeRadio->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
 $smokeRadio->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
 $smokeRadio->setBreakSpace(' &nbsp; ');
-
 if ($mode == 'addfixup') {
     $smokeRadio->setSelected($this->getParam('smoke'));
 } else {
     $smokeRadio->setSelected('N');
+    if($tripsmoke !== null)
+    $smokeRadio->setSelected($tripsmoke);
 }
 
 $table->startRow();
@@ -699,7 +718,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $additionalinfo = new textarea('additionalinfo');
 $additionalinfoLabel = new label($this->objLanguage->languageText('mod_liftclub_additionalinfo', 'liftclub', "Additional Information").'&nbsp;', 'input_additionalinfo');
-
+$additionalinfo->value = $tripadditionalinfo;
 if ($mode == 'addfixup') {
     $additionalinfo->value = $this->getParam('additionalinfo');
 }
@@ -714,11 +733,12 @@ $acceptoffersRadio = new radio ('acceptoffers');
 $acceptoffersRadio->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
 $acceptoffersRadio->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
 $acceptoffersRadio->setBreakSpace(' &nbsp; ');
-
 if ($mode == 'addfixup') {
     $acceptoffersRadio->setSelected($this->getParam('acceptoffers'));
 } else {
     $acceptoffersRadio->setSelected('N');
+    if($tripacceptoffers == 'Y')
+     $acceptoffersRadio->setSelected('Y');
 }
 
 $table->startRow();
@@ -745,6 +765,8 @@ if ($mode == 'addfixup') {
     $notificationsRadio->setSelected($this->getParam('notifications'));
 } else {
     $notificationsRadio->setSelected('N');
+    if($tripemailnotifications == 'Y')
+    $notificationsRadio->setSelected($tripemailnotifications);
 }
 
 $table->startRow();

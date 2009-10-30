@@ -84,6 +84,8 @@ class liftclub extends controller
                     return $this->nextAction('');
                 case 'register':
                     return $this->saveNewUser();
+                case 'updateregister':
+                    return $this->updateUser();
                 case 'detailssent':
                     return $this->detailsSent();
                 case 'invitefriend':
@@ -176,9 +178,8 @@ class liftclub extends controller
         echo '<br />';
         var_dump($userDestiny);
         echo '<br />';
-        var_dump($userDetails[0]["needtype"]);
-        exit;
-        */
+        var_dump($userDetails);
+        exit;*/        
         $userstring = $this->getParam('user');
         $userneed = $userDetails[0]["needtype"];
         $this->setSession('userneed', $userneed);
@@ -188,6 +189,7 @@ class liftclub extends controller
         $this->setVar('mode', 'add');
         $this->setVar('userneed', $userneed);
         $this->setVar('needtype', $needtype);
+        $this->setVar('id',$userInfo['id']);
         $this->setVar('register_username',$userInfo['username']);
         $this->setVar('register_title',$userInfo['title']);
         $this->setVar('register_firstname',$userInfo['firstname']);
@@ -197,17 +199,34 @@ class liftclub extends controller
         $this->setVar('register_sex',$userInfo['sex']);
         $this->setVar('country',$userInfo['country']);
         $this->setVar('register_email',$userInfo['emailaddress']);
+        $this->setVar('originid',$userOrigin[0]['id']);
         $this->setVar('street_name',$userOrigin[0]['street']);
         $this->setVar('suburborigin',$userOrigin[0]['suburb']);
         $this->setVar('citytownorigin',$userOrigin[0]['city']);
         $this->setVar('province',$userOrigin[0]['province']);
         $this->setVar('neighbourorigin',$userOrigin[0]['neighbour']);
+        $this->setVar('destinyid',$userDestiny[0]['id']);
         $this->setVar('destinstitution',$userDestiny[0]['institution']);
         $this->setVar('deststreetname',$userDestiny[0]['street']);
         $this->setVar('destsuburb',$userDestiny[0]['suburb']);
         $this->setVar('destcity',$userDestiny[0]['city']);
         $this->setVar('destprovince',$userDestiny[0]['province']);
         $this->setVar('destneighbour',$userDestiny[0]['neighbour']);
+        $this->setVar('detailsid',$userDetails[0]['id']);
+        $this->setVar('tripdaterequired',$userDetails[0]['daterequired']);
+        $this->setVar('triptimes',$userDetails[0]['times']);
+        $this->setVar('tripsmoke',$userDetails[0]['smoke']);
+        $this->setVar('tripadditionalinfo',$userDetails[0]['additionalinfo']);
+        $this->setVar('tripacceptoffers',$userDetails[0]['specialoffer']);
+        $this->setVar('tripemailnotifications',$userDetails[0]['emailnotifications']);
+        $this->setVar('daymon',$userDetails[0]['monday']);
+        $this->setVar('daytues',$userDetails[0]['tuesday']);
+        $this->setVar('daywednes',$userDetails[0]['wednesday']);
+        $this->setVar('daythurs',$userDetails[0]['thursday']);
+        $this->setVar('dayfri',$userDetails[0]['friday']);
+        $this->setVar('daysatur',$userDetails[0]['saturday']);
+        $this->setVar('daysun',$userDetails[0]['sunday']);
+        $this->setVar('varydays',$userDetails[0]['daysvary']);
         return 'modifyregistration_tpl.php';
     }
 
@@ -377,11 +396,172 @@ class liftclub extends controller
             $userId = $this->objUser->getItemFromPkId($pkid,$field='userid');            
             $origin = $this->objDBOrigin->insertSingle($userId, $streetname, $suburb, $citytown, $province, $neighbour);
             $destiny = $this->objDBDestiny->insertSingle($userId, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
-            $details = $this->objDBDetails->insertSingle($userId, $times, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+            $details = $this->objDBDetails->insertSingle($userId, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
             $this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             $this->setSession('time', $password);
             return $this->nextAction('detailssent');
+        }
+    }
+    /**
+     * Method to update user information
+     */
+    protected function updateUser() 
+    {
+        if (!$_POST) { // Check that user has submitted a page
+            return $this->nextAction(NULL);
+        }
+        // Generate User Id
+        $userId = $this->objUserAdmin->generateUserId();
+        // Capture all Submitted Fields
+        $id = $this->getParam('id');
+        $originid = $this->getParam('originid');
+        $destinyid = $this->getParam('destinyid');
+        $detailsid = $this->getParam('detailsid');
+        $captcha = $this->getParam('request_captcha');
+        $username = $this->getParam('register_username');
+        $password = $this->getParam('register_password');
+        $repeatpassword = $this->getParam('register_confirmpassword');
+        $title = $this->getParam('register_title');
+        $firstname = $this->getParam('register_firstname');
+        $surname = $this->getParam('register_surname');
+        $email = $this->getParam('register_email');
+        $repeatemail = $this->getParam('register_confirmemail');
+        $sex = $this->getParam('register_sex');
+        $cellnumber = $this->getParam('register_cellnum');
+        $staffnumber = $this->getParam('register_staffnum');
+        $country = $this->getParam('country');
+        //From (Home or Trip Origin)
+        $streetname = $this->getParam('street_name');
+        $suburb = $this->getParam('suburb');
+        $citytown = $this->getParam('citytown');
+        $province = $this->getParam('province'); 
+        $neighbour = $this->getParam('neighbour');                       
+        //To (Home or Trip Destination)  
+        $institution = $this->getParam('institution');                       
+        $streetname2 = $this->getParam('street_name2');
+        $suburb2 = $this->getParam('suburb2');
+        $citytown2 = $this->getParam('citytown2');
+        $province2 = $this->getParam('province2'); 
+        $neighbour2 = $this->getParam('neighbour2');                       
+        //Trip Details
+        $needtype = $this->getSession('needtype');
+        $userneed = $this->getSession('userneed');     
+
+        if($this->getSession('needtype')!=='Trip'){
+         $daterequired = null;
+		       $traveltimes = $this->getParam('traveltimes');
+		       $monday = $this->getParam('monday');
+		       $tuesday = $this->getParam('tuesday');
+		       $wednesday = $this->getParam('wednesday');
+		       $thursday = $this->getParam('thursday');
+		       $friday = $this->getParam('friday');
+		       $saturday = $this->getParam('saturday');
+		       $sunday = $this->getParam('sunday');
+		       $daysvary = $this->getParam('daysvary');
+        }else{
+         $daterequired =$this->getParam('daterequired');
+		       $traveltimes = null;
+		       $monday = null;
+		       $tuesday = null;
+		       $wednesday = null;
+		       $thursday = null;
+		       $friday = null;
+		       $saturday = null;
+		       $sunday = null;
+		       $daysvary = null;
+        }
+        $smoke = $this->getParam('smoke');
+        //Additional Information
+        $additionalinfo = $this->getParam('additionalinfo');
+        $acceptoffers = $this->getParam('acceptoffers');
+        //Account Settings
+        $notifications = $this->getParam('notifications');
+        $accountstatus = 1; // Default Status Active 
+        // Create an array of fields that cannot be empty
+        $checkFields = array(
+            $captcha,
+            $username,
+            $firstname,
+            $surname,
+            $email,
+            $repeatemail,
+            $streetname,
+            $suburb,
+            $citytown,
+            $streetname2,
+            $suburb2,
+            $citytown2,
+            $traveltimes
+        );
+        // Create an Array to store problems  
+        $problems = array();
+        // Check for any problems with streetname
+        if ($streetname == '') {
+            $problems[] = 'nostreetnameentered';
+        }
+        // Check for any problems with suburb
+        if ($suburb == '') {
+            $problems[] = 'nosuburbentered';
+        }
+        // Check for any problems with citytown
+        if ($citytown == '') {
+            $problems[] = 'nocitytownentered';
+        }
+        // Check for any problems with streetname
+        if ($streetname2 == '') {
+            $problems[] = 'nostreetnameentered2';
+        }
+        // Check for any problems with suburb
+        if ($suburb2 == '') {
+            $problems[] = 'nosuburbentered2';
+        }
+        // Check for any problems with citytown
+        if ($citytown2 == '') {
+            $problems[] = 'nocitytownentered2';
+        }
+        // Check for any problems with password
+        if ($password !== '') {
+         if ($password != $repeatpassword)
+            $problems[] = 'passwordsdontmatch';
+        }        
+        // Check for any problems with travel times
+        if($this->getSession('needtype')!=='Trip'){
+				     if ($traveltimes == '') {
+				          $problems[] = 'notraveltimesentered';
+				     }        
+		       // Check for any problems with lift days
+		       if ($this->getParam('monday')=='' && $this->getParam('tuesday')=='' && $this->getParam('wednesday')=='' && $this->getParam('thursday')=="" && $this->getParam('friday')=="" && $this->getParam('saturday')=="" && $this->getParam('sunday')=="") {
+		           $problems[] = 'noliftdaysentered';
+		       }
+        // Check that all required field are not empty
+        if (!$this->checkFields($checkFields)) {
+            $problems[] = 'missingfields';
+        }
+        }
+        // Check that email address is valid
+        if (!$this->objUrl->isValidFormedEmailAddress($email)) {
+            $problems[] = 'emailnotvalid';
+        }
+        // Check whether user matched captcha
+        if (md5(strtoupper($captcha)) != $this->getParam('captcha')) {
+            $problems[] = 'captchadoesntmatch';
+        }
+        // If there are problems, present from to user to fix
+        if (count($problems) > 0) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'registrationhome_tpl.php';
+        } else {
+            // Else add to database
+            $pkid = $this->objUserAdmin->updateUserDetails($id,$username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='', $accountstatus); 
+            $origin = $this->objDBOrigin->updateSingle($originid, $streetname, $suburb, $citytown, $province, $neighbour);
+            $destiny = $this->objDBDestiny->updateSingle($destinyid, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
+            $details = $this->objDBDetails->updateSingle($detailsid, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+            $this->setSession('id', $pkid);
+            //$this->setSession('password', $password);
+            $this->setSession('time', $password);
+            return $this->nextAction('liftclubhome');
         }
     }
     /**
