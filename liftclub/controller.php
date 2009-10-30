@@ -66,11 +66,15 @@ class liftclub extends controller
             return $this->showDisabledMessage();
         } else {
             switch ($action) {
-                case 'startregister':
+                case 'liftclubhome':
                 default:
+                    return $this->liftclubHome();
+                case 'startregister':
                     return 'registrationstart_tpl.php';
                 case 'showregister':
                     return $this->registrationHome();
+                case 'modifydetails':
+                    return $this->modifyRegistration();
                 case 'confirm':
                     $id = $this->getParam('newId');
                     if (!empty($id)) {
@@ -157,6 +161,56 @@ class liftclub extends controller
         $this->setVar('needtype', $needtype);       
         return 'registrationhome_tpl.php';
     }
+    /**
+     * Method to show the registration page
+     **/
+    protected function modifyRegistration() 
+    {
+        $userInfo = $this->objUserAdmin->getUserDetails($this->objUser->PKId($this->objUser->userId()));
+        $userOrigin = $this->objDBOrigin->userOrigin($this->objUser->userId());
+        $userDestiny = $this->objDBDestiny->userDestiny($this->objUser->userId());
+        $userDetails = $this->objDBDetails->userDetails($this->objUser->userId());
+        /*var_dump($userInfo);
+        echo '<br />'; 
+        var_dump($userOrigin);
+        echo '<br />';
+        var_dump($userDestiny);
+        echo '<br />';
+        var_dump($userDetails[0]["needtype"]);
+        exit;
+        */
+        $userstring = $this->getParam('user');
+        $userneed = $userDetails[0]["needtype"];
+        $this->setSession('userneed', $userneed);
+        $needtype = $userDetails[0]["needtype"];
+        $this->setSession('needtype', $needtype);
+        $this->setVar('userstring', $userstring);
+        $this->setVar('mode', 'add');
+        $this->setVar('userneed', $userneed);
+        $this->setVar('needtype', $needtype);
+        $this->setVar('register_username',$userInfo['username']);
+        $this->setVar('register_title',$userInfo['title']);
+        $this->setVar('register_firstname',$userInfo['firstname']);
+        $this->setVar('register_surname',$userInfo['surname']);
+        $this->setVar('register_staffnum',$userInfo['staffnumber']);
+        $this->setVar('register_cellnum',$userInfo['cellnumber']);
+        $this->setVar('register_sex',$userInfo['sex']);
+        $this->setVar('country',$userInfo['country']);
+        $this->setVar('register_email',$userInfo['emailaddress']);
+        $this->setVar('street_name',$userOrigin[0]['street']);
+        $this->setVar('suburborigin',$userOrigin[0]['suburb']);
+        $this->setVar('citytownorigin',$userOrigin[0]['city']);
+        $this->setVar('province',$userOrigin[0]['province']);
+        $this->setVar('neighbourorigin',$userOrigin[0]['neighbour']);
+        $this->setVar('destinstitution',$userDestiny[0]['institution']);
+        $this->setVar('deststreetname',$userDestiny[0]['street']);
+        $this->setVar('destsuburb',$userDestiny[0]['suburb']);
+        $this->setVar('destcity',$userDestiny[0]['city']);
+        $this->setVar('destprovince',$userDestiny[0]['province']);
+        $this->setVar('destneighbour',$userDestiny[0]['neighbour']);
+        return 'modifyregistration_tpl.php';
+    }
+
     /**
      * Method to add a new user
      */
@@ -401,5 +455,17 @@ class liftclub extends controller
         }
         return 'confirm_tpl.php';
     }
+    /**
+     * Method to inform the user that their registration has been successful
+     */
+    protected function liftclubHome() 
+    {
+        $user = $this->objUserAdmin->getUserDetails($this->objUser->userId());
+        if ($user !== FALSE) {
+            $this->setVarByRef('user', $user);
+        }
+        return 'liftclubhome_tpl.php';
+    }
+
 }
 ?>
