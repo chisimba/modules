@@ -3597,6 +3597,7 @@
             $table->endRow();
             //add context
             if ($this->inContextMode) {
+                $ContextInput=new textinput();
                 $ContextInput->name = 'Contextcode';
                 $ContextInput->id = 'Contextcode';
                 $ContextInput->fldType = 'hidden';
