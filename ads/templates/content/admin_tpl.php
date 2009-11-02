@@ -90,7 +90,7 @@ foreach($facultyModeratorList as $data) {
    $objIcon->setIcon('delete');
    $deleteFacultyModeratorLink->link=$objIcon->show();
 
-    $facultyModeratorData.="['".$data['userid']."','".$this->objFaculty->getFacultyName($data['facultyid'])."','".$deleteFacultyModeratorLink->show()."']";
+    $facultyModeratorData.="['".$data['userid']."','".$this->objFaculty->getFacultyName($data['facultyid'])."','".$this->objSchool->getSchoolName($data['schoolid'])."','".$deleteFacultyModeratorLink->show()."']";
 
   if($count < $total){
       $facultyModeratorData.=",";
@@ -107,7 +107,7 @@ foreach($subFacultyModeratorList as $data) {
    $objIcon->setIcon('delete');
    $deleteSubFacultyModeratorLink->link=$objIcon->show();
 
-    $subFacultyModeratorData.="['".$data['userid']."','".$this->objFaculty->getFacultyName($data['facultyid'])."','".$deleteSubFacultyModeratorLink->show()."']";
+    $subFacultyModeratorData.="['".$data['userid']."','".$this->objFaculty->getFacultyName($data['facultyid'])."','".$this->objSchool->getSchoolName($data['schoolid'])."','".$deleteSubFacultyModeratorLink->show()."']";
 
   if($count < $total){
       $subFacultyModeratorData.=",";
@@ -125,7 +125,7 @@ foreach($apoModeratorList as $data) {
 
     $deleteAPOModeratorLink->link=$objIcon->show();
 
-    $apoModeratorData.="['".$data['userid']."','".$this->objFaculty->getFacultyName($data['facultyid'])."','".$deleteAPOModeratorLink->show()."']";
+    $apoModeratorData.="['".$data['userid']."','".$this->objFaculty->getFacultyName($data['facultyid'])."','".$this->objSchool->getSchoolName($data['schoolid'])."','".$deleteAPOModeratorLink->show()."']";
 
   if($count < $total){
       $apoModeratorData.=",";
@@ -190,6 +190,7 @@ $addAPOModeratorButton->extra="style=\"margin-top: 2em;margin-bottom: 2em;\"";
 $saveCommentUrl = new link($this->uri(array('action'=>'saveapoextracommenttype')));
 $editCommentUrl = new link($this->uri(array('action'=>'updateapoextracommenttype')));
 $saveEmailTemplateUrl = new link($this->uri(array('action'=>'saveemailtemplate')));
+$schoolUrl = $this->uri(array('action' => 'getSchools'));
 
 $addCommentButton = new button('addModerator', 'Add Custom Unit');
 $addCommentButton->setId('addcomment-btn');
@@ -262,6 +263,8 @@ $mainjs = "/*!   * Ext JS Library 3.0.0
                  Ext.QuickTips.init();
                  showTabs('".$selectedtab."');
 
+                var schoolurl='".str_replace("amp;", "", $schoolUrl)."';
+
                 var facultyListData=[".$facultyData."];
                 showFacultyList(facultyListData,'".str_replace("amp;", "", $saveFacultyUrl)."');
 
@@ -270,13 +273,13 @@ $mainjs = "/*!   * Ext JS Library 3.0.0
                 showSchoolList(facultySchoolData, schoolListData,'".str_replace("amp;", "", $saveSchoolUrl)."');
 
                 var facultyModeratorListData=[".$facultyModeratorData."];
-                showFacultyModeratorList(facultyModeratorListData,'".str_replace("amp;", "", $saveFacultyModeratorUrl)."',facultyListData);
+                showFacultyModeratorList(facultyModeratorListData,'".str_replace("amp;", "", $saveFacultyModeratorUrl)."',facultyListData, schoolurl);
 
                 var subFacultyModeratorListData=[".$subFacultyModeratorData."];
-                showSubFacultyModeratorList(subFacultyModeratorListData,'".str_replace("amp;", "", $saveSubFacultyModeratorUrl)."',facultyListData);
+                showSubFacultyModeratorList(subFacultyModeratorListData,'".str_replace("amp;", "", $saveSubFacultyModeratorUrl)."',facultyListData, schoolurl);
 
                 var apoModeratorListData=[".$apoModeratorData."];
-                showAPOModeratorList(apoModeratorListData,'".str_replace("amp;", "", $saveAPOModeratorUrl)."',facultyListData);
+                showAPOModeratorList(apoModeratorListData,'".str_replace("amp;", "", $saveAPOModeratorUrl)."',facultyListData, schoolurl);
 
                  var contents=[
                 '".$forwardtoworkmatetemplatesubject."',

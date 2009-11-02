@@ -39,6 +39,7 @@ $searchusers =$this->uri(array('action'=>'searchusers'));
 $editTitleLink = new link("#");
 $editProposalTitleUrl = $this->uri(array('action'=>'updatecourseproposal','id'=>$this->id));
 $saveCommentUrl = new link($this->uri(array('action'=>'savecomment','courseid'=>$this->id,'phase'=>$courseProposal['phase'])));
+$schoolUrl = $this->uri(array('action' => 'getSchools'));
 /**
  * Formatted data from db
  *
@@ -330,13 +331,14 @@ var editFaculties=[".$facultyData."];
 var editSchools=[$schoolData];
 var editFacultyurl='".str_replace("amp;", "", $editProposalTitleUrl)."';
 var selectedFaculty='".$objFaculty->getFacultyName($courseProposal['faculty'])."';
-var selectedSchool='".$courseProposal['school']."';
+var selectedSchool='".$this->objSchool->getSchoolName($courseProposal['school'])."';
 var editProposalName='".$courseProposal['title']."';
+var schoolurl='".str_replace("amp;", "", $schoolUrl)."';
 </script>
 ";
 echo $editVars;
 
-$editValJS="showEditProposalWin(editFaculties,editSchools,editFacultyurl,selectedFaculty,selectedSchool,editProposalName);return false;";
+$editValJS="showEditProposalWin(editFaculties,editSchools,editFacultyurl,selectedFaculty,selectedSchool,editProposalName, schoolurl);return false;";
 $editTitleLink->extra='onClick="'.$editValJS.'"';
 $showEditTitleLink=$ownerEmail == $this->objUser->email() ? $editTitleLink->show():"";
 

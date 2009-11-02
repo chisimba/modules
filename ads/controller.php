@@ -1,8 +1,7 @@
 <?php
 
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -17,11 +16,11 @@ class ads extends controller {
 
         //These two store error text and form values
         $this->formError = $this->getObject("formerror");
-         $this->formValue = $this->getObject("formvalue");
+        $this->formValue = $this->getObject("formvalue");
 
         $this->objDocumentStore = $this->getObject('dbdocument');
         $this->objGetData = $this->getObject('getdata');
-       
+
         $this->objComment = $this->getObject('dbcoursecomments');
         $this->objQuestionComment = $this->getObject('dbquestioncomments');
 
@@ -59,16 +58,16 @@ class ads extends controller {
         return $this->$method();
     }
 
-  /**
-  *
-  * Method to convert the action parameter into the name of
-  * a method of this class.
-  *
-  * @access private
-  * @param string $action The action parameter passed byref
-  * @return string the name of the method
-  *
-  */
+    /**
+     *
+     * Method to convert the action parameter into the name of
+     * a method of this class.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return string the name of the method
+     *
+     */
     function getMethod(& $action) {
         if ($this->validAction($action)) {
             return '__'.$action;
@@ -78,18 +77,18 @@ class ads extends controller {
         }
     }
 
-  /**
-  *
-  * Method to check if a given action is a valid method
-  * of this class preceded by double underscore (__). If it __action
-  * is not a valid method it returns FALSE, if it is a valid method
-  * of this class it returns TRUE.
-  *
-  * @access private
-  * @param string $action The action parameter passed byref
-  * @return boolean TRUE|FALSE
-  *
-  */
+    /**
+     *
+     * Method to check if a given action is a valid method
+     * of this class preceded by double underscore (__). If it __action
+     * is not a valid method it returns FALSE, if it is a valid method
+     * of this class it returns TRUE.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return boolean TRUE|FALSE
+     *
+     */
     function validAction(& $action) {
         if (method_exists($this, '__'.$action)) {
             return TRUE;
@@ -99,32 +98,34 @@ class ads extends controller {
         }
     }
 
-    function __addquestioncomment(){
+    function __addquestioncomment() {
         $comment=$this->getParam("comment");
         $courseid=$this->getParam("courseid");
         $formnumber=$this->getParam("formnumber");
         $question=$this->getParam("question");
-        if($comment != ''){
-        $this->objQuestionComment->addComment($courseid, $formnumber,$question,$comment);
+        if($comment != '') {
+            $this->objQuestionComment->addComment($courseid, $formnumber,$question,$comment);
         }
         echo $this->objQuestionComment->getComments($courseid, $formnumber,$question);
     }
-    function __addcomment(){
+    
+    function __addcomment() {
         $this->setVarByRef('tmpcourseid',$this->getParam('courseid'));
         return "addcomment_tpl.php";
     }
 
-     function __adminads(){
-       $selectedTab=$this->getParam('selectedtab');
-       $this->setVarByRef('selectedtab',$selectedTab);
-       return "admin_tpl.php";
-     }
-     
-     function __commentadmin(){
-       return "commentadmin_tpl.php";
-   }
-    function __updatecomment(){
-           $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    function __adminads() {
+        $selectedTab=$this->getParam('selectedtab');
+        $this->setVarByRef('selectedtab',$selectedTab);
+        return "admin_tpl.php";
+    }
+
+    function __commentadmin() {
+        return "commentadmin_tpl.php";
+    }
+
+    function __updatecomment() {
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $toemail=$this->objCourseProposals($this->getParam('courseid'));
         $subject=$objSysConfig->getValue('EMAIL_COMMENT_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_COMMENT_BODY', 'ads');
@@ -147,59 +148,59 @@ class ads extends controller {
     }
 
     function __facultylist() {
-     return "facultylist_tpl.php";
+        return "facultylist_tpl.php";
     }
 
-   function __saveemailtemplate(){
-     $forwardtoworkmatecontent=$this->getParam('forwardtoworkmatefieldcontent');
-     $forwardtoworkmatesubject=$this->getParam('forwardtoworkmatefieldsubject');
-     if($this->objEmailTemplates->templateExists('forwardtoworkmate')){
-         $this->objEmailTemplates->updateTemplate('forwardtoworkmate',$forwardtoworkmatecontent,$forwardtoworkmatesubject);
-     }else{
-          $this->objEmailTemplates->addTemplate('forwardtoworkmate',$forwardtoworkmatecontent,$forwardtoworkmatesubject);
-     }
+    function __saveemailtemplate() {
+        $forwardtoworkmatecontent=$this->getParam('forwardtoworkmatefieldcontent');
+        $forwardtoworkmatesubject=$this->getParam('forwardtoworkmatefieldsubject');
+        if($this->objEmailTemplates->templateExists('forwardtoworkmate')) {
+            $this->objEmailTemplates->updateTemplate('forwardtoworkmate',$forwardtoworkmatecontent,$forwardtoworkmatesubject);
+        }else {
+            $this->objEmailTemplates->addTemplate('forwardtoworkmate',$forwardtoworkmatecontent,$forwardtoworkmatesubject);
+        }
 
-     $forwardtoownercontent=$this->getParam('forwardtoownerfieldcontent');
-     $forwardtoownersubject=$this->getParam('forwardtoownerfieldsubject');
-     if($this->objEmailTemplates->templateExists('forwardtoowner')){
-         $this->objEmailTemplates->updateTemplate('forwardtoowner',$forwardtoownercontent,$forwardtoownersubject);
-     }else{
-          $this->objEmailTemplates->addTemplate('forwardtoowner',$forwardtoownercontent,$forwardtoownersubject);
-     }
+        $forwardtoownercontent=$this->getParam('forwardtoownerfieldcontent');
+        $forwardtoownersubject=$this->getParam('forwardtoownerfieldsubject');
+        if($this->objEmailTemplates->templateExists('forwardtoowner')) {
+            $this->objEmailTemplates->updateTemplate('forwardtoowner',$forwardtoownercontent,$forwardtoownersubject);
+        }else {
+            $this->objEmailTemplates->addTemplate('forwardtoowner',$forwardtoownercontent,$forwardtoownersubject);
+        }
 
-     $addmembercontent=$this->getParam('addmemberfieldcontent');
-     $addmembersubject=$this->getParam('addmemberfieldsubject');
-     if($this->objEmailTemplates->templateExists('addmember')){
-         $this->objEmailTemplates->updateTemplate('addmember',$addmembercontent,$addmembersubject);
-     }else{
-          $this->objEmailTemplates->addTemplate('addmember',$addmembercontent,$addmembersubject);
-     }
-     $addcommentcontent=$this->getParam('addcommentfieldcontent');
-     $addcommentsubject=$this->getParam('addcommentfieldsubject');
-     if($this->objEmailTemplates->templateExists('addcomment')){
-         $this->objEmailTemplates->updateTemplate('addcomment',$addcommentcontent,$addcommentsubject);
-     }else{
-          $this->objEmailTemplates->addTemplate('addcomment',$addcommentcontent,$addcommentsubject);
-     }
+        $addmembercontent=$this->getParam('addmemberfieldcontent');
+        $addmembersubject=$this->getParam('addmemberfieldsubject');
+        if($this->objEmailTemplates->templateExists('addmember')) {
+            $this->objEmailTemplates->updateTemplate('addmember',$addmembercontent,$addmembersubject);
+        }else {
+            $this->objEmailTemplates->addTemplate('addmember',$addmembercontent,$addmembersubject);
+        }
+        $addcommentcontent=$this->getParam('addcommentfieldcontent');
+        $addcommentsubject=$this->getParam('addcommentfieldsubject');
+        if($this->objEmailTemplates->templateExists('addcomment')) {
+            $this->objEmailTemplates->updateTemplate('addcomment',$addcommentcontent,$addcommentsubject);
+        }else {
+            $this->objEmailTemplates->addTemplate('addcomment',$addcommentcontent,$addcommentsubject);
+        }
 
-     $updatephasecontent=$this->getParam('updatephasefieldcontent');
-     $updatephasesubject=$this->getParam('updatephasefieldsubject');
-     if($this->objEmailTemplates->templateExists('updatephase')){
-         $this->objEmailTemplates->updateTemplate('updatephase',$updatephasecontent,$updatephasesubject);
-     }else{
-          $this->objEmailTemplates->addTemplate('updatephase',$updatephasecontent,$updatephasesubject);
-     }
-    $this->nextAction('adminads',array('selectedtab'=>'5'));
-   }
+        $updatephasecontent=$this->getParam('updatephasefieldcontent');
+        $updatephasesubject=$this->getParam('updatephasefieldsubject');
+        if($this->objEmailTemplates->templateExists('updatephase')) {
+            $this->objEmailTemplates->updateTemplate('updatephase',$updatephasecontent,$updatephasesubject);
+        }else {
+            $this->objEmailTemplates->addTemplate('updatephase',$updatephasecontent,$updatephasesubject);
+        }
+        $this->nextAction('adminads',array('selectedtab'=>'5'));
+    }
 
     function __savecomment() {
 
         $proposalMembersData=$this->objProposalMembers->getMembers($this->getParam('courseid'),$this->getParam('phase'));
         $membercount=count($proposalMembersData);
-        if($membercount > 0){
-        foreach($proposalMembersData as $row){
-        $recepients[]=$this->objUser->email($row['userid']);
-        }  
+        if($membercount > 0) {
+            foreach($proposalMembersData as $row) {
+                $recepients[]=$this->objUser->email($row['userid']);
+            }
         }
         $body= $this->objEmailTemplates->getTemplateContent('addcomment');
         $subject= $this->objEmailTemplates->getTemplateSubject('addcomment');
@@ -231,24 +232,22 @@ class ads extends controller {
         return "viewcomment_tpl.php";
     }
 
-    function __searchusers(){
+    function __searchusers() {
         $val= $this->getParam('query');
         $start= $this->getParam('start');
         $limit= $this->getParam('limit');
         return $this->objDocumentStore->getUsers($val,$start,$limit);
     }
 
-
-
-    function __reviewcourseproposal(){
+    function __reviewcourseproposal() {
         return "reviewcourseproposal_tpl.php";
     }
 
-    function __addcourseproposal(){
+    function __addcourseproposal() {
         return "addcourseproposal_tpl.php";
     }
 
-    function __viewreport(){
+    function __viewreport() {
         return "viewreport_tpl.php";
     }
 
@@ -261,14 +260,14 @@ class ads extends controller {
         return $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'0'));
     }
 
-    function __savecourseproposal(){
+    function __savecourseproposal() {
         $faculty = $this->getParam('facultyid');
         $courseTitle= $this->getParam('title');
         $school = $this->getParam('schoolname');
         if ($form == "") {
             $form = $this->getParam('formnumber');
         }
-          
+
 
         if($this->getParam('edit')) {
             $this->id = $this->getParam('id');
@@ -281,7 +280,7 @@ class ads extends controller {
         return $this->nextAction('home', array('id'=>$courseProposalId));
     }
 
-    function __savecoursereview(){
+    function __savecoursereview() {
         $courseReview = $this->getParam('title');
         $courseID = $this->getParam('id');
         $courseReviewlId=$this->objCourseReviews->addCourseReview($courseReview,$courseID);
@@ -317,15 +316,15 @@ class ads extends controller {
             $this->createDocument($userid, $courseid);
         }
         else if ($verarray['status'] == 'submitted') {
-            $this->objDocumentStore->increaseVersion($courseid, $this->objUser->email($userid), ($verarray['version'] + 1));
-        }
-        else {
+                $this->objDocumentStore->increaseVersion($courseid, $this->objUser->email($userid), ($verarray['version'] + 1));
+            }
+            else {
             /*if(!$this->objUser->isAdmin()){
                 if (!strcmp($verarray['currentuser'], $this->objUser->email($userid)) == 0) { //current user is trying to edit a locked document
                     $this->formError->setError("general", "This document is currently locked, please wait until the user editing it is finished.");
                     return "error_tpl.php";
                 }}*/
-        }
+            }
 
         $values = $this->objDocumentStore->getValues($courseid, $form);
         if (count($values) == 0) {
@@ -343,38 +342,39 @@ class ads extends controller {
     function __submitform() {
         $form = $this->getParam('formnumber');
         $this->editable=$this->getParam('editable');
-         if ($this->editable !='false') {
+        if ($this->editable !='false') {
 
-        if (!$this->formExists($form)) {
-            $this->formError->setError("general", "Invalid form number.");
-            return "error_tpl.php";
-        }
-        $courseid = $this->getParam('courseid');
-         if (!$this->objCourseProposals->courseExists($courseid)) {
-            $this->formError->setError("general", "Invalid course number.");
-            return "error_tpl.php";
-        }
-        $userid = $this->objUser->userId();
-        $textquestions = $this->getTextQuestions($form);
-        $numericalquestions = $this->getNumericalQuestions($form);
-        $otherquestions = $this->getOtherQuestions($form);
-        //$this->errorCheckText($textquestions);
-        //$this->errorCheckNumeric($numericalquestions);
-        $allquestions = array_merge($textquestions, $numericalquestions);
-        $allquestions  = array_merge($allquestions, $otherquestions);
- 
-       // if ($this->formError->numErrors() == 0) {
+            if (!$this->formExists($form)) {
+                $this->formError->setError("general", "Invalid form number.");
+                return "error_tpl.php";
+            }
+            $courseid = $this->getParam('courseid');
+            if (!$this->objCourseProposals->courseExists($courseid)) {
+                $this->formError->setError("general", "Invalid course number.");
+                return "error_tpl.php";
+            }
+            $userid = $this->objUser->userId();
+            $textquestions = $this->getTextQuestions($form);
+            $numericalquestions = $this->getNumericalQuestions($form);
+            $otherquestions = $this->getOtherQuestions($form);
+            //$this->errorCheckText($textquestions);
+            //$this->errorCheckNumeric($numericalquestions);
+            $allquestions = array_merge($textquestions, $numericalquestions);
+            $allquestions  = array_merge($allquestions, $otherquestions);
+
+            // if ($this->formError->numErrors() == 0) {
             $this->updateDatabase($userid, $courseid, $form, $allquestions);
             return $this->getNext($form,$courseid);
-       // }
-       // else {
-     //       $this->formValue->setAllValues($_POST);
-     //       $this->submitAction = $this->uri(array("action"=>"submitform", "formnumber"=>$form, "courseid"=>$courseid,"editable"=>$this->editable));
-     //       return "form$form" . "_tpl.php";
-      //  }
-      }else{
-          return $this->getNext($form,$courseid);
-      }
+        // }
+        // else {
+        //       $this->formValue->setAllValues($_POST);
+        //       $this->submitAction = $this->uri(array("action"=>"submitform", "formnumber"=>$form, "courseid"=>$courseid,"editable"=>$this->editable));
+        //       return "form$form" . "_tpl.php";
+        //  }
+        }
+        else {
+            return $this->getNext($form,$courseid);
+        }
     }
     function __home() {
 
@@ -399,9 +399,9 @@ class ads extends controller {
         }
         $proposal = $this->objDocumentStore->getProposal($courseid, $verarray['version']);
         $this->errorFree($proposal,$courseid);
-            $verarray = $this->objDocumentStore->submitProposal($courseid, $verarray['version']);
-            return $this->__home();
-        
+        $verarray = $this->objDocumentStore->submitProposal($courseid, $verarray['version']);
+        return $this->__home();
+
         /*else {
             return "error_tpl.php";
         }*/
@@ -449,16 +449,15 @@ class ads extends controller {
             }
         }
         if ($count == count($this->allForms)) {
-            //no more forms, go back to initial page
+        //no more forms, go back to initial page
             $this->formError->setError("general", "Document complete, you may now submit it by clicking the submit link next to it.");
             return $this->nextAction('showcourseprophist',array("courseid"=>$courseid,'selectedtab'=>'0'));
         }
         else {
-            //go to $this->allForms[$count]
+        //go to $this->allForms[$count]
             return $this->__viewform($this->allForms[$count]);
         }
     }
-
 
     function createDocument($userid, $courseid) {
         foreach ($this->allForms as $form) {
@@ -501,7 +500,7 @@ class ads extends controller {
     }
 
     function errorCheckNumeric($array) {
-        //this will check if the numbers are actually numbers
+    //this will check if the numbers are actually numbers
         foreach ($array as $value) {
             if (!isset($_POST[$value])) {
                 $this->formError->setError($value, "You must specify a numeric value for this field.");
@@ -538,7 +537,7 @@ class ads extends controller {
             $textquestions[] = "C2b";
             $textquestions[] = "C3";
             $textquestions[] = "C4b_1";
-            //$textquestions[] = "C4b_2";
+        //$textquestions[] = "C4b_2";
         }
         if ($form == "D") {
             $textquestions[]  = "D1";
@@ -653,29 +652,29 @@ class ads extends controller {
         $submitted = $this->objCourseProposals->updateProposalStatus($this->id, $status);
 
         if($submitted) {
-        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $toemail=$this->objCourseProposals->getOwnerEmail($this->getParam('id'));
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $toemail=$this->objCourseProposals->getOwnerEmail($this->getParam('id'));
 
-        $body= $this->objEmailTemplates->getTemplateContent('updatephase');
-        $subject= $this->objEmailTemplates->getTemplateSubject('updatephase');
+            $body= $this->objEmailTemplates->getTemplateContent('updatephase');
+            $subject= $this->objEmailTemplates->getTemplateSubject('updatephase');
 
-        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
+            $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
 
-        $body.=' '. str_replace("amp;", "", $linkUrl);
-        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
-        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('id')), $body);
-        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('id')), $body);
-        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
+            $body.=' '. str_replace("amp;", "", $linkUrl);
+            $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+            $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('id')), $body);
+            $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('id')), $body);
+            $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
 
-        $objMailer = $this->getObject('email', 'mail');
-        $objMailer->setValue('to', array($toemail));
-        $objMailer->setValue('from', $this->objUser->email());
-        $objMailer->setValue('fromName', $this->objUser->fullnames);
-        $objMailer->setValue('subject', $subject);
-        $objMailer->setValue('body', $body);
-        $objMailer->send();
+            $objMailer = $this->getObject('email', 'mail');
+            $objMailer->setValue('to', array($toemail));
+            $objMailer->setValue('from', $this->objUser->email());
+            $objMailer->setValue('fromName', $this->objUser->fullnames);
+            $objMailer->setValue('subject', $subject);
+            $objMailer->setValue('body', $body);
+            $objMailer->send();
 
-        $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0'));
+            $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0'));
         }
         else {
             $message = "There was an error saving your information";
@@ -683,7 +682,6 @@ class ads extends controller {
             return "viewcourseproposalstatus_tpl.php";
         }
     }
-
 
     public function __updatephase() {
         $this->id=$this->getParam('id');
@@ -692,53 +690,53 @@ class ads extends controller {
         $updated = $this->objCourseProposals->updatePhase($this->id, $status);
 
         if($updated) {
-        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $toemail1=$this->objCourseProposals->getOwnerEmail($this->getParam('id'));
-        if($status == '1'){
-         $facultyId=$this->objCourseProposals->getFacultyId($this->getParam('id'));
-         $toemail2=$this->objAPOModerator->getAPOModeratorEmail($facultyId);
-        }
-        if($status == '2'){
-         $facultyId=$this->objCourseProposals->getFacultyId($this->getParam('id'));
-         $toemail2=$this->objSubFacultyModerator->getModeratorEmail($facultyId);
-        }
-       if($status == '3'){
-         $facultyId=$this->objCourseProposals->getFacultyId($this->getParam('id'));
-         $toemail2=$this->objFacultyModerator->getModeratorEmail($facultyId);
-        }
-        $phone = 'xxxx';
-        $lname="x";
-        $fname="y";
-        //now change owner to the new apo moderator
-        $this->objDocumentStore->sendProposal($lname, $fname, $toemail2, $phone, $this->id,$this->objUser->email(),false);
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $toemail1=$this->objCourseProposals->getOwnerEmail($this->getParam('id'));
+            if($status == '1') {
+                $facultyId=$this->objCourseProposals->getFacultyId($this->getParam('id'));
+                $toemail2=$this->objAPOModerator->getAPOModeratorEmail($facultyId);
+            }
+            if($status == '2') {
+                $facultyId=$this->objCourseProposals->getFacultyId($this->getParam('id'));
+                $toemail2=$this->objSubFacultyModerator->getModeratorEmail($facultyId);
+            }
+            if($status == '3') {
+                $facultyId=$this->objCourseProposals->getFacultyId($this->getParam('id'));
+                $toemail2=$this->objFacultyModerator->getModeratorEmail($facultyId);
+            }
+            $phone = 'xxxx';
+            $lname="x";
+            $fname="y";
+            //now change owner to the new apo moderator
+            $this->objDocumentStore->sendProposal($lname, $fname, $toemail2, $phone, $this->id,$this->objUser->email(),false);
 
-        $body= $this->objEmailTemplates->getTemplateContent('updatephase');
-        $subject= $this->objEmailTemplates->getTemplateSubject('updatephase');
-        
-        $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
+            $body= $this->objEmailTemplates->getTemplateContent('updatephase');
+            $subject= $this->objEmailTemplates->getTemplateSubject('updatephase');
 
-        $body.=' '. str_replace("amp;", "", $linkUrl);
-        $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
-        $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('id')), $body);
-        $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('id')), $body);
-        $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
+            $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->getParam('id'),'selectedtab'=>'0'));
 
-        $objMailer = $this->getObject('email', 'mail');
-        $objMailer->setValue('to', array($toemail1,$toemail2));
-        $objMailer->setValue('from', $this->objUser->email());
-        $objMailer->setValue('fromName', $this->objUser->fullnames);
-        $objMailer->setValue('subject', $subject);
-        $objMailer->setValue('body', $body);
-        $objMailer->send();
-        
-        
-         $this->objProposalMembers->saveMember($this->objUser->userId(),$this->getParam('id'),'n','',$status);
-         //selected  new owner
-         $userid=$this->objDocumentStore->getUserIdByEmail($toemail2);
-         $this->objProposalMembers->saveMember($userid,$this->getParam('id'),'n','',$status);
-        
+            $body.=' '. str_replace("amp;", "", $linkUrl);
+            $body=' '. str_replace("{from_names}", $this->objUser->fullname(), $body);
+            $body=' '. str_replace("{proposal_status}", $this->objCourseProposals->getStatus($this->getParam('id')), $body);
+            $body=' '. str_replace("{proposal}", $this->objCourseProposals->getTitle($this->getParam('id')), $body);
+            $body=' '. str_replace("{comment}", $this->getParam('commentField'), $body);
 
-        $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0'));
+            $objMailer = $this->getObject('email', 'mail');
+            $objMailer->setValue('to', array($toemail1,$toemail2));
+            $objMailer->setValue('from', $this->objUser->email());
+            $objMailer->setValue('fromName', $this->objUser->fullnames);
+            $objMailer->setValue('subject', $subject);
+            $objMailer->setValue('body', $body);
+            $objMailer->send();
+
+
+            $this->objProposalMembers->saveMember($this->objUser->userId(),$this->getParam('id'),'n','',$status);
+            //selected  new owner
+            $userid=$this->objDocumentStore->getUserIdByEmail($toemail2);
+            $this->objProposalMembers->saveMember($userid,$this->getParam('id'),'n','',$status);
+
+
+            $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0'));
         }
         else {
             $message = "There was an error saving your information";
@@ -747,7 +745,6 @@ class ads extends controller {
         }
     }
 
-    
     public function __deletecourseproposal() {
         $this->id=$this->getParam('id');
         $this->objCourseProposals->deleteProposal($this->id);
@@ -760,7 +757,7 @@ class ads extends controller {
         $this->id = $this->getParam('courseid');
         $data = $this->objDocumentStore->getVersion($this->id, $this->objUser->userId());
         $selectedtab= $this->getParam('selectedtab');
-        if(!$selectedtab){
+        if(!$selectedtab) {
             $selectedtab="0";
         }
         if($data['version'] == 0) {
@@ -774,12 +771,12 @@ class ads extends controller {
         }
     }
 
-    public function __sendproposaltomoderator(){
+    public function __sendproposaltomoderator() {
         /*if(strlen(trim($this->getParam('faculty'))) != 0) {
             $this->id = $this->objCourseProposals->getID($this->getParam('faculty'));
         }*/
         $this->id = $this->getParam('courseid');
-        
+
         $phone = 'xxxx';
         $lname="x";
         $fname="y";
@@ -789,7 +786,7 @@ class ads extends controller {
 
         $subject=$objSysConfig->getValue('EMAIL_MODERATOR_SUBJECT', 'ads');
         $body=$objSysConfig->getValue('EMAIL_MODERATOR_BODY', 'ads');
-        
+
         $linkUrl = $this->uri(array('action'=>'showcourseprophist','courseid'=>$this->id,'selectedtab'=>'0'));
 
         $body.=' '. str_replace("amp;", "", $linkUrl);
@@ -813,13 +810,13 @@ class ads extends controller {
 
 
 
-    public function __deleteproposalmember(){
+    public function __deleteproposalmember() {
         $memberid=$this->getParam('id');
         $this->id = $this->getParam('courseid');
         $this->objProposalMembers->deleteMember($memberid,$this->id);
         $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'1'));
-   }
-   public function __addproposalmember(){
+    }
+    public function __addproposalmember() {
         $this->id = $this->getParam('courseid');
         $email=$this->getParam('email');
         $userid=$this->getParam('userid');
@@ -828,15 +825,15 @@ class ads extends controller {
         $this->objDocumentStore->sendMail($email,$this->objUser->email(),$this->id,'addmember');
         $this->nextAction('showcourseprophist',array("courseid"=>$this->id,'selectedtab'=>'1'));
     }
-   public function __addunitcommentor(){
+    public function __addunitcommentor() {
         $this->id = $this->getParam('courseid');
         $commenttype=$this->getParam('commenttypeid');
         $phase=$this->getParam('phase');
         $email=$this->objCommentAdmin->getAPOExtraCommentTypeEmail($commenttype);
         $userid=$this->objDocumentStore->getUserIdByEmail($email);
 
-        if($userid == null){
-            
+        if($userid == null) {
+
             $userid="1";
         }
         $this->objProposalMembers->saveMember($userid, $this->id,'y',$commenttype,$phase);
@@ -853,7 +850,7 @@ class ads extends controller {
         $submission = $this->objDocumentStore->sendProposal($lname, $fname, $email, $phone, $this->id,$this->objUser->email(),false);
         $this->objDocumentStore->sendMail($email,$this->objUser->email(),$this->id,'forwardtoowner');
         $userid=$this->objDocumentStore->getUserIdByEmail($email);
-        
+
         $this->objProposalMembers->saveMember($userid,$this->id,'n','','0');
         //down grade to proposal phase
         $updated = $this->objCourseProposals->updatePhase($this->id, '0');
@@ -908,24 +905,27 @@ class ads extends controller {
     public function __savefacultymoderator() {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
-        $this->objFacultyModerator->saveModerator($faculty, $moderator);
+        $school = $this->getParam('schoolname');
+        $this->objFacultyModerator->saveModerator($faculty, $moderator, $school);
         $this->nextAction('adminads',array('selectedtab'=>'5'));
     }
     public function __savesubfacultymoderator() {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
-        $this->objSubFacultyModerator->saveModerator($faculty, $moderator);
+        $school = $this->getParam('schoolname');
+        $this->objSubFacultyModerator->saveModerator($faculty, $moderator, $school);
         $this->nextAction('adminads',array('selectedtab'=>'4'));
     }
-   public function __deleteapomoderator() {
+    public function __deleteapomoderator() {
         $moderator = $this->getParam('id');
         $this->objAPOModerator->deleteModerator($moderator);
         $this->nextAction('adminads',array('selectedtab'=>'2'));
     }
-  public function __saveapomoderator() {
+    public function __saveapomoderator() {
         $moderator = $this->getParam('moderator');
         $faculty  = $this->getParam('facultyid');
-        $this->objAPOModerator->saveModerator($faculty, $moderator);
+        $school = $this->getParam('schoolname');
+        $this->objAPOModerator->saveModerator($faculty, $moderator, $school);
         $this->nextAction('adminads',array('selectedtab'=>'2'));
     }
     public function __savefaculty() {
@@ -933,27 +933,27 @@ class ads extends controller {
         $this->objFaculty->saveFaculty($faculty);
         $this->nextAction('adminads',array('selectedtab'=>'0'));
     }
-    function getValValue($val){
-        if($val =='{names}'){
+    function getValValue($val) {
+        if($val =='{names}') {
             return $this->objUser->fullname();
         }
-        if($val == '{proposal}'){
+        if($val == '{proposal}') {
             return $this->objCourseProposals->getTitle($this->id);
         }
-        if($val == '{proposal_status}'){
+        if($val == '{proposal_status}') {
             return $this->objCourseProposals->getTitle($this->id);
         }
     }
-    function parseVar($txt){
+    function parseVar($txt) {
         $vals=array(
-        "{names}",
-        "{proposal_status}",
-        "{proposal}",
-        "{comment}"
-          );
-          foreach($vals as $val){
-             $txt= str_replace($val, "", $txt);
-          }
+            "{names}",
+            "{proposal_status}",
+            "{proposal}",
+            "{comment}"
+        );
+        foreach($vals as $val) {
+            $txt= str_replace($val, "", $txt);
+        }
     }
 
     public function __saveapoextracommenttype() {
@@ -962,18 +962,18 @@ class ads extends controller {
     }
 
     public function __updatestatus() {
-       $this->objCommentAdmin->updateStatus($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
-       $this->nextAction('adminaads',array('selectedtab'=>'4'));
+        $this->objCommentAdmin->updateStatus($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
+        $this->nextAction('adminaads',array('selectedtab'=>'4'));
     }
-    
+
     public function __updateapoextracommenttype() {
-       $this->objCommentAdmin->updateApoExtraCommentType($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
-       $this->nextAction('adminads',array('selectedtab'=>'3'));
+        $this->objCommentAdmin->updateApoExtraCommentType($this->getParam('title'), $this->getParam('moderator'), $this->getParam('id'));
+        $this->nextAction('adminads',array('selectedtab'=>'3'));
 
     }
-      public function __deleteapoextracommenttype() {
-       $this->objCommentAdmin->deleteApoExtraCommentType($this->getParam('id'));
-       $this->nextAction('adminads',array('selectedtab'=>'3'));
+    public function __deleteapoextracommenttype() {
+        $this->objCommentAdmin->deleteApoExtraCommentType($this->getParam('id'));
+        $this->nextAction('adminads',array('selectedtab'=>'3'));
     }
 
     public function __saveschool() {
@@ -982,9 +982,20 @@ class ads extends controller {
         $this->nextAction('adminads', array('selectedtab'=>'1'));
     }
 
+    public function __deletefaculty() {
+        $this->objFaculty->deleteFaculty($this->getParam('id'));
+        $this->nextAction('adminads', array('selectedtab'=>'0'));
+    }
+
     public function __deleteschool() {
-        $this->objSchool->deleteSchool($this->getParam('facultyname'), $this->getParam('school'));
+        $this->objSchool->deleteSchool($this->getParam('facultyname'), $this->getParam('id'));
         $this->nextAction('adminads', array('selectedtab'=>'1'));
+    }
+
+    public function __deletefacultymoderator() {
+        $moderator = $this->getParam('id');
+        $this->objFacultyModerator->deleteModerator($moderator);
+        $this->nextAction('adminads',array('selectedtab'=>'5'));
     }
 
     public function __deletesubfacultymoderator() {

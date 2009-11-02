@@ -12,6 +12,11 @@ class dbfaculty extends dbtable{
         $this->insert($data);
     }
 
+    public function deleteFaculty($id) {
+        $sql = "delete from ".$this->tablename." where id='".$id."'";
+        $data = $this->getArray($sql);
+    }
+
     public function saveModerator($faculty, $moderator) {
         $data = array('userid'=>$moderator);
         $this->update('name', $faculty, $data);

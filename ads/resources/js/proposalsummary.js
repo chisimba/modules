@@ -309,7 +309,7 @@ function addProposalMember(){
    window.location.href='?module=ads&action=addproposalmember'+'&email='+email+'&phase='+phase+'&courseid='+courseid+"&userid="+userid;
 }
 
-function showEditProposalWin(faculties,schools,url,selectedFaculty,selectedSchool,proposalName){
+function showEditProposalWin(faculties,schools,url,selectedFaculty,selectedSchool,proposalName, schoolurl){
   var facutlystore = new Ext.data.ArrayStore({
         fields:
          [
@@ -318,14 +318,22 @@ function showEditProposalWin(faculties,schools,url,selectedFaculty,selectedSchoo
          ],
         data : faculties
     });
-    var schoolstore = new Ext.data.ArrayStore({
-        fields: [
-            {name: 'school'},
-            {name: 'id'}
-        ],
-        data: schools
-    });
 
+    var schoolstore = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({url: schoolurl,method: "GET"}),
+        reader: new Ext.data.JsonReader({
+                    totalProperty: 'totalCount',
+                    root:'rows'
+                },
+                [{
+                        name: 'schoolid'
+                    },
+                    {
+                        name: 'schoolname'
+                    }
+                ])
+    });
+    
     var facultyField = new Ext.form.ComboBox({
         store: facutlystore,
         displayField:'faculty',
@@ -343,23 +351,24 @@ function showEditProposalWin(faculties,schools,url,selectedFaculty,selectedSchoo
         hiddenName : 'facultyid'
 
     });
-
     var schoolField = new Ext.form.ComboBox({
         store:schoolstore,
-        displayField:'school',
+        displayField:'schoolname',
         fieldLabel:'School',
         typeAhead: true,
         mode: 'local',
-        value:selectedSchool,
+        value: selectedSchool,
         editable: false,
         allowBlank: false,
         forceSelection: true,
         triggerAction:'all',
         emptyText: 'Select school...',
         selectOnFocus: true,
-        valueField:'id',
+        valueField:'schoolid',
         hiddenName: 'schoolname'
     });
+    schoolField.store.load({params:{faculty:facultyField.getValue()}});
+
       var form = new Ext.FormPanel({
             standardSubmit: true,
             labelWidth: 125,
@@ -384,6 +393,12 @@ function showEditProposalWin(faculties,schools,url,selectedFaculty,selectedSchoo
             ]
 
         });
+
+    facultyField.on('change', function() {
+        schoolField.reset();
+        schoolField.clearValue();
+        schoolField.store.load({params:{faculty:facultyField.getValue()}});
+    })
 
     var addProposalWin;
     if(!addProposalWin){

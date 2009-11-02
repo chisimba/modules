@@ -26,39 +26,31 @@ function showTabs() {
 function showFacultyList(data,url){
     // create the data store
     var store = new Ext.data.ArrayStore({
-        fields: [
-        {
+        fields: [{
             name: 'faculty'
-        },
-        {
+        },{
             name: 'id'
-        },
-        {
+        },{
             name: 'delete'
-        }
-        ]
+        }]
     });
     store.loadData(data);
 
     // create the Grid
     var grid = new Ext.grid.GridPanel({
         store: store,
-        columns: [
-        {
+        columns: [{
             id:'faculty',
             header: "Faculty",
-            width: 500,
+            width: 400,
             sortable: true,
             dataIndex: 'faculty'
-        },
-
-        {
+        },{
             header: "Delete",
             width:100,
             sortable: true,
             dataIndex: 'delete'
-        }
-        ],
+        }],
         sm: new Ext.grid.RowSelectionModel({
             singleSelect: true
         }),
@@ -68,7 +60,6 @@ function showFacultyList(data,url){
         width:500
     });
     grid.render('facultylist');
-
 
     var facultyAddForm = new Ext.FormPanel({
             standardSubmit: true,
@@ -168,19 +159,18 @@ function showSchoolList(facultyData, data, url) {
         store: schoolStore,
         columns: [
         {
-            id: 'schoolname',
+            id: 'school',
             header: "School",
-            width: 200,
             sortable: true,
             dataIndex: 'schoolname'
         },{
             header: "Faculty",
-            width:200,
+            width: 300,
             sortable: true,
             dataIndex: 'faculty'
         },{
             header: "Delete",
-            width:100,
+            width:50,
             sortable: true,
             dataIndex: 'delete'
         }],
@@ -188,9 +178,9 @@ function showSchoolList(facultyData, data, url) {
             singleSelect: true
         }),
         stripeRows: true,
-        autoExpandColumn: 'schoolname',
+        autoExpandColumn: 'school',
         height:350,
-        width:500
+        width:600
     });
     schoolGrid.render('schoollist');
 
@@ -250,56 +240,55 @@ function showSchoolList(facultyData, data, url) {
         addSchoolWin.show(this);
     });
 }
-function showFacultyModeratorList(data,url,modFaculties){
+function showFacultyModeratorList(data,url,modFaculties, schoolurl){
     // create the data store
     var store = new Ext.data.ArrayStore({
-        fields: [
-        {
+        fields: [{
             name: 'moderator'
-        },
-        {
+        },{
             name: 'faculty'
-        },
-        {
+        },{
+            name: 'school'
+        },{
             name: 'delete'
-        }
-        ]
+        }]
     });
     store.loadData(data);
 
     // create the Grid
     var grid = new Ext.grid.GridPanel({
         store: store,
-        columns: [
-        {
+        columns: [{
             id:'moderator',
             header: "Moderator",
             width: 250,
             sortable: true,
             dataIndex: 'moderator'
-        },
-        {
+        },{
             id:'faculty',
             header: "Faculty",
             width: 200,
             sortable: true,
             dataIndex: 'faculty'
-        },
-
-        {
+        },{
+            id:'school',
+            header: "School",
+            width: 100,
+            sortable: true,
+            dataIndex: 'school'
+        },{
             header: "Delete",
             width:50,
             sortable: true,
             dataIndex: 'delete'
-        }
-        ],
+        }],
         sm: new Ext.grid.RowSelectionModel({
             singleSelect: true
         }),
         stripeRows: true,
         autoExpandColumn: 'moderator',
         height:350,
-        width:500
+        width:600
     });
     grid.render('facultymoderators');
    var modFacultyStore = new Ext.data.ArrayStore({
@@ -318,6 +307,20 @@ function showFacultyModeratorList(data,url,modFaculties){
          ],
         data : modFaculties
     });
+
+    var schoolstore = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({url: schoolurl,method: "GET"}),
+        reader: new Ext.data.JsonReader({
+                    totalProperty: 'totalCount',
+                    root:'rows'
+                },[{
+                    name: 'schoolid'
+                },{
+                    name: 'schoolname'
+                }]
+        )
+    });
+
     var modFacultyField = new Ext.form.ComboBox({
         store: modFacultyStore,
         displayField:'faculty',
@@ -333,7 +336,24 @@ function showFacultyModeratorList(data,url,modFaculties){
         valueField : 'id',
         hiddenName : 'facultyid'
     });
-    
+
+    var schoolField = new Ext.form.ComboBox({
+        store:schoolstore,
+        displayField:'schoolname',
+        fieldLabel:'School',
+        typeAhead: true,
+        mode: 'local',
+        editable: false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction:'all',
+        emptyText: 'Select school...',
+        selectOnFocus: true,
+        valueField:'schoolid',
+        hiddenName: 'schoolname'
+    });
+    schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+
     var moderatorForm = new Ext.FormPanel({
             standardSubmit: true,
             labelWidth: 125,
@@ -346,6 +366,7 @@ function showFacultyModeratorList(data,url,modFaculties){
 
             items: [
                     modFacultyField,
+                    schoolField,
                     {
                     fieldLabel: 'Moderator',
                     name: 'moderator',
@@ -354,6 +375,12 @@ function showFacultyModeratorList(data,url,modFaculties){
                 }
             ]
         });
+
+    modFacultyField.on('change', function() {
+        schoolField.reset();
+        schoolField.clearValue();
+        schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+    })
 
     var addModeratorWin;
     var modBtn = Ext.get('addfacultymoderator-btn');
@@ -391,73 +418,78 @@ function showFacultyModeratorList(data,url,modFaculties){
     });
 }
 
-function showSubFacultyModeratorList(data,url,modFaculties){
+function showSubFacultyModeratorList(data,url,modFaculties,schoolurl){
     // create the data store
     var store = new Ext.data.ArrayStore({
-        fields: [
-        {
+        fields: [{
             name: 'moderator'
-        },
-        {
+        },{
             name: 'faculty'
-        },
-        {
+        },{
+            name: 'school'
+        },{
             name: 'delete'
-        }
-        ]
+        }]
     });
     store.loadData(data);
 
     // create the Grid
     var grid = new Ext.grid.GridPanel({
         store: store,
-        columns: [
-        {
+        columns: [{
             id:'moderator',
             header: "Moderator",
             width: 250,
             sortable: true,
             dataIndex: 'moderator'
-        },
-        {
+        },{
             id:'faculty',
             header: "Faculty",
-            width: 250,
+            width: 200,
             sortable: true,
             dataIndex: 'faculty'
-        },
-
-        {
+        },{
+            id:'school',
+            header: "School",
+            width: 100,
+            sortable: true,
+            dataIndex: 'school'
+        },{
             header: "Delete",
-            width:100,
+            width:50,
             sortable: true,
             dataIndex: 'delete'
-        }
-        ],
+        }],
         sm: new Ext.grid.RowSelectionModel({
             singleSelect: true
         }),
         stripeRows: true,
         autoExpandColumn: 'moderator',
         height:350,
-        width:500
+        width:600
     });
     grid.render('subfacultymoderators');
    var modFacultyStore = new Ext.data.ArrayStore({
-
-       fields: [
-        {
+       fields: [{
             name: 'faculty'
-        },
-        {
+        },{
             name: 'id'
-        },
-        {
+        },{
             name: 'delete'
-        }
-
-         ],
+        }],
         data : modFaculties
+    });
+    var schoolstore = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({url: schoolurl,method: "GET"}),
+        reader: new Ext.data.JsonReader({
+                    totalProperty: 'totalCount',
+                    root:'rows'
+                },[{
+                    name: 'schoolid'
+                },{
+                    name: 'schoolname'
+                }]
+        )
     });
     var modFacultyField = new Ext.form.ComboBox({
         store: modFacultyStore,
@@ -474,6 +506,22 @@ function showSubFacultyModeratorList(data,url,modFaculties){
         valueField : 'id',
         hiddenName : 'facultyid'
     });
+    var schoolField = new Ext.form.ComboBox({
+        store:schoolstore,
+        displayField:'schoolname',
+        fieldLabel:'School',
+        typeAhead: true,
+        mode: 'local',
+        editable: false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction:'all',
+        emptyText: 'Select school...',
+        selectOnFocus: true,
+        valueField:'schoolid',
+        hiddenName: 'schoolname'
+    });
+    schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
 
     var moderatorForm = new Ext.FormPanel({
             standardSubmit: true,
@@ -487,6 +535,7 @@ function showSubFacultyModeratorList(data,url,modFaculties){
 
             items: [
                     modFacultyField,
+                    schoolField,
                     {
                     fieldLabel: 'Moderator',
                     name: 'moderator',
@@ -495,6 +544,12 @@ function showSubFacultyModeratorList(data,url,modFaculties){
                 }
             ]
         });
+
+    modFacultyField.on('change', function() {
+        schoolField.reset();
+        schoolField.clearValue();
+        schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+    })
 
     var addModeratorWin;
     var modBtn = Ext.get('addsubfacultymoderator-btn');
@@ -535,73 +590,78 @@ function showSubFacultyModeratorList(data,url,modFaculties){
 
 
 
-function showAPOModeratorList(data,url,modFaculties){
+function showAPOModeratorList(data,url,modFaculties,schoolurl){
     // create the data store
     var store = new Ext.data.ArrayStore({
-        fields: [
-        {
+        fields: [{
             name: 'moderator'
-        },
-        {
+        },{
             name: 'faculty'
-        },
-        {
+        },{
+            name: 'school'
+        },{
             name: 'delete'
-        }
-        ]
+        }]
     });
     store.loadData(data);
 
     // create the Grid
     var grid = new Ext.grid.GridPanel({
         store: store,
-        columns: [
-        {
+        columns: [{
             id:'moderator',
             header: "Moderator",
-            width: 250,
+            width: 150,
             sortable: true,
             dataIndex: 'moderator'
-        },
-        {
+        },{
             id:'faculty',
             header: "Faculty",
             width: 250,
             sortable: true,
             dataIndex: 'faculty'
-        },
-
-        {
+        },{
+            id:'school',
+            header: "School",
+            width: 100,
+            sortable: true,
+            dataIndex: 'school'
+        },{
             header: "Delete",
             width:100,
             sortable: true,
             dataIndex: 'delete'
-        }
-        ],
+        }],
         sm: new Ext.grid.RowSelectionModel({
             singleSelect: true
         }),
         stripeRows: true,
         autoExpandColumn: 'moderator',
         height:350,
-        width:500
+        width:600
     });
     grid.render('apomoderators');
    var modFacultyStore = new Ext.data.ArrayStore({
-
-       fields: [
-        {
+        fields: [{
             name: 'faculty'
-        },
-        {
+        },{
             name: 'id'
-        },
-        {
+        },{
             name: 'delete'
-        }
-
-         ],
+        }],
         data : modFaculties
+    });
+    var schoolstore = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({url: schoolurl,method: "GET"}),
+        reader: new Ext.data.JsonReader({
+                    totalProperty: 'totalCount',
+                    root:'rows'
+                },[{
+                    name: 'schoolid'
+                },{
+                    name: 'schoolname'
+                }]
+        )
     });
     var modFacultyField = new Ext.form.ComboBox({
         store: modFacultyStore,
@@ -618,6 +678,22 @@ function showAPOModeratorList(data,url,modFaculties){
         valueField : 'id',
         hiddenName : 'facultyid'
     });
+    var schoolField = new Ext.form.ComboBox({
+        store:schoolstore,
+        displayField:'schoolname',
+        fieldLabel:'School',
+        typeAhead: true,
+        mode: 'local',
+        editable: false,
+        allowBlank: false,
+        forceSelection: true,
+        triggerAction:'all',
+        emptyText: 'Select school...',
+        selectOnFocus: true,
+        valueField:'schoolid',
+        hiddenName: 'schoolname'
+    });
+    schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
 
     var moderatorForm = new Ext.FormPanel({
             standardSubmit: true,
@@ -631,6 +707,7 @@ function showAPOModeratorList(data,url,modFaculties){
 
             items: [
                     modFacultyField,
+                    schoolField,
                     {
                     fieldLabel: 'Moderator',
                     name: 'moderator',
@@ -639,6 +716,11 @@ function showAPOModeratorList(data,url,modFaculties){
                 }
             ]
         });
+    modFacultyField.on('change', function() {
+        schoolField.reset();
+        schoolField.clearValue();
+        schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+    })
 
     var addModeratorWin;
     var modBtn = Ext.get('addapomoderator-btn');

@@ -7,8 +7,8 @@ class dbsubfacultymoderator extends dbtable{
        
     }
 
-    public function saveModerator($faculty, $moderator) {
-        $data = array('facultyid'=>$faculty,'userid'=>$moderator);
+    public function saveModerator($faculty, $moderator, $school) {
+        $data = array('facultyid'=>$faculty,'userid'=>$moderator, 'schoolid'=>$school);
         $this->insert($data);
     }
 

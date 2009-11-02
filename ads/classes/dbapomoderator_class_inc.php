@@ -6,8 +6,8 @@ class dbapomoderator extends dbtable{
         parent::init($this->tablename);
      
     }
-    public function saveModerator($faculty, $moderator) {
-        $data = array('facultyid'=>$faculty,'userid'=>$moderator, "date_forwarded"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
+    public function saveModerator($faculty, $moderator, $school) {
+        $data = array('facultyid'=>$faculty,'userid'=>$moderator, 'schoolid'=>$school, "date_forwarded"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
         $this->insert($data);
     }
     public function deleteModerator($id) {
