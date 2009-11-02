@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<filters>
+    <filter>
+        <name>colorbox</name>
+        <type>parametized</type>
+        <label>Colorbox</label>
+        <params>
+            <param name="boxtype">redbox</param>
+            <param name="boxtype">bluebox</param>
+            <param name="boxtype">yellowbox</param>
+            <param name="boxtype">purplebox</param>
+        </params>
+        <instructions>Select the color of the box to use in the parameters field</instructions>
+        <tag>COLORBOX</tag>
+    </filter>
+    <filter>
+        <name>realtime</name>
+        <type>basic</type>
+        <params>
+            <param name="skin">winxp</param>
+        </params>
+        <label>Realtime</label>
+        <instructions>This will create a link to a virtual classroom with the name of the selected text</instructions>
+        <tag>REALTIME</tag>
+    </filter>
+
+</filters>
