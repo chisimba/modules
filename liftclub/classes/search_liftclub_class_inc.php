@@ -25,6 +25,8 @@ class search_liftclub extends dbTable
     function getLiftsOffered($city, $start, $limit) 
     {
          if(!empty($start) && !empty($limit)){
+           $destiny = $this->objDBDetails->getAll("WHERE userneed ='offer' LIKE '%".$city."%' LIMIT ".$start." , ".$limit);
+           $sqlsearch = 'select det.userid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid, ori.street, ori.suburb, des.userid, des.street, des.suburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid';
 		         return $this->getAll("WHERE city LIKE '%".$city."%' LIMIT ".$start." , ".$limit);
          }else{
 		         return $this->getAll("WHERE city LIKE '%".$city."%'");
