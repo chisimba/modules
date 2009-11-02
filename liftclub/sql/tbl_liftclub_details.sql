@@ -50,6 +50,9 @@ $fields = array(
 		'daterequired' => array(
 		'type' => 'date',
 		),
+		'createdormodified' => array(
+		'type' => 'timestamp',
+		),
 	'monday' => array(
 		'type' => 'text',
 		'length' => 2,

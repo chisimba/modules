@@ -35,4 +35,15 @@
 			      </add>
 		      </data>
 	  </update>    
+    <update>
+        <table>tbl_liftclub_details</table>
+        <version>0.15</version>
+        <description>Added a date created or modified Field</description>
+        <data>
+        	<add>
+    			    <name>datecreatedormodified</name>
+		    	    <type>timestamp</type>
+			      </add>
+		      </data>
+	  </update>
 </updates>
