@@ -29,14 +29,15 @@
 
         public function getSchools($faculty){
             $objFaculty = $this->getObject('dbfaculty');
-            if(strlen(stristr($faculty, "gen")) == 0) {
-                // we have the faculty name directly, and not the faculty id
-                $myFaculty = trim($faculty);
-            }
-            else {
+            if(strlen(stristr($faculty, "gen")) != 0 || strlen(stristr($faculty, "default")) != 0) {
                 // we have an id and not the faculty name
                 $myFaculty = $objFaculty->getFacultyName($faculty);
             }
+            else {
+                // we have the faculty name directly, and not the faculty id
+                $myFaculty = trim($faculty);
+            }
+            
 
             $sql="select id, schoolname from $this->tablename where faculty like '".substr($myFaculty, 0, 10)."%' and deletestatus = 0";
             $xrows=$this->getArray($sql);
