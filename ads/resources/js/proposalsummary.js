@@ -277,7 +277,8 @@ function showHistory(myData){
         fields: [
            {name: 'phase'},
            {name: 'date'},
-           {name: 'forwardedTo'}
+           {name: 'forwardedTo'},
+           {name: 'forwardedBy'}
         ]
     });
     store.loadData(myData);
@@ -288,7 +289,8 @@ function showHistory(myData){
         columns: [
             {id:'phase',header: "Phase", width: 200, sortable: true, dataIndex: 'phase'},
             {header: "Date", width: 100, sortable: true, dataIndex: 'date'},
-            {header: "Forwarded To: ", width: 150, sortable: true, dataIndex: 'forwardedTo'}
+            {header: "Forwarded To", width: 150, sortable: true, dataIndex: 'forwardedTo'},
+            {header: "Forwarded By", width: 150, sortable: true, dataIndex: 'forwardedBy'}
         ],
         stripeRows: true,
         height:350,

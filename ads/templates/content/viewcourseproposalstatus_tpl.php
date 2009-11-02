@@ -24,7 +24,8 @@
     $this->appendArrayVar('headerParams', $styleSheet);
     
     // display the extj radio form
-    $content = '<div id="myForm">';
+    $content = '<div id="message">'.$message.'</div>';
+    $content .= '<div id="myForm">';
     $content .= '<div id="form-ct"></div></div>';
     $content .= '<input type="hidden" name="id" id="id" value="'.$this->getParam("id").'">';
 
@@ -52,28 +53,13 @@
         $items .= ", checked: true";
     }
     $items .= "},";
-    $items .= "{boxLabel: 'Library comment', name: 'proposalstatus', inputValue: '2'";
+    $items .= "{boxLabel: 'Faculty committee', name: 'proposalstatus', inputValue: '2'";
     if($this->getParam("status") == 2) {
         $items .= ", checked: true";
     }
     $items .= "},";
-    $items .= "{boxLabel: 'Subsidy comment', name: 'proposalstatus', inputValue: '3'";
+    $items .= "{boxLabel: 'Faculty', name: 'proposalstatus', inputValue: '3'";
     if($this->getParam("status") == 3) {
-        $items .= ", checked: true";
-    }
-    $items .= "},";
-    $items .= "{boxLabel: 'Faculty committee', name: 'proposalstatus', inputValue: '4'";
-    if($this->getParam("status") == 4) {
-        $items .= ", checked: true";
-    }
-    $items .= "},";
-    $items .= "{boxLabel: 'Faculty', name: 'proposalstatus', inputValue: '5'";
-    if($this->getParam("status") == 5) {
-        $items .= ", checked: true";
-    }
-    $items .= "},";
-    $items .= "{boxLabel: 'APDC', name: 'proposalstatus', inputValue: '6'";
-    if($this->getParam("status") == 0) {
         $items .= ", checked: true";
     }
     $items .= "}";

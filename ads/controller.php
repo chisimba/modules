@@ -32,6 +32,7 @@ class ads extends controller {
         $this->objCourseProposals = $this->getObject('dbcourseproposals');
         $this->objProposalMembers=$this->getObject('dbproposalmembers');
         $this->objCommentAdmin=$this->getObject('dbcommentsadmin');
+        $this->objDocumenHistory=$this->getObject('dbdocumenthistory');
         //review
         $this->objCourseReviews = $this->getObject('dbcoursereviews');
         $this->objUser = $this->getObject ( 'user', 'security' );
@@ -704,6 +705,14 @@ class ads extends controller {
                 $facultyId=$this->objCourseProposals->getFacultyId($this->getParam('id'));
                 $toemail2=$this->objFacultyModerator->getModeratorEmail($facultyId);
             }
+
+            // check email to see if there exists one
+            if($toemail2 == NULL) {
+                $message = "The Moderator for that phase for this school does not exist";
+                $this->setVarByRef("message", $message);
+                return "viewcourseproposalstatus_tpl.php";
+            }
+
             $phone = 'xxxx';
             $lname="x";
             $fname="y";
@@ -729,12 +738,13 @@ class ads extends controller {
             $objMailer->setValue('body', $body);
             $objMailer->send();
 
-
             $this->objProposalMembers->saveMember($this->objUser->userId(),$this->getParam('id'),'n','',$status);
             //selected  new owner
             $userid=$this->objDocumentStore->getUserIdByEmail($toemail2);
             $this->objProposalMembers->saveMember($userid,$this->getParam('id'),'n','',$status);
 
+            // store information in document history
+            $this->objDocumenHistory->saveHistory($this->id, $status, $userid);
 
             $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0'));
         }
@@ -854,6 +864,10 @@ class ads extends controller {
         $this->objProposalMembers->saveMember($userid,$this->id,'n','','0');
         //down grade to proposal phase
         $updated = $this->objCourseProposals->updatePhase($this->id, '0');
+
+        // store information in document history
+        $status = '0';
+        $this->objDocumenHistory->saveHistory($this->id, $status, $userid);
         $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully","courseid"=>$this->id,'selectedtab'=>'0'));
     }
     public function __forwardtoownerfromapo() {
@@ -864,6 +878,11 @@ class ads extends controller {
         $fname="y";
         $submission = $this->objDocumentStore->sendProposal($lname, $fname, $email, $phone, $this->id,$this->objUser->email());
         $updated = $this->objCourseProposals->updatePhase($this->id, '0');
+
+        // store information in document history
+        $userid=$this->objDocumentStore->getUserIdByEmail($email);
+        $status = '0';
+        $this->objDocumenHistory->saveHistory($status, $this->getParam('id'));
         $this->nextAction('showcourseprophist',array("message"=>"Proposal send successfully","courseid"=>$this->id,'selectedtab'=>'0'));
     }
     public function __sendproposal() {

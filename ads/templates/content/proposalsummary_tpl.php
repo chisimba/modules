@@ -145,30 +145,8 @@ foreach($commentTypeData as $data) {
   }
   }
 
-    // history grid data
-    $count = 1;
-    $membercount = count($historyData);
-    foreach($historyData as $data){
-        if($data['phase']== 0){
-                $data['phase'] = 'Proposal Phase';
-            }
-            elseif($data['phase']== 1){
-                $data['phase'] = 'APO Comment';
-            }
-            elseif($data['phase']== 2){
-                $data['phase'] = 'Faculty subcommittee approval';
-            }
-            elseif($data['phase']== 3){
-                $data['phase'] = 'Faculty board approval';
-            }
-        $date = date_create($data['date_forwarded']);
-        $hisData.="['".$data['phase']."','".date_format($date, 'd/m/Y h:m:s')."','".$this->objUser->fullname($data['userid'])."']";
-        
-        if($count < $membercount){
-            $hisData.=",";
-        }
-        $count++;
-    }
+  //history data grid
+  $hisData = $this->objDocumenHistory->getData($this->id);
 
 if(!$selectedtab){
     $selectedtab="0";
