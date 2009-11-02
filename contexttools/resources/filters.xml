@@ -9,19 +9,14 @@
             <param name="boxtype">bluebox</param>
             <param name="boxtype">yellowbox</param>
             <param name="boxtype">purplebox</param>
+            <param name="boxtype">greenbox</param>
+            <param name="boxtype">orangebox</param>
+            <param name="boxtype">pinkbox</param>
+            <param name="boxtype">greybox</param>
+            <param name="boxtype">bwbox</param>
+            <param name="boxtype">wbbox</param>
         </params>
-        <instructions>Select the color of the box to use in the parameters field</instructions>
+        <instructions>Select the color of the box to use in the parameters field.This will be applied to the selectd text in the editor.</instructions>
         <tag>COLORBOX</tag>
     </filter>
-    <filter>
-        <name>realtime</name>
-        <type>basic</type>
-        <params>
-            <param name="skin">winxp</param>
-        </params>
-        <label>Realtime</label>
-        <instructions>This will create a link to a virtual classroom with the name of the selected text</instructions>
-        <tag>REALTIME</tag>
-    </filter>
-
 </filters>
