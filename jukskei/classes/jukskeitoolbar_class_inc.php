@@ -1,29 +1,26 @@
 <?php
 // security check - must be included in all scripts
-if(!$GLOBALS['kewl_entry_point_run']){
+if(!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end of security
 
-class jukskeitoolbar extends object
-{
+class jukskeitoolbar extends object {
 
-    /**
-    * Constructor
-    */
-    public function init()
-    {
+/**
+ * Constructor
+ */
+    public function init() {
 
         $this->loadClass('link', 'htmlelements');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
     }
 
     /**
-    * Method to show the Toolbar
-    * @return string
-    */
-    public function show()
-    {
+     * Method to show the Toolbar
+     * @return string
+     */
+    public function show() {
         $objUser = $this->getObject('user', 'security');
         $userIsLoggedIn = $objUser->isLoggedIn();
 
@@ -31,8 +28,10 @@ class jukskeitoolbar extends object
             array('action'=>'about', 'text'=>'ABOUT THE PROJECT', 'actioncheck'=>array('about'), 'module'=>'jukskei', 'status'=>'both'),
             array('action'=>'wits', 'text'=>'WITS JOURNALISM', 'actioncheck'=>array('wits'), 'module'=>'jukskei', 'status'=>'both'),
             array('action'=>NULL, 'text'=>'CONTENT ADMIN', 'actioncheck'=>array(), 'module'=>'stories', 'status'=>'admin'),
-            array('action'=>NULL, 'text'=>'FILE MANAGER', 'actioncheck'=>array(), 'module'=>'filemanager', 'status'=>'admin'),
-            array('action'=>NULL, 'text'=>'SITE ADMIN', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'login'),
+            array('action'=>NULL, 'text'=>'FILE MANAGER', 'actioncheck'=>array(), 'module'=>'filemanager', 'status'=>'both'),
+            array('action'=>NULL, 'text'=>'PREVIEW', 'actioncheck'=>array(), 'module'=>'jukskei', 'status'=>'both'),
+
+            array('action'=>NULL, 'text'=>'SITE ADMIN', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
             array('action'=>NULL, 'text'=>'MY DETAILS', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
             array('action'=>'login', 'text'=>'LOGIN', 'actioncheck'=>array('login'), 'module'=>'jukskei', 'status'=>'login'),
             array('action'=>'login', 'text'=>'REGISTER', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
@@ -42,32 +41,31 @@ class jukskeitoolbar extends object
         $usedDefault = FALSE;
         $str = '';
 
-        foreach ($menuOptions as $option)
-        {
-            // First Step, Check whether item will be added to menu
-            // 1) Check Items to be Added whether user is logged in or not
+        foreach ($menuOptions as $option) {
+        // First Step, Check whether item will be added to menu
+        // 1) Check Items to be Added whether user is logged in or not
             if ($option['status'] == 'both') {
                 $okToAdd = TRUE;
 
-                // 2) Check Items to be added only if user is not logged in
+            // 2) Check Items to be added only if user is not logged in
             } else if ($option['status'] == 'login' && !$userIsLoggedIn) {
-                $okToAdd = TRUE;
+                    $okToAdd = TRUE;
 
                 // 3) Check Items to be added only if user IS logged in
-            } else if ($option['status'] == 'loggedin' && $userIsLoggedIn) {
-                $okToAdd = TRUE;
+                } else if ($option['status'] == 'loggedin' && $userIsLoggedIn) {
+                        $okToAdd = TRUE;
 
-                // 4) Check if User is Admin
-            } else if ($option['status'] == 'admin' && $objUser->isAdmin() && $userIsLoggedIn) {
-                $okToAdd = TRUE;
-            } else {
-                $okToAdd = FALSE; // ELSE FALSE
-            }
+                    // 4) Check if User is Admin
+                    } else if ($option['status'] == 'admin' && $objUser->isAdmin() && $userIsLoggedIn) {
+                            $okToAdd = TRUE;
+                        } else {
+                            $okToAdd = FALSE; // ELSE FALSE
+                        }
 
             // IF Ok To Add
             if ($okToAdd) {
 
-                // Do a check if current action matches possible actions
+            // Do a check if current action matches possible actions
                 if (count($option['actioncheck']) == 0) {
                     $actionCheck = TRUE; // No Actions, set TRUE, to enable all actions and fo module check
                 } else {
@@ -103,26 +101,24 @@ class jukskeitoolbar extends object
 
     }
 
-    private function generateItem($action='', $module='jukskei', $text, $isActive=FALSE)
-    {
-        switch ($module)
-        {
+    private function generateItem($action='', $module='jukskei', $text, $isActive=FALSE) {
+        switch ($module) {
             case '_default' : $isRegistered = TRUE; break;
-                default: $isRegistered = $this->objModules->checkIfRegistered($module); break;
-            }
-
-            if ($isRegistered) {
-                $link = new link ($this->uri(array('action'=>$action), $module));
-                $link->link = $text;
-
-                $isActive = $isActive ? ' id="current"' : '';
-
-                return '<li'.$isActive.'>'.$link->show().'</li>';
-            } else {
-                return '';
-            }
+            default: $isRegistered = $this->objModules->checkIfRegistered($module); break;
         }
 
+        if ($isRegistered) {
+            $link = new link ($this->uri(array('action'=>$action), $module));
+            $link->link = $text;
 
+            $isActive = $isActive ? ' id="current"' : '';
+
+            return '<li'.$isActive.'>'.$link->show().'</li>';
+        } else {
+            return '';
+        }
     }
+
+
+}
     ?>
