@@ -1040,4 +1040,8 @@ class ads extends controller {
         $faculty = $this->getParam('faculty');
         return $this->objSchool->getSchools($faculty);
     }
+
+    public function __configuration() {
+        return "configurations_tpl.php";
+    }
 }
