@@ -59,7 +59,7 @@ $label = new label ($this->objLanguage->languageText('mod_contextcontent_pagecon
 
 $formTable->startRow();
 $formTable->addCell($label->show());
-$formTable->addCell($htmlarea->showFCKEditor());
+$formTable->addCell($htmlarea->show());
 $formTable->endRow();
 
 $headerScripts = $this->newObject('multifileselect', 'filemanager');
