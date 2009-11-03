@@ -325,6 +325,7 @@ $middleContent='
 <h4>Welcome  '.$this->objUser->fullname().'</h4>
 <h1>'.$courseProposal['title'].$showEditTitleLink.'</h1>
 <font color="red"><h2>Phase:'.$statuscodes[$courseProposal['phase']].'</h2></font>
+<div id="message" style="color:red;font-weight:bold;text-decoration:underline">'.$this->getParam('errormessage').'</div>
 <div id="usersearch-surface"></div>
 <div id="popup-surface"></div>
 <div id="tabs">

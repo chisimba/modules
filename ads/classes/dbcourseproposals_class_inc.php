@@ -101,7 +101,7 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
     public function getStatus($id) {
         $statuscodes=
             array(
-            "0"=> 'Prposal Phase',
+            "0"=> 'Proposal Phase',
             "1"=>'APO Comment',
             "2"=>'Faculty subcommittee approval',
             "3=>'Faculty board approval'");
@@ -131,6 +131,12 @@ where cp.deleteStatus <> 1 and (cp.userid = '".$userid."' or ds.currentuser='".$
         $data = array('phase'=>$phase);
 
         return $this->update('id', $id, $data, $this->table);
+    }
+
+    public function getPhase($id) {
+        $data = $this->getRow('id', $id, $this->table);
+
+        return $data['status'];
     }
 
     public function deleteProposal($id) {

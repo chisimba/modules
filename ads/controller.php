@@ -687,6 +687,8 @@ class ads extends controller {
     public function __updatephase() {
         $this->id=$this->getParam('id');
         $status = $this->getParam('phase');
+        //get current phase
+        $currPhase = $this->objCourseProposals->getPhase($this->id);
         // save status in the database
         $updated = $this->objCourseProposals->updatePhase($this->id, $status);
 
@@ -708,9 +710,20 @@ class ads extends controller {
 
             // check email to see if there exists one
             if($toemail2 == NULL) {
-                $message = "The Moderator for that phase for this school does not exist";
-                $this->setVarByRef("message", $message);
-                return "viewcourseproposalstatus_tpl.php";
+                // change the status back since there is no moderator for this phase in this school
+                $updated = $this->objCourseProposals->updatePhase($this->id, $currPhase);
+
+                $courseProposal=$this->objCourseProposals->getCourseProposal($this->id);
+                $school = $this->objSchool->getSchoolName($courseProposal['school']);
+                $statuscodes=
+                    array(
+                    "0"=> 'Proposal Phase',
+                    "1"=>'APO Comment',
+                    "2"=>'Faculty subcommittee approval',
+                    "3=>'Faculty Board Approval'");
+                $message = "The moderator for ".$statuscodes[strval($status)].", in the school of $school, does not exist!";
+                //$this->setVarByRef("message", $message);
+                $this->nextAction('showcourseprophist',array('courseid'=>$this->id,'selectedtab'=>'0','errormessage'=>$message));
             }
 
             $phone = 'xxxx';
