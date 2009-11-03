@@ -22,30 +22,99 @@ class search_liftclub extends dbTable
         $this->objDBDestiny = $this->getObject('dbliftclub_destiny', 'liftclub');
         $this->objDBDetails = $this->getObject('dbliftclub_details', 'liftclub');
     }
-    function getLiftsOffered($city, $start, $limit) 
+    function getLifts($userneed, $start, $limit) 
     {
-         if(!empty($start) && !empty($limit)){
-           $destiny = $this->objDBDetails->getAll("WHERE userneed ='offer' LIKE '%".$city."%' LIMIT ".$start." , ".$limit);
-           $sqlsearch = 'select det.userid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid, ori.street, ori.suburb, des.userid, des.street, des.suburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid';
-		         return $this->getAll("WHERE city LIKE '%".$city."%' LIMIT ".$start." , ".$limit);
+         if(!empty($start) || $start>=0 && !empty($limit)){
+           $sqlsearch = "select det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as dessuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed."' LIMIT ".$start." , ".$limit;
+           $lifts = $this->objDBDetails->getArray($sqlsearch);
+		         return $lifts;
          }else{
-		         return $this->getAll("WHERE city LIKE '%".$city."%'");
+           $sqlsearch = "select det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed."'";
+           $lifts = $this->objDBDetails->getArray($sqlsearch);
+           return $lifts;           
          }
     }
  
-     function jsonLiftsOffered($city, $start, $limit) 
+    function jsonLiftSearch($userneed, $start, $limit) 
     {
-        $myCities = $this->getCities($city, $start, $limit);
-       	$cityCount = ( count ( $myCities ) );
-        $str = '{"citycount":"'.$cityCount.'","searchedcities":[';
+        $myLifts = $this->getLifts($userneed, $start, $limit);
+       	$liftCount = ( count ( $myLifts ) );
+        $str = '{"liftcount":"'.$liftCount.'","searchedlifts":[';
         $searchArray = array();
-        foreach($myCities as $thisCity){
+        foreach($myLifts as $thisLift){
           $infoArray = array();
-          $infoArray['id'] = $thisCity['id'];
-          $infoArray['city'] = $thisCity['city'];
+          $infoArray['detuserid'] = $thisLift['detuserid'];
+          $infoArray['times'] = $thisLift['times'];
+          $infoArray['additionalinfo'] = $thisLift['additionalinfo'];
+          $infoArray['specialoffer'] = $thisLift['specialoffer'];
+          $infoArray['emailnotifications'] = $thisLift['emailnotifications'];
+          $infoArray['userneed'] = $thisLift['userneed'];
+          $infoArray['needtype'] = $thisLift['needtype'];
+          $infoArray['daterequired'] = $thisLift['daterequired'];
+          $infoArray['createdormodified'] = $thisLift['createdormodified'];
+          //Store days selected in a string
+          $strdays = "";
+          if($thisLift['monday']=='Y')
+          $strdays .= "Monday";
+          if($thisLift['tuesday']=='Y'){
+           if($strdays==""){
+            $strdays .= "Tuesday";
+           }else{
+            $strdays .= ", Tuesday";
+           }
+          }
+          if($thisLift['wednesday']=='Y'){
+           if($strdays==""){
+            $strdays .= "Wednesday";
+           }else{
+            $strdays .= ", Wednesday";
+           }
+          }
+          if($thisLift['thursday']=='Y'){
+           if($strdays==""){
+            $strdays .= "Thursday";
+           }else{
+            $strdays .= ", Thursday";
+           }
+          }          
+          if($thisLift['friday']=='Y'){
+           if($strdays==""){
+            $strdays .= "Friday";
+           }else{
+            $strdays .= ", Friday";
+           }
+          }          
+          if($thisLift['saturday']=='Y'){
+           if($strdays==""){
+            $strdays .= "Saturday";
+           }else{
+            $strdays .= ", Saturday";
+           }
+          }
+          if($thisLift['sunday']=='Y'){
+           if($strdays==""){
+            $strdays .= "Sunday";
+           }else{
+            $strdays .= ", Sunday";
+           }
+          }
+          $infoArray['monday'] = $thisLift['monday'];
+          $infoArray['tuesday'] = $thisLift['tuesday'];
+          $infoArray['wednesday'] = $thisLift['wednesday'];
+          $infoArray['thursday'] = $thisLift['thursday'];
+          $infoArray['friday'] = $thisLift['friday'];
+          $infoArray['saturday'] = $thisLift['saturday'];
+          $infoArray['sunday'] = $thisLift['sunday'];
+          $infoArray['selectedays'] = $strdays;         
+          $infoArray['oriuserid'] = $thisLift['oriuserid'];
+          $infoArray['oristreet'] = $thisLift['oristreet'];
+          $infoArray['orisuburb'] = $thisLift['orisuburb'];
+          $infoArray['desuserid'] = $thisLift['desuserid'];
+          $infoArray['destreet'] = $thisLift['destreet'];
+          $infoArray['desuburb'] = $thisLift['desuburb'];
           $searchArray[] = $infoArray;
         }
-        return json_encode(array('citycount' => $cityCount, 'searchresults' =>  $searchArray));
+        return json_encode(array('liftcount' => $liftCount, 'searchresults' =>  $searchArray));
     }
 }
 ?>
