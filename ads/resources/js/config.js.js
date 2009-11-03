@@ -72,7 +72,7 @@ var saveNotification = function(isChecked) {
         firstTime = false;
     }
     else {
-        alert(isChecked);
+        //alert(isChecked);
         // save this value into the database using ajax :-)
     }
 }
