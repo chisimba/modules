@@ -22,14 +22,38 @@ class search_liftclub extends dbTable
         $this->objDBDestiny = $this->getObject('dbliftclub_destiny', 'liftclub');
         $this->objDBDetails = $this->getObject('dbliftclub_details', 'liftclub');
     }
-    function getLifts($userneed, $start, $limit) 
-    {
+    function getLifts($userneed, $start, $limit, $params=null) 
+    {	
+									$where = "";
+
+									if(is_array($params['search'])){
+										//$max = count($params['search']);
+		        $max=2;
+										$cnt = 0;
+										foreach($params['search'] as $field){
+											//$cnt++;
+											//$where .= $field.' LIKE "'.$params['query'].'%"';											
+
+											if($field=='orisuburb'){
+												$cnt++;
+											 $where .= ' ori.suburb LIKE "%'.$params['query'].'%" ';
+						     }
+											if($field=='desuburb'){
+												$cnt++;
+											 $where .= ' des.suburb LIKE "%'.$params['query'].'%" ';
+						     }
+											if($cnt < $max){
+												$where .= " OR ";
+											}
+										}					
+										$where = ' AND '.$where;		
+									}
          if(!empty($start) || $start>=0 && !empty($limit)){
-           $sqlsearch = "select det.id as detid, ori.id as orid, des.id as desid, det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed."' LIMIT ".$start." , ".$limit;
+           $sqlsearch = "select det.id as detid, ori.id as orid, des.id as desid, det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed.$where."' LIMIT ".$start." , ".$limit;
            $lifts = $this->objDBDetails->getArray($sqlsearch);
 		         return $lifts;
          }else{
-           $sqlsearch = "select det.id as detid, ori.id as orid, des.id as desid, det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed."'";
+           $sqlsearch = "select det.id as detid, ori.id as orid, des.id as desid, det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed.$where."'";
            $lifts = $this->objDBDetails->getArray($sqlsearch);
            return $lifts;           
          }
@@ -37,7 +61,13 @@ class search_liftclub extends dbTable
  
     function jsonLiftSearch($userneed, $start, $limit) 
     {
-        $myLifts = $this->getLifts($userneed, $start, $limit);
+								$params["start"] = ($this->getParam("start")) ? $this->getParam("start") : null;
+								$params["limit"] = ($this->getParam("limit")) ? $this->getParam("limit") : null;
+								$params["search"] = ($this->getParam("fields")) ? json_decode(stripslashes($this->getParam("fields"))) : null;
+								$params["query"] = ($this->getParam("query")) ? $this->getParam("query") : null;
+								$params["sort"] = ($this->getParam("sort")) ? $this->getParam("sort") : null;
+
+        $myLifts = $this->getLifts($userneed, $start, $limit, $params);
        	$liftCount = ( count ( $myLifts ) );
         $str = '{"liftcount":"'.$liftCount.'","searchedlifts":[';
         $searchArray = array();

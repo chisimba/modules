@@ -145,6 +145,7 @@ class liftclub extends controller
                     $userneed = $this->getParam('userneed');
                     $start = $this->getParam('start');
                     $limit = $this->getParam('limit');
+                    
                     $this->setLayoutTemplate(NULL);
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->setVar('pageSuppressBanner', TRUE);
