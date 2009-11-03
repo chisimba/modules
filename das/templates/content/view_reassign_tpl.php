@@ -12,7 +12,7 @@ $form = $this->newObject('form' , 'htmlelements');
 //setup the counsellor box
 //$objCounsellorBox->addFromDB($this->objIMUsers->getAll(), 'Counsellor' ,'userid', 'userid');
 $objCounsellorBox->name = "counsellorbox";
-$objCounsellorBox->setBreakSpace('<br>');
+$objCounsellorBox->setBreakSpace('table');
 $objCounsellorBox->cssClass = "radio1";
 foreach ($this->objIMUsers->getAll() as $counsellor)
 {
@@ -28,7 +28,7 @@ $button->name = "reassignbutton";
 
 $form->action=$this->uri(array('action'=>'reassign', 'patient' =>  $this->getParam('patient') ));
 $form->setDisplayType(2);
-$form->addToForm($objCounsellorBox->showNormal());
+$form->addToForm($objCounsellorBox);
 $form->addToForm($button);
 
 $str = '<div style="width:600px; margin-left:50px;margin-top:10px;">';
