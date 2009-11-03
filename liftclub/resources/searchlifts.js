@@ -62,9 +62,9 @@ var liftdata = new Ext.data.JsonStore({
             hidden: false,
             sortable: true
         },{
-            header: "Like",
+            header: "Find/Offer",
             dataIndex: 'userneed',
-            width: 50,
+            width: 70,
             hidden: false,
             sortable: true
         },{
@@ -76,7 +76,7 @@ var liftdata = new Ext.data.JsonStore({
         },{
             header: "Created",
             dataIndex: 'createdormodified',
-            width: 150,
+            width: 130,
             hidden: false,
             sortable: true
         },{
