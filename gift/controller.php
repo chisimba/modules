@@ -13,7 +13,7 @@ class gift extends controller
         $this->objHome     = $this->getObject("home");
         $this->objUser     = $this->getObject("user","security");
         $this->objEdit     = $this->getObject("edit");
-		
+		$test = "test";
         // Initialising $data (holds the data from database when edit link is called)
         $this->data = array();
     }
