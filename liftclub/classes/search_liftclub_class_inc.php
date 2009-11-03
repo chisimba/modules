@@ -42,6 +42,9 @@ class search_liftclub extends dbTable
 						     }elseif($field=='needtype'){
 												$cnt++;
 											 $where .= ' det.needtype LIKE "%'.$params['query'].'%" ';
+						     }elseif($field=='userneed'){
+												$cnt++;
+											 $where .= ' det.userneed LIKE "%'.$params['query'].'%" ';
 						     }
 											if($cnt < $max){
 												$where .= " OR ";

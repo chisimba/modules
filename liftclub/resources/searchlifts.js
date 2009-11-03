@@ -52,19 +52,25 @@ var liftdata = new Ext.data.JsonStore({
         {
             header: "Origin(Suburb)",
             dataIndex: 'orisuburb',
-            width: 100,
+            width: 120,
             hidden: false,
             sortable: true
         },{
             header: "Destiny(Suburb)",
             dataIndex: 'desuburb',
-            width: 100,
+            width: 120,
+            hidden: false,
+            sortable: true
+        },{
+            header: "Like",
+            dataIndex: 'userneed',
+            width: 50,
             hidden: false,
             sortable: true
         },{
             header: "Type",
             dataIndex: 'needtype',
-            width: 50,
+            width: 60,
             hidden: false,
             sortable: true
         },{
@@ -83,7 +89,7 @@ var liftdata = new Ext.data.JsonStore({
             id: 'detuserid', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
             header: "View",
             dataIndex: 'detuserid',
-            width: 100,
+            width: 50,
             renderer: renderTitle,            
             hidden: false,
             sortable: true
@@ -123,7 +129,7 @@ var liftdata = new Ext.data.JsonStore({
             displayMsg: 'Displaying Page {0} - {1} of {2}',
             emptyMsg: "No Lifts to display",
             items:[
-                '-', {
+                /*'-', {
                 pressed: false,
                 enableToggle:true,
                 text: 'Show/Hide Details',
@@ -133,7 +139,15 @@ var liftdata = new Ext.data.JsonStore({
                     view.showPreview = pressed;
                     view.refresh();
                 }
-            }]
+            }, {
+              xtype:'checkbox'
+              ,boxLabel:'Lifts Offered '
+              ,checked:true
+            }, {
+              xtype:'checkbox'
+              ,boxLabel:'Lifts Wanted'
+              ,checked:false
+            }*/]
         })
     });
     // render it
