@@ -9,7 +9,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
-
+$objWashout = $this->getObject('washout', 'utilities');
 $objIcon->setIcon('edit');
 $editIcon = $objIcon->show();
 
@@ -40,7 +40,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 $table->startRow();
 $table->addCell('<strong>'.$this->objLanguage->languageText('word_description', 'system', 'Description').'</strong>', 130);
-$table->addCell($assignment['description'], NULL, NULL, NULL, NULL, ' colspan="3"');
+$table->addCell($objWashout->parseText($assignment['description']), NULL, NULL, NULL, NULL, ' colspan="3"');
 $table->endRow();
 
 $table->startRow();
