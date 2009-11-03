@@ -4,7 +4,7 @@ $objSysConfig  = $this->getObject('altconfig','config');
 $this->appendArrayVar('headerParams', '
 <script type="text/javascript">
 var pageSize = 25;
-var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'liftclub', 'action' => 'jsongetlifts', 'userneed' => 'find'))).'"; 
+var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'liftclub', 'action' => 'jsongetlifts', 'userneed' => 'offer'))).'"; 
 var userneed = "find";
 var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
@@ -32,17 +32,17 @@ $modifyLink =new link($this->uri(array('action'=>'modifydetails')));
 $modifyLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 $modifyLink->title = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 
-$offerLink =new link($this->uri(array('action'=>'offeredlifts')));
-$offerLink->link = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
-$offerLink->title = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
-
 //$homeLink =new link($this->uri(array('module' => 'liftclub', 'action' => 'jsongetlifts', 'userneed' => 'find')));
 $homeLink =new link($this->uri(array('action'=>'liftclubhome')));
 $homeLink->link = $this->objLanguage->languageText("mod_liftclub_liftclubhome","liftclub","Lift Club Home");
 $homeLink->title = $this->objLanguage->languageText("mod_liftclub_liftclubhome","liftclub","Lift Club Home");
 
+$findLink =new link($this->uri(array('action'=>'findlift')));
+$findLink->link = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
+$findLink->title = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
+
 if($this->objUser->userId()!==null){
-echo $modifyLink->show()." | ".$offerLink->show()." | ".$homeLink->show();
+echo $modifyLink->show()." | ".$findLink->show()." | ".$homeLink->show();
 }else{
 echo $registerLink->show();
 }

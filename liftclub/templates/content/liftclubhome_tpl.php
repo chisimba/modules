@@ -22,8 +22,12 @@ $findLink =new link($this->uri(array('action'=>'findlift')));
 $findLink->link = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
 $findLink->title = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
 
+$offerLink =new link($this->uri(array('action'=>'offeredlifts')));
+$offerLink->link = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
+$offerLink->title = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
+
 if($this->objUser->userId()!==null){
-echo $modifyLink->show()." | ".$findLink->show();
+echo $modifyLink->show()." | ".$offerLink->show()." | ".$findLink->show();
 }else{
 echo $registerLink->show();
 }

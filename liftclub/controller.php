@@ -74,6 +74,8 @@ class liftclub extends controller
                     return 'registrationstart_tpl.php';
                 case 'findlift':
                     return 'liftclubfind_tpl.php';
+                case 'offeredlifts':
+                    return 'liftcluboffer_tpl.php'; 
                 case 'showregister':
                     return $this->registrationHome();
                 case 'modifydetails':
