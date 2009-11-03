@@ -17,8 +17,13 @@ $registerLink->title = $this->objLanguage->languageText("mod_liftclub_register",
 $modifyLink =new link($this->uri(array('action'=>'modifydetails')));
 $modifyLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 $modifyLink->title = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
+
+$findLink =new link($this->uri(array('action'=>'findlift')));
+$findLink->link = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
+$findLink->title = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
+
 if($this->objUser->userId()!==null){
-echo $modifyLink->show();
+echo $modifyLink->show()." | ".$findLink->show();
 }else{
 echo $registerLink->show();
 }

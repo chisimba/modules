@@ -5,22 +5,22 @@
  * 
  * http://extjs.com/license
  * By Paul Mungai
- * Searching Plugin: Qhamani Fenama
+ * Searching Plugin: Paul Mungai
  * wandopm@gmail.com
  */
-
-var proxyContextStore = new Ext.data.HttpProxy({
-            url:baseuri+'?module=context&action=jsongetcontexts&limt=25&start=0'
+Ext.onReady(function(){
+var proxyLiftsStore = new Ext.data.HttpProxy({
+            url:baseuri+'?module=liftclub&action=jsongetlifts&userneed='+userneed+'&start=0&limt=25'
         });
 
-   
-var othercontextdata = new Ext.data.JsonStore({
-        root: 'courses',
-        totalProperty: 'othercontextcount',
-        idProperty: 'code',
+var liftdata = new Ext.data.JsonStore({
+        root: 'searchresults',
+        totalProperty: 'liftcount',
+        idProperty: 'detid',
         remoteSort: false,        
-        fields: ['code', 'contextcode', 'title', 'lecturertitle', 'lecturers', 'accesstitle','access' ],
-        proxy:proxyContextStore,
+        fields: ['detid', 'orid', 'desid', 'detuserid', 'times', 'userneed','needtype', 'createdormodified', 'daterequired','selectedays', 'orisuburb','desuburb'],
+        
+        proxy:proxyLiftsStore,
         listeners:{ 
     		'loadexception': function(theO, theN, response){
     			//alert(response.responseText);
@@ -30,44 +30,38 @@ var othercontextdata = new Ext.data.JsonStore({
     			}
     	}
 	});
-	 othercontextdata.setDefaultSort('title', 'asc');
+	 liftdata.setDefaultSort('createdormodified', 'asc');
 	 
     // pluggable renders
     function renderTitle(value, p, record){
         return String.format(
-        		'<b><a href="'+baseuri+'?module=context&action=joincontext&contextcode={1}">{0}</a></b>', value, record.data.code);
+        		'<b><a href="'+baseuri+'?module=liftclub&action=viewlift&liftuserid={0}">{1} - {2}</a></b>', record.data.detuserid, record.data.orisuburb, record.data.desuburb);
+    }
+    function renderDetails(record){
+        return String.format(
+        		'<p>{0} ( {1} )<br />Created: {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times);
     }
 
-    var othergrid = new Ext.grid.GridPanel({
-        //el:'courses-grid',
+    var liftgrid = new Ext.grid.GridPanel({
+        el:'liftsrenderer',
         width:540,
         height:400,
-       // title:'My Courses',
-        store: othercontextdata,
+        title:'Search Lifts',
+        store: liftdata,
         trackMouseOver:false,
         disableSelection:true,
         loadMask: true,
-		emptyText:'No Courses Found',
+		      emptyText:'No Lifts Found',
 		
         // grid columns
         columns:[
         {
-            header: "Course Code",
-            dataIndex: 'contextcode',
-            width: 100,            
-            sortable: true
-        },{
+         {
             //id: 'code', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
             header: "Title",
-            dataIndex: 'title',
-            width: 320,
+            dataIndex: 'detuserid',
+            width: 540,
             renderer: renderTitle,
-            sortable: true
-        },{
-            header: "Lecturers",
-            dataIndex: 'lecturers',
-            width: 280,
-            hidden: false,
             sortable: true
         }],
 
@@ -78,7 +72,7 @@ var othercontextdata = new Ext.data.JsonStore({
             showPreview:false,
             getRowClass : function(record, rowIndex, p, store){
                 if(this.showPreview){
-                    p.body = '<p><b>'+record.data.accesstitle+' </b></p><p>'+record.data.access+'</p>';
+                    p.body = "<p>"+record.data.needtype+"</p>";
                     return 'x-grid3-row-expanded';
                 }
                 return 'x-grid3-row-collapsed';
@@ -88,7 +82,7 @@ var othercontextdata = new Ext.data.JsonStore({
 		plugins:[new Ext.ux.grid.Search({
 				 iconCls:'zoom'
 				 //,readonlyIndexes:['lecturers']
-				 ,disableIndexes:['lecturers']
+				 ,disableIndexes:['detid']
 				 ,minChars:1
 				 ,autoFocus:true
 				 // ,menuStyle:'radio'
@@ -96,19 +90,16 @@ var othercontextdata = new Ext.data.JsonStore({
 
         // paging bar on the bottom
         bbar: new Ext.PagingToolbar({
-            pageSize: 500,
-            store: othercontextdata,
+            pageSize: 25,
+            store: liftdata,
             displayInfo: true,
-            displayMsg: 'Courses {0} - {1} of {2}',
-            emptyMsg: "No courses to display"
+            displayMsg: 'Lifts {0} - {1} of {2}',
+            emptyMsg: "No lifts to display"
             
         })
     });
-    /*
-Ext.onReady(function(){
     // render it
-    usergrid.render();
-
+    liftgrid.render();
     // trigger the data store load
-    usercontextdata.load({params:{start:0, limit:500}});
-});*/
+    liftdata.load({params:{start:0, limit:25}});
+});
