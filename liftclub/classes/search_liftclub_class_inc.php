@@ -27,20 +27,21 @@ class search_liftclub extends dbTable
 									$where = "";
 
 									if(is_array($params['search'])){
-										//$max = count($params['search']);
-		        $max=2;
+										$max = count($params['search']);
+		        //$max=3;
 										$cnt = 0;
 										foreach($params['search'] as $field){
-											//$cnt++;
-											//$where .= $field.' LIKE "'.$params['query'].'%"';											
-
+											/*$cnt++;
+											$where .= $field.' LIKE "'.$params['query'].'%"';											*/
 											if($field=='orisuburb'){
 												$cnt++;
 											 $where .= ' ori.suburb LIKE "%'.$params['query'].'%" ';
-						     }
-											if($field=='desuburb'){
+						     }elseif($field=='desuburb'){
 												$cnt++;
 											 $where .= ' des.suburb LIKE "%'.$params['query'].'%" ';
+						     }elseif($field=='needtype'){
+												$cnt++;
+											 $where .= ' det.needtype LIKE "%'.$params['query'].'%" ';
 						     }
 											if($cnt < $max){
 												$where .= " OR ";
@@ -49,11 +50,11 @@ class search_liftclub extends dbTable
 										$where = ' AND '.$where;		
 									}
          if(!empty($start) || $start>=0 && !empty($limit)){
-           $sqlsearch = "select det.id as detid, ori.id as orid, des.id as desid, det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed.$where."' LIMIT ".$start." , ".$limit;
+           $sqlsearch = "select det.id as detid, ori.id as orid, des.id as desid, det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed."'".$where." LIMIT ".$start." , ".$limit;
            $lifts = $this->objDBDetails->getArray($sqlsearch);
 		         return $lifts;
          }else{
-           $sqlsearch = "select det.id as detid, ori.id as orid, des.id as desid, det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed.$where."'";
+           $sqlsearch = "select det.id as detid, ori.id as orid, des.id as desid, det.userid as detuserid, det.times, det.additionalinfo, det.specialoffer, det.emailnotifications, det.userneed, det.needtype, det.daterequired, det.createdormodified, det.monday, det.tuesday, det.wednesday, det.thursday, det.friday, det.saturday, det.sunday, ori.userid as oriuserid, ori.street as oristreet, ori.suburb as orisuburb, des.userid as desuserid, des.street as destreet, des.suburb as desuburb from tbl_liftclub_details as det, tbl_liftclub_origin as ori, tbl_liftclub_destiny as des where det.userid=ori.userid AND ori.userid=des.userid AND des.userid=det.userid AND det.userneed='".$userneed."'".$where;
            $lifts = $this->objDBDetails->getArray($sqlsearch);
            return $lifts;           
          }

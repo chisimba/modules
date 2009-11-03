@@ -31,7 +31,7 @@ var liftdata = new Ext.data.JsonStore({
  // pluggable renders
  function renderTitle(value, p, record){
      return String.format(
-     		'<b><a href="'+baseuri+'?module=liftclub&action=viewlift&liftuserid={0}">{1} to {2}</a></b>', record.data.detuserid, record.data.orisuburb, record.data.desuburb);
+     		'<b><a href="'+baseuri+'?module=liftclub&action=viewlift&liftuserid={0}">View</a></b>', record.data.detuserid, record.data.orisuburb, record.data.desuburb);
  }
  function renderDetails(record){
      return String.format(
@@ -50,10 +50,40 @@ var liftdata = new Ext.data.JsonStore({
         // grid columns
         columns:[
         {
+            header: "Origin(Suburb)",
+            dataIndex: 'orisuburb',
+            width: 100,
+            hidden: false,
+            sortable: true
+        },{
+            header: "Destiny(Suburb)",
+            dataIndex: 'desuburb',
+            width: 100,
+            hidden: false,
+            sortable: true
+        },{
+            header: "Type",
+            dataIndex: 'needtype',
+            width: 50,
+            hidden: false,
+            sortable: true
+        },{
+            header: "Created",
+            dataIndex: 'createdormodified',
+            width: 150,
+            hidden: false,
+            sortable: true
+        },{
+            header: "Selected Days",
+            dataIndex: 'selectedays',
+            width: 300,
+            hidden: false,
+            sortable: true
+        },{
             id: 'detuserid', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
-            header: "(Origin - Destination)",
+            header: "View",
             dataIndex: 'detuserid',
-            width: 800,
+            width: 100,
             renderer: renderTitle,            
             hidden: false,
             sortable: true
@@ -63,7 +93,7 @@ var liftdata = new Ext.data.JsonStore({
         viewConfig: {
             forceFit:true,
             enableRowBody:true,
-            showPreview:true,
+            showPreview:false,
             getRowClass : function(record, rowIndex, p, store){
                 if(this.showPreview){
                 //<p>{0} ( {1} )<br />Created: {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times
@@ -80,7 +110,7 @@ var liftdata = new Ext.data.JsonStore({
 								plugins:[new Ext.ux.grid.Search({
 											iconCls:'zoom'
 											//,readonlyIndexes:['lecturers']
-											//,disableIndexes:['detuserid']
+											,disableIndexes:['detuserid','createdormodified','selectedays']
 											,minChars:1
 											,autoFocus:true
 											// ,menuStyle:'radio'
