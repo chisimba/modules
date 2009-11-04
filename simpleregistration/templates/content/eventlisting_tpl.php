@@ -25,7 +25,7 @@ foreach($events as $row){
     $deleteLink->link=$objIcon->show();
 
     $editLink=new link();
-    $editLink->link($this->uri(array('action'=>'eventcontent','id'=>$row['id'],'eventtitle'=>$row['event_title'])));
+    $editLink->link($this->uri(array('action'=>'eventcontent','eventid'=>$row['id'],'eventtitle'=>$row['event_title'])));
     $objIcon->setIcon('edit');
     $editLink->link=$objIcon->show();
 

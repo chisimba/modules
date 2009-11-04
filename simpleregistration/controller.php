@@ -198,6 +198,7 @@ class simpleregistration extends controller {
         $staffreg=$this->getParam('staffregfield');
         $visitorreg=$this->getParam('visitorregfield');
         $mode=$this->getParam('mode');
+        
         if($mode == "new") {
             $this->dbeventscontent->addEventContent(
                 $eventid,
@@ -240,10 +241,10 @@ class simpleregistration extends controller {
 
 
     function __eventcontent() {
-        $id=$this->getParam('id');
+        $eventid=$this->getParam('eventid');
         $title=$this->getParam('eventtitle');
-        $content=$this->dbeventscontent->getEventContent($id);
-        $this->setVarByRef('eventid',$id);
+        $content=$this->dbeventscontent->getEventContent($eventid);
+        $this->setVarByRef('eventid',$eventid);
         $this->setVarByRef('content',$content);
         $this->setVarByRef('title',$title);
         return "eventcontent_tpl.php";

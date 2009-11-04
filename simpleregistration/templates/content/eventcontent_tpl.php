@@ -1,7 +1,9 @@
 <?php
 $this->loadclass('link','htmlelements');
-$objIcon= $this->newObject('geticon','htmlelements');
+$this->loadClass('form', 'htmlelements');
+$this->loadClass('textinput','htmlelements');
 
+$objIcon= $this->newObject('geticon','htmlelements');
 
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
@@ -13,10 +15,10 @@ $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $maincss);
 
 $eventcontent=array();
-$mode="new";
-if(count($content) > 0){
-    $eventcontent=$content[0];
-    $mode="edit";
+
+if(!empty ($content)) {
+    $eventcontent=$content;
+   $mode="edit";
 }
 
 $savecontentUrl = $this->uri(array('action'=>'savecontent','eventid'=>$eventid,'mode'=>$mode));
@@ -25,6 +27,97 @@ $previewLink->link=$title;
 $homeUrl = $this->uri(array('action'=>'eventcontent','id'=>$eventid,'eventtitle'=>$title));
 $order   = array("\r\n", "\n", "\r");
 $replace ='<br />';
+
+$table=$this->getObject('htmltable','htmlelements');
+
+$instfield = $this->newObject('htmlarea', 'htmlelements');
+$instfield->name = 'venuefield';
+$instfield->value = $eventcontent['event_timevenue'];
+
+$table->startRow();
+$table->addCell('Instructions');
+$table->addCell($instfield->show());
+$table->endRow();
+
+$contentfield = $this->newObject('htmlarea', 'htmlelements');
+$contentfield->name = 'contentfield';
+$contentfield->value = $eventcontent['event_content'];
+
+$table->startRow();
+$table->addCell('Main content');
+$table->addCell($contentfield->show());
+$table->endRow();
+
+$lefttitle1field = $this->newObject('htmlarea', 'htmlelements');
+$lefttitle1field->name = 'lefttitle1field';
+$lefttitle1field->value = $eventcontent['event_lefttitle1'];
+
+$table->startRow();
+$table->addCell('Left title 1');
+$table->addCell($lefttitle1field->show());
+$table->endRow();
+
+$lefttitle2field = $this->newObject('htmlarea', 'htmlelements');
+$lefttitle2field->name = 'lefttitle2field';
+$lefttitle2field->value = $eventcontent['event_lefttitle2'];
+
+$table->startRow();
+$table->addCell('Left title 2');
+$table->addCell($lefttitle2field->show());
+$table->endRow();
+
+$footerfield = $this->newObject('htmlarea', 'htmlelements');
+$footerfield->name = 'footerfield';
+$footerfield->value = $eventcontent['event_footer'];
+
+$table->startRow();
+$table->addCell('Footer');
+$table->addCell($footerfield->show());
+$table->endRow();
+
+$objInput = new textinput('emailcontactfield', $eventcontent['event_emailcontact'],null,100);
+$table->startRow();
+$table->addCell('Event email');
+$table->addCell($objInput->show());
+$table->endRow();
+
+$objInput = new textinput('emailsubjectfield', $eventcontent['event_emailsubject'],null,'100');
+$table->startRow();
+$table->addCell('Event email subject');
+$table->addCell($objInput->show());
+$table->endRow();
+
+
+$emailcontentfield = $this->newObject('htmlarea', 'htmlelements');
+$emailcontentfield->name = 'emailcontentfield';
+$emailcontentfield->value = $eventcontent['event_emailcontent'];
+
+$table->startRow();
+$table->addCell('Email body');
+$table->addCell($emailcontentfield->show());
+$table->endRow();
+
+$objInput = new textinput('emailattachmentfield', $eventcontent['event_emailattachments'],null,'100');
+$table->startRow();
+$table->addCell('Event attachments');
+$table->addCell($objInput->show());
+$table->endRow();
+
+
+$objInput = new textinput('staffregfield', $eventcontent['event_staffreg']);
+$table->startRow();
+$table->addCell('Allow staff registration');
+$table->addCell($objInput->show());
+$table->endRow();
+
+$objInput = new textinput('visitorregfield', $eventcontent['event_visitorreg']);
+$table->startRow();
+$table->addCell('Allow visitor registration');
+$table->addCell($objInput->show());
+$table->endRow();
+
+
+$objForm = new form('submit', $this->uri(array('action'=>'savecontent','eventid'=>$eventid,'mode'=>$mode)));
 
 $mainjs="
 Ext.onReady(function(){
@@ -137,16 +230,25 @@ var form = new Ext.form.FormPanel({
   });
 ";
 
-$content= '<div id="eventcontent"><h1>'.$previewLink->show().'</h1><br /><br /></div>';
+$content=$table->show();
+
+$objForm->addToForm($previewLink->show());
+$objForm->addToForm($table->show());
+
+$objButton = new button('save', "Save");
+$objButton->setToSubmit();
+$objForm->addToForm($objButton->show());
+
+$content.= '<div id="eventcontent"><h1>'.$previewLink->show().'</h1><br /><br /></div>';
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
 
 
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout->setNumColumns(1);
+$cssLayout->setNumColumns(2);
 
-$rightSideColumn .= $content;
+$rightSideColumn =$objForm->show();
 $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
 $cssLayout->setLeftColumnContent( $postLoginMenu->show());
 
