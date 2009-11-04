@@ -33,6 +33,7 @@ class ads extends controller {
         $this->objProposalMembers=$this->getObject('dbproposalmembers');
         $this->objCommentAdmin=$this->getObject('dbcommentsadmin');
         $this->objDocumenHistory=$this->getObject('dbdocumenthistory');
+        $this->objConfig=$this->getObject('dbconfigurations');
         //review
         $this->objCourseReviews = $this->getObject('dbcoursereviews');
         $this->objUser = $this->getObject ( 'user', 'security' );
@@ -1043,5 +1044,10 @@ class ads extends controller {
 
     public function __configuration() {
         return "configurations_tpl.php";
+    }
+
+    public function __saveEmailConfig() {
+        $emailOption = $this->getParam('emailOption');
+        return $this->objConfig->saveEmailConfig($emailOption, $this->objUser->userId());
     }
 }

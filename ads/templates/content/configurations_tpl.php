@@ -15,6 +15,7 @@
     $this->appendArrayVar('headerParams', $mainjs);
 
     $emailNotification = 'false';
+    $checkBoxUrl = $this->uri(array('action'=>'saveEmailConfig'));
 
     // Create an instance of the css layout class
     $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -22,10 +23,20 @@
     $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
     $cssLayout->setLeftColumnContent($postLoginMenu->show());
     $rightSideColumn =  '<div id ="config">';    
-    $content = '<input type="hidden" id="isChecked" value="'.$emailNotification.'">';
-    $rightSideColumn .= $content.'</div>';
+    $rightSideColumn .= '</div>';
     //$rightSideColumn .=$content.$note;
     $cssLayout->setMiddleColumnContent($rightSideColumn);
 
+    $myScript = '<script type="text/javascript">';
+    $myScript .= '
+        Ext.onReady(function(){
+            Ext.QuickTips.init();
+
+            showCheckBoxes("'.$emailNotification.'", "'.str_replace("amp;", "", $checkBoxUrl).'");
+        });
+    ';
+    $myScript .= '</script>';
+
     echo $cssLayout->show();
+    echo $myScript;
 ?>

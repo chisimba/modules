@@ -4,20 +4,9 @@
  * licensing@extjs.com
  * http://www.extjs.com/license
  */
-Ext.onReady(function(){
-
-    Ext.QuickTips.init();
-
-    // turn on validation errors beside the field globally
-    Ext.form.Field.prototype.msgTarget = 'side';
-
-    checked = Ext.get('isChecked');
-    showCheckBoxes(checked);
-});
-
 var firstTime = true;
 
-var showCheckBoxes = function(isChecked) {
+var showCheckBoxes = function(isChecked, url) {
 
     var individual = [{
         bodyStyle: 'padding-right:5px;',
@@ -29,11 +18,9 @@ var showCheckBoxes = function(isChecked) {
             items: {
                 checked: isChecked,
                 fieldLabel: 'Turn Email Notifications on/off',
-                labelSeparator: '',
-                boxLabel: '',
-                name: 'email-not-on-off',
+                name: 'emailNotification',
                 handler: function(e, checked) {
-                    check: saveNotification(checked, isChecked)
+                    check: saveNotification(checked, url)
                 }
             }
         }
@@ -67,12 +54,19 @@ var goBack = function() {
     window.location.href = 'http://localhost/chisimba/app/index.php?module=ads';
 }
 
-var saveNotification = function(isChecked) {
+var saveNotification = function(isChecked, url) {
     if(firstTime) {
         firstTime = false;
     }
     else {
-        //alert(isChecked);
-        // save this value into the database using ajax :-)
+        Ext.Ajax.request({
+           url: url,
+           failure: otherFn,
+           params: { emailOption: isChecked }
+        });
     }
+}
+
+var otherFn = function() {
+    Ext.Msg.alert("Submission Failure", "There was an error submitting you request");
 }
