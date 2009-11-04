@@ -88,7 +88,7 @@ $table->addCell($objInput->show());
 $table->endRow();
 
 
-$emailcontentfield = $this->newObject('htmlarea', 'htmlelements');
+$emailcontentfield = $this->newObject('textarea', 'htmlelements');
 $emailcontentfield->name = 'emailcontentfield';
 $emailcontentfield->value = $eventcontent['event_emailcontent'];
 
