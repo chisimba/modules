@@ -88,9 +88,9 @@ $table->addCell($objInput->show());
 $table->endRow();
 
 
-$objInput = new textinput('emailcontentfield', $eventcontent['event_emailcontent'],null,'100');
+$objInput = new textarea('emailcontentfield', $eventcontent['event_emailcontent'],null,'100');
 $table->startRow();
-$table->addCell('Event attachments');
+$table->addCell('Email Content');
 $table->addCell($objInput->show());
 $table->endRow();
 
