@@ -2,7 +2,7 @@
 $this->loadclass('link','htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput','htmlelements');
-
+$this->loadClass('textarea','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
 
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
