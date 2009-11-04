@@ -88,13 +88,10 @@ $table->addCell($objInput->show());
 $table->endRow();
 
 
-$emailcontentfield = $this->newObject('textarea', 'htmlelements');
-$emailcontentfield->name = 'emailcontentfield';
-$emailcontentfield->value = $eventcontent['event_emailcontent'];
-
+$objInput = new textinput('emailcontentfield', $eventcontent['event_emailcontent'],null,'100');
 $table->startRow();
-$table->addCell('Email body');
-$table->addCell($emailcontentfield->show());
+$table->addCell('Event attachments');
+$table->addCell($objInput->show());
 $table->endRow();
 
 $objInput = new textinput('emailattachmentfield', $eventcontent['event_emailattachments'],null,'100');
