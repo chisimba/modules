@@ -110,7 +110,7 @@ $cssLayout->setLeftColumnContent($postLoginMenu->show());
 $rightSideColumn =  '<h1>Course/Unit Proposals</h1><div id ="proposal-note">';
 $rightSideColumn .=$content.$note;
 $adminButtons=$this->objUser->isAdmin()?$adminButton->show():"";
-$rightSideColumn .='</div><div id="grouping-grid">'.$addButton->show()."&nbsp;&nbsp;".$adminButtons."&nbsp;&nbsp;".$reportButton->show()."&nbsp;&nbsp;".$configButton->show().'<br /><br /></div>';
+$rightSideColumn .='</div><div id="grouping-grid">'.$addButton->show()."&nbsp;&nbsp;".$adminButtons."&nbsp;&nbsp;"."&nbsp;&nbsp;".$configButton->show().'<br /><br /></div>';
 //where we render the 'popup' window
 $renderSurface='<div id="addsession-win" class="x-hidden"><div class="x-window-header"></div></div>';
 $renderSurface.='<div id="editfaculty-win" class="x-hidden"><div class="x-window-header"></div></div>';
