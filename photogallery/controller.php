@@ -74,7 +74,7 @@ class photogallery extends controller
 	    case null:
 		    if($this->_objUser->isLoggedIn())
 		    {
-			    return $this->nextAction('overview');
+			    return $this->nextAction('front'/*'overview'*/);
 		    } else {
 			    return $this->nextAction('front');
 		    }
@@ -202,7 +202,6 @@ class photogallery extends controller
 			    
 	    case 'addtags':
 		    $uri = $this->uri(array('action' => 'viewalbum', 'albumid' => $this->getParam('albumid')));					
-		    
 		    $this->setPageTemplate('');
 		    $this->setLayoutTemplate('');
 		    $this->_objTags->insertTags(array($this->getParam('myinput'.$this->getParam('imageid'))), $this->_objUser->userId(), $this->getParam('imageid'), 'photogallery', $uri);	
@@ -222,10 +221,12 @@ class photogallery extends controller
 			    $this->setVar('taggedImages', $this->_objUtils->getTaggedImages($this->getParam('meta_value')));
 		    }
 		    return 'popular_tpl.php';
-	    case 'deleteflickrusername':
-	    $this->_objDBFlickrUsernames->deleteUsername($this->getParam('username'));
+	    
+		case 'deleteflickrusername':
+	    	$this->_objDBFlickrUsernames->deleteUsername($this->getParam('username'));
 		    return $this->nextAction('flickr');
-	    case 'savealbumfield':
+	    
+		case 'savealbumfield':
 		    $field = $this->getParam('field');
 		    $value = $this->getParam('myparam');
 		    
@@ -234,9 +235,7 @@ class photogallery extends controller
 		    $this->setLayoutTemplate('blank_tpl.php');
 		    $this->setVar('str', 'some stuff'/*$this->editAlbum($this->getParam('albumid'))*/);
 		    return 'blank_tpl.php';
-	    
-				
-        }
+	    }
     }
     
     
@@ -310,9 +309,6 @@ class photogallery extends controller
 			$this->setVar('albumInfo', $this->_objFlickr->photosets_getInfo($albumid) );
 			
 			return 'albumslideshow_tpl.php';
-	
-		
-		
 	}
     /**
      * Method to get the menu
@@ -420,7 +416,7 @@ class photogallery extends controller
         
         $this->_objUtils->doUpload($this->getParam('albumselect'));
         
-		return $this->nextAction('uploadsection');
+		return $this->nextAction('front');
                 
 	}
 	

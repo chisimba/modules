@@ -1,4 +1,5 @@
 <?php
+
 $list = NULL;
 $h1 = $this->getObject('htmlheading', 'htmlelements');
 $this->loadClass('dropdown','htmlelements');
@@ -107,5 +108,4 @@ $bigString = '<div style="position: relative; display: inline;">
 $form->addToForm($bigString);
 
 echo '<div id="main">'.$form->show().'</div>';
-
 ?>     
