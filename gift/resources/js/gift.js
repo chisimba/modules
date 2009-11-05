@@ -1,7 +1,6 @@
+
 function initGrid(cols,url){
-	/// Array data for the grids
-    //var gifts = [cols];
-	
+		
 		ButtonPanel = Ext.extend(Ext.Panel, {
 
         layout:'table',
@@ -48,18 +47,20 @@ function initGrid(cols,url){
 		      {name: 'description'},
 		      {name: 'donor'},
 		      {name: 'recipient'},
-		      {name: 'value'},
-		      {name: 'edit'}
+		      {name: 'value'}
+		     
 		   ]);
     // create the data store
-    var store = new Ext.data.GroupingStore({
-    	sortInfo:{field: 'giftname', direction: 'ASC'},
+    store = new Ext.data.GroupingStore({
+    	id:'store',
+    	sortInfo:{field: 'donor', direction: 'ASC'},
         groupField:'donor',		
     	reader: reader,
     	groupOnSort:true
     	
     	
     });
+  
     //load data
     store.loadData(cols);
     // create the Grid
@@ -73,7 +74,7 @@ function initGrid(cols,url){
         {
             id:'giftname',
             header: "Name",
-            width: 200,
+            width: 120,
             dataIndex: 'giftname'
         },
 
@@ -99,15 +100,10 @@ function initGrid(cols,url){
             header: "Value",
             width: 100,
             dataIndex: 'value'
-        },
-         {
-            header: "Edit",
-            width: 100,
-            dataIndex: 'edit'
-        }
-        ],
+        }],
+         
         stripeRows: true,
-         height:300,
+        height:500,
         width:800,
         frame:false,
         border:false
@@ -140,7 +136,6 @@ var form = new Ext.form.FormPanel({
         });
 
 }
-
 
 function showAddGiftWin(url){
     var form = new Ext.form.FormPanel({
@@ -311,7 +306,7 @@ function showEditGiftWin(url,giftname,description,donor,val){
 
             });
         }
-
+           
        editGiftWin.show(this);
 
 }

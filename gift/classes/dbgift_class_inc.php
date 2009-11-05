@@ -103,8 +103,12 @@ class dbgift extends dbtable {
 
     function getMyGifts() {
         $recipient = $this->objUser->fullname();     // Recipient name
-
+		$query = $_POST['query'];
         $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
+    	if (isset($query)){
+   			 $qry .= " AND (giftname LIKE '%".addslashes($query)."%' )";
+   			 echo "<h1>".$qry."</h1";
+  		}
         $data = $this->getInfo($qry);
 
         return $data;

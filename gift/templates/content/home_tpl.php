@@ -19,8 +19,6 @@ $this->appendArrayVar('headerParams', $maincss);
 $this->appendArrayVar('headerParams', $listingjs);
 $addGift = $this->uri(array('action'=>'submitadd'));
 
-
-
 $data='';
 
 $dbdata=$this->objDbGift->getMyGifts();
@@ -34,18 +32,18 @@ foreach($dbdata as $row) {
     $decrb =$row['description'];
     $don =$row['donor'];
     $val =$row['value'];
-	//    $action ="showEditGiftWin($row,$gift,$decrb,$don,$val);return false";
-    // $action="showAddGiftWin($data);return false;";
+	
     $action ="showEditGiftWin(\'".$editGiftUrl."\',\'".$gift."\',\'".$decrb."\',\'".$don."\',\'".$val."\');return false";
     $editGift->extra = 'onClick="'.$action.'"';
     
     $data.="[";
-    $data.="'".$row['giftname']."',";
+    $data.="'".$row['giftname'];
+    $data.=$editGift->show()."',";
     $data.="'".$row['description']."',";
     $data.="'".$row['donor']."',";
     $data.="'".$row['recipient']."',";
-    $data.="'".$row['value']."',";
-    $data.="'".$editGift->show()."'";
+    $data.="'".$row['value']."'";
+   
     $data.="],";
 }
 $lastChar = $data[strlen($data)-1];
