@@ -258,9 +258,10 @@ class simpleregistration extends controller {
     }
     function __deletemember() {
         $id=$this->getParam('id');
+        $eventid=$this->getParam('eventid');
         $reg = $this->getObject('dbregistration');
         $reg->deleteMember($id);
-        $this->nextAction('memberlist');
+        $this->nextAction('memberlist',array('eventid'=>$eventid));
     }
     function __xls() {
         $eventid=$this->getParam('eventid');

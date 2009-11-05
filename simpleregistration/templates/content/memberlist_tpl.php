@@ -38,7 +38,7 @@ $index=0;
 foreach($dbdata as $row){
 
     $deleteLink=new link();
-    $deleteLink->link($this->uri(array('action'=>'deletemember','id'=>$row['id'])));
+    $deleteLink->link($this->uri(array('action'=>'deletemember','id'=>$row['id'],'eventid'=>$eventid)));
     $objIcon->setIcon('delete');
     $deleteLink->link=$objIcon->show();
 
