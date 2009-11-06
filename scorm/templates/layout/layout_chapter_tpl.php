@@ -139,10 +139,10 @@ if (isset($currentChapter)) {
     $objFieldset = $this->newObject('fieldset', 'htmlelements');
     $objFieldset->contents = $toolbar->show();
     $cssLayout = $this->newObject('csslayout', 'htmlelements');
-    $cssLayout->setNumColumns(3);
+    $cssLayout->setNumColumns(2);
     $cssLayout->setLeftColumnContent($left);
     $cssLayout->setMiddleColumnContent($this->getContent());
-    $cssLayout->setRightColumnContent($objFieldset->show());
+
     echo $cssLayout->show();
 
 } else {
