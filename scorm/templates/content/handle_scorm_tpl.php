@@ -317,7 +317,7 @@ if($mode == 'page') {
     $objTable->endRow();
 }
 
-$form->addToForm($objTable->show());
+
 if (count($chapters) > 1 && $this->isValid('movetochapter')) {
    
     $this->loadClass('dropdown', 'htmlelements');
@@ -343,6 +343,6 @@ if (count($chapters) > 1 && $this->isValid('movetochapter')) {
    
 
 }
-
+$form->addToForm($objTable->show());
 echo $form->show();
 ?>
