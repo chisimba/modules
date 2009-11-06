@@ -32,15 +32,8 @@ class viewerutils extends object
           
             <ul class="paneltabs">             
            
-            '.$this->objWashout->parseText($data['maintext']).'
+            '.$this->objWashout->parseText($data['maintext']).'</ul>';
             
-            </ul>
-            <br/>
-              ';
-            $content.='<div class="sectionstats">';
-            $content.='<div class="subcolumns">';
-            $content.='</div">';
-            $content.='</div">';
             return $content;
     }
     public function getTopicsContent($parentid){
@@ -68,19 +61,10 @@ class viewerutils extends object
              ;
             
            $content='
-            <h4>'.$homepagetitlelinks.'</h4>
-
             <ul class="paneltabs">
 
-          '.$this->objWashout->parseText($defaulttopiccontent[0]['description']).'
-
-            </ul>
-            <br/>
-              ';
-            $content.='<div class="sectionstats">';
-            $content.='<div class="subcolumns">';
-            $content.='</div">';
-            $content.='</div">';
+            '.$defaulttopiccontent[0]['description'].'</ul>';
+            
             return $content;
     }
     public function getTopicContent($id){
