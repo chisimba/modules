@@ -141,7 +141,7 @@ class scorm extends controller {
         if($this->getParam('mode') == 'chapter') {
         // $link = new link ($this->uri(array('action'=>'viewscorm','mode'=>'chapter', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
             $this->setVarByRef('chapterid', $chapterId);
-            $this->setLayoutTemplate('layout_firstpage_tpl.php');
+           // $this->setLayoutTemplate('layout_firstpage_tpl.php');
         }
         $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
         $this->setVarByRef('chapters', $chapters);
