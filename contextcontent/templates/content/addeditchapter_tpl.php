@@ -85,5 +85,14 @@ if ($mode == 'edit') {
 }
 
 echo $form->show();
+$chapterlisturl = $this->uri(array('action'=>'chapterlistastree','contextcode'=>$this->contextCode));
+$viewchapterurl = $this->uri(array('action'=>'viewchapter'));
+/*
+$mainjs = "
+                Ext.onReady(function(){
+                   initContextTools('".str_replace("amp;", "", $chapterlisturl)."','".str_replace("amp;", "", $viewchapterurl)."');
+                 });
 
+          ";
+echo "<script type=\"text/javascript\">".$mainjs."</script>";*/
 ?>

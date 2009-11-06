@@ -90,7 +90,7 @@ class db_contextcontent_pages extends dbtable
      * @param string $headerScript Header JS of the Page
      * @return boolean Result of Insert
      */
-    public function addPage($titleId, $menutitle, $content, $language, $headerScript=null)
+    public function addPage($titleId, $menutitle, $content, $language, $headerScript=null,$scorm='N')
     {
         if (!$this->checkPageExists($titleId, $language)) {
             return $this->insert(array(
@@ -100,6 +100,7 @@ class db_contextcontent_pages extends dbtable
                     'headerscripts' => $headerScript,
                     'language' => $language,
                     'original' => 'Y',
+                    'scorm' => $scorm,
                     'creatorid' => $this->objUser->userId(),
                     'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
                     'datemodified' => strftime('%Y-%m-%d %H:%M:%S', mktime())

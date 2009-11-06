@@ -50,4 +50,18 @@
             </add>
         </data>
     </update>
+
+    <update>
+        <table>tbl_contextcontent_pages</table>
+        <version>1.434</version>
+        <description>Added a field for scorm for pages</description>
+        <data>
+            <add>
+                <name>scorm</name>
+                <type>text</type>
+                <length>1</length>
+                <default>N</default>
+            </add>
+        </data>
+    </update>
 </updates>

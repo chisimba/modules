@@ -415,6 +415,31 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
         $row= $this->getRow('contextcode',$contextcode);
         return $row['chapterid'];
     }
+    /**
+     * returns a list of chapters as a tree for contexttools
+     * @param <type> $contextcode
+     * @return <type>
+     */
+    public function getChaptersAsTree($contextcode) {
+        $sql=" where contextcode ='$contextcode'";
+        $dbrows=$this->getAll($sql);
+        $data="[";
+        foreach($dbrows as $row) {
+            $data .= "{\n";
+            $data .= "\t\ttext: '".$this->getContextChapterTitle($row['chapterid'])."',\n";
+            $data .= "\t\tid: '".$row['chapterid']."',\n";
+            $data .= "\t\tleaf: true\n";
+            $data .= "\t},";
+        }
+        $lastChar = $data[strlen($data)-1];
+        $len=strlen($data);
+        if($lastChar == ',') {
+            $data=substr($data, 0, (strlen ($data)) - (strlen (strrchr($data,','))));
+        }
+        $data.="]";
+        $str = "[{\n\ttext:'Chapter List',\n\texpanded: true,\n\tchildren: ".$data."\n}]";
+        return $str;
+    }
 
 
 }

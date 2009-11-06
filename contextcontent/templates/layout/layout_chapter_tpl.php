@@ -38,6 +38,7 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
 
+
 if (isset($currentChapter)) {
 
     
@@ -81,8 +82,6 @@ if (isset($currentChapter)) {
     $header->type = 2;
     
     $left = $header->show();
-
-//    $left .= $objFieldset->show();
     
     $pageId = isset($currentPage) ? $currentPage : '';
     $left .= $heading->show();

@@ -1,12 +1,13 @@
 <?php
 
-
-
-
 $objFile = $this->getObject('dbfile', 'filemanager');
 
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
+
+$addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
+$addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
+
 
 $editLink = new link ($this->uri(array('action'=>'editpage', 'id'=>$page['id'], 'context'=>$this->contextCode)));
 $editLink->link = $this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent');
@@ -22,6 +23,7 @@ $list = array();
 
 if ($this->isValid('addpage')) {
     $list[] = $addLink->show();
+    $list[] = $addScormLink->show();
 }
 
 if ($this->isValid('editpage')) {
@@ -174,6 +176,7 @@ if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid
 */
 $objWashout = $this->getObject('washout', 'utilities');
 $content = $objWashout->parseText($page['pagecontent']);
+
 //echo $content;
 
 //echo '<hr />';

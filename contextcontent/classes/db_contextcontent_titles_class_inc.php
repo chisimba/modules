@@ -83,7 +83,7 @@ class db_contextcontent_titles extends dbtable
      * @param string $headerScript Any Script to go in the header
      * @return string The title id.
      */
-    public function addTitle($titleId='', $menutitle, $content, $language, $headerScript=null)
+    public function addTitle($titleId='', $menutitle, $content, $language, $headerScript=null,$scorm='N')
     {
         if ($titleId == '') {
             $titleId = $this->autoCreateTitle();
@@ -91,7 +91,7 @@ class db_contextcontent_titles extends dbtable
             $this->createTitle($titleId);
         }
 
-        $pageId = $this->objContentPages->addPage($titleId, $menutitle, $content, $language, $headerScript);
+        $pageId = $this->objContentPages->addPage($titleId, $menutitle, $content, $language, $headerScript,$scorm);
         
         return $titleId;
     }
