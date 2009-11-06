@@ -8,25 +8,25 @@ if (isset($hideNavSwitch) && $hideNavSwitch) {
 if ($showNav) {
     ?>
 <script type="text/javascript">
-//<![CDATA[
+    //<![CDATA[
 
-function changeNav (type) {
-    var url = 'index.php';
-    var pars = 'module=contextcontent&action=changenavigation&id=<?php echo $currentPage; ?>&type='+type;
-    var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
-}
-
-function showResponse (originalRequest) {
-    var newData = originalRequest.responseText;
-    
-    if (newData != '') {
-        $('contentnav').innerHTML = newData;
-        adjustLayout();
+    function changeNav (type) {
+        var url = 'index.php';
+        var pars = 'module=contextcontent&action=changenavigation&id=<?php echo $currentPage; ?>&type='+type;
+        var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
     }
-}
-//]]>
+
+    function showResponse (originalRequest) {
+        var newData = originalRequest.responseText;
+
+        if (newData != '') {
+            $('contentnav').innerHTML = newData;
+            adjustLayout();
+        }
+    }
+    //]]>
 </script>
-    <?php
+<?php
 }
 
 $this->loadClass('link', 'htmlelements');
@@ -41,18 +41,18 @@ $this->loadClass('hiddeninput', 'htmlelements');
 
 if (isset($currentChapter)) {
 
-    
-    
+
+
     if (!isset($currentChapterTitle)) {
         $currentChapterTitle = $this->objContextChapters->getContextChapterTitle($currentChapter);
     }
-    
+
     if (!isset($currentPage)) {
         $currentPage = '';
     }
-    
+
     $heading = new htmlheading();
-    
+
     $heading->str = $currentChapterTitle;
     $heading->type = 3;
 /*    
@@ -80,61 +80,64 @@ if (isset($currentChapter)) {
     $header = new htmlHeading();
     $header->str = ucwords($this->objLanguage->code2Txt('mod_contextcontent_name', 'contextcontent', NULL, '[-context-] Content'));
     $header->type = 2;
-    
+
     $left = $header->show();
-    
+
     $pageId = isset($currentPage) ? $currentPage : '';
     $left .= $heading->show();
-    
+
     $navigationType = $this->getSession('navigationType', 'tree');
-    
-    
-    
+
+
+
     if ($navigationType == 'tree') {
         $left .= '<div id="contentnav">';
         $left .= $this->objContentOrder->getTree($this->contextCode, $currentChapter, 'htmllist', $pageId, 'contextcontent');
-        
+
         if ($showNav) {
             $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
         }
-        
+
         $left .= '</div>';
     }  else if ($navigationType == 'bookmarks') {
-        $left .= '<div id="contentnav">';
-        $left .= $this->objContentOrder->getBookmarkedPages($this->contextCode, $currentChapter, $pageId);
-        
-        if ($showNav) {
-            $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
+            $left .= '<div id="contentnav">';
+            $left .= $this->objContentOrder->getBookmarkedPages($this->contextCode, $currentChapter, $pageId);
+
+            if ($showNav) {
+                $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
+            }
+
+            $left .= '</div>';
+        }else {
+            $left .= '<div id="contentnav">';
+            $left .= $this->objContentOrder->getTwoLevelNav($this->contextCode, $currentChapter, $pageId);
+
+            if ($showNav) {
+                $left .= '<hr /><p><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a>';
+                $left .= '<br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
+            }
+
+            $left .= '</div>';
         }
-        
-        $left .= '</div>';
-    }else {
-        $left .= '<div id="contentnav">';
-        $left .= $this->objContentOrder->getTwoLevelNav($this->contextCode, $currentChapter, $pageId);
-        
-        if ($showNav) {
-            $left .= '<hr /><p><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a>';
-            $left .= '<br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
-        }
-        
-        $left .= '</div>';
-    }
-    
+
     if ($this->isValid('addpage')) {
         $addLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$currentChapter, 'id'=>$currentPage)));
         $addLink->link = 'Add a Page';
-        
-        $left .= '<hr /><p>'.$addLink->show().'</p>';
+
+        $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
+        $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
+
+        $left .= '<hr /><p>'.$addLink->show().'&nbsp;&nbsp;'.$addScormLink->show().'</p>';
     }
-    
+
     $returnLink = new link ($this->uri(NULL));
     $returnLink->link = $this->objLanguage->languageText('mod_contextcontent_returntochapterlist', 'contextcontent', 'Return to Chapter List');
-    
+
     $left .= '<hr /><p>'.$returnLink->show().'</p>';
-    
+
     //Add toolbar
     $toolbar = $this->getObject('contextsidebar', 'context');
-    $objFieldset = $this->newObject('fieldset', 'htmlelements');    
+    $objFieldset = $this->newObject('fieldset', 'htmlelements');
     $objFieldset->contents = $toolbar->show();
     $cssLayout = $this->newObject('csslayout', 'htmlelements');
     $cssLayout->setNumColumns(3);

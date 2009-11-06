@@ -113,9 +113,9 @@ $this->appendArrayVar('headerParams', '
 
 if ($mode == 'edit') {
     $formaction = 'updatescormpage';
-    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_editpage','contextcontent').': '.$page['pagetitle'].'</h1>';
+    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent').': - '.$page['pagetitle'].'</h1>';
 } else {
-    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_addnewpagein','contextcontent').' '.$this->objContext->getTitle().'</h1>';
+    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_addnewcontextpages','contextcontent').' - '.$this->objContext->getTitle().'</h1>';
     $formaction = 'savescormpage';
 }
 //echo '<p>Todo: Allow User to place order of page</p>';
@@ -143,6 +143,9 @@ $label = new label ($this->objLanguage->languageText('mod_contextcontent_parent'
 $table->startRow();
 $table->addCell($label->show());
 $table->addCell($tree);
+$table->endRow();
+$table->startRow();
+$table->addCell('');
 $table->endRow();
 $title = new textinput('menutitle');
 $form->addRule('page', 'Title is required','required');
