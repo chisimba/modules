@@ -219,7 +219,7 @@ $hiddeninput = new hiddeninput('scorm', 'Y');
 $form->addToForm($hiddeninput->show());
 
 
-$button = new button('submitbutton', $this->objLanguage->languageText('mod_contextcontent_page','contextcontent'));
+$button = new button('submitbutton', $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent'));
 $button->cssId = 'submitbutton';
 $button->setToSubmit();
 $form->addToForm($button->show().' <pre id="contextcodemessage2">'.$contextCodeMessage.'</pre>');
