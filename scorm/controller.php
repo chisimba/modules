@@ -81,8 +81,9 @@ class scorm extends controller {
         $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer','contextcontent');
         //Store user Id
         $this->userId = $this->objUser->userId();
+        $this->objContentOrder = $this->getObject('db_contextcontent_order','contextcontent');
 
-
+        $this->objContextChapters = $this->getObject('db_contextcontent_contextchapter','contextcontent');
         $this->appendArrayVar('headerParams', $extbase);
         $this->appendArrayVar('headerParams', $extalljs);
         $this->appendArrayVar('headerParams', $extallcss);
@@ -97,7 +98,7 @@ class scorm extends controller {
     //check if in context, if not, give in
 
         if(!$this->objContext->isInContext()) {
-           return "notincontext_tpl.php";
+            return "notincontext_tpl.php";
         }
 
         // Method to set the layout template for the given action
@@ -116,16 +117,34 @@ class scorm extends controller {
     }
     private function __viewscorm() {
         $folderId = $this->getParam('folderId', NULL);
-        if($folderId == null){
+        if($folderId == null) {
             return $this->nextAction('home',NULL,'contextcontent');
         }
+
         $chapterId = $this->getParam('chapterid',$this->objContextChapter->getChapterId($this->contextCode ));
+
+
         //Log in activity streamer
         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapterId, $this->contextCode);
         if ($ischapterlogged==FALSE) {
             $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $chapterId, $this->contextCode);
         }
         $this->setVarByRef('folderId',$folderId);
+        if($this->getParam('mode') == 'page') {
+            $this->setVarByRef('lft',$this->getParam('lft'));
+            $this->setVarByRef('rght',$this->getParam('rght'));
+            $this->setVarByRef('mode',$this->getParam('mode'));
+            $this->setVarByRef('currentChapter', $chapterId);
+            $this->setVarByRef('id',$this->getParam('id'));
+            $this->setLayoutTemplate('layout_chapter_tpl.php');
+        }
+        if($this->getParam('mode') == 'chapter') {
+        // $link = new link ($this->uri(array('action'=>'viewscorm','mode'=>'chapter', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
+            $this->setVarByRef('chapterid', $chapterId);
+            $this->setLayoutTemplate('layout_firstpage_tpl.php');
+        }
+        $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
+        $this->setVarByRef('chapters', $chapters);
         return 'handle_scorm_tpl.php';
     }
     //Ajax function to get the next page

@@ -6,7 +6,7 @@ $this->loadClass("iframe", 'htmlelements');
 //Paul M. To do -- Correct form action
 $form = new form("default", 
     $this->uri(array(
-    'module'=>'contextcontent'
+    'module'=>'contextcontent','action' =>'movetochapter'
 )));
 
 //AJAX to check if selected folder contains scorm
@@ -190,6 +190,78 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
 	}
     </script>");
 
+
+if($mode == 'page') {
+
+    $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$currentChapter),'contextcontent'));
+    $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
+
+    $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$currentChapter),'contextcontent'));
+    $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
+
+
+    $editLink = new link ($this->uri(array('action'=>'editpage', 'id'=>$id, 'context'=>$this->contextCode),'contextcontent'));
+    $editLink->link = $this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent');
+
+    if (($rght - $lft - 1) == 0) {
+        $deleteLink = new link ($this->uri(array('action'=>'deletepage', 'id'=>$id, 'context'=>$this->contextCode),'contextcontent'));
+    } else {
+        $deleteLink = new link ("javascript:alert('".$this->objLanguage->languageText('mod_contextcontent_pagecannotbedeleteduntil','contextcontent').".');");
+    }
+    $deleteLink->link = $this->objLanguage->languageText('mod_contextcontent_delcontextpages','contextcontent');
+
+    $list = array();
+
+    if ($this->isValid('addpage')) {
+        $list[] = $addLink->show();
+        $list[] = $addScormLink->show();
+    }
+
+    if ($this->isValid('editpage')) {
+        $list[] = $editLink->show();
+    }
+
+    if ($this->isValid('deletepage')) {
+        $list[] = $deleteLink->show();
+    }
+
+    if (count($list) == 0) {
+        $middle = '&nbsp;';
+    } else {
+        $middle = '';
+        $divider = '';
+
+        foreach ($list as $item) {
+            $middle .= $divider.$item;
+            $divider = ' / ';
+        }
+    }
+
+    if ($this->isValid('movepageup')) {
+
+        $middle .= '<br />';
+
+        if ($isFirstPageOnLevel) {
+            $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_contextcontent_isfirstpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent').'</span>';
+        } else {
+            $link = new link($this->uri(array('action'=>'movepageup', 'id'=>$id),'contextcontent'));
+            $link->link = $this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent');
+            $middle .= $link->show();
+        }
+
+        $middle .= ' / ';
+
+        if ($isLastPageOnLevel) {
+            $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_contextcontent_islastpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent').'</span>';
+        } else {
+            $link = new link($this->uri(array('action'=>'movepagedown', 'id'=>$id),'contextcontent'));
+            $link->link = $this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent');
+            $middle .= $link->show();
+        }
+    }
+
+}
+
 //Get The API
 $getApi = $this->getResourcePath('api.htm', 'scorm');
 //get scorm folder id
@@ -216,8 +288,12 @@ $content = '<iframe id="IFRAME_content" src="'.$firstPage.'" name="content" heig
 $testNavs = "<div id='divNavs' align = 'center'><span id='span_home'> <a href = '".$firstPage."' target = 'content' id = 'home'> Home</a></span>"." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span id='span_prev'>&nbsp</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='span_next'>&nbsp</next> </div>";
 $testNavsB = "<div id='divNavsb' align = 'center'><span id='span_homeb'> <a href = '".$firstPage."' target = 'content' id = 'home'> Home</a></span>"." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span id='span_prevb'>&nbsp</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='span_nextb'>&nbsp</next> </div>";
 
+
 // Spacer
 $objTable->startRow();
+
+
+
 $objTable->addCell($apiIFrame);
 $objTable->addCell('<div id="div_navigators" class="small-box">'.$navigators."</div>");
 //	    $objTable->addCell($readXml);
@@ -228,9 +304,45 @@ $objTable->addCell("&nbsp;");
 $objTable->addCell(' <span id="contextcodemessage">'.$contextCodeMessage.'</span>');
 //	    $objTable->addCell($readXml);
 //	    $objTable->addCell($content);
+
 $objTable->endRow();
 
 $objTable->endRow();
+
+if($mode == 'page') {
+    $objTable->startRow();
+    $objTable->addCell($prevPage, '33%', 'top');
+    $objTable->addCell($middle, '33%', 'top', 'center');
+    $objTable->addCell($nextPage, '33%', 'top', 'right');
+    $objTable->endRow();
+}
+
 $form->addToForm($objTable->show());
+if (count($chapters) > 1 && $this->isValid('movetochapter')) {
+   
+    $this->loadClass('dropdown', 'htmlelements');
+    $this->loadClass('hiddeninput', 'htmlelements');
+    $this->loadClass('button', 'htmlelements');
+    $this->loadClass('label', 'htmlelements');
+     $hiddenInput = new hiddeninput('id', $id);
+
+    $dropdown = new dropdown('chapter');
+    foreach ($chapters as $chapterItem)
+    {
+        $dropdown->addOption($chapterItem['chapterid'], $chapterItem['chaptertitle']);
+    }
+    $dropdown->setSelected($page['chapterid']);
+
+    $label = new label ($this->objLanguage->languageText('mod_contextcontent_movepagetoanotherchapter','contextcontent').': ', 'input_chapter');
+
+    $button = new button ('movepage', $this->objLanguage->languageText('mod_contextcontent_move','contextcontent'));
+    $button->setToSubmit();
+
+    $form->addToForm($hiddenInput->show().$label->show().$dropdown->show().' '.$button->show());
+
+   
+
+}
+
 echo $form->show();
 ?>
