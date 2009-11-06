@@ -19,4 +19,88 @@
         <instructions>Select the color of the box to use in the parameters field.This will be applied to the selectd text in the editor.</instructions>
         <tag>COLORBOX</tag>
     </filter>
+    <filter>
+        <name>delicious</name>
+        <type>basic</type>
+        <label>del.icio.us tag cloud</label>
+        <params />
+        <instructions>Enter your del.icio.us username within the tags to create a tag cloud of your bookmarked URL's.</instructions>
+        <tag>DELTAGS</tag>
+    </filter>
+    <filter>
+        <name>embed</name>
+        <type>basic</type>
+        <label>Embed</label>
+        <params />
+        <instructions>Make a link of the text between the embed tags to embed a file from your filemanager. Supported formats are: mp3, ogg, mp4 for both audio and video files.</instructions>
+        <tag>EMBED</tag>
+    </filter>
+    <filter>
+        <name>flash video simple</name>
+        <type>basic</type>
+        <label>Flash Video (FLV) simple</label>
+        <params />
+        <instructions>Provide the URL of a flash video. Size of the video will be 340 x 240</instructions>
+        <tag>FLV</tag>
+    </filter>
+    <filter>
+        <name>flash video complex</name>
+        <type>parametized</type>
+        <label>Flas Video (FLV) complex</label>
+        <params>
+            <param name="url">http://www.example.com</param>
+            <param name="width">320</param>
+            <param name="height">240</param>
+        </params>
+        <instructions>Modify the url, width and height parameters to control the size of the flash video file (FLV) to be embedded in the content</instructions>
+        <tag>FLV</tag>
+    </filter>
+    <filter>
+        <name>IFrame</name>
+        <type>basic</type>
+        <label>IFrame</label>
+        <params />
+        <instructions>Inserts a page via URL into a content box. Please specify url|width|height as parameters</instructions>
+        <tag>IFRAME</tag>
+    </filter>
+    <filter>
+        <name>Google Video</name>
+        <type>basic</type>
+        <label>Google Video</label>
+        <params />
+        <instructions>Inserts a Google Video either by link or URL</instructions>
+        <tag>GVID</tag>
+    </filter>
+    <filter>
+        <name>YouTube</name>
+        <type>basic</type>
+        <label>YouTube</label>
+        <params />
+        <instructions>Inserts a YouTube video by either link or URL</instructions>
+        <tag>YOUTUBE</tag>
+    </filter>
+    <filter>
+        <name>Math</name>
+        <type>basic</type>
+        <label>Math formula</label>
+        <params />
+        <instructions>Enter a formula in standard mathematical latex format to render correctly</instructions>
+        <tag>MATH</tag>
+    </filter>
+    <filter>
+        <name>PDF</name>
+        <type>basic</type>
+        <label>PDF</label>
+        <params />
+        <instructions>Provide a URL to the pdf document to have it rendered in the content</instructions>
+        <tag>PDF</tag>
+    </filter>
+    <filter>
+        <name>RSS</name>
+        <type>basic</type>
+        <label>RSS Feed</label>
+        <params />
+        <instructions>Provide a URL to a RSS feed to insert into the content</instructions>
+        <tag>RSS</tag>
+    </filter>
 </filters>
