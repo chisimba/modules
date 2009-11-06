@@ -116,7 +116,8 @@ if ($this->isValid('addchapter')) {
 
 $objFieldset->contents = $toolbar->show();
 $cssLayout->setLeftColumnContent($content);
+$cssLayout->setNumColumns(2);
 $cssLayout->setMiddleColumnContent($this->getContent());
-$cssLayout->setRightColumnContent($objFieldset->show());
+
 echo $cssLayout->show();
 ?>
