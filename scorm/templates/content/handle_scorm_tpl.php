@@ -343,6 +343,7 @@ if (count($chapters) > 1 && $this->isValid('movetochapter')) {
    
 
 }
-$form->addToForm($objTable->show());
+$objWashout = $this->getObject('washout', 'utilities');
+$form->addToForm($objWashout->parseText($objTable->show()));
 echo $form->show();
 ?>
