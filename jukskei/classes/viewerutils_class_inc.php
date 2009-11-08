@@ -219,7 +219,9 @@ cell content can go in here
         $data= $objStories->getStory($id);
         $topicsnavid=$this->objDbSysconfig->getValue('TOPICS_NAV_CATEGORY','jukskei');
         $topicnavs=$this->storyparser->getStoryByCategory($topicsnavid);
-        $navbar='';
+        $link = new link ($this->uri(array('action'=>'home')));
+        $link->link = 'HOME';
+        $navbar=$link->show();
         foreach($topicnavs as $nav) {
             $link = new link ($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
             $link->link = $nav['title'];
