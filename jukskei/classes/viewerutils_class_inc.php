@@ -239,8 +239,8 @@ cell content can go in here
             <ul class="paneltabs">
 
              <font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><hr>
-             <b style="font-family:Arial;font-size:24;">'.$data['title'].'&nbsp; |&nbsp;</b><br/>
-             <font style="font-family:Arial;font-size:18;">  '.$articlenav.'</font>
+       
+             Articles: <font style="font-family:Arial;font-size:18;">  '.$articlenav.'</font><br/>
              '.$this->objWashout->parseText($data['maintext']).'
 
             </ul>
