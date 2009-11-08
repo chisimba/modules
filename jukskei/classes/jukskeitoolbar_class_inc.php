@@ -102,7 +102,7 @@ class jukskeitoolbar extends object {
 
 
         // Return Toolbar
-        return '<div class="chromestyle" id="chromemenu""><ul>'.$home.$str.'</ul></div>';
+        return '<div class="chromestyle"><ul>'.$home.$str.'</ul></div>';
 
 
     }
@@ -117,9 +117,9 @@ class jukskeitoolbar extends object {
             $link = new link ($this->uri(array('action'=>$action,'storyid'=>$storyid), $module));
             $link->link = $text;
 
-            $isActive = $isActive ? ' id="current"' : '';
+            $isActive = '';
 
-            return '<li'.$isActive.'>'.$link->show().'</li>';
+            return '<li'.$isActive.'>'.$link->show().'|</li>';
         } else {
             return '';
         }
