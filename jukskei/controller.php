@@ -163,6 +163,7 @@ class jukskei extends controller
     function __viewstory(){
         $storyid=$this->getParam('storyid');
         $this->setVarByRef('storyid',$storyid);
+        $this->setVar('pageSuppressToolbar', TRUE);
         return "story_tpl.php";
     }
  
