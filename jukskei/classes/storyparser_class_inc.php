@@ -24,7 +24,12 @@ class storyparser  extends dbTable {
         $data = $this->getRow('id',$id);
         return $data;
     }
-   public function getStoryByCategory($category) {
+    public function getArticleByAbstract($abs) {
+        $sql=" where abstract = '$abs'";
+        $data = $this->getAll($sql);
+        return $data;
+    }
+    public function getStoryByCategory($category) {
         $sql=" where category = '$category'";
         $data = $this->getAll($sql);
         return $data;
