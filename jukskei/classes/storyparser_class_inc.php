@@ -24,7 +24,11 @@ class storyparser  extends dbTable {
         $data = $this->getRow('id',$id);
         return $data;
     }
-
+   public function getStoryByCategory($category) {
+        $sql=" where category = '$category'";
+        $data = $this->getAll($sql);
+        return $data;
+    }
     public function getTopic($id) {
         $sql="select * from tbl_cms_sections where id='$id'";
         $data = $this->getArray($sql);

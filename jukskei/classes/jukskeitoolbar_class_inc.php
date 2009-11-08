@@ -14,6 +14,8 @@ class jukskeitoolbar extends object {
 
         $this->loadClass('link', 'htmlelements');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
+        $this->objDbSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->storyparser=$this->getObject('storyparser');
     }
 
     /**
@@ -24,19 +26,23 @@ class jukskeitoolbar extends object {
         $objUser = $this->getObject('user', 'security');
         $userIsLoggedIn = $objUser->isLoggedIn();
 
-        $menuOptions = array(
-            array('action'=>'about', 'text'=>'ABOUT THE PROJECT', 'actioncheck'=>array('about'), 'module'=>'jukskei', 'status'=>'both'),
-            array('action'=>'wits', 'text'=>'WITS JOURNALISM', 'actioncheck'=>array('wits'), 'module'=>'jukskei', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'CONTENT ADMIN', 'actioncheck'=>array(), 'module'=>'stories', 'status'=>'admin'),
-            array('action'=>NULL, 'text'=>'FILE MANAGER', 'actioncheck'=>array(), 'module'=>'filemanager', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'PREVIEW', 'actioncheck'=>array(), 'module'=>'jukskei', 'status'=>'both'),
+        $menuOptions = array();
 
-            array('action'=>NULL, 'text'=>'SITE ADMIN', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
-            array('action'=>NULL, 'text'=>'MY DETAILS', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
-            array('action'=>'login', 'text'=>'LOGIN', 'actioncheck'=>array('login'), 'module'=>'jukskei', 'status'=>'login'),
-            array('action'=>'login', 'text'=>'REGISTER', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
-            array('action'=>'logoff', 'text'=>'LOGOUT', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
-        );
+        $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','ocsinterface');
+        $topnavs=$this->storyparser->getStoryByCategory($topcatid);
+
+        foreach($topnavs as $nav) {
+            $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'ocsinterface', 'status'=>'both');
+        }
+
+        $menuOptions[]= array('action'=>NULL, 'text'=>'Content Admin', 'actioncheck'=>array(), 'module'=>'stories', 'status'=>'admin');
+        $menuOptions[]= array('action'=>NULL, 'text'=>'File manager', 'actioncheck'=>array(), 'module'=>'filemanager', 'status'=>'loggedin');
+        $menuOptions[]= array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin');
+        $menuOptions[]= array('action'=>NULL, 'text'=>'My details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin');
+
+        $menuOptions[]= array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin');
+
+
 
         $usedDefault = FALSE;
         $str = '';
@@ -96,7 +102,7 @@ class jukskeitoolbar extends object {
 
 
         // Return Toolbar
-        return '<div id="modernbricksmenum" style="float:right;"><ul>'.$home.$str.'</ul></div>';
+        return '<div class="chromestyle" id="chromemenu""><ul>'.$home.$str.'</ul></div>';
 
 
     }

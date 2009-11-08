@@ -49,6 +49,7 @@ class jukskei extends controller
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objViewerUtils = $this->getObject('viewerutils');
         $this->objWashout = $this->getObject('washout', 'utilities');
+        $this->storyparser=$this->getObject('storyparser');
     }
         /**
          * Method to override login for certain actions
@@ -164,37 +165,7 @@ class jukskei extends controller
         $this->setVarByRef('storyid',$storyid);
         return "story_tpl.php";
     }
-    function __viewsections(){
-        $data=
-        "
-[{
-    topic:'ColumnTree Example',
-    owner:'Admin',
-    uiProvider:'col',
-    cls:'master-task',
-    iconCls:'task-folder',
-    children:[
-    {
-        topic:'Abstract rendering in TreeNodeUI',
-        owner:'admin',
-        uiProvider:'col',
-        leaf:true,
-        iconCls:'task'
-    },
-   {
-        topic:'Test and make sure it works',
-        owner:'1 hour',
-        uiProvider:'col',
-        leaf:true,
-        iconCls:'task'
-    }
-]
-
-}]
-";
-        echo $data;
-        die();
-    }
+ 
 
 }
 
