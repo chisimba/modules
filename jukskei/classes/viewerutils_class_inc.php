@@ -268,7 +268,7 @@ cell content can go in here
             $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
         $articlenav='';
-       $articles=$this->storyparser->getArticleByAbstract(stripslashes($storydata['title']));
+       $articles=$this->storyparser->getArticleByAbstract(str_replace("'", "\'",$storydata['title']));
          foreach($articles as $nav) {
             $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$storyid,'articleid'=>$nav['id'])));
             $link->link = $nav['title'];
