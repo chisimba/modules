@@ -220,7 +220,7 @@ cell content can go in here
         $topicsnavid=$this->objDbSysconfig->getValue('TOPICS_NAV_CATEGORY','jukskei');
         $topicnavs=$this->storyparser->getStoryByCategory($topicsnavid);
         $link = new link ($this->uri(array('action'=>'home')));
-        $link->link = 'HOME&nbsp;&nbsp;|';
+        $link->link = 'HOME&nbsp;&nbsp;|&nbsp;&nbsp;';
         $navbar=$link->show();
         foreach($topicnavs as $nav) {
             $link = new link ($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
