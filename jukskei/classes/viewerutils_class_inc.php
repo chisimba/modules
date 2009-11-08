@@ -232,7 +232,7 @@ cell content can go in here
 
             <ul class="paneltabs">
 
-           <br/><font style="font-family:Arial;font-size:24;">  '.$navbar.' '.$this->objWashout->parseText($data['maintext']).'
+           <font style="font-family:Arial;font-size:24;">  '.$navbar.' '.$this->objWashout->parseText($data['maintext']).'
 
             </ul>
             <br/>
