@@ -89,7 +89,7 @@ class jukskeitoolbar extends object {
                 }
 
                 // Add to Navigation
-                $str .= $this->generateItem($option['action'], $option['module'], $option['text'], $isDefault);
+                $str .= $this->generateItem($option['action'], $option['module'], $option['text'],$option['storyid'], $isDefault);
             }
         }
 
@@ -107,14 +107,14 @@ class jukskeitoolbar extends object {
 
     }
 
-    private function generateItem($action='', $module='jukskei', $text, $isActive=FALSE) {
+    private function generateItem($action='', $module='jukskei', $text, $storyid,$isActive=FALSE) {
         switch ($module) {
             case '_default' : $isRegistered = TRUE; break;
             default: $isRegistered = $this->objModules->checkIfRegistered($module); break;
         }
 
         if ($isRegistered) {
-            $link = new link ($this->uri(array('action'=>$action), $module));
+            $link = new link ($this->uri(array('action'=>$action,'storyid'=>$storyid), $module));
             $link->link = $text;
 
             $isActive = $isActive ? ' id="current"' : '';
