@@ -28,7 +28,7 @@ class jukskeitoolbar extends object {
 
         $menuOptions = array();
 
-        $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','ocsinterface');
+        $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','jukskei');
         $topnavs=$this->storyparser->getStoryByCategory($topcatid);
 
         foreach($topnavs as $nav) {
