@@ -227,7 +227,7 @@ cell content can go in here
             $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
         $articlenav='';
-        $articles=$this->storyparser->getArticleByAbstract($data['title']);
+        $articles=$this->storyparser->getArticleByAbstract(stripslashes($data['title']));
          foreach($articles as $nav) {
             $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$id,'articleid'=>$nav['id'])));
             $link->link = $nav['title'];
@@ -268,7 +268,7 @@ cell content can go in here
             $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
         $articlenav='';
-        $articles=$this->storyparser->getArticleByAbstract($storydata['title']);
+       $articles=$this->storyparser->getArticleByAbstract(stripslashes($storydata['title']));
          foreach($articles as $nav) {
             $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$storyid,'articleid'=>$nav['id'])));
             $link->link = $nav['title'];
