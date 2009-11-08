@@ -280,7 +280,7 @@ cell content can go in here
             <ul class="paneltabs">
 
              <font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><hr>
-             <b style="font-family:Arial;font-size:24;">'.$storylink->show().'&nbsp; |&nbsp;</b><br/>
+             <b style="font-family:Arial;font-size:24;">Topic: '.$storylink->show().'</b><br/>
              <b style="font-family:Arial;font-size:24;">'.$data['title'].'&nbsp; |&nbsp;</b>
              <font style="font-family:Arial;font-size:18;">  '.$articlenav.'</font>
              '.$this->objWashout->parseText($data['maintext']).'
