@@ -32,7 +32,7 @@ class jukskeitoolbar extends object {
         $topnavs=$this->storyparser->getStoryByCategory($topcatid);
 
         foreach($topnavs as $nav) {
-            $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'ocsinterface', 'status'=>'both');
+            $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'jukskei', 'status'=>'both');
         }
 
         $menuOptions[]= array('action'=>NULL, 'text'=>'Content Admin', 'actioncheck'=>array(), 'module'=>'stories', 'status'=>'admin');
