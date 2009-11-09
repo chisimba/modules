@@ -30,10 +30,11 @@ if($this->objUser->userId()!==null){
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
 }
 $pageLink .= "</ul>";
+$objFeatureBox = $this->newObject ( 'featurebox', 'navigation' );
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->contents = $pageLink;
 
-$cssLayout->setLeftColumnContent($fieldset->show()."<br />".$objBlocks->showBlock('login', 'security'));
+$cssLayout->setLeftColumnContent($objFeatureBox->show ("Lift Club", $fieldset->show()."<br />","clubox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '')."<br />".$objBlocks->showBlock('login', 'security'));
 $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 ?>
