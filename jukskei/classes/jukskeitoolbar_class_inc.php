@@ -35,7 +35,7 @@ class jukskeitoolbar extends object {
             $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'jukskei', 'status'=>'both');
         }
 
-        $menuOptions[]= array('action'=>NULL, 'text'=>'Content Admin', 'actioncheck'=>array(), 'module'=>'stories', 'status'=>'admin');
+        $menuOptions[]= array('action'=>'storyadmin', 'text'=>'Content Admin', 'actioncheck'=>array(), 'module'=>'jukskei', 'status'=>'admin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'File manager', 'actioncheck'=>array(), 'module'=>'filemanager', 'status'=>'loggedin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'My details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin');

@@ -47,6 +47,9 @@ class jukskei extends controller {
         $this->objViewerUtils = $this->getObject('viewerutils');
         $this->objWashout = $this->getObject('washout', 'utilities');
         $this->storyparser=$this->getObject('storyparser');
+        $this->dbtopics=$this->getObject('dbtopics');
+        $this->dbgroups=$this->getObject('dbgroups');
+        $this->articles=$this->getObject('dbarticles');
     }
     /**
      * Method to override login for certain actions
@@ -163,8 +166,90 @@ class jukskei extends controller {
         return "article_tpl.php";
     }
 
+    function __storyadmin() {
+        return "storylist_tpl.php";
+    }
 
+    function __addtopic() {
+        $this->setVarByRef('mode','add');
+        return "addedittopic_tpl.php";
+
+    }
+    function __addarticle() {
+
+        $topicid=$this->getParam('topicid');
+        $this->setVarByRef('mode','add');
+        $this->setVarByRef('topicid',$topicid);
+        return "addeditarticle_tpl.php";
+
+    }
+    function __saveTopic() {
+        $content=$this->getParam('pagecontent');
+        $title=$this->getParam('titlefield');
+        $topicid=$this->dbtopics->saveTopic($title,$content);
+        $this->dbgroups->adduser($topicid);
+        return $this->nextAction('storyadmin');
+    }
+    function __savearticle() {
+        $content=$this->getParam('pagecontent');
+        $title=$this->getParam('titlefield');
+        $topicid=$this->getParam('topicid');
+        $this->articles->saveArticle($title,$content,$topicid);
+        return $this->nextAction('viewtopicarticles',array('topicid'=>$topicid));
+    }
+    function __updatearticle() {
+        $content=$this->getParam('pagecontent');
+        $title=$this->getParam('titlefield');
+        $articleid=$this->getParam('articleid');
+        $topicid=$this->getParam('topicid');
+        $this->articles->updateArticle($title,$content,$articleid);
+        return $this->nextAction('viewtopicarticles',array('topicid'=>$topicid));
+    }
+
+    function __updateTopic() {
+        $content=$this->getParam('pagecontent');
+        $title=$this->getParam('titlefield');
+        $topicid=$this->getParam('topicid');
+        $topicid=$this->dbtopics->updateTopic($title,$content,$topicid);
+        return $this->nextAction('storyadmin');
+    }
+    function __addmembertotopic() {
+        $topicid=$this->getParam('topicid');
+        $userid=$this->getParam('userid');
+        $this->dbgroups->adduser($topicid,$userid);
+        return $this->nextAction('topicmembers',array('topicid'=>$topicid));
+    }
+    function __topicmembers() {
+        $topicid=$this->getParam('topicid');
+        $this->setVarByRef('topicid',$topicid);
+        return 'topicmembers_tpl.php';
+    }
+    function __deletemember() {
+        $topicid=$this->getParam('topicid');
+        $userid=$this->getParam('userid');
+        $this->dbgroups->deleteMember($userid);
+        $this->setVarByRef('topicid',$topicid);
+        return 'topicmembers_tpl.php';
+    }
+    function __editTopic() {
+        $topicid=$this->getParam('topicid');
+        $this->setVarByRef('mode','edit');
+        $this->setVarByRef('topicid',$topicid);
+        return "addedittopic_tpl.php";
+    }
+    function __editarticle() {
+        $articleid=$this->getParam('articleid');
+        $this->setVarByRef('mode','edit');
+        $topicid=$this->getParam('topicid');
+
+        $this->setVarByRef('topicid',$topicid);
+        $this->setVarByRef('articleid',$articleid);
+        return "addeditarticle_tpl.php";
+    }
+    function __viewtopicarticles() {
+        $topicid=$this->getParam('topicid');
+        $this->setVarByRef('topicid',$topicid);
+        return "articlelist_tpl.php";
+    }
 }
-
-
 ?>

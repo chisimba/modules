@@ -19,6 +19,8 @@ class viewerutils extends object {
         $this->loadClass('link', 'htmlelements');
         $this->objWashout = $this->getObject('washout', 'utilities');
         $this->storyparser=$this->getObject('storyparser');
+        $this->topics=$this->getObject('dbtopics');
+        $this->articles=$this->getObject('dbarticles');
     }
 
     public function getHomePageContent() {
@@ -29,9 +31,11 @@ class viewerutils extends object {
         $data= $objStories->getStory($id);
         $content='';
         $topicsnavid=$this->objDbSysconfig->getValue('TOPICS_NAV_CATEGORY','jukskei');
-        $topicnavs=$this->storyparser->getStoryByCategory($topicsnavid);
+        //$topicnavs=$this->storyparser->getStoryByCategory($topicsnavid);
+        $topicsnavs=$this->topics->getTopics();
         $navbar='';
-        foreach($topicnavs as $nav) {
+
+        foreach($topicsnavs as $nav) {
         // $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'jukskei', 'status'=>'both');
             $link = new link ($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
             $link->link = $nav['title'];
@@ -74,9 +78,6 @@ class viewerutils extends object {
 
     public function getTopicsContent($parentid) {
 
-
-
-
         $objTrim = $this->getObject('trimstr', 'strings');
         $objStories=$this->getObject('storyparser');
 
@@ -85,7 +86,8 @@ class viewerutils extends object {
             $data= $objStories->getHomePageContent($category);
             $parentid=$data[0]['id'];
         }
-        $topics=$objStories->getTopics($parentid);
+        //$topics=$objStories->getTopics($parentid);
+        $topics=$this->topics->getTopics();
         $content='';
         $homepagetitlelinks='';
         foreach($topics as $topic) {
@@ -95,13 +97,13 @@ class viewerutils extends object {
         }
         $defaulttopicid=$topics[0]['id'];
 
-        $defaulttopiccontent=$objStories->getTopic($defaulttopicid);
-        ;
+        //$defaulttopiccontent=$objStories->getTopic($defaulttopicid);
+        $defaulttopiccontent=$this->topics->getTopic($defaulttopicid);
 
         $content='
             <ul class="paneltabs">
 
-            '.$defaulttopiccontent[0]['description'].'</ul>';
+            '.$defaulttopiccontent[0]['content'].'</ul>';
 
         return $content;
     }
@@ -110,7 +112,8 @@ class viewerutils extends object {
 
         $objTrim = $this->getObject('trimstr', 'strings');
         $objStories=$this->getObject('storyparser');
-        $topics=$objStories->getTopics($id);
+        //$topics=$objStories->getTopics($id);
+        $topics=$this->topics->getTopics($id);
         $content='';
         $navlinks='';
         foreach($topics as $topic) {
@@ -135,7 +138,7 @@ class viewerutils extends object {
 
             <ul class="paneltabs">
 
-            '.$this->objWashout->parseText($defaulttopiccontent[0]['description']).'
+            '.$this->objWashout->parseText($defaulttopiccontent[0]['content']).'
 
             </ul>
             <br/>
@@ -215,9 +218,9 @@ cell content can go in here
 
         $objTrim = $this->getObject('trimstr', 'strings');
         $objStories=$this->getObject('storyparser');
-        $data= $objStories->getStory($id);
+        $data= $this->topics->getTopic($id);
         $topicsnavid=$this->objDbSysconfig->getValue('TOPICS_NAV_CATEGORY','jukskei');
-        $topicnavs=$this->storyparser->getStoryByCategory($topicsnavid);
+        $topicnavs=$this->topics->getTopics();
         $link = new link ($this->uri(array('action'=>'home')));
         $link->link = 'HOME&nbsp;&nbsp;|&nbsp;&nbsp;';
         $navbar=$link->show();
@@ -227,7 +230,7 @@ cell content can go in here
             $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
         $articlenav='';
-        $articles=$this->storyparser->getArticleByAbstract(str_replace("'", "\'", $data['title']));
+        $articles=$this->articles->getArticles($id);
          foreach($articles as $nav) {
             $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$id,'articleid'=>$nav['id'])));
             $link->link = $nav['title'];
@@ -241,7 +244,7 @@ cell content can go in here
              <font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><hr>
        
              Articles: <font style="font-family:Arial;font-size:18;">  '.$articlenav.'</font><br/>
-             '.$this->objWashout->parseText($data['maintext']).'
+             '.$this->objWashout->parseText($data['content']).'
 
             </ul>
             <br/>
@@ -253,12 +256,12 @@ cell content can go in here
 
         $objTrim = $this->getObject('trimstr', 'strings');
         $objStories=$this->getObject('storyparser');
-        $data= $objStories->getStory($articleid);
-        $storydata= $objStories->getStory($storyid);
+        $data= $this->articles->getArticle($articleid);
+        $storydata= $this->topics->getTopic($storyid);
         $storylink=new link ($this->uri(array('action'=>'viewstory','storyid'=>$storyid)));
         $storylink->link=$storydata['title'];
         $topicsnavid=$this->objDbSysconfig->getValue('TOPICS_NAV_CATEGORY','jukskei');
-        $topicnavs=$this->storyparser->getStoryByCategory($topicsnavid);
+        $topicnavs=$this->topics->getTopics();
         $link = new link ($this->uri(array('action'=>'home')));
         $link->link = 'HOME&nbsp;&nbsp;|&nbsp;&nbsp;';
         $navbar=$link->show();
@@ -268,7 +271,7 @@ cell content can go in here
             $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
         $articlenav='';
-       $articles=$this->storyparser->getArticleByAbstract(str_replace("'", "\'",$storydata['title']));
+       $articles=$this->articles->getArticles($storyid);
          foreach($articles as $nav) {
             $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$storyid,'articleid'=>$nav['id'])));
             $link->link = $nav['title'];
@@ -283,7 +286,7 @@ cell content can go in here
              <b style="font-family:Arial;font-size:24;">Topic: '.$storylink->show().'</b><br/>
              <b style="font-family:Arial;font-size:24;">'.$data['title'].'&nbsp; |&nbsp;</b>
              <font style="font-family:Arial;font-size:18;">  '.$articlenav.'</font>
-             '.$this->objWashout->parseText($data['maintext']).'
+             '.$this->objWashout->parseText($data['content']).'
 
             </ul>
             <br/>
