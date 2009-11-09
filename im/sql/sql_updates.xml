@@ -82,7 +82,7 @@
     </update>
     <update>
         <table>tbl_im_presence</table>
-        <version>0.195</version>
+        <version>0.196</version>
         <description>Added new field</description>
         <data>
             <add>

@@ -317,6 +317,29 @@ class dbimpresence extends dbTable
             }
         }
 		
+           /**
+         *Method to check if a contact is hidden or not
+         *@param string personId
+         *@return boolean
+         */
+        public function needsReply($personId)
+        {
+            
+            $row = $this->getRow('person', $personId);
+            if($row['needs_reply'] == 1)
+            {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        }
+        
+        public function setHasReplied($personId)
+        {
+        	return $this->update('person', $personId, array('needs_reply' => 0), 'tbl_im_presence');   
+        }
+		
+        
 		 /**
          *Method to check if a contact is hidden or not
          *@param string personId

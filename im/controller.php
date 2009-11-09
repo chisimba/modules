@@ -173,7 +173,8 @@ class im extends controller {
 
                 // update the message now with the reply for bookkeeping purposes
                 $this->objDbIm->saveReply ( $msgid, $msg );
-
+				$this->objDbImPres->setHasReplied($user2send);
+				
                 echo $this->objLanguage->languageText ( 'mod_im_msgsent', 'im', 'Message Sent!' );
                 break;
 
