@@ -95,7 +95,7 @@ $objIcon->setIcon('loader');
                                     jQuery("#submitbutton").removeAttr("disabled");
 
                                 // Else
-                                } else {
+                                } else if(msg == "notok") {
                                     jQuery("#contextcodemessage2").html("Button is Disabled");
                                     jQuery("#contextcodemessage2").addClass("error");
                                     jQuery("#contextcodemessage").html("That folder does not contain a scorm course");
@@ -103,6 +103,14 @@ $objIcon->setIcon('loader');
                                     jQuery("#input_parentfolder").addClass("inputerror");
                                     jQuery("#contextcodemessage").removeClass("success");
                                     jQuery("#submitbutton").attr("disabled", "disabled");                                    
+                                } else {
+                                    jQuery("#contextcodemessage2").html("Button is Disabled");
+                                    jQuery("#contextcodemessage2").addClass("error");
+                                    jQuery("#contextcodemessage").html("Unknown error! Kindly select another folder");
+                                    jQuery("#contextcodemessage").addClass("error");
+                                    jQuery("#input_parentfolder").addClass("inputerror");
+                                    jQuery("#contextcodemessage").removeClass("success");
+                                    jQuery("#submitbutton").attr("disabled", "disabled");                                
                                 }
                                 
                             }
