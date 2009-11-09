@@ -202,7 +202,7 @@ $form->addToForm($hiddeninput->show());
 $button = new button('submitbutton', $this->objLanguage->languageText('mod_contextcontent_chapter','contextcontent'));
 $button->cssId = 'submitbutton';
 $button->setToSubmit();
-$form->addToForm($button->show().' <pre id="contextcodemessage2">'.$contextCodeMessage.'</pre>');
+$form->addToForm($button->show().' <pre id="contextcodemessage2">'.$contextCodeMessage.'</pre><br /><br /><br />');
 
 if ($mode == 'edit') {
     $hiddeninput = new hiddeninput('id', $id);
