@@ -18,5 +18,5 @@ $cssLayout->setLeftColumnContent( $postLoginMenu->show());
 $cssLayout->setMiddleColumnContent( $rightSideColumn);
 
 //Output the content to the page
-echo $cssLayout->show();
+echo $sessionmanager->showTopicMembersList($topicid);
 ?>
