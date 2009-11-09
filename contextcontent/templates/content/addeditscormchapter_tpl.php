@@ -20,10 +20,12 @@ $objIcon->setIcon('loader');
         
         // Var Current Entered Code
         var currentCode;
+        var sitepath;
         
         // Action to be taken once page has loaded
         jQuery(document).ready(function(){
             jQuery("#input_parentfolder").bind(\'change\', function() {
+                sitepath = jQuery("#input_sitepath").val();
                 checkCode(jQuery("#input_parentfolder").attr(\'value\'));
             });
         });
@@ -73,10 +75,10 @@ $objIcon->setIcon('loader');
                     // Set current Code
                     currentCode = code;
                     
-                    // DO Ajax
+                    // DO Ajax sitepath 
                     jQuery.ajax({
                         type: "GET", 
-                        url: "index.php", 
+                        url: sitepath, 
                         data: "module=scorm&action=checkfolder&code="+code, 
                         success: function(msg){                        
                             // Check if messages can be updated and code remains the same
@@ -123,6 +125,8 @@ if ($mode == 'edit') {
 $form = new form ('addscorm', $this->uri(array('action'=>$formaction)));
 $table = $this->newObject('htmltable', 'htmlelements');
 
+$sysSiteRoot = $this->objConfig->getsiteRoot()."index.php";
+$sitepathtitle = new textinput('sitepath',$sysSiteRoot,"hidden",10);
 $title = new textinput('chapter');
 $form->addRule('chapter', 'Title is required','required');
 $title->size = 60;
@@ -134,7 +138,7 @@ if ($mode == 'edit') {
 $label = new label ($this->objLanguage->languageText('mod_scorm_scormtitle','scorm'), 'input_chapter');
 $table->startRow();
 $table->addCell($label->show(), 150);
-$table->addCell($title->show());
+$table->addCell($title->show().$sitepathtitle->show());
 $table->endRow();
 //spacer
 $table->startRow();
