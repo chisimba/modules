@@ -98,7 +98,7 @@ $str = "$num$outof users";
 
 $middleColumn .= $header->show().'<br/>'.$config.'  '.$refreshLink->show().'<br/>'.$str;
 //$middleColumn .= '<div id="conversations"><span class="subdued"><i><h3>Loading....'.$loadIcon->show().'</h3></i></span></div>'; 
-$middleColumn .=$objImView->renderOutputForBrowser($msgs);
+$middleColumn .=$objImView->renderOutputForBrowser($msgs).'<br/>'.$refreshLink->show();
 
 
 if (!$this->objUser->isLoggedIn()) {

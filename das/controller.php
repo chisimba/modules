@@ -145,6 +145,7 @@ class das extends controller {
 
             case 'viewcounsilors':
                 $this->setVar('users', $this->objUser->getAll());
+                //die('here');
                 return 'counsilors_tpl.php';
             case 'addcounsilor':
                 $this->objIMUsers->addCounsilor($this->getParam('userid'));
@@ -173,6 +174,7 @@ class das extends controller {
             		
 			case 'viewarchive':
 				echo $this->objViewRender->getArchivedMessages($this->getParam('personid'));
+				exit(0);
 				break;
 				
             case 'reply' :
@@ -190,8 +192,10 @@ class das extends controller {
 
                 // update the message now with the reply for bookkeeping purposes
                 $this->objDbIm->saveReply ( $msgid, $msg );
+                
 
                 echo $this->objLanguage->languageText ( 'mod_im_msgsent', 'im', 'Message Sent!' );
+                exit(0);
                 break;
 
             case 'massmessage' :
@@ -218,7 +222,7 @@ class das extends controller {
                 $conn2->disconnect ();
 
                 echo "Messages were sent to ".count($users)." users";
-
+				exit(0);
                 break;
             case 'sendtoall':
             	$this->objImOps->sendToAll($this->getParam('message'));
@@ -274,6 +278,7 @@ class das extends controller {
 				$objAlias = $this->getObject('dbalias', 'das');
 				$objAlias->addAlias($this->getParam('personid'), $this->getParam('myparam'));
 				echo $this->getParam('myparam');
+				exit(0);
 				break;
 				
 			case "sendfeedback":				
@@ -283,7 +288,7 @@ class das extends controller {
 				} else {
 					echo "There was an error send the feedback. Please information the site Administrator";
 				}
-				
+				exit(0);
 				break;
 			default :
 					die ( "unknown action" );

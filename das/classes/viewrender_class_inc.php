@@ -116,7 +116,8 @@ class viewrender extends object {
         //loop the conversations
         foreach ( $msgs as $msg ) {
             $box = "";
-            
+            $replyIcon = "";
+
             $fuser = $msg ['person'];
             //$msgid = $msg ['id'];
            
@@ -136,6 +137,9 @@ class viewrender extends object {
 			
 				$this->objIcon->setIcon('minus');
 				$hiddenIcon = $this->objIcon->show();
+				
+				$this->objIcon->setIcon('icq_on');
+				$replyIcon = $this->objIcon->show();
 				
 				$this->objLink->href = $this->uri(array('action' => 'hidecontact', 'personid' => $fuser), 'das');
 				$this->objLink->link = $hiddenIcon;
@@ -192,8 +196,14 @@ class viewrender extends object {
 				
 				$pres = $this->getPresenceIndicator($msg['person']);
 				
-				$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
-				$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;'.$pres.'&nbsp;<b>' .$this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p>';
+				//if ($this->objDbImPres->needsReply($msg['person']))
+				//{
+				//	$divClass = "im_replyneeded";
+				//} else {
+					$divClass = "im_default";
+				//}
+				$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="'.$divClass.'" >' ;
+				$box .= '<p class="im_source">'.$replyIcon."&nbsp;".$hidden.'&nbsp;&nbsp;&nbsp;'.$pres.'&nbsp;<b>' .$this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p>';
 				$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">'   . $prevmessages . '</p><p>' . $ajax . '</p></div>';
 				$box .= '</td>';
 			}
@@ -347,6 +357,9 @@ class viewrender extends object {
 		{
 			
 			$anchor = $this->getObject('link', 'htmlelements');
+			$icon = $this->getObject('geticon', 'htmlelements');
+			$icon->setIcon('icq_on');
+
 			$str = '	<ul>';                                            
 			$class = ' class="first" ';
 
@@ -362,7 +375,13 @@ class viewrender extends object {
 				}
 				$anchor->link = $link;
 				
-				$str .="<li>".$anchor->show()."</li>";
+				if ($this->objDbImPres->needsReply($msg['person']))
+				{
+					$replyIcon = $icon->show();
+				} else {
+					$replyIcon = "";
+				}
+				$str .="<li>".$replyIcon." ".$anchor->show()."</li>";
 
 				$class = "  class=\"personalspace\" ";
 

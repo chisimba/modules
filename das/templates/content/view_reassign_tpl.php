@@ -14,8 +14,11 @@ $form = $this->newObject('form' , 'htmlelements');
 $objCounsellorBox->name = "counsellorbox";
 $objCounsellorBox->setBreakSpace('table');
 $objCounsellorBox->cssClass = "radio1";
+
+$r = "";
 foreach ($this->objIMUsers->getAll() as $counsellor)
 {
+	$r .= '<div>';
 	if($this->objUser->userId() != $counsellor['userid'])
 	{
 		$objCounsellorBox->addOption($counsellor['userid'],
