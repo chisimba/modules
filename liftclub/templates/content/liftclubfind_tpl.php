@@ -22,29 +22,6 @@ $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examp
 $this->appendArrayVar('headerParams', $ext);
 
 
-echo '<br /><p>Karibu! Welcome!</p><br />';
+echo '<div id="find-grid"></div><br /><br />';
 
-$registerLink =new link($this->uri(array('action'=>'startregister')));
-$registerLink->link = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
-$registerLink->title = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
-
-$modifyLink =new link($this->uri(array('action'=>'modifydetails')));
-$modifyLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
-$modifyLink->title = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
-
-$offerLink =new link($this->uri(array('action'=>'offeredlifts')));
-$offerLink->link = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
-$offerLink->title = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
-
-//$homeLink =new link($this->uri(array('module' => 'liftclub', 'action' => 'jsongetlifts', 'userneed' => 'find')));
-$homeLink =new link($this->uri(array('action'=>'liftclubhome')));
-$homeLink->link = $this->objLanguage->languageText("mod_liftclub_liftclubhome","liftclub","Lift Club Home");
-$homeLink->title = $this->objLanguage->languageText("mod_liftclub_liftclubhome","liftclub","Lift Club Home");
-
-if($this->objUser->userId()!==null){
-echo $modifyLink->show()." | ".$offerLink->show()." | ".$homeLink->show();
-}else{
-echo $registerLink->show();
-}
-echo '<br /><br /><div id="find-grid"></div><br /><br />';
 ?>
