@@ -183,7 +183,7 @@ class jukskei extends controller {
         return "addeditarticle_tpl.php";
 
     }
-    function __saveTopic() {
+    function __savetopic() {
         $content=$this->getParam('pagecontent');
         $title=$this->getParam('titlefield');
         $topicid=$this->dbtopics->saveTopic($title,$content);
@@ -238,10 +238,17 @@ class jukskei extends controller {
         return "addedittopic_tpl.php";
     }
 
-    function __deleteTopic() {
+    function __deletetopic() {
         $topicid=$this->getParam('topicid');
         $this->dbtopics->deleteTopic($topicid);
         return $this->nextAction('storyadmin');
+    }
+    function __deletearticle() {
+        $topicid=$this->getParam('articleid');
+        $this->articles->deleteArticle($articleid);
+        $topicid=$this->getParam('topicid');
+        $this->setVarByRef('topicid',$topicid);
+        return "articlelist_tpl.php";
     }
     function __editarticle() {
         $articleid=$this->getParam('articleid');

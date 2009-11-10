@@ -30,10 +30,12 @@ class dbarticles  extends dbTable {
         return $this->update('id',$articleid, $data);
     }
 
-
-    public function getArticle($id){
+    
+    public function getArticle($id) {
         return $this->getRow('id',$id);
     }
-
+    public function deleteArticle($id) {
+        return $this->delete('id',$id);
+    }
 }
 ?>

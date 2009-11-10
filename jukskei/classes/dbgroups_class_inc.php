@@ -42,7 +42,7 @@ class dbgroups  extends dbTable {
         $sql=" where userid = '$userid'";
         return $this->getAll($sql);
     }
-        public function deleteTopic($id) {
+    public function deletetopic($id) {
         return $this->delete('topicid',$id);
     }
 }

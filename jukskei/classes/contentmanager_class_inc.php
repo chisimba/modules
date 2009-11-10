@@ -111,9 +111,11 @@ class contentmanager extends object {
 
             $deleteLink=new link($this->uri(array('action'=>'deletetopic','topicid'=>$row['topicid'])));
             $objIcon->setIcon('delete');
+            $delValJS="deleteTopic(\'".$row['id']."\');return false;";
+            $objIcon->extra = 'onClick="'.$delValJS.'"';
             $deleteLink->link=$objIcon->show();
 
-
+            $objIcon= $this->newObject('geticon','htmlelements');
             $editLink=new link($this->uri(array('action'=>'edittopic','topicid'=>$row['topicid'])));
             $objIcon->setIcon('edit');
             $editLink->link=$objIcon->show();
@@ -303,18 +305,20 @@ window.location=\''.str_replace('amp;','', $addtopicurl).'\';
         foreach($dbdata as $row) {
 
 
-            $deleteLink=new link($this->uri(array('action'=>'deletearticle','articleid'=>$row['id'])));
+            $deleteLink=new link($this->uri(array('action'=>'deletearticle','articleid'=>$row['id'],'topicid'=>$topicid)));
             $objIcon->setIcon('delete');
+            $delValJS="deleteArticle(\'".$row['id']."\',\'".$topicid."\');return false;";
+            $objIcon->extra = 'onClick="'.$delValJS.'"';
             $deleteLink->link=$objIcon->show();
 
-
+             $objIcon= $this->newObject('geticon','htmlelements');
             $editLink=new link($this->uri(array('action'=>'editarticle','articleid'=>$row['id'],'topicid'=>$topicid)));
             $objIcon->setIcon('edit');
             $editLink->link=$objIcon->show();
 
             $data.="[";
             $data.= "'".addslashes($row['title'])."',";
-            $data.="'".$editLink->show().$deleteLink->show()."'";
+            $data.="'".$editLink->show().'&nbsp;&nbsp;&nbsp;'.$deleteLink->show()."'";
             $data.="],";
 
         }

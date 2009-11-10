@@ -1,6 +1,28 @@
 var userField;
 var addMemberForm;
 
+
+function deleteTopic(topicid){
+
+Ext.MessageBox.confirm('Delete Topic?', 'Are you sure you want to delete this topic?', function(btn){
+
+  if (btn == 'yes') {
+    window.location.href='?module=jukskei&action=deletetopic'+'&topicid='+topicid;
+  }
+
+});
+}
+
+function deleteArticle(articleid,topicid){
+
+Ext.MessageBox.confirm('Delete Article?', 'Are you sure you want to delete this article?', function(btn){
+
+  if (btn == 'yes') {
+    window.location.href='?module=jukskei&action=deletearticle'+'&articleid='+articleid+"&topicid="+topicid;
+  }
+
+});
+}
 function showTopics(data){
 
 var xg = Ext.grid;
