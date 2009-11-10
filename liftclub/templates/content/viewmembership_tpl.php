@@ -110,22 +110,26 @@ $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_r
 $form = new form ('viewdetails', $this->uri(array('action'=>'liftclubhome', 'id'=>$id, 'originid'=>$originid, 'destinyid'=>$destinyid, 'detailsid'=>$detailsid)));
 
 $messages = array();
-//Add to favourite
-$addfav = new checkbox('addtofav',null,false);
-$favUsrId = new textinput('favusrid',null,'hidden');
-$favUsrId->value = $this->getParam('liftuserid');
-$sysSiteRoot = $this->objConfig->getsiteRoot()."index.php";
-$sitepathtitle = new textinput('sitepath',$sysSiteRoot,"hidden",10);
-$table = $this->newObject('htmltable', 'htmlelements');
-$table->startRow();
-$table->addCell("<br /><div id='favmessage2'><b>".$this->objLanguage->languageText('mod_liftclub_addfavourite', 'liftclub', "Add to favourite")."? ".$addfav->show()." </b></div>".$favUsrId->show().$sitepathtitle->show(), 150, 'top', 'left');
-$table->endRow();
-$table->startRow();
-$table->addCell("<br /><div id='favmessage'> </div>", 150, 'top', 'left');
-$table->endRow();
+//Get userid
+$thisuserid = $this->objUser->userId();
+//Add to favourite if logged in
+if(!empty($thisuserid)){
+	$addfav = new checkbox('addtofav',null,false);
+	$favUsrId = new textinput('favusrid',null,'hidden');
+	$favUsrId->value = $this->getParam('liftuserid');
+	$sysSiteRoot = $this->objConfig->getsiteRoot()."index.php";
+	$sitepathtitle = new textinput('sitepath',$sysSiteRoot,"hidden",10);
+	$table = $this->newObject('htmltable', 'htmlelements');
+	$table->startRow();
+	$table->addCell("<br /><div id='favmessage2'><b>".$this->objLanguage->languageText('mod_liftclub_addfavourite', 'liftclub', "Add to favourite")."? ".$addfav->show()." </b></div>".$favUsrId->show().$sitepathtitle->show(), 150, 'top', 'left');
+	$table->endRow();
+	$table->startRow();
+	$table->addCell("<br /><div id='favmessage'> </div>", 150, 'top', 'left');
+	$table->endRow();
 
-$form->addToForm($table->show());
-$form->addToForm('<br />');
+	$form->addToForm($table->show());
+	$form->addToForm('<br />');
+}
 //Add user info
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
@@ -140,7 +144,7 @@ $table->startRow();
 $needLabel = new label($this->objLanguage->languageText('phrase_iwanto', 'liftclub', 'I want to'));
 $table->addCell("<b>".$needLabel->show().": </b>", 150, 'top', 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($userneed." ".$needtype);
+$table->addCell($userneed." - ".$needtype);
 $table->endRow();
 
 
