@@ -57,7 +57,7 @@ class jukskei extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('login');
+        $required = array('login','storyadmin');
 
 
         if (in_array($action, $required)) {
@@ -264,5 +264,7 @@ class jukskei extends controller {
         $this->setVarByRef('topicid',$topicid);
         return "articlelist_tpl.php";
     }
+
+ 
 }
 ?>
