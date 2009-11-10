@@ -54,6 +54,23 @@ class dbLiftclub_favourites extends dbTable
     }
     /**
      * Return records
+     * @param string $userid User ID
+     * @param string $favoureduserid Favoured User ID
+     * @return boolean
+     */
+    function checkIfExists($userid, $favoureduserid) 
+    {
+        $sql = "SELECT * FROM tbl_liftclub_favourites WHERE userid = '" . $userid . "' AND favoureduserid = '" . $favoureduserid . "'";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Return records
      * @param string $favoureduserid Favoured User ID
      * @return array The values
      */

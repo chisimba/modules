@@ -1,24 +1,3 @@
-<script type="text/javascript">
-//<![CDATA[
-function init () {
-    $('input_redraw').onclick = function () {
-        redraw();
-    }
-}
-function redraw () {
-    var url = 'index.php';
-    var pars = 'module=security&action=generatenewcaptcha';
-    var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
-}
-function showLoad () {
-    $('load').style.display = 'block';
-}
-function showResponse (originalRequest) {
-    var newData = originalRequest.responseText;
-    $('captchaDiv').innerHTML = newData;
-}
-//]]>
-</script>
 <?php
 // check if the site signup user string is set, if so, use it to populate the fields
 
@@ -38,22 +17,88 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objIcon->setIcon('loader');
+
 $this->appendArrayVar('headerParams', '
-	<script type="text/javascript">
-		var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'liftclub', 'action' => 'jsongetcities'))).'"; 
- </script>');
-
-//Ext stuff
-$ext = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
-$ext .=$this->getJavaScriptFile('extjsgetcity.js', 'liftclub');
-$ext .=$this->getJavaScriptFile('extjsgetcityb.js', 'liftclub');
-//$ext .=$this->getJavaScriptFile('forum-search.js', 'rimfhe');
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('combos.css', 'liftclub').'"type="text/css" />';
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
-$this->appendArrayVar('headerParams', $ext);
-
+    <script type="text/javascript">
+        
+        // Flag Variable - Update message or not
+        var doUpdateMessage = false;
+        
+        // Var Current Entered Code
+        var currentCode;
+        
+        // Action to be taken once page has loaded
+        jQuery(document).ready(function(){
+            jQuery("#input_addtofav").bind(\'change\', function() {
+                sitepath = jQuery("#input_sitepath").val();
+                checkCode(jQuery("#input_favusrid").attr(\'value\'));
+            });
+        });
+        
+        // Function to check whether context code is taken
+        function checkCode(code)
+        {
+            // Messages can be updated
+            doUpdateMessage = true;
+            
+            // If code is null
+            if (code == null) {
+                // Remove existing stuff
+                jQuery("#favmessage").html("Unfortunately there is a problem with that user");
+                jQuery("#favmessage").removeClass("error");
+                jQuery("#favmessage").removeClass("success");
+                doUpdateMessage = false;
+                                
+            // Else Need to do Ajax Call
+            } else {                
+                // Check that existing code is not in use
+                if (currentCode != code) {
+                    
+                    // Set message to checking
+                    jQuery("#favmessage").removeClass("success");
+                    jQuery("#favmessage").html("<span id=\"favusercheck\">'.addslashes($objIcon->show()).' Processing ...</span>");                                     
+                    // Set current Code
+                    currentCode = code;
+                    
+                    // DO Ajax 
+                    jQuery.ajax({
+                        type: "GET", 
+                        url: sitepath, 
+                        data: "module=liftclub&action=addfavourite&favusrid="+code, 
+                        success: function(msg){                        
+                            // Check if messages can be updated and code remains the same
+                            if (doUpdateMessage == true && currentCode == code) {
+                                
+                                // IF code exists
+                                if (msg == "ok") {
+                                    jQuery("#favmessage").html("Added to your favourites successfully!");
+                                    jQuery("#favmessage2").html(" ");
+                                    jQuery("#favmessage").addClass("success");
+                                    jQuery("#favmessage").removeClass("error");
+                                } else if (msg == "exists") {
+                                    jQuery("#favmessage").html("Already part of your favourites!");
+                                    jQuery("#favmessage2").html(" ");
+                                    jQuery("#favmessage").addClass("success");
+                                    jQuery("#favmessage").removeClass("error");
+                                } else if (msg == "notlogged") {
+                                    jQuery("#favmessage").addClass("error");
+                                    jQuery("#favmessage").html("kindly log in to be able to add lift to favourites!");
+                                    jQuery("#favmessage2").html(" ");
+                                // Else
+                                } else {
+                                    jQuery("#favmessage").html("Unexpected error occured!");
+                                    jQuery("#favmessage").addClass("error");
+                                }
+                                
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>');
 $header = new htmlheading();
 $header->type = 1;
 $header->str = $this->objLanguage->languageText("mod_liftclub_viewdetails", 'liftclub', "View Member Details");
@@ -65,7 +110,23 @@ $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_r
 $form = new form ('viewdetails', $this->uri(array('action'=>'liftclubhome', 'id'=>$id, 'originid'=>$originid, 'destinyid'=>$destinyid, 'detailsid'=>$detailsid)));
 
 $messages = array();
+//Add to favourite
+$addfav = new checkbox('addtofav',null,false);
+$favUsrId = new textinput('favusrid',null,'hidden');
+$favUsrId->value = $this->getParam('liftuserid');
+$sysSiteRoot = $this->objConfig->getsiteRoot()."index.php";
+$sitepathtitle = new textinput('sitepath',$sysSiteRoot,"hidden",10);
+$table = $this->newObject('htmltable', 'htmlelements');
+$table->startRow();
+$table->addCell("<br /><div id='favmessage2'><b>".$this->objLanguage->languageText('mod_liftclub_addfavourite', 'liftclub', "Add to favourite")."? ".$addfav->show()." </b></div>".$favUsrId->show().$sitepathtitle->show(), 150, 'top', 'left');
+$table->endRow();
+$table->startRow();
+$table->addCell("<br /><div id='favmessage'> </div>", 150, 'top', 'left');
+$table->endRow();
 
+$form->addToForm($table->show());
+$form->addToForm('<br />');
+//Add user info
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $usernameLabel = new label($this->objLanguage->languageText('word_username', 'system'));

@@ -42,6 +42,7 @@ class liftclub extends controller
         $this->objDBDestiny = $this->getObject('dbliftclub_destiny', 'liftclub');
         $this->objDBDetails = $this->getObject('dbliftclub_details', 'liftclub');
         $this->objLiftSearch = $this->getObject('search_liftclub', 'liftclub');
+        $this->objFavourites = $this->getObject('dbliftclub_favourites', 'liftclub');
     }
     /**
      * Method to turn off login requirement for all actions in this module
@@ -93,6 +94,8 @@ class liftclub extends controller
                     return $this->saveNewUser();
                 case 'updateregister':
                     return $this->updateUser();
+                case 'addfavourite':
+                    return $this->addFavourite();
                 case 'detailssent':
                     return $this->detailsSent();
                 case 'invitefriend':
@@ -489,6 +492,29 @@ class liftclub extends controller
             //$this->setSession('password', $password);
             $this->setSession('time', $password);
             return $this->nextAction('detailssent');
+        }
+    }
+    /**
+     * Method to add favourites
+     */
+    protected function addFavourite(){
+        $this->setPageTemplate(NULL);
+        $this->setLayoutTemplate(NULL);
+        // Capture all Submitted Fields
+        $userid = $this->objUser->userId();
+        $favusrid = $this->getParam('favusrid');
+        if(!empty($userid) && !empty($favusrid)){
+         $recexists = $this->objFavourites->checkIfExists($userid, $favusrid);
+         if($recexists==TRUE){
+          echo 'exists';
+         }else{
+          $id = $this->objFavourites->insertSingle($userid, $favusrid);
+          echo 'ok';
+         }
+        }elseif(!empty($userid)){
+         echo 'notok';
+        }else{
+         echo 'notlogged';
         }
     }
     /**
