@@ -55,6 +55,7 @@ class viewerutils extends object {
 
 
 </div>';
+       
 
         return $content;
     }
@@ -150,70 +151,6 @@ class viewerutils extends object {
         return $content;
     }
 
-    public function getArticlesContent($topic, $title) {
-
-        $this->loadClass('link', 'htmlelements');
-        $objTrim = $this->getObject('trimstr', 'strings');
-        $objStories=$this->getObject('storyparser');
-
-        $title == '' ?'Living off the river':$title;
-        $articlecontent=$objStories->getStoryByTitle($title,'juk_articles');
-        $content='';
-        $topiclink1=new link($this->uri(array("title"=>'Living off the river','action'=>'viewtopic')));
-        $topiclink1->link='Living off the river';
-
-        $topiclink2=new link($this->uri(array("title"=>"Jukskeis past and present",'action'=>'viewtopic')));
-        $topiclink2->link="Jukskei's past and present";
-
-        $topiclink3=new link($this->uri(array("title"=>'Environment and water','action'=>'viewtopic')));
-        $topiclink3->link='Environment and water';
-
-
-
-        $homepagetitle=$link1->show().'&nbsp;|&nbsp;'.$link2->show().'&nbsp;|&nbsp;'.$link3->show();
-        $content='
-            <h4>'.$homepagetitle.'</h4>
-
-            <ul class="paneltabs">
-
-            '.$articlecontent.'
-
-            </ul>
-            <br/>
-              ';
-        $content.='<div class="sectionstats">';
-        $content.='<div class="subcolumns">';
-        $content.='</div">';
-        $content.='</div">';
-        return $content;
-    }
-    public function createCell($colType) {
-        $str='<div class="'.$colType.'">
-              <div class="subcl">
-              <div class="sectionstats_content">
-
-              <div class="statslistcontainer">
-
-              <ul class="statslist">
-
-              <li class="sectionstats_first">
-              cell content can go in here
-            cell content can go in here
-cell content can go in here
-cell content can go in here
-cell content can go in here
- <br/><br/></br><br/><br/><br/><br/><br/><br/>
-              </li>
-
-              </ul>
- <div class="clear"></div>
-
-              </div>
-              </div>
-              </div>
-              </div>';
-        return $str;
-    }
     public function getTopic($id) {
 
         $objTrim = $this->getObject('trimstr', 'strings');
@@ -231,7 +168,7 @@ cell content can go in here
         }
         $articlenav='';
         $articles=$this->articles->getArticles($id);
-         foreach($articles as $nav) {
+        foreach($articles as $nav) {
             $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$id,'articleid'=>$nav['id'])));
             $link->link = $nav['title'];
             $articlenav.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
@@ -252,7 +189,7 @@ cell content can go in here
 
         return $content;
     }
-   public function getArticleContent($storyid,$articleid) {
+    public function getArticleContent($storyid,$articleid) {
 
         $objTrim = $this->getObject('trimstr', 'strings');
         $objStories=$this->getObject('storyparser');
@@ -271,8 +208,8 @@ cell content can go in here
             $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
         $articlenav='';
-       $articles=$this->articles->getArticles($storyid);
-         foreach($articles as $nav) {
+        $articles=$this->articles->getArticles($storyid);
+        foreach($articles as $nav) {
             $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$storyid,'articleid'=>$nav['id'])));
             $link->link = $nav['title'];
             $articlenav.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
@@ -291,8 +228,16 @@ cell content can go in here
             </ul>
             <br/>
               ';
-
-        return $content;
+ //footer
+        $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','jukskei');
+        $topnavs=$this->storyparser->getStoryByCategory($topcatid);
+        $footer='';
+        foreach($topnavs as $nav) {
+            $link=new link($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
+            $link->link=$nav['title'];
+            $footer.='&nbsp;&nbsp|'.$footer;
+        }
+        return $content.'<center>'.$footer.'</center>';
     }
 
 }
