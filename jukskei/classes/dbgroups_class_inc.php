@@ -42,5 +42,8 @@ class dbgroups  extends dbTable {
         $sql=" where userid = '$userid'";
         return $this->getAll($sql);
     }
+        public function deleteTopic($id) {
+        return $this->delete('topicid',$id);
+    }
 }
 ?>

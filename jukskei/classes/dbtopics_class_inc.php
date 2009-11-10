@@ -32,9 +32,13 @@ class dbtopics  extends dbTable {
         return $this->getRow('id',$topicid);
     }
 
-    public function getTopic($id){
+    public function getTopic($id) {
         return $this->getRow('id',$id);
     }
-
+    public function deleteTopic($id) {
+        $groups=$this->getObject('dbgroups');
+        $groups->deleteTopic($id);
+        return $this->delete('id',$id);
+    }
 }
 ?>

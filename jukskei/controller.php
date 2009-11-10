@@ -237,6 +237,12 @@ class jukskei extends controller {
         $this->setVarByRef('topicid',$topicid);
         return "addedittopic_tpl.php";
     }
+
+    function __deleteTopic() {
+        $topicid=$this->getParam('topicid');
+        $this->dbtopics->deleteTopic($topicid);
+        return $this->nextAction('storyadmin');
+    }
     function __editarticle() {
         $articleid=$this->getParam('articleid');
         $this->setVarByRef('mode','edit');

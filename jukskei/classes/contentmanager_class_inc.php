@@ -125,14 +125,16 @@ class contentmanager extends object {
             $articleLink->link=addslashes($topicdata['title']);
 
             $membersLink="";
+            $deleteTxt="";
             if($this->objUser->isAdmin()) {
                 $membersLink=$detailsLink->show();
+                $deleteTxt=$deleteLink->show();
             }
             $data.="[";
             $data.= "'".$articleLink->show()."',";
             $data.="'".$membersLink."',";
             $data.="'owner',";
-            $data.="'".$editLink->show()."'";
+            $data.="'".$editLink->show().$deleteTxt."'";
             $data.="],";
 
         }
