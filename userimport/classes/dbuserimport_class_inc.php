@@ -127,11 +127,12 @@ class dbuserimport extends dbTable
     function listBatch($contextCode)
     {
         $sql1="select distinct batchId,creationDate,contextCode from tbl_importusers";
-        if ($this->objUser->isAdmin()){
-            $sql2=" order by batchId";
-        } else {
+         // jsc says: removing feature of Admin user seeing ALL imports for now - might put it back later.
+        //if ($this->objUser->isAdmin()){
+        //    $sql2=" order by batchId";
+        //} else {
             $sql2=" where contextCode='$contextCode' order by batchId";
-        }
+        //}
         $info=$this->getArray($sql1.$sql2);
         return $info;
     }
