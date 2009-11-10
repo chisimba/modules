@@ -55,7 +55,7 @@ class viewerutils extends object {
 
 
 </div>';
-       
+
 
         return $content;
     }
@@ -214,6 +214,15 @@ class viewerutils extends object {
             $link->link = $nav['title'];
             $articlenav.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
+        //footer
+        $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','jukskei');
+        $topnavs=$this->storyparser->getStoryByCategory($topcatid);
+        $footer='';
+        foreach($topnavs as $nav) {
+            $link=new link($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
+            $link->link=$nav['title'];
+            $footer.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
+        }
         $content='';
         $content='
 
@@ -224,20 +233,12 @@ class viewerutils extends object {
              <b style="font-family:Arial;font-size:24;">'.$data['title'].'&nbsp; |&nbsp;</b>
              <font style="font-family:Arial;font-size:18;">  '.$articlenav.'</font>
              '.$this->objWashout->parseText($data['content']).'
-
+             <center>'.$footer.'</center>
             </ul>
             <br/>
               ';
- //footer
-        $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','jukskei');
-        $topnavs=$this->storyparser->getStoryByCategory($topcatid);
-        $footer='';
-        foreach($topnavs as $nav) {
-            $link=new link($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
-            $link->link=$nav['title'];
-            $footer.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
-        }
-        return $content.'<center>'.$footer.'</center>';
+
+        return $content;
     }
 
 }
