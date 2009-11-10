@@ -35,6 +35,13 @@ $this->appendArrayVar('headerParams', '
                 sitepath = jQuery("#input_sitepath").val();
                 checkCode(jQuery("#input_favusrid").attr(\'value\'));
             });
+            jQuery("#button_submitmessage").bind(\'click\', function() {
+                sitepath = jQuery("#input_sitepath").val();
+                recipentid = jQuery("#input_favusrid").attr(\'value\');
+                messagetitle = jQuery("#input_msgtitle").attr(\'value\');
+                messagebody = jQuery("#input_msgbody").attr(\'value\');
+                sendmessage(recipentid, messagetitle, messagebody);
+            });
         });
         
         // Function to check whether context code is taken
@@ -98,6 +105,74 @@ $this->appendArrayVar('headerParams', '
                 }
             }
         }
+        // Function to send message
+        function sendmessage(code, messagetitle, messagebody)
+        {
+            // Messages can be updated
+            doUpdateMessage = true;
+            
+            // If code is null
+            if (code == null) {
+                // Remove existing stuff
+                jQuery("#erroronsendmessage").html("Unfortunately there is a problem with that user");
+                jQuery("#erroronsendmessage").removeClass("error");
+                jQuery("#erroronsendmessage").removeClass("success");
+                doUpdateMessage = false;
+                                
+            // Else Need to do Ajax Call
+            } else if (messagetitle == null) {
+                // Remove existing stuff
+                jQuery("#erroronsendmessage").html("Title cannot be null");
+                jQuery("#erroronsendmessage").removeClass("error");
+                jQuery("#erroronsendmessage").removeClass("success");
+                doUpdateMessage = false;            
+            } else if (messagebody == null) {
+                // Remove existing stuff
+                jQuery("#erroronsendmessage").html("Title cannot be null");
+                jQuery("#erroronsendmessage").removeClass("error");
+                jQuery("#erroronsendmessage").removeClass("success");
+                doUpdateMessage = false;            
+            } else {                
+                // Check that existing code is not in use
+                if (currentCode != code) {
+                    
+                    // Set message to checking
+                    jQuery("#erroronsendmessage").removeClass("success");
+                    jQuery("#erroronsendmessage").html("<span id=\"favusercheck\">'.addslashes($objIcon->show()).' Sending ...</span>");                                     
+                    // Set current Code
+                    currentCode = code;
+                    
+                    // DO Ajax
+                    jQuery.ajax({
+                        type: "GET", 
+                        url: sitepath, 
+                        data: "module=liftclub&action=sendmessage&favusrid="+code+"&msgtitle="+messagetitle+"&msgbody="+messagebody, 
+                        success: function(msg){                        
+                            // Check if messages can be updated and code remains the same
+                            if (doUpdateMessage == true && currentCode == code) {
+                                
+                                // IF code exists
+                                if (msg == "ok") {
+                                    jQuery("#erroronsendmessage").html("Message sent successfully!");
+                                    jQuery("#erroronsendmessage").addClass("success");
+                                    jQuery("#erroronsendmessage").removeClass("error");
+                                    jQuery("#input_msgtitle").val("");
+                                    jQuery("#input_msgbody").val("");
+                                } else if (msg == "notlogged") {
+                                    jQuery("#erroronsendmessage").addClass("error");
+                                    jQuery("#erroronsendmessage").html("kindly log in to be able to send the message!");
+                                // Else
+                                } else {
+                                    jQuery("#erroronsendmessage").html("Unexpected error occured!"+messagebody+code+messagetitle+msg);
+                                    jQuery("#erroronsendmessage").addClass("error");
+                                }
+                                
+                            }
+                        }
+                    });
+                }
+            }
+        }
     </script>');
 $header = new htmlheading();
 $header->type = 1;
@@ -121,15 +196,54 @@ if(!empty($thisuserid)){
 	$sitepathtitle = new textinput('sitepath',$sysSiteRoot,"hidden",10);
 	$table = $this->newObject('htmltable', 'htmlelements');
 	$table->startRow();
-	$table->addCell("<br /><div id='favmessage2'><b>".$this->objLanguage->languageText('mod_liftclub_addfavourite', 'liftclub', "Add to favourite")."? ".$addfav->show()." </b></div>".$favUsrId->show().$sitepathtitle->show(), 150, 'top', 'left');
-	$table->endRow();
-	$table->startRow();
-	$table->addCell("<br /><div id='favmessage'> </div>", 150, 'top', 'left');
+	$table->addCell("<br /><div id='favmessage2'><b>".$this->objLanguage->languageText('mod_liftclub_addfavourite', 'liftclub', "Add to favourite")."? ".$addfav->show()." </b></div>".$favUsrId->show().$sitepathtitle->show(), 150, 'top', 'right');
+	$table->addCell("<br /><div id='favmessage'> </div>", NULL, 'top', 'left');
 	$table->endRow();
 
 	$form->addToForm($table->show());
 	$form->addToForm('<br />');
+
+//Send a message
+$table = $this->newObject('htmltable', 'htmlelements');
+$messageTitle = new textinput('msgtitle',NULL,NULL);
+$messageBody = new textarea($name='msgbody',$value='',$rows=4,$cols=50);
+$titleLabel = new label($this->objLanguage->languageText('mod_liftclub_messagetitle', 'liftclub', 'Title'));
+$bodyLabel = new label($this->objLanguage->languageText('mod_liftclub_messagebody', 'liftclub', 'Body'));
+$table->startRow();
+$table->addCell("<b>".$titleLabel->show().": </b>", 150, NULL, 'right');
+$table->addCell('&nbsp;', 5);
+$table->addCell($messageTitle->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell("<b>".$bodyLabel->show().": </b>", 150, 'top', 'right');
+$table->addCell('&nbsp;', 5);
+$table->addCell($messageBody->show());
+$table->endRow();
+
+$button = new button ('submitmessage', 'Send Message');
+$button->setId('button_submitmessage');
+$table->startRow();
+$table->addCell("&nbsp;", 150, 'top', 'right');
+$table->addCell('&nbsp;', 5);
+$table->addCell($button->show());
+$table->endRow();
+$table->startRow();
+$table->addCell("&nbsp;", 150, 'top', 'right');
+$table->addCell('&nbsp;', 5);
+$table->addCell("<div id='erroronsendmessage'> </div>");
+$table->endRow();
+
+
+$fieldset = $this->newObject('fieldset', 'htmlelements');
+$fieldset->legend = $this->objLanguage->languageText('mod_liftclub_sendmessage', 'liftclub', 'Send a Message')."?";
+$fieldset->contents = $table->show();
+
+$form->addToForm($fieldset->show());
+$form->addToForm('<br />');
+
 }
+
 //Add user info
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();

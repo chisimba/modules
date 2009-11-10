@@ -43,6 +43,7 @@ class liftclub extends controller
         $this->objDBDetails = $this->getObject('dbliftclub_details', 'liftclub');
         $this->objLiftSearch = $this->getObject('search_liftclub', 'liftclub');
         $this->objFavourites = $this->getObject('dbliftclub_favourites', 'liftclub');
+        $this->objMessages = $this->getObject('dbliftclub_messages', 'liftclub');
     }
     /**
      * Method to turn off login requirement for all actions in this module
@@ -94,6 +95,8 @@ class liftclub extends controller
                     return $this->saveNewUser();
                 case 'updateregister':
                     return $this->updateUser();
+                case 'sendmessage':
+                    return $this->sendMessage();
                 case 'addfavourite':
                     return $this->addFavourite();
                 case 'detailssent':
@@ -515,6 +518,26 @@ class liftclub extends controller
          echo 'notok';
         }else{
          echo 'notlogged';
+        }
+    }
+    /**
+     * Method to send a message
+     */
+    protected function sendMessage(){
+        $this->setPageTemplate(NULL);
+        $this->setLayoutTemplate(NULL);
+        // Capture all Submitted Fields
+        $userid = $this->objUser->userId();
+        $favusrid = $this->getParam('favusrid');
+        $msgtitle = $this->getParam('msgtitle');
+        $msgbody = $this->getParam('msgbody');
+        if(!empty($userid) && !empty($favusrid) && !empty($msgtitle) && !empty($msgbody)){
+         $sendmsg = $this->objMessages->insertSingle($userid, $favusrid, $msgtitle, $msgbody);
+         echo 'ok';
+        }elseif(empty($userid)){
+         echo 'notlogged';
+        }else{
+         echo 'notok';
         }
     }
     /**

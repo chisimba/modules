@@ -5,7 +5,7 @@ $tablename = 'tbl_liftclub_messages';
 //Options line for comments, encoding and character set
 $options = array('comment' => 'lift club messages', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
-// Fields
+// Fields 
 $fields = array(
 	'id' => array(
 		'type' => 'text',
@@ -33,7 +33,7 @@ $fields = array(
 		'length' => 150
 		),
 	'messagebody' => array(
-		'type' => 'blob'
+		'type' => 'text'
 		)
 	);
 ?>
