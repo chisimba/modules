@@ -235,7 +235,7 @@ class viewerutils extends object {
         foreach($topnavs as $nav) {
             $link=new link($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
             $link->link=$nav['title'];
-            $footer.='&nbsp;&nbsp|'.$footer;
+            $footer.='&nbsp;&nbsp|'.$link->show();
         }
         return $content.'<center>'.$footer.'</center>';
     }
