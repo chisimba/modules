@@ -102,7 +102,7 @@ class ocsinterfacetoolbar extends object {
 
 
         // Return Toolbar
-        return '<div id="nav-is" style="float:right;"><ul>'.$home.$str.'</ul></div>';
+        return '<div id="nav-is"><ul>'.$home.$str.'</ul></div>';
 
 
     }
