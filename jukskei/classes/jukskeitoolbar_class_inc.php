@@ -98,11 +98,11 @@ class jukskeitoolbar extends object {
         $usedDefault = $usedDefault ? FALSE: TRUE;
 
         // Add Home Link
-        $home = $this->generateItem(NULL, '_default', 'HOME', $usedDefault);
-
+         $preview= $this->generateItem('home', 'jukskei', 'PREVIEW', $usedDefault);
+         $home = $this->generateItem(NULL, '_default', 'HOME', $usedDefault);
 
         // Return Toolbar
-        return '<div class="chromestyle"><ul>'.$home.$str.'</ul></div>';
+        return '<div class="chromestyle"><ul>'.$home.$preview.$str.'</ul></div>';
 
 
     }
