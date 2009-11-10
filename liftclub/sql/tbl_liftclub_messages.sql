@@ -15,6 +15,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50
 		),
+	'recipentuserid' => array(
+		'type' => 'text',
+		'length' => 50
+		),
 	'timesent' => array(
 		'type' => 'timestamp'
 		),
