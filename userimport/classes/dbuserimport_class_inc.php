@@ -81,7 +81,7 @@ class dbuserimport extends dbTable
             }
         }
         // Uncomment below when doing a bulk-import of users
-        $this->addToUserGroup($students['Students'],'Students');
+        //$this->addToUserGroup($students['Students'],'Students');
         return $batchCode;
     }
 
