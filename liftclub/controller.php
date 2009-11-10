@@ -80,6 +80,8 @@ class liftclub extends controller
                     return $this->registrationHome();
                 case 'modifydetails':
                     return $this->modifyRegistration();
+                case 'viewlift':
+                    return $this->viewMembership();
                 case 'confirm':
                     $id = $this->getParam('newId');
                     if (!empty($id)) {
@@ -247,6 +249,73 @@ class liftclub extends controller
         $this->setVar('daysun',$userDetails[0]['sunday']);
         $this->setVar('varydays',$userDetails[0]['daysvary']);
         return 'modifyregistration_tpl.php';
+    }
+    /**
+     * Method to show the registration page
+     **/
+    protected function viewMembership() 
+    {
+        $userid = $this->getParam('liftuserid');
+        $userInfo = $this->objUserAdmin->getUserDetails($this->objUser->PKId($userid));
+        $userOrigin = $this->objDBOrigin->userOrigin($userid);
+        $userDestiny = $this->objDBDestiny->userDestiny($userid);
+        $userDetails = $this->objDBDetails->userDetails($userid);
+        /*var_dump($userInfo);
+        echo '<br />'; 
+        var_dump($userOrigin);
+        echo '<br />';
+        var_dump($userDestiny);
+        echo '<br />';
+        var_dump($userDetails);
+        exit;*/        
+        $userstring = $this->getParam('user');
+        $userneed = $userDetails[0]["userneed"];
+        $this->setSession('userneed', $userneed);
+        $needtype = $userDetails[0]["needtype"];
+        $this->setSession('needtype', $needtype);
+        $this->setVar('userstring', $userstring);
+        $this->setVar('mode', 'add');
+        $this->setVar('userneed', $userneed);
+        $this->setVar('needtype', $needtype);
+        $this->setVar('id',$userInfo['id']);
+        $this->setVar('register_username',$userInfo['username']);
+        $this->setVar('register_title',$userInfo['title']);
+        $this->setVar('register_firstname',$userInfo['firstname']);
+        $this->setVar('register_surname',$userInfo['surname']);
+        $this->setVar('register_staffnum',$userInfo['staffnumber']);
+        $this->setVar('register_cellnum',$userInfo['cellnumber']);
+        $this->setVar('register_sex',$userInfo['sex']);
+        $this->setVar('country',$userInfo['country']);
+        $this->setVar('register_email',$userInfo['emailaddress']);
+        $this->setVar('originid',$userOrigin[0]['id']);
+        $this->setVar('street_name',$userOrigin[0]['street']);
+        $this->setVar('suburborigin',$userOrigin[0]['suburb']);
+        $this->setVar('citytownorigin',$userOrigin[0]['city']);
+        $this->setVar('province',$userOrigin[0]['province']);
+        $this->setVar('neighbourorigin',$userOrigin[0]['neighbour']);
+        $this->setVar('destinyid',$userDestiny[0]['id']);
+        $this->setVar('destinstitution',$userDestiny[0]['institution']);
+        $this->setVar('deststreetname',$userDestiny[0]['street']);
+        $this->setVar('destsuburb',$userDestiny[0]['suburb']);
+        $this->setVar('destcity',$userDestiny[0]['city']);
+        $this->setVar('destprovince',$userDestiny[0]['province']);
+        $this->setVar('destneighbour',$userDestiny[0]['neighbour']);
+        $this->setVar('detailsid',$userDetails[0]['id']);
+        $this->setVar('tripdaterequired',$userDetails[0]['daterequired']);
+        $this->setVar('triptimes',$userDetails[0]['times']);
+        $this->setVar('tripsmoke',$userDetails[0]['smoke']);
+        $this->setVar('tripadditionalinfo',$userDetails[0]['additionalinfo']);
+        $this->setVar('tripacceptoffers',$userDetails[0]['specialoffer']);
+        $this->setVar('tripemailnotifications',$userDetails[0]['emailnotifications']);
+        $this->setVar('daymon',$userDetails[0]['monday']);
+        $this->setVar('daytues',$userDetails[0]['tuesday']);
+        $this->setVar('daywednes',$userDetails[0]['wednesday']);
+        $this->setVar('daythurs',$userDetails[0]['thursday']);
+        $this->setVar('dayfri',$userDetails[0]['friday']);
+        $this->setVar('daysatur',$userDetails[0]['saturday']);
+        $this->setVar('daysun',$userDetails[0]['sunday']);
+        $this->setVar('varydays',$userDetails[0]['daysvary']);
+        return 'viewmembership_tpl.php';
     }
 
     /**
