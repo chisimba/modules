@@ -30,12 +30,12 @@ class wits_studenttoolbar extends object {
 
         $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','wits_student');
         $topnavs=$this->storyparser->getStoryByCategory($topcatid);
+        $menuOptions[]= array('action'=>NULL, 'text'=>'Apply Online', 'actioncheck'=>array(), 'module'=>'witsstudentonlineapplication', 'status'=>'both');
 
         foreach($topnavs as $nav) {
             $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'wits_student', 'status'=>'both');
         }
 
-        $menuOptions[]= array('action'=>NULL, 'text'=>'Content Admin', 'actioncheck'=>array(), 'module'=>'stories', 'status'=>'admin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'File manager', 'actioncheck'=>array(), 'module'=>'filemanager', 'status'=>'loggedin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'My details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin');
