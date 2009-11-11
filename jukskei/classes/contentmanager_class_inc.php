@@ -123,6 +123,9 @@ class contentmanager extends object {
             $detailsLink=new link($this->uri(array('action'=>'topicmembers','topicid'=>$row['topicid'])));
             $detailsLink->link='Members';
 
+            $previewLink=new link($this->uri(array('action'=>'viewstory','storyid'=>$row['topicid'])));
+            $previewLink->link='Preview';
+
             $articleLink=new link($this->uri(array('action'=>'viewtopicarticles','topicid'=>$row['topicid'])));
             $articleLink->link=addslashes($topicdata['title']);
 
@@ -135,7 +138,7 @@ class contentmanager extends object {
             $data.="[";
             $data.= "'".$articleLink->show()."',";
             $data.="'".$membersLink."',";
-            $data.="'owner',";
+            $data.="'".$previewLink->show()."',";
             $data.="'".$editLink->show().$deleteTxt."'";
             $data.="],";
 

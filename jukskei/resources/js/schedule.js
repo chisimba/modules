@@ -30,7 +30,7 @@ var xg = Ext.grid;
 var reader = new Ext.data.ArrayReader({}, [
    {name: 'title'},
    {name: 'members'},
-   {name: 'owner'},
+   {name: 'preview'},
    {name: 'edit'}
 ]);
 // Array data for the grids
@@ -47,7 +47,7 @@ var grid = new xg.GridPanel({
     columns: [
         {id:'title',header: "Title", width: 500, dataIndex: 'title'},
         {header: "Members", width: 100, dataIndex: 'members'},
-        {header: "Owner", width: 100, dataIndex: 'owner'},
+        {header: "Preview", width: 100, dataIndex: 'preview'},
         {header: "Edit", width: 100, dataIndex: 'edit'}
     ],
 

@@ -16,16 +16,16 @@ class dbtopics  extends dbTable {
         $this->table = 'tbl_jukskei_topics';
     }
     public function getTopics() {
-        return $this->getAll();
+        return $this->getAll('where active = "1"');
     }
 
-    public function savetopic($title,$content) {
-        $data=array('title'=>$title,'content'=>$content);
+    public function savetopic($title,$content,$active) {
+        $data=array('title'=>$title,'content'=>$content,'active'=>$active);
         return $this->insert($data);
     }
 
-    public function updatetopic($title,$content,$topicid) {
-        $data=array('title'=>$title,'content'=>$content);
+    public function updatetopic($title,$content,$topicid,$active) {
+        $data=array('title'=>$title,'content'=>$content,'active'=>$active);
         return $this->update('id',$topicid, $data);
     }
     public function getTitle($topicid) {

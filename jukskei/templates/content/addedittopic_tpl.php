@@ -2,6 +2,7 @@
 
 $this->loadClass('form','htmlelements');
 $this->loadClass('label','htmlelements');
+$this->loadClass('radio','htmlelements');
 
 $this->loadClass('textinput','htmlelements');
 
@@ -34,6 +35,23 @@ if ($mode == 'add') {
 } else {
     $htmlarea->setContent($data['content']);
 }
+
+
+$activeRadio = new radio ('activefield');
+$activeRadio->addOption('1', 'Active');
+$activeRadio->addOption('0', 'Inactive');
+$activeRadio->setBreakSpace(' &nbsp; ');
+
+if ($mode == 'edit') {
+    $activeRadio->setSelected($this->getParam('active'));
+} else {
+    $activeRadio->setSelected('1');
+}
+
+$table->startRow();
+$table->addCell('Status'.'&nbsp;');
+$table->addCell($activeRadio->show());
+$table->endRow();
 
 $label = new label ('Content', 'input_htmlarea');
 

@@ -186,7 +186,8 @@ class jukskei extends controller {
     function __savetopic() {
         $content=$this->getParam('pagecontent');
         $title=$this->getParam('titlefield');
-        $topicid=$this->dbtopics->saveTopic($title,$content);
+        $active=$this->getParam('activefield');
+        $topicid=$this->dbtopics->saveTopic($title,$content,$active);
         $this->dbgroups->adduser($topicid);
         return $this->nextAction('storyadmin');
     }
@@ -210,7 +211,8 @@ class jukskei extends controller {
         $content=$this->getParam('pagecontent');
         $title=$this->getParam('titlefield');
         $topicid=$this->getParam('topicid');
-        $topicid=$this->dbtopics->updateTopic($title,$content,$topicid);
+         $active=$this->getParam('activefield');
+        $topicid=$this->dbtopics->updateTopic($title,$content,$topicid,$active);
         return $this->nextAction('storyadmin');
     }
     function __addmembertotopic() {
