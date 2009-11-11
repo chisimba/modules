@@ -43,7 +43,7 @@ $activeRadio->addOption('0', 'Inactive');
 $activeRadio->setBreakSpace(' &nbsp; ');
 
 if ($mode == 'edit') {
-    $activeRadio->setSelected($this->getParam('active'));
+    $activeRadio->setSelected($data['active']);
 } else {
     $activeRadio->setSelected('1');
 }
