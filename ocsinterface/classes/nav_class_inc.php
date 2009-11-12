@@ -32,7 +32,16 @@ class nav extends object {
             }
             $desc.='<li $cssClass>'.$element.'</li>';
         }
-        $desc.='</ul>';
+        $desc.='</ul><hr>';
+
+
+        $sidecatid2=$this->objDbSysconfig->getValue('SIDE_NAV2_CATEGORY','ocsinterface');
+        $sidenavs2=$this->storyparser->getStoryByCategory($sidecatid2);
+
+        foreach($sidenavs2 as $nav) {
+            $desc.=$objWashout->parseText($nav['maintext']);
+        }
+
 
         return $desc;
     }
