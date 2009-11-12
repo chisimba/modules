@@ -83,17 +83,12 @@ class contentmanager extends object {
          <font color="green"><b>Add Session</b></font> button.
          </p>
          ';
-
-
         //load class
         $this->loadclass('link','htmlelements');
         $objIcon= $this->newObject('geticon','htmlelements');
 
-
         $addButton = new button('add','Add Topic');
         $addButton->setId('add-topic');
-
-
 
         $btns='';
         if($this->objUser->isAdmin()) {

@@ -56,8 +56,8 @@ class viewerutils extends object {
 
 </div>';
 
-
-        return $content;
+        $footer='<div id="footer"><a href="http://www.wits.ac.za">www.wits.ac.za</a></div>';
+        return $content.$footer;
     }
 
     public function getHomePageMedia() {
@@ -109,8 +109,6 @@ class viewerutils extends object {
         return $content;
     }
     public function getTopicContent($id) {
-
-
         $objTrim = $this->getObject('trimstr', 'strings');
         $objStories=$this->getObject('storyparser');
         //$topics=$objStories->getTopics($id);
@@ -148,6 +146,8 @@ class viewerutils extends object {
         $content.='<div class="subcolumns">';
         $content.='</div">';
         $content.='</div">';
+
+
         return $content;
     }
 
@@ -180,14 +180,14 @@ class viewerutils extends object {
 
              <font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><hr>
        
-             Articles: <font style="font-family:Arial;font-size:18;">  '.$articlenav.'</font><br/>
-             '.$this->objWashout->parseText($data['content']).'
+             Current topic: <font style="font-family:Arial;font-size:18;font-weight:bold;">'.$data['title'].'</font><br/>
+            <font style="font-family:Arial;font-size:14;"> '.$this->objWashout->parseText($data['content']).'</font>
 
             </ul>
             <br/>
               ';
-
-        return $content;
+        $footer='<div id="footer">'.$articlenav.'</div>';
+        return $content.$footer;
     }
     public function getArticleContent($storyid,$articleid) {
 
@@ -217,12 +217,13 @@ class viewerutils extends object {
         //footer
         $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','jukskei');
         $topnavs=$this->storyparser->getStoryByCategory($topcatid);
-        $footer='';
+        $footer='<div id="footer">';
         foreach($topnavs as $nav) {
             $link=new link($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
             $link->link=$nav['title'];
             $footer.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
+         $footer.='<br/>'.$articlenav.'</div>';
         $content='';
         $content='
 
