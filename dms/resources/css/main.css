@@ -1,0 +1,11 @@
+/* 
+    Document   : main
+    Created on : 06 Nov 2009, 2:13:36 PM
+    Author     : Nguni
+    Description: This is the main style sheet. Anything that can be applied universally
+                 should be put in here.
+*/
+
+div#mainContent {
+    border: 1px solid #000;
+}
