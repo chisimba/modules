@@ -213,7 +213,7 @@ var rmButton = new Ext.Button({
 			id:'rmgroup',
             // Place a reference in the GridPanel
             ref: '../../removeButton',
-            disabled: true,
+            disabled: false,
             handler: function(){
             	doRemoveUsers();
             }
@@ -348,7 +348,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 //'<table border="1"><tr><td>'+record.data.messagebody+'</td></tr></table>'
 function renderBody(value, p, record){
         return String.format(
-        		'<TEXTAREA NAME="MESSAGE" COLS=50 ROWS=15 WRAP=SOFT readonly="readonly">'+record.data.messagebody+'</TEXTAREA>');
+        		'<TEXTAREA NAME="MESSAGE" COLS=54 ROWS=15 WRAP=SOFT readonly="readonly">'+record.data.messagebody+'</TEXTAREA>');
 }
 var SiteAdminGrid = new Ext.grid.GridPanel({
 	title:'Mesage',
@@ -368,14 +368,14 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
 	
     // grid columns
     cm: new Ext.grid.ColumnModel([
-            sm2,{
+            {
 	            id: 'msgid',
             header: "Message",
             dataIndex: 'messagebody',
 	           renderer: renderBody,            
             resizable: true,
             width: 500,
-	           align: 'left',
+	           align: 'center',
             sortable: false
         }]),    
      viewConfig: {
