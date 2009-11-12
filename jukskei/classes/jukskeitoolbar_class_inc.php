@@ -98,8 +98,10 @@ class jukskeitoolbar extends object {
         $usedDefault = $usedDefault ? FALSE: TRUE;
 
         // Add Home Link
-         $preview= $this->generateItem('home', 'jukskei', 'PREVIEW', $usedDefault);
-         $home = $this->generateItem(NULL, '_default', 'HOME', $usedDefault);
+        if($userIsLoggedIn){
+            $preview= $this->generateItem('home', 'jukskei', 'PREVIEW', $usedDefault);
+        }
+        $home = $this->generateItem(NULL, '_default', 'HOME', $usedDefault);
 
         // Return Toolbar
         return '<div class="chromestyle"><ul>'.$home.$preview.$str.'</ul></div>';
