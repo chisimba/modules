@@ -78,6 +78,8 @@ class liftclub extends controller
                     return 'liftclubfind_tpl.php';
                 case 'offeredlifts':
                     return 'liftcluboffer_tpl.php'; 
+                case 'messages':
+                    return 'messages_tpl.php'; 
                 case 'showregister':
                     return $this->registrationHome();
                 case 'modifydetails':
@@ -160,6 +162,20 @@ class liftclub extends controller
                     $this->setVar('pageSuppressSearch', TRUE);
                     $this->setVar('suppressFooter', TRUE);
                     $lifts= $this->objLiftSearch->jsonLiftSearch($userneed, $start, $limit);
+                    echo $lifts;
+                    exit(0);
+                    break;
+                case 'json_getallmessages':
+                    $userneed = $this->getParam('userneed');
+                    $start = $this->getParam('start');
+                    $limit = $this->getParam('limit');
+                    
+                    $this->setLayoutTemplate(NULL);
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    $this->setVar('pageSuppressBanner', TRUE);
+                    $this->setVar('pageSuppressSearch', TRUE);
+                    $this->setVar('suppressFooter', TRUE);
+                    $lifts= $this->objLiftSearch->jsonGetMessages($start, $limit, $read=NULL, $trash=NULL);
                     echo $lifts;
                     exit(0);
                     break;

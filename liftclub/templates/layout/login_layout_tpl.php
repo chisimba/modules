@@ -18,12 +18,17 @@ $findLink->title = $this->objLanguage->languageText("mod_liftclub_liftneeded","l
 $offerLink =new link($this->uri(array('action'=>'offeredlifts')));
 $offerLink->link = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
 $offerLink->title = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
+
+$msgLink =new link($this->uri(array('action'=>'messages')));
+$msgLink->link = $this->objLanguage->languageText("mod_liftclub_viewmessages","liftclub","View Messages");
+$msgLink->title = $this->objLanguage->languageText("mod_liftclub_viewmessages","liftclub","View Messages");
+
 $pageLink = "<ul>";
-if($this->objUser->userId()!==null){
- 
- $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>";
+if($this->objUser->userId()!==null){ 
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgLink->show()."</li>";
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>"; 
 }else{
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
