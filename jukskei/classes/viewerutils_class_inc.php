@@ -231,7 +231,7 @@ class viewerutils extends object {
 
              <font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><hr>
              <b style="font-family:Arial;font-size:24;">Topic: '.$storylink->show().'</b><br/>
-             <b style="font-family:Arial;font-size:24;">'.$data['title'].'&nbsp; |&nbsp;</b>
+             <b style="font-family:Arial;font-size:24;">Article: '.$data['title'].'&nbsp;&nbsp;</b>
             <font style="font-family:Arial;font-size:24;color:#1A4048"'.$this->objWashout->parseText($data['content']).'</font>
              <center>'.$footer.'</center>
             </ul>
