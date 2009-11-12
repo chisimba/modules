@@ -166,7 +166,7 @@ class liftclub extends controller
                     exit(0);
                     break;
                 case 'json_getallmessages':
-                    $userneed = $this->getParam('userneed');
+                    $id = $this->getParam('id');
                     $start = $this->getParam('start');
                     $limit = $this->getParam('limit');
                     
@@ -175,7 +175,7 @@ class liftclub extends controller
                     $this->setVar('pageSuppressBanner', TRUE);
                     $this->setVar('pageSuppressSearch', TRUE);
                     $this->setVar('suppressFooter', TRUE);
-                    $lifts= $this->objLiftSearch->jsonGetMessages($start, $limit, $read=NULL, $trash=NULL);
+                    $lifts= $this->objLiftSearch->jsonGetMessages($id, $start, $limit, $read=NULL, $trash=NULL);
                     echo $lifts;
                     exit(0);
                     break;

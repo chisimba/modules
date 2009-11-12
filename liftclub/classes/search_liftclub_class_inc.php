@@ -156,9 +156,11 @@ class search_liftclub extends dbTable
         }
         return json_encode(array('liftcount' => $liftCount, 'searchresults' =>  $searchArray));
     }
-    function getMessages($start, $limit, $params=NULL, $read=NULL, $trash=NULL) {
+    function getMessages($id=NULL, $start, $limit, $params=NULL, $read=NULL, $trash=NULL) {
          $thisuser = $this->objUser->userId();
 									$where = "";
+									if(!empty($id))
+									$where = " AND id='".$id."'";
 									if(is_array($params['search'])){
 										$max = count($params['search']);
 		        //$max=3;
@@ -207,7 +209,7 @@ class search_liftclub extends dbTable
 		         return $messages;
          }    
     }
-    function jsonGetMessages($start, $limit, $read=NULL, $trash=NULL) 
+    function jsonGetMessages($id=NULL, $start, $limit, $read=NULL, $trash=NULL) 
     {
 								$params["start"] = ($this->getParam("start")) ? $this->getParam("start") : null;
 								$params["limit"] = ($this->getParam("limit")) ? $this->getParam("limit") : null;
@@ -218,7 +220,7 @@ class search_liftclub extends dbTable
         $start= $params["start"];
         if(!empty($params["limit"]))
         $limit= $params["limit"];
-        $myMessages = $this->getMessages($start, $limit, $params, $read, $trash);
+        $myMessages = $this->getMessages($id, $start, $limit, $params, $read, $trash);
        	$msgCount = ( count ( $myMessages ) );
         //$str = '{"msgcount":"'.$msgCount.'","myMsgs":[';
         $searchArray = array();

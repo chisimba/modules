@@ -13,14 +13,14 @@ Ext.onReady(function(){
 	alphaGroupStore.load({params:{start:0, limit:25, letter:'A'}});
 	myBorderPanel.render('mainPanel');
 	
-	SiteAdminGrid.setVisible(true);
+	SiteAdminGrid.setVisible(false);
 
 	groupsGrid.getSelectionModel().on('rowselect', function(sm, ri, record)
 	{ 
 		
        SiteAdminGrid.setVisible(true);
-       selectedGroupId = record.data.id;
-       loadGroup(record.data.id, record.data.group_define_name, record.data.title);
+       selectedGroupId = record.data.msgid;
+       loadGroup(record.data.msgid, record.data.sender, record.data.timesent, record.data.messagetitle, record.data.messagebody);
       
     });       
 
@@ -76,19 +76,21 @@ var proxyStore = new Ext.data.HttpProxy({
 
   // create the Data Store
  var abstractStore = new Ext.data.JsonStore({
-        root: 'users',
-        totalProperty: 'totalCount',
-        idProperty: 'id',
+        root: 'searchresults',
+        totalProperty: 'msgcount',
+        idProperty: 'msgid',
         remoteSort: true,
-		
+		//baseParams: [{'letter':selectedTab}],
         fields: [
-            'username', 
-            'firstname', 
-            'surname', 
-            'userid',           
-            'lastloggedin',
-            'emailaddress'
-            //{name: 'lastloggedin', mapping: 'lastloggedin', type: 'date', dateFormat: 'timestamp'}
+        	'msgid',
+            'sender', 
+            'recipentuserid',
+            'timesent',
+            'markasread',
+            'markasdeleted',
+            'messagetitle',
+            'messagebody'
+            
         ],
         listeners:{ 
     		'loadexception': function(theO, theN, response){
@@ -157,7 +159,7 @@ var pageNavigation = new Ext.PagingToolbar({
             listeners:{ 	    		
 	    		beforechange: function(ptb, params){	
 	    			userOffset = params.start; 			
-	    			proxyStore.setUrl(baseUri+'?module=groupadmin&action=json_getgroupusers&groupid='+selectedGroupId+'&limit='+params.start+'&offset='+params.start);
+	    			proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&id='+selectedGroupId+'&limit='+params.start+'&offset='+params.start);
 	    		}  
             }
             
@@ -343,16 +345,20 @@ var groupsGrid = new Ext.grid.GridPanel({
     	}
 	
 });
-
+//'<table border="1"><tr><td>'+record.data.messagebody+'</td></tr></table>'
+function renderBody(value, p, record){
+        return String.format(
+        		'<TEXTAREA NAME="MESSAGE" COLS=50 ROWS=15 WRAP=SOFT readonly="readonly">'+record.data.messagebody+'</TEXTAREA>');
+}
 var SiteAdminGrid = new Ext.grid.GridPanel({
-	title:'Mesage Body',
+	title:'Mesage',
 	region: 'center',
 	split:true,
 	frame:true,
     layout: 'fit',
     margins: '10 10 10 10',	 
 	tbar: toolBar,        
-    bbar:pageNavigation,    
+    //bbar:pageNavigation,    
     width:400,
     height:300,   
     store: abstractStore,    
@@ -363,39 +369,18 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
     // grid columns
     cm: new Ext.grid.ColumnModel([
             sm2,{
-
-   // columns:[{
-            header: "Last Name",
-            dataIndex: 'surname',
-            width: 150,            
-            sortable: true
-        },{
-            id: 'firstname', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
-            header: "First Name",
-            dataIndex: 'firstname',
-            width: 150,            
-            sortable: true
-        },{
-            header: "Username",
-            dataIndex: 'username',
-            width: 100,           
-            sortable: true
-        },{
-            header: "Email",
-            dataIndex: 'emailaddress',
-            width: 150           
-        },{
-            id: 'last',
-            header: "Last Logged In",
-            dataIndex: 'lastloggedin',
-            width: 100,            
-             align: 'right',
-            sortable: true
-   		 }]),
-    
+	            id: 'msgid',
+            header: "Message",
+            dataIndex: 'messagebody',
+	           renderer: renderBody,            
+            resizable: true,
+            width: 500,
+	           align: 'left',
+            sortable: false
+        }]),    
      viewConfig: {
         forceFit:true,
-        emptyText: 'No Record found - Try the sub groups'
+        emptyText: 'Message Body not found'
 
     	}
 });
@@ -406,7 +391,7 @@ var myBorderPanel = new Ext.Panel({
     height: 400,
     margins: '10 10 10 10',
     padding: '10 10 10 10',
-    title: 'Group Administration',
+    title: 'Lift Club Messages',
     layout: 'border',
     items: [groupsGrid, SiteAdminGrid]
 });
@@ -434,22 +419,23 @@ function loadGroups(tabPanel, tab){
 
 //this function will be called when 
 //the group is selected in the groups grid
-function loadGroup(nodeId, groupname, grouptitle){
+loadGroup(record.data.msgid, record.data.sender, record.data.timesent, record.data.messagetitle, record.data.messagebody);
+function loadGroup(nodeId, sender, timesent, messagetitle, messagebody){
 	
 	//load the subgroups
-	subGroupStore.load({params:{start:0, limit:25, groupid: nodeId}});	
+	//subGroupStore.load({params:{start:0, limit:25, msgid: nodeId}});	
 	
-	SiteAdminGrid.setTitle(groupname+" - " +grouptitle);
-	SiteAdminGrid.render('groupusers');
-	//alert(nodeId);
-	proxyStore.setUrl(baseUri+'?module=groupadmin&action=json_getgroupusers&groupid='+nodeId);
+	SiteAdminGrid.setTitle(timesent+" - " +messagetitle);
+		//SiteAdminGrid.render('groupusers');
+	//alert(messagebody);
+	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&limit=25&start=0&id='+nodeId);
 	//load the data for this group
 	abstractStore.load({params:{start:0, limit:25}}); 	
 }
 
-function loadSubgroup1(groupId)
+function loadSubgroup1(nodeId)
 {
-	proxyStore.setUrl(baseUri+'?module=groupadmin&action=json_getgroupusers&groupid='+groupId);
+	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&limit=25&start=0&id='+nodeId);
 	abstractStore.load({params:{start:0, limit:25}});
 }
 
@@ -467,7 +453,7 @@ function loadSubgroupMenu(records){
 }
 
 function onSubGroupClick(item){	
-	proxyStore.setUrl(baseUri+'?module=groupadmin&action=json_getgroupusers&groupid='+item.getItemId());
+	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&limit=25&start=0&id='+item.getItemId());
 	abstractStore.load({params:{start:0, limit:25}}); 
 	selectedGroupId = item.getItemId();
 	//SiteAdminGrid.setTitle(SiteAdminGrid.getTitle()+' - '+item.getText());
@@ -505,8 +491,8 @@ function doRemoveUsers()
 	        			start:userOffset, 
 	        			limit:pageSize,
 	        			groupid:selectedGroupId,
-	        			module:'groupadmin',
-	        			action:'json_getgroupusers'
+	        			module:'liftclub',
+	        			action:'json_getallmessages'
 	        	}
 	        }); 
 	        myMask.hide();
