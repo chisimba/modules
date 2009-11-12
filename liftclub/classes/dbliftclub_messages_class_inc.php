@@ -102,12 +102,12 @@ class dbLiftclub_messages extends dbTable
     /**
      * mark email as trashed
      * @param string $id ID
-     * @param string $markasdeleted mark as deleted
+     * @param string $bol mark as trashed
      */
-    function markTrashed($id) 
+    function markTrashed($id,$bol=1) 
     {
         $this->update("id", $id, array(
-            'markasdeleted' => $markasdeleted
+            'markasdeleted' => $bol
         ));
     }
     /**

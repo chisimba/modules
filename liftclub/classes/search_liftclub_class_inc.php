@@ -21,6 +21,7 @@ class search_liftclub extends dbTable
         $this->objDBOrigin = $this->getObject('dbliftclub_origin', 'liftclub');
         $this->objDBDestiny = $this->getObject('dbliftclub_destiny', 'liftclub');
         $this->objDBDetails = $this->getObject('dbliftclub_details', 'liftclub');
+        $this->objDBMessages = $this->getObject('dbliftclub_messages', 'liftclub');
     }
     function getLifts($userneed, $start, $limit, $params=null) 
     {	
@@ -195,7 +196,7 @@ class search_liftclub extends dbTable
            }else{
             $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `recipentuserid`='".$thisuser."'".$where." LIMIT ".$start." , ".$limit;
            }
-           $messages = $this->objDBDetails->getArray($sqlsearch);
+           $messages = $this->objDBMessages->getArray($sqlsearch);
 		         return $messages;
          }else{
            if(!empty($read)){
@@ -205,7 +206,7 @@ class search_liftclub extends dbTable
            }else{
             $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `recipentuserid`='".$thisuser."'".$where;
            }
-           $messages = $this->objDBDetails->getArray($sqlsearch);
+           $messages = $this->objDBMessages->getArray($sqlsearch);
 		         return $messages;
          }    
     }
@@ -242,5 +243,29 @@ class search_liftclub extends dbTable
         }
         return json_encode(array('msgcount' => $msgCount, 'searchresults' =>  $searchArray));
     }
+    /**
+     * Method to send message to trash
+     * @param integer $msgId
+     * @return unknown
+     */
+    public function jsonMoveToTrash($msgId){
+    			if(!empty($msgId)){
+								$msgId = substr_replace($msgId, "",strlen($msgId) - 1);
+								//error_log('Success '.$groupId.'\n'.$userIds);
+								$msg = explode(',', $msgId);
+								error_log(var_export(count($msg)), true);
+								foreach ($msg as $id)
+								{
+								var_dump($id);
+									if($id){
+										$res = $this->objDBMessages->markTrashed($id,1);
+									}
+								}
+     		 $extjs['success'] = true;
+     		}else{
+				    $extjs['success'] = false;   		
+     		}
+     		return json_encode($extjs); 
+		}
 }
 ?>

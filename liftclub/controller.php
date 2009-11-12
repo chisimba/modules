@@ -165,6 +165,12 @@ class liftclub extends controller
                     echo $lifts;
                     exit(0);
                     break;
+                    //jsonMoveToTrash
+								        case 'json_movetotrash':
+								        	echo $this->objOps->jsonMoveToTrash($this->getParam('ids'));
+								        	exit(0);
+								        	break;
+
                 case 'json_getallmessages':
                     $id = $this->getParam('id');
                     $start = $this->getParam('start');

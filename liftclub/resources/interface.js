@@ -135,7 +135,7 @@ var proxyStore = new Ext.data.HttpProxy({
     		},
     		'load': function(thestore, records){    				
     				//alert('subgroupstore loaded');
-    				loadSubgroupMenu(records);			
+    				//loadSubgroupMenu(records);			
     			}
 		}
 	});
@@ -215,7 +215,7 @@ var rmButton = new Ext.Button({
             ref: '../../removeButton',
             disabled: false,
             handler: function(){
-            	doRemoveUsers();
+            	sendToTrash();
             }
         });
         
@@ -368,7 +368,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
 	
     // grid columns
     cm: new Ext.grid.ColumnModel([
-            {
+            sm2,{
 	            id: 'msgid',
             header: "Message",
             dataIndex: 'messagebody',
@@ -459,8 +459,8 @@ function onSubGroupClick(item){
 	//SiteAdminGrid.setTitle(SiteAdminGrid.getTitle()+' - '+item.getText());
 }
 
-//method tht removes users from a group
-function doRemoveUsers()
+//method that moves message to trash
+function sendToTrash()
 {	
 	myMask.show();
 	//get the selected users
@@ -479,9 +479,8 @@ function doRemoveUsers()
 	    url: baseUri,
 	    method: 'POST',
 	    params: {
-	       	module: 'groupadmin',
-	   		action: 'json_removeusers',
-	   		groupid: selectedGroupId,
+	       	module: 'liftclub',
+	   		action: 'json_movetotrash',
 	   		ids: idString
 	    },
 	    success: function(xhr,params) {
@@ -490,7 +489,7 @@ function doRemoveUsers()
 	        	params:{
 	        			start:userOffset, 
 	        			limit:pageSize,
-	        			groupid:selectedGroupId,
+	        			msgid:selectedGroupId,
 	        			module:'liftclub',
 	        			action:'json_getallmessages'
 	        	}
