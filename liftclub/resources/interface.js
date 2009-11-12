@@ -213,7 +213,7 @@ var rmButton = new Ext.Button({
 			id:'rmgroup',
             // Place a reference in the GridPanel
             ref: '../../removeButton',
-            disabled: false,
+            disabled: true,
             handler: function(){
             	sendToTrash();
             }
@@ -473,7 +473,7 @@ function sendToTrash()
 	{
 		idString = r.id +','+ idString ;		
 	});   	
-				//alert(userOffset);
+				alert(idString);
 		//post to server
 	Ext.Ajax.request({
 	    url: baseUri,
@@ -481,15 +481,15 @@ function sendToTrash()
 	    params: {
 	       	module: 'liftclub',
 	   		action: 'json_movetotrash',
-	   		ids: idString
+	   		msgid: idString
 	    },
 	    success: function(xhr,params) {
-	        //alert('Success!\n'+xhr.responseText);
+	        alert('Success!\n'+xhr.responseText+selectedGroupId);
 	        abstractStore.load({
 	        	params:{
 	        			start:userOffset, 
 	        			limit:pageSize,
-	        			msgid:selectedGroupId,
+	        			id:selectedGroupId,
 	        			module:'liftclub',
 	        			action:'json_getallmessages'
 	        	}

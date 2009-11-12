@@ -81,8 +81,10 @@ class dbLiftclub_messages extends dbTable
             'userid' => $userid,
             'recipentuserid' => $recipentuserid,
             'timesent' => date('Y-m-d, h:i:s'),
-            'messagetitle' => $messagetitle,
-            'messagebody' => $messagebody,
+            'markasdeleted' => 0,
+            '	markasread ' => 0,
+            '	messagetitle' => $messagetitle,
+            'messagebody' => $messagebody
          ));
         return $id;
     }

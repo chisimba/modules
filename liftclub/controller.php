@@ -167,7 +167,7 @@ class liftclub extends controller
                     break;
                     //jsonMoveToTrash
 								        case 'json_movetotrash':
-								        	echo $this->objOps->jsonMoveToTrash($this->getParam('ids'));
+								        	echo $this->objLiftSearch->jsonMoveToTrash($this->getParam('msgid'));
 								        	exit(0);
 								        	break;
 
@@ -181,7 +181,7 @@ class liftclub extends controller
                     $this->setVar('pageSuppressBanner', TRUE);
                     $this->setVar('pageSuppressSearch', TRUE);
                     $this->setVar('suppressFooter', TRUE);
-                    $lifts= $this->objLiftSearch->jsonGetMessages($id, $start, $limit, $read=NULL, $trash=NULL);
+                    $lifts= $this->objLiftSearch->jsonGetMessages($id, $start, $limit, $read=NULL, $trash=0);
                     echo $lifts;
                     exit(0);
                     break;
