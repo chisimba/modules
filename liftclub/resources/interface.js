@@ -213,7 +213,7 @@ var rmButton = new Ext.Button({
 			id:'rmgroup',
             // Place a reference in the GridPanel
             ref: '../../removeButton',
-            disabled: true,
+            disabled: false,
             handler: function(){
             	sendToTrash();
             }
@@ -368,7 +368,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
 	
     // grid columns
     cm: new Ext.grid.ColumnModel([
-            sm2,{
+            {
 	            id: 'msgid',
             header: "Message",
             dataIndex: 'messagebody',
@@ -463,17 +463,7 @@ function onSubGroupClick(item){
 function sendToTrash()
 {	
 	myMask.show();
-	//get the selected users
-	var selArr = SiteAdminGrid.getSelectionModel().getSelections();
-	
-	//get the selected id's
-	var idString = "";
-	
-	Ext.each( selArr, function( r ) 
-	{
-		idString = r.id +','+ idString ;		
-	});   	
-				alert(idString);
+				//alert(selectedGroupId);
 		//post to server
 	Ext.Ajax.request({
 	    url: baseUri,
@@ -481,11 +471,13 @@ function sendToTrash()
 	    params: {
 	       	module: 'liftclub',
 	   		action: 'json_movetotrash',
-	   		msgid: idString
+	   		msgid: selectedGroupId
 	    },
 	    success: function(xhr,params) {
-	        alert('Success!\n'+xhr.responseText+selectedGroupId);
-	        abstractStore.load({
+	        alert('Message Trashed Successfully!\n');
+	        SiteAdminGrid.setVisible(false);
+	        alphaGroupStore.load({params:{start:0, limit:25}});
+/*	        abstractStore.load({
 	        	params:{
 	        			start:userOffset, 
 	        			limit:pageSize,
@@ -493,7 +485,7 @@ function sendToTrash()
 	        			module:'liftclub',
 	        			action:'json_getallmessages'
 	        	}
-	        }); 
+	        }); */
 	        myMask.hide();
 	    },
 	    failure: function(xhr,params) {
