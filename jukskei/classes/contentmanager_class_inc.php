@@ -111,7 +111,7 @@ class contentmanager extends object {
 
             $deleteLink=new link($this->uri(array('action'=>'deletetopic','topicid'=>$row['topicid'])));
             $objIcon->setIcon('delete');
-            $delValJS="deleteTopic(\'".$row['id']."\');return false;";
+            $delValJS="deleteTopic(\'".$row['topicid']."\');return false;";
             $objIcon->extra = 'onClick="'.$delValJS.'"';
             $deleteLink->link=$objIcon->show();
 

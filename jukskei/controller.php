@@ -247,7 +247,7 @@ class jukskei extends controller {
     }
     function __deletearticle() {
         $topicid=$this->getParam('articleid');
-        $this->articles->deleteArticle($articleid);
+        $this->articles->deleteArticle($topicid);
         $topicid=$this->getParam('topicid');
         $this->setVarByRef('topicid',$topicid);
         return "articlelist_tpl.php";

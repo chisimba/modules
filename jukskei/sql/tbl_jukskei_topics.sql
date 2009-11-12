@@ -8,6 +8,7 @@ $options = array('comment'=>'Table to store groups','collate'=>'utf8_general_ci'
 $fields = array(
 		'id' => array('type' => 'text','length' => 32),
 		'title'=>array('type'=>'text','length'=>512),
+                'active' => array('type' => 'text','length' => 10),
                 'content'=>array('type'=>'text'))
 ;
 ?>

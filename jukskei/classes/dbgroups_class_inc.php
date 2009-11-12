@@ -16,8 +16,6 @@ class dbgroups  extends dbTable {
         $this->table = 'tbl_jukskei_groups';
         $this->objUser=$this->getObject('user','security');
     }
-
-
     public function adduser($topicid,$userid=NULL) {
         if($userid == null) {
             $userid=$this->objUser->userId();
@@ -25,7 +23,6 @@ class dbgroups  extends dbTable {
         $data=array('topicid'=>$topicid,'userid'=>$userid);
         return $this->insert($data);
     }
-
     public function getMembers($topicid) {
         $sql=" where topicid = '$topicid'";
         return $this->getAll($sql);
@@ -42,8 +39,8 @@ class dbgroups  extends dbTable {
         $sql=" where userid = '$userid'";
         return $this->getAll($sql);
     }
-    public function deletetopic($id) {
-        return $this->delete('topicid',$id);
+    public function deleteTopic($id) {
+        $this->delete('topicid', $id);
     }
 }
 ?>
