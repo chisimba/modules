@@ -178,7 +178,7 @@ class viewerutils extends object {
 
             <ul class="paneltabs">
 
-             <font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><hr>
+             <font style="font-family:Arial;font-size:20;">  '.$navbar.'</font><hr>
        
              Current topic: <font style="font-family:Arial;font-size:18;font-weight:bold;">'.$data['title'].'</font><br/>
             <font style="font-family:Arial;font-size:14;"> '.$this->objWashout->parseText($data['content']).'</font>
@@ -229,7 +229,7 @@ class viewerutils extends object {
 
             <ul class="paneltabs">
 
-             <font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><hr>
+             <font style="font-family:Arial;font-size:20;">  '.$navbar.'</font><hr>
              <b style="font-family:Arial;font-size:24;">Topic: '.$storylink->show().'</b><br/>
              <b style="font-family:Arial;font-size:24;">Article: '.$data['title'].'&nbsp;&nbsp;</b>
             <font style="font-family:Arial;font-size:24;color:#1A4048"'.$this->objWashout->parseText($data['content']).'</font>
