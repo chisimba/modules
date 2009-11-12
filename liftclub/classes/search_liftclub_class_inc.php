@@ -176,7 +176,7 @@ class search_liftclub extends dbTable
 												$senderuserid = $this->objUser->getUserId($params['query']);
 												if($senderuserid !== FALSE){
 											  $cnt++;
-											  $where .= " userid LIKE '%".$senderuserid."%' ";
+											  $where .= " userid = '".$senderuserid."' ";
 											 }
 						     }
 											if($cnt < $max){

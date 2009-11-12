@@ -205,8 +205,8 @@ var subGroupsCombo = new Ext.form.ComboBox({
 var scrollMenu = new Ext.menu.Menu();
 
 var rmButton = new Ext.Button({
-            text:'Remove User',
-            tooltip:'Remove the selected User',
+            text:'Send to trash',
+            tooltip:'Send message to trash',
             iconCls:'silk-delete',
 			id:'rmgroup',
             // Place a reference in the GridPanel
@@ -222,8 +222,8 @@ var rmButton = new Ext.Button({
 // The toolbar for the user grid
 var toolBar = new Ext.Toolbar({
 	items:[{
-            text:'Add User',
-            tooltip:'Add a User to this group',
+            text:'Reply',
+            tooltip:'Reply to sender',
             iconCls: 'silk-add',
             handler: function (){
 	        	if(!win){
@@ -241,13 +241,7 @@ var toolBar = new Ext.Toolbar({
 		        win.show(this);
 		        userStore.load({params:{start:0, limit:pageSize}})
             }
-        }, '-',rmButton, 
-        '-', 
-        {
-        	iconCls: 'blist',
-        	text: 'Sub Groups',
-        	menu: scrollMenu
-        }]
+        }, '-',rmButton]
 });
 
 
