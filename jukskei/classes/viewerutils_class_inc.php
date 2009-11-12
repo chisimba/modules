@@ -56,7 +56,7 @@ class viewerutils extends object {
 
 </div>';
 
-        $footer='<div id="footer"><a href="http://www.wits.ac.za">www.wits.ac.za</a></div>';
+        $footer='<div id="footer"><center><a href="http://www.wits.ac.za">www.wits.ac.za</a></center></div>';
         return $content.$footer;
     }
 
@@ -232,8 +232,7 @@ class viewerutils extends object {
              <font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><hr>
              <b style="font-family:Arial;font-size:24;">Topic: '.$storylink->show().'</b><br/>
              <b style="font-family:Arial;font-size:24;">'.$data['title'].'&nbsp; |&nbsp;</b>
-             <font style="font-family:Arial;font-size:18;">  '.$articlenav.'</font>
-             '.$this->objWashout->parseText($data['content']).'
+            <font style="font-family:Arial;font-size:24;color:#1A4048"'.$this->objWashout->parseText($data['content']).'</font>
              <center>'.$footer.'</center>
             </ul>
             <br/>
