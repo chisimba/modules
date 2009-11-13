@@ -606,11 +606,13 @@ class liftclub extends controller
         $msgbody = $this->getParam('msgbody');
         if(!empty($userid) && !empty($favusrid) && !empty($msgtitle) && !empty($msgbody)){
          $sendmsg = $this->objMessages->insertSingle($userid, $favusrid, $msgtitle, $msgbody);
-     		  $extjs['success'] = true;
+     		  $extjs['SUCCESS'] = true;
         }elseif(empty($userid)){
 				    $extjs['success'] = false;
+     		 $extjs['message'] = "Mail sent successfully";
         }else{
 				    $extjs['success'] = false;
+     		 $extjs['message'] = "Mail not sent, kindly try again";
         }
      		return json_encode($extjs); 
     }
