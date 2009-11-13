@@ -720,7 +720,7 @@ class blogposts extends object
         }
         $ptable->startRow();
         $ptable->addCell($pclabel->show());
-        $ptable->addCell($pcon->showFCKEditor());
+        $ptable->addCell($pcon->show());
         $ptable->endRow();
         // tags input box
         $ptable->startRow();

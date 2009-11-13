@@ -157,7 +157,7 @@ class blogprofiles extends object
             $bprf->setcontent($profile['blogger_profile']);
         }
         $ptable->addCell($bprflabel->show(), 200);
-        $ptable->addCell($bprf->showFCKEditor());
+        $ptable->addCell($bprf->show());
         $ptable->endRow();
         // put it all together and set up a submit button
         $pfieldset->addContent($ptable->show());

@@ -405,7 +405,7 @@ class bloglinksandroll extends object
             $bprf->setcontent($page[0]['page_content']);
         }
         $ptable->addCell($bprflabel->show());
-        $ptable->addCell($bprf->showFCKEditor());
+        $ptable->addCell($bprf->show());
         $ptable->endRow();
         // put it all together and set up a submit button
         $pfieldset->addContent($ptable->show());
