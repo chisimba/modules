@@ -32,7 +32,7 @@ class nav extends object {
             }
             $desc.='<li $cssClass>'.$element.'</li>';
         }
-        $desc.='</ul><hr>';
+        $desc.='</ul><br/>';
 
 
         $sidecatid2=$this->objDbSysconfig->getValue('SIDE_NAV2_CATEGORY','ocsinterface');
