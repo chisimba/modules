@@ -250,7 +250,6 @@ var rmButton = new Ext.Button({
         buttons: [{
             text: 'Save',
             handler: function() {
-/*
                 Ext.getCmp('mainForm').getForm().submit({
                     url:baseUri+'?module=liftclub&action=extjssendmessage&favusrid='+senderId,
                     method: 'POST',
@@ -258,16 +257,19 @@ var rmButton = new Ext.Button({
                     waitTitle: 'Processing...',
                     waitMsg: 'Please wait...',
                     success: function(f, a){
-																				 Ext.Msg.alert('Message Sent Successfully');
+																				 Ext.Msg.alert('Processing Complete','Message Sent Successfully');
 																				 sendmsgFormPanel.getForm().reset();
 																				 win.hide();
+																					SiteAdminGrid.setVisible(false);
+																					alphaGroupStore.load({params:{start:0, limit:25}});
 																				},
 																				failure: function(f, a)
 																				{
-																			 Ext.Msg.alert('Error Encountered, try again!');
+																			  Ext.Msg.alert('Processing Complete','Error Encountered, try again!');
+																			  //win.hide();
 																				}
                 });
-*/
+/*
                     Ext.Ajax.request({
                         method: 'POST',
                         url:baseUri+'?module=liftclub&action=extjssendmessage&favusrid='+senderId,
@@ -288,6 +290,7 @@ var rmButton = new Ext.Button({
                             Ext.MessageBox.alert('Failure Error', response.responseText);
                         }
                     });
+*/                    
             }
         },{
 												text: 'Reset',

@@ -597,8 +597,6 @@ class liftclub extends controller
      * Method to send a message for ExtJs
      */
     protected function sendMessageExtJs(){
-        $this->setPageTemplate(NULL);
-        $this->setLayoutTemplate(NULL);
         // Capture all Submitted Fields
         $userid = $this->objUser->userId();
         $favusrid = $this->getParam('favusrid');
@@ -606,15 +604,14 @@ class liftclub extends controller
         $msgbody = $this->getParam('msgbody');
         if(!empty($userid) && !empty($favusrid) && !empty($msgtitle) && !empty($msgbody)){
          $sendmsg = $this->objMessages->insertSingle($userid, $favusrid, $msgtitle, $msgbody);
-     		  $extjs['SUCCESS'] = true;
+     		  $extjs = '{"success":true}';
         }elseif(empty($userid)){
-				    $extjs['success'] = false;
-     		 $extjs['message'] = "Mail sent successfully";
+         $extjs = '{"success":false}';
         }else{
-				    $extjs['success'] = false;
-     		 $extjs['message'] = "Mail not sent, kindly try again";
-        }
-     		return json_encode($extjs); 
+         $extjs = '{"success":false}';
+        }   
+       echo $extjs; 
+     		//return json_encode($extjs); 
     }
     /**
      * Method to update user information
