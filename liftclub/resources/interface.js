@@ -269,28 +269,6 @@ var rmButton = new Ext.Button({
 																			  //win.hide();
 																				}
                 });
-/*
-                    Ext.Ajax.request({
-                        method: 'POST',
-                        url:baseUri+'?module=liftclub&action=extjssendmessage&favusrid='+senderId,
-                        form: 'mainForm', 
-                        params: Ext.getCmp('mainForm').getForm().getFieldValues(),
-                        success: function(response, options) {
-                            var data = Ext.decode(response.responseText);
-                            if (data.SUCCESS) {
-                                Ext.Msg.alert('OK', response.responseText);
-                                sendmsgFormPanel.getForm().reset();
-                                win.hide();                                 
-                            }
-                            else {
-                                Ext.MessageBox.alert('ERROR', response.responseText);
-                            }
-                        },
-                        failure: function(response, options) {
-                            Ext.MessageBox.alert('Failure Error', response.responseText);
-                        }
-                    });
-*/                    
             }
         },{
 												text: 'Reset',

@@ -259,12 +259,16 @@ var rmButton = new Ext.Button({
                     waitTitle: 'Processing...',
                     waitMsg: 'Please wait...',
                     success: function(f, a){
-																				 Ext.Msg.alert('Message Sent Successfully');
+																				 Ext.Msg.alert('Processing Complete','Message Sent Successfully');
 																				 sendmsgFormPanel.getForm().reset();
+																				 win.hide();
+																					SiteAdminGrid.setVisible(false);
+																					alphaGroupStore.load({params:{start:0, limit:25}});
 																				},
 																				failure: function(f, a)
 																				{
-																			 Ext.Msg.alert('Error Encountered, try again!');
+																			  Ext.Msg.alert('Processing Complete','Error Encountered, try again!');
+																			  //win.hide();
 																				}
                 });
             }
