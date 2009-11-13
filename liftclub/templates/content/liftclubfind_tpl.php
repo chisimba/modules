@@ -5,7 +5,7 @@ $this->appendArrayVar('headerParams', '
 <script type="text/javascript">
 var pageSize = 25;
 var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'liftclub', 'action' => 'jsongetlifts', 'userneed' => 'find'))).'"; 
-var userneed = "find";
+var usrneed = "find";
 var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
 
