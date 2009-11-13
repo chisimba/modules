@@ -223,6 +223,42 @@ var rmButton = new Ext.Button({
         });
         
 
+    var sendmsgFormPanel = new Ext.FormPanel({
+        labelWidth: 75, // label settings here cascade unless overridden
+        url:baseUri+'?module=liftclub&action=sendmessage',
+        frame:true,
+        title: 'Send Message Form',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaults: {width: 230},
+        defaultType: 'textfield',
+        items: [{
+                xtype:'textfield',
+                fieldLabel: 'Title',
+                name: 'msgtitle',
+                allowBlank:false
+            },{
+                xtype:'textarea',
+                fieldLabel: 'Message',
+                name: 'msgbody',
+                allowBlank:false
+            },{
+                xtype:'textfield',
+                fieldLabel: 'msgid',
+                name: 'msgid',
+                value: selectedGroupId,
+                allowBlank:false
+            }
+        ],
+        buttons: [{
+            text: 'Save'
+        },{
+            text: 'Cancel',
+            handler: function(){
+                       win.hide();
+            }
+        }]
+    });
 
 // The toolbar for the user grid
 var toolBar = new Ext.Toolbar({
@@ -232,19 +268,18 @@ var toolBar = new Ext.Toolbar({
             iconCls: 'silk-add',
             handler: function (){
 	        	if(!win){
-		            win = new Ext.Window({
-		                
+		            win = new Ext.Window({		                
 		                layout:'fit',
-		                width:615,
-		                height:350,
+		                width:415,
+		                //height:250,
+		                autoHeight:true,
 		                closeAction:'hide',
 		                plain: true,
 		                items: [sendmsgFormPanel]			                
 		            });
 		        }
 		        win.show(this);
-		        //userStore.load({params:{start:0, limit:pageSize}})
-            }
+          }
         }, '-',rmButton]
 });
 

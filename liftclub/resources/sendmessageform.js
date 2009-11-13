@@ -29,15 +29,15 @@ Ext.onReady(function(){
                 fieldLabel: 'Message',
                 name: 'msgbody',
                 allowBlank:false
-            })
+            }
         ],
-
         buttons: [{
             text: 'Save'
         },{
             text: 'Cancel'
         }]
     });
+
 /*
     sendmsgFormPanel.render(document.body);
 });
