@@ -228,8 +228,9 @@ var rmButton = new Ext.Button({
         
 
     var sendmsgFormPanel = new Ext.FormPanel({
+        id: 'mainForm',
         labelWidth: 75, // label settings here cascade unless overridden
-        url:baseUri+'?module=liftclub&action=sendmessage',
+        url:baseUri+'?module=liftclub&action=extjssendmessage&msgid='+selectedGroupId,
         frame:true,
         title: 'Send Message Form',
         bodyStyle:'padding:5px 5px 0',
@@ -250,10 +251,29 @@ var rmButton = new Ext.Button({
         ],
         buttons: [{
             text: 'Save',
-            handler: function(){
-             alert(recipentId);
+            handler: function() {
+                Ext.getCmp('mainForm').getForm().submit({
+                    url:baseUri+'?module=liftclub&action=extjssendmessage&favusrid='+recipentId,
+                    method: 'POST',
+                    //params: { msgid: selectedGroupId },
+                    waitTitle: 'Processing...',
+                    waitMsg: 'Please wait...',
+                    success: function(f, a){
+																				 Ext.Msg.alert('Message Sent Successfully');
+																				 sendmsgFormPanel.getForm().reset();
+																				},
+																				failure: function(f, a)
+																				{
+																			 Ext.Msg.alert('Error Encountered, try again!');
+																				}
+                });
             }
         },{
+												text: 'Reset',
+												handler: function() {
+												 sendmsgFormPanel.getForm().reset();
+								    }
+								},{
             text: 'Cancel',
             handler: function(){
                        win.hide();

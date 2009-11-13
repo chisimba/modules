@@ -103,6 +103,13 @@ class liftclub extends controller
                     return $this->updateUser();
                 case 'sendmessage':
                     return $this->sendMessage();
+                case 'extjssendmessage':
+				               $this->setLayoutTemplate(NULL);
+				               $this->setVar('pageSuppressToolbar', TRUE);
+				               $this->setVar('pageSuppressBanner', TRUE);
+				               $this->setVar('pageSuppressSearch', TRUE);
+				               $this->setVar('suppressFooter', TRUE);
+                    return $this->sendMessageExtJs();
                 case 'addfavourite':
                     return $this->addFavourite();
                 case 'detailssent':
@@ -585,6 +592,27 @@ class liftclub extends controller
         }else{
          echo 'notok';
         }
+    }
+    /**
+     * Method to send a message for ExtJs
+     */
+    protected function sendMessageExtJs(){
+        $this->setPageTemplate(NULL);
+        $this->setLayoutTemplate(NULL);
+        // Capture all Submitted Fields
+        $userid = $this->objUser->userId();
+        $favusrid = $this->getParam('favusrid');
+        $msgtitle = $this->getParam('msgtitle');
+        $msgbody = $this->getParam('msgbody');
+        if(!empty($userid) && !empty($favusrid) && !empty($msgtitle) && !empty($msgbody)){
+         $sendmsg = $this->objMessages->insertSingle($userid, $favusrid, $msgtitle, $msgbody);
+     		  $extjs['success'] = true;
+        }elseif(empty($userid)){
+				    $extjs['success'] = false;
+        }else{
+				    $extjs['success'] = false;
+        }
+     		return json_encode($extjs); 
     }
     /**
      * Method to update user information
