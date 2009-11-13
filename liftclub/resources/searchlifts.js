@@ -41,7 +41,7 @@ var liftdata = new Ext.data.JsonStore({
         el:'find-grid',
         width:800,
         height:400,
-        title:'Lifts',
+        title:liftitle,
         store: liftdata,
         trackMouseOver:false,
         disableSelection:true,
@@ -116,7 +116,7 @@ var liftdata = new Ext.data.JsonStore({
 								plugins:[new Ext.ux.grid.Search({
 											iconCls:'zoom'
 											//,readonlyIndexes:['lecturers']
-											,disableIndexes:['detuserid','createdormodified','selectedays','userneed']
+											,disableIndexes:['detuserid','createdormodified','selectedays']
 											,minChars:1
 											,autoFocus:true
 											// ,menuStyle:'radio'
@@ -154,6 +154,6 @@ var liftdata = new Ext.data.JsonStore({
     grid.render();
 
     // trigger the data store load
-    liftdata.load({params:{start:0, limit:5, usrneed:userneed}});
+    liftdata.load({params:{start:0, limit:5, usrneed:usrneed}});
 	
 });

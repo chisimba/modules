@@ -6,6 +6,7 @@ $this->appendArrayVar('headerParams', '
 var pageSize = 25;
 var uri = "'.str_replace('&amp;','&',$this->uri(array('module' => 'liftclub', 'action' => 'jsongetlifts', 'userneed' => 'find'))).'"; 
 var usrneed = "find";
+var liftitle= "Lifts Needed";
 var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
 
