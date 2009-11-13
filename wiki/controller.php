@@ -66,6 +66,11 @@ class wiki extends controller {
     */
     public function init()
     {
+        $wiki = $this->getParam('wiki');
+        if ($wiki) {
+            $this->setSession('wiki_id', $wiki);
+        }
+
         $this->objLanguage = $this->getObject( 'language', 'language' );
         $this->objWikidisplay = $this->newObject('wikidisplay', 'wiki');
         $this->objDbwiki = $this->newObject('dbwiki', 'wiki');
