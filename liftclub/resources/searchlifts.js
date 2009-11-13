@@ -116,7 +116,7 @@ var liftdata = new Ext.data.JsonStore({
 								plugins:[new Ext.ux.grid.Search({
 											iconCls:'zoom'
 											//,readonlyIndexes:['lecturers']
-											,disableIndexes:['detuserid','createdormodified','selectedays']
+											,disableIndexes:['detuserid','createdormodified','selectedays','userneed']
 											,minChars:1
 											,autoFocus:true
 											// ,menuStyle:'radio'

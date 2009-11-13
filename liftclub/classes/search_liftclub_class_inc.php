@@ -46,10 +46,10 @@ class search_liftclub extends dbTable
 												$cnt++;
 											 $where .= ' det.needtype LIKE "%'.$params['query'].'%" ';
 						     }
-						     if($field=='userneed'){
+/*						     if($field=='userneed'){
 												$cnt++;
 											 $where .= ' det.userneed LIKE "%'.$params['query'].'%" ';
-						     }
+						     }*/
 											if($cnt < $max){
 												$where .= " OR ";
 											}
@@ -80,6 +80,7 @@ class search_liftclub extends dbTable
         $str = '{"liftcount":"'.$liftCount.'","searchedlifts":[';
         $searchArray = array();
         foreach($myLifts as $thisLift){
+        if($thisLift['userneed']==$userneed){
           $infoArray = array();
           $infoArray['detid'] = $thisLift['detid'];
           $infoArray['orid'] = $thisLift['orid'];          
@@ -154,6 +155,7 @@ class search_liftclub extends dbTable
           $infoArray['destreet'] = $thisLift['destreet'];
           $infoArray['desuburb'] = $thisLift['desuburb'];
           $searchArray[] = $infoArray;
+        }
         }
         return json_encode(array('liftcount' => $liftCount, 'searchresults' =>  $searchArray));
     }
