@@ -233,7 +233,10 @@ class search_liftclub extends dbTable
           if(!empty($thisMsg['userid']))
           $senderusername = $this->objUser->userName($thisMsg['userid']);
           $infoArray['sender'] = $senderusername;
+          $infoArray['senderuserid'] = $thisMsg['userid'];
           $infoArray['recipentuserid'] = $thisMsg['recipentuserid'];
+          $receiverusername = $this->objUser->userName($thisMsg['recipentuserid']);
+          $infoArray['recipent'] = $receiverusername;
           $infoArray['timesent'] = $thisMsg['timesent'];
           $infoArray['markasread'] = $thisMsg['markasread'];
           $infoArray['markasdeleted'] = $thisMsg['markasdeleted'];
@@ -319,6 +322,7 @@ class search_liftclub extends dbTable
           if(!empty($thisMsg['userid']))
           $senderusername = $this->objUser->userName($thisMsg['userid']);
           $infoArray['sender'] = $senderusername;
+          $infoArray['senderuserid'] = $thisMsg['userid'];
           $infoArray['recipentuserid'] = $thisMsg['recipentuserid'];
           $receiverusername = $this->objUser->userName($thisMsg['recipentuserid']);
           $infoArray['recipent'] = $receiverusername;

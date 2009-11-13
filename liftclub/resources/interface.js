@@ -3,6 +3,7 @@ var pageSize = 25;
 var userOffset = 0;
 var selectedTab = "A";
 var selectedGroupId;
+var recipentId;
 var win;
 var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Please wait..."});
 
@@ -20,6 +21,8 @@ Ext.onReady(function(){
 		
        SiteAdminGrid.setVisible(true);
        selectedGroupId = record.data.msgid;
+       recipentId = record.data.recipentuserid;
+       senderId = record.data.senderuserid;
        loadGroup(record.data.msgid, record.data.sender, record.data.timesent, record.data.messagetitle, record.data.messagebody);
       
     });       
@@ -44,6 +47,7 @@ var proxyGroupStore = new Ext.data.HttpProxy({
         	'msgid',
             'sender', 
             'recipentuserid',
+            'senderuserid',
             'timesent',
             'markasread',
             'markasdeleted',
@@ -85,6 +89,7 @@ var proxyStore = new Ext.data.HttpProxy({
         	'msgid',
             'sender', 
             'recipentuserid',
+            'senderuserid',
             'timesent',
             'markasread',
             'markasdeleted',
@@ -220,6 +225,49 @@ var rmButton = new Ext.Button({
         });
         
 
+    var sendmsgFormPanel = new Ext.FormPanel({
+        id: 'mainForm',
+        labelWidth: 75, // label settings here cascade unless overridden
+        url:baseUri+'?module=liftclub&action=sendmessage&msgid='+selectedGroupId,
+        frame:true,
+        title: 'Send Message Form',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaults: {width: 230},
+        defaultType: 'textfield',
+        items: [{
+                xtype:'textfield',
+                fieldLabel: 'Title',
+                name: 'msgtitle',
+                allowBlank:false
+            },{
+                xtype:'textarea',
+                fieldLabel: 'Message',
+                name: 'msgbody',
+                allowBlank:false
+            }
+        ],
+        buttons: [{
+            text: 'Save',
+            /*handler: function(){
+             alert(senderId);
+            }*/
+            handler: function() {
+                Ext.getCmp('mainForm').getForm().submit({
+                    url:baseUri+'?module=liftclub&action=sendmessage&favusrid='+senderId,
+                    method: 'POST',
+                    //params: { msgid: selectedGroupId },
+                    waitTitle: 'Processing...',
+                    waitMsg: 'Please wait...'
+                });
+            }
+        },{
+            text: 'Cancel',
+            handler: function(){
+                       win.hide();
+            }
+        }]
+    });
 
 // The toolbar for the user grid
 var toolBar = new Ext.Toolbar({
@@ -229,19 +277,19 @@ var toolBar = new Ext.Toolbar({
             iconCls: 'silk-add',
             handler: function (){
 	        	if(!win){
+	        	    //alert(selectedGroupId);
 		            win = new Ext.Window({
-		                
 		                layout:'fit',
-		                width:615,
-		                height:350,
+		                width:415,
+		                //height:250,
+		                autoHeight:true,
 		                closeAction:'hide',
 		                plain: true,
 		                items: [sendmsgFormPanel]			                
 		            });
 		        }
 		        win.show(this);
-		        //userStore.load({params:{start:0, limit:pageSize}})
-            }
+          }
         }, '-',rmButton]
 });
 

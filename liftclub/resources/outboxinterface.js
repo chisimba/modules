@@ -20,6 +20,8 @@ Ext.onReady(function(){
 		
        SiteAdminGrid.setVisible(true);
        selectedGroupId = record.data.msgid;
+       recipentId = record.data.recipentuserid;
+       senderId = record.data.senderuserid;
        loadGroup(record.data.msgid, record.data.sender, record.data.timesent, record.data.messagetitle, record.data.messagebody);
       
     });       
@@ -44,6 +46,7 @@ var proxyGroupStore = new Ext.data.HttpProxy({
         	'msgid',
             'sender', 
             'recipentuserid',
+            'senderuserid',
             'recipent',
             'timesent',
             'markasread',
@@ -86,6 +89,7 @@ var proxyStore = new Ext.data.HttpProxy({
         	'msgid',
             'sender', 
             'recipentuserid',
+            'senderuserid',
             'recipent',
             'timesent',
             'markasread',
@@ -242,16 +246,13 @@ var rmButton = new Ext.Button({
                 fieldLabel: 'Message',
                 name: 'msgbody',
                 allowBlank:false
-            },{
-                xtype:'textfield',
-                fieldLabel: 'msgid',
-                name: 'msgid',
-                value: selectedGroupId,
-                allowBlank:false
             }
         ],
         buttons: [{
-            text: 'Save'
+            text: 'Save',
+            handler: function(){
+             alert(recipentId);
+            }
         },{
             text: 'Cancel',
             handler: function(){
