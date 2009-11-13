@@ -190,21 +190,21 @@ class search_liftclub extends dbTable
 									}
          if(!empty($start) || $start>=0 && !empty($limit)){
            if(!empty($read)){
-            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasread`='".$read."' AND `markasdeleted` !='1' AND `recipentuserid`='".$thisuser."'".$where." LIMIT ".$start." , ".$limit;
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasread`='".$read."' AND `markasdeleted` !='1' AND `recipentuserid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC LIMIT ".$start." , ".$limit;
            }elseif(!empty($trash)){
-            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasdeleted` ='".$trash."' AND `recipentuserid`='".$thisuser."'".$where." LIMIT ".$start." , ".$limit;
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasdeleted` ='".$trash."' AND `recipentuserid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC LIMIT ".$start." , ".$limit;
            }else{
-            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `recipentuserid`='".$thisuser."'".$where." AND `markasdeleted` ='".$trash."' LIMIT ".$start." , ".$limit;
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `recipentuserid`='".$thisuser."'".$where." AND `markasdeleted` ='".$trash."' ORDER BY `tbl_liftclub_messages`.`timesent` DESC LIMIT ".$start." , ".$limit;
            }
            $messages = $this->objDBMessages->getArray($sqlsearch);
 		         return $messages;
          }else{
            if(!empty($read)){
-            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasread`='".$read."' AND markasdeleted !='1' AND `recipentuserid`='".$thisuser."'".$where;
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasread`='".$read."' AND markasdeleted !='1' AND `recipentuserid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC";
            }elseif(!empty($trash)){
-            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasdeleted` ='".$trash."' AND `recipentuserid`='".$thisuser."'".$where;
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasdeleted` ='".$trash."' AND `recipentuserid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC";
            }else{
-            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE  `markasdeleted` ='".$trash."' AND `recipentuserid`='".$thisuser."'".$where;
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE  `markasdeleted` ='".$trash."' AND `recipentuserid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC";
            }
            $messages = $this->objDBMessages->getArray($sqlsearch);
 		         return $messages;
@@ -243,6 +243,94 @@ class search_liftclub extends dbTable
         }
         return json_encode(array('msgcount' => $msgCount, 'searchresults' =>  $searchArray));
     }
+    function getSentMessages($id=NULL, $start, $limit, $params=NULL, $read=NULL, $trash=0) {
+         $thisuser = $this->objUser->userId();
+									$where = "";
+									if(!empty($id))
+									$where = " AND id='".$id."'";
+									if(is_array($params['search'])){
+										$max = count($params['search']);
+		        //$max=3;
+										$cnt = 0;
+										foreach($params['search'] as $field){
+						     if($field=='messagetitle'){
+												$cnt++;
+											 $where .= " messagetitle LIKE '%".$params['query']."%' ";
+						     }
+						     if($field=='timesent'){
+												$cnt++;
+											 $where .= " timesent LIKE '%".$params['query']."%' ";
+						     }
+											if($field=='sender'){												
+												$senderuserid = $this->objUser->getUserId($params['query']);
+												if($senderuserid !== FALSE){
+											  $cnt++;
+											  $where .= " userid = '".$senderuserid."' ";
+											 }
+						     }
+											if($cnt < $max){
+												$where .= ' OR ';
+											}
+										}					
+										$where = ' AND '.$where;		
+									}
+         if(!empty($start) || $start>=0 && !empty($limit)){
+           if(!empty($read)){
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasread`='".$read."' AND `markasdeleted` !='1' AND `userid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC LIMIT ".$start." , ".$limit;
+           }elseif(!empty($trash)){
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasdeleted` ='".$trash."' AND `userid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC LIMIT ".$start." , ".$limit;
+           }else{
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `userid`='".$thisuser."'".$where." AND `markasdeleted` ='".$trash."' ORDER BY `tbl_liftclub_messages`.`timesent` DESC LIMIT ".$start." , ".$limit;
+           }
+           $messages = $this->objDBMessages->getArray($sqlsearch);
+		         return $messages;
+         }else{
+           if(!empty($read)){
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasread`='".$read."' AND markasdeleted !='1' AND `userid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC";
+           }elseif(!empty($trash)){
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE `markasdeleted` ='".$trash."' AND `userid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC";
+           }else{
+            $sqlsearch = "SELECT * FROM `tbl_liftclub_messages` WHERE  `markasdeleted` ='".$trash."' AND `userid`='".$thisuser."'".$where." ORDER BY `tbl_liftclub_messages`.`timesent` DESC";
+           }
+           $messages = $this->objDBMessages->getArray($sqlsearch);
+		         return $messages;
+         }    
+    }
+    function jsonGetSentMessages($id=NULL, $start, $limit, $read=NULL, $trash=NULL) 
+    {
+								$params["start"] = ($this->getParam("start")) ? $this->getParam("start") : null;
+								$params["limit"] = ($this->getParam("limit")) ? $this->getParam("limit") : null;
+								$params["search"] = ($this->getParam("fields")) ? json_decode(stripslashes($this->getParam("fields"))) : null;
+								$params["query"] = ($this->getParam("query")) ? $this->getParam("query") : null;
+								$params["sort"] = ($this->getParam("sort")) ? $this->getParam("sort") : null;
+        if(!empty($params["start"]))
+        $start= $params["start"];
+        if(!empty($params["limit"]))
+        $limit= $params["limit"];
+        $myMessages = $this->getSentMessages($id, $start, $limit, $params, $read, $trash);
+       	$msgCount = ( count ( $myMessages ) );
+        //$str = '{"msgcount":"'.$msgCount.'","myMsgs":[';
+        $searchArray = array();
+        //msgid userid recipentuserid timesent markasread markasdeleted messagetitle messagebody  
+        foreach($myMessages as $thisMsg){
+          $infoArray = array();
+          $infoArray['msgid'] = $thisMsg['id'];
+          $senderusername = $thisMsg['userid'];
+          if(!empty($thisMsg['userid']))
+          $senderusername = $this->objUser->userName($thisMsg['userid']);
+          $infoArray['sender'] = $senderusername;
+          $infoArray['recipentuserid'] = $thisMsg['recipentuserid'];
+          $receiverusername = $this->objUser->userName($thisMsg['recipentuserid']);
+          $infoArray['recipent'] = $receiverusername;
+          $infoArray['timesent'] = $thisMsg['timesent'];
+          $infoArray['markasread'] = $thisMsg['markasread'];
+          $infoArray['markasdeleted'] = $thisMsg['markasdeleted'];
+          $infoArray['messagetitle'] = $thisMsg['messagetitle'];
+          $infoArray['messagebody'] = $thisMsg['messagebody'];
+          $searchArray[] = $infoArray;
+        }
+        return json_encode(array('msgcount' => $msgCount, 'searchresults' =>  $searchArray));
+    }
     /**
      * Method to send message to trash
      * @param integer $msgId
@@ -257,6 +345,21 @@ class search_liftclub extends dbTable
 				    $extjs['success'] = false;   		
      		}
      		return json_encode($extjs); 
-		}
+		 }
+    /**
+     * Method to restore message from trash
+     * @param integer $msgId
+     * @return unknown
+     */
+    public function jsonMoveFromTrash($msgId){
+    			if(!empty($msgId)){
+								$res = $this->objDBMessages->markTrashed($msgId,0);
+								    				var_dump($res);
+     		 $extjs['success'] = true;
+     		}else{
+				    $extjs['success'] = false;   		
+     		}
+     		return json_encode($extjs); 
+		 }
 }
 ?>

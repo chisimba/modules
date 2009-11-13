@@ -9,7 +9,7 @@
 	//$ext .=$this->getJavaScriptFile('ColumnNodeUI.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('Ext.ux.grid.Search.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('sendmessagesform.js', 'liftclub');
-	$ext .=$this->getJavaScriptFile('interface.js', 'liftclub');
+	$ext .=$this->getJavaScriptFile('outboxinterface.js', 'liftclub');
 
 	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
 	

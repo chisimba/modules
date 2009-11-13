@@ -80,6 +80,10 @@ class liftclub extends controller
                     return 'liftcluboffer_tpl.php'; 
                 case 'messages':
                     return 'messages_tpl.php'; 
+                case 'trashedmessages':
+                    return 'trashmessages_tpl.php'; 
+                case 'outboxmessages':
+                    return 'outboxmessages_tpl.php'; 
                 case 'showregister':
                     return $this->registrationHome();
                 case 'modifydetails':
@@ -165,23 +169,43 @@ class liftclub extends controller
                     echo $lifts;
                     exit(0);
                     break;
-                    //jsonMoveToTrash
+                    //jsonMoveToTrash 
 								        case 'json_movetotrash':
 								        	echo $this->objLiftSearch->jsonMoveToTrash($this->getParam('msgid'));
 								        	exit(0);
 								        	break;
-
+								        case 'json_movefromtrash':
+								        	echo $this->objLiftSearch->jsonMoveFromTrash($this->getParam('msgid'));
+								        	exit(0);
+								        	break;
                 case 'json_getallmessages':
                     $id = $this->getParam('id');
                     $start = $this->getParam('start');
                     $limit = $this->getParam('limit');
-                    
+                    $trash = $this->getParam('trash');                    
                     $this->setLayoutTemplate(NULL);
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->setVar('pageSuppressBanner', TRUE);
                     $this->setVar('pageSuppressSearch', TRUE);
                     $this->setVar('suppressFooter', TRUE);
-                    $lifts= $this->objLiftSearch->jsonGetMessages($id, $start, $limit, $read=NULL, $trash=0);
+                    if($trash!=1){
+                     $lifts= $this->objLiftSearch->jsonGetMessages($id, $start, $limit, $read=NULL, $trash=0);
+                    }else{
+                     $lifts= $this->objLiftSearch->jsonGetMessages($id, $start, $limit, $read=NULL, $trash);
+                    }
+                    echo $lifts;
+                    exit(0);
+                    break;
+                case 'json_getsentmessages':
+                    $id = $this->getParam('id');
+                    $start = $this->getParam('start');
+                    $limit = $this->getParam('limit');
+                    $this->setLayoutTemplate(NULL);
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    $this->setVar('pageSuppressBanner', TRUE);
+                    $this->setVar('pageSuppressSearch', TRUE);
+                    $this->setVar('suppressFooter', TRUE);
+                    $lifts= $this->objLiftSearch->jsonGetSentMessages($id, $start, $limit, $read=NULL, $trash=0);
                     echo $lifts;
                     exit(0);
                     break;

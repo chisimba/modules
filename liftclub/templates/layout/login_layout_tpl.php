@@ -20,14 +20,24 @@ $offerLink->link = $this->objLanguage->languageText("mod_liftclub_liftonoffer","
 $offerLink->title = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
 
 $msgLink =new link($this->uri(array('action'=>'messages')));
-$msgLink->link = $this->objLanguage->languageText("mod_liftclub_viewmessages","liftclub","View Messages");
-$msgLink->title = $this->objLanguage->languageText("mod_liftclub_viewmessages","liftclub","View Messages");
+$msgLink->link = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Message Inbox");
+$msgLink->title = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Message Inbox");
+
+$msgOutLink =new link($this->uri(array('action'=>'outboxmessages')));
+$msgOutLink->link = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Message Outbox");
+$msgOutLink->title = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Message Outbox");
+
+$msgTrashLink =new link($this->uri(array('action'=>'trashedmessages')));
+$msgTrashLink->link = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trashed Messages");
+$msgTrashLink->title = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trashed Messages");
 
 $pageLink = "<ul>";
 if($this->objUser->userId()!==null){ 
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgLink->show()."</li>";
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgOutLink->show()."</li>";
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgTrashLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>"; 
 }else{
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";

@@ -30,7 +30,7 @@ Ext.onReady(function(){
 /// Data Stores ////////
 ////////////////////////
 var proxyGroupStore = new Ext.data.HttpProxy({
-            url: baseUri+'?module=liftclub&action=json_getallmessages&limit=25&start=0'
+            url: baseUri+'?module=liftclub&action=json_getallmessages&trash=1&limit=25&start=0'
         });
 
         //msgid sender recipentuserid timesent markasread markasdeleted messagetitle messagebody
@@ -109,7 +109,7 @@ var proxyStore = new Ext.data.HttpProxy({
     //store.setDefaultSort('lastpost', 'desc');
     
     var proxySubGroupStore = new Ext.data.HttpProxy({
-            url: baseUri+'?module=liftclub&action=json_getallmessages&limit=25&start=0'
+            url: baseUri+'?module=liftclub&action=json_getallmessages&trash=1&limit=25&start=0'
         });
         
     var subGroupStore = new Ext.data.JsonStore({
@@ -159,7 +159,7 @@ var pageNavigation = new Ext.PagingToolbar({
             listeners:{ 	    		
 	    		beforechange: function(ptb, params){	
 	    			userOffset = params.start; 			
-	    			proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&id='+selectedGroupId+'&limit='+params.start+'&offset='+params.start);
+	    			proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&trash=1&id='+selectedGroupId+'&limit='+params.start+'&offset='+params.start);
 	    		}  
             }
             
@@ -175,7 +175,7 @@ var groupsPageNavigation = new Ext.PagingToolbar({
             emptyMsg: "No Messages to display",
             listeners:{ 
             	beforechange: function(ptb, params){	    			
-	    			proxyGroupStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&limit='+params.start+'&start='+params.start);	    			
+	    			proxyGroupStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&trash=1&limit='+params.start+'&start='+params.start);	    			
 	    		}            
             }
             
@@ -207,15 +207,15 @@ var subGroupsCombo = new Ext.form.ComboBox({
 var scrollMenu = new Ext.menu.Menu();
 
 var rmButton = new Ext.Button({
-            text:'Send to Trash',
-            tooltip:'Send message to trash',
+            text:'Restore to Inbox/Outbox',
+            tooltip:'Send message to back to Inbox/Outbox',
             iconCls:'silk-delete',
 			id:'rmgroup',
             // Place a reference in the GridPanel
             ref: '../../removeButton',
             disabled: false,
             handler: function(){
-            	sendToTrash();
+            	restoreMessage();
             }
         });
         
@@ -223,26 +223,7 @@ var rmButton = new Ext.Button({
 
 // The toolbar for the user grid
 var toolBar = new Ext.Toolbar({
-	items:[{
-            text:'Reply',
-            tooltip:'Reply to sender',
-            iconCls: 'silk-add',
-            handler: function (){
-	        	if(!win){
-		            win = new Ext.Window({
-		                
-		                layout:'fit',
-		                width:615,
-		                height:350,
-		                closeAction:'hide',
-		                plain: true,
-		                items: [sendmsgFormPanel]			                
-		            });
-		        }
-		        win.show(this);
-		        //userStore.load({params:{start:0, limit:pageSize}})
-            }
-        }, '-',rmButton]
+	items:[rmButton]
 });
 
 
@@ -281,7 +262,7 @@ var groupsGrid = new Ext.grid.GridPanel({
         height:300,
        // frame:true,
         store: alphaGroupStore,
-        title:'Inbox',
+        title:'Trashed Messages',
         iconCls:'icon-grid',
         loadMask: true,
 		//stripeRows: true,//msgid sender recipentuserid timesent markasread markasdeleted messagetitle messagebody
@@ -427,14 +408,14 @@ function loadGroup(nodeId, sender, timesent, messagetitle, messagebody){
 	SiteAdminGrid.setTitle(timesent+" - " +messagetitle);
 		//SiteAdminGrid.render('groupusers');
 	//alert(messagebody);
-	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&limit=25&start=0&id='+nodeId);
+	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&trash=1&limit=25&start=0&id='+nodeId);
 	//load the data for this group
 	abstractStore.load({params:{start:0, limit:25}}); 	
 }
 
 function loadSubgroup1(nodeId)
 {
-	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&limit=25&start=0&id='+nodeId);
+	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&trash=1&limit=25&start=0&id='+nodeId);
 	abstractStore.load({params:{start:0, limit:25}});
 }
 
@@ -452,14 +433,14 @@ function loadSubgroupMenu(records){
 }
 
 function onSubGroupClick(item){	
-	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&limit=25&start=0&id='+item.getItemId());
+	proxyStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&trash=1&limit=25&start=0&id='+item.getItemId());
 	abstractStore.load({params:{start:0, limit:25}}); 
 	selectedGroupId = item.getItemId();
 	//SiteAdminGrid.setTitle(SiteAdminGrid.getTitle()+' - '+item.getText());
 }
 
 //method that moves message to trash
-function sendToTrash()
+function restoreMessage()
 {	
 	myMask.show();
 				//alert(selectedGroupId);
@@ -469,11 +450,11 @@ function sendToTrash()
 	    method: 'POST',
 	    params: {
 	       	module: 'liftclub',
-	   		action: 'json_movetotrash',
+	   		action: 'json_movefromtrash',
 	   		msgid: selectedGroupId
 	    },
 	    success: function(xhr,params) {
-	        alert('Message Trashed Successfully!\n');
+	        alert('Message Restored Successfully!\n');
 	        SiteAdminGrid.setVisible(false);
 	        alphaGroupStore.load({params:{start:0, limit:25}});
 /*	        abstractStore.load({
