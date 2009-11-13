@@ -31,7 +31,7 @@
 			        
 		        //----------TEXT INPUT--------------
         		//Create a new textinput for the title of the essay
-        		$objTitle = new textinput('essaytitle');
+        		$objTitle = new textinput('essaytitle','',NULL,100);
         		//Create a new label for the text labels
         		$essaytitleLabel = new label($this->objLanguage->languageText("mod_EFL_Essaytitle","EFL"),"essaytitle");
         		$objForm->addToForm($essaytitleLabel->show() . "<br />");
@@ -40,7 +40,7 @@
 
 			//----------TEXTAREA--------------
         		//Create a new textarea for the essay text
-				$objEssay = new textarea('essay','',150,140);
+				$objEssay = new textarea('essay','',50,100);
         		$essayLabel = new label($this->objLanguage->languageText("mod_EFL_Essaytxt","EFL"),"essay");
         		$objForm->addToForm($essayLabel->show() . "<br />");
         		$objForm->addToForm($objEssay->show() . "<br />");

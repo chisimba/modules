@@ -1,16 +1,23 @@
 <?php
 
-$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
-$mainjs = '<script src="'.$this->getResourceUri('js/editor.js').'" type="text/javascript"></script>';
+// Create an instance of the css layout class
+$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout->setNumColumns(2);
 
-$this->appendArrayVar('headerParams', $extbase);
-$this->appendArrayVar('headerParams', $extalljs);
-$this->appendArrayVar('headerParams', $extallcss);
-$this->appendArrayVar('headerParams', $mainjs);
+$objEditForm = $this->getObject('editform', 'efl');
+$postLoginMenu  = $this->newObject('postloginmenu','toolbar');
+$leftSideColumn = $postLoginMenu->show();
+$cssLayout->setLeftColumnContent($leftSideColumn);
 
-echo "<div id='texteditor'></div>";
+$rightSideColumn='<div id="gtx"></div><div style="padding:10px;">';
+
+//Add the table to the centered layer
+$rightSideColumn .=$objEditForm->show();
+$rightSideColumn.= '</div>';
+// Add Right Column
+$cssLayout->setMiddleColumnContent($rightSideColumn);
+
 $objEditForm = $this->getObject('editform', 'efl');
 echo $objEditForm->show();
+
 ?>
