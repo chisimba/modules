@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -81,12 +82,19 @@ import org.jivesoftware.smack.util.Base64;
 import org.avoir.realtime.gui.tips.*;
 import org.avoir.realtime.sound.AudioVideoTest;
 import org.avoir.realtime.sound.SoundMonitor;
+import snoozesoft.systray4j.CheckableMenuItem;
+import snoozesoft.systray4j.SubMenu;
+import snoozesoft.systray4j.SysTrayMenu;
+import snoozesoft.systray4j.SysTrayMenuEvent;
+import snoozesoft.systray4j.SysTrayMenuIcon;
+import snoozesoft.systray4j.SysTrayMenuItem;
+import snoozesoft.systray4j.SysTrayMenuListener;
 
 /**
  *
  * @author developer
  */
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener {
 
     private JDialog magnifierDialog;
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
@@ -132,6 +140,20 @@ public class MainFrame extends javax.swing.JFrame {
     private JButton okButton = new JButton("Set");
     private JLabel percLbl = new JLabel(" % ");
     private JTextArea screenOptionText = new JTextArea();
+    private static final String[] toolTips = {
+        "SysTray for Java rules!",
+        "brought to you by\nSnoozeSoft 2004"
+    };
+    // create icons
+    static final SysTrayMenuIcon[] icons = {
+        // the extension can be omitted
+      
+        new SysTrayMenuIcon("icons/duke"),
+        new SysTrayMenuIcon("icons/duke_up")
+    };
+    SysTrayMenu menu;
+    int currentIndexIcon;
+    int currentIndexTooltip;
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
@@ -252,7 +274,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         //initialise share screen option frame
         screenOptionText.setText("Select the percentage size of the desktop screen thumb nail.");
-        screenOptionText.setBounds(110,30,150,160);
+        screenOptionText.setBounds(110, 30, 150, 160);
         screenOptionText.setLineWrap(true);
         screenOptionText.setBackground(Color.WHITE);
         sizeOption.setBounds(28, 30, 60, 30);
@@ -278,7 +300,79 @@ public class MainFrame extends javax.swing.JFrame {
         shareSizeFr.pack();
         shareSizeFr.setSize(300, 180);
         shareSizeFr.setLocationRelativeTo(GUIAccessManager.mf);
+        createMenu();
+    }
 
+    void createMenu() {
+        // create some labeled menu items
+        SysTrayMenuItem subItem1 = new SysTrayMenuItem("Windows 98", "windows 98");
+        subItem1.addSysTrayMenuListener(this);
+        // disable this item
+        subItem1.setEnabled(false);
+
+        SysTrayMenuItem subItem2 = new SysTrayMenuItem("Windows 2000", "windows 2000");
+        subItem2.addSysTrayMenuListener(this);
+        SysTrayMenuItem subItem3 = new SysTrayMenuItem("Windows XP", "windows xp");
+        subItem3.addSysTrayMenuListener(this);
+
+        SysTrayMenuItem subItem4 = new SysTrayMenuItem("GNOME", "gnome");
+        subItem4.addSysTrayMenuListener(this);
+        subItem4.setEnabled(false);
+
+        SysTrayMenuItem subItem5 = new SysTrayMenuItem("KDE 3", "kde 3");
+        subItem5.addSysTrayMenuListener(this);
+
+        Vector items = new Vector();
+        items.add(subItem1);
+        items.add(subItem2);
+        items.add(subItem3);
+        items.add(subItem4);
+        items.add(subItem5);
+
+        // create a submenu and insert the previously created items
+        SubMenu subMenu = new SubMenu("Supported", items);
+
+        // create some checkable menu items
+        CheckableMenuItem chItem1 = new CheckableMenuItem("IPC", "ipc");
+        chItem1.addSysTrayMenuListener(this);
+
+        CheckableMenuItem chItem2 = new CheckableMenuItem("Sockets", "sockets");
+        chItem2.addSysTrayMenuListener(this);
+
+        CheckableMenuItem chItem3 = new CheckableMenuItem("JNI", "jni");
+        chItem3.addSysTrayMenuListener(this);
+
+        // check this item
+        chItem2.setState(true);
+        chItem3.setState(true);
+
+        // create another submenu and insert the items through addItem()
+        SubMenu chSubMenu = new SubMenu("Communication");
+        // disable this submenu
+        chSubMenu.setEnabled(false);
+
+        chSubMenu.addItem(chItem1);
+        chSubMenu.addItem(chItem2);
+        chSubMenu.addItem(chItem3);
+
+        // create an exit item
+        SysTrayMenuItem itemExit = new SysTrayMenuItem("Exit", "exit");
+        itemExit.addSysTrayMenuListener(this);
+
+        // create an about item
+        SysTrayMenuItem itemAbout = new SysTrayMenuItem("About...", "about");
+        itemAbout.addSysTrayMenuListener(this);
+
+        // create the main menu
+        menu = new SysTrayMenu(icons[ 0], toolTips[ 0]);
+
+        // insert items
+        menu.addItem(itemExit);
+        menu.addSeparator();
+        menu.addItem(itemAbout);
+        menu.addSeparator();
+        menu.addItem(subMenu);
+        menu.addItem(chSubMenu);
     }
 
     private void applySkin() {
@@ -328,8 +422,8 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
-    //dwaf temporarily disabled this
-    //actionsMenu.add(presentnew);
+        //dwaf temporarily disabled this
+        //actionsMenu.add(presentnew);
     }
 
     public void removeAllSpeakers() {
@@ -1533,13 +1627,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void notepadButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notepadButtonMouseEntered
         notepadButton.setContentAreaFilled(true);
         notepadButton.setBorderPainted(true);
-    // notepadButton.setText("Notepad");
+        // notepadButton.setText("Notepad");
     }//GEN-LAST:event_notepadButtonMouseEntered
 
     private void notepadButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notepadButtonMouseExited
         notepadButton.setContentAreaFilled(false);
         notepadButton.setBorderPainted(false);
-    //   notepadButton.setText("");
+        //   notepadButton.setText("");
     }//GEN-LAST:event_notepadButtonMouseExited
 
     private void imagesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imagesButtonActionPerformed
@@ -1549,13 +1643,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void imagesButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagesButtonMouseEntered
         imagesButton.setContentAreaFilled(true);
         imagesButton.setBorderPainted(true);
-    // imagesButton.setText("Insert Image");
+        // imagesButton.setText("Insert Image");
     }//GEN-LAST:event_imagesButtonMouseEntered
 
     private void imagesButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagesButtonMouseExited
         imagesButton.setContentAreaFilled(false);
         imagesButton.setBorderPainted(false);
-    //  imagesButton.setText("");
+        //  imagesButton.setText("");
     }//GEN-LAST:event_imagesButtonMouseExited
 
     private void pointerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pointerButtonActionPerformed
@@ -1573,13 +1667,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void pointerButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pointerButtonMouseEntered
         pointerButton.setContentAreaFilled(true);
         pointerButton.setBorderPainted(true);
-    // pointerButton.setText("Pointer");
+        // pointerButton.setText("Pointer");
     }//GEN-LAST:event_pointerButtonMouseEntered
 
     private void pointerButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pointerButtonMouseExited
         pointerButton.setContentAreaFilled(false);
         pointerButton.setBorderPainted(false);
-    //  pointerButton.setText("");
+        //  pointerButton.setText("");
     }//GEN-LAST:event_pointerButtonMouseExited
 
     private void notepadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notepadButtonActionPerformed
@@ -1589,13 +1683,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void notepadButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notepadButton1MouseEntered
         notepadButton1.setContentAreaFilled(true);
         notepadButton1.setBorderPainted(true);
-    // notepadButton1.setText("Notepad");
+        // notepadButton1.setText("Notepad");
     }//GEN-LAST:event_notepadButton1MouseEntered
 
     private void notepadButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notepadButton1MouseExited
         notepadButton1.setContentAreaFilled(false);
         notepadButton1.setBorderPainted(false);
-    //  notepadButton1.setText("");
+        //  notepadButton1.setText("");
     }//GEN-LAST:event_notepadButton1MouseExited
 
     private void notepadButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notepadButton1ActionPerformed
@@ -1609,13 +1703,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void changeRoomButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeRoomButtonMouseEntered
         changeRoomButton.setContentAreaFilled(true);
         changeRoomButton.setBorderPainted(true);
-    // changeRoomButton.setText("Change Room");
+        // changeRoomButton.setText("Change Room");
     }//GEN-LAST:event_changeRoomButtonMouseEntered
 
     private void changeRoomButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeRoomButtonMouseExited
         changeRoomButton.setContentAreaFilled(false);
         changeRoomButton.setBorderPainted(false);
-    // changeRoomButton.setText("");
+        // changeRoomButton.setText("");
     }//GEN-LAST:event_changeRoomButtonMouseExited
 
     private void privateChatMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateChatMenuItemActionPerformed
@@ -1645,13 +1739,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void deskShareButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deskShareButtonMouseEntered
         deskShareButton.setContentAreaFilled(true);
         deskShareButton.setBorderPainted(true);
-    // deskShareButton.setText("Desktop Share");
+        // deskShareButton.setText("Desktop Share");
     }//GEN-LAST:event_deskShareButtonMouseEntered
 
     private void deskShareButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deskShareButtonMouseExited
         deskShareButton.setContentAreaFilled(false);
         deskShareButton.setBorderPainted(false);
-    // deskShareButton.setText("");
+        // deskShareButton.setText("");
     }//GEN-LAST:event_deskShareButtonMouseExited
 
     private void optionsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optionsMenuItemActionPerformed
@@ -1761,25 +1855,25 @@ public class MainFrame extends javax.swing.JFrame {
 
         public void actionPerformed(ActionEvent evt) {*/
         glass.setVisible(!glass.isVisible());
-    /*}
-    });
-    if (magnifierDialog == null) {
+        /*}
+        });
+        if (magnifierDialog == null) {
 
-    magnifierDialog = new JDialog(this, "Magnifier", false);
-    magnifierDialog.getContentPane().add(onSwitch);
-    magnifierDialog.setSize(100, 50);
-    magnifierDialog.pack();
-    //magnifierDialog.setLocation(this.getX() + this.getWidth(), this.getY());
-    magnifierDialog.addWindowListener(new WindowAdapter() {
+        magnifierDialog = new JDialog(this, "Magnifier", false);
+        magnifierDialog.getContentPane().add(onSwitch);
+        magnifierDialog.setSize(100, 50);
+        magnifierDialog.pack();
+        //magnifierDialog.setLocation(this.getX() + this.getWidth(), this.getY());
+        magnifierDialog.addWindowListener(new WindowAdapter() {
 
-    @Override
-    public void windowClosing(WindowEvent e) {
-    glass.setVisible(false);
-    onSwitch.setSelected(false);
-    }
-    });
-    }
-    magnifierDialog.setVisible(true);*/
+        @Override
+        public void windowClosing(WindowEvent e) {
+        glass.setVisible(false);
+        onSwitch.setSelected(false);
+        }
+        });
+        }
+        magnifierDialog.setVisible(true);*/
     }//GEN-LAST:event_magnifierMenuitemActionPerformed
 
     private void zoomInButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zoomInButtonMouseEntered
@@ -1892,14 +1986,15 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "You do not have permission to perform this action in this room.");
             return;
         } else {
-        	org.avoir.realtime.gui.AnswerNavigator navi = new org.avoir.realtime.gui.AnswerNavigator(this);
-        	JFrame AManagerFrame=new JFrame("Answers Navigator");
-        	AManagerFrame.setSize((int)(ss.width / 4), (int)(ss.height / 2.5));
-        	AManagerFrame.setLocation((int)(ss.width/2-ss.width / 8),(int)(ss.height/2-ss.height / 5));
-        	AManagerFrame.setContentPane(navi);
-        	AManagerFrame.setVisible(true);        }
+            org.avoir.realtime.gui.AnswerNavigator navi = new org.avoir.realtime.gui.AnswerNavigator(this);
+            JFrame AManagerFrame = new JFrame("Answers Navigator");
+            AManagerFrame.setSize((int) (ss.width / 4), (int) (ss.height / 2.5));
+            AManagerFrame.setLocation((int) (ss.width / 2 - ss.width / 8), (int) (ss.height / 2 - ss.height / 5));
+            AManagerFrame.setContentPane(navi);
+            AManagerFrame.setVisible(true);
+        }
     }
-    
+
     private void slideBuilderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_slideBuilderMenuItemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_slideBuilderMenuItemActionPerformed
@@ -2055,6 +2150,15 @@ public class MainFrame extends javax.swing.JFrame {
                     true;
         }
 
+    }
+
+    public void iconLeftClicked(SysTrayMenuEvent evt) {
+    }
+
+    public void iconLeftDoubleClicked(SysTrayMenuEvent evt) {
+    }
+
+    public void menuItemSelected(SysTrayMenuEvent evt) {
     }
 
     public WebBrowserManager getWebbrowserManager() {

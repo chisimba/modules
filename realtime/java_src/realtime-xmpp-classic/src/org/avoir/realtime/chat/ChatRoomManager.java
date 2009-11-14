@@ -92,16 +92,17 @@ public class ChatRoomManager {
             //GUIAccessManager.mf.removeSpeaker(user);
             String xuser = user.split(":")[1];
             chatRoom.insertSystemMessage(xuser + " joined.");
+            GeneralUtil.showChatPopup(currentRoomName, xuser + " joined.",false);
         }
 
         public void left(String jid) {
-
             String xuser = jid.substring(jid.lastIndexOf("/") + 1);
             GUIAccessManager.mf.getUserListPanel().getParticipantListTable().removeUser(xuser);
             String username = xuser.split(":")[0];
             String names = xuser.split(":")[1];
             GUIAccessManager.mf.removeSpeaker(username);
             chatRoom.insertSystemMessage(names + " left.");
+            GeneralUtil.showChatPopup(currentRoomName, names + " left.",false);
 
         }
 

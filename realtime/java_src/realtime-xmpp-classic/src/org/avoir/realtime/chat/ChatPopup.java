@@ -35,6 +35,7 @@ public class ChatPopup extends JWindow {
     private int xValue = 10;
     private int windowHeight = 10;
     private MPanel mpanel = new MPanel();
+    private boolean showHeader = true;
 
     public ChatPopup() {
         setSize(100, windowHeight);
@@ -49,7 +50,7 @@ public class ChatPopup extends JWindow {
         return message;
     }
 
-    public void setMessage(final String xsender, final String xmessage) {
+    public void setMessage(final String xsender, final String xmessage, final boolean xshowHeader) {
         Thread t = new Thread() {
 
             public void run() {
@@ -57,6 +58,7 @@ public class ChatPopup extends JWindow {
                 sender = xsender;
                 windowHeight = 10;
                 yValue = 0;
+                showHeader = xshowHeader;
                 mpanel.repaint();
                 try {
                     sleep(5000);
@@ -89,7 +91,9 @@ public class ChatPopup extends JWindow {
 
             g2.setColor(Color.BLACK);
             g2.setColor(new Color(0, 131, 0));
-            g2.drawString(sender + " says:", 10, 40);
+            if (showHeader) {
+                g2.drawString(sender + " says:", 10, 40);
+            }
             //g2.drawLine(10, 15, 180, 15);
             g2.setColor(Color.BLACK);
             windowHeight = 45;
@@ -103,7 +107,7 @@ public class ChatPopup extends JWindow {
             }
 
             g2.setColor(Color.BLACK);
-        // g2.drawRect(3, 1, 180, windowHeight +20);
+            // g2.drawRect(3, 1, 180, windowHeight +20);
 
         }
 

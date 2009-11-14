@@ -664,8 +664,17 @@ public class ParticipantListTable extends JTable implements ActionListener {
         }
         alerter.cancel();
         if (raisedHands) {
-            if(GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().isFullScreen()){
-                JDialog alerter=new JDialog(GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getFullScreenFrame(), "Raised Hands", false);
+             String raisedHandsUsers="";
+            for (final Map user : users) {
+                final PermissionList perm = (PermissionList) user.get("permissions");
+                if (perm.raisedHand) {
+                    raisedHandsUsers+=user.get("names")+ ",";
+                }
+            }
+            GeneralUtil.showChatPopup("System", "Following users raised hands: "+raisedHandsUsers, false);
+
+            if (GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().isFullScreen()) {
+                JDialog alerter = new JDialog(GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getFullScreenFrame(), "Raised Hands", false);
                 alerter.setContentPane(GUIAccessManager.mf.getUserListPanel().getAlerterField());
                 alerter.pack();
                 alerter.setVisible(true);
@@ -744,9 +753,9 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 fr.dispose();
             }
         });
-        JPanel p2=new JPanel();
+        JPanel p2 = new JPanel();
         p2.add(closeButton);
-       // c.add(p2, BorderLayout.SOUTH);
+        // c.add(p2, BorderLayout.SOUTH);
         fr.setVisible(true);
     }
 
@@ -1069,9 +1078,9 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 evaluatePermissions();
                 if (isOwner) {
                     grantEverything();
-                //NB: the following line should remain commented as it crashes on most
-                //windows machines
-                //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
+                    //NB: the following line should remain commented as it crashes on most
+                    //windows machines
+                    //GUIAccessManager.mf.getUserListPanel().initAudioVideo(true, ConnectionManager.getRoomName());
                 } else if (grantAdmin) {
                     grantEverything();
                 } else if (grantWhiteboard) {
@@ -1126,7 +1135,8 @@ public class ParticipantListTable extends JTable implements ActionListener {
         public void run() {
             GUIAccessManager.mf.getUserListPanel().getAlerterField().setIcon(on ? handIcon : blankIcon);
             GUIAccessManager.mf.getUserListPanel().getAlerterField().setText(on ? "Hand Raised" : "");
-            GUIAccessManager.mf.getUserListPanel().getAlerterField().setBackground(on?Color.RED:GUIAccessManager.mf.getBackground());
+            GUIAccessManager.mf.getUserListPanel().getAlerterField().setBackground(on ? Color.RED : GUIAccessManager.mf.getBackground());
+
             on = !on;
         }
     }

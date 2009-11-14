@@ -6,6 +6,7 @@ package org.avoir.realtime.common.util;
 
 import java.awt.BorderLayout;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -65,6 +66,7 @@ import org.jivesoftware.smackx.packet.VCard;
  */
 public class GeneralUtil {
 
+    static Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
     final static String version = "1.0.2 beta";
     public final static String about = "<html><h1>Chisimba Realtime Tools<h1><br>Version: " + version +
             "<br><h3><strong>" +
@@ -85,9 +87,21 @@ public class GeneralUtil {
     static String tmpDir = System.getProperty("user.home") +
             "/avoir-realtime-1.0.2/tmp/";
 
-
     static {
         init();
+    }
+
+    public static void showChatPopup(final String user, final String message,final boolean showHeader) {
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setMessage(user, message,showHeader);
+                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setLocation(ss.width - 200, ss.height - GUIAccessManager.mf.getChatRoomManager().getChatPopup().getHeight() - 100);
+                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setVisible(true);
+            }
+        };
+        t.start();
     }
 
     public static int getCurrentYear() {
@@ -144,9 +158,9 @@ public class GeneralUtil {
 
     private static int generateRandomInteger(int aStart, int aEnd) {
         if (aStart > aEnd) {
-            int temp=aStart;
-            aStart=aEnd;
-            aEnd=temp;
+            int temp = aStart;
+            aStart = aEnd;
+            aEnd = temp;
 
         }
         Random aRandom = new Random();
@@ -434,7 +448,7 @@ public class GeneralUtil {
                     image.getWidth(null), image.getHeight(null), transparency);
         } catch (HeadlessException e) {
             e.printStackTrace();
-        // The system does not have a screen
+            // The system does not have a screen
         }
 
         if (bimage == null) {
@@ -464,7 +478,7 @@ public class GeneralUtil {
                 String line = null;
                 while ((line = input.readLine()) != null) {
                     contents.append(line);
-                //contents.append(System.getProperty("line.separator"));
+                    //contents.append(System.getProperty("line.separator"));
                 }
             } finally {
                 input.close();
@@ -582,7 +596,6 @@ public class GeneralUtil {
         }
         return str;
     }
-
 
     static {
 
@@ -760,9 +773,9 @@ public class GeneralUtil {
             System.out.println(ex.getMessage());
         }
         return builder.toString();
-    /*
-     * outputStream = new BufferedWriter(new
-     * FileWriter("characteroutput.txt"));
-     */
+        /*
+         * outputStream = new BufferedWriter(new
+         * FileWriter("characteroutput.txt"));
+         */
     }
 }

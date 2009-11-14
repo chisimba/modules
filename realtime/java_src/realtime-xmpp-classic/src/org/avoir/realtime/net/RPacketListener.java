@@ -47,7 +47,6 @@ import org.avoir.realtime.gui.SlidesNavigator;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.main.Main;
 import org.avoir.realtime.gui.main.MainFrame;
-import org.avoir.realtime.gui.main.StandAloneManager;
 import org.avoir.realtime.gui.main.WebPresentManager;
 import org.avoir.realtime.gui.whiteboard.items.Item;
 import org.avoir.realtime.net.packets.RealtimePacket;
@@ -141,7 +140,7 @@ public class RPacketListener implements PacketListener {
     public static void removeQuestionNavigatorFileVewListener(QuestionNavigator nav) {
         qnNavigatorListeners.remove(nav);
     }
-    
+
     public static void addAnswerNavigatorFileVewListener(org.avoir.realtime.gui.AnswerNavigator nav) {
         anNavigatorListeners.add(nav);
     }
@@ -149,7 +148,7 @@ public class RPacketListener implements PacketListener {
     public static void removeAnswerNavigatorFileVewListener(org.avoir.realtime.gui.AnswerNavigator nav) {
         anNavigatorListeners.remove(nav);
     }
-    
+
     public static void addQuestionImageDownloadListener(QuestionFrame fr) {
         questionImageDownloadListeners.add(fr);
     }
@@ -301,7 +300,7 @@ public class RPacketListener implements PacketListener {
                 String successMessage = "Invitation was successfull";
                 String errorMessage = "There was an error during invitation. The server couldnt not send emails to recipients.\n" +
                         "Try again. If problem persists, contact your system adminstrator.";
-            // JOptionPane.showMessageDialog(null, success ? successMessage : errorMessage);
+                // JOptionPane.showMessageDialog(null, success ? successMessage : errorMessage);
             } else if (mode.equals(Mode.SLIDES_COUNT)) {
                 SlideShowProcessor.initProgressMonitorIfNecessary(packet.getContent());
             } else if (mode.equals(Mode.SCREEN_SHARE_INVITE_FROM_SERVER)) {
@@ -470,7 +469,7 @@ public class RPacketListener implements PacketListener {
                 } catch (Exception ex) {
                     // ex.printStackTrace();
                 }
-            //end
+                //end
 
 
             } else if (mode.equals(Mode.TRANSFORMED_ITEM_BROADCAST)) {
@@ -617,24 +616,28 @@ public class RPacketListener implements PacketListener {
             }
             if (!GUIAccessManager.mf.isActive()) {
 
-                showChatPopup(from, message.getBody());
-                try {
-
-                    GUIAccessManager.mf.setIconImage(GUIAccessManager.mf.getIcon("alert").getImage());
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                GeneralUtil.showChatPopup(from, message.getBody(), true);
             }
+            /*  try {
+
+            GUIAccessManager.mf.setIconImage(GUIAccessManager.mf.getIcon("alert").getImage());
+            } catch (Exception ex) {
+            ex.printStackTrace();
+            }
+            }*/
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantName("(" + from + ") ");
             GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertParticipantMessage(from, message.getBody(), size, color);
-        } else if (type.equals("sys-text")) {
-            GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(message.getBody());
-        } else if (type.equals("sys-participant-cleanup")) {
-            GUIAccessManager.mf.removeAllSpeakers();
-        } else if (type.equals("stop-screen-share")) {
-            GUIAccessManager.mf.getWebbrowserManager().closeScreenShareViewer();
+
         } else {
-            WhiteboardMessageProcessor.processCustomMessage(message);
+            if (type.equals("sys-text")) {
+                GUIAccessManager.mf.getChatRoomManager().getChatRoom().insertSystemMessage(message.getBody());
+            } else if (type.equals("sys-participant-cleanup")) {
+                GUIAccessManager.mf.removeAllSpeakers();
+            } else if (type.equals("stop-screen-share")) {
+                GUIAccessManager.mf.getWebbrowserManager().closeScreenShareViewer();
+            } else {
+                WhiteboardMessageProcessor.processCustomMessage(message);
+            }
         }
     }
 
@@ -655,19 +658,6 @@ public class RPacketListener implements PacketListener {
         } else {
             ConnectionManager.sendPacket(p);
         }
-    }
-
-    private static void showChatPopup(final String user, final String message) {
-        Thread t = new Thread() {
-
-            public void run() {
-                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setMessage(user, message);
-                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setLocation(ss.width - 200, ss.height - GUIAccessManager.mf.getChatRoomManager().getChatPopup().getHeight() - 100);
-                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setVisible(true);
-            //  GUIAccessManager.mf.runMessageAlerter();
-            }
-        };
-        t.start();
     }
 
     private static void processPresence(Packet packet) {

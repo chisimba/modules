@@ -58,7 +58,7 @@ public class WebBrowserManager {
      * This method is only compatible in java 1.6 or above
      */
     public void showScreenShareViewer() {
-        SwingUtilities.invokeLater(new Runnable() {
+       /* SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
                 try {
@@ -71,7 +71,7 @@ public class WebBrowserManager {
                     ex.printStackTrace();
                 }
             }
-        });
+        });*/
     }
 
     public void showScreenShareViewer(final int w, final int h, final String title, final boolean centerScreen) {
