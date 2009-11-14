@@ -154,8 +154,8 @@ class block_liftclubmenu extends object
 								$mailLink .= "</ul>";
 								$mailfieldset = $this->newObject('fieldset', 'htmlelements');
 								$mailfieldset->contents = $mailLink;
-        $mailBox = $mailfieldset->show();
-								$mailBox = $mailBox."<br />";
+								$mailBox = $objFeatureBox->show ($this->objLanguage->languageText("mod_liftclub_mailbox","liftclub","Mail Box"), $mailfieldset->show()."<br />","mailbox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '');
+
 							}else{
 								//$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
