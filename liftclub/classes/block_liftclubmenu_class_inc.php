@@ -100,6 +100,10 @@ class block_liftclubmenu extends object
 							$homeLink->link = $this->objLanguage->languageText("word_home","system","Home");
 							$homeLink->title = $this->objLanguage->languageText("word_home","system","Home");
 
+							$exitLink =new link($this->uri(array('action'=>'liftclubsignout')));
+							$exitLink->link = $this->objLanguage->languageText("mod_liftclub_signout","liftclub","Sign Out");
+							$exitLink->title = $this->objLanguage->languageText("mod_liftclub_signout","liftclub","Sign Out");
+
 							$registerLink =new link($this->uri(array('action'=>'startregister')));
 							$registerLink->link = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 							$registerLink->title = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
@@ -137,12 +141,12 @@ class block_liftclubmenu extends object
 							$pageLink = "<ul>";
 							$mailBox = "";
 							if($this->objUser->userId()!==null){ 
-								//$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$favLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>"; 
-		
+								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$exitLink->show()."</li>";
+										
 								$mailLink = "<ul>";
 								$mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgLink->show()."</li>";
 								$mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgOutLink->show()."</li>";
