@@ -72,7 +72,8 @@ class liftclub extends controller
                 case 'liftclubhome':
                 default:
                     $this->setVar('pageSuppressToolbar', TRUE);
-                    return $this->liftclubHome();
+                    //return $this->liftclubHome();
+                    return $this->nextAction ( NULL, NULL, 'prelogin' );
                 case 'startregister':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'registrationstart_tpl.php';

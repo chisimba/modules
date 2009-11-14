@@ -3,6 +3,10 @@ $this->loadclass('link','htmlelements');
 $objBlocks = $this->getObject('blocks', 'blocks');
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
 
+$homeLink =new link($this->uri(array('action'=>'liftclubhome')));
+$homeLink->link = $this->objLanguage->languageText("word_home","system","Home");
+$homeLink->title = $this->objLanguage->languageText("word_home","system","Home");
+
 $registerLink =new link($this->uri(array('action'=>'startregister')));
 $registerLink->link = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 $registerLink->title = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
@@ -40,6 +44,7 @@ $objFeatureBox = $this->newObject ( 'featurebox', 'navigation' );
 $pageLink = "<ul>";
 $mailFeatBox = "";
 if($this->objUser->userId()!==null){ 
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$favLink->show()."</li>";
@@ -55,6 +60,7 @@ if($this->objUser->userId()!==null){
  $mailFeatBox = $objFeatureBox->show ($this->objLanguage->languageText("mod_liftclub_mailbox","liftclub","Mail Box"), $mailfieldset->show()."<br />","mailbox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '');
  $mailFeatBox = $mailFeatBox."<br /><br /><br /><br />";
 }else{
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
