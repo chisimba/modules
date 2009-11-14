@@ -43,6 +43,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
@@ -83,7 +84,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
     private java.text.DecimalFormat df = new java.text.DecimalFormat("#.####");
     private ArrayList<Item> items = new ArrayList<Item>();
-    private int startX,  startY;
+    private int startX, startY;
     private boolean dragging = false;
     private int ITEM_TYPE = PEN;
     private Item currentItem = null;
@@ -104,7 +105,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private ImageIcon handRight = ImageUtil.createImageIcon(this, "/images/pointer-hand_right.png");
     private int currentPointer = PointerListPanel.NO_POINTER;
     private Image currentPointerImage;
-    private int currentPointerX,  currentPointerY;
+    private int currentPointerX, currentPointerY;
     private boolean firstTime = true;
     private Rectangle whiteboardSize = new Rectangle(600, 600);
     private boolean gotSize = false;
@@ -196,6 +197,8 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     private JDialog chatBox;
     private JDialog toolsDialog;
     private boolean firstTimeFullscreenMouePresss = true;
+    private boolean autoShowToolsDialog = true;
+    private JCheckBox autoShowToolsDialogOpt = new JCheckBox("Auto show");
 
     public Whiteboard(WhiteboardPanel whiteboardPanel) {
 
@@ -221,10 +224,12 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         whiteboardPopup.add(textFontMenuItem);
         whiteboardPopup.add(textSizeMenuItem);
         whiteboardPopup.add(textStyleMenuItem);
-
         whiteboardPopup.addSeparator();
-
         whiteboardPopup.add(lineSizeMenuItem);
+        autoShowToolsDialogOpt.setSelected(true);
+        autoShowToolsDialogOpt.setActionCommand("autoshowtoolsdialog");
+        autoShowToolsDialogOpt.addActionListener(this);
+
         for (float i = 0; i < 20.0; i += 0.5) {
             JMenuItem sizeItem = new JMenuItem(i + "");
             sizeItem.addActionListener(this);
@@ -491,7 +496,6 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     class ZoomListener implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
         //class variable declaration
 
-
         //constructor
         public ZoomListener() {
         }
@@ -508,31 +512,31 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         public void mousePressed(MouseEvent e) {
             dragStartScreen = e.getPoint();
             dragEndScreen = null;
-        /*
-        JButton b = (JButton) e.getSource();
-        if (b.getActionCommand().equals("zoomin")) {
-        zoomOut();
-        }
-        if (b.getActionCommand().equals("zoomout")) {
-        zoomIn();
-        }
-        if (b.getActionCommand().equals("scrolldown")) {
-        translateY += 10;
-        repaint();
-        }
-        if (b.getActionCommand().equals("scrollup")) {
-        translateY -= 10;
-        repaint();
-        }
-        if (b.getActionCommand().equals("scrollright")) {
-        translateX += 10;
-        repaint();
-        }
-        if (b.getActionCommand().equals("scrollleft")) {
-        translateX -= 10;
-        repaint();
-        }
-         */
+            /*
+            JButton b = (JButton) e.getSource();
+            if (b.getActionCommand().equals("zoomin")) {
+            zoomOut();
+            }
+            if (b.getActionCommand().equals("zoomout")) {
+            zoomIn();
+            }
+            if (b.getActionCommand().equals("scrolldown")) {
+            translateY += 10;
+            repaint();
+            }
+            if (b.getActionCommand().equals("scrollup")) {
+            translateY -= 10;
+            repaint();
+            }
+            if (b.getActionCommand().equals("scrollright")) {
+            translateX += 10;
+            repaint();
+            }
+            if (b.getActionCommand().equals("scrollleft")) {
+            translateX -= 10;
+            repaint();
+            }
+             */
         }
 
         public void mouseReleased(MouseEvent e) {
@@ -585,6 +589,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     private void zoomCamera(MouseWheelEvent e) {
+        zoomEnabled = true;
         try {
             int wheelRotation = e.getWheelRotation();
             Point p = e.getPoint();
@@ -634,7 +639,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     }
 
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getActionCommand().equals("autoshowtoolsdialog")) {
+            autoShowToolsDialog = autoShowToolsDialogOpt.isSelected();
+        }
         if (e.getActionCommand().equals("zoom")) {
 
             zoomEnabled = zoomOpt.isSelected();
@@ -827,22 +834,22 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         } else if (currentPointer == PointerListPanel.NO_POINTER) {
             if (ITEM_TYPE == ERASE) {
                 setCursor(eraseC);
-            /*} else if (ITEM_TYPE == MOVE) {
-            setCursor(moveC);
-            } else if (ITEM_TYPE == LINE) {
-            setCursor(writeC);
+                /*} else if (ITEM_TYPE == MOVE) {
+                setCursor(moveC);
+                } else if (ITEM_TYPE == LINE) {
+                setCursor(writeC);
 
-            } else if (ITEM_TYPE == DRAW_OVAL) {
-            setCursor(writeC);
-            } else if (ITEM_TYPE == FILL_OVAL) {
-            setCursor(writeC);
-            } else if (ITEM_TYPE == DRAW_RECT) {
-            setCursor(writeC);
-            } else if (ITEM_TYPE == FILL_OVAL) {
-            setCursor(writeC);
-            } else if (ITEM_TYPE == PEN) {
-            setCursor(writeC);
-             */
+                } else if (ITEM_TYPE == DRAW_OVAL) {
+                setCursor(writeC);
+                } else if (ITEM_TYPE == FILL_OVAL) {
+                setCursor(writeC);
+                } else if (ITEM_TYPE == DRAW_RECT) {
+                setCursor(writeC);
+                } else if (ITEM_TYPE == FILL_OVAL) {
+                setCursor(writeC);
+                } else if (ITEM_TYPE == PEN) {
+                setCursor(writeC);
+                 */
             } else {
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
@@ -1079,10 +1086,10 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
             //  } else if (scaleOff) {
             g2.drawImage(slideImage.getImage(), xx, yy, this);
             g2.drawRoundRect(xx - 5, yy - 5, slideImage.getIconWidth() + 10, slideImage.getIconHeight() + 10, 10, 10);
-        /*} else {
-        g2.drawImage(slideImage.getImage(), xx, yy, this);
-        g2.drawRoundRect(xx - 5, yy - 5, slideImage.getIconWidth() + 10, slideImage.getIconHeight() + 10, 10, 10);
-        }*/
+            /*} else {
+            g2.drawImage(slideImage.getImage(), xx, yy, this);
+            g2.drawRoundRect(xx - 5, yy - 5, slideImage.getIconWidth() + 10, slideImage.getIconHeight() + 10, 10, 10);
+            }*/
         }
         if (firstTime) {
             //  g2.drawImage(GUIAccessManager.mf.getLogo().getImage(), 100, 100, this);
@@ -1264,17 +1271,21 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     public void displayToolsDialog() {
         if (toolsDialog == null) {
             toolsDialog = new JDialog(GUIAccessManager.mf);
-            toolsDialog.setContentPane(whiteboardPanel.getWbToolbar());
+            toolsDialog.setLayout(new BorderLayout());
+            toolsDialog.add(whiteboardPanel.getWbToolbar(), BorderLayout.CENTER);
+            toolsDialog.add(autoShowToolsDialogOpt, BorderLayout.SOUTH);
             toolsDialog.pack();
             toolsDialog.setLocation(ss.width - toolsDialog.getWidth(), 100);
         }
         if (fullScreen) {
             if (firstTimeFullscreenMouePresss) {
                 toolsDialog = new JDialog(fullScreenFrame);
-                toolsDialog.setContentPane(whiteboardPanel.getWbToolbar());
+                toolsDialog.setLayout(new BorderLayout());
+                toolsDialog.add(whiteboardPanel.getWbToolbar(), BorderLayout.CENTER);
+                toolsDialog.add(autoShowToolsDialogOpt, BorderLayout.SOUTH);
                 toolsDialog.pack();
                 toolsDialog.setLocation(ss.width - toolsDialog.getWidth(), 100);
-                firstTimeFullscreenMouePresss=false;
+                firstTimeFullscreenMouePresss = false;
             }
         }
         toolsDialog.setVisible(true);
@@ -1290,8 +1301,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
         if (!drawEnabled || zoomEnabled) {
             return;
         }
-
-        displayToolsDialog();
+        if (autoShowToolsDialog) {
+            displayToolsDialog();
+        }
         points.clear();
 
 
