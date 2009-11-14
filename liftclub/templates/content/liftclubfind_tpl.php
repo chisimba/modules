@@ -23,6 +23,6 @@ $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examp
 $this->appendArrayVar('headerParams', $ext);
 
 
-echo '<div id="find-grid"></div><br /><br />';
+echo '<div id="find-grid"></div>';
 
 ?>

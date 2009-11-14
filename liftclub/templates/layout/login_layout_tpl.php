@@ -53,6 +53,7 @@ if($this->objUser->userId()!==null){
 	$mailfieldset = $this->newObject('fieldset', 'htmlelements');
 	$mailfieldset->contents = $mailLink;
  $mailFeatBox = $objFeatureBox->show ($this->objLanguage->languageText("mod_liftclub_mailbox","liftclub","Mail Box"), $mailfieldset->show()."<br />","mailbox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '');
+ $mailFeatBox = $mailFeatBox."<br /><br /><br /><br />";
 }else{
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
@@ -63,7 +64,7 @@ $pageLink .= "</ul>";
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->contents = $pageLink;
 
-$cssLayout->setLeftColumnContent($objFeatureBox->show ($this->objLanguage->languageText("mod_liftclub_liftclubname","liftclub","Lift Club"), $fieldset->show()."<br />","clubox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '')."<br />".$mailFeatBox."<br />".$objBlocks->showBlock('login', 'security'));
+$cssLayout->setLeftColumnContent($objFeatureBox->show ($this->objLanguage->languageText("mod_liftclub_liftclubname","liftclub","Lift Club"), $fieldset->show()."<br />","clubox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '')."<br />".$mailFeatBox.$objBlocks->showBlock('login', 'security'));
 $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 ?>

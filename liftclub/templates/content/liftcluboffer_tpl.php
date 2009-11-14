@@ -22,5 +22,5 @@ $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resou
 $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-examples.css', 'htmlelements').'" type="text/css" />';
 $this->appendArrayVar('headerParams', $ext);
 
-echo '<div id="find-grid"></div><br /><br />';
+echo '<div id="find-grid"></div>';
 ?>
