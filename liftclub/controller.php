@@ -71,26 +71,37 @@ class liftclub extends controller
             switch ($action) {
                 case 'liftclubhome':
                 default:
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->liftclubHome();
                 case 'startregister':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return 'registrationstart_tpl.php';
                 case 'findlift':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftclubfind_tpl.php';
                 case 'myfavourites':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftclubfavourites_tpl.php';
                 case 'offeredlifts':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftcluboffer_tpl.php'; 
                 case 'messages':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return 'messages_tpl.php'; 
                 case 'trashedmessages':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return 'trashmessages_tpl.php'; 
                 case 'outboxmessages':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return 'outboxmessages_tpl.php'; 
                 case 'showregister':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->registrationHome();
                 case 'modifydetails':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->modifyRegistration();
                 case 'viewlift':
+                    $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->viewMembership();
                 case 'confirm':
                     $id = $this->getParam('newId');
