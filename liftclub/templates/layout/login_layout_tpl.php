@@ -20,36 +20,45 @@ $offerLink->link = $this->objLanguage->languageText("mod_liftclub_liftonoffer","
 $offerLink->title = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
 
 $msgLink =new link($this->uri(array('action'=>'messages')));
-$msgLink->link = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Message Inbox");
-$msgLink->title = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Message Inbox");
+$msgLink->link = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
+$msgLink->title = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
 
 $msgOutLink =new link($this->uri(array('action'=>'outboxmessages')));
-$msgOutLink->link = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Message Outbox");
-$msgOutLink->title = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Message Outbox");
+$msgOutLink->link = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Outbox");
+$msgOutLink->title = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Outbox");
 
 $msgTrashLink =new link($this->uri(array('action'=>'trashedmessages')));
-$msgTrashLink->link = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trashed Messages");
-$msgTrashLink->title = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trashed Messages");
+$msgTrashLink->link = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
+$msgTrashLink->title = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
+
+$objFeatureBox = $this->newObject ( 'featurebox', 'navigation' );
 
 $pageLink = "<ul>";
+$mailFeatBox = "";
 if($this->objUser->userId()!==null){ 
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
- $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgLink->show()."</li>";
- $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgOutLink->show()."</li>";
- $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgTrashLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>"; 
+ 
+ $mailLink = "<ul>";
+ $mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgLink->show()."</li>";
+ $mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgOutLink->show()."</li>";
+ $mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgTrashLink->show()."</li>";
+ $mailLink .= "</ul>";
+	$mailfieldset = $this->newObject('fieldset', 'htmlelements');
+	$mailfieldset->contents = $mailLink;
+ $mailFeatBox = $objFeatureBox->show ($this->objLanguage->languageText("mod_liftclub_mailbox","liftclub","Mail Box"), $mailfieldset->show()."<br />","mailbox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '');
 }else{
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
 }
 $pageLink .= "</ul>";
-$objFeatureBox = $this->newObject ( 'featurebox', 'navigation' );
+
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->contents = $pageLink;
 
-$cssLayout->setLeftColumnContent($objFeatureBox->show ("Lift Club", $fieldset->show()."<br />","clubox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '')."<br />".$objBlocks->showBlock('login', 'security'));
+$cssLayout->setLeftColumnContent($objFeatureBox->show ($this->objLanguage->languageText("mod_liftclub_liftclubname","liftclub","Lift Club"), $fieldset->show()."<br />","clubox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '')."<br />".$mailFeatBox."<br />".$objBlocks->showBlock('login', 'security'));
 $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 ?>
