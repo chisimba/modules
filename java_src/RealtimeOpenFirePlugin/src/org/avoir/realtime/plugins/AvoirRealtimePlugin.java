@@ -27,7 +27,6 @@ import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.jivesoftware.database.DbConnectionManager;
 import org.jivesoftware.openfire.IQHandlerInfo;
 import org.jivesoftware.openfire.IQRouter;
 import org.jivesoftware.openfire.PacketRouter;
@@ -147,10 +146,16 @@ public class AvoirRealtimePlugin implements Plugin {
                     return roomResourceManager.deleteRoomMember(packet, roomName, userName, roomOwner);
                 } else if (mode.equals(Mode.REQUEST_MIC_FORWARDED)) {
                     return packet;
+                } else if (mode.equals(Mode.SET_ROOM_RESOURCE_STATE)) {
+                    String id = XmlUtils.readString(doc, "id");
+                    String state = XmlUtils.readString(doc, "active");
+                    return roomResourceManager.updateRoomResourceState(packet, roomName, state, new Integer(id));
+                } else if (mode.equals(Mode.REQUEST_ROOM_RESOURCE_LIST)) {
+                    return roomResourceManager.getRoomResourceList(packet, roomName);
                 } else if (mode.equals(Mode.PRIVATE_CHAT_SEND)) {
                     String receiver = XmlUtils.readString(doc, "private-chat-receiver");
                     String sender = XmlUtils.readString(doc, "private-chat-sender");
-                    String senderName = XmlUtils.readString(doc,"private-chat-sender-name");
+                    String senderName = XmlUtils.readString(doc, "private-chat-sender-name");
                     String msg = XmlUtils.readString(doc, "private-chat-msg");
                     defaultPacketProcessor.forwardPrivateChatToReceiver(packet, receiver, sender, senderName, msg);
                 } else if (mode.equals(Mode.JOIN_MEETING_ID)) {
@@ -188,8 +193,7 @@ public class AvoirRealtimePlugin implements Plugin {
                     if (userPermissions.get('m')) {
                         //if the user already has the mic, ignore.
                         defaultPacketProcessor.warnUser(packet, requester, "You already have the MIC.");
-                    }
-                    else {
+                    } else {
                         roomResourceManager.addUserPermissions(requester, "m");
                         defaultPacketProcessor.forwardMICRequest(packet, (String) (user.get("room_owner")), requester, (String) (user.get("name")));
                     }
@@ -266,10 +270,9 @@ public class AvoirRealtimePlugin implements Plugin {
                     roomResourceManager.updateUserPermissions(username, newPermissions);
                     String message = XmlUtils.readString(doc, "message");
                     if (message != null) {
-                      defaultPacketProcessor.warnUser(packet, username, message);
-                    }
-                    else {
-                      //defaultPacketProcessor.warnUser(packet, username, "Your room permissions have been changed.");
+                        defaultPacketProcessor.warnUser(packet, username, message);
+                    } else {
+                        //defaultPacketProcessor.warnUser(packet, username, "Your room permissions have been changed.");
                     }
 
                     Map user = roomResourceManager.getUserInfo(username);
@@ -281,36 +284,35 @@ public class AvoirRealtimePlugin implements Plugin {
                     int index = XmlUtils.readInt(doc, "index");
                     defaultPacketProcessor.broadcastChangeTab(packet, index, roomName);
                 } else if (mode.equals(Mode.MIC_ADMIN_HOLDER)) {
-                  //  return packet;
+                    //  return packet;
                 } else if (mode.equals(Mode.UPDATE_URL)) {
                     String url = XmlUtils.readString(doc, "url");
                     defaultPacketProcessor.broadcastChangeURL(packet, url, roomName);
-                }  else if (mode.equals(Mode.BROADCAST_IMAGE_DATA)) {
+                } else if (mode.equals(Mode.BROADCAST_IMAGE_DATA)) {
                     String imageData = XmlUtils.readString(doc, "image-data");
                     defaultPacketProcessor.broadcastImageData(packet, imageData, roomName);
-                } 
-                //this should all be covered by SET_ACCESS
+                } //this should all be covered by SET_ACCESS
                 /* else if (mode.equals(Mode.GIVE_MIC)) {
-                    String recipientUsername = XmlUtils.readString(doc, "recipient-username");
-                    String recipientName = XmlUtils.readString(doc, "recipient-names");
-                    String permissions = XmlUtils.readString(doc, "permissions");
-                    Map user = roomResourceManager.getUserInfo(recipientUsername);
-                    roomResourceManager.updateOnlineUser(recipientUsername, 1);
-                    roomResourceManager.updateUserPermissions(recipientUsername, permissions);
-                    defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientUsername, (String) (user.get("room_name")));
+                String recipientUsername = XmlUtils.readString(doc, "recipient-username");
+                String recipientName = XmlUtils.readString(doc, "recipient-names");
+                String permissions = XmlUtils.readString(doc, "permissions");
+                Map user = roomResourceManager.getUserInfo(recipientUsername);
+                roomResourceManager.updateOnlineUser(recipientUsername, 1);
+                roomResourceManager.updateUserPermissions(recipientUsername, permissions);
+                defaultPacketProcessor.broadcastGiveMicPacket(packet, recipientUsername, (String) (user.get("room_name")));
 
                 }else if (mode.equals(Mode.REQUEST_MIC_REPLY)) {
-                    //user asks for mic, which gets forwarded to the channel owner
-                    //this is the reply, but GIVE_MIC is sent if the request is granted
-                    //so this code only really gets run when the request is denied.
-                    //Suggest change the mode to MIC_REQUEST_DENY
-                    String username = XmlUtils.readString(doc, "username");
-                    int response = XmlUtils.readInt(doc, "response");
-                    if (response == 0) {
-                        Map user = roomResourceManager.getUserInfo(username);
-                        roomResourceManager.updateOnlineUser(username, 0);
-                        defaultPacketProcessor.warnUser(packet, username, "Your request for the MIC has been denied by the room owner, try again in a few minutes.");
-                    }
+                //user asks for mic, which gets forwarded to the channel owner
+                //this is the reply, but GIVE_MIC is sent if the request is granted
+                //so this code only really gets run when the request is denied.
+                //Suggest change the mode to MIC_REQUEST_DENY
+                String username = XmlUtils.readString(doc, "username");
+                int response = XmlUtils.readInt(doc, "response");
+                if (response == 0) {
+                Map user = roomResourceManager.getUserInfo(username);
+                roomResourceManager.updateOnlineUser(username, 0);
+                defaultPacketProcessor.warnUser(packet, username, "Your request for the MIC has been denied by the room owner, try again in a few minutes.");
+                }
 
                 }*/ else if (mode.equals(Mode.SCREEN_SHARE_INVITE)) {
                     String instructor = XmlUtils.readString(doc, "instructor");
@@ -473,7 +475,7 @@ public class AvoirRealtimePlugin implements Plugin {
     public String getDomain() {
         return domain;
     }
-    
+
     public DefaultPacketProcessor getDefaultPacketProcessor() {
         return defaultPacketProcessor;
     }

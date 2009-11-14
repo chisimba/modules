@@ -116,10 +116,10 @@ public class Mode {
     public static final String REQUEST_MIC_FORWARDED = "request-mic-forwarded";
     public static final String PRIVATE_CHAT_SEND = "private-chat-send";
     public static final String PRIVATE_CHAT_FORWARD = "private-chat-forward";
-    public static final String ADD_ROOM_MEMBER= "add-room-member";
-    public static final String DELETE_ROOM_MEMBER= "delete-room-member";
-    public static final String REQUEST_ROOM_MEMBERS= "request-room-members";
-    public static final String ROOM_MEMBERS= "room-members";
+    public static final String ADD_ROOM_MEMBER = "add-room-member";
+    public static final String DELETE_ROOM_MEMBER = "delete-room-member";
+    public static final String REQUEST_ROOM_MEMBERS = "request-room-members";
+    public static final String ROOM_MEMBERS = "room-members";
     public static final String ITEM_HISTORY_FROM_SERVER = "item-history-from-server";
     public static final String MIC_HOLDER = "mic-holder";
     public static final String WARN = "warn";
@@ -127,4 +127,7 @@ public class Mode {
     public static final String MIC_ADMIN_HOLDER = "mic-admin-holder";
     public static final String SET_ACCESS = "set-access";
     public static final String SET_PERMISSIONS = "set-permissions";
+    public static final String REQUEST_ROOM_RESOURCE_LIST = "request-room-resource-list";
+    public static final String ROOM_RESOURCE_LIST = "room-resource-list";
+    public static final String SET_ROOM_RESOURCE_STATE = "set-room-resource-state";
 }
