@@ -19,6 +19,10 @@ $offerLink =new link($this->uri(array('action'=>'offeredlifts')));
 $offerLink->link = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
 $offerLink->title = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
 
+$favLink =new link($this->uri(array('action'=>'myfavourites')));
+$favLink->link = $this->objLanguage->languageText("mod_liftclub_myfavourites","liftclub","My Favourites");
+$favLink->title = $this->objLanguage->languageText("mod_liftclub_myfavourites","liftclub","My Favourites");
+
 $msgLink =new link($this->uri(array('action'=>'messages')));
 $msgLink->link = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
 $msgLink->title = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
@@ -38,6 +42,7 @@ $mailFeatBox = "";
 if($this->objUser->userId()!==null){ 
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$favLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>"; 
  
  $mailLink = "<ul>";

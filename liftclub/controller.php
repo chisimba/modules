@@ -76,6 +76,8 @@ class liftclub extends controller
                     return 'registrationstart_tpl.php';
                 case 'findlift':
                     return 'liftclubfind_tpl.php';
+                case 'myfavourites':
+                    return 'liftclubfavourites_tpl.php';
                 case 'offeredlifts':
                     return 'liftcluboffer_tpl.php'; 
                 case 'messages':
@@ -173,6 +175,19 @@ class liftclub extends controller
                     $this->setVar('pageSuppressSearch', TRUE);
                     $this->setVar('suppressFooter', TRUE);
                     $lifts= $this->objLiftSearch->jsonLiftSearch($userneed, $start, $limit);
+                    echo $lifts;
+                    exit(0);
+                    break;
+                case 'jsongetfavs':
+                    $start = $this->getParam('start');
+                    $limit = $this->getParam('limit');
+                    
+                    $this->setLayoutTemplate(NULL);
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    $this->setVar('pageSuppressBanner', TRUE);
+                    $this->setVar('pageSuppressSearch', TRUE);
+                    $this->setVar('suppressFooter', TRUE);
+                    $lifts= $this->objLiftSearch->jsonGetFavourites($start, $limit);
                     echo $lifts;
                     exit(0);
                     break;
