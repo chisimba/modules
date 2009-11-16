@@ -7,12 +7,21 @@
     $this->appendArrayVar('headerParams', $mainjs);
     $this->appendArrayVar('headerParams', $maincss);
     
+    $upload = "";
+    if($this->getParam("upload")) {
+        $upload = $this->getparam("upload");
+    }
+
     // Create an instance of the css layout class
     $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
     $cssLayout->setNumColumns(2);
     $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
     $cssLayout->setLeftColumnContent($postLoginMenu->show());
-    $rightSideColumn =  '<div id ="mainContent">Hello Document Management System</div>';
+    $rightSideColumn =  '<div id ="mainContent">';
+    $content = $upload."<br>".$this->objUtils->showUploadForm();
+
+    $rightSideColumn .= $content;
+    $rightSideColumn .= '</div>';
     $cssLayout->setMiddleColumnContent($rightSideColumn);
 
     echo $cssLayout->show();
