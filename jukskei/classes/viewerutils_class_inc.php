@@ -227,14 +227,14 @@ class viewerutils extends object {
         $content='';
         $content='
 
-            <ul class="paneltabs">
+          
 
              <font style="font-family:Arial;font-size:20;">  '.$navbar.'</font><hr>
              <b style="font-family:Arial;font-size:24;">Topic: '.$storylink->show().'</b><br/>
              <b style="font-family:Arial;font-size:24;">Article: '.$data['title'].'&nbsp;&nbsp;</b>
             <font style="font-family:Arial;font-size:24;color:#1A4048"'.$this->objWashout->parseText($data['content']).'</font>
              <center>'.$footer.'</center>
-            </ul>
+            
             <br/>
               ';
 
