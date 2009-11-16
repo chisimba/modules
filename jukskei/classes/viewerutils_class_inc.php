@@ -38,7 +38,7 @@ class viewerutils extends object {
         foreach($topicsnavs as $nav) {
         // $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'jukskei', 'status'=>'both');
             $link = new link ($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
-            $link->link = $nav['title'];
+            $link->link ='<b>'. $nav['title'].'</b>';
             $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
 
@@ -51,7 +51,8 @@ class viewerutils extends object {
 </div>
 <div id="contentwrapper" class="subcolumns">
 
-     <br/><font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><br/><br/><br/>'.$this->objWashout->parseText($data['maintext']).'
+     <br/><font style="font-family:Arial;font-size:24;">  '.$navbar.'</font><br/><br/><br/>
+<font style="color:#1A4048;> '.$this->objWashout->parseText($data['maintext']).'</font>
 
 
 </div>';
