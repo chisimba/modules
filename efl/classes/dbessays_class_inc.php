@@ -28,17 +28,31 @@ if (!
  * @global unknown $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
  */
-$GLOBALS['kewl_entry_point_run']) {
+    $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
 class dbessays extends object{
     function init(){
-
+        $this->objUser=$this->getObject('user','security');
     }
 
     function getEssays(){
-        return array();
+        return array(
+            array('title'=>'test title','details'=>'details','preview'=>'Preview','edit'=>'Edit')
+        );
+    }
+    function getSubmittedEssays(){
+        return array(
+            array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/15'),
+            array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/16'),
+            array('from'=>$this->objUser->fullname(),'date'=>'2009/11/17'),
+            array('from'=>$this->objUser->fullname(),'date'=>'2009/11/18')
+        );
+    }
+
+    function getTitle($essayid){
+        return array('title'=> "test title");
     }
 }
 

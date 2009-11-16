@@ -38,77 +38,51 @@ $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/session.css').'"/>';
-$schedulejs = '<script language="JavaScript" src="'.$this->getResourceUri('js/essaylist.js').'" type="text/javascript"></script>';
+$list = '<script language="JavaScript" src="'.$this->getResourceUri('js/submittedessaylist.js').'" type="text/javascript"></script>';
 
 $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $maincss);
-$this->appendArrayVar('headerParams', $schedulejs);
+$this->appendArrayVar('headerParams', $list);
 
 //where we render the 'popup' window
 $renderSurface='';
-$essayTitle='<h2>Essays</h2>';
+$essayTitle='<h2>Essay title</h2>';
 $essayTitle.='
-          <p>Here you will find a listing of essays owned by you or of
-          which you are a member.<br/>
-
-         Select one to view the essays. You can start you own essay by clicking on the
-         <font color="green"><b>Add Essay</b></font> button.
+          <p>
+          Listing of submitted essays
          </p>
          ';
 //load class
 $this->loadclass('link','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
 
-$addButton = new button('add','Add essay');
-$addButton->setId('add-essay');
+$listButton = new button('add','Back to essay list');
+$listButton->setId('list-essay');
 
 $btns='';
-if($this->objUser->isAdmin()) {
-    $btns.=$addButton->show().'&nbsp;&nbsp;';
-}
+
+    $btns.=$listButton->show().'&nbsp;&nbsp;';
+
 $content = $message;
 $content= '<div id="grouping-grid">'.$essayTitle.$btns.'<br /><br /></div>';
 
 //data grid from db
-$dbdata=$this->essays->getEssays($this->objUser->userid());
+$dbdata=$this->essays->getSubmittedEssays($this->objUser->userid());
 $total=count($dbdata);
 $data="";
 foreach($dbdata as $row) {
     $essaydata=$this->essays->getTitle($row['essayid']);
 
-    $deleteLink=new link($this->uri(array('action'=>'deleteessay','essayid'=>$row['essayid'])));
-    $objIcon->setIcon('delete');
-    $delValJS="deleteessay(\'".$row['essayid']."\');return false;";
-    $objIcon->extra = 'onClick="'.$delValJS.'"';
-    $deleteLink->link=$objIcon->show();
 
-    $objIcon= $this->newObject('geticon','htmlelements');
-    $editLink=new link($this->uri(array('action'=>'editessay','essayid'=>$row['essayid'])));
-    $objIcon->setIcon('edit');
-    $editLink->link=$objIcon->show();
+    $detailsLink=new link($this->uri(array('action'=>'markessay','essayid'=>$row['essayid'])));
+    $detailsLink->link=$row['from'];
 
-    $detailsLink=new link($this->uri(array('action'=>'essaymembers','essayid'=>$row['essayid'])));
-    $detailsLink->link='Members';
-
-    $previewLink=new link($this->uri(array('action'=>'viewstory','storyid'=>$row['essayid'])));
-    $previewLink->link='Preview';
-
-    $articleLink=new link($this->uri(array('action'=>'viewsubmittedessays','essayid'=>$row['essayid'])));
-    $articleLink->link=addslashes($essaydata['title']);
-
-    $membersLink="";
-    $deleteTxt="";
-    if($this->objUser->isAdmin()) {
-        $membersLink=$detailsLink->show();
-        $deleteTxt=$deleteLink->show();
-    }
     $data.="[";
-    $data.= "'".$articleLink->show()."',";
-    $data.="'".$membersLink."',";
-    $data.="'".$previewLink->show()."',";
-    $data.="'".$editLink->show().$deleteTxt."'";
+    $data.="'".$detailsLink->show()."',";
+    $data.="'".$row['date']."'";
+
     $data.="],";
 
 }
@@ -138,20 +112,20 @@ $mainjs = "/*!realtime
 
                     Ext.QuickTips.init();
                        var data=[$data];
-                       showEssays(data);
+                       showSubmittedEssays(data);
                    });
     ";
 
 $content.= "<script type=\"text/javascript\">".$mainjs."</script>";
-$addessayurl= $this->uri(array('action'=>'addessay'));
-$addessayjs = 'jQuery(document).ready(function() {
- jQuery("#add-essay").click(function() {
+$listessayurl= $this->uri(array('action'=>'home'));
+$listessayjs = 'jQuery(document).ready(function() {
+ jQuery("#list-essay").click(function() {
 
-window.location=\''.str_replace('amp;','', $addessayurl).'\';
+window.location=\''.str_replace('amp;','', $listessayurl).'\';
 });
 });
 ';
-$addessay.= "<script type=\"text/javascript\">".$addessayjs."</script>";
+$addessay.= "<script type=\"text/javascript\">".$listessayjs."</script>";
 
 
 // Create an instance of the css layout class
