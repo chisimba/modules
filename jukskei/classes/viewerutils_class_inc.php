@@ -223,7 +223,7 @@ class viewerutils extends object {
             $link->link=$nav['title'];
             $footer.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
-         $footer.='<br/></br>'.$articlenav.'</div>';
+         $footer.='<br/></br/>'.$articlenav.'</div>';
         $content='';
         $content='
 
