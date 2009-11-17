@@ -309,13 +309,18 @@ window.location=\''.str_replace('amp;','', $addtopicurl).'\';
             $objIcon->extra = 'onClick="'.$delValJS.'"';
             $deleteLink->link=$objIcon->show();
 
-             $objIcon= $this->newObject('geticon','htmlelements');
+
+
+            $objIcon= $this->newObject('geticon','htmlelements');
             $editLink=new link($this->uri(array('action'=>'editarticle','articleid'=>$row['id'],'topicid'=>$topicid)));
             $objIcon->setIcon('edit');
             $editLink->link=$objIcon->show();
 
+            $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$topicid,'articleid'=>$row['id'])));
+            $link->link = addslashes($row['title']);
+
             $data.="[";
-            $data.= "'".addslashes($row['title'])."',";
+            $data.= "'".$link->show()."',";
             $data.="'".$editLink->show().'&nbsp;&nbsp;&nbsp;'.$deleteLink->show()."'";
             $data.="],";
 
