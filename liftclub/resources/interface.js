@@ -416,7 +416,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 //'<table border="1"><tr><td>'+record.data.messagebody+'</td></tr></table>'
 function renderBody(value, p, record){
         return String.format(
-          '<div STYLE="font-size: large; text-align: left; width: 400px; white-space: -moz-pre-wrap !important; word-wrap: break-word; white-space: pre-wrap; white-space: -o-pre-wrap;  break-word: break-all; overflow: auto !important;">'+record.data.messagebody+'</div>');
+          '<div STYLE="color: black !important; font-size: large; text-align: left; width: 400px; white-space: -moz-pre-wrap !important; word-wrap: break-word; white-space: pre-wrap; white-space: -o-pre-wrap;  break-word: break-all; overflow: auto !important;">'+record.data.messagebody+'</div>');
         //'<table border="0" cellpadding="0" cellspacing="2" width="100%"><tr><td>'+record.data.messagebody+'</td></tr></table>');
         		//'<TEXTAREA NAME="MESSAGE" COLS=54 ROWS=15 WRAP=SOFT readonly="readonly">'+record.data.messagebody+'</TEXTAREA>');
 }
