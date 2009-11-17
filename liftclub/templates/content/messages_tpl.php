@@ -5,7 +5,6 @@
 
 	$objSysConfig  = $this->getObject('altconfig','config');
 	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'htmlelements');
-	
 	//$ext .=$this->getJavaScriptFile('ColumnNodeUI.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('Ext.ux.grid.Search.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('sendmessagesform.js', 'liftclub');

@@ -2,6 +2,7 @@
 $this->loadclass('link','htmlelements');
 $objBlocks = $this->getObject('blocks', 'blocks');
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(2);
 
 $homeLink =new link($this->uri(array('action'=>'liftclubhome')));
 $homeLink->link = $this->objLanguage->languageText("word_home","system","Home");

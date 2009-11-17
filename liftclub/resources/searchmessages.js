@@ -10,11 +10,18 @@
  */
 Ext.onReady(function(){
 var liftdata = new Ext.data.JsonStore({
-        root: 'searchresults',
-        totalProperty: 'liftcount',
-        idProperty: 'detid',
+        root: 'myMsgs',
+        totalProperty: 'msgcount',
+        idProperty: 'msgid',
         remoteSort: false,        
-        fields: ['detid', 'orid', 'desid', 'detuserid', 'times','additionalinfo', 'specialoffer', 'emailnotifications', 'userneed','needtype', 'daterequired', 'createdormodified', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'selectedays', 'oriuserid', 'oristreet', 'orisuburb', 'desuserid', 'destreet', 'desuburb'],
+        fields: ['msgid',
+            'sender', 
+            'recipentuserid',
+            'timesent',
+            'markasread',
+            'markasdeleted',
+            'messagetitle',
+            'messagebody'],
         proxy: new Ext.data.HttpProxy({ 
             	url: uri
         }),
@@ -39,9 +46,9 @@ var liftdata = new Ext.data.JsonStore({
  }
     var grid = new Ext.grid.GridPanel({
         el:'find-grid',
-        width:900,
+        width:420,
         height:400,
-        title:liftitle,
+        title:'Messages',
         store: liftdata,
         trackMouseOver:false,
         disableSelection:true,
@@ -50,50 +57,30 @@ var liftdata = new Ext.data.JsonStore({
         // grid columns
         columns:[
         {
-            header: "Origin(Suburb)",
-            dataIndex: 'orisuburb',
-            width: 120,
-            hidden: false,
-            sortable: true
-        },{
-            header: "Destiny(Suburb)",
-            dataIndex: 'desuburb',
-            width: 120,
-            hidden: false,
-            sortable: true
-        },{
-            header: "Find/Offer",
-            dataIndex: 'userneed',
-            width: 70,
-            hidden: false,
-            sortable: true
-        },{
-            header: "Type",
-            dataIndex: 'needtype',
-            width: 60,
-            hidden: false,
-            sortable: true
-        },{
-            header: "Created",
-            dataIndex: 'createdormodified',
-            width: 130,
-            hidden: false,
-            sortable: true
-        },{
-            header: "Selected Days",
-            dataIndex: 'selectedays',
-            width: 300,
-            hidden: false,
-            sortable: true
-        },{
-            id: 'detuserid', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
-            header: "View",
-            dataIndex: 'detuserid',
-            width: 50,
-            renderer: renderTitle,            
-            hidden: false,
-            sortable: true
-        }],
+	            id: 'timesent', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+	            header: "Time",
+	            dataIndex: 'timesent',
+	            width: 100,
+	            align: 'left',
+	            //renderer: renderTopic,
+	            sortable: true
+	        },{
+	            id: 'sender', 
+	            header: "Sender",
+	            dataIndex: 'sender',
+	            width: 100,
+	            align: 'left',
+	            //renderer: renderTopic,
+	            sortable: true
+	        },{
+	            id: 'messagetitle', 
+	            header: "Title",
+	            dataIndex: 'messagetitle',
+	            width: 220,
+	            align: 'left',
+	            //renderer: renderTopic,
+	            sortable: true
+	        }],
 
         // customize view config
         viewConfig: {
@@ -116,7 +103,7 @@ var liftdata = new Ext.data.JsonStore({
 								plugins:[new Ext.ux.grid.Search({
 											iconCls:'zoom'
 											//,readonlyIndexes:['lecturers']
-											,disableIndexes:['detuserid','createdormodified','selectedays','userneed']
+											,disableIndexes:['detuserid','createdormodified','selectedays']
 											,minChars:1
 											,autoFocus:true
 											// ,menuStyle:'radio'
@@ -126,8 +113,8 @@ var liftdata = new Ext.data.JsonStore({
             pageSize: 5,
             store: liftdata,
             displayInfo: true,
-            displayMsg: 'Displaying Page {0} - {1} of {2}',
-            emptyMsg: "No Lifts to display",
+            displayMsg: 'Displaying Messages {0} - {1} of {2}',
+            emptyMsg: "No Messages to display",
             items:[
                 /*'-', {
                 pressed: false,
@@ -154,6 +141,6 @@ var liftdata = new Ext.data.JsonStore({
     grid.render();
 
     // trigger the data store load
-    liftdata.load({params:{start:0, limit:5, usrneed:usrneed}});
+    liftdata.load({params:{start:0, limit:5}});
 	
 });

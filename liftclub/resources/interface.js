@@ -232,20 +232,20 @@ var rmButton = new Ext.Button({
         frame:true,
         title: 'Send Message Form',
         bodyStyle:'padding:5px 5px 0',
-        width: 350,
-        defaults: {width: 230},
+        width: 650,
+        defaults: {width: 500},
         defaultType: 'textfield',
         items: [{
                 xtype:'textfield',
                 fieldLabel: 'Title',
                 name: 'msgtitle',
                 allowBlank:false
-            },{
-                xtype:'textarea',
-                fieldLabel: 'Message',
-                name: 'msgbody',
-                allowBlank:false
-            }
+            },new Ext.form.HtmlEditor({
+             id:'msgbody',
+             fieldLabel:'Message',
+             width:550,
+             height:180
+            })
         ],
         buttons: [{
             text: 'Save',
@@ -294,7 +294,7 @@ var toolBar = new Ext.Toolbar({
 	        	    //alert(selectedGroupId);
 		            win = new Ext.Window({
 		                layout:'fit',
-		                width:415,
+		                width:650,
 		                //height:250,
 		                autoHeight:true,
 		                closeAction:'hide',
@@ -406,10 +406,19 @@ var groupsGrid = new Ext.grid.GridPanel({
     	}
 	
 });
+/*
+'<table border="2" cellpadding="2" cellspacing="2" width="50%">
+<tr>
+<td>'+record.data.messagebody+'</td>
+</tr>
+</table>'
+*/
 //'<table border="1"><tr><td>'+record.data.messagebody+'</td></tr></table>'
 function renderBody(value, p, record){
         return String.format(
-        		'<TEXTAREA NAME="MESSAGE" COLS=54 ROWS=15 WRAP=SOFT readonly="readonly">'+record.data.messagebody+'</TEXTAREA>');
+          '<div STYLE="text-align: left; width: 400px; white-space: -moz-pre-wrap !important; word-wrap: break-word; white-space: pre-wrap; white-space: -o-pre-wrap;  break-word: break-all; overflow: auto !important;">'+record.data.messagebody+'</div>');
+        //'<table border="0" cellpadding="0" cellspacing="2" width="100%"><tr><td>'+record.data.messagebody+'</td></tr></table>');
+        		//'<TEXTAREA NAME="MESSAGE" COLS=54 ROWS=15 WRAP=SOFT readonly="readonly">'+record.data.messagebody+'</TEXTAREA>');
 }
 var SiteAdminGrid = new Ext.grid.GridPanel({
 	title:'Mesage',
