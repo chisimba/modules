@@ -37,12 +37,13 @@ foreach($dbdata as $row) {
     $editGift->extra = 'onClick="'.$action.'"';
     
     $data.="[";
-    $data.="'".$row['giftname'];
-    $data.=$editGift->show()."',";
+    $data.="'".$row['giftname']."',";
+    //$data.=$editGift->show()."',";
     $data.="'".$row['description']."',";
     $data.="'".$row['donor']."',";
     $data.="'".$row['recipient']."',";
-    $data.="'".$row['value']."'";
+    $data.="'".$row['value']."',";
+    $data.="'".$editGift->show()."'";
    
     $data.="],";
 }

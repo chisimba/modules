@@ -25,18 +25,19 @@ class home extends object{
      */
     public function getLeftContent($toSelect, $action){
 
-        $homelink = new link($this->uri(NULL));
-        $addgift  = new link($this->uri(array("action"=>"addx")));
-        $editgift = new link($this->uri(array("action"=>"resultx")));
+        //creates a home link
+        $home = new link ($this->uri(array('action'=>'home')));
+        $homeIcon='<img src="'.$this->getResourceUri('images/house.png').'">';
+        $home->link='<font color="green">'.$homeIcon. $this->objLanguage->languageText('mod_home_homeLink', 'gift').'</font>';
 
-        $homelink->link = $this->objLanguage->languageText('mod_home_homeLink','gift');;
-        $addgift->link  = $this->objLanguage->languageText('mod_home_addLink','gift');
-        $editgift->link = $this->objLanguage->languageText('mod_home_editLink','gift');
+        //create edit icon for editing a donation
+        //$editgift = new link($this->uri(array("action"=>"resultx")));
+        $editgift = '<img src="'.$this->getResourceUri('images/gifticon1.png').'">';
+        //$editgift->link=/*'<font color="green">'.*/$editIcon /*.$this->objLanguage->languageText('mod_home_editLink', 'gift').'</font>'*/;
 
         $list=array(
-            "0"=>$homelink->show(),
-            "1"=>$addgift->show(),
-            "2"=>$editgift->show()
+            "0"=>$home->show(),
+            "1"=>$editgift
         );
 
         $desc = '<ul id="nav-secondary">';

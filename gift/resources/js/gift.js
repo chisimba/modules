@@ -47,7 +47,8 @@ function initGrid(cols,url){
 		      {name: 'description'},
 		      {name: 'donor'},
 		      {name: 'recipient'},
-		      {name: 'value'}
+		      {name: 'value'},
+                      {name: 'edit'}
 		     
 		   ]);
     // create the data store
@@ -74,19 +75,19 @@ function initGrid(cols,url){
         {
             id:'giftname',
             header: "Name",
-            width: 120,
+            width: 100,
             dataIndex: 'giftname'
         },
 
         {
             header: "Description",
-            width: 120,
+            width: 100,
             dataIndex: 'description'
         },
 
         {
             header:"Donor",
-            width: 120,
+            width: 100,
             dataIndex: 'donor'
         },
 
@@ -100,26 +101,34 @@ function initGrid(cols,url){
             header: "Value",
             width: 100,
             dataIndex: 'value'
+        },
+
+        {
+            header: "Edit",
+            width: 100,
+            dataIndex: 'edit'
         }],
-         
+
+
         stripeRows: true,
+        autoExpandColumn: 'giftname',
         height:500,
-        width:800,
-        frame:false,
-        border:false
+        width:700,
+        frame:true,
+        border:true
 
     });
    // grid.render('grouping-grid');
-var form = new Ext.form.FormPanel({
+ var form = new Ext.form.FormPanel({
 
         baseCls: 'x-plain',
-        width:750,
+        width:800,
         labelWidth: 135,
         bodyStyle:'padding:5px 5px 0',
         renderTo: 'grouping-grid',
         collapsible: true,
-        defaults: {width: 750},
-        height:400,
+        defaults: {width:750},
+        height:600,
         bodyStyle:'background-color:transparent',
         defaultType: 'textfield',
         border:false,
@@ -127,7 +136,7 @@ var form = new Ext.form.FormPanel({
             xtype: 'fieldset',
             title: 'Gift Listing',
             autoHeight: true,
-            height:400,
+            height:800,
             items:[
               buttons,
               grid
