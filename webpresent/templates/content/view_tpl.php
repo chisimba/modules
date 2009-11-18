@@ -234,8 +234,12 @@ $rightCell  .= "<p><strong>"
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 
+$disqus=$this->getObject('disquselems','disqus');
+$leftContents = $flashContent.'<br/>'.$disqus->addWidget();;
 
-$leftContents = $flashContent;
+//$this->objComments = &$this->getObject('commentapi', 'blogcomments');
+//$this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
+
 
 $leftContents .= '<br /><p>'.$objBookMarks->addThis();
 $divider = ' &nbsp;';
