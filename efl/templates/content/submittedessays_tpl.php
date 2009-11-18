@@ -1,9 +1,9 @@
 <?php
 
 
- /**
+/**
  * This class displays a  an ext js based form listing the essays accessible
-  * by the current user
+ * by the current user
  *
  * PHP version 5
  *
@@ -63,7 +63,7 @@ $listButton->setId('list-essay');
 
 $btns='';
 
-    $btns.=$listButton->show().'&nbsp;&nbsp;';
+$btns.=$listButton->show().'&nbsp;&nbsp;';
 
 $content = $message;
 $content= '<div id="grouping-grid">'.$essayTitle.$btns.'<br /><br /></div>';
@@ -71,7 +71,14 @@ $content= '<div id="grouping-grid">'.$essayTitle.$btns.'<br /><br /></div>';
 //data grid from db
 $dbdata=$this->essays->getSubmittedEssays($this->objUser->userid());
 $total=count($dbdata);
-$data="";
+
+$objAltConfig = $this->getObject('altconfig','config');
+$modPath=$objAltConfig->getModulePath();
+$replacewith="";
+$docRoot=$_SERVER['DOCUMENT_ROOT'];
+$resourcePath=str_replace($docRoot,$replacewith,$modPath);
+$codebase="http://" . $_SERVER['HTTP_HOST'].$resourcePath.'/efl/resources/';
+
 foreach($dbdata as $row) {
     $essaydata=$this->essays->getTitle($row['essayid']);
 
@@ -80,7 +87,8 @@ foreach($dbdata as $row) {
     $detailsLink->link=$row['from'];
 
     $data.="[";
-    $data.="'".$detailsLink->show()."',";
+    $data.="'<a href=\"".$codebase."jefla.jnlp\">".$row['from']."</a>',";
+  //  $data.="'". $detailsLink->show()."',";
     $data.="'".$row['date']."'";
 
     $data.="],";
