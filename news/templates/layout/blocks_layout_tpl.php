@@ -47,19 +47,19 @@ $leftContent .= $this->objNewsStories->getFeedLinks();
 
 $adminOptions = array();
 
-if ($this->isValid('managecategories')) {
+if ($objUser->isAdmin()) {
 $newsCategoriesLink = new link ($this->uri(array('action'=>'managecategories')));
 $newsCategoriesLink->link = 'Manage News Categories';
 $adminOptions[] = '<li>'.$newsCategoriesLink->show().'</li>';
 }
 
-if ($this->isValid('addstory')) {
+if ($objUser->isAdmin()) {
 $addNewsStoryLink = new link ($this->uri(array('action'=>'addstory')));
 $addNewsStoryLink->link = 'Add News Story';
 $adminOptions[] = '<li>'.$addNewsStoryLink->show().'</li>';
 }
 
-if ($this->isValid('viewarchives')){
+if ($objUser->isAdmin()){
 $addNewsStoryLink = new link ($this->uri(array('action'=>'viewarchives')));
 $addNewsStoryLink->link = 'Views News Archives';
 $adminOptions[] = '<li>'.$addNewsStoryLink->show().'</li>';
