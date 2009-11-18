@@ -1,6 +1,6 @@
 <?php
 
- /**
+/**
  * This module is for a simple essay marking tool to be used used as part of the
  * assessment tools.
  *
@@ -30,14 +30,14 @@ if (!
  * @global unknown $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
  */
-    $GLOBALS['kewl_entry_point_run']) {
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 class efl extends controller {
 
 
     function init() {
-        //Instantiate the language object
+    //Instantiate the language object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->essays=$this->getObject('dbessays');
         $this->objUser=$this->getObject('user','security');
@@ -114,19 +114,21 @@ class efl extends controller {
         return "addeditessay_tpl.php";
     }
 
-   /**
-    * this returns a screen showing submissions for a specific
-    * essay
-    * @return <type>
-    */
-    function __viewsubmittedessays(){
+    /**
+     * this returns a screen showing submissions for a specific
+     * essay
+     * @return <type>
+     */
+    function __viewsubmittedessays() {
         $essayid=$this->getParam('essayid');
-
+        $this->essayutil->generateJNLP();
         return 'submittedessays_tpl.php';
     }
 
-    function __markessay(){
+    function __markessay() {
+
         return "essaymarker_tpl.php";
+
     }
 }
 ?>
