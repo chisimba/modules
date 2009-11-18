@@ -42,7 +42,7 @@ class essayutil extends object {
         $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $resourcePath=str_replace($docRoot,$replacewith,$modPath);
-        $codebase="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'efl/resources/';
+        $codebase="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/efl/resources/';
 
 
         $str=
