@@ -126,7 +126,8 @@ class sessionmanager extends object{
         $openfireHost=$objSysConfig->getValue('OPENFIRE_HOST', 'realtime');
         $openfirePort=$objSysConfig->getValue('OPENFIRE_CLIENT_PORT', 'realtime');
         $openfireHttpBindUrl=$objSysConfig->getValue('OPENFIRE_HTTP_BIND', 'realtime');
-
+        $skinclass=$objSysConfig->getValue('SKINCLASS', 'realtime');
+        $skinjars=$objSysConfig->getValue('SKINJAR', 'realtime');
         $username=$this->objUser->userName();
         $fullnames=$this->objUser->fullname();
         $email=$this->objUser->email();
@@ -187,7 +188,8 @@ class sessionmanager extends object{
             $roomUrl.='useec2=false&';
             $roomUrl.='joinid=none&';
             $roomUrl.='codebase='.$codebase.'&';
-            $roomUrl.='skinclass=null';
+            $roomUrl.='skinclass='.$skinclass.'&';
+            $roomUrl.='skinjar='.$skinjars;
 
             $deleteLink->link($this->uri(array('action'=>'deleteschedule','id'=>$row['id'])));
             $objIcon->setIcon('delete');
