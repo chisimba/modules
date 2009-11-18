@@ -10,8 +10,7 @@ if (count($slideContent['slideshow']) > 0) {
 
     ";
 
-    foreach ($slideContent['slideshow'] as $jsSlide)
-    {
+    foreach ($slideContent['slideshow'] as $jsSlide) {
         $jsContent .= $jsSlide;
     }
 
@@ -127,20 +126,20 @@ $rightCell = '<div style="float:right">'.$objBookMarks->diggThis().'</div>';
 
 if ($file['description'] != '') {
     $rightCell .= '<p><strong>'
-    . $this->objLanguage->languageText("word_description")
-    . ':</strong><br /> '
-    .nl2br(htmlentities($file['description']))
-    .'</p>';
+        . $this->objLanguage->languageText("word_description")
+        . ':</strong><br /> '
+        .nl2br(htmlentities($file['description']))
+        .'</p>';
 }
 
 $rightCell .=  '<p><strong>'
-. $this->objLanguage->languageText("word_tags")
-. ':</strong> ';
+    . $this->objLanguage->languageText("word_tags")
+    . ':</strong> ';
 
 if (count($tags) == 0) {
     $rightCell .=  '<em>'
-    . $this->objLanguage->languageText("mod_webpresent_notags", "webpresent")
-    . ' </em>';
+        . $this->objLanguage->languageText("mod_webpresent_notags", "webpresent")
+        . ' </em>';
 } else {
     $divider = '';
     foreach ($tags as $tag) {
@@ -160,8 +159,8 @@ $license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']);
 $rightCell .=  '<p>'.$objDisplayLicense->show($license).'</p>';
 
 $rightCell .=  '<h3>'
-. $this->objLanguage->languageText("word_download")
-. '</h3>';
+    . $this->objLanguage->languageText("word_download")
+    . '</h3>';
 
 $fileTypes = array('odp'=>'OpenOffice Impress Presentation', 'ppt'=>'PowerPoint Presentation', 'pdf'=>'PDF Document');
 
@@ -169,14 +168,13 @@ $objFileIcons = $this->getObject('fileicons', 'files');
 
 $rightCell .= '<ul>';
 
-foreach ($fileTypes as $fileType=>$fileName)
-{
+foreach ($fileTypes as $fileType=>$fileName) {
     $ext = pathinfo($file['filename']);
     $ext = $ext['extension'];
     $fullPath = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
 
     if (file_exists($fullPath)) {
-        //$relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
+    //$relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
         $link = new link($this->uri(array('action'=>'download', 'id'=>$file['id'], 'type'=>$fileType)));
         $link->link = $objFileIcons->getExtensionIcon($fileType).' '.$fileName;
 
@@ -201,16 +199,16 @@ $flashUrl = $this->uri(array('action'=>'getflash', 'id'=>$file['id']));
 
 
 $flashUrl =  $this->objConfig->getsiteRoot()
-. $this->objConfig->getcontentPath()
-.'webpresent/'  .$file['id'] .'/'. $file['id'].'.swf';
+    . $this->objConfig->getcontentPath()
+    .'webpresent/'  .$file['id'] .'/'. $file['id'].'.swf';
 
 
 $filterText = "[WPRESENT: type=byurl, url=" . $flashUrl . "]";
 $filterBox->setValue($filterText);
 $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filterbyurl", "webpresent")
-. "</strong>: " . $filterBox->show() . "<br />"
-. $this->objLanguage->languageText("mod_webpresent_filterbyurlexplained", "webpresent")
-. "</p>";
+    . "</strong>: " . $filterBox->show() . "<br />"
+    . $this->objLanguage->languageText("mod_webpresent_filterbyurlexplained", "webpresent")
+    . "</p>";
 unset($filterText);
 
 $snippetText = '<div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
@@ -223,10 +221,10 @@ $snippetText = '<div style="border: 1px solid #000; width: 534px; height: 402px;
 $this->loadClass('textarea', 'htmlelements');
 $snippetBox=new textarea('snippet', $snippetText, 4, 80);
 $rightCell  .= "<p><strong>"
-. $this->objLanguage->languageText("mod_webpresent_snippet", "webpresent")
-. "</strong>:" . $snippetBox->show() . "<br />"
-.  $this->objLanguage->languageText("mod_webpresent_snippetexplained", "webpresent")
-. "</p>";
+    . $this->objLanguage->languageText("mod_webpresent_snippet", "webpresent")
+    . "</strong>:" . $snippetBox->show() . "<br />"
+    .  $this->objLanguage->languageText("mod_webpresent_snippetexplained", "webpresent")
+    . "</p>";
 
 
 // End of output the filter code.
@@ -234,9 +232,13 @@ $rightCell  .= "<p><strong>"
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 
-$disqus=$this->getObject('disquselems','disqus');
-$leftContents = $flashContent.'<br/>'.$disqus->addWidget();;
-
+$objModule = $this->getObject('modules','modulecatalogue');
+//See if the mathml module is registered and set params
+$isRegistered = $objModule->checkIfRegistered('disqus');
+if ($isRegistered) {
+    $disqus=$this->getObject('disquselems','disqus');
+    $leftContents = $flashContent.'<br/>'.$disqus->addWidget();;
+}
 //$this->objComments = &$this->getObject('commentapi', 'blogcomments');
 //$this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
 
@@ -244,8 +246,7 @@ $leftContents = $flashContent.'<br/>'.$disqus->addWidget();;
 $leftContents .= '<br /><p>'.$objBookMarks->addThis();
 $divider = ' &nbsp;';
 
-foreach ($objBookMarks->options as $option)
-{
+foreach ($objBookMarks->options as $option) {
     if ($option != 'diggThis' && $option != 'addThis') {
         $leftContents .= $divider.$objBookMarks->$option();
     }
@@ -258,12 +259,12 @@ $table->addCell($rightCell);
 
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
 
- /**
-  *      * We need the agenda, so find it. If the presentation was not given any specific
-     * title (which is used as default agenda), then use the file name.
-     * However, the presenter will be given a chance to modify this (just temporarily
-     * for the presentation) before starting a live presentation
-     */
+/**
+ *      * We need the agenda, so find it. If the presentation was not given any specific
+ * title (which is used as default agenda), then use the file name.
+ * However, the presenter will be given a chance to modify this (just temporarily
+ * for the presentation) before starting a live presentation
+ */
 
 
 $agenda='';
@@ -297,8 +298,7 @@ $bottomLinks = array();
 
 $bottomLinks[] = $homeLink->show();
 
-if ($this->isValid('regenerate'))
-{
+if ($this->isValid('regenerate')) {
     $flashLink = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
     $flashLink->link = $this->objLanguage->languageText("mod_webpresent_regenerateflash", "webpresent");
     $bottomLinks[] = $flashLink->show();
@@ -324,8 +324,7 @@ if ($blogRegistered) {
 
 echo '<p>';
 $divider = '';
-foreach ($bottomLinks as $link)
-{
+foreach ($bottomLinks as $link) {
     echo $divider.$link;
     $divider = ' | ';
 }
