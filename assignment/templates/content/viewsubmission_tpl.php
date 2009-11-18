@@ -32,7 +32,7 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadclass('textinput','htmlelements');
-
+$objWashout = $this->getObject('washout', 'utilities');
 $header = new htmlHeading();
 $header->str = $assignment['name'];
 $header->type = 1;
@@ -46,7 +46,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 $table->startRow();
 $table->addCell('<strong>'.$this->objLanguage->languageText('word_description', 'system', 'Description').'</strong>', 130);
-$table->addCell($assignment['description'], NULL, NULL, NULL, NULL, ' colspan="3"');
+$table->addCell($objWashout->parseText($assignment['description']), NULL, NULL, NULL, NULL, ' colspan="3"');
 $table->endRow();
 
 $table->startRow();
