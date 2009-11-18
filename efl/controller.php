@@ -42,7 +42,8 @@ class efl extends controller {
         $this->essays=$this->getObject('dbessays');
         $this->objUser=$this->getObject('user','security');
         $this->essayutil=$this->getObject('essayutil');
-		$this->objEssays = $this->getObject('dbessays','efl'); 
+        $this->objEssays = $this->getObject('dbessays','efl');
+        $this->objStudentEssays = $this->getObject('dbstudentessays','efl')        ;
     }
 
 
@@ -125,38 +126,44 @@ class efl extends controller {
         $this->essayutil->generateJNLP();
         return 'submittedessays_tpl.php';
     }
-	
-	function __viewessayasstudent(){
-		return 'studentessay_tpl.php';
-	}
-	
-    function __markessay() {
 
+    function __viewessayasstudent() {
+        $essayid=$this->getParam('essayid');
+        $this->setVarByRef('essayid',$essayid);
+        return 'studentessay_tpl.php';
+    }
+   /**
+    * used to invoke teh marker tool
+    * @return <type>
+    */
+    function __markessay() {
         return "essaymarker_tpl.php";
 
     }
-	/**
-	 *saves a students essay
-	 *
-	 */
-	function __addstudentessay(){
-		if($this->objEssays->addstudentEssay($userid,$essayid,$title,$content,$date))
-			     {
-          			return "studentessaylist_tpl.php";
-        		     } else
-			     {
-          			return "home_tpl.php"; 
-        		     }
-	
-	}
-	
-	/**
-	 *updates a students essay
-	 *
-	 */
-	function __updatestudentessay(){
-	
-	}
-	
+    /**
+     *saves a students essay
+     *
+     */
+    function __addstudentessay() {
+        $userid=$this->objUser->userId();
+        $essayid=$this->getParam('essayid');
+        $content=$this->getParam('content');
+        
+        if($this->objStudentEssays->addstudentEssay($userid,$essayid,$content)) {
+            return "studentessaylist_tpl.php";
+        } else {
+            return "home_tpl.php";
+        }
+
+    }
+
+    /**
+     *updates a students essay
+     *
+     */
+    function __updatestudentessay() {
+
+    }
+
 }
 ?>

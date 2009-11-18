@@ -1,6 +1,6 @@
 <?php
 
- /**
+/**
  * This class provides functionality to access the essays table
  * PHP version 5
  *
@@ -28,13 +28,28 @@ if (!
  * @global unknown $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
  */
-    $GLOBALS['kewl_entry_point_run']) {
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
-	//get the edit form object and instantiate it
-	$objEditForm = $this->getObject('editform','efl');
-	echo $objEditForm->show();
+//get the edit form object and instantiate it
+$objEditForm = $this->getObject('editform','efl');
 
+// Create an instance of the css layout class
+$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout->setNumColumns(2);
+
+$postLoginMenu  = $this->newObject('postloginmenu','toolbar');
+$leftSideColumn = $postLoginMenu->show();
+$cssLayout->setLeftColumnContent($leftSideColumn);
+
+$rightSideColumn='<div id="gtx"></div><div style="padding:10px;">';
+
+//Add the table to the centered layer
+$rightSideColumn .=$objEditForm->show($essayid);
+$rightSideColumn.= '</div>';
+// Add Right Column
+$cssLayout->setMiddleColumnContent($rightSideColumn);
+echo $cssLayout->show()
 ?>
 

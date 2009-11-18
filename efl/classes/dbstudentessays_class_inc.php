@@ -32,24 +32,31 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
-class dbessays extends dbtable {
+class dbstudentessays extends dbtable {
     function init() {
         $this->objUser=$this->getObject('user','security');
+        parent::init('tbl_efl_submittedessays');
     }
 
-    function getEssays() {
-        return array(
-        array('id'=>'123456', 'title'=>'test title','details'=>'details','preview'=>'Preview','edit'=>'Edit')
+    //add a student essay to database
+    public function addstudentEssay($userid,$essayid,$content) {
+        $data = array(
+            'userid' =>$userid,
+            'essayid' => $essayid,
+            'content' => $content,
+            'submitdate' => strftime('%Y-%m-%d %H:%M:%S', mktime())
         );
+
+        return $this->insert($data);
     }
-    function getSubmittedEssays() {
-        return array(
-        array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/15'),
-        array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/16'),
-        array('from'=>$this->objUser->fullname(),'date'=>'2009/11/17'),
-        array('from'=>$this->objUser->fullname(),'date'=>'2009/11/18')
-        );
+
+    //get saved student essays
+    public function getstudentEssays() {
+        $data=$this->getAll();
+        return $data;
     }
+
+    
 
     function getTitle($essayid) {
         return array('title'=> "test title");

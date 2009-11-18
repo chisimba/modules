@@ -58,16 +58,16 @@ class editform extends object {
      * this builds a form that can be reusable
      * @return <type>
      */
-    private function buildForm() {
+    private function buildForm($essayid) {
     //load form elements
         $this->loadElements();
         //create a form
-        $objForm = new form("essay",$this->getFormAction());
+        $objForm = new form("essay",$this->getFormAction($essayid));
 
         //----------TEXTAREA--------------
         //Create a new textarea for the essay content
         $objEssay = new textarea('essay','',50,100);
-        $essayLabel = new label($this->objLanguage->languageText("mod_EFL_Essaytxt","EFL"),"essay");
+        $essayLabel = new label($this->objLanguage->languageText("mod_efl_essaytxt","efl"),"essay");
         $objForm->addToForm($essayLabel->show() . "<br />");
         $objForm->addToForm($objEssay->show() . "<br />");
 
@@ -78,7 +78,7 @@ class editform extends object {
         $objButton->setToSubmit();
         // Use the language object to label button
         // with the word save
-        $objButton->setValue(' '.$this->objLanguage->languageText("mod_EFL_saveessay", "EFL").' ');
+        $objButton->setValue(' '.$this->objLanguage->languageText("mod_efl_saveessay", "efl").' ');
         $objForm->addToForm($objButton->show());
 
         return $objForm->show();
@@ -90,13 +90,13 @@ class editform extends object {
      * dynamically generate form actions
      * @return <type>
      */
-    private function getFormAction() {
+    private function getFormAction($essayid) {
 
         $action = $this->getParam("action", "save");
         if ($action == "edit") {
-            $formAction = $this->uri(array("action" => "update"), "efl");
+            $formAction = $this->uri(array("action" => "update",'essayid'=>$essayid), "efl");
         } else {
-            $formAction = $this->uri(array("action" => "addstudentessay"), "EFL");
+            $formAction = $this->uri(array("action" => "addstudentessay",'essayid'=>$essayid), "efl");
         }
         return $formAction;
     }
@@ -105,8 +105,8 @@ class editform extends object {
     * used for actual rendering
     * @return <type>
     */
-    public function show() {
-        return $this->buildForm();
+    public function show($essayid) {
+        return $this->buildForm($essayid);
     }
 
 

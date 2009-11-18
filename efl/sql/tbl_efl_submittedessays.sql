@@ -1,11 +1,11 @@
 <?php
 
-$tablename = 'efl_essay table';
+$tablename = 'tbl_efl_submittedessays';
 
 
 
 $options = array(
-    'comment' => 'Table for efl_essays',
+    'comment' => 'Table for tbl_efl_submittedessays',
     'collate' => 'utf8_general_ci', 
     'character_set' => 'utf8');
 
@@ -25,17 +25,11 @@ $fields = array(
         'length' => 150,
         'notnull' => 1
         ),
-	'title' => array(
-        'type' => 'text',
-        'length' => 150,
-        'notnull' => 1
-        ),
+
     'content' => array(
-        'type' => 'text',
-		'length' => '1000',
-		'notnull' =>TRUE
+        'type' => 'text'
         ), 
-    'date' => array(
+    'submitdate' => array(
         'type' => 'timestamp',
         'notnull' => TRUE
         )

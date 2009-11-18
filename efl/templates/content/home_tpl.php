@@ -1,9 +1,9 @@
 <?php
 
 
- /**
+/**
  * This class displays a  an ext js based form listing the essays accessible
-  * by the current user
+ * by the current user
  *
  * PHP version 5
  *
@@ -73,30 +73,31 @@ $content= '<div id="grouping-grid">'.$essayTitle.$btns.'<br /><br /></div>';
 
 //data grid from db
 $dbdata=$this->essays->getEssays($this->objUser->userid());
+
 $total=count($dbdata);
 $data="";
 foreach($dbdata as $row) {
-    $essaydata=$this->essays->getTitle($row['essayid']);
+    $essaydata=$this->essays->getTitle($row['id']);
 
-    $deleteLink=new link($this->uri(array('action'=>'deleteessay','essayid'=>$row['essayid'])));
+    $deleteLink=new link($this->uri(array('action'=>'deleteessay','essayid'=>$row['id'])));
     $objIcon->setIcon('delete');
     $delValJS="deleteessay(\'".$row['essayid']."\');return false;";
     $objIcon->extra = 'onClick="'.$delValJS.'"';
     $deleteLink->link=$objIcon->show();
 
     $objIcon= $this->newObject('geticon','htmlelements');
-    $editLink=new link($this->uri(array('action'=>'editessay','essayid'=>$row['essayid'])));
+    $editLink=new link($this->uri(array('action'=>'editessay','essayid'=>$row['id'])));
     $objIcon->setIcon('edit');
     $editLink->link=$objIcon->show();
 
-    $detailsLink=new link($this->uri(array('action'=>'essaymembers','essayid'=>$row['essayid'])));
+    $detailsLink=new link($this->uri(array('action'=>'essaymembers','essayid'=>$row['id'])));
     $detailsLink->link='Members';
 
-    $previewLink=new link($this->uri(array('action'=>'viewstory','storyid'=>$row['essayid'])));
+    $previewLink=new link($this->uri(array('action'=>'viewstory','storyid'=>$row['id'])));
     $previewLink->link='Preview';
 
-    $articleLink=new link($this->uri(array('action'=>'viewessayasstudent','essayid'=>$row['essayid'])));
-    $articleLink->link=addslashes($essaydata['title']);
+    $titleLink=new link($this->uri(array('action'=>'viewessayasstudent','essayid'=>$row['id'])));
+    $titleLink->link=addslashes($essaydata['title']);
 
     $membersLink="";
     $deleteTxt="";
@@ -104,13 +105,13 @@ foreach($dbdata as $row) {
     if($this->objUser->isAdmin()) {
         $membersLink=$detailsLink->show();
         $deleteTxt=$deleteLink->show();
-		$editTxt = $editLink->show();
-		$articleLink=new link($this->uri(array('action'=>'viewsubmittedessays','essayid'=>$row['essayid'])));
-		$articleLink->link=addslashes($essaydata['title']);
+        $editTxt = $editLink->show();
+        $titleLink=new link($this->uri(array('action'=>'viewsubmittedessays','essayid'=>$row['id'])));
+        $titleLink->link=addslashes($essaydata['title']);
 
     }
     $data.="[";
-    $data.= "'".$articleLink->show()."',";
+    $data.= "'".$titleLink->show()."',";
     $data.="'".$membersLink."',";
     $data.="'".$previewLink->show()."',";
     $data.="'".$editTxt.$deleteTxt."'";

@@ -1,12 +1,12 @@
-<jnlp spec="1.0+" codebase="http://localhost/chisimba/packages/efl/resources/">
+<jnlp spec="1.0+" codebase="http://localhost//chisimba/packages//efl/resources/">
     <information>
         <title>EFL</title>
         <vendor>WITS eLearn</vendor>
         <description>EFL</description>
         <homepage href="http://www.wits.ac.za"/>
         <description kind="short">EFL</description>
-        <icon href="http://localhost/chisimba/packages/efl/resources//images/logo.png"/>
-        <icon kind="splash" href="http://localhost/chisimba/packages/efl/resources//images/splash_realtime.png"/>
+        <icon href="http://localhost//chisimba/packages//efl/resources//images/logo.png"/>
+        <icon kind="splash" href="http://localhost//chisimba/packages//efl/resources//images/splash_realtime.png"/>
         <offline-allowed/>
     </information>
     <resources>
