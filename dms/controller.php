@@ -36,6 +36,7 @@ class dms extends controller {
         $this->loadclass('link','htmlelements');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLog = $this->getObject('logactivity', 'logger');
+        $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objLog->log();
 
 
@@ -108,7 +109,20 @@ class dms extends controller {
         return "home_tpl.php";
     }
 
-    public function upload() {
-        $this->nextAction('home_tpl.php', array('upload'=>"true"));
+    /*
+     * Method to show the upload file page
+     *
+     */
+    public function __uploadFile() {
+        return "uploadFile_tpl.php";
+    }
+
+    /*
+     * Method to submit file of any type
+     *
+     */
+    public function __doajaxupload() {
+        $filename = $_FILES['filename']['name'];
+        return $this->objUtils->saveFile($filename);
     }
 }

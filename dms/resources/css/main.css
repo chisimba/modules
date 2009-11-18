@@ -9,3 +9,24 @@
 div#mainContent {
     border: 0px solid #000;
 }
+
+div#heading h1 {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+div#searchpane {
+    padding: 2em 0;
+}
+
+div#fi-form {
+    padding-top: 2em;
+}
+
+div#error {
+    font-weight: bold;
+    font-size: 14px;
+    color: #F00;
+    padding-bottom: 1em;
+    font-family: Arial,Helvetica,sans-serif;
+}
