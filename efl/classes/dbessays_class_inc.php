@@ -32,10 +32,33 @@ if (!
     die("You cannot view this page directly");
 }
 
-class dbessays extends object{
+class dbessays extends dbtable
+{
     function init(){
         $this->objUser=$this->getObject('user','security');
+		parent::init('efl_essay table');
     }
+	
+	//add a student essay to database
+	public function addstudentEssay($userid,$essayid,$title,$content,$date)
+        {
+            $data = array(
+						  'userid' =>$userid,
+						  'essayid' => $essayid,
+						  'title' => $title,
+                          'content' => $content,
+						  'date' => $date
+                         );
+
+            return $this->insert($data);
+        }
+		
+	//get saved student essays
+	public function getstudentEssays()
+        {
+            $data=$this->getAll();
+            return $data;
+        }
 
     function getEssays(){
         return array(
@@ -55,5 +78,4 @@ class dbessays extends object{
         return array('title'=> "test title");
     }
 }
-
 ?>

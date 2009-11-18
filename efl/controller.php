@@ -42,6 +42,7 @@ class efl extends controller {
         $this->essays=$this->getObject('dbessays');
         $this->objUser=$this->getObject('user','security');
         $this->essayutil=$this->getObject('essayutil');
+		$this->objEssays = $this->getObject('dbessays','efl'); 
     }
 
 
@@ -124,11 +125,38 @@ class efl extends controller {
         $this->essayutil->generateJNLP();
         return 'submittedessays_tpl.php';
     }
-
+	
+	function __viewessayasstudent(){
+		return 'studentessay_tpl.php';
+	}
+	
     function __markessay() {
 
         return "essaymarker_tpl.php";
 
     }
+	/**
+	 *saves a students essay
+	 *
+	 */
+	function __addstudentessay(){
+		if($this->objEssays->addstudentEssay($userid,$essayid,$title,$content,$date))
+			     {
+          			return "studentessaylist_tpl.php";
+        		     } else
+			     {
+          			return "home_tpl.php"; 
+        		     }
+	
+	}
+	
+	/**
+	 *updates a students essay
+	 *
+	 */
+	function __updatestudentessay(){
+	
+	}
+	
 }
 ?>

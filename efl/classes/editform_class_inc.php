@@ -64,19 +64,10 @@ class editform extends object {
         //create a form
         $objForm = new form("essay",$this->getFormAction());
 
-        //----------TEXT INPUT--------------
-        //Create a new textinput for the title of the essay
-        $objTitle = new textinput('essaytitle','',NULL,100);
-        //Create a new label for the text labels
-        $essaytitleLabel = new label($this->objLanguage->languageText("mod_efl_Essaytitle","efl"),"essaytitle");
-        $objForm->addToForm($essaytitleLabel->show() . "<br />");
-        $objForm->addToForm($objTitle->show() . "<br />");
-
-
         //----------TEXTAREA--------------
-        //Create a new textarea for the essay text
+        //Create a new textarea for the essay content
         $objEssay = new textarea('essay','',50,100);
-        $essayLabel = new label($this->objLanguage->languageText("mod_efl_Essaytxt","efl"),"essay");
+        $essayLabel = new label($this->objLanguage->languageText("mod_EFL_Essaytxt","EFL"),"essay");
         $objForm->addToForm($essayLabel->show() . "<br />");
         $objForm->addToForm($objEssay->show() . "<br />");
 
@@ -92,8 +83,6 @@ class editform extends object {
 
         return $objForm->show();
 
-
-
     }
 
 
@@ -103,11 +92,11 @@ class editform extends object {
      */
     private function getFormAction() {
 
-        $action = $this->getParam("action", "add");
+        $action = $this->getParam("action", "save");
         if ($action == "edit") {
             $formAction = $this->uri(array("action" => "update"), "efl");
         } else {
-            $formAction = $this->uri(array("action" => "add"), "efl");
+            $formAction = $this->uri(array("action" => "addstudentessay"), "EFL");
         }
         return $formAction;
     }

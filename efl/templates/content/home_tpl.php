@@ -95,20 +95,25 @@ foreach($dbdata as $row) {
     $previewLink=new link($this->uri(array('action'=>'viewstory','storyid'=>$row['essayid'])));
     $previewLink->link='Preview';
 
-    $articleLink=new link($this->uri(array('action'=>'viewsubmittedessays','essayid'=>$row['essayid'])));
+    $articleLink=new link($this->uri(array('action'=>'viewessayasstudent','essayid'=>$row['essayid'])));
     $articleLink->link=addslashes($essaydata['title']);
 
     $membersLink="";
     $deleteTxt="";
+    $editTxt = '';
     if($this->objUser->isAdmin()) {
         $membersLink=$detailsLink->show();
         $deleteTxt=$deleteLink->show();
+		$editTxt = $editLink->show();
+		$articleLink=new link($this->uri(array('action'=>'viewsubmittedessays','essayid'=>$row['essayid'])));
+		$articleLink->link=addslashes($essaydata['title']);
+
     }
     $data.="[";
     $data.= "'".$articleLink->show()."',";
     $data.="'".$membersLink."',";
     $data.="'".$previewLink->show()."',";
-    $data.="'".$editLink->show().$deleteTxt."'";
+    $data.="'".$editTxt.$deleteTxt."'";
     $data.="],";
 
 }
