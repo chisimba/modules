@@ -77,7 +77,7 @@ $modPath=$objAltConfig->getModulePath();
 $replacewith="";
 $docRoot=$_SERVER['DOCUMENT_ROOT'];
 $resourcePath=str_replace($docRoot,$replacewith,$modPath);
-$codebase="http://" . $_SERVER['HTTP_HOST'].$resourcePath.'/efl/resources/';
+$codebase="http://" . $_SERVER['HTTP_HOST'].'/'.$resourcePath.'/efl/resources/';
 
 foreach($dbdata as $row) {
     $essaydata=$this->essays->getTitle($row['essayid']);
