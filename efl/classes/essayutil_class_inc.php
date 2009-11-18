@@ -1,6 +1,6 @@
 <?php
 
- /**
+/**
  * This class provides varoius utilities for essays
  * PHP version 5
  *
@@ -28,27 +28,71 @@ if (!
  * @global unknown $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
  */
-    $GLOBALS['kewl_entry_point_run']) {
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-class essayutil extends object{
-    function init(){
+class essayutil extends object {
+    function init() {
 
     }
 
-/**
- * create a JNLP file to launch the marker
- */
-    function showJavaMarker(){
+    function generateJNLP() {
+        $objAltConfig = $this->getObject('altconfig','config');
+        $modPath=$objAltConfig->getModulePath();
+        $replacewith="";
+        $docRoot=$_SERVER['DOCUMENT_ROOT'];
+        $resourcePath=str_replace($docRoot,$replacewith,$modPath);
+        $codebase="http://" . $_SERVER['HTTP_HOST']."".$resourcePath.'efl/resources/';
+
+
+        $str=
+            '<jnlp spec="1.0+" codebase="'.$codebase.'">
+    <information>
+        <title>EFL</title>
+        <vendor>WITS eLearn</vendor>
+        <description>EFL</description>
+        <homepage href="http://www.wits.ac.za"/>
+        <description kind="short">EFL</description>
+        <icon href="'.$codebase.'/images/logo.png"/>
+        <icon kind="splash" href="'.$codebase.'/images/splash_realtime.png"/>
+        <offline-allowed/>
+    </information>
+    <resources>
+        <j2se version="1.5+" />
+        <jar href="jefla.jar" />
+        <jar href="swing-layout-1.0.3.jar" />
+
+    </resources>
+   <applet-desc
+         name="Marker"
+         main-class="efla.EflaView"
+
+         width="1024"
+         height="768">
+       <param name="baseurl" value="http://'.$_SERVER['HTTP_HOST'].'"/>
+
+     </applet-desc>
+
+    <security>
+        <all-permissions/>
+    </security>
+</jnlp>
+';
+        $myFile = $modPath.'efl/resources/jefla.jnlp';
+        $fh = fopen($myFile, 'w') or die("can't open file");
+        fwrite($fh, $str);
+        fclose($fh);
+    }
+    /**
+     * create a JNLP file to launch the marker
+     */
+    function showJavaMarker() {
         $objAltConfig = $this->getObject('altconfig','config');
         $modPath=$objAltConfig->getModulePath();
         $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $resourcePath=str_replace($docRoot,$replacewith,$modPath);
         $codebase="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/efl/resources/';
-
-       
-
         $str='
                         <?xml version="1.0" encoding="utf-8"?>
                         <jnlp spec="1.0+" codebase="'.$codebase.'">
