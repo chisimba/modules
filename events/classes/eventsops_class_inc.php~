@@ -655,7 +655,7 @@ class eventsops extends object {
             }
         }
         else {
-            $maxppl = "No limit";
+            $maxppl = $this->objLanguage->languageText("mod_events_nolimit", "events");
         }
         $objFB = $this->newObject('featurebox', 'navigation');
         $attarray = $this->objUtils->object2array($eventdata->attendees);
@@ -1038,6 +1038,20 @@ class eventsops extends object {
         return $ret;
     }
 
+    public function picUploadForm() {
+        $ret = NULL;
+        $this->loadClass('form', 'htmlelements');
+        $objSelectFile = $this->newObject('selectfile', 'filemanager');
+        $objSelectFile->restrictFileList = array('jpg', 'jpeg', 'png', 'gif');
+        $objSelectFile->name = 'pic';
+        $form = new form ('uploadpic', $this->uri(array('action'=>'uploadpic'), 'events'));
+        $form->addToForm($objSelectFile->show());
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_userregistration_uploadpic", "userregistration"));
+        $button->setToSubmit();
+        $form->addToForm('<p align="center"><br />'.$button->show().'</p>');
+        $ret .= $form->show();
+        return $ret;
+    }
     /**
      * Form used to invite friends to the site via mail invite
      *

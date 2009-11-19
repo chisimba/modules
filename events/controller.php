@@ -381,9 +381,22 @@ class events extends controller
                 //$this->objOps->grabTwitterBySearch('Chisimba');
                 //$this->objUtils->createMediaTag('Brand monday party!');
                 //var_dump($this->objDbEvents->addTwtId(123, 'gen21Srv31Nme28_62509_1254836051'));
-                $this->objCollecta = $this->getObject('collecta', 'utilities');
-                header("Content-Type: application/json");
-                echo $this->objCollecta->search("Chisimba", array('format' => 'json'));
+                //$this->objCollecta = $this->getObject('collecta', 'utilities');
+                //header("Content-Type: application/json");
+                //echo $this->objCollecta->search("Chisimba", array('format' => 'json'));
+                $this->objTpic = $this->getObject('twitpicops', 'twitter');
+                $username = 'peepscoza';
+                $password = 'pongid56';
+                $message = 'Testing #Chisimba Twitpic API class';
+                $media = "/var/www/chisimbalogo.png";
+                //$ret = $this->objTpic->uploadPicPostMsg($media, $username, $password, $message);
+                echo "<img src =".$this->objTpic->getSmall('n4vq7', 'thumb').">";
+                var_dump($ret);
+                break;
+            
+            case 'picupload' :
+                echo $this->objOps->picUploadForm();
+                
                 break;
 
             case 'savevenue' :
