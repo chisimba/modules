@@ -19,17 +19,30 @@ class gift extends controller
     }
   
     function dispatch($action) {
-        switch ($action) {
+       		
+    	switch ($action) {
+        	
             case 'add': return $this->add();
             case 'submitadd': return $this->submitAdd();
             case 'result': return $this->result();
             case 'edit': return $this->edit();
             case 'archive': return $this->archive();
             case 'submitedit': return $this->submitEdit();
+            case 'search': return $this->searchGift();
             default: return "home_tpl.php";
         }
     }
 
+    /*
+     * Search for a gift
+     */
+    public function searchGift(){
+    	//echo $action;
+    	$searchkey = $this->getParam('giftname');
+    	
+    	$this->setVarByRef('searchStr', $searchkey);
+    	return "home_tpl.php";
+    }
     /**
      * Add link clicked from home page, calls this method
      * @return string

@@ -1,5 +1,7 @@
 
-function initGrid(cols,url){
+
+
+function initGrid(cols,url,searchurl){
 		
 		ButtonPanel = Ext.extend(Ext.Panel, {
 
@@ -52,13 +54,13 @@ function initGrid(cols,url){
 		     
 		   ]);
     // create the data store
-    store = new Ext.data.GroupingStore({
+		   var store = new Ext.data.GroupingStore({
     	id:'store',
     	sortInfo:{field: 'donor', direction: 'ASC'},
         groupField:'donor',		
     	reader: reader,
     	groupOnSort:true
-    	
+    	 	
     	
     });
   
@@ -108,6 +110,20 @@ function initGrid(cols,url){
             width: 100,
             dataIndex: 'edit'
         }],
+
+        tbar: [
+                 {
+                	 text: 'Search',
+                	 tooltip: 'Search for gift',  
+                	 handler: function(){
+                	 				searchGift(searchurl);
+                	 			}
+                	 
+                 }
+           ],
+         
+
+
 
 
         stripeRows: true,
@@ -230,7 +246,8 @@ function showAddGiftWin(url){
 }
 
 function showEditGiftWin(url,giftname,description,donor,val){
-    
+
+	
 	var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,
@@ -297,12 +314,12 @@ function showEditGiftWin(url,giftname,description,donor,val){
                   buttons: [{
                     text:'Save',
                     handler: function(){
-                  if (form.url){
-                            form.getForm().getEl().dom.action = form.url;
-                          }
-                        form.getForm().submit();
-
-                  }
+		                  if (form.url){
+		                            form.getForm().getEl().dom.action = form.url;
+		                          }
+		                        form.getForm().submit();
+		
+		                  }
                   }
                   ,{
                     text: 'Cancel',
@@ -318,4 +335,64 @@ function showEditGiftWin(url,giftname,description,donor,val){
            
        editGiftWin.show(this);
 
+}
+
+function searchGift(url){
+	var GiftName; 
+	var form;
+	var SearchWindow; 
+	
+	
+		 form = new Ext.form.FormPanel({
+			 	renderTo: 'search-gift-surface',
+				baseCls: 'x-plain',
+		        labelWidth: 75,
+		        bodyStyle:'padding:5px 5px 0',
+		        standardSubmit: true,
+		        url:url,
+		        defaultType: 'textfield',
+		        items:[
+						{
+						    fieldLabel: 'Gift Name',
+						    name: 'giftname',
+						    width:80
+						   
+						}
+		             ]
+		 });
+	
+		 if(!SearchWindow){
+			 SearchWindow = new Ext.Window({
+				 applyTo:'search-gift-surface',
+				 title: 'Gift Search',
+		        closeAction:'hide',
+		        width: 220,
+		        height: 100,
+		        x:250,
+                y:250,
+		        plain:true,
+		        layout: 'fit',
+		        items:[ form],
+		        buttons: [{
+		        	text: 'Search',
+		        	handler: function(){
+	                         if (form.url){
+                            form.getForm().getEl().dom.action = form.url;
+                          }
+                        form.getForm().submit();
+
+	                  }
+				        	},{
+		            text: 'Close',
+		            handler: function(){
+		         	 SearchWindow.hide();
+		               window.location.reload(true);
+		           }
+            
+          
+			}]
+			 	});
+		 }
+	
+		 SearchWindow.show(this);
 }

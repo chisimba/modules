@@ -25,21 +25,26 @@ class home extends object{
      */
     public function getLeftContent($toSelect, $action){
 
+
         //creates a home link
         $home = new link ($this->uri(array('action'=>'home')));
         $homeIcon='<img src="'.$this->getResourceUri('images/house.png').'">';
         $home->link='<font color="green">'.$homeIcon. $this->objLanguage->languageText('mod_home_homeLink', 'gift').'</font>';
+
+
 
         //create edit icon for editing a donation
         //$editgift = new link($this->uri(array("action"=>"resultx")));
         $editgift = '<img src="'.$this->getResourceUri('images/gifticon1.png').'">';
         //$editgift->link=/*'<font color="green">'.*/$editIcon /*.$this->objLanguage->languageText('mod_home_editLink', 'gift').'</font>'*/;
 
+
         $list=array(
+
+
             "0"=>$home->show(),
             "1"=>$editgift
-        );
-
+		);
         $desc = '<ul id="nav-secondary">';
         $cssClass = '';
         foreach($list as $element){
