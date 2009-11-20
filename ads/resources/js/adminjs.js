@@ -11,15 +11,44 @@ function showTabs() {
         activeTab: parseInt(selectedTab),
         frame:false,
         
-        defaults:{autoHeight: true},
+        defaults:{
+            autoHeight: true
+        },
         items:[
-            {contentEl:'facultylist', title: 'Faculty List'},
-            {contentEl:'schoollist', title: 'School List'},
-            {contentEl: 'apomoderators', title: 'APO Moderators'},
-            {contentEl: 'commentlist', title: 'Custom Units'},
-            {contentEl: 'subfacultymoderators', title: 'Faculty Subcommittee Moderators'},
-            {contentEl: 'facultymoderators', title: 'Faculty Moderators'},
-            {contentEl: 'emailtemplates', title: 'Email Templates'}
+        {
+            contentEl:'facultylist',
+            title: 'Faculty List'
+        },
+
+        {
+            contentEl:'schoollist',
+            title: 'School List'
+        },
+
+        {
+            contentEl: 'apomoderators',
+            title: 'APO Moderators'
+        },
+
+        {
+            contentEl: 'commentlist',
+            title: 'Custom Units'
+        },
+
+        {
+            contentEl: 'subfacultymoderators',
+            title: 'Faculty Subcommittee Moderators'
+        },
+
+        {
+            contentEl: 'facultymoderators',
+            title: 'Faculty Moderators'
+        },
+
+        {
+            contentEl: 'emailtemplates',
+            title: 'Email Templates'
+        }
         ]
     });
 }
@@ -62,22 +91,22 @@ function showFacultyList(data,url){
     grid.render('facultylist');
 
     var facultyAddForm = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 100,
-            url:url,
-            title: 'Add Faculty',
-            bodyStyle:'padding:5px 5px 0',
-            width: 350,
-            defaultType: 'textfield',
+        standardSubmit: true,
+        labelWidth: 100,
+        url:url,
+        title: 'Add Faculty',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaultType: 'textfield',
 
-            items: [{
-                    fieldLabel: 'Faculty',
-                    name: 'addfaculty',
-                    id: 'addfaculty_title',
-                    allowBlank: false,
-                    width: 250
-            }]
-        });
+        items: [{
+            fieldLabel: 'Faculty',
+            name: 'addfaculty',
+            id: 'addfaculty_title',
+            allowBlank: false,
+            width: 250
+        }]
+    });
 
     var addFacultyWin;
     var facultyAddBtn = Ext.get('addfaculty-btn');
@@ -106,7 +135,7 @@ function showFacultyList(data,url){
                 },{
                     text: 'Cancel',
                     handler: function(){
-                       addFacultyWin.hide();
+                        addFacultyWin.hide();
                     }
                 }]
             });
@@ -142,30 +171,45 @@ function showSchoolList(facultyData, data, url) {
         hiddenName : 'facultyid'
 
     });
-    
-    var schoolStore = new Ext.data.ArrayStore({
-        fields: [{
+
+        // shared reader
+    var schoolStoreReader = new Ext.data.ArrayReader({}, [
+{
             name: 'schoolname'
         },{
             name: 'faculty'
         },{
             name: 'delete'
-        }]
+        }
+    ]);
+    var schoolStore = new Ext.data.GroupingStore({
+        reader:schoolStoreReader,
+        sortInfo:{
+            field: 'faculty',
+            direction: 'ASC'
+        },
+        groupField:'faculty',
+        groupOnSort:true
     });
     schoolStore.loadData(data);
 
     // create the Grid
     var schoolGrid = new Ext.grid.GridPanel({
         store: schoolStore,
+        view: new Ext.grid.GroupingView({
+            forceFit:true,
+            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Schools" : "School"]})'
+        }),
         columns: [
         {
             id: 'school',
             header: "School",
             sortable: true,
+            width: 300,
             dataIndex: 'schoolname'
         },{
             header: "Faculty",
-            width: 300,
+            width: 250,
             sortable: true,
             dataIndex: 'faculty'
         },{
@@ -186,24 +230,24 @@ function showSchoolList(facultyData, data, url) {
 
 
     var schoolAddForm = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 100,
-            url:url,
-            title: 'Add School',
-            bodyStyle:'padding:5px 5px 0',
-            width: 350,
-            defaultType: 'textfield',
+        standardSubmit: true,
+        labelWidth: 100,
+        url:url,
+        title: 'Add School',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaultType: 'textfield',
 
-            items: [
-                    schoolFacultyField,
-                    {
-                    fieldLabel: 'School',
-                    name: 'addschool',
-                    id: 'addschool_title',
-                    allowBlank: false,
-                    width: 250
-            }]
-        });
+        items: [
+        schoolFacultyField,
+        {
+            fieldLabel: 'School',
+            name: 'addschool',
+            id: 'addschool_title',
+            allowBlank: false,
+            width: 250
+        }]
+    });
 
     var addSchoolWin;
     var schoolAddBtn = Ext.get('addschool-btn');
@@ -232,7 +276,7 @@ function showSchoolList(facultyData, data, url) {
                 },{
                     text: 'Cancel',
                     handler: function(){
-                       addSchoolWin.hide();
+                        addSchoolWin.hide();
                     }
                 }]
             });
@@ -291,9 +335,9 @@ function showFacultyModeratorList(data,url,modFaculties, schoolurl){
         width:600
     });
     grid.render('facultymoderators');
-   var modFacultyStore = new Ext.data.ArrayStore({
+    var modFacultyStore = new Ext.data.ArrayStore({
        
-       fields: [
+        fields: [
         {
             name: 'faculty'
         },
@@ -304,20 +348,23 @@ function showFacultyModeratorList(data,url,modFaculties, schoolurl){
             name: 'delete'
         }
 
-         ],
+        ],
         data : modFaculties
     });
 
     var schoolstore = new Ext.data.Store({
-        proxy: new Ext.data.HttpProxy({url: schoolurl,method: "GET"}),
+        proxy: new Ext.data.HttpProxy({
+            url: schoolurl,
+            method: "GET"
+        }),
         reader: new Ext.data.JsonReader({
-                    totalProperty: 'totalCount',
-                    root:'rows'
-                },[{
-                    name: 'schoolid'
-                },{
-                    name: 'schoolname'
-                }]
+            totalProperty: 'totalCount',
+            root:'rows'
+        },[{
+            name: 'schoolid'
+        },{
+            name: 'schoolname'
+        }]
         )
     });
 
@@ -352,34 +399,44 @@ function showFacultyModeratorList(data,url,modFaculties, schoolurl){
         valueField:'schoolid',
         hiddenName: 'schoolname'
     });
-    schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+    schoolField.store.load({
+        params:{
+            faculty:modFacultyField.getValue()
+            }
+        });
 
     var moderatorForm = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 125,
-            url:url,
-            title: 'Add Faculty Moderator',
-            bodyStyle:'padding:5px 5px 0',
-            width: 350,
-            defaults: {width: 230},
-            defaultType: 'textfield',
+        standardSubmit: true,
+        labelWidth: 125,
+        url:url,
+        title: 'Add Faculty Moderator',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaults: {
+            width: 230
+        },
+        defaultType: 'textfield',
 
-            items: [
-                    modFacultyField,
-                    schoolField,
-                    {
-                    fieldLabel: 'Moderator',
-                    name: 'moderator',
-                    id: 'moderator_title',
-                    allowBlank: false
-                }
-            ]
-        });
+        items: [
+        modFacultyField,
+        schoolField,
+        {
+            fieldLabel: 'Moderator',
+            name: 'moderator',
+            id: 'moderator_title',
+            allowBlank: false
+        }
+        ]
+    });
 
     modFacultyField.on('change', function() {
         schoolField.reset();
         schoolField.clearValue();
-        schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+        schoolField.store.load({
+            params:{
+                faculty:modFacultyField.getValue()
+                }
+            });
     })
 
     var addModeratorWin;
@@ -409,7 +466,7 @@ function showFacultyModeratorList(data,url,modFaculties, schoolurl){
                 },{
                     text: 'Cancel',
                     handler: function(){
-                       addModeratorWin.hide();
+                        addModeratorWin.hide();
                     }
                 }]
             });
@@ -469,8 +526,8 @@ function showSubFacultyModeratorList(data,url,modFaculties,schoolurl){
         width:600
     });
     grid.render('subfacultymoderators');
-   var modFacultyStore = new Ext.data.ArrayStore({
-       fields: [{
+    var modFacultyStore = new Ext.data.ArrayStore({
+        fields: [{
             name: 'faculty'
         },{
             name: 'id'
@@ -480,15 +537,18 @@ function showSubFacultyModeratorList(data,url,modFaculties,schoolurl){
         data : modFaculties
     });
     var schoolstore = new Ext.data.Store({
-        proxy: new Ext.data.HttpProxy({url: schoolurl,method: "GET"}),
+        proxy: new Ext.data.HttpProxy({
+            url: schoolurl,
+            method: "GET"
+        }),
         reader: new Ext.data.JsonReader({
-                    totalProperty: 'totalCount',
-                    root:'rows'
-                },[{
-                    name: 'schoolid'
-                },{
-                    name: 'schoolname'
-                }]
+            totalProperty: 'totalCount',
+            root:'rows'
+        },[{
+            name: 'schoolid'
+        },{
+            name: 'schoolname'
+        }]
         )
     });
     var modFacultyField = new Ext.form.ComboBox({
@@ -521,34 +581,44 @@ function showSubFacultyModeratorList(data,url,modFaculties,schoolurl){
         valueField:'schoolid',
         hiddenName: 'schoolname'
     });
-    schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+    schoolField.store.load({
+        params:{
+            faculty:modFacultyField.getValue()
+            }
+        });
 
     var moderatorForm = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 125,
-            url:url,
-            title: 'Add Faculty Subcommittee Moderator',
-            bodyStyle:'padding:5px 5px 0',
-            width: 350,
-            defaults: {width: 230},
-            defaultType: 'textfield',
+        standardSubmit: true,
+        labelWidth: 125,
+        url:url,
+        title: 'Add Faculty Subcommittee Moderator',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaults: {
+            width: 230
+        },
+        defaultType: 'textfield',
 
-            items: [
-                    modFacultyField,
-                    schoolField,
-                    {
-                    fieldLabel: 'Moderator',
-                    name: 'moderator',
-                    id: 'moderator_title',
-                    allowBlank: false
-                }
-            ]
-        });
+        items: [
+        modFacultyField,
+        schoolField,
+        {
+            fieldLabel: 'Moderator',
+            name: 'moderator',
+            id: 'moderator_title',
+            allowBlank: false
+        }
+        ]
+    });
 
     modFacultyField.on('change', function() {
         schoolField.reset();
         schoolField.clearValue();
-        schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+        schoolField.store.load({
+            params:{
+                faculty:modFacultyField.getValue()
+                }
+            });
     })
 
     var addModeratorWin;
@@ -578,7 +648,7 @@ function showSubFacultyModeratorList(data,url,modFaculties,schoolurl){
                 },{
                     text: 'Cancel',
                     handler: function(){
-                       addModeratorWin.hide();
+                        addModeratorWin.hide();
                     }
                 }]
             });
@@ -641,7 +711,7 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
         width:600
     });
     grid.render('apomoderators');
-   var modFacultyStore = new Ext.data.ArrayStore({
+    var modFacultyStore = new Ext.data.ArrayStore({
         fields: [{
             name: 'faculty'
         },{
@@ -652,15 +722,18 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
         data : modFaculties
     });
     var schoolstore = new Ext.data.Store({
-        proxy: new Ext.data.HttpProxy({url: schoolurl,method: "GET"}),
+        proxy: new Ext.data.HttpProxy({
+            url: schoolurl,
+            method: "GET"
+        }),
         reader: new Ext.data.JsonReader({
-                    totalProperty: 'totalCount',
-                    root:'rows'
-                },[{
-                    name: 'schoolid'
-                },{
-                    name: 'schoolname'
-                }]
+            totalProperty: 'totalCount',
+            root:'rows'
+        },[{
+            name: 'schoolid'
+        },{
+            name: 'schoolname'
+        }]
         )
     });
     var modFacultyField = new Ext.form.ComboBox({
@@ -693,33 +766,43 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
         valueField:'schoolid',
         hiddenName: 'schoolname'
     });
-    schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+    schoolField.store.load({
+        params:{
+            faculty:modFacultyField.getValue()
+            }
+        });
 
     var moderatorForm = new Ext.FormPanel({
-            standardSubmit: true,
-            labelWidth: 125,
-            url:url,
-            title: 'Add APO Moderator',
-            bodyStyle:'padding:5px 5px 0',
-            width: 350,
-            defaults: {width: 230},
-            defaultType: 'textfield',
+        standardSubmit: true,
+        labelWidth: 125,
+        url:url,
+        title: 'Add APO Moderator',
+        bodyStyle:'padding:5px 5px 0',
+        width: 350,
+        defaults: {
+            width: 230
+        },
+        defaultType: 'textfield',
 
-            items: [
-                    modFacultyField,
-                    schoolField,
-                    {
-                    fieldLabel: 'Moderator',
-                    name: 'moderator',
-                    id: 'moderator_title',
-                    allowBlank: false
-                }
-            ]
-        });
+        items: [
+        modFacultyField,
+        schoolField,
+        {
+            fieldLabel: 'Moderator',
+            name: 'moderator',
+            id: 'moderator_title',
+            allowBlank: false
+        }
+        ]
+    });
     modFacultyField.on('change', function() {
         schoolField.reset();
         schoolField.clearValue();
-        schoolField.store.load({params:{faculty:modFacultyField.getValue()}});
+        schoolField.store.load({
+            params:{
+                faculty:modFacultyField.getValue()
+                }
+            });
     })
 
     var addModeratorWin;
@@ -749,7 +832,7 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
                 },{
                     text: 'Cancel',
                     handler: function(){
-                       addModeratorWin.hide();
+                        addModeratorWin.hide();
                     }
                 }]
             });
@@ -760,7 +843,7 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
 
 function initEmailTemplates(url,contents){
     var form = new Ext.form.FormPanel(
-       {
+    {
         baseCls: 'x-plain',
         labelWidth:160,
        
@@ -770,91 +853,91 @@ function initEmailTemplates(url,contents){
         url:url,
         defaultType: 'textfield',
         items: [
-         {
-         fieldLabel: 'Subject',
-         value: contents[0],
-         width:500,
-         name: 'forwardtoworkmatefieldsubject',
-         allowBlank: false
+        {
+            fieldLabel: 'Subject',
+            value: contents[0],
+            width:500,
+            name: 'forwardtoworkmatefieldsubject',
+            allowBlank: false
         },
         new Ext.form.TextArea({
-        fieldLabel: 'Forward to workmate template',
-        value: contents[1],
-        height: 200,
-        width:500,
-        name: 'forwardtoworkmatefieldcontent',
-        allowBlank: false
+            fieldLabel: 'Forward to workmate template',
+            value: contents[1],
+            height: 200,
+            width:500,
+            name: 'forwardtoworkmatefieldcontent',
+            allowBlank: false
         }),
         {
-         fieldLabel: 'Subject',
-         value: contents[2],
-         width:500,
-         name: 'forwardtoownerfieldsubject',
-         allowBlank: false
+            fieldLabel: 'Subject',
+            value: contents[2],
+            width:500,
+            name: 'forwardtoownerfieldsubject',
+            allowBlank: false
         },
         new Ext.form.TextArea({
-        fieldLabel: 'Forward to owner template',
-        value: contents[3],
-        height: 200,
-        width:500,
-        name: 'forwardtoownerfieldcontent',
-        allowBlank: false
+            fieldLabel: 'Forward to owner template',
+            value: contents[3],
+            height: 200,
+            width:500,
+            name: 'forwardtoownerfieldcontent',
+            allowBlank: false
         }),
         {
-         fieldLabel: 'Subject',
-         value: contents[4],
-         width:500,
-         name: 'addmemberfieldsubject',
-         allowBlank: false
+            fieldLabel: 'Subject',
+            value: contents[4],
+            width:500,
+            name: 'addmemberfieldsubject',
+            allowBlank: false
         },
         new Ext.form.TextArea({
-        fieldLabel: 'Add Member',
-        value: contents[5],
-        height: 200,
-        width:500,
-        name: 'addmemberfieldcontent',
-        allowBlank: false
+            fieldLabel: 'Add Member',
+            value: contents[5],
+            height: 200,
+            width:500,
+            name: 'addmemberfieldcontent',
+            allowBlank: false
         }),
         {
-         fieldLabel: 'Subject',
-         value: contents[6],
-         width:500,
-         name: 'addcommentfieldsubject',
-         allowBlank: false
+            fieldLabel: 'Subject',
+            value: contents[6],
+            width:500,
+            name: 'addcommentfieldsubject',
+            allowBlank: false
         },
         new Ext.form.TextArea({
-        fieldLabel: 'Add Comment',
-        value: contents[7],
-        height: 200,
-        width:500,
-        name: 'addcommentfieldcontent',
-        allowBlank: false
+            fieldLabel: 'Add Comment',
+            value: contents[7],
+            height: 200,
+            width:500,
+            name: 'addcommentfieldcontent',
+            allowBlank: false
         }),
-          {
-         fieldLabel: 'Subject',
-         value: contents[8],
-         width:500,
-         name: 'updatephasefieldsubject',
-         allowBlank: false
+        {
+            fieldLabel: 'Subject',
+            value: contents[8],
+            width:500,
+            name: 'updatephasefieldsubject',
+            allowBlank: false
         },
         new Ext.form.TextArea({
-        fieldLabel: 'Update Phase',
-        value: contents[9],
-        height: 200,
-        width:500,
-        name: 'updatephasefieldcontent',
-        allowBlank: false
+            fieldLabel: 'Update Phase',
+            value: contents[9],
+            height: 200,
+            width:500,
+            name: 'updatephasefieldcontent',
+            allowBlank: false
         })
         ],
-         buttons: [{
-                    text:'Save',
-                    handler: function(){
-                        if (form.url)
-                            form.getForm().getEl().dom.action = form.url;
-                            form.getForm().submit();
-                    }
-                }]
+        buttons: [{
+            text:'Save',
+            handler: function(){
+                if (form.url)
+                    form.getForm().getEl().dom.action = form.url;
+                form.getForm().submit();
+            }
+        }]
     }
-);
+    );
 
 }

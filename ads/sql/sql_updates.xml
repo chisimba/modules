@@ -66,8 +66,8 @@
 
 	</data>
     </update>
->
-    <update>
+
+   <update>
         <table>tbl_ads_apomoderators</table>
         <version>0.26</version>
         <description>Added date forwarded</description>
@@ -79,5 +79,22 @@
 		</add>
 
 	</data>
-    </update>                   
+    </update>
+
+    <update>
+        <table>tbl_ads_apomoderators</table>
+        <version>0.28</version>
+        <description>Added date forwarded</description>
+        <data>
+        	<add>
+
+                     <name>schoolid</name>
+                     <type>text</type>
+                     <length>32</length>
+		</add>
+
+	</data>
+    </update>
+
+
 </updates>

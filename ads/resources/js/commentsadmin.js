@@ -69,7 +69,7 @@ function initCommentaddWin(){
         labelWidth: 125,
         url:myUrl,
         frame:true,
-        title: 'Add  New Status',
+        title: 'Add  New Custom Unit',
         bodyStyle:'padding:5px 5px 0',
         width: 350,
         defaults: {
