@@ -36,7 +36,7 @@ class wits_studenttoolbar extends object {
             $menuOptions[]= array('action'=>NULL, 'text'=>'Appllication Status', 'actioncheck'=>array(), 'module'=>'witsapplicationstatus', 'status'=>'loggedin');
             $menuOptions[]= array('action'=>NULL, 'text'=>'Apply Online', 'actioncheck'=>array(), 'module'=>'witsstudentonlineapplication', 'status'=>'loggedin');
         }else {
-            if($howcreated == 'LDAP' ) {
+            if($howcreated == 'LDAP' || $howcreated == 'ldap' ) {
                 $menuOptions[]= array('action'=>NULL, 'text'=>'Enrolment Rollover (Postgraduate)', 'actioncheck'=>array(), 'module'=>'witsstudentrollover', 'status'=>'loggedin');
             }else {
                 $menuOptions[]= array('action'=>NULL, 'text'=>'Appllication Status', 'actioncheck'=>array(), 'module'=>'witsapplicationstatus', 'status'=>'loggedin');
