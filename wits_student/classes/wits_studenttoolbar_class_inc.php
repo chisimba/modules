@@ -25,7 +25,8 @@ class wits_studenttoolbar extends object {
     public function show() {
         $objUser = $this->getObject('user', 'security');
         $userIsLoggedIn = $objUser->isLoggedIn();
-        $howcreated = $objUser->howCreated($objUser->userId());
+        $howcreated =$this->storyparser->howCurrentUserWasCreated();// $objUser->howCreated($objUser->userId());
+
         $menuOptions = array();
 
         $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','wits_student');

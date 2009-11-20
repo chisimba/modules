@@ -61,5 +61,19 @@ class storyparser  extends dbTable {
         $data = $this->getArray($sql);
         return $data;
     }
+
+    public function howCurrentUserWasCreated() {
+        $objUser = $this->getObject('user', 'security');
+        $sql="SELECT howcreated from tbl_users where userid='".$objUser->userId()."'";
+        $return=$this->getArray($sql);
+
+        if(count($return) > 0) {
+            $val=$return[0];
+            return $val['howcreated'];
+        }else {
+            return 'unknown';
+        }
+    }
+
 }
 ?>
