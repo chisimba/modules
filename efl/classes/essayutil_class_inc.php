@@ -61,17 +61,13 @@ class essayutil extends object {
         <j2se version="1.5+" />
         <jar href="jefla.jar" />
         <jar href="swing-layout-1.0.3.jar" />
-
+        <jar href="looks-2.3.0.jar" />
     </resources>
-   <applet-desc
-         name="Marker"
-         main-class="efla.EflaView"
+   <application-desc    main-class="jefla.Main">
 
-         width="1024"
-         height="768">
-       <param name="baseurl" value="http://'.$_SERVER['HTTP_HOST'].'"/>
+       <argument>http://'.$_SERVER['HTTP_HOST'].'</argument>
 
-     </applet-desc>
+     </application-desc>
 
     <security>
         <all-permissions/>
