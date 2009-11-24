@@ -7,7 +7,7 @@ function showTabs() {
     var tabs = new Ext.TabPanel({
         renderTo: 'tabs',
         width:800,
-        height:1500,
+         autoHeight: true,
         activeTab: parseInt(selectedTab),
         frame:false,
         
