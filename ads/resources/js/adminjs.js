@@ -210,12 +210,12 @@ function showSchoolList(facultyData, data, url) {
             dataIndex: 'schoolname'
         },{
             header: "Faculty",
-            width: 250,
+            width: 300,
             sortable: true,
             dataIndex: 'faculty'
         },{
             header: "Delete",
-            width:50,
+            width:150,
             sortable: true,
             dataIndex: 'delete'
         }],
@@ -228,7 +228,6 @@ function showSchoolList(facultyData, data, url) {
         width:750
     });
     schoolGrid.render('schoollist');
-
 
     var schoolAddForm = new Ext.FormPanel({
         standardSubmit: true,
@@ -678,7 +677,7 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
         }
     ]);
     var apoStore = new Ext.data.GroupingStore({
-        reader:schoolStoreReader,
+        reader: apoStoreReader,
         sortInfo:{
             field: 'moderator',
             direction: 'ASC'
@@ -691,6 +690,10 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
     // create the Grid
     var grid = new Ext.grid.GridPanel({
         store: apoStore,
+        view: new Ext.grid.GroupingView({
+            forceFit:true,
+            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Moderators" : "Moderator"]})'
+        }),
         columns: [{
             id:'moderator',
             header: "Moderator",
