@@ -193,7 +193,7 @@ class dbdocument extends dbtable{
         // get the full name of this email address. if it doesn't exist, return the email address
         $tmp = strstr(strtolower($this->objUser->fullname($this->getUserId($user))), "error");
         if(strlen($tmp) == 0) {
-            return $this->objUser->fullname($this->getUserId($user)).' ('.$this->objUser->email($this->getUserId($user)).')';
+            return $this->objUser->email($this->getUserId($user));
         }
         else {
             return $user;
