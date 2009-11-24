@@ -79,7 +79,7 @@ foreach($schoolList as $data) {
 //proposal meta info
 $faculty=$this->objFaculty->getFacultyName($courseProposal['faculty']);
 $school = $this->objSchool->getSchoolName($courseProposal['school']);
-$owner=$this->objUser->fullname($courseProposal['userid']);
+$owner=$this->objUser->fullname($courseProposal['userid']).'('.$this->objUser->email($courseProposal['userid']).')';
 $currentEditor=$this->objDocumentStore->getCurrentEditor($this->id);
 $ownerEmail=$this->objCourseProposals->getOwnerEmail($this->id);
 $lastEditDate=$this->objDocumentStore->getLastEditDate($this->id);
