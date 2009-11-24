@@ -68,6 +68,7 @@ function showFacultyList(data,url){
     // create the Grid
     var grid = new Ext.grid.GridPanel({
         store: store,
+        border:false,
         columns: [{
             id:'faculty',
             header: "Faculty",
@@ -85,8 +86,8 @@ function showFacultyList(data,url){
         }),
         stripeRows: true,
         autoExpandColumn: 'faculty',
-        height:350,
-        width:500
+        width:350,
+        autoHeight:true
     });
     grid.render('facultylist');
 
@@ -225,6 +226,7 @@ function showSchoolList(facultyData, data, url) {
         stripeRows: true,
         autoExpandColumn: 'school',
         autoHeight: true,
+       
         width:750
     });
     schoolGrid.render('schoollist');
@@ -331,8 +333,8 @@ function showFacultyModeratorList(data,url,modFaculties, schoolurl){
         }),
         stripeRows: true,
         autoExpandColumn: 'moderator',
-        height:350,
-        width:600
+       autoHeight:true,
+       width:600
     });
     grid.render('facultymoderators');
     var modFacultyStore = new Ext.data.ArrayStore({
@@ -724,7 +726,7 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
         stripeRows: true,
         autoExpandColumn: 'moderator',
         autoHeight:true,
-        width:600
+        width:750
     });
     grid.render('apomoderators');
     var modFacultyStore = new Ext.data.ArrayStore({
