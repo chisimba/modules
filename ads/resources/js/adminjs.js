@@ -7,7 +7,7 @@ function showTabs() {
     var tabs = new Ext.TabPanel({
         renderTo: 'tabs',
         width:800,
-         autoHeight: true,
+        autoHeight: true,
         activeTab: parseInt(selectedTab),
         frame:false,
         
@@ -225,7 +225,7 @@ function showSchoolList(facultyData, data, url) {
         stripeRows: true,
         autoExpandColumn: 'school',
         autoHeight: true,
-        width:600
+        width:750
     });
     schoolGrid.render('schoollist');
 
@@ -662,9 +662,12 @@ function showSubFacultyModeratorList(data,url,modFaculties,schoolurl){
 
 
 function showAPOModeratorList(data,url,modFaculties,schoolurl){
-    // create the data store
-    var store = new Ext.data.ArrayStore({
-        fields: [{
+
+
+
+   // shared reader
+    var apoStoreReader = new Ext.data.ArrayReader({}, [
+    {
             name: 'moderator'
         },{
             name: 'faculty'
@@ -672,13 +675,22 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
             name: 'school'
         },{
             name: 'delete'
-        }]
+        }
+    ]);
+    var apoStore = new Ext.data.GroupingStore({
+        reader:schoolStoreReader,
+        sortInfo:{
+            field: 'moderator',
+            direction: 'ASC'
+        },
+        groupField:'moderator',
+        groupOnSort:true
     });
-    store.loadData(data);
 
+    apoStore.loadData(data);
     // create the Grid
     var grid = new Ext.grid.GridPanel({
-        store: store,
+        store: apoStore,
         columns: [{
             id:'moderator',
             header: "Moderator",
