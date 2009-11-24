@@ -59,10 +59,10 @@ var showSearchForm = function(url) {
 
     var panel = new Ext.Panel({
         applyTo: 'searchpane',
-        title:'Forum Search',
-        height:100,
+        title:'File Search',
+        height:300,
         autoScroll:true,
-        width: 600,
+        width: 550,
 
         items: new Ext.DataView({
             tpl: resultTpl,

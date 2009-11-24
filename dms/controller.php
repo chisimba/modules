@@ -121,8 +121,18 @@ class dms extends controller {
      * Method to submit file of any type
      *
      */
-    public function __doajaxupload() {
-        $filename = $_FILES['filename']['name'];
-        return $this->objUtils->saveFile($filename);
+    public function __doupload() {
+        $result = $this->objUtils->saveFile();
+        
+        if(strstr($result, "success")) {
+            $this->nextAction('home');
+        }
+        else {
+            return $this->nextAction('uploadFile', array('message'=>'error'));
+        }
+    }
+
+    public function __getJSONdata() {
+        return $this->objUtils->createJSONFileData();
     }
 }

@@ -14,6 +14,7 @@ class userutils extends object {
         //instantiate the language object
         $this->loadClass('link', 'htmlelements');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objUploadTable = $this->getObject('dbfileuploads');
     }
 
     public function showPageHeading() {
@@ -21,10 +22,10 @@ class userutils extends object {
     }
 
     public function searchFiles($url) {
-        $script = '
-                var url = "'.$url.'";
+        $script = "
+                var url = '".$url."';
                 showSearchForm(url);
-        ';
+        ";
         return $script;
     }
 
@@ -39,13 +40,18 @@ class userutils extends object {
         //return $this->objUpload->show();
     }
 
-    public function getRecentFiles() {
-        $data = "<h1>Latest 10 Uploads</h1><hr />";
-
+    public function getRecentFiles($url) {
+        //$data = "<h1>Latest 10 Uploads</h1><hr />";
+        $data = "
+                showLatestUploads('".$url."')";
+        
         return $data;
     }
 
-    public function saveFile($filename) {
+    public function saveFile() {
+        //declare user object
+        $objUser = $this->getObject('user', 'security');
+        /* create directory on which to save files */
         $objMkDir = $this->getObject('mkdir', 'files');
 
         $destinationDir = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$id;
@@ -53,40 +59,68 @@ class userutils extends object {
 
         @chmod($destinationDir, 0777);
 
-        $objFileUpload = $this->getObject('upload','files');
-        $objFileUpload->permittedTypes = array("txt", "xls", "doc","pdf", "mp3", "ppt", "odp", "pps", "css");print_r($objFileUpload->permittedTypes);
+        $objFileUpload = $this->getObject('upload');
         $objFileUpload->overWrite = TRUE;
         $objFileUpload->uploadFolder = $destinationDir.'/';
 
-        $result = $objFileUpload->doUpload(TRUE, $filename);
-        $pathParts = pathinfo($fileName);
+        $result = $objFileUpload->doUpload(TRUE);
         
-        echo "<br>$filename<br>";
-        print_r($pathParts);
-        echo "<br>";
-        var_dump($result);
-        echo "<br>";
         if ($result['success'] == FALSE) {
-            //rmdir($this->objConfig->getcontentBasePath().'/dmsUploadFiles/');
-            //$filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
-            return $this->nextAction('uploadFile', array('message'=>'error'));
+            return "error";
         }
         else {
             $filename = $result['filename'];
-            $mimetype = $result['mimetype'];
-            $path_parts = $result['storedname'];
-            $ext = $path_parts['extension'];
-            $file = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$filename.$ext;
+            $ext = $result['extension'];
+            $file = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$filename;
 
             if (is_file($file)) {
                 @chmod($file, 0777);
             }
 
             // save the file information into the database
+            $data = array('filename'=>$filename, 'filetype'=>$ext, 'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),'userid'=>$objUser->userId());
+            $result = $this->objUploadTable->saveFileInfo($data);
 
-            //return $this->nextAction('home');
+            return "success";
         }
     }
-}
 
+    public function createJSONFileData() {
+        // get text documents
+        $txtDocs = $this->objUploadTable->textDocs();
+
+        $numRows = count($txtDocs);
+        $JSONstr = "[{";
+        if($numRows > 0) {
+            $count = 1;
+
+            $JSONstr .= "
+    filename:'Plain Text Documents',
+    duration:'',
+    uiProvider:'col',
+    cls:'master-task',
+    iconCls:'task-folder',
+    children:[";
+            foreach($txtDocs as $data) {
+                $JSONstr .= "
+        {
+        filename:'".$data['filename']."',
+        duration:'".$data['filetype']."',
+        uiProvider:'col',
+        leaf:true,
+        iconCls:'task'
+    }";
+                if($count < $numRows) {
+                    $JSONstr .= ",";
+                }
+
+                $count++;
+            }
+            $JSONstr .= "]";
+        }
+         $JSONstr .= "
+}]";
+        echo $JSONstr;
+    }
+}
 ?>

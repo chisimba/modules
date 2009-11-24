@@ -8,6 +8,9 @@
     $mainjs = '<script src="'.$this->getResourceUri('js/main.js').'" type="text/javascript"></script>';
     $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/main.css').'"/>';
     $buttoncss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css').'"/>';
+    $uploadsjs = '<script src="'.$this->getResourceUri('js/grouping.js').'" type="text/javascript"></script>';
+    $columnnodecss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('js/ext-3.0.0/examples/ux/css/ColumnNodeUI.css').'"/>';
+    $columnnodejs = '<script src="'.$this->getResourceUri('js/ext-3.0.0/examples/ux/ColumnNodeUI.js').'" type="text/javascript"></script>';
     
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);
@@ -16,6 +19,9 @@
     $this->appendArrayVar('headerParams', $mainjs);
     $this->appendArrayVar('headerParams', $maincss);
     $this->appendArrayVar('headerParams', $buttoncss);
+    $this->appendArrayVar('headerParams', $uploadsjs);
+    $this->appendArrayVar('headerParams', $columnnodecss);
+    $this->appendArrayVar('headerParams', $columnnodejs);
 
     $upload = "";
     if($this->getParam("upload")) {
@@ -25,6 +31,7 @@
     //url
     $searchUrl = str_replace("amp;", "", $this->uri(array('action'=>'searchforfile')));
     $uploadUrl = str_replace("amp;", "", $this->uri(array('action'=>'uploadFile')));
+    $JSONUrl = str_replace("amp;", "", $this->uri(array('action'=>'getJSONdata')));
 
     // Create an instance of the css layout class
     $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -34,21 +41,24 @@
     $rightSideColumn =  '<div id ="mainContent">';
     $content = '<div id="heading"><h1>'.$this->objUtils->showPageHeading().'</h1></div>';
     $content .= '<div id="buttons"></div>';
+    $content .= '<div id="recent-uploads"></div>';
     $content .= '<div id="searchpane"></div>';
-    $content .= '<div id="recentfiles">'.$this->objUtils->getRecentFiles().'</div>';
     $content .= '<input id="uploadURL" type="hidden" value="'.$uploadUrl.'">';
     $rightSideColumn .= $content;
     $rightSideColumn .= '</div>';
     $cssLayout->setMiddleColumnContent($rightSideColumn);
 
     echo $cssLayout->show();
-    $mainjs = '<script type="text/javascript">
-        Ext.onReady(function() {';
+    $mainjs = "<script type='text/javascript'>
+        Ext.onReady(function() {
+
+            Ext.QuickTips.init();";
 
     $mainjs .= $this->objUtils->searchFiles($searchUrl);
-    $mainjs .= '
-                });';
-    $mainjs .= '</script>';
+    $mainjs .= $this->objUtils->getRecentFiles($JSONUrl);
+    $mainjs .= "
+                });";
+    $mainjs .= "</script>";
 
 
     echo $mainjs;
