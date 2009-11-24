@@ -6,7 +6,7 @@ function showTabs() {
     // basic tabs, first tabs contains the Course details, second tabs contains course history
     var tabs = new Ext.TabPanel({
         renderTo: 'tabs',
-        width:800,
+        autoWidth:true,
         autoHeight: true,
         activeTab: parseInt(selectedTab),
         frame:false,
