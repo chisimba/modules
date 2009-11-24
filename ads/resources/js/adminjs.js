@@ -172,15 +172,15 @@ function showSchoolList(facultyData, data, url) {
 
     });
 
-        // shared reader
+    // shared reader
     var schoolStoreReader = new Ext.data.ArrayReader({}, [
-{
-            name: 'schoolname'
-        },{
-            name: 'faculty'
-        },{
-            name: 'delete'
-        }
+    {
+        name: 'schoolname'
+    },{
+        name: 'faculty'
+    },{
+        name: 'delete'
+    }
     ]);
     var schoolStore = new Ext.data.GroupingStore({
         reader:schoolStoreReader,
@@ -196,6 +196,7 @@ function showSchoolList(facultyData, data, url) {
     // create the Grid
     var schoolGrid = new Ext.grid.GridPanel({
         store: schoolStore,
+
         view: new Ext.grid.GroupingView({
             forceFit:true,
             groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Schools" : "School"]})'
@@ -223,7 +224,7 @@ function showSchoolList(facultyData, data, url) {
         }),
         stripeRows: true,
         autoExpandColumn: 'school',
-        height:350,
+        autoHeight: true,
         width:600
     });
     schoolGrid.render('schoollist');
@@ -402,8 +403,8 @@ function showFacultyModeratorList(data,url,modFaculties, schoolurl){
     schoolField.store.load({
         params:{
             faculty:modFacultyField.getValue()
-            }
-        });
+        }
+    });
 
     var moderatorForm = new Ext.FormPanel({
         standardSubmit: true,
@@ -435,8 +436,8 @@ function showFacultyModeratorList(data,url,modFaculties, schoolurl){
         schoolField.store.load({
             params:{
                 faculty:modFacultyField.getValue()
-                }
-            });
+            }
+        });
     })
 
     var addModeratorWin;
@@ -584,8 +585,8 @@ function showSubFacultyModeratorList(data,url,modFaculties,schoolurl){
     schoolField.store.load({
         params:{
             faculty:modFacultyField.getValue()
-            }
-        });
+        }
+    });
 
     var moderatorForm = new Ext.FormPanel({
         standardSubmit: true,
@@ -617,8 +618,8 @@ function showSubFacultyModeratorList(data,url,modFaculties,schoolurl){
         schoolField.store.load({
             params:{
                 faculty:modFacultyField.getValue()
-                }
-            });
+            }
+        });
     })
 
     var addModeratorWin;
@@ -769,8 +770,8 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
     schoolField.store.load({
         params:{
             faculty:modFacultyField.getValue()
-            }
-        });
+        }
+    });
 
     var moderatorForm = new Ext.FormPanel({
         standardSubmit: true,
@@ -801,8 +802,8 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
         schoolField.store.load({
             params:{
                 faculty:modFacultyField.getValue()
-                }
-            });
+            }
+        });
     })
 
     var addModeratorWin;
