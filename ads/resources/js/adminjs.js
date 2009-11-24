@@ -723,7 +723,7 @@ function showAPOModeratorList(data,url,modFaculties,schoolurl){
         }),
         stripeRows: true,
         autoExpandColumn: 'moderator',
-        height:350,
+        autoHeight:true,
         width:600
     });
     grid.render('apomoderators');
