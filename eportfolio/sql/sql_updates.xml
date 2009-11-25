@@ -2,7 +2,7 @@
 <updates>
   <update>
         <table>tbl_eportfolio_activity</table>
-        <version>4.233</version>
+        <version>4.234</version>
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
@@ -25,7 +25,7 @@
 	</update>
   <update>
         <table>tbl_eportfolio_demographics</table>
-        <version>4.233</version>
+        <version>4.234</version>
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
@@ -40,7 +40,7 @@
 	</update>
   <update>
         <table>tbl_eportfolio_affiliation</table>
-        <version>4.233</version>
+        <version>4.234</version>
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
@@ -63,7 +63,7 @@
 	</update>
   <update>
         <table>tbl_eportfolio_qcl</table>
-        <version>4.233</version>
+        <version>4.234</version>
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
@@ -78,7 +78,7 @@
 	</update>
   <update>
         <table>tbl_eportfolio_competency</table>
-        <version>4.233</version>
+        <version>4.234</version>
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
@@ -93,7 +93,7 @@
 	</update>
   <update>
         <table>tbl_eportfolio_reflection</table>
-        <version>4.233</version>
+        <version>4.234</version>
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
@@ -108,7 +108,7 @@
 	</update>
   <update>
         <table>tbl_eportfolio_assertion</table>
-        <version>4.233</version>
+        <version>4.234</version>
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
@@ -124,7 +124,7 @@
 
   <update>
         <table>tbl_eportfolio_interest</table>
-        <version>4.233</version>
+        <version>4.234</version>
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
