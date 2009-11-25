@@ -62,13 +62,8 @@ $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
 //Store the GroupId
 //var_dump($isSubGroup);
 //var_dump($groupId);
-$objHeading->type = 1;
+
 $objHeading->align = center;
-$objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
-echo $objHeading->show();
-echo "</br>";
-//AnotherHeading
-echo "</br>";
 $objHeading->type = 2;
 $objHeading->str = '<font color="#FF8800">' . $objUser->getSurname() . ', ' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $groupname . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . '</font>';
 echo $objHeading->show();

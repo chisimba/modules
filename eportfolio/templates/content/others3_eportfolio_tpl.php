@@ -536,7 +536,7 @@ $goalsTable->cellspacing = '12';
 $goalsTable->width = "60%";
 // Add the table heading.
 $goalsTable->startRow();
-$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>");
+$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_goals", 'eportfolio') . "</b>");
 $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
