@@ -24,7 +24,7 @@ $objFeatureBox = $this->newObject ( 'featurebox', 'navigation' );
 			  'module' => 'eportfolio',
 			  'action' => 'myview'
 	)));
-	$mngviewlink->link = $this->objLanguage->languageText("mod_eportfolio_view","eportfolio","View")." ".$this->objLanguage->languageText("mod_eportfolio_wordEportfolio","eportfolio","ePortfolio");
+	$mngviewlink->link = $this->objLanguage->languageText("mod_eportfolio_view","eportfolio","View")." ".$this->objLanguage->languageText("mod_eportfolio_own","eportfolio","Own")." ".$this->objLanguage->languageText("mod_eportfolio_wordEportfolio","eportfolio","ePortfolio");
 	$linkviewManage = $mngviewlink->show();
 
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$linkviewManage."</li>";
