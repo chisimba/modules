@@ -64,7 +64,7 @@ $strtdate->setDefaultDate($mybirth[0]);
 
 //$startField = $this->objPopupcal->show('birth', 'no', 'no', $birth);
 $row = array(
-    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_birthDate", 'eportfolio') . ":</b>"
+    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 200, 'top', 'right');

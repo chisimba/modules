@@ -60,7 +60,7 @@ $strtdate->setDateFormat("YYYY-MM-DD");
 //$textinput->size = 20;
 //$startField = $this->objPopupcal->show('birth', 'no', 'no', Null);
 $row = array(
-    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_birthDate", 'eportfolio') . ":</b>"
+    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 200, 'top', 'right');

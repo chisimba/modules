@@ -550,41 +550,28 @@ class eportfolio extends controller
             return "add_address_tpl.php";
             break;
 
-        case "view_transcript":
-            return 'main_tpl.php';
-            break;
-
         case "add_interest":
             $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             return "add_interest_tpl.php";
             break;
-
+        case "view_assertion":
+        case "view_product":
+        case "view_category":
+        case "view_categorytype":
+        case "view_reflection":
+        case "view_demographics":
+        case "view_affiliation":
+        case "view_competency":
+        case "view_transcript":
         case "view_interest":
-            return 'main_tpl.php';
-            break;
-
         case "view_address":
-            return 'main_tpl.php';
-            break;
-
         case "view_contact":
-            return 'main_tpl.php';
-            break;
-
         case "view_email":
-            return 'main_tpl.php';
-            break;
-
         case "view_activity":
-            return 'main_tpl.php';
-            break;
-
         case "view_qcl":
-            return 'main_tpl.php';
-            break;
-
         case "view_goals":
-            return 'main_tpl.php';
+            $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+            return 'new_main_tpl.php';
             break;
 
         case "add_goals":
@@ -617,17 +604,10 @@ class eportfolio extends controller
             return "add_assertion_tpl.php";
             break;
 
-        case "view_assertion":
-            return 'main_tpl.php';
-            break;
 
         case "add_product":
             $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             return "add_product_tpl.php";
-            break;
-
-        case "view_product":
-            return 'main_tpl.php';
             break;
 
         case "add_category":
@@ -635,33 +615,9 @@ class eportfolio extends controller
             return "add_category_tpl.php";
             break;
 
-        case "view_category":
-            return 'main_tpl.php';
-            break;
-
         case "add_categorytype":
             $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             return "add_categorytype_tpl.php";
-            break;
-
-        case "view_categorytype":
-            return 'main_tpl.php';
-            break;
-
-        case "view_reflection":
-            return 'main_tpl.php';
-            break;
-
-        case "view_demographics":
-            return 'main_tpl.php';
-            break;
-
-        case "view_affiliation":
-            return 'main_tpl.php';
-            break;
-
-        case "view_competency":
-            return 'main_tpl.php';
             break;
 
         case "add_affiliation":
