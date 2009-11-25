@@ -541,6 +541,7 @@ class eportfolio extends controller
             break;
 
         case "main":
+            $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             return "new_main_tpl.php";
             break;
 
