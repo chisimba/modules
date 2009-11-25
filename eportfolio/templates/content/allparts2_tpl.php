@@ -56,13 +56,8 @@ $categorypage = '';
 $categorytypepage = '';
 //Get Group Name
 $groupname = $this->_objGroupAdmin->getName($groupId);
-$objHeading->type = 1;
+
 $objHeading->align = center;
-$objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
-echo $objHeading->show();
-echo "</br>";
-//AnotherHeading
-echo "</br>";
 $objHeading->type = 2;
 $objHeading->str = '<font color="#FF8800">' . $objUser->getSurname() . ', ' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $groupname . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . '</font>';
 echo $objHeading->show();
@@ -574,7 +569,7 @@ $goalsTable->width = "60%";
 // Add the table heading.
 $goalsTable->startRow();
 $goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_wordSelect", 'eportfolio') . "<b>");
-$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>");
+$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_goals", 'eportfolio') . "</b>");
 $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
