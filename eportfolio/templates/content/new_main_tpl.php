@@ -442,7 +442,7 @@ $demographicsTable->border = 0;
 $demographicsTable->cellspacing = '3';
 $demographicsTable->width = "50%";
 // Add the table heading.
-if (empty($demographicsList)) {
+//if (empty($demographicsList)) {
     // Show the add link
     $iconAdd = $this->getObject('geticon', 'htmlelements');
     $iconAdd->setIcon('add');
@@ -458,7 +458,7 @@ if (empty($demographicsList)) {
     $demographicsTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_add", 'eportfolio').'&nbsp;'.$objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio') . '&nbsp;&nbsp;&nbsp;</b>'.$objLink->show() , '', 'left', '', '', 'colspan="4"');
     $demographicsTable->endRow();
     //echo $objHeading->show();    
-}
+//}
 $demographicsTable->startRow();
 $demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . "</b>");

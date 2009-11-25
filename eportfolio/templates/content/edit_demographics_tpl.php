@@ -55,8 +55,13 @@ $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
 $mybirth = explode(" ", $birth);
 //birth text box
-$textinput = new textinput("birth", $mybirth[0]);
-$textinput->size = 20;
+//$textinput = new textinput("birth", $mybirth[0]);
+//$textinput->size = 20;
+$strtdate = &$this->getObject('datepicker', 'htmlelements');
+$strtdate->setName('birth');
+$strtdate->setDateFormat("YYYY-MM-DD");
+$strtdate->setDefaultDate($mybirth[0]);
+
 //$startField = $this->objPopupcal->show('birth', 'no', 'no', $birth);
 $row = array(
     "<b>" . $label = $objLanguage->languageText("mod_eportfolio_birthDate", 'eportfolio') . ":</b>"
@@ -64,13 +69,8 @@ $row = array(
 $objTable->startRow();
 $objTable->addCell($row[0], 200, 'top', 'right');
 $form->addRule('birth', 'Please enter your birth date', 'required');
-/*
 $row = array(
-$startField
-);
-*/
-$row = array(
-    $textinput->show()
+    $strtdate->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
