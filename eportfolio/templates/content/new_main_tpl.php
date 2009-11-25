@@ -442,7 +442,7 @@ $demographicsTable->border = 0;
 $demographicsTable->cellspacing = '3';
 $demographicsTable->width = "50%";
 // Add the table heading.
-if (!empty($demographicsList)) {
+if (empty($demographicsList)) {
     // Show the add link
     $iconAdd = $this->getObject('geticon', 'htmlelements');
     $iconAdd->setIcon('add');
