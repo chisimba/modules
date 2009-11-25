@@ -6,20 +6,20 @@
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
-        		<title>
-        		<type>start</type>
+        		<start>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</start>
 			</change>
         	<change>
-        		<title>
-        		<type>finish</type>
+        		<finish>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</finish>
 			</change>
 		</data>
 	</update>
@@ -29,12 +29,12 @@
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
-        		<title>
-        		<type>birth</type>
+        		<birth>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</birth>
 			</change>
 		</data>
 	</update>
@@ -44,20 +44,20 @@
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
-        		<title>
-        		<type>start</type>
+        		<start>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</start>
 			</change>
         	<change>
-        		<title>
-        		<type>finish</type>
+        		<finish>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</finish>
 			</change>
 		</data>
 	</update>
@@ -67,12 +67,12 @@
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
-        		<title>
-        		<type>award_date</type>
+        		<award_date>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</award_date>
 			</change>
 		</data>
 	</update>
@@ -82,12 +82,12 @@
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
-        		<title>
-        		<type>award_date</type>
+        		<award_date>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</award_date>
 			</change>
 		</data>
 	</update>
@@ -97,12 +97,12 @@
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
-        		<title>
-        		<type>creation_date</type>
+        		<creation_date>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</creation_date>
 			</change>
 		</data>
 	</update>
@@ -112,12 +112,12 @@
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
-        		<title>
-        		<type>creation_date</type>
+        		<creation_date>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</creation_date>
 			</change>
 		</data>
 	</update>
@@ -128,12 +128,12 @@
         <description>Changed type from timestamp to date</description>
         <data>
         	<change>
-        		<title>
-        		<type>creation_date</type>
+        		<creation_date>
+        		<type>date</type>
         			<definition>
 		    			<type>date</type>
     				</definition>
-    			</title>
+    			</creation_date>
 			</change>
 		</data>
 	</update>
