@@ -52,4 +52,3 @@ $rightSideColumn.= '</div>';
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 echo $cssLayout->show()
 ?>
-

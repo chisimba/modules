@@ -80,7 +80,6 @@ class editform extends object {
         // with the word save
         $objButton->setValue(' '.$this->objLanguage->languageText("mod_efl_saveessay", "efl").' ');
         $objForm->addToForm($objButton->show());
-
         return $objForm->show();
 
     }
@@ -108,8 +107,5 @@ class editform extends object {
     public function show($essayid) {
         return $this->buildForm($essayid);
     }
-
-
-
 }
 ?>

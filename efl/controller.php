@@ -152,7 +152,7 @@ class efl extends controller {
         if($this->objStudentEssays->addstudentEssay($userid,$essayid,$content)) {
             return "studentessaylist_tpl.php";
         } else {
-            return "home_tpl.php";
+            return "studentessaylist_tpl.php";
         }
 
     }

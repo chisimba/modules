@@ -31,6 +31,7 @@ $fields = array(
         ), 
     'submitdate' => array(
         'type' => 'timestamp',
+        'length' => 15,
         'notnull' => TRUE
         )
 );
