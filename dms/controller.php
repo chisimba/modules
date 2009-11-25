@@ -42,6 +42,7 @@ class dms extends controller {
 
         //get the util object
         $this->objUtils = $this->getObject('userutils');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -122,7 +123,8 @@ class dms extends controller {
      *
      */
     public function __doupload() {
-        $result = $this->objUtils->saveFile();
+        $permissions = $this->getParam('permissions');
+        $result = $this->objUtils->saveFile($permissions);
         
         if(strstr($result, "success")) {
             $this->nextAction('home');
@@ -133,6 +135,7 @@ class dms extends controller {
     }
 
     public function __getJSONdata() {
-        return $this->objUtils->createJSONFileData();
+        $userid = $this->objUser->userId();
+        return $this->objUtils->createJSONFileData($userid);
     }
 }

@@ -9,7 +9,7 @@ var showUploadForm = function(myUrl) {
         title: 'File Upload Form',
         autoHeight: true,
         bodyStyle: 'padding: 10px 10px 0 10px;',
-        labelWidth: 50,
+        labelWidth: 80,
         defaults: {
             anchor: '95%',
             allowBlank: false,
@@ -21,6 +21,14 @@ var showUploadForm = function(myUrl) {
             emptyText: 'Select a file',
             fieldLabel: 'File',
             name: 'filename'
+        },
+        {
+            xtype: 'radiogroup',
+            fieldLabel: 'Permissions',
+            items: [
+                {boxLabel: 'Public', name: 'permissions', inputValue: 1, checked: true},
+                {boxLabel: 'Private', name: 'permissions', inputValue: 2}
+            ]
         }],
         buttons: [{
             text: 'Save',

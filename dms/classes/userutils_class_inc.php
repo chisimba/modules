@@ -48,13 +48,20 @@ class userutils extends object {
         return $data;
     }
 
-    public function saveFile() {
+    public function saveFile($permissions) {
         //declare user object
         $objUser = $this->getObject('user', 'security');
         /* create directory on which to save files */
         $objMkDir = $this->getObject('mkdir', 'files');
 
-        $destinationDir = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$id;
+        $userid = $objUser->userId();
+        $this->objUploadTable->setUserId($userid);
+        if($permissions == 1) {
+            $destinationDir = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid."/shared/".$id;
+        }
+        else {
+            $destinationDir = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid."/".$id;
+        }
         $objMkDir->mkdirs($destinationDir);
 
         @chmod($destinationDir, 0777);
@@ -78,48 +85,75 @@ class userutils extends object {
             }
 
             // save the file information into the database
-            $data = array('filename'=>$filename, 'filetype'=>$ext, 'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),'userid'=>$objUser->userId());
+            $data = array('filename'=>$filename, 'filetype'=>$ext, 'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),'userid'=>$objUser->userId(), 'shared'=>$permissions);
             $result = $this->objUploadTable->saveFileInfo($data);
 
             return "success";
         }
     }
 
-    public function createJSONFileData() {
-        // get text documents
-        $txtDocs = $this->objUploadTable->textDocs();
+    public function createJSONFileData($userid) {
+        $this->objUploadTable->setUserId($userid);
+        //get distinct file types
+        $distinctFT = $this->objUploadTable->getFileTypes();
 
-        $numRows = count($txtDocs);
-        $JSONstr = "[{";
-        if($numRows > 0) {
-            $count = 1;
-
+        $count = 1;
+        $numTypes = count($distinctFT);
+        $JSONstr = "[";
+        foreach($distinctFT as $data) {
+            $docs = $this->objUploadTable->getDocs($data['filetype']);
+            $numRows = count($txtDocs);
+            $JSONstr .= "{";
+            
+            $numRows = count($docs);
             $JSONstr .= "
-    filename:'Plain Text Documents',
+    filename:";
+            if(strcmp($data['filetype'], "txt") == 0) {
+                $JSONstr .= "'Plain Text Documents',";
+            }
+            else if(strcmp($data['filetype'], "pdf") == 0) {
+                $JSONstr .= "'PDF Documents',";
+            }
+            else if(strcmp($data['filetype'], "doc") == 0) {
+                $JSONstr .= "'Word Documents',";
+            }
+            else if(strcmp($data['filetype'], "mp3") == 0) {
+                $JSONstr .= "'Music Files',";
+            }
+            else {
+                $JSONstr .= "'',";
+            }
+    $JSONstr .= "
     duration:'',
     uiProvider:'col',
     cls:'master-task',
     iconCls:'task-folder',
     children:[";
-            foreach($txtDocs as $data) {
+
+            $counter = 1;
+            foreach($docs as $newdata) {
                 $JSONstr .= "
-        {
-        filename:'".$data['filename']."',
-        duration:'".$data['filetype']."',
+    {
+        filename:'".$newdata['filename']."',
+        duration:'".$newdata['filetype']."',
         uiProvider:'col',
         leaf:true,
         iconCls:'task'
     }";
-                if($count < $numRows) {
+                if($counter < $numRows) {
                     $JSONstr .= ",";
                 }
-
-                $count++;
+                $counter++;
             }
-            $JSONstr .= "]";
+            $JSONstr .= "
+]}";
+            if($count < $numTypes) {
+                $JSONstr .= ",";
+            }
+            $count++;
+
         }
-         $JSONstr .= "
-}]";
+        $JSONstr .= "]";
         echo $JSONstr;
     }
 }
