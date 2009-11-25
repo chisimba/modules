@@ -1,5 +1,143 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
+  <update>
+        <table>tbl_eportfolio_activity</table>
+        <version>4.233</version>
+        <description>Changed type from timestamp to date</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>start</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+        	<change>
+        		<title>
+        		<type>finish</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
+  <update>
+        <table>tbl_eportfolio_demographics</table>
+        <version>4.233</version>
+        <description>Changed type from timestamp to date</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>birth</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
+  <update>
+        <table>tbl_eportfolio_affiliation</table>
+        <version>4.233</version>
+        <description>Changed type from timestamp to date</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>start</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+        	<change>
+        		<title>
+        		<type>finish</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
+  <update>
+        <table>tbl_eportfolio_qcl</table>
+        <version>4.233</version>
+        <description>Changed type from timestamp to date</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>award_date</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
+  <update>
+        <table>tbl_eportfolio_competency</table>
+        <version>4.233</version>
+        <description>Changed type from timestamp to date</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>award_date</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
+  <update>
+        <table>tbl_eportfolio_reflection</table>
+        <version>4.233</version>
+        <description>Changed type from timestamp to date</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>creation_date</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
+  <update>
+        <table>tbl_eportfolio_assertion</table>
+        <version>4.233</version>
+        <description>Changed type from timestamp to date</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>creation_date</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
+
+  <update>
+        <table>tbl_eportfolio_interest</table>
+        <version>4.233</version>
+        <description>Changed type from timestamp to date</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>creation_date</type>
+        			<definition>
+		    			<type>date</type>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
+
     <update>
         <table>tbl_eportfolio_affiliation</table>
         <version>4.05</version>

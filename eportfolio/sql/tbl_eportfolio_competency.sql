@@ -20,7 +20,7 @@ $fields = array(
 		'length' => 255,
 		),
 	'award_date' => array(
-		'type' => 'timestamp',
+		'type' => 'date',
 		),
 	'shortdescription' => array(
 		'type' => 'text',

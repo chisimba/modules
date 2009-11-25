@@ -24,7 +24,7 @@ $fields = array(
 		'length' => 255,
 		),
 	'creation_date' => array(
-		'type' => 'timestamp',
+		'type' => 'date',
 		),
 	'shortdescription' => array(
 		'type' => 'text',

@@ -27,7 +27,7 @@ $fields = array(
 		'type' => 'date',
 		),
 	'finish' => array(
-		'type' => 'timestamp',
+		'type' => 'date',
 		),
 	'shortdescription' => array(
 		'type' => 'text',

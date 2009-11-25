@@ -32,10 +32,10 @@ $fields = array(
 		'length' => 255,
 		),
 	'start' => array(
-		'type' => 'timestamp',
+		'type' => 'date',
 		),
 	'finish' => array(
-		'type' => 'timestamp',
+		'type' => 'date',
 		),
 	'shortdescription' => array(
 		'type' => 'text',

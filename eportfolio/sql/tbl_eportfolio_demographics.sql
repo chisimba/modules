@@ -20,7 +20,7 @@ $fields = array(
 		'length' => 50,
 		),
 	'birth' => array(
-		'type' => 'timestamp',
+		'type' => 'date',
 		),
 	'nationality' => array(
 		'type' => 'text',
