@@ -1532,7 +1532,7 @@ class eportfolio extends controller
 private function showUserDetailsForm() 
 {
 //    return 'main_tpl.php';
-    return "extjs_main_tpl.php";
+    return "new_main_tpl.php";
 }
 /**
  * Method to remove a user from a group
