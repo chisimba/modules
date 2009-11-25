@@ -541,7 +541,7 @@ class eportfolio extends controller
             break;
 
         case "main":
-            return "main_tpl.php";
+            return "new_main_tpl.php";
             break;
 
         case "add_address":
