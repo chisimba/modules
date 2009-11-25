@@ -885,7 +885,7 @@ $assertionstable->addRow($row, NULL);
 //}//end else hasAccess
 //End View Assertions
 //Information Title
-$objinfoTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("phrase_eportfolio_userinformation", 'eportfolio');
+$objinfoTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("phrase_eportfolio_userinformation", 'eportfolio');
 $this->objmainTab = $this->newObject('tabber', 'htmlelements');
 $this->objTab = $this->newObject('tabber', 'htmlelements');
 $namesLabel = $userTable->show();
@@ -920,86 +920,69 @@ $this->objTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordDemographics", 'eportfolio') ,
     'content' => $demographicsLabel
 ));
-$addressTab = $this->objTab->show();
+
 //Information tab
-$page.= $featureBox->show($objinfoTitles->show() , $addressTab, 'mybox1', 'default', TRUE);
 $this->objmainTab->init();
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInformation", 'eportfolio') ,
-    'content' => $page
+    'content' => $this->objTab->show()
 ));
 //Activity Title
-$objactivityTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_activitylist", 'eportfolio');
-$activitypage.= $featureBox->show($objactivityTitles->show() , $activityLabel, 'mybox2', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordActivity", 'eportfolio') ,
-    'content' => $activitypage
+    'content' => $activityLabel
 ));
 //Affiliation Title
-$objaffiliationTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_affiliationheading", 'eportfolio');
-$affiliationpage.= $featureBox->show($objaffiliationTitles->show() , $affiliationTable->show() , 'mybox3', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAffiliation", 'eportfolio') ,
-    'content' => $affiliationpage
+    'content' => $affiliationTable->show()
 ));
 //Transcript Title
-$objtranscriptTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_transcriptlist", 'eportfolio');
-$transcriptpage.= $featureBox->show($objtranscriptTitles->show() , $transcriptTable->show() , 'mybox4', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordTranscripts", 'eportfolio') ,
-    'content' => $transcriptpage
+    'content' => $transcriptTable->show()
 ));
 //Qcl Title
-$objqclTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_qclheading", 'eportfolio');
-$qclpage.= $featureBox->show($objqclTitles->show() , $qclTable->show() , 'mybox5', 'default', TRUE);
+$objqclTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_qclheading", 'eportfolio');
+$qclpage.= $featureBox->show($objqclTitles->show() , $qclTable->show() , 'yourbox5', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordQualification", 'eportfolio') ,
-    'content' => $qclpage
+    'content' => $qclTable->show()
 ));
 //Goals Title
-$objgoalsTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_goalList", 'eportfolio');
-$goalspage.= $featureBox->show($objgoalsTitles->show() , $goalsTable->show() , 'mybox6', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordGoals", 'eportfolio') ,
-    'content' => $goalspage
+    'content' => $goalsTable->show()
 ));
 //Competency Title
-$objcompetencyTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_competencylist", 'eportfolio');
-$competencypage.= $featureBox->show($objcompetencyTitles->show() , $competencyTable->show() , 'mybox7', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordCompetency", 'eportfolio') ,
-    'content' => $competencypage
+    'content' => $competencyTable->show()
 ));
 //interest Title
-$objinterestTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_interestList", 'eportfolio');
-$interestpage.= $featureBox->show($objinterestTitles->show() , $interestTable->show() , 'mybox8', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInterests", 'eportfolio') ,
-    'content' => $interestpage
+    'content' => $interestTable->show()
 ));
 //reflection Title
-$objreflectionTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_reflectionList", 'eportfolio');
-$reflectionpage.= $featureBox->show($objreflectionTitles->show() , $reflectionTable->show() , 'mybox9', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordReflections", 'eportfolio') ,
-    'content' => $reflectionpage
+    'content' => $reflectionTable->show()
 ));
 //assertions Title
-$objassertionsTitles->str = $objUser->getSurname($fullname[userid]) . $objLanguage->languageText("mod_eportfolio_assertionList", 'eportfolio');
-$assertionspage.= $featureBox->show($objassertionsTitles->show() , $assertionstable->show() , 'mybox10', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAssertion", 'eportfolio') ,
-    'content' => $assertionspage
+    'content' => $assertionstable->show()
 ));
 $myeportfolioTab = $this->objmainTab->show();
 $tabBox->addTab(array(

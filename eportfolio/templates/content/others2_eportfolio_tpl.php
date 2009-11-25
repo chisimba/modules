@@ -59,13 +59,8 @@ $categorytypepage = '';
 $groupname = $this->_objGroupAdmin->getName($groupId);
 //Get the subgroups which represent the various parts of the eportfolio ie a goal item, an activity item
 $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
-$objHeading->type = 1;
+
 $objHeading->align = center;
-$objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
-echo $objHeading->show();
-echo "</br>";
-//AnotherHeading
-echo "</br>";
 $objHeading->type = 2;
 //Get Owner Details
 $fullOwnername = $this->objUserAdmin->getUserDetails($ownerId);
@@ -109,10 +104,6 @@ $link = new link($this->uri(array(
 $link->link = 'View Identification Details';
 //Start Address View
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
-// Show the heading
-$objaddressTitles->type = 3;
-$objaddressTitles->str = $objLanguage->languageText("mod_eportfolio_heading", 'eportfolio');
-//echo $objHeading->show();
 $addressList = $this->objDbAddressList->getByItem($userId);
 // Create a table object
 $addressTable = &$this->newObject("htmltable", "htmlelements");
@@ -120,9 +111,6 @@ $addressTable->border = 0;
 $addressTable->cellspacing = '12';
 $addressTable->width = "100%";
 // Add the table heading.
-$addressTable->startRow();
-$addressTable->addCell($objaddressTitles->show() , '', '', '', '', 'colspan="8"');
-$addressTable->endRow();
 $addressTable->startRow();
 $addressTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $addressTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_streetno", 'eportfolio') . "</b>");
@@ -134,6 +122,7 @@ $addressTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_postad
 $addressTable->endRow();
 // Step through the list of addresses.
 if (!empty($addressList)) {
+    $addrcount = 0;
     foreach($addressList as $addressItem) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
@@ -144,6 +133,7 @@ if (!empty($addressList)) {
                 }
             }
             if ($addCheck == 1) {
+                $addrcount = 1;
                 //$objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
                 // Display each field for addresses
                 $addressTable->startRow();
@@ -165,21 +155,15 @@ if (!empty($addressList)) {
         }
     }
     unset($addressItem);
-} else {
+}
+if ($addrcount == 0) {
     $addressTable->startRow();
     $addressTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
     $addressTable->endRow();
 }
-$addressTable->startRow();
-$addressTable->addCell('', '', '', '', '', 'noRecordsMessage', 'colspan="8"');
-$addressTable->endRow();
 //echo '<br clear="left" />'.$mainlink->show();
 //End Address View
 //Start Contacts View
-// Show the heading
-$objcontactTitles->type = 3;
-$objcontactTitles->str = $objLanguage->languageText("mod_eportfolio_contact", 'eportfolio');
-//echo $objHeading->show();
 $contactList = $this->objDbContactList->getByItem($userId);
 $emailList = $this->objDbEmailList->getByItem($userId);
 // Create a table object
@@ -189,9 +173,6 @@ $contactTable->cellspacing = '3';
 $contactTable->width = "100%";
 // Add the table heading.
 $contactTable->startRow();
-$contactTable->endRow();
-$contactTable->addCell($objcontactTitles->show() , '', '', '', '', 'colspan="6"');
-$contactTable->startRow();
 $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contacttype", 'eportfolio') . "</b>");
 $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_countrycode", 'eportfolio') . "</b>");
@@ -200,6 +181,7 @@ $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contac
 $contactTable->endRow();
 // Step through the list of addresses.
 if (!empty($contactList)) {
+    $contcount = 0;
     foreach($contactList as $contactItem) {
         // Display each field
         $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
@@ -213,6 +195,7 @@ if (!empty($contactList)) {
                 }
             }
             if ($contCheck == 1) {
+                $contcount = 1;
                 $contactTable->startRow();
                 // Show the manage item check box
                 $contactTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
@@ -225,22 +208,17 @@ if (!empty($contactList)) {
         }
     }
     unset($contactItem);
-} else {
+}
+if ($contcount == 0) {
     $contactTable->startRow();
     $contactTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $contactTable->endRow();
 }
-$contactTable->startRow();
-$contactTable->addCell('', '', '', '', 'noRecordsMessage', 'colspan="6"');
-$contactTable->endRow();
 //End Contact View
 //Start Email View
 $iconAdd = $this->getObject('geticon', 'htmlelements');
 $iconAdd->setIcon('add');
 $iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');
-// Create a heading for emails
-$emailobjHeading->str = $objLanguage->languageText("mod_eportfolio_emailList", 'eportfolio');
-//echo $emailobjHeading->show();
 // Create a table object for emails
 $emailTable = &$this->newObject("htmltable", "htmlelements");
 $emailTable->border = 0;
@@ -248,15 +226,13 @@ $emailTable->cellspacing = '3';
 $emailTable->width = "50%";
 // Add the table heading.
 $emailTable->startRow();
-$emailTable->addCell($emailobjHeading->show() , '', '', '', '', 'colspan="3"');
-$emailTable->endRow();
-$emailTable->startRow();
 $emailTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $emailTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_email", 'eportfolio') . "</b>");
 $emailTable->endRow();
 // Step through the list of addresses.
 $class = 'even';
 if (!empty($emailList)) {
+    $emcount = 0;
     foreach($emailList as $emailItem) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
@@ -268,6 +244,7 @@ if (!empty($emailList)) {
             }
             //Do justice on the checkbox
             if ($emailCheck == 1) {
+                $emcount = 1;
                 // Display each field for addresses
                 $cattype = $this->objDbCategorytypeList->listSingle($emailItem['type']);
                 $emailTable->startRow();
@@ -280,14 +257,12 @@ if (!empty($emailList)) {
         }
     }
     unset($emailItem);
-} else {
+}
+if($emcount == 0) {
     $emailTable->startRow();
     $emailTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
     $emailTable->endRow();
 }
-$emailTable->startRow();
-$emailTable->addCell('', '', '', '', 'noRecordsMessage', 'colspan="3"');
-$emailTable->endRow();
 //End Email View
 //Demographics view
 $demographicsList = $this->objDbDemographicsList->getByItem($userId);
@@ -297,20 +272,6 @@ $demographicsTable->border = 0;
 $demographicsTable->cellspacing = '3';
 $demographicsTable->width = "50%";
 // Add the table heading.
-if (empty($demographicsList)) {
-    // Show the heading
-    $demographicsobjHeading->str = $objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio');
-    $demographicsTable->startRow();
-    $demographicsTable->addCell($demographicsobjHeading->show() , '', '', '', '', 'colspan="4"');
-    $demographicsTable->endRow();
-    //echo $objHeading->show();
-    
-} else {
-    $demographicsobjHeading->str = $objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio');
-    $demographicsTable->startRow();
-    $demographicsTable->addCell($demographicsobjHeading->show() , '', '', '', '', 'colspan="4"');
-    $demographicsTable->endRow();
-}
 $demographicsTable->startRow();
 $demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . "</b>");
@@ -318,6 +279,7 @@ $demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_n
 $demographicsTable->endRow();
 // Step through the list of addresses.
 if (!empty($demographicsList)) {
+    $democount = 0;
     foreach($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
@@ -330,6 +292,7 @@ if (!empty($demographicsList)) {
                 }
             }
             if ($demoCheck == 1) {
+                $democount = 1;
 									       $datetime = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
                 $demographicsTable->startRow();
                 $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
@@ -340,11 +303,13 @@ if (!empty($demographicsList)) {
         }
     }
     unset($demographicsItem);
-} else {
+}
+if($democount==0) {
     $demographicsTable->startRow();
     $demographicsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
     $demographicsTable->endRow();
 }
+
 //echo $demographicsTable->show();
 //End Demographics view
 //view name
@@ -358,9 +323,6 @@ $userTable->border = 0;
 $userTable->cellspacing = '12';
 $userTable->width = "40%";
 // Add the table heading.
-$userTable->startRow();
-$userTable->addCell($objHeading->show() , '', '', '', '', 'colspan="3"');
-$userTable->endRow();
 $userTable->startRow();
 $userTable->addCell("<b>" . $objLanguage->languageText('word_title', 'system') . "</b>");
 $userTable->addCell("<b>" . $objLanguage->languageText('word_surname', 'system') . "</b>");
@@ -388,10 +350,6 @@ if (!empty($fullOwnername)) {
 //Language Items
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
 // Show the heading
-$activityobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-$activityobjHeading->type = 3;
-$activityobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordActivity", 'eportfolio');
-// echo $activityobjHeading->show();
 $activitylist = $this->objDbActivityList->getByItem($userId);
 // Create a table object
 $activityTable = &$this->newObject("htmltable", "htmlelements");
@@ -399,9 +357,6 @@ $activityTable->border = 0;
 $activityTable->cellspacing = '3';
 $activityTable->width = "100%";
 // Add the table heading.
-$activityTable->startRow();
-$activityTable->addCell($activityobjHeading->show() , '', '', '', '', 'colspan="6"');
-$activityTable->endRow();
 $activityTable->startRow();
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contexttitle", 'eportfolio') . "</b>");
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activitytype", 'eportfolio') . "</b>");
@@ -413,6 +368,7 @@ $activityTable->endRow();
 $class = NULL;
 if (!empty($activitylist)) {
     $i = 0;
+    $actcount = 0;
     foreach($activitylist as $item) {
         //Get context title
         $objDbContext = &$this->getObject('dbcontext', 'context');
@@ -431,6 +387,7 @@ if (!empty($activitylist)) {
                 }
             }
             if ($actvCheck == 1) {
+                $actcount = 1;
                 // Display each field for activities
                 $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
                 $activityTable->startRow();
@@ -444,7 +401,8 @@ if (!empty($activitylist)) {
         }
     }
     unset($item);
-} else {
+}
+if ($actcount == 0) {
     $activityTable->startRow();
     $activityTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $activityTable->endRow();
@@ -454,10 +412,6 @@ if (!empty($activitylist)) {
 //Language Items
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
 // Show the heading
-$affiliationobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-$affiliationobjHeading->type = 3;
-$affiliationobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio');
-//    echo $affiliationobjHeading->show();
 $affiliationList = $this->objDbAffiliationList->getByItem($userId);
 // Create a table object
 $affiliationTable = &$this->newObject("htmltable", "htmlelements");
@@ -465,9 +419,6 @@ $affiliationTable->border = 0;
 $affiliationTable->cellspacing = '12';
 $affiliationTable->width = "100%";
 // Add the table heading.
-$affiliationTable->startRow();
-$affiliationTable->addCell($affiliationobjHeading->show() , '', '', '', '', 'colspan="8"');
-$affiliationTable->endRow();
 $affiliationTable->startRow();
 $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_classificationView", 'eportfolio') . "</b>");
@@ -480,6 +431,7 @@ $affiliationTable->endRow();
 $class = NULL;
 if (!empty($affiliationList)) {
     $i = 0;
+    $affcount = 0;
     foreach($affiliationList as $affiliationItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
@@ -493,6 +445,7 @@ if (!empty($affiliationList)) {
             }
             //Do justice on the checkbox
             if ($affiliationCheck == 1) {
+                $affcount = 1;
                 $affiliationTable->startRow();
                 $affiliationTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
                 $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, $class, '');
@@ -505,7 +458,8 @@ if (!empty($affiliationList)) {
         }
     }
     unset($affiliationItem);
-} else {
+} 
+if ($affcount == 0) {
     $affiliationTable->startRow();
     $affiliationTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
     $affiliationTable->endRow();
@@ -515,9 +469,6 @@ if (!empty($affiliationList)) {
 //Language Items
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
 // Show the heading
-$transcriptobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-$transcriptobjHeading->type = 3;
-$transcriptobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordTranscripts", 'eportfolio');
 $transcriptlist = $this->objDbTranscriptList->getByItem($userId);
 // Create a table object
 $transcriptTable = &$this->newObject("htmltable", "htmlelements");
@@ -526,14 +477,12 @@ $transcriptTable->cellspacing = '12';
 $transcriptTable->width = "50%";
 // Add the table heading.
 $transcriptTable->startRow();
-$transcriptTable->addCell($transcriptobjHeading->show() , '', '', '', '', 'colspan="2"');
-$transcriptTable->endRow();
-$transcriptTable->startRow();
 $transcriptTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
 $transcriptTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($transcriptlist)) {
+    $transcount = 0;
     foreach($transcriptlist as $item) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
@@ -544,6 +493,7 @@ if (!empty($transcriptlist)) {
                 }
             }
             if ($transCheck == 1) {
+                $transcount = 1;
                 // Display each field for activities
                 $transcriptTable->startRow();
                 $transcriptTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
@@ -552,7 +502,8 @@ if (!empty($transcriptlist)) {
         }
     }
     unset($item);
-} else {
+}
+if ($transcount == 0) {
     $transcriptTable->startRow();
     $transcriptTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
     $transcriptTable->endRow();
@@ -561,11 +512,6 @@ if (!empty($transcriptlist)) {
 //View Qcl
 //Language Items
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
-// Show the heading
-$qclobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-$qclobjHeading->type = 3;
-$qclobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio');
-//echo $qclobjHeading->show();
 $qclList = $this->objDbQclList->getByItem($userId);
 // Create a table object
 $qclTable = &$this->newObject("htmltable", "htmlelements");
@@ -573,9 +519,6 @@ $qclTable->border = 0;
 $qclTable->cellspacing = '3';
 $qclTable->width = "100%";
 // Add the table heading.
-$qclTable->startRow();
-$qclTable->addCell($qclobjHeading->show() , '', '', '', '', 'colspan="6"');
-$qclTable->endRow();
 $qclTable->startRow();
 $qclTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $qclTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_wordtitle", 'eportfolio') . "</b>");
@@ -587,6 +530,7 @@ $qclTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($qclList)) {
+    $qclcount = 0;
     foreach($qclList as $qclItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($qclItem['qcl_type']);
@@ -599,6 +543,7 @@ if (!empty($qclList)) {
                 }
             }
             if ($qclCheck == 1) {
+                $qclcount = 1;
                 $qclTable->startRow();
                 $qclTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
                 $qclTable->addCell($qclItem['qcl_title'], "", NULL, NULL, $class, '');
@@ -610,7 +555,8 @@ if (!empty($qclList)) {
         }
     }
     unset($qclItem);
-} else {
+} 
+if ($qclcount == 0) {
     $qclTable->startRow();
     $qclTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $qclTable->endRow();
@@ -619,25 +565,21 @@ if (!empty($qclList)) {
 //View Goals
 //Language Items
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
-// Show the heading
-$goalsobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-$goalsobjHeading->type = 3;
-$goalsobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordGoals", 'eportfolio');
-//  echo $goalsobjHeading->show();
 $goalsList = $this->objDbGoalsList->getByItem($userId);
 // Create a table object
 $goalsTable = &$this->newObject("htmltable", "htmlelements");
 $goalsTable->border = 0;
 $goalsTable->cellspacing = '12';
 $goalsTable->width = "60%";
-// Add the table heading.
 $goalsTable->startRow();
-$goalsTable->addCell($goalsobjHeading->show() , '', '', '', '', 'colspan="2"');
+$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>" , '', '', '', '', 'colspan="2"');
 $goalsTable->endRow();
+
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($goalsList)) {
     $i = 0;
+    $goacount = 0;
     foreach($goalsList as $item) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
@@ -649,6 +591,7 @@ if (!empty($goalsList)) {
             }
             //Do justice on the checkbox
             if ($goalsCheck == 1) {
+                $goacount = 1;
                 // Display each field for activities
                 $goalsTable->startRow();
                 $goalsTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
@@ -657,7 +600,8 @@ if (!empty($goalsList)) {
         }
     }
     unset($item);
-} else {
+}
+if ($goacount == 0) {
     $goalsTable->startRow();
     $goalsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
     $goalsTable->endRow();
@@ -666,11 +610,6 @@ if (!empty($goalsList)) {
 //View Competency
 //Language Items
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
-// Show the heading
-$competencyobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-$competencyobjHeading->type = 3;
-$competencyobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordCompetency", 'eportfolio');
-//echo $competencyobjHeading->show();
 $competencyList = $this->objDbCompetencyList->getByItem($userId);
 // Create a table object
 $competencyTable = &$this->newObject("htmltable", "htmlelements");
@@ -679,9 +618,6 @@ $competencyTable->cellspacing = '12';
 $competencyTable->width = "100%";
 // Add the table heading.
 $competencyTable->startRow();
-$competencyTable->addCell($competencyobjHeading->show() , '', '', '', '', 'colspan="4"');
-$competencyTable->endRow();
-$competencyTable->startRow();
 $competencyTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $competencyTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . "</b>");
 $competencyTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
@@ -689,6 +625,7 @@ $competencyTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($competencyList)) {
+    $compcount = 0;
     foreach($competencyList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
@@ -702,6 +639,7 @@ if (!empty($competencyList)) {
             }
             //Do justice on the checkbox
             if ($ctyCheck == 1) {
+                $compcount = 1;
                 $competencyTable->startRow();
                 $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
                 $competencyTable->addCell($this->objDate->formatDate($item['award_date']) , "", NULL, NULL, $class, '');
@@ -711,7 +649,8 @@ if (!empty($competencyList)) {
         }
     }
     unset($item);
-} else {
+}
+if ($compcount == 0) {
     $competencyTable->startRow();
     $competencyTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
     $competencyTable->endRow();
@@ -720,10 +659,6 @@ if (!empty($competencyList)) {
 //View Interest
 //Language Items
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
-// Show the heading
-$interestobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-$interestobjHeading->type = 3;
-$interestobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordInterests", 'eportfolio');
 //echo $interestobjHeading->show();
 $interestList = $this->objDbInterestList->getByItem($userId);
 // Create a table object
@@ -733,9 +668,6 @@ $interestTable->cellspacing = '12';
 $interestTable->width = "100%";
 // Add the table heading.
 $interestTable->startRow();
-$interestTable->addCell($interestobjHeading->show() , '', '', '', '', 'colspan="4"');
-$interestTable->endRow();
-$interestTable->startRow();
 $interestTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $interestTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
 $interestTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
@@ -743,6 +675,7 @@ $interestTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($interestList)) {
+    $intcount = 0;
     foreach($interestList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
@@ -756,6 +689,7 @@ if (!empty($interestList)) {
             }
             //Do justice on the checkbox
             if ($intrstCheck == 1) {
+                $intcount = 1;
                 $interestTable->startRow();
                 $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
                 $interestTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
@@ -765,7 +699,8 @@ if (!empty($interestList)) {
         }
     }
     unset($item);
-} else {
+}
+if ($intcount == 0) {
     $interestTable->startRow();
     $interestTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
     $interestTable->endRow();
@@ -774,11 +709,6 @@ if (!empty($interestList)) {
 //View reflection
 //Language Items
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
-// Show the heading
-$reflectionobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-$reflectionobjHeading->type = 3;
-$reflectionobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordReflections", 'eportfolio');
-//echo $reflectionobjHeading->show();
 $reflectionList = $this->objDbReflectionList->getByItem($userId);
 // Create a table object
 $reflectionTable = &$this->newObject("htmltable", "htmlelements");
@@ -786,9 +716,6 @@ $reflectionTable->border = 0;
 $reflectionTable->cellspacing = '3';
 $reflectionTable->width = "100%";
 // Add the table heading.
-$reflectionTable->startRow();
-$reflectionTable->addCell($reflectionobjHeading->show() , '', '', '', '', 'colspan="4"');
-$reflectionTable->endRow();
 $reflectionTable->startRow();
 $reflectionTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . "</b>");
 $reflectionTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
@@ -798,6 +725,7 @@ $reflectionTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($reflectionList)) {
+    $refcount = 0;
     foreach($reflectionList as $item) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
@@ -809,6 +737,7 @@ if (!empty($reflectionList)) {
             }
             //Do justice on the checkbox
             if ($rfctnCheck == 1) {
+                $refcount = 1;
                 //Show the view Icon
                 $this->objIcon = $this->newObject('geticon', 'htmlelements');
                 $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
@@ -838,7 +767,8 @@ if (!empty($reflectionList)) {
         }
     }
     unset($item);
-} else {
+}
+if ($refcount == 0) {
     $reflectionTable->startRow();
     $reflectionTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
     $reflectionTable->endRow();
@@ -852,9 +782,6 @@ if (!$hasAccess) {
     //Language Items
     $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
     // Show the heading
-    $assertionsobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-    $assertionsobjHeading->type = 3;
-    $assertionsobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio');
     //  echo $assertionsobjHeading->show();
     $Id = $this->_objGroupAdmin->getUserGroups($ownerId);
     // Create a table object
@@ -863,10 +790,6 @@ if (!$hasAccess) {
     $assertionstable->cellspacing = '3';
     $assertionstable->width = "100%";
     // Add the table heading.
-    $assertionstable->startRow();
-    $assertionstable->addCell($assertionsobjHeading->show() , '', '', '', '', 'colspan="5"');
-    $assertionstable->endRow();
-    $assertionstable->startRow();
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_lecturer", 'eportfolio') . "</b>");
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . "</b>");
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
@@ -918,10 +841,6 @@ if (!$hasAccess) {
     //Language Items
     $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
     // Show the heading
-    $assertionsobjHeading = &$this->getObject('htmlheading', 'htmlelements');
-    $assertionsobjHeading->type = 3;
-    $assertionsobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio');
-    // echo $assertionsobjHeading->show();
     $assertionslist = $this->objDbAssertionList->getByItem($userId);
     // Create a table object
     $assertionstable = &$this->newObject("htmltable", "htmlelements");
@@ -929,9 +848,6 @@ if (!$hasAccess) {
     $assertionstable->cellspacing = '3';
     $assertionstable->width = "100%";
     // Add the table heading.
-    $assertionstable->startRow();
-    $assertionstable->addCell($assertionsobjHeading->show() , '', '', '', '', 'colspan="5"');
-    $assertionstable->endRow();
     $assertionstable->startRow();
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . "</b>");
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
@@ -1011,39 +927,31 @@ $this->objTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordDemographics", 'eportfolio') ,
     'content' => $demographicsLabel
 ));
-$addressTab = $this->objTab->show();
+
 //Information tab
-//$page .= $featureBox->show($objinfoTitles->show(), $userTable->show().$addressTable->show().$contactTable->show().$emailTable->show().$demographicsTable->show(),1 );
-$page.= $featureBox->show($objinfoTitles->show() , $addressTab, 'yourbox1', 'default', TRUE);
 $this->objmainTab->init();
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInformation", 'eportfolio') ,
-    'content' => $page
+    'content' => $this->objTab->show()
 ));
 //Activity Title
-$objactivityTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_activitylist", 'eportfolio');
-$activitypage.= $featureBox->show($objactivityTitles->show() , $activityLabel, 'yourbox2', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordActivity", 'eportfolio') ,
-    'content' => $activitypage
+    'content' => $activityLabel
 ));
 //Affiliation Title
-$objaffiliationTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_affiliationheading", 'eportfolio');
-$affiliationpage.= $featureBox->show($objaffiliationTitles->show() , $affiliationTable->show() , 'yourbox3', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAffiliation", 'eportfolio') ,
-    'content' => $affiliationpage
+    'content' => $affiliationTable->show()
 ));
 //Transcript Title
-$objtranscriptTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_transcriptlist", 'eportfolio');
-$transcriptpage.= $featureBox->show($objtranscriptTitles->show() , $transcriptTable->show() , 'yourbox4', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordTranscripts", 'eportfolio') ,
-    'content' => $transcriptpage
+    'content' => $transcriptTable->show()
 ));
 //Qcl Title
 $objqclTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_qclheading", 'eportfolio');
@@ -1051,47 +959,37 @@ $qclpage.= $featureBox->show($objqclTitles->show() , $qclTable->show() , 'yourbo
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordQualification", 'eportfolio') ,
-    'content' => $qclpage
+    'content' => $qclTable->show()
 ));
 //Goals Title
-$objgoalsTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_goalList", 'eportfolio');
-$goalspage.= $featureBox->show($objgoalsTitles->show() , $goalsTable->show() , 'yourbox6', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordGoals", 'eportfolio') ,
-    'content' => $goalspage
+    'content' => $goalsTable->show()
 ));
 //Competency Title
-$objcompetencyTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_competencylist", 'eportfolio');
-$competencypage.= $featureBox->show($objcompetencyTitles->show() , $competencyTable->show() , 'yourbox7', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordCompetency", 'eportfolio') ,
-    'content' => $competencypage
+    'content' => $competencyTable->show()
 ));
 //interest Title
-$objinterestTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_interestList", 'eportfolio');
-$interestpage.= $featureBox->show($objinterestTitles->show() , $interestTable->show() , 'yourbox8', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInterests", 'eportfolio') ,
-    'content' => $interestpage
+    'content' => $interestTable->show()
 ));
 //reflection Title
-$objreflectionTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_reflectionList", 'eportfolio');
-$reflectionpage.= $featureBox->show($objreflectionTitles->show() , $reflectionTable->show() , 'yourbox9', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordReflections", 'eportfolio') ,
-    'content' => $reflectionpage
+    'content' => $reflectionTable->show()
 ));
 //assertions Title
-$objassertionsTitles->str = $objUser->getSurname($userId) . $objLanguage->languageText("mod_eportfolio_assertionList", 'eportfolio');
-$assertionspage.= $featureBox->show($objassertionsTitles->show() , $assertionstable->show() , 'yourbox10', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAssertion", 'eportfolio') ,
-    'content' => $assertionspage
+    'content' => $assertionstable->show()
 ));
 $myeportfolioTab = $this->objmainTab->show();
 $tabBox->addTab(array(

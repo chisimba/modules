@@ -19,8 +19,7 @@ $iconSelect = $this->getObject('geticon', 'htmlelements');
 $iconSelect->setIcon('home');
 $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_eportfoliohome", 'eportfolio');
 $mnglink = new link($this->uri(array(
-    'module' => 'eportfolio',
-    'action' => 'view_assertion'
+    'module' => 'eportfolio'
 )));
 $mnglink->link = $iconSelect->show();
 $linkManage = $mnglink->show();

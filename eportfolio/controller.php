@@ -125,8 +125,6 @@ class eportfolio extends controller
         $this->setVarByRef('user', $this->user);
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
-                // View a rubric
-                
             case "postcomment":
                 $id = $this->objDbComment->insertSingle($this->getParam('eportfoliopartid', NULL) , $this->getParam('newcomment', NULL) , $isapproved = '0');
                 // After processing return to view main
@@ -442,6 +440,7 @@ class eportfolio extends controller
 										//Empty array
 										$selectedParts = array();
          }
+           $this->setLayoutTemplate('eportfolio_layout_tpl.php');      
           return 'allparts_tpl.php';
          }else{
 										$selectedParts = $this->getArrayParam('arrayList');
@@ -467,6 +466,7 @@ class eportfolio extends controller
 											//Empty array
 											$selectedParts = array();
 										}
+           $this->setLayoutTemplate('eportfolio_layout_tpl.php');      
           return 'allparts2_tpl.php';
          }
         case "add_group":
@@ -474,7 +474,7 @@ class eportfolio extends controller
             break;
 
         case 'manage_eportfolio':
-            //$this->setLayoutTemplate('eportfolio_layout_tpl.php');
+            $this->setLayoutTemplate('eportfolio_layout_tpl.php');      
             $groupId = $this->getParam('id', null);
             $this->setVarByRef('groupId', $groupId);
             if(class_exists('groupops',false)){
@@ -492,7 +492,7 @@ class eportfolio extends controller
             break;
 
         case 'view_others_eportfolio':
-            //$this->setLayoutTemplate('eportfolio_layout_tpl.php');
+            $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             $groupId = $this->getParam('id', null);
             $ownerId = $this->getParam('ownerId', null);
             $this->setVarByRef('groupId', $groupId);
@@ -1514,14 +1514,25 @@ class eportfolio extends controller
         return $this->removeUserFromGroup($this->getParam('userid') , $this->getParam('group'));
         break;
 
+    case "viewothersportfolio":
+        $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+        return "view_others_tpl.php";
+        break;
+    case "configureviews":
+        $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+        return "manage_views_tpl.php";
+        break;
+
     default:
+        $this->setLayoutTemplate('eportfolio_layout_tpl.php');
         return $this->showUserDetailsForm();
         break;
     }
 }
 private function showUserDetailsForm() 
 {
-    return 'main_tpl.php';
+//    return 'main_tpl.php';
+    return "extjs_main_tpl.php";
 }
 /**
  * Method to remove a user from a group
