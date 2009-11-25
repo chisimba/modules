@@ -114,7 +114,7 @@ if($mode == 'edit'){
 $table->startRow();
 $objCategory = new dropdown('category');
 $categoryLabel = new label($journalCategory.'&nbsp;', 'category');
-$categories=array("ISI Listing", "IBSS Listing", "Approved SA Listing");
+$categories=array("ISI", "IBSS", "Approved SA");
 foreach ($categories as $category)
 {
     $objCategory->addOption($category,$category);
