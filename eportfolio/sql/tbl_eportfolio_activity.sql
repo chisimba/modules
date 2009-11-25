@@ -24,10 +24,10 @@ $fields = array(
 		'length' => 50,
 		),
 	'start' => array(
-		'type' => 'timestamp',
+		'type' => 'date',
 		),
 	'finish' => array(
-		'type' => 'timestamp',
+		'type' => 'date',
 		),
 	'shortdescription' => array(
 		'type' => 'text',

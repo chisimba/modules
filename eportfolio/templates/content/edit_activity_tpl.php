@@ -81,10 +81,16 @@ $row = array(
     "<b>" . $label = $objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . ":</b>"
 );
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = $this->objPopupcal->show('activityStart', 'yes', 'no', $activityStart);
+//$startField = $this->objPopupcal->show('activityStart', 'yes', 'no', $activityStart);
+$activityStart = explode(" ",$activityStart);
+$activtyStart = &$this->getObject('datepicker', 'htmlelements');
+$activtyStart->setName('activityStart');
+$activtyStart->setDateFormat("YYYY-MM-DD");
+$activtyStart->setDefaultDate($activityStart[0]);
+
 $form->addRule('activityStart', 'Please enter Activity Start Date', 'required');
 $row = array(
-    $startField
+    $activtyStart->show()
 );
 $objTable->addCell($row[0], NULL, 'top', 'left');
 $objTable->endRow();
@@ -94,10 +100,16 @@ $row = array(
     "<b>" . $label = $objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . ":</b>"
 );
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = $this->objPopupcal->show('activityFinish', 'yes', 'no', $activityFinish);
+//$startField = $this->objPopupcal->show('activityFinish', 'yes', 'no', $activityFinish);
+$activityFinish = explode(" ",$activityFinish);
+$activtyFinish = &$this->getObject('datepicker', 'htmlelements');
+$activtyFinish->setName('activityFinish');
+$activtyFinish->setDateFormat("YYYY-MM-DD");
+$activtyFinish->setDefaultDate($activityFinish[0]);
+
 //$form->addRule('activityFinish', 'Please enter Activity Finish Date', 'required');
 $row = array(
-    $startField
+    $activtyFinish->show()
 );
 $objTable->addCell($row[0], NULL, 'top', 'left');
 $objTable->endRow();

@@ -1,6 +1,6 @@
 <?php
-$hasAccess = $this->objEngine->_objUser->isContextLecturer();
-$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$hasAccess = $this->objUser->isContextLecturer();
+$hasAccess |= $this->objUser->isAdmin();
 $this->setVar('pageSuppressXML', true);
 if (!$hasAccess) {
     // Redirect
@@ -71,10 +71,16 @@ if (!$hasAccess) {
     );
     $objTable->startRow();
     $objTable->addCell($row[0], 140, 'bottom', 'right');
-    $startField = $this->objPopupcal->show('creation_date', 'yes', 'no', $creation_date);
+    //$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', $creation_date);
+    $creation_date = explode(" ", $creation_date);
+				$strtdate = &$this->getObject('datepicker', 'htmlelements');
+				$strtdate->setName('creation_date');
+				$strtdate->setDateFormat("YYYY-MM-DD");
+				$strtdate->setDefaultDate($creation_date[0]);
+
     $form->addRule('creation_date', 'Please enter the creation date', 'required');
     $row = array(
-        $startField
+        $strtdate->show()
     );
     $objTable->addCell($row[0], Null, 'top', 'left');
     $objTable->endRow();

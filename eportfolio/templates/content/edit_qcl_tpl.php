@@ -100,10 +100,16 @@ $row = array(
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = $this->objPopupcal->show('award_date', 'yes', 'no', $award_date);
+//$startField = $this->objPopupcal->show('award_date', 'yes', 'no', $award_date);
+$award_date = explode(" ", $award_date);
+$strtdate = &$this->getObject('datepicker', 'htmlelements');
+$strtdate->setName('award_date');
+$strtdate->setDateFormat("YYYY-MM-DD");
+$strtdate->setDefaultDate($award_date[0]);
+
 $form->addRule('award_date', 'Please enter the finish date', 'required');
 $row = array(
-    $startField
+    $strtdate->show()
 );
 $objTable->addCell($row[0], Null, 'bottom', 'left');
 $objTable->endRow();

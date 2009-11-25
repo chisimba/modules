@@ -100,10 +100,16 @@ $row = array(
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = $this->objPopupcal->show('start', 'yes', 'no', $start);
+//$startField = $this->objPopupcal->show('start', 'yes', 'no', $start);
 //$form->addRule('start', 'Please enter the start date', 'required');
+$start = explode (" ", $start);
+$strtdate = &$this->getObject('datepicker', 'htmlelements');
+$strtdate->setName('start');
+$strtdate->setDateFormat("YYYY-MM-DD");
+$strtdate->setDefaultDate($start[0]);
+
 $row = array(
-    $startField
+    $strtdate->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
@@ -113,10 +119,15 @@ $row = array(
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = $this->objPopupcal->show('finish', 'yes', 'no', $finish);
+//$startField = $this->objPopupcal->show('finish', 'yes', 'no', $finish);
 //$form->addRule('finish', 'Please enter the finish date', 'required');
+$finish = explode(" ", $finish);
+$findate = &$this->getObject('datepicker', 'htmlelements');
+$findate->setName('finish');
+$findate->setDateFormat("YYYY-MM-DD");
+$findate->setDefaultDate($finish[0]);
 $row = array(
-    $startField
+    $findate->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();

@@ -56,10 +56,14 @@ $row = array(
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', '');
+//$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', '');
+$strtdate = &$this->getObject('datepicker', 'htmlelements');
+$strtdate->setName('creation_date');
+$strtdate->setDateFormat("YYYY-MM-DD");
+
 $form->addRule('creation_date', 'Please enter the creation date', 'required');
 $row = array(
-    $startField
+    $strtdate->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();

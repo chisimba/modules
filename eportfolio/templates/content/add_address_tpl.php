@@ -5,6 +5,7 @@ $this->loadClass("textinput", "htmlelements");
 $this->loadClass("button", "htmlelements");
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
+
 //	$objLabel =& $this->newObject('label', 'htmlelements');
 $objWindow = &$this->newObject('windowpop', 'htmlelements');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
