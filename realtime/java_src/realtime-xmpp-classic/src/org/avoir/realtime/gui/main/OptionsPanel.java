@@ -45,6 +45,7 @@ public class OptionsPanel extends javax.swing.JPanel {
         usernameField.setText(GeneralUtil.getProperty("proxy.username"));
 
         passwordField.setText(GeneralUtil.getProperty("proxy.password"));
+        showJavaVersionWarningOpt.setSelected(!new Boolean(GeneralUtil.getProperty("show.java.warning")));
 
         try {
             connectionType = Integer.parseInt(GeneralUtil.getProperty("connection.type"));
@@ -172,6 +173,7 @@ public class OptionsPanel extends javax.swing.JPanel {
         showDebugOpt = new javax.swing.JCheckBox();
         jLabel8 = new javax.swing.JLabel();
         maxSpeakersField = new javax.swing.JSpinner();
+        showJavaVersionWarningOpt = new javax.swing.JCheckBox();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -362,6 +364,17 @@ public class OptionsPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         add(maxSpeakersField, gridBagConstraints);
+
+        showJavaVersionWarningOpt.setText("Show java version warning");
+        showJavaVersionWarningOpt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showJavaVersionWarningOptActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 12;
+        add(showJavaVersionWarningOpt, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void serverPortFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverPortFieldActionPerformed
@@ -382,6 +395,10 @@ public class OptionsPanel extends javax.swing.JPanel {
     private void showDebugOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDebugOptActionPerformed
         GeneralUtil.saveProperty("debug.enabled", showDebugOpt.isSelected() + "");
     }//GEN-LAST:event_showDebugOptActionPerformed
+
+    private void showJavaVersionWarningOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showJavaVersionWarningOptActionPerformed
+        GeneralUtil.saveProperty("show.java.warning", showJavaVersionWarningOpt.isSelected() + "");
+    }//GEN-LAST:event_showJavaVersionWarningOptActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField audioVideoHttpUrlField;
@@ -406,6 +423,7 @@ public class OptionsPanel extends javax.swing.JPanel {
     private javax.swing.JTextField serverHostField;
     private javax.swing.JTextField serverPortField;
     private javax.swing.JCheckBox showDebugOpt;
+    private javax.swing.JCheckBox showJavaVersionWarningOpt;
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
 }

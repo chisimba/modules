@@ -300,11 +300,34 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         shareSizeFr.pack();
         shareSizeFr.setSize(300, 180);
         shareSizeFr.setLocationRelativeTo(GUIAccessManager.mf);
-        createMenu();
+        String javaVersion=System.getProperty("java.version");
+        
+        String major=javaVersion.substring(0,1);
+        String minorStr=javaVersion.substring(2,3);
+        int minorInt=Integer.parseInt(minorStr);
+        if(minorInt < 6){
+            String warnOpt=GeneralUtil.getProperty("show.java.warning");
+            
+            if(warnOpt == null){
+                warnOpt="true";
+            }
+            boolean doNotShowJavaVersionWarning=new Boolean(warnOpt);
+            if(!doNotShowJavaVersionWarning){
+                JavaVersionWarningDialog javaVersionWarningDialog=new JavaVersionWarningDialog(this, true);
+                javaVersionWarningDialog.setSize(400, 200);
+                javaVersionWarningDialog.setLocationRelativeTo(this);
+                javaVersionWarningDialog.setVisible(true);
+            }
+        }else{
+            RealtimeSysTray.init();
+        }
     }
 
+
+
     void createMenu() {
-        // create some labeled menu items
+
+      /*  // create some labeled menu items
         SysTrayMenuItem subItem1 = new SysTrayMenuItem("Windows 98", "windows 98");
         subItem1.addSysTrayMenuListener(this);
         // disable this item
@@ -372,7 +395,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         menu.addItem(itemAbout);
         menu.addSeparator();
         menu.addItem(subMenu);
-        menu.addItem(chSubMenu);
+        menu.addItem(chSubMenu);*/
     }
 
     private void applySkin() {
@@ -635,90 +658,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         return roomToolsToolbar;
     }
 
-    /* public void showInstructorToolbar() {
-    toolBarTabbedPane.addTab("Toolbar", instToolbar);
-    toolBarTabbedPane.addTab("Whiteboard Toolbox", whiteboardPanel.getWbToolbar());
-    toolBarTabbedPane.addChangeListener(new ChangeListener() {
 
-    public void stateChanged(ChangeEvent e) {
-    if (toolBarTabbedPane.getSelectedIndex() == 1) {
-    tabbedPane.setSelectedIndex(0);
-    }
-
-    }
-    });
-    for (int i = 2; i <
-    userListPanel.getUserTabbedPane().getTabCount(); i++) {
-    userListPanel.getUserTabbedPane().removeTabAt(i);
-    }
-
-    JTabbedPane tp = new JTabbedPane();
-    webPresentNavigator = new WebpresentNavigator();
-
-    userListPanel.getUserTabbedPane().addTab("Slides", webPresentNavigator);
-    userListPanel.getUserTabbedPane().addChangeListener(new ChangeListener() {
-
-    public void stateChanged(ChangeEvent e) {
-    if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
-    if (!slidesPopulated) {
-    webPresentNavigator.populateWithRoomResources();
-    slidesPopulated =
-    true;
-
-    adjustSize();
-
-    }
-    }
-    }
-    });
-
-    adjustSize();
-    } else {
-    slidesSplitPane.setTopComponent(slidesNavigator);
-    slidesSplitPane.setDividerLocation(180);
-    // userListPanel.getUserTabbedPane().setFont(new Font("Dialog", 0, 12));
-
-    Color bg = new Color(244, 247, 203);
-    //sp.getViewport().setBackground(bg);
-    //roomResourceList.setBackground(bg);
-    JPanel p = new JPanel(new BorderLayout());
-    p.add(roomResourceNavigator, BorderLayout.CENTER);
-    tp.addTab("Room Resources", p);
-    slidesSplitPane.setBottomComponent(tp);
-    slidesSplitPane.setDividerSize(3);
-    userListPanel.getUserTabbedPane().addTab("Slides", roomResourceNavigator);
-    userListPanel.getUserTabbedPane().addTab("Questions", questionsNavigator);
-    userListPanel.getUserTabbedPane().addChangeListener(new ChangeListener() {
-
-    public void stateChanged(ChangeEvent e) {
-    if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
-    if (!slidesPopulated) {
-    roomResourceNavigator.populateWithRoomResources();
-    slidesPopulated =
-    true;
-    adjustSize();
-
-    }
-
-
-    }
-    if (userListPanel.getUserTabbedPane().getSelectedIndex() == 3) {
-    if (!questionsPopulated) {
-    questionsNavigator.populateNodes("questions");
-    questionsPopulated =
-    true;
-    }
-
-    }
-    }
-    });
-    slidesSplitPane.repaint();
-    adjustSize();
-
-    }
-
-
-    }*/
     public RoomResourceNavigator getRoomResourceNavigator() {
         return roomResourceNavigator;
     }

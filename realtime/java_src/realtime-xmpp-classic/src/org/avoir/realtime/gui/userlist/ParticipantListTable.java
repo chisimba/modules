@@ -657,21 +657,23 @@ public class ParticipantListTable extends JTable implements ActionListener {
                 PermissionList perm = (PermissionList) thisUser.get("permissions");
                 GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().setDrawEnabled(perm.grantWhiteboard);
                 GUIAccessManager.enableWhiteboardButtons(perm.grantWhiteboard);
-                GUIAccessManager.mf.getUserListPanel().getUserListTabbedPane().setEnabledAt(2, perm.isOwner || perm.grantAdmin);
+                if (GUIAccessManager.mf.getUserListPanel().getUserListTabbedPane().getTabCount() > 1) {
+                    GUIAccessManager.mf.getUserListPanel().getUserListTabbedPane().setEnabledAt(2, perm.isOwner || perm.grantAdmin);
+                }
 
             }
             index++;
         }
         alerter.cancel();
         if (raisedHands) {
-             String raisedHandsUsers="";
+            String raisedHandsUsers = "";
             for (final Map user : users) {
                 final PermissionList perm = (PermissionList) user.get("permissions");
                 if (perm.raisedHand) {
-                    raisedHandsUsers+=user.get("names")+ ",";
+                    raisedHandsUsers += user.get("names") + ",";
                 }
             }
-            GeneralUtil.showChatPopup("System", "Following users raised hands: "+raisedHandsUsers, false);
+            GeneralUtil.showChatPopup("System", "Following users raised hands: " + raisedHandsUsers, false);
 
             if (GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().isFullScreen()) {
                 JDialog alerter = new JDialog(GUIAccessManager.mf.getWhiteboardPanel().getWhiteboard().getFullScreenFrame(), "Raised Hands", false);
@@ -780,25 +782,28 @@ public class ParticipantListTable extends JTable implements ActionListener {
     }
 
     public void removeUser(String name) {
-
-        String username = name.split(":")[0];
-        String nickname = name.split(":")[1];
-        int index = 0;
-        ArrayList<Integer> toRemove = new ArrayList<Integer>();
-        for (Map user : users) {
-            String thisNickname = (String) user.get("names");
-            if ((thisNickname).equalsIgnoreCase(nickname)) {
-                toRemove.add(index);
+        try {
+            String username = name.split(":")[0];
+            String nickname = name.split(":")[1];
+            int index = 0;
+            ArrayList<Integer> toRemove = new ArrayList<Integer>();
+            for (Map user : users) {
+                String thisNickname = (String) user.get("names");
+                if ((thisNickname).equalsIgnoreCase(nickname)) {
+                    toRemove.add(index);
+                }
+                index++;
             }
-            index++;
-        }
 
-        for (int i : toRemove) {
-            users.remove(i);
+            for (int i : toRemove) {
+                users.remove(i);
+            }
+            model = new ParticipantListTableModel();
+            setModel(model);
+            decorateTable();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        model = new ParticipantListTableModel();
-        setModel(model);
-        decorateTable();
     }
 
     private void decorateTable() {

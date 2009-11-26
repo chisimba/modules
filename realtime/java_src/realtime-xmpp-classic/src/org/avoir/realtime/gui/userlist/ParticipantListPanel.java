@@ -120,7 +120,13 @@ public class ParticipantListPanel extends javax.swing.JPanel {
     }
 
     public void enableAudio() {
-        userListTabbedPane.setSelectedIndex(1);
+        try{
+        if (userListTabbedPane.getTabCount() > 1) {
+            userListTabbedPane.setSelectedIndex(1);
+        }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         initAudioVideo(ConnectionManager.isOwner, ConnectionManager.getRoomName());
         GUIAccessManager.mf.getSoundMonitor().cancel();
         soundAlerterField.setText("");
@@ -422,7 +428,6 @@ public class ParticipantListPanel extends javax.swing.JPanel {
     private void soundAlerterFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_soundAlerterFieldMouseClicked
         enableAudio();
     }//GEN-LAST:event_soundAlerterFieldMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox accStatusField;
     private javax.swing.JLabel accountNameField;
