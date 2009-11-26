@@ -44,11 +44,12 @@ $objLayer->id = 'cms_header_left';
 $headStr = $objLayer->show();
 $objLayer->str = $topNav;
 //$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
-$objLayer->id = cms_header_right;
+$objLayer->id = 'cms_header_right';
 $headStr .= $objLayer->show();
 
 $objLayer->str = '';
 //border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_clear';
 $objLayer->cssClass = 'clearboth';
 $navStr = $objLayer->show();
 

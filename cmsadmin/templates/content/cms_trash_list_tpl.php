@@ -53,6 +53,7 @@ $headStr .= $objLayer->show();
 
 $objLayer->str = '';
 //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_clear';
 $objLayer->cssClass = 'clearboth';
 $navStr = $objLayer->show();
 

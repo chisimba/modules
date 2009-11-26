@@ -178,10 +178,9 @@
                 return TRUE;
             }
 
-            $row = $this->getAll(" WHERE user_id = '$userId'");
-            $row = $row[0];
-
-            if ($row['show_on_frontpage'] == TRUE) { 
+            $row = $this->getRow('user_id', $userId);
+            
+            if (isset($row) && $row['show_on_frontpage'] == TRUE) { 
                 return  TRUE;
             } else {
                 return FALSE;

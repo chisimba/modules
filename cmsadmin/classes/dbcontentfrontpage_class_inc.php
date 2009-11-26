@@ -50,6 +50,7 @@ class dbcontentfrontpage extends dbTable
                 $this->_objUser = $this->getObject('user', 'security');
                 $this->_objSecurity = $this->getObject('dbsecurity', 'cmsadmin');
                 $this->_objLanguage = $this->newObject('language', 'language');
+				$this->_objUserPerm = $this->getObject ('dbuserpermissions', 'cmsadmin');
                 
                 $this->objIcon = $this->newObject('geticon', 'htmlelements');
                 $this->loadClass('link', 'htmlelements');
@@ -69,7 +70,10 @@ class dbcontentfrontpage extends dbTable
          */
         public function add($contentId, $ordering = 1)
         {
-            $show_content = $this->getParam('show_content',0);
+            if (!$this->_objUserPerm->canAddToFrontPage()) {
+				return FALSE;
+			}
+			$show_content = $this->getParam('show_content',0);
                 
             $fields = array();
             $fields['show_content'] = $show_content;
@@ -95,9 +99,12 @@ class dbcontentfrontpage extends dbTable
          * @access public
          * @return bool
          */
-        public function remove($id)
+        private function remove($id)
         {
-			log_debug('called delete from frontpage manager for id ' . $id);
+			if (!$this->_objUserPerm->canAddToFrontPage()) {
+				return FALSE;
+			}
+            log_debug('called delete from frontpage manager for id ' . $id);
             $result = $this->delete('id', $id);
             
             $this->reorderContent();
@@ -113,17 +120,13 @@ class dbcontentfrontpage extends dbTable
         */
         public function removeIfExists($pageId)
         {
-            $sql = "SELECT id FROM tbl_cms_content_frontpage
-                WHERE content_id = '$pageId'";
+			$data = $this->getRow('content_id', $pageId);
             
-            $data = $this->getArray($sql);
-            
-            if(!empty($data)){
-                $id = $data[0]['id'];
-                $this->remove($id);
+            if ($data){
+                $this->remove($data['id']);
                 return TRUE;
             }
-            return '';
+            return FALSE;
         }
         
         /**

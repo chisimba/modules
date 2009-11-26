@@ -1048,7 +1048,7 @@ $jQuery->loadSimpleTreePlugin();
                     if (!$this->_objUserPerm->canAddToFrontPage()) {
                         $message = $this->objLanguage->languageText('mod_cmsadmin_nofrontpageaccess', 'cmsadmin');
                         $this->setVarByRef('message',$message);
-                        $this->setVarByRef('type',$type);
+                        //$this->setVarByRef('type',$type);
 
                         return 'cms_nopermissions_tpl.php';
                     }

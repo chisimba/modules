@@ -530,7 +530,7 @@
             $display .= str_replace("\n", '',$table->show());
             $display = str_replace("\n\r", '', $display);
 
-            $display .= $action;
+            //$display .= $action;
             $display .= '</form>';
 
             return $display;

@@ -41,16 +41,17 @@ $h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_cmsa
 
 $objLayer->str = $h3->show();
 //$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
-$objLayer->id = 'cms_header_right';
+$objLayer->id = 'cms_header_left';
 $header = $objLayer->show();
 
 $objLayer->str = $topNav;
 //$objLayer->border .= '; float:right; align:right; margin:0px; padding:0px;';
 $objLayer->id = 'cms_header_right';
-$header = $objLayer->show();
+$header .= $objLayer->show();
 
 $objLayer->str = '';
 //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
+$objLayer->id = 'cms_header_clear';
 $objLayer->cssClass = 'clearboth';
 $headShow = $objLayer->show(); 
 
@@ -58,8 +59,8 @@ $display = '<p>'.$header.$headShow.'</p><hr />';
 //Show Header
 echo $display;
 // Show Form
-echo "<br><br><br><br>";
-echo $objLayer->show();//$tbl->show());
+//echo "<br><br><br><br>";
+//echo $objLayer->show();//$tbl->show());
 
 
 $table = new htmltable();

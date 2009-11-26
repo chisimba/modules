@@ -444,7 +444,7 @@
 			$tbl->border = '0';
             $tbl->align = "left";
 
-            $link =$this->newObject('link', 'htmlelements');
+            $link = $this->newObject('link', 'htmlelements');
             $objIcon = $this->newObject('geticon', 'htmlelements');
 
 
@@ -471,7 +471,7 @@
                 $innerHtml = $this->_objDisplay->getAlertForm('', $message);
                 $this->_objBox->setHtml($innerHtml);
                 $this->_objBox->setTitle('Notice: Access Denied');
-                $this->_objBox->attachClickEvent('btn_frontpage' . $userPerm['id']);
+                $this->_objBox->attachClickEvent('btn_frontpage');// . $userPerm['id']);
 
                 $url = '#';
                 $link = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');
@@ -3334,17 +3334,18 @@
 
             $objLayer->str = $h3->show();
             //$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_left';
+            $objLayer->id = 'cms_header_left';
             $header = $objLayer->show();
 
             $objLayer->str = $topNav;
             //$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_right';
+            $objLayer->id = 'cms_header_right';
             $header .= $objLayer->show();
 
             $objLayer->str = '';
             //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
-	    $objLayer->cssClass = 'clearboth';
+            $objLayer->id = 'cms_header_clear';
+            $objLayer->cssClass = 'clearboth';
             $headShow = $objLayer->show();
 
             //Add content to the output layer
@@ -3972,16 +3973,17 @@
 
             $objLayer->str = $objH->show();
             //$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_left';
+            $objLayer->id = 'cms_header_left';
             $header = $objLayer->show();
             $objLayer->str = $topNav;
             //$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_right';
+            $objLayer->id = 'cms_header_right';
             $header .= $objLayer->show();
 
             $objLayer->str = '';
             //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
-	    $objLayer->cssClass = 'clearboth';
+            $objLayer->id = 'cms_header_clear';
+            $objLayer->cssClass = 'clearboth';
             $headShow = $objLayer->show();
             // end header
 
@@ -4407,16 +4409,17 @@
 
             $objLayer->str = $objH->show();
             //$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_left';
+            $objLayer->id = 'cms_header_left';
             $header = $objLayer->show();
             $objLayer->str = $topNav;
             //$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_right';
+            $objLayer->id = 'cms_header_right';
             $header .= $objLayer->show();
 
             $objLayer->str = '';
             //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
-	    $objLayer-> cssClass = 'clearboth';
+            $objLayer->id = 'cms_header_clear';
+            $objLayer-> cssClass = 'clearboth';
             $headShow = $objLayer->show();
             // end header
 
@@ -4914,16 +4917,17 @@
 
             $objLayer->str = $objH->show();
             //$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_left';
+            $objLayer->id = 'cms_header_left';
             $header = $objLayer->show();
             $objLayer->str = $topNav;
             //$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_right';
+            $objLayer->id = 'cms_header_right';
             $header .= $objLayer->show();
 
             $objLayer->str = '';
             //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
-	    $objLayer->cssClass = 'clearboth';
+            $objLayer->id = 'cms_header_clear';
+            $objLayer->cssClass = 'clearboth';
             $headShow = $objLayer->show();
             // end header
 
@@ -6069,17 +6073,18 @@ $this->appendArrayVar('headerParams', $script);
 
             $objLayer->str = $h3->show();
             //$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_left';
+            $objLayer->id = 'cms_header_left';
             $header = $objLayer->show();
 
             $objLayer->str = $topNav;
             //$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
-	    $objLayer->id = 'cms_header_right';
+            $objLayer->id = 'cms_header_right';
             $header .= $objLayer->show();
 
             $objLayer->str = '';
             //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
-	    $objLayer->cssClass = 'clearboth';
+            $objLayer->id = 'cms_header_clear';
+            $objLayer->cssClass = 'clearboth';
             $headShow = $objLayer->show();
             
             $objLayer->str = '&nbsp;';
