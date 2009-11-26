@@ -16,7 +16,10 @@ $this->appendArrayVar('headerParams', '
         		var terms = "'.$this->objSysConfig->getValue('trackterms', 'twitterizer').'"
         	</script>');
 
-$ext =$this->getJavaScriptFile('SearchField.js', 'twitterizer');
+$ext =$this->getJavaScriptFile('statusBar.js', 'twitterizer');
+$ext .=$this->getJavaScriptFile('SearchField.js', 'twitterizer');
+
+$ext .=$this->getJavaScriptFile('functions.js', 'twitterizer');
 $ext .=$this->getJavaScriptFile('west.js', 'twitterizer');
 $ext .=$this->getJavaScriptFile('middle.js', 'twitterizer');
 $ext .=$this->getJavaScriptFile('interface.js', 'twitterizer');
@@ -84,6 +87,80 @@ $ext .= '
         #search-results .x-toolbar {
             border:0 none;
         }
+        
+        /* StatusBar */
+
+.x-statusbar .x-status-text {
+    height: 21px;
+    line-height: 21px;
+    padding: 0 4px;
+    cursor: default;
+}
+.x-statusbar .x-status-busy {
+    padding-left: 25px !important;
+    background: transparent url(../images/loading.gif) no-repeat 3px 3px;
+}
+.x-statusbar .x-status-text-panel {
+    border-top: 1px solid #99BBE8;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    border-left: 1px solid #99BBE8;
+    padding: 2px 8px 2px 5px;
+}
+
+/* StatusBar word processor example styles */
+
+#word-status .x-status-text {
+    color: #777;
+}
+#word-status .x-status-text-panel .spacer {
+    width: 60px;
+    font-size:0;
+    line-height:0;
+}
+#word-status .x-status-busy {
+    padding-left: 25px !important;
+    background: transparent url(../images/saving.gif) no-repeat 3px 3px;
+}
+#word-status .x-status-saved {
+    padding-left: 25px !important;
+    background: transparent url(../images/saved.png) no-repeat 3px 3px;
+}
+
+/* StatusBar form validation example styles */
+
+.x-statusbar .x-status-error {
+    color: #C33;
+    cursor: pointer;
+    padding-left: 25px !important;
+    background: transparent url(../images/exclamation.gif) no-repeat 3px 3px;
+}
+.x-statusbar .x-status-valid {
+    padding-left: 25px !important;
+    background: transparent url(../images/accept.png) no-repeat 3px 3px;
+}
+.x-status-error-list {
+    font: 11px tahoma,arial,verdana,sans-serif;
+    position: absolute;
+    z-index: 9999;
+    border: 1px solid #C33;
+    background: #ffa;
+    padding: 5px 10px;
+    color: #999;
+}
+.x-status-error-list li {
+    cursor: pointer;
+    list-style: disc;
+    margin-left: 10px;
+}
+.x-status-error-list li a {
+    color: #15428B;
+    text-decoration: none;
+}
+.x-status-error-list li a:hover {
+    text-decoration: underline;
+}
+
     </style>';
 $this->appendArrayVar('headerParams', $ext);
 ?>

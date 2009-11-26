@@ -63,7 +63,7 @@ class dbtweets extends dbTable {
     }
 
     public function getRange($start, $num) {
-        $range = $this->getAll ( "ORDER BY puid ASC LIMIT {$start}, {$num}" );
+        return $range = $this->getAll ( "ORDER BY tstamp DESC LIMIT {$start}, {$num}" );
         return array_reverse($range);
     }
 
@@ -90,6 +90,11 @@ class dbtweets extends dbTable {
     
     public function getTweetCount() {
     	return $this->getArray("SELECT count(id) as cnt FROM tbl_twitterizer");
+    }
+    
+    public function getDateRange($lastTimeCheck){    	
+    	
+    	return $this->getArray("SELECT * FROM tbl_twitterizer WHERE tstamp > $lastTimeCheck ORDER BY tstamp DESC");
     }
 
 }

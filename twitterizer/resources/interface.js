@@ -1,6 +1,12 @@
-
+ //1259225301;
 
 Ext.onReady(function(){
+	
+	/**** Polling the server for new conversations ****/
+      
+	//twitPoll.disconnect();
+
+	
 	var viewport = new Ext.Viewport({
             layout: 'border',
             items: [
@@ -39,4 +45,9 @@ Ext.onReady(function(){
              ] 
         });       
 		ds.load({params:{start:0, limit:20, forumId: 4}});
+		
+		//alert(dts.format("U"));
     });
+
+    
+   

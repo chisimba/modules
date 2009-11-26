@@ -99,10 +99,29 @@ class twitterizer extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
 
-        	case 'json_gettweets':
-        		echo $this->objOps->getJsonTweets($this->getParam('start', 0), $this->getParam('limit', 20));
+        	case 'json_gettweets':        		
+        		echo $this->objOps->getJsonTweets($this->getParam('start', 0), $this->getParam('limit', 20), $this->getParam('lastTimeCheck'));
         		exit(0);
         		break;
+        		
+        	case 'twit_poll':
+				//$updates = $this->getJsonTwitUpadtes($this->getParam('lastTimeCheck'));
+				error_log(var_export($_REQUEST, true));
+				if($this->objOps->hasUpdates($this->getParam('lastTimeCheck')))				
+				{
+					$hasUpdates = 'yes';
+				}else {
+					$hasUpdates = 'no';
+				}
+				echo json_encode(array(
+					'type' => 'event',
+					'name' => 'twit_updates',
+					'data' => array('hasUpdates' => $hasUpdates)
+				));
+				
+				
+				exit(0);
+				break;
         		
             case 'viewallajax' :
                 $page = intval ( $this->getParam ( 'page', 0 ) );

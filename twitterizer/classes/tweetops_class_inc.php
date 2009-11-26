@@ -133,7 +133,7 @@ class tweetops extends object {
                          $image = $userdata->profile_image_url;
                          $location = $userdata->location;
                          // make an array for db record insert
-                         $insarr = array('tweet' => $text, 'createdat' => $created, 'screen_name' => $screen_name, 'name' => $name, 'image' => $image, 'location' => $location);
+                         $insarr = array('tweet' => $text, 'createdat' => $created, 'tstamp'=> strtotime($created), 'screen_name' => $screen_name, 'name' => $name, 'image' => $image, 'location' => $location);
                          $this->objDbTweets->addRec($insarr);
                      }
                      unlink($prev);
@@ -237,12 +237,40 @@ class tweetops extends object {
         
     }
     
-    public function getJsonTweets($start = 0,  $limit=20) {
+    public function getJsonTweets($start = 0,  $limit=20, $lastTimeCheck=false) {
+
+    	if($lastTimeCheck == ""){
+    	 	$msgs = $this->objDbTweets->getRange($start, $limit);    	
+    	}else{
+    		$msgs = $this->objDbTweets->getDateRange($lastTimeCheck);
+    	}
     	
-    	 $msgs = $this->objDbTweets->getRange($start, $limit);    	
     	 $cnt = $this->objDbTweets->getTweetCount();
     	
     	 echo json_encode(array('totalCount' => $cnt[0]['cnt'], 'tweets' => $msgs));
+    }
+    
+    
+    public function hasUpdates($lastTimeCheck){
+    	if($lastTimeCheck != ""){
+	    	$msgs = $this->objDbTweets->getDateRange($lastTimeCheck);
+	    	if(count($msgs) > 0){
+	    		return true;
+	    	}else {
+	    		return false;
+	    	}
+    	}
+    }
+    
+    
+    public function getJsonTwitUpadtes($lastTimeCheck = null){
+    	if($lastTimeCheck){
+    		 $msgs = $this->objDbTweets->getDateRange($lastTimeCheck);    	
+    	 	 $cnt = $this->objDbTweets->getTweetCount();
+    		 echo json_encode(array('totalCount' => $cnt[0]['cnt'], 'tweets' => $msgs));
+    	}else{
+    		return false;
+    	}
     }
 
 }

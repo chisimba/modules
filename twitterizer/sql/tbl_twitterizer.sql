@@ -19,6 +19,9 @@ $fields = array(
         'type' => 'text',
         'length' => 35,
     ),
+    'tstamp' => array(
+        'type' => 'integer',       
+    ),
     'screen_name' => array(
         'type' => 'text',
         'length' => 255,
