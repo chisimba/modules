@@ -70,10 +70,29 @@ class brandmonday extends controller {
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
+        	
+        	case 'json_getbrandplus':
+        		$resPlus = $this->objDbBm->getRange('tbl_bmplus', 0, 100);
+        		echo json_encode(array('totalCount' =>count($resPlus->results), 'tweets'=> $resPlus->results));
+        		
+        		exit(0);
+        		
+        	case 'json_getbrandminus':
+        		$resMinus = $this->objDbBm->getRange('tbl_bmminus', 0, 100);
+        		echo json_encode(array('totalCount' =>count($resMinus->results), 'tweets'=> $resMinus->results));
+        		
+        		exit(0);
+        		
+        	case 'json_getmentions':
+        		$resMentions = $this->objDbBm->getRange('tbl_bmmentions', 0, 100);
+        		echo json_encode(array('totalCount' =>count($resMentions->results), 'tweets'=> $resMentions->results));
+        		
+        		exit(0);
             case 'main' :
                 break;
 
             default: 
+            	return "main_tpl.php";
                 $this->requiresLogin('default');
                 $path = $this->objConfig->getModulePath()."brandmonday/update";
                 if(!file_exists($path)) {
@@ -136,23 +155,23 @@ class brandmonday extends controller {
 
             case 'bestserv':
                 $ret = NULL;
-                $ret .= "<br /><h2>Cloud:</h2><br />";
+                $ret .= "<div class=\"bestserv\">";
                 $ret .=  $this->objBmOps->bestServiceTagCloud();
-                $ret .= "<br /><h2>All time:</h2><br />";
+                $ret .= "<h2>All time:</h2>";
                 $ret .= $this->objBmOps->bestServicePieChartAll();
-                $ret .= "<br /><h2>This week:</h2><br />";
-                $ret .= $this->objBmOps->bestServicePieChartWeek();
+                $ret .= "<span class=\"thisweek\"><h2>This week:</h2>";
+                $ret .= $this->objBmOps->bestServicePieChartWeek()."</span></div>";
                 echo $ret;
                 break;
 
             case 'worstserv':
                 $ret = NULL;
-                $ret .= "<br /><h2>Cloud:</h2><br />";
+                $ret .= "<div class=\"bestserv\"><h2>Cloud:</h2><br />";
                 $ret .= $this->objBmOps->worstServiceTagCloud();
                 $ret .= "<br /><h2>All time:</h2><br />";
                 $ret .= $this->objBmOps->worstServicePieChartAll();
                 $ret .= "<br /><h2>This week:</h2><br />";
-                $ret .= $this->objBmOps->worstServicePieChartWeek();
+                $ret .= $this->objBmOps->worstServicePieChartWeek().'</div>';
                 echo $ret;
                 break;
 
