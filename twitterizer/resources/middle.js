@@ -7,7 +7,7 @@
 		    	'module':'twitterizer',
 		    	'lastTimeCheck':lastTimeCheck
 		    },
-		    interval:10000 //the interval for the polling the server ... should be made configurable
+		    interval:20000 //the interval for the polling the server ... should be made configurable
 		});
 		Ext.Direct.addProvider(twitPoll);
 		

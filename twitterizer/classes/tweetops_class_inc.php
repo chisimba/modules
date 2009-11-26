@@ -250,28 +250,13 @@ class tweetops extends object {
     	 echo json_encode(array('totalCount' => $cnt[0]['cnt'], 'tweets' => $msgs));
     }
     
-    
-    public function hasUpdates($lastTimeCheck){
-    	if($lastTimeCheck != ""){
-	    	$msgs = $this->objDbTweets->getDateRange($lastTimeCheck);
-	    	if(count($msgs) > 0){
-	    		return true;
-	    	}else {
-	    		return false;
-	    	}
-    	}
+    public function searchTweets($query){
+    	
+    	$msgs = $this->objDbTweets->searcTable($query);
+    	$cnt = count($msgs);
+    	echo json_encode(array('totalCount' => $cnt[0]['cnt'], 'tweets' => $msgs));
     }
     
-    
-    public function getJsonTwitUpadtes($lastTimeCheck = null){
-    	if($lastTimeCheck){
-    		 $msgs = $this->objDbTweets->getDateRange($lastTimeCheck);    	
-    	 	 $cnt = $this->objDbTweets->getTweetCount();
-    		 echo json_encode(array('totalCount' => $cnt[0]['cnt'], 'tweets' => $msgs));
-    	}else{
-    		return false;
-    	}
-    }
 
 }
 ?>

@@ -99,8 +99,16 @@ class twitterizer extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
 
-        	case 'json_gettweets':        		
-        		echo $this->objOps->getJsonTweets($this->getParam('start', 0), $this->getParam('limit', 20), $this->getParam('lastTimeCheck'));
+        	case 'json_gettweets': 
+        		if($this->getParam('query')){
+        			echo $this->objOps->searchTweets($this->getParam('query'));
+        		}else{
+        			echo $this->objOps->getJsonTweets(
+        					$this->getParam('start', 0), 
+        					$this->getParam('limit', 20), 
+        					$this->getParam('lastTimeCheck')
+        					);
+        		}
         		exit(0);
         		break;
         		
