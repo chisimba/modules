@@ -41,7 +41,7 @@ Ext.onReady(function(){
 	                html:'<img src="http://avoir.uwc.ac.za/usrfiles/filemanager_thumbnails/gen14Srv6Nme27_2590_1221319552.jpg" />'
 	            },*/
 	            
-	            westPanel,    
+	           // westPanel,    
 	            middlePanel
              ] 
         });       
