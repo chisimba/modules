@@ -2,7 +2,7 @@
 
 
 var BrandPanel = new Ext.Panel({
-	width: 950,
+	//width: 950,
     height: 400,
     plain:true,
 	layout:'border',	
@@ -10,7 +10,7 @@ var BrandPanel = new Ext.Panel({
 });
 
 var MentionsPanel = new Ext.Panel({
-	width: 950,
+	//width: '90%',
     height: 400,
     plain:true,
 	layout:'border',	
@@ -23,7 +23,7 @@ var middlePanel = new Ext.TabPanel({
     region: 'center',
     plain:true,
     margins:'0 20px 0 20px',
-	width: 800,
+	width: '90%',
 	activeTab: 0,
 
 	padding: '5px',	

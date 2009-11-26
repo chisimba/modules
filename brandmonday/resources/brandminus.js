@@ -38,7 +38,7 @@ var dsBrandMinus = new Ext.data.Store({
         
         
 var BrandMinus = new Ext.Panel({
-	width: 450,
+	width: '50%',
     height: 400,
     items: dvBrandMinus,
     margins: '10 10 10 10',

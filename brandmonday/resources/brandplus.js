@@ -38,7 +38,7 @@ var dsBrandPlus = new Ext.data.Store({
         
         
 var BrandPlus = new Ext.Panel({
-	width: 450,
+	width: '50%',
     height: 400,
     items: dvBrandPlus,
     margins: '10 10 10 10',
