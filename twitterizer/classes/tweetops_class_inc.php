@@ -236,6 +236,14 @@ class tweetops extends object {
         return $objFB->show($this->objLanguage->languageText("mod_twitterizer_phrase_siocfb", "twitterizer"),$sioclink->show());
         
     }
+    
+    public function getJsonTweets($start = 0,  $limit=20) {
+    	
+    	 $msgs = $this->objDbTweets->getRange($start, $limit);    	
+    	 $cnt = $this->objDbTweets->getTweetCount();
+    	
+    	 echo json_encode(array('totalCount' => $cnt[0]['cnt'], 'tweets' => $msgs));
+    }
 
 }
 ?>

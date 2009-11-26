@@ -99,6 +99,11 @@ class twitterizer extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
 
+        	case 'json_gettweets':
+        		echo $this->objOps->getJsonTweets($this->getParam('start', 0), $this->getParam('limit', 20));
+        		exit(0);
+        		break;
+        		
             case 'viewallajax' :
                 $page = intval ( $this->getParam ( 'page', 0 ) );
                 if ($page < 0) {
@@ -120,6 +125,7 @@ class twitterizer extends controller
                 $this->setVarByRef ( 'pages', $pages );
 
                 header("Content-Type: text/html;charset=utf-8");
+                return 'main_tpl.php';
                 return 'viewall_tpl.php';
                 break;
 

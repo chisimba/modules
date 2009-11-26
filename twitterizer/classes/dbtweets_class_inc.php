@@ -87,6 +87,10 @@ class dbtweets extends dbTable {
     public function searcTable($keyword) {
         return $this->getAll("WHERE tweet LIKE '%%$keyword%%' OR screen_name LIKE '%%$keyword%%' OR name LIKE '%%$keyword%%' ");
     }
+    
+    public function getTweetCount() {
+    	return $this->getArray("SELECT count(id) as cnt FROM tbl_twitterizer");
+    }
 
 }
 ?>
