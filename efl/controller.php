@@ -165,5 +165,27 @@ class efl extends controller {
 
     }
 
+    /**
+     *saves the essay topics in a database
+     *
+     */
+    function __saveessay(){
+        $userid=$this->objUser->userId();
+        $title=$this->getParam('titlefield');
+        $content=$this->getParam('pagecontent');
+        $contextcode="ABCD";/*$this->getParam('contextcode');*/
+        $active=$this->getParam('active');
+        $multisubmit=$this->getParam('multiSubmit');
+
+        if ($this->objEssays->addEssay($title,$content,$contextcode,$active,$multisubmit))
+        {
+            return "home_tpl.php";
+        }
+        else
+        {
+            return "essayedit_tpl.php";
+        }
+    }
+
 }
 ?>

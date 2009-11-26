@@ -35,13 +35,29 @@ $GLOBALS['kewl_entry_point_run']) {
 class dbessays extends dbtable {
     function init() {
         $this->objUser=$this->getObject('user','security');
+         parent::init('tbl_efl_proposedessaytopics');
+    }
+
+    public function addEssay($title,$content,$contextcode,$active,$multisubmit){
+
+        $data = array(
+            'title'=>$title,
+            'userid' => $this->objUser->userId(),
+            'content' => $content,
+            'contextcode' => $contextcode,
+            'active' => $active,
+            'multiplesubmit' => $multisubmit
+        );
+
+        $essayTopicId = $this->insert($data);
+        return $essayTopicId;
     }
 
     function getEssays() {
-        return array(
-        array('id'=>'123456', 'title'=>'test title','details'=>'details','preview'=>'Preview','edit'=>'Edit')
-        );
+        $data=$this->getAll();
+        return $data;
     }
+    
     function getSubmittedEssays() {
         return array(
         array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/15'),

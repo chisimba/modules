@@ -36,6 +36,7 @@ $this->loadClass('form','htmlelements');
 $this->loadClass('label','htmlelements');
 
 $this->loadClass('textinput','htmlelements');
+$this->loadClass('dropdown','htmlelements');
 
 $data=array();
 $title='';
@@ -50,6 +51,15 @@ if($mode == 'edit'){
 
 $objForm = new form('essayform',$action);
 $titleField=new textinput('titlefield',$title, NULL, 150);
+$multipleSubDropDown=new dropdown('multiSubmit');
+
+$multipleSubDropDown->addOption('1','yes');
+$multipleSubDropDown->addOption('0','no');
+
+$activeDropDown=new dropdown('active');
+
+$activeDropDown->addOption('1','draft');
+$activeDropDown->addOption('0','not draft');
 
 $table=$this->getObject('htmltable','htmlelements');
 $table->cellspacing = '20';
@@ -57,6 +67,16 @@ $table->cellspacing = '20';
 $table->startRow();
 $table->addCell('Title', 60, NULL, 'left');
 $table->addCell($titleField->show(), 600);
+$table->endRow();
+
+$table->startRow();
+$table->addCell('Allow multiple submissions?', 60, NULL, 'left');
+$table->addCell($multipleSubDropDown->show(), 600);
+$table->endRow();
+
+$table->startRow();
+$table->addCell('Is this still a draft?', 60, NULL, 'left');
+$table->addCell($activeDropDown->show(), 600);
 $table->endRow();
 
 $htmlarea = $this->newObject('htmlarea', 'htmlelements');
@@ -74,8 +94,6 @@ $table->startRow();
 $table->addCell($label->show());
 $table->addCell($htmlarea->show());
 $table->endRow();
-
-
 
 $button = new button('submitform', 'Save');
 $button->setToSubmit();

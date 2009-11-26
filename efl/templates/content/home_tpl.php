@@ -77,8 +77,8 @@ $dbdata=$this->essays->getEssays($this->objUser->userid());
 $total=count($dbdata);
 $data="";
 foreach($dbdata as $row) {
-    $essaydata=$this->essays->getTitle($row['id']);
-
+    $essaydata['title']=$row['title'];
+    
     $deleteLink=new link($this->uri(array('action'=>'deleteessay','essayid'=>$row['id'])));
     $objIcon->setIcon('delete');
     $delValJS="deleteessay(\'".$row['essayid']."\');return false;";
@@ -118,6 +118,8 @@ foreach($dbdata as $row) {
     $data.="],";
 
 }
+
+/*echo "<pre>"; print_r($dbdata); echo"</pre>";*/
 
 $lastChar = $data[strlen($data)-1];
 $len=strlen($data);
