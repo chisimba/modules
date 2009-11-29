@@ -16,7 +16,7 @@ Ext.onReady(function(){
 	                height: 32, // give north and south regions a height
 	                autoEl: {
 	                    tag: 'div',
-	                    html:'<p class="header">#BrandMonday: Tweet about Brands on Mondays</p>'
+	                    html:'<p class="header">#BrandMonday Campaign - An Initiative of <a href="http://twitter.com/capetown">@CapeTown</a> driven by <a href="http://avoir.uwc.ac.za">#Chisimba</a> : Consumer Tweets for Mondays</p>'
 	                }
 	            }),
 	            new Ext.BoxComponent({
