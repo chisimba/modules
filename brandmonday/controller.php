@@ -93,7 +93,7 @@ class brandmonday extends controller {
                 break;
 
             default: 
-            	return "main_tpl.php";
+            	
                 $this->requiresLogin('default');
                 $path = $this->objConfig->getModulePath()."brandmonday/update";
                 if(!file_exists($path)) {
@@ -138,7 +138,7 @@ class brandmonday extends controller {
                 $this->setVarByRef('resMentions', $resMentions);
                 $this->setVarByRef('resMinus', $resMinus);
                 $this->setVarByRef('resPlus', $resPlus);
-				
+				return "main_tpl.php";
                 return 'view_tpl.php';
                 break;
 
