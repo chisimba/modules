@@ -16,7 +16,7 @@ Ext.onReady(function(){
 	                height: 32, // give north and south regions a height
 	                autoEl: {
 	                    tag: 'div',
-	                    html:'<p>#BrandMonday: Tweet about Brands on Mondays</p>'
+	                    html:'<p class="header">#BrandMonday: Tweet about Brands on Mondays</p>'
 	                }
 	            }),
 	            new Ext.BoxComponent({
@@ -41,7 +41,7 @@ Ext.onReady(function(){
 	                html:'<img src="http://avoir.uwc.ac.za/usrfiles/filemanager_thumbnails/gen14Srv6Nme27_2590_1221319552.jpg" />'
 	            },*/
 	            
-	           // westPanel,    
+	            westPanel,    
 	            middlePanel
              ] 
         });       

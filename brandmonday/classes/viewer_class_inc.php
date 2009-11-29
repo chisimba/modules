@@ -286,7 +286,7 @@ class viewer extends object {
         return $ret;
     }
 
-    public function aboutBlock() {
+    public function aboutBlock($showBox = true) {
         $this->objWashout = $this->getObject("washout", "utilities");
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $abouttext = $this->objSysConfig->getValue ( 'abouttext', 'brandmonday' );
@@ -294,12 +294,12 @@ class viewer extends object {
         $ret = NULL;
 
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $ret .= $objFeatureBox->show($abouthead, $this->objWashout->parseText($abouttext));
+        $ret .= ($showBox) ? $objFeatureBox->show($abouthead, $this->objWashout->parseText($abouttext)) : $this->objWashout->parseText($abouttext);
         
         return $ret;
     }
 
-    public function tweetBlock() {
+    public function tweetBlock($showBox) {
         $objTwitterRemote = $this->getObject("twitterremote", "twitter");
         $objTwitterRemote->userName = "CapeTown";
         $tweets = $objTwitterRemote->showTimeline(FALSE, 'user');
@@ -321,7 +321,7 @@ class viewer extends object {
         return $ret;
     }
 
-    public function rssBlock() {
+    public function rssBlock($showBox = TRUE) {
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $text = "Feeds"; //$this->objLanguage->languageText("mod_brandmonday_rss", "brandmonday");
         $ret = NULL;
@@ -334,12 +334,12 @@ class viewer extends object {
             
         $rss = $happylink->show()."<br />";
         $rss .= $sadlink->show();
-        $ret .= $objFeatureBox->show($text, $rss);
+        $ret .= ($showBox) ? $objFeatureBox->show($text, $rss) : $rss;
         
         return $ret;
     }
     
-    public function tweetThisBox() {
+    public function tweetThisBox($showBox = true) {
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
@@ -350,7 +350,7 @@ class viewer extends object {
         $tlink->target = "_blank";
         $str = $tlink->show()."<br />".$this->objLanguage->languageText("mod_brandmonday_tweetthisblurb", "brandmonday");
         
-        return $objFeatureBox->show($this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" ), $str);
+        return ($showBox) ? $objFeatureBox->show($this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" ), $str) : $str;
     }
     
     public function loginBlock() {

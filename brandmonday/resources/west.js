@@ -3,7 +3,7 @@
 var westPanel = new Ext.Panel({
 	region: 'east',
     id: 'Tweet Tools', // see Ext.getCmp() below
-    title: 'West',
+    //title: 'West',
     split: true,
     width: 200,
     minSize: 175,
@@ -12,7 +12,7 @@ var westPanel = new Ext.Panel({
     collapsible: true,
      unstyled: true,
 
-    margins: '0 0 0 5',
+    margins: '25 10 1 1',
     layout: {
         type: 'accordion',
        
@@ -21,33 +21,50 @@ var westPanel = new Ext.Panel({
 
     items: [ 
     	{	    	
-	        title: 'Powered By',
-	        html: '<p class="warning">Terms (keywords, hashtags etc) currently being tracked:<br>#SITACLOUD<br>	#sitacloud</p>',
+	        title: poweredHead,
+	        //html: '<p class="warning">Terms (keywords, hashtags etc) currently being tracked:<br>#SITACLOUD<br>	#sitacloud</p>',
 	        border: true,
+	        contentEl:'poweredby',
 	        iconCls: 'settings'
 	    },
 	    
 	    {              
-	        //contentEl: 'west',
-	        title: 'Get your company involved',
-	        html:'<img src="http://tweetgator.peeps.co.za/skins/_common/icons/sioc.gif">',
+	        contentEl: 'about',
+	        title: abouthead,
+	       
+	        iconCls: 'nav' // see the HEAD section for style used
+	    }, {              
+	        contentEl: 'tweetthis',
+	        title: tweetThisHead,
+	       
+	        iconCls: 'nav' // see the HEAD section for style used
+	    }, {              
+	        contentEl: 'feeds',
+	        title: 'Feeds',
+	        //html:'<img src="http://tweetgator.peeps.co.za/skins/_common/icons/sioc.gif">',
 	       // border: false,
 	        iconCls: 'nav' // see the HEAD section for style used
-	    }, {	    	
-	        title: 'Featured Blogger',
-	        html: '<p class="warning">Total posts so far: 44<br>Total contributors: 5.</p>',
+	    },  {	    	
+	        title: fhead,
+	        contentEl:'ad3',
 	        border: true,
 	        iconCls: 'settings'
 	    },
 	    {	    	
-	        title: 'BrandMonday Campaign',
-	       	//items: [searchForm]
+	        title: adhead1,
+	        contentEl:'ad1',
+	        border: true,
+	        iconCls: 'settings'
+	    },
+	     {	    	
+	        title: adhead2,
+	        contentEl:'ad2',
 	        border: true,
 	        iconCls: 'settings'
 	    },
 	    {	    	
 	        title: 'Disclaimer',
-	       	//items: [searchForm]
+	       	contentEl:'disclaimer',
 	        border: true,
 	        iconCls: 'settings'
 	    }

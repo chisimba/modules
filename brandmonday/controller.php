@@ -76,23 +76,24 @@ class brandmonday extends controller {
         		echo json_encode(array('totalCount' =>count($resPlus->results), 'tweets'=> $resPlus->results));
         		
         		exit(0);
-        		
+        		break;
         	case 'json_getbrandminus':
         		$resMinus = $this->objDbBm->getRange('tbl_bmminus', 0, 100);
         		echo json_encode(array('totalCount' =>count($resMinus->results), 'tweets'=> $resMinus->results));
         		
         		exit(0);
-        		
+        		break;
         	case 'json_getmentions':
         		$resMentions = $this->objDbBm->getRange('tbl_bmmentions', 0, 100);
         		echo json_encode(array('totalCount' =>count($resMentions->results), 'tweets'=> $resMentions->results));
         		
         		exit(0);
+        		break;
             case 'main' :
                 break;
 
             default: 
-            	
+            	return "main_tpl.php";
                 $this->requiresLogin('default');
                 $path = $this->objConfig->getModulePath()."brandmonday/update";
                 if(!file_exists($path)) {
@@ -137,12 +138,13 @@ class brandmonday extends controller {
                 $this->setVarByRef('resMentions', $resMentions);
                 $this->setVarByRef('resMinus', $resMinus);
                 $this->setVarByRef('resPlus', $resPlus);
-				return "main_tpl.php";
+				
                 return 'view_tpl.php';
                 break;
 
             case 'happypeeps':
                 echo $this->objBmOps->happyPeepsTagCloud();
+                exit(0);
                 break;
 
             case 'sadpeeps':
@@ -163,7 +165,19 @@ class brandmonday extends controller {
                 $ret .= $this->objBmOps->bestServicePieChartWeek()."</span></div>";
                 echo $ret;
                 break;
-
+                
+            case 'bestservcloud':
+            	echo  $this->objBmOps->bestServiceTagCloud();
+				break;
+				
+			case 'bestservalltime':
+            	echo  $this->objBmOps->bestServicePieChartAll();
+				break;
+			
+			case 'bestservthisweek':
+            	echo  $this->objBmOps->bestServicePieChartWeek();
+				break;
+					
             case 'worstserv':
                 $ret = NULL;
                 $ret .= "<div class=\"bestserv\"><h2>Cloud:</h2><br />";
@@ -174,6 +188,18 @@ class brandmonday extends controller {
                 $ret .= $this->objBmOps->worstServicePieChartWeek().'</div>';
                 echo $ret;
                 break;
+                
+            case 'worstcloud':
+            	echo  $this->objBmOps->worstServiceTagCloud();
+				break;
+				
+			case 'worstalltime':
+            	echo  $this->objBmOps->worstServicePieChartAll();
+				break;
+			
+			case 'worstthisweek':
+            	echo  $this->objBmOps->worstServicePieChartWeek();
+				break;
 
             case 'mentions':
                 echo $this->objBmOps->mentionsTagCloud();

@@ -12,7 +12,7 @@ var dsBrandMinus = new Ext.data.Store({
             {name: 'image', mapping: 'image'},
             {name: 'name', mapping: 'name'},
             {name: 'tstamp', mapping: 'tstamp'},
-            {name: 'screen_name', mapping: 'screen_name'},
+            {name: 'screen_name', mapping: 'from_user'},
             {name: 'lastPost', mapping: 'createdat'},
             {name: 'excerpt', mapping: 'tweet'}
         ]),
@@ -25,7 +25,7 @@ var dsBrandMinus = new Ext.data.Store({
         '<div class="search-item">', 
         	'<a href="http://www.twitter.com/{screen_name}" target="_blank"><img height="48px" width="48px" src="{image}" /></a>',    	     	
             '<span>{lastPost}</span>',                       
-            '<div style="margin-top:8px;padding-left:5px;"><a href="http://www.twitter.com/{screen_name}" target="_blank">{name}</a>',           
+            '<div style="margin-top:8px;padding-left:5px;"><a href="http://www.twitter.com/{screen_name}" target="_blank">{screen_name}</a>',           
             '<p>{excerpt}</p></div>',
         '</div></tpl>'
     );

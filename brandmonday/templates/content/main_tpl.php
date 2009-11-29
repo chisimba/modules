@@ -8,11 +8,31 @@ $this->setVar('pageSuppressContainer', TRUE);
 $this->setVar('SUPPRESS_PROTOTYPE', true);
 $this->setVar('SUPPRESS_JQUERY', true);
 
+$this->objWashout = $this->getObject ( 'washout', 'utilities' );
+$this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+$this->objViewer = $this->getObject('viewer');
+
+$adhead1 = $this->objSysConfig->getValue ( 'adhead1', 'brandmonday' );
+$adhead2 = $this->objSysConfig->getValue ( 'adhead2', 'brandmonday' );
+$fbhead = $this->objSysConfig->getValue ( 'fbhead', 'brandmonday' );
+$fbtext = $this->objSysConfig->getValue ( 'fbtext', 'brandmonday' );
+$adtext1 = $this->objSysConfig->getValue ( 'adtext1', 'brandmonday' );
+$adtext2 = $this->objSysConfig->getValue ( 'adtext2', 'brandmonday' );
+$abouthead = $this->objSysConfig->getValue ( 'abouthead', 'brandmonday' );
+$tweetThisHead = $this->objLanguage->languageText ( "mod_brandmonday_tweetthis", "brandmonday" );
+        
 $objExtJS = $this->getObject('extjs','htmlelements');
 $objExtJS->show();
 $this->appendArrayVar('headerParams', '
         	<script type="text/javascript">	        		
         		var baseUri = "'.$this->objConfig->getsiteRoot().'index.php";
+        		var poweredHead = "'.$this->objSysConfig->getValue ( 'chishead', 'brandmonday' ).'";
+        		var adhead1 = "'.$adhead1.'";
+        		var adhead2 = "'.$adhead2.'";
+        		var abouthead = "'.$abouthead.'";
+        		var fhead = "'.$fhead.'";
+        		var tweetThisHead = "'.$tweetThisHead.'";
+        		
         		
         	</script>');
 
@@ -21,6 +41,7 @@ $this->appendArrayVar('headerParams', '
 
 $ext =$this->getJavaScriptFile('functions.js', 'brandmonday');
 $ext .=$this->getJavaScriptFile('brandplus.js', 'brandmonday');
+$ext .=$this->getJavaScriptFile('awards.js', 'brandmonday');
 $ext .=$this->getJavaScriptFile('brandminus.js', 'brandmonday');
 $ext .=$this->getJavaScriptFile('mentions.js', 'brandmonday');
 $ext .=$this->getJavaScriptFile('west.js', 'brandmonday');
@@ -70,6 +91,12 @@ padding:10px 10px 10px 10px;
 
 .search-item a span{
 	
+}
+
+.header{
+	font: bold 18px tahoma, arial, helvetica, sans-serif;
+	padding:10px 10px 10px 10px;
+	margin-left:300px;
 }
 
 .search-item span {
@@ -178,6 +205,10 @@ padding:10px 10px 10px 10px;
     text-decoration: underline;
 }
 
+.west {
+	font: 11px tahoma,arial,verdana,sans-serif;
+	padding:5px 5px 5px 5px;
+}
     </style>';
 $this->appendArrayVar('headerParams', $ext);
 ?>
@@ -194,5 +225,65 @@ $this->appendArrayVar('headerParams', $ext);
         <p>Powered By Chisimba</p>
     </div>
     
+    
+    
+    <div id="poweredby" class="west">   
+    <p>
+    <?php 
+    	echo $this->objWashout->parseText($this->objSysConfig->getValue ( 'chistext', 'brandmonday' ));      
+    ?>
+    </p>
+    </div>
+    
+    <div id="feeds" class="west">   
+    <p>
+    <?php 
+    	echo $this->objViewer->rssBlock(false);
+     ?>
+    </p>
+    </div>
+    
+        
+     <div id="disclaimer" class="west">   
+    <p>
+    <?php 
+    	echo  $this->objWashout->parseText(
+    			$this->objLanguage->languageText("mod_brandmonday_disclaimertext", "brandmonday"));
+     ?>
+    </p>
+    </div>
+    
+     <div id="ad1" class="west">   
+    <p>
+    <?php 	echo $adtext1;       ?>
+    </p>
+    </div>
+    
+     <div id="ad2" class="west">   
+    <p>
+    <?php  	echo $adtext2 ?>
+    </p>
+    </div>
+    
+     <div id="ad3" class="west">   
+    <p>
+    <?php  	echo   $fbtext   ?>
+    </p>
+    </div>
+    
+    <div id="about" class="west">   
+    <p>
+    <?php  	echo   $this->objViewer->aboutBlock(false);   ?>
+    </p>
+    </div>
+    
+     <div id="tweetthis" class="west">   
+    <p>
+    <?php  	echo   $this->objViewer->tweetThisBox(false);   ?>
+    </p>
+    </div>
+    
+   
+        
     
 </div>
