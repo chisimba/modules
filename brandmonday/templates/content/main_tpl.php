@@ -247,27 +247,26 @@ $this->appendArrayVar('headerParams', $ext);
      <div id="disclaimer" class="west">   
     <p>
     <?php 
-    	echo  $this->objWashout->parseText(
-    			$this->objLanguage->languageText("mod_brandmonday_disclaimertext", "brandmonday"));
+    	echo  $this->objWashout->parseText($this->objLanguage->languageText("mod_brandmonday_disclaimertext", "brandmonday"));
      ?>
     </p>
     </div>
     
      <div id="ad1" class="west">   
     <p>
-    <?php 	echo $adtext1;       ?>
+    <?php 	echo $this->objWashout->parseText($adtext1);       ?>
     </p>
     </div>
     
      <div id="ad2" class="west">   
     <p>
-    <?php  	echo $adtext2 ?>
+    <?php  	echo $this->objWashout->parseText($adtext2) ?>
     </p>
     </div>
     
      <div id="ad3" class="west">   
     <p>
-    <?php  	echo   $fbtext   ?>
+    <?php  	echo   $this->objWashout->parseText($fbtext)   ?>
     </p>
     </div>
     
@@ -281,9 +280,5 @@ $this->appendArrayVar('headerParams', $ext);
     <p>
     <?php  	echo   $this->objViewer->tweetThisBox(false);   ?>
     </p>
-    </div>
-    
-   
-        
-    
+    </div>  
 </div>
