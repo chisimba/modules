@@ -67,25 +67,7 @@ var awardsTab = new Ext.TabPanel({
                 				autoScroll: true
                 	},
                 	items:[
-                			{               				
-                				title:'Happiest Peeps',
-                				autoLoad:baseUri+'?module=brandmonday&action=happypeeps',  
-                				region:'center',
-                				
-                			},
-                			
-                			{
-                				title:'Sad Peeps',
-                				autoLoad:baseUri+'?module=brandmonday&action=sadpeeps',
-                				
-                			},
-                			{
-                				title:'Most Active Peeps',
-                				autoLoad:baseUri+'?module=brandmonday&action=activepeeps',
-                				autoScroll:true,
-                				
-                			},
-                			{
+                                        {
                 				title:'Best Service',
                 				plain:false,
                 				autoScroll:true,
@@ -121,9 +103,28 @@ var awardsTab = new Ext.TabPanel({
                 				}]
                 				           				
                 			},
+                			{               				
+                				title:'#BrandPLUS Activists',
+                				autoLoad:baseUri+'?module=brandmonday&action=happypeeps',  
+                				region:'center',
+                				
+                			},
                 			
                 			{
-                				title:'Most Mentioned',
+                				title:'#BrandMINUS Activists',
+                				autoLoad:baseUri+'?module=brandmonday&action=sadpeeps',
+                				
+                			},
+                			{
+                				title:'Most Active BrandMonday Activists',
+                				autoLoad:baseUri+'?module=brandmonday&action=activepeeps',
+                				autoScroll:true,
+                				
+                			},
+                			
+                			
+                			{
+                				title:'Most Mentioned BrandMonday Activists',
                 				autoLoad:baseUri+'?module=brandmonday&action=mentions',                				
                 			}
                 			]

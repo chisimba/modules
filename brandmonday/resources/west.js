@@ -20,20 +20,22 @@ var westPanel = new Ext.Panel({
      cmargins: '5 5 0 5',
 
     items: [ 
-    	{	    	
-	        title: poweredHead,
-	        //html: '<p class="warning">Terms (keywords, hashtags etc) currently being tracked:<br>#SITACLOUD<br>	#sitacloud</p>',
-	        border: true,
-	        contentEl:'poweredby',
-	        iconCls: 'settings'
-	    },
+    	
 	    
 	    {              
 	        contentEl: 'about',
 	        title: abouthead,
 	       
 	        iconCls: 'nav' // see the HEAD section for style used
-	    }, {              
+	    }, 
+            {	    	
+	        title: poweredHead,
+	        //html: '<p class="warning">Terms (keywords, hashtags etc) currently being tracked:<br>#SITACLOUD<br>	#sitacloud</p>',
+	        border: true,
+	        contentEl:'poweredby',
+	        iconCls: 'settings'
+	    }, 
+            {              
 	        contentEl: 'tweetthis',
 	        title: tweetThisHead,
 	       
