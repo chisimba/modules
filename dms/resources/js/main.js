@@ -1,12 +1,18 @@
-var url;
+var url,
+    searchURL;
 Ext.onReady(function() {
     url = Ext.get('uploadURL').dom.value;
+    searchURL = Ext.get('searchURL').dom.value;
     var p = new Ext.Panel({
-        width: 100,
+        layout: 'table',
+        autoWidth: true,
+        style: 'marginRight: 10px',
+        baseCls: 'x-plain',
+        cls: 'btn-panel',
         border: false,
         defaultType: 'button',
         id: 'upload-button',
-        items: {
+        items: [{
             text: 'Upload File',
             iconCls: 'add16',
             iconAlign: 'right',
@@ -16,7 +22,15 @@ Ext.onReady(function() {
             handler: function() {
                 goUploadPage();
             }
-        }
+        },{
+            text: 'Search',
+            scale: 'medium',
+            baseCls: 'x-plain',
+            cls: 'btn-panel',
+            handler: function() {
+                goSearchPage();
+            }
+        }]
     });
 
     p.render("buttons");
@@ -24,6 +38,10 @@ Ext.onReady(function() {
 
 var goUploadPage = function() {
     window.location.href = url;
+}
+
+var goSearchPage = function() {
+    window.location.href = searchURL;
 }
 
 var showSearchForm = function(url) {

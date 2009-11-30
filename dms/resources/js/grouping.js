@@ -7,8 +7,8 @@
 var showLatestUploads = function(url) {
 
     var tree = new Ext.ux.tree.ColumnTree({
-        width: 550,
-        height: 300,
+        autoWidth: true,
+        autoHeight: true,
         rootVisible:false,
         autoScroll:true,
         title: 'Last 10 Uploads',

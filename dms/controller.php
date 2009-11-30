@@ -138,4 +138,8 @@ class dms extends controller {
         $userid = $this->objUser->userId();
         return $this->objUtils->createJSONFileData($userid);
     }
+
+    public function __searchforfile() {
+        return "searchForFile_tpl.php";
+    }
 }
