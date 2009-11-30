@@ -59,12 +59,15 @@ class dbessays extends dbtable {
     }
     
     function getSubmittedEssays() {
-        return array(
+        $sql = "select * from tbl_efl_submittedessays";
+        return $this->getArray($sql);
+
+        /*return array(
         array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/15'),
         array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/16'),
         array('from'=>$this->objUser->fullname(),'date'=>'2009/11/17'),
         array('from'=>$this->objUser->fullname(),'date'=>'2009/11/18')
-        );
+        );*/
     }
 
     function getTitle($essayid) {

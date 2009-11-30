@@ -4,7 +4,9 @@ $this->loadClass('htmltable','htmlelements');
     
 $table = new htmltable();
 $table->addCell('Essayid');
+$table->addCell('content');
 $table->addCell('Submitdate');
+
 $essays=$this->objStudentEssays->getstudentEssays($essayid);
 foreach($essays as $essay) {
     $table->width='30%';
@@ -12,6 +14,7 @@ foreach($essays as $essay) {
     $table->cellspacing='1';
     $table->startRow();
     $table->addCell($essay['essayid']);
+    $table->addCell($essay['content']);
     $table->addCell($essay['submitdate']);
     $table->endRow();
 }

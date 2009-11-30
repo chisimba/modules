@@ -79,21 +79,29 @@ $docRoot=$_SERVER['DOCUMENT_ROOT'];
 $resourcePath=str_replace($docRoot,$replacewith,$modPath);
 $codebase="http://" . $_SERVER['HTTP_HOST'].'/'.$resourcePath.'/efl/resources/';
 
+$count = 1;
+$numRows = count($dbdata);
+
 foreach($dbdata as $row) {
     $essaydata=$this->essays->getTitle($row['essayid']);
 
 
     $detailsLink=new link($this->uri(array('action'=>'markessay','essayid'=>$row['essayid'])));
-    $detailsLink->link=$row['from'];
+    $detailsLink->link=$row['userid'];
 
     $data.="[";
-    $data.="'<a href=\"".$codebase."jefla.jnlp\">".$row['from']."</a>',";
+    $data.="'<a href=\"".$codebase."jefla.jnlp\">".$row['userid']."</a>',";
   //  $data.="'". $detailsLink->show()."',";
-    $data.="'".$row['date']."'";
+    $data.="'".$row['submitdate']."']";
 
-    $data.="],";
+    if($count < $numRows) {
+        $data.=",";
+    }
+
+    $count++;
 
 }
+//echo $data;
 
 $lastChar = $data[strlen($data)-1];
 $len=strlen($data);

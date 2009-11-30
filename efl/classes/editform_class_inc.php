@@ -66,7 +66,7 @@ class editform extends object {
 
         //----------TEXTAREA--------------
         //Create a new textarea for the essay content
-        $objEssay = new textarea('essay','',50,100);
+        $objEssay = new textarea('content','',50,100);
         $essayLabel = new label($this->objLanguage->languageText("mod_efl_essaytxt","efl"),"essay");
         $objForm->addToForm($essayLabel->show() . "<br />");
         $objForm->addToForm($objEssay->show() . "<br />");
