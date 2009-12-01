@@ -68,7 +68,7 @@ if (!$this->objUser->isAdmin()) {
 }
 
 $inputGeo2 = new dropdown('geo2Id');
-$inputGeo2->addFromDB($this->objGeo2->getAll("ORDER BY name"), 'name', 'id');
+$inputGeo2->addFromDB($this->objCountry->getAll("ORDER BY common_name"), 'common_name', 'id');
 $inputGeo2->setSelected($geo2Id);
 $inputGeo2->cssClass = "select_officer";
 if (!$this->objUser->isAdmin()) {
