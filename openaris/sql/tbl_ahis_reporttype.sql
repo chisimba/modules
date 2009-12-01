@@ -12,7 +12,7 @@ $fields = array(
 		),
     'name' => array(
         'type' => 'text',
-        'length' => 32,
+        'length' => 64,
         'notnull' => TRUE
         )
     );

@@ -2,11 +2,11 @@
 <defaultdata>
 	<tbl_ahis_reporttype>
 		<id>init_01</id>
-		<name>Passive Surveillance</name>
+		<name>Disease Report</name>
 	</tbl_ahis_reporttype>
 	<tbl_ahis_reporttype>
 		<id>init_02</id>
-		<name>Animal Population Census</name>
+		<name>Animal Population and Composition</name>
 	</tbl_ahis_reporttype>
 	<tbl_ahis_reporttype>
 		<id>init_03</id>
@@ -34,7 +34,7 @@
 	</tbl_ahis_reporttype>
 	<tbl_ahis_reporttype>
 		<id>init_10</id>
-		<name>Vaccine Inventory</name>
+		<name>Vaccination Report</name>
 	</tbl_ahis_reporttype>
 	<tbl_ahis_reporttype>
 		<id>init_09</id>
