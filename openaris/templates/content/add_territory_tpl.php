@@ -91,28 +91,28 @@ $objTable->addCell($nameText->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_latitudenorth", "ahis").": ");
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_latitudenorth", "openaris").": ");
 $objTable->addCell($latNText->show());
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_latitudesouth", "ahis").": ");
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_latitudesouth", "openaris").": ");
 $objTable->addCell($latSText->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_longitudeeast", "ahis").": ");
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_longitudeeast", "openaris").": ");
 $objTable->addCell($lonEText->show());
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_longitudewest", "ahis").": ");
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_longitudewest", "openaris").": ");
 $objTable->addCell($lonWText->show());
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText("word_area"));
 $objTable->addCell($areaText->show());
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_geolevel", "ahis")." 2: ");
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_geolevel", "openaris")." 2: ");
 $objTable->addCell($geo2Drop->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_unitofmeasure", "ahis").": ");
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_unitofmeasure", "openaris").": ");
 $objTable->addCell($unitText->show());
 $objTable->endRow();
 
