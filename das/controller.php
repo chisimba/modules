@@ -218,7 +218,7 @@ class das extends controller {
                 $rsleep = rand(1, 3);
                 $cnt = 0;
                 foreach ( $users as $user ) {
-                   // $conn2->message ( $user ['person'], $msg );
+                    $conn2->message ( $user ['person'], $msg );
                     $cnt++;
                     //put the random counter in between 1 - 10 users
                     if($cnt == $rcnt)
