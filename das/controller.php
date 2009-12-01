@@ -213,15 +213,30 @@ class das extends controller {
 
 				//get all the users that was active in the last x minutes
                 $users = $this->objDbImPres->getAll();//ActiveUsers(); 
+                srand();
+                $rcnt = rand(1, 10);
+                $rsleep = rand(1, 3);
+                $cnt = 0;
                 foreach ( $users as $user ) {
-                    $conn2->message ( $user ['person'], $msg );
-                    usleep(2000);
+                   // $conn2->message ( $user ['person'], $msg );
+                    $cnt++;
+                    //put the random counter in between 1 - 10 users
+                    if($cnt == $rcnt)
+                    {
+                    	//radomize the sleep also betwee 1 - 3 secs
+                    	sleep($rsleep);
+                    	
+                    	//reset both counters
+                    	$rcnt = rand(1, 10);
+                		$rsleep = rand(1, 3);
+                		$cnt = 0;
+                	}
                 }
                 $time_end = microtime ( TRUE );
                 $time = $time_end - $time_start;
                 $conn2->disconnect ();
 
-                echo "Messages were sent to ".count($users)." users";
+                echo "Messages were sent to ".count($users)." users <br> Time taking ".number_format($time, 2, '.', '')." seconds";
 				exit(0);
                 break;
             case 'sendtoall':
