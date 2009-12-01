@@ -93,9 +93,9 @@ class editform extends object {
 
         $action = $this->getParam("action", "save");
         if ($action == "edit") {
-            $formAction = $this->uri(array("action" => "update",'essayid'=>$essayid), "efl");
+            $formAction = $this->uri(array("action" => "editessay",'essayid'=>$essayid), "efl");
         } else {
-            $formAction = $this->uri(array("action" => "addstudentessay",'essayid'=>$essayid), "efl");
+            $formAction = $this->uri(array("action" => "home",'essayid'=>$essayid), "efl");
         }
         return $formAction;
     }

@@ -161,6 +161,14 @@ class efl extends controller {
      *updates a students essay
      *
      */
+    function __editessay(){
+        $userid=$this->objUser->userId();
+        $essayid=$this->getParam('essayid');
+        $content=$this->getParam('content');
+        
+        return "essayedit_tpl.php";
+        
+    }
     function __updatestudentessay() {
 
     }

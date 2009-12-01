@@ -46,12 +46,12 @@ $cssLayout->setLeftColumnContent($leftSideColumn);
 $rightSideColumn='<div id="gtx"></div><div style="padding:10px;">';
 
 //Add the table to the centered layer
-$rightSideColumn .=$objEditForm->show();
+$rightSideColumn .=$objEditForm->show('essayid');
 $rightSideColumn.= '</div>';
 // Add Right Column
 $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 $objEditForm = $this->getObject('editform', 'efl');
-echo $objEditForm->show();
+echo $objEditForm->show('essayid');
 
 ?>
