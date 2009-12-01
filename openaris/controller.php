@@ -2549,7 +2549,7 @@ class openaris extends controller {
 			return 'add_currency_tpl.php';
 		case 'unit_of_area_add':
 		$this->setVar('output', $this->getParam('output'));
-			return 'add_unitOfArea_tpl.php';
+			return 'add_unitofarea_tpl.php';
 		case 'locality_type_add':
 		$this->setVar('output', $this->getParam('output'));
 			return 'locality_types_tpl.php';
@@ -2579,7 +2579,7 @@ class openaris extends controller {
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
 			 $this->setVar('unitOfArea',$this->objUnitOfArea->getUnitOfArea($id));
-			 return 'edit_unitOfArea_tpl.php';
+			 return 'edit_unitofarea_tpl.php';
 		case 'edit_country':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
@@ -3846,7 +3846,7 @@ class openaris extends controller {
 		   $this->setVar('unit_of_area', $unit_of_area);
 			$this->setVar('abbrev', $abbrev);
 			$this->setVar('desc', $desc);
-		  return 'add_UnitOfArea_tpl.php';
+		  return 'add_unitofarea_tpl.php';
 		   //return $this->nextAction('unit_of_area_add',array('output'=>$val));
 		 }	
 		 else
