@@ -99,8 +99,8 @@ public class CaptureScreen {
 				
 			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
 			JPEGEncodeParam encpar = encoder.getDefaultJPEGEncodeParam(image);
-			encpar.setQuality(ConnectionBean.imgQuality, false);
-			encoder.setJPEGEncodeParam(encpar);
+			//encpar.setQuality(ConnectionBean.imgQuality, false);
+			//encoder.  //.setJPEGEncodeParam(encpar);
 			encoder.encode(image);
 			
 			imageScreen.flush();
@@ -111,12 +111,7 @@ public class CaptureScreen {
 			
 			return out.toByteArray();
 
-		} catch (FileNotFoundException e) {
-			System.out.println(e);
-			e.printStackTrace();
-		} catch (IOException ioe) {
-			System.out.println(ioe);
-			ioe.printStackTrace();
+		
 		} catch (Exception e) {
 			System.out.println(e);
 			e.printStackTrace();
