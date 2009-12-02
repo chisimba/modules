@@ -120,8 +120,7 @@ $fields = array(
 	
 	'userids' => array(
 		'type' => 'text',
-		'length' => 255,
-        'notnull' => TRUE
+		'length' => 255
 		),
 	
 	'groupid' => array(
