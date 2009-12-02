@@ -21,7 +21,7 @@ $addGift = $this->uri(array('action'=>'submitadd'));
 
 $data='';
 
-$dbdata=$this->objDbGift->getMyGifts();
+$dbdata=$this->objDbGift->getMyGifts($data);
 $objIcon->setIcon('edit');
 
 foreach($dbdata as $row) {
@@ -80,8 +80,12 @@ echo '<script type="text/javascript">'.$mainjs.'</script>';
 $heading = new htmlheading($this->objLanguage->languageText('mod_homeWelcome_heading','gift'),1);
 $body    = $this->objLanguage->languageText('mod_homeWelcome_body','gift');
 $notice  = $this->objLanguage->languageText('mod_homeWelcome_warning','gift');
+$policy  = $this->objLanguage->languageText('mod_home_policylink','gift');
 
-$rightSideColumn.=$heading->show().$body.'<br/>'.$notice;
+$objLink = new link($this->uri(array('action'=>'back')));
+$objLink->link='Click here';
+
+$rightSideColumn.=$heading->show().$body.'<br/>'.$notice.'<br/>'.'<br/>'.$objLink->show().$policy;
 $rightSideColumn .='
 
 <div id="add-gift-surface"></div>
