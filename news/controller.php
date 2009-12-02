@@ -178,10 +178,11 @@ class news extends controller
         $this->setVarByRef('categories', $categories);
         
         // Load Blocks
-        $this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage');
+        $rightBlocks=$this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage');
         
         $this->setVar('pageType', 'frontpage');
         $this->setVar('pageTypeId', 'frontpage');
+        $this->setVar('rightBlocks', $rightBlocks);
         
         return 'home.php';
     }
