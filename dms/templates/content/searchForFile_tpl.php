@@ -23,7 +23,7 @@
     $postLoginMenu  = $this->newObject('postloginmenu','toolbar');
     $cssLayout->setLeftColumnContent($postLoginMenu->show());
     $rightSideColumn =  '<div id ="mainContent">';
-    $content = '<div id="heading"><h1>'.$this->objUtils->showPageHeading().'</h1></div>';
+    $content = '<div id="heading"><h1>'.$this->objUtils->showPageHeading($action).'</h1></div>';
     $content .= '<div id="searchpane"></div>';
     $rightSideColumn .= $content;
     $rightSideColumn .= '</div>';

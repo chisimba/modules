@@ -17,8 +17,13 @@ class userutils extends object {
         $this->objUploadTable = $this->getObject('dbfileuploads');
     }
 
-    public function showPageHeading() {
-        return $this->heading;
+    public function showPageHeading($page=null) {
+        if($page != null) {
+            return $this->heading." - ".ucfirst($page);
+        }
+        else {
+            return $this->heading;
+        }
     }
 
     public function searchFiles($url) {
@@ -132,10 +137,25 @@ class userutils extends object {
 
             $counter = 1;
             foreach($docs as $newdata) {
+                $mylink = new link();
+                $mylink->link($this->uri(array('action'=>'viewfiledetails', 'id'=>$newdata['id'])));
+                $mylink->link = "Click here for details";
+                $date = date_create($newdata['date_uploaded']);
+                if($newdata['shared'] == '1') {
+                    $status = "public";
+                }
+                else {
+                    $status = "private";
+                }
+
+                
                 $JSONstr .= "
     {
         filename:'".$newdata['filename']."',
         duration:'".$newdata['filetype']."',
+        details: '".str_replace("amp;", "", $mylink->show())."',
+        modified: '".date_format($date, 'm/d/Y')."',
+        status: '".$status."',
         uiProvider:'col',
         leaf:true,
         iconCls:'task'

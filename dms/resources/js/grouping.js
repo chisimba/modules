@@ -13,16 +13,29 @@ var showLatestUploads = function(url) {
         autoScroll:true,
         title: 'Last 10 Uploads',
         renderTo: 'recent-uploads',
-
+        
         columns:[{
             header:'Filename',
-            width:400,
+            width: 250,
             dataIndex:'filename'
         },{
             header:'File Type',
-            width:130,
+            width: 80,
             dataIndex:'duration'
-        }],
+        },{
+            header:'View Details',
+            width: 125,
+            dataIndex:'details'
+        }, {
+            header:'Date Last Modified',
+            width: 100,
+            dataIndex:'modified'
+        }, {
+            header:'Status',
+            width: 50,
+            dataIndex:'status'
+        }
+        ],
 
         loader: new Ext.tree.TreeLoader({
             dataUrl: url,
@@ -31,8 +44,14 @@ var showLatestUploads = function(url) {
             }
         }),
 
+        listeners: {
+            dblclick: function(e, t, o) {
+                //Ext.Msg.alert('Navigation Tree Click', 'You Double clicked: ' + t.attributes.innerHTML);
+            }
+        },
+
         root: new Ext.tree.AsyncTreeNode({
-            text:'Tasks'
+            text:'Filename'
         })
     });
 }

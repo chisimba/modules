@@ -115,6 +115,7 @@ class dms extends controller {
      *
      */
     public function __uploadFile() {
+        $this->setVarByRef('action','upload');
         return "uploadFile_tpl.php";
     }
 
@@ -140,6 +141,11 @@ class dms extends controller {
     }
 
     public function __searchforfile() {
+        $this->setVarByRef('action','search');
         return "searchForFile_tpl.php";
+    }
+
+    public function __viewfiledetails() {
+        echo $this->getParam('id');
     }
 }

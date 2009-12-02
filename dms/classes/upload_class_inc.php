@@ -47,7 +47,7 @@ class upload extends object {
         //Instantiate the language object
         $this->objLanguage =  $this->getObject('language', 'language');
         
-        $this->permittedTypes = array("txt", "xls", "doc", "pdf", "mp3", "ppt", "odp", "pps", "css");
+        $this->permittedTypes = array("txt", "xls", "doc", "pdf", "mp3", "ppt", "odp", "pps", "css", "odt");
         //Set the default overwrite
         $this->overWrite = FALSE;
     }
