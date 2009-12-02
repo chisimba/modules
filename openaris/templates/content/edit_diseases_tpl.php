@@ -102,10 +102,32 @@ $formTable->endRow();
 
 
 $label = new label ('In OIE List:', 'in_oie_list');
-$in_oie_list = new textinput('in_oie_list',$disease['0']['in_OIE_list']);
+$in_oie_list = new dropdown('in_oie_list');
+$in_oie_list ->addOption('','select');
+$in_oie_list ->addOption('Yes');
+$in_oie_list ->addOption('No');
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($in_oie_list->show());
+$formTable->endRow();
+
+$dateStartPicker = $this->newObject('datepicker', 'htmlelements');
+$dateStartPicker->name = 'startdate';
+
+$label_start_date = new label('Start date: ','startdate');
+$formTable->startRow();
+$formTable->addCell($label_start_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateStartPicker->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+//end date
+$dateEndPicker = $this->newObject('datepicker', 'htmlelements');
+$dateEndPicker->name = 'enddate';
+
+$label_end_date = new label('End date: ','enddate');
+$formTable->startRow();
+$formTable->addCell($label_end_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateEndPicker->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 
@@ -133,6 +155,6 @@ $form->addToForm($btcancel->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$form->show());
-
+$objLayer->align='center';
 echo $objLayer->show();
 ?>

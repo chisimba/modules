@@ -81,6 +81,7 @@ $objTable->cellspacing = 2;
 //DiseaseId
 $label = new label ('Disease: ', 'disease');
 $disease = new dropdown('disease');
+$disease->addOption('','','');
 $disease->addFromDB($diseases, 'disease_name', 'id');
 $objTable->startRow();
 $objTable->addCell($label->show());
@@ -90,6 +91,7 @@ $objTable->endRow();
 //Agent
 $label = new label ('Agent: ', 'agent');
 $agent = new dropdown('agent');
+$agent->addOption('','','');
 $agent->addFromDB($agents,'agent','id');
 $objTable->startRow();
 $objTable->addCell($label->show());

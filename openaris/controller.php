@@ -170,8 +170,7 @@ class openaris extends controller {
 			$this->objFarmingSystem = $this->getObject('farmingsystem');
 			$this->objSpeciesType = $this->getObject('speciestype');          
 			$this->objSpeciesAgeGroup = $this->getObject('speciesagegroup');	
-			$this->objSpeciesTropicalLivestockUnit = $this->getObject('speciestropicallivestockunit');
-			$this->objSpeciesTropicalLiveStockUnit = $this->getObject('speciestropicallivestockunit');	
+			$this->objSpeciesTropicalLivestockUnit = $this->getObject('speciestropicallivestockunit');	
 			$this->objOccurenceCode = $this->getObject('occurencecode');
 			$this->objDiseaseAgent = $this->getObject('diseaseagent');	
                        
@@ -3126,6 +3125,7 @@ class openaris extends controller {
 				
 			case 'diseasespecies_add':
 			    $this->setVar('id', $this->getParam('id'));
+			     
 				return 'ahis_diseasespecies_tpl.php';
 				
 			
@@ -3469,6 +3469,8 @@ class openaris extends controller {
 			//species tropical livestock unit actions
 			case 'speciestropicallivestockunit_add':
 				  $this->setVar('id', $this->getParam('id'));
+				  $this->setVar('species',$this->objSpeciesnew->getAll());
+				  $this->setVar('speciescategories',$this->objSpeciescategories->getAll());
 				  return 'add_speciestropicallivestockunit_tpl.php';
 			case 'speciestropicallivestockunit_save':
 				return $this->saveSpeciesType();
@@ -3477,16 +3479,16 @@ class openaris extends controller {
 				$data = $this->objSpeciesTropicalLivestockUnit->getAll("WHERE speciestropicallivestockunits LIKE '%$searchStr%' ORDER BY agegroup");
 				$this->setVar('addLinkUri', $this->uri(array('action'=>'speciestropicallivestockunit_add')));
 				$this->setVar('addLinkText', "Add Species Tropical Livestock Unit");
-				$this->setVar('headingText', $this->objLanguage->languageText('phrase_speciestropicallivestockunit','openaris'));
+				$this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_speciestropicallivestockunit','openaris'));
 				$this->setVar('action', $action);
-				$this->setVar('columnName1', $this->objLanguage->languageText('mod_ahis_species'));
-				$this->setVar('columnName2', $this->objLanguage->languageText('mod_ahis_speciescategory'));
-				$this->setVar('columnName3', $this->objLanguage->languageText('mod_ahis_tlufactor'));
-				$this->setVar('columnName4', $this->objLanguage->languageText('mod_ahis_word_remarks'));
-				$this->setVar('createdon', $this->objLanguage->languageText('mod_ahis_word_createdon'));
-				$this->setVar('createdby', $this->objLanguage->languageText('mod_ahis_word_createdby'));
-				$this->setVar('modifiedon', $this->objLanguage->languageText('mod_ahis_word_modifiedon'));
-				$this->setVar('modifiedby', $this->objLanguage->languageText('mod_ahis_word_modifiedby'));
+				$this->setVar('columnName1', $this->objLanguage->languageText('word_species'));
+				$this->setVar('columnName2', $this->objLanguage->languageText('word_speciescategories'));
+				$this->setVar('columnName3', $this->objLanguage->languageText('word_tlufactor'));
+				$this->setVar('columnName4', $this->objLanguage->languageText('word_remarks'));
+				$this->setVar('createdon', $this->objLanguage->languageText('word_createdon'));
+				$this->setVar('createdby', $this->objLanguage->languageText('word_createdby'));
+				$this->setVar('modifiedon', $this->objLanguage->languageText('word_modifiedon'));
+				$this->setVar('modifiedby', $this->objLanguage->languageText('word_modifiedby'));
 				$this->setVar('deleteAction', 'speciestropicallivestockunit_delete');
 				$this->setVar('fieldName1', 'speciesnameid');
 				$this->setVar('fieldName2', 'speciescategoryid');

@@ -56,7 +56,7 @@ if ($id) {
     $sButton->setToSubmit();
     $sButton->setCSS('saveButton');
 } else {
-    $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('mod_ahis_speciestropicallivestockunit');
+    $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('mod_ahis_speciestropicallivestockunit','openaris');
     $objFormUri = $this->uri(array('action'=>'speciestropicallivestockunit_save'));
     $record['name'] = '';
 
@@ -82,6 +82,7 @@ $objTable->cellspacing = 2;
 $label = new label ('Species Name: ', 'speciesname');
 
 $speciesname = new dropdown('speciesname');
+$speciesname->addOption('','','');
 $speciesname->addFromDB($species, 'speciesname', 'id');
 
 $objTable->startRow();
@@ -93,6 +94,7 @@ $objTable->endRow();
 $label = new label ('Species Category: ', 'speciescategory');
 
 $speciescategory = new dropdown('speciescategory');
+$speciescategory->addOption('','','');
 $speciescategory->addFromDB($speciescategories, 'speciescategory', 'id');
 
 $objTable->startRow();

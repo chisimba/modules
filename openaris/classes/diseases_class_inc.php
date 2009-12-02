@@ -70,7 +70,7 @@ class diseases extends dbtable
 			
 	} 
    public function getDiseases($id){	
-	$sql="SELECT * FROM tbl_ahis_diseases where id='$id' "; echo $sql;
+	$sql="SELECT * FROM tbl_ahis_diseases where id='$id' ";
 	$data=$this->getArray($sql);
 	return $data;	
 	}
