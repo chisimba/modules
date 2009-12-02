@@ -46,7 +46,8 @@ class dbessays extends dbtable {
             'content' => $content,
             'contextcode' => $contextcode,
             'active' => $active,
-            'multiplesubmit' => $multisubmit
+            'multiplesubmit' => $multisubmit,
+           
         );
 
         $essayTopicId = $this->insert($data);
@@ -58,8 +59,13 @@ class dbessays extends dbtable {
         return $data;
     }
     
-    function getSubmittedEssays() {
-        $sql = "select * from tbl_efl_submittedessays";
+    function getSubmittedEssays($essayId, $user=null) {
+        if($user == null) {
+            $sql = "select * from tbl_efl_submittedessays where essayid = '".$essayId."'";
+        }
+        else {
+            $sql = "select * from tbl_efl_submittedessays where userid= $user";
+        }
         return $this->getArray($sql);
 
         /*return array(
@@ -73,5 +79,6 @@ class dbessays extends dbtable {
     function getTitle($essayid) {
         return array('title'=> "test title");
     }
+
 }
 ?>

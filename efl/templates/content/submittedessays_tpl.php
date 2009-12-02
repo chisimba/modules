@@ -68,8 +68,14 @@ $btns.=$listButton->show().'&nbsp;&nbsp;';
 $content = $message;
 $content= '<div id="grouping-grid">'.$essayTitle.$btns.'<br /><br /></div>';
 
+$essayId = $this->getParam('essayid');
 //data grid from db
-$dbdata=$this->essays->getSubmittedEssays($this->objUser->userid());
+if($this->objUser->isAdmin()) {
+    $dbdata=$this->essays->getSubmittedEssays($essayId);
+}
+else {
+    $dbdata=$this->essays->getSubmittedEssays($essayId, $this->objUser->userId());
+}
 $total=count($dbdata);
 
 $objAltConfig = $this->getObject('altconfig','config');
@@ -101,7 +107,6 @@ foreach($dbdata as $row) {
     $count++;
 
 }
-//echo $data;
 
 $lastChar = $data[strlen($data)-1];
 $len=strlen($data);

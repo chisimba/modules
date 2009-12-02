@@ -39,5 +39,5 @@ $fields = array(
         'length' => 1,
         'notnull' => TRUE
     )
-);
+   );
 ?>
