@@ -1,6 +1,3 @@
-
-
-
 function initGrid(cols,url,searchurl){
 		
 		ButtonPanel = Ext.extend(Ext.Panel, {
@@ -395,4 +392,32 @@ function searchGift(url){
 		 }
 	
 		 SearchWindow.show(this);
+}
+
+var showGiftPolicy = function () {
+    var win;
+    
+    if(!win){
+        win = new Ext.Window({
+            applyTo:'hello-win',
+            layout:'fit',
+            autoWidth: true,
+            autoHeight:true,
+            closeAction:'hide',
+            plain: true,
+
+            buttons: [{
+                text:'Accept',
+                handler: function() {
+                    alert("hello accept");
+                }
+            },{
+                text: 'Decline',
+                handler: function(){
+                    win.hide();
+                }
+            }]
+        });
+    }
+    win.show(this);
 }

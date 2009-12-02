@@ -82,15 +82,20 @@ $body    = $this->objLanguage->languageText('mod_homeWelcome_body','gift');
 $notice  = $this->objLanguage->languageText('mod_homeWelcome_warning','gift');
 $policy  = $this->objLanguage->languageText('mod_home_policylink','gift');
 
-$objLink = new link($this->uri(array('action'=>'back')));
+$objLink = new link('#');
 $objLink->link='Click here';
+$objLink->extra = 'onClick="showGiftPolicy()"';
 
 $rightSideColumn.=$heading->show().$body.'<br/>'.$notice.'<br/>'.'<br/>'.$objLink->show().$policy;
 $rightSideColumn .='
 
 <div id="add-gift-surface"></div>
 <div id="edit-gift-surface"></div>
-<div id="grouping-grid"></div>';
+<div id="grouping-grid"></div>
+<div id="hello-win" class="x-hidden">
+    <div class="x-window-header">Hello Dialog</div>    
+</div>
+';
 
 // Add Right Column
 $cssLayout->setMiddleColumnContent($rightSideColumn);
