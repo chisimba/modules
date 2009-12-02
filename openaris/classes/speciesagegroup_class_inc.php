@@ -47,10 +47,10 @@ $GLOBALS['kewl_entry_point_run']) {
  * 
  * @category  Chisimba
  * @package   ahis
- * @author    Rosina Ntow<rntow@ug.edu.gh>
+ * @author    Joseph Gatheru
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: species_class_inc.php 
+ * @version   $Id: 
  * @link      http://avoir.uwc.ac.za
  */
 class speciesagegroup extends dbtable {

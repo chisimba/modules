@@ -54,6 +54,8 @@ $formTable = $this->newObject('htmltable', 'htmlelements');
 
 //species name
 $species_name = new dropdown('speciesnameid');
+$species_name->addOption('','','');
+$species_name->addFromDB($speciesnames,'speciesname','id');
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_speciesname'),NULL,NULL,'right');
 $formTable->addCell($species_name->show());

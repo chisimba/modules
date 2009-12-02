@@ -60,7 +60,7 @@ if ($id) {
     $objFormUri = $this->uri(array('action'=>'speciesagegroup_save'));
     $record['name'] = '';
 
-    $sButton = new button('speciesagegroup_save', 'Update');
+    $sButton = new button('speciesagegroup_save', 'Save');
     $sButton->setToSubmit();
     $sButton->setCSS('saveButton');
 }
@@ -91,6 +91,7 @@ $objTable->endRow();
 $label = new label ('Species: ', 'speciesid');
 
 $speciesid = new dropdown('speciesid');
+$speciesid->addOption('','','');
 $speciesid->addFromDB($species, 'speciesname', 'id');
 
 $objTable->startRow();
@@ -118,19 +119,21 @@ $objTable->endRow();
 //lower limit
 $label = new label ('Lower Limit: ', 'lowerlimit');
 $lowerlimit = new textinput('lowerlimit',$record[0]['lowerlimit']);
+$blabel= new label('(Months)','(Months)');
 
 $objTable->startRow();
 $objTable->addCell($label->show());
-$objTable->addCell($lowerlimit->show());
+$objTable->addCell($lowerlimit->show()." ".$blabel->show());
 $objTable->endRow();
 
 //upper limit
 $label = new label ('Upper Limit: ', 'upperlimit');
 $upperlimit = new textinput('upperlimit',$record[0]['upperlimit']);
+$blabel= new label('(Months)','(Months)');
 
 $objTable->startRow();
 $objTable->addCell($label->show());
-$objTable->addCell($upperlimit->show());
+$objTable->addCell($upperlimit->show()." ".$blabel->show());
 $objTable->endRow();
 
 //start date

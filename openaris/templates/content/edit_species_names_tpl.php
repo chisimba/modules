@@ -53,7 +53,8 @@ $formAction = 'species_names_update';
 $buttonText = 'Save';
 
 $speciesDrop = new dropdown('species');
-$speciesDrop->addFromDB($languages, 'language', 'language');
+$speciesDrop->addOption('','select');
+$speciesDrop->addFromDB($allspecies, 'speciesname', 'speciesname');
 
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
@@ -111,6 +112,6 @@ $form->addToForm($btcancel->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$form->show());
-
+$objLayer->align='center';
 echo $objLayer->show();
 ?>

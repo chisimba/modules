@@ -50,9 +50,9 @@ $this->loadClass('textarea','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_speciestyps','openaris');
     $objFormUri = $this->uri(array('action'=>'speciestype_update', 'id'=>$id));
-    $record = $this->objPartition->getRow($id);
+    $record = $this->objSpeciesType->getRow($id);
 
-    $sButton = new button('partitioncategory_update', 'Update');
+    $sButton = new button('speciestype_update', 'Update');
     $sButton->setToSubmit();
     $sButton->setCSS('saveButton');
 } else {
@@ -60,7 +60,7 @@ if ($id) {
     $objFormUri = $this->uri(array('action'=>'speciestype_save'));
     $record['name'] = '';
 
-    $sButton = new button('speciestype_save', 'Update');
+    $sButton = new button('speciestype_save', 'Save');
     $sButton->setToSubmit();
     $sButton->setCSS('saveButton');
 }

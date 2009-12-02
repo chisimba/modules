@@ -110,6 +110,6 @@ $form->addToForm($btcancel->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$form->show());
-
+$objLayer->align='center';
 echo $objLayer->show();
 ?>

@@ -100,6 +100,7 @@ $objTable->cellspacing = 2;
 $label = new label ('Partition Level: ', 'partitionlevel');
 
 $partitionlevel = new dropdown('partitionlevel');
+$partitionlevel->addOption('','','');
 $partitionlevel->addFromDB($partitionlevels, 'partitionlevel', 'id');
 
 $objTable->startRow();

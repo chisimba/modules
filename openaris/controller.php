@@ -1364,6 +1364,7 @@ class openaris extends controller {
 			case 'newspecies_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
+			 $this->setVar('speciestypes',$this->objSpeciesType->getAll());
 			 $this->setVar('speciesnew',$this->objSpeciesnew->getSpecies($id));
 			 return 'ahis_speciesedit_tpl.php';
 		
@@ -2614,6 +2615,7 @@ class openaris extends controller {
 			  $this->setVar('id',$id);
 			   $this->setVar('languages',$this->objLanguages->getAll("ORDER BY language"));
 			 $this->setVar('species',$this->objSpeciesNames->getSpecies($id));
+			  $this->setVar('allspecies',$this->objSpeciesnew->getAll());
 			 return 'edit_species_names_tpl.php';
 			 
 		case 'diseases_edit':
@@ -2986,7 +2988,7 @@ class openaris extends controller {
                 $this->setVar('allowEdit', TRUE);
                 $this->setVar('editAction', 'species_economic_function_edit');
                 $this->setVar('success', $this->getParam('success'));
-                return 'admin_overviews_tpl.php';
+                return 'genview_tpl.php';
 				case 'other_control_measures_admin':
 			$searchStr = $this->getParam('searchStr');
                 $data = $this->objOtherControlMeasures->getAll("WHERE control_measure LIKE '%$searchStr%' ORDER BY control_measure");
@@ -3110,10 +3112,12 @@ class openaris extends controller {
 				
 			case 'speciesnew_add':
 			    $this->setVar('id', $this->getParam('id'));
+			    $this->setVar('speciestypes',$this->objSpeciesType->getAll());
 				return 'ahis_species_tpl.php';
 				
 			case 'speciescategories_add':
 			    $this->setVar('id', $this->getParam('id'));
+			    $this->setVar('speciesnames',$this->objSpeciesNew->getAll());
 				return 'ahis_speciescategories_tpl.php';
 			
 			case 'agents_add':
@@ -3216,7 +3220,7 @@ class openaris extends controller {
 				$searchStr = $this->getParam('searchStr');
 				$data = $this->objPartitionLevel->getAll("WHERE partitioncategory LIKE '%$searchStr%' ORDER BY partitioncategory");
 				$this->setVar('addLinkUri', $this->uri(array('action'=>'partitionlevel_add')));
-				$this->setVar('addLinkText', "Add Level");
+				$this->setVar('addLinkText', "Add Partition Level");
 				$this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_partitionlevel','openaris'));
 				$this->setVar('action', $action);
 				$this->setVar('columnName1', $this->objLanguage->languageText('mod_ahis_partitionlevel','openaris'));
@@ -3373,7 +3377,7 @@ class openaris extends controller {
 				
 			//species type actions
 			case 'speciestype_add':
-                $this->setVar('id', $this->getParam('id'));
+                //$this->setVar('id', $this->getParam('id'));
                 return 'add_speciestypes_tpl.php';
 						
 	    	case 'speciestype_save':
@@ -3418,7 +3422,7 @@ class openaris extends controller {
 			return $this->saveSpeciesAgeGroup();
 	
 			case 'speciesagegroup_add':
-			      $this->setVar('id', $this->getParam('id'));
+			      //$this->setVar('id', $this->getParam('id'));
 			      $species = $this->objSpecies->getAll();
 			      $this->setVar('species', $species);
 			      return 'add_speciesagegroups_tpl.php';

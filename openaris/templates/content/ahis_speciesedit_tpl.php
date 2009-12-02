@@ -55,8 +55,10 @@ $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
-//species type
-$species_type= new textinput('speciestypeid',$speciesnew['0']['speciestypeid']);
+// species type
+$species_type = new dropdown('speciestypeid');
+$species_type->addOption('','','');
+$species_type->addFromDB($speciestypes,'speciestype','id');
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_speciestype'),NULL,NULL,'right');
 $formTable->addCell($species_type->show(),NULL,NULL,'left');

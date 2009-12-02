@@ -98,6 +98,11 @@ $GLOBALS['kewl_entry_point_run']) {
 	$data=$this->getArray($sql);
 	return $data;	
 	}
+public function getAll()
+{
+  $sql="select * from tbl_ahis_speciesnew";
+  return $this->getArray($sql);
+}
 	
  }
 

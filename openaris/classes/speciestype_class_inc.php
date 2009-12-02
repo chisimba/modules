@@ -41,16 +41,16 @@ $GLOBALS['kewl_entry_point_run']) {
 
 
 /**
- * ahis age group Class
+ * ahis age species type Class
  * 
- * class to connect to age group table
+ * class to connect to species type table
  * 
  * @category  Chisimba
  * @package   ahis
- * @author    Rosina Ntow<rntow@ug.edu.gh>
+ * @author    Joseph Gatheru
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: species_class_inc.php 
+ * @version   $Id:  
  * @link      http://avoir.uwc.ac.za
  */
 class speciestype extends dbtable {

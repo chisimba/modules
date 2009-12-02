@@ -89,6 +89,7 @@ $objTable->endRow();
 // partition category	
 $label = new label ('Partition Category: ', 'partitioncategory');
 $partitioncategory = new dropdown('partitioncategory');
+$partitioncategory->addOption('','','');
 $partitioncategory->addFromDB($partitioncategories, 'partitioncategory', 'id'); 
 
 $objTable->startRow();
