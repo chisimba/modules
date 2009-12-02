@@ -319,7 +319,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
                 javaVersionWarningDialog.setVisible(true);
             }
         }else{
-            RealtimeSysTray.init();
+            RealtimeSysTray.init(userListPanel);
         }
     }
 
