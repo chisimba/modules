@@ -119,11 +119,14 @@ class userutils extends object {
             else if(strcmp($data['filetype'], "pdf") == 0) {
                 $JSONstr .= "'PDF Documents',";
             }
-            else if(strcmp($data['filetype'], "doc") == 0 || strcmp($data['filetype'], "odt") == 0) {
+            else if(strcmp($data['filetype'], "doc") == 0) {
                 $JSONstr .= "'Word Documents',";
             }
             else if(strcmp($data['filetype'], "mp3") == 0) {
                 $JSONstr .= "'Music Files',";
+            }
+            else if(strcmp($data['filetype'], "odt") == 0) {
+                $JSONstr .= "'OpenOffice Word',";
             }
             else {
                 $JSONstr .= "'',";
