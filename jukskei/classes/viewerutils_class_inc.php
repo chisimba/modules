@@ -57,8 +57,8 @@ class viewerutils extends object {
 
 </div>';
 
-        $footer='<div id="footer"><center><a href="http://www.wits.ac.za">www.wits.ac.za</a></center></div>';
-        return $content.$footer;
+        $articles='<div id="articles"><center><a href="http://www.wits.ac.za">www.wits.ac.za</a></center></div>';
+        return $content.$articles;
     }
 
     public function getHomePageMedia() {
@@ -187,8 +187,8 @@ class viewerutils extends object {
             </ul>
             <br/>
               ';
-        $footer='<div id="footer">'.$articlenav.'</div>';
-        return $content.$footer;
+        $articles='<div id="articles">'.$articlenav.'</div>';
+        return $content.$articles;
     }
     public function getArticleContent($storyid,$articleid) {
 
@@ -215,16 +215,16 @@ class viewerutils extends object {
             $link->link = $nav['title'];
             $articlenav.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
-        //footer
+        //articles
         $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','jukskei');
         $topnavs=$this->storyparser->getStoryByCategory($topcatid);
-        $footer='<div id="footer">';
+        $articles='<div id="articles">';
         foreach($topnavs as $nav) {
             $link=new link($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
             $link->link=$nav['title'];
-            $footer.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
+            $articles.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
-         $footer.='<br/><br/>'.$articlenav.'<br/></div>';
+         $articles.='<br/><br/>'.$articlenav.'<br/></div>';
         $content='';
         $content='
 
@@ -234,7 +234,7 @@ class viewerutils extends object {
              <b style="font-family:Arial;font-size:24;">Topic: '.$storylink->show().'</b><br/>
              <b style="font-family:Arial;font-size:24;">Article: '.$data['title'].'&nbsp;&nbsp;</b>
             <font style="font-family:Arial;font-size:24;color:#1A4048"'.$this->objWashout->parseText($data['content']).'</font>
-             <center>'.$footer.'</center>
+             <center>'.$articles.'</center>
             
             <br/>
               ';
