@@ -56,8 +56,6 @@ class dbstudentessays extends dbtable {
         return $data;
     }
 
-    
-
     function getTitle($essayid) {
         return array('title'=> "test title");
     }

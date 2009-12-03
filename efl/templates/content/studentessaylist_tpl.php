@@ -30,6 +30,7 @@ if (!
 $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+$this->loadclass('button','htmlelements');
 
 echo "Essay Table Updated Succesfully";
 $this->loadClass('htmltable','htmlelements');
@@ -50,5 +51,11 @@ foreach($essays as $essay) {
     $table->addCell($essay['submitdate']);
     $table->endRow();
 }
+
+$backbutton=new button('back');
+$backbutton->setValue('Back');
+$backbutton->setOnClick('alert(\'An onclick Event\')');
+
 echo $table->show();
+$backbutton->show();
 ?>

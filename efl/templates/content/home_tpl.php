@@ -93,7 +93,7 @@ foreach($dbdata as $row) {
     $detailsLink=new link($this->uri(array('action'=>'essaymembers','essayid'=>$row['id'])));
     $detailsLink->link='Members';
 
-    $previewLink=new link($this->uri(array('action'=>'viewstory','storyid'=>$row['id'])));
+    $previewLink=new link($this->uri(array('action'=>'previewessay','storyid'=>$row['id'])));
     $previewLink->link='Preview';
 
     $titleLink=new link($this->uri(array('action'=>'viewessayasstudent','essayid'=>$row['id'])));

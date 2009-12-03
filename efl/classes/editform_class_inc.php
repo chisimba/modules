@@ -62,7 +62,7 @@ class editform extends object {
     //load form elements
         $this->loadElements();
         //create a form
-        $objForm = new form("essay",$this->getFormAction($essayid));
+        $objForm = new form("essay",$this->uri(array("action" => "addstudentessay","essayid"=>$essayid)));
 
         //----------TEXTAREA--------------
         //Create a new textarea for the essay content

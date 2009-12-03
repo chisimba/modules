@@ -127,9 +127,14 @@ class efl extends controller {
         return 'submittedessays_tpl.php';
     }
 
+
     function __viewessayasstudent() {
         $essayid=$this->getParam('essayid');
         $this->setVarByRef('essayid',$essayid);
+
+        //$essayid=$this->getParam('essayid');
+        $this->essayutil->generateJNLP();
+
         return 'studentessay_tpl.php';
     }
    /**
@@ -168,6 +173,7 @@ class efl extends controller {
         return "essayedit_tpl.php";
         
     }
+    
     function __updatestudentessay() {
 
     }
@@ -192,6 +198,11 @@ class efl extends controller {
         {
             return "essayedit_tpl.php";
         }
+    }
+
+    function __previewessay(){
+        
+        return 'previewessay_tpl.php';
     }
 
 }
