@@ -1,8 +1,11 @@
 var url,
-    searchURL;
+    searchURL,
+    adminURL;
 Ext.onReady(function() {
     url = Ext.get('uploadURL').dom.value;
-    searchURL = Ext.get('searchURL').dom.value;
+    searchURL = Ext.get('searchURL').dom.value,
+    adminURL = Ext.get('adminURL').dom.value;
+
     var p = new Ext.Panel({
         layout: 'table',
         autoWidth: true,
@@ -30,6 +33,14 @@ Ext.onReady(function() {
             handler: function() {
                 goSearchPage();
             }
+        },{
+            text: 'Admin',
+            scale: 'medium',
+            baseCls: 'x-plain',
+            cls: 'btn-panel',
+            handler: function() {
+                goAdminPage();
+            }
         }]
     });
 
@@ -42,6 +53,10 @@ var goUploadPage = function() {
 
 var goSearchPage = function() {
     window.location.href = searchURL;
+}
+
+var goAdminPage = function() {
+    window.location.href = adminURL;
 }
 
 var showSearchForm = function(url) {
@@ -80,7 +95,7 @@ var showSearchForm = function(url) {
         title:'File Search',
         height:300,
         autoScroll:true,
-        width: 550,
+        autoWidth: true,
 
         items: new Ext.DataView({
             tpl: resultTpl,

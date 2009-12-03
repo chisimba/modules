@@ -45,8 +45,8 @@ var showLatestUploads = function(url) {
         }),
 
         listeners: {
-            dblclick: function(e, t, o) {
-                //Ext.Msg.alert('Navigation Tree Click', 'You Double clicked: ' + t.attributes.innerHTML);
+            dblclick: function(node, event) {
+                Ext.Msg.alert('Navigation Tree Click', 'You Double clicked: ' + node.toString());
             }
         },
 

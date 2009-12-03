@@ -148,4 +148,15 @@ class dms extends controller {
     public function __viewfiledetails() {
         echo $this->getParam('id');
     }
+
+    public function __admin() {
+        $this->setVarByRef('action','admin');
+        return "admin_tpl.php";
+    }
+
+    public function __savefiletype() {
+        // go save stuff
+        echo "hello world";
+        //return $this->nextAction('admin');
+    }
 }
