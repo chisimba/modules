@@ -214,11 +214,12 @@ class das extends controller {
 				//get all the users that was active in the last x minutes
                 $users = $this->objDbImPres->getAll();//ActiveUsers(); 
                 srand();
-                $rcnt = rand(1, 10);
+                $rcnt = rand(1, 5);
                 $rsleep = rand(1, 3);
                 $cnt = 0;
                 foreach ( $users as $user ) {
                     $conn2->message ( $user ['person'], $msg );
+                    usleep(3000);
                     $cnt++;
                     //put the random counter in between 1 - 10 users
                     if($cnt == $rcnt)
@@ -227,7 +228,7 @@ class das extends controller {
                     	sleep($rsleep);
                     	
                     	//reset both counters
-                    	$rcnt = rand(1, 10);
+                    	$rcnt = rand(1, 5);
                 		$rsleep = rand(1, 3);
                 		$cnt = 0;
                 	}
