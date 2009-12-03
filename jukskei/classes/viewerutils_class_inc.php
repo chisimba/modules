@@ -187,7 +187,7 @@ class viewerutils extends object {
             </ul>
             <br/>
               ';
-        $articles='<div id="articles">'.$articlenav.'</div>';
+        $articles='<div id="articles"><center>'.$articlenav.'</center></div>';
         return $content.$articles;
     }
     public function getArticleContent($storyid,$articleid) {
