@@ -4,6 +4,8 @@
  */
 package org.avoir.realtime.common.util;
 
+import org.avoir.realtime.gui.main.RealtimeSysTray;
+
 import java.awt.BorderLayout;
 
 import java.awt.Dimension;
@@ -17,6 +19,7 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
+import java.awt.TrayIcon;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.PixelGrabber;
@@ -91,14 +94,18 @@ public class GeneralUtil {
         init();
     }
 
-    public static void showChatPopup(final String user, final String message,final boolean showHeader) {
+    public static void showChatPopup(final String user, final String message, final boolean showHeader) {
         Thread t = new Thread() {
 
             @Override
             public void run() {
-                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setMessage(user, message,showHeader);
+                GUIAccessManager.mf.getChatRoomManager().getChatPopup().setMessage(user, message, showHeader);
                 GUIAccessManager.mf.getChatRoomManager().getChatPopup().setLocation(ss.width - 200, ss.height - GUIAccessManager.mf.getChatRoomManager().getChatPopup().getHeight() - 100);
                 GUIAccessManager.mf.getChatRoomManager().getChatPopup().setVisible(true);
+                //trayIcon.setImage(newimage);
+                if (showHeader) {
+                    GUIAccessManager.mf.getRealtimeSysTray().updateTrayIcon();
+                }
             }
         };
         t.start();

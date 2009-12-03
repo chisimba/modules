@@ -4,6 +4,7 @@
  */
 package org.avoir.realtime.chat;
 
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -44,6 +45,7 @@ public class ChatPopup extends JWindow {
         setAlwaysOnTop(true);
         mpanel.setBorder(BorderFactory.createEtchedBorder());
         add(mpanel, BorderLayout.CENTER);
+        
     }
 
     public String getMessage() {

@@ -43,6 +43,7 @@ import org.jivesoftware.smack.packet.Message;
 
 
 import javax.swing.text.MutableAttributeSet;
+import org.avoir.realtime.gui.main.GUIAccessManager;
 
 /**
  *
@@ -325,8 +326,10 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
             msg.setProperty("message-type", "sys-text");
             if (chatRoomManager != null) {
                 chatRoomManager.sendMessage(msg);
+                
             }
         }
+
     }
 
     private void showUserEnteredText() {
@@ -345,6 +348,7 @@ public class ChatRoom extends javax.swing.JPanel implements ActionListener {
                     typingTimer.scheduleAtFixedRate(new TypingStatus(), 0, 1000);
                 }
             }
+            GUIAccessManager.mf.getRealtimeSysTray().revertTrayIcon();
         }
 
     }
