@@ -17,7 +17,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import org.avoir.realtime.common.util.ImageUtil;
 
 /**
  *
@@ -25,9 +27,14 @@ import javax.swing.JOptionPane;
  */ //
 public class RealtimeSysTray {
 
-    public static void init(final ParticipantListPanel userListPanel) {
+    private static TrayIcon trayIcon = null;
+    private ImageIcon alertimage = ImageUtil.createImageIcon(this, "/images/icons_header.jpg");
+    private ImageIcon image = ImageUtil.createImageIcon(this, "/images/post-it-notes.gif");
 
-        final TrayIcon trayIcon;
+
+    public void init(final ParticipantListPanel userListPanel) {
+
+        //final  TrayIcon trayIcon;
         final TrayIcon trayIcon2 = null;
 
 
@@ -35,7 +42,8 @@ public class RealtimeSysTray {
 
 
             SystemTray tray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit().getImage("post-it-notes.gif");
+            
+
 
             MouseListener mouseListener = new MouseListener() {
 
@@ -73,7 +81,7 @@ public class RealtimeSysTray {
                     //audioVideoTest.setLocationRelativeTo(null);
                     //audioVideoTest.setVisible(true);
                     userListPanel.getUserListTabbedPane().setSelectedIndex(1);
-                    
+
                 }
             };
 
@@ -86,6 +94,7 @@ public class RealtimeSysTray {
 
                 }
             };
+
 
             PopupMenu popup = new PopupMenu();
 
@@ -104,7 +113,7 @@ public class RealtimeSysTray {
             //PopupMenu menu = new PopupMenu();
 
 
-            trayIcon = new TrayIcon(image, "Tray Demo", popup);
+            trayIcon = new TrayIcon(image.getImage(), "RealTime Tools", popup);
 
             ActionListener actionListener = new ActionListener() {
 
@@ -115,9 +124,21 @@ public class RealtimeSysTray {
                 }
             };
 
+
+
             trayIcon.setImageAutoSize(true);
             trayIcon.addActionListener(actionListener);
             trayIcon.addMouseListener(mouseListener);
+
+            ActionListener updateListener = new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    trayIcon.displayMessage("Action Event",
+                            "An Action Event Has Been Performed!",
+                            TrayIcon.MessageType.INFO);
+                }
+            };
+
 
             try {
                 tray.add(trayIcon);
@@ -129,5 +150,16 @@ public class RealtimeSysTray {
             //  System Tray is not supported
         }
 
+    }
+
+    public void updateTrayIcon() {
+        if (trayIcon != null) {
+            trayIcon.setImage(alertimage.getImage());
+        }
+    }
+    public void revertTrayIcon(){
+        if (trayIcon != null) {
+            trayIcon.setImage(image.getImage());
+        }
     }
 }

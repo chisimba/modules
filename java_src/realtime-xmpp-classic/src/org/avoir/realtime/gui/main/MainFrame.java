@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -82,12 +81,9 @@ import org.jivesoftware.smack.util.Base64;
 import org.avoir.realtime.gui.tips.*;
 import org.avoir.realtime.sound.AudioVideoTest;
 import org.avoir.realtime.sound.SoundMonitor;
-import snoozesoft.systray4j.CheckableMenuItem;
-import snoozesoft.systray4j.SubMenu;
 import snoozesoft.systray4j.SysTrayMenu;
 import snoozesoft.systray4j.SysTrayMenuEvent;
 import snoozesoft.systray4j.SysTrayMenuIcon;
-import snoozesoft.systray4j.SysTrayMenuItem;
 import snoozesoft.systray4j.SysTrayMenuListener;
 
 /**
@@ -144,6 +140,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         "SysTray for Java rules!",
         "brought to you by\nSnoozeSoft 2004"
     };
+    private RealtimeSysTray realtimeSysTray = new RealtimeSysTray();
     // create icons
     static final SysTrayMenuIcon[] icons = {
         // the extension can be omitted
@@ -319,7 +316,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
                 javaVersionWarningDialog.setVisible(true);
             }
         }else{
-            RealtimeSysTray.init(userListPanel);
+           realtimeSysTray.init(userListPanel);
         }
     }
 
@@ -672,6 +669,10 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         int h = getHeight();
         setSize(w + 1, h + 1);
         setSize(w - 1, h - 1);
+    }
+
+    public RealtimeSysTray getRealtimeSysTray() {
+        return realtimeSysTray;
     }
 
     /*  public void showParticipantToolbar() {
