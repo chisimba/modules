@@ -50,6 +50,7 @@ class speciestropicallivestockunit extends dbtable {
 	public function init() {
 		try {
 			parent::init('tbl_ahis_speciestropicallivestockunits');
+			$this->objUser = $this->getObject('user', 'security');
 		}
 		catch (customException $e)
 		{
@@ -67,7 +68,7 @@ class speciestropicallivestockunit extends dbtable {
 			'tlufactor' => $tlufactor,
 			'remarks' => $remarks,
 			'startdate' => $startdate,
-			'enddate' => $enddate,
+			'enddate' => $enddate,			
 			'createdon' => date('Y-m-d H:i:s',time()),
 			'createdby' => $this->objUser->userId(),
 			'modifiedon' => date('Y-m-d H:i:s',time()),
@@ -107,16 +108,5 @@ class speciestropicallivestockunit extends dbtable {
 			return true;
 			else
 			return false;
-	}
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_speciestropicallivestockunits";	     
-	return $this->getArray($sql);	
-	}
-
-	public function getRow($id){
-	
-	$sql="SELECT * FROM tbl_ahis_speciestropicallivestockunits where id='$id'";	     
-	return $this->getArray($sql);	
 	}
 }

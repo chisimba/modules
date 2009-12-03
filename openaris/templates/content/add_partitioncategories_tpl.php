@@ -50,7 +50,7 @@ $this->loadClass('textarea','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_partitioncategory','openaris');
     $objFormUri = $this->uri(array('action'=>'partitioncategory_update', 'id'=>$id));
-    $record = $this->objPartitionCategory->getRow($id);
+    $record = $this->objPartitionCategory->getRow('id',$id);
 
     $sButton = new button('partitioncategory_update', 'Update');
     $sButton->setToSubmit();
@@ -81,7 +81,7 @@ $objTable->cellspacing = 2;
 
 // partition category	
 $label = new label ('Partition Category: ', 'partitioncategory');
-$partitioncategory = new textinput('partitioncategory',$record[0]['partitioncategory']);
+$partitioncategory = new textinput('partitioncategory',$record['partitioncategory']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());
@@ -89,7 +89,7 @@ $objTable->addCell($partitioncategory->show());
 $objTable->endRow();
 
 $label = new label ('Description: ', 'description');
-$description = new textarea('description',$record[0]['description']);
+$description = new textarea('description',$record['description']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());

@@ -56,21 +56,21 @@ $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
 //control measure
-$control_measure= new textinput('controlmeasure',$controlmeasures['0']['controlmeasure']);
+$control_measure= new textinput('controlmeasure',$controlmeasures['controlmeasure']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_controlmeasure'),NULL,NULL,'right');
 $formTable->addCell($control_measure->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //abbreviation
-$abbreviation= new textinput('abbreviation',$controlmeasures['0']['abbreviation']);
+$abbreviation= new textinput('abbreviation',$controlmeasures['abbreviation']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_abbreviation'),NULL,NULL,'right');
 $formTable->addCell($abbreviation->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //description
-$description= new textarea('description',$controlmeasures['0']['description']);
+$description= new textarea('description',$controlmeasures['description']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_description'),NULL,NULL,'right');
 $formTable->addCell($description->show(),NULL,NULL,'left');

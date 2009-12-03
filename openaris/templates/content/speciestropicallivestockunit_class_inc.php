@@ -103,9 +103,4 @@ class speciestropicallivestockunit extends dbtable {
 			return false;
 			
 	} 
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_speciestropicallivestockunits";	     
-	return $this->getArray($sql);	
-	}
 }

@@ -92,13 +92,6 @@ $GLOBALS['kewl_entry_point_run']) {
 			return false;
 			
 	} 
-
-	public function getInfectionsources($id){	
-	$sql="SELECT * FROM tbl_ahis_infectionsource where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
-	}
-	
  }
 
 

@@ -56,28 +56,30 @@ $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
 //species name
-$species_name= new textinput('speciesnameid',$speciescategories['0']['speciesnameid']);
+$species_name = new dropdown('speciesnameid');
+$species_name->setSelected('id');
+$species_name->addFromDB($speciesnames,'speciesname','id');
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_speciesname'),NULL,NULL,'right');
-$formTable->addCell($species_name->show(),NULL,NULL,'left');
+$formTable->addCell($species_name->show());
 $formTable->endRow();
 
 //category
-$category = new textinput('category',$speciescategories['0']['category']);
+$category = new textinput('category',$speciescategories['category']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_category'),NULL,NULL,'right');
 $formTable->addCell($category->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //abbreviation
-$abbreviation = new textinput('abbreviation',$speciescategories['0']['abbreviation']);
+$abbreviation = new textinput('abbreviation',$speciescategories['abbreviation']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_abbreviation'),NULL,NULL,'right');
 $formTable->addCell($abbreviation->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //description
-$description= new textarea('description',$speciescategories['0']['description']);
+$description= new textarea('description',$speciescategories['description']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_description'),NULL,NULL,'right');
 $formTable->addCell($description->show(),NULL,NULL,'left');

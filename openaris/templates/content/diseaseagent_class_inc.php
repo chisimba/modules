@@ -78,11 +78,6 @@ $GLOBALS['kewl_entry_point_run']) {
 			return false;
 			
 	} 
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_diseaseagents";	     
-	return $this->getArray($sql);	
-	}
  }
  
 

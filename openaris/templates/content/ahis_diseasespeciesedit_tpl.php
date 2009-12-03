@@ -54,19 +54,24 @@ $buttonText = 'Save';
 $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
 $formTable->width = NULL;
-$disease = new textinput('diseaseid',$diseasespecies['0']['diseaseid']);
+//disease
+$disease = new dropdown('diseaseid');
+$disease->addFromDB($diseases, 'disease_name', 'id');
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_disease'),NULL,NULL,'right');
-$formTable->addCell($disease->show(),NULL,NULL,'left');
+$formTable->addCell($disease->show());
 $formTable->endRow();
 
-$species = new textinput('speciesid',$diseasespecies['0']['speciesid']);
+//species
+$species = new dropdown('speciestypeid');
+$species->addFromDB($speciestypes, 'speciestype', 'id');
+
 $formTable->startRow();
-$formTable->addCell($this->objLanguage->languageText('phrase_species'),NULL,NULL,'right');
-$formTable->addCell($species->show(),NULL,NULL,'left');
+$formTable->addCell($this->objLanguage->languageText('phrase_speciestype'),NULL,NULL,'right');
+$formTable->addCell($species->show());
 $formTable->endRow();
 
-$description= new textarea('description',$diseasespecies['0']['description']);
+$description= new textarea('description',$diseasespecies['description']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_description'),NULL,NULL,'right');
 $formTable->addCell($description->show(),NULL,NULL,'left');
@@ -103,7 +108,7 @@ if($dateStartPicker > $dateEndPicker)
 }
 
 //buttons
-$button = new button ('diseasespecies_save', 'Save');
+$button = new button ('diseasespecies_update', 'Save');
 $button->setCSS('saveButton');
 $button->setToSubmit();
 $backUri = $this->uri(array('action'=>'newdiseasespecies_admin'));

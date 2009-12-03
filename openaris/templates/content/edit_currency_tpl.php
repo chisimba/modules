@@ -54,7 +54,7 @@ $buttonText = 'Save';
 $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
 $formTable->width = NULL;
-$isocurrencycode= new textinput('isocurrencycode',$currency['0']['iso_currency_code']);
+$isocurrencycode= new textinput('isocurrencycode',$currency['iso_currency_code']);
 $label = new label ('ISO Currency Code:', 'isocurrencycode');
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -62,7 +62,7 @@ $formTable->addCell($isocurrencycode->show());
 $formTable->endRow();
 
 $label = new label ('Symbol:', 'symbol');
-$symbol= new textinput('symbol',$currency['0']['symbol']);
+$symbol= new textinput('symbol',$currency['symbol']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($symbol->show());
@@ -70,7 +70,7 @@ $formTable->endRow();
 
 
 $label = new label ('Remarks:', 'remarks');
-$remarksBox = new textarea('remarks', $currency['0']['remarks'], 4, 40);
+$remarksBox = new textarea('remarks', $currency['remarks'], 4, 40);
 
 $formTable->startRow();
 $formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;');
@@ -78,7 +78,7 @@ $formTable->addCell($remarksBox->show(),NULL, NULL, NULL, NULL, 'colspan="4"');
 $formTable->endRow();
 
 $label = new label ('Currency:', 'currency');
-$currency = new textinput('currency',$currency['0']['currency']);
+$currency = new textinput('currency',$currency['currency']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($currency->show());
@@ -109,6 +109,6 @@ $form->addToForm($btcancel->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$form->show());
-
+$objLayer->align='center';
 echo $objLayer->show();
 ?>

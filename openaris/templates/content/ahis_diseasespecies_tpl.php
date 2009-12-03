@@ -54,6 +54,7 @@ $formTable = $this->newObject('htmltable', 'htmlelements');
 
 //disease
 $disease = new dropdown('diseaseid');
+$disease->addFromDB($diseases, 'disease_name', 'id');
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_disease'),NULL,NULL,'right');
 $formTable->addCell($disease->show());
@@ -61,7 +62,7 @@ $formTable->endRow();
 
 //species
 $species = new dropdown('speciestypeid');
-$species->addFromDB($this->objSpeciesnew->getAll("ORDER BY speciestypeid"), 'speciestypeid', 'id');
+$species->addFromDB($speciestypes, 'speciestype', 'id');
 
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_speciestype'),NULL,NULL,'right');

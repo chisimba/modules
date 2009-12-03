@@ -50,7 +50,7 @@ $this->loadClass('textarea','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_speciestyps','openaris');
     $objFormUri = $this->uri(array('action'=>'speciestype_update', 'id'=>$id));
-    $record = $this->objSpeciesType->getRow($id);
+    $record = $this->objSpeciesType->getRow('id',$id);
 
     $sButton = new button('speciestype_update', 'Update');
     $sButton->setToSubmit();
@@ -80,8 +80,7 @@ $objTable->cellspacing = 2;
 
 //species type
 $label = new label ('Species Type: ', 'speciestype');
-
-$speciestype = new textinput('speciestype',$record[0]['speciestype']);
+$speciestype = new textinput('speciestype',$record['speciestype']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());
@@ -90,7 +89,7 @@ $objTable->endRow();
 
 // abbreviation	
 $label = new label ('Abbreviation: ', 'abbreviation');
-$abbreviation = new textinput('abbreviation',$record[0]['abbreviation']);
+$abbreviation = new textinput('abbreviation',$record['abbreviation']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($abbreviation->show());
@@ -98,7 +97,7 @@ $objTable->endRow();
 
 //description
 $label = new label ('Description: ', 'description');
-$description = new textarea('description',$record[0]['description']);
+$description = new textarea('description',$record['description']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());

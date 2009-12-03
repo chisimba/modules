@@ -92,18 +92,7 @@ $GLOBALS['kewl_entry_point_run']) {
 			else
 			return false;
 			
-	} 
-	public function getSpecies($id){	
-	$sql="SELECT * FROM tbl_ahis_speciesnew where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
-	}
-	public function getAll()
-	{
-	  $sql="select * from tbl_ahis_speciesnew";
-	  return $this->getArray($sql);
-	}
-	
+	} 	
  }
 
 

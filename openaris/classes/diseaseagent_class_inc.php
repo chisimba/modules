@@ -83,7 +83,7 @@ $GLOBALS['kewl_entry_point_run']) {
 		
 			$sql = $this->update('id',$id,array(
 			'diseaseid' => $disease,
-			'agent' => $agent,
+			'agentid' => $agent,
 			'description' => $description,
 			'startdate'=>$startdate,
 			'enddate'=>$enddate,
@@ -104,16 +104,6 @@ $GLOBALS['kewl_entry_point_run']) {
 			return true;
 			else
 			return false;
-	}
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_diseaseagents";    
-	return $this->getArray($sql);	
-	}
-	public function getRow($id){
-	
-	$sql="SELECT * FROM tbl_ahis_diseaseagents where id='$id'";	     
-	return $this->getArray($sql);	
 	}
  }
  

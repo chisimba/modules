@@ -73,10 +73,5 @@ class country extends dbtable
 			return false;
 			
 	} 
-   public function getCountry($id){	
-	$sql="SELECT * FROM tbl_ahis_countries where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
-	}
 }
 ?>

@@ -90,10 +90,5 @@ class farmingsystem extends dbtable {
 			else
 			return false;
 			
-	} 
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_farmingsystems";	     
-	return $this->getArray($sql);	
 	}
 }

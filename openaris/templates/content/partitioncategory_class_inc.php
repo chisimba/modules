@@ -74,11 +74,6 @@ $GLOBALS['kewl_entry_point_run']) {
 			else
 			return false;
 			
-	} 
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_partition_categories";	     
-	return $this->getArray($sql);	
 	}
  }
  

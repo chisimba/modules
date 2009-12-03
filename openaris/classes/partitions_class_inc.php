@@ -108,30 +108,6 @@ $GLOBALS['kewl_entry_point_run']) {
 			else
 			return false;
 	}
-	public function getRow($id){
-	
-	$sql="SELECT * FROM tbl_ahis_partitions where id='$id'";	     
-	return $this->getArray($sql);	
-	}
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_partitions";	     
-	return $this->getArray($sql);	
-	}
-	
-	public function getLevelPartitions($level,$searchStr,$parent){
-	if($level!=01)
-	  $level="0".$level;
-	if(empty($parent))
-	{
-	  $sql="SELECT tbl_ahis_partitions.* FROM tbl_ahis_partitions,tbl_ahis_partition_levels WHERE tbl_ahis_partitions.partitionname LIKE '%$searchStr%' and tbl_ahis_partitions.partitionlevelid=tbl_ahis_partition_levels.id and tbl_ahis_partition_levels.partitionlevel='$level' and tbl_ahis_partitions.parentpartition is Null ORDER BY tbl_ahis_partitions.partitionname";
-	}
-	else
-	{
-	  $sql="SELECT tbl_ahis_partitions.* FROM tbl_ahis_partitions,tbl_ahis_partition_levels WHERE tbl_ahis_partitions.partitionname LIKE '%$searchStr%' and tbl_ahis_partitions.partitionlevelid=tbl_ahis_partition_levels.id and tbl_ahis_partition_levels.partitionlevel='$level' and tbl_ahis_partitions.parentpartition='$parent' ORDER BY tbl_ahis_partitions.partitionname";
-	}//echo $sql;
-	return $this->getArray($sql);	
-	}
  }
  
 

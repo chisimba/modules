@@ -67,7 +67,7 @@ $level=$this->getParam('level');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_partitions','openaris');
     $objFormUri = $this->uri(array('action'=>'partition_update', 'id'=>$id,'level'=>$level,'parent'=>$parent));
-    $record = $this->objPartition->getRow($id);
+    $record = $this->objPartition->getRow('id',$id);
 
 
     $sButton = new button('partition_update', 'Update');
@@ -100,7 +100,7 @@ $objTable->cellspacing = 2;
 $label = new label ('Partition Level: ', 'partitionlevel');
 
 $partitionlevel = new dropdown('partitionlevel');
-$partitionlevel->addOption('','','');
+$partitionlevel->setSelected('id');
 $partitionlevel->addFromDB($partitionlevels, 'partitionlevel', 'id');
 
 $objTable->startRow();
@@ -110,7 +110,7 @@ $objTable->endRow();
 
 // partition code	
 $label = new label ('Partition Code: ', 'partitioncode');
-$partitioncode = new textinput('partitioncode',$record[0]['partitioncode']);
+$partitioncode = new textinput('partitioncode',$record['partitioncode']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($partitioncode->show());
@@ -118,7 +118,7 @@ $objTable->endRow();
 
 //partition name
 $label = new label ('Partition Name: ', 'partitionname');
-$partitionname = new textinput('partitionname',$record[0]['partitionname']);
+$partitionname = new textinput('partitionname',$record['partitionname']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());
@@ -129,8 +129,9 @@ $objTable->endRow();
 $label = new label ('Parent Partition: ', 'parentpartition');
 $parentpartition = new dropdown('parentpartition');
 //$parentpartition->addFromDB($partitions, 'partitioncode', 'id');
-$dt=$this->objPartition->getRow($parent);
-$parentpartition->addOption($parent,$dt[0][partitionname],$parent);
+$dt=$this->objPartition->getRow('parentpartition',$parent);
+$parentpartition->addOption($parent,$dt['partitionname'],$parent);
+$parentpartition->setSelected($dt['partitionname']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($parentpartition->show());

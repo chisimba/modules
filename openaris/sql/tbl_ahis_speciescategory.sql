@@ -15,7 +15,7 @@ $fields = array(
 		'length' => 64,
         'notnull' => TRUE
 		),
-	'category' => array(
+	'speciescategory' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE

@@ -102,16 +102,6 @@ $GLOBALS['kewl_entry_point_run']) {
 			else
 			return false;
 	}
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_occurencecodes";	     
-	return $this->getArray($sql);	
-	}
-	public function getRow($id){
-	
-	$sql="SELECT * FROM tbl_ahis_occurencecodes where id='$id'";	     
-	return $this->getArray($sql);	
-	}
  }
  
 

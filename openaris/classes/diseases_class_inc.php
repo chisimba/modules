@@ -68,11 +68,6 @@ class diseases extends dbtable
 			else
 			return false;
 			
-	} 
-   public function getDiseases($id){	
-	$sql="SELECT * FROM tbl_ahis_diseases where id='$id' ";
-	$data=$this->getArray($sql);
-	return $data;	
 	}
 }
 ?>

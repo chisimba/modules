@@ -159,7 +159,7 @@ class openaris extends controller {
 			$this->objExchangeratedetail = $this->getObject('exchangeratedetails');
 			$this->objInfectionsources = $this->getObject('infectionsources');
 			$this->objControlmeasures = $this->getObject('controlmeasures');
-			$this->objSpeciesnew = $this->getObject('speciesnew');
+			$this->objSpeciesNew = $this->getObject('speciesnew');
 			$this->objSpeciescategories = $this->getObject('speciescategories');
 			$this->objAgents = $this->getObject('agents');
 			$this->objDiseasespecies = $this->getObject('diseasespecies');
@@ -1164,7 +1164,7 @@ class openaris extends controller {
 			case 'exchangerates_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('exchangerate',$this->objExchangerate->getExchangerate($id));
+			 $this->setVar('exchangerate',$this->objExchangerate->getRow('id',$id));
 			 return 'ahis_exchangerateedit_tpl.php';
 		
 			case 'exchangerates_update':
@@ -1267,7 +1267,7 @@ class openaris extends controller {
 			case 'infectionsources_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('infectionsources',$this->objInfectionsources->getInfectionsources($id));
+			 $this->setVar('infectionsources',$this->objInfectionsources->getRow('id',$id));
 			 return 'ahis_infectionsourcesedit_tpl.php';
 		
 			case 'infectionsources_update':
@@ -1315,7 +1315,7 @@ class openaris extends controller {
 			case 'controlmeasures_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('controlmeasures',$this->objControlmeasures->getControlmeasure($id));
+			 $this->setVar('controlmeasures',$this->objControlmeasures->getRow('id',$id));
 			 return 'ahis_controlmeasuresedit_tpl.php';
 		
 			case 'controlmeasures_update':
@@ -1353,7 +1353,7 @@ class openaris extends controller {
                 $this->setVar('allowEdit', TRUE);
                 $this->setVar('editAction', 'newspecies_edit');
                 $this->setVar('success', $this->getParam('success'));
-                return 'admin_overviews_tpl.php';
+                return 'genview_tpl.php';
 				
 			case 'newspecies_delete':
 				$id = $this->getParam('id');
@@ -1364,7 +1364,7 @@ class openaris extends controller {
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
 			 $this->setVar('speciestypes',$this->objSpeciesType->getAll());
-			 $this->setVar('speciesnew',$this->objSpeciesnew->getSpecies($id));
+			 $this->setVar('speciesnew',$this->objSpeciesnew->getRow('id',$id));
 			 return 'ahis_speciesedit_tpl.php';
 		
 			case 'newspecies_update':
@@ -1412,7 +1412,8 @@ class openaris extends controller {
 			case 'speciescategory_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('speciescategories',$this->objSpeciescategories->getSpeciescategory($id));
+			 $this->setVar('speciescategories',$this->objSpeciescategories->getRow('id',$id));
+			  $this->setVar('speciesnames',$this->objSpeciesNew->getAll());
 			 return 'ahis_speciescategoriesedit_tpl.php';
 		
 			case 'speciescategory_update':
@@ -1509,13 +1510,15 @@ class openaris extends controller {
 			case 'newdiseasespecies_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('diseasespecies',$this->objDiseasespecies->getDiseasespecies($id));
+				$this->setVar('diseases', $this->objDiseases->getAll());
+				$this->setVar('speciestypes', $this->objSpeciesType->getAll());
+			 $this->setVar('diseasespecies',$this->objDiseasespecies->getRow('id',$id));
 			 return 'ahis_diseasespeciesedit_tpl.php';
 		
 			case 'newdiseasespecies_update':
 				$id = $this->getParam('id');
 				$disease = $this->getParam('diseaseid');
-				$species = $this->getParam('speciesid');
+				$species = $this->getParam('speciestypeid');
 				$description = $this->getParam('description');
 				$dateStartPicker = $this->getSession('ps_calendardate',date('Y-m-d'));
 				$dateEndPicker = $this->getSession('ps_calendardate',date('Y-m-d'));
@@ -2573,12 +2576,12 @@ class openaris extends controller {
 		case 'edit_language':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('language',$this->objLanguages->getLanguage($id));
+			 $this->setVar('language',$this->objLanguages->getRow('id',$id));
 			 return 'edit_language_tpl.php';
 		 case 'unit_of_area_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('unitOfArea',$this->objUnitOfArea->getUnitOfArea($id));
+			 $this->setVar('unitOfArea',$this->objUnitOfArea->getRow('id',$id));
 			 return 'edit_unitofarea_tpl.php';
 		case 'edit_country':
 			 $id= $this->getParam('id');
@@ -2586,22 +2589,22 @@ class openaris extends controller {
 			  $this->setVar('languages',$this->objLanguages->getAll("ORDER BY language"));
 			 $this->setVar('currencies',$this->objCurrency->getAll());	
 			$this->setVar('unitsOfArea',$this->objUnitOfArea->getAll());
-			 $this->setVar('country',$this->objCountry->getCountry($id));
+			 $this->setVar('country',$this->objCountry->getRow('id',$id));
 			return 'edit_country_tpl.php';
 		case 'currency_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('currency',$this->objCurrency->getCurrency($id));
+			 $this->setVar('currency',$this->objCurrency->getRow('id',$id));
 			 return 'edit_currency_tpl.php';
 		 case 'locality_type_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('localitytype',$this->objLocalityType->getLocality($id));
+			 $this->setVar('localitytype',$this->objLocalityType->getRow('id',$id));
 			 return 'edit_locality_type_tpl.php';
 		case 'diagnostic_method_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('diagmethod',$this->objDiagnosticMethod->getMethod($id));
+			 $this->setVar('diagmethod',$this->objDiagnosticMethod->getRow('id',$id));
 			 return 'edit_diagnostic_method_tpl.php';
 		case 'other_control_measures_edit':
 			 $id= $this->getParam('id');
@@ -2613,21 +2616,21 @@ class openaris extends controller {
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
 			   $this->setVar('languages',$this->objLanguages->getAll("ORDER BY language"));
-			 $this->setVar('species',$this->objSpeciesNames->getSpecies($id));
+			 $this->setVar('species',$this->objSpeciesNames->getRow('id',$id));
 			  $this->setVar('allspecies',$this->objSpeciesnew->getAll());
 			 return 'edit_species_names_tpl.php';
 			 
 		case 'diseases_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			 $this->setVar('disease',$this->objDiseases->getDiseases($id));
+			 $this->setVar('disease',$this->objDiseases->getRow('id',$id));
 			 return 'edit_diseases_tpl.php';
 			 
 		case 'species_economic_function_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
-			  $this->setVar('languages',$this->objLanguages->getAll("ORDER BY language"));
-			 $this->setVar('economic',$this->objSpeciesEconomicFunction->getFunction($id));
+			  $this->setVar('species',$this->objSpeciesNames->getAll());
+			 $this->setVar('economic',$this->objSpeciesEconomicFunction->getRow('id',$id));
 			 return 'edit_species_economic_function_tpl.php';
 					
 		case 'currency_update':
@@ -3125,7 +3128,9 @@ class openaris extends controller {
 				
 			case 'diseasespecies_add':
 			    $this->setVar('id', $this->getParam('id'));
-			     
+			     $diseases = $this->objDiseases->getAll();
+				$this->setVar('diseases', $diseases);
+				$this->setVar('speciestypes', $this->objSpeciesType->getAll());
 				return 'ahis_diseasespecies_tpl.php';
 				
 			
@@ -3153,7 +3158,6 @@ class openaris extends controller {
 			case 'diseasespecies_save':
 				return $this->saveDiseaseSpeciesData();
 				
-			//from
 			//partition actions
 			case 'partition_add':
 				$this->setVar('output', $this->getParam('output'));
@@ -3169,9 +3173,9 @@ class openaris extends controller {
 				if(empty($level))
 				  $level='01';
 				$parent=$this->getParam('parent');
-				$dt = $this->objPartition->getRow($parent);
-				$this->setVar('parentname',$dt[0]['partitionname']);
-				$data = $this->objPartition->getLevelPartitions($level,$searchStr,$parent);
+				$dt = $this->objPartition->getRow('parentpartition',$parent);
+				$this->setVar('parentname',$dt['partitionname']);
+				$data = $this->objPartition->getAll();//getLevelPartitions($level,$searchStr,$parent);
 				$this->setVar('addLinkUri', $this->uri(array('action'=>'partition_add','parent'=>$parent,'level'=>$level)));
 				$this->setVar('addLinkText', "Add Partition");
 				$this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_partitions','openaris'));
@@ -3218,7 +3222,7 @@ class openaris extends controller {
 				return $this->savePartitionLevel();
 			case 'partitionlevel_view':
 				$searchStr = $this->getParam('searchStr');
-				$data = $this->objPartitionLevel->getAll("WHERE partitioncategory LIKE '%$searchStr%' ORDER BY partitioncategory");
+				$data = $this->objPartitionLevel->getAll("WHERE partitionlevel LIKE '%$searchStr%' ORDER BY partitionlevel");
 				$this->setVar('addLinkUri', $this->uri(array('action'=>'partitionlevel_add')));
 				$this->setVar('addLinkText', "Add Partition Level");
 				$this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_partitionlevel','openaris'));
@@ -3297,7 +3301,7 @@ class openaris extends controller {
 				return $this->saveOccurenceCode();
 			case 'occurencecode_view':
 				$searchStr = $this->getParam('searchStr');
-				$data = $this->objOccurenceCode->getAll("WHERE occurencecodes LIKE '%$searchStr%' ORDER BY occurencecode");
+				$data = $this->objOccurenceCode->getAll("WHERE occurencecode LIKE '%$searchStr%' ORDER BY occurencecode");
 				$this->setVar('addLinkUri', $this->uri(array('action'=>'occurencecode_add')));
 				$this->setVar('addLinkText', "Add Occurence Code");
 				$this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_occurencecods','openaris'));
@@ -3385,7 +3389,7 @@ class openaris extends controller {
 		
 			case 'speciestype_view':
 				$searchStr = $this->getParam('searchStr');
-				$data = $this->objSpeciesType->getAll("WHERE speciestypes LIKE '%$searchStr%' ORDER BY speciestype");
+				$data = $this->objSpeciesType->getAll("WHERE speciestype LIKE '%$searchStr%' ORDER BY speciestype");
 				$this->setVar('addLinkUri', $this->uri(array('action'=>'speciestype_add')));
 				$this->setVar('addLinkText', "Add Species Type");
 				$this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_speciestyps','openaris'));
@@ -3428,7 +3432,7 @@ class openaris extends controller {
 			      return 'add_speciesagegroups_tpl.php';
 			case 'speciesagegroup_view':
 					$searchStr = $this->getParam('searchStr');
-					$data = $this->objSpeciesAgeGroup->getAll("WHERE speciesagegroups LIKE '%$searchStr%' ORDER BY agegroup");
+					$data = $this->objSpeciesAgeGroup->getAll("WHERE agegroup LIKE '%$searchStr%' ORDER BY agegroup");
 					$this->setVar('addLinkUri', $this->uri(array('action'=>'speciesagegroup_add')));
 					$this->setVar('addLinkText', "Add Species Age Group");
 					$this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_speciesagegrps','openaris'));
@@ -3469,14 +3473,14 @@ class openaris extends controller {
 			//species tropical livestock unit actions
 			case 'speciestropicallivestockunit_add':
 				  $this->setVar('id', $this->getParam('id'));
-				  $this->setVar('species',$this->objSpeciesnew->getAll());
+				  $this->setVar('species',$this->objSpeciesNew->getAll());
 				  $this->setVar('speciescategories',$this->objSpeciescategories->getAll());
 				  return 'add_speciestropicallivestockunit_tpl.php';
 			case 'speciestropicallivestockunit_save':
-				return $this->saveSpeciesType();
+				return $this->saveSpeciesTropicalLivestockUnit();
 			case 'speciestropicallivestockunit_view':
 				$searchStr = $this->getParam('searchStr');
-				$data = $this->objSpeciesTropicalLivestockUnit->getAll("WHERE speciestropicallivestockunits LIKE '%$searchStr%' ORDER BY agegroup");
+				$data = $this->objSpeciesTropicalLivestockUnit->getAll("WHERE tlufactor LIKE '%$searchStr%'");
 				$this->setVar('addLinkUri', $this->uri(array('action'=>'speciestropicallivestockunit_add')));
 				$this->setVar('addLinkText', "Add Species Tropical Livestock Unit");
 				$this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_speciestropicallivestockunit','openaris'));
@@ -3513,7 +3517,7 @@ class openaris extends controller {
 			//disease agent actions
 			case 'diseaseagent_add':
 				$this->setVar('id', $this->getParam('id'));
-				$diseases = $this->objDisease->getAll();
+				$diseases = $this->objDiseases->getAll();
 				$this->setVar('diseases', $diseases);	
 				$agents = $this->objAgents->getAll();
 				$this->setVar('agents', $agents);				
@@ -4268,7 +4272,7 @@ class openaris extends controller {
 	private function saveDiseaseSpeciesData()
 	{
 		$disease = $this->getParam('diseaseid');
-		$species = $this->getParam('speciesid');
+		$species = $this->getParam('speciestypeid');
 		$description = $this->getParam('description');
 		$dateStartPicker = $this->getParam('startdate');
 		$dateEndPicker = $this->getParam('enddate');
@@ -4542,7 +4546,7 @@ class openaris extends controller {
 		$startdate = $this->getParam('startdate');
 		$enddate = $this->getParam('enddate');
 				 
-		$data = $this->objSpeciesAgeGroup->addSpeciesAgeGroup($speciesname,$speciescategory,$tlufactor,$remarks,$startdate,$enddate);  
+		$data = $this->objSpeciesTropicalLivestockUnit->addSpeciesTropicalLivestockUnit($speciesname,$speciescategory,$tlufactor,$remarks,$startdate,$enddate);  
 			
 		$this->setVar('speciestropicallivestockunits', $this->objSpeciesTropicalLivestockUnit->getAll());
 		return $this->nextAction('speciestropicallivestockunit_view');
@@ -4559,7 +4563,7 @@ class openaris extends controller {
 		$startdate = $this->getParam('startdate');
 		$enddate = $this->getParam('enddate');
 				 
-		$data = $this->objSpeciesAgeGroup->editSpeciesAgeGroup($id,$speciesname,$speciescategory,$tlufactor,$remarks,$startdate,$enddate);  
+		$data = $this->objSpeciesTropicalLivestockUnit->editSpeciesTropicalLivestockUnit($id,$speciesname,$speciescategory,$tlufactor,$remarks,$startdate,$enddate);  
 			
 		$this->setVar('speciestropicallivestockunits', $this->objSpeciesTropicalLivestockUnit->getAll());
 		return $this->nextAction('speciestropicallivestockunit_view');

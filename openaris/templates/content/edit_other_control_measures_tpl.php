@@ -89,6 +89,25 @@ $formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;');
 $formTable->addCell($remarksBox->show(),NULL, NULL, NULL, NULL, 'colspan="4"');
 $formTable->endRow();
 
+$dateStartPicker = $this->newObject('datepicker', 'htmlelements');
+$dateStartPicker->name = 'startdate';
+
+$label_start_date = new label('Start date: ','startdate');
+$formTable->startRow();
+$formTable->addCell($label_start_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateStartPicker->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+//end date
+$dateEndPicker = $this->newObject('datepicker', 'htmlelements');
+$dateEndPicker->name = 'enddate';
+
+$label_end_date = new label('End date: ','enddate');
+$formTable->startRow();
+$formTable->addCell($label_end_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateEndPicker->show(),NULL,NULL,'left');
+$formTable->endRow();
+
 // Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction,'id'=>$id)));
 $form->addToForm($formTable->show());

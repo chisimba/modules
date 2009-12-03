@@ -59,7 +59,7 @@ $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
 
-$code= new textinput('code',$disease['0']['disease_code']);
+$code= new textinput('code',$disease['disease_code']);
 //$isolanguagecode->extra='readonly';
 $label = new label ('Disease Code:', 'code');
 $formTable->startRow();
@@ -67,7 +67,7 @@ $formTable->addCell($label->show());
 $formTable->addCell($code->show());
 $formTable->endRow();
 
-$name= new textinput('name',$disease['0']['disease_name']);
+$name= new textinput('name',$disease['disease_name']);
 //$isolanguagecode->extra='readonly';
 $label = new label ('Disease Name:', 'name');
 $formTable->startRow();
@@ -75,7 +75,7 @@ $formTable->addCell($label->show());
 $formTable->addCell($name->show());
 $formTable->endRow();
 
-$shortname= new textinput('shortname',$disease['0']['short_name']);
+$shortname= new textinput('shortname',$disease['short_name']);
 //$isolanguagecode->extra='readonly';
 $label = new label ('Short Name:', 'shortname');
 $formTable->startRow();
@@ -85,7 +85,7 @@ $formTable->endRow();
 
 
 $label = new label ('Reference Code:', 'ref_code');
-$ref_code = new textinput('ref_code',$disease['0']['reference_code']);
+$ref_code = new textinput('ref_code',$disease['reference_code']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($ref_code->show());
@@ -93,7 +93,7 @@ $formTable->endRow();
 
 
 $label = new label ('Description:', 'desc');
-$remarksBox = new textarea('desc', $disease['0']['description'], 4, 40);
+$remarksBox = new textarea('desc', $disease['description'], 4, 40);
 
 $formTable->startRow();
 $formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;');

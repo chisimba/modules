@@ -91,15 +91,7 @@ $GLOBALS['kewl_entry_point_run']) {
 			else
 			return false;
 			
-	} 
-	
-	public function getDiseasespecies($id){	
-	$sql="SELECT * FROM tbl_ahis_diseasespecies where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
-	}
-	
-	
+	} 	
  }
 
 

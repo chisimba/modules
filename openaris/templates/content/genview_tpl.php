@@ -168,12 +168,12 @@ if (!empty($data)) {
 	{$str="fieldName$i";	
 	  if($str=="diseaseid")
 {
-$diseases=$this->objDiseases->getDiseases($datum[$$str]);
+$diseases=$this->objDiseases->getRow('id',$datum[$$str]);
 	    $dat=$diseases['disease_name'];
 }
 elseif($str=="agentid")
 {
-$diseases=$this->objAgents->getAgent($datum[$$str]);
+$diseases=$this->objAgents->getRow('id',$datum[$$str]);
 	    $dat=$diseases['agent'];
 }
 else

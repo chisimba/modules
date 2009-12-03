@@ -57,7 +57,7 @@ $formTable->width = NULL;
 
 // species type
 $species_type = new dropdown('speciestypeid');
-$species_type->addOption('','','');
+$species_type->setSelected('speciestype');
 $species_type->addFromDB($speciestypes,'speciestype','id');
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_speciestype'),NULL,NULL,'right');
@@ -65,21 +65,21 @@ $formTable->addCell($species_type->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //species code
-$species_code= new textinput('speciescode',$speciesnew['0']['speciescode']);
+$species_code= new textinput('speciescode',$speciesnew['speciescode']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_speciescode'),NULL,NULL,'right');
 $formTable->addCell($species_code->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //species name
-$species_name = new textinput('speciesname',$speciesnew['0']['speciesname']);
+$species_name = new textinput('speciesname',$speciesnew['speciesname']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_speciesname'),NULL,NULL,'right');
 $formTable->addCell($species_name->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //description
-$description= new textarea('description',$speciesnew['0']['description']);
+$description= new textarea('description',$speciesnew['description']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_description'),NULL,NULL,'right');
 $formTable->addCell($description->show(),NULL,NULL,'left');

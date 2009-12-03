@@ -160,7 +160,7 @@ if (!empty($data)) {
         $objTable->startRow($class);
 	$objTable->addCell($rowindex);
 	$objTable->addCell($datum["partitioncode"]);
-	$dt=$this->objPartitionLevel->getRow($datum["partitionlevelid"]);
+	$dt=$this->objPartitionLevel->getRow('partitionlevel',$datum["partitionlevelid"]);
 	$level=$dt[0]["partitionlevel"]+01;
 	$parent=$datum["id"];
 	$slink = new link($this->uri(array('action' => 'partition_view','level'=>$level,'parent'=>$parent)));

@@ -92,18 +92,6 @@ $GLOBALS['kewl_entry_point_run']) {
 			
 	} 
 	
-	public function getExchangerate($id){	
-	$sql="SELECT * FROM tbl_ahis_exchangerate where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
-	}
-	
-	public function getUser($id){	
-	$sql="SELECT * FROM tbl_users where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data[0]['name'];	
-	}
-	
 	public function getExchangerates($level,$searchStr,$parent){
 	if($level!=01)
 	  $level="0".$level;

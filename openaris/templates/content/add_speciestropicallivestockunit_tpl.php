@@ -50,7 +50,7 @@ $this->loadClass('textarea','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_speciestropicallivestockunit','openaris');
     $objFormUri = $this->uri(array('action'=>'speciestropicallivestockunit_update', 'id'=>$id));
-    $record = $this->objSpeciesTropicalLivestockUnit->getRow($id);
+    $record = $this->objSpeciesTropicalLivestockUnit->getRow('id',$id);
 
     $sButton = new button('speciestropicallivestockunit_update', 'Update');
     $sButton->setToSubmit();
@@ -82,7 +82,7 @@ $objTable->cellspacing = 2;
 $label = new label ('Species Name: ', 'speciesname');
 
 $speciesname = new dropdown('speciesname');
-$speciesname->addOption('','','');
+$speciesname->setSelected('id');
 $speciesname->addFromDB($species, 'speciesname', 'id');
 
 $objTable->startRow();
@@ -94,7 +94,7 @@ $objTable->endRow();
 $label = new label ('Species Category: ', 'speciescategory');
 
 $speciescategory = new dropdown('speciescategory');
-$speciescategory->addOption('','','');
+$speciesname->setSelected('id');
 $speciescategory->addFromDB($speciescategories, 'speciescategory', 'id');
 
 $objTable->startRow();
@@ -104,7 +104,7 @@ $objTable->endRow();
 
 // TLU factor	
 $label = new label ('TLU Factor: ', 'tlufactor');
-$tlufactor = new textinput('tlufactor',$record[0]['tlufactor']);
+$tlufactor = new textinput('tlufactor',$record['tlufactor']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($tlufactor->show());
@@ -112,7 +112,7 @@ $objTable->endRow();
 
 //Remarks
 $label = new label ('Remarks: ', 'remarks');
-$remarks = new textarea('remarks',$record[0]['remarks']);
+$remarks = new textarea('remarks',$record['remarks']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());

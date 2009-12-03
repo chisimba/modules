@@ -59,7 +59,7 @@ $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
 
-$diagnostic_method= new textinput('diagnostic_method',$diagmethod['0']['diagnostic_method']);
+$diagnostic_method= new textinput('diagnostic_method',$diagmethod['diagnostic_method']);
 $label = new label ('Diagnostic Method:', 'diagnostic_method');
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -68,18 +68,37 @@ $formTable->endRow();
 
 	
 $label = new label ('Abbreviation:', 'abbrev');
-$abbrev=new textinput('abbrev',$diagmethod['0']['abbreviation']);
+$abbrev=new textinput('abbrev',$diagmethod['abbreviation']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($abbrev->show());
 $formTable->endRow();
 
 $label = new label ('Description:', 'desc');
-$remarksBox = new textarea('desc', $diagmethod['0']['description'], 4, 40);
+$remarksBox = new textarea('desc', $diagmethod['description'], 4, 40);
 
 $formTable->startRow();
 $formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;');
 $formTable->addCell($remarksBox->show(),NULL, NULL, NULL, NULL, 'colspan="4"');
+$formTable->endRow();
+
+$dateStartPicker = $this->newObject('datepicker', 'htmlelements');
+$dateStartPicker->name = 'startdate';
+
+$label_start_date = new label('Start date: ','startdate');
+$formTable->startRow();
+$formTable->addCell($label_start_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateStartPicker->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+//end date
+$dateEndPicker = $this->newObject('datepicker', 'htmlelements');
+$dateEndPicker->name = 'enddate';
+
+$label_end_date = new label('End date: ','enddate');
+$formTable->startRow();
+$formTable->addCell($label_end_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateEndPicker->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // Create Form

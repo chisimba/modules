@@ -66,11 +66,6 @@ class species_economic_function extends dbtable
 			else
 			return false;
 			
-	} 
-   public function getFunction($id){	
-	$sql="SELECT * FROM tbl_ahis_species_economic_function where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
 	}
 }
 ?>

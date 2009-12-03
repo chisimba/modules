@@ -53,7 +53,7 @@ $formAction = 'species_names_update';
 $buttonText = 'Save';
 
 $speciesDrop = new dropdown('species');
-$speciesDrop->addOption('','select');
+$speciesDrop->setSelected('speciesname');
 $speciesDrop->addFromDB($allspecies, 'speciesname', 'speciesname');
 
 
@@ -69,7 +69,7 @@ $formTable->addCell($speciesDrop->show());
 $formTable->endRow();
 
 
-$common_name= new textinput('common_name',$species['0']['common_name']);
+$common_name= new textinput('common_name',$species['common_name']);
 $label = new label ('Common Name:', 'common_name');
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -78,18 +78,37 @@ $formTable->endRow();
 
 
 $label = new label ('Abbreviation:', 'abbrev');
-$abbrev=new textinput('abbrev',$species['0']['abbreviation']);
+$abbrev=new textinput('abbrev',$species['abbreviation']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($abbrev->show());
 $formTable->endRow();
 
 $label = new label ('Description:', 'desc');
-$remarksBox = new textarea('desc', $species['0']['description'], 4, 40);
+$remarksBox = new textarea('desc', $species['description'], 4, 40);
 
 $formTable->startRow();
 $formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;');
 $formTable->addCell($remarksBox->show(),NULL, NULL, NULL, NULL, 'colspan="4"');
+$formTable->endRow();
+
+$dateStartPicker = $this->newObject('datepicker', 'htmlelements');
+$dateStartPicker->name = 'startdate';
+
+$label_start_date = new label('Start date: ','startdate');
+$formTable->startRow();
+$formTable->addCell($label_start_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateStartPicker->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+//end date
+$dateEndPicker = $this->newObject('datepicker', 'htmlelements');
+$dateEndPicker->name = 'enddate';
+
+$label_end_date = new label('End date: ','enddate');
+$formTable->startRow();
+$formTable->addCell($label_end_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateEndPicker->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // Create Form

@@ -54,21 +54,21 @@ $buttonText = 'Save';
 $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
 $formTable->width = NULL;
-$possible_source= new textinput('possiblesource',$infectionsources['0']['possiblesource']);
+$possible_source= new textinput('possiblesource',$infectionsources['possiblesource']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_possiblesource'),NULL,NULL,'right');
 $formTable->addCell($possible_source->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //abbreviation
-$abbreviation= new textinput('abbreviation',$infectionsources['0']['abbreviation']);
+$abbreviation= new textinput('abbreviation',$infectionsources['abbreviation']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_abbreviation'),NULL,NULL,'right');
 $formTable->addCell($abbreviation->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //description
-$description= new textarea('description',$infectionsources['0']['description']);
+$description= new textarea('description',$infectionsources['description']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_description'),NULL,NULL,'right');
 $formTable->addCell($description->show(),NULL,NULL,'left');

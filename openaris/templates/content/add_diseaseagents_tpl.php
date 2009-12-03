@@ -49,7 +49,7 @@ $this->loadClass('layer', 'htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_diseaseagnts','openaris');
     $objFormUri = $this->uri(array('action'=>'diseaseagent_update', 'id'=>$id));
-    $record = $this->objDiseaseAgent->getRow($id);
+    $record = $this->objDiseaseAgent->getRow('id',$id);
 
     $sButton = new button('diseaseagent_update', 'Update');
     $sButton->setToSubmit();
@@ -81,7 +81,6 @@ $objTable->cellspacing = 2;
 //DiseaseId
 $label = new label ('Disease: ', 'disease');
 $disease = new dropdown('disease');
-$disease->addOption('','','');
 $disease->addFromDB($diseases, 'disease_name', 'id');
 $objTable->startRow();
 $objTable->addCell($label->show());
@@ -91,7 +90,6 @@ $objTable->endRow();
 //Agent
 $label = new label ('Agent: ', 'agent');
 $agent = new dropdown('agent');
-$agent->addOption('','','');
 $agent->addFromDB($agents,'agent','id');
 $objTable->startRow();
 $objTable->addCell($label->show());
@@ -100,7 +98,7 @@ $objTable->endRow();
 
 //Description
 $label = new label ('Description: ', 'description');
-$desc = new textarea('description',$record[0]['description']);
+$desc = new textarea('description',$record['description']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($desc->show());

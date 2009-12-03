@@ -91,12 +91,6 @@ $GLOBALS['kewl_entry_point_run']) {
 			else
 			return false;
 	} 
-	
-	public function getControlmeasure($id){	
-	$sql="SELECT * FROM tbl_ahis_controlmeasure where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
-	}
  }
 
 

@@ -56,14 +56,14 @@ $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
 //default currency
-$default_currency = new textinput('defaultcurrencyid',$exchangerate['0']['defaultcurrencyid']);
+$default_currency = new textinput('defaultcurrencyid',$exchangerate['defaultcurrencyid']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_defaultcurrency'),NULL,NULL,'right');
 $formTable->addCell($default_currency->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //exchange currency
-$exchange_currency= new textinput('exchangecurrencyid',$exchangerate['0']['exchangecurrencyid']);
+$exchange_currency= new textinput('exchangecurrencyid',$exchangerate['exchangecurrencyid']);
 $formTable->startRow();
 $formTable->addCell($this->objLanguage->languageText('phrase_exchangecurrency'));
 $formTable->addCell($exchange_currency->show());

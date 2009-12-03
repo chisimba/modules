@@ -99,16 +99,7 @@ $GLOBALS['kewl_entry_point_run']) {
 			else
 			return false;
 	}
-	public function getAll(){
 	
-	$sql="SELECT * FROM tbl_ahis_partition_categories";	     
-	return $this->getArray($sql);	
-	}
-	public function getRow($id){
-	
-	$sql="SELECT * FROM tbl_ahis_partition_categories where id='$id'";	     
-	return $this->getArray($sql);	
-	}
  }
  
 

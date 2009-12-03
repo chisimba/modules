@@ -50,7 +50,7 @@ $this->loadClass('textarea','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_occurencecods','openaris');
     $objFormUri = $this->uri(array('action'=>'occurencecode_update', 'id'=>$id));
-    $record = $this->objOccurenceCode->getRow($id);
+    $record = $this->objOccurenceCode->getRow('id',$id);
 
     $sButton = new button('occurencecode_update', 'Update');
     $sButton->setToSubmit();
@@ -80,7 +80,7 @@ $objTable->cellspacing = 2;
 
 //Occurence Code
 $label = new label ('Occurence Code: ', 'occurencecode');
-$occurencecode = new textinput('occurencecode',$record[0]['occurencecode']);
+$occurencecode = new textinput('occurencecode',$record['occurencecode']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($occurencecode->show());
@@ -88,7 +88,7 @@ $objTable->endRow();
 
 //Abbreviation
 $label = new label ('Abbreviation: ', 'abbreviation');
-$abbreviation = new textinput('abbreviation',$record[0]['abbreviation']);
+$abbreviation = new textinput('abbreviation',$record['abbreviation']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($abbreviation->show());
@@ -96,7 +96,7 @@ $objTable->endRow();
 
 //Description
 $label = new label ('Description: ', 'description');
-$description = new textarea('description',$record[0]['description']);
+$description = new textarea('description',$record['description']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($description->show());

@@ -65,7 +65,7 @@ $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
 
-$isocountrycode= new textinput('isocountrycode',$country['0']['iso_country_code']);
+$isocountrycode= new textinput('isocountrycode',$country['iso_country_code']);
 //$isolanguagecode->extra='readonly';
 $label = new label ('ISO Country Code:', 'isocountrycode');
 $formTable->startRow();
@@ -73,7 +73,7 @@ $formTable->addCell($label->show());
 $formTable->addCell($isocountrycode->show());
 $formTable->endRow();
 
-$commoname= new textinput('commoname',$country['0']['common_name']);
+$commoname= new textinput('commoname',$country['common_name']);
 //$isolanguagecode->extra='readonly';
 $label = new label ('Common Name:', 'commoname');
 $formTable->startRow();
@@ -81,7 +81,7 @@ $formTable->addCell($label->show());
 $formTable->addCell($commoname->show());
 $formTable->endRow();
 
-$officialname= new textinput('officialname',$country['0']['official_name']);
+$officialname= new textinput('officialname',$country['official_name']);
 //$isolanguagecode->extra='readonly';
 $label = new label ('Official Name:', 'officialname');
 $formTable->startRow();
@@ -103,42 +103,42 @@ $formTable->endRow();
 
 
 $label = new label ('Country IDD:', 'countryidd');
-$countryidd = new textinput('countryidd',$country['0']['country_idd']);
+$countryidd = new textinput('countryidd',$country['country_idd']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($countryidd->show());
 $formTable->endRow();
 
 $label = new label ('North Latitude:', 'northlat');
-$northlat = new textinput('northlat',$country['0']['north_latitude']);
+$northlat = new textinput('northlat',$country['north_latitude']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($northlat->show());
 $formTable->endRow();
 
 $label = new label ('South Latitude:', 'southlat');
-$southlat = new textinput('southlat',$country['0']['south_latitude']);
+$southlat = new textinput('southlat',$country['south_latitude']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($southlat->show());
 $formTable->endRow();
 
 $label = new label ('West Longitude:', 'westlong');
-$westlong = new textinput('westlong',$country['0']['west_longitude']);
+$westlong = new textinput('westlong',$country['west_longitude']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($westlong->show());
 $formTable->endRow();
 
 $label = new label ('East Longitude:', 'eastlong');
-$eastlong = new textinput('eastlong',$country['0']['east_longitude']);
+$eastlong = new textinput('eastlong',$country['east_longitude']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($eastlong->show());
 $formTable->endRow();
 
 $label = new label ('Area:', 'area');
-$area = new textinput('area',$country['0']['area']);
+$area = new textinput('area',$country['area']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($area->show());
@@ -182,6 +182,6 @@ $form->addToForm($btcancel->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$form->show());
-
+$objLayer->align='center';
 echo $objLayer->show();
 ?>

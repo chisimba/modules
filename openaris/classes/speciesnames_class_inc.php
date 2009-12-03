@@ -66,11 +66,6 @@ class speciesnames extends dbtable
 			else
 			return false;
 			
-	} 
-   public function getSpecies($id){	
-	$sql="SELECT * FROM tbl_ahis_species_names where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
 	}
 }
 ?>

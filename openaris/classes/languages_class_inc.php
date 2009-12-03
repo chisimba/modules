@@ -64,12 +64,6 @@ class languages extends dbtable
 			else
 			return false;
 			
-	} 
-  public function getLanguage($id){	
-	$sql="SELECT * FROM tbl_ahis_languages where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
 	}
-
 }
 ?>

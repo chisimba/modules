@@ -66,11 +66,5 @@ class diagnostic_method extends dbtable
 			return false;
 			
 	} 
-  
-   public function getMethod($id){	
-	$sql="SELECT * FROM tbl_ahis_diagnostic_methods where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
-	}
 }
 ?>

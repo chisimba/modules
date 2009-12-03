@@ -50,7 +50,7 @@ $this->loadClass('textarea','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_partitionlevel','openaris');
     $objFormUri = $this->uri(array('action'=>'partitionlevel_update', 'id'=>$id));
-    $record = $this->objPartitionLevel->getRow($id);
+    $record = $this->objPartitionLevel->getRow('id',$id);
 
     $sButton = new button('partitionlevel_update', 'Update');
     $sButton->setToSubmit();
@@ -80,7 +80,7 @@ $objTable->cellspacing = 2;
 
 //partition level
 $label = new label ('Partition Level: ', 'partitionlevel');
-$partitionlevel = new textinput('partitionlevel',$record[0]['partitionlevel']);
+$partitionlevel = new textinput('partitionlevel',$record['partitionlevel']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($partitionlevel->show());
@@ -89,7 +89,7 @@ $objTable->endRow();
 // partition category	
 $label = new label ('Partition Category: ', 'partitioncategory');
 $partitioncategory = new dropdown('partitioncategory');
-$partitioncategory->addOption('','','');
+$partitioncategory->setSelected($record['partitioncategory']);
 $partitioncategory->addFromDB($partitioncategories, 'partitioncategory', 'id'); 
 
 $objTable->startRow();
@@ -99,7 +99,7 @@ $objTable->endRow();
 
 //Description
 $label = new label ('Description: ', 'description');
-$description = new textarea('description',$record[0]['description']);
+$description = new textarea('description',$record['description']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());

@@ -66,12 +66,6 @@ class currency extends dbtable
 			else
 			return false;
 			
-	} 
-   public function getCurrency($id){	
-	$sql="SELECT * FROM tbl_ahis_currencies where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
 	}
-
 }
 ?>

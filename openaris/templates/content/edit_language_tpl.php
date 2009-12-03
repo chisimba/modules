@@ -56,7 +56,7 @@ $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
-$isolanguagecode= new textinput('isolanguagecode',$language['0']['iso_language_code']);
+$isolanguagecode= new textinput('isolanguagecode',$language['iso_language_code']);
 $label = new label ('ISO Language Code:', 'isolanguagecode');
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -65,14 +65,31 @@ $formTable->endRow();
 
 
 $label = new label ('Language:', 'language');
-$language = new textinput('language',$language['0']['language']);
+$language = new textinput('language',$language['language']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($language->show());
 $formTable->endRow();
 
 
+$dateStartPicker = $this->newObject('datepicker', 'htmlelements');
+$dateStartPicker->name = 'startdate';
 
+$label_start_date = new label('Start date: ','startdate');
+$formTable->startRow();
+$formTable->addCell($label_start_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateStartPicker->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+//end date
+$dateEndPicker = $this->newObject('datepicker', 'htmlelements');
+$dateEndPicker->name = 'enddate';
+
+$label_end_date = new label('End date: ','enddate');
+$formTable->startRow();
+$formTable->addCell($label_end_date->show(),NULL,NULL,'left');
+$formTable->addCell($dateEndPicker->show(),NULL,NULL,'left');
+$formTable->endRow();
 
 // Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction,'id'=>$id)));
@@ -93,6 +110,6 @@ $form->addToForm($btcancel->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$form->show());
-
+$objLayer->align='center';
 echo $objLayer->show();
 ?>

@@ -50,7 +50,7 @@ $this->loadClass('textarea','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_speciesagegrps','openaris');
     $objFormUri = $this->uri(array('action'=>'speciesagegroup_update', 'id'=>$id));
-    $record = $this->objSpeciesAgeGroup->getRow($id);
+    $record = $this->objSpeciesAgeGroup->getRow('id',$id);
 
     $sButton = new button('speciesagegroup_update', 'Update');
     $sButton->setToSubmit();
@@ -80,7 +80,7 @@ $objTable->cellspacing = 2;
 
 //species age group
 $label = new label ('Species Age Group: ', 'agegroup');
-$agegroup = new textinput('agegroup',$record[0]['agegroup']);
+$agegroup = new textinput('agegroup',$record['agegroup']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());
@@ -91,7 +91,7 @@ $objTable->endRow();
 $label = new label ('Species: ', 'speciesid');
 
 $speciesid = new dropdown('speciesid');
-$speciesid->addOption('','','');
+$speciesid->setSelected('id');
 $speciesid->addFromDB($species, 'speciesname', 'id');
 
 $objTable->startRow();
@@ -101,7 +101,7 @@ $objTable->endRow();
 
 // abbreviation	
 $label = new label ('Abbreviation: ', 'abbreviation');
-$abbreviation = new textinput('abbreviation',$record[0]['abbreviation']);
+$abbreviation = new textinput('abbreviation',$record['abbreviation']);
 $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($abbreviation->show());
@@ -109,7 +109,7 @@ $objTable->endRow();
 
 //description
 $label = new label ('Description: ', 'description');
-$description = new textarea('description',$record[0]['description']);
+$description = new textarea('description',$record['description']);
 
 $objTable->startRow();
 $objTable->addCell($label->show());
@@ -118,7 +118,7 @@ $objTable->endRow();
 
 //lower limit
 $label = new label ('Lower Limit: ', 'lowerlimit');
-$lowerlimit = new textinput('lowerlimit',$record[0]['lowerlimit']);
+$lowerlimit = new textinput('lowerlimit',$record['lowerlimit']);
 $blabel= new label('(Months)','(Months)');
 
 $objTable->startRow();
@@ -128,7 +128,7 @@ $objTable->endRow();
 
 //upper limit
 $label = new label ('Upper Limit: ', 'upperlimit');
-$upperlimit = new textinput('upperlimit',$record[0]['upperlimit']);
+$upperlimit = new textinput('upperlimit',$record['upperlimit']);
 $blabel= new label('(Months)','(Months)');
 
 $objTable->startRow();

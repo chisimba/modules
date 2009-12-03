@@ -121,14 +121,4 @@ class speciestype extends dbtable {
 			else
 			return false;
 	}
-	public function getAll(){
-	
-	$sql="SELECT * FROM tbl_ahis_speciestypes";	     
-	return $this->getArray($sql);	
-	}
-	public function getRow($id){
-	
-	$sql="SELECT * FROM tbl_ahis_speciestypes where id='$id'";	     
-	return $this->getArray($sql);	
-	}
 }

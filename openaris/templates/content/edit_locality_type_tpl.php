@@ -59,7 +59,7 @@ $formTable->cellspacing = 2;
 $formTable->width = NULL;
 
 
-$locality_type= new textinput('locality_type',$localitytype['0']['locality_type']);
+$locality_type= new textinput('locality_type',$localitytype['locality_type']);
 $label = new label ('Locality Type:', 'locality_type');
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -68,14 +68,14 @@ $formTable->endRow();
 
 	
 $label = new label ('Abbreviation:', 'abbrev');
-$abbrev=new textinput('abbrev',$localitytype['0']['abbreviation']);
+$abbrev=new textinput('abbrev',$localitytype['abbreviation']);
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($abbrev->show());
 $formTable->endRow();
 
 $label = new label ('Description:', 'desc');
-$remarksBox = new textarea('desc', $localitytype['0']['description'], 4, 40);
+$remarksBox = new textarea('desc', $localitytype['description'], 4, 40);
 
 $formTable->startRow();
 $formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;');

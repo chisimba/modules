@@ -64,12 +64,6 @@ class unitofarea extends dbtable
 			else
 			return false;
 			
-	} 
-  public function getUnitOfArea($id){	
-	$sql="SELECT * FROM tbl_ahis_unitofarea where id='$id' "; 
-	$data=$this->getArray($sql);
-	return $data;	
 	}
-
 }
 ?>
