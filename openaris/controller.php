@@ -296,7 +296,7 @@ class openaris extends controller {
 					case "init_09":
                         return $this->nextAction('animaldeworming_add');
                     case "init_10":
-                        return $this->nextAction('animalvaccine_add');
+                        return $this->nextAction('vacinventory');
 					case "init_05":
 					default:
                         return $this->nextAction('active_surveillance');
@@ -2525,7 +2525,60 @@ class openaris extends controller {
                 	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
 					$this->setVar('control', $this->objControl ->getAll("ORDER BY name"));
 					return 'animaldeworming_tpl.php';
-			
+			case 'vacinventory':
+			      $this->setVar('repdate',$this->getSession('ps_calendardate',date('Y-m-d')));
+			      $this->setVar('ibardate',$this->getSession('ps_calendardate',date('Y-m-d')));
+			      $this->setVar('officerId', $this->getSession('ps_officerId'));
+			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));	
+			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));			      		      
+			      $this->setVar('userList', $this->objAhisUser->getList());
+			      $data = $this->objCountry->getAll("ORDER BY official_name");
+			      $ptype = $this->objPartitionCategory->getAll("ORDER BY partitioncategory");
+			      $plevel = $this->objPartitionLevel->getAll("ORDER BY partitionlevel");
+			      $pname = $this->objPartition->getAll();
+			      $this->setVar('arraycountry',$data);
+			      $this->setVar('arraypartitiontype',$ptype);
+			      $this->setVar('arraypartitionlevel',$plevel);
+			      $this->setVar('arraypartition',$pname);
+			      $this->setVar('dateyear',$this->getSession('ps_calendardate',date('Y-m-d')));
+			      //$this->setSession('ps_calendardate', $this->getParam('calendardate'));
+			      return 'vacinventory_tpl.php';
+			case 'vacinventory_add':
+			      $this->setSession('ps_officerId',$this->getParam('repoff'));
+			      $this->setSession('ps_dataoff',$this->getParam('dataoff'));		
+			      $this->setSession('ps_vetoff',$this->getParam('vetoff'));	
+			      $this->setSession('ps_repdate',$this->getParam('repdate'));	
+			      $this->setSession('ps_ibardate',$this->getParam('ibardate'));
+			      $this->setSession('ps_country',$this->getParam('country'));	
+			      $this->setSession('ps_month',$this->getParam('month'));	
+			      $this->setSession('ps_year',$this->getParam('year'));	
+			      $this->setSession('ps_admin1',$this->getParam('admin1'));
+				   $this->setSession('ps_admin2',$this->getParam('admin2'));
+			      $this->setSession('ps_admin3',$this->getParam('admin3'));
+			      $this->setSession('ps_loctype',$this->getParam('loctype'));	
+			      $this->setSession('ps_locname',$this->getParam('locname'));	
+			      $this->setSession('ps_lattitude',$this->getParam('lattitude'));
+			      $this->setSession('ps_longitude',$this->getParam('longitude'));			      			      		      		      				   		      			      			      		      			      		      			      		      			      			      			      		      			      		      			      	      
+				   return $this->nextAction('vacinventory2');
+
+			      
+			case 'vacinventory2':
+			   	$ddata = $this->objDiseases->getAll("ORDER BY disease_name");
+               $this->setVar('repdate',$this->getSession('ps_calendardate',date('Y-m-d')));
+			      $this->setVar('ibardate',$this->getSession('ps_calendardate',date('Y-m-d')));			   	
+	     			$this->setVar('arraydisease',$ddata);
+	     			$this->setVar('repoff', $this->getSession('ps_officerId'));
+	     			$this->setVar('repdate', $this->getSession('ps_repdate'));
+	     			$this->setVar('ibardate', $this->getSession('ps_ibardate'));
+	            $this->setVar('vetoff', $this->getSession('ps_vetoff'));
+	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   			  				     				     			
+			      $this->setVar('userList', $this->objAhisUser->getList());
+			      return 'vacinventory2_tpl.php';
+			      
+	     case 'vacinventory2_add':
+	     		   $vetoff= $this->getSession('ps_vetoff');
+	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   
+			      return 'vacinventory2_add_tpl.php';		      
 			case 'animalvaccine_add':
 					$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('dist',$this->objAnimalmovement->getDistrict($id));
