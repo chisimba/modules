@@ -40,125 +40,249 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('phrase_passive')." ".$this->objLanguage->languageText('word_main');
+$objHeading->str = $this->objLanguage->languageText('mod_ahis_diseasereport', 'openaris')." ".$this->objLanguage->languageText('word_main');
 $objHeading->type = 2;
 
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('textarea','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
-$this->loadClass('layer','htmlelements');
+$this->loadClass('radio','htmlelements');
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_next'));
 $sButton->setCSS('nextButton');
 $sButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'select_officer'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$bButton->setCSS('backButton');
+$bButton->setCSS('cancelButton');
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSurveillance()");
 $cButton->setCSS('clearButton');
 
-$geo2Drop = new dropdown('geo2Id');
-$geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
-$geo2Drop->setSelected($geo2Id);
-$geo2Drop->cssClass = 'passive_surveillance';
-$oStatusDrop = new dropdown('oStatusId');
-$oStatusDrop->addFromDB($arrayOutbreakStatus, 'name', 'id');
-$oStatusDrop->setSelected($oStatusId);
-$oStatusDrop->cssClass = 'passive_surveillance';
-$qualityDrop = new dropdown('qualityId');
-$qualityDrop->addFromDB($arrayQuality, 'name', 'id');
-$qualityDrop->setSelected($qualityId);
-$qualityDrop->cssClass = 'passive_surveillance';
+$countryDrop = new dropdown('countryId');
+$countryDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$countryDrop->addFromDB($arrayCountry, 'common_name', 'id');
+$countryDrop->setSelected($countryId);
+$countryDrop->cssClass = 'passive_surveillance';
+
+$admin1Drop = new dropdown('admin1Id');
+$admin1Drop->addFromDB($arrayAdmin1, 'name', 'id');
+$admin1Drop->cssClass = 'passive_surveillance';
+
+$admin2Drop = new dropdown('admin2Id');
+$admin2Drop->addFromDB($arrayAdmin2, 'name', 'id');
+$admin2Drop->cssClass = 'passive_surveillance';
+
+$admin3Drop = new dropdown('admin3Id');
+$admin3Drop->addFromDB($arrayAdmin3, 'name', 'id');
+$admin3Drop->cssClass = 'passive_surveillance';
+
+$monthDrop = new dropdown('month');
+for ($i=1; $i<13; $i++) {
+    $monthDrop->addOption($i, date('F', mktime(0,0,0,$i)));
+}
+$monthDrop->setSelected(date('m'));
+$monthDrop->cssClass = 'passive_surveillance';
+
+$yearBox = new textinput('year', date('Y'), 'text', 4);
 
 $preparedDate = $this->newObject('datepicker','htmlelements');
 $preparedDate->setName('datePrepared');
 $preparedDate->setDefaultDate($datePrepared);
-$IBARDate = $this->newObject('datepicker','htmlelements');
-$IBARDate->setName('dateIBAR');
-$IBARDate->setDefaultDate($dateIBAR);
-$receivedDate = $this->newObject('datepicker','htmlelements');
-$receivedDate->setName('dateReceived');
-$receivedDate->setDefaultDate($dateReceived);
-$isReportedDate = $this->newObject('datepicker','htmlelements');
-$isReportedDate->setName('dateIsReported');
-$isReportedDate->setDefaultDate($dateIsReported);
+$IBARSubDate = $this->newObject('datepicker','htmlelements');
+$IBARSubDate->setName('dateIBARSub');
+$IBARSubDate->setDefaultDate($dateIBARSub);
+$IBARRecDate = $this->newObject('datepicker','htmlelements');
+$IBARRecDate->setName('dateIBARRec');
+$IBARRecDate->setDefaultDate($dateIBARRec);
 
-$refNoBox = new textinput('refNo', $refNo, 'text', 30);
-$monthBox = new textinput('month', date('F', strtotime($calendardate)),'text', 23);
-$yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 4);
-$yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
-//if (!$this->objUser->isAdmin()) {
-    $geo2Drop->extra = 'disabled';
-//}
-$remarksBox = new textarea('remarks', $remarks, 4, 29);
-
-$objTable = $this->getObject('htmltable','htmlelements');
+$objTable = $this->newObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
-//$objTable->cssClass = 'min50';
 
 $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').":$tab");
-$objTable->addCell($refNoBox->show(),NULL,'center');
+$objTable->addCell($this->objLanguage->languageText('word_country').": ");
+$objTable->addCell($countryDrop->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_monthandyear', 'openaris').":$tab");
-$objTable->addCell($monthBox->show()."&nbsp; ".$yearBox->show(),NULL,'center');
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_admin', 'openaris')." 1: ");
+$objTable->addCell($admin1Drop->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').":$tab");
-$objTable->addCell($geo2Drop->show(),NULL,'center');
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_outbreak').":$tab");
-$objTable->addCell($oStatusDrop->show(),NULL,'center');
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_admin', 'openaris')." 2: ");
+$objTable->addCell($admin2Drop->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_dateprepared', 'openaris').":$tab");
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_admin', 'openaris')." 3: ");
+$objTable->addCell($admin3Drop->show(),NULL,'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_month').": ");
+$objTable->addCell($monthDrop->show(),NULL,'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_year').": ");
+$objTable->addCell($yearBox->show(),NULL,'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_dateprepared', 'openaris').": ");
 $objTable->addCell($preparedDate->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate', 'openaris').":$tab");
-$objTable->addCell($IBARDate->show(),NULL,'center');
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibarsubdate', 'openaris').": ");
+$objTable->addCell($IBARSubDate->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_dvsdate', 'openaris').":$tab");
-$objTable->addCell($receivedDate->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_isreporteddate', 'openaris').":$tab");
-$objTable->addCell($isReportedDate->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_quality').":$tab");
-$objTable->addCell($qualityDrop->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_remarks').":$tab");
-$objTable->addCell($remarksBox->show(),NULL,'center');
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibarrecdate', 'openaris').": ");
+$objTable->addCell($IBARRecDate->show(),NULL,'center');
 $objTable->endRow();
 
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->addCell("&nbsp;".$bButton->show().$tab.$cButton->show().$tab.$sButton->show());
-$objTable->endRow();
+$reportOfficerDrop = new dropdown('reportOfficerId');
+$reportOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$reportOfficerDrop->addFromDB($arrayOfficer, 'fullname', 'id');
+$reportOfficerDrop->setSelected($reportOfficerId);
+$reportOfficerDrop->cssClass = 'passive_surveillance';
+$reportOfficerFaxBox = new textinput('reportOfficerFax', $reportOfficerFax, 'text');
+$reportOfficerFaxBox->setCss('passive_surveillance');
+$reportOfficerTelBox = new textinput('reportOfficerTel', $reportOfficerTel, 'text');
+$reportOfficerTelBox->setCss('passive_surveillance');
+$reportOfficerEmailBox = new textinput('reportOfficerEmail', $reportOfficerEmail, 'text');
+$reportOfficerEmailBox->setCss('passive_surveillance');
+$reportOfficerFaxBox->extra =
+    $reportOfficerTelBox->extra =
+    $reportOfficerEmailBox->extra = 'disabled';
+
+$dataEntryOfficerDrop = new dropdown('dataEntryOfficerId');
+$dataEntryOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$dataEntryOfficerDrop->addFromDB($arrayOfficer, 'fullname', 'id');
+$dataEntryOfficerDrop->setSelected($dataEntryOfficerId);
+$dataEntryOfficerDrop->cssClass = 'passive_surveillance';
+$dataEntryOfficerFaxBox = new textinput('dataEntryOfficerFax', $dataEntryOfficerFax, 'text');
+$dataEntryOfficerFaxBox->setCss('passive_surveillance');
+$dataEntryOfficerTelBox = new textinput('dataEntryOfficerTel', $dataEntryOfficerTel, 'text');
+$dataEntryOfficerTelBox->setCss('passive_surveillance');
+$dataEntryOfficerEmailBox = new textinput('dataEntryOfficerEmail', $dataEntryOfficerEmail, 'text');
+$dataEntryOfficerEmailBox->setCss('passive_surveillance');
+$dataEntryOfficerFaxBox->extra =
+    $dataEntryOfficerTelBox->extra =
+    $dataEntryOfficerEmailBox->extra = 'disabled';
+
+$valOfficerDrop = new dropdown('valOfficerId');
+$valOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$valOfficerDrop->addFromDB($arrayOfficer, 'fullname', 'id');
+$valOfficerDrop->setSelected($valOfficerId);
+$valOfficerDrop->cssClass = 'passive_surveillance';
+$valOfficerFaxBox = new textinput('valOfficerFax', $valOfficerFax, 'text');
+$valOfficerFaxBox->setCss('passive_surveillance');
+$valOfficerTelBox = new textinput('valOfficerTel', $valOfficerTel, 'text');
+$valOfficerTelBox->setCss('passive_surveillance');
+$valOfficerEmailBox = new textinput('valOfficerEmail', $valOfficerEmail, 'text');
+$valOfficerEmailBox->setCss('passive_surveillance');
+$valOfficerFaxBox->extra =
+    $valOfficerTelBox->extra =
+    $valOfficerEmailBox->extra = 'disabled';
+
+$objOfficerTable = $this->newObject('htmltable','htmlelements');
+$objOfficerTable->cellspacing = 2;
+$objOfficerTable->width = NULL;
+$objOfficerTable->startRow();
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer', 'openaris').": ");
+$objOfficerTable->addCell($reportOfficerDrop->show(),NULL,'center');
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_fax', 'openaris').": ");
+$objOfficerTable->addCell($reportOfficerFaxBox->show(),NULL,'center');
+$objOfficerTable->endRow();
+$objOfficerTable->startRow();
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_phone', 'openaris').": ");
+$objOfficerTable->addCell($reportOfficerTelBox->show(),NULL,'center');
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_email', 'openaris').": ");
+$objOfficerTable->addCell($reportOfficerEmailBox->show(),NULL,'center');
+$objOfficerTable->endRow();
+$objOfficerTable->startRow();
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_dataofficer', 'openaris').": ");
+$objOfficerTable->addCell($dataEntryOfficerDrop->show(),NULL,'center');
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_fax', 'openaris').": ");
+$objOfficerTable->addCell($dataEntryOfficerFaxBox->show(),NULL,'center');
+$objOfficerTable->endRow();
+$objOfficerTable->startRow();
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_phone', 'openaris').": ");
+$objOfficerTable->addCell($dataEntryOfficerTelBox->show(),NULL,'center');
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_email', 'openaris').": ");
+$objOfficerTable->addCell($dataEntryOfficerEmailBox->show(),NULL,'center');
+$objOfficerTable->endRow();
+$objOfficerTable->startRow();
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_valofficer', 'openaris').": ");
+$objOfficerTable->addCell($valOfficerDrop->show(),NULL,'center');
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_fax', 'openaris').": ");
+$objOfficerTable->addCell($valOfficerFaxBox->show(),NULL,'center');
+$objOfficerTable->endRow();
+$objOfficerTable->startRow();
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_phone', 'openaris').": ");
+$objOfficerTable->addCell($valOfficerTelBox->show(),NULL,'center');
+$objOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_word_email', 'openaris').": ");
+$objOfficerTable->addCell($valOfficerEmailBox->show(),NULL,'center');
+$objOfficerTable->endRow();
+
+$officerSet = $this->newObject('fieldset', 'htmlelements');
+$officerSet->addContent($objOfficerTable->show());
+$officerSet->setLegend($this->objLanguage->languageText('mod_ahis_officerinfo', 'openaris'));
+
+$outbreakRadio = new radio('outbreak');
+$outbreakRadio->addOption('1', $this->objLanguage->languageText('word_yes')." ");
+$outbreakRadio->addOption('0', $this->objLanguage->languageText('word_no'));
+$outbreakRadio->setSelected('0');
+
+$validatedRadio = new radio('validated');
+$validatedRadio->addOption('1', $this->objLanguage->languageText('word_yes')." ");
+$validatedRadio->addOption('0', $this->objLanguage->languageText('word_no'));
+$validatedRadio->setSelected('0');
+
+$commentBox = new textarea('comment', $comment, 4, 42);
+
+$radioTable = $this->newObject('htmltable', 'htmlelements');
+$radioTable->cellspacing = 2;
+$radioTable->width = NULL;
+$radioTable->startRow();
+$radioTable->addCell($this->objLanguage->languageText('mod_ahis_outbreaktoreport', 'openaris')."&nbsp ");
+$radioTable->addCell($outbreakRadio->show());
+$radioTable->endRow();
+$radioTable->startRow();
+$radioTable->addCell($this->objLanguage->languageText('mod_ahis_validated', 'openaris')." ");
+$radioTable->addCell($validatedRadio->show());
+$radioTable->endRow();
+$radioTable->startRow();
+$radioTable->addCell($this->objLanguage->languageText('word_comments')." ");
+$radioTable->addCell($commentBox->show());
+$radioTable->endRow();
+
+$objTopTable = $this->newObject('htmltable','htmlelements');
+$objTopTable->cellspacing = 2;
+$objTopTable->width = NULL;
+$objTopTable->startRow();
+$objTopTable->addCell($objTable->show(), NULL, 'top', NULL, 'layout');
+$objTopTable->addCell($officerSet->show().$radioTable->show(), NULL, 'top', NULL, 'layout');
+$objTopTable->endRow();
+
+$objButtonTable = $this->newObject('htmltable','htmlelements');
+$objButtonTable->cellspacing = 2;
+$objButtonTable->width = '99%';
+$objButtonTable->startRow();
+$objButtonTable->addCell($bButton->show(), NULL, 'top', 'center');
+$objButtonTable->addCell($sButton->show(), NULL, 'top', 'center');
+$objButtonTable->endRow();
+
+$content = $objTopTable->show()."<hr />".$objButtonTable->show();
 
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_outbreak')));
-$objForm->addToForm($objTable->show());
+$objForm->addToForm($content);
 $objForm->addRule('datePrepared', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'datenotfuture');
 $objForm->addRule('dateIBAR', $this->objLanguage->languageText('mod_ahis_valdateibar', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('datePrepared','dateIBAR'), $this->objLanguage->languageText('mod_ahis_valdateibarafterprepared', 'openaris'), 'datenotbefore');
 $objForm->addRule('dateReceived', $this->objLanguage->languageText('mod_ahis_valdatedvs', 'openaris'), 'datenotfuture');
 $objForm->addRule('dateIsReported', $this->objLanguage->languageText('mod_ahis_valdateisreported', 'openaris'), 'datenotfuture');
-
-//$objLayer = new layer();
-//$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
-//$objLayer->align = 'center';
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
-//echo $objLayer->show();
 echo $objHeading->show()."<br />".$objForm->show();

@@ -43,44 +43,7 @@ $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $this->objLanguage->languageText('mod_ahis_selectofficer','openaris');
 $objHeading->type = 2;
 
-$this->loadClass('textinput','htmlelements');
 $this->loadClass('dropdown','htmlelements');
-$this->loadClass('layer','htmlelements');
-
-if ($feedback) {
-    $timeout = $this->getObject('timeoutmessage', 'htmlelements');
-    $timeout->setMessage($this->objLanguage->languageText('mod_ahis_added', 'openaris'));
-    $msg = $timeout->show();
-} else {
-    $msg = '';
-}
-
-$inputOfficer = new dropdown('officerId');
-$inputOfficer->addFromDB($userList, 'name', 'userid');
-$inputOfficer->setSelected($officerId);
-$inputOfficer->cssClass = "select_officer";
-if (!$this->objUser->isAdmin()) {
-    $inputOfficer->extra = 'disabled';
-    $hiddenOfficer = new textinput('officerId', $officerId, 'hidden');
-    $inputOfficer = $inputOfficer->show().$hiddenOfficer->show();
-} else {
-    $inputOfficer = $inputOfficer->show();
-}
-
-$inputGeo2 = new dropdown('geo2Id');
-$inputGeo2->addFromDB($this->objCountry->getAll("ORDER BY common_name"), 'common_name', 'id');
-$inputGeo2->setSelected($geo2Id);
-$inputGeo2->cssClass = "select_officer";
-if (!$this->objUser->isAdmin()) {
-    $inputGeo2->extra = 'disabled';
-    $hiddenGeo2 = new textinput('geo2Id', $geo2Id, 'hidden');
-    $inputGeo2 = $inputGeo2->show().$hiddenGeo2->show();
-} else {
-    $inputGeo2 = $inputGeo2->show();
-}
-
-$inputDate = $this->getObject('datepicker','htmlelements');
-$inputDate->setDefaultDate($calendardate);
 
 $allReportTypes = $this->objReport->getAll("ORDER BY name");
 $inputType = new dropdown('reportType');
@@ -101,18 +64,6 @@ $objTable->cellspacing = 2;
 $objTable->width = NULL;
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').": $tab");
-$objTable->addCell($inputOfficer);
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": $tab");
-$objTable->addCell($inputGeo2);
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','openaris').": $tab");
-$objTable->addCell($inputDate->show());
-$objTable->endRow();
-$objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reporttype','openaris').": $tab");
 $objTable->addCell($inputType->show());
 $objTable->endRow();
@@ -124,13 +75,5 @@ $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'report_filter')));
 $objForm->addToForm($objTable->show());
-//$objForm->addRule('officer', $this->objLanguage->languageText('mod_ahis_officerrule','openaris'), 'required');
-//$objForm->addRule('district', $this->objLanguage->languageText('mod_ahis_districtrule','openaris'), 'required');
-$objForm->addRule('calendardate', $this->objLanguage->languageText('mod_ahis_valdatereport', 'openaris'), 'datenotfuture');
-
-//$objLayer = new layer();
-//$objLayer->addToStr($objHeading->show()."<hr class='openaris' />$msg".$objForm->show());
-//$objLayer->align = 'center';
-//echo $objLayer->show();
 
 echo $objHeading->show()."<br />".$objForm->show();

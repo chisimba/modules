@@ -273,23 +273,12 @@ class openaris extends controller {
 				return 'home_tpl.php';
 				
         	case 'select_officer':
-				$this->setVar('feedback', $this->getParam('feedback'));
-                $this->setVar('userList', $this->objAhisUser->getList());
-                $this->setVar('officerId', $this->getSession('ps_officerId', $this->objUser->userId()));
-                $this->setVar('geo2Id', $this->getSession('ps_geo2Id', $this->objAhisUser->getGeo2Id()));
-                $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
-                $this->setVar('reportType', $this->getSession('ps_reportType'));
+				$this->setVar('reportType', $this->getParam('reportType'));
                 return 'select_officer_tpl.php';
             
             case 'report_filter':
-                $this->setSession('ps_officerId', $this->getParam('officerId'));
-                $this->setSession('ps_geo2Id' , $this->getParam('geo2Id'));
-
-                $this->setSession('ps_calendardate', $this->getParam('calendardate'));
                 $reportType = $this->getParam('reportType');
-
-                $this->setSession('ps_reportType', $reportType);
-                switch ($reportType) {
+				switch ($reportType) {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
 					case "init_02":
@@ -308,27 +297,46 @@ class openaris extends controller {
                         return $this->nextAction('animaldeworming_add');
                     case "init_10":
                         return $this->nextAction('animalvaccine_add');
-						
 					case "init_05":
 					default:
                         return $this->nextAction('active_surveillance');
                 }
             
             case 'passive_surveillance':
-                $this->setVar('calendardate', $this->getSession('ps_calendardate',date('Y-m-d')));
-                $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
-                $this->setVar('arrayOutbreakStatus', $this->objOutbreak->getAll("ORDER BY name"));
-                $this->setVar('arrayQuality', $this->objQuality->getAll("ORDER BY name"));
+                $this->setVar('arrayCountry', $this->objCountry->getAll("ORDER BY common_name"));
+                $this->setVar('arrayAdmin1', array());
+                $this->setVar('arrayAdmin2', array());
+                $this->setVar('arrayAdmin3', array());
+                $this->setVar('arrayOfficer', array());
                 
-                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
-                $this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
-                $this->setVar('qualityId', $this->getSession('ps_qualityId'));
+                $this->setVar('countryId', $this->getSession('ps_countryId'));
+                $this->setVar('admin1Id', $this->getSession('ps_admin1Id'));
+                $this->setVar('admin2Id', $this->getSession('ps_admin2Id'));
+                $this->setVar('admin3Id', $this->getSession('ps_admin3Id'));
                 $this->setVar('datePrepared', $this->getSession('ps_datePrepared', date('Y-m-d')));
-                $this->setVar('dateIBAR', $this->getSession('ps_dateIBAR', date('Y-m-d')));
+                $this->setVar('dateIBARSub', $this->getSession('ps_dateIBARSub', date('Y-m-d')));
+                $this->setVar('dateIBARRec', $this->getSession('ps_dateIBARRec', date('Y-m-d')));
+                $this->setVar('reportOfficerId', $this->getSession('ps_reportOfficerId'));
+                $this->setVar('dataEntryOfficerId', $this->getSession('ps_reportOfficerId'));
+                $this->setVar('valOfficerId', $this->getSession('ps_reportOfficerId'));
+                
+				$this->setVar('reportOfficerFax', '');
+				$this->setVar('reportOfficerTel', '');
+				$this->setVar('reportOfficerEmail', '');
+				$this->setVar('dataEntryOfficerFax', '');
+				$this->setVar('dataEntryOfficerTel', '');
+				$this->setVar('dataEntryOfficerEmail', '');
+				$this->setVar('valOfficerFax', '');
+				$this->setVar('valOfficerTel', '');
+				$this->setVar('valOfficerEmail', '');
+				
+				$this->setVar('comment', $this->getSession('ps_comment'));
+				/*$this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
+                $this->setVar('qualityId', $this->getSession('ps_qualityId'));
                 $this->setVar('dateReceived', $this->getSession('ps_dateReceived', date('Y-m-d')));
                 $this->setVar('dateIsReported', $this->getSession('ps_dateIsReported', date('Y-m-d')));
                 $this->setVar('refNo', $this->getSession('ps_refNo', $this->objPassive->nextRefNo()));
-                $this->setVar('remarks', $this->getSession('ps_remarks'));
+                */
 
                 return "passive_surveillance_tpl.php";
             

@@ -100,7 +100,7 @@ class tabsmenu extends object
     {        
         // Add Admin Module
         if ($this->objUser->isAdmin()) {
-            $this->menuItems['admin'] = array('text'=>$this->objLanguage->languageText('category_admin', 'toolbar', 'Admin'), 'link'=>$this->uri(array('action'=>'admin'), 'openaris'));
+            $this->menuItems['admin'] = array('text'=>$this->objLanguage->languageText('mod_ahis_admin', 'openaris'), 'link'=>$this->uri(array('action'=>'admin'), 'openaris'));
         }
         
         $this->determineDefault($this->getParam('action'));
