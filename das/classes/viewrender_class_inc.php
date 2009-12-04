@@ -79,6 +79,7 @@ class viewrender extends object {
 		$this->objDbIm = $this->getObject ( 'dbim', 'im' );
         $this->objDbImPres = $this->getObject ( 'dbimpresence', 'im' );
         $this->objIcon->setIcon ( 'green_bullet' );
+        $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
         //$this->objIcon->setAlt($this->objLanguage->languageText('mod_im_available', 'im'));
         $this->activeIcon = $this->objIcon->show ();
         $this->objIcon->setIcon ( 'grey_bullet' );
@@ -463,7 +464,7 @@ class viewrender extends object {
         $blocks = $this->renderLinkList($this->objDbIm->getMessagesByActiveUser(
                                  $this->objUser->userId()));
                                  
-       // $blocks .= $this->getChatBlock();
+        $blocks .= $this->mxitDictionary();
         $blocks .= $this->advisorMassMessage();
         
         return $blocks;
@@ -578,6 +579,18 @@ class viewrender extends object {
 			";
 
 		return '<p>'.$objFB->show("Send a message to everyone that you are chatting to", $ajax).'</p>';
+	}
+	
+	public function mxitDictionary()
+	{
+		if($this->objModules->checkIfRegistered('mxitdictionary')){		
+			
+			$anchor = $this->getObject('link', 'htmlelements');
+			$anchor->href = $this->uri(null, 'mxitdictionary');				
+			$anchor->link = 'View Mxit Dictionary';
+			return $this->objFeatureBox->show('Mxit Dictionary', $anchor->show());
+		}
+		
 	}
 
 }

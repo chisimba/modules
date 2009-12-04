@@ -17,5 +17,17 @@
             </add>
         </data>
 	</update>
+	<update>
+		<table>tbl_das_messagesarchive</table>
+		<version>0.05</version>
+		<description>Added new field: session_id</description>
+		<data>
+            <add>
+                <name>session_id</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+	</update>
     
 </updates>

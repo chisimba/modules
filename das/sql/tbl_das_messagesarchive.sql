@@ -31,6 +31,10 @@ $fields = array(
         'type' => 'text',
         'length' => 60,
       ),
+    'session_id' =>array(
+        'type' => 'text',
+        'length' => 32,
+      ),
     'datesent' => array(
         'type' => 'timestamp',
         ),
