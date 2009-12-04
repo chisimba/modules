@@ -220,6 +220,9 @@ class dbimpresence extends dbTable
 		//check if das is installed
 		if($objModCat->checkIfRegistered('das'))
 		{
+			//save the session first
+			$sessionId = $this->insert(array('datesent' => $this->now()) , 'tbl_das_sessions');
+			
 			parent::init('tbl_im');
 			$messages = $this->getAll();
 			if(count($messages))
@@ -228,7 +231,7 @@ class dbimpresence extends dbTable
 				{
 					array_shift($message);
 					array_pop($message);
-					//$message['im_id'] = $message['id'];
+					$message['session_id'] = $sessionId;
 					
 				
 					$this->insert($message, 'tbl_das_messagesarchive');
