@@ -7,15 +7,6 @@
 
 var typeURL;
 
-Ext.onReady(function(){
-    Ext.QuickTips.init();
-
-    typeURL = Ext.get('typeURL').dom.value;
-    showButtons();
-    showForm();
-    showTypeForm();
-});
-
 var showButtons = function() {
     // buttons
     var p = new Ext.Panel({
@@ -28,7 +19,7 @@ var showButtons = function() {
         defaultType: 'button',
         id: 'upload-button',
         items: [{
-            text: 'Add Type',
+            text: 'Add File Type',
             scale: 'medium',
             baseCls: 'x-plain',
             cls: 'btn-panel',
@@ -40,53 +31,85 @@ var showButtons = function() {
     p.render("buttons");
 }
 
-var showForm = function() {
-    Ext.namespace('Ext.exampledata');
+var showTabs = function() {
+    //var args=showTabs.arguments;
+    var selectedTab=0; //args[0];
 
-    Ext.exampledata.states = [
-        ['odt', 'Open Office Document'],
-    ];
+    // basic tabs, first tabs contains the Course details, second tabs contains course history
+    var tabs = new Ext.TabPanel({
+        renderTo: 'tabs',
+        width:600,
+        autoHeight:true,
+        activeTab: parseInt(selectedTab),
+        frame:false,
 
-    var store = new Ext.data.ArrayStore({
-        fields: ['filetype', 'filevalue'],
-        data : Ext.exampledata.states
+        defaults:{autoHeight: true},
+        items:[
+            {contentEl:'filetype', title: 'File Type'}
+        ]
     });
-
-    var combo = new Ext.form.ComboBox({
-        store: store,
-        fieldLabel: 'Permitted Types',
-        displayField:'filevalue',
-        valueField: 'filetype',
-        typeAhead: true,
-        mode: 'local',
-        forceSelection: true,
-        triggerAction: 'all',
-        emptyText:'Select permitted type...',
-        selectOnFocus:true
-    });
-
-    var simple = new Ext.FormPanel({
-        labelWidth: 100, // label settings here cascade unless overridden
-        url:'save-form.php',
-        frame:true,
-        title: 'Configurations',
-        bodyStyle:'padding:5px 5px 0',
-        width: 500,
-        defaults: {width: 230},
-
-        items: [
-            combo
-        ],
-
-        buttons: [{
-            text: 'Save'
-        },{
-            text: 'Cancel'
-        }]
-    });
-
-    simple.render('config');
 }
+
+var showFileType = function(fileTypeData) {
+    
+    // create the data store
+    var store = new Ext.data.ArrayStore({
+        fields: [{
+            name: 'filename'
+        },{
+            name: 'filetype'
+        },
+        {
+            name: 'delete'
+        }],
+        sortInfo: {
+            field: 'filetype',
+            direction: 'ASC'
+        }
+    });
+
+    store.loadData(fileTypeData);
+
+    // create the Grid
+    var grid = new Ext.grid.GridPanel({
+        store: store,
+        columns: [{
+            id:'filename',
+            header: "File Name",
+            sortable: true,
+            dataIndex: 'filename'
+        },{
+            id:'filetype',
+            header: "File Type",
+            sortable: true,
+            dataIndex: 'filetype'
+        },{
+            header: "Delete",
+            dataIndex: 'delete'
+        }],
+        sort: 'filetype',
+        stripeRows: true,
+        autoExpandColumn: 'filename',
+        autoHeight: true,
+        width: 400
+    });
+    
+    grid.render('filetype');
+}
+
+var fileTypeAddForm = [{
+    fieldLabel: 'File Type Description',
+    name: 'filetypedesc',
+    id: 'addfiletypedesc_title',
+    allowBlank: false,
+    width: 250
+},{
+    fieldLabel: 'File Type Extension',
+    name: 'filetypeext',
+    id: 'addfiletypeext_title',
+    allowBlank: false,
+    width: 250
+}];
 
 var goAddType = function() {
     var win;
@@ -96,34 +119,25 @@ var goAddType = function() {
         labelWidth: 125,
         url: typeURL,
         frame:true,
-        title: 'Add  New File Type',
         bodyStyle:'padding:5px 5px 0',
         width: 350,
         defaults: {width: 230},
         defaultType: 'textfield',
-
-        items: [{
-                fieldLabel: 'Title',
-                name: 'title',
-                id: 'input_title',
-                allowBlank: false
-            }
-        ]
-
+        items: fileTypeAddForm
     });
 
     if(!win){
         win = new Ext.Window({
             applyTo:'addtype-win',
             layout:'fit',
-            autoWidth: true,
-            autoHeight:true,
+            width: 500,
+            height: 200,
             closeAction:'hide',
             plain: true,
             items: myForm,
 
             buttons: [{
-                text: 'Save',
+                text: 'Add',
                 handler: function(){
                     if (myForm.url)
                         myForm.getForm().getEl().dom.action = myForm.url;
@@ -139,26 +153,4 @@ var goAddType = function() {
         });
     }
     win.show(this);
-}
-
-var showTypeForm = function() {
-    var simple = new Ext.FormPanel({
-        labelWidth: 100, // label settings here cascade unless overridden
-        url:'typeURL',
-        frame:true,
-        title: 'Configurations',
-        bodyStyle:'padding:5px 5px 0',
-        width: 500,
-        defaults: {width: 230},
-
-        items: [
-            combo
-        ],
-
-        buttons: [{
-            text: 'Save'
-        },{
-            text: 'Cancel'
-        }]
-    });
 }

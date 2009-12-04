@@ -46,10 +46,23 @@ class upload extends object {
     public function init() {
         //Instantiate the language object
         $this->objLanguage =  $this->getObject('language', 'language');
-        
-        $this->permittedTypes = array("txt", "xls", "doc", "pdf", "mp3", "ppt", "odp", "pps", "css", "odt");
+        $this->objPermittedTypes = $this->getObject('dbpermittedtypes');
+        $this->permittedTypes = $this->getTypes();
         //Set the default overwrite
         $this->overWrite = FALSE;
+    }
+
+    function getTypes() {
+        $types = array();
+        $data = $this->objPermittedTypes->getFileExtensions();
+        $count = 1;
+        foreach($data as $data) {
+            $tmp = array($count=>$data['ext']);
+            $types = $types + $tmp;
+            $count++;
+        }
+
+        return $types;
     }
 
     function doUpload()

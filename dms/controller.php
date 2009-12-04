@@ -42,7 +42,10 @@ class dms extends controller {
 
         //get the util object
         $this->objUtils = $this->getObject('userutils');
+        // user object
         $this->objUser = $this->getObject('user', 'security');
+        //file type info object
+        $this->objPermitted = $this->getObject('dbpermittedtypes');
     }
 
     /**
@@ -156,7 +159,13 @@ class dms extends controller {
 
     public function __savefiletype() {
         // go save stuff
-        echo "hello world";
-        //return $this->nextAction('admin');
+        $this->objPermitted->saveFileTypes($this->getParam('filetypedesc'),$this->getParam('filetypeext'));
+        return $this->nextAction('admin');
+    }
+
+    public function __deletefiletype() {
+        $id = $this->getParam('id');
+        $this->objPermitted->deleteFileType($id);
+        return $this->nextAction('admin');
     }
 }

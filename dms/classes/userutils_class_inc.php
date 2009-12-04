@@ -15,6 +15,7 @@ class userutils extends object {
         $this->loadClass('link', 'htmlelements');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUploadTable = $this->getObject('dbfileuploads');
+        $this->objPermittedTypes = $this->getObject('dbpermittedtypes');
     }
 
     public function showPageHeading($page=null) {
@@ -107,30 +108,16 @@ class userutils extends object {
         $JSONstr = "[";
         foreach($distinctFT as $data) {
             $docs = $this->objUploadTable->getDocs($data['filetype']);
+
+            // get the file type description from the permittedtypes table
+            $fileDesc = $this->objPermittedTypes->getFileDesc($data['filetype']);
+
             $numRows = count($txtDocs);
             $JSONstr .= "{";
             
             $numRows = count($docs);
             $JSONstr .= "
-    filename:";
-            if(strcmp($data['filetype'], "txt") == 0) {
-                $JSONstr .= "'Plain Text Documents',";
-            }
-            else if(strcmp($data['filetype'], "pdf") == 0) {
-                $JSONstr .= "'PDF Documents',";
-            }
-            else if(strcmp($data['filetype'], "doc") == 0) {
-                $JSONstr .= "'Microsoft Word Documents',";
-            }
-            else if(strcmp($data['filetype'], "mp3") == 0) {
-                $JSONstr .= "'Music Files',";
-            }
-            else if(strcmp($data['filetype'], "odt") == 0) {
-                $JSONstr .= "'OpenOffice Word Documents',";
-            }
-            else {
-                $JSONstr .= "'',";
-            }
+    filename:'".$fileDesc."',";
     $JSONstr .= "
     duration:'',
     uiProvider:'col',
