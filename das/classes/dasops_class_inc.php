@@ -144,6 +144,8 @@ class dasops extends object {
 		return '<p>'.$objFB->show("Send a message to this session's subscribers", $ajax).'</p>';
 	}
 	
+	
+	
     private function massmessageform($editor = FALSE) {
         try {
             $this->loadClass ( 'form', 'htmlelements' );

@@ -84,7 +84,7 @@ class viewrender extends object {
         $this->objIcon->setIcon ( 'grey_bullet' );
         $this->inactiveIcon = $this->objIcon->show ();
 		$this->objWashout = $this->getObject ( 'washout', 'utilities' );
-		 $this->objAilas = $this->getObject('dbalias', 'das');
+		$this->objAilas = $this->getObject('dbalias', 'das');
     }
 
 	/**
@@ -381,7 +381,7 @@ class viewrender extends object {
 				} else {
 					$replyIcon = "";
 				}
-				$str .="<li>".$replyIcon." ".$anchor->show()."</li>";
+				$str .="<li>".$anchor->show()."</li>";
 
 				$class = "  class=\"personalspace\" ";
 
@@ -464,6 +464,7 @@ class viewrender extends object {
                                  $this->objUser->userId()));
                                  
        // $blocks .= $this->getChatBlock();
+        $blocks .= $this->advisorMassMessage();
         
         return $blocks;
     }
@@ -561,6 +562,22 @@ class viewrender extends object {
 		}
 		
 		
+	}
+	
+	/**
+	* Method to post a massage
+	*/
+	public function advisorMassMessage()
+	{
+		$objFB = $this->getObject('featurebox', 'navigation');
+		 $ajax = "<p class=\"im_source\" id=\"massdiv\">Ready...</p>
+            
+			 <script charset=\"utf-8\">
+                            new Ajax.InPlaceEditor('massdiv', 'index.php', {rows:10,cols:13, callback: function(form, value) { return 'module=das&action=advisormassmessage&msg=' + escape(value) }})
+                        </script>
+			";
+
+		return '<p>'.$objFB->show("Send a message to everyone that you are chatting to", $ajax).'</p>';
 	}
 
 }
