@@ -82,11 +82,11 @@ $body    = $this->objLanguage->languageText('mod_homeWelcome_body','gift');
 $notice  = $this->objLanguage->languageText('mod_homeWelcome_warning','gift');
 $policy  = $this->objLanguage->languageText('mod_home_policylink','gift');
 
-$objLink = new link('#');
-$objLink->link='Click here';
-$objLink->extra = 'onClick="showGiftPolicy()"';
+$objpolicyLink = new link($this->uri(array('action'=>'viewpolicy')));
+$objpolicyLink-> link = 'Click here';
+//$objLink->extra = 'onClick="showGiftPolicy()"';
 
-$rightSideColumn.=$heading->show().$body.'<br/>'.$notice.'<br/>'.'<br/>'.$objLink->show().$policy;
+$rightSideColumn.=$heading->show().$body.'<br/>'.$notice.'<br/>'.'<br/>'.$objpolicyLink->show().$policy;
 $rightSideColumn .='
 
 <div id="add-gift-surface"></div>

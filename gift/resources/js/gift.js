@@ -395,7 +395,8 @@ function searchGift(url){
 }
 
 var showGiftPolicy = function () {
-    var win;
+
+   /* var win;
     
     if(!win){
         win = new Ext.Window({
@@ -419,5 +420,5 @@ var showGiftPolicy = function () {
             }]
         });
     }
-    win.show(this);
+    win.show(this);*/
 }

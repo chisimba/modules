@@ -29,6 +29,7 @@ class gift extends controller
             case 'archive': return $this->archive();
             case 'submitedit': return $this->submitEdit();
             case 'search': return $this->searchGift();
+			case 'viewpolicy': return $this->viewPolicy();
             default: return "home_tpl.php";
         }
     }
@@ -134,5 +135,10 @@ class gift extends controller
         return $this->nextAction('result');
         
     }
+	
+	//shows the gift policy template
+	function viewPolicy(){
+		return 'giftPolicy_tpl.php';
+	}
 }
 ?>
