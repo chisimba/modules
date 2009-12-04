@@ -68,5 +68,5 @@
 
 
     echo $mainjs;
-    echo "<a href=\"#\" onclick=\"Ext.log('Hello from the Ext console. This is logged using the Ext.log function.');return false;\">Click Here For Debug</a>";
+    //echo "<a href=\"#\" onclick=\"Ext.log('Hello from the Ext console. This is logged using the Ext.log function.');return false;\">Click Here For Debug</a>";
 ?>
