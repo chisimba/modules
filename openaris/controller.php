@@ -308,6 +308,11 @@ class openaris extends controller {
                 $this->setVar('arrayAdmin2', array());
                 $this->setVar('arrayAdmin3', array());
                 $this->setVar('arrayOfficer', array());
+                $this->setVar('arrayOutbreak', array());
+                $this->setVar('arrayDisease', array());
+                $this->setVar('arrayOfficer', array());
+                $this->setVar('arrayOccurence', array());
+                $this->setVar('arrayInfection', array());
                 
                 $this->setVar('countryId', $this->getSession('ps_countryId'));
                 $this->setVar('admin1Id', $this->getSession('ps_admin1Id'));
@@ -330,7 +335,16 @@ class openaris extends controller {
 				$this->setVar('valOfficerTel', '');
 				$this->setVar('valOfficerEmail', '');
 				
+				$this->setVar('outbreakReported', $this->getSession('ps_outbreakReported'));
+				$this->setVar('validated', $this->getSession('ps_validated'));
 				$this->setVar('comment', $this->getSession('ps_comment'));
+				
+				$this->setVar('reportTypeId', $this->getSession('ps_reportTypeId'));
+				$this->setVar('outbreakId', $this->getSession('ps_outbreakId'));
+				$this->setVar('diseaseId', $this->getSession('ps_diseaseId'));
+				$this->setVar('occurenceId', $this->getSession('ps_occurenceId'));
+				$this->setVar('infectionId', $this->getSession('ps_infectionId'));
+				
 				/*$this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
                 $this->setVar('qualityId', $this->getSession('ps_qualityId'));
                 $this->setVar('dateReceived', $this->getSession('ps_dateReceived', date('Y-m-d')));

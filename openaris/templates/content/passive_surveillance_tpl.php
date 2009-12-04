@@ -230,12 +230,12 @@ $officerSet->setLegend($this->objLanguage->languageText('mod_ahis_officerinfo', 
 $outbreakRadio = new radio('outbreak');
 $outbreakRadio->addOption('1', $this->objLanguage->languageText('word_yes')." ");
 $outbreakRadio->addOption('0', $this->objLanguage->languageText('word_no'));
-$outbreakRadio->setSelected('0');
+$outbreakRadio->setSelected($outbreakReported);
 
 $validatedRadio = new radio('validated');
 $validatedRadio->addOption('1', $this->objLanguage->languageText('word_yes')." ");
 $validatedRadio->addOption('0', $this->objLanguage->languageText('word_no'));
-$validatedRadio->setSelected('0');
+$validatedRadio->setSelected($validated);
 
 $commentBox = new textarea('comment', $comment, 4, 42);
 
@@ -263,6 +263,121 @@ $objTopTable->addCell($objTable->show(), NULL, 'top', NULL, 'layout');
 $objTopTable->addCell($officerSet->show().$radioTable->show(), NULL, 'top', NULL, 'layout');
 $objTopTable->endRow();
 
+$reportTypeDrop = new dropdown('reportTypeId');
+$reportTypeDrop->addOption('0', $this->objLanguage->languageText('word_new'));
+$reportTypeDrop->addOption('1', $this->objLanguage->languageText('phrase_followup'));
+$reportTypeDrop->setSelected($reportTypeId);
+$reportTypeDrop->cssClass = 'passive_surveillance';
+
+$outbreakDrop = new dropdown('outbreakId');
+//$outbreakDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_none', 'openaris'));
+$outbreakDrop->addFromDB($arrayOutbreak, 'fullname', 'id');
+$outbreakDrop->setSelected($outbreakId);
+$outbreakDrop->cssClass = 'passive_surveillance';
+$outbreakDrop->extra = 'disabled';
+
+$diseaseDrop = new dropdown('diseaseId');
+$diseaseDrop->addFromDB($arrayDisease, 'fullname', 'id');
+$diseaseDrop->setSelected($diseaseId);
+$diseaseDrop->cssClass = 'passive_surveillance';
+
+$occurenceDrop = new dropdown('occurenceId');
+$occurenceDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$occurenceDrop->addFromDB($arrayOccurence, 'fullname', 'id');
+$occurenceDrop->setSelected($occurenceId);
+$occurenceDrop->cssClass = 'passive_surveillance';
+
+$infectionDrop = new dropdown('infectionId');
+$infectionDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$infectionDrop->addFromDB($arrayInfection, 'fullname', 'id');
+$infectionDrop->setSelected($infectionId);
+$infectionDrop->cssClass = 'passive_surveillance';
+
+$diseaseTable = $this->newObject('htmltable','htmlelements');
+$diseaseTable->cellspacing = 2;
+$diseaseTable->startRow();
+$diseaseTable->addCell($this->objLanguage->languageText('phrase_report'));
+$diseaseTable->addCell($reportTypeDrop->show());
+$diseaseTable->endRow();
+$diseaseTable->startRow();
+$diseaseTable->addCell($this->objLanguage->languageText('mod_ahis_outbreakno', 'openaris').": ");
+$diseaseTable->addCell($outbreakDrop->show());
+$diseaseTable->endRow();
+$diseaseTable->startRow();
+$diseaseTable->addCell($this->objLanguage->languageText('word_disease').": ");
+$diseaseTable->addCell($diseaseDrop->show());
+$diseaseTable->endRow();
+$diseaseTable->startRow();
+$diseaseTable->addCell($this->objLanguage->languageText('mod_ahis_occurence', 'openaris').": ");
+$diseaseTable->addCell($occurenceDrop->show());
+$diseaseTable->endRow();
+$diseaseTable->startRow();
+$diseaseTable->addCell($this->objLanguage->languageText('mod_ahis_infectionsource', 'openaris').": ");
+$diseaseTable->addCell($infectionDrop->show());
+$diseaseTable->endRow();
+
+$diseaseSet = $this->newObject('fieldset', 'htmlelements');
+$diseaseSet->addContent($diseaseTable->show());
+$diseaseSet->setLegend($this->objLanguage->languageText('mod_ahis_diseaseinfo', 'openaris'));
+
+$periodTable = $this->newObject('htmltable','htmlelements');
+$periodTable->cellspacing = 2;
+$periodTable->startRow();
+$periodTable->addCell('');
+$periodTable->addCell('');
+$periodTable->endRow();
+$periodTable->startRow();
+$periodTable->addCell('');
+$periodTable->addCell('');
+$periodTable->endRow();
+$periodTable->startRow();
+$periodTable->addCell('');
+$periodTable->addCell('');
+$periodTable->endRow();
+$periodTable->startRow();
+$periodTable->addCell('');
+$periodTable->addCell('');
+$periodTable->endRow();
+$periodTable->startRow();
+$periodTable->addCell('');
+$periodTable->addCell('');
+$periodTable->endRow();
+$periodTable->startRow();
+$periodTable->addCell('');
+$periodTable->addCell('');
+$periodTable->endRow();
+
+$periodSet = $this->newObject('fieldset', 'htmlelements');
+$periodSet->addContent($periodTable->show());
+$periodSet->setLegend($this->objLanguage->languageText('mod_ahis_periodinfo', 'openaris'));
+
+$createdTable = $this->newObject('htmltable','htmlelements');
+$createdTable->cellspacing = 2;
+$createdTable->startRow();
+$createdTable->addCell('');
+$createdTable->addCell('');
+$createdTable->endRow();
+$createdTable->startRow();
+$createdTable->addCell('');
+$createdTable->addCell('');
+$createdTable->endRow();
+$createdTable->startRow();
+$createdTable->addCell('');
+$createdTable->addCell('');
+$createdTable->endRow();
+$createdTable->startRow();
+$createdTable->addCell('');
+$createdTable->addCell('');
+$createdTable->endRow();
+
+$objBottomTable = $this->newObject('htmltable','htmlelements');
+$objBottomTable->cellspacing = 2;
+$objBottomTable->startRow();
+$objBottomTable->addCell($diseaseSet->show(), NULL, 'top', NULL, 'layout');
+$objBottomTable->addCell($periodSet->show(), NULL, 'top', NULL, 'layout');
+$objBottomTable->addCell($createdTable->show());
+$objBottomTable->endRow();
+
 $objButtonTable = $this->newObject('htmltable','htmlelements');
 $objButtonTable->cellspacing = 2;
 $objButtonTable->width = '99%';
@@ -271,7 +386,7 @@ $objButtonTable->addCell($bButton->show(), NULL, 'top', 'center');
 $objButtonTable->addCell($sButton->show(), NULL, 'top', 'center');
 $objButtonTable->endRow();
 
-$content = $objTopTable->show()."<hr />".$objButtonTable->show();
+$content = $objTopTable->show()."<hr />".$objBottomTable->show().$objButtonTable->show();
 
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_outbreak')));
