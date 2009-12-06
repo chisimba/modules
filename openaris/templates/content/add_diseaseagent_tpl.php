@@ -112,7 +112,8 @@ $objTable->startRow();
 $objTable->addCell($label->show());
 $objTable->addCell($startdate->show());
 $objTable->endRow();
-		
+
+
 //end date
 $label = new label ('End Date: ', 'enddate');
 $enddate = new textinput('enddate');
