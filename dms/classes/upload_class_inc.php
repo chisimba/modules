@@ -97,14 +97,23 @@ class upload extends object {
                 }
                 else {
                     $this->moveUploadedFile();
-                                       
-                    return array(
-                        'success' => TRUE,
-                        'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'dms'),
-                        'filename' => $this->fileName,
-                        'mimetype' => $this->type,
-                        'extension' => $this->getFileExtension(),
-                    );
+
+                    // check if the file actually exists, i.e., it has been uploaded
+                    if($this->checkExists()) {
+                        return array(
+                            'success' => TRUE,
+                            'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'dms'),
+                            'filename' => $this->fileName,
+                            'mimetype' => $this->type,
+                            'extension' => $this->getFileExtension(),
+                        );
+                    }
+                    else {
+                      return array(
+                            'success' => FALSE,
+                            'message' => $this->objLanguage->languageText("error_UPLOAD_FILENOTUPLOADED", 'dms'),
+                      );
+                    }
                 }
             }
             else {

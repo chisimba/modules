@@ -134,7 +134,7 @@ class dms extends controller {
             $this->nextAction('home');
         }
         else {
-            return $this->nextAction('uploadFile', array('message'=>'error'));
+            return $this->nextAction('uploadFile', array('message'=>$result));
         }
     }
 

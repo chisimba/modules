@@ -4,12 +4,14 @@
     $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('js/ext-3.0.0/resources/css/ext-all.css').'"/>';
     $config = '<script language="JavaScript" src="'.$this->getResourceUri('js/config.js').'" type="text/javascript"></script>';
     $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/main.css').'"/>';
+    $buttoncss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css').'"/>';
 
     $this->appendArrayVar('headerParams', $extallcss);
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);
     $this->appendArrayVar('headerParams', $config);
     $this->appendArrayVar('headerParams', $maincss);
+    $this->appendArrayVar('headerParams', $buttoncss);
 
     // objects
     $objIcon= $this->newObject('geticon','htmlelements');

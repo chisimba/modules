@@ -30,6 +30,8 @@ class userutils extends object {
     public function searchFiles($url) {
         $script = "
                 var url = '".$url."';
+                
+                showButtons();
                 showSearchForm(url);
         ";
         return $script;
@@ -79,7 +81,7 @@ class userutils extends object {
         $result = $objFileUpload->doUpload(TRUE);
         
         if ($result['success'] == FALSE) {
-            return "error";
+            return $result['message'];
         }
         else {
             $filename = $result['filename'];

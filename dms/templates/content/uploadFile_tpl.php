@@ -8,7 +8,9 @@
     $uploadjs = '<script src="'.$this->getResourceUri('js/upload.js').'" type="text/javascript"></script>';
     $uploadcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/file-upload.css').'"/>';
     $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/main.css').'"/>';
+    $buttoncss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css').'"/>';
 
+    $myTmpCss = "<style>div#buttons { padding-bottom: 0;} </style>";
     $this->appendArrayVar('headerParams', $extbase);
     $this->appendArrayVar('headerParams', $extalljs);
     $this->appendArrayVar('headerParams', $extallcss);
@@ -16,6 +18,8 @@
     $this->appendArrayVar('headerParams', $fileupload);
     $this->appendArrayVar('headerParams', $uploadjs);
     $this->appendArrayVar('headerParams', $maincss);
+    $this->appendArrayVar('headerParams', $buttoncss);
+    $this->appendArrayVar('headerParams', $myTmpCss);
 
     // urls
     $uploadUrl = str_replace("amp;", "", $this->uri(array('action'=>'doupload')));
@@ -27,7 +31,7 @@
 
     $error = "";
     if(strlen($this->getParam('message')) > 0) {
-        $error = $this-getParam('message');
+        $error = $this->getParam('message');
     }
 
     // Create an instance of the css layout class
@@ -37,6 +41,7 @@
     $cssLayout->setLeftColumnContent($postLoginMenu->show());
     $rightSideColumn =  '<div id ="mainContent">';
     $content = '<div id="heading"><h1>'.$this->objUtils->showPageHeading($action).'</h1></div>';
+    $content .= '<div id="buttons"></div>';
     $content .= '<div id="error">'.$error.'</div><div id="fi-form"></div>';
     $rightSideColumn .= $content;
     $rightSideColumn .= '</div>';

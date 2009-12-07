@@ -17,8 +17,16 @@ var showButtons = function() {
         cls: 'btn-panel',
         border: false,
         defaultType: 'button',
-        id: 'upload-button',
+        id: 'myButtons',
         items: [{
+            text: 'Back',
+            scale: 'medium',
+            baseCls: 'x-plain',
+            cls: 'btn-panel',
+            handler: function() {
+                goBack();
+            }
+        },{
             text: 'Add File Type',
             scale: 'medium',
             baseCls: 'x-plain',
@@ -153,4 +161,8 @@ var goAddType = function() {
         });
     }
     win.show(this);
+}
+
+var goBack = function() {
+    history.back(1);
 }

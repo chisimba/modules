@@ -1,4 +1,6 @@
 var showUploadForm = function(myUrl) {
+    showButtons();
+
     var fp = new Ext.FormPanel({
         standardSubmit: true,
         url: myUrl,
@@ -43,10 +45,37 @@ var showUploadForm = function(myUrl) {
         },{
             text: 'Cancel',
             handler: function(){
-                //fp.getForm().;
+                goBack();
             }
         }]
     });
 }
 
+var showButtons = function() {
+    var p = new Ext.Panel({
+        layout: 'table',
+        autoWidth: true,
+        style: 'marginRight: 10px',
+        baseCls: 'x-plain',
+        cls: 'btn-panel',
+        border: false,
+        defaultType: 'button',
+        id: 'upload-button',
+        items: [{
+            text: 'Back',
+            scale: 'medium',
+            baseCls: 'x-plain',
+            cls: 'btn-panel',
+            handler: function() {
+                goBack();
+            }
+        }]
+    });
 
+    p.render("buttons");
+}
+
+
+var goBack = function() {
+    history.back(1);
+}
