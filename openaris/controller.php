@@ -2621,10 +2621,7 @@ class openaris extends controller {
                $this->setVar('breed', $this->objBreed ->getAll("ORDER BY name"));	
                
                //$this->setVar('species', $this->getSession('ps_species'));
-               $this->setVar('breed', $this->getSession('ps_breed'));
-               
-               				    
-				
+               $this->setVar('breed', $this->getSession('ps_breed'));                        				    
 					$this->setVar('dataEntryOfficerFax', '');
 					$this->setVar('dataEntryOfficerTel', '');
 					$this->setVar('dataEntryOfficerEmail', '');
