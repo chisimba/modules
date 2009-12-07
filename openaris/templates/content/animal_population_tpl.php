@@ -63,7 +63,14 @@ $bButton->setCSS('cancelButton');
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSurveillance()");
 $cButton->setCSS('clearButton');
 
+//buttons
+
+$backUri = $this->uri(array('action'=>'select_officer'));
+$btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
+$btcancel->setCSS('cancelButton');
+
 $classDrop = new dropdown('classification');
+$classDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $classDrop->addFromDB($species, 'name', 'name'); 
 
 
@@ -110,13 +117,13 @@ $reportOfficerDrop->addOption('null',$this->objLanguage->languageText('mod_ahis_
 $reportOfficerDrop->addFromDB($userList, 'name', 'name');
 $reportOfficerDrop->setSelected($repoff);
 
+//Data entry officer
 $dataEntryOfficerDrop = new dropdown('dataoff',$dataoff);
 $dataEntryOfficerDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $dataEntryOfficerDrop->addFromDB($userList, 'name', 'name');
 $dataEntryOfficerDrop->setSelected($dataoff);
 
-
-
+//Vet officer
 $valOfficerDrop = new dropdown('vetoff',$vetoff);
 $valOfficerDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $valOfficerDrop->addFromDB($userList, 'name', 'name');
@@ -133,14 +140,15 @@ $vfaxBox = new textinput('valOfficerFax', $valOfficerFax, 'text');
 $vemailBox = new textinput('valOfficerEmail', $valOfficerEmail, 'text');
 
 $speciesDrop = new dropdown('speciesId');
+$speciesDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $speciesDrop->addFromDB($species, 'fullname', 'id');
-//$speciesDrop->setSelected($speciesId);
-$speciesDrop->cssClass = 'passive_surveillance';
+$speciesDrop->setSelected($speciesId);
+
 
 $breedDrop = new dropdown('breedId');
 $breedDrop->addFromDB($breed, 'fullname', 'id');
-//$breedDrop->setSelected($breedId);
-$breedDrop->cssClass = 'passive_surveillance';
+$breedDrop->setSelected($breedId);
+
 
 
 $admin3Drop = new dropdown('admin3Id');
@@ -151,12 +159,14 @@ $objTopTable->cellspacing = 2;
 $objTopTable->width = NULL;
 
 //Reporting Officer
- $tab= "&nbsp;&nbsp;&nbsp;&nbsp;";
+ $tab= "&nbsp;&nbsp;&nbsp;&nbsp;";
+ $tabs=$tab.$tab.$tab;
+
 $objTopTable->startRow();
 $objTopTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').": ");
 $objTopTable->addCell($reportOfficerDrop->show());
 
-$objTopTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','openaris').":");
+$objTopTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_reportdate','openaris').":");
 $objTopTable->addCell($repDate->show(),NULL,'center');
 $objTopTable->endRow();
 
@@ -173,34 +183,34 @@ $objEntryOfficerTable->width = NULL;
 
 //Data entry officer
 $objEntryOfficerTable->startRow();
-$objEntryOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_entryofficer','openaris').": ");
+$objEntryOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_entryofficer','openaris').": "."&nbsp;");
 $objEntryOfficerTable->addCell($dataEntryOfficerDrop->show());
 $objEntryOfficerTable->endRow();
 
 $objEntryOfficerTable->startRow();
 $objEntryOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_phone', 'openaris').": ");
 $objEntryOfficerTable->addCell($phoneBox->show());
-$objEntryOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_faxn','openaris').": ");
+$objEntryOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_faxn','openaris').": ");
 $objEntryOfficerTable->addCell($faxBox->show());
-$objEntryOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_email','openaris').": ");
+$objEntryOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_email','openaris').": ");
 $objEntryOfficerTable->addCell($emailBox->show());
 $objEntryOfficerTable->endRow();
-
+//vet officer
 $objVetOfficerTable = $this->newObject('htmltable', 'htmlelements');
 $objVetOfficerTable->cellspacing = 2;
 $objVetOfficerTable->width = NULL;
 
 $objVetOfficerTable->startRow();
-$objVetOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_vofficer','openaris').": ");
+$objVetOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_vofficer','openaris').": ".$tabs);
 $objVetOfficerTable->addCell($valOfficerDrop->show());
 $objVetOfficerTable->endRow();
 
 $objVetOfficerTable->startRow();
 $objVetOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_phone', 'openaris').": ");
 $objVetOfficerTable->addCell($vphoneBox->show());
-$objVetOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_faxn','openaris').": ");
+$objVetOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_faxn','openaris').": ");
 $objVetOfficerTable->addCell($vfaxBox->show());
-$objVetOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_email','openaris').": ");
+$objVetOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_email','openaris').": ");
 $objVetOfficerTable->addCell($vemailBox->show());
 $objVetOfficerTable->endRow();
 
@@ -211,18 +221,18 @@ $objBottomTable->width = NULL;
 $objBottomTable->startRow();
 $objBottomTable->addCell($this->objLanguage->languageText('word_country').": ");
 $objBottomTable->addCell($countryDrop->show(),NULL,'center');
-$objBottomTable->addCell($this->objLanguage->languageText('mod_ahis_partitions', 'openaris'));
+$objBottomTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_partitions', 'openaris'));
 $objBottomTable->addCell($admin1Drop->show(),NULL,'center');
-$objBottomTable->addCell($this->objLanguage->languageText('mod_ahis_word_species', 'openaris'));
+$objBottomTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_word_species', 'openaris'));
 $objBottomTable->addCell($classDrop->show());
 $objBottomTable->endRow();
 
 $objBottomTable->startRow();
 $objBottomTable->addCell($this->objLanguage->languageText('word_year').": ");
 $objBottomTable->addCell($yearBox->show(),NULL,'center');
-$objBottomTable->addCell($this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris'));
+$objBottomTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris'));
 $objBottomTable->addCell($partitionLDrop->show(),NULL,'center');
-$objBottomTable->addCell($this->objLanguage->languageText('word_breed'));
+$objBottomTable->addCell($tab.$this->objLanguage->languageText('word_breed'));
 $objBottomTable->addCell($breedDrop->show(),NULL,'center');
 $objBottomTable->endRow();
 
@@ -232,13 +242,20 @@ $objBottomTable->addCell($partitionNDrop->show(),NULL,'center');
 $label = new label ('Animal Production:', ' input_production');
 $production = new dropdown('animal_production');
 
-$production->addFromDB($animprod, 'name','name');$objBottomTable->addCell($label->show());
+$production->addFromDB($animprod, 'name','name');$objBottomTable->addCell($tab.$label->show());
 $objBottomTable->addCell($production->show());
 $objBottomTable->endRow();	
 
+$objButtonTable = $this->newObject('htmltable','htmlelements');
+$objButtonTable->cellspacing = 2;
+$objButtonTable->width = '40%';
+$objButtonTable->startRow();
+$objButtonTable->addCell($bButton->show(), NULL, 'top', 'center');
+$objButtonTable->addCell($sButton->show(), NULL, 'top', 'center');
+$objButtonTable->endRow();
 
 // Create Form
-$content=$objTopTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<hr />";
+$content=$objTopTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<br />".$objButtonTable->show();
 $objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory_add')));
 $form = new form ('add', $this->uri(array('action'=>'animal_population_screen2')));
 $form->addToForm($content);
@@ -248,14 +265,8 @@ $form->addRule('source', 'Please enter source of animals', 'required');
 $form->addRule('source', 'Please enter valid source', 'nonnumeric');
 
 
-//buttons
-
-$backUri = $this->uri(array('action'=>'select_officer'));
-$btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
-$btcancel->setCSS('cancelButton');
-
-$form->addToForm($btcancel->show().$tab);
-$form->addToForm($sButton->show());
+//$form->addToForm($btcancel->show().$tab);
+//$form->addToForm($sButton->show());
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 

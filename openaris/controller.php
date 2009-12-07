@@ -2620,7 +2620,7 @@ class openaris extends controller {
                $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));		
                $this->setVar('breed', $this->objBreed ->getAll("ORDER BY name"));	
                
-               $this->setVar('species', $this->getSession('ps_species'));
+               //$this->setVar('species', $this->getSession('ps_species'));
                $this->setVar('breed', $this->getSession('ps_breed'));
                
                				    
@@ -2637,6 +2637,13 @@ class openaris extends controller {
                 $dateIBAR = $this->getParam('iDate', $this->getSession('ps_iDate'));
                 $dateIsReported = $this->getParam('rDate', $this->getSession('ps_rDate'));
 				    $reportingOfficer=$this->getParam('officerId', $this->getSession('ps_officerId'));
+				   $this->setVar('totalNumSpecies', '');
+					$this->setVar('breedNumber', '');
+					$this->setVar('animalCat', '');
+					$this->setVar('tropicalLivestock', '');
+					$this->setVar('crossBreed', '');
+					$this->setVar('catNumber', '');
+					$this->setVar('productionno', '');
 
 				    
          return 'animal_population2_tpl.php';       
