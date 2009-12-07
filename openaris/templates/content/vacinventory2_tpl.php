@@ -51,25 +51,25 @@ $nextButton = new button('next', $this->objLanguage->languageText('word_next'), 
 //text input for report officer 
 $repOff = new dropdown('repoff');
 $repOff->addOption('null','Select');
-$repOff->addFromDB($userList, 'name', 'userid');
+$repOff->addFromDB($userList, 'name', 'name');
 $repOff->setSelected($repoff);
 $repOff->extra = 'disabled';
 
 //text input for data entry officer 
 $dataOff = new dropdown('dataoff',$dataoff);
 $dataOff->addOption('null','Select');
-$dataOff->addFromDB($userList, 'name', 'userid');
+$dataOff->addFromDB($userList, 'name', 'name');
 $dataOff->setSelected($dataoff);
 $dataOff->extra = 'disabled';
 //text input for vetofficer
 $vetOff = new dropdown('vetoff',$vetoff);
 $vetOff->addOption('null','Select');
-$vetOff->addFromDB($userList, 'name', 'userid');
+$vetOff->addFromDB($userList, 'name', 'name');
 $vetOff->setSelected($vetoff);
 $vetOff->extra = 'disabled';
 
 //report date set default to today 
-print_r($repdate);
+//print_r($repdate);
 $reportDate = $this->getObject('datepicker','htmlelements');
 $reportDate->setName('repdate');
 $reportDate->setDefaultDate($repdate);
@@ -138,15 +138,8 @@ $comments = new textarea('comments',$comments);
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
-//dropdown for admin2
-$admin2 = new dropdown('admin2');
-//$admin2->addFromDB($arrayadmin2, 'name', 'id');
-//$admin2->setSelected($admin2);
 
-//dropdown for admin3
-$admin3 = new dropdown('admin3');
-//$admin3->addFromDB($arrayadmin3, 'name', 'id');
-//$admin3->setSelected($admin3);
+
 
 //textinput field for location type
 $loctype = new textinput('loctype',$loctype);

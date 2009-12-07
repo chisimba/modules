@@ -2571,18 +2571,42 @@ class openaris extends controller {
 			case 'vacinventory2':
 			   	$ddata = $this->objDiseases->getAll("ORDER BY disease_name");
                $this->setVar('repdate',$this->getSession('ps_calendardate',date('Y-m-d')));
-			      $this->setVar('ibardate',$this->getSession('ps_calendardate',date('Y-m-d')));			   	
+			      $this->setVar('ibardate',$this->getSession('ps_calendardate',date('Y-m-d')));		
+			      $this->setVar('mandate',$this->getSession('ps_calendardate',date('Y-m-d')));
+			      $this->setVar('expdate',$this->getSession('ps_calendardate',date('Y-m-d')));		   	   	
 	     			$this->setVar('arraydisease',$ddata);
+	     			$this->setVar('parttype', $this->getSession('ps_admin1'));	  
+	     			$this->setVar('partlevel', $this->getSession('ps_admin2'));	
+	     			$this->setVar('partname', $this->getSession('ps_admin3'));	     				     			     				     			   			
 	     			$this->setVar('repoff', $this->getSession('ps_officerId'));
-	     			$this->setVar('repdate', $this->getSession('ps_repdate'));
-	     			$this->setVar('ibardate', $this->getSession('ps_ibardate'));
+	     			$this->setVar('phone',$this->getSession('ps_phone'));
+	     			$this->setVar('fax',$this->getSession('ps_phone'));
+	     			$this->setVar('email',$this->getSession('ps_phone'));
+	     			$this->setVar('fax1',$this->getSession('ps_fax1'));
+	     			$this->setVar('phone1',$this->getSession('ps_phone1'));
+	     			$this->setVar('email',$this->getSession('ps_email1'));	     					     			     				     			
 	            $this->setVar('vetoff', $this->getSession('ps_vetoff'));
 	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   			  				     				     			
 			      $this->setVar('userList', $this->objAhisUser->getList());
 			      return 'vacinventory2_tpl.php';
 			      
 	     case 'vacinventory2_add':
-	     		   $vetoff= $this->getSession('ps_vetoff');
+
+	     		   $data['repoff']= $this->getParam('repoff');
+	     		   $data['dataoff']= $this->getParam('dataoff');
+	     		   $data['vetoff']=$this->getParam('vetoff');
+	     		   $data['ibardate']=$this->getSession('ps_ibardate');
+	     		   $data['repdate']=$this->getSession('ps_repdate');
+	     		   $data['country']=$this->getSession('ps_country');
+	     		   $data['month']=$this->getSession('ps_month');
+	     		   $data['year']=$this->getSession('ps_year');
+	     		   $data['parttype']=$this->getSession('ps_admin1');
+	     		   $data['partlevel']=$this->getSession('ps_admin2');
+	     		   $data['partname']=$this->getSession('ps_admin3');
+	     		   $data['loctype']=$this->getSession('loctype');
+	     		   $data['lattitude']=$this->getSession('ps_lattitude');
+	     		   $data['longitude']=$this->getSession('ps_longitude');
+	     		   print_r($data);exit;
 	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   
 			      return 'vacinventory2_add_tpl.php';	
 			      	      

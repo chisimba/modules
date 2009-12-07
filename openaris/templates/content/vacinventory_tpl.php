@@ -108,12 +108,25 @@ $admin1->addFromDB($arraypartitiontype, 'partitioncategory', 'partitioncategory'
 $admin1->setSelected($ptype);
 //print_r($admin1);echo jl;exit;
 
+ //text field for phone
+ $phone= new textinput('phone',$phone);
  
-   
+ //text field for fax
+ $fax = new textinput('fax',$fax1);
+  
+  //text field for email
+  $email = new textinput('email',$email1);
+  
+  //text field for phone
+ $phone1= new textinput('phone1',$phone1);
+ 
+ //text field for fax
+ $fax1 = new textinput('fax1',$fax1);
+  
+  //text field for email
+  $email1 = new textinput('email1',$email1); 
 //get htmltable object
-$objTable = $this->getObject('htmltable','htmlelements');
-$objTable->cellspacing = 2;
-$objTable->width = NULL;
+
 //dropdown for admin2
 $admin2 = new dropdown('admin2');
 $admin2->addOption('null',Select);
@@ -143,24 +156,57 @@ $objTable->width = NULL;
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris'));
 $objTable->addCell($repOff->show());
-$objTable->endRow();
-
-$objTable->startRow();
 $objTable->addCell('&nbsp');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_dataentryofficer'));
-$objTable->addCell($dataOff->show());
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','openaris'));
 $objTable->addCell($reportDate->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_vetofficer'));
-$objTable->addCell($vetOff->show());
+$objTable->addCell('&nbsp');
+$objTable->addCell('&nbsp');
+$objTable->addCell('&nbsp');
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris'));
 $objTable->addCell($ibarDate->show());
 $objTable->endRow();
+
+//get htmltable object
+$objTable2 = new htmlTable();
+$objTable2->cellpadding =4;
+$objTable2->cellspacing = 2;
+$objTable2->width = '90%';
+$objTable2->cssClass = 'min50';
+$objTable2->startRow();
+$objTable2->addCell($this->objLanguage->languageText('phrase_dataentryofficer'));
+$objTable2->addCell($dataOff->show());
+
+$objTable2->endRow();
+
+$objTable2->startRow();
+$objTable2->addCell($this->objLanguage->languageText('word_phone'));
+$objTable2->addCell($phone->show());
+$objTable2->addCell($this->objLanguage->languageText('word_fax'));
+$objTable2->addCell($fax->show());
+$objTable2->addCell($this->objLanguage->languageText('word_email'));
+$objTable2->addCell($email->show());
+
+$objTable2->endRow();
+
+//get htmltable object
+$objTable3 = new htmlTable();
+$objTable3->cellpadding =4;
+$objTable3->cellspacing = 2;
+$objTable3->width = '90%';
+$objTable3->cssClass = 'min50';
+$objTable3->startRow();
+$objTable2->addCell($this->objLanguage->languageText('phrase_vetofficer'));
+$objTable3->addCell($vetOff->show());
+$objTable3->addCell($this->objLanguage->languageText('word_phone'));
+$objTable3->addCell($phone1->show());
+$objTable3->addCell($this->objLanguage->languageText('word_fax'));
+$objTable3->addCell($fax1->show());
+$objTable3->addCell($this->objLanguage->languageText('word_email'));
+$objTable3->addCell($email1->show());
+$objTable3->endRow();
 
 
 
@@ -220,7 +266,17 @@ $objTable1->endRow();
 
 
 $objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory_add')));
-$objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable1->show());
+$objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable2->show()."<hr class='openaris' />".$objTable3->show()."<hr class='openaris' />".$objTable1->show());
+$objForm->addRule('repoff','Please Select Report Officer','required');
+$objForm->addRule('dataoff', 'Please Select Data Entry Officer', 'required');
+$objForm->addRule('vetoff', 'Please Select Vet Officer', 'required');
+$objForm->addRule('country', 'Please Select country', 'required');
+$objForm->addRule('monthdate', 'Please Select Month', 'required');
+$objForm->addRule('yeardate', 'Please Select Year', 'required');
+$objForm->addRule('admin1', 'Please Select Partition Type', 'required');
+$objForm->addRule('admin2', 'Please Select Partition level', 'required');
+$objForm->addRule('admin3', 'Please Select Partition name', 'required');
+
 
 
 $objLayer = new layer();
