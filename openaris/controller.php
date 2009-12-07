@@ -339,18 +339,24 @@ class openaris extends controller {
 				$this->setVar('validated', $this->getSession('ps_validated'));
 				$this->setVar('comment', $this->getSession('ps_comment'));
 				
+				$this->setVar('createdBy', $this->objUser->username($this->getSession('createdById')));
+				$this->setVar('createdDate', $this->getSession('createdDate', date('Y-m-d')));
+				$this->setVar('modifiedBy', '');
+				$this->setVar('modifiedDate', $this->getSession('modifiedDate', ''));
+				
 				$this->setVar('reportTypeId', $this->getSession('ps_reportTypeId'));
 				$this->setVar('outbreakId', $this->getSession('ps_outbreakId'));
 				$this->setVar('diseaseId', $this->getSession('ps_diseaseId'));
 				$this->setVar('occurenceId', $this->getSession('ps_occurenceId'));
 				$this->setVar('infectionId', $this->getSession('ps_infectionId'));
 				
-				/*$this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
-                $this->setVar('qualityId', $this->getSession('ps_qualityId'));
-                $this->setVar('dateReceived', $this->getSession('ps_dateReceived', date('Y-m-d')));
-                $this->setVar('dateIsReported', $this->getSession('ps_dateIsReported', date('Y-m-d')));
-                $this->setVar('refNo', $this->getSession('ps_refNo', $this->objPassive->nextRefNo()));
-                */
+				$this->setVar('observationDate', $this->getSession('ps_observationDate', date('Y-m-d')));
+                $this->setVar('vetDate', $this->getSession('ps_vetDate', date('Y-m-d')));
+                $this->setVar('investigationDate', $this->getSession('ps_investigationDate', date('Y-m-d')));
+                $this->setVar('sampleDate', $this->getSession('ps_sampleDate', date('Y-m-d')));
+                $this->setVar('diagnosisDate', $this->getSession('ps_diagnosisDate', date('Y-m-d')));
+                $this->setVar('interventionDate', $this->getSession('ps_interventionDate', date('Y-m-d')));
+                
 
                 return "passive_surveillance_tpl.php";
             
