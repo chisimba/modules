@@ -156,7 +156,9 @@ if(!empty($resultdata))
 								}
 							}
 
-							foreach($resultsData as $myResults){
+							//foreach($resultsData as $myResults){
+                                          if(!empty($resultsData)){
+                                                $myResults = $resultsData;
 								if($myResults["studentid"] == $userId){
 									$studentMark = $myResults["mark"];
 								}
