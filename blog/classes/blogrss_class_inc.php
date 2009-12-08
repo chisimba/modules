@@ -435,7 +435,7 @@ class blogrss extends object
         // $this->setVar('pageSuppressXML',true);
         $objIcon = &$this->getObject('geticon', 'htmlelements');
         $objIcon->setIcon('toggle');
-        $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide', adjustLayout());\">" . $this->objLanguage->languageText("mod_blog_moreoptions", "blog") . "</a>";
+        $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide');\">" . $this->objLanguage->languageText("mod_blog_moreoptions", "blog") . "</a>";
         // $objIcon->show() . "</a>";
         $topper = $rss2feed . $atomfeed;
         $str.= '<div id="feedmenu"  style="width:170px;overflow: hidden;display:' . $showOrHide . ';"> ';

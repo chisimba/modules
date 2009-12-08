@@ -286,7 +286,7 @@ class blogops extends object
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $objIcon = &$this->getObject('geticon', 'htmlelements');
             $objIcon->setIcon('toggle');
-            $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('adminmenu','slide', adjustLayout());\">" . $this->objLanguage->languageText("mod_blog_moreoptions", "blog") . "</a>";
+            $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('adminmenu','slide');\">" . $this->objLanguage->languageText("mod_blog_moreoptions", "blog") . "</a>";
             // $objIcon->show() . "</a>";
             $str.= '<div id="adminmenu"  style="width:170px;overflow: hidden;display:' . $showOrHide . ';"> ';
             $str.= $ret;
