@@ -484,7 +484,7 @@ class blogposts extends object
                     $tblnl->addCell($tburl . "&nbsp;" . $numtb);
                     // trackback URL
                     if ($post['comment_status'] == 'Y' || $post['comment_status'] == 'on') {
-                        // $tblnl->addCell($this->setComments($post, FALSE) . " " . $commentCount);
+                        $tblnl->addCell($this->setComments($post, FALSE) . " " . $commentCount);
                     }
                     $tblnl->addCell($iconList);
                     // cc licence
