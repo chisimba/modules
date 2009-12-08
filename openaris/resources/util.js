@@ -139,6 +139,30 @@ function clear_viewReports() {
 	$('input_month').selectedIndex = monthIndex;
 }
 
+function changeCountry() {
+	//jQuery('#input_admin1Id >option').remove();
+}
+
+function getOfficerInfo(role) {
+	var userId = jQuery('#input_'+role+'OfficerId').val();
+	var fax;
+	var phone;
+	var email;
+	if (userId == -1) {
+		jQuery('#input_'+role+'OfficerFax').val('');
+		jQuery('#input_'+role+'OfficerTel').val('');
+		jQuery('#input_'+role+'OfficerEmail').val('');
+	} else {
+		jQuery.getJSON("index.php?module=openaris&action=ajax_getofficerinfo&userid="+userId,
+					   function(data) {
+							jQuery('#input_'+role+'OfficerFax').val(data.fax);
+							jQuery('#input_'+role+'OfficerTel').val(data.phone);
+							jQuery('#input_'+role+'OfficerEmail').val(data.email);
+					   });
+	}
+
+}
+
 function numberVal()
 {
 	alert('Insert numerics only.');	

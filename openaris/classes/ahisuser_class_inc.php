@@ -101,6 +101,33 @@ class ahisuser extends dbtable {
 	}
 	
 	/**
+	 * Method to return a list of all ARIS users of a certain role
+	 *
+	 * @param string $role The role to be searched for
+	 * @return array ARIS users
+	 */
+	public function getListByRole($role) {
+		$sql = "SELECT u.userid AS userid, CONCAT(u.firstname,' ',u.surname) AS name
+				FROM tbl_users AS u, tbl_ahis_users AS au
+				WHERE u.id = au.id AND au.roleid = '$role'
+				ORDER BY name";
+		return $this->objUser->getArray($sql);
+	}
+	
+	/**
+	 * Method to get contact info for user
+	 *
+	 * @param string $userId The id of the user
+	 * @return array of contact details
+	 */
+	public function getUserContact($userId) {
+		$sql = "SELECT fax, phone, email
+				FROM tbl_ahis_users AS au, tbl_users AS u
+				WHERE u.id = au.id AND u.userid = '$userId'";
+		return $this->getArray($sql);
+	}
+	
+	/**
 	 * Method to check whether a user is a asuperuser
 	 *
 	 * @param string $userId The user id of the user to check

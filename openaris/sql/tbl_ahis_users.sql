@@ -60,6 +60,21 @@ $fields = array(
         'notnull' => TRUE
 		),
     
+    'fax' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+    
+    'phone' => array(
+		'type' => 'text',
+		'length' => 32
+		),
+    
+    'email' => array(
+		'type' => 'text',
+		'length' => 64
+		),
+    
     'ahisuser' => array(
         'type' => 'integer',
         'length' => '1',

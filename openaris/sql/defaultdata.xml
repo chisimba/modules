@@ -420,4 +420,20 @@
          <name>Vector Control</name>
     </tbl_ahis_control>
 	
+	<tbl_ahis_role>
+        <id>init_01</id>
+        <name>Reporting Officer</name>
+    </tbl_ahis_role>
+    <tbl_ahis_role>
+        <id>init_02</id>
+        <name>Data Entry Officer</name>
+    </tbl_ahis_role>
+    <tbl_ahis_role>
+        <id>init_03</id>
+        <name>Validation Officer</name>
+    </tbl_ahis_role><tbl_ahis_role>
+        <id>init_04</id>
+        <name>Administrator</name>
+    </tbl_ahis_role>
+    
 </defaultdata>

@@ -304,10 +304,12 @@ class openaris extends controller {
             
             case 'passive_surveillance':
                 $this->setVar('arrayCountry', $this->objCountry->getAll("ORDER BY common_name"));
-                $this->setVar('arrayAdmin1', array());
-                $this->setVar('arrayAdmin2', array());
-                $this->setVar('arrayAdmin3', array());
-                $this->setVar('arrayOfficer', array());
+                $this->setVar('arrayAdmin1', $this->objPartitionCategory->getAll("ORDER BY partitioncategory"));
+                $this->setVar('arrayAdmin2', $this->objPartitionLevel->getAll("ORDER BY partitionlevel"));
+                $this->setVar('arrayAdmin3', $this->objPartition->getAll("ORDER BY partitionname"));
+                $this->setVar('arrayROfficer', $this->objAhisUser->getListByRole('init_01'));
+                $this->setVar('arrayDEOfficer', $this->objAhisUser->getListByRole('init_02'));
+                $this->setVar('arrayVOfficer', $this->objAhisUser->getListByRole('init_03'));
                 $this->setVar('arrayOutbreak', array());
                 $this->setVar('arrayDisease', array());
                 $this->setVar('arrayOfficer', array());
@@ -359,6 +361,12 @@ class openaris extends controller {
                 
 
                 return "passive_surveillance_tpl.php";
+			
+			case "ajax_getofficerinfo":
+				$userId = $this->getParam('userid');
+				$infos = $this->objAhisUser->getUserContact($userId);
+				echo json_encode(current($infos));
+				break;
             
             case 'passive_outbreak':
                 $oStatusId = $this->getParam('oStatusId', $this->getSession('ps_oStatusId'));
@@ -1067,19 +1075,19 @@ class openaris extends controller {
                     $this->setVar('location', $this->uri(array('action'=>'department_admin')));
                     return 'redirect_tpl.php';
                 }
-                if ($this->objTerritory->getRecordCount() < 1) {
-                    $this->setVar('message', $this->objLanguage->languageText('mod_ahis_noterritory','openaris'));
-                    $this->setVar('location', $this->uri(array('action'=>'create_territory')));
+                if ($this->objCountry->getRecordCount() < 1) {
+                    $this->setVar('message', $this->objLanguage->languageText('mod_ahis_nocountry','openaris'));
+                    $this->setVar('location', $this->uri(array('action'=>'country_add')));
                     return 'redirect_tpl.php';
                 }
                 
                 $this->setVar('id', $this->getParam('id'));
                 $this->setVar('error', $this->getParam('error'));
-                $this->setVar('titles', $this->objTitle->getAll());
-                $this->setVar('status', $this->objStatus->getAll());
-                $this->setVar('locations', $this->objTerritory->getAll());
-                $this->setVar('departments', $this->objDepartment->getAll());
-                $this->setVar('roles', $this->objRole->getAll());
+                $this->setVar('titles', $this->objTitle->getAll("ORDER BY name"));
+                $this->setVar('status', $this->objStatus->getAll("ORDER BY name"));
+                $this->setVar('locations', $this->objCountry->getAll("ORDER BY common_name"));
+                $this->setVar('departments', $this->objDepartment->getAll("ORDER BY name"));
+                $this->setVar('roles', $this->objRole->getAll('ORDER BY name'));
 				$superDisabled = ($this->objAhisUser->isSuperUser($this->objUser->userId()))? 0 : 1;
 				$this->setVar('superDisabled', $superDisabled);
                 return "add_employee_tpl.php";
@@ -1117,6 +1125,9 @@ class openaris extends controller {
                 $ahisRecord['roleid'] = $this->getParam('roleid');
                 $ahisRecord['dateofbirth'] = $this->getParam('datebirth');
                 $ahisRecord['datehired'] = $this->getParam('hireddate');
+                $ahisRecord['fax'] = $this->getParam('fax');
+                $ahisRecord['phone'] = $this->getParam('phone');
+                $ahisRecord['email'] = $this->getParam('email');
                 $ahisRecord['retired'] = $this->getParam('retired');
                 if ($ahisRecord['retired']) {
                     $ahisRecord['retired'] = 1;
@@ -2531,6 +2542,7 @@ class openaris extends controller {
                 	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
 					$this->setVar('control', $this->objControl ->getAll("ORDER BY name"));
 					return 'animaldeworming_tpl.php';
+
 			case 'vacinventory':
 			      $this->setVar('repdate',$this->getSession('ps_calendardate',date('Y-m-d')));
 			      $this->setVar('ibardate',$this->getSession('ps_calendardate',date('Y-m-d')));
@@ -2609,7 +2621,7 @@ class openaris extends controller {
 	     		   print_r($data);exit;
 	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   
 			      return 'vacinventory2_add_tpl.php';	
-			      	      
+	      
 			case 'animalvaccine_add':
 					$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('dist',$this->objAnimalmovement->getDistrict($id));

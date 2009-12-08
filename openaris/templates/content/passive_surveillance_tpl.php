@@ -63,17 +63,18 @@ $countryDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectd
 $countryDrop->addFromDB($arrayCountry, 'common_name', 'id');
 $countryDrop->setSelected($countryId);
 $countryDrop->cssClass = 'passive_surveillance';
+$countryDrop->extra = 'onchange="javascript:changeCountry()"';
 
 $admin1Drop = new dropdown('admin1Id');
-$admin1Drop->addFromDB($arrayAdmin1, 'name', 'id');
+$admin1Drop->addFromDB($arrayAdmin1, 'partitioncategory', 'id');
 $admin1Drop->cssClass = 'passive_surveillance';
 
 $admin2Drop = new dropdown('admin2Id');
-$admin2Drop->addFromDB($arrayAdmin2, 'name', 'id');
+$admin2Drop->addFromDB($arrayAdmin2, 'partitionlevel', 'id');
 $admin2Drop->cssClass = 'passive_surveillance';
 
 $admin3Drop = new dropdown('admin3Id');
-$admin3Drop->addFromDB($arrayAdmin3, 'name', 'id');
+$admin3Drop->addFromDB($arrayAdmin3, 'partitionname', 'id');
 $admin3Drop->cssClass = 'passive_surveillance';
 
 $monthDrop = new dropdown('month');
@@ -140,9 +141,10 @@ $objTable->endRow();
 
 $reportOfficerDrop = new dropdown('reportOfficerId');
 $reportOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$reportOfficerDrop->addFromDB($arrayOfficer, 'fullname', 'id');
+$reportOfficerDrop->addFromDB($arrayROfficer, 'name', 'userid');
 $reportOfficerDrop->setSelected($reportOfficerId);
 $reportOfficerDrop->cssClass = 'passive_surveillance';
+$reportOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("report");\'';
 $reportOfficerFaxBox = new textinput('reportOfficerFax', $reportOfficerFax, 'text');
 $reportOfficerFaxBox->setCss('passive_surveillance');
 $reportOfficerTelBox = new textinput('reportOfficerTel', $reportOfficerTel, 'text');
@@ -155,9 +157,10 @@ $reportOfficerFaxBox->extra =
 
 $dataEntryOfficerDrop = new dropdown('dataEntryOfficerId');
 $dataEntryOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$dataEntryOfficerDrop->addFromDB($arrayOfficer, 'fullname', 'id');
+$dataEntryOfficerDrop->addFromDB($arrayDEOfficer, 'name', 'userid');
 $dataEntryOfficerDrop->setSelected($dataEntryOfficerId);
 $dataEntryOfficerDrop->cssClass = 'passive_surveillance';
+$dataEntryOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("dataEntry");\'';
 $dataEntryOfficerFaxBox = new textinput('dataEntryOfficerFax', $dataEntryOfficerFax, 'text');
 $dataEntryOfficerFaxBox->setCss('passive_surveillance');
 $dataEntryOfficerTelBox = new textinput('dataEntryOfficerTel', $dataEntryOfficerTel, 'text');
@@ -170,9 +173,10 @@ $dataEntryOfficerFaxBox->extra =
 
 $valOfficerDrop = new dropdown('valOfficerId');
 $valOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$valOfficerDrop->addFromDB($arrayOfficer, 'fullname', 'id');
+$valOfficerDrop->addFromDB($arrayVOfficer, 'name', 'userid');
 $valOfficerDrop->setSelected($valOfficerId);
 $valOfficerDrop->cssClass = 'passive_surveillance';
+$valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("val");\'';
 $valOfficerFaxBox = new textinput('valOfficerFax', $valOfficerFax, 'text');
 $valOfficerFaxBox->setCss('passive_surveillance');
 $valOfficerTelBox = new textinput('valOfficerTel', $valOfficerTel, 'text');
@@ -421,11 +425,22 @@ $content = $objTopTable->show()."<hr />".$objBottomTable->show().$objButtonTable
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_outbreak')));
 $objForm->addToForm($content);
+$objForm->addRule('countryId', $this->objLanguage->languageText('mod_ahis_valcountry', 'openaris'), 'select');
 $objForm->addRule('datePrepared', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'datenotfuture');
-$objForm->addRule('dateIBAR', $this->objLanguage->languageText('mod_ahis_valdateibar', 'openaris'), 'datenotfuture');
-$objForm->addRule(array('datePrepared','dateIBAR'), $this->objLanguage->languageText('mod_ahis_valdateibarafterprepared', 'openaris'), 'datenotbefore');
-$objForm->addRule('dateReceived', $this->objLanguage->languageText('mod_ahis_valdatedvs', 'openaris'), 'datenotfuture');
-$objForm->addRule('dateIsReported', $this->objLanguage->languageText('mod_ahis_valdateisreported', 'openaris'), 'datenotfuture');
+$objForm->addRule('dateIBARSub', $this->objLanguage->languageText('mod_ahis_valdateibar', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('datePrepared','dateIBARSub'), $this->objLanguage->languageText('mod_ahis_valdateibarafterprepared', 'openaris'), 'datenotbefore');
+$objForm->addRule('dateIBARRec', $this->objLanguage->languageText('mod_ahis_valdateibarsub', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('dateIBARSub', 'dateIBARRec'), $this->objLanguage->languageText('mod_ahis_valdateibarafteribar', 'openaris'), 'datenotbefore');
+$objForm->addRule(array('month'=>'month','year'=>'year'), $this->objLanguage->languageText('mod_ahis_valdate', 'openaris'), 'twofielddate');
+//$objForm->addRule('reportOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
+//$objForm->addRule('dateEntryOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
+//$objForm->addRule('validationOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidateofficer', 'openaris'), 'select');
+$objForm->addRule('outbreak', $this->objLanguage->languageText('mod_ahis_valoutbreak', 'openaris'), 'required');
+$objForm->addRule('validated', $this->objLanguage->languageText('mod_ahis_valvalidated', 'openaris'), 'required');
+
+
+$objForm->addRule('reportOfficerFax', 'mm', 'required');
+
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");

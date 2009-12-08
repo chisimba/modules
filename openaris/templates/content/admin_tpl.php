@@ -61,9 +61,9 @@ $userList = "<strong>".$this->objLanguage->languageText('mod_ahis_userfields', '
 $link = new link($this->uri(array('action' => 'department_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_departmentadmin', 'openaris');
 $userList .= "<li>".$link->show()."</li>";
-$link = new link($this->uri(array('action' => 'role_admin')));
-$link->link = $this->objLanguage->languageText('mod_ahis_roleadmin', 'openaris');
-$userList .= "<li>".$link->show()."</li>";
+//$link = new link($this->uri(array('action' => 'role_admin')));
+//$link->link = $this->objLanguage->languageText('mod_ahis_roleadmin', 'openaris');
+//$userList .= "<li>".$link->show()."</li>";
 $link = new link($this->uri(array('action' => 'status_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_statusadmin', 'openaris');
 $userList .= "<li>".$link->show()."</li>";

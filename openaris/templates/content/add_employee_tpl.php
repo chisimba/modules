@@ -57,6 +57,7 @@ if ($id) {
     }
     $ahisRecord = $this->objAhisUser->getRow('id', $id);
     if (empty($ahisRecord)) {
+        $ahisRecord['fax'] = $ahisRecord['phone'] = $ahisRecord['email'] = '';
         $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] =
         $ahisRecord['titleid'] = $ahisRecord['statusid'] = $ahisRecord['retired'] = '';
         $ahisRecord['ahisuser'] = $ahisRecord['superuser'] = 0;
@@ -69,6 +70,8 @@ if ($id) {
     $record['username'] = $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] = '';
     $ahisRecord['ahisuser'] = $ahisRecord['superuser'] = $record['adminuser'] = 0;
     $ahisRecord['dateofbirth'] = $ahisRecord['datehired'] = $ahisRecord['dateretired'] = date('Y-m-d');
+    $ahisRecord['fax'] = $ahisRecord['phone'] = $ahisRecord['email'] = '';
+        
 }
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
@@ -93,6 +96,9 @@ $usernameInput = new textinput('username',$record['username']);
 $usernameInput->extra = "onkeyup='boxLimiter(this)'";
 $passwordInput = new textinput('password', NULL, 'password');
 $confirmInput = new textinput('confirm', NULL, 'password');
+$faxInput = new textinput('fax',$ahisRecord['fax']);
+$phoneInput = new textinput('phone',$ahisRecord['phone']);
+$emailInput = new textinput('email',$ahisRecord['email']);
 
 $retiredBox = new checkbox('retired', NULL, $ahisRecord['retired']);
 $retiredBox->extra = "onchange = 'toggleRetiredDate();'";
@@ -126,7 +132,7 @@ $statusDrop = new dropdown('statusid');
 $statusDrop->addFromDB($status, 'name', 'id');
 $statusDrop->setSelected($ahisRecord['statusid']);
 $locationDrop = new dropdown('locationid');
-$locationDrop->addFromDB($locations, 'name', 'id');
+$locationDrop->addFromDB($locations, 'common_name', 'id');
 $locationDrop->setSelected($ahisRecord['locationid']);
 $departmentDrop = new dropdown('departmentid');
 $departmentDrop->addFromDB($departments, 'name', 'id');
@@ -193,6 +199,19 @@ $objTable->addCell($this->objLanguage->languageText('word_department').": ");
 $objTable->addCell($departmentDrop->show());
 $objTable->addCell($this->objLanguage->languageText('word_role').": ");
 $objTable->addCell($roleDrop->show(), NULL, NULL, NULL, NULL, 'colspan=2');
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_fax').": ");
+$objTable->addCell($faxInput->show());
+$objTable->addCell($this->objLanguage->languageText('word_phone').": ");
+$objTable->addCell($phoneInput->show(), NULL, NULL, NULL, NULL, 'colspan=2');
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_email').": ");
+$objTable->addCell($emailInput->show());
+$objTable->addCell('', NULL, NULL, NULL, NULL, 'colspan=3');
 $objTable->endRow();
 
 $objTable->startRow();
