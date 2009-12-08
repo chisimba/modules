@@ -12,5 +12,17 @@
 		</add>
 	</data>
     </update>
+        <update>
+        <table>tbl_textblock</table>
+        <version>0.79</version>
+        <description>Added css_class that was added to sql directly instead of sql update.Please DO NOT apply this update if you textblocks work fine.</description>
+        <data>
+        	<add>
+    			<length>250</length>
+                        <name>css_class</name>
+                        <type>text</type>
+		</add>
+	</data>
+    </update>
 
 </updates>
