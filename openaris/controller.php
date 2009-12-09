@@ -2752,16 +2752,11 @@ class openaris extends controller {
 			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));		
                 $this->setVar('userList', $this->objAhisUser->getList());              
                 
-               $this->setVar('iDate', $this->getSession('ps_iDate', date('Y-m-d')));
-                $this->setVar('rDate', $this->getSession('ps_rDate', date('Y-m-d')));
+                $this->setVar('iDate',$this->getSession('ps_calendardate',date('Y-m-d')));
+                $this->setVar('rDate', $this->getSession('ps_calendardate', date('Y-m-d')));
 			 		$id=$this->getSession('ps_geo2Id');
 			 		
-			 		 $this->setVar('countryId', $this->getSession('ps_countryId'));
-                $this->setVar('admin1Id', $this->getSession('ps_admin1Id'));
-                $this->setVar('admin2Id', $this->getSession('ps_admin2Id'));
-                $this->setVar('admin3Id', $this->getSession('ps_admin3Id'));
-                $this->setVar('valOfficerId', $this->getSession('ps_reportOfficerId'));
-			 		
+			 	  		 		
 			 		 $this->setVar('countryId', $this->getSession('ps_countryId'));
                 $this->setVar('admin1Id', $this->getSession('ps_admin1Id'));
                 $this->setVar('admin2Id', $this->getSession('ps_admin2Id'));
@@ -2773,19 +2768,35 @@ class openaris extends controller {
                $this->setVar('breed', $this->objBreed ->getAll("ORDER BY name"));	
                
                //$this->setVar('species', $this->getSession('ps_species'));
+               $this->setVar('dataEntryOfficerFax', $this->getSession('ps_dfax'));
+					$this->setVar('dataEntryOfficerTel', $this->getSession('ps_dphone'));
+					$this->setVar('dataEntryOfficerEmail', $this->getSession('ps_demail'));
+					$this->setVar('valOfficerFax', $this->getSession('ps_vfax'));
+					$this->setVar('valOfficerTel', $this->getSession('ps_vphone'));
+					$this->setVar('valOfficerEmail', $this->getSession('ps_vemail'));
                $this->setVar('breed', $this->getSession('ps_breed'));                        				    
-					$this->setVar('dataEntryOfficerFax', '');
-					$this->setVar('dataEntryOfficerTel', '');
-					$this->setVar('dataEntryOfficerEmail', '');
-					$this->setVar('valOfficerFax', '');
-					$this->setVar('valOfficerTel', '');
-					$this->setVar('valOfficerEmail', '');
+					
 					return 'animal_population_tpl.php';
+					
+					case 'animal_population1':
+			      $this->setSession('ps_officerId',$this->getParam('repoff'));
+			      $this->setSession('ps_dataoff',$this->getParam('dataoff'));		
+			      $this->setSession('ps_vetoff',$this->getParam('vetoff'));	
+			      $this->setSession('ps_iDate',$this->getParam('iDate'));	
+			      $this->setSession('ps_rDate',$this->getParam('rDate'));	
+			      
+			       return $this->nextAction(animal_population_screen2);
          
-         case 'animal_population_screen2':
-                $dateIBAR = $this->getParam('iDate', $this->getSession('ps_iDate'));
-                $dateIsReported = $this->getParam('rDate', $this->getSession('ps_rDate'));
-				    $reportingOfficer=$this->getParam('officerId', $this->getSession('ps_officerId'));
+         case 'animal_population_screen2':         
+                
+                $this->setVar('repoff', $this->getSession('ps_officerId'));
+                $this->setVar('iDate',$this->getSession('ps_iDate',date('Y-m-d')));
+			      $this->setVar('rDate',$this->getSession('ps_rDate',date('Y-m-d')));	
+                
+               // $dateIBAR = $this->getParam('iDate', $this->getSession('ps_iDate'));
+                //$dateIsReported = $this->getParam('rDate', $this->getSession('ps_rDate'));
+                
+				    //$reportingOfficer=$this->getParam('ps_officerId', $this->getSession('repoff'));
 				   $this->setVar('totalNumSpecies', '');
 					$this->setVar('breedNumber', '');
 					$this->setVar('animalCat', '');

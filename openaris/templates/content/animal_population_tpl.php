@@ -73,7 +73,7 @@ $classDrop = new dropdown('classification');
 $classDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $classDrop->addFromDB($species, 'name', 'name'); 
 
-
+//drop down for country
 $countryDrop = new dropdown('countryId');
 $countryDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $countryDrop->addFromDB($arrayCountry, 'common_name', 'id');
@@ -163,17 +163,20 @@ $objTopTable->width = NULL;
  $tabs=$tab.$tab.$tab;
 
 $objTopTable->startRow();
-$objTopTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').": ");
+$objTopTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris'));
 $objTopTable->addCell($reportOfficerDrop->show());
 
-$objTopTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_reportdate','openaris').":");
-$objTopTable->addCell($repDate->show(),NULL,'center');
+$objTopTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_reportdate','openaris'),NULL,'centre');
+$objTopTable->addCell($repDate->show());
 $objTopTable->endRow();
 
 //IBAR date
 $objTopTable->startRow();
-$objTopTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris').": ");
-$objTopTable->addCell($ibarDate->show(),NULL, 'center');
+$objTopTable->addCell('&nbsp;');
+$objTopTable->addCell('&nbsp;');
+
+$objTopTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris'));
+$objTopTable->addCell($ibarDate->show());
 $objTopTable->endRow();
 
 
@@ -256,8 +259,7 @@ $objButtonTable->endRow();
 
 // Create Form
 $content=$objTopTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<br />".$objButtonTable->show();
-$objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory_add')));
-$form = new form ('add', $this->uri(array('action'=>'animal_population_screen2')));
+$form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
 $form->addRule('num_animals', 'Please enter number of animals', 'required');
 $form->addRule('num_animals', 'Please enter valid number ', 'numeric');

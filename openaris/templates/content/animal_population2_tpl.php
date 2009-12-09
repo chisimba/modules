@@ -68,9 +68,15 @@ $speciesDrop->setSelected($speciesId);
 $classDrop = new dropdown('classification');
 $classDrop->addFromDB($species, 'name', 'name'); 
 
+//Breed dropdown
 $breedDrop = new dropdown('breedId');
 $breedDrop->addFromDB($breed, 'fullname', 'id');
 $breedDrop->setSelected($breedId);
+
+//animal category dropdown
+$animalCatDrop=new dropdown('animalCat');
+$animalCatDrop->addFromDB($animalcategory, 'category', 'category');
+$animalCatDrop->setSelected($animalcat);
 
 
 $monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 23);
@@ -87,14 +93,14 @@ $ibarDate->setDefaultDate($iDate);
 
 
 $reportOfficerDrop = new dropdown('repoff');
-$reportOfficerDrop->addOption('null',$this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$reportOfficerDrop->addOption('null','Select');
 $reportOfficerDrop->addFromDB($userList, 'name', 'name');
-$reportOfficerDrop->setSelected($repoff);
+$reportOfficerDrop->setSelected($repOfficer);
 $reportOfficerDrop->extra='disabled';
 
 $totalNumSpecies = new textinput('totalNumSpecies', $totalNumSpecies, 'text');
 $breedNumber = new textinput('breedNumber', $breedNumber, 'text');
-$animalCat = new textinput('animalCat', $animalCat, 'text');
+//$animalCat = new textinput('animalCat', $animalCat, 'text');
 
 $tropicalLivestock = new textinput('tropicalLivestock', $tropicalLivestock, 'text');
 $crossBreed = new textinput('crossBreed', $crossBreed, 'text');
@@ -163,7 +169,7 @@ $middleTable->addCell($totalNumSpecies->show());
 $middleTable->addCell($this->objLanguage->languageText('mod_ahis_breedno','openaris'));
 $middleTable->addCell($breedNumber->show());
 $middleTable->addCell($this->objLanguage->languageText('mod_ahis_animalcat','openaris'));
-$middleTable->addCell($animalCat->show());
+$middleTable->addCell($animalCatDrop->show());
 $middleTable->endRow();
 
 $middleTable->startRow();
