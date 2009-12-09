@@ -201,6 +201,8 @@ class efl extends controller {
     }
 
     function __previewessay(){
+        $storyid=$this->getParam('storyid');
+        $this->setVarByRef('storyid',$storyid);
         
         return 'previewessay_tpl.php';
     }

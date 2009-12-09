@@ -30,6 +30,15 @@ if (!
 $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout->setNumColumns(2);
+
+$postLoginMenu  = $this->newObject('postloginmenu','toolbar');
+$leftSideColumn = $postLoginMenu->show();
+$cssLayout->setLeftColumnContent($leftSideColumn);
+
+$rightSideColumn='<div id="gtx"></div><div style="padding:10px;">';
+
 $this->loadclass('button','htmlelements');
 
 echo "Essay Table Updated Succesfully";
@@ -42,8 +51,8 @@ $table->addCell('Submitdate');
 
 $essays=$this->objStudentEssays->getstudentEssays($essayid);
 foreach($essays as $essay) {
-    $table->width='30%';
-    $table->border='2';
+    $table->width='50%';
+    $table->border='1';
     $table->cellspacing='1';
     $table->startRow();
     $table->addCell($essay['essayid']);
@@ -54,8 +63,15 @@ foreach($essays as $essay) {
 
 $backbutton=new button('back');
 $backbutton->setValue('Back');
-$backbutton->setOnClick('alert(\'An onclick Event\')');
+$backbutton->setOnClick('home_tpl.php');
 
-echo $table->show();
-$backbutton->show();
+//echo $table->show();
+//echo $backbutton->show();
+$rightSideColumn .=$table->show();
+$rightSideColumn .=$backbutton->show();
+$rightSideColumn.= '</div>';
+
+$cssLayout->setMiddleColumnContent($rightSideColumn);
+echo $cssLayout->show()
+
 ?>

@@ -80,5 +80,11 @@ class dbessays extends dbtable {
         return array('title'=> "test title");
     }
 
+//essayid = '".$essayid.
+    function getPreviewEssay($storyid) {
+        $sql="select content from tbl_efl_proposedessaytopics where id= '".$storyid."'"; echo $sql;
+
+        return $this->getArray($sql);
+    }
 }
 ?>
