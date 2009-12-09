@@ -6,7 +6,10 @@ var filterInstructions;
 var filterType;
 var filterParamName;
 var filterParamValue;
-function initContextTools(url,contexturl,filtersurl,baseurl){
+var filterInputValue;
+var conn = new Ext.data.Connection();
+
+function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
     var tabs = new Ext.TabPanel({
         activeTab:0,
@@ -200,8 +203,25 @@ function initContextTools(url,contexturl,filtersurl,baseurl){
                     url: baseurl+"&filtername="+filtername,
                     method: 'GET'
                 });
-                
+
+                Ext.getCmp('xparamlistfield').disabled=false;
                 filterparamssds.load();
+                if(filterType=='basicinput'){
+                    conn.request({
+                        url: inputurl+"&filtername="+filtername,
+                        method: 'GET',
+                        success: function(responseObject) {
+
+                            showInputForm(responseObject.responseText);
+                        }
+                    });
+                }
+                if(filterType=='parametizedall'){
+                    Ext.getCmp('xparamlistfield').disabled=true;
+                    Ext.MessageBox.alert('Instructions', filterInstructions);
+
+                }
+
             }
 
         }
@@ -219,13 +239,21 @@ function initContextTools(url,contexturl,filtersurl,baseurl){
         forceSelection: true,
         triggerAction: 'all',
         emptyText:'Select parameter...',
-        //selectOnFocus:true,
+        selectOnFocus:true,
         valueField:'name',
+        hiddenName : 'paramlistfield',
+        id:"xparamlistfield",
         listeners:{
             select: function(combo, record, index){
-                filterParamName=record.data.name;
+                var xprm=record.data.name;
+                var prm=xprm.split(":");
+                if(prm.length > 0){
+                    filterParamName=prm[0];
+                }else{
+                    filterParamName=xprm;
+                }
                 filterParamValue=record.data.value;
-
+                
             }
 
         }
@@ -272,16 +300,35 @@ function initContextTools(url,contexturl,filtersurl,baseurl){
         {
             iconCls: 'insert',
             text:'Insert filter',
+            id:'insertFilterButton',
 
             handler: function(){
                 
                 var selectedText=window.opener.CKEDITOR.instances[instancename].getSelection().getNative();
                 var filter='';
-                if(filterType=='parametized')
+                if(filterType=='parametized'){
                     filter='['+filterTag+':'+filterParamName+'='+filterParamValue+']' +selectedText+'[/'+filterTag+']';
-                else
-                    filter='['+filterTag+']' +selectedText+'[/'+filterTag+']';
+                }else if(filterType=='parametizedall'){
 
+                    paramList="";
+                    filterparamssds.each(function(r) {
+                        paramList+= r.data['name']+"="+r.data['value']+",";
+
+                    });
+                    if(paramList.endsWith(",")){
+                        paramList=paramList.substring(0,paramList.length-1);
+                    }
+                    filter='['+filterTag+':'+paramList+']' +selectedText+'[/'+filterTag+']';
+                    window.opener.CKEDITOR.instances[instancename].insertHtml(filter);
+                    window.close();
+
+
+                }else if(filterType=='basicinput'){
+                    filter='['+filterTag+']' +filterInputValue+'[/'+filterTag+']';
+                }
+                else{
+                    filter='['+filterTag+']' +selectedText+'[/'+filterTag+']';
+                }
                 window.opener.CKEDITOR.instances[instancename].insertHtml(filter);
                 window.close();
             }
@@ -297,4 +344,36 @@ function initContextTools(url,contexturl,filtersurl,baseurl){
         ]
 
     });
+
+  
+   
 }
+
+function showInputForm(xparams){
+
+    var params=xparams.split("#");
+  
+    for(i=0;i<params.length;i++){
+        var xparam=params[i];
+        var param=xparam.split(":");
+        if(param.length > 0){
+            var label=param[1];
+            label=label.trim();
+            if(label != ''){
+                Ext.MessageBox.prompt(filtername, label, showResult);
+            }
+        }
+    }
+}
+
+function showResult(btn,text){
+    if(btn == 'ok'){
+        filterInputValue=text;
+        filter='['+filterTag+']' +filterInputValue+'[/'+filterTag+']';
+
+        window.opener.CKEDITOR.instances[instancename].insertHtml(filter);
+        window.close();
+    }else{
+        filterInputValue=null;
+    }
+};

@@ -42,6 +42,7 @@ class contexttools extends controller {
         $this->objUser=$this->getObject('user','security');
         $this->objConfig = $this->getObject ( 'altconfig', 'config' );
         $this->objUtils=$this->getObject('contexttoolsutils');
+        $this->dbstories=$this->getObject('dbstories');
     }
 
     public function dispatch($action) {
@@ -144,9 +145,21 @@ class contexttools extends controller {
 
     }
 
-  function __getfilterparams(){
-      $filtername=$this->getParam('filtername');
-      return $this->objUtils->readFilterParams($filtername);
-  }
+    function __getfilterparams() {
+        $filtername=$this->getParam('filtername');
+        return $this->objUtils->readFilterParams($filtername);
+    }
+
+    function __getStories() {
+        return $this->dbstories->getStories();
+    }
+    /**
+     * this gets input fileds for a filter
+     * @return <type>
+     */
+    function __getfilterinput() {
+        $filtername=$this->getParam('filtername');
+        return $this->objUtils->readFilterInput($filtername);
+    }
 }
 ?>

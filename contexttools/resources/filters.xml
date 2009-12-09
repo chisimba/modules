@@ -5,27 +5,32 @@
         <type>parametized</type>
         <label>Colorbox</label>
         <params>
-            <param name="boxtype">redbox</param>
-            <param name="boxtype">bluebox</param>
-            <param name="boxtype">yellowbox</param>
-            <param name="boxtype">purplebox</param>
-            <param name="boxtype">greenbox</param>
-            <param name="boxtype">orangebox</param>
-            <param name="boxtype">pinkbox</param>
-            <param name="boxtype">greybox</param>
-            <param name="boxtype">bwbox</param>
-            <param name="boxtype">wbbox</param>
+            <param name="boxtype:1">redbox</param>
+            <param name="boxtype:2">bluebox</param>
+            <param name="boxtype:3">yellowbox</param>
+            <param name="boxtype:4">purplebox</param>
+            <param name="boxtype:5">greenbox</param>
+            <param name="boxtype:6">orangebox</param>
+            <param name="boxtype:7">pinkbox</param>
+            <param name="boxtype:8">greybox</param>
+            <param name="boxtype:9">bwbox</param>
+            <param name="boxtype:10">wbbox</param>
         </params>
         <instructions>Select the color of the box to use in the parameters field.This will be applied to the selectd text in the editor.</instructions>
         <tag>COLORBOX</tag>
+        <input/>
     </filter>
     <filter>
         <name>delicious</name>
-        <type>basic</type>
+        <type>basicinput</type>
         <label>del.icio.us tag cloud</label>
         <params />
         <instructions>Enter your del.icio.us username within the tags to create a tag cloud of your bookmarked URL's.</instructions>
         <tag>DELTAGS</tag>
+        <input>
+            <inputparam name="username">Enter your del.icio.us username </inputparam>
+        </input>
+
     </filter>
     <filter>
         <name>embed</name>
@@ -34,18 +39,22 @@
         <params />
         <instructions>Make a link of the text between the embed tags to embed a file from your filemanager. Supported formats are: mp3, ogg, mp4 for both audio and video files.</instructions>
         <tag>EMBED</tag>
+        <input/>
     </filter>
     <filter>
         <name>flash video simple</name>
-        <type>basic</type>
+        <type>basicinput</type>
         <label>Flash Video (FLV) simple</label>
         <params />
         <instructions>Provide the URL of a flash video. Size of the video will be 340 x 240</instructions>
         <tag>FLV</tag>
+        <input>
+            <inputparam name="username">Provide the URL of a flash video. Size of the video will be 340 x 240</inputparam>
+        </input>
     </filter>
     <filter>
         <name>flash video complex</name>
-        <type>parametized</type>
+        <type>parametizedall</type>
         <label>Flas Video (FLV) complex</label>
         <params>
             <param name="url">http://www.example.com</param>
@@ -54,53 +63,95 @@
         </params>
         <instructions>Modify the url, width and height parameters to control the size of the flash video file (FLV) to be embedded in the content</instructions>
         <tag>FLV</tag>
+        <input/>
     </filter>
     <filter>
         <name>IFrame</name>
-        <type>basic</type>
+        <type>basicinput</type>
         <label>IFrame</label>
         <params />
         <instructions>Inserts a page via URL into a content box. Please specify url|width|height as parameters</instructions>
         <tag>IFRAME</tag>
+
+        <input>
+            <inputparam name="iframparams">Enter the url for the iframe, with and height in format url|width|height. Example; www.example.com|400|300</inputparam>
+        </input>
     </filter>
     <filter>
         <name>Google Video</name>
-        <type>basic</type>
+        <type>basicinput</type>
         <label>Google Video</label>
         <params />
         <instructions>Inserts a Google Video either by link or URL</instructions>
         <tag>GVID</tag>
+        <input>
+            <inputparam name="url">Enter the link or url for the google video</inputparam>
+        </input>
     </filter>
     <filter>
         <name>YouTube</name>
-        <type>basic</type>
+        <type>basicinput</type>
         <label>YouTube</label>
         <params />
         <instructions>Inserts a YouTube video by either link or URL</instructions>
         <tag>YOUTUBE</tag>
+        <input>
+            <inputparam name="url">Enter the link or url for the youtube video</inputparam>
+        </input>
     </filter>
     <filter>
         <name>Math</name>
-        <type>basic</type>
+        <type>basicinput</type>
         <label>Math formula</label>
         <params />
         <instructions>Enter a formula in standard mathematical latex format to render correctly</instructions>
         <tag>MATH</tag>
+        <input>
+            <inputparam name="formula">Enter a formula in standard mathematical latex format to render correctly for example \alpha\,\!</inputparam>
+        </input>
     </filter>
     <filter>
         <name>PDF</name>
-        <type>basic</type>
+        <type>basicinput</type>
         <label>PDF</label>
         <params />
         <instructions>Provide a URL to the pdf document to have it rendered in the content</instructions>
         <tag>PDF</tag>
+        <input>
+            <inputparam name="url">Provide a URL to the pdf document to have it rendered in the content</inputparam>
+        </input>
     </filter>
     <filter>
         <name>RSS</name>
-        <type>basic</type>
+        <type>basicinput</type>
         <label>RSS Feed</label>
         <params />
         <instructions>Provide a URL to a RSS feed to insert into the content</instructions>
         <tag>RSS</tag>
+        <input>
+            <inputparam name="url">Provide a URL to a RSS feed to insert into the content</inputparam>
+        </input>
+    </filter>
+    <filter>
+        <name>screenshot</name>
+        <type>basicinput</type>
+        <label>Site Screenshot</label>
+        <params />
+        <instructions>Provide a URL to a site you wish to have a screenshot</instructions>
+        <tag>SCREENSHOT</tag>
+        <input>
+            <inputparam name="url">Provide a URL to a site you wish to have a screenshot</inputparam>
+        </input>
+    </filter>
+    <filter>
+        <name>realtime</name>
+        <type>basicinput</type>
+        <label>Virtual Classroom</label>
+        <params />
+        <instructions>Enter the name of the room to use for virtual classroom</instructions>
+        <tag>REALTIME</tag>
+        <input>
+            <inputparam name="url">Enter the name of the room to use for virtual classroom</inputparam>
+        </input>
     </filter>
 </filters>

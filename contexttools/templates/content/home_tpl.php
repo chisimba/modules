@@ -43,14 +43,15 @@ $contextlisturl = $this->uri(array('action'=>'jsonusercontexts'));
 $contexturl = $this->uri(array('action'=>'joincontext'),'context');
 $filtersurl = $this->uri(array('action'=>'getfilters'));
 $baseurl = $this->uri(array('action'=>'getfilterparams'));
-
+$storyurl = $this->uri(array('action'=>'getstories'));
+$inputurl = $this->uri(array('action'=>'getfilterinput'));
 $extdiv='
         <div id="contexttools">  </div>
         <div id="contexttools-win"> </div>
         <div id="contextlist"  class="x-hide-display"></div>
         <div id="filterlist"  class="x-hide-display"></div>
         </div>
-
+        <div id="inputwin"</div>
       ';
 
 echo $extdiv;
@@ -60,7 +61,9 @@ $mainjs = "
                    var contexturl='".str_replace("amp;", "", $contexturl)."';
                    var filtersurl='".str_replace("amp;", "", $filtersurl)."';
                    var baseurl='".str_replace("amp;", "", $baseurl)."';
-                   initContextTools(url,contexturl,filtersurl,baseurl);
+                   var storyurl='".str_replace("amp;", "", $storyurl)."';
+                   var inputurl='".str_replace("amp;", "", $inputurl)."';
+                   initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl);
                  });
 
           ";

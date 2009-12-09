@@ -23,7 +23,7 @@
  * @author    David Wafula
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link      http://avoir.uwc.ac.za
-=
+ =
  */
 /* --------------------\----------------*/
 // security check - must be included in all scripts
@@ -60,6 +60,7 @@ class contexttoolsutils extends object {
                 $instructions=(string)$filter->instructions;
                 $tag=(string)$filter->tag;
                 $params=$filter->params;
+                $input=$filter->input;
                 $paramJson="";
                 if(count($params) > 0) {
                     $paramJson='{"paramcount":"'.count($params).'","params":[';
@@ -76,6 +77,7 @@ class contexttoolsutils extends object {
                     $paramJson.="]}";
                 }
 
+
                 if (empty($name)) {
                     $name="unknown$index";
                 }
@@ -85,11 +87,12 @@ class contexttoolsutils extends object {
                     "label"=> $label,
                     "instructions"=> $instructions,
                     "tag"=>$tag,
-                    "params"=>$paramJson
+                    "params"=>$paramJson,
+                    "input"=>$inputParamJson
                 );
                 $index++;
             }
-            
+
 
             $json='{"filtercount":"'.count($result).'","filters":[';
             foreach($result as $entry) {
@@ -98,7 +101,7 @@ class contexttoolsutils extends object {
                 $json.='"label":"'.$entry['label'].'",';
                 $json.='"instructions":"'.$entry['instructions'].'",';
                 $json.='"tag":"'.$entry['tag'].'"},';
-               // $json.='"params":"'.$entry['params'].'"},';
+            // $json.='"params":"'.$entry['params'].'"},';
             }
             $lastChar = $json[strlen($json)-1];
             $len=strlen($json);
@@ -107,7 +110,7 @@ class contexttoolsutils extends object {
             }
 
             $json.="]}";
-             echo $json;
+            echo $json;
             die();
 
 
@@ -117,7 +120,7 @@ class contexttoolsutils extends object {
         }
     }
 
- public function readFilterParams($filtername) {
+    public function readFilterParams($filtername) {
         try {
 
             $this->_path = $this->objConfig->getModulePath()."contexttools/resources/filters.xml";
@@ -152,7 +155,34 @@ class contexttoolsutils extends object {
         }
     }
 
+    public function readFilterInput($filtername) {
+        try {
 
+            $this->_path = $this->objConfig->getModulePath()."contexttools/resources/filters.xml";
+            $xml = simplexml_load_file($this->_path);
+            $entries = $xml->xpath("//filter[name='$filtername']");
+            $index=0;
+            foreach ($entries as $filter) {
+                $params=$filter->input;
+                $paramJson="";
+                if(count($params) > 0) {
+
+                    foreach($params->inputparam as $p) {
+                        foreach($p[0]->attributes() as $a => $b) {
+                            $paramJson.=$b.":".$p[0].'#';
+                        }
+                    }
+                }
+
+                echo $paramJson;
+                die();
+            }
+
+        }catch (Exception $e ) {
+            $this->errorCallback('Caught exception: '.$e->getMessage());
+            exit();
+        }
+    }
 }
 
 ?>
