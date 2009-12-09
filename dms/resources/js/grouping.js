@@ -20,12 +20,12 @@ var showLatestUploads = function(gridData) {
         }),
 
         columns: [
-            {id:'filename',header: "Filename", width: 60, sortable: true, dataIndex: 'filename'},
-            {header: "Status", width: 15, sortable: true, dataIndex: 'status'},
-            {header: "Date Last Modified", width: 30, sortable: true, dataIndex: 'lastChange'},
-            {header: "File Type", width: 30, sortable: true, dataIndex: 'filetype'},
-            {header: "File Type Description", width: 50, sortable: true, dataIndex: 'filetypedesc'},
-            {header: "Details", width: 20, sortable: true, dataIndex: 'details'}
+            {id:'filename',header: "Filename", width: 40, sortable: true, dataIndex: 'filename'},
+            {header: "Status", width: 10, sortable: true, dataIndex: 'status'},
+            {header: "Date Last Modified", width: 10, sortable: true, dataIndex: 'lastChange'},
+            {header: "FT", width: 10, sortable: true, dataIndex: 'filetype'},
+            {header: "File Type Description", width: 15, sortable: true, dataIndex: 'filetypedesc'},
+            {header: "Details", width: 15, sortable: true, dataIndex: 'details'}
         ],
 
         view: new Ext.grid.GroupingView({
@@ -35,12 +35,14 @@ var showLatestUploads = function(gridData) {
             hideGroupedColumn: true
         }),
 
-        frame:true,
-        width: 800,
+        frame:false,
+        width: "100%",
+
         height: 450,
+        border:false,
         collapsible: true,
         animCollapse: false,
-        title: 'Last 10 Uploaded files',
+        //title: 'Last 10 Uploaded files',
         renderTo: 'recent-uploads'
     });
 }
