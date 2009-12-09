@@ -137,7 +137,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
     private JButton okButton = new JButton("Set");
     private JLabel percLbl = new JLabel(" % ");
     private JTextArea screenOptionText = new JTextArea();
-    private JPanel cPanel = new JPanel();
+    private JWebBrowser screenShareView = new JWebBrowser();
     private static final String[] toolTips = {
         "SysTray for Java rules!",
         "brought to you by\nSnoozeSoft 2004"
@@ -146,18 +146,21 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
     // create icons
     static final SysTrayMenuIcon[] icons = {
         // the extension can be omitted
-      
+
         new SysTrayMenuIcon("icons/duke"),
         new SysTrayMenuIcon("icons/duke_up")
     };
-    SysTrayMenu menu;
-    int currentIndexIcon;
-    int currentIndexTooltip;
+    private SysTrayMenu menu;
+    private int currentIndexIcon;
+    private int currentIndexTooltip;
     //private Item item = new Item();
+    private MainFrameUtils mainFrameUtil;
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
         this.setGlassPane(glass);
+        mainFrameUtil=new MainFrameUtils(this);
+        mainFrameUtil.configureScreenShareView();
         initComponents();
         userListPanel = new ParticipantListPanel();
         leftSplitPane.setDividerLocation((ss.height / 2));
@@ -170,21 +173,8 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
             tabbedPane.add("Browser", generalWebBrowser);
         }
         tabbedPane.add("Speakers", speakersPanel);
-        //toolsPanel.add(whiteboardPanel.getWbToolbar(), BorderLayout.SOUTH);
+        tabbedPane.add("Screen share", screenShareView);
         webPresentNavigator = new WebpresentNavigator();
-
-
-        tabbedPane.addTab("ScreenShare", cPanel);
-        screenShareMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (tabbedPane.getSelectedIndex() == 3){
-                   GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab1(shareSizeFr);
-                 }
-            }
-        });
-        
-
-    
 
         userListPanel.getUserTabbedPane().addTab("Presentations", webPresentNavigator);
         userListPanel.getUserTabbedPane().addChangeListener(new ChangeListener() {
@@ -200,7 +190,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
                     adjustSize();
                     GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab1(shareSizeFr);
                 }
-               }
+            }
         });
 
 
@@ -319,35 +309,37 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         shareSizeFr.pack();
         shareSizeFr.setSize(300, 180);
         shareSizeFr.setLocationRelativeTo(GUIAccessManager.mf);
-        String javaVersion=System.getProperty("java.version");
-        
-        String major=javaVersion.substring(0,1);
-        String minorStr=javaVersion.substring(2,3);
-        int minorInt=Integer.parseInt(minorStr);
-        if(minorInt < 6){
-            String warnOpt=GeneralUtil.getProperty("show.java.warning");
-            
-            if(warnOpt == null){
-                warnOpt="true";
+        String javaVersion = System.getProperty("java.version");
+
+        String major = javaVersion.substring(0, 1);
+        String minorStr = javaVersion.substring(2, 3);
+        int minorInt = Integer.parseInt(minorStr);
+        if (minorInt < 6) {
+            String warnOpt = GeneralUtil.getProperty("show.java.warning");
+
+            if (warnOpt == null) {
+                warnOpt = "true";
             }
-            boolean doNotShowJavaVersionWarning=new Boolean(warnOpt);
-            if(!doNotShowJavaVersionWarning){
-                JavaVersionWarningDialog javaVersionWarningDialog=new JavaVersionWarningDialog(this, true);
+            boolean doNotShowJavaVersionWarning = new Boolean(warnOpt);
+            if (!doNotShowJavaVersionWarning) {
+                JavaVersionWarningDialog javaVersionWarningDialog = new JavaVersionWarningDialog(this, true);
                 javaVersionWarningDialog.setSize(400, 200);
                 javaVersionWarningDialog.setLocationRelativeTo(this);
                 javaVersionWarningDialog.setVisible(true);
             }
-        }else{
-           realtimeSysTray.init(userListPanel);
+        } else {
+            realtimeSysTray.init(userListPanel);
         }
-     
+
     }
 
-
+    public JWebBrowser getScreenShareView() {
+        return screenShareView;
+    }
 
     void createMenu() {
 
-      /*  // create some labeled menu items
+        /*  // create some labeled menu items
         SysTrayMenuItem subItem1 = new SysTrayMenuItem("Windows 98", "windows 98");
         subItem1.addSysTrayMenuListener(this);
         // disable this item
@@ -677,7 +669,6 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
     public JToolBar getRoomToolsToolbar() {
         return roomToolsToolbar;
     }
-
 
     public RoomResourceNavigator getRoomResourceNavigator() {
         return roomResourceNavigator;
@@ -2153,9 +2144,6 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
     public RoomResourcesList getRoomResourcesList() {
         return roomResourcesList;
     }
-
-    
-
 
     /*** The gets **/
     public JComponent getGlass() {

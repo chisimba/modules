@@ -1271,6 +1271,7 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
     public void displayToolsDialog() {
         if (toolsDialog == null) {
             toolsDialog = new JDialog(GUIAccessManager.mf);
+            toolsDialog.setModal(false);
             toolsDialog.setLayout(new BorderLayout());
             toolsDialog.add(whiteboardPanel.getWbToolbar(), BorderLayout.CENTER);
             toolsDialog.add(autoShowToolsDialogOpt, BorderLayout.SOUTH);
@@ -1288,7 +1289,9 @@ public class Whiteboard extends JPanel implements MouseListener, MouseMotionList
                 firstTimeFullscreenMouePresss = false;
             }
         }
-        toolsDialog.setVisible(true);
+        if (!toolsDialog.isVisible()) {
+            toolsDialog.setVisible(true);
+        }
     }
 
     public void mousePressed(MouseEvent e) {
