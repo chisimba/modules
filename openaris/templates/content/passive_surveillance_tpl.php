@@ -425,7 +425,7 @@ $objButtonTable->endRow();
 $content = $objTopTable->show()."<hr />".$objBottomTable->show().$objButtonTable->show();
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'passive_outbreak')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'disease_report_screen_2')));
 $objForm->addToForm($content);
 $objForm->addRule('countryId', $this->objLanguage->languageText('mod_ahis_valcountry', 'openaris'), 'select');
 $objForm->addRule('datePrepared', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'datenotfuture');
@@ -451,8 +451,6 @@ $objForm->addRule('diagnosisDate', $this->objLanguage->languageText('mod_ahis_va
 $objForm->addRule(array('sampleDate', 'diagnosisDate'), $this->objLanguage->languageText('mod_ahis_valdiagnosisafter', 'openaris'), 'datenotbefore');
 $objForm->addRule('interventionDate', $this->objLanguage->languageText('mod_ahis_valinterventiondate', 'openaris'), 'datenotfuture');
 $objForm->addRule(array('diagnosisDate', 'interventionDate'), $this->objLanguage->languageText('mod_ahis_valinterventionafter', 'openaris'), 'datenotbefore');
-
-
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");

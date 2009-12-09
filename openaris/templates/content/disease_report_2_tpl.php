@@ -40,17 +40,136 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('phrase_passive')." ".$this->objLanguage->languageText('word_outbreak');
+$objHeading->str = $this->objLanguage->languageText('mod_ahis_diseasereport', 'openaris')." #2";
 $objHeading->type = 2;
 
 $this->loadClass('textinput','htmlelements');
-$this->loadClass('textarea','htmlelements');
+$this->loadClass('fieldset','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
-$this->loadClass('layer','htmlelements');
 $this->loadClass('form','htmlelements');
 
-$sButton = new button('enter', $this->objLanguage->languageText('word_next'));
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+
+$objTableArea1 = $this->getObject('htmltable','htmlelements');
+$objTableArea1->cellspacing = 2;
+$objTableArea1->width = NULL;
+
+$objTableArea1->startHeaderRow();
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitiontype'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'));
+$objTableArea1->endHeaderRow();
+
+$outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
+$outbreakCodeBox->extra = 'disabled';
+$outbreakCodeBox->setCss('passive_surveillance');
+
+$latitudeBox = new textinput('latitude', $latitude);
+$latitudeBox->setCss('geo');
+$longitudeBox = new textinput('longitude', $longitude);
+$longitudeBox->setCss('geo');
+
+$latDirecDrop = new dropdown('latDirec');
+$latDirecDrop->addOption('N', 'N');
+$latDirecDrop->addOption('S', 'S');
+$latDirecDrop->setSelected($latDirec);
+
+$longDirecDrop = new dropdown('longDirec');
+$longDirecDrop->addOption('E', 'E');
+$longDirecDrop->addOption('W', 'W');
+$longDirecDrop->setSelected($longDirec);
+
+$localityNameBox = new textinput('localityName', $localityName);
+$localityNameBox->setCss('passive_surveillance');
+
+$localityTypeDrop = new dropdown('localityTypeId');
+$localityTypeDrop->addFromDB($arrayLocalityType, 'locality_type', 'id');
+$localityTypeDrop->setSelected($localityTypeId);
+$localityTypeDrop->cssClass = 'passive_surveillance';
+
+$farmingSystemDrop = new dropdown('farmingSystemId');
+$farmingSystemDrop->addFromDB($arrayFarmingSystem, 'farmingsystem', 'id');
+$farmingSystemDrop->setSelected($farmingSystemId);
+$farmingSystemDrop->cssClass = 'passive_surveillance';
+
+$createdBox = new textinput('createdBy', $createdBy, 'text');
+$createdBox->setCss('passive_surveillance');
+$createdDateBox = new textinput('createdDate', $createdDate, 'text');
+$createdDateBox->setCss('passive_surveillance');
+$modifiedBox = new textinput('modifiedBy', $modifiedBy, 'text');
+$modifiedBox->setCss('passive_surveillance');
+$modifiedDateBox = new textinput('modifiedDate', $modifiedDate, 'text');
+$modifiedDateBox->setCss('passive_surveillance');
+$createdBox->extra = $createdDateBox->extra = $modifiedBox->extra = $modifiedDateBox->extra = 'disabled';
+
+$objTableArea2 = $this->newObject('htmltable','htmlelements');
+$objTableArea2->cellspacing = 2;
+$objTableArea2->width = NULL;
+
+$objTableArea2->startRow();
+$objTableArea2->addCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
+$objTableArea2->addCell($outbreakCodeBox->show());
+$objTableArea2->addCell($this->objLanguage->languageText('word_latitude'));
+$objTableArea2->addCell($latitudeBox->show()." ".$latDirecDrop->show());
+$objTableArea2->addCell($this->objLanguage->languageText('word_createdby'));
+$objTableArea2->addCell($createdBox->show());
+$objTableArea2->endRow();
+$objTableArea2->startRow();
+$objTableArea2->addCell($this->objLanguage->languageText('mod_ahis_localitytype', 'openaris'));
+$objTableArea2->addCell($localityTypeDrop->show());
+$objTableArea2->addCell($this->objLanguage->languageText('word_longitude'));
+$objTableArea2->addCell($longitudeBox->show()." ".$longDirecDrop->show());
+$objTableArea2->addCell($this->objLanguage->languageText('phrase_createddate'));
+$objTableArea2->addCell($createdDateBox->show());
+$objTableArea2->endRow();
+$objTableArea2->startRow();
+$objTableArea2->addCell($this->objLanguage->languageText('mod_ahis_localityname', 'openaris'));
+$objTableArea2->addCell($localityNameBox->show());
+$objTableArea2->addCell($this->objLanguage->languageText('phrase_farmingsystem'));
+$objTableArea2->addCell($farmingSystemDrop->show());
+$objTableArea2->addCell($this->objLanguage->languageText('word_modifiedby'));
+$objTableArea2->addCell($modifiedBox->show());
+$objTableArea2->endRow();
+$objTableArea2->startRow();
+$objTableArea2->addCell($this->objLanguage->languageText('phrase_modifieddate'), NULL, 'top', NULL, NULL, 'colspan="5"');
+$objTableArea2->addCell($modifiedDateBox->show());
+$objTableArea2->endRow();
+
+$localitySet = new fieldset('localitySet');
+$localitySet->setLegend($this->objLanguage->languageText('mod_ahis_localitydataentry', 'openaris'));
+$localitySet->addContent($objTableArea2->show());
+
+$objForm = new form('reportForm', $this->uri(array('action' => 'passive_species')));
+$objForm->addToForm($localitySet->show());
+
+$objTableArea3 = $this->newObject('htmltable','htmlelements');
+$objTableArea3->cellspacing = 2;
+$objTableArea3->width = NULL;
+
+$objTableArea3->startHeaderRow();
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_localitytype', 'openaris'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_localityname', 'openaris'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_latitude'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_direction'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_longitude'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_direction'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_farmingsystem'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby'));
+$objTableArea3->endHeaderRow();
+
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
+
+$content = $objTableArea1->show()."<hr />".$objForm->show()."<hr />".$objTableArea3->show();
+echo $objHeading->show()."<br />".$content;
+
+/*$sButton = new button('enter', $this->objLanguage->languageText('word_next'));
 $sButton->setToSubmit();
 $sButton->setCSS('nextButton');
 $backUri = $this->uri(array('action'=>'passive_surveillance'));
@@ -186,13 +305,4 @@ $objForm->addRule('latdeg', $this->objLanguage->languageText('mod_ahis_vallatitu
 $objForm->addRule('longdeg', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
 $objForm->addRule('latmin', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
 $objForm->addRule('longmin', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
-
-//$objLayer = new layer();
-//$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
-//$objLayer->align = 'center';
-
-$scriptUri = $this->getResourceURI('util.js');
-$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
-
-//echo $objLayer->show();
-echo $objHeading->show()."<br />".$objForm->show();
+*/

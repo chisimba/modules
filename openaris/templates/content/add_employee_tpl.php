@@ -248,7 +248,7 @@ $objForm->addRule('surname', $this->objLanguage->languageText('mod_ahis_surnamer
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'openaris'), 'required');
 $objForm->addRule('datebirth', $this->objLanguage->languageText('mod_ahis_valdatebirth', 'openaris'), 'datenotfuture');
 $objForm->addRule('hireddate', $this->objLanguage->languageText('mod_ahis_valdatehired', 'openaris'), 'datenotfuture');
-
+$objForm->addRule('phone', $this->objLanguage->languageText('mod_ahis_phonerequired', 'openaris'), 'required');
 $objForm->addRule(array('confirm', 'password'), $this->objLanguage->languageText('mod_ahis_pwordmismatch', 'openaris'), 'compare');
 
 $scriptUri = $this->getResourceURI('util.js');

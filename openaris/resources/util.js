@@ -175,6 +175,8 @@ function toggleOutbreak(value) {
 		disableDatePicker('sampleDate');
 		disableDatePicker('diagnosisDate');
 		disableDatePicker('interventionDate');
+		jQuery('[name=enter]').removeClass('nextButton');
+		jQuery('[name=enter]').addClass('saveButton');
 		
 	} else {
 		jQuery('#input_reportTypeId').removeAttr('disabled');
@@ -190,6 +192,8 @@ function toggleOutbreak(value) {
 		enableDatePicker('sampleDate');
 		enableDatePicker('diagnosisDate');
 		enableDatePicker('interventionDate');
+		jQuery('[name=enter]').removeClass('saveButton');
+		jQuery('[name=enter]').addClass('nextButton');
 		
 	}
 }
