@@ -202,14 +202,14 @@ $objTable->addCell($roleDrop->show(), NULL, NULL, NULL, NULL, 'colspan=2');
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_fax').": ");
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_word_fax', 'openaris').": ");
 $objTable->addCell($faxInput->show());
-$objTable->addCell($this->objLanguage->languageText('word_phone').": ");
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_word_phone', 'openaris').": ");
 $objTable->addCell($phoneInput->show(), NULL, NULL, NULL, NULL, 'colspan=2');
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_email').": ");
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_word_email', 'openaris').": ");
 $objTable->addCell($emailInput->show());
 $objTable->addCell('', NULL, NULL, NULL, NULL, 'colspan=3');
 $objTable->endRow();
