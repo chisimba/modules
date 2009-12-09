@@ -298,7 +298,7 @@ class dbsubmissions extends dbtable
     {
         $xmlData = array();
         $xml = $this->xmlMeta->openXML('etd_'.$submitId);
-        if(!empty($xml)){
+        if(is_array($xml) && !empty($xml)){
             $xmlData = array_merge($xml['metadata']['dublincore'], $xml['metadata'][$this->metaType]);
         }
         return $xmlData;
