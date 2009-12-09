@@ -85,6 +85,7 @@ import snoozesoft.systray4j.SysTrayMenu;
 import snoozesoft.systray4j.SysTrayMenuEvent;
 import snoozesoft.systray4j.SysTrayMenuIcon;
 import snoozesoft.systray4j.SysTrayMenuListener;
+import org.jivesoftware.smack.packet.Packet;
 
 /**
  *
@@ -136,6 +137,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
     private JButton okButton = new JButton("Set");
     private JLabel percLbl = new JLabel(" % ");
     private JTextArea screenOptionText = new JTextArea();
+    private JPanel cPanel = new JPanel();
     private static final String[] toolTips = {
         "SysTray for Java rules!",
         "brought to you by\nSnoozeSoft 2004"
@@ -151,6 +153,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
     SysTrayMenu menu;
     int currentIndexIcon;
     int currentIndexTooltip;
+    //private Item item = new Item();
 
     /** Creates new form MainFrame */
     public MainFrame(String roomName) {
@@ -170,6 +173,19 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         //toolsPanel.add(whiteboardPanel.getWbToolbar(), BorderLayout.SOUTH);
         webPresentNavigator = new WebpresentNavigator();
 
+
+        tabbedPane.addTab("ScreenShare", cPanel);
+        screenShareMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (tabbedPane.getSelectedIndex() == 3){
+                   GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab1(shareSizeFr);
+                 }
+            }
+        });
+        
+
+    
+
         userListPanel.getUserTabbedPane().addTab("Presentations", webPresentNavigator);
         userListPanel.getUserTabbedPane().addChangeListener(new ChangeListener() {
 
@@ -182,10 +198,11 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
                 if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
                     webPresentNavigator.populateWithRoomResources();
                     adjustSize();
-
+                    GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab1(shareSizeFr);
                 }
-            }
+               }
         });
+
 
         generalWebBrowser.addWebBrowserListener(new RWebBrowserListener(generalWebBrowser));
         slidesNavigator = new SlidesNavigator(this);
@@ -210,6 +227,8 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
                 }
             }
         });
+
+
         whiteboardPanel.getWhiteboard().setDefaultRoom(true);
         if (GUIAccessManager.skinClass == null) {
             for (int i = 0; i < speakerCols; i++) {
@@ -249,6 +268,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         presentationFC.setMultiSelectionEnabled(true);
         doRealRoomJoin(roomName);
         userListPanel.getStartAudioVideoButton().setEnabled(!ConnectionManager.useEC2);
+        //GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab(t);
         displayAvator();
         setSize(ss);
         if (GUIAccessManager.skinClass == null) {
@@ -263,6 +283,8 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
                 }
             }
         });
+
+
 
 //        addCustomComponents();
         userListPanel.showRoomOwnerAudioVideoWindow();
@@ -318,6 +340,7 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
         }else{
            realtimeSysTray.init(userListPanel);
         }
+     
     }
 
 
@@ -2130,6 +2153,9 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
     public RoomResourcesList getRoomResourcesList() {
         return roomResourcesList;
     }
+
+    
+
 
     /*** The gets **/
     public JComponent getGlass() {

@@ -126,8 +126,49 @@ public class WebBrowserManager {
                 mPanel.add(webBrowser, BorderLayout.CENTER);
                 mPanel.add(cPanel, BorderLayout.SOUTH);
                 cPanel.add(stopButton);
-                GUIAccessManager.mf.getChatTabbedPane().addTab("Preview", mPanel);
-                GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(mPanel);
+                GUIAccessManager.mf.getTabbedPane().addTab("ScreenShare", cPanel);
+                GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(cPanel);
+                //GUIAccessManager.mf.getChatTabbedPane().addTab("Preview", mPanel);
+                //GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(mPanel);
+            }
+        });
+        NativeInterface.runEventPump();
+
+    }
+
+    public void showScreenShareViewerAsEmbbededTab1(final JFrame fr) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                final JWebBrowser webBrowser = new JWebBrowser();
+                JPanel mPanel = new JPanel(new BorderLayout());
+                JPanel cPanel = new JPanel();
+                JButton stopButton = new JButton("Screen Share Options");
+                stopButton.setBackground(Color.RED);
+                stopButton.addActionListener(new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        for (int i = 1; i < GUIAccessManager.mf.getChatTabbedPane().getTabCount(); i++) {
+                            GUIAccessManager.mf.getChatTabbedPane().remove(i);
+                        }
+                        fr.setVisible(true);
+                    }
+                });
+
+                webBrowser.setMenuBarVisible(false);
+                webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
+                webBrowser.setBarsVisible(false);
+                webBrowser.setButtonBarVisible(false);
+                webBrowser.setLocationBarVisible(false);
+                webBrowser.setStatusBarVisible(false);
+                mPanel.add(webBrowser, BorderLayout.CENTER);
+                mPanel.add(cPanel, BorderLayout.SOUTH);
+                cPanel.add(stopButton);
+                GUIAccessManager.mf.getTabbedPane().addTab("ScreenShare", cPanel);
+                GUIAccessManager.mf.getTabbedPane().setSelectedComponent(cPanel);
+                //GUIAccessManager.mf.getChatTabbedPane().addTab("Preview", mPanel);
+                //GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(mPanel);
             }
         });
         NativeInterface.runEventPump();
