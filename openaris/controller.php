@@ -129,6 +129,7 @@ class openaris extends controller {
             $this->objCausative = $this->getObject('causative');
             $this->objNewherd = $this->getObject('newherd');
             $this->objViewReport = $this->getObject('report');
+            $this->objVacinventory = $this->getObject('vacinventory');
             $this->objSampledetails = $this->getObject('sampledetails');
             $this->objSampling = $this->getObject('sampling');
             $this->objAnimalProduction = $this->getObject('animalproduction');
@@ -2543,8 +2544,8 @@ class openaris extends controller {
 					return 'animaldeworming_tpl.php';
 
 			case 'vacinventory':
-			      $this->setVar('repdate',$this->getSession('ps_calendardate',date('Y-m-d')));
-			      $this->setVar('ibardate',$this->getSession('ps_calendardate',date('Y-m-d')));
+			      $this->setVar('repdate',$this->getSession('ps_repdate	     		    $result = $this->objVacinventory->insert($data);',date('Y-m-d')));
+			      $this->setVar('ibardate',$this->getSession('ps_ibardate',date('Y-m-d')));
 			      $this->setVar('officerId', $this->getSession('ps_officerId'));
 			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));	
 			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));			      		      
@@ -2604,6 +2605,10 @@ class openaris extends controller {
 
 			      
 			case 'vacinventory2':
+			
+			      
+			
+			
 			   	$ddata = $this->objDiseases->getAll("ORDER BY disease_name");
                $this->setVar('repdate',$this->getSession('ps_repdate',date('Y-m-d')));
 			      $this->setVar('ibardate',$this->getSession('ps_ibardate',date('Y-m-d')));		
@@ -2615,7 +2620,16 @@ class openaris extends controller {
 	     			$this->setVar('partname', $this->getSession('ps_admin3'));	     				     			     				     			   			
 	     			$this->setVar('repoff', $this->getSession('ps_officerId'));
 	     			$this->setVar('phone',$this->getSession('ps_phone'));
-
+               $this->setVar('diseases',$this->getSession('ps_disease'));
+               $this->setVar('vaccinesource',$this->getSession('ps_vacsource'));
+               $this->setVar('lotnumber',$this->getSession('ps_lotno'));
+               $this->setVar('planprovac',$this->getSession('ps_planprovac'));
+               $this->setVar('condprovac',$this->getSession('ps_condprovac'));
+               $this->setVar('cumprovac',$this->getSession('ps_cumprovac'));
+               $this->setVar('planconvac',$this->getSession('ps_planconvac'));
+               $this->setVar('condconvac',$this->getSession('ps_condconvac'));
+               $this->setVar('cumconvac',$this->getSession('ps_cumconvac'));
+               $this->setVar('comments',$this->getSession('ps_comments'));
 	     			$this->setVar('fax',$this->getSession('ps_phone'));
 	     			$this->setVar('email',$this->getSession('ps_phone'));
 	     			$this->setVar('fax1',$this->getSession('ps_fax1'));
@@ -2627,6 +2641,25 @@ class openaris extends controller {
 			      return 'vacinventory2_tpl.php';
 			      
 	     case 'vacinventory2_add':
+	     
+	            
+               //Set session of screen 2
+               $this->setSession('ps_outrefno',$this->getParam('outrefno'));
+               $this->setSession('ps_disease',$this->getParam('disease'));
+               $this->setSession('ps_species',$this->getParam('species'));
+               $this->setSession('ps_vacsource',$this->getParam('vaccinesource'));
+               $this->setSession('ps_lotno',$this->getParam('lotnumber'));
+               $this->setSession('ps_mandate',$this->getParam('mandate'));
+               $this->setSession('ps_expdate',$this->getParam('expdate'));
+               $this->setSession('ps_planprovac',$this->getParam('planprovac'));
+               $this->setSession('ps_condprovac',$this->getParam('condprovac'));
+               $this->setSession('ps_cumprovac',$this->getParam('cumprovac'));
+               $this->setSession('ps_planconvac',$this->getParam('planconvac'));
+               $this->setSession('ps_condconvac',$this->getParam('condconvac'));
+               $this->setSession('ps_cumconvac',$this->getParam('cumconvac'));
+               $this->setSession('ps_comments',$this->getParam('comments'));
+               
+               
 
 	     		   $data['repoff']= $this->getSession('ps_officerId');
 	     		   $data['dataoff']= $this->getSession('ps_dataoff');
@@ -2648,10 +2681,57 @@ class openaris extends controller {
 	     		   $data['vphone']= $this->getSession('ps_vphone');
 	     		   $data['vfax']= $this->getSession('ps_vfax');
 	     		   $data['vemail']=$this->getSession('ps_vemail');
-	     		   print_r($data);exit;
-	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   
+	     		   $data['outrefno']=$this->getSession('ps_outrefno');
+	     		   $data['disease']=$this->getSession('ps_disease');
+	     		   $data['species']=$this->getSession('ps_species');
+	     		   $data['vacsource']=$this->getSession('ps_vacsource');
+	     		   $data['lotno']=$this->getSession('ps_lotno');
+	     		   $data['mandate']=$this->getSession('ps_mandate');
+	     		   $data['expdate']=$this->getSession('ps_expdate');
+	     		   $data['planprovac']=$this->getSession('ps_planprovac');
+	     		   $data['condprovac']=$this->getSession('ps_condprovac');
+	     		   $data['cumprovac']=$this->getSession('ps_cumprovac');
+	     		   $data['planconvac']=$this->getSession('ps_planconvac');
+	     		   $data['condconvac']=$this->getSession('ps_condconvac');
+	     		   $data['cumconvac']=$this->getSession('ps_cumconvac');	  
+	     		   $data['comments']=$this->getSession('ps_comments');   		   
+	     		   $sub = $this->getParam('fin');
+	     		  // print_r($data); print_r($sub); 
+	     		   if($sub == 'Next')
+	     		   {
+	     		    $result = $this->objVacinventory->insert($data);
+	     		   $this->unsetVaccineInventory2();
+				   return $this->nextAction('vacinventory2');
+	     		   }
+	     		   if($sub == 'Finish'){
+	     		   $result = $this->objVacinventory->insert($data);
+	     		    $this->unsetVaccineInventory1();
+	     		    $this->unsetVaccineInventory2();
+				   return $this->nextAction('');
+	     		   
+	     		   
+	     		   }
+
+
 			      return 'vacinventory2_add_tpl.php';	
 	      
+	      case 'vacinventory2_clear':
+	             $this->unsetSession('ps_outrefno');
+	             $this->unsetSession('ps_disease');
+	             $this->unsetSession('ps_species');
+	             $this->unsetSession('ps_vacsource');
+	             $this->unsetSession('ps_lotno');
+	             $this->unsetSession('ps_mandate');
+	             $this->unsetSession('ps_expdate');
+	             $this->unsetSession('ps_planprovac');
+	             $this->unsetSession('ps_condprovac');
+	             $this->unsetSession('ps_cumprovac');
+	             $this->unsetSession('ps_planconvac');
+	             $this->unsetSession('ps_condconvac');
+	             $this->unsetSession('ps_cumconvac');
+	             $this->unsetSession('ps_comments');
+	            
+				   return $this->nextAction('vacinventory2');
 			case 'animalvaccine_add':
 					$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('dist',$this->objAnimalmovement->getDistrict($id));
@@ -4928,6 +5008,53 @@ class openaris extends controller {
       }
 	
 	}
+	
+	    private function unsetVaccineInventory1() {
+                $this->unsetSession('ps_officerId');
+	             $this->unsetSession('ps_dataoff');
+	             $this->unsetSession('ps_vetoff');
+	             $this->unsetSession('ps_repdate');
+	             $this->unsetSession('ps_ibardate');
+	             $this->unsetSession('ps_country');
+	             $this->unsetSession('ps_month');
+	             $this->unsetSession('ps_year');
+	             $this->unsetSession('ps_admin1');
+	             $this->unsetSession('ps_admin2');
+	             $this->unsetSession('ps_admin3');
+	             $this->unsetSession('ps_loctype');
+	             $this->unsetSession('ps_locname');
+	             $this->unsetSession('ps_lattitude');
+	             $this->unsetSession('ps_longitude');
+	             $this->unsetSession('ps_dphone');
+	             $this->unsetSession('ps_demail');
+	             $this->unsetSession('ps_dfax');
+	             $this->unsetSession('ps_vphone');
+	             $this->unsetSession('ps_vemail');
+	             $this->unsetSession('ps_vfax');	    
+	    
+	    
+	    
+	    }
+	    
+	     private function unsetVaccineInventory2() {
+                $this->unsetSession('ps_outrefno');
+	             $this->unsetSession('ps_disease');
+	             $this->unsetSession('ps_species');
+	             $this->unsetSession('ps_vacsource');
+	             $this->unsetSession('ps_lotno');
+	             $this->unsetSession('ps_mandate');
+	             $this->unsetSession('ps_expdate');
+	             $this->unsetSession('ps_planprovac');
+	             $this->unsetSession('ps_condprovac');
+	             $this->unsetSession('ps_cumprovac');
+	             $this->unsetSession('ps_planconvac');
+	             $this->unsetSession('ps_condconvac');
+	             $this->unsetSession('ps_cumconvac');
+	             $this->unsetSession('ps_comments');	    
+	    
+	    
+	    
+	    }
     /**
      * Method to determine whether the user needs to be logged in
      * 

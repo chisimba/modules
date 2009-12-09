@@ -40,8 +40,9 @@ $backButton = $this->uri(array('action'=>'vacinventory'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backButton'");
 
 //create next button
-$nextButton = $this->uri(array('action'=>'vacinventory2_add'));
-$nextButton = new button('next', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextButton'");
+$nextButton = new button('fin', $this->objLanguage->languageText('word_next'));
+
+$nextButton->setToSubmit();
 
 //print_r($repoff);
 //print_r($dataoff);
@@ -70,12 +71,12 @@ $vetOff->extra = 'disabled';
 
 //report date set default to today 
 //print_r($repdate);
-$reportDate = $this->getObject('datepicker','htmlelements');
+$reportDate = $this->newObject('datepicker','htmlelements');
 $reportDate->setName('repdate');
 $reportDate->setDefaultDate($repdate);
 
 //IBAR date set default to today
-$ibarDate = $this->getObject('datepicker','htmlelements');
+$ibarDate = $this->newObject('datepicker','htmlelements');
 $ibarDate->setName('ibardate');
 $ibarDate->setDefaultDate($ibardate);
 
@@ -88,8 +89,8 @@ $outbreakRef = new dropdown('outbreakref');
 //dropdown for disease
 $disease = new dropdown('disease');
 $disease->addOption('null','Select');
-$disease->addFromDB($arraydisease,'disease_name','id');
-$disease->setSelected('null');
+$disease->addFromDB($arraydisease,'disease_name','disease_name');
+$disease->setSelected($diseases);
 
 //dropdown form disease
 $species = new dropdown('species');
@@ -103,12 +104,12 @@ $vaccineSource = new textinput('vaccinesource',$vaccinesource);
 $lotNumber = new textinput('lotnumber',$lotnumber);
 
 //text input for manufacture date
-$manDate = $this->getObject('datepicker','htmlelements');
+$manDate = $this->newObject('datepicker','htmlelements');
 $manDate->setName('mandate');
 $manDate->setDefaultDate($mandate);
 
 //date object for expiration date
-$expDate = $this->getObject('datepicker','htmlelements');
+$expDate = $this->newObject('datepicker','htmlelements');
 $expDate->setName('expdate');
 $expDate->setDefaultDate($expdate);
 
@@ -244,8 +245,7 @@ $objTable2->cssClass = 'min50';
 $objTable2->startRow();
 $objTable2->addCell($this->objLanguage->languageText('word_comments'));
 $objTable2->addCell($comments->show());
-$objTable2->addCell($this->objLanguage->languageText('word_comments'));
-$objTable2->addCell($comments->show());
+
 $objTable2->endRow();
 
 

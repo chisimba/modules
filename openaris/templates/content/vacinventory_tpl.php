@@ -284,7 +284,7 @@ $objForm->addRule('yeardate', 'Please Select Year', 'select');
 $objForm->addRule('admin1', 'Please Select Partition Type', 'select');
 $objForm->addRule('admin2', 'Please Select Partition level', 'select');
 $objForm->addRule('admin3', 'Please Select Partition name', 'select');
-
+$objForm->addRule('phone',$this->objLanguage->languageText('word_required'),'required');
 
 
 $objLayer = new layer();
