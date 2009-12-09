@@ -105,7 +105,7 @@ public class StartScreen {
             t.add(startButton);
 
 
-            stopButton = new JButton("stop Sharing");
+            stopButton = new JButton("Stop Sharing");
             stopButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent arg0) {

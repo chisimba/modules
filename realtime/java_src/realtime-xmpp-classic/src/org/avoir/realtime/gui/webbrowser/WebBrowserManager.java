@@ -25,11 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -37,8 +32,6 @@ import javax.swing.SwingUtilities;
 import org.avoir.realtime.gui.main.GUIAccessManager;
 import org.avoir.realtime.gui.screenviewer.webstart.gui.StartScreen;
 import org.avoir.realtime.net.ConnectionManager;
-import org.avoir.realtime.net.packets.RealtimePacket;
-import org.avoir.realtime.gui.screenviewer.webstart.screen.CaptureScreen;
 
 /**
  *
@@ -58,19 +51,19 @@ public class WebBrowserManager {
      * This method is only compatible in java 1.6 or above
      */
     public void showScreenShareViewer() {
-       /* SwingUtilities.invokeLater(new Runnable() {
+        /* SwingUtilities.invokeLater(new Runnable() {
 
-            public void run() {
-                try {
-                    try {
-                        java.awt.Desktop.getDesktop().browse(new URI(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1"));
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                } catch (URISyntaxException ex) {
-                    ex.printStackTrace();
-                }
-            }
+        public void run() {
+        try {
+        try {
+        java.awt.Desktop.getDesktop().browse(new URI(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1"));
+        } catch (IOException ex) {
+        ex.printStackTrace();
+        }
+        } catch (URISyntaxException ex) {
+        ex.printStackTrace();
+        }
+        }
         });*/
     }
 
@@ -78,7 +71,7 @@ public class WebBrowserManager {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                final JWebBrowser webBrowser = new JWebBrowser();
+                /*final JWebBrowser webBrowser = new JWebBrowser();
                 frame.setTitle(title);
                 frame.setAlwaysOnTop(true);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -86,15 +79,18 @@ public class WebBrowserManager {
                 frame.setSize(w, h);
                 frame.setLocationByPlatform(centerScreen);
                 frame.setVisible(true);
-                webBrowser.setMenuBarVisible(false);
-                webBrowser.navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
+                webBrowser.setMenuBarVisible(false);*/
+                GUIAccessManager.mf.getScreenShareView().navigate(ConnectionManager.AUDIO_VIDEO_URL + "/screen/screen.html?username=test1");
+                if (GUIAccessManager.mf.getTabbedPane().getTabCount() > 2) {
+                    GUIAccessManager.mf.getTabbedPane().setSelectedIndex(3);
+                }
             }
         });
         NativeInterface.runEventPump();
     }
 
     public void closeScreenShareViewer() {
-        frame.dispose();
+       GUIAccessManager.mf.getScreenShareView().setHTMLContent("Screen share stopped");
     }
 
     public void showScreenShareViewerAsEmbbededTab(final JFrame fr) {
@@ -126,10 +122,10 @@ public class WebBrowserManager {
                 mPanel.add(webBrowser, BorderLayout.CENTER);
                 mPanel.add(cPanel, BorderLayout.SOUTH);
                 cPanel.add(stopButton);
-                GUIAccessManager.mf.getTabbedPane().addTab("ScreenShare", cPanel);
-                GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(cPanel);
-                //GUIAccessManager.mf.getChatTabbedPane().addTab("Preview", mPanel);
-                //GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(mPanel);
+                //GUIAccessManager.mf.getTabbedPane().addTab("ScreenShare", cPanel);
+                //GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(cPanel);
+                GUIAccessManager.mf.getChatTabbedPane().addTab("Preview", mPanel);
+                GUIAccessManager.mf.getChatTabbedPane().setSelectedComponent(mPanel);
             }
         });
         NativeInterface.runEventPump();
@@ -182,6 +178,4 @@ public class WebBrowserManager {
 
 
     }
-
-   
 }
