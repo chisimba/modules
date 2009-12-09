@@ -358,7 +358,8 @@ class openaris extends controller {
                 $this->setVar('sampleDate', $this->getSession('ps_sampleDate', date('Y-m-d')));
                 $this->setVar('diagnosisDate', $this->getSession('ps_diagnosisDate', date('Y-m-d')));
                 $this->setVar('interventionDate', $this->getSession('ps_interventionDate', date('Y-m-d')));
-                
+                $outbreakCode = "KEATX00309";
+				
 
                 return "passive_surveillance_tpl.php";
 			
@@ -369,6 +370,7 @@ class openaris extends controller {
 				break;
 			
 			case "disease_report_screen_2":
+				$outbreakCode = "KEATX00309";
 				$countryId = $this->getParam('countryId', $this->getSession('ps_countryId'));
                 $partitionTypeId = $this->getParam('partitionTypeId', $this->getSession('ps_partitionTypeId'));
                 $partitionLevelId = $this->getParam('partitionLevelId', $this->getSession('ps_partitionLevelId'));
@@ -388,7 +390,6 @@ class openaris extends controller {
 					//save zero report
 					return $this->nextAction('passive_feedback', array('success'=>1));
 				}
-				$outbreakCode = "KEATX00309";
 				$reportTypeId = $this->getParam('reportTypeId', $this->getSession('ps_reportTypeId'));
                 $outbreakId = $this->getParam('outbreakId', $this->getSession('ps_outbreakId'));
                 $diseaseId = $this->getParam('diseaseId', $this->getSession('ps_diseaseId'));
@@ -445,90 +446,53 @@ class openaris extends controller {
 				$this->setVar('modifiedDate', $this->getSession('modifiedDate', ''));
 				return 'disease_report_2_tpl.php';
             
-            case 'passive_species':
-                $dateVet = $this->getParam('dateVet', $this->getSession('ps_dateVet'));
-                $dateOccurence = $this->getParam('dateOccurence', $this->getSession('ps_dateOccurence'));
-                $dateDiagnosis = $this->getParam('dateDiagnosis', $this->getSession('ps_dateDiagnosis'));
-                $dateInvestigation = $this->getParam('dateInvestigation', $this->getSession('ps_dateInvestigation'));
-                $locationId = $this->getParam('locationId', $this->getSession('ps_locationId'));
-                $longdeg = $this->getParam('longdeg', $this->getSession('ps_longdeg'));
-                $latdeg = $this->getParam('latdeg', $this->getSession('ps_latdeg'));
-                $longmin = $this->getParam('longmin', $this->getSession('ps_longmin'));
-                $latmin = $this->getParam('latmin', $this->getSession('ps_latmin'));
-                $longdirec = $this->getParam('longdirection', $this->getSession('ps_longdirec'));
-                $latdirec = $this->getParam('latdirection', $this->getSession('ps_latdirec'));
-                $diseaseId = $this->getParam('diseaseId', $this->getSession('ps_diseaseId'));
-                $causativeId = $this->getParam('causativeId', $this->getSession('ps_causativeId'));
-                
-                $this->setSession('ps_dateVet', $dateVet);
-                $this->setSession('ps_dateOccurence', $dateOccurence);
-                $this->setSession('ps_dateDiagnosis', $dateDiagnosis);
-                $this->setSession('ps_dateInvestigation', $dateInvestigation);
-                $this->setSession('ps_longdeg', $longdeg);
-                $this->setSession('ps_latdeg', $latdeg);
-                $this->setSession('ps_longmin', $longmin);
-                $this->setSession('ps_latmin', $latmin);
-                $this->setSession('ps_longdirec', $longdirec);
-                $this->setSession('ps_latdirec', $latdirec);
-                $this->setSession('ps_locationId', $locationId);
-                $this->setSession('ps_diseaseId', $diseaseId);
-                $this->setSession('ps_causativeId', $causativeId);
-                
-                $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
-                $this->setVar('arrayProduction', $this->objProduction->getAll("ORDER BY name"));
-                $this->setVar('arrayAge', $this->objAge->getAll("ORDER BY name"));
-                $this->setVar('arraySex', $this->objSex->getAll("ORDER BY name"));
-                $this->setVar('arraySpecies', $this->objSpecies->getAll("ORDER BY name"));
-                $this->setVar('arrayBasis', $this->objDiagnosis->getAll("ORDER BY name"));
-                $this->setVar('arrayControl', $this->objControl->getAll("ORDER BY name"));
-                
-                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
-                $this->setVar('productionId', $this->getSession('ps_productionId'));
-                $this->setVar('ageId', $this->getSession('ps_ageId'));
-                $this->setVar('sexId', $this->getSession('ps_sexId'));
-                $this->setVar('speciesId', $this->getSession('ps_speciesId'));
-                $this->setVar('basisId', $this->getSession('ps_basisId'));
-                $this->setVar('controlId', $this->getSession('ps_controlId'));
-                
-                $this->setVar('calendardate', $this->getSession('ps_calendardate'));
-                $this->setVar('refNo', $this->getSession('ps_refNo'));
-                $this->setVar('susceptible', $this->getSession('ps_susceptible'));
-                $this->setVar('cases', $this->getSession('ps_cases'));
-                $this->setVar('deaths', $this->getSession('ps_deaths'));
-                $this->setVar('vaccinated', $this->getSession('ps_vaccinated'));
-                $this->setVar('slaughtered', $this->getSession('ps_slaughtered'));
-                $this->setVar('destroyed', $this->getSession('ps_destroyed'));
-                $this->setVar('production', $this->getSession('ps_production'));
-                $this->setVar('newcases', $this->getSession('ps_newcases'));
-                $this->setVar('recovered', $this->getSession('ps_recovered'));
-                $this->setVar('prophylactic', $this->getSession('ps_prophylactic'));
-                
-                return 'passive_species_tpl.php';
+            case 'disease_report_screen_3':
+                $this->setVar('outbreakCode', $this->getParam('outbreakCode'));
+				$this->setVar('arrayNatureOfDiagnosis', $this->objDiagnosticMethod->getAll("ORDER BY diagnostic_method"));
+				$this->setVar('diagnosisId', $this->getSession('ps_diagnosisId'));
+				$this->setVar('createdBy', $this->objUser->username($this->getSession('createdById')));
+				$this->setVar('createdDate', $this->getSession('createdDate', date('Y-m-d')));
+				$this->setVar('modifiedBy', '');
+				$this->setVar('modifiedDate', $this->getSession('modifiedDate', ''));
+				
+                return 'disease_report_3_tpl.php';
             
-            case 'passive_vaccine':
-                $this->setSession('ps_productionId', $this->getParam('productionId'));
-                $this->setSession('ps_ageId', $this->getParam('ageId'));
-                $this->setSession('ps_sexId', $this->getParam('sexId'));
-                $this->setSession('ps_speciesId', $this->getParam('speciesId'));
-                $this->setSession('ps_controlId', $this->getParam('controlId'));
-                $this->setSession('ps_basisId', $this->getParam('basisId'));
-                $this->setSession('ps_cases', $this->getParam('cases'));
-                $this->setSession('ps_susceptible', $this->getParam('susceptible'));
-                $this->setSession('ps_deaths', $this->getParam('deaths'));
-                $this->setSession('ps_vaccinated', $this->getParam('vaccinated'));
-                $this->setSession('ps_slaughtered', $this->getParam('slaughtered'));
-                $this->setSession('ps_destroyed', $this->getParam('destroyed'));
-                $this->setSession('ps_newcases', $this->getParam('newcases'));
-                $this->setSession('ps_production', $this->getParam('production'));
-                $this->setSession('ps_recovered', $this->getParam('recovered'));
-                $this->setSession('ps_prophylactic', $this->getParam('prophylactic'));
-                
-                $this->setVar('calendardate', $this->getSession('ps_calendardate'));
-                $this->setVar('refNo', $this->getSession('ps_refNo'));
-                $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
-                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
-                
-                return 'passive_vaccine_tpl.php';
+            case 'disease_report_screen_4':
+                $this->setVar('outbreakCode', $this->getParam('outbreakCode'));
+				$this->setVar('arraySpecies', $this->objSpeciesNames->getAll("ORDER BY common_name"));
+				$this->setVar('arrayAgeGroup', $this->objSpeciesAgeGroup->getAll("ORDER BY agegroup"));
+				$this->setVar('arraySex', $this->objSex->getAll("ORDER BY name"));
+				
+				$this->setVar('risk', $this->getSession('ps_risk'));
+				$this->setVar('cases', $this->getSession('ps_cases'));
+				$this->setVar('deaths', $this->getSession('ps_deaths'));
+				$this->setVar('destroyed', $this->getSession('ps_destroyed'));
+				$this->setVar('slaughtered', $this->getSession('ps_slaughtered'));
+				$this->setVar('cumulativeCases', $this->getSession('ps_cumulativeCases'));
+				$this->setVar('cumulativeDeaths', $this->getSession('ps_cumulativeDeaths'));
+				$this->setVar('cumulativeDestroyed', $this->getSession('ps_cumulativeDestroyed'));
+				$this->setVar('cumulativeSlaughtered', $this->getSession('ps_cumulativeSlaughtered'));
+				
+				$this->setVar('speciesId', $this->getSession('ps_speciesId'));
+				$this->setVar('ageId', $this->getSession('ps_ageId'));
+				$this->setVar('sexId', $this->getSession('ps_sexId'));
+				$this->setVar('createdBy', $this->objUser->username($this->getSession('createdById')));
+				$this->setVar('createdDate', $this->getSession('createdDate', date('Y-m-d')));
+				$this->setVar('modifiedBy', '');
+				$this->setVar('modifiedDate', $this->getSession('modifiedDate', ''));
+				
+                return 'disease_report_4_tpl.php';
+            
+            case 'disease_report_screen_5':
+                $this->setVar('outbreakCode', $this->getParam('outbreakCode'));
+				$this->setVar('arrayNatureOfDiagnosis', $this->objDiagnosis->getAll("ORDER BY name"));
+				$this->setVar('diagnosisId', $this->getSession('ps_diagnosisId'));
+				$this->setVar('createdBy', $this->objUser->username($this->getSession('createdById')));
+				$this->setVar('createdDate', $this->getSession('createdDate', date('Y-m-d')));
+				$this->setVar('modifiedBy', '');
+				$this->setVar('modifiedDate', $this->getSession('modifiedDate', ''));
+				
+                return 'disease_report_5_tpl.php';
             
             case 'passive_save':
                 $ps_array['reporterid'] = $this->getSession('ps_officerId');

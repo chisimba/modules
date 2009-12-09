@@ -112,10 +112,10 @@ $objTableArea2 = $this->newObject('htmltable','htmlelements');
 $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
 
-$nextUri = '';
+$nextUri = $this->uri(array('action'=>'disease_report_screen_3', 'outbreakCode'=>$outbreakCode));
 $sButton = new button('enter', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
 $sButton->setCSS('nextButton');
-$backUri = $this->uri(array('action'=>'passive_surveillance'));
+$backUri = $this->uri(array('action'=>'passive_surveillance', 'outbreakCode'=>$outbreakCode));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $bButton->setCSS('backButton');
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearDiseaseLocality()");
@@ -183,6 +183,9 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('word_longitude')
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('word_direction'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_farmingsystem'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createddate'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'));
 $objTableArea3->endHeaderRow();
 
 $scriptUri = $this->getResourceURI('util.js');
@@ -190,13 +193,3 @@ $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scri
 
 $content = $objTableArea1->show()."<br />".$objForm->show()."<br />".$objTableArea3->show();
 echo $objHeading->show()."<br />".$content;
-
-/*
-$objForm->addToForm($objTable->show());
-$objForm->addRule('dateVet', $this->objLanguage->languageText('mod_ahis_valdatevet', 'openaris'), 'datenotfuture');
-$objForm->addRule('dateOccurence', $this->objLanguage->languageText('mod_ahis_valdateoccurence', 'openaris'), 'datenotfuture');
-$objForm->addRule('dateDiagnosis', $this->objLanguage->languageText('mod_ahis_valdatediagnosis', 'openaris'), 'datenotfuture');
-$objForm->addRule('dateInvestigation', $this->objLanguage->languageText('mod_ahis_valdateinvestigation', 'openaris'), 'datenotfuture');
-$objForm->addRule('latmin', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
-$objForm->addRule('longmin', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
-*/

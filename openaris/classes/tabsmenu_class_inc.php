@@ -119,9 +119,11 @@ class tabsmenu extends object
         {
             case 'select_officer':
             case 'passive_surveillance':
-            case 'passive_outbreak':
-            case 'passive_species':
-            case 'passive_vaccine':
+            case 'disease_report_screen_2':
+            case 'disease_report_screen_3':
+            case 'disease_report_screen_4':
+            case 'disease_report_screen_5':
+            case 'disease_report_screen_6':
             case 'passive_feedback':
                 $this->default = 'entry';
                 break;

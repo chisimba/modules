@@ -78,23 +78,8 @@ function clearDiseaseLocality() {
 	jQuery('#input_longitude').val('');
 }
 
-function clearPassiveSpecies() {
-    //$('input_speciesId').selectedIndex = 0;
-    //$('input_ageId').selectedIndex = 0;
-    //$('input_sexId').selectedIndex = 0;
-    //$('input_productionId').selectedIndex = 0;
-    //$('input_controlId').selectedIndex = 0;
-    //$('input_basisId').selectedIndex = 0;
-    $('input_susceptible').value = '';
-    $('input_cases').value = '';
-    $('input_deaths').value = '';
-    $('input_vaccinated').value = '';
-    $('input_slaughtered').value = '';
-    $('input_destroyed').value = '';
-    $('input_production').value = '';
-    $('input_newcases').value = '';
-    $('input_recovered').value = '';
-    $('input_prophylactic').value = '';  
+function clearNatureOfDiagnosis() {
+    $('input_diagnosisId').selectedIndex = 0; 
 }
 
 function clearPassiveVaccine() {
