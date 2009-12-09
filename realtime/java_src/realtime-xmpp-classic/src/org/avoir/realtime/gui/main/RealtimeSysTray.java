@@ -28,8 +28,9 @@ import org.avoir.realtime.common.util.ImageUtil;
 public class RealtimeSysTray {
 
     private static TrayIcon trayIcon = null;
-    private ImageIcon alertimage = ImageUtil.createImageIcon(this, "/images/icons_header.jpg");
-    private ImageIcon image = ImageUtil.createImageIcon(this, "/images/post-it-notes.gif");
+    private ImageIcon alertimage = ImageUtil.createImageIcon(this, "/images/appiconalert.png");
+    private ImageIcon image = ImageUtil.createImageIcon(this, "/images/appicon.png");
+
 
 
     public void init(final ParticipantListPanel userListPanel) {
@@ -48,23 +49,23 @@ public class RealtimeSysTray {
             MouseListener mouseListener = new MouseListener() {
 
                 public void mouseClicked(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse clicked!");
+                    //System.out.println("Tray Icon - Mouse clicked!");
                 }
 
                 public void mouseEntered(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse entered!");
+                    //System.out.println("Tray Icon - Mouse entered!");
                 }
 
                 public void mouseExited(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse exited!");
+                    //System.out.println("Tray Icon - Mouse exited!");
                 }
 
                 public void mousePressed(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse pressed!");
+                    //System.out.println("Tray Icon - Mouse pressed!");
                 }
 
                 public void mouseReleased(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse released!");
+                   // System.out.println("Tray Icon - Mouse released!");
                 }
             };
 
@@ -84,8 +85,6 @@ public class RealtimeSysTray {
 
                 }
             };
-
-
             ActionListener executeListener = new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
