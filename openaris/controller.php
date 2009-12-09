@@ -2554,10 +2554,28 @@ class openaris extends controller {
 			      $plevel = $this->objPartitionLevel->getAll("ORDER BY partitionlevel");
 			      $pname = $this->objPartition->getAll();
 			      $this->setVar('arraycountry',$data);
+			      $this->setVar('count',$this->getSession('ps_country'));
+			      $this->setVar('ptype',$this->getSession('ps_admin1'));
+			       $this->setVar('plevel',$this->getSession('ps_admin2'));
+			      $this->setVar('pname',$this->getSession('ps_admin3'));
+			      $this->setVar('month',$this->getSession('ps_month'));
+			      $this->setVar('year',$this->getSession('ps_year'));
+			      $this->setVar('longitude',$this->getSession('ps_longitude'));
+			      $this->setVar('lattitude',$this->getSession('ps_lattitude'));
+		         $this->setVar('locname',$this->getSession('ps_locname'));
+			      $this->setVar('loctype',$this->getSession('ps_loctype'));	      
+			      
 			      $this->setVar('arraypartitiontype',$ptype);
 			      $this->setVar('arraypartitionlevel',$plevel);
 			      $this->setVar('arraypartition',$pname);
 			      $this->setVar('dateyear',$this->getSession('ps_calendardate',date('Y-m-d')));
+			      $this->setVar('phone',$this->getSession('ps_dphone'));
+			      $this->setVar('fax',$this->getSession('ps_dfax'));
+			      $this->setVar('email',$this->getSession('ps_demail'));
+               $this->setVar('phone1',$this->getSession('ps_vphone'));
+			      $this->setVar('fax1',$this->getSession('ps_vfax'));
+			      $this->setVar('email1',$this->getSession('ps_vemail'));
+			      
 			      //$this->setSession('ps_calendardate', $this->getParam('calendardate'));
 			      return 'vacinventory_tpl.php';
 			case 'vacinventory_add':
@@ -2565,6 +2583,12 @@ class openaris extends controller {
 			      $this->setSession('ps_dataoff',$this->getParam('dataoff'));		
 			      $this->setSession('ps_vetoff',$this->getParam('vetoff'));	
 			      $this->setSession('ps_repdate',$this->getParam('repdate'));	
+			      $this->setSession('ps_dphone',$this->getParam('phone'));
+			      $this->setSession('ps_dfax',$this->getParam('fax'));
+			      $this->setSession('ps_demail',$this->getParam('email'));
+			      $this->setSession('ps_vphone',$this->getParam('phone1'));
+			      $this->setSession('ps_vfax',$this->getParam('fax1'));
+			      $this->setSession('ps_vemail',$this->getParam('email1'));  
 			      $this->setSession('ps_ibardate',$this->getParam('ibardate'));
 			      $this->setSession('ps_country',$this->getParam('country'));	
 			      $this->setSession('ps_month',$this->getParam('month'));	
@@ -2581,16 +2605,17 @@ class openaris extends controller {
 			      
 			case 'vacinventory2':
 			   	$ddata = $this->objDiseases->getAll("ORDER BY disease_name");
-               $this->setVar('repdate',$this->getSession('ps_calendardate',date('Y-m-d')));
-			      $this->setVar('ibardate',$this->getSession('ps_calendardate',date('Y-m-d')));		
-			      $this->setVar('mandate',$this->getSession('ps_calendardate',date('Y-m-d')));
-			      $this->setVar('expdate',$this->getSession('ps_calendardate',date('Y-m-d')));		   	   	
+               $this->setVar('repdate',$this->getSession('ps_repdate',date('Y-m-d')));
+			      $this->setVar('ibardate',$this->getSession('ps_ibardate',date('Y-m-d')));		
+			      $this->setVar('mandate',$this->getSession('ps_mandate',date('Y-m-d')));
+			      $this->setVar('expdate',$this->getSession('ps_expdate',date('Y-m-d')));		   	   	
 	     			$this->setVar('arraydisease',$ddata);
 	     			$this->setVar('parttype', $this->getSession('ps_admin1'));	  
 	     			$this->setVar('partlevel', $this->getSession('ps_admin2'));	
 	     			$this->setVar('partname', $this->getSession('ps_admin3'));	     				     			     				     			   			
 	     			$this->setVar('repoff', $this->getSession('ps_officerId'));
 	     			$this->setVar('phone',$this->getSession('ps_phone'));
+
 	     			$this->setVar('fax',$this->getSession('ps_phone'));
 	     			$this->setVar('email',$this->getSession('ps_phone'));
 	     			$this->setVar('fax1',$this->getSession('ps_fax1'));
@@ -2603,9 +2628,9 @@ class openaris extends controller {
 			      
 	     case 'vacinventory2_add':
 
-	     		   $data['repoff']= $this->getParam('repoff');
-	     		   $data['dataoff']= $this->getParam('dataoff');
-	     		   $data['vetoff']=$this->getParam('vetoff');
+	     		   $data['repoff']= $this->getSession('ps_officerId');
+	     		   $data['dataoff']= $this->getSession('ps_dataoff');
+	     		   $data['vetoff']=$this->getSession('ps_vetoff');
 	     		   $data['ibardate']=$this->getSession('ps_ibardate');
 	     		   $data['repdate']=$this->getSession('ps_repdate');
 	     		   $data['country']=$this->getSession('ps_country');
@@ -2614,9 +2639,15 @@ class openaris extends controller {
 	     		   $data['parttype']=$this->getSession('ps_admin1');
 	     		   $data['partlevel']=$this->getSession('ps_admin2');
 	     		   $data['partname']=$this->getSession('ps_admin3');
-	     		   $data['loctype']=$this->getSession('loctype');
+	     		   $data['loctype']=$this->getSession('ps_loctype');
 	     		   $data['lattitude']=$this->getSession('ps_lattitude');
 	     		   $data['longitude']=$this->getSession('ps_longitude');
+	     		   $data['dphone']= $this->getSession('ps_dphone');
+	     		   $data['dfax']=$this->getSession('ps_dfax');
+	     		   $data['demail']= $this->getSession('ps_demail');
+	     		   $data['vphone']= $this->getSession('ps_vphone');
+	     		   $data['vfax']= $this->getSession('ps_vfax');
+	     		   $data['vemail']=$this->getSession('ps_vemail');
 	     		   print_r($data);exit;
 	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   
 			      return 'vacinventory2_add_tpl.php';	

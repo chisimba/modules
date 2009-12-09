@@ -56,13 +56,13 @@ $repOff->setSelected($repoff);
 $repOff->extra = 'disabled';
 
 //text input for data entry officer 
-$dataOff = new dropdown('dataoff',$dataoff);
+$dataOff = new dropdown('dataoff');
 $dataOff->addOption('null','Select');
 $dataOff->addFromDB($userList, 'name', 'name');
 $dataOff->setSelected($dataoff);
 $dataOff->extra = 'disabled';
 //text input for vetofficer
-$vetOff = new dropdown('vetoff',$vetoff);
+$vetOff = new dropdown('vetoff');
 $vetOff->addOption('null','Select');
 $vetOff->addFromDB($userList, 'name', 'name');
 $vetOff->setSelected($vetoff);

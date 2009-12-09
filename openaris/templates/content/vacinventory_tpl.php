@@ -52,14 +52,14 @@ $repOff->setSelected($officerId);
 
 
 //text input for data entry officer 
-$dataOff = new dropdown('dataoff',$dataoff);
+$dataOff = new dropdown('dataoff');
 $dataOff->addOption('null','Select');
 $dataOff->addFromDB($userList, 'name', 'name');
 $dataOff->setSelected($dataoff);
 
 
 //text input for vetofficer
-$vetOff = new dropdown('vetoff',$vetoff);
+$vetOff = new dropdown('vetoff');
 $vetOff->addOption('null','Select');
 $vetOff->addFromDB($userList, 'name', 'name');
 $vetOff->setSelected($vetoff);
@@ -67,13 +67,13 @@ $vetOff->setSelected($vetoff);
 
 
 //report date set default to today 
-$reportDate = $this->getObject('datepicker','htmlelements');
+$reportDate = $this->newObject('datepicker','htmlelements');
 $reportDate->setName('repdate');
 $reportDate->setDefaultDate($repdate);
 
 
 //IBAR date set default to today
-$ibarDate = $this->getObject('datepicker','htmlelements');
+$ibarDate = $this->newObject('datepicker','htmlelements');
 $ibarDate->setName('ibardate');
 $ibarDate->setDefaultDate($ibardate);
 
@@ -92,6 +92,7 @@ for ($i=1; $i<=12; $i++) {
     $date = strtotime("01-$i-01");
     $monthdate->addOption(date('m', $date), date('F', $date));
 }
+$monthdate->setSelected(date('m'));
 
 //dropdown for year
 
@@ -112,10 +113,10 @@ $admin1->setSelected($ptype);
  $phone= new textinput('phone',$phone);
  
  //text field for fax
- $fax = new textinput('fax',$fax1);
+ $fax = new textinput('fax',$fax);
   
   //text field for email
-  $email = new textinput('email',$email1);
+  $email = new textinput('email',$email);
   
   //text field for phone
  $phone1= new textinput('phone1',$phone1);
@@ -132,6 +133,7 @@ $admin2 = new dropdown('admin2');
 $admin2->addOption('null',Select);
 $admin2->addFromDB($arraypartitionlevel, 'partitionlevel', 'partitionlevel');
 $admin2->setSelected($plevel);
+
 //dropdown for admin3
 $admin3 = new dropdown('admin3');
 $admin3->addOption('null',Select);
@@ -182,11 +184,11 @@ $objTable2->addCell($dataOff->show());
 $objTable2->endRow();
 
 $objTable2->startRow();
-$objTable2->addCell($this->objLanguage->languageText('word_phone'));
+$objTable2->addCell($this->objLanguage->languageText('mod_ahis_word_phone','openaris'));
 $objTable2->addCell($phone->show());
-$objTable2->addCell($this->objLanguage->languageText('word_fax'));
+$objTable2->addCell($this->objLanguage->languageText('mod_ahis_word_fax','openaris'));
 $objTable2->addCell($fax->show());
-$objTable2->addCell($this->objLanguage->languageText('word_email'));
+$objTable2->addCell($this->objLanguage->languageText('mod_ahis_word_email','openaris'));
 $objTable2->addCell($email->show());
 
 $objTable2->endRow();
@@ -198,13 +200,16 @@ $objTable3->cellspacing = 2;
 $objTable3->width = '90%';
 $objTable3->cssClass = 'min50';
 $objTable3->startRow();
-$objTable2->addCell($this->objLanguage->languageText('phrase_vetofficer'));
+$objTable3->addCell($this->objLanguage->languageText('phrase_vetofficer'));
 $objTable3->addCell($vetOff->show());
-$objTable3->addCell($this->objLanguage->languageText('word_phone'));
+$objTable3->endRow();
+
+$objTable3->startRow();
+$objTable3->addCell($this->objLanguage->languageText('mod_ahis_word_phone','openaris'));
 $objTable3->addCell($phone1->show());
-$objTable3->addCell($this->objLanguage->languageText('word_fax'));
+$objTable3->addCell($this->objLanguage->languageText('mod_ahis_word_fax','openaris'));
 $objTable3->addCell($fax1->show());
-$objTable3->addCell($this->objLanguage->languageText('word_email'));
+$objTable3->addCell($this->objLanguage->languageText('mod_ahis_word_email','openaris'));
 $objTable3->addCell($email1->show());
 $objTable3->endRow();
 
@@ -255,6 +260,9 @@ $objTable1->endRow();
 
 
 $objTable1->startRow();
+$objTable->addCell('&nbsp');
+$objTable->addCell('&nbsp');
+$objTable->addCell('&nbsp');
 $objTable1->addCell($this->objLanguage->languageText('word_longitude'));
 $objTable1->addCell($longitude->show());
 $objTable1->endRow();
@@ -267,15 +275,15 @@ $objTable1->endRow();
 
 $objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory_add')));
 $objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable2->show()."<hr class='openaris' />".$objTable3->show()."<hr class='openaris' />".$objTable1->show());
-$objForm->addRule('repoff','Please Select Report Officer','required');
-$objForm->addRule('dataoff', 'Please Select Data Entry Officer', 'required');
-$objForm->addRule('vetoff', 'Please Select Vet Officer', 'required');
-$objForm->addRule('country', 'Please Select country', 'required');
-$objForm->addRule('monthdate', 'Please Select Month', 'required');
-$objForm->addRule('yeardate', 'Please Select Year', 'required');
-$objForm->addRule('admin1', 'Please Select Partition Type', 'required');
-$objForm->addRule('admin2', 'Please Select Partition level', 'required');
-$objForm->addRule('admin3', 'Please Select Partition name', 'required');
+$objForm->addRule('repoff','Please Select Report Officer','select');
+$objForm->addRule('dataoff', 'Please Select Data Entry Officer', 'select');
+$objForm->addRule('vetoff', 'Please Select Vet Officer', 'select');
+$objForm->addRule('country', 'Please Select country', 'select');
+$objForm->addRule('monthdate', 'Please Select Month', 'select');
+$objForm->addRule('yeardate', 'Please Select Year', 'select');
+$objForm->addRule('admin1', 'Please Select Partition Type', 'select');
+$objForm->addRule('admin2', 'Please Select Partition level', 'select');
+$objForm->addRule('admin3', 'Please Select Partition name', 'select');
 
 
 
