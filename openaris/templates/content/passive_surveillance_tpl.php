@@ -232,13 +232,14 @@ $officerSet->addContent($objOfficerTable->show());
 $officerSet->setLegend($this->objLanguage->languageText('mod_ahis_officerinfo', 'openaris'));
 
 $outbreakRadio = new radio('outbreak');
-$outbreakRadio->addOption('1', $this->objLanguage->languageText('word_yes')." ");
-$outbreakRadio->addOption('0', $this->objLanguage->languageText('word_no'));
+$outbreakRadio->addOption(1, $this->objLanguage->languageText('word_yes')." ");
+$outbreakRadio->addOption(0, $this->objLanguage->languageText('word_no'));
 //$outbreakRadio->setSelected($outbreakReported);
+$outbreakRadio->extra = 'onclick="javascript:toggleOutbreak(this.value);"';
 
 $validatedRadio = new radio('validated');
-$validatedRadio->addOption('1', $this->objLanguage->languageText('word_yes')." ");
-$validatedRadio->addOption('0', $this->objLanguage->languageText('word_no'));
+$validatedRadio->addOption(1, $this->objLanguage->languageText('word_yes')." ");
+$validatedRadio->addOption(0, $this->objLanguage->languageText('word_no'));
 //$validatedRadio->setSelected($validated);
 
 $commentBox = new textarea('comment', $comment, 4, 42);
@@ -272,6 +273,7 @@ $reportTypeDrop->addOption('0', $this->objLanguage->languageText('word_new'));
 $reportTypeDrop->addOption('1', $this->objLanguage->languageText('phrase_followup'));
 $reportTypeDrop->setSelected($reportTypeId);
 $reportTypeDrop->cssClass = 'passive_surveillance';
+$reportTypeDrop->extra = 'onchange="javascript:toggleReportType();"';
 
 $outbreakDrop = new dropdown('outbreakId');
 //$outbreakDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_none', 'openaris'));
@@ -432,14 +434,24 @@ $objForm->addRule(array('datePrepared','dateIBARSub'), $this->objLanguage->langu
 $objForm->addRule('dateIBARRec', $this->objLanguage->languageText('mod_ahis_valdateibarsub', 'openaris'), 'datenotfuture');
 $objForm->addRule(array('dateIBARSub', 'dateIBARRec'), $this->objLanguage->languageText('mod_ahis_valdateibarafteribar', 'openaris'), 'datenotbefore');
 $objForm->addRule(array('month'=>'month','year'=>'year'), $this->objLanguage->languageText('mod_ahis_valdate', 'openaris'), 'twofielddate');
-//$objForm->addRule('reportOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
-//$objForm->addRule('dateEntryOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
-//$objForm->addRule('validationOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidateofficer', 'openaris'), 'select');
+$objForm->addRule('reportOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
+$objForm->addRule('dataEntryOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
+$objForm->addRule('valOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
 $objForm->addRule('outbreak', $this->objLanguage->languageText('mod_ahis_valoutbreak', 'openaris'), 'required');
 $objForm->addRule('validated', $this->objLanguage->languageText('mod_ahis_valvalidated', 'openaris'), 'required');
 
+$objForm->addRule('observationDate', $this->objLanguage->languageText('mod_ahis_valobservationdate', 'openaris'), 'datenotfuture');
+$objForm->addRule('vetDate', $this->objLanguage->languageText('mod_ahis_valvetdate', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('observationDate', 'vetDate'), $this->objLanguage->languageText('mod_ahis_valvetafter', 'openaris'), 'datenotbefore');
+$objForm->addRule('investigationDate', $this->objLanguage->languageText('mod_ahis_valinvestigationdate', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('vetDate', 'investigationDate'), $this->objLanguage->languageText('mod_ahis_valinvestigationafter', 'openaris'), 'datenotbefore');
+$objForm->addRule('sampleDate', $this->objLanguage->languageText('mod_ahis_valsampledate', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('investigationDate', 'sampleDate'), $this->objLanguage->languageText('mod_ahis_valsampleafter', 'openaris'), 'datenotbefore');
+$objForm->addRule('diagnosisDate', $this->objLanguage->languageText('mod_ahis_valdiagnosisdate', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('sampleDate', 'diagnosisDate'), $this->objLanguage->languageText('mod_ahis_valdiagnosisafter', 'openaris'), 'datenotbefore');
+$objForm->addRule('interventionDate', $this->objLanguage->languageText('mod_ahis_valinterventiondate', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('diagnosisDate', 'interventionDate'), $this->objLanguage->languageText('mod_ahis_valinterventionafter', 'openaris'), 'datenotbefore');
 
-$objForm->addRule('reportOfficerFax', 'mm', 'required');
 
 
 $scriptUri = $this->getResourceURI('util.js');
