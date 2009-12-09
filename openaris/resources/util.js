@@ -68,32 +68,14 @@ function resetDate(fieldName) {
     $('input_' + fieldName).value = year + '-' + month + '-' + day;
 }
 
-function clearPassiveSurveillance() {
-    //$('input_oStatusId').selectedIndex = 0;
-    //$('input_qualityId').selectedIndex = 0;
-    $('input_remarks').value = '';
-    //resetDate('datePrepared');
-    //resetDate('dateIBAR');
-    //resetDate('dateReceived');
-    //resetDate('dateIsReported');
-}
-
-function clearPassiveOutbreak() {
-    resetDate('dateVet');
-    resetDate('dateOccurence');
-    resetDate('dateDiagnosis');
-    resetDate('dateInvestigation');
-    $('input_latmin').value = '';
-	$('input_longmin').value = '';
-	$('input_latdeg').value = '';
-	$('input_longdeg').value = '';
-	$('input_locationId').selectedIndex = 0;
-	$('input_latdirection').selectedIndex = 0;
-    $('input_longdirection').selectedIndex = 0;
-	$('input_diseaseId').selectedIndex = 0;
-    $('input_causativeId').selectedIndex = 0;
-	
-    
+function clearDiseaseLocality() {
+    $('input_localityTypeId').selectedIndex = 0;
+	$('input_latDirec').selectedIndex = 0;
+	$('input_longDirec').selectedIndex = 0;
+	$('input_farmingSystemId').selectedIndex = 0;
+	jQuery('#input_localityName').val('');
+	jQuery('#input_latitude').val('');
+	jQuery('#input_longitude').val('');
 }
 
 function clearPassiveSpecies() {

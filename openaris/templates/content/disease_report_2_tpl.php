@@ -57,7 +57,7 @@ $objTableArea1->width = NULL;
 
 $objTableArea1->startHeaderRow();
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitiontype'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('phrase_partitiontype'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
@@ -77,11 +77,13 @@ $latDirecDrop = new dropdown('latDirec');
 $latDirecDrop->addOption('N', 'N');
 $latDirecDrop->addOption('S', 'S');
 $latDirecDrop->setSelected($latDirec);
+$latDirecDrop->cssClass = 'geodrop';
 
 $longDirecDrop = new dropdown('longDirec');
 $longDirecDrop->addOption('E', 'E');
 $longDirecDrop->addOption('W', 'W');
 $longDirecDrop->setSelected($longDirec);
+$longDirecDrop->cssClass = 'geodrop';
 
 $localityNameBox = new textinput('localityName', $localityName);
 $localityNameBox->setCss('passive_surveillance');
@@ -110,6 +112,19 @@ $objTableArea2 = $this->newObject('htmltable','htmlelements');
 $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
 
+$nextUri = '';
+$sButton = new button('enter', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
+$sButton->setCSS('nextButton');
+$backUri = $this->uri(array('action'=>'passive_surveillance'));
+$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$bButton->setCSS('backButton');
+$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearDiseaseLocality()");
+$cButton->setCSS('clearButton');
+$aButton = new button('add', $this->objLanguage->languageText('word_add'));
+$aButton->setCSS('addButton');
+$aButton->setToSubmit();
+
+
 $objTableArea2->startRow();
 $objTableArea2->addCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
 $objTableArea2->addCell($outbreakCodeBox->show());
@@ -135,16 +150,24 @@ $objTableArea2->addCell($this->objLanguage->languageText('word_modifiedby'));
 $objTableArea2->addCell($modifiedBox->show());
 $objTableArea2->endRow();
 $objTableArea2->startRow();
-$objTableArea2->addCell($this->objLanguage->languageText('phrase_modifieddate'), NULL, 'top', NULL, NULL, 'colspan="5"');
+$objTableArea2->addCell($this->objLanguage->languageText('phrase_modifieddate'), NULL, 'top', 'right', NULL, 'colspan="5"');
 $objTableArea2->addCell($modifiedDateBox->show());
 $objTableArea2->endRow();
+$objTableArea2->startRow();
+$objTableArea2->addCell($cButton->show().$tab.$bButton->show().$tab.$aButton->show().$tab.$sButton->show(), NULL, 'top', 'center', NULL, 'colspan="6"');
+$objTableArea2->endRow();
+
 
 $localitySet = new fieldset('localitySet');
+$localitySet->setExtra('style="max-width: 822px;"');
 $localitySet->setLegend($this->objLanguage->languageText('mod_ahis_localitydataentry', 'openaris'));
 $localitySet->addContent($objTableArea2->show());
 
-$objForm = new form('reportForm', $this->uri(array('action' => 'passive_species')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'add_locality')));
 $objForm->addToForm($localitySet->show());
+$objForm->addRule('latitude', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
+$objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
+$objForm->addRule('localityName', $this->objLanguage->languageText('mod_ahis_vallocalityname', 'openaris'), 'required');
 
 $objTableArea3 = $this->newObject('htmltable','htmlelements');
 $objTableArea3->cellspacing = 2;
@@ -162,147 +185,18 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_farmingsy
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby'));
 $objTableArea3->endHeaderRow();
 
-
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
-$content = $objTableArea1->show()."<hr />".$objForm->show()."<hr />".$objTableArea3->show();
+$content = $objTableArea1->show()."<br />".$objForm->show()."<br />".$objTableArea3->show();
 echo $objHeading->show()."<br />".$content;
 
-/*$sButton = new button('enter', $this->objLanguage->languageText('word_next'));
-$sButton->setToSubmit();
-$sButton->setCSS('nextButton');
-$backUri = $this->uri(array('action'=>'passive_surveillance'));
-$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$bButton->setCSS('backButton');
-$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveOutbreak()");
-$cButton->setCSS('clearButton');
-
-$refNoBox = new textinput('refNo', $refNo, 'text', 30);
-$monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 23);
-$yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 4);
-$dateBox = new textinput('reportdate', date('Y/m/d', strtotime($calendardate)),'text', 30);
-$yearBox->extra = $monthBox->extra = $dateBox->extra = $refNoBox->extra = "readonly";
-
-$geo2Drop = new dropdown('geo2Id');
-$geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
-$geo2Drop->setSelected($geo2Id);
-$geo2Drop->extra = 'disabled';
-$geo2Drop->cssClass = "passive_surveillance";
-
-$locationDrop = new dropdown('locationId');
-$locationDrop->addFromDB($arrayLocation, 'name', 'id');
-$locationDrop->setSelected($locationId);
-$locationDrop->cssClass = "passive_surveillance";
-$diseaseDrop = new dropdown('diseaseId');
-$diseaseDrop->addFromDB($arrayDisease, 'name', 'id');
-$diseaseDrop->setSelected($diseaseId);
-$diseaseDrop->cssClass = "passive_surveillance";
-$causativeDrop = new dropdown('causativeId');
-$causativeDrop->addFromDB($arrayCausative, 'name', 'id');
-$causativeDrop->setSelected($causativeId);
-$causativeDrop->cssClass = "passive_surveillance";
-
-$vetDate = $this->newObject('datepicker','htmlelements');
-$vetDate->setName('dateVet');
-$vetDate->setDefaultDate($dateVet);
-$occurenceDate = $this->newObject('datepicker','htmlelements');
-$occurenceDate->setName('dateOccurence');
-$occurenceDate->setDefaultDate($dateOccurence);
-$diagnosisDate = $this->newObject('datepicker','htmlelements');
-$diagnosisDate->setName('dateDiagnosis');
-$diagnosisDate->setDefaultDate($dateDiagnosis);
-$investigationDate = $this->newObject('datepicker','htmlelements');
-$investigationDate->setName('dateInvestigation');
-$investigationDate->setDefaultDate($dateInvestigation);
-
-$latitudeDegBox = new textinput('latdeg', $latdeg, 'text', 4);
-$longitudeDegBox = new textinput('longdeg', $longdeg, 'text', 4);
-$latitudeMinBox = new textinput('latmin', $latmin, 'text', 4);
-$longitudeMinBox = new textinput('longmin', $longmin, 'text', 4);
-$latDrop = new dropdown('latdirection');
-$latDrop->addOption('N','N');
-$latDrop->addOption('S','S');
-$latDrop->setSelected($latdirec);
-$longDrop = new dropdown('longdirection');
-$longDrop->addOption('E','E');
-$longDrop->addOption('W','W');
-$longDrop->setSelected($longdirec);
-$degrees = $this->objLanguage->languageText('word_degrees');
-$minutes = $this->objLanguage->languageText('word_minutes');
-
-$objTable = $this->getObject('htmltable','htmlelements');
-$objTable->cellspacing = 2;
-$objTable->width = NULL;
-//$objTable->cssClass = 'min50';
-$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
-
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').":$tab");
-$objTable->addCell($refNoBox->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').":$tab");
-$objTable->addCell($geo2Drop->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_monthandyear', 'openaris').":$tab");
-$objTable->addCell($monthBox->show()."&nbsp; ".$yearBox->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_dateprepared', 'openaris').":$tab");
-$objTable->addCell($dateBox->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_vetdate', 'openaris').":$tab");
-$objTable->addCell($vetDate->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_dateoccurence', 'openaris').":$tab");
-$objTable->addCell($occurenceDate->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_diagnosisdate', 'openaris').":$tab");
-$objTable->addCell($diagnosisDate->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_investigationdate', 'openaris').":$tab");
-$objTable->addCell($investigationDate->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_location').":$tab");
-$objTable->addCell($locationDrop->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_latitude').":$tab");
-$objTable->addCell("$degrees: ".$latitudeDegBox->show()." $minutes: ".$latitudeMinBox->show().$latDrop->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_longitude').":$tab");
-$objTable->addCell("$degrees: ".$longitudeDegBox->show()." $minutes: ".$longitudeMinBox->show().$longDrop->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_disease').":$tab");
-$objTable->addCell($diseaseDrop->show(),NULL,'center');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_causative').":$tab");
-$objTable->addCell($causativeDrop->show(),NULL,'center');
-$objTable->endRow();
-
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->addCell("&nbsp;".$bButton->show().$tab.$cButton->show().$tab.$sButton->show());
-$objTable->endRow();
-
-$objForm = new form('reportForm', $this->uri(array('action' => 'passive_species')));
+/*
 $objForm->addToForm($objTable->show());
 $objForm->addRule('dateVet', $this->objLanguage->languageText('mod_ahis_valdatevet', 'openaris'), 'datenotfuture');
 $objForm->addRule('dateOccurence', $this->objLanguage->languageText('mod_ahis_valdateoccurence', 'openaris'), 'datenotfuture');
 $objForm->addRule('dateDiagnosis', $this->objLanguage->languageText('mod_ahis_valdatediagnosis', 'openaris'), 'datenotfuture');
 $objForm->addRule('dateInvestigation', $this->objLanguage->languageText('mod_ahis_valdateinvestigation', 'openaris'), 'datenotfuture');
-$objForm->addRule('latdeg', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
-$objForm->addRule('longdeg', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
 $objForm->addRule('latmin', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
 $objForm->addRule('longmin', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
 */
