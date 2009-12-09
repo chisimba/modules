@@ -46,6 +46,7 @@
     $rightSideColumn =  '<div id ="mainContent">';
     $content = '<div id="heading"><h1>'.$this->objUtils->showPageHeading().'</h1></div>';
     $content .= '<div id="buttons"></div>';
+    $content .= '<div id="error">'.$error.'</div>';
     $content .= '<div id="recent-uploads"></div>';
     $content .= '<div id="searchpane"></div>';
     $content .= '<input id="uploadURL" type="hidden" value="'.$uploadUrl.'">';
@@ -61,7 +62,7 @@
 
             Ext.QuickTips.init();";
 
-    $mainjs .= $this->objUtils->getRecentFiles($JSONUrl);
+    $mainjs .= $this->objUtils->getRecentFiles($userid);
     $mainjs .= "
                 });";
     $mainjs .= "</script>";

@@ -16,6 +16,7 @@ class userutils extends object {
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUploadTable = $this->getObject('dbfileuploads');
         $this->objPermittedTypes = $this->getObject('dbpermittedtypes');
+        $this->objIcon = $this->getObject('geticon', 'htmlelements');
     }
 
     public function showPageHeading($page=null) {
@@ -48,10 +49,41 @@ class userutils extends object {
         //return $this->objUpload->show();
     }
 
-    public function getRecentFiles($url) {
-        //$data = "<h1>Latest 10 Uploads</h1><hr />";
+    public function getRecentFiles($userid) {
+        $this->objUploadTable->setUserId($userid);
+        $myData = $this->objUploadTable->getAllFiles();
+        $count = 1;
+        $numRows = count($myData);
+        $detailsLink = new link();
+        $deleteLink = new link();
+        $fileData = "[";
+        foreach($myData as $row) {
+            // get the description for this file type.
+            $name = $this->objPermittedTypes->getFileDesc($row['filetype']);
+            $fileData .= "['".$row['filename']."','";
+            if($row['shared'] == 1) {
+                $fileData .= "public";
+            }
+            else {
+                $fileData .= "private";
+            }
+            $detailsLink->link($this->uri(array('action'=>'viewFileDetails','id'=>$row['id'])));
+            $this->objIcon->setIcon('preview');
+            $detailsLink->link=$this->objIcon->show();
+            $deleteLink->link($this->uri(array('action'=>'deletefile','id'=>$row['id'])));
+            $this->objIcon->setIcon('delete');
+            $deleteLink->link=$this->objIcon->show();
+            $date = date_create($row['date_forwaded']);
+            $fileData .= "','".date_format($date, "m/d/Y")."','".$row['filetype']."','".$name."','".$detailsLink->show().$deleteLink->show()."'";
+            $fileData .= "]";
+            if($count < $numRows) {
+                $fileData .= ",";
+            }
+            $count++;
+        }
+        $fileData .= "]";
         $data = "
-                showLatestUploads('".$url."')";
+                showLatestUploads(".$fileData.");";
         
         return $data;
     }
@@ -167,6 +199,29 @@ class userutils extends object {
         }
         $JSONstr .= "]";
         echo $JSONstr;
+    }
+
+    public function deleteFile($userid, $id) {
+        $fileData = $this->objUploadTable->getFileName($id);
+
+        // get the name of the file
+        $filename = $fileData['filename'];
+        $permission = $fileData['shared'];
+        
+        if($permission == 1) {
+            $myFile = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid.'/shared/'.$filename;
+        }
+        else {
+            $myFile = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid.'/'.$filename;
+        }
+
+        if(file_exists($myFile) && is_file($myFile)) {
+            //unlink($myFile);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
 ?>

@@ -28,5 +28,21 @@ class dbfileuploads extends dbtable {
 
         return $res;
     }
+
+    public function getAllFiles() {
+        $sql = "select * from ".$this->tablename." where userid = '".$this->userid."' order by date_uploaded desc, filename limit 10";
+        $res = $this->getArray($sql);
+
+        return $res;
+    }
+
+    public function deleteFileRecord($id) {
+        $this->delete('id', $id);
+    }
+
+    public function getFileName($id) {
+        $data = $this->getRow('id', $id);
+        return $data;
+    }
 }
 ?>

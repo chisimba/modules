@@ -46,6 +46,7 @@ class dms extends controller {
         $this->objUser = $this->getObject('user', 'security');
         //file type info object
         $this->objPermitted = $this->getObject('dbpermittedtypes');
+        $this->objUploads = $this->getObject('dbfileuploads');
     }
 
     /**
@@ -110,6 +111,11 @@ class dms extends controller {
      * Method to show the Home Page of the Module
      */
     public function __home() {
+        $error = "";
+        $error = $this->getParam('result');
+        $userid = $this->objUser->userId();
+        $this->setVarByRef("userid", $userid);
+        $this->setVarByRef("error", $error);
         return "home_tpl.php";
     }
 
@@ -167,5 +173,21 @@ class dms extends controller {
         $id = $this->getParam('id');
         $this->objPermitted->deleteFileType($id);
         return $this->nextAction('admin');
+    }
+
+    public function __deletefile() {
+        $userid = $this->objUser->userId();
+        $id = $this->getParam('id');
+        $fileRes = $this->objUtils->deleteFile($userid, $id);
+        $result = "";
+
+        if($fileRes == 1) {
+            $this->objUploads->deleteFileRecord($id);
+        }
+        else {
+            $result = $this->objLanguage->languageText("error_DELETE", 'dms');
+        }
+        
+        return $this->nextAction('home', array("result"=>"$result"));
     }
 }

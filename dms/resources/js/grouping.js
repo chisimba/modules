@@ -1,57 +1,46 @@
-/*!
- * Ext JS Library 3.0.0
- * Copyright(c) 2006-2009 Ext JS, LLC
- * licensing@extjs.com
- * http://www.extjs.com/license
- */
-var showLatestUploads = function(url) {
+var showLatestUploads = function(gridData) {
+    var xg = Ext.grid;
 
-    var tree = new Ext.ux.tree.ColumnTree({
-        autoWidth: true,
-        autoHeight: true,
-        rootVisible:false,
-        autoScroll:true,
-        title: 'Last 10 Uploads',
-        renderTo: 'recent-uploads',
-        
-        columns:[{
-            header:'Filename',
-            width: 250,
-            dataIndex:'filename'
-        },{
-            header:'File Type',
-            width: 80,
-            dataIndex:'duration'
-        },{
-            header:'View Details',
-            width: 125,
-            dataIndex:'details'
-        }, {
-            header:'Date Last Modified',
-            width: 100,
-            dataIndex:'modified'
-        }, {
-            header:'Status',
-            width: 50,
-            dataIndex:'status'
-        }
-        ],
+    // shared reader
+    var reader = new Ext.data.ArrayReader({}, [
+       {name: 'filename'},
+       {name: 'status'},
+       {name: 'lastChange'},
+       {name: 'filetype'},
+       {name: 'filetypedesc'},
+       {name: 'details'}
+    ]);
 
-        loader: new Ext.tree.TreeLoader({
-            dataUrl: url,
-            uiProviders:{
-                'col': Ext.ux.tree.ColumnNodeUI
-            }
+    var grid = new xg.GridPanel({
+        store: new Ext.data.GroupingStore({
+            reader: reader,
+            data: gridData,
+            sortInfo:{field: 'filename', direction: "ASC"},
+            groupField:'filetype'
         }),
 
-        listeners: {
-            dblclick: function(node, event) {
-                Ext.Msg.alert('Navigation Tree Click', 'You Double clicked: ' + node.toString());
-            }
-        },
+        columns: [
+            {id:'filename',header: "Filename", width: 60, sortable: true, dataIndex: 'filename'},
+            {header: "Status", width: 15, sortable: true, dataIndex: 'status'},
+            {header: "Date Last Modified", width: 30, sortable: true, dataIndex: 'lastChange'},
+            {header: "File Type", width: 30, sortable: true, dataIndex: 'filetype'},
+            {header: "File Type Description", width: 50, sortable: true, dataIndex: 'filetypedesc'},
+            {header: "Details", width: 20, sortable: true, dataIndex: 'details'}
+        ],
 
-        root: new Ext.tree.AsyncTreeNode({
-            text:'Filename'
-        })
+        view: new Ext.grid.GroupingView({
+            forceFit:true,
+            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})',
+            startCollapsed: true,
+            hideGroupedColumn: true
+        }),
+
+        frame:true,
+        width: 800,
+        height: 450,
+        collapsible: true,
+        animCollapse: false,
+        title: 'Last 10 Uploaded files',
+        renderTo: 'recent-uploads'
     });
 }
