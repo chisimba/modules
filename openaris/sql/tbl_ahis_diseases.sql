@@ -16,6 +16,13 @@ $fields = array(
 		'length' => 64,
         'notnull' => TRUE
 		),
+    
+    'scientific_name' => array(
+		'type' => 'text',
+		'length' => 200,
+        'notnull' => TRUE
+		),
+        
     'disease_name' => array(
 		'type' => 'text',
 		'length' => 64,
@@ -36,7 +43,17 @@ $fields = array(
 		'length' => 64,
         'notnull' => TRUE
 		),
+	'zoonotic' => array(
+		'type' => 'text',
+		'length' => 20,
+        'notnull' => TRUE
+		),
 	'description' => array (
+		'type' => 'text',
+		'length' => 64,
+        'notnull' => TRUE
+	),
+	'has_vaccine' => array (
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE

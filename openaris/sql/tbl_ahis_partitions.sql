@@ -10,8 +10,12 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-	
-    'partitionlevelid' => array(
+	'countryid' => array(
+		'type' => 'text',
+		'length' => 64,
+        'notnull' => TRUE
+		),
+	'partitionlevelid' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
