@@ -155,7 +155,11 @@ class dms extends controller {
     }
 
     public function __viewfiledetails() {
-        echo $this->getParam('id');
+        $id = $this->getParam('id');
+        $this->setVarByRef("id", $id);
+        $this->setVarByRef('action','Details');
+
+        return "viewfiledetails_tpl.php";
     }
 
     public function __admin() {

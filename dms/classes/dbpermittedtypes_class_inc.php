@@ -31,5 +31,9 @@ class dbpermittedtypes extends dbtable {
         $data = $this->getRow('ext', $filetype);
         return $data['name'];
     }
+
+    public function saveNewExt($data) {
+        $this->insert($data);
+    }
 }
 ?>

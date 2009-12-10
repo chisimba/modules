@@ -117,6 +117,39 @@ class upload extends object {
                 }
             }
             else {
+                // save the extension in the database and have it's description be 'others'
+                //$data = array('ext'=>$this->getFileExtension(), 'name'=>'Others');
+                //$this->objPermittedTypes->saveNewExt($data);
+                
+                /*if (!$this->overWrite && $this->checkExists()) {
+                    $this->isError = TRUE;
+                    return array(
+                        'success' => FALSE,
+                        'message' => $this->objLanguage->languageText("error_UPLOAD_NOOVERWRITE", 'dms'),
+                        );
+                    
+                }
+                else {
+                    $this->moveUploadedFile();
+
+                    // check if the file actually exists, i.e., it has been uploaded
+                    if($this->checkExists()) {
+                        return array(
+                            'success' => TRUE,
+                            'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'dms'),
+                            'filename' => $this->fileName,
+                            'mimetype' => $this->type,
+                            'extension' => 'others',
+                        );
+                    }
+                    else {
+                      return array(
+                            'success' => FALSE,
+                            'message' => $this->objLanguage->languageText("error_UPLOAD_FILENOTUPLOADED", 'dms'),
+                      );
+                    }
+                }*/
+                
                 return array(
                         'success' => FALSE,
                         'message' => $this->objLanguage->languageText("error_UPLOAD_DISALLOWEDEXTENSION", 'dms'),
