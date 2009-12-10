@@ -123,19 +123,19 @@ $ibarDate->setDefaultDate($iDate);
 
 $reportOfficerDrop = new dropdown('repOfficerId');
 $reportOfficerDrop->addOption('-1',$this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$reportOfficerDrop->addFromDB($userList, 'name', 'userid');
+$reportOfficerDrop->addFromDB($arrayrepoff, 'name', 'userid');
 $reportOfficerDrop->setSelected($repoff);
 $reportOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("rep");\'';
 //Data entry officer
 $dataEntryOfficerDrop = new dropdown('dataOfficerId');
 $dataEntryOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$dataEntryOfficerDrop->addFromDB($userList, 'name', 'userid');
+$dataEntryOfficerDrop->addFromDB($arraydataoff, 'name', 'userid');
 $dataEntryOfficerDrop->setSelected($dataoff);
 $dataEntryOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("data");\'';
 //Vet officer
 $valOfficerDrop = new dropdown('vetOfficerId');
 $valOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$valOfficerDrop->addFromDB($userList, 'name', 'userid');
+$valOfficerDrop->addFromDB($arrayvetoff, 'name', 'userid');
 $valOfficerDrop->setSelected($vetoff);
 $valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
@@ -267,10 +267,10 @@ $objButtonTable->endRow();
 $content=$objTopTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<br />".$objButtonTable->show();
 $form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
-$form->addRule('repOfficerId', 'Please enter number of animals', 'select');
-$form->addRule('dataOfficerId', 'Please enter valid number ', 'select');
-$form->addRule('vetOfficerId', 'Please enter source of animals', 'select');
-$form->addRule('countryId', 'Please enter valid source', 'select');
+$form->addRule('repOfficerId', 'Please Select Reporting Officer', 'select');
+$form->addRule('dataOfficerId','Please Select Data Entry Officer Officer ', 'select');
+$form->addRule('vetOfficerId', 'Please Select Vet Officer', 'select');
+$form->addRule('countryId', 'Please Select a Country', 'select');
 
 
 //$form->addToForm($btcancel->show().$tab);

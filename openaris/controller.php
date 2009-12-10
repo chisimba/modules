@@ -2762,6 +2762,9 @@ class openaris extends controller {
                 $this->setVar('arrayAdmin1',$this->objPartitionCategory->getAll("ORDER BY partitioncategory"));
                 $this->setVar('arrayAdmin2', $this->objPartitionLevel->getAll("ORDER BY partitionlevel"));
                 $this->setVar('arrayAdmin3', $this->objPartition->getAll());
+                $this->setVar('arrayrepoff', $this->objAhisUser->getListByRole('init_01'));
+                $this->setVar('arraydataoff', $this->objAhisUser->getListByRole('init_02'));
+                $this->setVar('arrayvetoff', $this->objAhisUser->getListByRole('init_03'));
                $this->setVar('repoff', $this->getSession('ps_officerId'));
 			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));
 			      $this->setVar('country',$this->getSession('ps_country'));	
@@ -2833,15 +2836,11 @@ class openaris extends controller {
                $this->setVar('userList', $this->objAhisUser->getList());                 		  
                $this->setVar('repoff', $this->getSession('ps_officerId'));
                $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY name"));		
-                 $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
-                $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));	
-                $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      
+               $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
+               $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));	
+               $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      
 			      $this->setVar('species',$this->getSession('ps_species'));			 
-               // $dateIBAR = $this->getParam('iDate', $this->getSession('ps_iDate'));
-                //$dateIsReported = $this->getParam('rDate', $this->getSession('ps_rDate'));
-                
-				    //$reportingOfficer=$this->getParam('ps_officerId', $this->getSession('repoff'));
-				   $this->setVar('totalNumSpecies', '');
+               $this->setVar('totalNumSpecies', '');
 					$this->setVar('breedNumber', '');
 					$this->setVar('animalCat', '');
 					$this->setVar('tropicalLivestock', '');
