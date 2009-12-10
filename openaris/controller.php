@@ -2544,7 +2544,7 @@ class openaris extends controller {
 					return 'animaldeworming_tpl.php';
 
 			case 'vacinventory':
-			      $this->setVar('repdate',$this->getSession('ps_repdate	     		    $result = $this->objVacinventory->insert($data);',date('Y-m-d')));
+			      $this->setVar('repdate',$this->getSession('ps_repdate',date('Y-m-d')));
 			      $this->setVar('ibardate',$this->getSession('ps_ibardate',date('Y-m-d')));
 			      $this->setVar('officerId', $this->getSession('ps_officerId'));
 			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));	
@@ -2580,16 +2580,16 @@ class openaris extends controller {
 			      //$this->setSession('ps_calendardate', $this->getParam('calendardate'));
 			      return 'vacinventory_tpl.php';
 			case 'vacinventory_add':
-			      $this->setSession('ps_officerId',$this->getParam('repoff'));
-			      $this->setSession('ps_dataoff',$this->getParam('dataoff'));		
-			      $this->setSession('ps_vetoff',$this->getParam('vetoff'));	
+			      $this->setSession('ps_officerId',$this->getParam('repOfficerId'));
+			      $this->setSession('ps_dataoff',$this->getParam('dataOfficerId'));		
+			      $this->setSession('ps_vetoff',$this->getParam('vetOfficerId'));	
 			      $this->setSession('ps_repdate',$this->getParam('repdate'));	
-			      $this->setSession('ps_dphone',$this->getParam('phone'));
-			      $this->setSession('ps_dfax',$this->getParam('fax'));
-			      $this->setSession('ps_demail',$this->getParam('email'));
-			      $this->setSession('ps_vphone',$this->getParam('phone1'));
-			      $this->setSession('ps_vfax',$this->getParam('fax1'));
-			      $this->setSession('ps_vemail',$this->getParam('email1'));  
+			      $this->setSession('ps_dphone',$this->getParam('dataOfficerTel'));
+			      $this->setSession('ps_dfax',$this->getParam('dataOfficerFax'));
+			      $this->setSession('ps_demail',$this->getParam('dataOfficerEmail'));
+			      $this->setSession('ps_vphone',$this->getParam('vetOfficerTel'));
+			      $this->setSession('ps_vfax',$this->getParam('vetOfficerFax'));
+			      $this->setSession('ps_vemail',$this->getParam('vetOfficerEmail'));  
 			      $this->setSession('ps_ibardate',$this->getParam('ibardate'));
 			      $this->setSession('ps_country',$this->getParam('country'));	
 			      $this->setSession('ps_month',$this->getParam('month'));	
@@ -2696,7 +2696,7 @@ class openaris extends controller {
 	     		   $data['cumconvac']=$this->getSession('ps_cumconvac');	  
 	     		   $data['comments']=$this->getSession('ps_comments');   		   
 	     		   $sub = $this->getParam('fin');
-	     		  // print_r($data); print_r($sub); 
+	     		 //  print_r($data); print_r($sub); exit;
 	     		   if($sub == 'Next')
 	     		   {
 	     		    $result = $this->objVacinventory->insert($data);

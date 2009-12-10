@@ -109,7 +109,10 @@ function clear_viewReports() {
 function changeCountry() {
 	//jQuery('#input_admin1Id >option').remove();
 }
+function changePartition(){
 
+
+}
 function getOfficerInfo(role) {
 	var userId = jQuery('#input_'+role+'OfficerId').val();
 	var fax;

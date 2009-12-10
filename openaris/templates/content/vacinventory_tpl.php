@@ -28,16 +28,7 @@ $objHeading->type = 2;
 $nextButton = new button('next', $this->objLanguage->languageText('word_next'));
 
 $nextButton->setToSubmit();
-echo $this->getJavaScriptFile('jquery/1.3.2/jquery-1.3.2.min.js', 'htmlelements');
- ?>
- <script>
- $(document).ready(function(){
- $("#input_dataoff").each(function){
- $(this).hide();
- });
- 
-  }); </script>
-   <?php
+
 //create next button 
 
 $clearButton = $this->uri(array('action'=>'vacinventory_clear'));
@@ -45,26 +36,25 @@ $clearButton = new button('clear', $this->objLanguage->languageText('phrase_clea
 
 //create fields for form
 //text input for report officer 
-$repOff = new dropdown('repoff');
-$repOff->addOption('null','Select');
-$repOff->addFromDB($userList, 'name', 'name');
+$repOff = new dropdown('repOfficerId');
+$repOff->addOption('-1','Select');
+$repOff->addFromDB($userList, 'name', 'userid');
 $repOff->setSelected($officerId);
-
+$repOff->extra = 'onchange = \'javascript:getOfficerInfo("rep");\'';
 
 //text input for data entry officer 
-$dataOff = new dropdown('dataoff');
-$dataOff->addOption('null','Select');
-$dataOff->addFromDB($userList, 'name', 'name');
+$dataOff = new dropdown('dataOfficerId');
+$dataOff->addOption('-1','Select');
+$dataOff->addFromDB($userList, 'name', 'userid');
 $dataOff->setSelected($dataoff);
-
+$dataOff->extra = 'onchange = \'javascript:getOfficerInfo("data");\'';
 
 //text input for vetofficer
-$vetOff = new dropdown('vetoff');
-$vetOff->addOption('null','Select');
-$vetOff->addFromDB($userList, 'name', 'name');
+$vetOff = new dropdown('vetOfficerId');
+$vetOff->addOption('-1','Select');
+$vetOff->addFromDB($userList, 'name', 'userid');
 $vetOff->setSelected($vetoff);
-
-
+$vetOff->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
 //report date set default to today 
 $reportDate = $this->newObject('datepicker','htmlelements');
@@ -79,9 +69,10 @@ $ibarDate->setDefaultDate($ibardate);
 
 // drop down for Country
 $country = new dropdown('country');
-$country->addOption('null','Select');
+$country->addOption('-1','Select');
 $country->addFromDB($arraycountry,'official_name','official_name');
 $country->setSelected($count);
+$country->extra = 'onchange="javascript:changeCountry()"';
  
 //date picker for month and year 
 //$dateMonth = new datepicker($datemonth);
@@ -104,41 +95,43 @@ $yeardate->addOption(date('y',$date),date('Y',$date));
 }
 //dropdown for admin1
 $admin1 = new dropdown('admin1');
-$admin1->addOption('null',Select);
+$admin1->addOption('-1',Select);
 $admin1->addFromDB($arraypartitiontype, 'partitioncategory', 'partitioncategory');
 $admin1->setSelected($ptype);
+$admin1->extra = 'onchange="javascript:changePartition()"';
 //print_r($admin1);echo jl;exit;
 
  //text field for phone
- $phone= new textinput('phone',$phone);
+ $phone= new textinput('dataOfficerTel',$phone);
  
  //text field for fax
- $fax = new textinput('fax',$fax);
+ $fax = new textinput('dataOfficerFax',$fax);
   
   //text field for email
-  $email = new textinput('email',$email);
+  $email = new textinput('dataOfficerEmail',$email);
   
   //text field for phone
- $phone1= new textinput('phone1',$phone1);
+ $phone1= new textinput('vetOfficerTel',$phone1);
  
  //text field for fax
- $fax1 = new textinput('fax1',$fax1);
+ $fax1 = new textinput('vetOfficerFax',$fax1);
   
   //text field for email
-  $email1 = new textinput('email1',$email1); 
+  $email1 = new textinput('vetOfficerEmail',$email1); 
 //get htmltable object
 
 //dropdown for admin2
 $admin2 = new dropdown('admin2');
-$admin2->addOption('null',Select);
+$admin2->addOption('-1',Select);
 $admin2->addFromDB($arraypartitionlevel, 'partitionlevel', 'partitionlevel');
 $admin2->setSelected($plevel);
-
+$admin2->extra = 'onchange="javascript:changePartition()"';
 //dropdown for admin3
 $admin3 = new dropdown('admin3');
-$admin3->addOption('null',Select);
+$admin3->addOption('-1',Select);
 $admin3->addFromDB($arraypartition, 'partitionname', 'partitionname');
 $admin3->setSelected($pname);
+$admin3->extra = 'onchange="javascript:changePartition()"';
 //textinput field for location type
 $loctype = new textinput('loctype',$loctype);
 
@@ -275,16 +268,23 @@ $objTable1->endRow();
 
 $objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory_add')));
 $objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable2->show()."<hr class='openaris' />".$objTable3->show()."<hr class='openaris' />".$objTable1->show());
-$objForm->addRule('repoff','Please Select Report Officer','select');
-$objForm->addRule('dataoff', 'Please Select Data Entry Officer', 'select');
-$objForm->addRule('vetoff', 'Please Select Vet Officer', 'select');
-$objForm->addRule('country', 'Please Select country', 'select');
-$objForm->addRule('monthdate', 'Please Select Month', 'select');
-$objForm->addRule('yeardate', 'Please Select Year', 'select');
-$objForm->addRule('admin1', 'Please Select Partition Type', 'select');
-$objForm->addRule('admin2', 'Please Select Partition level', 'select');
-$objForm->addRule('admin3', 'Please Select Partition name', 'select');
-$objForm->addRule('phone',$this->objLanguage->languageText('word_required'),'required');
+$objForm->addRule('repOfficerId',$this->objLanguage->languageText('mod_ahis_reportoffreq','openaris'),'select');
+$objForm->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_dataoffreq','openaris'),'select');
+$objForm->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_vetoffreq','openaris'),'select');
+$objForm->addRule('admin1', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
+$objForm->addRule('admin2', $this->objLanguage->languageText('mod_ahis_admin2req','openaris'),'select');
+$objForm->addRule('admin3', $this->objLanguage->languageText('mod_ahis_admin3req','openaris'),'select');
+//$objForm->addRule('lattitude', $this->objLanguage->languageText('mod_ahis_lattitudereq','openaris'),'numeric');
+//$objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_longitudereq','openaris'),'numeric');
+$objForm->addRule('dataOfficerTel', $this->objLanguage->languageText('mod_ahis_validatedatatel', 'openaris'), 'required');
+$objForm->addRule('vetOfficerTel', $this->objLanguage->languageText('mod_ahis_validatevettel', 'openaris'), 'required');
+
+$objForm->addRule('repdate', $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotfuture');
+$objForm->addRule('ibardate', $this->objLanguage->languageText('mod_ahis_validateibardate', 'openaris'), 'datenotfuture');
+$objForm->addRule(array('repdate','ibardate'), $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotbefore');
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 
 $objLayer = new layer();

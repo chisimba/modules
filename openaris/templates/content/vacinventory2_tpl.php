@@ -52,33 +52,33 @@ $nextButton->setToSubmit();
 //text input for report officer 
 $repOff = new dropdown('repoff');
 $repOff->addOption('null','Select');
-$repOff->addFromDB($userList, 'name', 'name');
+$repOff->addFromDB($userList, 'name', 'userid');
 $repOff->setSelected($repoff);
 $repOff->extra = 'disabled';
 
 //text input for data entry officer 
 $dataOff = new dropdown('dataoff');
 $dataOff->addOption('null','Select');
-$dataOff->addFromDB($userList, 'name', 'name');
+$dataOff->addFromDB($userList, 'name', 'userid');
 $dataOff->setSelected($dataoff);
 $dataOff->extra = 'disabled';
 //text input for vetofficer
 $vetOff = new dropdown('vetoff');
 $vetOff->addOption('null','Select');
-$vetOff->addFromDB($userList, 'name', 'name');
+$vetOff->addFromDB($userList, 'name', 'userid');
 $vetOff->setSelected($vetoff);
 $vetOff->extra = 'disabled';
 
 //report date set default to today 
 //print_r($repdate);
-$reportDate = $this->newObject('datepicker','htmlelements');
-$reportDate->setName('repdate');
-$reportDate->setDefaultDate($repdate);
+$reportDate = new textinput('repdate',$repdate);
+$reportDate->extra='disabled';
+
 
 //IBAR date set default to today
-$ibarDate = $this->newObject('datepicker','htmlelements');
-$ibarDate->setName('ibardate');
-$ibarDate->setDefaultDate($ibardate);
+$ibarDate = new textinput('ibardate',$ibardate);
+$ibarDate->extra='disabled';
+
 
 
 //dropdown for outbreak ref number
@@ -260,6 +260,14 @@ $objTable2->endRow();
 $objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory2_add')));
 $objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable1->show()."<hr class='openaris' />".$objTable2->show());
 
+$objForm->addRule('condprovac', $this->objLanguage->languageText('mod_ahis_condproreq','openaris'),'numeric');
+$objForm->addRule('condconvac', $this->objLanguage->languageText('mod_ahis_condconreq','openaris'),'numeric');
+
+$objForm->addRule('mandate', $this->objLanguage->languageText('mod_ahis_validatemandate', 'openaris'), 'datenotfuture');
+
+$objForm->addRule(array('mandate','expdate'), $this->objLanguage->languageText('mod_ahis_validateexpman', 'openaris'), 'datenotbefore');
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$objForm->show());
