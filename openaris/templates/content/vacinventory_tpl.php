@@ -70,9 +70,9 @@ $ibarDate->setDefaultDate($ibardate);
 // drop down for Country
 $country = new dropdown('country');
 $country->addOption('-1','Select');
-$country->addFromDB($arraycountry,'official_name','official_name');
+$country->addFromDB($arraycountry,'common_name','id');
 $country->setSelected($count);
-$country->extra = 'onchange="javascript:changeCountry()"';
+$country->extra =  'onchange="javascript:changeNames();"';
  
 //date picker for month and year 
 //$dateMonth = new datepicker($datemonth);
@@ -94,11 +94,11 @@ $date = strtotime("01-01-$i");
 $yeardate->addOption(date('y',$date),date('Y',$date));
 }
 //dropdown for admin1
-$admin1 = new dropdown('admin1');
+$admin1 = new dropdown('partitionTypeId');
 $admin1->addOption('-1',Select);
-$admin1->addFromDB($arraypartitiontype, 'partitioncategory', 'partitioncategory');
+$admin1->addFromDB($arraypartitiontype, 'partitioncategory', 'id');
 $admin1->setSelected($ptype);
-$admin1->extra = 'onchange="javascript:changePartition()"';
+$admin1->extra = 'onchange="javascript:changePartitionType();"';
 //print_r($admin1);echo jl;exit;
 
  //text field for phone
@@ -121,15 +121,15 @@ $admin1->extra = 'onchange="javascript:changePartition()"';
 //get htmltable object
 
 //dropdown for admin2
-$admin2 = new dropdown('admin2');
+$admin2 = new dropdown('partitionLevelId');
 $admin2->addOption('-1',Select);
-$admin2->addFromDB($arraypartitionlevel, 'partitionlevel', 'partitionlevel');
+$admin2->addFromDB($arraypartitionlevel, 'partitionlevel', 'id');
 $admin2->setSelected($plevel);
-$admin2->extra = 'onchange="javascript:changePartition()"';
+$admin2->extra = 'onchange="javascript:changeNames();"';
 //dropdown for admin3
-$admin3 = new dropdown('admin3');
+$admin3 = new dropdown('partitionId');
 $admin3->addOption('-1',Select);
-$admin3->addFromDB($arraypartition, 'partitionname', 'partitionname');
+$admin3->addFromDB($arraypartition, 'partitionname', 'id');
 $admin3->setSelected($pname);
 $admin3->extra = 'onchange="javascript:changePartition()"';
 //textinput field for location type

@@ -2609,9 +2609,9 @@ class openaris extends controller {
 			      $this->setSession('ps_country',$this->getParam('country'));	
 			      $this->setSession('ps_month',$this->getParam('month'));	
 			      $this->setSession('ps_year',$this->getParam('year'));	
-			      $this->setSession('ps_admin1',$this->getParam('admin1'));
-				   $this->setSession('ps_admin2',$this->getParam('admin2'));
-			      $this->setSession('ps_admin3',$this->getParam('admin3'));
+			      $this->setSession('ps_admin1',$this->getParam('partitionTypeId'));
+				   $this->setSession('ps_admin2',$this->getParam('partitionLevelId'));
+			      $this->setSession('ps_admin3',$this->getParam('partitionId'));
 			      $this->setSession('ps_loctype',$this->getParam('loctype'));	
 			      $this->setSession('ps_locname',$this->getParam('locname'));	
 			      $this->setSession('ps_lattitude',$this->getParam('lattitude'));
@@ -2820,9 +2820,9 @@ class openaris extends controller {
 			      $this->setSession('ps_country',$this->getParam('countryId'));	
 			      $this->setSession('ps_month',$this->getParam('month'));	
 			      $this->setSession('ps_year',$this->getParam('year'));	
-			      $this->setSession('ps_admin1',$this->getParam('admin1Id'));
-				   $this->setSession('ps_admin2',$this->getParam('admin2Id'));
-			      $this->setSession('ps_admin3',$this->getParam('admin3Id'));
+			      $this->setSession('ps_admin1',$this->getParam('partitionTypeId'));
+				   $this->setSession('ps_admin2',$this->getParam('partitionLevelId'));
+			      $this->setSession('ps_admin3',$this->getParam('partitionId'));
 			      $this->setSession('ps_species',$this->getParam('classification'));	
 			      $this->setSession('ps_breed',$this->getParam('breedId'));	
 			      $this->setSession('ps_prodname',$this->getParam('animal_production'));
