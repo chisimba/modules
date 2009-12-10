@@ -2580,7 +2580,9 @@ class openaris extends controller {
 			      $this->setVar('lattitude',$this->getSession('ps_lattitude'));
 		         $this->setVar('locname',$this->getSession('ps_locname'));
 			      $this->setVar('loctype',$this->getSession('ps_loctype'));	      
-			      
+			      $this->setVar('arrayrepoff', $this->objAhisUser->getListByRole('init_01'));
+                $this->setVar('arraydataoff', $this->objAhisUser->getListByRole('init_02'));
+                $this->setVar('arrayvetoff', $this->objAhisUser->getListByRole('init_03'));
 			      $this->setVar('arraypartitiontype',$ptype);
 			      $this->setVar('arraypartitionlevel',$plevel);
 			      $this->setVar('arraypartition',$pname);
@@ -2778,7 +2780,10 @@ class openaris extends controller {
 			       $this->setVar('vphone',$this->getSession('ps_vphone'));
 	             $this->setVar('vfax',$this->getSession('ps_vfax'));
 			       $this->setVar('vemail',$this->getSession('ps_vemail'));	
-			       $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      
+			       $this->setVar('prodname',$this->getSession('ps_prodname'));
+			       $this->setVar('arrayrepoff', $this->objAhisUser->getListByRole('init_01'));
+                $this->setVar('arraydataoff', $this->objAhisUser->getListByRole('init_02'));
+                $this->setVar('arrayvetoff', $this->objAhisUser->getListByRole('init_03'));	      			      			      			      
 			      $this->setVar('species',$this->getSession('ps_species'));				      			      
                 $this->setVar('userList', $this->objAhisUser->getList());              
                 $this->setVar('arrayBreed',$this->objBreed->getAll());

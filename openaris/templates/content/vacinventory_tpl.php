@@ -38,21 +38,21 @@ $clearButton = new button('clear', $this->objLanguage->languageText('phrase_clea
 //text input for report officer 
 $repOff = new dropdown('repOfficerId');
 $repOff->addOption('-1','Select');
-$repOff->addFromDB($userList, 'name', 'userid');
+$repOff->addFromDB($arrayrepoff, 'name', 'userid');
 $repOff->setSelected($officerId);
 $repOff->extra = 'onchange = \'javascript:getOfficerInfo("rep");\'';
 
 //text input for data entry officer 
 $dataOff = new dropdown('dataOfficerId');
 $dataOff->addOption('-1','Select');
-$dataOff->addFromDB($userList, 'name', 'userid');
+$dataOff->addFromDB($arraydataoff, 'name', 'userid');
 $dataOff->setSelected($dataoff);
 $dataOff->extra = 'onchange = \'javascript:getOfficerInfo("data");\'';
 
 //text input for vetofficer
 $vetOff = new dropdown('vetOfficerId');
 $vetOff->addOption('-1','Select');
-$vetOff->addFromDB($userList, 'name', 'userid');
+$vetOff->addFromDB($arrayvetoff, 'name', 'userid');
 $vetOff->setSelected($vetoff);
 $vetOff->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
