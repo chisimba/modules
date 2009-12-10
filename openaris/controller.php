@@ -130,6 +130,7 @@ class openaris extends controller {
             $this->objNewherd = $this->getObject('newherd');
             $this->objViewReport = $this->getObject('report');
             $this->objVacinventory = $this->getObject('vacinventory');
+            $this->objAnimalPopCensus= $this->getObject('animal_population');
             $this->objSampledetails = $this->getObject('sampledetails');
             $this->objSampling = $this->getObject('sampling');
             $this->objAnimalProduction = $this->getObject('animalproduction');
@@ -2886,8 +2887,10 @@ class openaris extends controller {
 	     		   $data['animalcat']=$this->getParam('animalCat');
 	     		   $data['catnum']=$this->getParam('catNumber');
 	     		   $data['comments']=$this->getParam('comments');
-			   		//print_r($data); exit;
-			   		$this->unsetAnimalpopulation();	   			   						
+	     		   
+			   	$result = $this->objAnimalPopCensus->insert($data);
+			   	
+			   	$this->unsetAnimalpopulation();	   			   						
 			   return 'select_officer_tpl.php';  	
 			case 'country_add':
 			 		//$id=$this->getSession('ps_geo2Id');

@@ -267,10 +267,6 @@ $objButtonTable->endRow();
 $content=$objTopTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<br />".$objButtonTable->show();
 $form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
-$form->addRule('repOfficerId', 'Please Select Reporting Officer', 'select');
-$form->addRule('dataOfficerId','Please Select Data Entry Officer Officer ', 'select');
-$form->addRule('vetOfficerId', 'Please Select Vet Officer', 'select');
-$form->addRule('countryId', 'Please Select a Country', 'select');
 
 
 //$form->addToForm($btcancel->show().$tab);
