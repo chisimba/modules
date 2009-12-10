@@ -63,20 +63,22 @@ $countryDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectd
 $countryDrop->addFromDB($arrayCountry, 'common_name', 'id');
 $countryDrop->setSelected($countryId);
 $countryDrop->cssClass = 'passive_surveillance';
-$countryDrop->extra = 'onchange="javascript:changeCountry()"';
+$countryDrop->extra = 'onchange="javascript:changeNames();"';
 
-$admin1Drop = new dropdown('admin1Id');
+$admin1Drop = new dropdown('partitionTypeId');
 $admin1Drop->addFromDB($arrayAdmin1, 'partitioncategory', 'id');
 $admin1Drop->cssClass = 'passive_surveillance';
+$admin1Drop->extra = 'onchange="javascript:changePartitionType();"';
 
-$admin2Drop = new dropdown('admin2Id');
+$admin2Drop = new dropdown('partitionLevelId');
 $admin2Drop->addFromDB($arrayAdmin2, 'partitionlevel', 'id');
 $admin2Drop->cssClass = 'passive_surveillance';
+$admin2Drop->extra = 'onchange="javascript:changeNames();"';
 
-$admin3Drop = new dropdown('admin3Id');
-$admin3Drop->addFromDB($arrayAdmin3, 'partitionname', 'id');
+$admin3Drop = new dropdown('partitionId');
+//$admin3Drop->addFromDB($arrayAdmin3, 'partitionname', 'id');
 $admin3Drop->cssClass = 'passive_surveillance';
-
+$admin3Drop->extra = 'disabled';
 $monthDrop = new dropdown('month');
 for ($i=1; $i<13; $i++) {
     $monthDrop->addOption($i, date('F', mktime(0,0,0,$i)));
@@ -276,26 +278,25 @@ $reportTypeDrop->cssClass = 'passive_surveillance';
 $reportTypeDrop->extra = 'onchange="javascript:toggleReportType();"';
 
 $outbreakDrop = new dropdown('outbreakId');
-//$outbreakDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_none', 'openaris'));
 $outbreakDrop->addFromDB($arrayOutbreak, 'fullname', 'id');
 $outbreakDrop->setSelected($outbreakId);
 $outbreakDrop->cssClass = 'passive_surveillance';
 $outbreakDrop->extra = 'disabled';
 
 $diseaseDrop = new dropdown('diseaseId');
-$diseaseDrop->addFromDB($arrayDisease, 'fullname', 'id');
+$diseaseDrop->addFromDB($arrayDisease, 'short_name', 'id');
 $diseaseDrop->setSelected($diseaseId);
 $diseaseDrop->cssClass = 'passive_surveillance';
 
 $occurenceDrop = new dropdown('occurenceId');
 $occurenceDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$occurenceDrop->addFromDB($arrayOccurence, 'fullname', 'id');
+$occurenceDrop->addFromDB($arrayOccurence, 'occurencecode', 'id');
 $occurenceDrop->setSelected($occurenceId);
 $occurenceDrop->cssClass = 'passive_surveillance';
 
 $infectionDrop = new dropdown('infectionId');
 $infectionDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$infectionDrop->addFromDB($arrayInfection, 'fullname', 'id');
+$infectionDrop->addFromDB($arrayInfection, 'possiblesource', 'id');
 $infectionDrop->setSelected($infectionId);
 $infectionDrop->cssClass = 'passive_surveillance';
 

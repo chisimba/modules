@@ -58,6 +58,14 @@ $GLOBALS['kewl_entry_point_run']) {
 		}
 	}
 	
+	public function getLevels($categoryId) {
+		$levels = $this->getAll("WHERE partitioncategoryid = '$categoryId'");
+		$levelArray = array();
+		foreach ($levels as $level) {
+			$levelArray[$level['id']] = $level['partitionlevel']; 
+		}
+		return $levelArray;
+	}
 	
 	public function addPartitionLevel($partitioncategory,$partitionlevel,$description)
 	{

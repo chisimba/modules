@@ -58,6 +58,14 @@ $GLOBALS['kewl_entry_point_run']) {
 		}
 	}
 	
+	public function getNames($countryId, $levelId) {
+		$names = $this->getAll("WHERE countryid = '$countryId' AND partitionlevelid = '$levelId' ORDER BY partitionname");
+		$nameArray = array();
+		foreach ($names as $name) {
+			$array[$name['id']] = $name['partitionname']; 
+		}
+		return $array;
+	}
 	
 	public function addPartition($partitioncode,$partitionlevel,$partitionname,$parentpartition,$startdate,$enddate)
 	{

@@ -106,13 +106,44 @@ function clear_viewReports() {
 	$('input_month').selectedIndex = monthIndex;
 }
 
-function changeCountry() {
-	//jQuery('#input_admin1Id >option').remove();
+function changePartitionType() {
+	jQuery('#input_partitionLevelId >option').remove();
+	jQuery('#input_partitionId >option').remove();
+	jQuery('#input_partitionLevelId').attr('disabled', true);
+	jQuery('#input_partitionId').attr('disabled', true);
+	var categoryId = jQuery('#input_partitionTypeId').val();
+	//load levels
+	jQuery.getJSON("index.php?module=openaris&action=ajax_getpartitionlevels&categoryId="+categoryId,
+				   function(data) {
+						jQuery.each(data, function(key, value) {
+							jQuery('#input_partitionLevelId').append(jQuery("<option></option>").attr("value",key).text(value));
+						});
+						if (data.length != 0) {
+							jQuery('#input_partitionLevelId').removeAttr('disabled');
+						}
+						changeNames();
+				   });
+	
 }
-function changePartition(){
 
-
+function changeNames() {
+	jQuery('#input_partitionId >option').remove();
+	jQuery('#input_partitionId').attr('disabled', true);
+	var countryId = jQuery('#input_countryId').val();
+	if (countryId != -1) {
+		var levelId = jQuery('#input_partitionLevelId').val();
+		jQuery.getJSON("index.php?module=openaris&action=ajax_getpartitionnames&levelId="+levelId+"&countryId="+countryId,
+				   function(data) {
+						jQuery.each(data, function(key, value) {
+							jQuery('#input_partitionId').append(jQuery("<option></option>").attr("value",key).text(value));
+						});
+						if (data.length != 0) {
+							jQuery('#input_partitionId').removeAttr('disabled');
+						}
+				   });
+	}
 }
+
 function getOfficerInfo(role) {
 	var userId = jQuery('#input_'+role+'OfficerId').val();
 	var fax;

@@ -129,7 +129,7 @@ class openaris extends controller {
             $this->objCausative = $this->getObject('causative');
             $this->objNewherd = $this->getObject('newherd');
             $this->objViewReport = $this->getObject('report');
-            $this->objVacinventory = $this->getObject('vacinventory');
+            //$this->objVacinventory = $this->getObject('vacinventory');
             $this->objSampledetails = $this->getObject('sampledetails');
             $this->objSampling = $this->getObject('sampling');
             $this->objAnimalProduction = $this->getObject('animalproduction');
@@ -305,22 +305,26 @@ class openaris extends controller {
             
             case 'passive_surveillance':
                 $this->setVar('arrayCountry', $this->objCountry->getAll("ORDER BY common_name"));
-                $this->setVar('arrayAdmin1', $this->objPartitionCategory->getAll("ORDER BY partitioncategory"));
-                $this->setVar('arrayAdmin2', $this->objPartitionLevel->getAll("ORDER BY partitionlevel"));
-                $this->setVar('arrayAdmin3', $this->objPartition->getAll("ORDER BY partitionname"));
+				$partitionCategories = $this->objPartitionCategory->getAll("ORDER BY partitioncategory");
+                $this->setVar('arrayAdmin1', $partitionCategories);
                 $this->setVar('arrayROfficer', $this->objAhisUser->getListByRole('init_01'));
                 $this->setVar('arrayDEOfficer', $this->objAhisUser->getListByRole('init_02'));
                 $this->setVar('arrayVOfficer', $this->objAhisUser->getListByRole('init_03'));
                 $this->setVar('arrayOutbreak', array());
-                $this->setVar('arrayDisease', array());
-                $this->setVar('arrayOfficer', array());
-                $this->setVar('arrayOccurence', array());
-                $this->setVar('arrayInfection', array());
+                $this->setVar('arrayDisease', $this->objDiseases->getAll('ORDER BY short_name'));
+                $this->setVar('arrayOccurence', $this->objOccurenceCode->getAll("ORDER BY occurencecode"));
+                $this->setVar('arrayInfection', $this->objInfectionsources->getAll("ORDER BY possiblesource"));
                 
                 $this->setVar('countryId', $this->getSession('ps_countryId'));
-                $this->setVar('admin1Id', $this->getSession('ps_admin1Id'));
-                $this->setVar('admin2Id', $this->getSession('ps_admin2Id'));
-                $this->setVar('admin3Id', $this->getSession('ps_admin3Id'));
+				$defaultCategory = current($partitionCategories);
+                $partitionTypeId = $this->getSession('ps_partitionTypeId', $defaultCategory['id']);
+				$this->setVar('partitionTypeId', $partitionTypeId);
+                $this->setVar('arrayAdmin2', $this->objPartitionLevel->getAll("WHERE partitioncategoryid = '$partitionTypeId' ORDER BY partitionlevel"));
+                $partitionLevelId = $this->getSession('ps_partitionLevelId');
+				$this->setVar('partitionLevelId', $partitionLevelId);
+                $this->setVar('arrayAdmin3', $this->objPartition->getAll("ORDER BY partitionname"));
+                $this->setVar('partitionLevelId', $this->getSession('ps_partitionLevelId'));
+                $this->setVar('partitionId', $this->getSession('ps_partitionId'));
                 $this->setVar('datePrepared', $this->getSession('ps_datePrepared', date('Y-m-d')));
                 $this->setVar('dateIBARSub', $this->getSession('ps_dateIBARSub', date('Y-m-d')));
                 $this->setVar('dateIBARRec', $this->getSession('ps_dateIBARRec', date('Y-m-d')));
@@ -368,6 +372,17 @@ class openaris extends controller {
 				$userId = $this->getParam('userid');
 				$infos = $this->objAhisUser->getUserContact($userId);
 				echo json_encode(current($infos));
+				break;
+			
+			case "ajax_getpartitionlevels":
+				$categoryId = $this->getParam('categoryId');
+				echo json_encode($this->objPartitionLevel->getLevels($categoryId));
+				break;
+			
+			case "ajax_getpartitionnames":
+				$countryId = $this->getParam('countryId');
+				$levelId = $this->getParam('levelId');
+				echo json_encode($this->objPartition->getNames($countryId, $levelId));
 				break;
 			
 			case "disease_report_screen_2":
