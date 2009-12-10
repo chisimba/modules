@@ -61,17 +61,18 @@ $bButton->setCSS('backButton');
 $btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
 $btcancel->setCSS('cancelButton');
 
-$speciesDrop = new dropdown('speciesId');
-$speciesDrop->addFromDB($species, 'fullname', 'id');
-$speciesDrop->setSelected($speciesId);
+
 
 $classDrop = new dropdown('classification');
-$classDrop->addFromDB($species, 'name', 'name'); 
+
+$classDrop->addFromDB($arrayspecies, 'name', 'name'); 
+$classDrop->setSelected($species);
+$classDrop->extra = 'disabled'; 
 
 //Breed dropdown
 $breedDrop = new dropdown('breedId');
-$breedDrop->addFromDB($breed, 'fullname', 'id');
-$breedDrop->setSelected($breedId);
+//$breedDrop->addFromDB($breed, 'fullname', 'id');
+//$breedDrop->setSelected($breedId);
 
 //animal category dropdown
 $animalCatDrop=new dropdown('animalCat');
@@ -83,19 +84,17 @@ $monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 
 $dateBox = new textinput('reportdate', date('Y/m/d', strtotime($calendardate)),'text', 30);
 $yearBox = new textinput('year', date('Y'), 'text', 4);
 
-$repDate = $this->newObject('datepicker','htmlelements');
-$repDate->setName('rDate');
-$repDate->setDefaultDate($rDate);
+$repDate = new textinput('rDate',$rDate);
+$repDate->extra = 'disabled';
 
-$ibarDate=$this->newObject('datepicker', 'htmlelements');
-$ibarDate->setName('iDate');
-$ibarDate->setDefaultDate($iDate);
+$ibarDate= new textinput('iDate',$iDate);
+$ibarDate->extra ='disabled';
 
 
 $reportOfficerDrop = new dropdown('repoff');
 $reportOfficerDrop->addOption('null','Select');
-$reportOfficerDrop->addFromDB($userList, 'name', 'name');
-$reportOfficerDrop->setSelected($repOfficer);
+$reportOfficerDrop->addFromDB($userList, 'name', 'userid');
+$reportOfficerDrop->setSelected($repoff);
 $reportOfficerDrop->extra='disabled';
 
 $totalNumSpecies = new textinput('totalNumSpecies', $totalNumSpecies, 'text');
@@ -109,25 +108,15 @@ $prodNumber = new textinput('productionno', $productionno, 'text');
 
 $commentsBox = new textarea('comments', $comments , 4, 40);
 
-$speciesDrop = new dropdown('speciesId');
-$speciesDrop->addFromDB($species, 'fullname', 'id');
-$speciesDrop->cssClass = 'passive_surveillance';
-
-$breedDrop = new dropdown('breedId');
-$breedDrop->addFromDB($breed, 'fullname', 'id');
-//$breedDrop->setSelected($breedId);
-$breedDrop->cssClass = 'passive_surveillance';
 
 
-$admin3Drop = new dropdown('admin3Id');
-$admin3Drop->addFromDB($arrayAdmin3, 'name', 'id');
 
 $objTable = $this->newObject('htmltable', 'htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
 
 //Reporting Officer
-$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";//$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer').":$tab");
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').":$tab");
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').": $tab");
@@ -151,9 +140,10 @@ $objTable->addCell($breedDrop->show(),NULL,'center');
 $objTable->endRow();
 //animal production
 $label = new label ('Animal Production:', ' input_production');
-$production = new dropdown('animal_production');
+$production = new textinput('animal_production',$prodname);
+$production->extra = 'disabled';
 $objTable->startRow();
-$production->addFromDB($animprod, 'name','name');$objTable->addCell($label->show());
+$objTable->addCell($label->show());
 $objTable->addCell($production->show());
 $objTable->endRow();	
 
@@ -208,7 +198,7 @@ $objButtonTable->addCell($button->show(), NULL, 'top', 'center');
 $objButtonTable->endRow();
 
 // Create Form
-$form = new form ('add', $this->uri(array('action'=>$formAction)));
+$form = new form ('add', $this->uri(array('action'=>'animal_population2')));
 $content=$objTable->show()."<hr />".$middleTable->show()."<hr />".$bottomTable->show()."<br />".$objButtonTable->show();
 $form->addToForm($content);
 $form->addRule('num_animals', 'Please enter number of animals', 'required');

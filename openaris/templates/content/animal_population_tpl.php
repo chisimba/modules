@@ -71,28 +71,33 @@ $btcancel->setCSS('cancelButton');
 
 $classDrop = new dropdown('classification');
 $classDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$classDrop->addFromDB($species, 'name', 'name'); 
+$classDrop->addFromDB($arrayspecies, 'name', 'name');
+$classDrop->setSelected($species); 
 
 //drop down for country
 $countryDrop = new dropdown('countryId');
 $countryDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $countryDrop->addFromDB($arrayCountry, 'common_name', 'id');
-$countryDrop->setSelected($countryId);
+$countryDrop->setSelected($country);
 $countryDrop->cssClass = 'animal_population_add';
+$countryDrop->extra = 'onchange="javascript:changeCountry()"';
 
 $admin1Drop = new dropdown('admin1Id');
 $admin1Drop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$admin1Drop->addFromDB($arrayAdmin1, 'name', 'id');
+$admin1Drop->addFromDB($arrayAdmin1, 'partitioncategory', 'partitioncategory');
+$admin1Drop->setSelected($admin1);
 $admin1Drop->cssClass = 'animal_population_add';
 
 $partitionLDrop = new dropdown('admin2Id');
 $partitionLDrop ->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$partitionLDrop->addFromDB($arrayAdmin2, 'name', 'id');
+$partitionLDrop->addFromDB($arrayAdmin2, 'partitionlevel', 'partitionlevel');
+$partitionLDrop->setSelected($admin2);
 $partitionLDrop->cssClass = 'animal_population_add';
 
-$partitionNDrop = new dropdown('admin2Id');
+$partitionNDrop = new dropdown('admin3Id');
 $partitionNDrop ->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$partitionNDrop->addFromDB($arrayAdmin2, 'name', 'id');
+$partitionNDrop->addFromDB($arrayAdmin3, 'partitionname', 'partitionname');
+$partitionNDrop->setSelected($admin3);
 $partitionNDrop->cssClass = 'animal_population';
 
 $admin3Drop = new dropdown('admin3Id');
@@ -112,41 +117,38 @@ $ibarDate->setName('iDate');
 $ibarDate->setDefaultDate($iDate);
 
 
-$reportOfficerDrop = new dropdown('repoff');
-$reportOfficerDrop->addOption('null',$this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$reportOfficerDrop->addFromDB($userList, 'name', 'name');
+$reportOfficerDrop = new dropdown('repOfficerId');
+$reportOfficerDrop->addOption('-1',$this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$reportOfficerDrop->addFromDB($userList, 'name', 'userid');
 $reportOfficerDrop->setSelected($repoff);
-
+$reportOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("rep");\'';
 //Data entry officer
-$dataEntryOfficerDrop = new dropdown('dataoff',$dataoff);
-$dataEntryOfficerDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$dataEntryOfficerDrop->addFromDB($userList, 'name', 'name');
+$dataEntryOfficerDrop = new dropdown('dataOfficerId');
+$dataEntryOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$dataEntryOfficerDrop->addFromDB($userList, 'name', 'userid');
 $dataEntryOfficerDrop->setSelected($dataoff);
-
+$dataEntryOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("data");\'';
 //Vet officer
-$valOfficerDrop = new dropdown('vetoff',$vetoff);
-$valOfficerDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$valOfficerDrop->addFromDB($userList, 'name', 'name');
+$valOfficerDrop = new dropdown('vetOfficerId');
+$valOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$valOfficerDrop->addFromDB($userList, 'name', 'userid');
 $valOfficerDrop->setSelected($vetoff);
+$valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
 
+$phoneBox = new textinput('dataOfficerTel', $dphone, 'text');
+$faxBox = new textinput('dataOfficerFax', $dfax, 'text');
+$emailBox = new textinput('dataOfficerEmail', $demail, 'text');
 
-$phoneBox = new textinput('dataEntryOfficerPhone', $dataEntryOfficerPhone, 'text');
-$faxBox = new textinput('dataEntryOfficerFax', $dataEntryOfficerFax, 'text');
-$emailBox = new textinput('dataEntryOfficerEmail', $dataEntryOfficerEmail, 'text');
+$vphoneBox = new textinput('vetOfficerTel', $vphone, 'text');
+$vfaxBox = new textinput('vetOfficerFax', $vfax, 'text');
+$vemailBox = new textinput('vetOfficerEmail', $vemail, 'text');
 
-$vphoneBox = new textinput('valOfficerPhone', $valOfficerPhone, 'text');
-$vfaxBox = new textinput('valOfficerFax', $valOfficerFax, 'text');
-$vemailBox = new textinput('valOfficerEmail', $valOfficerEmail, 'text');
 
-$speciesDrop = new dropdown('speciesId');
-$speciesDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$speciesDrop->addFromDB($species, 'fullname', 'id');
-$speciesDrop->setSelected($speciesId);
 
 
 $breedDrop = new dropdown('breedId');
-$breedDrop->addFromDB($breed, 'fullname', 'id');
+$breedDrop->addFromDB($arraybreed, 'name', 'id');
 $breedDrop->setSelected($breedId);
 
 
@@ -243,9 +245,9 @@ $objBottomTable->startRow();$objBottomTable->addCell($this->objLanguage->langua
 $objBottomTable->addCell($partitionNDrop->show(),NULL,'center');
 //animal production
 $label = new label ('Animal Production:', ' input_production');
-$production = new dropdown('animal_production');
+$production = new textinput('animal_production',$prodname);
 
-$production->addFromDB($animprod, 'name','name');$objBottomTable->addCell($tab.$label->show());
+$objBottomTable->addCell($tab.$label->show());
 $objBottomTable->addCell($production->show());
 $objBottomTable->endRow();	
 
@@ -261,10 +263,10 @@ $objButtonTable->endRow();
 $content=$objTopTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<br />".$objButtonTable->show();
 $form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
-$form->addRule('num_animals', 'Please enter number of animals', 'required');
-$form->addRule('num_animals', 'Please enter valid number ', 'numeric');
-$form->addRule('source', 'Please enter source of animals', 'required');
-$form->addRule('source', 'Please enter valid source', 'nonnumeric');
+$form->addRule('repOfficerId', 'Please enter number of animals', 'select');
+$form->addRule('dataOfficerId', 'Please enter valid number ', 'select');
+$form->addRule('vetOfficerId', 'Please enter source of animals', 'select');
+$form->addRule('countryId', 'Please enter valid source', 'select');
 
 
 //$form->addToForm($btcancel->show().$tab);

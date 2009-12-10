@@ -129,7 +129,7 @@ class openaris extends controller {
             $this->objCausative = $this->getObject('causative');
             $this->objNewherd = $this->getObject('newherd');
             $this->objViewReport = $this->getObject('report');
-            //$this->objVacinventory = $this->getObject('vacinventory');
+            $this->objVacinventory = $this->getObject('vacinventory');
             $this->objSampledetails = $this->getObject('sampledetails');
             $this->objSampling = $this->getObject('sampling');
             $this->objAnimalProduction = $this->getObject('animalproduction');
@@ -2759,16 +2759,28 @@ class openaris extends controller {
 				
              case 'animal_population_add':
                 $this->setVar('arrayCountry', $this->objCountry->getAll("ORDER BY common_name"));
-                $this->setVar('arrayAdmin1', array());
-                $this->setVar('arrayAdmin2', array());
-                $this->setVar('arrayAdmin3', array());
-               $this->setVar('officerId', $this->getSession('ps_officerId'));
-			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));	
-			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));		
+                $this->setVar('arrayAdmin1',$this->objPartitionCategory->getAll("ORDER BY partitioncategory"));
+                $this->setVar('arrayAdmin2', $this->objPartitionLevel->getAll("ORDER BY partitionlevel"));
+                $this->setVar('arrayAdmin3', $this->objPartition->getAll());
+               $this->setVar('repoff', $this->getSession('ps_officerId'));
+			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));
+			      $this->setVar('country',$this->getSession('ps_country'));	
+			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));	
+			      $this->setVar('admin1',$this->getSession('ps_admin1'));	
+			      $this->setVar('admin2',$this->getSession('ps_admin2'));	
+			      $this->setVar('admin3',$this->getSession('ps_admin3'));
+			      $this->setVar('dphone',$this->getSession('ps_dphone'));
+			       $this->setVar('dfax',$this->getSession('ps_dfax'));
+			       $this->setVar('demail',$this->getSession('ps_demail'));
+			       $this->setVar('vphone',$this->getSession('ps_vphone'));
+	             $this->setVar('vfax',$this->getSession('ps_vfax'));
+			       $this->setVar('vemail',$this->getSession('ps_vemail'));	
+			       $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      
+			      $this->setVar('species',$this->getSession('ps_species'));				      			      
                 $this->setVar('userList', $this->objAhisUser->getList());              
-                
-                $this->setVar('iDate',$this->getSession('ps_calendardate',date('Y-m-d')));
-                $this->setVar('rDate', $this->getSession('ps_calendardate', date('Y-m-d')));
+                $this->setVar('arrayBreed',$this->objBreed->getAll());
+                $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
+                $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));
 			 		$id=$this->getSession('ps_geo2Id');
 			 		
 			 	  		 		
@@ -2779,7 +2791,7 @@ class openaris extends controller {
 			 		$rDate = $this->getParam('rDate', $this->getSession('ps_rDate'));
 			 		$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
 			 	   $this->setVar('animprod',$this->objAnimalProduction->getAll("ORDER BY name"));
-               $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));		
+               $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY name"));		
                $this->setVar('breed', $this->objBreed ->getAll("ORDER BY name"));	
                
                //$this->setVar('species', $this->getSession('ps_species'));
@@ -2794,20 +2806,37 @@ class openaris extends controller {
 					return 'animal_population_tpl.php';
 					
 					case 'animal_population1':
-			      $this->setSession('ps_officerId',$this->getParam('repoff'));
-			      $this->setSession('ps_dataoff',$this->getParam('dataoff'));		
-			      $this->setSession('ps_vetoff',$this->getParam('vetoff'));	
-			      $this->setSession('ps_iDate',$this->getParam('iDate'));	
-			      $this->setSession('ps_rDate',$this->getParam('rDate'));	
-			      
+			      $this->setSession('ps_officerId',$this->getParam('repOfficerId'));
+			      $this->setSession('ps_dataoff',$this->getParam('dataOfficerId'));		
+			      $this->setSession('ps_vetoff',$this->getParam('vetOfficerId'));	
+			      $this->setSession('ps_repdate',$this->getParam('rDate'));	
+			      $this->setSession('ps_dphone',$this->getParam('dataOfficerTel'));
+			      $this->setSession('ps_dfax',$this->getParam('dataOfficerFax'));
+			      $this->setSession('ps_demail',$this->getParam('dataOfficerEmail'));
+			      $this->setSession('ps_vphone',$this->getParam('vetOfficerTel'));
+			      $this->setSession('ps_vfax',$this->getParam('vetOfficerFax'));
+			      $this->setSession('ps_vemail',$this->getParam('vetOfficerEmail'));  
+			      $this->setSession('ps_ibardate',$this->getParam('iDate'));
+			      $this->setSession('ps_country',$this->getParam('countryId'));	
+			      $this->setSession('ps_month',$this->getParam('month'));	
+			      $this->setSession('ps_year',$this->getParam('year'));	
+			      $this->setSession('ps_admin1',$this->getParam('admin1Id'));
+				   $this->setSession('ps_admin2',$this->getParam('admin2Id'));
+			      $this->setSession('ps_admin3',$this->getParam('admin3Id'));
+			      $this->setSession('ps_species',$this->getParam('classification'));	
+			      $this->setSession('ps_breed',$this->getParam('breedId'));	
+			      $this->setSession('ps_prodname',$this->getParam('animal_production'));
+
 			       return $this->nextAction(animal_population_screen2);
          
          case 'animal_population_screen2':         
-                
-                $this->setVar('repoff', $this->getSession('ps_officerId'));
-                $this->setVar('iDate',$this->getSession('ps_iDate',date('Y-m-d')));
-			      $this->setVar('rDate',$this->getSession('ps_rDate',date('Y-m-d')));	
-                
+               $this->setVar('userList', $this->objAhisUser->getList());                 		  
+               $this->setVar('repoff', $this->getSession('ps_officerId'));
+               $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY name"));		
+                 $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
+                $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));	
+                $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      
+			      $this->setVar('species',$this->getSession('ps_species'));			 
                // $dateIBAR = $this->getParam('iDate', $this->getSession('ps_iDate'));
                 //$dateIsReported = $this->getParam('rDate', $this->getSession('ps_rDate'));
                 
@@ -2823,7 +2852,39 @@ class openaris extends controller {
 				    
          return 'animal_population2_tpl.php';       
          				
-				
+			case 'animal_population2':
+			   
+	     		   $data['repoff']= $this->getSession('ps_officerId');
+	     		   $data['dataoff']= $this->getSession('ps_dataoff');
+	     		   $data['vetoff']=$this->getSession('ps_vetoff');
+	     		   $data['ibardate']=$this->getSession('ps_ibardate');
+	     		   $data['repdate']=$this->getSession('ps_repdate');
+	     		   $data['country']=$this->getSession('ps_country');
+
+	     		   $data['year']=$this->getSession('ps_year');
+	     		   $data['parttype']=$this->getSession('ps_admin1');
+	     		   $data['partlevel']=$this->getSession('ps_admin2');
+	     		   $data['partname']=$this->getSession('ps_admin3');
+	     		   $data['species']=$this->getSession('ps_species');
+	     		   $data['prodname']=$this->getSession('ps_prodname');
+	     		   $data['breed']=$this->getSession('ps_breed');
+	     		   $data['dphone']= $this->getSession('ps_dphone');
+	     		   $data['dfax']=$this->getSession('ps_dfax');
+	     		   $data['demail']= $this->getSession('ps_demail');
+	     		   $data['vphone']= $this->getSession('ps_vphone');
+	     		   $data['vfax']= $this->getSession('ps_vfax');
+	     		   $data['vemail']=$this->getSession('ps_vemail');
+	     		   $data['totnum']=$this->getParam('totalNumSpecies');
+	     		   $data['troplivestock']=$this->getParam('tropicalLivestock');
+	     		   $data['prodnum']=$this->getParam('productionno');
+	     		   $data['breedno']=$this->getParam('breedNumber');
+	     		   $data['crossbreednum']=$this->getParam('crossBreed');
+	     		   $data['animalcat']=$this->getParam('animalCat');
+	     		   $data['catnum']=$this->getParam('catNumber');
+	     		   $data['comments']=$this->getParam('comments');
+			   		//print_r($data); exit;
+			   		$this->unsetAnimalpopulation();	   			   						
+			   return 'select_officer_tpl.php';  	
 			case 'country_add':
 			 		//$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('languages',$this->objLanguages->getAll("ORDER BY language"));
@@ -5080,6 +5141,32 @@ class openaris extends controller {
 	    
 	    
 	    
+	    }
+  private function unsetAnimalpopulation() {
+                $this->unsetSession('ps_officerId');
+	             $this->unsetSession('ps_dataoff');
+	             $this->unsetSession('ps_vetoff');
+	             $this->unsetSession('ps_repdate');
+	             $this->unsetSession('ps_ibardate');
+	             $this->unsetSession('ps_country');
+
+	             $this->unsetSession('ps_year');
+	             $this->unsetSession('ps_admin1');
+	             $this->unsetSession('ps_admin2');
+	             $this->unsetSession('ps_admin3');
+	             $this->unsetSession('ps_loctype');
+	             $this->unsetSession('ps_locname');
+	             $this->unsetSession('ps_lattitude');
+	             $this->unsetSession('ps_longitude');
+	             $this->unsetSession('ps_dphone');
+	             $this->unsetSession('ps_demail');
+	             $this->unsetSession('ps_dfax');
+	             $this->unsetSession('ps_vphone');
+	             $this->unsetSession('ps_vemail');
+	             $this->unsetSession('ps_vfax');	
+	             $this->unsetSession('ps_species'); 
+	             $this->unsetSession('ps_prodname');       
+	    	           	    
 	    }
     /**
      * Method to determine whether the user needs to be logged in
