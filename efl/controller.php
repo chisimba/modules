@@ -124,6 +124,7 @@ class efl extends controller {
     function __viewsubmittedessays() {
         $essayid=$this->getParam('essayid');
         $this->essayutil->generateJNLP();
+
         return 'submittedessays_tpl.php';
     }
 
@@ -133,7 +134,7 @@ class efl extends controller {
         $this->setVarByRef('essayid',$essayid);
 
         //$essayid=$this->getParam('essayid');
-        $this->essayutil->generateJNLP();
+        //$this->essayutil->generateJNLP();
 
         return 'studentessay_tpl.php';
     }

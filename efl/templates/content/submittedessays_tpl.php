@@ -87,6 +87,8 @@ $codebase="http://" . $_SERVER['HTTP_HOST'].'/'.$resourcePath.'/efl/resources/';
 
 $count = 1;
 $numRows = count($dbdata);
+$titleid=$this->getparam('essayid');
+$essaytitle = $essaycontent=$this->essays->getTitle($titleid);
 
 foreach($dbdata as $row) {
     $essaydata=$this->essays->getTitle($row['essayid']);
