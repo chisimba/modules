@@ -360,8 +360,6 @@ class eportfolio extends controller
 												$createPdf = False;
 												if(!empty($address)||!empty($contacts)||!empty($emails)||!empty($demographics)||!empty($activity)||!empty($affiliation)||!empty($transcripts)||!empty($qualification)||!empty($goals)||!empty($competency)||!empty($interests)||!empty($reflections)||!empty($assertions)){
 													$createPdf = True;
-													var_dump($transcripts."I am not empty!");
-													exit;
 												}
             //get the pdfmaker classes
             $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
