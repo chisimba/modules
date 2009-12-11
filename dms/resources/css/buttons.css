@@ -26,6 +26,21 @@ h2 {
     width:400px;
 }
 
-h3 {
-    font-weight:normal !important;
+
+.upload {
+    background-image: url(images/arrow_up.png) !important;
 }
+.helpimg {
+    background-image: url(images/help.png) !important;
+}
+.refresh {
+    background-image: url(images/arrow_refresh.png) !important;
+}
+.folderadd {
+    background-image: url(images/folder_add.png) !important;
+}
+
+.settings {
+    background-image: url(images/cog.png) !important;
+}
+
