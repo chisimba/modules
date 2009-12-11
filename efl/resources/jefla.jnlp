@@ -17,7 +17,7 @@
     </resources>
    <application-desc    main-class="jefla.Main">
 
-       <argument>this is a test essay</argument>
+       <argument></argument>
 
      </application-desc>
 

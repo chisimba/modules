@@ -105,6 +105,7 @@ class efl extends controller {
      * @return <type>
      */
     function __home() {
+        $this->essayutil->generateJNLP();
         return "home_tpl.php";
     }
 
@@ -123,7 +124,7 @@ class efl extends controller {
      */
     function __viewsubmittedessays() {
         $essayid=$this->getParam('essayid');
-        $this->essayutil->generateJNLP();
+        //$this->essayutil->generateJNLP();
 
         return 'submittedessays_tpl.php';
     }
@@ -133,9 +134,6 @@ class efl extends controller {
         $essayid=$this->getParam('essayid');
         $this->setVarByRef('essayid',$essayid);
 
-        //$essayid=$this->getParam('essayid');
-        //$this->essayutil->generateJNLP();
-
         return 'studentessay_tpl.php';
     }
    /**
@@ -143,6 +141,8 @@ class efl extends controller {
     * @return <type>
     */
     function __markessay() {
+        //$this->essayutil->generateJNLP();
+
         return "essaymarker_tpl.php";
 
     }
@@ -157,8 +157,10 @@ class efl extends controller {
         $this->setVarByRef('essayid',$essayid);
 
         if($this->objStudentEssays->addstudentEssay($userid,$essayid,$content)) {
+            $this->essayutil->generateJNLP();
             return "studentessaylist_tpl.php";
         } else {
+            $this->essayutil->generateJNLP();
             return "studentessaylist_tpl.php";
         }
 

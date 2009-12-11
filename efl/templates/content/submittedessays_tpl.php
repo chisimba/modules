@@ -48,7 +48,10 @@ $this->appendArrayVar('headerParams', $list);
 
 //where we render the 'popup' window
 $renderSurface='';
-$essayTitle='<h2>Essay title</h2>';
+$titleid=$this->getparam('essayid');
+$essaytitle = $this->essays->getTitle($titleid);
+
+$essayTitle= $essaytitle[0]['title'];
 $essayTitle.='
           <p>
           Listing of submitted essays
@@ -77,17 +80,17 @@ else {
     $dbdata=$this->essays->getSubmittedEssays($essayId, $this->objUser->userId());
 }
 $total=count($dbdata);
-$objAltConfig = $this->getObject('altconfig','config');
+/*$objAltConfig = $this->getObject('altconfig','config');
 $modPath=$objAltConfig->getModulePath();
 $replacewith="";
 $docRoot=$_SERVER['DOCUMENT_ROOT'];
 $resourcePath=str_replace($docRoot,$replacewith,$modPath);
-$codebase="http://" . $_SERVER['HTTP_HOST'].'/'.$resourcePath.'/efl/resources/';
+$codebase="http://" . $_SERVER['HTTP_HOST'].'/'.$resourcePath.'/efl/resources/';*/
 
 $count = 1;
 $numRows = count($dbdata);
 $titleid=$this->getparam('essayid');
-$essaytitle =$this->essays->getTitle($titleid);
+$essaytitle = $this->essays->getTitle($titleid);
 
 foreach($dbdata as $row) {
     $essaydata=$this->essays->getTitle($row['essayid']);
@@ -95,10 +98,10 @@ foreach($dbdata as $row) {
     $detailsLink->link=$row['userid'];
 
     $data.="[";
-    $data.="'<a href=\"".$codebase."jefla.jnlp\">".$row['userid']."</a>',";
-//  $data.="'". $detailsLink->show()."',";
+    //$data.="'<a href=\"".$codebase."jefla.jnlp\">".$row['userid']."</a>',";
+    //$data.="'". $detailsLink->show()."',";
+    $data.="'".$row['userid']."',";
     $data.="'".$row['submitdate']."']";
-
     if($count < $numRows) {
         $data.=",";
     }

@@ -74,6 +74,13 @@ $content= '<div id="grouping-grid">'.$essayTitle.$btns.'<br /><br /></div>';
 //data grid from db
 $dbdata=$this->essays->getEssays($this->objUser->userid());
 
+$objAltConfig = $this->getObject('altconfig','config');
+$modPath=$objAltConfig->getModulePath();
+$replacewith="";
+$docRoot=$_SERVER['DOCUMENT_ROOT'];
+$resourcePath=str_replace($docRoot,$replacewith,$modPath);
+$codebase="http://" . $_SERVER['HTTP_HOST'].'/'.$resourcePath.'/efl/resources/';
+
 $total=count($dbdata);
 $data="";
 foreach($dbdata as $row) {
@@ -112,7 +119,7 @@ foreach($dbdata as $row) {
 
     }
     $data.="[";
-    $data.= "'".$titleLink->show()."',";
+    $data.= "'<a href=\"".$codebase."jefla.jnlp\">".$titleLink->show()."',"; //$data.="'<a href=\"".$codebase."jefla.jnlp\">".$row['userid']."</a>',";
     $data.="'".$membersLink."',";
     $data.="'".$previewLink->show()."',";
     $data.="'".$editTxt.$deleteTxt."'";

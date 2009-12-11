@@ -43,7 +43,7 @@ class essayutil extends object {
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $resourcePath=str_replace($docRoot,$replacewith,$modPath);
         $codebase="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/efl/resources/';
-        $content= "this is a test essay";
+        //$essaycontent=$this->essays->getEssayContent($storyid);
         $str=
             '<jnlp spec="1.0+" codebase="'.$codebase.'">
     <information>
@@ -64,7 +64,7 @@ class essayutil extends object {
     </resources>
    <application-desc    main-class="jefla.Main">
 
-       <argument>'.$content.'</argument>
+       <argument>'.$essaycontent.'</argument>
 
      </application-desc>
 
