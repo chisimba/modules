@@ -67,7 +67,7 @@ class editform extends object {
         //----------TEXTAREA--------------
         //Create a new textarea for the essay content
         $objEssay = new textarea('content','',50,100);
-        $essayLabel = new label($this->objLanguage->languageText("mod_efl_essaytxt","efl"),"essay");
+        $essayLabel = new label($this->objLanguage->languageText("mod_efl_essaytxt","EFL"),"essay");
         $objForm->addToForm($essayLabel->show() . "<br />");
         $objForm->addToForm($objEssay->show() . "<br />");
 
@@ -78,7 +78,7 @@ class editform extends object {
         $objButton->setToSubmit();
         // Use the language object to label button
         // with the word save
-        $objButton->setValue(' '.$this->objLanguage->languageText("mod_efl_saveessay", "efl").' ');
+        $objButton->setValue(' '.$this->objLanguage->languageText("mod_efl_saveessay", "EFL").' ');
         $objForm->addToForm($objButton->show());
         return $objForm->show();
 
@@ -92,10 +92,10 @@ class editform extends object {
     private function getFormAction($essayid) {
 
         $action = $this->getParam("action", "save");
-        if ($action == "edit") {
+        if ($action == "edit"){
             $formAction = $this->uri(array("action" => "editessay",'essayid'=>$essayid), "efl");
         } else {
-            $formAction = $this->uri(array("action" => "home",'essayid'=>$essayid), "efl");
+            $formAction = $this->uri(array("action" => "addstudentessay",'essayid'=>$essayid), "efl");
         }
         return $formAction;
     }

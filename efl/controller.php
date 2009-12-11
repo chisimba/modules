@@ -154,6 +154,8 @@ class efl extends controller {
         $userid=$this->objUser->userId();
         $essayid=$this->getParam('essayid');
         $content=$this->getParam('content');
+        $this->setVarByRef('essayid',$essayid);
+
         if($this->objStudentEssays->addstudentEssay($userid,$essayid,$content)) {
             return "studentessaylist_tpl.php";
         } else {

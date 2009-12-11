@@ -57,7 +57,10 @@ class dbstudentessays extends dbtable {
     }
 
     function getTitle($essayid) {
-        return array('title'=> "test title");
+         $sql = "select title from tbl_efl_proposedessaytopics where id = '".$essayid."'";
+
+        return $this->getArray($sql);
+        //return array('title'=> "test title");
     }
 }
 ?>

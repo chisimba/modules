@@ -77,6 +77,7 @@ $dbdata=$this->essays->getEssays($this->objUser->userid());
 $total=count($dbdata);
 $data="";
 foreach($dbdata as $row) {
+    
     $essaydata['title']=$row['title'];
     
     $deleteLink=new link($this->uri(array('action'=>'deleteessay','essayid'=>$row['id'])));
@@ -90,7 +91,7 @@ foreach($dbdata as $row) {
     $objIcon->setIcon('edit');
     $editLink->link=$objIcon->show();
 
-    $detailsLink=new link($this->uri(array('action'=>'essaymembers','essayid'=>$row['id'])));
+   $detailsLink=new link($this->uri(array('action'=>'essaymembers','essayid'=>$row['id'])));
     $detailsLink->link='Members';
 
     $previewLink=new link($this->uri(array('action'=>'previewessay','storyid'=>$row['id'])));
@@ -128,7 +129,7 @@ if($lastChar == ',') {
 }
 $submitUrl = $this->uri(array('action' => 'saveschedule'));
 
-$title='Title';
+//$title='Title';
 $dateCreated='Date Created';
 $details='Details';
 

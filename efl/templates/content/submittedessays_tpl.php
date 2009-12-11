@@ -77,7 +77,6 @@ else {
     $dbdata=$this->essays->getSubmittedEssays($essayId, $this->objUser->userId());
 }
 $total=count($dbdata);
-
 $objAltConfig = $this->getObject('altconfig','config');
 $modPath=$objAltConfig->getModulePath();
 $replacewith="";
@@ -88,18 +87,16 @@ $codebase="http://" . $_SERVER['HTTP_HOST'].'/'.$resourcePath.'/efl/resources/';
 $count = 1;
 $numRows = count($dbdata);
 $titleid=$this->getparam('essayid');
-$essaytitle = $essaycontent=$this->essays->getTitle($titleid);
+$essaytitle =$this->essays->getTitle($titleid);
 
 foreach($dbdata as $row) {
     $essaydata=$this->essays->getTitle($row['essayid']);
-
-
     $detailsLink=new link($this->uri(array('action'=>'markessay','essayid'=>$row['essayid'])));
     $detailsLink->link=$row['userid'];
 
     $data.="[";
     $data.="'<a href=\"".$codebase."jefla.jnlp\">".$row['userid']."</a>',";
-  //  $data.="'". $detailsLink->show()."',";
+//  $data.="'". $detailsLink->show()."',";
     $data.="'".$row['submitdate']."']";
 
     if($count < $numRows) {
