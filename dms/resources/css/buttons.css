@@ -39,7 +39,9 @@ h2 {
 .folderadd {
     background-image: url(images/folder_add.png) !important;
 }
-
+.delete {
+    background-image: url(images/delete.png) !important;
+}
 .settings {
     background-image: url(images/cog.png) !important;
 }

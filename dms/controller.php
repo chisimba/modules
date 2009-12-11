@@ -47,6 +47,7 @@ class dms extends controller {
         //file type info object
         $this->objPermitted = $this->getObject('dbpermittedtypes');
         $this->objUploads = $this->getObject('dbfileuploads');
+        $this->objFileFolder = $this->getObject('filefolder','filemanager');
     }
 
     /**
@@ -116,7 +117,7 @@ class dms extends controller {
         $userid = $this->objUser->userId();
         $this->setVarByRef("userid", $userid);
         $this->setVarByRef("error", $error);
-        return "home_tpl.php";
+        return "home2_tpl.php";
     }
 
     /*
@@ -135,7 +136,7 @@ class dms extends controller {
     public function __doupload() {
         $permissions = $this->getParam('permissions');
         $result = $this->objUtils->saveFile($permissions);
-        
+
         if(strstr($result, "success")) {
             $this->nextAction('home');
         }
@@ -168,7 +169,7 @@ class dms extends controller {
     }
 
     public function __savefiletype() {
-        // go save stuff
+    // go save stuff
         $this->objPermitted->saveFileTypes($this->getParam('filetypedesc'),$this->getParam('filetypeext'));
         return $this->nextAction('admin');
     }
@@ -179,6 +180,19 @@ class dms extends controller {
         return $this->nextAction('admin');
     }
 
+    public function __downloadfile() {
+        $filename=$this->getParam('filename');
+        return $this->objUtils->downloadFile($filename);
+    }
+    public function __getFiles() {
+        return $this->objUtils->getFiles();
+    }
+
+    public function __createfolder() {
+
+        $this->objUtils->createFolder($this->getParam('folderpath'),$this->getParam('foldername'));
+        return $this->nextAction('home', array());
+    }
     public function __deletefile() {
         $userid = $this->objUser->userId();
         $id = $this->getParam('id');
@@ -191,7 +205,7 @@ class dms extends controller {
         else {
             $result = $this->objLanguage->languageText("error_DELETE", 'dms');
         }
-        
+
         return $this->nextAction('home', array("result"=>"$result"));
     }
 }
