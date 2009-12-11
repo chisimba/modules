@@ -10,7 +10,7 @@ Ext.onReady(function(){
         remoteSort: true,
         baseParams: {lightWeight:true,ext: 'js'},
         sortInfo: {field:'lastpost', direction:'DESC'},
-        autoLoad: {params:{start:0, limit:12}},
+        autoLoad: {params:{start:0, limit:500}},
 
         proxy: new Ext.data.ScriptTagProxy({
             url: 'http://extjs.com/forum/topics-browse-remote.php'
@@ -63,7 +63,7 @@ Ext.onReady(function(){
 
 	    bbar: new Ext.PagingToolbar({
 		    store: store,
-		    pageSize:12,
+		    pageSize:500,
 		    displayInfo:true
 	    }),
 
@@ -78,13 +78,8 @@ Ext.onReady(function(){
 
     // render functions
     function renderTopic(value, p, record){
-/*
         return String.format(
                 '<b><a href="http://extjs.com/forum/showthread.php?t={2}" target="_blank">{0}</a></b><a href="http://extjs.com/forum/forumdisplay.php?f={3}" target="_blank">{1} Forum</a>',
-                value, record.data.forumtitle, record.id, record.data.forumid);
-*/
-        return String.format(
-                '{1} Forum',
                 value, record.data.forumtitle, record.id, record.data.forumid);
     }
     function renderLast(value, p, r){
