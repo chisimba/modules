@@ -2746,7 +2746,9 @@ class openaris extends controller {
 
 
 			      return 'vacinventory2_add_tpl.php';	
-	      
+	      case 'vacinventory_clear':
+	      	   $this->unsetVaccineInventory1();
+	           return $this->nextAction('vacinventory');
 	      case 'vacinventory2_clear':
 	             $this->unsetSession('ps_outrefno');
 	             $this->unsetSession('ps_disease');

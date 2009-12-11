@@ -68,7 +68,7 @@ $ibarDate->setName('ibardate');
 $ibarDate->setDefaultDate($ibardate);
 
 // drop down for Country
-$country = new dropdown('country');
+$country = new dropdown('countryId');
 $country->addOption('-1','Select');
 $country->addFromDB($arraycountry,'common_name','id');
 $country->setSelected($count);
@@ -278,7 +278,7 @@ $objForm->addRule('admin3', $this->objLanguage->languageText('mod_ahis_admin3req
 //$objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_longitudereq','openaris'),'numeric');
 $objForm->addRule('dataOfficerTel', $this->objLanguage->languageText('mod_ahis_validatedatatel', 'openaris'), 'required');
 $objForm->addRule('vetOfficerTel', $this->objLanguage->languageText('mod_ahis_validatevettel', 'openaris'), 'required');
-
+$objForm->addRule('countryId',$this->objLanguage->languageText('mod_ahis_validatecountry', 'openaris'), 'required');
 $objForm->addRule('repdate', $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotfuture');
 $objForm->addRule('ibardate', $this->objLanguage->languageText('mod_ahis_validateibardate', 'openaris'), 'datenotfuture');
 $objForm->addRule(array('repdate','ibardate'), $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotbefore');

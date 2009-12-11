@@ -89,7 +89,7 @@ $outbreakRef = new dropdown('outbreakref');
 //dropdown for disease
 $disease = new dropdown('disease');
 $disease->addOption('null','Select');
-$disease->addFromDB($arraydisease,'disease_name','disease_name');
+$disease->addFromDB($arraydisease,'disease_name','id');
 $disease->setSelected($diseases);
 
 //dropdown form disease
