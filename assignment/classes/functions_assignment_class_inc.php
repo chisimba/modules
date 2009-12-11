@@ -609,6 +609,9 @@ class functions_assignment extends object
 							$objTable->startRow();
 							$objTable->addCell($this->objLanguage->languageText('mod_assignment_noassignments', 'assignment', 'No Assignments'),'','','','noRecordsMessage');
 							$objTable->endRow();
+							return false;
+						}else{
+						 return $objTable->show();
 						}
 					}
 					/*
@@ -620,7 +623,7 @@ class functions_assignment extends object
 					echo '<p>'.$link->show().'</p>';
 					}
 					*/
-					return $objTable->show();    
+					//return $objTable->show();    
     }
  }//end of class
 ?>
