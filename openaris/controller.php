@@ -114,7 +114,7 @@ class openaris extends controller {
             $this->objAge = $this->getObject('age');
             $this->objRole = $this->getObject('role');
             $this->objDepartment = $this->getObject('department');
-            $this->objPassive = $this->getObject('passive');
+            $this->objDiseaseReport = $this->getObject('diseasereport');
             $this->objReport = $this->getObject('reporttype');
             $this->objDisease = $this->getObject('disease');
             $this->objTest = $this->getObject('test');
@@ -364,14 +364,15 @@ class openaris extends controller {
                 $this->setVar('sampleDate', $this->getSession('ps_sampleDate', date('Y-m-d')));
                 $this->setVar('diagnosisDate', $this->getSession('ps_diagnosisDate', date('Y-m-d')));
                 $this->setVar('interventionDate', $this->getSession('ps_interventionDate', date('Y-m-d')));
-                $outbreakCode = "KEATX00309";
+                
+				$this->setVar('outbreakCode', '');
 				
 
                 return "passive_surveillance_tpl.php";
 			
 			case "ajax_getofficerinfo":
 				$userId = $this->getParam('userid');
-				$infos = $this->objAhisUser->getUserContact($userId);
+				$infos 	= $this->objAhisUser->getUserContact($userId);
 				echo json_encode(current($infos));
 				break;
 			
@@ -381,13 +382,20 @@ class openaris extends controller {
 				break;
 			
 			case "ajax_getpartitionnames":
-				$countryId = $this->getParam('countryId');
-				$levelId = $this->getParam('levelId');
+				$countryId 	= $this->getParam('countryId');
+				$levelId 	= $this->getParam('levelId');
 				echo json_encode($this->objPartition->getNames($countryId, $levelId));
 				break;
 			
+			case "ajax_getoutbreakcode":
+				$countryId 	= $this->getParam('countryId');
+				$diseaseId 	= $this->getParam('diseaseId');
+				$year 		= $this->getPAram('year');
+				echo json_encode(array('code'=>$this->objDiseaseReport->genOutbreakCode($countryId, $diseaseId, $year)));
+				break;
+			
 			case "disease_report_screen_2":
-				$outbreakCode = "KEATX00309";
+				$outbreakCode = $this->getParam('outbreakCode');
 				$countryId = $this->getParam('countryId', $this->getSession('ps_countryId'));
                 $partitionTypeId = $this->getParam('partitionTypeId', $this->getSession('ps_partitionTypeId'));
                 $partitionLevelId = $this->getParam('partitionLevelId', $this->getSession('ps_partitionLevelId'));
@@ -502,8 +510,10 @@ class openaris extends controller {
             
             case 'disease_report_screen_5':
                 $this->setVar('outbreakCode', $this->getParam('outbreakCode'));
-				$this->setVar('arrayNatureOfDiagnosis', $this->objDiagnosis->getAll("ORDER BY name"));
-				$this->setVar('diagnosisId', $this->getSession('ps_diagnosisId'));
+				$this->setVar('arrayControlMeasure', $this->objControlmeasures->getAll("ORDER BY controlmeasure"));
+				$this->setVar('arrayOtherMeasure', $this->objOtherControlMeasures->getAll("ORDER BY control_measure"));
+				$this->setVar('controlId', $this->getSession('ps_controlId'));
+				$this->setVar('otherId', $this->getSession('ps_otherId'));
 				$this->setVar('createdBy', $this->objUser->username($this->getSession('createdById')));
 				$this->setVar('createdDate', $this->getSession('createdDate', date('Y-m-d')));
 				$this->setVar('modifiedBy', '');
@@ -511,6 +521,10 @@ class openaris extends controller {
 				
                 return 'disease_report_5_tpl.php';
             
+			case 'disease_report_screen_6':
+				$this->setVar('outbreakCode', $this->getParam('outbreakCode'));
+				return 'disease_report_6_tpl.php';
+			
             case 'passive_save':
                 $ps_array['reporterid'] = $this->getSession('ps_officerId');
                 $ps_array['geo2id'] = $this->getSession('ps_geo2Id');

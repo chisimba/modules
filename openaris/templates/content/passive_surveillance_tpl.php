@@ -63,7 +63,7 @@ $countryDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectd
 $countryDrop->addFromDB($arrayCountry, 'common_name', 'id');
 $countryDrop->setSelected($countryId);
 $countryDrop->cssClass = 'passive_surveillance';
-$countryDrop->extra = 'onchange="javascript:changeNames();"';
+$countryDrop->extra = 'onchange="javascript:changeCountry();"';
 
 $admin1Drop = new dropdown('partitionTypeId');
 $admin1Drop->addFromDB($arrayAdmin1, 'partitioncategory', 'id');
@@ -87,6 +87,7 @@ $monthDrop->setSelected(date('m'));
 $monthDrop->cssClass = 'passive_surveillance';
 
 $yearBox = new textinput('year', date('Y'), 'text', 4);
+$yearBox->extra = 'onchange="javascript:changeOutbreakCode();"';
 
 $preparedDate = $this->newObject('datepicker','htmlelements');
 $preparedDate->setName('datePrepared');
@@ -281,12 +282,17 @@ $outbreakDrop = new dropdown('outbreakId');
 $outbreakDrop->addFromDB($arrayOutbreak, 'fullname', 'id');
 $outbreakDrop->setSelected($outbreakId);
 $outbreakDrop->cssClass = 'passive_surveillance';
-$outbreakDrop->extra = 'disabled';
+$outbreakDrop->extra = 'style="display: none;"';
+
+$outbreakBox = new textinput('outbreakCode');
+$outbreakBox->setCss('passive_surveillance');
+$outbreakBox->extra = 'readonly';
 
 $diseaseDrop = new dropdown('diseaseId');
 $diseaseDrop->addFromDB($arrayDisease, 'short_name', 'id');
 $diseaseDrop->setSelected($diseaseId);
 $diseaseDrop->cssClass = 'passive_surveillance';
+$diseaseDrop->extra = 'onchange="javascript:changeOutbreakCode();"';
 
 $occurenceDrop = new dropdown('occurenceId');
 $occurenceDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
@@ -308,7 +314,7 @@ $diseaseTable->addCell($reportTypeDrop->show());
 $diseaseTable->endRow();
 $diseaseTable->startRow();
 $diseaseTable->addCell($this->objLanguage->languageText('mod_ahis_outbreakno', 'openaris').": ");
-$diseaseTable->addCell($outbreakDrop->show());
+$diseaseTable->addCell($outbreakDrop->show().$outbreakBox->show());
 $diseaseTable->endRow();
 $diseaseTable->startRow();
 $diseaseTable->addCell($this->objLanguage->languageText('word_disease').": ");

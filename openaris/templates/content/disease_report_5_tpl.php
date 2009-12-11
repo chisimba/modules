@@ -40,7 +40,7 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('mod_ahis_diseasereport', 'openaris')." #3";
+$objHeading->str = $this->objLanguage->languageText('mod_ahis_diseasereport', 'openaris')." #5";
 $objHeading->type = 2;
 
 $this->loadClass('textinput','htmlelements');
@@ -68,10 +68,15 @@ $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
 $outbreakCodeBox->extra = 'disabled';
 $outbreakCodeBox->setCss('passive_surveillance');
 
-$diagnosisDrop = new dropdown('diagnosisId');
-$diagnosisDrop->addFromDB($arrayNatureOfDiagnosis, 'diagnostic_method', 'id');
-$diagnosisDrop->setSelected($diagnosisId);
-$diagnosisDrop->cssClass = 'passive_surveillance';
+$controlDrop = new dropdown('controlId');
+$controlDrop->addFromDB($arrayControlMeasure, 'controlmeasure', 'id');
+$controlDrop->setSelected($controlId);
+$controlDrop->cssClass = 'passive_surveillance';
+
+$otherControlDrop = new dropdown('otherControlId');
+$otherControlDrop->addFromDB($arrayOtherMeasure, 'control_measure', 'id');
+$otherControlDrop->setSelected($otherId);
+$otherControlDrop->cssClass = 'passive_surveillance';
 
 $createdBox = new textinput('createdBy', $createdBy, 'text');
 $createdBox->setCss('passive_surveillance');
@@ -87,13 +92,13 @@ $objTableArea2 = $this->newObject('htmltable','htmlelements');
 $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
 
-$nextUri = $this->uri(array('action'=>'disease_report_screen_4', 'outbreakCode'=>$outbreakCode));
+$nextUri = $this->uri(array('action'=>'disease_report_screen_6', 'outbreakCode'=>$outbreakCode));
 $sButton = new button('enter', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
 $sButton->setCSS('nextButton');
-$backUri = $this->uri(array('action'=>'disease_report_screen_2', 'outbreakCode'=>$outbreakCode));
+$backUri = $this->uri(array('action'=>'disease_report_screen_4', 'outbreakCode'=>$outbreakCode));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $bButton->setCSS('backButton');
-$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearNatureOfDiagnosis()");
+$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearControlMeasures()");
 $cButton->setCSS('clearButton');
 $aButton = new button('add', $this->objLanguage->languageText('word_add'));
 $aButton->setCSS('addButton');
@@ -107,13 +112,15 @@ $objTableArea2->addCell($this->objLanguage->languageText('word_createdby'));
 $objTableArea2->addCell($createdBox->show());
 $objTableArea2->endRow();
 $objTableArea2->startRow();
-$objTableArea2->addCell($this->objLanguage->languageText('mod_ahis_natureofdiagnosis', 'openaris'));
-$objTableArea2->addCell($diagnosisDrop->show());
+$objTableArea2->addCell($this->objLanguage->languageText('phrase_control'));
+$objTableArea2->addCell($controlDrop->show());
 $objTableArea2->addCell($this->objLanguage->languageText('phrase_createddate'));
 $objTableArea2->addCell($createdDateBox->show());
 $objTableArea2->endRow();
 $objTableArea2->startRow();
-$objTableArea2->addCell($this->objLanguage->languageText('word_modifiedby'), NULL, 'top', 'right', NULL, 'colspan="3"');
+$objTableArea2->addCell($this->objLanguage->languageText('mod_ahis_othermeasure', 'openaris'));
+$objTableArea2->addCell($otherControlDrop->show());
+$objTableArea2->addCell($this->objLanguage->languageText('word_modifiedby'));
 $objTableArea2->addCell($modifiedBox->show());
 $objTableArea2->endRow();
 $objTableArea2->startRow();
@@ -127,7 +134,7 @@ $objTableArea2->endRow();
 
 $diagnosisSet = new fieldset('diagnosisSet');
 $diagnosisSet->setExtra('style="max-width: 572px;"');
-$diagnosisSet->setLegend($this->objLanguage->languageText('mod_ahis_natureofdiagnosis', 'openaris'));
+$diagnosisSet->setLegend($this->objLanguage->languageText('phrase_control'));
 $diagnosisSet->addContent($objTableArea2->show());
 
 $objForm = new form('reportForm', $this->uri(array('action' => 'add_diagnosis')));
@@ -139,7 +146,8 @@ $objTableArea3->width = NULL;
 
 $objTableArea3->startHeaderRow();
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_natureofdiagnosis', 'openaris'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_control'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_othermeasure', 'openaris'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createddate'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));

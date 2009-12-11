@@ -82,12 +82,25 @@ function clearNatureOfDiagnosis() {
     $('input_diagnosisId').selectedIndex = 0; 
 }
 
-function clearPassiveVaccine() {
-    $('input_source').value = '';
-    $('input_batch').value = '';
-    //resetDate('dateManufactured');
-    //resetDate('dateExpire');
-    $('input_panvac').checked = false;
+function clearControlMeasures() {
+    $('input_controlId').selectedIndex = 0; 
+	$('input_otherControlId').selectedIndex = 0; 
+}
+
+function clearDiseaseNumbers() {
+    $('input_speciesId').selectedIndex = 0;
+	$('input_ageId').selectedIndex = 0;
+	$('input_sexId').selectedIndex = 0;
+	jQuery('#input_risk').val('');
+	jQuery('#input_cases').val('');
+	jQuery('#input_deaths').val('');
+	jQuery('#input_destroyed').val('');
+	jQuery('#input_slaughtered').val('');
+	jQuery('#input_cumulativeCases').val('');
+	jQuery('#input_cumulativeDeaths').val('');
+	jQuery('#input_cumulativeDestroyed').val('');
+	jQuery('#input_cumulativeSlaughtered').val('');
+	
 }
 
 function boxLimiter(box) {
@@ -141,6 +154,25 @@ function changeNames() {
 							jQuery('#input_partitionId').removeAttr('disabled');
 						}
 				   });
+	}
+}
+
+function changeCountry() {
+	changeNames();
+	changeOutbreakCode();
+}
+
+function changeOutbreakCode() {
+	var countryId 	= jQuery('#input_countryId').val();
+	var diseaseId 	= jQuery('#input_diseaseId').val();
+	var year 		= jQuery('#input_year').val();
+	if (countryId != -1 && year != '') {
+		jQuery.getJSON("index.php?module=openaris&action=ajax_getoutbreakcode&diseaseId="+diseaseId+"&countryId="+countryId+"&year="+year,
+				   function(data) {
+						jQuery('#input_outbreakCode').val(data.code);
+					});
+	} else {
+		jQuery('#outbreakCode').val('');
 	}
 }
 
@@ -215,13 +247,15 @@ function enableDatePicker(name) {
 
 function toggleReportType() {
 	if (jQuery('#input_reportTypeId').val() == 1) {
-		jQuery('#input_outbreakId').removeAttr('disabled');
+		jQuery('#input_outbreakCode').hide();
+		jQuery('#input_outbreakId').show();
 		jQuery('#input_diseaseId').attr('disabled', true);
 		jQuery('#input_occurenceId').attr('disabled', true);
 		jQuery('#input_infectionId').attr('disabled', true);
 		
 	} else {
-		jQuery('#input_outbreakId').attr('disabled', true);
+		jQuery('#input_outbreakCode').show();
+		jQuery('#input_outbreakId').hide();
 		jQuery('#input_diseaseId').removeAttr('disabled');
 		jQuery('#input_occurenceId').removeAttr('disabled');
 		jQuery('#input_infectionId').removeAttr('disabled');

@@ -64,7 +64,7 @@ class report extends object {
      */
 	public function init() {
 		try {
-			$this->objPassive = $this->getObject('passive');
+			//$this->objPassive = $this->getObject('passive');
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objGeo3 = $this->getObject('geolevel3');
 			$this->objGeo2 = $this->getObject('geolevel2');
