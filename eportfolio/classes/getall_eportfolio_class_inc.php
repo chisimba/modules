@@ -842,6 +842,7 @@ class getall_Eportfolio extends object
                 //Get student essays for this course
                 $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
                 if (!empty($contextEssay)) {
+				
                     $hasAssessment = 1;
                     $hasEssays = 1;
                     $viewEssays = $this->viewAssessments->viewEssaysFull($contextEssay);
@@ -854,8 +855,8 @@ class getall_Eportfolio extends object
                 }
                 //Get student essays for this course
                 $contextAssignments = $this->objAssignmentFunctions->displayAssignmentFull($contextCode);
-                if (!empty($contextAssignments)) {
-                    $hasAssessment = 1;
+                if (!empty($contextAssignments)) {		
+				    $hasAssessment = 1;
                     //$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
                     $list = $this->objLanguage->languageText('word_list');
                     $head = $objDbContext->getTitle($contextCode) . " : " . $this->objLanguage->languageText('mod_assignment_assignments', 'assignment');
@@ -873,7 +874,7 @@ class getall_Eportfolio extends object
                 }
                 //Get mcqtests
                 $objmcq = $this->objMcqtestsFunctions->displaymcqFull($contextCode, $userId);
-                if (!empty($objmcq)) {
+                if (!empty($objmcq) && $objmcq!==false) {
                     $hasAssessment = 1;
                     $mcqHead = $objDbContext->getTitle($contextCode) . " : " . $this->objLanguage->languageText('mod_mcqtests_mcq', 'mcqtests');
                     $transcriptTable->startRow();
