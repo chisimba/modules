@@ -109,16 +109,12 @@ $prodNumber = new textinput('productionno', $productionno, 'text');
 $commentsBox = new textarea('comments', $comments , 4, 40);
 
 
-
-
 $objTable = $this->newObject('htmltable', 'htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
 
 //Reporting Officer
-$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').":$tab");
-
-$objTable->startRow();
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";$objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').": $tab");
 $objTable->addCell($reportOfficerDrop->show().$tab);
 

@@ -267,7 +267,9 @@ $objButtonTable->endRow();
 $content=$objTopTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<br />".$objButtonTable->show();
 $form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
-
+$form->addRule('repOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
+$form->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
+$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
 
 //$form->addToForm($btcancel->show().$tab);
 //$form->addToForm($sButton->show());
