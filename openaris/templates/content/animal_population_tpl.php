@@ -71,8 +71,9 @@ $btcancel->setCSS('cancelButton');
 
 $classDrop = new dropdown('classification');
 $classDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$classDrop->addFromDB($arrayspecies, 'name', 'name');
+$classDrop->addFromDB($arrayspecies, 'name', 'id');
 $classDrop->setSelected($species); 
+$classDrop->extra = 'onchange="javascript:changeBreed();"';
 
 //drop down for country
 $countryDrop = new dropdown('countryId');
@@ -149,9 +150,8 @@ $vfaxBox = new textinput('vetOfficerFax', $vfax, 'text');
 $vemailBox = new textinput('vetOfficerEmail', $vemail, 'text');
 
 
-
-
 $breedDrop = new dropdown('breedId');
+$breedDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $breedDrop->addFromDB($arraybreed, 'name', 'id');
 $breedDrop->setSelected($breedId);
 
@@ -250,6 +250,7 @@ $objBottomTable->addCell($partitionNDrop->show(),NULL,'center');
 //animal production
 $label = new label ('Animal Production:', ' input_production');
 $production = new textinput('animal_production',$prodname);
+
 
 $objBottomTable->addCell($tab.$label->show());
 $objBottomTable->addCell($production->show());

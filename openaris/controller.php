@@ -125,6 +125,7 @@ class openaris extends controller {
             $this->objVaccination = $this->getObject('vaccinationhistory');
             $this->objBreed = $this->getObject('breed');
             $this->objSpecies = $this->getObject('species');
+            $this->objAnimalCat = $this->getObject('animalcat');
             $this->objActive = $this->getObject('active');
             $this->objCausative = $this->getObject('causative');
             $this->objNewherd = $this->getObject('newherd');
@@ -392,6 +393,12 @@ class openaris extends controller {
 				$diseaseId 	= $this->getParam('diseaseId');
 				$year 		= $this->getPAram('year');
 				echo json_encode(array('code'=>$this->objDiseaseReport->genOutbreakCode($countryId, $diseaseId, $year)));
+				break;
+				
+				
+            case "ajax_getbreed":
+				$speciesId = $this->getParam('speciesId');
+				echo json_encode($this->objBreed->getBreed($speciesId));
 				break;
 			
 			case "disease_report_screen_2":
@@ -2803,7 +2810,7 @@ class openaris extends controller {
                 $this->setVar('arrayvetoff', $this->objAhisUser->getListByRole('init_03'));	      			      			      			      
 			      $this->setVar('species',$this->getSession('ps_species'));				      			      
                 $this->setVar('userList', $this->objAhisUser->getList());              
-                $this->setVar('arrayBreed',$this->objBreed->getAll());
+                $this->setVar('arraybreed',$this->objBreed->getAll());
                 $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
                 $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));
 			 		$id=$this->getSession('ps_geo2Id');
@@ -2864,7 +2871,12 @@ class openaris extends controller {
 			      $this->setVar('species',$this->getSession('ps_species'));			 
                $this->setVar('totalNumSpecies', '');
 					$this->setVar('breedNumber', '');
-					$this->setVar('animalCat', '');
+               $speciesId=$this->getSession('ps_species');					
+					$this->setVar('arrayanimalCat', $this->objAnimalCat->getCategory($speciesId));
+					$charsq=$this->objAnimalCat->getCategory($speciesId);
+					//print_r($charsq);
+				   $this->setVar('breedId', $this->getSession('ps_breed'));
+					$this->setVar('arraybreed',$this->objBreed->getAll());
 					$this->setVar('tropicalLivestock', '');
 					$this->setVar('crossBreed', '');
 					$this->setVar('catNumber', '');

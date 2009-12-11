@@ -65,18 +65,19 @@ $btcancel->setCSS('cancelButton');
 
 $classDrop = new dropdown('classification');
 
-$classDrop->addFromDB($arrayspecies, 'name', 'name'); 
+$classDrop->addFromDB($arrayspecies, 'name', 'id'); 
 $classDrop->setSelected($species);
 $classDrop->extra = 'disabled'; 
 
 //Breed dropdown
 $breedDrop = new dropdown('breedId');
-//$breedDrop->addFromDB($breed, 'fullname', 'id');
-//$breedDrop->setSelected($breedId);
+$breedDrop->addFromDB($arraybreed, 'name', 'id');
+$breedDrop->setSelected($breedId);
+$breedDrop->extra='disabled';
 
 //animal category dropdown
 $animalCatDrop=new dropdown('animalCat');
-$animalCatDrop->addFromDB($animalcategory, 'category', 'category');
+$animalCatDrop->addFromDB($arrayanimalCat, 'age_group', 'id');
 $animalCatDrop->setSelected($animalcat);
 
 
@@ -90,7 +91,7 @@ $repDate->extra = 'disabled';
 $ibarDate= new textinput('iDate',$iDate);
 $ibarDate->extra ='disabled';
 
-
+//print_r($arrayanimalCat);
 $reportOfficerDrop = new dropdown('repoff');
 $reportOfficerDrop->addOption('null','Select');
 $reportOfficerDrop->addFromDB($userList, 'name', 'userid');
@@ -134,8 +135,9 @@ $objTable->endRow();
 $objTable->addCell($this->objLanguage->languageText('word_breed'));
 $objTable->addCell($breedDrop->show(),NULL,'center');
 $objTable->endRow();
+
 //animal production
-$label = new label ('Animal Production:', ' input_production');
+$label = new label ('Production Name:', ' input_production');
 $production = new textinput('animal_production',$prodname);
 $production->extra = 'disabled';
 $objTable->startRow();

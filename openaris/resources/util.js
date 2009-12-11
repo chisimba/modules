@@ -272,3 +272,21 @@ function confirmation()
     alert("Please add at least one Farm");
 
 }
+
+function changeBreed() {
+	jQuery('#input_breedId >option').remove();
+	jQuery('#input_breedId').attr('disabled', true);
+	var classification = jQuery('#input_classification').val();
+	if (classification != -1) {
+		var breedsId = jQuery('#input_classification').val();
+				jQuery.getJSON("index.php?module=openaris&action=ajax_getbreed&speciesId="+breedsId,
+				   function(data) {
+						jQuery.each(data, function(key, value) {
+							jQuery('#input_breedId').append(jQuery("<option></option>").attr("value",key).text(value));
+						});
+						if (data.length != 0) {
+							jQuery('#input_breedId').removeAttr('disabled');
+						}
+				   });
+	}
+}

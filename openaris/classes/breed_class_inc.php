@@ -1,8 +1,7 @@
 <?php
 /**
- * ahis breed Class
- *
- * file housing breed class
+ * 
+ * partitionlevel class
  * 
  * PHP version 5
  * 
@@ -21,10 +20,10 @@
  * 
  * @category  Chisimba
  * @package   ahis
- * @author    Rosina Ntow<rntow@ug.edu.gh>
+ * @author    Patrick Kuti<pkuti@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: breed_class_inc.php 
+ * @version   $Id: 
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
@@ -40,22 +39,8 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 
-/**
- * ahis breed group Class
- * 
- * class to connect to breed group table
- * 
- * @category  Chisimba
- * @package   ahis
- * @author    Rosina Ntow<rntow@ug.edu.gh>
- * @copyright 2009 AVOIR
- * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: breed_class_inc.php 
- * @link      http://avoir.uwc.ac.za
- */
-class breed extends dbtable {
-	
-    /**
+ class breed extends dbtable{
+ /**
      * Standard Chisimba init method
      * 
      * @return void  
@@ -64,6 +49,7 @@ class breed extends dbtable {
 	public function init() {
 		try {
 			parent::init('tbl_ahis_breed');
+			$this->objUser = $this->getObject('user', 'security');
 		}
 		catch (customException $e)
 		{
@@ -71,4 +57,16 @@ class breed extends dbtable {
 			exit;
 		}
 	}
-}
+	
+public function getBreed($speciesId) {
+		$breeds = $this->getAll("WHERE speciesid = '$speciesId'");
+		$breedArray = array();
+		foreach ($breeds as $breed) {
+		$breedArray[$breed['id']] = $breed['name']; 
+		}
+		return $breedArray;
+	}
+	
+}	
+	
+?>
