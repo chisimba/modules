@@ -140,9 +140,10 @@ if(!empty($resultdata))
 					$nextLabel = $this->objLanguage->languageText('mod_mcqtests_next', 'mcqtests');
 
 					$data = $this->dbTestadmin->getTests($contextCode);
-
+                    $ifnotempty = 0;
 					if (!empty($data)) {
 						foreach($data as $myData){
+						    
 							$studentMark = "";
 							$studentSubmitDate = "";   
 							$totalmark = $this->dbQuestions->sumTotalmark($myData['id']);
@@ -187,6 +188,8 @@ if(!empty($resultdata))
 								$objTable->cellspacing = 1;
 								$objTable->width = 500;
 								$objTable->border = 1;
+								
+								$ifnotempty = 1;
 
 								$percent = round($result['mark']/$totalmark*100, 2);
 								$studentName = $this->objUser->fullName($result['studentid']);
@@ -279,9 +282,13 @@ if(!empty($resultdata))
 								}
 							}
 						}
-						return $objTable->show();
+						if($ifnotempty == 1){
+						 return $objTable->show();
+						}else{
+						 return false;
+						}
 					}else{
-					return False;
+					return false;
 					}
    }
 }
