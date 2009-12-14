@@ -67,6 +67,11 @@ class diseasereport extends dbtable {
 			$this->objCountry 	= $this->getObject('country');
 			$this->objUser 		= $this->getObject('user', 'security');
 			$this->objDisease	= $this->getObject('diseases');
+			$this->objPartition = $this->getObject('partitions');
+			
+			$this->objPartitionLevel 	= $this->getObject('partitionlevel');
+			$this->objPartitionCategory = $this->getObject('partitioncategory');
+			
 			
 		}
 		catch (customException $e)
@@ -97,6 +102,23 @@ class diseasereport extends dbtable {
 		}
 		return $country['iso_country_code'].$disease['disease_code'].$count.$year;
 		
+	}
+	
+	public function getOutbreaks() {
+		$outbreaks = $this->getAll("ORDER BY outbreakcode");
+		$array = array();
+		foreach ($outbreaks as $outbreak) {
+			$partition = $this->objPartition->getRow('id', $outbreak['partitionid']);
+			$partitionLevel = $this->objPartitionLevel->getRow('id', $partition['partitionlevelid']);
+			$partitionType = $this->objPartitionCategory->getRow('id', $partitionLevel['partitioncategoryid']);
+			$array[] = array('outbreakCode'=>$outbreak['outbreakcode'],
+							 'partitionType'=>$partitionType['partitioncategory'],
+							 'partitionLevel'=>$partitionLevel['partitionlevel'],
+							 'partitionName'=>$partition['partitionname'],
+							 'month'=>date('F', strtotime($outbreak['reportdate'])),
+							 'year'=>date('Y', strtotime($outbreak['reportdate'])));
+		}
+		return $array;
 	}
 	
 }

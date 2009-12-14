@@ -60,7 +60,7 @@ $fields = array(
 	'comments' => array(
 		'type' => 'clob'
 		),
-    'outbreackcode' => array(
+    'outbreakcode' => array(
         'type' => 'text',
         'length' => 11,
         'notnull' => TRUE

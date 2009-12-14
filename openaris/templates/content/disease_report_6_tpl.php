@@ -53,8 +53,8 @@ $radio = new radio('outbreakEnded');
 $radio->addoption('0', $this->objLanguage->languageText('word_ended')." ");
 $radio->addoption('1', $this->objLanguage->languageText('word_continuing'));
 
-$nextUri = $this->uri(array('action'=>'disease_report_screen_6', 'outbreakCode'=>$outbreakCode));
-$sButton = new button('enter', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
+$confirmSave = $this->objLanguage->languageText('mod_ahis_confirmsave', 'openaris');
+$sButton = new button('enter', $this->objLanguage->languageText('word_next'), "javascript: return confirm('$confirmSave');");
 $sButton->setCSS('saveButton');
 $sButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'select_officer', 'outbreakCode'=>$outbreakCode));
@@ -68,5 +68,6 @@ $buttons = $bButton->show().$tab.$tab.$tab.$sButton->show();
 
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_feedback', 'success'=>1)));
 $objForm->addToForm("$subHead <br /> $question <br />".$radio->show()." <br /> $buttons");
+$objForm->addRule('outbreakEnded', $this->objLanguage->languageText('mod_ahis_valoutbreakended', 'openaris'), 'required');
 
 echo $objHeading->show()."<br />".$objForm->show();

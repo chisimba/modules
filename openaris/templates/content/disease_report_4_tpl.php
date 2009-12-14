@@ -64,8 +64,19 @@ $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'));
 $objTableArea1->endHeaderRow();
 
+foreach ($outbreaks as $outbreak) {
+    $objTableArea1->startRow();
+    $objTableArea1->addCell($outbreak['outbreakCode']);
+    $objTableArea1->addCell($outbreak['partitionType']);
+    $objTableArea1->addCell($outbreak['partitionLevel']);
+    $objTableArea1->addCell($outbreak['partitionName']);
+    $objTableArea1->addCell($outbreak['month']);
+    $objTableArea1->addCell($outbreak['year']);
+    $objTableArea1->endRow();
+}
+
 $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
-$outbreakCodeBox->extra = 'disabled';
+$outbreakCodeBox->extra = 'readonly';
 $outbreakCodeBox->setCss('passive_surveillance');
 
 $speciesDrop = new dropdown('speciesId');
@@ -94,7 +105,13 @@ $modifiedDateBox->setCss('passive_surveillance');
 $createdBox->extra = $createdDateBox->extra = $modifiedBox->extra = $modifiedDateBox->extra = 'disabled';
 
 $nextUri = $this->uri(array('action'=>'disease_report_screen_5', 'outbreakCode'=>$outbreakCode));
-$sButton = new button('enter', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
+if (count($diseaseSpeciesNumber) > 0) {
+    $function = "javascript: document.location='$nextUri'";
+} else {
+    $message = $this->objLanguage->languageText('mod_ahis_mustaddnumbers', 'openaris');
+    $function = "javascript: alert('$message')";
+}
+$sButton = new button('enter', $this->objLanguage->languageText('word_next'), $function);
 $sButton->setCSS('nextButton');
 $backUri = $this->uri(array('action'=>'disease_report_screen_3', 'outbreakCode'=>$outbreakCode));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
@@ -234,7 +251,7 @@ $objTableArea2->startRow();
 $objTableArea2->addCell($cButton->show().$tab.$bButton->show().$tab.$aButton->show().$tab.$sButton->show(), NULL, 'top', 'center', NULL, 'colspan="6"');
 $objTableArea2->endRow();
 
-$objForm = new form('reportForm', $this->uri(array('action' => 'add_locality')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'add_diseasespeciesnumber')));
 $objForm->addToForm($objTableArea2->show());
 $objForm->addRule('latitude', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
 $objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
@@ -263,6 +280,33 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdda
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'));
 $objTableArea3->endHeaderRow();
+
+foreach ($diseaseSpeciesNumber as $numbers) {
+    $species  = $this->objSpeciesNames->getRow('id', $numbers['speciesid']);
+    $age = $this->objSpeciesAgeGroup->getRow('id', $numbers['agegroupid']);
+    $sex = $this->objSex->getRow('id', $numbers['sexid']);
+    $objTableArea3->startRow();
+    $objTableArea3->addCell($numbers['outbreakcode']);
+    $objTableArea3->addCell($species['common_name']);
+    $objTableArea3->addCell($age['agegroup']);
+    $objTableArea3->addCell($sex['name']);
+    $objTableArea3->addCell($numbers['risk']);
+    $objTableArea3->addCell($numbers['cases']);
+    $objTableArea3->addCell($numbers['deaths']);
+    $objTableArea3->addCell($numbers['destroyed']);
+    $objTableArea3->addCell($numbers['slaughtered']);
+    $objTableArea3->addCell($numbers['cumulativecases']);
+    $objTableArea3->addCell($numbers['cumulativedeaths']);
+    $objTableArea3->addCell($numbers['cumulativedestroyed']);
+    $objTableArea3->addCell($numbers['cumulativeslaughtered']);
+    $objTableArea3->addCell($this->objUser->Username($numbers['created_by']));
+    $objTableArea3->addCell($numbers['date_created']);
+    $modifier = ($numbers['modified_by'] == NULL)? '' : $this->objUser->Username($numbers['modified_by']);
+    $objTableArea3->addCell($modifier);
+    $objTableArea3->addCell($numbers['date_modified']);
+    $objTableArea3->endRow();
+
+}
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");

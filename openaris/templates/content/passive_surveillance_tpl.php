@@ -279,8 +279,8 @@ $reportTypeDrop->cssClass = 'passive_surveillance';
 $reportTypeDrop->extra = 'onchange="javascript:toggleReportType();"';
 
 $outbreakDrop = new dropdown('outbreakId');
-$outbreakDrop->addFromDB($arrayOutbreak, 'fullname', 'id');
-$outbreakDrop->setSelected($outbreakId);
+$outbreakDrop->addFromDB($arrayOutbreak, 'outbreakcode', 'id');
+$outbreakDrop->setSelected($outbreakCode);
 $outbreakDrop->cssClass = 'passive_surveillance';
 $outbreakDrop->extra = 'style="display: none;"';
 
@@ -432,7 +432,7 @@ $objButtonTable->endRow();
 $content = $objTopTable->show()."<hr />".$objBottomTable->show().$objButtonTable->show();
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'disease_report_screen_2')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'save_disease_1')));
 $objForm->addToForm($content);
 $objForm->addRule('countryId', $this->objLanguage->languageText('mod_ahis_valcountry', 'openaris'), 'select');
 $objForm->addRule('datePrepared', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'datenotfuture');

@@ -60,12 +60,23 @@ $objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbrea
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('phrase_partitiontype'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
 $objTableArea1->endHeaderRow();
 
+foreach ($outbreaks as $outbreak) {
+    $objTableArea1->startRow();
+    $objTableArea1->addCell($outbreak['outbreakCode']);
+    $objTableArea1->addCell($outbreak['partitionType']);
+    $objTableArea1->addCell($outbreak['partitionLevel']);
+    $objTableArea1->addCell($outbreak['partitionName']);
+    $objTableArea1->addCell($outbreak['month']);
+    $objTableArea1->addCell($outbreak['year']);
+    $objTableArea1->endRow();
+}
+
 $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
-$outbreakCodeBox->extra = 'disabled';
+$outbreakCodeBox->extra = 'readonly';
 $outbreakCodeBox->setCss('passive_surveillance');
 
 $latitudeBox = new textinput('latitude', $latitude);
@@ -113,7 +124,13 @@ $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
 
 $nextUri = $this->uri(array('action'=>'disease_report_screen_3', 'outbreakCode'=>$outbreakCode));
-$sButton = new button('enter', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
+if (count($diseaseLocalities) > 0) {
+    $function = "javascript: document.location='$nextUri'";
+} else {
+    $message = $this->objLanguage->languageText('mod_ahis_mustaddlocality', 'openaris');
+    $function = "javascript: alert('$message')";
+}
+$sButton = new button('enter', $this->objLanguage->languageText('word_next'), $function);
 $sButton->setCSS('nextButton');
 $backUri = $this->uri(array('action'=>'passive_surveillance', 'outbreakCode'=>$outbreakCode));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
@@ -163,11 +180,11 @@ $localitySet->setExtra('style="max-width: 822px;"');
 $localitySet->setLegend($this->objLanguage->languageText('mod_ahis_localitydataentry', 'openaris'));
 $localitySet->addContent($objTableArea2->show());
 
-$objForm = new form('reportForm', $this->uri(array('action' => 'add_locality')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'add_diseaselocality')));
 $objForm->addToForm($localitySet->show());
+$objForm->addRule('localityName', $this->objLanguage->languageText('mod_ahis_vallocalityname', 'openaris'), 'required');
 $objForm->addRule('latitude', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
 $objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
-$objForm->addRule('localityName', $this->objLanguage->languageText('mod_ahis_vallocalityname', 'openaris'), 'required');
 
 $objTableArea3 = $this->newObject('htmltable','htmlelements');
 $objTableArea3->cellspacing = 2;
@@ -187,6 +204,27 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdda
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'));
 $objTableArea3->endHeaderRow();
+
+foreach ($diseaseLocalities as $locality) {
+    $localityType  = $this->objLocalityType->getRow('id', $locality['localitytypeid']);
+    $farmingSystem = $this->objFarmingSystem->getRow('id', $locality['farmingsystemid']);
+    $objTableArea3->startRow();
+    $objTableArea3->addCell($locality['outbreakcode']);
+    $objTableArea3->addCell($localityType['locality_type']);
+    $objTableArea3->addCell($locality['name']);
+    $objTableArea3->addCell($locality['latitude']);
+    $objTableArea3->addCell($locality['latdirection']);
+    $objTableArea3->addCell($locality['longitude']);
+    $objTableArea3->addCell($locality['longdirection']);
+    $objTableArea3->addCell($farmingSystem['farmingsystem']);
+    $objTableArea3->addCell($this->objUser->Username($locality['created_by']));
+    $objTableArea3->addCell($locality['date_created']);
+    $modifier = ($locality['modified_by'] == NULL)? '' : $this->objUser->Username($locality['modified_by']);
+    $objTableArea3->addCell($modifier);
+    $objTableArea3->addCell($locality['date_modified']);
+    $objTableArea3->endRow();
+
+}
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");

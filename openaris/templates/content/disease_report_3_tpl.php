@@ -64,8 +64,19 @@ $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'));
 $objTableArea1->endHeaderRow();
 
+foreach ($outbreaks as $outbreak) {
+    $objTableArea1->startRow();
+    $objTableArea1->addCell($outbreak['outbreakCode']);
+    $objTableArea1->addCell($outbreak['partitionType']);
+    $objTableArea1->addCell($outbreak['partitionLevel']);
+    $objTableArea1->addCell($outbreak['partitionName']);
+    $objTableArea1->addCell($outbreak['month']);
+    $objTableArea1->addCell($outbreak['year']);
+    $objTableArea1->endRow();
+}
+
 $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
-$outbreakCodeBox->extra = 'disabled';
+$outbreakCodeBox->extra = 'readonly';
 $outbreakCodeBox->setCss('passive_surveillance');
 
 $diagnosisDrop = new dropdown('diagnosisId');
@@ -88,7 +99,13 @@ $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
 
 $nextUri = $this->uri(array('action'=>'disease_report_screen_4', 'outbreakCode'=>$outbreakCode));
-$sButton = new button('enter', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
+if (count($diagnoses) > 0) {
+    $function = "javascript: document.location='$nextUri'";
+} else {
+    $message = $this->objLanguage->languageText('mod_ahis_mustadddiagnosis', 'openaris');
+    $function = "javascript: alert('$message')";
+}
+$sButton = new button('enter', $this->objLanguage->languageText('word_next'), $function);
 $sButton->setCSS('nextButton');
 $backUri = $this->uri(array('action'=>'disease_report_screen_2', 'outbreakCode'=>$outbreakCode));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
@@ -124,13 +141,12 @@ $objTableArea2->startRow();
 $objTableArea2->addCell($cButton->show().$tab.$bButton->show().$tab.$aButton->show().$tab.$sButton->show(), NULL, 'top', 'center', NULL, 'colspan="4"');
 $objTableArea2->endRow();
 
-
 $diagnosisSet = new fieldset('diagnosisSet');
 $diagnosisSet->setExtra('style="max-width: 572px;"');
 $diagnosisSet->setLegend($this->objLanguage->languageText('mod_ahis_natureofdiagnosis', 'openaris'));
 $diagnosisSet->addContent($objTableArea2->show());
 
-$objForm = new form('reportForm', $this->uri(array('action' => 'add_diagnosis')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'add_diseasediagnosis')));
 $objForm->addToForm($diagnosisSet->show());
 
 $objTableArea3 = $this->newObject('htmltable','htmlelements');
@@ -145,6 +161,20 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdda
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'));
 $objTableArea3->endHeaderRow();
+
+foreach ($diagnoses as $diagnosis) {
+    $diagnosisNature  = $this->objDiagnosticMethod->getRow('id', $diagnosis['diagnosticmethodid']);
+    $objTableArea3->startRow();
+    $objTableArea3->addCell($diagnosis['outbreakcode']);
+    $objTableArea3->addCell($diagnosisNature['diagnostic_method']);
+    $objTableArea3->addCell($this->objUser->Username($diagnosis['created_by']));
+    $objTableArea3->addCell($diagnosis['date_created']);
+    $modifier = ($diagnosis['modified_by'] == NULL)? '' : $this->objUser->Username($diagnosis['modified_by']);
+    $objTableArea3->addCell($modifier);
+    $objTableArea3->addCell($diagnosis['date_modified']);
+    $objTableArea3->endRow();
+
+}
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
