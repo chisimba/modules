@@ -263,7 +263,8 @@ function toggleReportType() {
 }
 
 function addNumbers(name) {
-	jQuery('#input_cumulative'+name).val(parseInt(jQuery('#input_cumulative'+name).val())+parseInt(jQuery('#input_'+name).val()));
+	var total = (isNaN(parseInt(jQuery('#input_cumulative'+name).val())))? 0 : parseInt(jQuery('#input_cumulative'+name).val());
+	jQuery('#input_cumulative'+name).val(total+parseInt(jQuery('#input_'+name).val()));
 }
 
 function numberVal()
