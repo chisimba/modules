@@ -45,18 +45,6 @@ $fields = array(
 	'slaughtered' => array(
 		'type' => 'integer'
         ),
-	'cumulativecases' => array(
-		'type' => 'integer'
-        ),
-	'cumulativedeaths' => array(
-		'type' => 'integer'
-        ),
-	'cumulativedestroyed' => array(
-		'type' => 'integer'
-        ),
-	'cumulativeslaughtered' => array(
-		'type' => 'integer'
-        ),
 	'date_created' => array(
 		'type' => 'date',
         'notnull' => TRUE

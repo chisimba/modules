@@ -566,6 +566,7 @@ class openaris extends controller {
 			
             case 'disease_report_screen_4':
 				$outbreakCode = $this->getParam('outbreakCode');
+				$report = $this->objDiseaseReport->getRow('outbreakcode', $outbreakCode);
 				$this->setVar('diseaseSpeciesNumber', $this->objDiseaseSpeciesNumber->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
                 $this->setVar('outbreakCode', $outbreakCode);
 				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks());
@@ -578,10 +579,10 @@ class openaris extends controller {
 				$this->setVar('deaths', $this->getSession('ps_deaths'));
 				$this->setVar('destroyed', $this->getSession('ps_destroyed'));
 				$this->setVar('slaughtered', $this->getSession('ps_slaughtered'));
-				$this->setVar('cumulativeCases', $this->getSession('ps_cumulativeCases'));
-				$this->setVar('cumulativeDeaths', $this->getSession('ps_cumulativeDeaths'));
-				$this->setVar('cumulativeDestroyed', $this->getSession('ps_cumulativeDestroyed'));
-				$this->setVar('cumulativeSlaughtered', $this->getSession('ps_cumulativeSlaughtered'));
+				$this->setVar('cumulativeCases', $this->objDiseaseSpeciesNumber->getCases($report['diseaseid']));
+				$this->setVar('cumulativeDeaths', $this->objDiseaseSpeciesNumber->getDeaths($report['diseaseid']));
+				$this->setVar('cumulativeDestroyed', $this->objDiseaseSpeciesNumber->getDestroyed($report['diseaseid']));
+				$this->setVar('cumulativeSlaughtered', $this->objDiseaseSpeciesNumber->getSlaughtered($report['diseaseid']));
 				
 				$this->setVar('speciesId', $this->getSession('ps_speciesId'));
 				$this->setVar('ageId', $this->getSession('ps_ageId'));
@@ -604,10 +605,6 @@ class openaris extends controller {
 								 'deaths' => $this->getParam('deaths'),
 								 'destroyed' => $this->getParam('destroyed'),
 								 'slaughtered' => $this->getParam('slaughtered'),
-								 'cumulativecases' => $this->getParam('cumulativeCases'),
-								 'cumulativedeaths' => $this->getParam('cumulativeDeaths'),
-								 'cumulativedestroyed' => $this->getParam('cumulativeDestroyed'),
-								 'cumulativeslaughtered' => $this->getParam('cumulativeSlaughtered'),
 								 'date_created' => date('Y-m-d'),
 								 'created_by' => $this->objUser->userId()
 								 );

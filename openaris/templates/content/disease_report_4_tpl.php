@@ -147,12 +147,16 @@ $riskBox = new textinput('risk', $risk, 'text');
 $riskBox->setCss('geo');
 $casesBox = new textinput('cases', $cases, 'text');
 $casesBox->setCss('geo');
+$casesBox->extra = 'onchange = "javascript: addNumbers(\'cases\');"';
 $deathsBox = new textinput('deaths', $deaths, 'text');
 $deathsBox->setCss('geo');
+$deathsBox->extra = 'onchange = "javascript: addNumbers(\'deaths\');"';
 $destroyedBox = new textinput('destroyed', $destroyed, 'text');
 $destroyedBox->setCss('geo');
+$destroyedBox->extra = 'onchange = "javascript: addNumbers(\'destroyed\');"';
 $slaughteredBox = new textinput('slaughtered', $slaughtered, 'text');
 $slaughteredBox->setCss('geo');
+$slaughteredBox->extra = 'onchange = "javascript: addNumbers(\'slaughtered\');"';
 
 $objTableActual = $this->newObject('htmltable','htmlelements');
 $objTableActual->cellspacing = 2;
@@ -179,14 +183,17 @@ $objTableActual->addCell($this->objLanguage->languageText('mod_ahis_slaughtered'
 $objTableActual->addCell($slaughteredBox->show());
 $objTableActual->endRow();
 
-$cumulativeCasesBox = new textinput('cumulativeCases', $cumulativeCases, 'text');
+$cumulativeCasesBox = new textinput('cumulativecases', $cumulativeCases, 'text');
 $cumulativeCasesBox->setCss('geo');
-$cumulativeDeathsBox = new textinput('cumulativeDeaths', $cumulativeDeaths, 'text');
+$cumulativeDeathsBox = new textinput('cumulativedeaths', $cumulativeDeaths, 'text');
 $cumulativeDeathsBox->setCss('geo');
-$cumulativeDestroyedBox = new textinput('cumulativeDestroyed', $cumulativeDestroyed, 'text');
+$cumulativeDestroyedBox = new textinput('cumulativedestroyed', $cumulativeDestroyed, 'text');
 $cumulativeDestroyedBox->setCss('geo');
-$cumulativeSlaughteredBox = new textinput('cumulativeSlaughtered', $cumulativeSlaughtered, 'text');
+$cumulativeSlaughteredBox = new textinput('cumulativeslaughtered', $cumulativeSlaughtered, 'text');
 $cumulativeSlaughteredBox->setCss('geo');
+$cumulativeSlaughteredBox->extra = $cumulativeDestroyedBox->extra =
+    $cumulativeDeathsBox->extra = $cumulativeCasesBox->extra = 'readonly';
+
 
 $objTableCumulative = $this->newObject('htmltable','htmlelements');
 $objTableCumulative->cellspacing = 2;
@@ -271,10 +278,6 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nocases
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nodeaths', 'openaris'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nodestroyed', 'openaris'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_noslaughtered', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_totalcases', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_totaldeaths', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_totaldestroyed', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_totalslaughtered', 'openaris'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createddate'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
@@ -295,10 +298,6 @@ foreach ($diseaseSpeciesNumber as $numbers) {
     $objTableArea3->addCell($numbers['deaths']);
     $objTableArea3->addCell($numbers['destroyed']);
     $objTableArea3->addCell($numbers['slaughtered']);
-    $objTableArea3->addCell($numbers['cumulativecases']);
-    $objTableArea3->addCell($numbers['cumulativedeaths']);
-    $objTableArea3->addCell($numbers['cumulativedestroyed']);
-    $objTableArea3->addCell($numbers['cumulativeslaughtered']);
     $objTableArea3->addCell($this->objUser->Username($numbers['created_by']));
     $objTableArea3->addCell($numbers['date_created']);
     $modifier = ($numbers['modified_by'] == NULL)? '' : $this->objUser->Username($numbers['modified_by']);

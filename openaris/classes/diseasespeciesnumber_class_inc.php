@@ -72,4 +72,36 @@ class diseasespeciesnumber extends dbtable {
 		}
 	}
 	
+	public function getCases($diseaseId) {
+		$sql = "SELECT SUM(num.cases) AS number
+				FROM tbl_ahis_diseasespeciesnumber AS num, tbl_ahis_diseasereport AS rep
+				WHERE rep.diseaseid = '$diseaseId' AND rep.outbreakcode = num.outbreakcode";
+		$number = $this->getArray($sql);
+		return $number[0]['number'];
+	}
+	
+	public function getDeaths($diseaseId) {
+		$sql = "SELECT SUM(num.deaths) AS number
+				FROM tbl_ahis_diseasespeciesnumber AS num, tbl_ahis_diseasereport AS rep
+				WHERE rep.diseaseid = '$diseaseId' AND rep.outbreakcode = num.outbreakcode";
+		$number = $this->getArray($sql);
+		return $number[0]['number'];
+	}
+	
+	public function getDestroyed($diseaseId) {
+		$sql = "SELECT SUM(num.destroyed) AS number
+				FROM tbl_ahis_diseasespeciesnumber AS num, tbl_ahis_diseasereport AS rep
+				WHERE rep.diseaseid = '$diseaseId' AND rep.outbreakcode = num.outbreakcode";
+		$number = $this->getArray($sql);
+		return $number[0]['number'];
+	}
+	
+	public function getSlaughtered($diseaseId) {
+		$sql = "SELECT SUM(num.slaughtered) AS number
+				FROM tbl_ahis_diseasespeciesnumber AS num, tbl_ahis_diseasereport AS rep
+				WHERE rep.diseaseid = '$diseaseId' AND rep.outbreakcode = num.outbreakcode";
+		$number = $this->getArray($sql);
+		return $number[0]['number'];
+	}
+	
 }
