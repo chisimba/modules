@@ -307,7 +307,7 @@ class openaris extends controller {
             
             case 'passive_surveillance':
                 $this->setVar('arrayCountry', $this->objCountry->getAll("ORDER BY common_name"));
-				$partitionCategories = $this->objPartitionCategory->getAll("ORDER BY partitioncategory");
+				    $partitionCategories = $this->objPartitionCategory->getAll("ORDER BY partitioncategory");
                 $this->setVar('arrayAdmin1', $partitionCategories);
                 $this->setVar('arrayROfficer', $this->objAhisUser->getListByRole('init_01'));
                 $this->setVar('arrayDEOfficer', $this->objAhisUser->getListByRole('init_02'));
@@ -318,12 +318,12 @@ class openaris extends controller {
                 $this->setVar('arrayInfection', $this->objInfectionsources->getAll("ORDER BY possiblesource"));
                 
                 $this->setVar('countryId', $this->getSession('ps_countryId'));
-				$defaultCategory = current($partitionCategories);
+				    $defaultCategory = current($partitionCategories);
                 $partitionTypeId = $this->getSession('ps_partitionTypeId', $defaultCategory['id']);
-				$this->setVar('partitionTypeId', $partitionTypeId);
+				    $this->setVar('partitionTypeId', $partitionTypeId);
                 $this->setVar('arrayAdmin2', $this->objPartitionLevel->getAll("WHERE partitioncategoryid = '$partitionTypeId' ORDER BY partitionlevel"));
                 $partitionLevelId = $this->getSession('ps_partitionLevelId');
-				$this->setVar('partitionLevelId', $partitionLevelId);
+				    $this->setVar('partitionLevelId', $partitionLevelId);
                 $this->setVar('arrayAdmin3', $this->objPartition->getAll("ORDER BY partitionname"));
                 $this->setVar('partitionLevelId', $this->getSession('ps_partitionLevelId'));
                 $this->setVar('partitionId', $this->getSession('ps_partitionId'));
@@ -2920,6 +2920,12 @@ class openaris extends controller {
 			   	
 			   	$this->unsetAnimalpopulation();	   			   						
 			   return 'select_officer_tpl.php';  	
+			   
+			   
+			       case 'animal_population_clear':
+	      	   $this->unsetAnimalpopulation();
+	           return $this->nextAction('animal_population_add');
+	           
 			case 'country_add':
 			 		//$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('languages',$this->objLanguages->getAll("ORDER BY language"));

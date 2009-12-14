@@ -60,7 +60,10 @@ $sButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'select_officer'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $bButton->setCSS('cancelButton');
-$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSurveillance()");
+//clear button
+$cButton = $this->uri(array('action'=>'animal_population_clear'));
+//$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearAnimalPopulation()");
+$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: document.location='$clearButton'");
 $cButton->setCSS('clearButton');
 
 //buttons
@@ -142,12 +145,18 @@ $valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
 
 $phoneBox = new textinput('dataOfficerTel', $dphone, 'text');
+$phoneBox->extra = 'disabled';
 $faxBox = new textinput('dataOfficerFax', $dfax, 'text');
+$faxBox->extra = 'disabled';
 $emailBox = new textinput('dataOfficerEmail', $demail, 'text');
+$emailBox->extra = 'disabled';
 
 $vphoneBox = new textinput('vetOfficerTel', $vphone, 'text');
+$vphoneBox->extra = 'disabled';
 $vfaxBox = new textinput('vetOfficerFax', $vfax, 'text');
+$vfaxBox->extra = 'disabled';
 $vemailBox = new textinput('vetOfficerEmail', $vemail, 'text');
+$vemailBox->extra = 'disabled';
 
 
 $breedDrop = new dropdown('breedId');
@@ -230,7 +239,7 @@ $objBottomTable->width = NULL;
 $objBottomTable->startRow();
 $objBottomTable->addCell($this->objLanguage->languageText('word_country').": ");
 $objBottomTable->addCell($countryDrop->show(),NULL,'center');
-$objBottomTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_partitions', 'openaris'));
+$objBottomTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_productiontype', 'openaris'));
 $objBottomTable->addCell($admin1Drop->show(),NULL,'center');
 $objBottomTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_word_species', 'openaris'));
 $objBottomTable->addCell($classDrop->show());
@@ -245,14 +254,14 @@ $objBottomTable->addCell($tab.$this->objLanguage->languageText('word_breed'));
 $objBottomTable->addCell($breedDrop->show(),NULL,'center');
 $objBottomTable->endRow();
 
-$objBottomTable->startRow();$objBottomTable->addCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris'));
+$objBottomTable->startRow();
+$objBottomTable->addCell('&nbsp;');
+$objBottomTable->addCell('&nbsp;');$objBottomTable->addCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris'));
 $objBottomTable->addCell($partitionNDrop->show(),NULL,'center');
 //animal production
-$label = new label ('Animal Production:', ' input_production');
-$production = new textinput('animal_production',$prodname);
-
-
-$objBottomTable->addCell($tab.$label->show());
+$objBottomTable->addCell($this->objLanguage->LanguageText('mod_ahis_prodname','openaris'));
+//$label = new label ('Animal Production:', ' input_production');
+$production = new textinput('animal_production',$prodname);//$objBottomTable->addCell($tab.$label->show());
 $objBottomTable->addCell($production->show());
 $objBottomTable->endRow();	
 
@@ -261,6 +270,7 @@ $objButtonTable->cellspacing = 2;
 $objButtonTable->width = '40%';
 $objButtonTable->startRow();
 $objButtonTable->addCell($bButton->show(), NULL, 'top', 'center');
+$objButtonTable->addCell($cButton->show(), NULL, 'top', 'center');
 $objButtonTable->addCell($sButton->show(), NULL, 'top', 'center');
 $objButtonTable->endRow();
 
