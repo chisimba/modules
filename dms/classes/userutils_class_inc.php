@@ -340,14 +340,43 @@ class userutils extends object {
     }
 
     public function createfolder($folderpath,$foldername) {
-
         $this->objMkdir = $this->getObject('mkdir', 'files');
-
         $path =$this->objSysConfig->getValue('FILES_DIR', 'dms').'/'.$folderpath.'/'.$foldername;
-
         $result = $this->objMkdir->mkdirs($path);
+    }
 
+    public function renamefolder($folderpath,$foldername) {
+        $folderpath = str_replace("//", "", $folderpath);
 
+        $prevpath = $this->objSysConfig->getValue('FILES_DIR', 'dms').'/'.$folderpath;
+        $newpath = $this->objSysConfig->getValue('FILES_DIR', 'dms').'/'.$foldername;
+
+        // do a move using command line interface from previous location to new location.
+        $command = "mv ".$prevpath." ".$newpath;
+        $res = system($command, $retval);
+
+        if($retval != 0) {
+            return "error";
+        }
+        else {
+            return "success";
+        }
+    }
+
+    public function deleteFolder($folderpath) {
+        $folderpath = str_replace("//", "", $folderpath);
+        $fullpath = $this->objSysConfig->getValue('FILES_DIR', 'dms').'/'.$folderpath;
+        
+        if (is_dir($fullpath)) {
+            $res = rmdir($fullpath);
+        }
+
+        if($res) {
+            return "success";
+        }
+        else {
+            return "error";
+        }
     }
 }
 ?>

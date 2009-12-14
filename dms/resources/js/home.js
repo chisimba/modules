@@ -1,8 +1,12 @@
-var currentPath;
-var createFolderUrl;
-var uploadWindow;
-function showHome(dataurl,xcreateFolderUrl){
+var currentPath,
+    createFolderUrl,
+    renameFolderUrl,
+    deleteFolderUrl,
+    uploadWindow;
+function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl){
     createFolderUrl=xcreateFolderUrl;
+    renameFolderUrl = xrenameFolderUrl;
+    deleteFolderUrl = xdeleteFolderUrl;
     var Tree = Ext.tree;
     var detailsText = '<center><h1>File manager 0.1 beta</h1> &copy;2010.\n\
 <ul>\n\
@@ -112,17 +116,30 @@ function showHome(dataurl,xcreateFolderUrl){
                 handler: function() {
                     var name = prompt( "Please enter folder name:");
                     if (name != '' && name != null) {
-
                         window.location.href=createFolderUrl+"&foldername="+name+"&folderpath="+currentPath;
                     }
                 }
             });
             var renameFolder = new Ext.menu.Item({
-                text: "Rename"
+                text: "Rename",
+                handler: function() {
+                    var name = prompt( "Please enter folder name:");
+                    if (name != '' && name != null) {
+                        window.location.href=renameFolderUrl+"&foldername="+name+"&folderpath="+currentPath;
+                    }
+                }
             });
             var deleteFolder = new Ext.menu.Item({
                 text: "Delete",
-                iconCls: 'delete'
+                iconCls: 'delete',
+                handler: function() {
+                    Ext.Msg.show({
+                       title:'Delete Folder?',
+                       msg: 'Are you sure you want to delete this folder?',
+                       buttons: Ext.Msg.YESNO,
+                       fn: deletefolder
+                    });
+                }
             });
             //Create the context menu to hold the buttons
             var contextMenu = new Ext.menu.Menu();
@@ -180,8 +197,6 @@ function showHome(dataurl,xcreateFolderUrl){
 
 }
 
-
-
 function createFolder(){
     Ext.MessageBox.prompt('New folder', 'Please enter folder name', handleCreateFolder);
 
@@ -193,9 +208,16 @@ function handleCreateFolder(btn, text){
     }
 }
 
+function deletefolder(btn, text) {
+    if(btn == 'yes') {
+        window.location.href=deleteFolderUrl+"&folderpath="+currentPath;
+    }
+}
+
 function accessRights(){
     
 }
+
 function showUploadForm(){
     var fibasic = new Ext.ux.form.FileUploadField({
         width: 300

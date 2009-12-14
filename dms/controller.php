@@ -189,10 +189,15 @@ class dms extends controller {
     }
 
     public function __createfolder() {
-
         $this->objUtils->createFolder($this->getParam('folderpath'),$this->getParam('foldername'));
         return $this->nextAction('home', array());
     }
+
+    public function __renamefolder() {
+        $res = $this->objUtils->renameFolder($this->getParam('folderpath'),$this->getParam('foldername'));
+        return $this->nextAction('home', array("result"=>$res));
+    }
+
     public function __deletefile() {
         $userid = $this->objUser->userId();
         $id = $this->getParam('id');
@@ -207,5 +212,10 @@ class dms extends controller {
         }
 
         return $this->nextAction('home', array("result"=>"$result"));
+    }
+
+    public function __deletefolder() {
+        $res = $this->objUtils->deleteFolder($this->getParam('folderpath'));
+        return $this->nextAction('home', array("result"=>$res));
     }
 }
