@@ -348,7 +348,7 @@ class dbwebpresentfiles extends dbtable
                 //echo $file.'<br />';
                 $file = basename($file);
 
-                if (preg_match('/'.$id.'\.(odp|ppt)/', $file)) {
+                if (preg_match('/'.$id.'\.(odp|ppt|pptx)/', $file)) {
                     $path_parts = pathinfo($file);
 
                     $ext = $path_parts['extension'];
@@ -395,7 +395,7 @@ class dbwebpresentfiles extends dbtable
         $conv = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.'.$outputExt;
 
 
-        //echo $source.'<br />'.$conv;
+       // echo $source.'<br />'.$conv;
 
         if (!file_exists($conv)) {
             $objConvertDoc = $this->getObject('convertdoc', 'documentconverter');
@@ -506,6 +506,7 @@ class dbwebpresentfiles extends dbtable
 
     public function regenerateFile($id, $type)
     {
+
         switch ($type)
         {
             case 'flash':
@@ -551,8 +552,17 @@ class dbwebpresentfiles extends dbtable
         {
             unlink($swfFile);
         }
-
+        $file =  $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.odp';
+        if (file_exists($file))
         return $this->convertFileFromFormat($id, 'odp', 'swf');
+        $file =  $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.ppt';
+        if (file_exists($file))
+        return $this->convertFileFromFormat($id, 'ppt', 'swf');
+
+        $file =  $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.pptx';
+        if (file_exists($file))
+        return $this->convertFileFromFormat($id, 'pptx', 'swf');
+
     }
 
     private function regenerateSlides($id)

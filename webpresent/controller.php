@@ -156,7 +156,7 @@ class webpresent extends controller
         $hometpl=$objSysConfig->getValue('HOMETPL', 'webpresent');
         $permittedTypes = array ('newhome', 'home');
 
-        // Check that period is valid, if not, show daily result
+        // Check that period is valid, if not, the default home install
         if (!in_array($hometpl, $permittedTypes)) {
             $period = 'home';
         }
@@ -652,7 +652,7 @@ class webpresent extends controller
         @chmod($destinationDir, 0777);
 
         $objUpload = $this->newObject('upload', 'files');
-        $objUpload->permittedTypes = array('ppt', 'odp', 'pps'); //'pps',
+        $objUpload->permittedTypes = array('ppt', 'odp', 'pps','pptx'); //'pps',
         $objUpload->overWrite = TRUE;
         $objUpload->uploadFolder = $destinationDir.'/';
 
@@ -692,7 +692,14 @@ class webpresent extends controller
                 $filename = $path_parts['filename'].'.ppt';
             }
 
+            if ($ext == 'pptx')
+            {
+                $rename = $this->objConfig->getcontentBasePath().'/webpresent/'.$id.'/'.$id.'.pptx';
 
+                rename($file, $rename);
+
+                $filename = $path_parts['filename'].'.pptx';
+            }
             if (is_file($file)) {
                 @chmod($file, 0777);
             }
