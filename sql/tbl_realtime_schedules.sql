@@ -34,6 +34,11 @@ $fields = array(
     'end_time' =>  array(
       'type'  =>  'text',
       'length' => '12'
-    )
+    ),
+    'session_type' =>  array(
+      'type'  =>  'text',
+      'length' => '20'
+    ),
+
 );
 ?>
