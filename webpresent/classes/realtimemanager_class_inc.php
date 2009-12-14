@@ -132,7 +132,7 @@ class realtimemanager extends Object
         $result = array();
         $cmd='ps aux | grep java';
         $needle=' avoir.realtime.tcp.base.SlidesServer';
-        exec( $cmd, &$result);
+        exec( $cmd, $result);
         foreach ($result as $v ){
 
             if($this->in_str($needle,$v)){
