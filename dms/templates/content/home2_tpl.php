@@ -24,7 +24,6 @@ $this->appendArrayVar('headerParams',$iconscss);
 $this->appendArrayVar('headerParams',$fucss);
 $this->appendArrayVar('headerParams',$homejs);
 
-
 $upload = "";
 if($this->getParam("upload")) {
     $upload = $this->getparam("upload");
@@ -35,6 +34,7 @@ $dataUrl = str_replace("amp;", "", $this->uri(array('action'=>'getFiles')));
 $createFolderUrl = str_replace("amp;", "", $this->uri(array('action'=>'createfolder')));
 $renameFolderUrl = str_replace("amp;", "", $this->uri(array('action'=>'renamefolder')));
 $deleteFolderUrl = str_replace("amp;", "", $this->uri(array('action'=>'deletefolder')));
+$uploadUrl = str_replace("amp;", "", $this->uri(array('action'=>'doupload')));
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
@@ -55,7 +55,8 @@ $mainjs = "<script type='text/javascript'>
                 createFolderUrl='".$createFolderUrl."',
                 renameFolderUrl='".$renameFolderUrl."';
                 deleteFolderUrl='".$deleteFolderUrl."';
-            showHome(dataUrl,createFolderUrl, renameFolderUrl, deleteFolderUrl);
+                uploadUrl = '".$uploadUrl."';
+            showHome(dataUrl,createFolderUrl, renameFolderUrl, deleteFolderUrl, uploadUrl);
         });";
 $mainjs .= "</script>";
 

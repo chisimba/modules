@@ -234,7 +234,7 @@ class userutils extends object {
     }
 
     function getFiles() {
-
+        $objUser = $this->getObject("user", "security");
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'dms');
         $node = isset($_REQUEST['node'])?$_REQUEST['node']:"";
         if(strpos($node, '..') !== false) {
@@ -264,12 +264,15 @@ class userutils extends object {
                     $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
                     $downloadurl=$this->objAltConfig->getSiteRoot().'?module=dms&action=downloadfile&filename='.$f;
                     $deleteurl=$this->objAltConfig->getSiteRoot().'?module=dms&action=deletefile&filename='.$f;
+                    $filename = str_replace(strstr($f, "."), "",$f);
+                    $refno = $objUser->userId()."_".date_format(date_create($lastmod), "dmY")."_".$filename;
                     $nodes[] = array('text'=>$f,
                         'id'=>$node.'/'.$f,
                         'leaf'=>true,
                         'cls'=>'file',
                         'lastmodified'=>$lastmod,
                         'size'=>$size,
+                        'refno'=>$refno,
                         'parent'=>$node,
                         'downloadurl'=>$downloadurl,
                         'downloadimgurl'=>$this->sitePath.'/dms/resources/images/arrow_down.png',

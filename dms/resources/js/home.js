@@ -2,11 +2,13 @@ var currentPath,
     createFolderUrl,
     renameFolderUrl,
     deleteFolderUrl,
+    uploadUrl,
     uploadWindow;
-function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl){
+function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, xuploadUrl){
     createFolderUrl=xcreateFolderUrl;
     renameFolderUrl = xrenameFolderUrl;
     deleteFolderUrl = xdeleteFolderUrl;
+    uploadUrl = xuploadUrl;
     var Tree = Ext.tree;
     var detailsText = '<center><h1>File manager 0.1 beta</h1> &copy;2010.\n\
 <ul>\n\
@@ -41,7 +43,6 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl){
 
     });
 
-
     tb.add({
         text:'Help',
         iconCls: 'helpimg',
@@ -50,7 +51,6 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl){
         }
            
     });
-
 
     tb.doLayout();
 
@@ -152,7 +152,6 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl){
     });
     tree.getRootNode().expand();
 
-
     var detailsPanel = new Ext.Panel({
         region: 'center',
         margins:'3 3 3 0',
@@ -160,11 +159,7 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl){
         defaults:{
             autoScroll:true
         },
-       
         html: detailsText
-       
-
-       
     });
 
     // Panel for the west
@@ -194,7 +189,6 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl){
 
     });
     p.render("mainContent");
-
 }
 
 function createFolder(){
@@ -220,6 +214,10 @@ function accessRights(){
 
 function showUploadForm(){
     var fibasic = new Ext.ux.form.FileUploadField({
+        id: 'form-file',
+        emptyText: 'Select a file',
+        fieldLabel: 'File',
+        name: 'filename',
         width: 300
     });
     var type= [
@@ -245,11 +243,10 @@ function showUploadForm(){
         emptyText:'Select access...',
         selectOnFocus:true,
         allowBlank:false,
-        name : 'typefield'
+        name : 'permissions'
 
     });
 
-    
     if(!uploadWindow){
         uploadWindow = new Ext.Window({
             applyTo:'upload-win',
@@ -275,6 +272,12 @@ function showUploadForm(){
                 handler: function(){
                     var v = fibasic.getValue();
                     alert('Selected File', v && v != '' ? v : 'None');
+                    /*if(fp.getForm().isValid()){
+	                if (fp.url) {
+                            fp.getForm().getEl().dom.action = fp.url + '&path=' + currentPath;
+                        }
+                        fp.getForm().submit();
+                    }*/
                 }
             },{
                 text: 'Cancel',
@@ -285,5 +288,4 @@ function showUploadForm(){
         });
     }
     uploadWindow.show(this);
-
 }
