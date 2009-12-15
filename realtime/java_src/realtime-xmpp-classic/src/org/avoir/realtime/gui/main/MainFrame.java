@@ -185,11 +185,6 @@ public class MainFrame extends javax.swing.JFrame implements SysTrayMenuListener
                         userListPanel.enableAudio();
                     }
                 }
-                if (userListPanel.getUserTabbedPane().getSelectedIndex() == 2) {
-                    webPresentNavigator.populateWithRoomResources();
-                    adjustSize();
-                    GUIAccessManager.mf.getWebbrowserManager().showScreenShareViewerAsEmbbededTab1(shareSizeFr);
-                }
             }
         });
 
