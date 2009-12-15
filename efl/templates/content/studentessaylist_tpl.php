@@ -32,27 +32,7 @@ if (!
 $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-echo "Essay Table Updated Succesfully";
-/*$this->loadClass('htmltable','htmlelements');
-    
-$table = new htmltable();
-$table->addCell('Essayid');
-$table->addCell('content');
-$table->addCell('Submitdate');
 
-$essays=$this->objStudentEssays->getstudentEssays($essayid);
-foreach($essays as $essay) {
-    $table->width='50%';
-    $table->border='1';
-    $table->cellspacing='1';
-    $table->startRow();
-    $table->addCell($essay['essayid']);
-    $table->addCell($essay['content']);
-    $table->addCell($essay['submitdate']);
-    $table->endRow();
-}
-<<<<<<< .mine
-echo $table->show();*/
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
@@ -64,6 +44,10 @@ $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $maincss);
 $this->appendArrayVar('headerParams', $schedulejs);
+
+$this->loadclass('button', 'htmlelements');
+
+echo "Essay Table Updated Succesfully";
 
 $content = $message;
 
@@ -117,24 +101,29 @@ window.location=\''.str_replace('amp;','', $addessayurl).'\';
 });
 });
 ';
-//$addessay.= "<script type=\"text/javascript\">".$addessayjs."</script>";
 
+$backbuttonurl= $this->uri(array('action'=>'home'));
+
+$backbutton = new button('Back','Back');
+$backbutton->setId('back-button');
+$backbutton->setOnClick($backbuttonurl);
 
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-$cssLayout->setNumColumns(1);
+$cssLayout->setNumColumns(2);
 
 
-$leftSideColumn ='<div id="gtx"></div><div style="padding:10px;">';
+$postLoginMenu  = $this->newObject('postloginmenu','toolbar');
+$leftSideColumn = $postLoginMenu->show();
 $cssLayout->setLeftColumnContent($leftSideColumn);
 
-
+$rightSideColumn ='<div id="gtx"></div><div style="padding:10px;">';
 
 //Add the table to the centered layer
-$rightSideColumn .=$content;
+$rightSideColumn .= $content.$backbutton->show();
 $rightSideColumn.= '</div>';
 // Add Right Column
 $cssLayout->setMiddleColumnContent($rightSideColumn);
-echo $cssLayout->show();
 
+echo $cssLayout->show();
 ?>

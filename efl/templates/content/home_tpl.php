@@ -49,14 +49,21 @@ $this->appendArrayVar('headerParams', $schedulejs);
 //where we render the 'popup' window
 $renderSurface='';
 $essayTitle='<h2>Essays</h2>';
+if($this->objUser->isAdmin()){
 $essayTitle.='
           <p>Here you will find a listing of essays owned by you or of
           which you are a member.<br/>
 
-         Select one to view the essays. You can start you own essay by clicking on the
+         Select one to view the essays. You can start your own essay by clicking on the
          <font color="green"><b>Add Essay</b></font> button.
          </p>
          ';
+}
+else{
+    $essayTitle.='
+          <p>Here you will find a listing of essays owned by you or of
+          which you are a member. Select one to view the essays.</p>';
+    }
 //load class
 $this->loadclass('link','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
@@ -98,7 +105,7 @@ foreach($dbdata as $row) {
     $objIcon->setIcon('edit');
     $editLink->link=$objIcon->show();
 
-   $detailsLink=new link($this->uri(array('action'=>'essaymembers','essayid'=>$row['id'])));
+    $detailsLink=new link($this->uri(array('action'=>'essaymembers','essayid'=>$row['id'])));
     $detailsLink->link='Members';
 
     $previewLink=new link($this->uri(array('action'=>'previewessay','storyid'=>$row['id'])));

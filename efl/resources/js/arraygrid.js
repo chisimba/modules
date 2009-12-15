@@ -35,7 +35,7 @@ var showMyGrid = function(myData) {
         store: store,
         columns: [
             {id:'title',header: "Title", width: 160, sortable: true, dataIndex: 'title'},
-            {header: "Submit Date", width: 85, sortable: true, dataIndex: 'lastChange'}
+            {header: "Submit Date", width: 150, sortable: true, dataIndex: 'lastChange'}
         ],
         stripeRows: true,
         autoExpandColumn: 'title',

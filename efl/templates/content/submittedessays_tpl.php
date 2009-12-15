@@ -50,12 +50,16 @@ $this->appendArrayVar('headerParams', $list);
 $renderSurface='';
 $titleid=$this->getparam('essayid');
 $essaytitle = $this->essays->getTitle($titleid);
+$this->loadClass('htmlheading', 'htmlelements');
 
-$essayTitle= $essaytitle[0]['title'];
-$essayTitle.='
+//page header
+$essayTitle = new htmlheading($essaytitle[0]['title'], 4);
+$essayText='
           <p>
+          <b>
           Listing of submitted essays
-         </p>
+          </b>
+          </p>
          ';
 //load class
 $this->loadclass('link','htmlelements');
@@ -69,7 +73,7 @@ $btns='';
 $btns.=$listButton->show().'&nbsp;&nbsp;';
 
 $content = $message;
-$content= '<div id="grouping-grid">'.$essayTitle.$btns.'<br /><br /></div>';
+$content= '<div id="grouping-grid">'.$essayTitle->show().$essayText.$btns.'<br /><br /></div>';
 
 $essayId = $this->getParam('essayid');
 //data grid from db
@@ -99,7 +103,7 @@ foreach($dbdata as $row) {
 
     $data.="[";
     //$data.="'<a href=\"".$codebase."jefla.jnlp\">".$row['userid']."</a>',";
-    //$data.="'". $detailsLink->show()."',";
+    $data.="'". $detailsLink->show()."',";
     $data.="'".$row['userid']."',";
     $data.="'".$row['submitdate']."']";
     if($count < $numRows) {

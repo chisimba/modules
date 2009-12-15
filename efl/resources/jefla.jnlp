@@ -17,7 +17,7 @@
     </resources>
    <application-desc    main-class="jefla.Main">
 
-       <argument></argument>
+       <argument>Array</argument>
 
      </application-desc>
 

@@ -141,6 +141,8 @@ class efl extends controller {
     * @return <type>
     */
     function __markessay() {
+        $essayid=$this->getParam('essayid');
+        $this->setVarByRef('essayid',$essayid);
         //$this->essayutil->generateJNLP();
 
         return "essaymarker_tpl.php";
@@ -210,6 +212,10 @@ class efl extends controller {
         $this->setVarByRef('storyid',$storyid);
         
         return 'previewessay_tpl.php';
+    }
+
+    function __essaymembers(){
+        return 'essaymembers_tpl.php';
     }
 
 }

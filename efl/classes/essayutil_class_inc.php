@@ -33,6 +33,7 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 class essayutil extends object {
     function init() {
+        $this->objessays = $this->getObject('dbessays');
 
     }
 
@@ -43,7 +44,7 @@ class essayutil extends object {
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $resourcePath=str_replace($docRoot,$replacewith,$modPath);
         $codebase="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/efl/resources/';
-        //$essaycontent=$this->essays->getEssayContent($storyid);
+        $essaycontent=$this->objessays->getEssayContent($storyid);
         $str=
             '<jnlp spec="1.0+" codebase="'.$codebase.'">
     <information>

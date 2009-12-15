@@ -68,12 +68,6 @@ class dbessays extends dbtable {
         }
         return $this->getArray($sql);
 
-        /*return array(
-        array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/15'),
-        array('from'=>$this->objUser->fullname(), 'date'=>'2009/11/16'),
-        array('from'=>$this->objUser->fullname(),'date'=>'2009/11/17'),
-        array('from'=>$this->objUser->fullname(),'date'=>'2009/11/18')
-        );*/
     }
 
     function getTitle($essayid) {
@@ -82,7 +76,6 @@ class dbessays extends dbtable {
         return $this->getArray($sql);
        }
 
-//essayid = '".$essayid.
     function getEssayContent($storyid) {
         $sql="select content from tbl_efl_proposedessaytopics where id= '".$storyid."'";
 

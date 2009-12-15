@@ -7,10 +7,11 @@ $replacewith="";
 $docRoot=$_SERVER['DOCUMENT_ROOT'];
 $resourcePath=str_replace($docRoot,$replacewith,$modPath);
 $codebase="http://" . $_SERVER['HTTP_HOST'].$resourcePath.'/efl/resources';
-
+$essayid=$this->getparam('essayid');
+$content=$this->essays->getEssayContent($essayid);
 
 $str='<applet
-      codebase="'.$codebase.'"
+      codebase="'.$content[0]['content'].'"
       archive="jefla.jar"
       code="efla.EflaView"
       width=1024
