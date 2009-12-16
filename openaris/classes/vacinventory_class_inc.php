@@ -26,4 +26,29 @@ class vacinventory extends dbtable {
 			exit;
 		}
 	}
+	
+	public function getData($month,$year,$val,$filter,$district){
+	
+	
+	$sql = $this->getAll("WHERE month <='$month' AND year='$year' AND partname='$district'");
+	$vdata = array();
+	$value =$val;
+		if($filter == "convac"){
+   foreach($sql as $data){
+
+   $value = $value+$data['condconvac'];
+   
+   }}else{
+   
+   
+   foreach($sql as $data){
+
+   $value = $value+$data['condprovac'];
+   
+   }
+   
+   }
+
+	return $value;
+	}
 }

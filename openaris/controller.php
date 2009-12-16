@@ -396,10 +396,30 @@ class openaris extends controller {
 			case "ajax_getoutbreakcode":
 				$countryId 	= $this->getParam('countryId');
 				$diseaseId 	= $this->getParam('diseaseId');
-				$year 		= $this->getPAram('year');
+				$year 		= $this->getParam('year');
 				echo json_encode(array('code'=>$this->objDiseaseReport->genOutbreakCode($countryId, $diseaseId, $year)));
 				break;
-			
+			case "ajax_getdiseasenames":
+				$district = $this->getSession('ps_admin3');
+			  $diseaseId = $this->getParam('outbreakcode');
+			  echo json_encode($this->objDiseaseReport->getdisease($diseaseId,$district));
+			  
+			   break;
+			case "ajax_getspeciesnames":
+			$district = $this->getSession('ps_admin3');
+			  $diseaseId = $this->getParam('outbreakcode');
+			  echo json_encode($this->objDiseaseReport->getspecies($diseaseId,$district));
+			  
+			   break;   
+			case "ajax_getvalues":
+			   $filter = $this->getParam('filter');
+			   $val = $this->getParam('condprovac',0);
+			   $district = $this->getSession('ps_admin3');
+			   $month = $this->getSession('ps_month');
+			   $year = $this->getSession('ps_year');
+			   echo json_encode(array('cumvac'=>$this->objVacinventory->getData($month,$year,$val,$filter,$district)));
+			   break;
+			      
 			case 'save_disease_1':
 				$outbreakCode = $this->getParam('outbreakCode');
 				$countryId = $this->getParam('countryId', $this->getSession('ps_countryId'));
@@ -1524,7 +1544,7 @@ class openaris extends controller {
 			
 			case 'newspecies_admin':
 			 $searchStr = $this->getParam('searchStr');
-                $data = $this->objSpeciesnew->getAll("WHERE speciestypeid LIKE '%$searchStr%' OR speciesname LIKE '%$searchStr%' OR description LIKE '%$searchStr%' ORDER BY speciestypeid");
+                $data = $this->objSpeciesNew->getAll("WHERE speciestypeid LIKE '%$searchStr%' OR speciesname LIKE '%$searchStr%' OR description LIKE '%$searchStr%' ORDER BY speciestypeid");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'speciesnew_add')));
                 $this->setVar('addLinkText', "Add new species");
                 $this->setVar('headingText', 'New species');
@@ -1546,14 +1566,14 @@ class openaris extends controller {
 				
 			case 'newspecies_delete':
 				$id = $this->getParam('id');
-                $this->objSpeciesnew->delete('id', $id);
+                $this->objSpeciesNew->delete('id', $id);
                 return $this->nextAction('newspecies_admin', array('success'=>'2'));
 			
 			case 'newspecies_edit':
 			 $id= $this->getParam('id');
 			  $this->setVar('id',$id);
 			 $this->setVar('speciestypes',$this->objSpeciesType->getAll());
-			 $this->setVar('speciesnew',$this->objSpeciesnew->getRow('id',$id));
+			 $this->setVar('speciesnew',$this->objSpeciesNew->getRow('id',$id));
 			 return 'ahis_speciesedit_tpl.php';
 		
 			case 'newspecies_update':
@@ -1568,7 +1588,7 @@ class openaris extends controller {
 				$createdby = $this->getParam('createdby');
 				$dateModifiedPicker = $this->getSession('ps_calendardate',date('Y-m-d'));
 				$modifiedby = $this->getParam('modifiedby');
-				$this->objSpeciesnew->update('id', $id, array('speciestypeid'=>$species_type,'speciescode'=>$species_code,'speciesname'=>$species_name,'description'=>$description,'startdate'=>$dateStartPicker,'enddate'=>$dateEndPicker,'datecreated'=>$dateCreatedPicker, 'createdby'=>$this->objUser->UserName(), 'datemodified'=>$dateModifiedPicker,'modifiedby'=>$this->objUser->UserName()));
+				$this->objSpeciesNew->update('id', $id, array('speciestypeid'=>$species_type,'speciescode'=>$species_code,'speciesname'=>$species_name,'description'=>$description,'startdate'=>$dateStartPicker,'enddate'=>$dateEndPicker,'datecreated'=>$dateCreatedPicker, 'createdby'=>$this->objUser->UserName(), 'datemodified'=>$dateModifiedPicker,'modifiedby'=>$this->objUser->UserName()));
 			 	return $this->nextAction('newspecies_admin',array('success'=>3));
 				
 			case 'speciescategory_admin':
@@ -2701,6 +2721,7 @@ class openaris extends controller {
 			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));			      		      
 			      $this->setVar('userList', $this->objAhisUser->getList());
 			      $data = $this->objCountry->getAll("ORDER BY official_name");
+			      //print_r($data);exit;
 			      $ptype = $this->objPartitionCategory->getAll("ORDER BY partitioncategory");
 			      $plevel = $this->objPartitionLevel->getAll("ORDER BY partitionlevel");
 			      $pname = $this->objPartition->getAll();
@@ -2743,7 +2764,7 @@ class openaris extends controller {
 			      $this->setSession('ps_vfax',$this->getParam('vetOfficerFax'));
 			      $this->setSession('ps_vemail',$this->getParam('vetOfficerEmail'));  
 			      $this->setSession('ps_ibardate',$this->getParam('ibardate'));
-			      $this->setSession('ps_country',$this->getParam('country'));	
+			      $this->setSession('ps_country',$this->getParam('countryId'));	
 			      $this->setSession('ps_month',$this->getParam('month'));	
 			      $this->setSession('ps_year',$this->getParam('year'));	
 			      $this->setSession('ps_admin1',$this->getParam('partitionTypeId'));
@@ -2759,9 +2780,12 @@ class openaris extends controller {
 			case 'vacinventory2':
 			
 			      
-			
-			
 			   	$ddata = $this->objDiseases->getAll("ORDER BY disease_name");
+			   	$month = $this->getSession('ps_month');
+			   	$year = $this->getSession('ps_year');
+			      $district = $this->getSession('ps_admin3');
+			   	$this->setVar('datemonth',$this->getSession('ps_month'));
+			   	//$this->setVar('arraymonth',$this->objVacinventory->getData($month,$year));
                $this->setVar('repdate',$this->getSession('ps_repdate',date('Y-m-d')));
 			      $this->setVar('ibardate',$this->getSession('ps_ibardate',date('Y-m-d')));		
 			      $this->setVar('mandate',$this->getSession('ps_mandate',date('Y-m-d')));
@@ -2790,15 +2814,18 @@ class openaris extends controller {
 	            $this->setVar('vetoff', $this->getSession('ps_vetoff'));
 	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   			  				     				     			
 			      $this->setVar('userList', $this->objAhisUser->getList());
+			      $this->setVar('arrayoutbreak',$this->objDiseaseReport->getOutbreak($month,$year,$district));
+			      //$this->setVar('arraydisease',$this->objDiseaseReport->getdiseasename());
+			      $this->setVar('arrayspecies',$this->objSpeciesNew->getAll("ORDER BY speciesname"));
 			      return 'vacinventory2_tpl.php';
 			      
 	     case 'vacinventory2_add':
 	     
 	            
                //Set session of screen 2
-               $this->setSession('ps_outrefno',$this->getParam('outrefno'));
-               $this->setSession('ps_disease',$this->getParam('disease'));
-               $this->setSession('ps_species',$this->getParam('species'));
+               $this->setSession('ps_outrefno',$this->getParam('outbreakref'));
+               $this->setSession('ps_disease',$this->getParam('diseaseId'));
+               $this->setSession('ps_species',$this->getParam('speciesId'));
                $this->setSession('ps_vacsource',$this->getParam('vaccinesource'));
                $this->setSession('ps_lotno',$this->getParam('lotnumber'));
                $this->setSession('ps_mandate',$this->getParam('mandate'));
@@ -2825,6 +2852,7 @@ class openaris extends controller {
 	     		   $data['partlevel']=$this->getSession('ps_admin2');
 	     		   $data['partname']=$this->getSession('ps_admin3');
 	     		   $data['loctype']=$this->getSession('ps_loctype');
+	     		   $data['locname']=$this->getSession('ps_locname');
 	     		   $data['lattitude']=$this->getSession('ps_lattitude');
 	     		   $data['longitude']=$this->getSession('ps_longitude');
 	     		   $data['dphone']= $this->getSession('ps_dphone');
@@ -2866,7 +2894,10 @@ class openaris extends controller {
 
 
 			      return 'vacinventory2_add_tpl.php';	
-	      
+	      case 'vacinventory_clear':
+	            $this->unsetVaccineInventory1();
+	            return $this->nextAction('vacinventory');
+	            
 	      case 'vacinventory2_clear':
 	             $this->unsetSession('ps_outrefno');
 	             $this->unsetSession('ps_disease');
@@ -3093,7 +3124,7 @@ class openaris extends controller {
 			return 'other_control_methods_tpl.php';
 		case 'species_names_add':	
 		$this->setVar('output', $this->getParam('output'));	
-		$this->setVar('species',$this->objSpeciesnew->getAll());
+		$this->setVar('species',$this->objSpeciesNew->getAll());
 			return 'species_names_tpl.php';
 		case 'species_economic_function_add':
 		$this->setVar('output', $this->getParam('output'));
@@ -3146,7 +3177,7 @@ class openaris extends controller {
 			  $this->setVar('id',$id);
 			   $this->setVar('languages',$this->objLanguages->getAll("ORDER BY language"));
 			 $this->setVar('species',$this->objSpeciesNames->getRow('id',$id));
-			  $this->setVar('allspecies',$this->objSpeciesnew->getAll());
+			  $this->setVar('allspecies',$this->objSpeciesNew->getAll());
 			 return 'edit_species_names_tpl.php';
 			 
 		case 'diseases_edit':
@@ -3465,7 +3496,7 @@ class openaris extends controller {
                 $this->setVar('success', $this->getParam('success'));
                 return 'admin_overviews_tpl.php';
 				case 'species_names_admin':
-				if ($this->objSpeciesnew->getRecordCount() < 1) {
+				if ($this->objSpeciesNew->getRecordCount() < 1) {
                     $this->setVar('message', 'No Species records have been entered yet. Please create a species first!');
                     $this->setVar('location', $this->uri(array('action'=>'newspecies_admin')));
                     return 'redirect_tpl.php';
@@ -4488,13 +4519,13 @@ class openaris extends controller {
 			$val = $this->validateDates($sdate,$edate);
       
 		 if($val=='yes'){
-		 		$this->setVar('languages',$this->objSpeciesnew->getAll());
+		 		$this->setVar('languages',$this->objSpeciesNew->getAll());
 
 		   $this->setVar('output', $val);
 		   $this->setVar('common_name', $common_name);
 			$this->setVar('abbrev', $abbrev);
 			$this->setVar('desc', $desc);
-		$this->setVar('species',$this->objSpeciesnew->getAll());
+		$this->setVar('species',$this->objSpeciesNew->getAll());
 			return 'species_names_tpl.php';
 		   //return $this->nextAction('species_names_add',array('output'=>$val));
 		 }	
@@ -4753,7 +4784,7 @@ class openaris extends controller {
 		$dateModifiedPicker = $this->getSession('ps_calendardate',date('Y-m-d'));
 		$modifiedby = $this->getParam('modifiedby');
 		
-		$data= $this->objSpeciesnew->addSpeciesNewData($species_type,$species_code,$species_name,$description,$dateStartPicker,$dateEndPicker,$dateCreatedPicker,$this->objUser->UserName(),$dateModifiedPicker,$this->objUser->UserName());
+		$data= $this->objSpeciesNew->addSpeciesNewData($species_type,$species_code,$species_name,$description,$dateStartPicker,$dateEndPicker,$dateCreatedPicker,$this->objUser->UserName(),$dateModifiedPicker,$this->objUser->UserName());
 														
 		return $this->nextAction('newspecies_admin',array('success'=>'1'));
 	}

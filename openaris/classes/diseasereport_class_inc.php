@@ -71,8 +71,10 @@ class diseasereport extends dbtable {
 			
 			$this->objPartitionLevel 	= $this->getObject('partitionlevel');
 			$this->objPartitionCategory = $this->getObject('partitioncategory');
-			
-			
+			$this->objDiseaseControlMeasure = $this->getObject('diseasecontrolmeasure');
+		   $this->objDiseasespecies = $this->getObject('diseasespecies');
+		   $this->objSpeciesType = $this->getObject('speciestype'); 
+		   $this->objSpeciesNew = $this->getObject('speciesnew');         
 		}
 		catch (customException $e)
 		{
@@ -80,6 +82,9 @@ class diseasereport extends dbtable {
 			exit;
 		}
 	}
+	
+	
+	
 	
 	/**
 	 * Method to return the next outbreak reference number
@@ -121,4 +126,69 @@ class diseasereport extends dbtable {
 		return $array;
 	}
 	
+	public function getdiseasename(){
+	$data = $this->getAll("ORDER BY outbreakcode");
+	$array = array();
+	foreach($data as $vars){
+	$disease = $this->objDisease->getRow('id',$vars['diseaseid']);
+	$array[] = array('diseasename'=>$disease['disease_name'],'outbreakcode'=>$vars['outbreakcode']);
+	
+	}
+	return $array;
+	
+	}
+	
+	public function getdisease($diseaseId,$district){
+
+    $disease = $this->objDiseaseControlMeasure->getAll("WHERE outbreakcode ='$diseaseId' AND controlmeasureid='init_02'");
+		$diseaseArray = array();
+//print_r($disease);exit;
+foreach ($disease as $dis) {
+      $val = $dis['outbreakcode'];
+    $data = $this->getRow('outbreakcode',$val);
+
+	$datv = $this->objDisease->getRow('id',$data['diseaseid']);
+
+			//$diseaseArray[$datv['disease_name']] = $datv['disease_name']; 
+			$diseaseArray[$datv['id']] = $datv['disease_name'];
+		}
+		//print_r($diseaseArray);
+		return $diseaseArray;
+	
+	}
+	public function getspecies($diseaseId,$district){
+
+    $disease = $this->objDiseaseControlMeasure->getAll("WHERE outbreakcode ='$diseaseId' AND controlmeasureid='init_02'");
+		$diseaseArray = array();
+				$dat = array();
+				
+//print_r($disease);exit;
+foreach($disease as $dis) {
+      $val = $dis['outbreakcode'];
+    $data = $this->getRow('outbreakcode',$val);
+      $val1 = $data['diseaseid'];
+	$datv = $this->objDiseasespecies->getAll("WHERE diseaseid ='$val1'");
+	//print_r($datv);
+    foreach($datv as $ddatv){
+    $speciesId = $ddatv['speciesid'];
+$ddat =$this->objSpeciesType->getRow('id',$speciesId);
+$sdat =$this->objSpeciesNew->getAll("WHERE speciestypeid = '$ddat[id]'");
+   foreach($sdat as $ssdat){
+   
+       $dat[$ssdat['id']]=$ssdat['speciesname'];
+   }
+
+    }
+		}
+		//print_r($dat);
+		return $dat;
+	
+	}
+	
+	
+	public function getOutbreak($month,$year,$district){
+	
+	$sql = $this->getAll("WHERE partitionid='$district'");
+	return $sql;
+	}
 }

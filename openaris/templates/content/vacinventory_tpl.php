@@ -72,7 +72,7 @@ $country = new dropdown('countryId');
 $country->addOption('-1','Select');
 $country->addFromDB($arraycountry,'common_name','id');
 $country->setSelected($count);
-$country->extra =  'onchange="javascript:changeNames();"';
+$country->extra =  'onchange="javascript:changeCountry();"';
  
 //date picker for month and year 
 //$dateMonth = new datepicker($datemonth);
@@ -131,7 +131,7 @@ $admin3 = new dropdown('partitionId');
 $admin3->addOption('-1',Select);
 $admin3->addFromDB($arraypartition, 'partitionname', 'id');
 $admin3->setSelected($pname);
-$admin3->extra = 'onchange="javascript:changePartition()"';
+
 //textinput field for location type
 $loctype = new textinput('loctype',$loctype);
 
@@ -139,8 +139,16 @@ $loctype = new textinput('loctype',$loctype);
 $locname = new textinput('locname',$locname);
 
 //textinput field for lattitude and longitude
-$lattitude = new textinput('lattitude',$lattitude);
-$longitude = new textinput('longitude',$longitude);
+if(!isset($lattitude)){
+
+$lattitude = 0;
+}
+$latt= new textinput('lattitude',$lattitude);
+if(!isset($longitude)){
+
+$longitude = 0;
+}
+$long = new textinput('longitude',$longitude);
 
 //get htmltable object
 $objTable = $this->getObject('htmltable','htmlelements');
@@ -239,7 +247,7 @@ $objTable1->addCell($yeardate->show());
 $objTable1->addCell($this->objLanguage->languageText('mod_ahis_partitionname','openaris'));
 $objTable1->addCell($admin3->show());
 $objTable1->addCell($this->objLanguage->languageText('word_latitude'));
-$objTable1->addCell($lattitude->show());
+$objTable1->addCell($latt->show());
 $objTable1->endRow();
 
 $objTable1->startRow();
@@ -257,7 +265,7 @@ $objTable->addCell('&nbsp');
 $objTable->addCell('&nbsp');
 $objTable->addCell('&nbsp');
 $objTable1->addCell($this->objLanguage->languageText('word_longitude'));
-$objTable1->addCell($longitude->show());
+$objTable1->addCell($long->show());
 $objTable1->endRow();
 
 $objTable1->startRow();
@@ -268,17 +276,22 @@ $objTable1->endRow();
 
 $objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory_add')));
 $objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable2->show()."<hr class='openaris' />".$objTable3->show()."<hr class='openaris' />".$objTable1->show());
+
 $objForm->addRule('repOfficerId',$this->objLanguage->languageText('mod_ahis_reportoffreq','openaris'),'select');
-$objForm->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_dataoffreq','openaris'),'select');
-$objForm->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_vetoffreq','openaris'),'select');
-$objForm->addRule('admin1', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
-$objForm->addRule('admin2', $this->objLanguage->languageText('mod_ahis_admin2req','openaris'),'select');
-$objForm->addRule('admin3', $this->objLanguage->languageText('mod_ahis_admin3req','openaris'),'select');
-//$objForm->addRule('lattitude', $this->objLanguage->languageText('mod_ahis_lattitudereq','openaris'),'numeric');
-//$objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_longitudereq','openaris'),'numeric');
 $objForm->addRule('dataOfficerTel', $this->objLanguage->languageText('mod_ahis_validatedatatel', 'openaris'), 'required');
 $objForm->addRule('vetOfficerTel', $this->objLanguage->languageText('mod_ahis_validatevettel', 'openaris'), 'required');
-$objForm->addRule('countryId',$this->objLanguage->languageText('mod_ahis_validatecountry', 'openaris'), 'required');
+
+
+
+$objForm->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_dataoffreq','openaris'),'select');
+$objForm->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_vetoffreq','openaris'),'select');
+$objForm->addRule('countryId', $this->objLanguage->languageText('mod_ahis_valcountry', 'openaris'), 'select');
+$objForm->addRule('partitionTypeId', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
+$objForm->addRule('partitionLevelId', $this->objLanguage->languageText('mod_ahis_admin2req','openaris'),'select');
+$objForm->addRule('partitionId', $this->objLanguage->languageText('mod_ahis_admin3req','openaris'),'select');
+$objForm->addRule('lattitude', $this->objLanguage->languageText('mod_ahis_lattitudereq','openaris'),'numeric');
+$objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_longitudereq','openaris'),'numeric');
+
 $objForm->addRule('repdate', $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotfuture');
 $objForm->addRule('ibardate', $this->objLanguage->languageText('mod_ahis_validateibardate', 'openaris'), 'datenotfuture');
 $objForm->addRule(array('repdate','ibardate'), $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotbefore');

@@ -83,24 +83,31 @@ $ibarDate->extra='disabled';
 
 //dropdown for outbreak ref number
 $outbreakRef = new dropdown('outbreakref');
-//$outbreakRef->addFromDB($arrayoutbreakref,'name','id');
+$outbreakRef->addOption('-1','Select');
+$outbreakRef->addFromDB($arrayoutbreak,'outbreakcode','outbreakcode');
+$outbreakRef->extra = 'onchange="javascript:changeDisease();"';
 //$outbreakRef->setSelected($outbreakref);
 //print_r($arraydisease); exit;
 //dropdown for disease
-$disease = new dropdown('disease');
-$disease->addOption('null','Select');
+$disease = new dropdown('diseaseId');
+$disease->addOption('-1','Select');
 $disease->addFromDB($arraydisease,'disease_name','id');
-$disease->setSelected($diseases);
-
+//$disease->setSelected($diseases);
+//$disease->extra = 'onchange="javascript:changeDisease();"';
 //dropdown form disease
-$species = new dropdown('species');
-//$species->addFromDB($arrayspecies,'name','id');
-//$species->setDefaultDate($species);
+$species = new dropdown('speciesId');
+$species->addOption('-1','Select');
+$species->addFromDB($arrayspecies,'speciesname','id');
+//$species->setSelected($species);
 
 //text input field for vaccine source
 $vaccineSource = new textinput('vaccinesource',$vaccinesource);
 
 //text input field for lot number
+if(!isset($lotnumber)){
+
+$lotnumber = 0;
+}
 $lotNumber = new textinput('lotnumber',$lotnumber);
 
 //text input for manufacture date
@@ -113,23 +120,41 @@ $expDate = $this->newObject('datepicker','htmlelements');
 $expDate->setName('expdate');
 $expDate->setDefaultDate($expdate);
 
+
+
+
+
 //text input field for planned pro. vaccination
+if(!isset($planprovac)){
+
+$planprovac = 0;
+}
 $planprovac = new textinput('planprovac',$planprovac);
 
 //text input field for cond pro. vaccination
-$condprovac = new textinput('condprovac',$condprovac);
 
+$condprovac = new textinput('condprovac',$condprovac);
+$condprovac->extra = 'onchange = \'javascript:changeValues("provac");\'';
 //text input field for cummulative pro. vaccination
+
 $cumprovac = new textinput('cumprovac',$cumprovac);
 
 
 //text input field for planned control vaccination
+if(!isset($planconvac)){
+
+$planconvac = 0;
+}
 $planconvac = new textinput('planconvac',$planconvac);
 
 //text input field for cond pro. vaccination
 $condconvac = new textinput('condconvac',$condconvac);
-
+$condconvac->extra = 'onchange = \'javascript:changeValues("convac");\'';
 //text input field for cummulative pro. vaccination
+if(!isset($cumconvac)){
+
+$cumconvac = 0;
+}
 $cumconvac = new textinput('cumconvac',$cumconvac);
 
 //text area for comments 
@@ -262,10 +287,13 @@ $objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable1->show
 
 $objForm->addRule('condprovac', $this->objLanguage->languageText('mod_ahis_condproreq','openaris'),'numeric');
 $objForm->addRule('condconvac', $this->objLanguage->languageText('mod_ahis_condconreq','openaris'),'numeric');
-
+$objForm->addRule('outbreakref', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
+$objForm->addRule('diseaseId', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
+$objForm->addRule('lotnumber', $this->objLanguage->languageText('mod_ahis_validatevac', 'openaris'), 'nonnumeric');
 $objForm->addRule('mandate', $this->objLanguage->languageText('mod_ahis_validatemandate', 'openaris'), 'datenotfuture');
 
 $objForm->addRule(array('mandate','expdate'), $this->objLanguage->languageText('mod_ahis_validateexpman', 'openaris'), 'datenotbefore');
+
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
