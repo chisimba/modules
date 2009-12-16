@@ -199,12 +199,11 @@ $objButtonTable->endRow();
 $form = new form ('add', $this->uri(array('action'=>'animal_population2')));
 $content=$objTable->show()."<hr />".$middleTable->show()."<hr />".$bottomTable->show()."<br />".$objButtonTable->show();
 $form->addToForm($content);
-$form->addRule('num_animals', 'Please enter number of animals', 'required');
-$form->addRule('num_animals', 'Please enter valid number ', 'numeric');
-$form->addRule('source', 'Please enter source of animals', 'required');
-$form->addRule('source', 'Please enter valid source', 'nonnumeric');
-
-
+$form->addRule('totalNumSpecies', $this->objLanguage->languageText('mod_ahis_valtotnum', 'openaris'), 'required');
+$form->addRule('breedNumber', $this->objLanguage->languageText('mod_ahis_valbreedno', 'openaris'), 'required');
+$form->addRule('crossBreed', $this->objLanguage->languageText('mod_ahis_valcrossbreedno', 'openaris'), 'required');
+$form->addRule('animalCat', $this->objLanguage->languageText('mod_ahis_valanimalcat', 'openaris'), 'select');
+$form->addRule('catNumber', $this->objLanguage->languageText('mod_ahis_valcatno', 'openaris'), 'required');
 
 
 

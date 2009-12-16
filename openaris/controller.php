@@ -3002,7 +3002,7 @@ class openaris extends controller {
 			      $this->setSession('ps_vemail',$this->getParam('vetOfficerEmail'));  
 			      $this->setSession('ps_ibardate',$this->getParam('iDate'));
 			      $this->setSession('ps_country',$this->getParam('countryId'));	
-			      $this->setSession('ps_month',$this->getParam('month'));	
+			      //$this->setSession('ps_month',$this->getParam('month'));	
 			      $this->setSession('ps_year',$this->getParam('year'));	
 			      $this->setSession('ps_admin1',$this->getParam('partitionTypeId'));
 				   $this->setSession('ps_admin2',$this->getParam('partitionLevelId'));

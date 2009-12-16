@@ -73,7 +73,7 @@ $btcancel = new button('cancel', 'Cancel', "javascript: document.location='$back
 $btcancel->setCSS('cancelButton');
 
 $classDrop = new dropdown('classification');
-$classDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$classDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $classDrop->addFromDB($arrayspecies, 'name', 'id');
 $classDrop->setSelected($species); 
 $classDrop->extra = 'onchange="javascript:changeBreed();"';
@@ -118,7 +118,7 @@ $admin3Drop = new dropdown('admin3Id');
 $admin3Drop->addFromDB($arrayAdmin3, 'name', 'id');
 
 
-$monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 23);
+//$monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 23);
 $dateBox = new textinput('reportdate', date('Y/m/d', strtotime($calendardate)),'text', 30);
 $yearBox = new textinput('year', date('Y'), 'text', 4);
 
@@ -281,9 +281,14 @@ $form->addToForm($content);
 //$form->addRule('repOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
 //$form->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
 //$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
+$form->addRule('year', $this->objLanguage->languageText('mod_ahis_promptyear', 'openaris'), 'required');
+//$form->addRule(array('month'=>'month','year'=>'year'), $this->objLanguage->languageText('mod_ahis_valdate', 'openaris'), 'twofielddate');
+$form->addRule('countryId', $this->objLanguage->languageText('mod_ahis_valcountry', 'openaris'), 'select');
+$form->addRule('partitionTypeId', $this->objLanguage->languageText('mod_ahis_valparttype', 'openaris'), 'select');
+$form->addRule('classification', $this->objLanguage->languageText('mod_ahis_valspecies', 'openaris'), 'select');
+$form->addRule('breedId', $this->objLanguage->languageText('mod_ahis_valbreed', 'openaris'), 'select');
+$form->addRule('animal_production', $this->objLanguage->languageText('mod_ahis_valprodname', 'openaris'), 'required');
 
-//$form->addToForm($btcancel->show().$tab);
-//$form->addToForm($sButton->show());
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 

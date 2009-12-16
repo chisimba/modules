@@ -39,11 +39,7 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'month' => array(
-		'type' => 'text',
-		'length' => 32,
-        'notnull' => TRUE
-		),
+	
 	'year' => array(
 		'type' => 'text',
 		'length' => 32,
