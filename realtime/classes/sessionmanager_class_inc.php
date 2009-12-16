@@ -55,10 +55,14 @@ class sessionmanager extends object{
         $this->objAltConfig = $this->getObject('altconfig','config');
         $this->objDbSchedules=$this->getObject('dbschedules');
         // scripts
-        $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0.3/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-        $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0.3/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-        $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0.3/resources/css/ext-all.css','htmlelements').'"/>';
-        $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/session.css').'"/>';
+       // $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+       // $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0.3/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+       // $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0.3/resources/css/ext-all.css','htmlelements').'"/>';
+
+
+       $extjs=$this->getObject('extjs','htmlelements');
+       $extjs->show();
+       $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/session.css').'"/>';
         $schedulejs = '<script language="JavaScript" src="'.$this->getResourceUri('js/schedule.js').'" type="text/javascript"></script>';
 
         $this->appendArrayVar('headerParams', $extbase);
