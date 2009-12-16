@@ -72,9 +72,9 @@ $classDrop->extra = 'disabled';
 //Breed dropdown
 $breedDrop = new dropdown('breedId');
 $breedDrop->addFromDB($arraybreed, 'name', 'id');
-$breedDrop->setSelected($breedId);
+$breedDrop->setSelected($breed);
 $breedDrop->extra='disabled';
-
+//echo $breed;
 //animal category dropdown
 $animalCatDrop=new dropdown('animalCat');
 $animalCatDrop->addFromDB($arrayanimalCat, 'age_group', 'id');

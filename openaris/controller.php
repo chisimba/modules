@@ -125,6 +125,7 @@ class openaris extends controller {
             $this->objVaccination = $this->getObject('vaccinationhistory');
             $this->objBreed = $this->getObject('breed');
             $this->objSpecies = $this->getObject('species');
+            $this->objAnimCat = $this->getObject('animalcat');
             $this->objActive = $this->getObject('active');
             $this->objCausative = $this->getObject('causative');
             $this->objNewherd = $this->getObject('newherd');
@@ -2918,9 +2919,13 @@ class openaris extends controller {
 			       $this->setVar('arrayrepoff', $this->objAhisUser->getListByRole('init_01'));
                 $this->setVar('arraydataoff', $this->objAhisUser->getListByRole('init_02'));
                 $this->setVar('arrayvetoff', $this->objAhisUser->getListByRole('init_03'));	      			      			      			      
-			      $this->setVar('species',$this->getSession('ps_species'));				      			      
-                $this->setVar('userList', $this->objAhisUser->getList());              
-                $this->setVar('arrayBreed',$this->objBreed->getAll());
+			       $this->setVar('species',$this->getSession('ps_species'));				      			      
+                $this->setVar('userList', $this->objAhisUser->getList());
+                $speciesId= $this->getParam('speciesId', $this->getSession('ps_species')); 
+                $animBreeds = $this->objBreed->getAll();
+                $this->setVar('arraybreed', $animBreeds);             
+                
+                //$this->setVar('arrayBreed',$this->objBreed->getAll());
                 $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
                 $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));
 			 		$id=$this->getSession('ps_geo2Id');
@@ -2933,8 +2938,8 @@ class openaris extends controller {
 			 		$rDate = $this->getParam('rDate', $this->getSession('ps_rDate'));
 			 		$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
 			 	   $this->setVar('animprod',$this->objAnimalProduction->getAll("ORDER BY name"));
-               $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY name"));		
-               $this->setVar('breed', $this->objBreed ->getAll("ORDER BY name"));	
+			 	   $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY name"));		
+               //$this->setVar('breed', $this->objBreed ->getAll("ORDER BY name"));	
                
                //$this->setVar('species', $this->getSession('ps_species'));
                $this->setVar('dataEntryOfficerFax', $this->getSession('ps_dfax'));
@@ -2943,9 +2948,15 @@ class openaris extends controller {
 					$this->setVar('valOfficerFax', $this->getSession('ps_vfax'));
 					$this->setVar('valOfficerTel', $this->getSession('ps_vphone'));
 					$this->setVar('valOfficerEmail', $this->getSession('ps_vemail'));
-               $this->setVar('breed', $this->getSession('ps_breed'));                        				    
+               $this->setVar('breed', $this->getSession('ps_breed')); 
+              	                      				    
 					
 					return 'animal_population_tpl.php';
+					
+				  case "ajax_getbreed":
+				  $speciesId = $this->getParam('classification');
+				  echo json_encode($this->objBreed->getBreed($speciesId));
+				  break;
 					
 					case 'animal_population1':
 			      $this->setSession('ps_officerId',$this->getParam('repOfficerId'));
@@ -2965,7 +2976,8 @@ class openaris extends controller {
 			      $this->setSession('ps_admin1',$this->getParam('partitionTypeId'));
 				   $this->setSession('ps_admin2',$this->getParam('partitionLevelId'));
 			      $this->setSession('ps_admin3',$this->getParam('partitionId'));
-			      $this->setSession('ps_species',$this->getParam('classification'));	
+			      
+			      $this->setSession('ps_species',$this->getParam('classification'));
 			      $this->setSession('ps_breed',$this->getParam('breedId'));	
 			      $this->setSession('ps_prodname',$this->getParam('animal_production'));
 
@@ -2974,14 +2986,20 @@ class openaris extends controller {
          case 'animal_population_screen2':         
                $this->setVar('userList', $this->objAhisUser->getList());                 		  
                $this->setVar('repoff', $this->getSession('ps_officerId'));
+               $animBreeds = $this->objBreed->getAll();
+               $this->setVar('arraybreed', $animBreeds);     
                $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY name"));		
                $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
                $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));	
                $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      
-			      $this->setVar('species',$this->getSession('ps_species'));			 
+			      $this->setVar('species',$this->getSession('ps_species'));	
+			      $this->setVar('breed', $this->getSession('ps_breed'));		 
                $this->setVar('totalNumSpecies', '');
 					$this->setVar('breedNumber', '');
-					$this->setVar('animalCat', '');
+					$speciesId= $this->getParam('speciesId', $this->getSession('ps_species')); 
+               $animalcat = $this->objAnimCat->getCategory($speciesId);
+              //print_r($animalcat);
+					$this->setVar('arrayanimalCat', $animalcat);
 					$this->setVar('tropicalLivestock', '');
 					$this->setVar('crossBreed', '');
 					$this->setVar('catNumber', '');
@@ -2992,33 +3010,33 @@ class openaris extends controller {
          				
 			case 'animal_population2':
 			   
-	     		   $data['repoff']= $this->getSession('ps_officerId');
-	     		   $data['dataoff']= $this->getSession('ps_dataoff');
-	     		   $data['vetoff']=$this->getSession('ps_vetoff');
+	     		   $data['reporterid']= $this->getSession('ps_officerId');
+	     		   $data['dataentryid']= $this->getSession('ps_dataoff');
+	     		   $data['vetofficerid']=$this->getSession('ps_vetoff');
 	     		   $data['ibardate']=$this->getSession('ps_ibardate');
 	     		   $data['repdate']=$this->getSession('ps_repdate');
-	     		   $data['country']=$this->getSession('ps_country');
+	     		   $data['countryid']=$this->getSession('ps_country');
 
 	     		   $data['year']=$this->getSession('ps_year');
-	     		   $data['parttype']=$this->getSession('ps_admin1');
-	     		   $data['partlevel']=$this->getSession('ps_admin2');
-	     		   $data['partname']=$this->getSession('ps_admin3');
-	     		   $data['species']=$this->getSession('ps_species');
-	     		   $data['prodname']=$this->getSession('ps_prodname');
-	     		   $data['breed']=$this->getSession('ps_breed');
-	     		   $data['dphone']= $this->getSession('ps_dphone');
-	     		   $data['dfax']=$this->getSession('ps_dfax');
-	     		   $data['demail']= $this->getSession('ps_demail');
-	     		   $data['vphone']= $this->getSession('ps_vphone');
-	     		   $data['vfax']= $this->getSession('ps_vfax');
-	     		   $data['vemail']=$this->getSession('ps_vemail');
-	     		   $data['totnum']=$this->getParam('totalNumSpecies');
-	     		   $data['troplivestock']=$this->getParam('tropicalLivestock');
-	     		   $data['prodnum']=$this->getParam('productionno');
-	     		   $data['breedno']=$this->getParam('breedNumber');
-	     		   $data['crossbreednum']=$this->getParam('crossBreed');
-	     		   $data['animalcat']=$this->getParam('animalCat');
-	     		   $data['catnum']=$this->getParam('catNumber');
+	     		   $data['partitiontypeid']=$this->getSession('ps_admin1');
+	     		   $data['partitionlevelid']=$this->getSession('ps_admin2');
+	     		   $data['partitionnameid']=$this->getSession('ps_admin3');
+	     		   $data['speciesid']=$this->getSession('ps_species');
+	     		   $data['prodnameid']=$this->getSession('ps_prodname');
+	     		   $data['breedid']=$this->getSession('ps_breed');
+	     		   //$data['dphone']= $this->getSession('ps_dphone');
+	     		   //$data['dfax']=$this->getSession('ps_dfax');
+	     		   //$data['demail']= $this->getSession('ps_demail');
+	     		   //$data['vphone']= $this->getSession('ps_vphone');
+	     		  // $data['vfax']= $this->getSession('ps_vfax');
+	     		   //$data['vemail']=$this->getSession('ps_vemail');
+	     		   $data['totnumid']=$this->getParam('totalNumSpecies');
+	     		   $data['troplivestockid']=$this->getParam('tropicalLivestock');
+	     		   $data['prodnumid']=$this->getParam('productionno');
+	     		   $data['breednoid']=$this->getParam('breedNumber');
+	     		   $data['crossbreednumid']=$this->getParam('crossBreed');
+	     		   $data['animalcatid']=$this->getParam('animalCat');
+	     		   $data['catnumid']=$this->getParam('catNumber');
 	     		   $data['comments']=$this->getParam('comments');
 	     		   
 			   	$result = $this->objAnimalPopCensus->insert($data);

@@ -284,7 +284,7 @@ function changeBreed() {
 	var classification = jQuery('#input_classification').val();
 	if (classification != -1) {
 		var breedsId = jQuery('#input_classification').val();
-				jQuery.getJSON("index.php?module=openaris&action=ajax_getbreed&speciesId="+breedsId,
+				jQuery.getJSON("index.php?module=openaris&action=ajax_getbreed&classification="+breedsId,
 				   function(data) {
 						jQuery.each(data, function(key, value) {
 							jQuery('#input_breedId').append(jQuery("<option></option>").attr("value",key).text(value));
