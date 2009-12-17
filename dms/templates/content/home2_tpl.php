@@ -2,15 +2,11 @@
 $this->loadclass('link','htmlelements');
 $this->loadclass('link','htmlelements');
 $objIcon= $this->newObject('geticon','htmlelements');
-$ext=$this->getObject('extjs','htmlelements');
-$ext->show();
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 
-/*$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('js/ext-3.0.0/adapter/ext/ext-base.js').'" type="text/javascript"></script>';
-$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('js/ext-3.0.0/ext-all.js').'" type="text/javascript"></script>';
-$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('js/ext-3.0.0/resources/css/ext-all.css').'"/>';
-*/
-//$uxjs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0.3/ux/FileUploadField.js','htmlelements').'" type="text/javascript"></script>';
-$uxjs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0.0/ux/FileUploadField.js','htmlelements').'" type="text/javascript"></script>';
+$uxjs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ux/fileuploadfield/FileUploadField.js','htmlelements').'" type="text/javascript"></script>';
 
 $iconscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/buttons.css').'"/>';
 $homejs = '<script language="JavaScript" src="'.$this->getResourceUri('js/home.js').'" type="text/javascript"></script>';
