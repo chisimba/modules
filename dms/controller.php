@@ -135,13 +135,14 @@ class dms extends controller {
      */
     public function __doupload() {
         $permissions = $this->getParam('permissions');
-        $result = $this->objUtils->saveFile($permissions);
+        $path = $this->getParam('path');
+        $result = $this->objUtils->saveFile($permissions, $path);
 
         if(strstr($result, "success")) {
             $this->nextAction('home');
         }
         else {
-            return $this->nextAction('uploadFile', array('message'=>$result));
+            return $this->nextAction('home', array('message'=>$result));
         }
     }
 

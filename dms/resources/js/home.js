@@ -3,12 +3,14 @@ var currentPath,
     renameFolderUrl,
     deleteFolderUrl,
     uploadUrl,
+    settingsUrl,
     uploadWindow;
-function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, xuploadUrl){
+function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, xuploadUrl, xsettingsUrl){
     createFolderUrl=xcreateFolderUrl;
     renameFolderUrl = xrenameFolderUrl;
     deleteFolderUrl = xdeleteFolderUrl;
     uploadUrl = xuploadUrl;
+    settingsUrl = xsettingsUrl;
     var Tree = Ext.tree;
     var detailsText = '<center><h1>File manager 0.1 beta</h1> &copy;2010.\n\
 <ul>\n\
@@ -38,7 +40,7 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, x
         text:'Settings',
         iconCls: 'settings',
         handler: function() {
-            alert('Settings!!');
+            goSettings();
         }
 
     });
@@ -181,9 +183,7 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, x
         baseCls: 'x-plain',
         cls: 'btn-panel',
         border: false,
-        
         height:600,
-        //border:false,
         plain:true,
         items: [nav, detailsPanel]
 
@@ -212,6 +212,10 @@ function accessRights(){
     
 }
 
+function goSettings() {
+    window.location.href = settingsUrl;
+}
+
 function showUploadForm(){
     var fibasic = new Ext.ux.form.FileUploadField({
         id: 'form-file',
@@ -221,9 +225,8 @@ function showUploadForm(){
         width: 300
     });
     var type= [
-    ['Private'],
-    ['Public']
-
+        ['Public'],
+        ['Private']
     ];
 
     var typestore = new Ext.data.ArrayStore({
@@ -247,44 +250,46 @@ function showUploadForm(){
 
     });
 
+    var fp = new Ext.FormPanel({
+        standardSubmit: true,
+        url: uploadUrl,
+        fileUpload: true,
+        frame: true,
+        title: 'File Upload Form',
+        autoHeight: true,
+        labelWidth: 80,
+        items: [fibasic,typefield],
+        buttons: [{
+            text:'Upload',
+            handler: function(){
+                if(fp.getForm().isValid()){
+                    if (fp.url) {
+                        fp.getForm().getEl().dom.action = fp.url + '&path=' + currentPath;
+                    }
+                    fp.getForm().submit();
+                }
+            }
+        },{
+            text: 'Cancel',
+            handler: function(){
+                uploadWindow.hide();
+            }
+        }]
+    })
+
     if(!uploadWindow){
         uploadWindow = new Ext.Window({
             applyTo:'upload-win',
             width:500,
-            height:250,
+            autoHeight: true,
             x:125,
             y:50,
             closeAction:'destroy',
             plain: true,
             labelWidth: 155,
-            items: [{
-                xtype: 'fieldset',
-                title: 'Upload new document',
-                autoHeight: true,
-                bodyStyle:'margin-left:1em;margin-top:1em;',
-                items:[
-                fibasic,typefield
-
-                ]
-            }],
-            buttons: [{
-                text:'Upload',
-                handler: function(){
-                    var v = fibasic.getValue();
-                    alert('Selected File', v && v != '' ? v : 'None');
-                    /*if(fp.getForm().isValid()){
-	                if (fp.url) {
-                            fp.getForm().getEl().dom.action = fp.url + '&path=' + currentPath;
-                        }
-                        fp.getForm().submit();
-                    }*/
-                }
-            },{
-                text: 'Cancel',
-                handler: function(){
-                    uploadWindow.hide();
-                }
-            }]
+            items: [
+                    fp
+            ]
         });
     }
     uploadWindow.show(this);

@@ -97,15 +97,21 @@ class userutils extends object {
         return $data;
     }
 
-    public function saveFile($permissions) {
-    //declare user object
+    public function saveFile($permissions,$path) {
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'dms');
+        $filepath = $dir.$path;
+
+        $filepath = str_replace("//", "/", $filepath);
+        $permissionsArr = array("Public"=>"1", "Private"=>"2");
+        
+        //declare user object
         $objUser = $this->getObject('user', 'security');
         /* create directory on which to save files */
-        $objMkDir = $this->getObject('mkdir', 'files');
+        /*$objMkDir = $this->getObject('mkdir', 'files');*/
 
         $userid = $objUser->userId();
         $this->objUploadTable->setUserId($userid);
-        if($permissions == 1) {
+        /*if($permissionsArr[$permissions] == 1) {
             $destinationDir = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid."/shared/".$id;
         }
         else {
@@ -113,28 +119,35 @@ class userutils extends object {
         }
         $objMkDir->mkdirs($destinationDir);
 
-        @chmod($destinationDir, 0777);
+        @chmod($destinationDir, 0777);*/
 
+        $destinationDir = $filepath;
         $objFileUpload = $this->getObject('upload');
         $objFileUpload->overWrite = TRUE;
         $objFileUpload->uploadFolder = $destinationDir.'/';
-
+        
         $result = $objFileUpload->doUpload(TRUE);
-
+        
         if ($result['success'] == FALSE) {
             return $result['message'];
         }
         else {
             $filename = $result['filename'];
             $ext = $result['extension'];
-            $file = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$filename;
+            $file = $destinationDir.'/'.$filename;
 
             if (is_file($file)) {
                 @chmod($file, 0777);
             }
 
             // save the file information into the database
-            $data = array('filename'=>$filename, 'filetype'=>$ext, 'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),'userid'=>$objUser->userId(), 'shared'=>$permissions);
+            $data = array(
+                    'filename'=>$filename,
+                    'filetype'=>$ext,
+                    'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),
+                    'userid'=>$objUser->userId(),
+                    'shared'=>$permissionsArr[$permissions],
+                    'filepath'=>$file);
             $result = $this->objUploadTable->saveFileInfo($data);
 
             return "success";
