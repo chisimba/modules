@@ -356,3 +356,15 @@ function changeSpecies() {
 	
 	
 	}
+function getTLU(){
+//alert('nospecies');
+var nospecies= jQuery('#input_totalNumSpecies').val();
+if (nospecies !=-1){
+var nospecies= jQuery('#input_totalNumSpecies').val();
+jQuery.getJSON("index.php?module=openaris&action=ajax_gettlu&speciesno="+nospecies,
+				   function(data) {
+							jQuery('#input_tropicalLivestock').val(data.prod);
+							
+					   });
+	}
+}

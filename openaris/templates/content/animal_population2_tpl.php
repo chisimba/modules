@@ -98,7 +98,9 @@ $reportOfficerDrop->addFromDB($userList, 'name', 'userid');
 $reportOfficerDrop->setSelected($repoff);
 $reportOfficerDrop->extra='disabled';
 
-$totalNumSpecies = new textinput('totalNumSpecies', $totalNumSpecies, 'text');
+$totalNumSpecies = new textinput('totalNumSpecies', $totalNumSpecies);
+$totalNumSpecies->extra = 'onblur="javascript:getTLU();"';
+
 $breedNumber = new textinput('breedNumber', $breedNumber, 'text');
 //$animalCat = new textinput('animalCat', $animalCat, 'text');
 
@@ -199,7 +201,7 @@ $objButtonTable->endRow();
 $form = new form ('add', $this->uri(array('action'=>'animal_population2')));
 $content=$objTable->show()."<hr />".$middleTable->show()."<hr />".$bottomTable->show()."<br />".$objButtonTable->show();
 $form->addToForm($content);
-$form->addRule('totalNumSpecies', $this->objLanguage->languageText('mod_ahis_valtotnum', 'openaris'), 'required');
+$form->addRule('totalNumSpecies', $this->objLanguage->languageText('mod_ahis_valtotnum', 'openaris'), 'select');
 $form->addRule('breedNumber', $this->objLanguage->languageText('mod_ahis_valbreedno', 'openaris'), 'required');
 $form->addRule('crossBreed', $this->objLanguage->languageText('mod_ahis_valcrossbreedno', 'openaris'), 'required');
 $form->addRule('animalCat', $this->objLanguage->languageText('mod_ahis_valanimalcat', 'openaris'), 'select');

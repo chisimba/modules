@@ -126,6 +126,7 @@ class openaris extends controller {
             $this->objBreed = $this->getObject('breed');
             $this->objSpecies = $this->getObject('species');
             $this->objAnimCat = $this->getObject('animalcat');
+            $this->objTlu = $this->getObject('tluconversion');
             $this->objActive = $this->getObject('active');
             $this->objCausative = $this->getObject('causative');
             $this->objNewherd = $this->getObject('newherd');
@@ -2989,6 +2990,12 @@ class openaris extends controller {
 				  $speciesId = $this->getParam('classification');
 				  echo json_encode($this->objBreed->getBreed($speciesId));
 				  break;
+				  
+				  case "ajax_gettlu":
+					$speciesId = $this->getSession('ps_species');
+					$speciesno = $this->getParam('speciesno');
+					echo json_encode(array('prod'=>$this->objTlu->getTlu($speciesId,$speciesno)));
+			 		break;  
 					
 					case 'animal_population1':
 			      $this->setSession('ps_officerId',$this->getParam('repOfficerId'));
@@ -3032,13 +3039,16 @@ class openaris extends controller {
                $animalcat = $this->objAnimCat->getCategory($speciesId);
               //print_r($animalcat);
 					$this->setVar('arrayanimalCat', $animalcat);
+					$totspecies=$this->getParam('totalNumSpecies');
+					
 					$this->setVar('tropicalLivestock', '');
 					$this->setVar('crossBreed', '');
 					$this->setVar('catNumber', '');
 					$this->setVar('productionno', '');
 
 				    
-         return 'animal_population2_tpl.php';       
+         return 'animal_population2_tpl.php';   
+          
          				
 			case 'animal_population2':
 			   
@@ -5333,7 +5343,7 @@ class openaris extends controller {
 	             $this->unsetSession('ps_planconvac');
 	             $this->unsetSession('ps_condconvac');
 	             $this->unsetSession('ps_cumconvac');
-	             $this->unsetSession('ps_comments');	    
+	             $this->unsetSession('ps_comments');  
 	    
 	    
 	    
