@@ -45,7 +45,8 @@ class dbAnnouncements extends dbTable
     {
         parent::init('tbl_announcements');
         $this->objUser = $this->getObject('user', 'security');
-
+        $this->userId = $this->objUser->userId();
+        $this->isAdmin = $this->objUser->isAdmin();
         $this->objIndexData = $this->getObject('indexdata', 'search');
     }
 
@@ -344,19 +345,29 @@ class dbAnnouncements extends dbTable
     public function getAllAnnouncements($contexts, $limit=NULL, $page=NULL)
     {
         $where = '';
+        $or = '';
 
         if (count($contexts) > 0) {
             foreach($contexts as $context)
             {
-                $where .= "tbl_announcements_context.contextid = '{$context}' OR ";
+                $where .= "{$or} tbl_announcements_context.contextid = '{$context}'";
+                $or = " OR ";
             }
+        }
+
+        if ($this->isAdmin) {
+            $where .= "{$or} tbl_announcements.contextid = 'site'";
+        }
+
+        if ($where != '') {
+            $where = 'WHERE '.$where;
         }
 
         $sql = "SELECT DISTINCT tbl_announcements.id, title, createdon, tbl_announcements.contextid, message, createdby FROM tbl_announcements
         LEFT JOIN tbl_announcements_context ON ( tbl_announcements_context.announcementid = tbl_announcements.id )
-        WHERE ({$where} tbl_announcements.contextid = 'site')
+        {$where}
         ORDER BY createdon DESC ";
-
+        // AND createdby = '{$this->userId}'
         if ($limit != NULL && $page != NULL) {
 
             $page = $page * $limit;
@@ -433,20 +444,29 @@ class dbAnnouncements extends dbTable
     public function getNumAnnouncements($contexts)
     {
         $where = '';
+        $or = '';
 
         if (count($contexts) > 0) {
             foreach($contexts as $context)
             {
-                $where .= "tbl_announcements_context.contextid = '{$context}' OR ";
+                $where .= "{$or} tbl_announcements_context.contextid = '{$context}'";
+                $or = " OR ";
             }
         }
 
+        if ($this->isAdmin) {
+            $where .= "{$or} tbl_announcements.contextid = 'site'";
+        }
+
+        if ($where != '') {
+            $where = 'WHERE '.$where;
+        }
 
         $sql = "SELECT count( DISTINCT tbl_announcements.id ) AS recordcount FROM tbl_announcements
         LEFT JOIN tbl_announcements_context ON ( tbl_announcements_context.announcementid = tbl_announcements.id )
-        WHERE ({$where} tbl_announcements.contextid = 'site')
+        {$where}
         ORDER BY createdon DESC ";
-
+        //AND tbl_announcements.createdby = '{$this->userId}'
         $result = $this->getArray($sql);
 
         return $result[0]['recordcount'];
