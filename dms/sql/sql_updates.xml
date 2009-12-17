@@ -2,17 +2,15 @@
 <updates>
     <update>
         <table>tbl_dms_fileuploads</table>
-        <version>0.011</version>
-        <description>Added the folderpath field</description>
+        <version>0.013</version>
+        <description>Added the filepath field</description>
         <data>
             <add>
-                <name>folderpath</name>
+                <name>filepath</name>
                 <type>text</type>
+                <notnull>TRUE</notnull>
             </add>
 
         </data>
     </update>
-
-
-
 </updates>
