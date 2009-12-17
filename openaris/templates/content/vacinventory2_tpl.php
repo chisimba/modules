@@ -136,7 +136,12 @@ $planprovac = new textinput('planprovac',$planprovac);
 $condprovac = new textinput('condprovac',$condprovac);
 $condprovac->extra = 'onchange = \'javascript:changeValues("provac");\'';
 //text input field for cummulative pro. vaccination
+$cumprovac = 0;
+foreach($arraycon as $dat){
+   $cumprovac = $cumprovac+$dat['condprovac'];
 
+
+}
 $cumprovac = new textinput('cumprovac',$cumprovac);
 
 
@@ -151,9 +156,12 @@ $planconvac = new textinput('planconvac',$planconvac);
 $condconvac = new textinput('condconvac',$condconvac);
 $condconvac->extra = 'onchange = \'javascript:changeValues("convac");\'';
 //text input field for cummulative pro. vaccination
-if(!isset($cumconvac)){
 
 $cumconvac = 0;
+foreach($arraycon as $dat){
+   $cumconvac = $cumconvac+$dat['condconvac'];
+
+
 }
 $cumconvac = new textinput('cumconvac',$cumconvac);
 

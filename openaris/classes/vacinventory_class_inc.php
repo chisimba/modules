@@ -51,4 +51,12 @@ class vacinventory extends dbtable {
 
 	return $value;
 	}
+	
+	public function getCon($month,$year,$district){
+	
+		$sql = $this->getAll("WHERE month <='$month' AND year='$year' AND partname='$district'");
+		return $sql;
+	
+	}	
+	
 }

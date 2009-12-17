@@ -2785,6 +2785,7 @@ class openaris extends controller {
 			   	$year = $this->getSession('ps_year');
 			      $district = $this->getSession('ps_admin3');
 			   	$this->setVar('datemonth',$this->getSession('ps_month'));
+			   	$this->setVar('arraycon',$this->objVacinventory->getCon($month,$year,$district));
 			   	//$this->setVar('arraymonth',$this->objVacinventory->getData($month,$year));
                $this->setVar('repdate',$this->getSession('ps_repdate',date('Y-m-d')));
 			      $this->setVar('ibardate',$this->getSession('ps_ibardate',date('Y-m-d')));		
