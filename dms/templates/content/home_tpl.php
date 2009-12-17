@@ -1,9 +1,16 @@
 <?php
     $this->loadclass('link','htmlelements');
 
-    $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('js/ext-3.0.0/adapter/ext/ext-base.js').'" type="text/javascript"></script>';
+   /* $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('js/ext-3.0.0/adapter/ext/ext-base.js').'" type="text/javascript"></script>';
     $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('js/ext-3.0.0/ext-all.js').'" type="text/javascript"></script>';
     $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('js/ext-3.0.0/resources/css/ext-all.css').'"/>';
+    * /
+    *
+    *
+    */
+
+
+    $ext=$this->getObject('')
     //$debugcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/debug.css').'"/>';
     //$debugjs = '<script src="'.$this->getResourceUri('js/debug.js').'" type="text/javascript"></script>';
     $mainjs = '<script src="'.$this->getResourceUri('js/main.js').'" type="text/javascript"></script>';

@@ -1,10 +1,10 @@
 var currentPath,
-    createFolderUrl,
-    renameFolderUrl,
-    deleteFolderUrl,
-    uploadUrl,
-    settingsUrl,
-    uploadWindow;
+createFolderUrl,
+renameFolderUrl,
+deleteFolderUrl,
+uploadUrl,
+settingsUrl,
+uploadWindow;
 function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, xuploadUrl, xsettingsUrl){
     createFolderUrl=xcreateFolderUrl;
     renameFolderUrl = xrenameFolderUrl;
@@ -136,10 +136,10 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, x
                 iconCls: 'delete',
                 handler: function() {
                     Ext.Msg.show({
-                       title:'Delete Folder?',
-                       msg: 'Are you sure you want to delete this folder?',
-                       buttons: Ext.Msg.YESNO,
-                       fn: deletefolder
+                        title:'Delete Folder?',
+                        msg: 'Are you sure you want to delete this folder?',
+                        buttons: Ext.Msg.YESNO,
+                        fn: deletefolder
                     });
                 }
             });
@@ -225,8 +225,8 @@ function showUploadForm(){
         width: 300
     });
     var type= [
-        ['Public'],
-        ['Private']
+    ['Public'],
+    ['Private']
     ];
 
     var typestore = new Ext.data.ArrayStore({
@@ -288,7 +288,7 @@ function showUploadForm(){
             plain: true,
             labelWidth: 155,
             items: [
-                    fp
+            fp
             ]
         });
     }

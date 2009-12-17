@@ -6,6 +6,7 @@
  */
 
 var typeURL;
+var win;
 
 var showButtons = function() {
     // buttons
@@ -120,7 +121,7 @@ var fileTypeAddForm = [{
 }];
 
 var goAddType = function() {
-    var win;
+    
 
     var myForm = new Ext.FormPanel({
         standardSubmit: true,
@@ -140,6 +141,8 @@ var goAddType = function() {
             layout:'fit',
             width: 500,
             height: 200,
+            x: 100,
+            y: 100,
             closeAction:'hide',
             plain: true,
             items: myForm,
