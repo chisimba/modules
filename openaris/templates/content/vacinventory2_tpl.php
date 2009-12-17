@@ -106,7 +106,7 @@ $vaccineSource = new textinput('vaccinesource',$vaccinesource);
 //text input field for lot number
 if(!isset($lotnumber)){
 
-$lotnumber = 0;
+$lotnumber = "NULL";
 }
 $lotNumber = new textinput('lotnumber',$lotnumber);
 

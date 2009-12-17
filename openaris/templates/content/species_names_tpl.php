@@ -71,7 +71,7 @@ $buttonText = 'Save';
 
 $speciesDrop = new dropdown('species');
 $speciesDrop->addOption('','select');
-$speciesDrop->addFromDB($species, 'speciesname', 'speciesname');
+$speciesDrop->addFromDB($species, 'speciesname', 'id');
 
 
 $formTable = $this->newObject('htmltable', 'htmlelements');

@@ -48,6 +48,7 @@ $this->loadClass('fieldset','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
+$this->loadClass('link', 'htmlelements');
 
 $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
@@ -64,9 +65,17 @@ $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
 $objTableArea1->endHeaderRow();
 
+    
 foreach ($outbreaks as $outbreak) {
     $objTableArea1->startRow();
-    $objTableArea1->addCell($outbreak['outbreakCode']);
+    $outbreakcode= $outbreak['outbreakCode'];
+    $LinkUri = $this->uri(array('action'=>'disease_report_screen_2','outbreakCode'=>$outbreakcode));
+
+    $objLink = new link($LinkUri);
+    $objLink->link = $outbreak['outbreakCode'];
+//echo $deLink//;
+
+    $objTableArea1->addCell($objLink->show());
     $objTableArea1->addCell($outbreak['partitionType']);
     $objTableArea1->addCell($outbreak['partitionLevel']);
     $objTableArea1->addCell($outbreak['partitionName']);

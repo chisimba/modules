@@ -74,7 +74,8 @@ class diseasereport extends dbtable {
 			$this->objDiseaseControlMeasure = $this->getObject('diseasecontrolmeasure');
 		   $this->objDiseasespecies = $this->getObject('diseasespecies');
 		   $this->objSpeciesType = $this->getObject('speciestype'); 
-		   $this->objSpeciesNew = $this->getObject('speciesnew');         
+		   $this->objSpeciesNew = $this->getObject('speciesnew');   
+		   $this->objSpeciesNames= $this->getObject('speciesnames');      
 		}
 		catch (customException $e)
 		{
@@ -174,8 +175,10 @@ foreach($disease as $dis) {
 $ddat =$this->objSpeciesType->getRow('id',$speciesId);
 $sdat =$this->objSpeciesNew->getAll("WHERE speciestypeid = '$ddat[id]'");
    foreach($sdat as $ssdat){
-   
-       $dat[$ssdat['id']]=$ssdat['speciesname'];
+  $ndat = $this->objSpeciesNames->getAll("WHERE species_id = '$ssdat[id]'");
+  foreach($ndat as $nndat){
+       $dat[$nndat['id']]=$nndat['common_name'];
+       }
    }
 
     }

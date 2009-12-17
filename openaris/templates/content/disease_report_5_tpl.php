@@ -48,6 +48,7 @@ $this->loadClass('fieldset','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
+$this->loadClass('link', 'htmlelements');
 
 $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
@@ -66,7 +67,13 @@ $objTableArea1->endHeaderRow();
 
 foreach ($outbreaks as $outbreak) {
     $objTableArea1->startRow();
-    $objTableArea1->addCell($outbreak['outbreakCode']);
+       $objTableArea1->startRow();
+    $outbreakcode= $outbreak['outbreakCode'];
+    $LinkUri = $this->uri(array('action'=>'disease_report_screen_5','outbreakCode'=>$outbreakcode));
+
+    $objLink = new link($LinkUri);
+    $objLink->link = $outbreak['outbreakCode'];
+    $objTableArea1->addCell($objLink->show());
     $objTableArea1->addCell($outbreak['partitionType']);
     $objTableArea1->addCell($outbreak['partitionLevel']);
     $objTableArea1->addCell($outbreak['partitionName']);
