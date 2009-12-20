@@ -12,11 +12,11 @@
 class dbtopics  extends dbTable {
 
     public function init() {
-        parent::init('tbl_speak4free_topics');
-        $this->table = 'tbl_speak4free_topics';
+        parent::init('tbl_stories');
+        $this->table = 'tbl_stories';
     }
     public function getTopics() {
-        return $this->getAll('where active = "1"');
+        return $this->getAll();
     }
 
     public function savetopic($title,$content,$active) {
@@ -32,8 +32,8 @@ class dbtopics  extends dbTable {
         return $this->getRow('id',$topicid);
     }
 
-    public function getTopic($id) {
-        return $this->getRow('id',$id);
+    public function getTopic($category) {
+        return $this->getRow('category',$category);
     }
     public function deletetopic($id) {
         $groups=$this->getObject('dbgroups');

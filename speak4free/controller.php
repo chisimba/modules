@@ -1,30 +1,5 @@
 <?php
-/**
- *
- *  PHP version 5
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the
- * Free Software Foundation, Inc.,
- * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * @category  Chisimba
- * @package   webpresent
- * @author    Tohir Solomons, Derek Keats and later modifications by David Wafula
- *
- * @copyright 2008 Free Software Innnovation Unit
- * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @link      http://avoir.uwc.ac.za
- * @see       References to other sections (if any)...
- */
+
 if(!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
@@ -50,6 +25,9 @@ class speak4free extends controller {
         $this->dbtopics=$this->getObject('dbtopics');
         $this->dbgroups=$this->getObject('dbgroups');
         $this->articles=$this->getObject('dbarticles');
+        $this->objFiles = $this->getObject('dbspeak4freefiles');
+        $this->objTags = $this->getObject('dbspeak4freetags');
+        $this->objFileEmbed = $this->getObject('fileembed','filemanager');
     }
     /**
      * Method to override login for certain actions
@@ -152,8 +130,8 @@ class speak4free extends controller {
     }
 
     function __viewstory() {
-        $storyid=$this->getParam('storyid');
-        $this->setVarByRef('storyid',$storyid);
+        $category=$this->getParam('category');
+        $this->setVarByRef('category',$category);
         $this->setVar('pageSuppressToolbar', TRUE);
         return "story_tpl.php";
     }
@@ -211,7 +189,7 @@ class speak4free extends controller {
         $content=$this->getParam('pagecontent');
         $title=$this->getParam('titlefield');
         $topicid=$this->getParam('topicid');
-         $active=$this->getParam('activefield');
+        $active=$this->getParam('activefield');
         $topicid=$this->dbtopics->updateTopic($title,$content,$topicid,$active);
         return $this->nextAction('storyadmin');
     }
@@ -266,7 +244,224 @@ class speak4free extends controller {
         $this->setVarByRef('topicid',$topicid);
         return "articlelist_tpl.php";
     }
+    function __tempiframe() {
+        echo '<pre>';
+        print_r($_GET);
+    }
+    /**
+     * Used to do the actual upload
+     *
+     */
+    function __doajaxupload() {
 
- 
+        $generatedid = $this->getParam('id');
+        $filename = $this->getParam('filename');
+        $id = $this->objFiles->autoCreateTitle();
+        $objMkDir = $this->getObject('mkdir', 'files');
+
+        $destinationDir = $this->objConfig->getcontentBasePath().'/speak4free/'.$id;
+
+        $objMkDir->mkdirs($destinationDir);
+
+        @chmod($destinationDir, 0777);
+
+        $objUpload = $this->newObject('upload', 'files');
+        $objUpload->permittedTypes = array(
+            //video
+            'mov',
+            'wmv',
+            'avi',
+            'flv',
+            'ogg',
+            'mpg',
+            'mpeg',
+            'mp4',
+            //audio
+            'mp3'
+            );
+        $objUpload->overWrite = TRUE;
+        $objUpload->uploadFolder = $destinationDir.'/';
+
+        $result = $objUpload->doUpload(TRUE, $id);
+
+
+        if ($result['success'] == FALSE) {
+            $this->objFiles->removeAutoCreatedTitle($id);
+            rmdir($this->objConfig->getcontentBasePath().'/speak4free/'.$id);
+
+            $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
+
+            return $this->nextAction('erroriframe', array('message'=>'Unsupported file extension.Only use .mov,.wmv, .avi, .flv, .ogg, .mpg, .mpeg, .mp3', 'file'=>$filename, 'id'=>$generatedid));
+        } else {
+
+            $filename = $result['filename'];
+            $mimetype = $result['mimetype'];
+
+            $path_parts = $result['storedname'];
+
+            $ext = $path_parts['extension'];
+
+
+            $file = $this->objConfig->getcontentBasePath().'/speak4free/'.$id.'/'.$id.'.'.$ext;
+
+            if ($ext == 'png') {
+                $rename = $this->objConfig->getcontentBasePath().'/speak4free/'.$id.'/'.$id.'.png';
+
+                rename($file, $rename);
+
+                $filename = $path_parts['filename'].'.png';
+            }
+
+            if ($ext == 'flv') {
+                $rename = $this->objConfig->getcontentBasePath().'/speak4free/'.$id.'/'.$id.'.flv';
+
+                rename($file, $rename);
+
+                $filename = $path_parts['filename'].'.flv';
+            }
+            if (is_file($file)) {
+                @chmod($file, 0777);
+            }
+
+            $this->objFiles->updateReadyForConversion($id, $filename, $mimetype);
+
+            $uploadedFiles = $this->getSession('uploadedfiles', array());
+            $uploadedFiles[] = $id;
+            $this->setSession('uploadedfiles', $uploadedFiles);
+
+            return $this->nextAction('ajaxuploadresults', array('id'=>$generatedid, 'fileid'=>$id, 'filename'=>$filename));
+        }
+    }
+
+
+    /**
+     * Used to push through upload results for AJAX
+     */
+    function __ajaxuploadresults() {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+
+        $fileid = $this->getParam('fileid');
+        $this->setVarByRef('fileid', $fileid);
+
+        $filename = $this->getParam('filename');
+        $this->setVarByRef('filename', $filename);
+
+        return 'ajaxuploadresults_tpl.php';
+    }
+
+    function __upload() {
+        return 'upload_tpl.php';
+    }
+    function __erroriframe() {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+
+        $message = $this->getParam('message');
+        $this->setVarByRef('message', $message);
+
+        return 'erroriframe_tpl.php';
+    }
+
+    function __ajaxprocess() {
+        $this->setPageTemplate(NULL);
+
+        $id = $this->getParam('id');
+
+        $file = $this->objFiles->getFile($id);
+
+        if ($file == FALSE) {
+            return $this->nextAction('home', array('error'=>'norecord'));
+        }
+
+        // Set Filename as title in this process
+        // Based on the filename, it might make it easier for users to complete the name
+        $file['title'] = $file['filename'];
+
+
+        $this->setVarByRef('file', $file);
+        $this->setVarByRef('tags', $tags);
+
+        $this->setVar('mode', 'add');
+
+        return 'process_tpl.php';
+    }
+    function __updatedetails() {
+        $id = $this->getParam('id');
+        $title = $this->getParam('title');
+        $description = $this->getParam('description');
+        $tags = explode(',', $this->getParam('tags'));
+        $newTags = array();
+
+        // Create an Array to store problems
+        $problems = array();
+        // Check that username is available
+        if ($title == '') {
+            $problems[] = 'emptytitle';
+            $title=$id;
+
+        }
+        //
+        // Clean up Spaces
+        foreach ($tags as $tag) {
+            $newTags[] = trim($tag);
+        }
+
+        $tags =  array_unique($newTags);
+        $license = $this->getParam('creativecommons');
+
+        $this->objFiles->updateFileDetails($id, $title, $description, $license);
+        $this->objTags->addTags($id, $tags);
+
+        $file = $this->objFiles->getFile($id);
+        $tags = $this->objTags->getTagsAsArray($id);
+      
+        $file['tags'] = $tags;
+       
+
+        //$this->_prepareDataForSearch($file);
+
+        if (count($problems) > 0) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'process_tpl.php';
+        }else {
+            return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
+        }
+    }
+/**
+     * Method to view the details of a presentation
+     *
+     */
+    function __view()
+    {
+        $id = $this->getParam('id');
+
+        $file = $this->objFiles->getFile($id);
+
+        if ($file == FALSE) {
+            return $this->nextAction('home', array('error'=>'norecord'));
+        }
+
+
+        $tags = $this->objTags->getTags($id);
+
+        $this->setVarByRef('file', $file);
+        $this->setVarByRef('tags', $tags);
+
+        $this->setVar('pageTitle', $this->objConfig->getSiteName().' - '.$file['title']);
+
+
+        return 'view_tpl.php';
+    }
+
 }
 ?>

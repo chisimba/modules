@@ -2,7 +2,7 @@
 /* 
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
- */
+*/
 if (!
 /**
  * Description for $GLOBALS
@@ -21,6 +21,11 @@ class viewerutils extends object {
         $this->storyparser=$this->getObject('storyparser');
         $this->topics=$this->getObject('dbtopics');
         $this->articles=$this->getObject('dbarticles');
+        $this->objFiles = $this->getObject('dbspeak4freefiles');
+        $this->objTags = $this->getObject('dbspeak4freetags');
+        $this->objFileEmbed = $this->getObject('fileembed','filemanager');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objUser=$this->getObject('user','security');
     }
 
     public function getHomePageContent() {
@@ -36,7 +41,7 @@ class viewerutils extends object {
         $navbar='';
 
         foreach($topicsnavs as $nav) {
-        // $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'speak4free', 'status'=>'both');
+            // $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'speak4free', 'status'=>'both');
             $link = new link ($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
             $link->link ='<b>'. $nav['title'].'</b>';
             $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
@@ -152,28 +157,14 @@ class viewerutils extends object {
         return $content;
     }
 
-    public function getTopic($id) {
+    public function getTopic($category) {
 
         $objTrim = $this->getObject('trimstr', 'strings');
         $objStories=$this->getObject('storyparser');
-        $data= $this->topics->getTopic($id);
-        $topicsnavid=$this->objDbSysconfig->getValue('TOPICS_NAV_CATEGORY','speak4free');
-        $topicnavs=$this->topics->getTopics();
-        $link = new link ($this->uri(array('action'=>'home')));
-        $link->link = 'HOME&nbsp;&nbsp;|&nbsp;&nbsp;';
-        $navbar=$link->show();
-        foreach($topicnavs as $nav) {
-            $link = new link ($this->uri(array('action'=>'viewstory','storyid'=>$nav['id'])));
-            $link->link = $nav['title'];
-            $navbar.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
-        }
-        $articlenav='';
-        $articles=$this->articles->getArticles($id);
-        foreach($articles as $nav) {
-            $link = new link ($this->uri(array('action'=>'viewarticle','storyid'=>$id,'articleid'=>$nav['id'])));
-            $link->link = $nav['title'];
-            $articlenav.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
-        }
+        $data= $this->topics->getTopic($category);
+        $homelink=new link($this->uri(array("action"=>"home")));
+        $homelink->link="Home";
+
         $content='';
         $content='
 
@@ -181,14 +172,13 @@ class viewerutils extends object {
 
              <font style="font-family:Arial;font-size:20;">  '.$navbar.'</font><hr>
        
-             Current topic: <font style="font-family:Arial;font-size:18;font-weight:bold;">'.$data['title'].'</font><br/>
-            <font style="font-family:Arial;font-size:14;"> '.$this->objWashout->parseText($data['content']).'</font>
+             <font style="font-family:Arial;font-size:18;font-weight:bold;color:#f68939;">'.$data['title'].'</font><br/>
+            <font style="font-family:Arial;font-size:14;"> '.$this->objWashout->parseText($data['maintext']).'</font>
 
             </ul>
             <br/>
               ';
-        $articles='<div id="articles"><center>'.$articlenav.'</center></div>';
-        return $content.$articles;
+        return $homelink->show().$content;
     }
     public function getArticleContent($storyid,$articleid) {
 
@@ -224,7 +214,7 @@ class viewerutils extends object {
             $link->link=$nav['title'];
             $articles.=$link->show().'&nbsp;&nbsp;|&nbsp;&nbsp;';
         }
-         $articles.='<br/><br/>'.$articlenav.'<br/></div>';
+        $articles.='<br/><br/>'.$articlenav.'<br/></div>';
         $content='';
         $content='
 
@@ -242,6 +232,44 @@ class viewerutils extends object {
         return $content;
     }
 
+    function getLatestUploads() {
+        $files=  $this->objFiles->getLatestUploads();
+        $objAltConfig = $this->getObject('altconfig','config');
+        $latestUploads=array();
+        foreach ($files as $file) {
+            $ext = pathinfo($file['filename']);
+            $ext = $ext['extension'];
+            $fullPath = $this->objConfig->getcontentBasePath().'speak4free/'.$file['id'].'/'.$file['id'].'.'.$ext;
+
+            $replacewith="";
+            $docRoot=$_SERVER['DOCUMENT_ROOT'];
+            $resourcePath=str_replace($docRoot,$replacewith,$fullPath);
+            $codebase="http://" . $_SERVER['HTTP_HOST'].'/'.$resourcePath;
+
+            $fileTypes = array(
+                    'png'=>'image',
+                    'flv'=>'flv',
+                    'mp3'=>'audio',
+                    'mov'=>'quicktime',
+                    'wmv'=>'wmv',
+                    'ogg'=>'ogg',
+                    'mpg'=>'mpg',
+                    'mpeg'=>'mpeg',
+                    'mp4'=>'mp4'
+
+            );
+            foreach ($fileTypes as $fileType=>$fileName) {
+                if($fileType == $ext) {
+                    $latestUploads[] = $this->objFileEmbed->embed($codebase, $fileName,"150","100").
+                            '<br/>By '.$this->objUser->fullname($file['creatorid']).
+                            '<br/>Date '.$file['dateuploaded'];
+                }
+
+            }
+
+        }
+        return $latestUploads;
+    }
 }
 
 ?>

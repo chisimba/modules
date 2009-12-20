@@ -28,15 +28,7 @@ class speak4freetoolbar extends object {
 
         $menuOptions = array();
 
-        $topcatid=$this->objDbSysconfig->getValue('TOP_NAV_CATEGORY','speak4free');
-        $topnavs=$this->storyparser->getStoryByCategory($topcatid);
-
-        foreach($topnavs as $nav) {
-            $menuOptions[]=    array('action'=>'viewstory','storyid'=>$nav['id'], 'text'=>$nav['title'], 'actioncheck'=>array(), 'module'=>'speak4free', 'status'=>'both');
-        }
-
-        $menuOptions[]= array('action'=>'storyadmin', 'text'=>'Content Admin', 'actioncheck'=>array(), 'module'=>'speak4free', 'status'=>'loggedin');
-        $menuOptions[]= array('action'=>NULL, 'text'=>'File manager', 'actioncheck'=>array(), 'module'=>'filemanager', 'status'=>'loggedin');
+        $menuOptions[]= array('action'=>'upload', 'text'=>'Upload', 'actioncheck'=>array(), 'module'=>'speak4free', 'status'=>'loggedin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'My details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin');
 
