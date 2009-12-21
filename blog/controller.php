@@ -23,8 +23,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
-class blog extends controller
-{
+class blog extends controller {
     /**
      * Controller class for the blog module that extends the base controller
      *
@@ -268,8 +267,7 @@ class blog extends controller
      */
     protected $objUserParams;
 
-    public function init()
-    {
+    public function init() {
         try {
             //grab the blogimporter class, just in case we need it.
             //I think that the import stuff should all be done in a seperate module...
@@ -344,11 +342,10 @@ class blog extends controller
      * @param  string $action String indicating action to be taken
      * @return string template
      */
-    public function dispatch($action = Null)
-    {
+    public function dispatch($action = Null) {
         switch ($action) {
             default:
-                //we don't require login - preloin action
+            //we don't require login - preloin action
                 $this->requiresLogin(FALSE);
                 $blog_action = $this->objSysConfig->getValue('blog_action', 'blog');
                 //var_dump($blog_action); die();
@@ -473,10 +470,10 @@ class blog extends controller
                 // $this->setVar('pageSuppressXML', TRUE);
                 return 'randblog_tpl.php';
                 break;
-                // The siteblog function added by Irshaad Hoosain
+            // The siteblog function added by Irshaad Hoosain
 
             case 'siteblog':
-                //get the category ID if any
+            //get the category ID if any
                 $catid = $this->getParam('catid');
                 //grab the user id
                 $userid = 1;
@@ -508,7 +505,7 @@ class blog extends controller
                 break;
 
             case 'viewsingle':
-                //single post view for the bookmarks/comments etc
+            //single post view for the bookmarks/comments etc
                 $comment = $this->getParam('comment');
                 $useremail = $this->getParam('useremail');
                 //echo $comment, $useremail;
@@ -536,7 +533,7 @@ class blog extends controller
                 break;
 
             case 'setupmail':
-                //check that the person trying to set this up is logged in and an admin
+            //check that the person trying to set this up is logged in and an admin
                 if ($this->objUser->isLoggedIn() == FALSE || $this->objUser->inAdminGroup($this->objUser->userId()) == FALSE) {
                     //user is not logged in, bust out of this case and go to the default
                     $this->nextAction('');
@@ -554,7 +551,7 @@ class blog extends controller
                     }
                     //create the DSN
                     $newsettings = array(
-                        "BLOG_MAIL_DSN" => $sprot . '://' . $muser . ':' . $mpass . '@' . $mserver . ':' . $mport . '/' . $mbox
+                            "BLOG_MAIL_DSN" => $sprot . '://' . $muser . ':' . $mpass . '@' . $mserver . ':' . $mport . '/' . $mbox
                     );
                     $this->objblogExtras->setupConfig($newsettings);
                     $this->nextAction('');
@@ -572,7 +569,7 @@ class blog extends controller
                 break;
 
             case 'importblog':
-                //check if the user is logged in
+            //check if the user is logged in
                 if ($this->objUser->isLoggedIn() == FALSE) {
                     //no, redirect to the main blog page
                     $this->nextAction('');
@@ -595,17 +592,17 @@ class blog extends controller
                         foreach($blog as $blogs) {
                             //create the post array in a format the this blog can understand...
                             $postarr = array(
-                                'userid' => $userid,
-                                'postdate' => strtotime($blogs['dateadded']) ,
-                                'postcontent' => $this->objblogOps->html2txt(htmlentities($blogs['content']) , TRUE) ,
-                                'posttitle' => $this->objblogOps->html2txt(htmlentities($blogs['title']) , TRUE) ,
-                                'postcat' => 0,
-                                'postexcerpt' => $this->objblogOps->html2txt(htmlentities($blogs['headline']) , TRUE) ,
-                                'poststatus' => 0,
-                                'commentstatus' => 'Y',
-                                'postmodified' => $blogs['dateadded'],
-                                'commentcount' => 0,
-                                'postdate' => $blogs['dateadded']
+                                    'userid' => $userid,
+                                    'postdate' => strtotime($blogs['dateadded']) ,
+                                    'postcontent' => $this->objblogOps->html2txt(htmlentities($blogs['content']) , TRUE) ,
+                                    'posttitle' => $this->objblogOps->html2txt(htmlentities($blogs['title']) , TRUE) ,
+                                    'postcat' => 0,
+                                    'postexcerpt' => $this->objblogOps->html2txt(htmlentities($blogs['headline']) , TRUE) ,
+                                    'poststatus' => 0,
+                                    'commentstatus' => 'Y',
+                                    'postmodified' => $blogs['dateadded'],
+                                    'commentcount' => 0,
+                                    'postdate' => $blogs['dateadded']
                             );
                             //use the insertPost methods to populate...
                             $this->objblogPosts->quickPostAdd($userid, $postarr, 'import');
@@ -624,7 +621,7 @@ class blog extends controller
                 break;
 
             case 'importallblogs':
-                //check if the user is logged in
+            //check if the user is logged in
                 if ($this->objUser->isLoggedIn() == FALSE) {
                     //no, redirect to the main blog page
                     $this->nextAction('');
@@ -652,17 +649,17 @@ class blog extends controller
                                 $userid = $userArr[0]['userid'];
                                 // create the post array in a format the this blog can understand...
                                 $postarr = array(
-                                    'userid' => $userid,
-                                    'postdate' => strtotime($blogs['dateadded']) ,
-                                    'postcontent' => $this->objblogOps->html2txt(htmlentities($blogs['content']) , TRUE) ,
-                                    'posttitle' => $this->objblogOps->html2txt(htmlentities($blogs['title']) , TRUE) ,
-                                    'postcat' => 0,
-                                    'postexcerpt' => $this->objblogOps->html2txt(htmlentities($blogs['headline']) , TRUE) ,
-                                    'poststatus' => 0,
-                                    'commentstatus' => 'Y',
-                                    'postmodified' => $blogs['dateadded'],
-                                    'commentcount' => 0,
-                                    'postdate' => $blogs['dateadded']
+                                        'userid' => $userid,
+                                        'postdate' => strtotime($blogs['dateadded']) ,
+                                        'postcontent' => $this->objblogOps->html2txt(htmlentities($blogs['content']) , TRUE) ,
+                                        'posttitle' => $this->objblogOps->html2txt(htmlentities($blogs['title']) , TRUE) ,
+                                        'postcat' => 0,
+                                        'postexcerpt' => $this->objblogOps->html2txt(htmlentities($blogs['headline']) , TRUE) ,
+                                        'poststatus' => 0,
+                                        'commentstatus' => 'Y',
+                                        'postmodified' => $blogs['dateadded'],
+                                        'commentcount' => 0,
+                                        'postdate' => $blogs['dateadded']
                                 );
                                 //use the insertPost methods to populate...
                                 $this->objblogPosts->quickPostAdd($userid, $postarr, 'import');
@@ -680,15 +677,15 @@ class blog extends controller
                 break;
 
             case 'feedurl':
-                //get the feed format parameter from the querystring
+            //get the feed format parameter from the querystring
                 $format = $this->getParam('feedselector');
                 //and the userid of the blog we are interested in
                 $userid = $this->getParam('userid');
                 // Create the feed url
                 $url = $this->uri(array(
-                    'action' => 'feed',
-                    'feedselector' => $format,
-                    'userid' => $userid
+                        'action' => 'feed',
+                        'feedselector' => $format,
+                        'userid' => $userid
                 ));
                 $this->setVarByRef('feed', $url);
                 // $this->setVar('pageSuppressXML', TRUE);
@@ -696,7 +693,7 @@ class blog extends controller
                 break;
 
             case 'feed':
-                //get the feed format parameter from the querystring
+            //get the feed format parameter from the querystring
                 $format = $this->getParam('feedselector');
                 //and the userid of the blog we are interested in
                 $userid = $this->getParam('userid');
@@ -738,9 +735,9 @@ class blog extends controller
                     //use the post title as the feed item title
                     $itemTitle = $feeditems['post_title'];
                     $itemLink = $this->uri(array(
-                        'action' => 'viewsingle',
-                        'postid' => $feeditems['id'],
-                        'userid' => $userid
+                            'action' => 'viewsingle',
+                            'postid' => $feeditems['id'],
+                            'userid' => $userid
                     )); //todo - add this to the posts table!
                     //description
                     $itemDescription = stripslashes($feeditems['post_content']);
@@ -841,9 +838,9 @@ class blog extends controller
                     //use the post title as the feed item title
                     $itemTitle = $feeditems['comment_author'];
                     $itemLink = $this->uri(array(
-                        'action' => 'viewsingle',
-                        'postid' => $feeditems['comment_parentid'],
-                        'userid' => $userid
+                            'action' => 'viewsingle',
+                            'postid' => $feeditems['comment_parentid'],
+                            'userid' => $userid
                     ));
                     //description
                     $itemDescription = $feeditems['comment_content'];
@@ -944,10 +941,12 @@ class blog extends controller
                 break;
 
             case 'viewblog':
-                //get the category ID if any
+
+               //get the category ID if any
                 $catid = $this->getParam('catid');
                 //grab the user id
                 $userid = $this->getParam('userid');
+
                 if ($userid == '') {
                     //fix the user id just in case
                     if ($this->objUser->isLoggedIn() == TRUE) {
@@ -957,6 +956,7 @@ class blog extends controller
                         exit;
                     }
                 }
+
                 //get the category tree
                 $catarr = $this->objDbBlog->getCatsTree($userid);
                 //get the links categories
@@ -992,7 +992,7 @@ class blog extends controller
                 break;
 
             case 'viewblogbytag':
-                //get the tag
+            //get the tag
                 $tag = $this->getParam('tag');
                 //grab the user id
                 $userid = $this->getParam('userid');
@@ -1023,8 +1023,7 @@ class blog extends controller
                 $stickypost = $this->objDbBlog->getStickyPosts($userid);
                 $this->setVarByRef('stickypost', $stickypost);
                 //send all that to the template
-                if(!isset($catid))
-                {
+                if(!isset($catid)) {
                     $catid = NULL;
                 }
                 $this->setVarByRef('catid', $catid);
@@ -1038,7 +1037,7 @@ class blog extends controller
                 break;
 
             case 'blogadmin':
-                //make sure the user is logged in
+            //make sure the user is logged in
                 if ($this->objUser->isLoggedIn() == FALSE) {
                     //bail to the default page
                     $this->nextAction('');
@@ -1049,7 +1048,7 @@ class blog extends controller
                 $userid = $this->objUser->userId();
                 $this->setVarByRef('userid', $userid);
                 // Check if the user is allowed to blog - added Dec 2008
-                if (!($this->approvedBlogger())){
+                if (!($this->approvedBlogger())) {
                     return 'not_approved_tpl.php';
                     exit;
                 }
@@ -1065,15 +1064,15 @@ class blog extends controller
                 //check the mode
                 $mode = $this->getParam('mode');
                 switch ($mode) {
-                        //return a specific template for the chosen mode
+                    //return a specific template for the chosen mode
 
                     case 'writepost':
                         return 'writepost_tpl.php';
                         break;
 
                     case 'editpost':
-                        //$this->setPageTemplate(NULL);
-                        //$this->setLayoutTemplate(NULL);
+                    //$this->setPageTemplate(NULL);
+                    //$this->setLayoutTemplate(NULL);
                         return 'editpost_tpl.php';
                         break;
 
@@ -1112,8 +1111,8 @@ class blog extends controller
                 break;
 
             case 'catadd':
-                //add a category
-                //check for login
+            //add a category
+            //check for login
                 if ($this->objUser->isLoggedIn() == FALSE) {
                     //not logged in - send to default action
                     $this->nextAction('');
@@ -1143,12 +1142,12 @@ class blog extends controller
                     //build the array again
                     $entry = $this->objDbBlog->getCatForEdit($userid, $id);
                     $catarr = array(
-                        'userid' => $userid,
-                        'cat_name' => $entry['cat_name'],
-                        'cat_nicename' => $entry['cat_nicename'],
-                        'cat_desc' => $entry['cat_desc'],
-                        'cat_parent' => $entry['cat_parent'],
-                        'id' => $id
+                            'userid' => $userid,
+                            'cat_name' => $entry['cat_name'],
+                            'cat_nicename' => $entry['cat_nicename'],
+                            'cat_desc' => $entry['cat_desc'],
+                            'cat_parent' => $entry['cat_parent'],
+                            'id' => $id
                     );
                     //display the cat editor with the values in the array, set that form to editcommit
                     $this->setVarByRef('catarr', $catarr);
@@ -1159,30 +1158,30 @@ class blog extends controller
                 }
                 if ($mode == 'editcommit') {
                     $catarr = array(
-                        'userid' => $userid,
-                        'cat_name' => $catname,
-                        'cat_nicename' => $catname,
-                        'cat_desc' => $catdesc,
-                        'cat_parent' => $catparent,
-                        'id' => $id
+                            'userid' => $userid,
+                            'cat_name' => $catname,
+                            'cat_nicename' => $catname,
+                            'cat_desc' => $catdesc,
+                            'cat_parent' => $catparent,
+                            'id' => $id
                     );
                     $this->objDbBlog->setCats($userid, $catarr, $mode);
                     $this->nextAction('blogadmin', array(
-                        'mode' => 'editcats'
+                            'mode' => 'editcats'
                     ));
                 }
                 if ($mode == NULL) {
                     $catarr = array(
-                        'userid' => $userid,
-                        'cat_name' => $catname,
-                        'cat_nicename' => $catname,
-                        'cat_desc' => $catdesc,
-                        'cat_parent' => $catparent
+                            'userid' => $userid,
+                            'cat_name' => $catname,
+                            'cat_nicename' => $catname,
+                            'cat_desc' => $catdesc,
+                            'cat_parent' => $catparent
                     );
                     //insert the category into the db
                     $this->objDbBlog->setCats($userid, $catarr);
                     $this->nextAction('blogadmin', array(
-                        'mode' => 'editcats'
+                            'mode' => 'editcats'
                     ));
                     break;
                 }
@@ -1191,17 +1190,17 @@ class blog extends controller
             case "add":
                 $this->objIcon = &$this->getObject('geticon', 'htmlelements');
                 $edIcon = $this->objIcon->getEditIcon($this->uri(array(
-                    'action' => 'postedit',
-                    'id' => $post['id'],
-                    'module' => 'blog'
+                        'action' => 'postedit',
+                        'id' => $post['id'],
+                        'module' => 'blog'
                 )));
                 $commentLink = $this->objComments->addCommentLink($type = NULL);
                 return "input_tpl.php";
                 break;
 
             case 'postadd':
-                //Added by Ishaad Hoosain for siteblog
-                //if user clicked checkbox he is admin
+            //Added by Ishaad Hoosain for siteblog
+            //if user clicked checkbox he is admin
                 if ($this->objUser->isLoggedIn() == FALSE) {
                     $this->nextAction('');
                     exit;
@@ -1228,8 +1227,7 @@ class blog extends controller
                 $tags = $this->getParam('tags');
                 $tagarray = explode(",", $tags);
                 $geotags = $this->getParam('geotag');
-                if(isset($geotags[0]) && isset($geotags[1]))
-                {
+                if(isset($geotags[0]) && isset($geotags[1])) {
                     $geotags = explode(', ', $geotags);
                     $lat = $geotags[0];
                     $lon = $geotags[1];
@@ -1252,37 +1250,37 @@ class blog extends controller
                 //post quick add
                 if ($mode == 'quickadd') {
                     $this->objblogPosts->quickPostAdd($userid, array(
-                        'posttitle' => $posttitle,
-                        'postcontent' => nl2br(htmlentities($postcontent)) ,
-                        'postcat' => $cat,
-                        'postexcerpt' => '',
-                        'poststatus' => '0',
-                        'commentstatus' => 'Y',
-                        'postmodified' => date('r') ,
-                        'commentcount' => 0,
-                        'postdate' => $postdate,
-                        'cclic' => $cclic
+                            'posttitle' => $posttitle,
+                            'postcontent' => nl2br(htmlentities($postcontent)) ,
+                            'postcat' => $cat,
+                            'postexcerpt' => '',
+                            'poststatus' => '0',
+                            'commentstatus' => 'Y',
+                            'postmodified' => date('r') ,
+                            'commentcount' => 0,
+                            'postdate' => $postdate,
+                            'cclic' => $cclic
                     ));
                     $this->nextAction('viewblog');
                     break;
                 } elseif ($mode == 'editpost') {
                     $insarredit = array(
-                        'id' => $id,
-                        'posttitle' => $posttitle,
-                        'postcontent' => $postcontent,
-                        'postcat' => $cat,
-                        'postexcerpt' => $excerpt,
-                        'poststatus' => $status,
-                        'commentstatus' => $commentsallowed,
-                        'postmodified' => date('r') ,
-                        'commentcount' => 0,
-                        'postdate' => $postdate,
-                        'postts' => $postts,
-                        'cclic' => $cclic,
-                        'stickypost' => $stickypost,
-                        'showpdf' => $showpdf,
-                        'geolat' => $lat,
-                        'geolon' => $lon,
+                            'id' => $id,
+                            'posttitle' => $posttitle,
+                            'postcontent' => $postcontent,
+                            'postcat' => $cat,
+                            'postexcerpt' => $excerpt,
+                            'poststatus' => $status,
+                            'commentstatus' => $commentsallowed,
+                            'postmodified' => date('r') ,
+                            'commentcount' => 0,
+                            'postdate' => $postdate,
+                            'postts' => $postts,
+                            'cclic' => $cclic,
+                            'stickypost' => $stickypost,
+                            'showpdf' => $showpdf,
+                            'geolat' => $lat,
+                            'geolon' => $lon,
                     );
                     $this->objblogPosts->quickPostAdd($userid, $insarredit, $mode);
                     if (!empty($tagarray) && $tagarray[0] != "") {
@@ -1315,21 +1313,21 @@ class blog extends controller
                     break;
                 } else {
                     $this->objblogPosts->quickPostAdd($userid, array(
-                        'id' => $id,
-                        'posttitle' => $posttitle,
-                        'postcontent' => $postcontent,
-                        'postcat' => $cat,
-                        'postexcerpt' => $excerpt,
-                        'poststatus' => $status,
-                        'commentstatus' => $commentsallowed,
-                        'postmodified' => date('r') ,
-                        'commentcount' => 0,
-                        'postdate' => $postdate,
-                        'cclic' => $cclic,
-                        'stickypost' => $stickypost,
-                        'showpdf' => $showpdf,
-                        'geolat' => $lat,
-                        'geolon' => $lon,
+                            'id' => $id,
+                            'posttitle' => $posttitle,
+                            'postcontent' => $postcontent,
+                            'postcat' => $cat,
+                            'postexcerpt' => $excerpt,
+                            'poststatus' => $status,
+                            'commentstatus' => $commentsallowed,
+                            'postmodified' => date('r') ,
+                            'commentcount' => 0,
+                            'postdate' => $postdate,
+                            'cclic' => $cclic,
+                            'stickypost' => $stickypost,
+                            'showpdf' => $showpdf,
+                            'geolat' => $lat,
+                            'geolon' => $lon,
                     ));
                     //dump in the tags
                     if (!empty($tagarray) && $tagarray[0] != "") {
@@ -1371,8 +1369,8 @@ class blog extends controller
                             return $this->nextAction($nextAction);
                         }
                         return $this->nextAction('blogadmin', array(
-                                    'mode' => 'editpost'
-                               ));
+                                'mode' => 'editpost'
+                        ));
                     } else {
                         return $this->nextAction(NULL);
                     }
@@ -1396,7 +1394,7 @@ class blog extends controller
                         $this->objDbBlog->deletePost($deletes);
                     }
                     $this->nextAction('blogadmin', array(
-                        'mode' => 'editpost'
+                            'mode' => 'editpost'
                     ));
                 }
                 //print_r($delarr); die();
@@ -1428,16 +1426,16 @@ class blog extends controller
                 foreach($posts as $post) {
                     //update the found posts and set their cat to '0'
                     $insarredit = array(
-                        'id' => $post['id'],
-                        'posttitle' => $post['post_title'],
-                        'postcontent' => $post['post_content'],
-                        'postcat' => 0,
-                        'postexcerpt' => $post['post_excerpt'],
-                        'poststatus' => $post['post_status'],
-                        'commentstatus' => $post['comment_status'],
-                        'postmodified' => $post['post_modified'],
-                        'commentcount' => $post['comment_count'],
-                        'postdate' => $post['post_date']
+                            'id' => $post['id'],
+                            'posttitle' => $post['post_title'],
+                            'postcontent' => $post['post_content'],
+                            'postcat' => 0,
+                            'postexcerpt' => $post['post_excerpt'],
+                            'poststatus' => $post['post_status'],
+                            'commentstatus' => $post['comment_status'],
+                            'postmodified' => $post['post_modified'],
+                            'commentcount' => $post['comment_count'],
+                            'postdate' => $post['post_date']
                     );
                     $this->objblogPosts->quickPostAdd($userid, $insarredit, 'editcommit');
                 }
@@ -1445,7 +1443,7 @@ class blog extends controller
                 $this->objDbBlog->deleteCat($id);
                 //nextaction back to the cats view thing
                 $this->nextAction('blogadmin', array(
-                    'mode' => 'editcats'
+                        'mode' => 'editcats'
                 ));
                 break;
 
@@ -1460,30 +1458,30 @@ class blog extends controller
                 //echo the cloud out
                 //this action is a test action, this functionality will be moved to blogops soon.
                 $tagarray = array(
-                    array(
-                        'name' => 'PHP',
-                        'url' => 'http://www.php.net',
-                        'weight' => 1000,
-                        'time' => strtotime('-56 days')
-                    ) ,
-                    array(
-                        'name' => 'Google SA',
-                        'url' => 'http://www.google.co.za',
-                        'weight' => 1250,
-                        'time' => strtotime('-6 days')
-                    ) , //strtotime('-3 days')),
-                    array(
-                        'name' => 'AVOIR',
-                        'url' => 'http://avoir.uwc.ac.za',
-                        'weight' => 1950,
-                        'time' => time()
-                    ) ,
-                    array(
-                        'name' => 'FSIU',
-                        'url' => 'http://fsiu.uwc.ac.za',
-                        'weight' => 1560,
-                        'time' => time()
-                    )
+                        array(
+                                'name' => 'PHP',
+                                'url' => 'http://www.php.net',
+                                'weight' => 1000,
+                                'time' => strtotime('-56 days')
+                        ) ,
+                        array(
+                                'name' => 'Google SA',
+                                'url' => 'http://www.google.co.za',
+                                'weight' => 1250,
+                                'time' => strtotime('-6 days')
+                        ) , //strtotime('-3 days')),
+                        array(
+                                'name' => 'AVOIR',
+                                'url' => 'http://avoir.uwc.ac.za',
+                                'weight' => 1950,
+                                'time' => time()
+                        ) ,
+                        array(
+                                'name' => 'FSIU',
+                                'url' => 'http://fsiu.uwc.ac.za',
+                                'weight' => 1560,
+                                'time' => time()
+                        )
                 );
                 print $this->objTC->buildCloud($tagarray);
                 break;
@@ -1502,10 +1500,10 @@ class blog extends controller
                 //do a check to see if it is valid
                 if (!isset($data['title']) || !isset($data['excerpt']) || !isset($data['url']) || !isset($data['blog_name'])) {
                     $theurl = $this->uri(array(
-                        'action' => $req['action'],
-                        'module' => $req['module'],
-                        'userid' => $req['userid'],
-                        'postid' => $req['postid']
+                            'action' => $req['action'],
+                            'module' => $req['module'],
+                            'userid' => $req['userid'],
+                            'postid' => $req['postid']
                     ));
                     $this->setVarByRef('theurl', $theurl);
                     return 'tburl_tpl.php';
@@ -1515,19 +1513,19 @@ class blog extends controller
                 $dnsbl = new Net_DNSBL();
                 $remoteIP = $pd['host'];
                 $dnsbl->setBlacklists(array(
-                    'dul.dnsbl.sorbs.net',
-                    'rhsbl.sorbs.net',
-                    'http.dnsbl.sorbs.net',
-                    'socks.dnsbl.sorbs.net',
-                    'misc.dnsbl.sorbs.net',
-                    'smtp.dnsbl.sorbs.net',
-                    'web.dnsbl.sorbs.net',
-                    'block.dnsbl.sorbs.net',
-                    'zombie.dnsbl.sorbs.net',
-                    'badconf.rhsbl.sorbs.net',
-                    'sbl.spamhaus.org',
-                    'dnsbl.njabl.org',
-                    'relays.ordb.org'
+                        'dul.dnsbl.sorbs.net',
+                        'rhsbl.sorbs.net',
+                        'http.dnsbl.sorbs.net',
+                        'socks.dnsbl.sorbs.net',
+                        'misc.dnsbl.sorbs.net',
+                        'smtp.dnsbl.sorbs.net',
+                        'web.dnsbl.sorbs.net',
+                        'block.dnsbl.sorbs.net',
+                        'zombie.dnsbl.sorbs.net',
+                        'badconf.rhsbl.sorbs.net',
+                        'sbl.spamhaus.org',
+                        'dnsbl.njabl.org',
+                        'relays.ordb.org'
                 ));
                 if ($dnsbl->isListed($remoteIP)) {
                     return 'tburl_tpl.php';
@@ -1535,11 +1533,11 @@ class blog extends controller
                     //add the $data array to a db table
                     $this->objDbBlog->setTrackback($data);
                     $options = array(
-                        // Options for trackback directly
-                        'strictness' => 1,
-                        'timeout' => 30, // seconds
-                        'fetchlines' => 30,
-                        'fetchextra' => true,
+                            // Options for trackback directly
+                            'strictness' => 1,
+                            'timeout' => 30, // seconds
+                            'fetchlines' => 30,
+                            'fetchextra' => true,
                     );
                     $this->objTB = $this->getObject("trackback");
                     //use the factory
@@ -1563,12 +1561,12 @@ class blog extends controller
                 $trackback_url = $this->getParam('tburl');
                 $extra = $this->getParam('extra');
                 $tbarr = array(
-                    'postid' => $postid,
-                    'title' => $title,
-                    'excerpt' => $excerpt,
-                    'blog_name' => $blog_name,
-                    'url' => $url,
-                    'trackback_url' => $trackback_url
+                        'postid' => $postid,
+                        'title' => $title,
+                        'excerpt' => $excerpt,
+                        'blog_name' => $blog_name,
+                        'url' => $url,
+                        'trackback_url' => $trackback_url
                 );
                 $this->setVarByRef('tbarr', $tbarr);
                 //check that all necessary params arre there, otherwise return the template again...
@@ -1578,49 +1576,49 @@ class blog extends controller
                 }
                 //otherwise simply send the trackback and return to the blog. :)
                 $data = array(
-                    'id' => $postid,
-                    'title' => $title,
-                    'excerpt' => $excerpt,
-                    'blog_name' => $blog_name,
-                    'url' => $url,
-                    'trackback_url' => $trackback_url,
-                    'extra' => $extra
+                        'id' => $postid,
+                        'title' => $title,
+                        'excerpt' => $excerpt,
+                        'blog_name' => $blog_name,
+                        'url' => $url,
+                        'trackback_url' => $trackback_url,
+                        'extra' => $extra
                 );
                 //get the proxy info if set
                 $proxyArr = $this->objProxy->getProxy();
                 if (isset($proxyArr['proxy_host'])) {
                     $options = array(
-                        // Options for Services_Trackback directly
-                        'strictness' => 1,
-                        'timeout' => 30, // seconds
-                        'fetchlines' => 30,
-                        'fetchextra' => true,
-                        // Options for HTTP_Request class
-                        'httprequest' => array(
-                            'allowRedirects' => true,
-                            'maxRedirects' => 2,
-                            'method' => 'POST',
-                            'useragent' => 'Chisimba',
-                            'proxy_host' => $proxyArr['proxy_host'],
-                            'proxy_port' => $proxyArr['proxy_port'],
-                            'proxy_user' => $proxyArr['proxy_user'],
-                            'proxy_pass' => $proxyArr['proxy_pass']
-                        ) ,
+                            // Options for Services_Trackback directly
+                            'strictness' => 1,
+                            'timeout' => 30, // seconds
+                            'fetchlines' => 30,
+                            'fetchextra' => true,
+                            // Options for HTTP_Request class
+                            'httprequest' => array(
+                                    'allowRedirects' => true,
+                                    'maxRedirects' => 2,
+                                    'method' => 'POST',
+                                    'useragent' => 'Chisimba',
+                                    'proxy_host' => $proxyArr['proxy_host'],
+                                    'proxy_port' => $proxyArr['proxy_port'],
+                                    'proxy_user' => $proxyArr['proxy_user'],
+                                    'proxy_pass' => $proxyArr['proxy_pass']
+                            ) ,
                     );
                 } else {
                     $options = array(
-                        // Options for Services_Trackback directly
-                        'strictness' => 1,
-                        'timeout' => 30, // seconds
-                        'fetchlines' => 30,
-                        'fetchextra' => true,
-                        // Options for HTTP_Request class
-                        'httprequest' => array(
-                            'allowRedirects' => true,
-                            'maxRedirects' => 2,
-                            'method' => 'POST',
-                            'useragent' => 'Chisimba',
-                        ) ,
+                            // Options for Services_Trackback directly
+                            'strictness' => 1,
+                            'timeout' => 30, // seconds
+                            'fetchlines' => 30,
+                            'fetchextra' => true,
+                            // Options for HTTP_Request class
+                            'httprequest' => array(
+                                    'allowRedirects' => true,
+                                    'maxRedirects' => 2,
+                                    'method' => 'POST',
+                                    'useragent' => 'Chisimba',
+                            ) ,
                     );
                 }
                 try {
@@ -1648,7 +1646,7 @@ class blog extends controller
                 break;
 
             case "addmetadata":
-                //metadata can be a tag, a keyword or whatever else you want about a post
+            //metadata can be a tag, a keyword or whatever else you want about a post
                 $userid = $this->getParam('userid');
                 $postid = $this->getParam('postid');
                 $metakey = $this->getParam('metakey');
@@ -1673,14 +1671,14 @@ class blog extends controller
                 }
                 //all set to go, lets insert it to the db...
                 $insarr = array(
-                    'userid' => $userid,
-                    'post_id' => $postid,
-                    'meta_key' => $metakey,
-                    'meta_value' => $metavalue
+                        'userid' => $userid,
+                        'post_id' => $postid,
+                        'meta_key' => $metakey,
+                        'meta_value' => $metavalue
                 );
                 $ret = $this->objDbBlog->insertMeta($insarr);
                 $this->nextAction('postedit', array(
-                    'id' => $postid
+                        'id' => $postid
                 ));
                 break;
 
@@ -1715,12 +1713,12 @@ class blog extends controller
                 //put in a timestamp
                 $addtime = time();
                 $addarr = array(
-                    'userid' => $userid,
-                    'url' => $rssurl,
-                    'name' => $rssname,
-                    'description' => $rssdesc,
-                    'rsscache' => htmlentities($rsscache) ,
-                    'rsstime' => $addtime
+                        'userid' => $userid,
+                        'url' => $rssurl,
+                        'name' => $rssname,
+                        'description' => $rssdesc,
+                        'rsscache' => htmlentities($rsscache) ,
+                        'rsstime' => $addtime
                 );
                 //write the file down for caching
                 //check that the blog dir exists
@@ -1750,12 +1748,12 @@ class blog extends controller
                 $rssname = htmlentities($rssname, ENT_QUOTES);
                 $rssdesc = htmlentities($rssdesc, ENT_QUOTES);
                 $addarr = array(
-                    'userid' => $userid,
-                    'url' => $rssurl,
-                    'name' => $rssname,
-                    'description' => $rssdesc,
-                    'rsscache' => $filename,
-                    'rsstime' => $rsstime
+                        'userid' => $userid,
+                        'url' => $rssurl,
+                        'name' => $rssname,
+                        'description' => $rssdesc,
+                        'rsscache' => $filename,
+                        'rsstime' => $rsstime
                 );
                 $this->objDbBlog->addRss($addarr);
                 $this->nextAction('viewblog');
@@ -1770,11 +1768,11 @@ class blog extends controller
                 $id = $this->getParam('id');
                 if ($mode == 'edit') {
                     $addarr = array(
-                        'id' => $id,
-                        'userid' => $userid,
-                        'url' => $rssurl,
-                        'name' => $rssname,
-                        'description' => $rssdesc
+                            'id' => $id,
+                            'userid' => $userid,
+                            'url' => $rssurl,
+                            'name' => $rssname,
+                            'description' => $rssdesc
                     );
                     $this->objDbBlog->addRss($addarr, 'edit');
                 }
@@ -1794,7 +1792,7 @@ class blog extends controller
                 break;
 
             case 'setprofile':
-                //profile stuff
+            //profile stuff
                 $mode = $this->getParam('mode');
                 $userid = $this->objUser->userId();
                 //ok lets check if this user already has a profile or not...
@@ -1811,10 +1809,10 @@ class blog extends controller
                     $blogprofile = addslashes($this->getParam('blogprofile'));
                     //save the profile to the table
                     $prfarr = array(
-                        'userid' => $userid,
-                        'blog_name' => $blogname,
-                        'blog_descrip' => $blogdesc,
-                        'blogger_profile' => $blogprofile
+                            'userid' => $userid,
+                            'blog_name' => $blogname,
+                            'blog_descrip' => $blogdesc,
+                            'blogger_profile' => $blogprofile
                     );
                     $this->objDbBlog->saveProfile($prfarr);
                     $this->nextAction('viewblog');
@@ -1836,11 +1834,11 @@ class blog extends controller
                     $blogprofile = addslashes($this->getParam('blogprofile'));
                     //save the profile to the table
                     $prfarr = array(
-                        'id' => $id,
-                        'userid' => $userid,
-                        'blog_name' => $blogname,
-                        'blog_descrip' => $blogdesc,
-                        'blogger_profile' => $blogprofile
+                            'id' => $id,
+                            'userid' => $userid,
+                            'blog_name' => $blogname,
+                            'blog_descrip' => $blogdesc,
+                            'blogger_profile' => $blogprofile
                     );
                     $this->objDbBlog->updateProfile($prfarr);
                     $this->nextAction('viewblog');
@@ -1889,8 +1887,8 @@ class blog extends controller
                 $sendername = $this->getParam('sendername');
                 if (empty($emailadd[0])) {
                     $m2fdata = array(
-                        'bloggerid' => $bloggerid,
-                        'postid' => $postid
+                            'bloggerid' => $bloggerid,
+                            'postid' => $postid
                     );
                     $this->setVarByRef('m2fdata', $m2fdata);
                     //show the form
@@ -1904,8 +1902,7 @@ class blog extends controller
                     //print_r($matches);
                     $mcount = 0;
                     foreach($matches as $match) {
-                        if(isset($match[$mcount]))
-                        {
+                        if(isset($match[$mcount])) {
                             $postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='" . $match[$mcount] . "'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
                         }
                         $mcount++;
@@ -1914,12 +1911,12 @@ class blog extends controller
                     $objMailer = $this->getObject('email', 'mail');
                     //munge together the bodyText...
                     $bodyText = $this->objLanguage->languageText("mod_blog_yourfriend", "blog") . ", " . $sendername . ", " . $this->objLanguage->languageText("mod_blog_interestedin", "blog") . ": <br /> " . "<a href='" . $this->uri(array(
-                        'action' => 'viewsingle',
-                        'postid' => $postid
-                    ) , 'blog') . "'>" . $this->uri(array(
-                        'action' => 'viewsingle',
-                        'postid' => $postid
-                    ) , 'blog') . "</a>";
+                            'action' => 'viewsingle',
+                            'postid' => $postid
+                            ) , 'blog') . "'>" . $this->uri(array(
+                            'action' => 'viewsingle',
+                            'postid' => $postid
+                            ) , 'blog') . "</a>";
                     $bodyText.= "<br /><br />";
                     if (!empty($message)) {
                         $bodyText.= $this->objLanguage->languageText("mod_blog_additionalcomments", "blog") . ": <br />";
@@ -2014,7 +2011,7 @@ class blog extends controller
                 break;
 
             case 'addlink':
-                //do some catching and inserting
+            //do some catching and inserting
                 $mode = $this->getParam('mode');
                 if ($mode == 'edit') {
                     $id = $this->getParam('id');
@@ -2031,21 +2028,21 @@ class blog extends controller
                 //echo $lurl, $lname, $ldescription, $ltarget, $ltype, $lnotes;
                 //create the insert array and pop into the db
                 $insarr = array(
-                    'userid' => $this->objUser->userId() ,
-                    'link_url' => $lurl,
-                    'link_name' => $lname,
-                    'link_image' => '',
-                    'link_target' => $ltarget,
-                    'link_category' => 'default',
-                    'link_description' => $ldescription,
-                    'link_visible' => '1',
-                    'link_owner' => $this->objUser->userName($this->objUser->userId()) ,
-                    'link_rating' => 0,
-                    'link_updated' => time() ,
-                    'link_rel' => '',
-                    'link_notes' => $lnotes,
-                    'link_rss' => '',
-                    'link_type' => $ltype
+                        'userid' => $this->objUser->userId() ,
+                        'link_url' => $lurl,
+                        'link_name' => $lname,
+                        'link_image' => '',
+                        'link_target' => $ltarget,
+                        'link_category' => 'default',
+                        'link_description' => $ldescription,
+                        'link_visible' => '1',
+                        'link_owner' => $this->objUser->userName($this->objUser->userId()) ,
+                        'link_rating' => 0,
+                        'link_updated' => time() ,
+                        'link_rel' => '',
+                        'link_notes' => $lnotes,
+                        'link_rss' => '',
+                        'link_type' => $ltype
                 );
                 $this->objDbBlog->insertUserLink($insarr);
                 return 'bloglinks_tpl.php';
@@ -2072,28 +2069,28 @@ class blog extends controller
                 //echo $lurl, $lname, $ldescription, $ltarget, $ltype, $lnotes;
                 //create the insert array and pop into the db
                 $insarr = array(
-                    'userid' => $this->objUser->userId() ,
-                    'link_url' => $lurl,
-                    'link_name' => $lname,
-                    'link_image' => '',
-                    'link_target' => $ltarget,
-                    'link_category' => 'default',
-                    'link_description' => $ldescription,
-                    'link_visible' => '1',
-                    'link_owner' => $this->objUser->userName($this->objUser->userId()) ,
-                    'link_rating' => 0,
-                    'link_updated' => time() ,
-                    'link_rel' => '',
-                    'link_notes' => $lnotes,
-                    'link_rss' => '',
-                    'link_type' => $ltype
+                        'userid' => $this->objUser->userId() ,
+                        'link_url' => $lurl,
+                        'link_name' => $lname,
+                        'link_image' => '',
+                        'link_target' => $ltarget,
+                        'link_category' => 'default',
+                        'link_description' => $ldescription,
+                        'link_visible' => '1',
+                        'link_owner' => $this->objUser->userName($this->objUser->userId()) ,
+                        'link_rating' => 0,
+                        'link_updated' => time() ,
+                        'link_rel' => '',
+                        'link_notes' => $lnotes,
+                        'link_rss' => '',
+                        'link_type' => $ltype
                 );
                 $this->objDbBlog->updateUserLink($id, $insarr);
                 return 'bloglinks_tpl.php';
                 break;
 
             case 'setpage':
-                //page stuff
+            //page stuff
                 $mode = $this->getParam('mode');
                 //echo $mode;
                 $userid = $this->objUser->userId();
@@ -2104,9 +2101,9 @@ class blog extends controller
                     $pagecontent = addslashes($this->getParam('page_content'));
                     // save the page to the table
                     $prfarr = array(
-                        'userid' => $userid,
-                        'page_name' => $pagename,
-                        'page_content' => $pagecontent
+                            'userid' => $userid,
+                            'page_name' => $pagename,
+                            'page_content' => $pagecontent
                     );
                     $this->setVarByRef('userid', $userid);
                     $this->objDbBlog->savepage($prfarr);
@@ -2119,9 +2116,9 @@ class blog extends controller
                     if (!empty($pagename) && !empty($pagecontent)) {
                         // save the page to the table
                         $this->objDbBlog->updatePage($pageid, array(
-                            'userid' => $userid,
-                            'page_name' => $pagename,
-                            'page_content' => $pagecontent
+                                'userid' => $userid,
+                                'page_name' => $pagename,
+                                'page_content' => $pagecontent
                         ));
                         $this->nextAction('setpage');
                     }
@@ -2190,48 +2187,46 @@ class blog extends controller
                 $pid = $this->getParam('pid');
                 $this->objDbBlog->deleteTrackBack($id);
                 $this->nextAction('viewsingle', array(
-                    'postid' => $pid,
-                    'userid' => $this->objUser->userId()
+                        'postid' => $pid,
+                        'userid' => $this->objUser->userId()
                 ));
-                //echo $id; die();
+            //echo $id; die();
 
-            } //action
+        } //action
 
-        }
-        /**
-         * Overide the login object in the parent class
-         *
-         * @param  void
-         * @return bool
-         * @access public
-         */
-        public function requiresLogin($action)
-        {
-            $actionsRequiringLogin = array(
-                'blogadmin', 'viewblog'
-            );
-            if (in_array($action, $actionsRequiringLogin)) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
-        }
-
-
-        /**
-        * Check if user is allowed to blog
-        * @returns boolean
-        */
-        public function approvedBlogger()
-        {
-            $blogSetting = $this->objSysConfig->getValue('limited_users', 'blog');
-            if ($blogSetting) {
-                $groupId = $this->objGroup->getId('Bloggers');
-                $userId = $this->objUser->userid();
-                return $this->objGroup->isGroupMember($userId, $groupId);
-            } else {
-                return TRUE;
-            }
+    }
+    /**
+     * Overide the login object in the parent class
+     *
+     * @param  void
+     * @return bool
+     * @access public
+     */
+    public function requiresLogin($action) {
+        $actionsRequiringLogin = array(
+                'blogadmin',
+        );
+        if (in_array($action, $actionsRequiringLogin)) {
+            return TRUE;
+        } else {
+            return FALSE;
         }
     }
+
+
+    /**
+     * Check if user is allowed to blog
+     * @returns boolean
+     */
+    public function approvedBlogger() {
+        $blogSetting = $this->objSysConfig->getValue('limited_users', 'blog');
+        if ($blogSetting) {
+            $groupId = $this->objGroup->getId('Bloggers');
+            $userId = $this->objUser->userid();
+            return $this->objGroup->isGroupMember($userId, $groupId);
+        } else {
+            return TRUE;
+        }
+    }
+}
 ?>
