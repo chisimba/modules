@@ -84,8 +84,8 @@ if (count($lecturerContext) > 0) {
                 $checkbox->ischecked = TRUE;
             }
         }
-        
-        $label = new label(' '.$this->objContext->getTitle($context), 'context_'.$context);
+        $contextRow=$this->objContext->getContext($context);
+        $label = new label(' '.$contextRow['title'], 'context_'.$context);
         
         $contextsList .= '<br />&nbsp; &nbsp; '.$checkbox->show().$label->show();
     }
