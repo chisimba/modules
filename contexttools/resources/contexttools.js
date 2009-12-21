@@ -319,8 +319,8 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
                 if(CKEDITOR.env.ie)
                 {
-                    // CKEDITOR.instances[instancename].getSelection().unlock(true);
-                    alert('hhhhh');
+                     CKEDITOR.instances[instancename].getSelection().unlock(true);
+                   
                     selectedText = CKEDITOR.instances[instancename].getSelection().getNative().createRange().text;
                 }else{
                     selectedText=  window.opener.CKEDITOR.instances[instancename].getSelection().getNative();
