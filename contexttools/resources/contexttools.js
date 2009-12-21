@@ -103,7 +103,16 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
             handler: function(){
                 var contextcode=contextlistfield.value;
-                var selectedText=window.opener.CKEDITOR.instances[instancename].getSelection().getNative();
+                var selectedText="";
+                if(CKEDITOR.env.ie)
+                {
+                    CKEDITOR.instances[instancename].getSelection().unlock(true);
+                    selectedText = CKEDITOR.instances[instancename].getSelection().getNative().createRange().text;
+                }
+                else
+                {
+                    selectedText=window.opener.CKEDITOR.instances[instancename].getSelection().getNative();
+                }
                 var link='<a href="'+contexturl+"&contextcode="+contextcode+'">'+selectedText+'</a>';
                 window.opener.CKEDITOR.instances[instancename].insertHtml(link);
                 window.close();
@@ -185,6 +194,7 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
         fieldLabel:'Filter list',
         typeAhead: true,
         mode: 'local',
+        width: 250,
         editable:false,
         forceSelection: true,
         triggerAction: 'all',
@@ -235,6 +245,7 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
         fieldLabel:'Parameters list',
         typeAhead: true,
         mode: 'local',
+        width: 250,
         editable:false,
         forceSelection: true,
         triggerAction: 'all',
@@ -266,7 +277,7 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
         baseCls: 'x-plain',
         width:550,
-        labelWidth: 135,
+        labelWidth: 145,
         bodyStyle:'margin-left:2em;margin-top:2em;margin-bottom:2em;background-color:transparent;',
         renderTo: 'filterlist',
         collapsible: true,
@@ -275,20 +286,20 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
         items:[
        
         {
-            html:'<h3><font color="red">NOTE: The filter will modify the text selected in the editor</font></h3>',
+            html:'<b><font color="red">NOTE: The filter will modify the text selected in the editor</font></b>',
             border:false,
             bodyStyle:'margin-bottom:3em'
         }
         ,
-        filterlistfield,
-        filterparamfield,
-        
+              
         {
             xtype: 'fieldset',
-            title: 'Filter instructions',
+            title: 'Filters',
             autoHeight: true,
             width:500,
             items:[
+            filterlistfield,
+            filterparamfield,
             instructionsfield
             ]
         }
@@ -304,7 +315,16 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
             handler: function(){
                 
-                var selectedText=window.opener.CKEDITOR.instances[instancename].getSelection().getNative();
+                var selectedText="";
+
+                if(CKEDITOR.env.ie)
+                {
+                    // CKEDITOR.instances[instancename].getSelection().unlock(true);
+                    alert('hhhhh');
+                    selectedText = CKEDITOR.instances[instancename].getSelection().getNative().createRange().text;
+                }else{
+                    selectedText=  window.opener.CKEDITOR.instances[instancename].getSelection().getNative();
+                }
                 var filter='';
                 if(filterType=='parametized'){
                     filter='['+filterTag+':'+filterParamName+'='+filterParamValue+']' +selectedText+'[/'+filterTag+']';

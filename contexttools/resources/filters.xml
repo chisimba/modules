@@ -55,7 +55,7 @@
     <filter>
         <name>flash video complex</name>
         <type>parametizedall</type>
-        <label>Flas Video (FLV) complex</label>
+        <label>Flash Video (FLV) complex</label>
         <params>
             <param name="url">http://www.example.com</param>
             <param name="width">320</param>
