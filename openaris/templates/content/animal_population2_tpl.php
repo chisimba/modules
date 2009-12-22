@@ -71,6 +71,7 @@ $classDrop->extra = 'disabled';
 
 //Breed dropdown
 $breedDrop = new dropdown('breedId');
+$breedDrop->addOption('null','select');
 $breedDrop->addFromDB($arraybreed, 'name', 'id');
 $breedDrop->setSelected($breed);
 $breedDrop->extra='disabled';
@@ -103,11 +104,16 @@ $totalNumSpecies->extra = 'onblur="javascript:getTLU();"';
 
 $breedNumber = new textinput('breedNumber', $breedNumber, 'text');
 //$animalCat = new textinput('animalCat', $animalCat, 'text');
+$breedNumber->extra = 'onchange="javascript:checkBreedSpecies();"';
 
 $tropicalLivestock = new textinput('tropicalLivestock', $tropicalLivestock, 'text');
 $crossBreed = new textinput('crossBreed', $crossBreed, 'text');
+
 $catNumber = new textinput('catNumber', $catNumber, 'text');
+$catNumber->extra = 'onchange="javascript:checkAnimCatSpecies();"';
+
 $prodNumber = new textinput('productionno', $productionno, 'text');
+$prodNumber->extra = 'onchange="javascript:checkProdNoSpecies();"';
 
 $commentsBox = new textarea('comments', $comments , 4, 40);
 
@@ -198,14 +204,15 @@ $objButtonTable->addCell($button->show(), NULL, 'top', 'center');
 $objButtonTable->endRow();
 
 // Create Form
+$speciesMax=4000;
 $form = new form ('add', $this->uri(array('action'=>'animal_population2')));
 $content=$objTable->show()."<hr />".$middleTable->show()."<hr />".$bottomTable->show()."<br />".$objButtonTable->show();
 $form->addToForm($content);
-$form->addRule('totalNumSpecies', $this->objLanguage->languageText('mod_ahis_valtotnum', 'openaris'), 'select');
+$form->addRule(array('totalNumSpecies',$speciesMax), $this->objLanguage->languageText('mod_ahis_valtotnum', 'openaris'), 'maxnumber');
 $form->addRule('breedNumber', $this->objLanguage->languageText('mod_ahis_valbreedno', 'openaris'), 'required');
-$form->addRule('crossBreed', $this->objLanguage->languageText('mod_ahis_valcrossbreedno', 'openaris'), 'required');
+$form->addRule('crossBreed', $this->objLanguage->languageText('mod_ahis_valcrossbreedno', 'openaris'), 'numeric');
 $form->addRule('animalCat', $this->objLanguage->languageText('mod_ahis_valanimalcat', 'openaris'), 'select');
-$form->addRule('catNumber', $this->objLanguage->languageText('mod_ahis_valcatno', 'openaris'), 'required');
+$form->addRule('catNumber', $this->objLanguage->languageText('mod_ahis_valcatno', 'openaris'), 'numeric');
 
 
 

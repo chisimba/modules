@@ -2995,7 +2995,8 @@ class openaris extends controller {
 					$speciesId = $this->getSession('ps_species');
 					$speciesno = $this->getParam('speciesno');
 					echo json_encode(array('prod'=>$this->objTlu->getTlu($speciesId,$speciesno)));
-			 		break;  
+			 		break; 
+			 		 
 					
 					case 'animal_population1':
 			      $this->setSession('ps_officerId',$this->getParam('repOfficerId'));
@@ -3047,8 +3048,9 @@ class openaris extends controller {
 					$this->setVar('productionno', '');
 
 				    
-         return 'animal_population2_tpl.php';   
-          
+         return 'animal_population2_tpl.php';          
+        
+       
          				
 			case 'animal_population2':
 			   

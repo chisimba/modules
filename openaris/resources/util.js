@@ -356,6 +356,45 @@ function changeSpecies() {
 	
 	
 	}
+	
+
+	
+function checkBreedSpecies()
+{
+
+var nobreed= jQuery('#input_breedNumber').val();
+var nospec= jQuery('#input_totalNumSpecies').val();
+if(nobreed> nospec){ 
+	alert('Breed Number should be less than Total Number (Species)');
+	jQuery('#input_breedNumber').val('');
+	
+	}	
+}	
+
+function checkProdNoSpecies()
+{
+
+var noprod= jQuery('#input_productionno').val();
+var nospec= jQuery('#input_totalNumSpecies').val();
+if(noprod> nospec){ 
+	alert('Production Number should be less than Total Number (Species)');
+	jQuery('#input_productionno').val('');
+	
+	}	
+}
+
+function checkAnimCatSpecies()
+{
+
+var nocat= jQuery('#input_catNumber').val();
+var nospec= jQuery('#input_totalNumSpecies').val();
+if(nocat> nospec){ 
+	alert('Category Number should be less than Total Number (Species)');
+	jQuery('#input_catNumber').val('');
+	
+	}	
+}
+	
 function getTLU(){
 //alert('nospecies');
 var nospecies= jQuery('#input_totalNumSpecies').val();
