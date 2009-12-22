@@ -1,4 +1,4 @@
-function initGrid(cols,url,searchurl){
+function initGrid(cols,url,searchurl, myUserCheckUrl, saveUserUrl){
 		
 		ButtonPanel = Ext.extend(Ext.Panel, {
 
@@ -34,7 +34,15 @@ function initGrid(cols,url,searchurl){
             iconCls: 'commentadd',
             text:'Add Gift',
             handler: function(){
-                showAddGiftWin(url);
+				if(checkUser(myUserCheckUrl)) {
+					//the person exists, show the gift
+					showAddGiftWin(url);
+				}
+				else {
+					//add to the database
+					window.location.href = saveUserUrl;
+				}
+                
             }
         }
         ]
@@ -392,6 +400,17 @@ function searchGift(url){
 		 }
 	
 		 SearchWindow.show(this);
+}
+
+var function checkUser(myUserCheckUrl) {
+	
+	Ext.Ajax.request({
+	   url: myUserCheckUrl,
+	   success: function() {
+		
+	   }
+	});
+
 }
 
 var showGiftPolicy = function () {

@@ -113,7 +113,12 @@ class dbgift extends dbtable {
 
         return $data;
     }
+	
+	//returns boolean
 
+	function userExists($userid){
+		return $this->valueExists('userid',$userid);
+	}
 
 }
 ?>

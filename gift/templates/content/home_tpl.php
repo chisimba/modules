@@ -18,6 +18,8 @@ $this->appendArrayVar('headerParams', $maincss);
 
 $this->appendArrayVar('headerParams', $listingjs);
 $addGift = $this->uri(array('action'=>'submitadd'));
+$userExists = $this->uri(array('action'=>'userexists'));
+$saveUserUrl = $this->uri(array('action'=>'saveuser'));
 
 $data='';
 
@@ -56,9 +58,12 @@ if($lastChar == ',') {
 $mainjs = "
               Ext.onReady(function(){
                 Ext.QuickTips.init();
-                var url='".str_replace("amp;", "", $addGift)."';
+                var url='".str_replace("amp;", "", $addGift)."',
+					myUserCheckUrl ='".str_replace("amp;", "", $userExists)."',
+					saveUserUrl = '".str_replace("amp;", "", $saveUserUrl)."';
+				
                 var xdata=[$data];
-                initGrid(xdata,url);
+                initGrid(xdata,url,myUserCheckUrl,saveUserUrl);
                 });";
 
 

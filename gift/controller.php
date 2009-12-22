@@ -13,6 +13,7 @@ class gift extends controller
         $this->objHome     = $this->getObject("home");
         $this->objUser     = $this->getObject("user","security");
         $this->objEdit     = $this->getObject("edit");
+		$this->objGiftUser = $this->getObject("dbuserstbl");
 		$test = "test";
         // Initialising $data (holds the data from database when edit link is called)
         $this->data = array();
@@ -30,6 +31,8 @@ class gift extends controller
             case 'submitedit': return $this->submitEdit();
             case 'search': return $this->searchGift();
 			case 'viewpolicy': return $this->viewPolicy();
+			case 'userexists': return $this->userExists();
+			case 'saveuser': return $this->saveUser();
             default: return "home_tpl.php";
         }
     }
@@ -139,6 +142,18 @@ class gift extends controller
 	//shows the gift policy template
 	function viewPolicy(){
 		return 'giftPolicy_tpl.php';
+	}
+	
+	function userExists(){
+		$userid = $this->objUser->userId();
+		return $this->objGiftUser->userExists($userid);
+	}
+	
+	function saveUser() {
+		//save the user info in the database
+		$data = array('userid'=>$this->ObjUser->userId(), 'time'=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
+		$this->objGiftUser->addUser($data);
+		$this->nextAction('viewPolicy');
 	}
 }
 ?>
