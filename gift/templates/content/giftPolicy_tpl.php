@@ -4,7 +4,7 @@
 $this->loadclass('link','htmlelements');
 
 $objbackLink = new link($this->uri(array('action'=>'back')));
-$objbackLink-> link = 'Do not accept';
+$objbackLink-> link = 'Back';
 
 $acceptLink = new link($this->uri(array('action'=>'acceptpolicy')));
 $acceptLink-> link = 'Accept';
