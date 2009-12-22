@@ -34,10 +34,10 @@ foreach($dbdata as $row) {
     $decrb =$row['description'];
     $don =$row['donor'];
     $val =$row['value'];
-	
+
     $action ="showEditGiftWin(\'".$editGiftUrl."\',\'".$gift."\',\'".$decrb."\',\'".$don."\',\'".$val."\');return false";
     $editGift->extra = 'onClick="'.$action.'"';
-    
+
     $data.="[";
     $data.="'".$row['giftname']."',";
     //$data.=$editGift->show()."',";
@@ -46,7 +46,7 @@ foreach($dbdata as $row) {
     $data.="'".$row['recipient']."',";
     $data.="'".$row['value']."',";
     $data.="'".$editGift->show()."'";
-   
+
     $data.="],";
 }
 $lastChar = $data[strlen($data)-1];
@@ -55,6 +55,28 @@ if($lastChar == ',') {
     $data=substr($data, 0, (strlen ($data)) - (strlen (strrchr($data,','))));
 }
 
+if($this->giftPolicyAccepted == "true") {
+echo '<script type="text/javascript">
+var giftPolicyAccepted=true;
+</script>';
+}else {
+    echo '<script type="text/javascript">
+
+var giftPolicyAccepted=false;
+</script>';
+
+}
+if($this->clickedAdd == "true") {
+echo '<script type="text/javascript">
+var clickedAdd=true;
+</script>';
+}else {
+    echo '<script type="text/javascript">
+
+var clickedAdd=false;
+</script>';
+
+}
 $mainjs = "
               Ext.onReady(function(){
                 Ext.QuickTips.init();
@@ -64,6 +86,9 @@ $mainjs = "
 				
                 var xdata=[$data];
                 initGrid(xdata,url,myUserCheckUrl,saveUserUrl);
+                 if(giftPolicyAccepted && clickedAdd){
+                    showAddGiftWin(url);
+                 }
                 });";
 
 

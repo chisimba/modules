@@ -1,6 +1,7 @@
-function initGrid(cols,url,searchurl, myUserCheckUrl, saveUserUrl){
+var addGiftWin;
+function initGrid(cols,url, myUserCheckUrl, saveUserUrl){
 		
-		ButtonPanel = Ext.extend(Ext.Panel, {
+    ButtonPanel = Ext.extend(Ext.Panel, {
 
         layout:'table',
         defaultType: 'button',
@@ -8,6 +9,7 @@ function initGrid(cols,url,searchurl, myUserCheckUrl, saveUserUrl){
         cls: 'btn-panel',
         menu: undefined,
         split: true,
+
      
         bodyStyle:'margin-top:2em;margin-bottom:2em;',
         constructor: function(buttons){
@@ -26,45 +28,61 @@ function initGrid(cols,url,searchurl, myUserCheckUrl, saveUserUrl){
     });
 
     ButtonPanel.override({
-     renderTo : 'grouping-grid'
-      });
-   var buttons= new ButtonPanel(
+        renderTo : 'grouping-grid'
+    });
+    var buttons= new ButtonPanel(
 
         [{
             iconCls: 'commentadd',
             text:'Add Gift',
             handler: function(){
-				if(checkUser(myUserCheckUrl)) {
-					//the person exists, show the gift
-					showAddGiftWin(url);
-				}
-				else {
-					//add to the database
-					window.location.href = saveUserUrl;
-				}
-                
+                if(giftPolicyAccepted){
+                    showAddGiftWin(url);
+                }else{
+                    window.location.href = saveUserUrl;
+                }
             }
         }
         ]
 
- );
-		// shared reader
-		   var reader = new Ext.data.ArrayReader({}, [
-		      {name: 'giftname'},
-		      {name: 'description'},
-		      {name: 'donor'},
-		      {name: 'recipient'},
-		      {name: 'value'},
-                      {name: 'edit'}
+        );
+    // shared reader
+    var reader = new Ext.data.ArrayReader({}, [
+    {
+        name: 'giftname'
+    },
+
+    {
+        name: 'description'
+    },
+
+    {
+        name: 'donor'
+    },
+
+    {
+        name: 'recipient'
+    },
+
+    {
+        name: 'value'
+    },
+
+    {
+        name: 'edit'
+    }
 		     
-		   ]);
+    ]);
     // create the data store
-		   var store = new Ext.data.GroupingStore({
-    	id:'store',
-    	sortInfo:{field: 'donor', direction: 'ASC'},
+    var store = new Ext.data.GroupingStore({
+        id:'store',
+        sortInfo:{
+            field: 'donor',
+            direction: 'ASC'
+        },
         groupField:'donor',		
-    	reader: reader,
-    	groupOnSort:true
+        reader: reader,
+        groupOnSort:true
     	 	
     	
     });
@@ -82,88 +100,73 @@ function initGrid(cols,url,searchurl, myUserCheckUrl, saveUserUrl){
         {
             id:'giftname',
             header: "Name",
-            width: 100,
+            width: 14,
             dataIndex: 'giftname'
         },
 
         {
             header: "Description",
-            width: 100,
+            width: 14,
             dataIndex: 'description'
         },
 
         {
             header:"Donor",
-            width: 100,
+            width: 14,
             dataIndex: 'donor'
         },
 
         {
             header: "Recipient",
-            width: 150,
+            width: 14,
             dataIndex: 'recipient'
         },
 
         {
             header: "Value",
-            width: 100,
+            width: 14,
             dataIndex: 'value'
         },
 
         {
             header: "Edit",
-            width: 100,
+            width: 10,
             dataIndex: 'edit'
         }],
-
-        tbar: [
-                 {
-                	 text: 'Search',
-                	 tooltip: 'Search for gift',  
-                	 handler: function(){
-                	 				searchGift(searchurl);
-                	 			}
-                	 
-                 }
-           ],
-         
-
-
-
-
         stripeRows: true,
         autoExpandColumn: 'giftname',
         height:500,
-        width:700,
-        frame:true,
-        border:true
+        width:"100%",
+        frame:false,
+
+        border:false
 
     });
-   // grid.render('grouping-grid');
- var form = new Ext.form.FormPanel({
+    // grid.render('grouping-grid');
+    var form = new Ext.form.FormPanel({
 
         baseCls: 'x-plain',
-        width:800,
+
         labelWidth: 135,
         bodyStyle:'padding:5px 5px 0',
         renderTo: 'grouping-grid',
-        collapsible: true,
-        defaults: {width:750},
+        width:"100%",
+        
         height:600,
         bodyStyle:'background-color:transparent',
         defaultType: 'textfield',
         border:false,
-         items: {
+        items: {
             xtype: 'fieldset',
             title: 'Gift Listing',
             autoHeight: true,
             height:800,
             items:[
-              buttons,
-              grid
+           
+            grid
             ]
-         }
-        });
+        }
+    });
 
 }
 
@@ -176,84 +179,84 @@ function showAddGiftWin(url){
         url:url,
         defaultType: 'textfield',
         items:[
-               {
-                    fieldLabel: 'Gift Name',
-                    name: 'giftnamefield',
-                    width:350,
-                    allowBlank: false
-                },
+        {
+            fieldLabel: 'Gift Name',
+            name: 'giftnamefield',
+            width:350,
+            allowBlank: false
+        },
 
-            new Ext.form.TextArea({
-               fieldLabel: 'Description',
-               width:350,
-               height:150,
+        new Ext.form.TextArea({
+            fieldLabel: 'Description',
+            width:350,
+            height:150,
                
-               name: 'descfield'
-               }),
+            name: 'descfield'
+        }),
 
-              {
-                fieldLabel: 'Donor',
-                name: 'donorfield',
-                width:350,
-                allowBlank: false
-                },
-              {
-                    fieldLabel: 'Value',
-                    name: 'valuefield',
-                    width:350,
-                    allowBlank: false
-                }
-
-          ]
-
-      });
-         var addGiftWin;
-
-           if(!addGiftWin){
-            
-            addGiftWin = new Ext.Window({
-                applyTo:'add-gift-surface',
-                layout:'fit',
-                title:'Enter Gift',
-                width:500,
-                height:350,
-                x:250,
-                y:50,
-                closeAction:'hide',
-                plain: true,
-                items: [
-                 form
-                ],
-                  buttons: [{
-                    text:'Save',
-                    handler: function(){
-                  if (form.url){
-                            form.getForm().getEl().dom.action = form.url;
-                          }
-                        form.getForm().submit();
-
-                  }
-                  }
-                  ,{
-                    text: 'Cancel',
-                    handler: function(){
-                       addGiftWin.hide();
-                        window.location.reload(true);
-                    }
-                  }
-                ]
-
-            });
+        {
+            fieldLabel: 'Donor',
+            name: 'donorfield',
+            width:350,
+            allowBlank: false
+        },
+        {
+            fieldLabel: 'Value',
+            name: 'valuefield',
+            width:350,
+            allowBlank: false
         }
 
-        addGiftWin.show(this);
+        ]
+
+    });
+
+
+    if(!addGiftWin){
+            
+        addGiftWin = new Ext.Window({
+            applyTo:'add-gift-surface',
+            layout:'fit',
+            title:'Enter Gift',
+            width:500,
+            height:350,
+            x:250,
+            y:50,
+            closeAction:'hide',
+            plain: true,
+            items: [
+            form
+            ],
+            buttons: [{
+                text:'Save',
+                handler: function(){
+                    if (form.url){
+                        form.getForm().getEl().dom.action = form.url;
+                    }
+                    form.getForm().submit();
+
+                }
+            }
+            ,{
+                text: 'Cancel',
+                handler: function(){
+                    addGiftWin.hide();
+                    window.location.reload(true);
+                }
+            }
+            ]
+
+        });
+    }
+
+    addGiftWin.show(this);
 
 }
 
 function showEditGiftWin(url,giftname,description,donor,val){
 
 	
-	var form = new Ext.form.FormPanel({
+    var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,
         bodyStyle:'padding:5px 5px 0',
@@ -261,161 +264,161 @@ function showEditGiftWin(url,giftname,description,donor,val){
         url:url,
         defaultType: 'textfield',
         items:[
-               {
-                    fieldLabel: 'Gift Name',
-                    name: 'gname',
-                    width:350,
-                    allowBlank: false,
-                    value:giftname
+        {
+            fieldLabel: 'Gift Name',
+            name: 'gname',
+            width:350,
+            allowBlank: false,
+            value:giftname
                     
-                },
+        },
 
-            new Ext.form.TextArea({
-               fieldLabel: 'Descption',
-               width:350,
-               height:150,
+        new Ext.form.TextArea({
+            fieldLabel: 'Descption',
+            width:350,
+            height:150,
                
-               name: 'descripvalue',
-               value:description
-               }),
+            name: 'descripvalue',
+            value:description
+        }),
 
-              {
-                fieldLabel: 'Donor',
-                name: 'dnvalue',
-                width:350,
-                allowBlank: false,
-                value:donor
-                },
-              {
-                    fieldLabel: 'Value',
-                    name: 'gvalue',
-                    width:350,
-                    allowBlank: false,
-                    value:val
-                }
+        {
+            fieldLabel: 'Donor',
+            name: 'dnvalue',
+            width:350,
+            allowBlank: false,
+            value:donor
+        },
+        {
+            fieldLabel: 'Value',
+            name: 'gvalue',
+            width:350,
+            allowBlank: false,
+            value:val
+        }
 
-          ]
+        ]
 
-      });
+    });
 			
 	
-         var editGiftWin;
+    var editGiftWin;
 
-           if(!editGiftWin){
+    if(!editGiftWin){
             
-            editGiftWin = new Ext.Window({
-                applyTo:'edit-gift-surface',
-                layout:'fit',
-                title:'Edit Gift',
-                width:500,
-                height:350,
-                x:250,
-                y:50,
-                closeAction:'hide',
-                plain: true,
-                items: [
-                 form
-                ],
-                  buttons: [{
-                    text:'Save',
-                    handler: function(){
-		                  if (form.url){
-		                            form.getForm().getEl().dom.action = form.url;
-		                          }
-		                        form.getForm().submit();
-		
-		                  }
-                  }
-                  ,{
-                    text: 'Cancel',
-                    handler: function(){
-                       editGiftWin.hide();
-                        window.location.reload(true);
+        editGiftWin = new Ext.Window({
+            applyTo:'edit-gift-surface',
+            layout:'fit',
+            title:'Edit Gift',
+            width:500,
+            height:350,
+            x:250,
+            y:50,
+            closeAction:'hide',
+            plain: true,
+            items: [
+            form
+            ],
+            buttons: [{
+                text:'Save',
+                handler: function(){
+                    if (form.url){
+                        form.getForm().getEl().dom.action = form.url;
                     }
-                  }
-                ]
+                    form.getForm().submit();
+		
+                }
+            }
+            ,{
+                text: 'Cancel',
+                handler: function(){
+                    editGiftWin.hide();
+                    window.location.reload(true);
+                }
+            }
+            ]
 
-            });
-        }
+        });
+    }
            
-       editGiftWin.show(this);
+    editGiftWin.show(this);
 
 }
 
 function searchGift(url){
-	var GiftName; 
-	var form;
-	var SearchWindow; 
+    var GiftName;
+    var form;
+    var SearchWindow;
 	
 	
-		 form = new Ext.form.FormPanel({
-			 	renderTo: 'search-gift-surface',
-				baseCls: 'x-plain',
-		        labelWidth: 75,
-		        bodyStyle:'padding:5px 5px 0',
-		        standardSubmit: true,
-		        url:url,
-		        defaultType: 'textfield',
-		        items:[
-						{
-						    fieldLabel: 'Gift Name',
-						    name: 'giftname',
-						    width:80
+    form = new Ext.form.FormPanel({
+        renderTo: 'search-gift-surface',
+        baseCls: 'x-plain',
+        labelWidth: 75,
+        bodyStyle:'padding:5px 5px 0',
+        standardSubmit: true,
+        url:url,
+        defaultType: 'textfield',
+        items:[
+        {
+            fieldLabel: 'Gift Name',
+            name: 'giftname',
+            width:80
 						   
-						}
-		             ]
-		 });
+        }
+        ]
+    });
 	
-		 if(!SearchWindow){
-			 SearchWindow = new Ext.Window({
-				 applyTo:'search-gift-surface',
-				 title: 'Gift Search',
-		        closeAction:'hide',
-		        width: 220,
-		        height: 100,
-		        x:250,
-                y:250,
-		        plain:true,
-		        layout: 'fit',
-		        items:[ form],
-		        buttons: [{
-		        	text: 'Search',
-		        	handler: function(){
-	                         if (form.url){
-                            form.getForm().getEl().dom.action = form.url;
-                          }
-                        form.getForm().submit();
+    if(!SearchWindow){
+        SearchWindow = new Ext.Window({
+            applyTo:'search-gift-surface',
+            title: 'Gift Search',
+            closeAction:'hide',
+            width: 220,
+            height: 100,
+            x:250,
+            y:250,
+            plain:true,
+            layout: 'fit',
+            items:[ form],
+            buttons: [{
+                text: 'Search',
+                handler: function(){
+                    if (form.url){
+                        form.getForm().getEl().dom.action = form.url;
+                    }
+                    form.getForm().submit();
 
-	                  }
-				        	},{
-		            text: 'Close',
-		            handler: function(){
-		         	 SearchWindow.hide();
-		               window.location.reload(true);
-		           }
+                }
+            },{
+                text: 'Close',
+                handler: function(){
+                    SearchWindow.hide();
+                    window.location.reload(true);
+                }
             
           
-			}]
-			 	});
-		 }
+            }]
+        });
+    }
 	
-		 SearchWindow.show(this);
+    SearchWindow.show(this);
 }
 
-var function checkUser(myUserCheckUrl) {
+var checkUser=function (myUserCheckUrl) {
 	
-	Ext.Ajax.request({
-	   url: myUserCheckUrl,
-	   success: function() {
+    Ext.Ajax.request({
+        url: myUserCheckUrl,
+        success: function() {
 		
-	   }
-	});
+        }
+    });
 
 }
 
 var showGiftPolicy = function () {
 
-   /* var win;
+/* var win;
     
     if(!win){
         win = new Ext.Window({

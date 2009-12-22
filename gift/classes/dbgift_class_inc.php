@@ -4,7 +4,7 @@ class dbgift extends dbtable {
  * Assign the table name in dbtable to be the table specified below
  */
     public function init() {
-        parent::init("tbl_gifttable");
+        parent::init("tbl_gift");
         $this->objUser     = $this->getObject("user","security");
     }
 
@@ -70,7 +70,7 @@ class dbgift extends dbtable {
 
 
     public function checkDuplicates($data) {
-        $qry = "SELECT * FROM tbl_gifttable WHERE
+        $qry = "SELECT * FROM tbl_gift WHERE
                 donor = '{$data['donor']}',
                 recipient = '{$data['recipient']}',
                 giftname = '{$data['giftname']}',
@@ -104,7 +104,7 @@ class dbgift extends dbtable {
     public function getMyGifts($query) {
         $recipient = $this->objUser->fullname();     // Recipient name
 		
-        $qry = "SELECT * FROM tbl_gifttable WHERE recipient = '$recipient'";
+        $qry = "SELECT * FROM tbl_gift WHERE recipient = '$recipient'";
     	if (isset($query)){
    			 $qry .= " AND (giftname LIKE '%".addslashes($query)."%' )";
    			 
