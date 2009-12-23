@@ -316,7 +316,7 @@ $objForm->addRule('dataOfficerTel', $this->objLanguage->languageText('mod_ahis_v
 
 
 $objForm->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_dataoffreq','openaris'),'select');
-//$objForm->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_vetoffreq','openaris'),'select');
+$objForm->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_vetoffreq','openaris'),'select');
 $objForm->addRule('countryId', $this->objLanguage->languageText('mod_ahis_valcountry', 'openaris'), 'select');
 $objForm->addRule('partitionTypeId', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
 $objForm->addRule('partitionLevelId', $this->objLanguage->languageText('mod_ahis_admin2req','openaris'),'select');
