@@ -190,10 +190,12 @@ class twitter extends controller
         $objUserParams->readConfig();
         $userName = $objUserParams->getValue("twittername");
         $password = $objUserParams->getValue("twitterpassword");
+        $latitude = $objUserParams->getValue("latitude");
+        $longitude = $objUserParams->getValue("longitude");
         if (!$userName == NULL && !$password == NULL) {
             $this->objTwitterRemote->initializeConnection($userName, $password);
             $status = $this->getParam("tweet", NULL);
-            $this->objTwitterRemote->updateStatus($status);
+            $this->objTwitterRemote->updateStatus($status, $latitude, $longitude);
         }
     }
 

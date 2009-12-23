@@ -126,9 +126,11 @@ class twitterlib extends object
     {
         $twittername = $this->_objUserParams->getValue('twittername');
         $twitterpassword = $this->_objUserParams->getValue('twitterpassword');
+        $latitude = $this->_objUserParams->getValue('latitude');
+        $longitude = $this->_objUserParams->getValue('longitude');
         if ($twittername && $twitterpassword) {
             $this->_objTwitterRemote->initializeConnection($twittername, $twitterpassword);
-            $this->_objTwitterRemote->updateStatus($status);
+            $this->_objTwitterRemote->updateStatus($status, $latitude, $longitude);
         }
     }
 }
