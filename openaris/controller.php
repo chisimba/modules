@@ -2942,6 +2942,9 @@ class openaris extends controller {
 			      $this->setVar('admin1',$this->getSession('ps_admin1'));	
 			      $this->setVar('admin2',$this->getSession('ps_admin2'));	
 			      $this->setVar('admin3',$this->getSession('ps_admin3'));
+			      $this->setVar('rphone',$this->getSession('ps_rphone'));
+			       $this->setVar('rfax',$this->getSession('ps_rfax'));
+			       $this->setVar('remail',$this->getSession('ps_remail'));
 			      $this->setVar('dphone',$this->getSession('ps_dphone'));
 			       $this->setVar('dfax',$this->getSession('ps_dfax'));
 			       $this->setVar('demail',$this->getSession('ps_demail'));
@@ -2971,7 +2974,7 @@ class openaris extends controller {
 			 		$rDate = $this->getParam('rDate', $this->getSession('ps_rDate'));
 			 		$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
 			 	   $this->setVar('animprod',$this->objAnimalProduction->getAll("ORDER BY name"));
-			 	   $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY name"));		
+			 	   $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY speciesname"));		
                //$this->setVar('breed', $this->objBreed ->getAll("ORDER BY name"));	
                
                //$this->setVar('species', $this->getSession('ps_species'));
@@ -3003,6 +3006,9 @@ class openaris extends controller {
 			      $this->setSession('ps_dataoff',$this->getParam('dataOfficerId'));		
 			      $this->setSession('ps_vetoff',$this->getParam('vetOfficerId'));	
 			      $this->setSession('ps_repdate',$this->getParam('rDate'));	
+			       $this->setSession('ps_rphone',$this->getParam('repOfficerTel'));
+			      $this->setSession('ps_rfax',$this->getParam('repOfficerFax'));
+			      $this->setSession('ps_remail',$this->getParam('repOfficerEmail'));
 			      $this->setSession('ps_dphone',$this->getParam('dataOfficerTel'));
 			      $this->setSession('ps_dfax',$this->getParam('dataOfficerFax'));
 			      $this->setSession('ps_demail',$this->getParam('dataOfficerEmail'));
@@ -3028,7 +3034,7 @@ class openaris extends controller {
                $this->setVar('repoff', $this->getSession('ps_officerId'));
                $animBreeds = $this->objBreed->getAll();
                $this->setVar('arraybreed', $animBreeds);     
-               $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY name"));		
+               $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY speciesname"));		
                $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
                $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));	
                $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      

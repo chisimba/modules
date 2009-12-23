@@ -65,7 +65,7 @@ $btcancel->setCSS('cancelButton');
 
 $classDrop = new dropdown('classification');
 
-$classDrop->addFromDB($arrayspecies, 'name', 'id'); 
+$classDrop->addFromDB($arrayspecies, 'speciesname', 'id'); 
 $classDrop->setSelected($species);
 $classDrop->extra = 'disabled'; 
 
@@ -78,7 +78,7 @@ $breedDrop->extra='disabled';
 //echo $breed;
 //animal category dropdown
 $animalCatDrop=new dropdown('animalCat');
-$animalCatDrop->addFromDB($arrayanimalCat, 'age_group', 'id');
+$animalCatDrop->addFromDB($arrayanimalCat, 'agegroup', 'id');
 $animalCatDrop->setSelected($animalcat);
 
 

@@ -63,7 +63,8 @@ class animalcat extends dbtable {
      */
 	public function init() {
 		try {
-			parent::init('tbl_ahis_age_groups');
+			parent::init('tbl_ahis_speciesagegroups');
+			
 		}
 		catch (customException $e)
 		{

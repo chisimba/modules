@@ -63,7 +63,7 @@ class species extends dbtable {
      */
 	public function init() {
 		try {
-			parent::init('tbl_ahis_species');
+			parent::init('tbl_ahis_speciesnew');
 		}
 		catch (customException $e)
 		{
@@ -80,6 +80,6 @@ class species extends dbtable {
 	 */
 	public function getName($id) {
 		$row = $this->getRow('id', $id);
-		return (is_array($row))? $row['name'] : FALSE;
+		return (is_array($row))? $row['speciesname'] : FALSE;
 	}
 }

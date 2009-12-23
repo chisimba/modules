@@ -74,7 +74,7 @@ $btcancel->setCSS('cancelButton');
 
 $classDrop = new dropdown('classification');
 $classDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
-$classDrop->addFromDB($arrayspecies, 'name', 'id');
+$classDrop->addFromDB($arrayspecies, 'speciesname', 'id');
 $classDrop->setSelected($species); 
 $classDrop->extra = 'onchange="javascript:changeBreed();"';
 
@@ -150,6 +150,13 @@ $valOfficerDrop->setSelected($vetoff);
 $valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
 
+$rphoneBox = new textinput('repOfficerTel', $rphone, 'text');
+$rphoneBox->extra = 'disabled';
+$rfaxBox = new textinput('repOfficerFax', $rfax, 'text');
+$rfaxBox->extra = 'disabled';
+$remailBox = new textinput('repOfficerEmail', $remail, 'text');
+$remailBox->extra = 'disabled';
+
 $phoneBox = new textinput('dataOfficerTel', $dphone, 'text');
 $phoneBox->extra = 'disabled';
 $faxBox = new textinput('dataOfficerFax', $dfax, 'text');
@@ -172,34 +179,43 @@ $admin3Drop->addFromDB($arrayAdmin3, 'name', 'id');
 $objTopTable = $this->newObject('htmltable', 'htmlelements');
 $objTopTable->cellspacing = 2;
 $objTopTable->width = NULL;
-
-//Reporting Officer
- $tab= "&nbsp;&nbsp;&nbsp;&nbsp;";
- $tabs=$tab.$tab.$tab;
-
-$objTopTable->startRow();
-$objTopTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris'));
-$objTopTable->addCell($reportOfficerDrop->show());
-
+//Reporting Date 
 $objTopTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_reportdate','openaris'),NULL,'centre');
 $objTopTable->addCell($repDate->show());
 $objTopTable->endRow();
 
 //IBAR date
 $objTopTable->startRow();
-$objTopTable->addCell('&nbsp;');
-$objTopTable->addCell('&nbsp;');
-
 $objTopTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris'));
 $objTopTable->addCell($ibarDate->show());
 $objTopTable->endRow();
 
+//Reporting Officer
+ $tab= "&nbsp;&nbsp;&nbsp;&nbsp;";
+ $tabs=$tab.$tab.$tab;
+ 
+$objRepOfficerTable = $this->newObject('htmltable', 'htmlelements');
+$objRepOfficerTable->cellspacing = 2;
+$objRepOfficerTable->width = NULL;
 
+$objRepOfficerTable->startRow();
+$objRepOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').": "."&nbsp;");
+$objRepOfficerTable->addCell($reportOfficerDrop->show());
+
+$objRepOfficerTable->startRow();
+$objRepOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_phone', 'openaris').": ");
+$objRepOfficerTable->addCell($rphoneBox->show());
+$objRepOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_faxn','openaris').": ");
+$objRepOfficerTable->addCell($rfaxBox->show());
+$objRepOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_email','openaris').": ");
+$objRepOfficerTable->addCell($remailBox->show());
+$objRepOfficerTable->endRow();
+
+//Data entry officer
 $objEntryOfficerTable = $this->newObject('htmltable', 'htmlelements');
 $objEntryOfficerTable->cellspacing = 2;
 $objEntryOfficerTable->width = NULL;
 
-//Data entry officer
 $objEntryOfficerTable->startRow();
 $objEntryOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_entryofficer','openaris').": "."&nbsp;");
 $objEntryOfficerTable->addCell($dataEntryOfficerDrop->show());
@@ -275,12 +291,12 @@ $objButtonTable->addCell($sButton->show(), NULL, 'top', 'center');
 $objButtonTable->endRow();
 
 // Create Form
-$content=$objTopTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<br />".$objButtonTable->show();
+$content=$objTopTable->show()."<hr />".$objRepOfficerTable->show()."<hr />".$objEntryOfficerTable->show()."<hr /> ".$objVetOfficerTable->show()."<hr /> ".$objBottomTable->show()."<br />".$objButtonTable->show();
 $form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
 $form->addRule('repOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
 $form->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
-$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
+//$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
 $form->addRule('year', $this->objLanguage->languageText('mod_ahis_promptyear', 'openaris'), 'required');
 $form->addRule(array('month'=>'month','year'=>'year'), $this->objLanguage->languageText('mod_ahis_valdate', 'openaris'), 'twofielddate');
 $form->addRule('rDate', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'valreportdate');
