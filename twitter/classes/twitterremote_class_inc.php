@@ -145,7 +145,7 @@ class twitterremote extends object
     * should not be more than 140 characters to ensure optimal display.
     *
     */
-    public function updateStatus($status, $latitude=null, $longitude=null)
+    public function updateStatus($status, $latitude=NULL, $longitude=NULL)
     {
         $auth = $this->userName.":".$this->password;
         $url = 'http://'.$auth.'@twitter.com/statuses/update.xml';
