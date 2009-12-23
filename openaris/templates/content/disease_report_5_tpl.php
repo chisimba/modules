@@ -69,7 +69,7 @@ foreach ($outbreaks as $outbreak) {
     $objTableArea1->startRow();
        $objTableArea1->startRow();
     $outbreakcode= $outbreak['outbreakCode'];
-    $LinkUri = $this->uri(array('action'=>'disease_report_screen_5','outbreakCode'=>$outbreakcode));
+    $LinkUri = $this->uri(array('action'=>'disease_report_screen_5','outbreakCode1'=>$outbreakcode));
 
     $objLink = new link($LinkUri);
     $objLink->link = $outbreak['outbreakCode'];
@@ -111,7 +111,7 @@ $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
 
 $nextUri = $this->uri(array('action'=>'disease_report_screen_6', 'outbreakCode'=>$outbreakCode));
-if (count($diseaseControlMeasures) > 0) {
+if (count($numcontrol) > 0) {
     $function = "javascript: document.location='$nextUri'";
 } else {
     $message = $this->objLanguage->languageText('mod_ahis_mustaddcontrolmeasure', 'openaris');
@@ -177,7 +177,7 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdda
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'));
 $objTableArea3->endHeaderRow();
-
+//print_r($diseaseControlMeasures);
 foreach ($diseaseControlMeasures as $measure) {
     $controlMeasure = $this->objControlmeasures->getRow('id', $measure['controlmeasureid']);
     $otherMeasure = $this->objOtherControlMeasures->getRow('id', $measure['othermeasureid']);

@@ -69,7 +69,7 @@ foreach ($outbreaks as $outbreak) {
 
     $objTableArea1->startRow();
      $outbreakcode= $outbreak['outbreakCode'];
-    $LinkUri = $this->uri(array('action'=>'disease_report_screen_3','outbreakCode'=>$outbreakcode));
+    $LinkUri = $this->uri(array('action'=>'disease_report_screen_3','outbreakCode1'=>$outbreakcode));
 
     $objLink = new link($LinkUri);
     $objLink->link = $outbreak['outbreakCode'];
@@ -83,7 +83,7 @@ foreach ($outbreaks as $outbreak) {
     $objTableArea1->addCell($outbreak['year']);
     $objTableArea1->endRow();
 }
-
+//print_r($diagnoses);
 $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
 $outbreakCodeBox->extra = 'readonly';
 $outbreakCodeBox->setCss('passive_surveillance');
@@ -108,7 +108,7 @@ $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
 
 $nextUri = $this->uri(array('action'=>'disease_report_screen_4', 'outbreakCode'=>$outbreakCode));
-if (count($diagnoses) > 0) {
+if (count($numdiag) > 0) {
     $function = "javascript: document.location='$nextUri'";
 } else {
     $message = $this->objLanguage->languageText('mod_ahis_mustadddiagnosis', 'openaris');
@@ -170,7 +170,7 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdda
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'));
 $objTableArea3->endHeaderRow();
-
+//print_r($diagnosis);
 foreach ($diagnoses as $diagnosis) {
     $diagnosisNature  = $this->objDiagnosticMethod->getRow('id', $diagnosis['diagnosticmethodid']);
     $objTableArea3->startRow();

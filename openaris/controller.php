@@ -400,6 +400,10 @@ class openaris extends controller {
 				$year 		= $this->getParam('year');
 				echo json_encode(array('code'=>$this->objDiseaseReport->genOutbreakCode($countryId, $diseaseId, $year)));
 				break;
+			case "ajax_getoutbreakcountry":
+				$countryId 	= $this->getParam('countryId');
+				echo json_encode($this->objDiseaseReport->genOutbreakCountry($countryId));
+				break;	
 			case "ajax_getdiseasenames":
 				$district = $this->getSession('ps_admin3');
 			  $diseaseId = $this->getParam('outbreakcode');
@@ -420,7 +424,13 @@ class openaris extends controller {
 			   $year = $this->getSession('ps_year');
 			   echo json_encode(array('cumvac'=>$this->objVacinventory->getData($month,$year,$val,$filter,$district)));
 			   break;
-			      
+			case "ajax_valdirection":
+			   $filter = $this->getParam('filter');
+			   $countryId = $this->getParam('countryId',0);
+			   $direction = $this->getParam('direction',0);
+			   $valid = $this->objCountry->getData($filter,$direction,$countryId);
+			    echo json_encode(current($valid));
+			   break;      
 			case 'save_disease_1':
 				$outbreakCode = $this->getParam('outbreakCode');
 				$countryId = $this->getParam('countryId', $this->getSession('ps_countryId'));
@@ -459,7 +469,7 @@ class openaris extends controller {
 										  'validaterid' => $valOfficerId,
 										  'countryid' => $countryId,
 										  'partitionid' => $partitionId,
-										  'reportdate' => date('Y-m-d', mktime(0,0,0,1,$month,$year)),
+										  'reportdate' => date('Y-m-d', mktime(0,0,0,$month,1,$year)),
 										  'prepareddate' => $datePrepared,
 										  'ibarsubdate' => $dateIBARSub,
 										  'ibarrecdate' => $dateIBARRec,
@@ -476,7 +486,7 @@ class openaris extends controller {
 										  'diagnosisdate' => $diagnosisDate,
 										  'interventiondate' => $interventionDate,
 										  'date_created' => date('Y-m-d'),
-										  'created_by' => $this->objUser->userId());
+										  'created_by' => $this->objUser->userId());;
 					$this->objDiseaseReport->insert($insert_array);
 				} else {
 					$outbreakId = $this->getParam('outbreakId');
@@ -493,7 +503,7 @@ class openaris extends controller {
 					$this->objDiseaseReport->update('id', $report['id'], $modify_array);
 				}
 					
-                /*
+                
 				$this->setSession('ps_countryId', $countryId);
 				$this->setSession('ps_partitionTypeId', $partitionTypeId);
 				$this->setSession('ps_partitionLevelId', $partitionLevelId);
@@ -520,18 +530,28 @@ class openaris extends controller {
 				$this->setSession('ps_sampleDate', $sampleDate);
 				$this->setSession('ps_diagnosisDate', $diagnosisDate);
 				$this->setSession('ps_interventionDate', $interventionDate);
-				*/
+				$this->setSession('ps_outbreakCode',$outbreakCode);
+				
+				
 				return $this->nextAction('disease_report_screen_2', array('outbreakCode'=>$outbreakCode));
 				
 			case "disease_report_screen_2":
-				$outbreakCode = $this->getParam('outbreakCode');
-				$this->setVar('outbreakCode', $outbreakCode);
+				$outbreakCode1 = $this->getParam('outbreakCode1');
+				$outbreakCode = $this->getSession('ps_outbreakCode');
+				$this->setVar('outbreakCode1', $outbreakCode1);
+				$this->setVar('outbreakCode',$outbreakCode);
 				
+				$this->setVar('numloc', $this->objDiseaseLocality->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
+				$country =$this->getSession('ps_countryId');
+				$this->setVar('countryId', $country);
 				$this->setVar('arrayLocalityType', $this->objLocalityType->getAll("ORDER BY locality_type"));
 				$this->setVar('arrayFarmingSystem', $this->objFarmingSystem->getAll("ORDER BY farmingsystem"));
-				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks());
+				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks($country));
+            if(!empty($outbreakCode1)){
+				$this->setVar('diseaseLocalities', $this->objDiseaseLocality->getAll("WHERE outbreakcode = '$outbreakCode1' ORDER BY date_created"));
+				}else{
 				$this->setVar('diseaseLocalities', $this->objDiseaseLocality->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
-				
+				}
 				$this->setVar('localityTypeId', $this->getSession('ps_localityTypeId'));
 				$this->setVar('localityName', $this->getSession('ps_localityName'));
 				$this->setVar('latitude', $this->getSession('ps_latitude'));
@@ -562,11 +582,19 @@ class openaris extends controller {
 				return $this->nextAction('disease_report_screen_2', array('outbreakCode'=>$outbreakCode));
 			
             case 'disease_report_screen_3':
-                $outbreakCode = $this->getParam('outbreakCode');
-				$this->setVar('outbreakCode', $outbreakCode);
-				
+            $outbreakCode1 = $this->getParam('outbreakCode1');
+            $outbreakCode = $this->getSession('ps_outbreakCode');
+				$this->setVar('outbreakCode1', $outbreakCode1);
+				$this->setVar('outbreakCode',$outbreakCode);
+				$this->setVar('numdiag', $this->objDiseaseDiagnosis->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));				
+            if(!empty($outbreakCode1)){
+				$this->setVar('diagnoses', $this->objDiseaseDiagnosis->getAll("WHERE outbreakcode = '$outbreakCode1' ORDER BY date_created"));
+				}else{
 				$this->setVar('diagnoses', $this->objDiseaseDiagnosis->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
-				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks());
+				}
+				$country =$this->getSession('ps_countryId');
+
+				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks($country));
 				$this->setVar('arrayNatureOfDiagnosis', $this->objDiagnosticMethod->getAll("ORDER BY diagnostic_method"));
 				$this->setVar('diagnosisId', $this->getSession('ps_diagnosisId'));
 				$this->setVar('createdBy', $this->objUser->username($this->getSession('createdById')));
@@ -577,21 +605,30 @@ class openaris extends controller {
                 return 'disease_report_3_tpl.php';
             
 			case "add_diseasediagnosis":
-				$outbreakCode = $this->getParam('outbreakCode');
+				$outbreakCode = $this->getSession('ps_outbreakCode');
 				$insert_array = array('outbreakcode' => $outbreakCode,
 								 'diagnosticmethodid' => $this->getParam('diagnosisId'),
 								 'date_created' => date('Y-m-d'),
 								 'created_by' => $this->objUser->userId()
-								 );
+								 );//print_r($insert_array);
 				$this->objDiseaseDiagnosis->insert($insert_array);
 				return $this->nextAction('disease_report_screen_3', array('outbreakCode'=>$outbreakCode));
 			
             case 'disease_report_screen_4':
-				$outbreakCode = $this->getParam('outbreakCode');
-				$report = $this->objDiseaseReport->getRow('outbreakcode', $outbreakCode);
+            $outbreakCode1 = $this->getParam('outbreakCode1');
+				$outbreakCode = $this->getSession('ps_outbreakCode');
+				$this->setVar('outbreakCode1', $outbreakCode1);
+				$this->setVar('numspecies', $this->objDiseaseSpeciesNumber->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
+            if(!empty($outbreakCode1)){
+				$this->setVar('diseaseSpeciesNumber', $this->objDiseaseSpeciesNumber->getAll("WHERE outbreakcode = '$outbreakCode1' ORDER BY date_created"));
+				}else{
 				$this->setVar('diseaseSpeciesNumber', $this->objDiseaseSpeciesNumber->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
-                $this->setVar('outbreakCode', $outbreakCode);
-				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks());
+				}
+				$report = $this->objDiseaseReport->getRow('outbreakcode', $outbreakCode);
+
+            $this->setVar('outbreakCode', $outbreakCode);
+            $country =$this->getSession('ps_countryId');    
+				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks($country));
 				$this->setVar('arraySpecies', $this->objSpeciesNames->getAll("ORDER BY common_name"));
 				$this->setVar('arrayAgeGroup', $this->objSpeciesAgeGroup->getAll("ORDER BY agegroup"));
 				$this->setVar('arraySex', $this->objSex->getAll("ORDER BY name"));
@@ -605,7 +642,7 @@ class openaris extends controller {
 				$this->setVar('cumulativeDeaths', $this->objDiseaseSpeciesNumber->getDeaths($report['diseaseid']));
 				$this->setVar('cumulativeDestroyed', $this->objDiseaseSpeciesNumber->getDestroyed($report['diseaseid']));
 				$this->setVar('cumulativeSlaughtered', $this->objDiseaseSpeciesNumber->getSlaughtered($report['diseaseid']));
-				
+
 				$this->setVar('speciesId', $this->getSession('ps_speciesId'));
 				$this->setVar('ageId', $this->getSession('ps_ageId'));
 				$this->setVar('sexId', $this->getSession('ps_sexId'));
@@ -634,11 +671,19 @@ class openaris extends controller {
 				return $this->nextAction('disease_report_screen_4', array('outbreakCode'=>$outbreakCode));
 			
             case 'disease_report_screen_5':
-				$outbreakCode = $this->getParam('outbreakCode');
-                $this->setVar('outbreakCode', $outbreakCode);
+            $outbreakCode1 = $this->getParam('outbreakCode1');
+				$outbreakCode = $this->getSession('ps_outbreakCode');
+				$this->setVar('outbreakCode1', $outbreakCode1);
+			   $this->setVar('outbreakCode', $outbreakCode);
+				$this->setVar('numcontrol', $this->objDiseaseControlMeasure->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
+            if(!empty($outbreakCode1)){
+				$this->setVar('diseaseControlMeasures', $this->objDiseaseControlMeasure->getAll("WHERE outbreakcode = '$outbreakCode1' ORDER BY date_created"));
+				}else{
 				$this->setVar('diseaseControlMeasures', $this->objDiseaseControlMeasure->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
-			
-				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks());
+				}
+
+				$country =$this->getSession('ps_countryId');			
+				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks($country));
 				$this->setVar('arrayControlMeasure', $this->objControlmeasures->getAll("ORDER BY controlmeasure"));
 				$this->setVar('arrayOtherMeasure', $this->objOtherControlMeasures->getAll("ORDER BY control_measure"));
 				$this->setVar('controlId', $this->getSession('ps_controlId'));
@@ -658,6 +703,7 @@ class openaris extends controller {
 								 'date_created' => date('Y-m-d'),
 								 'created_by' => $this->objUser->userId()
 								 );
+								// print_r($insert_array);
 				$this->objDiseaseControlMeasure->insert($insert_array);
 				return $this->nextAction('disease_report_screen_5', array('outbreakCode'=>$outbreakCode));
 			
@@ -2721,6 +2767,7 @@ class openaris extends controller {
 			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));	
 			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));			      		      
 			      $this->setVar('userList', $this->objAhisUser->getList());
+			      $this->setVar('status',$this->getParam('status'));
 			      $data = $this->objCountry->getAll("ORDER BY official_name");
 			      //print_r($data);exit;
 			      $ptype = $this->objPartitionCategory->getAll("ORDER BY partitioncategory");
@@ -2750,6 +2797,12 @@ class openaris extends controller {
                $this->setVar('phone1',$this->getSession('ps_vphone'));
 			      $this->setVar('fax1',$this->getSession('ps_vfax'));
 			      $this->setVar('email1',$this->getSession('ps_vemail'));
+			      $this->setVar('phone2',$this->getSession('ps_rphone'));
+			      $this->setVar('fax2',$this->getSession('ps_rfax'));
+			      $this->setVar('email2',$this->getSession('ps_remail'));
+			      
+			      $this->setVar('lataxis',$this->getSession('ps_lataxes'));
+			      $this->setVar('longaxis',$this->getSession('ps_longaxes'));
 			      
 			      //$this->setSession('ps_calendardate', $this->getParam('calendardate'));
 			      return 'vacinventory_tpl.php';
@@ -2763,7 +2816,10 @@ class openaris extends controller {
 			      $this->setSession('ps_demail',$this->getParam('dataOfficerEmail'));
 			      $this->setSession('ps_vphone',$this->getParam('vetOfficerTel'));
 			      $this->setSession('ps_vfax',$this->getParam('vetOfficerFax'));
-			      $this->setSession('ps_vemail',$this->getParam('vetOfficerEmail'));  
+			      $this->setSession('ps_vemail',$this->getParam('vetOfficerEmail')); 
+			       $this->setSession('ps_rphone',$this->getParam('repOfficerTel'));
+			      $this->setSession('ps_rfax',$this->getParam('repOfficerFax'));
+			      $this->setSession('ps_remail',$this->getParam('repOfficerEmail')); 
 			      $this->setSession('ps_ibardate',$this->getParam('ibardate'));
 			      $this->setSession('ps_country',$this->getParam('countryId'));	
 			      $this->setSession('ps_month',$this->getParam('month'));	
@@ -2774,7 +2830,22 @@ class openaris extends controller {
 			      $this->setSession('ps_loctype',$this->getParam('loctype'));	
 			      $this->setSession('ps_locname',$this->getParam('locname'));	
 			      $this->setSession('ps_lattitude',$this->getParam('lattitude'));
-			      $this->setSession('ps_longitude',$this->getParam('longitude'));			      			      		      		      				   		      			      			      		      			      		      			      		      			      			      			      		      			      		      			      	      
+			      $this->setSession('ps_longitude',$this->getParam('longitude'));	
+	            $this->setSession('ps_longaxes',$this->getParam('longaxes'));
+	            $this->setSession('ps_lataxes',$this->getParam('lataxes')); 
+	            $lattval = $this->getSession('ps_lattitude'); 
+	            $longval =$this->getSession('ps_longitude');
+	            $countryId = $this->getSession('ps_country');
+	            $filter = 'latt';
+	            $status = $this->objCountry->getData($filter,$lattval,$countryId);  
+               if($status[0]['status']==1){
+               return $this->nextAction('vacinventory',array('status'=>1));
+               }
+	             $filter = 'long';
+	            $status = $this->objCountry->getData($filter,$longval,$countryId);
+               if($status[0]['status']==2){
+               return $this->nextAction('vacinventory',array('status'=>2));
+               }
 				   return $this->nextAction('vacinventory2');
 
 			      
@@ -2817,6 +2888,8 @@ class openaris extends controller {
 	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   			  				     				     			
 			      $this->setVar('userList', $this->objAhisUser->getList());
 			      $this->setVar('arrayoutbreak',$this->objDiseaseReport->getOutbreak($month,$year,$district));
+			      $data =$this->objDiseaseReport->getOutbreak($month,$year,$district);
+			      //print_r($data);
 			      //$this->setVar('arraydisease',$this->objDiseaseReport->getdiseasename());
 			      $this->setVar('arrayspecies',$this->objSpeciesNew->getAll("ORDER BY speciesname"));
 			      return 'vacinventory2_tpl.php';
@@ -5332,6 +5405,9 @@ class openaris extends controller {
 	             $this->unsetSession('ps_vphone');
 	             $this->unsetSession('ps_vemail');
 	             $this->unsetSession('ps_vfax');	    
+	             $this->unsetSession('ps_rphone');
+	             $this->unsetSession('ps_remail');
+	             $this->unsetSession('ps_rfax');	    
 	    
 	    
 	    

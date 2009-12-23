@@ -73,5 +73,46 @@ class country extends dbtable
 			return false;
 			
 	} 
+	
+	public function getData($filter,$direct,$countryId){
+	$status = 0;
+
+    $function = "javascript: alert('hello')";
+		$direction = $this->getAll("WHERE id='$countryId'");
+	if($filter == 'latt'){
+	
+	foreach($direction as $dir){
+	$nlatt = $dir['north_latitude'];
+	$slatt = $dir['south_latitude'];
+	if($direct<$nlatt || $direct>$slatt){
+
+	 $status = 1;
+	
+	}
+	
+	}
+	
+	}else{
+	
+	foreach($direction as $dir){
+	$wlong = $dir['west_longitude'];
+	$elong = $dir['east_longitude'];
+	if($direct<$wlong || $direct>$elong){
+	
+    $status = 2;
+   
+	
+	}
+	
+	
+	
+	}
+	
+	
+	}
+
+	$dataarray[] = array('status'=>$status,'nlatt'=>$nlatt,'slatt'=>$slatt,'wlong'=>$wlong,'elong'=>$elong);
+	return $dataarray;
+}
 }
 ?>

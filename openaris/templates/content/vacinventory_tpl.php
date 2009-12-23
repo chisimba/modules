@@ -120,6 +120,15 @@ $admin1->extra = 'onchange="javascript:changePartitionType();"';
   $email1 = new textinput('vetOfficerEmail',$email1); 
 //get htmltable object
 
+//text field for phone
+ $phone2= new textinput('repOfficerTel',$phone2);
+ 
+ //text field for fax
+ $fax2 = new textinput('repOfficerFax',$fax2);
+  
+  //text field for email
+  $email2 = new textinput('repOfficerEmail',$email2);
+  
 //dropdown for admin2
 $admin2 = new dropdown('partitionLevelId');
 $admin2->addOption('-1',Select);
@@ -148,7 +157,20 @@ if(!isset($longitude)){
 
 $longitude = 0;
 }
+$latt->extra = 'onchange = \'javascript:valdirection("latt");\'';
 $long = new textinput('longitude',$longitude);
+$long->extra = 'onchange = \'javascript:valdirection("long");\'';
+
+$lataxes = new dropdown('lataxes');
+$lataxes->addOption('N', 'N');
+$lataxes->addOption('S', 'S');
+$lataxes->setSelected($lataxis);
+
+
+$longaxes = new dropdown('longaxes');
+$longaxes->addOption('E', 'E');
+$longaxes->addOption('W', 'W');
+$longaxes->setSelected($longaxis);
 
 //get htmltable object
 $objTable = $this->getObject('htmltable','htmlelements');
@@ -157,20 +179,36 @@ $objTable->width = NULL;
 
 //create table rows and place text fields and labels 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris'));
-$objTable->addCell($repOff->show());
-$objTable->addCell('&nbsp');
+
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','openaris'));
 $objTable->addCell($reportDate->show());
 $objTable->endRow();
-
 $objTable->startRow();
-$objTable->addCell('&nbsp');
-$objTable->addCell('&nbsp');
-$objTable->addCell('&nbsp');
+
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris'));
 $objTable->addCell($ibarDate->show());
 $objTable->endRow();
+
+//get htmltable object
+$objTable4 = new htmlTable();
+$objTable4->cellpadding =4;
+$objTable4->cellspacing = 2;
+$objTable4->width = '90%';
+$objTable4->cssClass = 'min50';
+
+//create table rows and place text fields and labels 
+$objTable4->startRow();
+$objTable4->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris'));
+$objTable4->addCell($repOff->show());
+$objTable4->startRow();
+$objTable4->addCell($this->objLanguage->languageText('mod_ahis_word_phone','openaris'));
+$objTable4->addCell($phone2->show());
+$objTable4->addCell($this->objLanguage->languageText('mod_ahis_word_fax','openaris'));
+$objTable4->addCell($fax2->show());
+$objTable4->addCell($this->objLanguage->languageText('mod_ahis_word_email','openaris'));
+$objTable4->addCell($email2->show());
+$objTable4->endRow();
+
 
 //get htmltable object
 $objTable2 = new htmlTable();
@@ -228,7 +266,7 @@ $objTable1->addCell($this->objLanguage->languageText('word_country'));
 $objTable1->addCell($country->show());
 $objTable1->addCell($this->objLanguage->languageText('phrase_partitiontype'));
 $objTable1->addCell($admin1->show());
-$objTable1->addCell($this->objLanguage->languageText('word_location')." ".$this->objLanguage->languageText('word_type'));
+$objTable1->addCell($this->objLanguage->languageText('mod_ahis_localitytype','openaris'));
 $objTable1->addCell($loctype->show());
 $objTable1->endRow();
 
@@ -237,7 +275,7 @@ $objTable1->addCell($this->objLanguage->languageText('word_month'));
 $objTable1->addCell($monthdate->show());
 $objTable1->addCell($this->objLanguage->languageText('mod_ahis_partitionlevel','openaris'));
 $objTable1->addCell($admin2->show());
-$objTable1->addCell($this->objLanguage->languageText('word_location')." ".$this->objLanguage->languageText('word_name'));
+$objTable1->addCell($this->objLanguage->languageText('mod_ahis_localityname','openaris'));
 $objTable1->addCell($locname->show());
 $objTable1->endRow();
 
@@ -247,25 +285,19 @@ $objTable1->addCell($yeardate->show());
 $objTable1->addCell($this->objLanguage->languageText('mod_ahis_partitionname','openaris'));
 $objTable1->addCell($admin3->show());
 $objTable1->addCell($this->objLanguage->languageText('word_latitude'));
-$objTable1->addCell($latt->show());
-$objTable1->endRow();
-
-$objTable1->startRow();
-
-$objTable1->endRow();
-
-$objTable1->startRow();
-
+$objTable1->addCell($latt->show()." ".$lataxes->show());
 $objTable1->endRow();
 
 
 
+
 $objTable1->startRow();
-$objTable->addCell('&nbsp');
-$objTable->addCell('&nbsp');
-$objTable->addCell('&nbsp');
+$objTable1->addCell('&nbsp');
+$objTable1->addCell('&nbsp');
+$objTable1->addCell('&nbsp');
+$objTable1->addCell('&nbsp');
 $objTable1->addCell($this->objLanguage->languageText('word_longitude'));
-$objTable1->addCell($long->show());
+$objTable1->addCell($long->show()." ".$longaxes->show());
 $objTable1->endRow();
 
 $objTable1->startRow();
@@ -275,7 +307,7 @@ $objTable1->endRow();
 
 
 $objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory_add')));
-$objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable2->show()."<hr class='openaris' />".$objTable3->show()."<hr class='openaris' />".$objTable1->show());
+$objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable4->show()."<hr class='openaris' />".$objTable2->show()."<hr class='openaris' />".$objTable3->show()."<hr class='openaris' />".$objTable1->show());
 
 $objForm->addRule('repOfficerId',$this->objLanguage->languageText('mod_ahis_reportoffreq','openaris'),'select');
 $objForm->addRule('dataOfficerTel', $this->objLanguage->languageText('mod_ahis_validatedatatel', 'openaris'), 'required');
@@ -291,11 +323,11 @@ $objForm->addRule('partitionLevelId', $this->objLanguage->languageText('mod_ahis
 $objForm->addRule('partitionId', $this->objLanguage->languageText('mod_ahis_admin3req','openaris'),'select');
 $objForm->addRule('lattitude', $this->objLanguage->languageText('mod_ahis_lattitudereq','openaris'),'numeric');
 $objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_longitudereq','openaris'),'numeric');
-
+//$objForm->addRule(array('lattitude','5'), $this->objLanguage->languageText('mod_ahis_validaterepdateibardate', 'openaris'), 'minlength');
 $objForm->addRule('repdate', $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotfuture');
 $objForm->addRule('ibardate', $this->objLanguage->languageText('mod_ahis_validateibardate', 'openaris'), 'datenotfuture');
-$objForm->addRule(array('repdate','ibardate'), $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotbefore');
-
+$objForm->addRule(array('repdate','ibardate'), $this->objLanguage->languageText('mod_ahis_validaterepdateibardate', 'openaris'), 'datenotbefore');
+//$objForm->addRule(array('lattitude','5'), $this->objLanguage->languageText('mod_ahis_validaterepdateibardate', 'openaris'), 'minlength');
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
@@ -305,4 +337,15 @@ $objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$objForm->show
 
 
 echo $objLayer->show();
+//echo $status;
+if($status ==1){
+echo "<script type=\"text/javascript\">";
+echo " alert(\"Please enter valid lattitude\")";
+echo "</script>";
+}
+if($status ==2){
+echo "<script type=\"text/javascript\">";
+echo " alert(\"Please enter valid longitude\")";
+echo "</script>";
+}
 ?>

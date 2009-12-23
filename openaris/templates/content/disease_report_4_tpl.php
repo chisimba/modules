@@ -69,7 +69,7 @@ foreach ($outbreaks as $outbreak) {
     $objTableArea1->startRow();
      $objTableArea1->startRow();
      $outbreakcode= $outbreak['outbreakCode'];
-    $LinkUri = $this->uri(array('action'=>'disease_report_screen_4','outbreakCode'=>$outbreakcode));
+    $LinkUri = $this->uri(array('action'=>'disease_report_screen_4','outbreakCode1'=>$outbreakcode));
 
     $objLink = new link($LinkUri);
     $objLink->link = $outbreak['outbreakCode'];
@@ -112,7 +112,7 @@ $modifiedDateBox->setCss('passive_surveillance');
 $createdBox->extra = $createdDateBox->extra = $modifiedBox->extra = $modifiedDateBox->extra = 'disabled';
 
 $nextUri = $this->uri(array('action'=>'disease_report_screen_5', 'outbreakCode'=>$outbreakCode));
-if (count($diseaseSpeciesNumber) > 0) {
+if (count($numspecies) > 0) {
     $function = "javascript: document.location='$nextUri'";
 } else {
     $message = $this->objLanguage->languageText('mod_ahis_mustaddnumbers', 'openaris');

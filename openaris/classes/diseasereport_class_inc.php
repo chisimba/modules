@@ -110,8 +110,16 @@ class diseasereport extends dbtable {
 		
 	}
 	
-	public function getOutbreaks() {
-		$outbreaks = $this->getAll("ORDER BY outbreakcode");
+	public function genOutbreakCountry($countryId) {
+		$outbreaks = $this->getAll("WHERE countryid = '$countryId' ORDER BY outbreakcode");
+		$arrayd = array();
+		foreach ($outbreaks as $outbreak) {
+			$arrayd[$outbreak['id']]= $outbreak['outbreakcode'];
+		}
+		return $arrayd;
+	}
+	public function getOutbreaks($country) {
+		$outbreaks = $this->getAll("WHERE countryid = '$country' ORDER BY outbreakcode");
 		$array = array();
 		foreach ($outbreaks as $outbreak) {
 			$partition = $this->objPartition->getRow('id', $outbreak['partitionid']);

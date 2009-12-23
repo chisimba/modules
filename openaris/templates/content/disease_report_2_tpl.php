@@ -65,11 +65,12 @@ $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'));
 $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
 $objTableArea1->endHeaderRow();
 
+   // print_r($outbreaks);exit;
     
 foreach ($outbreaks as $outbreak) {
     $objTableArea1->startRow();
     $outbreakcode= $outbreak['outbreakCode'];
-    $LinkUri = $this->uri(array('action'=>'disease_report_screen_2','outbreakCode'=>$outbreakcode));
+    $LinkUri = $this->uri(array('action'=>'disease_report_screen_2','outbreakCode1'=>$outbreakcode));
 
     $objLink = new link($LinkUri);
     $objLink->link = $outbreak['outbreakCode'];
@@ -83,15 +84,17 @@ foreach ($outbreaks as $outbreak) {
     $objTableArea1->addCell($outbreak['year']);
     $objTableArea1->endRow();
 }
-
+$countryBox = new textinput('countryId',$countryId,'hidden');
 $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
 $outbreakCodeBox->extra = 'readonly';
 $outbreakCodeBox->setCss('passive_surveillance');
 
 $latitudeBox = new textinput('latitude', $latitude);
 $latitudeBox->setCss('geo');
+$latitudeBox->extra = 'onchange = \'javascript:valdirection("lat");\'';
 $longitudeBox = new textinput('longitude', $longitude);
 $longitudeBox->setCss('geo');
+$longitudeBox->extra = 'onchange = \'javascript:valdirection("long");\'';
 
 $latDirecDrop = new dropdown('latDirec');
 $latDirecDrop->addOption('N', 'N');
@@ -133,7 +136,7 @@ $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
 
 $nextUri = $this->uri(array('action'=>'disease_report_screen_3', 'outbreakCode'=>$outbreakCode));
-if (count($diseaseLocalities) > 0) {
+if (count($numloc) > 0) {
     $function = "javascript: document.location='$nextUri'";
 } else {
     $message = $this->objLanguage->languageText('mod_ahis_mustaddlocality', 'openaris');
@@ -178,6 +181,7 @@ $objTableArea2->endRow();
 $objTableArea2->startRow();
 $objTableArea2->addCell($this->objLanguage->languageText('phrase_modifieddate'), NULL, 'top', 'right', NULL, 'colspan="5"');
 $objTableArea2->addCell($modifiedDateBox->show());
+$objTableArea2->addCell($countryBox->show());
 $objTableArea2->endRow();
 $objTableArea2->startRow();
 $objTableArea2->addCell($cButton->show().$tab.$bButton->show().$tab.$aButton->show().$tab.$sButton->show(), NULL, 'top', 'center', NULL, 'colspan="6"');

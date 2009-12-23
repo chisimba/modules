@@ -247,10 +247,14 @@ function enableDatePicker(name) {
 }
 
 function toggleReportType() {
+
 	if (jQuery('#input_reportTypeId').val() == 1) {
 		jQuery('#input_outbreakCode').hide();
+
 		jQuery('#input_outbreakId').show();
-		jQuery('#input_diseaseId').attr('disabled', true);
+				changeoutbreak();
+
+		jQuery('#input_diseaseId').attr('disabled', true);						
 		jQuery('#input_occurenceId').attr('disabled', true);
 		jQuery('#input_infectionId').attr('disabled', true);
 		
@@ -356,6 +360,53 @@ function changeSpecies() {
 	
 	
 	}
+
+	function changeoutbreak(){
+	jQuery('#input_outbreakId >option').remove();
+	jQuery('#input_outbreakId').attr('disabled', true);
+	var countryId = jQuery('#input_countryId').val();
+		if (countryId != -1) {
+	jQuery.getJSON("index.php?module=openaris&action=ajax_getoutbreakcountry&countryId="+countryId,
+				   function(data){ 
+						jQuery.each(data, function(key, value) {
+							jQuery('#input_outbreakId').append(jQuery("<option></option>").attr("value",key).text(value));
+						});
+						if (data.length != 0) {
+							jQuery('#input_outbreakId').removeAttr('disabled');
+						}
+						});
+	
+	}
+	}
+
+function valdirection(dname){
+
+	var direction  = jQuery('#input_'+dname+'itude').val();
+	var country = jQuery('#input_countryId').val();
+
+	if (direction != -1) {
+	var direction  = jQuery('#input_'+dname+'itude').val();
+		var country = jQuery('#input_countryId').val();
+		
+				   jQuery.getJSON("index.php?module=openaris&action=ajax_valdirection&direction="+direction+"&filter="+dname+"&countryId="+country,
+				   function(data) {
+				   if(data.status == 1){
+				   
+				   alert("Please,Lattitude is out of range.Range is between "+data.nlatt+" and "+data.slatt);
+				   var def = 'NULL';
+				   jQuery('#input_'+dname+'itude').val(def);
+				   }
+				   if(data.status == 2){
+				   
+			      alert("Please,Longitude is out of range.Range is between "+data.wlong+" and "+data.elong);
+			      				  // var def1 = 'NULL';
+			     jQuery('#input_'+dname+'itude').val(0);
+				   }
+					   });
+	}
+	
+	
+	}
 	
 
 	
@@ -407,3 +458,4 @@ jQuery.getJSON("index.php?module=openaris&action=ajax_gettlu&speciesno="+nospeci
 					   });
 	}
 }
+

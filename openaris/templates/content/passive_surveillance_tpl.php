@@ -279,7 +279,7 @@ $reportTypeDrop->cssClass = 'passive_surveillance';
 $reportTypeDrop->extra = 'onchange="javascript:toggleReportType();"';
 
 $outbreakDrop = new dropdown('outbreakId');
-$outbreakDrop->addFromDB($arrayOutbreak, 'outbreakcode', 'id');
+//$outbreakDrop->addFromDB($arrayOutbreak, 'outbreakcode', 'id');
 $outbreakDrop->setSelected($outbreakCode);
 $outbreakDrop->cssClass = 'passive_surveillance';
 $outbreakDrop->extra = 'style="display: none;"';
