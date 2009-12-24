@@ -482,7 +482,7 @@ class blogui extends object
                     'catsmenu',
                     'searchbox',
                     'quickcats',
-                    'quickpost',
+                    // 'quickpost',
                 ) ,
             );
             // write the defaults to the file
