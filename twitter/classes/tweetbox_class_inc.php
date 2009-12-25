@@ -205,10 +205,10 @@ class tweetbox extends object
         if ($this->hasTwitterLogon()) {
            $ret = "<form name=\"myEditorForm\" id=\"myEditorForm\" action=\""
               . $this->url . "\" method=\"post\">"
-              . "<table cellpadding=\"4\" width=\"100%\"><tr><td><span class=\"minute\">"
+              . "<table cellpadding=\"4\" width=\"98%\"><tr><td><span class=\"minute\">"
               . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
               . "</span></td><td><span class=\"error\"><div name=\"charlimitinfo\" id=\"charlimitinfo\">140</div></span></td></tr></table>"
-              . "<textarea name=\"tweet\" id=\"tweet\" cols=\"20\" rows=\"4\">"
+              . "<textarea name=\"tweet\" id=\"tweet\" cols=\"19\" rows=\"4\">"
               . "</textarea><br />"
               . "<input type=\"submit\" value=\"Tweet\" />"
               . "</form>";

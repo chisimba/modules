@@ -117,7 +117,7 @@ class twitter extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'tweet');
+        $action=$this->getParam('action', 'jqshow');
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -175,6 +175,34 @@ class twitter extends controller
         }
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
+    }
+    
+
+    /**
+    *
+    * Method corresponding to the demo action. It fetches the default user
+    * twitter status and displays it.
+    *
+    * @access private
+    *
+    */
+    private function __jqshow()
+    {
+        $str="<h1>WORKING HERE</h1>";
+        $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
+        $objUserParams->readConfig();
+        $userName = $objUserParams->getValue("twittername");
+        $password = $objUserParams->getValue("twitterpassword");
+        if (!$userName == NULL) {
+            $jqTwit = $this->getObject("jqtwitter","twitter");
+            // Note that the CSS should always be loaded first
+            $jqTwit->loadTweetCss();
+            $jqTwit->loadJquery();
+            $jqTwit->loadTweetPlugin();
+            $jqTwit->initializeTweetPlugin($userName);
+        }
+        $this->setVarByRef('str', $str);
+        return "jqtweet_tpl.php";
     }
 
     private function __tweet()
