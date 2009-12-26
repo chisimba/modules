@@ -57,6 +57,23 @@ $GLOBALS['kewl_entry_point_run']) {
 
 class skypestatus extends object
 {
+    /**
+     * Standard constructor to load the necessary resources
+     * and populate the new object's instance variables.
+     *
+     * @access public
+     */
+    public function init()
+    {
+    }
+
+    /**
+     * Retrieve the current presence status of a user.
+     *
+     * @access public
+     * @param  string $username The username of the user to retrieve the status of.
+     * @return array  Associative array with the language codes as keys.
+     */
     public function getStatus($username)
     {
         $uri = sprintf('http://mystatus.skype.com/%s.xml', rawurlencode($username));
