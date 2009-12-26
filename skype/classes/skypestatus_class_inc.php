@@ -76,15 +76,26 @@ class skypestatus extends object
      */
     public function getStatus($username)
     {
+        // Compile the URI to retrieve.
         $uri = sprintf('http://mystatus.skype.com/%s.xml', rawurlencode($username));
+
+        // Create the DOM document and populate it from the URI.
         $document = new DOMDocument();
         $document->load($uri);
+
+        // Retrieve the presence elements.
         $elements = $document->getElementsByTagName('presence');
+
+        // Initialise the array to be returned by this method.
         $status = array();
+
+        // Loop through each presence element and populate the $status array accordingly.
         foreach ($elements as $element) {
             $lang = $element->getAttribute('xml:lang');
             $status[$lang] = $element->textContent;
         }
+
+        // Return the status array.
         return $status;
     }
 }
