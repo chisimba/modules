@@ -113,12 +113,9 @@ class jqtwitter extends object
     public function loadJquery()
     {
         $this->setVar('SUPPRESS_JQUERY', TRUE);
-        /*$jQuery = $this->getObject('jquery', 'htmlelements');
-        $jQuery->setVersion('1.3.2');
-        $this->appendArrayVar('headerParams', $jQuery->show());*/
-        // It doesn't work with our 1.2 or 1.3.2 versions so use the Google one.
-        $script = '<script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js" type="text/javascript"></script>';
-        $this->appendArrayVar('headerParams', $script);
+        $jQuery = $this->getObject('jquery', 'htmlelements');
+        $jQuery->setVersion('1.3.1');
+        $this->appendArrayVar('headerParams', $jQuery->show());
         return TRUE;
     }
     
@@ -189,7 +186,7 @@ class jqtwitter extends object
     */
     public function wrapInScriptTags($script) {
         $wrappedScript = '<script type=\'text/javascript\'>
-        $(document).ready(function(){
+        jQuery(document).ready(function(){
             ' . $script
             . '
         });
@@ -210,7 +207,7 @@ class jqtwitter extends object
     public function loadUser($userName)
     {
         $this->userName = urlencode($userName);
-        $script ='$(".tweet").tweet({
+        $script ='jQuery(".tweet").tweet({
                 join_text: "auto",
                 username: "' . $userName . '",
                 avatar_size: 32,
@@ -234,7 +231,7 @@ class jqtwitter extends object
     public function loadToUser($userName)
     {
         $this->userName = urlencode($userName);
-        $script ='$("#touser").tweet({
+        $script ='jQuery("#touser").tweet({
           avatar_size: 32,
           count: 4,
           query: "to%3A' . $userName . '",
@@ -266,7 +263,7 @@ class jqtwitter extends object
       $avatarSize=32, $displayCount=4)
     {
 
-        $script ='$("#' . $queryBase . "_"
+        $script ='jQuery("#' . $queryBase . "_"
           . $queryNumber . '").tweet({
           avatar_size: ' . $avatarSize . ',
           count: ' . $displayCount . ',
