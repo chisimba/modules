@@ -61,7 +61,7 @@ class skypestatus extends object
      * Instance of the curlwrapper class of the utilities module.
      *
      * @access protected
-     * @param  object
+     * @var    object
      */
     protected $curl;
 
