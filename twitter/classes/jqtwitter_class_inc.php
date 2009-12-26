@@ -250,7 +250,9 @@ class jqtwitter extends object
     * for a given query text. The purpose of this method is to
     * allow multiple queries to be generated in the same page.
     * The object and method calling this method should insert
-    * a div tag in the page
+    * a div tag in the page. Where multiple TWEETS will be used
+    * the id of the DIV should include a hashtag. See the TWEET
+    * filter in the filters module (core_modules) for an example.
     *
     * @param string $queryTxt The text of the given query
     * @param string $queryBase The base code for the qwery to which the number
@@ -260,13 +262,14 @@ class jqtwitter extends object
     * @return VOID
     *
     */
-    public function loadQueryByNumber($queryTxt, $queryBase, $queryNumber)
+    public function loadQueryByNumber($queryTxt, $queryBase, $queryNumber,
+      $avatarSize=32, $displayCount=4)
     {
 
         $script ='$("#' . $queryBase . "_"
           . $queryNumber . '").tweet({
-          avatar_size: 32,
-          count: 4,
+          avatar_size: ' . $avatarSize . ',
+          count: ' . $displayCount . ',
           query: "' . $queryTxt . '",
           loading_text: "Loading tweets..."
         });
