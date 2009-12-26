@@ -58,6 +58,14 @@ $GLOBALS['kewl_entry_point_run']) {
 class skypestatus extends object
 {
     /**
+     * Instance of the curlwrapper class of the utilities module.
+     *
+     * @access protected
+     * @param  object
+     */
+    protected $curl;
+
+    /**
      * Standard constructor to load the necessary resources
      * and populate the new object's instance variables.
      *
@@ -65,6 +73,7 @@ class skypestatus extends object
      */
     public function init()
     {
+        $this->curl = $this->getObject('curlwrapper', 'utilities');
     }
 
     /**
@@ -79,9 +88,12 @@ class skypestatus extends object
         // Compile the URI to retrieve.
         $uri = sprintf('http://mystatus.skype.com/%s.xml', rawurlencode($username));
 
-        // Create the DOM document and populate it from the URI.
+        // Retrieve the XML document from the URI.
+        $xml = $this->curl->process($uri);
+
+        // Create the DOM document and populate it using the XML.
         $document = new DOMDocument();
-        $document->load($uri);
+        $document->loadXML($xml);
 
         // Retrieve the presence elements.
         $elements = $document->getElementsByTagName('presence');
