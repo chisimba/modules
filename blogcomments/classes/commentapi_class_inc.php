@@ -137,7 +137,7 @@ class commentapi extends object
 				$comm->setContent($comment);
 			}
 			$comm->height = 400;
-			$comm->width = 420;
+			$comm->width = "100%";
 			$comm->setBasicToolBar();
 			$ctbl->addCell($comm->showFCKEditor());
 		}
