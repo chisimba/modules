@@ -29,6 +29,32 @@
  * @link      http://avoir.uwc.ac.za/
  */
 
+// security check - must be included in all scripts
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
+
+/**
+ * Skype Status
+ * 
+ * Skype user presence status helper 
+ * 
+ * @category  Chisimba
+ * @package   skype
+ * @author    Charl van Niekerk <charlvn@charlvn.com>
+ * @copyright 2009 Charl van Niekerk
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   Release: @package_version@
+ * @link      http://avoir.uwc.ac.za/
+ */
+
 class skypestatus extends object
 {
     public function getStatus($username)
