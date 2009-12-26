@@ -172,28 +172,58 @@ class jqtwitter extends object
     public function initializeTweetPlugin($userName)
     {
         $this->userName = urlencode($userName);
-        $script ='<script type=\'text/javascript\'>
+        $script = $this->wrapInScriptTags($this->loadUser($userName) . $this->loadToUser($userName));
+        $this->appendArrayVar('headerParams', $script);
+        return TRUE;
+    }
+
+
+    /**
+    *
+    * Method to wrap the generated script components in SCRIPT and
+    * document.ready function for the jQuery plugin
+    * @param string $script all the code for the script to be wrapped
+    * @access public
+    * @return VOID
+    *
+    */
+    public function wrapInScriptTags($script) {
+        $wrappedScript = '<script type=\'text/javascript\'>
         $(document).ready(function(){
-            $(".tweet").tweet({
+            ' . $script
+            . '
+        });
+        </script>';
+        return $wrappedScript;
+    }
+    
+    /**
+    *
+    * Method to load script for the jQuery plugin to show posts to
+    * the logged in user.
+    * 
+    * @param string $userName The username of the authenticating user
+    * @access public
+    * @return VOID
+    *
+    */
+    public function loadUser($userName)
+    {
+        $this->userName = urlencode($userName);
+        $script ='$(".tweet").tweet({
                 join_text: "auto",
                 username: "' . $userName . '",
                 avatar_size: 32,
                 count: 10,
                 loading_text: "Loading tweets..."
             });
-            '
-            . $this->loadToUser($userName)
-            . '
-        });
-        </script>';
-        $this->appendArrayVar('headerParams', $script);
-        return TRUE;
+        ';
+        return $script;
     }
-    
     
     /**
     *
-    * Method to load script for the jQuery plugin to show posts to
+    * Method to load script for the jQuery plugin to show posts made to
     * the logged in user.
     * 
     * @param string $userName The username of the authenticating user
@@ -214,5 +244,34 @@ class jqtwitter extends object
         return $script;
     }
 
+    /**
+    *
+    * Method to load script for the jQuery plugin to show posts
+    * for a given query text. The purpose of this method is to
+    * allow multiple queries to be generated in the same page.
+    * The object and method calling this method should insert
+    * a div tag in the page
+    *
+    * @param string $queryTxt The text of the given query
+    * @param string $queryBase The base code for the qwery to which the number
+    *        is appended
+    * @param string $queryNumber a generated number from the calling method
+    * @access public
+    * @return VOID
+    *
+    */
+    public function loadQueryByNumber($queryTxt, $queryBase, $queryNumber)
+    {
+
+        $script ='$("#' . $queryBase . "_"
+          . $queryNumber . '").tweet({
+          avatar_size: 32,
+          count: 4,
+          query: "' . $queryTxt . '",
+          loading_text: "Loading tweets..."
+        });
+        ';
+        return $script;
+    }
 }
 ?>

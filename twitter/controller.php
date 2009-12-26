@@ -188,7 +188,6 @@ class twitter extends controller
     */
     private function __jqshow()
     {
-        $str="<h1>WORKING HERE</h1>";
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         $objUserParams->readConfig();
         $userName = $objUserParams->getValue("twittername");
@@ -201,7 +200,6 @@ class twitter extends controller
             $jqTwit->loadTweetPlugin();
             $jqTwit->initializeTweetPlugin($userName);
         }
-        $this->setVarByRef('str', $str);
         return "jqtweet_tpl.php";
     }
 
