@@ -81,30 +81,38 @@ class skypestatus extends object
      *
      * @access public
      * @param  string $username The username of the user to retrieve the status of.
-     * @return array  Associative array with the language codes as keys.
+     * @return array  Associative array with the language codes as keys. False on failure.
      */
     public function getStatus($username)
     {
+        // Initialise the array to be returned by this method.
+        $status = array();
+
         // Compile the URI to retrieve.
         $uri = sprintf('http://mystatus.skype.com/%s.xml', rawurlencode($username));
 
         // Retrieve the XML document from the URI.
         $xml = $this->curl->process($uri);
 
-        // Create the DOM document and populate it using the XML.
-        $document = new DOMDocument();
-        $document->loadXML($xml);
+        // Ensure the HTTP fetch was successful.
+        if (is_object($xml)) {
+            // Create the DOM document and populate it using the XML.
+            $document = dom_import_simplexml($xml);
 
-        // Retrieve the presence elements.
-        $elements = $document->getElementsByTagName('presence');
+            // Retrieve the presence elements.
+            $elements = $document->getElementsByTagName('presence');
 
-        // Initialise the array to be returned by this method.
-        $status = array();
+            // Initialise the array to be returned by this method.
+            $status = array();
 
-        // Loop through each presence element and populate the $status array accordingly.
-        foreach ($elements as $element) {
-            $lang = $element->getAttribute('xml:lang');
-            $status[$lang] = $element->textContent;
+            // Loop through each presence element and populate the $status array accordingly.
+            foreach ($elements as $element) {
+                $lang = $element->getAttribute('xml:lang');
+                $status[$lang] = $element->textContent;
+            }
+        } else {
+            // Change the status array to a FALSE in case of a failure.
+            $status = FALSE;
         }
 
         // Return the status array.
