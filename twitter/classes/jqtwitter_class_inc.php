@@ -262,7 +262,6 @@ class jqtwitter extends object
     public function loadQueryByNumber($queryTxt, $queryBase, $queryNumber,
       $avatarSize=32, $displayCount=4)
     {
-
         $script ='jQuery("#' . $queryBase . "_"
           . $queryNumber . '").tweet({
           avatar_size: ' . $avatarSize . ',
