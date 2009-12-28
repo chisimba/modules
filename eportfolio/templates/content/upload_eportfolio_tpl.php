@@ -74,9 +74,10 @@ $this->appendArrayVar('headerParams', '
                         success: function(msg){                        
                             // Check if messages can be updated and code remains the same
                             if (doUpdateMessage == true && currentCode == code) {
-                                
+                                var result;
+                                ifok = 1;
                                 // IF code exists
-                                if (msg == "ok") {
+                                if (msg == ifok ) {
                                     jQuery("#contextcodemessage").html("Good! It complies to IMS Global eportfolio Specification");
                                     jQuery("#contextcodemessage2").html("");
                                     jQuery("#contextcodemessage").addClass("success");
@@ -87,7 +88,7 @@ $this->appendArrayVar('headerParams', '
                                 // Else
                                 } else {
                                     jQuery("#contextcodemessage").html("The folder contents do NOT comply to IMS Global eportfolio Specification");
-                                    jQuery("#contextcodemessage2").html("Button is Disabled");
+                                    jQuery("#contextcodemessage2").html("Button is Disabled"+ifok+" "+result);
                                     jQuery("#contextcodemessage2").addClass("error");
                                     jQuery("#contextcodemessage").addClass("error");
                                     jQuery("#input_parentfolder").addClass("inputerror");

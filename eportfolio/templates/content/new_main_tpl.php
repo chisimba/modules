@@ -1218,6 +1218,7 @@ $reflectionTable->startRow();
 $reflectionTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . "</b>");
 $reflectionTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
 $reflectionTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+$reflectionTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
 $reflectionTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
@@ -1274,7 +1275,8 @@ if (!empty($reflectionList)) {
             'id' => $item["id"]
         )) , $objLanguage->languageText('mod_eportfolio_suredelete', 'eportfolio'));
         //echo $objConfirm->show();
-        $reflectionTable->addCell($objPopup->show() . $linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
+        $reflectionTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
+        $reflectionTable->addCell( $linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
         $reflectionTable->endRow();
     }
     unset($item);

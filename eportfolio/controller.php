@@ -294,9 +294,9 @@ class eportfolio extends controller
                         $verifyFolder = $this->objFile->getFileFolder($filename, $folderPath['folderpath']);
                         $verifyFolderIdent = $this->objFile->getFileFolder($fileIdentification, $folderPath['folderpath']);
                         if ($verifyFolder[0]['filename'] == 'imsmanifest.xml' && $verifyFolderIdent[0]['filename'] == 'Identification.xml') {
-                            echo 'ok';
+                            echo 1;
                         } else {
-                            echo 'notok';
+                            echo 0;
                         }
                 }
                 break;
