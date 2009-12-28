@@ -194,13 +194,28 @@ class twitter extends controller
         $password = $objUserParams->getValue("twitterpassword");
         if (!$userName == NULL) {
             $jqTwit = $this->getObject("jqtwitter","twitter");
+            $jqJuitter = $this->getObject("jqjuitter","twitter");
+            $jqJuitter->loadJuitterPlugin();
+            $jqJuitter->loadJuitterSystem();
             // Note that the CSS should always be loaded first
             $jqTwit->loadTweetCss();
-            $jqTwit->loadJquery();
+            $jqJuitter->loadJuitterCss();
+            //$jqTwit->loadJquery();
             $jqTwit->loadTweetPlugin();
             $jqTwit->initializeTweetPlugin($userName);
+            $this->setVar('searchForm', $jqJuitter->loadJuitterSearchForm());
+            $this->setVar('jqDiv', $jqJuitter->loadJuitterDiv());
         }
         return "jqtweet_tpl.php";
+    }
+
+    private function __exper()
+    {
+        $jqJuitter = $this->getObject("jqjuitter","twitter");
+        $jqJuitter->loadJuitterCss();
+        $jqJuitter->loadJuitterPlugin();
+        $jqJuitter->loadJuitterSystem();
+        return "experimental_tpl.php";
     }
 
     private function __tweet()

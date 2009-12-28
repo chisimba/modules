@@ -10,7 +10,7 @@ $objWidjet = $this->getObject("tweetbox","twitter");
 //Right panel
 $objBlock = $this->getObject("blocks", "blocks");
 $rightBit =  $objBlock->showBlock("followers", "twitter");
-$rightBit="";
+//$rightBit="";
 $cssLayout->setRightColumnContent($rightBit);
 
 
@@ -36,15 +36,10 @@ $cssLayout->setLeftColumnContent($leftbit);
 
 
 //Add your tweets
-$middleBit = "<h3>"
+$middleBit = $searchForm . $jqDiv . "<h3>"
  . $this->objLanguage->languageText("mod_twitter_tweetsfromyou", "twitter")
- . "</h3><div class='tweet'></div>";
+ . "<div class='tweet'></div>";
 $cssLayout->setMiddleColumnContent($middleBit);
-
-
-
-
-
 
 
 //Render it out
