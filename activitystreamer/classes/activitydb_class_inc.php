@@ -63,12 +63,24 @@ class activitydb extends dbTable
     	{
     		$content['contextcode'] = null;
     	}
+    	$userId = $this->objUser->userId();
+    	if(empty($userId)){
+    	 if(!empty($content['author'])){
+     	 $userId = $content['author'];
+    	 }elseif(!empty($content['createdby'])){
+    	  $userId = $content['createdby'];
+    	 }else{
+    	  $userId = Null;
+    	 } 
+    	}else{
+    	 $userId = $this->objUser->userId();
+    	}
     	$messageId = $this->insert(array(
                 'module' => $notification->getNotificationName(),
                 'description' => $content['description'],
                 'title' => $content['title'],
                 'createdon' => $this->now(),
-                'createdby' => $this->objUser->userId(),
+                'createdby' => $userId,
                 'contextcode' => $content['contextcode'],
                 'link'        => $content['link'],
             ));
