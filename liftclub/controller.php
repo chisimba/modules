@@ -44,6 +44,20 @@ class liftclub extends controller
         $this->objLiftSearch = $this->getObject('search_liftclub', 'liftclub');
         $this->objFavourites = $this->getObject('dbliftclub_favourites', 'liftclub');
         $this->objMessages = $this->getObject('dbliftclub_messages', 'liftclub');
+								//Load Module Catalogue Class
+								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+
+								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+
+								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+								{
+									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+									$this->eventsEnabled = TRUE;
+								} else {
+									$this->eventsEnabled = FALSE;
+								}
+
     }
     /**
      * Method to turn off login requirement for all actions in this module
@@ -578,6 +592,20 @@ class liftclub extends controller
             $this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             $this->setSession('time', $password);
+									   //add to activity log
+					       if($this->eventsEnabled) {
+									       $username = $this->objUser->username($userId);
+										      //$path = $this->uri(array('module'=>'liftclub', 'action'=>'viewlift','liftuserid'=>$userId));
+										      $path = 'module=liftclub&action=viewlift&liftuserid='.$userId;
+					           $message = $username." ".$this->objLanguage->languageText('mod_liftclub_liftadded', 'liftclub',"Added a Lift");
+					           $this->eventDispatcher->post($this->objActivityStreamer, "liftclub", array('title'=> $message,
+					               'link'=> $path,
+					               'contextcode' => NULL,
+					               'author' => $username,
+					               'description'=>$message));
+					       }
+
+            
             return $this->nextAction('detailssent');
         }
     }
@@ -596,6 +624,20 @@ class liftclub extends controller
           echo 'exists';
          }else{
           $id = $this->objFavourites->insertSingle($userid, $favusrid);
+							   //add to activity log
+			       if($this->eventsEnabled) {
+			         $username = $this->objUser->username($userid);
+			         $favusername = $this->objUser->username($favusrid);
+	           //$path = $this->uri(array('module'=>'liftclub', 'action'=>'viewlift','liftuserid'=>$favusrid));
+            $path = 'module=liftclub&action=viewlift&liftuserid='.$favusrid;
+			           $message = $username." ".$this->objLanguage->languageText('mod_liftclub_liftfavouredby', 'liftclub',"Added a Lift by")." ".$favusername." ".$this->objLanguage->languageText('mod_liftclub_liftfavoured', 'liftclub',"to their Favourites");
+			           $this->eventDispatcher->post($this->objActivityStreamer, "liftclub", array('title'=> $message,
+			               'link'=> $path,
+			               'contextcode' => NULL,
+			               'author' => $username,
+			               'description'=>$message));
+			       }
+
           echo 'ok';
          }
         }elseif(!empty($userid)){
@@ -802,6 +844,19 @@ class liftclub extends controller
             $this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             $this->setSession('time', $password);
+							   //add to activity log
+			       if($this->eventsEnabled) {
+			           $username = $this->objUser->username();
+			           $userId = $this->objUser->userId();
+			           //$path = $this->uri(array('module'=>'liftclub', 'action'=>'viewlift','liftuserid'=>$userId));
+              $path = 'module=liftclub&action=viewlift&liftuserid='.$userId;
+			           $message = $username." ".$this->objLanguage->languageText('mod_liftclub_liftupdated', 'liftclub',"Updated a Lift");
+			           $this->eventDispatcher->post($this->objActivityStreamer, "liftclub", array('title'=> $message,
+			               'link'=> $path,
+			               'contextcode' => NULL,
+			               'author' => $username,
+			               'description'=>$message));
+			       }
             return $this->nextAction('liftclubhome');
         }
     }

@@ -6,29 +6,37 @@
 	$objSysConfig  = $this->getObject('altconfig','config');
 	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'htmlelements');
 	
-	//$ext .=$this->getJavaScriptFile('ColumnNodeUI.js', 'liftclub');
+//	$ext .=$this->getJavaScriptFile('extjsExtendHTMLEditorToolbar.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('Ext.ux.grid.Search.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('sendmessagesform.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('outboxinterface.js', 'liftclub');
 
 	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+
 	
 	//setup the dynamicuri
 	$this->appendArrayVar('headerParams', '
 	        	<script type="text/javascript">	        		
 	        		var baseUri = "'.$objSysConfig->getsiteRoot().'index.php";
 	        	</script>');
+			$extall_css = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
 
 			$extbase_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-		
+
+			//$extall_js = '<script language="JavaScript" src="'.$this->getResourceUri('extFCKEditor.js', 'liftclub').'" type="text/javascript"></script>';
+
 			$extall_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js', 'htmlelements').'" type="text/javascript"></script>';
+
+			$extalldebug_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all-debug.js', 'htmlelements').'" type="text/javascript"></script>';
+
+			$exteditor_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/source/wigets/form/HtmlEditor.js', 'htmlelements').'" type="text/javascript"></script>';
 		
-			$extall_css = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
-		
+			$this->appendArrayVar('headerParams', $extall_css);		
 			$this->appendArrayVar('headerParams', $extbase_js);
 			$this->appendArrayVar('headerParams', $extall_js);
-			$this->appendArrayVar('headerParams', $extall_css);
-	
+			$this->appendArrayVar('headerParams', $extalldebug_js);
+			$this->appendArrayVar('headerParams', $exteditor_js);
+				
 	//$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ColumnNodeUI.css', 'liftclub').'" type="text/css" />';
 	$ext .= '<link rel="stylesheet" href="skins/_common/css/extjs/silk/silk.css" type="text/css" />';
 	$ext .= '<link rel="stylesheet" href="skins/_common/css/extjs/menus.css" type="text/css" />';
@@ -72,8 +80,6 @@
 			</style>";
  $this->appendArrayVar('headerParams', $ext);
 
-
- 
 ?>
 
 <center><div id="mainPanel"></div></center>

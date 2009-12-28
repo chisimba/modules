@@ -9,7 +9,9 @@ var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Please wait..."});
 //the main function 
 Ext.onReady(function(){
 	Ext.QuickTips.init();
-	
+	/*global Ext */ 
+ Ext.ns('Ext.ux.form');
+
 	alphaGroupStore.load({params:{start:0, limit:25, letter:'A'}});
 	myBorderPanel.render('mainPanel');
 	
@@ -225,8 +227,106 @@ var rmButton = new Ext.Button({
             	sendToTrash();
             }
         });
-        
 
+/*,{
+                xtype:'fckeditor',
+                fieldLabel: 'Biography',
+                height: 200,
+																anchor:'98%',
+																plugins: [																
+																				//new Ext.ux.HTMLEditorToolbar()
+																				new Ext.ux.form.HtmlEditor.Divider(),
+																				new Ext.ux.form.HtmlEditor.Word(),  
+																				new Ext.ux.form.HtmlEditor.Table(),  
+																				new Ext.ux.form.HtmlEditor.HR(),  
+																				new Ext.ux.form.HtmlEditor.IndentOutdent(),  
+																				new Ext.ux.form.HtmlEditor.SubSuperScript(),  
+																				new Ext.ux.form.HtmlEditor.RemoveFormat()
+																]
+            }*/
+/*
+Ext.override(Ext.form.HtmlEditor, {
+    onRender : function(){
+        // ...
+        // insert image
+        editor = this;
+        this.getToolbar().insertButton(16, {
+            iconCls: 'icon-insertimage',
+            handler: function(b,e) {
+                insertimagewindow = new Ext.Window({
+                    title: 'Insert image',
+                    layout: "fit",
+                    closable : true,
+                    items: [
+                        insertimageFormPanel = new Ext.form.FormPanel({
+                            fileUpload: true,
+                            autoHeight: true,
+                            autoWidth: true,
+                            labelWidth: 70,
+                            frame:true,
+                            bodyStyle:'padding:5px 5px 0',
+                            labelAlign: 'right',
+                            defaultType: 'textfield',
+                            defaults: {width: 220},
+                            items: [
+                                {
+                                    fieldLabel: 'URL',
+                                    name: 'image',
+                                    id: 'image'
+                                },{
+                                    fieldLabel: 'Upload',
+                                    xtype: 'fileuploadfield',
+                                    id: 'imagename',
+                                    emptyText: 'Select image...',
+                                    name: 'imagename',
+                                    buttonText: '',
+                                    buttonCfg: {
+                                        iconCls: 'icon-upload'
+                                    }
+                                }
+                            ],
+                            buttons: [
+                                {
+                                    handler: function() {
+                                        if(insertimageFormPanel.getForm().isValid()) {
+                                            insertimageFormPanel.getForm().submit({
+                                                url: 'ajax/uploadimage.php',
+                                                method: 'get',
+                                                params: {image: Ext.getCmp('image').getValue(), dir:'pages'},
+                                                waitMsg: 'sending...',
+                                                success: function(fp, o){
+                                                    if(o.result.imgname == 'none') {
+                                                        if(!Ext.getCmp('image').getValue()) errorMsg('insert URL');
+                                                        else {
+                                                            editor.relayCmd('insertimage', Ext.getCmp('image').getValue());
+                                                            insertimagewindow.close();
+                                                        }
+                                                    } else {
+                                                        editor.relayCmd('insertimage', o.result.imgname);
+                                                        insertimagewindow.close();
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            errorMsg('error.'); 
+                                        }
+                                    },
+                                    text: 'Add'
+                                }
+                            ]
+                        })
+                    ],
+                    closable: true,
+                    width: 350,
+                    modal: true,
+                    autoHeight: true
+                });
+                insertimagewindow.show();
+            }
+        });
+    }
+});
+*/        
     var sendmsgFormPanel = new Ext.FormPanel({
         id: 'mainForm',
         labelWidth: 75, // label settings here cascade unless overridden
@@ -247,7 +347,13 @@ var rmButton = new Ext.Button({
              fieldLabel:'Message',
              width:550,
              height:180
-            })
+            }),{
+																		xtype: 'htmleditor',
+				              fieldLabel: 'Message 2',
+				              name: 'msgbody2',
+																		enableColors: false,
+																		enableAlignments: false
+												}
         ],
         buttons: [{
             text: 'Save',

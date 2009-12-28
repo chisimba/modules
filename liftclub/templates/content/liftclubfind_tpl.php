@@ -21,8 +21,6 @@ $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'html
 $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
 $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-examples.css', 'htmlelements').'" type="text/css" />';
 $this->appendArrayVar('headerParams', $ext);
-
-
 echo '<div id="find-grid"></div>';
 
 ?>
