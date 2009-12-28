@@ -85,7 +85,7 @@ class tweetbox extends object
     */
     public function show()
     {
-        return $this->getLimitBox(140, "tweet");
+        return $this->getLimitBox(140, "chisimba_tweet");
     }
 
     /**
@@ -208,7 +208,7 @@ class tweetbox extends object
               . "<table cellpadding=\"4\" width=\"98%\"><tr><td><span class=\"minute\">"
               . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
               . "</span></td><td><span class=\"error\"><div name=\"charlimitinfo\" id=\"charlimitinfo\">140</div></span></td></tr></table>"
-              . "<textarea name=\"tweet\" id=\"tweet\" cols=\"19\" rows=\"4\">"
+              . "<textarea name=\"tweet\" id=\"chisimba_tweet\" cols=\"19\" rows=\"4\">"
               . "</textarea><br />"
               . "<input type=\"submit\" value=\"Tweet\" />"
               . "</form>";

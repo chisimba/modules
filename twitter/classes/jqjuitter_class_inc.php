@@ -1,15 +1,14 @@
 <?php
 /**
  *
- * jQuery real-time tweets interface
+ * jQuery Juitter interface elements
  *
  * Twitter is a module that creates an integration between your Chisimba
- * site using your Twitter account. This class uses jQuery rea;-time tweets
- * plugin to add a real-time tweets bar related to your posts from your twitter
- * timeline.
+ * site using your Twitter account. This class uses jQuery to access the
+ * juitter plugin for jQuery
  *
- * You can get real-time tweets at
- *    http://www.moretechtips.net/2009/09/realtime-related-tweets-bar-another.html
+ * You can get Juitter! at
+ *    http://juitter.com/
  *
  * PHP version 5
  *
@@ -54,13 +53,13 @@ $GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* Class to use the jQuery real-time tweets interface
+* jQuery Juitter interface elements
 *
 * @author Derek Keats
 * @package twitter
 *
 */
-class jqrtt extends object
+class jqjuitter extends object
 {
     /**
     *
@@ -69,7 +68,7 @@ class jqrtt extends object
     *
     */
     public $userName='';
-   
+    
     /**
     *
     * @var string $objLanguage String object property for holding the
@@ -81,16 +80,7 @@ class jqrtt extends object
 
     /**
     *
-    * @var string $jqTwitter String object property for holding the
-    * jqTwitter object
-    * @access public
-    *
-    */
-    public $jqTwitter;
-
-    /**
-    *
-    * Constructor for the jqrtt class
+    * Constructor for the twitterremote class
     * @access public
     * @return VOID
     *
@@ -98,44 +88,87 @@ class jqrtt extends object
     public function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
-        $this->jqTwitter = $this->getObject('jqtwitter', 'twitter');
-        $this->jqTwitter->loadTweetCss();
     }
-
 
     /**
     *
-    * Method to load the jQuery plugin fpr real-time tweet
+    * Method to load the jQuery plugin
+    *
     * @access public
     * @return VOID
     *
     */
-    public function loadRttPlugin()
+    public function loadJuitterPlugin()
     {
         $script = '<script language="javascript" src="'
-          . $this->getResourceUri("jquery.relatedtweets-1.0.min.js", "twitter")
+          . $this->getResourceUri("jquery.juitter.js", "twitter")
           . '" type="text/javascript"></script>';
         $this->appendArrayVar('headerParams', $script);
         return TRUE;
+
     }
-    
+
     /**
     *
-    * Method to load the jQuery plugin fpr real-time tweet
+    * Method to load the juitter default system.js
+    *
     * @access public
     * @return VOID
     *
     */
-    public function loadDisplayDiv()
+    public function loadJuitterSystem()
     {
-        return '<div class="related-tweets">Loading tweets...</div>';
+        $script = '<script language="javascript" src="'
+          . $this->getResourceUri("system.js", "twitter")
+          . '" type="text/javascript"></script>';
+        $this->appendArrayVar('headerParams', $script);
+        return TRUE;
+
     }
 
-    public function loadNearbyDisplayDiv($latitude, $longitude, $distance='25km')
+    /**
+    *
+    * Method to load the CSS 
+    * @access public
+    * @return VOID
+    *
+    */
+    public function loadJuitterCss()
     {
-        return "<div class=\"related-tweets\" options=\"{\n"
-          . "debug:true,geocode:'" . $latitude . "," . $longitude
-          . "," . $distance . "'}\">Loading tweets...</div>";
+        $script = '<link href="'
+          . $this->getResourceUri("juitter.css", "twitter")
+          . '" media="all" rel="stylesheet" type="text/css"/>
+          ';
+        $this->appendArrayVar('headerParams', $script);
+        return TRUE;
     }
+
+    /**
+    *
+    * Method to load the <DIV> tags
+    * @param string $userName The username of the authenticating user
+    * @access public
+    * @return VOID
+    *
+    */
+    public function loadJuitterDiv()
+    {
+        return "<div id=\"juitterContainer\"></div>";
+    }
+
+    /**
+    *
+    * Method to load the <DIV> tags
+    * @param string $userName The username of the authenticating user
+    * @access public
+    * @return VOID
+    *
+    */
+    public function loadJuitterSearchForm()
+    {
+        return "<form method=\"post\" id=\"juitterSearc\" action=\"\">\n"
+          . "<p>Search Twitter: <input type=\"text\" class=\"juitterSearch\" "
+          . "value=\"Type a word and press enter\" /></p>\n</form>";
 }
+    }
 ?>
