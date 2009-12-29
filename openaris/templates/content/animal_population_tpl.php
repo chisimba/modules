@@ -80,7 +80,7 @@ $classDrop->extra = 'onchange="javascript:changeBreed();"';
 
 
 $breedDrop = new dropdown('breedId');
-$breedDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
+$breedDrop->addOption('null', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $breedDrop->addFromDB($arraybreed, 'name', 'id');
 $breedDrop->setSelected($breed);
 
@@ -296,7 +296,7 @@ $form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
 $form->addRule('repOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
 $form->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
-//$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
+$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
 $form->addRule('year', $this->objLanguage->languageText('mod_ahis_promptyear', 'openaris'), 'required');
 $form->addRule(array('month'=>'month','year'=>'year'), $this->objLanguage->languageText('mod_ahis_valdate', 'openaris'), 'twofielddate');
 $form->addRule('rDate', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'valreportdate');

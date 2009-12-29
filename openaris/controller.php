@@ -3008,7 +3008,7 @@ class openaris extends controller {
                 $this->setVar('arrayrepoff', $this->objAhisUser->getListByRole('init_01'));
                 $this->setVar('arraydataoff', $this->objAhisUser->getListByRole('init_02'));
                 $this->setVar('arrayvetoff', $this->objAhisUser->getListByRole('init_03'));
-               $this->setVar('repoff', $this->getSession('ps_officerId'));
+               $this->setVar('repoff', $this->getSession('ps_repOfficerId'));
 			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));
 			      $this->setVar('country',$this->getSession('ps_country'));	
 			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));	
@@ -3025,6 +3025,8 @@ class openaris extends controller {
 	             $this->setVar('vfax',$this->getSession('ps_vfax'));
 			       $this->setVar('vemail',$this->getSession('ps_vemail'));	
 			       $this->setVar('prodname',$this->getSession('ps_prodname'));
+			       
+			       $this->setVar('breed', $this->getSession('ps_breedId'));
 			       $this->setVar('arrayrepoff', $this->objAhisUser->getListByRole('init_01'));
                 $this->setVar('arraydataoff', $this->objAhisUser->getListByRole('init_02'));
                 $this->setVar('arrayvetoff', $this->objAhisUser->getListByRole('init_03'));	      			      			      			      
@@ -3075,7 +3077,7 @@ class openaris extends controller {
 			 		 
 					
 					case 'animal_population1':
-			      $this->setSession('ps_officerId',$this->getParam('repOfficerId'));
+			      $this->setSession('ps_repOfficerId',$this->getParam('repOfficerId'));
 			      $this->setSession('ps_dataoff',$this->getParam('dataOfficerId'));		
 			      $this->setSession('ps_vetoff',$this->getParam('vetOfficerId'));	
 			      $this->setSession('ps_repdate',$this->getParam('rDate'));	
@@ -3104,7 +3106,7 @@ class openaris extends controller {
          
          case 'animal_population_screen2':         
                $this->setVar('userList', $this->objAhisUser->getList());                 		  
-               $this->setVar('repoff', $this->getSession('ps_officerId'));
+               $this->setVar('repoff', $this->getSession('ps_repOfficerId'));
                $animBreeds = $this->objBreed->getAll();
                $this->setVar('arraybreed', $animBreeds);     
                $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY speciesname"));		
@@ -3125,7 +3127,6 @@ class openaris extends controller {
 					$this->setVar('crossBreed', '');
 					$this->setVar('catNumber', '');
 					$this->setVar('productionno', '');
-
 				    
          return 'animal_population2_tpl.php';          
         
@@ -5384,7 +5385,7 @@ class openaris extends controller {
 	}
 	
 	    private function unsetVaccineInventory1() {
-                $this->unsetSession('ps_officerId');
+                $this->unsetSession('ps_repOfficerId');
 	             $this->unsetSession('ps_dataoff');
 	             $this->unsetSession('ps_vetoff');
 	             $this->unsetSession('ps_repdate');
@@ -5433,7 +5434,7 @@ class openaris extends controller {
 	    
 	    }
   private function unsetAnimalpopulation() {
-                $this->unsetSession('ps_officerId');
+                $this->unsetSession('ps_repOfficerId');
 	             $this->unsetSession('ps_dataoff');
 	             $this->unsetSession('ps_vetoff');
 	             $this->unsetSession('ps_repdate');
@@ -5455,6 +5456,7 @@ class openaris extends controller {
 	             $this->unsetSession('ps_vemail');
 	             $this->unsetSession('ps_vfax');	
 	             $this->unsetSession('ps_species'); 
+	             $this->unsetSession('ps_breedId');
 	             $this->unsetSession('ps_prodname');       
 	    	           	    
 	    }

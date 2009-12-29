@@ -204,15 +204,16 @@ $objButtonTable->addCell($button->show(), NULL, 'top', 'center');
 $objButtonTable->endRow();
 
 // Create Form
-$speciesMax=4000;
-$form = new form ('add', $this->uri(array('action'=>'animal_population2')));
+//$speciesMax=4000;
+$form2 = new form ('add', $this->uri(array('action'=>'animal_population2')));
 $content=$objTable->show()."<hr />".$middleTable->show()."<hr />".$bottomTable->show()."<br />".$objButtonTable->show();
-$form->addToForm($content);
-$form->addRule(array('totalNumSpecies',$speciesMax), $this->objLanguage->languageText('mod_ahis_valtotnum', 'openaris'), 'maxnumber');
-$form->addRule('breedNumber', $this->objLanguage->languageText('mod_ahis_valbreedno', 'openaris'), 'required');
-$form->addRule('crossBreed', $this->objLanguage->languageText('mod_ahis_valcrossbreedno', 'openaris'), 'numeric');
-$form->addRule('animalCat', $this->objLanguage->languageText('mod_ahis_valanimalcat', 'openaris'), 'select');
-$form->addRule('catNumber', $this->objLanguage->languageText('mod_ahis_valcatno', 'openaris'), 'numeric');
+$form2->addToForm($content);
+$form2->addRule('totalNumSpecies',$this->objLanguage->languageText('mod_ahis_valtotnum', 'openaris'), 'numeric');
+$form2->addRule('breedNumber', $this->objLanguage->languageText('mod_ahis_valbreedno', 'openaris'), 'required');
+$form2->addRule('crossBreed', $this->objLanguage->languageText('mod_ahis_valcrossbreedno', 'openaris'), 'required');
+$form2->addRule('crossBreed', $this->objLanguage->languageText('mod_ahis_valcrossbreedno', 'openaris'), 'numeric');
+$form2->addRule('animalCat', $this->objLanguage->languageText('mod_ahis_valanimalcat', 'openaris'), 'select');
+$form2->addRule('catNumber', $this->objLanguage->languageText('mod_ahis_valcatno', 'openaris'), 'numeric');
 
 
 
@@ -220,7 +221,7 @@ $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 $objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$form->show());
+$objLayer->addToStr($objHeading->show()."<hr class='openaris' />".$form2->show());
 
 echo $objLayer->show();
 ?>
