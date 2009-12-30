@@ -3001,20 +3001,27 @@ class openaris extends controller {
 					return 'animalvaccine_tpl.php';
 				
              case 'animal_population_add':
-                $this->setVar('arrayCountry', $this->objCountry->getAll("ORDER BY common_name"));
-                $this->setVar('arrayAdmin1',$this->objPartitionCategory->getAll("ORDER BY partitioncategory"));
-                $this->setVar('arrayAdmin2', $this->objPartitionLevel->getAll("ORDER BY partitionlevel"));
-                $this->setVar('arrayAdmin3', $this->objPartition->getAll());
+                $countlist = $this->objCountry->getAll("ORDER BY official_name");	
+                $ptype = $this->objPartitionCategory->getAll("ORDER BY partitioncategory");
+			       $plevel = $this->objPartitionLevel->getAll("ORDER BY partitionlevel");
+			       $pname = $this->objPartition->getAll();                		       
+			       $this->setVar('arrayCountry', $countlist);
+			       $this->setVar('count',$this->getSession('ps_country'));
+			       $this->setVar('ptype',$this->getSession('ps_admin1'));
+			       $this->setVar('plevel',$this->getSession('ps_admin2'));
+			       $this->setVar('pname',$this->getSession('ps_admin3'));
+                $this->setVar('arrayAdmin1',$ptype);
+                $this->setVar('arrayAdmin2', $plevel);
+                $this->setVar('arrayAdmin3', $pname);
+                
                 $this->setVar('arrayrepoff', $this->objAhisUser->getListByRole('init_01'));
                 $this->setVar('arraydataoff', $this->objAhisUser->getListByRole('init_02'));
                 $this->setVar('arrayvetoff', $this->objAhisUser->getListByRole('init_03'));
                $this->setVar('repoff', $this->getSession('ps_repOfficerId'));
 			      $this->setVar('dataoff', $this->getSession('ps_dataoff'));
-			      $this->setVar('country',$this->getSession('ps_country'));	
+			      	
 			      $this->setVar('vetoff', $this->getSession('ps_vetoff'));	
-			      $this->setVar('admin1',$this->getSession('ps_admin1'));	
-			      $this->setVar('admin2',$this->getSession('ps_admin2'));	
-			      $this->setVar('admin3',$this->getSession('ps_admin3'));
+			      
 			      $this->setVar('rphone',$this->getSession('ps_rphone'));
 			       $this->setVar('rfax',$this->getSession('ps_rfax'));
 			       $this->setVar('remail',$this->getSession('ps_remail'));

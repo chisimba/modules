@@ -88,34 +88,28 @@ $breedDrop->setSelected($breed);
 $countryDrop = new dropdown('countryId');
 $countryDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $countryDrop->addFromDB($arrayCountry, 'common_name', 'id');
-$countryDrop->setSelected($country);
+$countryDrop->setSelected($count);
 $countryDrop->cssClass = 'animal_population_add';
 $countryDrop->extra = 'onchange="javascript:changeNames();"';
 
 $admin1Drop = new dropdown('partitionTypeId');
 $admin1Drop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $admin1Drop->addFromDB($arrayAdmin1, 'partitioncategory', 'id');
-$admin1Drop->setSelected($admin1);
-$admin1Drop->cssClass = 'animal_population_add';
+$admin1Drop->setSelected($ptype);
 $admin1Drop->extra = 'onchange="javascript:changePartitionType();"';
+
 
 
 $partitionLDrop = new dropdown('partitionLevelId');
 $partitionLDrop ->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $partitionLDrop->addFromDB($arrayAdmin2, 'partitionlevel', 'id');
-$partitionLDrop->setSelected($admin2);
-$partitionLDrop->cssClass = 'animal_population_add';
+$partitionLDrop->setSelected($plevel);
 $partitionLDrop->extra = 'onchange="javascript:changeNames();"';
 
 $partitionNDrop = new dropdown('partitionId');
 $partitionNDrop ->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $partitionNDrop->addFromDB($arrayAdmin3, 'partitionname', 'id');
-$partitionNDrop->setSelected($admin3);
-$partitionNDrop->cssClass = 'animal_population';
-$partitionNDrop->extra = 'onchange="javascript:changeNames();"';
-
-$admin3Drop = new dropdown('admin3Id');
-$admin3Drop->addFromDB($arrayAdmin3, 'name', 'id');
+$partitionNDrop->setSelected($pname);
 
 
 //$monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 23);
@@ -172,9 +166,6 @@ $vemailBox = new textinput('vetOfficerEmail', $vemail, 'text');
 $vemailBox->extra = 'disabled';
 
 
-
-$admin3Drop = new dropdown('admin3Id');
-$admin3Drop->addFromDB($arrayAdmin3, 'name', 'id');
 
 $objTopTable = $this->newObject('htmltable', 'htmlelements');
 $objTopTable->cellspacing = 2;

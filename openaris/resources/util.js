@@ -413,8 +413,8 @@ function valdirection(dname){
 function checkBreedSpecies()
 {
 
-var nobreed= jQuery('#input_breedNumber').val();
-var nospec= jQuery('#input_totalNumSpecies').val();
+var nobreed= parseInt(jQuery('#input_breedNumber').val());
+var nospec= parseInt(jQuery('#input_totalNumSpecies').val());
 if(nobreed> nospec){ 
 	alert('Breed Number should be less than Total Number (Species)');
 	jQuery('#input_breedNumber').val('');
@@ -425,8 +425,8 @@ if(nobreed> nospec){
 function checkProdNoSpecies()
 {
 
-var noprod= jQuery('#input_productionno').val();
-var nospec= jQuery('#input_totalNumSpecies').val();
+var noprod= parseInt(jQuery('#input_productionno').val());
+var nospec= parseInt(jQuery('#input_totalNumSpecies').val());
 if(noprod> nospec){ 
 	alert('Production Number should be less than Total Number (Species)');
 	jQuery('#input_productionno').val('');
@@ -437,8 +437,8 @@ if(noprod> nospec){
 function checkAnimCatSpecies()
 {
 
-var nocat= jQuery('#input_catNumber').val();
-var nospec= jQuery('#input_totalNumSpecies').val();
+var nocat= parseInt(jQuery('#input_catNumber').val());
+var nospec= parseInt(jQuery('#input_totalNumSpecies').val());
 if(nocat> nospec){ 
 	alert('Category Number should be less than Total Number (Species)');
 	jQuery('#input_catNumber').val('');
