@@ -33,7 +33,6 @@ class block_related extends object
     function show()
     {
         $objRtt = $this->getObject('jqrtt', 'twitter');
-        $objRtt->loadJquery();
         $objRtt->loadRttPlugin();
         return $objRtt->loadDisplayDiv();
     }
