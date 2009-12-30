@@ -112,10 +112,10 @@ class jqtwitter extends object
     */
     public function loadJquery()
     {
-        $this->setVar('SUPPRESS_JQUERY', TRUE);
+        /*$this->setVar('SUPPRESS_JQUERY', TRUE);
         $jQuery = $this->getObject('jquery', 'htmlelements');
         $jQuery->setVersion('1.3.1');
-        $this->appendArrayVar('headerParams', $jQuery->show());
+        $this->appendArrayVar('headerParams', $jQuery->show());*/
         return TRUE;
     }
     

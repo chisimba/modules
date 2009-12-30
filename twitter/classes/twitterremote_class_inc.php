@@ -198,14 +198,14 @@ class twitterremote extends object
                $fixedTime = strtotime($user->status->created_at);
                $fixedTime = date('Y-m-d H:i:s', $fixedTime);
                $humanTime = $objHumanizeDate->getDifference($fixedTime);
-               $link = "<img src=\"" . $user->profile_image_url
-                 . "\" align=\"left\" style=\"margin-bottom: 3px; margin-right: 5px;\"/><a href=\"" . $user->url . "\">"
+               $link = "<a href=\"" . $user->url
+                 . "\" class=\"tweet_avatar\"><img src=\"" . $user->profile_image_url
+                 . "\" align=\"left\" width=\"32\" height=\"32\"/>"
                  . $user->name ."</a> ";
                $text = $user->status->text ."<br />";
-               $ret .="<tr><td>" . $link . $text
+               $ret .="<tr><td><div id=\"touser\" class=\"query\">" . $link . $text
                . "<span class=\"minute\">"
-               . $humanTime . "<br /><br /></span>"
-               . "</td></tr>";
+               . $humanTime . "<br /><br /></span></div></td></tr>";
             }
             $ret .= "</table>";
         }

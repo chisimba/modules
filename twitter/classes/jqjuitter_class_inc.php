@@ -169,6 +169,55 @@ class jqjuitter extends object
         return "<form method=\"post\" id=\"juitterSearc\" action=\"\">\n"
           . "<p>Search Twitter: <input type=\"text\" class=\"juitterSearch\" "
           . "value=\"Type a word and press enter\" /></p>\n</form>";
-}
     }
+
+    public function wrapCode($codeString)
+    {
+        return "jQuery(document).ready(function() {\n"
+          . $codeString
+          . "});";
+    }
+
+    /**
+     *
+     * Method to create the jQuery start function.
+     *
+     * @param string $searchType The type of search, either "searchWord",
+     *     "fromUser", "toUser"
+     * @param string $searchObject needed, you can insert a username here or
+     *     a word to be searched for, if you wish multiple search, separate
+     *     the words by comma.
+     * @param string $lang restricts the search by the given language (e.g. en)
+     * @param string $refreshSeconds  The time in seconds to wait before
+     *     requesting the Twitter API for updates.
+     * @param string $placeHolder The placeholder div tag for the display
+     * @param string $loadMSG The message loading text
+     * @param string $total Number of tweets to be show - max 100
+     *
+     */
+    public function createStart($searchType, $searchObject, $lang="en",
+      $refreshSeconds="120", $placeHolder="juitterContainer", $total="10")
+    {
+        // loadMSG - Loading message, if you want to show an image, fill it with "image/gif" and go to the next variable to set which image you want to use on\
+        // imgName - Loading image, to enable it, go to the loadMSG var above and change it to "image/gif"
+         //readMore - read more message to be show after the tweet content
+        // nameUser - insert "image" to show avatar of "text" to show the name of the user that sent the tweet
+        // openExternalLinks - here you can choose how to open link to external websites, "newWindow" or "sameWindow"
+       // insert the words you want to hide from the tweets followed by what you want to show instead example: "sex->censured" or "porn->BLOCKED WORD" you can define as many as you want, if you don't want to replace the word, simply remove it, just add the words you want separated like this "porn,sex,fuck"... Be aware that the tweets will still be showed, only the bad words will be removed
+            $ret = "jQuery.Juitter.start({\n"
+              . "searchType:\"$searchType\", \n"
+              . "searchObject:\"" . $searchObject . "\",\n"
+              . "lang:\"" . $lang . "\", \n"
+              . "live:\"live-" . $refreshSeconds . "\",\n"
+              . "placeHolder:\"" . $placeHolder . "\", \n"
+              . "loadMSG: \"Loading messages...\", \n"
+              . "imgName: \"loader.gif\", "
+              . "total: " . $total . ", \n"
+              . "readMore: \"Read it on Twitter\", \n"
+              . "nameUser:\"image\", \n"
+              . "openExternalLinks:\"newWindow\", \n"
+              . "filter:\"sex->*BAD word*,porn->*BAD word*,fuck->*BAD word*,shit->*BAD word*\" \n"
+              . "});";
+    }
+}
 ?>
