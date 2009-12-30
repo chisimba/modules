@@ -444,7 +444,7 @@ class blogposts extends object
                             'action' => 'viewblogbytag',
                             'userid' => $userid,
                             'tag' => $tags['meta_value']
-                        )) , stripslashes($tags['meta_value']));
+                        )), stripslashes($tags['meta_value']), "rel=\"tag\"");
                         $linkstr.= $link->show();
                         $link = NULL;
                     }
