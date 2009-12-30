@@ -22,6 +22,7 @@ class search_liftclub extends dbTable
         $this->objDBDestiny = $this->getObject('dbliftclub_destiny', 'liftclub');
         $this->objDBDetails = $this->getObject('dbliftclub_details', 'liftclub');
         $this->objDBMessages = $this->getObject('dbliftclub_messages', 'liftclub');
+        $this->objDBActivitystreamer = $this->getObject('activitydb', 'activitystreamer');
     }
     function getLifts($userneed, $start, $limit, $params=null) 
     {	
@@ -159,6 +160,34 @@ class search_liftclub extends dbTable
         }
         return json_encode(array('liftcount' => $liftCount, 'searchresults' =>  $searchArray));
     }
+
+    function jsonLiftClubActivities($start, $limit) 
+    {
+								$params["start"] = ($this->getParam("start")) ? $this->getParam("start") : null;
+								$params["limit"] = ($this->getParam("limit")) ? $this->getParam("limit") : null;
+								$params["search"] = ($this->getParam("fields")) ? json_decode(stripslashes($this->getParam("fields"))) : null;
+								$params["query"] = ($this->getParam("query")) ? $this->getParam("query") : null;
+								$params["sort"] = ($this->getParam("sort")) ? $this->getParam("sort") : null;
+        $startlimit = $start.', '.$limit; 
+        $filter = "where module = 'liftclub'";
+        $liftActivities = $this->objDBActivitystreamer->getActivities($filter, $startlimit);
+       	$activityCount = ( count ( $liftActivities ) );
+        $str = '{"activitycount":"'.$activityCount.'","searchedactivities":[';
+        $searchArray = array();
+        foreach($liftActivities as $thisActivity){
+          $infoArray = array();
+          $infoArray['id'] = $thisActivity['id'];
+          $infoArray['module'] = $thisActivity['module'];          
+          $infoArray['title'] = $thisActivity['title'];
+          $infoArray['description'] = $thisActivity['description'];
+          $infoArray['createdon'] = $thisActivity['createdon'];
+          $infoArray['createdby'] = $thisActivity['createdby'];
+          $infoArray['link'] = $thisActivity['link'];
+          $searchArray[] = $infoArray;
+        }
+        return json_encode(array('activitycount' => $liftCount, 'searchresults' =>  $searchArray));
+    }
+
     function getMessages($id=NULL, $start, $limit, $params=NULL, $read=NULL, $trash=0) {
          $thisuser = $this->objUser->userId();
 									$where = "";

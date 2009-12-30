@@ -113,6 +113,9 @@ class liftclub extends controller
                 case 'outboxmessages':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'outboxmessages_tpl.php'; 
+                case 'viewactivities':
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    return 'liftclubactivities_tpl.php'; 
                 case 'showregister':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->registrationHome();
@@ -194,6 +197,18 @@ class liftclub extends controller
                     echo $myCities;
                     exit(0);
                     break; 
+                case 'jsongetactivities':
+                    $start = $this->getParam('start');
+                    $limit = $this->getParam('limit');
+                    $this->setLayoutTemplate(NULL);
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    $this->setVar('pageSuppressBanner', TRUE);
+                    $this->setVar('pageSuppressSearch', TRUE);
+                    $this->setVar('suppressFooter', TRUE);
+                    $lifts= $this->objLiftSearch->jsonLiftClubActivities($start, $limit);
+                    echo $lifts;
+                    exit(0);
+                    break;
                 case 'jsongetlifts':
                     $userneed = $this->getParam('userneed');
                     $start = $this->getParam('start');
@@ -594,14 +609,14 @@ class liftclub extends controller
             $this->setSession('time', $password);
 									   //add to activity log
 					       if($this->eventsEnabled) {
-									       $username = $this->objUser->username($userId);
+									       //$username = $this->objUser->username($userId);
 										      //$path = $this->uri(array('module'=>'liftclub', 'action'=>'viewlift','liftuserid'=>$userId));
 										      $path = 'module=liftclub&action=viewlift&liftuserid='.$userId;
 					           $message = $username." ".$this->objLanguage->languageText('mod_liftclub_liftadded', 'liftclub',"Added a Lift");
 					           $this->eventDispatcher->post($this->objActivityStreamer, "liftclub", array('title'=> $message,
 					               'link'=> $path,
 					               'contextcode' => NULL,
-					               'author' => $username,
+					               'author' => $userId,
 					               'description'=>$message));
 					       }
 
