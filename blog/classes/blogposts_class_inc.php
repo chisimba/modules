@@ -451,7 +451,12 @@ class blogposts extends object
                     if (empty($linkstr)) {
                         $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    $fboxcontent = $post['post_content'] . $this->cleaner->cleanHtml("<br /><hr />" . "<center><em><b>" . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") . "</b><br />" . $linkstr . "</em><hr />" . "<center>" . $tbl->show() . "</center>");
+                    $fboxcontent = $post['post_content']
+                      . $this->cleaner->cleanHtml("<br /><hr />"
+                      . "<center><em><b>"
+                      . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog")
+                      . "</b><br />" . $linkstr . "</em><hr />"
+                      . $tbl->show() . "</center>");
                     $ret.= $objFeatureBox->showContent($head, $fboxcontent);
                 } else {
                     // table of non logged in options
@@ -519,16 +524,20 @@ class blogposts extends object
                     foreach($thetags as $tags) {
                         $link = new href($this->uri(array(
                             'action' => 'viewblogbytag',
-                            'userid' => $userid,
+                            'userid' => $post['userid'],
                             'tag' => $tags['meta_value']
-                        )) , stripslashes($tags['meta_value']));
+                        )) , stripslashes($tags['meta_value']), "rel=\"tag\"");
                         $linkstr.= $link->show();
                         $link = NULL;
                     }
                     if (empty($linkstr)) {
                         $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    $ret.= $objFeatureBox->showContent($head, $post['post_content'] . "<center>" . $tblnl->show() . "</center>" );
+                    $ret.= $objFeatureBox->showContent($head, $post['post_content']
+                      . $this->cleaner->cleanHtml("<br /><hr /><center><em><b>"
+                      . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") 
+                      . "</b><br />" . $linkstr . "</em><hr />"
+                      .  $tblnl->show() . "</center>" ));
                 }
             }
         } else {
