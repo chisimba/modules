@@ -5,7 +5,7 @@
  *
  *  A simple jQuery plugin that uses OEmbed API to help displaying embedded
  *  content (such as photos or videos) in your website. It makes use of the
- *  jquery-oembed code developed by , and available from:
+ *  jquery-oembed code developed by Richard Chamorro, and available from:
  *      http://code.google.com/p/jquery-oembed/
  *
  * PHP version 5
@@ -55,7 +55,7 @@ $GLOBALS['kewl_entry_point_run'])
 *
 *  A simple jQuery plugin that uses OEmbed API to help displaying embedded
 *  content (such as photos or videos) in your website. It makes use of the
-*  jquery-oembed code developed by , and available from:
+*  jquery-oembed code developed by Richard Chamorro, and available from:
 *      http://code.google.com/p/jquery-oembed/
 *
 * @author Derek Keats
