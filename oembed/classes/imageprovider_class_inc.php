@@ -100,76 +100,125 @@ class imageprovider extends object
     */
     public function init()
     {
-
+        $this->objLanguage = $this->getObject('language', 'language');
     }
 
 
     /**
     *
     * Method to extract the components of the provided URL and set them
-    * as class properties
-    * 
+    * as class properties. It also sets an err property if it fails to
+    * generate the JSON for any reason.
+    *
+    * @param string $imageUrl The URL for the image to provide.
     * @access public
-    * @return TRUE | FALSE True if the image URL is valid, false if not.
+    *
+    * @return boolean TRUE|FALSE True if the image URL produces valid JSON,
+    *   false if not
     *
     */
     public function extractComponents($imageUrl)
     {
         if (!$this->testHttp($imageUrl)) {
+            $this->err = "404 Not Found";
             return FALSE;
         } else {
-            $ar = explode("/", $imageUrl);
+            // Instantiate the configuration object.
+            $objConfig = $this->getObject('altconfig', 'config');
+            // Get the site root as a URL.
+            $siteRoot = $objConfig->getsiteRoot();
+            // Get the site root as a file system path.
+            $siteRootPath = $objConfig->getsiteRootPath();
+            // Get the site name to make it the provider_name.
+            $this->provider_name = $objConfig->getSiteName();
+            // Unset the config object as we don't need it any more.
+            unset($objConfig);
+            // Take off the siteRoot from the image URL.
+            $imageForExplode = str_replace($siteRoot, NULL, $imageUrl, $count);
+            // If we didn't remove the siteRoot then it can't be a local image
+            if ($count == 0) {
+                $this->err = "404 Not Found";
+                return FALSE;
+            }
+            // Verify that the file exists.
+            if (!file_exists($siteRootPath . $imageForExplode)) {
+                $this->err = "404 Not Found";
+                return FALSE;
+            }
+            // Explode it into an array, the easiest way to get the file name
+            $ar = explode("/", $imageForExplode);
+            // Get an insteance of the filemanager database connector.
             $objFileDb = $this->getObject('dbfile', 'filemanager');
+            // Get the filename from the exploded array
             $fileName =  $this->getFileName($ar);
+            // Do a reverse lookup on the filename from the filemanager data.
             $fileInfoAr = $objFileDb->getRow('filename', $fileName);
             $fileId = $fileInfoAr['id'];
-            $fileOwner = $fileInfoAr['userid'];
+            $fileUser = $fileInfoAr['userid'];
             $this->title = $fileInfoAr['description'];
             unset($objFileDb);
+            // Get an instance of the user object to look up the file owner
             $objUser = $this->getObject('user', 'security');
-            $fileOwner = $objUser->fullName($fileOwner);
+            $fileOwner = $objUser->fullName($fileUser);
+            // Get an instane of the media metadata information object from filemanager.
             $mediaInfo = $this->getObject("dbmediafileinfo", "filemanager");
             $mediaInfoAr = $mediaInfo->getRow('fileid', $fileId);
-            $author_url = "";
-
+            // Start setting the properties that will generate the json.
             $this->type = "photo";
             $this->version = "1.0";
-            $this->author_name = $objUser->fullName($fileOwner);
-            $objConfig = $this->getObject('altconfig', 'config');
-            $this->provider_name = $objConfig->getSiteName();
-            $siteRoot = $objConfig->getsiteRoot();
-            $siteRootPath = $objConfig->getsiteRootPath();
-            unset($objConfig);
+            $this->author_name = $objUser->fullName($fileUser);
+            // Get the thumbnail from standard location.
             $thumbFile = "usrfiles/filemanager_thumbnails/"
               . $fileId . ".jpg";
             $size = getimagesize($siteRootPath . $thumbFile);
             $this->thumbnail_url = $siteRoot . $thumbFile;
             $this->thumbnail_width = $size[0];
             $this->thumbnail_height = $size[1];
-            $this->provider_url = $this->uri(array());
+            $this->provider_url = $siteRoot;
             $this->author_url = $this->provider_url;
             $this->cache_age = 600;
             $this->url = $imageUrl;
             $this->width = $mediaInfoAr['width'];
             $this->height = $mediaInfoAr['height'];
             $ar = $this->createArray();
-            //$objJson = $this->getObject('jsonutils', 'utilities');
-            header("Content-Type: application/json");
-            $json = json_encode($ar);
-            echo $json; die(); // This is crude. I need to make a template.
+            $this->json = json_encode($ar);
+            return TRUE;
         }
     }
 
+    /**
+    * Method to test if the link is valid HTML
+    *
+    * @param string $imageUrl The URL for the image being tested
+    * @return boolean TRUE | FALSE
+    * @access private
+    *
+    */
     private function testHttp($imageUrl)
     {
          return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $imageUrl);
     }
 
+    /**
+    * Method to get the filename from the exploded array
+    *
+    * @param string array $ar The exploded array from the URL
+    * @return string The filename for the image
+    * @access private
+    * 
+    */
     private function getFileName($ar)
     {
         return $ar[count($ar)-1];
     }
 
+    /**
+    * Method to create an array from the class properties
+    *
+    * @return sting array THe array of keys and values
+    * @access private
+    *
+    */
     private function createArray()
     {
         $ar = array(

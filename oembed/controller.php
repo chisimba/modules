@@ -134,6 +134,7 @@ class oembed extends controller
     * querystring.
     *
     * @access private
+    * @return string The populated template
     *
     */
     private function __demo()
@@ -148,14 +149,31 @@ class oembed extends controller
         return "dump_tpl.php";
     }
 
+    /**
+    *
+    * Image provider method. This returns the json or an HTML error
+    * without any Chisimba template / header information.
+    *
+    * @return string The populated template
+    * @access private
+    *
+    */
     private function __provideimage()
     {
         $imageUrl = $this->getParam('image', NULL);
         $objImage =  $this->getObject('imageprovider', 'oembed');
-        $str .= "<----" . $objImage->extractComponents($imageUrl);
-        $this->setVarByRef('str', $str);
-        return "dump_tpl.php";
+        if ($objImage->extractComponents($imageUrl)) {
+            $this->setPageTemplate('json_tpl.php');
+            $this->setVarByRef('str', $objImage->json);
+        } else {
+            $this->setPageTemplate('plain_tpl.php');
+            $this->setVarByRef('str', $objImage->err);
+        }
+        return "conts_tpl.php";
+        
     }
+
+    // --------------------------------------------------------
 
     /**
     *
