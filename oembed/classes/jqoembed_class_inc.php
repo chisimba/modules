@@ -73,6 +73,7 @@ class jqoembed extends object
     *
     */
     public $objLanguage;
+    
 
     /**
     *
@@ -128,6 +129,27 @@ class jqoembed extends object
 
     /**
     *
+    * Method to load the oembed embed-method-append script based on the
+    * flickr-embedmethod-append-example.html example.
+    *
+    * @param string $divClass The name of the class used for the display
+    *   in the anchor tag.
+    * @access public
+    * @return string The embeddable script.
+    *
+    */
+    public function getEmbedAppend($divClass="oembed")
+    {
+        return "<script type=\"text/javascript\">\n"
+	  . "jQuery(document).ready(function() {\n"
+          . "jQuery(\"." . $divClass . "\")."
+          . $divClass . "oembed(null, {embedMethod: \"append\"});\n"
+	  . "});\n"
+          . "</script>";
+    }
+
+    /**
+    *
     * Method to load the oembed default embeddable script 
     *
     * @param string $divClass The name of the class used for the display
@@ -153,7 +175,7 @@ class jqoembed extends object
     * @return VOID
     *
     */
-    public function loadExplicitDiv($divClass)
+    public function getExplicitDiv($divClass)
     {
         return '<div id="' . $divClass . '"></div>';
     }

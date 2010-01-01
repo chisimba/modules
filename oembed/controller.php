@@ -148,6 +148,15 @@ class oembed extends controller
         return "dump_tpl.php";
     }
 
+    private function __provideimage()
+    {
+        $imageUrl = $this->getParam('image', NULL);
+        $objImage =  $this->getObject('imageprovider', 'oembed');
+        $str .= "<----" . $objImage->extractComponents($imageUrl);
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
+
     /**
     *
     * Method to return an error when the action is not a valid
