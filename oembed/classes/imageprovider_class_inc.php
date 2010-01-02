@@ -247,11 +247,29 @@ class imageprovider extends object
         return $ar;
     }
 
+    /**
+    *
+    * Make json from the array
+    *
+    * @access private
+    * @param string $ar The array of keys/values to make into json
+    * @return string the JSON code
+    * 
+    */
     private function makeJson($ar)
     {
         return $this->json = json_encode($ar);
     }
 
+    /**
+    *
+    * Make XML from the array
+    *
+    * @access private
+    * @param string $ar The array of keys/values to make into XML
+    * @return string The XML as a string
+    * 
+    */
     private function makeXml($ar)
     {
         $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<oembed>\n";
@@ -263,6 +281,12 @@ class imageprovider extends object
         return $xml;
     }
 
+    /**
+    * Determine from the querystring if they want XML or JSON.
+    *
+    * @access private
+    * @return boolean TRUE|FALSE
+    */
     private function asXml()
     {
         if ($this->getParam('as', 'json') == 'xml') {
