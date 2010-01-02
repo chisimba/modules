@@ -163,14 +163,18 @@ class oembed extends controller
         $imageUrl = $this->getParam('image', NULL);
         $objImage =  $this->getObject('imageprovider', 'oembed');
         if ($objImage->extractComponents($imageUrl)) {
-            $this->setPageTemplate('json_tpl.php');
-            $this->setVarByRef('str', $objImage->json);
+            if ($objImage->json !== NULL) {
+                $this->setPageTemplate('json_tpl.php');
+                $this->setVarByRef('str', $objImage->json);
+            } else {
+                $this->setPageTemplate('xml_tpl.php');
+                $this->setVarByRef('str', $objImage->xml);
+            }
         } else {
             $this->setPageTemplate('plain_tpl.php');
             $this->setVarByRef('str', $objImage->err);
         }
         return "conts_tpl.php";
-        
     }
 
     // --------------------------------------------------------

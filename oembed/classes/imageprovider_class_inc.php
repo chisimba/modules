@@ -180,8 +180,16 @@ class imageprovider extends object
             $this->url = $imageUrl;
             $this->width = $mediaInfoAr['width'];
             $this->height = $mediaInfoAr['height'];
+            // Turn the appropriate class properties into an array.
             $ar = $this->createArray();
-            $this->json = json_encode($ar);
+            // Set either XML or json with the default being json.
+            if ($this->asXml()) {
+                $this->json = NULL;
+                $this->xml = $this->makeXml($ar);
+            } else {
+                $this->xml = NULL;
+                $this->json = $this->makeJson($ar);
+            }
             return TRUE;
         }
     }
@@ -237,6 +245,31 @@ class imageprovider extends object
           'width' => $this->width,
           'height' => $this->height);
         return $ar;
+    }
+
+    private function makeJson($ar)
+    {
+        return $this->json = json_encode($ar);
+    }
+
+    private function makeXml($ar)
+    {
+        $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<oembed>\n";
+        foreach ($ar as $key=>$value) {
+            $key = strtolower($key);
+            $xml .= "    <$key>$value</$key>\n";
+        }
+        $xml .= "</oembed>\n";
+        return $xml;
+    }
+
+    private function asXml()
+    {
+        if ($this->getParam('as', 'json') == 'xml') {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 }
 ?>
