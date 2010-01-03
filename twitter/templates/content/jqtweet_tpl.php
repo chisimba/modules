@@ -36,7 +36,17 @@ $cssLayout->setLeftColumnContent($leftbit);
 
 
 //Add your tweets
-$middleBit = $searchForm . $jqDiv . "<h3>"
+
+$middleBit = "";
+if (isset($searchForm)) {
+    $middleBit .= $searchForm;
+}
+
+if (isset($jqDiv)) {
+    $middleBit .= $jqDiv;
+}
+
+$middleBit .= "<h3>"
  . $this->objLanguage->languageText("mod_twitter_tweetsfromyou", "twitter")
  . "<div class='tweet'></div>";
 $cssLayout->setMiddleColumnContent($middleBit);
