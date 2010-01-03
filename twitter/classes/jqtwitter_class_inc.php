@@ -112,10 +112,6 @@ class jqtwitter extends object
     */
     public function loadJquery()
     {
-        /*$this->setVar('SUPPRESS_JQUERY', TRUE);
-        $jQuery = $this->getObject('jquery', 'htmlelements');
-        $jQuery->setVersion('1.3.1');
-        $this->appendArrayVar('headerParams', $jQuery->show());*/
         return TRUE;
     }
     
@@ -260,7 +256,7 @@ class jqtwitter extends object
     *
     */
     public function loadQueryByNumber($queryTxt, $queryBase, $queryNumber,
-      $avatarSize=32, $displayCount=4)
+      $avatarSize=32, $displayCount=10)
     {
         $script ='jQuery("#' . $queryBase . "_"
           . $queryNumber . '").tweet({
