@@ -67,16 +67,6 @@ class jqoembed extends object
    
     /**
     *
-    * @var string $objLanguage String object property for holding the
-    * language object
-    * @access public
-    *
-    */
-    public $objLanguage;
-    
-
-    /**
-    *
     * Constructor for the jqoembd class
     *
     * @access public
@@ -85,7 +75,6 @@ class jqoembed extends object
     */
     public function init()
     {
-        $this->objLanguage = $this->getObject('language', 'language');
     }
 
 
@@ -170,7 +159,9 @@ class jqoembed extends object
     
     /**
     *
-    * Method to load the jQuery plugin fpr real-time tweet
+    * Method to load the div for explicit inclusion. This will rarely, if ever,
+    * be used except in testing.
+    *
     * @access public
     * @return VOID
     *
