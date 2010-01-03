@@ -67,7 +67,7 @@ $GLOBALS['kewl_entry_point_run'])
 * using Chisimba's file manager.
 *
 * @author Derek Keats
-* @package twitter
+* @package oembed
 *
 */
 class imageprovider extends object
@@ -289,7 +289,7 @@ class imageprovider extends object
     */
     private function asXml()
     {
-        if ($this->getParam('as', 'json') == 'xml') {
+        if ($this->getParam('format', 'json') == 'xml') {
             return TRUE;
         } else {
             return FALSE;

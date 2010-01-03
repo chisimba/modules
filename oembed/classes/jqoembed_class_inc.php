@@ -59,7 +59,7 @@ $GLOBALS['kewl_entry_point_run'])
 *      http://code.google.com/p/jquery-oembed/
 *
 * @author Derek Keats
-* @package twitter
+* @package oembed
 *
 */
 class jqoembed extends object
@@ -122,7 +122,7 @@ class jqoembed extends object
         return "<script type=\"text/javascript\">\n"
 	  . "jQuery(document).ready(function() {\n"
           . "jQuery(\"." . $divClass . "\")."
-          . $divClass . "oembed(null, {embedMethod: \"fill\"});\n"
+          . $divClass . "(null, {embedMethod: \"fill\"});\n"
 	  . "});\n"
           . "</script>";
     }
@@ -143,7 +143,7 @@ class jqoembed extends object
         return "<script type=\"text/javascript\">\n"
 	  . "jQuery(document).ready(function() {\n"
           . "jQuery(\"." . $divClass . "\")."
-          . $divClass . "oembed(null, {embedMethod: \"append\"});\n"
+          . $divClass . "(null, {embedMethod: \"append\"});\n"
 	  . "});\n"
           . "</script>";
     }
@@ -175,7 +175,7 @@ class jqoembed extends object
     * @return VOID
     *
     */
-    public function getExplicitDiv($divClass)
+    public function getExplicitDiv($divClass='oembed')
     {
         return '<div id="' . $divClass . '"></div>';
     }
