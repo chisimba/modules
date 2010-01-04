@@ -101,12 +101,13 @@ $species->addFromDB($arrayspecies,'speciesname','id');
 //$species->setSelected($species);
 
 //text input field for vaccine source
+$vaccinesource = "NULL";
 $vaccineSource = new textinput('vaccinesource',$vaccinesource);
 
 //text input field for lot number
 if(!isset($lotnumber)){
 
-$lotnumber = "NULL";
+$lotnumber = "NULL1";
 }
 $lotNumber = new textinput('lotnumber',$lotnumber);
 
@@ -130,7 +131,7 @@ if(!isset($planprovac)){
 $planprovac = 0;
 }
 $planprovac = new textinput('planprovac',$planprovac);
-
+$planprovac->extra = 'onkeyup = \'javascript:ignorenegative("planpro");\'';
 //text input field for cond pro. vaccination
 
 $condprovac = new textinput('condprovac',$condprovac);
@@ -151,7 +152,7 @@ if(!isset($planconvac)){
 $planconvac = 0;
 }
 $planconvac = new textinput('planconvac',$planconvac);
-
+$planconvac->extra = 'onkeyup = \'javascript:ignorenegative("plancon");\'';
 //text input field for cond pro. vaccination
 $condconvac = new textinput('condconvac',$condconvac);
 $condconvac->extra = 'onchange = \'javascript:changeValues("convac");\'';
@@ -166,7 +167,8 @@ foreach($arraycon as $dat){
 $cumconvac = new textinput('cumconvac',$cumconvac);
 
 //text area for comments 
-$comments = new textarea('comments',$comments);
+$comments = new textarea('comment',$comments);
+$comments->extra = 'onkeyup="javascript:limitcomment();"';
 
 //get htmltable object
 $objTable = $this->getObject('htmltable','htmlelements');
@@ -297,8 +299,9 @@ $objForm->addRule('condprovac', $this->objLanguage->languageText('mod_ahis_condp
 $objForm->addRule('condconvac', $this->objLanguage->languageText('mod_ahis_condconreq','openaris'),'numeric');
 $objForm->addRule('outbreakref', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
 $objForm->addRule('diseaseId', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
-$objForm->addRule('lotnumber', $this->objLanguage->languageText('mod_ahis_validatevac', 'openaris'), 'nonnumeric');
+$objForm->addRule('lotnumber', $this->objLanguage->languageText('mod_ahis_validatevac', 'openaris'), 'alphanumeric');
 $objForm->addRule('mandate', $this->objLanguage->languageText('mod_ahis_validatemandate', 'openaris'), 'datenotfuture');
+$objForm->addRule('vaccinesource', $this->objLanguage->languageText('mod_ahis_validatevacsource', 'openaris'), 'nonnumeric');
 
 $objForm->addRule(array('mandate','expdate'), $this->objLanguage->languageText('mod_ahis_validateexpman', 'openaris'), 'datenotbefore');
 

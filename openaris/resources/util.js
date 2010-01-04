@@ -348,7 +348,7 @@ function changeSpecies() {
 
 	var condprovac  = jQuery('#input_cond'+vname).val();
 	var cumvac;
-	if (condprovac != -1) {
+	if (condprovac >= 0) {
 		var condprovac = jQuery('#input_cond'+vname).val();
 //alert(diseaseId);
 				   jQuery.getJSON("index.php?module=openaris&action=ajax_getvalues&condprovac="+condprovac+"&filter="+vname,
@@ -356,6 +356,10 @@ function changeSpecies() {
 							jQuery('#input_cum'+vname).val(data.cumvac);
 							
 					   });
+	}else{
+alert("Please Enter positive whole number");
+								jQuery('#input_cond'+vname).val(condprovac.substr(0,0));
+	
 	}
 	
 	
@@ -387,9 +391,10 @@ function valdirection(dname){
 	if (direction != -1) {
 	var direction  = jQuery('#input_'+dname+'itude').val();
 		var country = jQuery('#input_countryId').val();
-		
+
 				   jQuery.getJSON("index.php?module=openaris&action=ajax_valdirection&direction="+direction+"&filter="+dname+"&countryId="+country,
 				   function(data) {
+				   jQuery('#input_'+dname+'itude').val(data.direct);
 				   if(data.status == 1){
 				   
 				   alert("Please,Lattitude is out of range.Range is between "+data.nlatt+" and "+data.slatt);
@@ -459,3 +464,29 @@ jQuery.getJSON("index.php?module=openaris&action=ajax_gettlu&speciesno="+nospeci
 	}
 }
 
+function limitcomment(){
+
+var comment = jQuery('#input_comment').val();
+var clength = comment.length;
+
+if(comment.length > 256){
+jQuery('#input_comment').val(comment.substr(0,256));
+
+}
+
+
+}
+
+function ignorenegative(value){
+
+var caseinput = jQuery('#input_'+value+'vac').val();
+
+
+if(caseinput == '-'){
+alert("Please enter Positive whole number");
+jQuery('#input_'+value+'vac').val(0);
+
+}
+
+
+}

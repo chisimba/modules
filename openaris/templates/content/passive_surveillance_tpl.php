@@ -246,6 +246,8 @@ $validatedRadio->addOption(0, $this->objLanguage->languageText('word_no'));
 //$validatedRadio->setSelected($validated);
 
 $commentBox = new textarea('comment', $comment, 4, 42);
+$commentBox->extra = 'onkeyup="javascript:limitcomment();"';
+
 
 $radioTable = $this->newObject('htmltable', 'htmlelements');
 $radioTable->cellspacing = 2;

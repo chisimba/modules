@@ -83,7 +83,7 @@ for ($i=1; $i<=12; $i++) {
     $date = strtotime("01-$i-01");
     $monthdate->addOption(date('m', $date), date('F', $date));
 }
-$monthdate->setSelected(date('m'));
+$monthdate->setSelected($month);
 
 //dropdown for year
 
@@ -93,6 +93,7 @@ $yeardate =new dropdown('year');
 $date = strtotime("01-01-$i");
 $yeardate->addOption(date('y',$date),date('Y',$date));
 }
+$yeardate->setSelected($year1);
 //dropdown for admin1
 $admin1 = new dropdown('partitionTypeId');
 $admin1->addOption('-1',Select);
@@ -103,32 +104,32 @@ $admin1->extra = 'onchange="javascript:changePartitionType();"';
 
  //text field for phone
  $phone= new textinput('dataOfficerTel',$phone);
- 
+ $phone->extra = 'disabled';
  //text field for fax
  $fax = new textinput('dataOfficerFax',$fax);
-  
+   $fax->extra = 'disabled';
   //text field for email
   $email = new textinput('dataOfficerEmail',$email);
-  
+   $email->extra = 'disabled';
   //text field for phone
  $phone1= new textinput('vetOfficerTel',$phone1);
- 
+  $phone1->extra = 'disabled';
  //text field for fax
  $fax1 = new textinput('vetOfficerFax',$fax1);
-  
+   $fax1->extra = 'disabled';
   //text field for email
   $email1 = new textinput('vetOfficerEmail',$email1); 
 //get htmltable object
-
+ $email1->extra = 'disabled';
 //text field for phone
  $phone2= new textinput('repOfficerTel',$phone2);
- 
+  $phone2->extra = 'disabled';
  //text field for fax
  $fax2 = new textinput('repOfficerFax',$fax2);
-  
+   $fax2->extra = 'disabled';
   //text field for email
   $email2 = new textinput('repOfficerEmail',$email2);
-  
+   $email2->extra = 'disabled';
 //dropdown for admin2
 $admin2 = new dropdown('partitionLevelId');
 $admin2->addOption('-1',Select);
@@ -310,7 +311,7 @@ $objForm = new form('vacForm', $this->uri(array('action' => 'vacinventory_add'))
 $objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable4->show()."<hr class='openaris' />".$objTable2->show()."<hr class='openaris' />".$objTable3->show()."<hr class='openaris' />".$objTable1->show());
 
 $objForm->addRule('repOfficerId',$this->objLanguage->languageText('mod_ahis_reportoffreq','openaris'),'select');
-$objForm->addRule('dataOfficerTel', $this->objLanguage->languageText('mod_ahis_validatedatatel', 'openaris'), 'required');
+//$objForm->addRule('dataOfficerTel', $this->objLanguage->languageText('mod_ahis_validatedatatel', 'openaris'), 'required');
 //$objForm->addRule('vetOfficerTel', $this->objLanguage->languageText('mod_ahis_validatevettel', 'openaris'), 'required');
 
 
@@ -327,7 +328,8 @@ $objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_longit
 $objForm->addRule('repdate', $this->objLanguage->languageText('mod_ahis_validaterepdate', 'openaris'), 'datenotfuture');
 $objForm->addRule('ibardate', $this->objLanguage->languageText('mod_ahis_validateibardate', 'openaris'), 'datenotfuture');
 $objForm->addRule(array('repdate','ibardate'), $this->objLanguage->languageText('mod_ahis_validaterepdateibardate', 'openaris'), 'datenotbefore');
-//$objForm->addRule(array('lattitude','5'), $this->objLanguage->languageText('mod_ahis_validaterepdateibardate', 'openaris'), 'minlength');
+$objForm->addRule('loctype', $this->objLanguage->languageText('mod_ahis_validateloctype', 'openaris'), 'nonnumeric');
+$objForm->addRule('locname', $this->objLanguage->languageText('mod_ahis_validatelocname', 'openaris'), 'nonnumeric');
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
@@ -346,6 +348,12 @@ echo "</script>";
 if($status ==2){
 echo "<script type=\"text/javascript\">";
 echo " alert(\"Please enter valid longitude\")";
+echo "</script>";
+}
+
+if($status ==3){
+echo "<script type=\"text/javascript\">";
+echo " alert(\"Please enter valid month,date cannot be in the  future\")";
 echo "</script>";
 }
 ?>

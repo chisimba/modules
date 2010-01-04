@@ -89,9 +89,9 @@ $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
 $outbreakCodeBox->extra = 'readonly';
 $outbreakCodeBox->setCss('passive_surveillance');
 
-$latitudeBox = new textinput('latitude', $latitude);
+$latitudeBox = new textinput('lattitude', $latitude);
 $latitudeBox->setCss('geo');
-$latitudeBox->extra = 'onchange = \'javascript:valdirection("lat");\'';
+$latitudeBox->extra = 'onchange = \'javascript:valdirection("latt");\'';
 $longitudeBox = new textinput('longitude', $longitude);
 $longitudeBox->setCss('geo');
 $longitudeBox->extra = 'onchange = \'javascript:valdirection("long");\'';
@@ -196,7 +196,7 @@ $localitySet->addContent($objTableArea2->show());
 $objForm = new form('reportForm', $this->uri(array('action' => 'add_diseaselocality')));
 $objForm->addToForm($localitySet->show());
 $objForm->addRule('localityName', $this->objLanguage->languageText('mod_ahis_vallocalityname', 'openaris'), 'required');
-$objForm->addRule('latitude', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
+$objForm->addRule('lattitude', $this->objLanguage->languageText('mod_ahis_vallatitude', 'openaris'), 'numeric');
 $objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_vallongitude', 'openaris'), 'numeric');
 
 $objTableArea3 = $this->newObject('htmltable','htmlelements');

@@ -111,7 +111,7 @@ class country extends dbtable
 	
 	}
 
-	$dataarray[] = array('status'=>$status,'nlatt'=>$nlatt,'slatt'=>$slatt,'wlong'=>$wlong,'elong'=>$elong);
+	$dataarray[] = array('status'=>$status,'nlatt'=>$nlatt,'slatt'=>$slatt,'wlong'=>$wlong,'elong'=>$elong,'direct'=>round($direct,5));
 	return $dataarray;
 }
 }

@@ -21,7 +21,7 @@
  * 
  * @category  Chisimba
  * @package   ahis
- * @author    Nic Appleby <nappleby@uwc.ac.za>
+ * @author    Nic Appleby <nappleby@uwc.ac.za>,Rosina Ntow<rntow@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id: controller.php 13885 2009-07-08 14:38:03Z nic $
@@ -570,7 +570,7 @@ class openaris extends controller {
 				$insert_array = array('outbreakcode' => $outbreakCode,
 								 'localitytypeid' => $this->getParam('localityTypeId'),
 								 'name' => $this->getParam('localityName'),
-								 'latitude' => $this->getParam('latitude'),
+								 'latitude' => $this->getParam('lattitude'),
 								 'latdirection' => $this->getParam('latDirec'),
 								 'longitude' => $this->getParam('longitude'),
 								 'longdirection' => $this->getParam('longDirec'),
@@ -2779,7 +2779,7 @@ class openaris extends controller {
 			       $this->setVar('plevel',$this->getSession('ps_admin2'));
 			      $this->setVar('pname',$this->getSession('ps_admin3'));
 			      $this->setVar('month',$this->getSession('ps_month'));
-			      $this->setVar('year',$this->getSession('ps_year'));
+			      $this->setVar('year1',$this->getSession('ps_year'));
 			      $this->setVar('longitude',$this->getSession('ps_longitude'));
 			      $this->setVar('lattitude',$this->getSession('ps_lattitude'));
 		         $this->setVar('locname',$this->getSession('ps_locname'));
@@ -2837,13 +2837,21 @@ class openaris extends controller {
 	            $longval =$this->getSession('ps_longitude');
 	            $countryId = $this->getSession('ps_country');
 	            $filter = 'latt';
-	            $status = $this->objCountry->getData($filter,$lattval,$countryId);  
+	            $status = $this->objCountry->getData($filter,$lattval,$countryId); 
+
+	            $year = date('y');
+	             $month = date('m');
+	            $selyr = $this->getSession('ps_year');
+	            $selmth = $this->getSession('ps_month'); 
+	           if($selyr == $year && $selmth > $month ){
+               return $this->nextAction('vacinventory',array('status'=>3));
+	           } 
                if($status[0]['status']==1){
                return $this->nextAction('vacinventory',array('status'=>1));
                }
 	             $filter = 'long';
 	            $status = $this->objCountry->getData($filter,$longval,$countryId);
-               if($status[0]['status']==2){
+               if($status[0]['status']==2 && $longval !=0){
                return $this->nextAction('vacinventory',array('status'=>2));
                }
 				   return $this->nextAction('vacinventory2');
@@ -2911,7 +2919,7 @@ class openaris extends controller {
                $this->setSession('ps_planconvac',$this->getParam('planconvac'));
                $this->setSession('ps_condconvac',$this->getParam('condconvac'));
                $this->setSession('ps_cumconvac',$this->getParam('cumconvac'));
-               $this->setSession('ps_comments',$this->getParam('comments'));
+               $this->setSession('ps_comments',$this->getParam('comment'));
                
                
 
