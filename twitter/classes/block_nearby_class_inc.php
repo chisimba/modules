@@ -45,7 +45,7 @@ class block_nearby extends object
             $latitude = $objUserParams->getValue("latitude");
             $longitude = $objUserParams->getValue("longitude");
             if ($latitude && $longitude) {
-                return $objRtt->loadNearbyDisplayDiv($latitude, $longitude, $distance);
+                return $objRtt->loadNearbyDiv($latitude, $longitude, $distance);
             } else {
                 return NULL;
             }
