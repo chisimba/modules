@@ -125,7 +125,9 @@
         new OEmbedProvider("vimeo", "vimeo.com", "http://vimeo.com/api/oembed.json"),
         new OEmbedProvider("wikipedia", "wikipedia.org"),
         new OEmbedProvider("wordpress", "wordpress.com"),
-        new OEmbedProvider("youtube", "youtube.com")
+        new OEmbedProvider("youtube", "youtube.com"),
+        new OEmbedProvider("localhost", "localhost", "http://localhost/ch/index.php?module=oembed&action=provideimage&image=")
+
     ];
 
     function OEmbedProvider(name, urlPattern, oEmbedUrl, callbackparameter) {
