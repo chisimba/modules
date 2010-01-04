@@ -87,6 +87,7 @@ class jbviewer extends object {
         $this->objWashout = $this->getObject ( 'washout', 'utilities' );
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
         $this->objTwtOps = $this->getObject ( 'twitoasterops', 'twitoaster');
+        $this->objUserPic = $this->getObject('imageupload', 'useradmin');
     }
 
     public function renderSingle($msg) {
@@ -218,11 +219,16 @@ class jbviewer extends object {
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $objWashout = $this->getObject ( 'washout', 'utilities' );
         $this->profiletext = $this->objSysConfig->getValue ( 'jposterprofile', 'jabberblog' );
-        $menu = "<center>" . $this->objUser->getUserImage ( $this->jposteruid, FALSE, 'user_image' ) . "</center>";
+        
+        $head = NULL;
+        $head .= '<div class="vcard">'."\n";
+        $head .= '<span class="fn">'.$this->objUser->fullName ( $this->jposteruid ).'</span>'."\n";
+		$body  = '<p align="center"><img class="photo" src="'.$this->objUserPic->userpicture($this->jposteruid).'" alt="'.$this->objUser->fullName($this->jposteruid).'" /></p>'."\n";
+		
         $blurb = $objWashout->parseText ( $this->profiletext );
         $objFeature = $this->newObject ( 'featurebox', 'navigation' );
 
-        return $objFeature->show ( $this->objUser->fullName ( $this->jposteruid ), $menu . "<br />" . $blurb );
+        return $objFeature->show ( $head, $body . "<br />" . $blurb );
     }
 
     public function searchBox() {
