@@ -348,7 +348,8 @@ function changeSpecies() {
 
 	var condprovac  = jQuery('#input_cond'+vname).val();
 	var cumvac;
-	if (condprovac >= 0) {
+	condprovac = condprovac/1;
+	if (condprovac >= 0 && condprovac == parseInt(condprovac)|| condprovac ==0) {
 		var condprovac = jQuery('#input_cond'+vname).val();
 //alert(diseaseId);
 				   jQuery.getJSON("index.php?module=openaris&action=ajax_getvalues&condprovac="+condprovac+"&filter="+vname,
@@ -358,7 +359,8 @@ function changeSpecies() {
 					   });
 	}else{
 alert("Please Enter positive whole number");
-								jQuery('#input_cond'+vname).val(condprovac.substr(0,0));
+var v = "";
+								jQuery('#input_cond'+vname).val(v);
 	
 	}
 	
@@ -486,6 +488,18 @@ if(caseinput == '-'){
 alert("Please enter Positive whole number");
 jQuery('#input_'+value+'vac').val(0);
 
+}else{
+ //var all = round(caseinput);
+//if(isset(isInteger(caseinput))){
+var ncaseinput = caseinput/1; 
+if(ncaseinput == parseInt(ncaseinput)|| ncaseinput ==0){
+
+}else{
+alert("please enter positive whole numbers");
+jQuery('#input_'+value+'vac').val(0);
+
+}
+//}
 }
 
 
