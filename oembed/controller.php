@@ -24,7 +24,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   helloforms
+ * @package   oembed
  * @author    Derek Keats dkeats@uwc.ac.za
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -54,7 +54,7 @@ $GLOBALS['kewl_entry_point_run'])
 * Controller class for Chisimba for the module oembed
 *
 * @author Derek Keats
-* @package twitter
+* @package oembed
 *
 */
 class oembed extends controller
