@@ -50,26 +50,32 @@ class dbbm extends dbTable {
      */
      
     public $excludeList;
+    public $objCurl;
     
     public function init() {
         parent::init ( 'tbl_bmmentions' );
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $this->excludeList = $this->objSysConfig->getValue('exclusions', 'brandmonday');
         $this->excludeList = explode(",", $this->excludeList);
+        $this->objCurl = $this->getObject('curlwrapper', 'utilities');
     }
 
     public function smartUpdate($resMinus, $resPlus, $resMentions) {
         // first the plus
         foreach($resPlus->results as $res) {
             if(!$this->tweetExists('tbl_bmplus', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, /* 'location' => $res->location,*/ 'tweettime' => strtotime($res->created_at)), 'tbl_bmplus');
+                $location = $this->checkUserLoc($res);
+                $location = $location['location'];
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $location, 'tweettime' => strtotime($res->created_at)), 'tbl_bmplus');
                 $this->parseHashTags($res->text, $res->id, 'plus');
                 $this->analyseWords('tbl_bmplus_words', $res->text);
             }
         }
         foreach($resMinus->results as $res) {
             if(!$this->tweetExists('tbl_bmminus', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, /*'location' => $res->location,*/ 'tweettime' => strtotime($res->created_at)), 'tbl_bmminus');
+                $location = $this->checkUserLoc($res);
+                $location = $location['location'];
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->geo, 'tweettime' => strtotime($res->created_at)), 'tbl_bmminus');
                 $this->parseHashTags($res->text, $res->id, 'minus');
                 $this->analyseWords('tbl_bmminus_words', $res->text);
             }
@@ -79,8 +85,47 @@ class dbbm extends dbTable {
                 $res->to_user = NULL;
             }
             if(!$this->tweetExists('tbl_bmmentions', $res->id)) {
-                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, /*'location' => $res->location,*/ 'tweettime' => strtotime($res->created_at)), 'tbl_bmmentions');
+                $this->insert(array('tweet' => $res->text, 'createdat' => $res->created_at, 'from_user' => $res->from_user, 'to_user' => $res->to_user, 'tweetid' => $res->id, 'lang' => $res->iso_language_code, 'source' => $res->source, 'image' => $res->profile_image_url, 'location' => $res->geo, 'tweettime' => strtotime($res->created_at)), 'tbl_bmmentions');
                 // $this->parseHashTags($res->text, $res->id);
+            }
+        }
+    }
+    
+    public function checkUserLoc($res) {
+        // check if we already have the info for this user
+        parent::init('tbl_bmlocations');
+        $user = $res->from_user;
+        $chk = $this->getRecordCount("WHERE user = '$user'");
+        if($chk > 0) {
+            $loc = $this->getAll("WHERE user = '$user'");
+            return $loc[0];
+        }
+        else {
+            $userlookupurl = "http://twitter.com/users/show.json?screen_name=".$res->from_user;
+            $udata = json_decode($this->objCurl->exec($userlookupurl));
+            $userLocation = @$udata->location;
+            if($userLocation != '' || $userLocation != NULL) {
+                $userLocation = explode(": ", $userLocation);
+                if(isset($userLocation[1])) {
+                    $res = array('user' => $res->from_user, 'location' => $userLocation[1], 'datecreated' => $this->now());
+                }
+                else {
+                    $userLocation = explode(",", $userLocation[0]);
+                    $userLocation = addslashes($userLocation[0]);
+                    // look up the latlon on geonames.org database.
+                    parent::init('tbl_geonames');
+                    $loc = $this->getAll("WHERE name = '$userLocation'");
+                    $loc = $loc[0];
+                    $lat = $loc['latitude'];
+                    $lon = $loc['longitude'];
+                    $res = array('user' => $res->from_user, 'location' => $lat.", ".$lon, 'datecreated' => $this->now());
+                }
+                // insert the record
+                $this->insert($res, 'tbl_bmlocations');
+                return $res;
+            }
+            else {
+                $res = array('user' => $res->from_user, 'location' => 'Unknown', 'datecreated' => $this->now());
             }
         }
     }

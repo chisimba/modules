@@ -1,6 +1,6 @@
 <?php
 /**
- * tribe controller class
+ * brandmonday controller class
  *
  * Class to control the tribe module
  *
@@ -70,25 +70,25 @@ class brandmonday extends controller {
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
-        	
-        	case 'json_getbrandplus':
-        		$resPlus = $this->objDbBm->getRange('tbl_bmplus', 0, 100);
-        		echo json_encode(array('totalCount' =>count($resPlus->results), 'tweets'=> $resPlus->results));
-        		
-        		exit(0);
-        		break;
-        	case 'json_getbrandminus':
-        		$resMinus = $this->objDbBm->getRange('tbl_bmminus', 0, 100);
-        		echo json_encode(array('totalCount' =>count($resMinus->results), 'tweets'=> $resMinus->results));
-        		
-        		exit(0);
-        		break;
-        	case 'json_getmentions':
-        		$resMentions = $this->objDbBm->getRange('tbl_bmmentions', 0, 100);
-        		echo json_encode(array('totalCount' =>count($resMentions->results), 'tweets'=> $resMentions->results));
-        		
-        		exit(0);
-        		break;
+            
+            case 'json_getbrandplus':
+                $resPlus = $this->objDbBm->getRange('tbl_bmplus', 0, 100);
+                echo json_encode(array('totalCount' =>count($resPlus->results), 'tweets'=> $resPlus->results));
+                exit(0);
+                break;
+            
+            case 'json_getbrandminus':
+                $resMinus = $this->objDbBm->getRange('tbl_bmminus', 0, 100);
+                echo json_encode(array('totalCount' =>count($resMinus->results), 'tweets'=> $resMinus->results));
+                exit(0);
+                break;
+            
+            case 'json_getmentions':
+                $resMentions = $this->objDbBm->getRange('tbl_bmmentions', 0, 100);
+                echo json_encode(array('totalCount' =>count($resMentions->results), 'tweets'=> $resMentions->results));
+                exit(0);
+                break;
+            
             case 'main' :
                 break;
 

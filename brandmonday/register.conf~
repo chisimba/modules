@@ -3,7 +3,7 @@ MODULE_NAME: BrandMonday
 MODULE_DESCRIPTION: BrandMonday Tweet hashtag module
 MODULE_AUTHORS: Paul Scott
 MODULE_RELEASEDATE: 2009 06 26
-MODULE_VERSION: 0.010
+MODULE_VERSION: 0.012
 MODULE_PATH: brandmonday
 MODULE_ISADMIN: 0
 MODULE_ISVISIBLE: 1
@@ -26,6 +26,7 @@ TABLE: tbl_bmminus
 TABLE: tbl_bmmentions
 TABLE: tbl_bmplus_words
 TABLE: tbl_bmminus_words
+TABLE: tbl_bmlocations
 
 CONFIG: adhead1|Advert1!|mod_brandmonday_adhead1
 CONFIG: fbhead|Featured Blogger|mod_brandmonday_fbhead

@@ -358,15 +358,26 @@ class viewer extends object {
         return $objLogin->renderLoginBox('brandmonday');
     }
 
-    public function tweetMap($dataArray) {
+    public function tweetMapMarkers($dataArray) {
         // build up a set of markers for a google map
         $head = "<markers>";
         $body = NULL;
         foreach($dataArray as $data) {
-            $body .= "<marker lat="".$data['lat']."" lng="".$data['lng']."" tweet="".$data['tweet'].""/>";
+            $body .= "<marker lat='".$data['lat']."' lng='".$data['lng']."' tweet='".$data['tweet']."' />";
         }
         $tail = "</markers>";
-        return $head.$body.$tail;
+        $data = $head.$body.$tail;
+        $path = $this->objConfig->getModulePath()."brandmonday/markers.xml";
+        if(!file_exists($path)) {
+            touch($path);
+            chmod($path, 0777);
+        }
+        else {
+            unlink($path);
+            touch($path);
+            chmod($path, 0777);
+        }
+        file_put_contents($path, $data);
     }
 }
 ?>

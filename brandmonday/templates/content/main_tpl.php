@@ -30,7 +30,7 @@ $this->appendArrayVar('headerParams', '
         		var adhead1 = "'.$adhead1.'";
         		var adhead2 = "'.$adhead2.'";
         		var abouthead = "'.$abouthead.'";
-        		var fhead = "'.$fhead.'";
+        		var fhead = "'.$fbhead.'";
         		var tweetThisHead = "'.$tweetThisHead.'";
         		
         		

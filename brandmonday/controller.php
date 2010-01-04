@@ -1,8 +1,8 @@
 <?php
 /**
- * tribe controller class
+ * brandmonday controller class
  *
- * Class to control the tribe module
+ * Class to control the brandmonday module
  *
  * PHP version 5
  *
@@ -104,7 +104,7 @@ class brandmonday extends controller {
                 $lastupdate = explode("|", $lastupdate);
                 if($lastupdate[0] == '' || $lastupdate[1] == '' || $lastupdate[2] == '') {
                     $minusurl = "http://search.twitter.com/search.json?q=&ands=BrandMinus&phrase=&ors=&nots=BrandPlus&lang=all&from=&to=&ref=&since_id=$lastupdate&rpp=100";
-                    $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&lang=all&from=&to=&ref=&since_id=$lastupdate&rpp=100"; //"http://search.twitter.com/search.json?q=%23BrandPlus+AND+%23BrandMonday&lang=all&geocode=-33.55%2C18.22%2C100km";
+                    $plusurl = "http://search.twitter.com/search.json?q=&ands=BrandPlus&phrase=&ors=&nots=BrandMinus&lang=all&from=&to=&ref=&since_id=$lastupdate&rpp=100";
                     $menurl = "http://search.twitter.com/search.json?q=%23BrandMonday&lang=all&since_id=$lastupdate";
                 }
                 else {
