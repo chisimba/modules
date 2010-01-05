@@ -112,7 +112,7 @@ class jqtwitter extends object
     */
     public function loadJquery()
     {
-        return TRUE;
+        die("DEPRECATED CODE USED: loadJquery");
     }
     
     /**
