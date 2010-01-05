@@ -4,37 +4,47 @@ renameFolderUrl,
 deleteFolderUrl,
 uploadUrl,
 settingsUrl,
-uploadWindow;
-function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, xuploadUrl, xsettingsUrl){
+uploadWindow,
+filesUrl;
+var conn = new Ext.data.Connection();
+var filesstore;
+var filesPanel;
+
+function showHome(dataurl,
+    xcreateFolderUrl,
+    xrenameFolderUrl,
+    xdeleteFolderUrl,
+    xuploadUrl,
+    xsettingsUrl,
+    xfileUrl,
+    modPath){
     createFolderUrl=xcreateFolderUrl;
     renameFolderUrl = xrenameFolderUrl;
     deleteFolderUrl = xdeleteFolderUrl;
     uploadUrl = xuploadUrl;
     settingsUrl = xsettingsUrl;
+    filesUrl=xfileUrl;
     var Tree = Ext.tree;
-    var detailsText = '<center><h1>File manager 0.1 beta</h1> &copy;2010.\n\
-<ul>\n\
-<li>Getting Started</li>\n\
-</ul>\n\
-</center>';
-    var tpl = new Ext.Template(
-        
-        '<fieldset style="margin-left:10px;margin-right:10px;">',
-        '<legend >File details</legend>',
-        '<p><h1 style="margin-left:10px;margin-right:10px;">Ref No: {refno}</h1></p>',
-        '<h2 class="title" style="margin-left:10px;margin-right:10px;">{title}</h2>',
-        '<p><b style="margin-left:10px;margin-right:10px;">Name</b>: {text}</p>',
-        '<p><b style="margin-left:10px;margin-right:10px;">Type</b>: {cls}</p>',
-        '<p><b style="margin-left:10px;margin-right:10px;">Last modified</b>: {lastmodified}</p>',
-        '<p><b style="margin-left:10px;margin-right:10px;">Size</b>: {size}</p>',
-        '<font style="margin-left:10px;margin-right:10px;"><a href={downloadurl}>Download<img src="{downloadimgurl}"></a>&nbsp;&nbsp;<a href={deleteurl}>Delete<img src="{deleteimgurl}"></a></font>',
+  
+    var tpl = new Ext.XTemplate(
+        '<tpl for=".">',
 
-        '</fieldset>'
-   
+        '<div class="thumb-wrap" id="{text}">',
+        '<div class="thumb"><img src="'+modPath+'/{ext}.png" title="{text}"></div>',
+        '<span class="x-editable">{shortName}</span></div>',
+        '</tpl>',
+        '<div class="x-clear"></div>'
         );
-    tpl.compile();
     var tb = new Ext.Toolbar();
     tb.render('toolbar');
+    tb.add({
+        text:'Upload',
+        iconCls: 'upload',
+        handler: function() {
+            showUploadForm();
+        }
+
+    });
 
     tb.add({
         text:'Settings',
@@ -56,6 +66,7 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, x
 
     tb.doLayout();
 
+   
     var tree = new Tree.TreePanel({
         useArrows: true,
         autoScroll: true,
@@ -74,26 +85,25 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, x
                     }else{
                         currentPath+="/"+node.text;
                     }
-                    
+                    filesstore = new Ext.data.JsonStore({
+                        url:filesUrl+"&node="+currentPath,
+                        root: 'files',
+                        fields: ['text', 'id','ext',
+                        {
+                            name:'size',
+                            type: 'float'
+                        }, {
+                            name:'lastmodified',
+                            type:'date',
+                            dateFormat:'timestamp'
+                        }
+                        ]
+                    });
+                    filesstore.load();
+
+                    filesPanel.bindStore(filesstore);
+                    filesPanel.refresh();
                    
-                    detailsText = '<fieldset style="margin-left:10px;margin-right:10px;"><hr/>\n\
-<legend >Folder details</legend>                      \n\
- <b style="margin-left:10px;margin-right:10px;">Path:</b>'+currentPath+'\n\
-<p><b style="margin-left:10px;margin-right:10px;">Last modified</b>: '+node.attributes.lastmodified+'</p>                        \n\
-<font style="padding: 10px;"\n\
-                        <a href="#" onClick="showUploadForm();return false;">Upload Document</a>\n\
-                        &nbsp;&nbsp;\n\
-                        <a href="#" onClick="createFolder();return false;">Create folder</a>\n\
-&nbsp;&nbsp;\n\
-<a href="#" onClick="accessRights();return false;">Access rights</a> \n\
-</font>\n\
-                        </fieldset>';
-                    var el = Ext.getCmp('details-panel').body;
-                    if(node && node.leaf){
-                        tpl.overwrite(el, node.attributes);
-                    }else{
-                        el.update(detailsText);
-                    }
                 })
             }
 
@@ -106,6 +116,9 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, x
             id: '/'
         }
     });
+
+
+    
     tree.on('contextmenu', function(node){
        
         if(node && node.leaf){
@@ -146,23 +159,66 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, x
             //Create the context menu to hold the buttons
             var contextMenu = new Ext.menu.Menu();
             contextMenu.add(createFolder, renameFolder,deleteFolder);
-
-
             //Show the menu
             contextMenu.show(node.ui.getAnchor());
         }
     });
     tree.getRootNode().expand();
-
-    var detailsPanel = new Ext.Panel({
+    filesPanel=new Ext.DataView({
+        store: filesstore,
+        tpl: tpl,
         region: 'center',
         margins:'3 3 3 0',
-        id: 'details-panel',
-        defaults:{
-            autoScroll:true
+        id:'images-view',
+        autoHeight:true,
+        multiSelect: true,
+        overClass:'x-view-over',
+        itemSelector:'div.thumb-wrap',
+        emptyText: 'No files to display',
+        bodyStyle:"background:#ffffff;",
+        plugins: [
+        new Ext.DataView.DragSelector()
+        ],
+        
+        prepareData: function(data){
+            data.shortName = Ext.util.Format.ellipsis(data.text, 15);
+            data.sizeString = Ext.util.Format.fileSize(data.size);
+            data.dateString = data.lastmodified.format("m/d/Y g:i a");
+            return data;
         },
-        html: detailsText
+
+        listeners: {
+            selectionchange: {
+                fn: function(dv,nodes){
+                    var l = nodes.length;
+                    var s = l != 1 ? 's' : '';
+                    filesPanel.setTitle('Simple DataView ('+l+' item'+s+' selected)');
+                }
+            }
+            ,
+            contextmenu:{
+                fn:function(evt,nodes){
+                     evt.stopEvent();
+
+                    //Set up some buttons
+                    var createFolder = new Ext.menu.Item({
+                        text: "Upload new file",
+                        iconCls: 'upload',
+                        handler: function() {
+                            showUploadForm();
+                        }
+                    });
+                    //Create the context menu to hold the buttons
+                    var contextMenu = new Ext.menu.Menu();
+                    contextMenu.add(createFolder);
+                    //Show the menu
+                    contextMenu.show(filesPanel.el);
+                }
+            }
+        }
     });
+
+
 
     // Panel for the west
     var nav = new Ext.Panel({
@@ -185,7 +241,8 @@ function showHome(dataurl,xcreateFolderUrl, xrenameFolderUrl,xdeleteFolderUrl, x
         border: false,
         height:600,
         plain:true,
-        items: [nav, detailsPanel]
+        
+        items: [nav,filesPanel]
 
     });
     p.render("mainContent");
@@ -294,3 +351,22 @@ function showUploadForm(){
     }
     uploadWindow.show(this);
 }
+
+function showContextDVMenu(view, index, node, e){
+
+    //Set up some buttons
+    var createFolder = new Ext.menu.Item({
+        text: "Upload new file",
+        iconCls: 'upload',
+        handler: function() {
+                    
+        }
+    });
+    //Create the context menu to hold the buttons
+    var contextMenu = new Ext.menu.Menu();
+    contextMenu.add(createFolder);
+    //Show the menu
+    contextMenu.show(view.ui.getAnchor());
+        
+}
+

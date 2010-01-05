@@ -25,16 +25,21 @@ h2 {
     background:#eee;
     width:400px;
 }
-
+.add {
+    background-image: url(images/add.png) !important;
+}
 
 .upload {
-    background-image: url(images/arrow_up.png) !important;
+    background-image: url(images/add.png) !important;
 }
 .helpimg {
     background-image: url(images/help.png) !important;
 }
 .refresh {
     background-image: url(images/arrow_refresh.png) !important;
+}
+.download {
+    background-image: url(images/arrow_down.png) !important;
 }
 .folderadd {
     background-image: url(images/folder_add.png) !important;
@@ -44,5 +49,14 @@ h2 {
 }
 .settings {
     background-image: url(images/cog.png) !important;
+}
+.folder_user {
+    background-image: url(images/folder_user.png) !important;
+}
+.search {
+    background-image: url(images/find.png) !important;
+}
+.user_edit {
+    background-image: url(images/user_edit.png) !important;
 }
 

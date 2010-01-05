@@ -1,4 +1,28 @@
 <?php
+/**
+ * This class contains utilities for doing common functions in dms
+ *  PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   dms (document management system)
+ * @author    Nguni Phakela, david wafula
+ * @copyright 2010
+=
+ */
+
 if (!
 /**
  * Description for $GLOBALS
@@ -11,8 +35,9 @@ $GLOBALS['kewl_entry_point_run']) {
 class userutils extends object {
     var $heading = "Document Management System";
     var $resourcePath;
+    public $xmlutil;
     public function init() {
-    //instantiate the language object
+        //instantiate the language object
         $this->loadClass('link', 'htmlelements');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUploadTable = $this->getObject('dbfileuploads');
@@ -21,11 +46,13 @@ class userutils extends object {
         $this->objAltConfig = $this->getObject('altconfig','config');
         $this->resourcePath=$this->objAltConfig->getModulePath();
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-
+        $this->xmlutil=$this->getObject('xmlutil');
         $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $location = "http://" . $_SERVER['HTTP_HOST'];
         $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
+        $this->folderPermissions=$this->getObject('dbfolderpermissions');
+        $this->objUser=$this->getObject('user','security');
     }
 
     public function showPageHeading($page=null) {
@@ -48,14 +75,14 @@ class userutils extends object {
     }
 
     public function showUploadForm($url=null) {
-    //instantiate the file upload object
+        //instantiate the file upload object
         $this->objUpload = $this->getObject('upload', 'filemanager');
         $script = '
             var url ="'.$url.'";
             showUploadForm(url);
         ';
         return $script;
-    //return $this->objUpload->show();
+        //return $this->objUpload->show();
     }
 
     public function getRecentFiles($userid) {
@@ -67,7 +94,7 @@ class userutils extends object {
         $deleteLink = new link();
         $fileData = "[";
         foreach($myData as $row) {
-        // get the description for this file type.
+            // get the description for this file type.
             $name = $this->objPermittedTypes->getFileDesc($row['filetype']);
             $fileData .= "['".$row['filename']."','";
             if($row['shared'] == 1) {
@@ -97,48 +124,34 @@ class userutils extends object {
         return $data;
     }
 
-    public function saveFile($permissions,$path) {
+    public function saveFile($id,$path) {
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'dms');
         $filepath = $dir.$path;
-
         $filepath = str_replace("//", "/", $filepath);
-        $permissionsArr = array("Public"=>"1", "Private"=>"2");
-        
-        //declare user object
         $objUser = $this->getObject('user', 'security');
-        /* create directory on which to save files */
-        /*$objMkDir = $this->getObject('mkdir', 'files');*/
-
         $userid = $objUser->userId();
         $this->objUploadTable->setUserId($userid);
-        /*if($permissionsArr[$permissions] == 1) {
-            $destinationDir = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid."/shared/".$id;
-        }
-        else {
-            $destinationDir = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid."/".$id;
-        }
-        $objMkDir->mkdirs($destinationDir);
-
-        @chmod($destinationDir, 0777);*/
-
         $destinationDir = $filepath;
         $objFileUpload = $this->getObject('upload');
         $objFileUpload->overWrite = TRUE;
         $objFileUpload->uploadFolder = $destinationDir.'/';
-        
-        $result = $objFileUpload->doUpload(TRUE);
-        
+        $result = $objFileUpload->doUpload($id);
+
         if ($result['success'] == FALSE) {
+
             return $result['message'];
         }
         else {
-            $filename = $result['filename'];
+            $filename= $result['clonename'];
             $ext = $result['extension'];
-            $file = $destinationDir.'/'.$filename;
+            $parent=$result['filename'];
 
+            $file = $destinationDir.'/'.$filename;
             if (is_file($file)) {
                 @chmod($file, 0777);
             }
+
+
 
             // save the file information into the database
             $data = array(
@@ -146,7 +159,8 @@ class userutils extends object {
                     'filetype'=>$ext,
                     'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),
                     'userid'=>$objUser->userId(),
-                    'shared'=>$permissionsArr[$permissions],
+                    'parent'=>$parent,
+                    'refno'=>'1234',
                     'filepath'=>$file);
             $result = $this->objUploadTable->saveFileInfo($data);
 
@@ -173,7 +187,7 @@ class userutils extends object {
 
             $numRows = count($docs);
             $JSONstr .= "
-    filename:'".$fileDesc."',";
+            filename:'".$fileDesc."',";
             $JSONstr .= "
     duration:'',
     uiProvider:'col',
@@ -238,7 +252,7 @@ class userutils extends object {
         }
 
         if(file_exists($myFile) && is_file($myFile)) {
-        //unlink($myFile);
+            //unlink($myFile);
             return true;
         }
         else {
@@ -248,8 +262,10 @@ class userutils extends object {
 
     function getFiles() {
         $objUser = $this->getObject("user", "security");
-        $dir = $this->objSysConfig->getValue('FILES_DIR', 'dms');
+        $dir=$this->objSysConfig->getValue('FILES_DIR', 'dms');
+
         $node = isset($_REQUEST['node'])?$_REQUEST['node']:"";
+
         if(strpos($node, '..') !== false) {
             die('Nice try buddy.');
         }
@@ -257,60 +273,101 @@ class userutils extends object {
 
         $d = dir($dir.$node);
         while($f = $d->read()) {
-            $add=true;
-            //check permisions here first before adding it to list
-            /*
-             * ** permision check start ***/
+            if($f == '.' || $f == '..' || substr($f, 0, 1) == '.')continue;
+            $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
 
-
-
-            /*** person check end ***/
-
-            if($add) {
-                if($f == '.' || $f == '..' || substr($f, 0, 1) == '.')continue;
-                $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
-                if(is_dir($dir.$node.'/'.$f)) {
-                    $qtip = 'Type: Folder<br />Last Modified: '.$lastmod;
-                    $nodes[] = array('text'=>$f, 'id'=>$node.'/'.$f, 'cls'=>'folder','lastmodified'=>$lastmod,
-                        'size'=>$size,'parent'=>$node);
-                }else {
+            if(!is_dir($dir.$node.'/'.$f)) {
+                $fileinfo=$this->objUploadTable->getFileInfo($f,$dir.$node.'/'.$f);
+                foreach ($fileinfo as $file) {
                     $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
-                    $downloadurl=$this->objAltConfig->getSiteRoot().'?module=dms&action=downloadfile&filename='.$f;
-                    $deleteurl=$this->objAltConfig->getSiteRoot().'?module=dms&action=deletefile&filename='.$f;
-                    $filename = str_replace(strstr($f, "."), "",$f);
-                    $refno = $objUser->userId()."_".date_format(date_create($lastmod), "dmY")."_".$filename;
-                    $nodes[] = array('text'=>$f,
-                        'id'=>$node.'/'.$f,
-                        'leaf'=>true,
-                        'cls'=>'file',
-                        'lastmodified'=>$lastmod,
-                        'size'=>$size,
-                        'refno'=>$refno,
-                        'parent'=>$node,
-                        'downloadurl'=>$downloadurl,
-                        'downloadimgurl'=>$this->sitePath.'/dms/resources/images/arrow_down.png',
-                        'deleteurl'=>$deleteurl,
-                        'deleteimgurl'=>$this->sitePath.'/dms/resources/images/delete.png'
+                    $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
+                    $nodes[] = array(
+                            'text'=>$f,
+                            'id'=>$node.'/'.$f,
+                            'refno'=>$file['id'],
+                            'owner'=>$this->objUser->fullname($file['userid']),
+                            'lastmod'=>$lastmod,
+                            'filesize'=>$size,
+                            'thumbnailpath'=>$this->sitePath.'/dms/resources/images/ext/'.$this->findexts($f).'.png'
                     );
-            }}
+                }
+            }
+
         }
         $d->close();
-        echo json_encode($nodes);
+
+        echo json_encode(array("files"=>$nodes));
 
     }
+    /**
+     * retrieves folders that this user has access to
+     */
+    function getFolders() {
+        $objUser = $this->getObject("user", "security");
+        $dir=$this->objSysConfig->getValue('FILES_DIR', 'dms');
+
+        $node = isset($_REQUEST['id'])?$_REQUEST['id']:"";
+
+        if(strpos($node, '..') !== false) {
+            die('Nice try buddy.');
+        }
+        $result="<items>";
+
+        $d = dir($dir.$node);
+        while($f = $d->read()) {
+            if($f == '.' || $f == '..' || substr($f, 0, 1) == '.')continue;
+            $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
+
+            if(is_dir($dir.$node.'/'.$f)) {
+                //set permission before adding
+                $permissions=$this->folderPermissions->getPermmissions($node.'/'.$f);
+                $isadmin=$this->objUser->isAdmin()?"true":"false";
+
+                foreach ($permissions as $permission) {
+                    $isowner=$this->objUser->userid() == $permission['userid']?"true":"false";
+                    $result.='<item
+                        folder="true"
+                        name="'.$f.'"
+                        id="'.$node.'/'.$f.'"
+                        lastmodified="'.$lastmod.'"
+                        size="'.$size.'"
+                        viewfiles="'.$permission['viewfiles'].'"
+                        uploadfiles="'.$permission['uploadfiles'].'"
+                        createfolder="'.$permission['createfolder'].'"
+                        isadmin="'.$isadmin.'"
+                        isowner="'.$isowner.'"
+                        parent="'.$node.'">
+                       </item>';
+                }
+            }
+        }
+       
+        $result.="</items>";
+        $d->close();
+        echo $result;
+    }
+
 
     // from php manual page
     function formatBytes($val, $digits = 3, $mode = "SI", $bB = "B") { //$mode == "SI"|"IEC", $bB == "b"|"B"
         $si = array("", "K", "M", "G", "T", "P", "E", "Z", "Y");
         $iec = array("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi", "Yi");
         switch(strtoupper($mode)) {
-            case "SI" : $factor = 1000; $symbols = $si; break;
-            case "IEC" : $factor = 1024; $symbols = $iec; break;
-            default : $factor = 1000; $symbols = $si; break;
+            case "SI" : $factor = 1000;
+                $symbols = $si;
+                break;
+            case "IEC" : $factor = 1024;
+                $symbols = $iec;
+                break;
+            default : $factor = 1000;
+                $symbols = $si;
+                break;
         }
         switch($bB) {
-            case "b" : $val *= 8; break;
-            default : $bB = "B"; break;
+            case "b" : $val *= 8;
+                break;
+            default : $bB = "B";
+                break;
         }
         for($i=0;$i<count($symbols)-1 && $val>=$factor;$i++)
             $val /= $factor;
@@ -320,7 +377,13 @@ class userutils extends object {
         return round($val, $digits) . " " . $symbols[$i] . $bB;
     }
 
+    /**
+     * allows the user to donwload the selected file
+     * @param <type> $filename
+     */
     function downloadFile($filename) {
+        //check if user has access to the parent folder before accessing it
+
         $download_path= $this->objSysConfig->getValue('FILES_DIR', 'dms');
         // Detect missing filename
         if(!$filename) die("I'm sorry, you must specify a file name to download.");
@@ -347,7 +410,7 @@ class userutils extends object {
 
         // Send file headers
         header("Content-type: $type");
-        header("Content-Disposition: attachment;filename=$filename");
+        header("Content-Disposition: attachment;filename=".$this->getFileName( $filename));
         header('Pragma: no-cache');
         header('Expires: 0');
 
@@ -355,12 +418,29 @@ class userutils extends object {
         readfile($file);
     }
 
+    /**
+     * creates a folder
+     * @param <type> $folderpath
+     * @param <type> $foldername
+     */
     public function createfolder($folderpath,$foldername) {
         $this->objMkdir = $this->getObject('mkdir', 'files');
         $path =$this->objSysConfig->getValue('FILES_DIR', 'dms').'/'.$folderpath.'/'.$foldername;
         $result = $this->objMkdir->mkdirs($path);
+
+        //if($result != FALSE) {
+        $this->folderPermissions->addPermission(
+                $this->objUser->userid(),$folderpath.'/'.$foldername,
+                'true','true','true');
+        //}
     }
 
+    /**
+     * renames a selected folder
+     * @param <type> $folderpath
+     * @param <type> $foldername
+     * @return <type>
+     */
     public function renamefolder($folderpath,$foldername) {
         $folderpath = str_replace("//", "", $folderpath);
 
@@ -379,10 +459,34 @@ class userutils extends object {
         }
     }
 
+    /**
+     *  used to get ext to a file
+     * @param <type> $filename
+     * @return <type>
+     */
+    function findexts ($filename) {
+        $filename = strtolower($filename) ;
+        $exts = split("[/\\.]", $filename) ;
+        $n = count($exts)-1;
+        $exts = $exts[$n];
+
+        //check if icon for this exists, else return unknown
+        $filePath=$this->objConfig->getModulePath().'/dms/resources/images/ext/'.$exts.'.png';
+        if(file_exists($filePath) ) {
+            return $exts;
+        }else {
+            return "unknown";
+        }
+    }
+    /**
+     * deletes selected folder
+     * @param <type> $folderpath
+     * @return <type>
+     */
     public function deleteFolder($folderpath) {
         $folderpath = str_replace("//", "", $folderpath);
         $fullpath = $this->objSysConfig->getValue('FILES_DIR', 'dms').'/'.$folderpath;
-        
+
         if (is_dir($fullpath)) {
             $res = rmdir($fullpath);
         }
@@ -393,6 +497,25 @@ class userutils extends object {
         else {
             return "error";
         }
+    }
+
+    /**
+     * returns filename with ext stripped
+     */
+    function getFileName($filepath) {
+        preg_match('/[^?]*/', $filepath, $matches);
+        $string = $matches[0];
+        //split the string by the literal dot in the filename
+        $pattern = preg_split('/\./', $string, -1, PREG_SPLIT_OFFSET_CAPTURE);
+        //get the last dot position
+        $lastdot = $pattern[count($pattern)-1][1];
+        //now extract the filename using the basename function
+        $filename = basename(substr($string, 0, $lastdot-1));
+        $exts = split("[/\\.]", $filepath) ;
+        $n = count($exts)-1;
+        $ext = $exts[$n];
+
+        return $filename.'.'.$ext;
     }
 }
 ?>

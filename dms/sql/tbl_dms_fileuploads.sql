@@ -6,6 +6,7 @@
                     'filetype' => array('type' => 'text','length' => 128, 'notnull'=>TRUE),
                     'date_uploaded' => array('type' => 'timestamp', 'notnull'=>TRUE),
                     'userid' => array('type' => 'text','length' => 15, 'notnull'=>TRUE),
-                    'shared' => array('type' => 'text','length' => 3, 'notnull'=>TRUE, 'default'=> 0),
+                    'refno' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
+                    'parent' => array('type' => 'text', 'notnull'=>TRUE),
                     'filepath' => array('type' => 'text', 'notnull'=>TRUE));
 ?>

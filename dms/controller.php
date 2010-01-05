@@ -18,12 +18,9 @@
  *
  * @category  Chisimba
  * @package   dms (document management system)
- * @author    Nguni Phakela
+ * @author    Nguni Phakela, david wafula
  *
- * @copyright 2008 Free Software Innnovation Unit
- * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @link      http://avoir.uwc.ac.za
- * @see       References to other sections (if any)...
+=
  */
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
@@ -38,8 +35,7 @@ class dms extends controller {
         $this->objLog = $this->getObject('logactivity', 'logger');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objLog->log();
-
-
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         //get the util object
         $this->objUtils = $this->getObject('userutils');
         // user object
@@ -48,6 +44,7 @@ class dms extends controller {
         $this->objPermitted = $this->getObject('dbpermittedtypes');
         $this->objUploads = $this->getObject('dbfileuploads');
         $this->objFileFolder = $this->getObject('filefolder','filemanager');
+        $this->folderPermissions=$this->getObject('dbfolderpermissions');
     }
 
     /**
@@ -56,15 +53,15 @@ class dms extends controller {
      * @return <type>
      */
     public function dispatch($action) {
-    /*
+        /*
     * Convert the action into a method (alternative to
     * using case selections)
-    */
+        */
         $method = $this->getMethod($action);
-    /*
+        /*
     * Return the template determined by the method resulting
     * from action
-    */
+        */
         return $this->$method();
     }
 
@@ -117,13 +114,13 @@ class dms extends controller {
         $userid = $this->objUser->userId();
         $this->setVarByRef("userid", $userid);
         $this->setVarByRef("error", $error);
-        return "home2_tpl.php";
+        return "home_tpl.php";
     }
 
     /*
      * Method to show the upload file page
      *
-     */
+    */
     public function __uploadFile() {
         $this->setVarByRef('action','upload');
         return "uploadFile_tpl.php";
@@ -132,11 +129,11 @@ class dms extends controller {
     /*
      * Method to submit file of any type
      *
-     */
+    */
     public function __doupload() {
-        $permissions = $this->getParam('permissions');
         $path = $this->getParam('path');
-        $result = $this->objUtils->saveFile($permissions, $path);
+        $id=$this->getParam('idfield');
+        $result = $this->objUtils->saveFile($id,$path);
 
         if(strstr($result, "success")) {
             $this->nextAction('home');
@@ -151,11 +148,19 @@ class dms extends controller {
         return $this->objUtils->createJSONFileData($userid);
     }
 
+    /**
+     * displays the search GUI
+     * @return <type>
+     */
     public function __searchforfile() {
         $this->setVarByRef('action','search');
         return "searchForFile_tpl.php";
     }
 
+    /**
+     * Used to display details of a specific file
+     * @return <type>
+     */
     public function __viewfiledetails() {
         $id = $this->getParam('id');
         $this->setVarByRef("id", $id);
@@ -164,41 +169,81 @@ class dms extends controller {
         return "viewfiledetails_tpl.php";
     }
 
+    /**
+     * for admin puproses
+     * @return <type>
+     */
     public function __admin() {
         $this->setVarByRef('action','admin');
         return "admin_tpl.php";
     }
 
+    /**
+     * Used to add a new ext type to the database
+     * @return <type>
+     */
     public function __savefiletype() {
-    // go save stuff
+        // go save stuff
         $this->objPermitted->saveFileTypes($this->getParam('filetypedesc'),$this->getParam('filetypeext'));
         return $this->nextAction('admin');
     }
 
-    public function __deletefiletype() {
+    /**
+     * for deleting an extension
+     * @return <type>
+     */
+    public function __deleteext() {
         $id = $this->getParam('id');
         $this->objPermitted->deleteFileType($id);
         return $this->nextAction('admin');
     }
 
+    /**
+     * Used for downloading a selected file
+     * @return <type>
+     */
     public function __downloadfile() {
         $filename=$this->getParam('filename');
         return $this->objUtils->downloadFile($filename);
     }
+    /**
+     *gets a list of folders for a give dir. List given in json format
+     * @return <type>
+     */
+    public function __getFolders() {
+        return $this->objUtils->getFolders();
+    }
+    /**
+     * gets a list of files in a selected dir. Thel list is given in json format
+     * @return <type>
+     */
     public function __getFiles() {
         return $this->objUtils->getFiles();
     }
 
+    /**
+     * used to create a new folder in a selected dir. If none is provided, the folder is
+     * created in the root dir
+     * @return <type>
+     */
     public function __createfolder() {
         $this->objUtils->createFolder($this->getParam('folderpath'),$this->getParam('foldername'));
-        return $this->nextAction('home', array());
+        return $this->nextAction('getFolders', array());
     }
 
+    /**
+     * renames the supplied folder
+     * @return <type>
+     */
     public function __renamefolder() {
         $res = $this->objUtils->renameFolder($this->getParam('folderpath'),$this->getParam('foldername'));
         return $this->nextAction('home', array("result"=>$res));
     }
 
+    /**
+     * deletes the selected file
+     * @return <type>
+     */
     public function __deletefile() {
         $userid = $this->objUser->userId();
         $id = $this->getParam('id');
@@ -215,8 +260,74 @@ class dms extends controller {
         return $this->nextAction('home', array("result"=>"$result"));
     }
 
+    /**
+     * deletes the selected folder
+     */
     public function __deletefolder() {
-        $res = $this->objUtils->deleteFolder($this->getParam('folderpath'));
-        return $this->nextAction('home', array("result"=>$res));
+        $this->objUtils->deleteFolder($this->getParam('folderpath'));
+
+    }
+
+    /**
+     * returns a list of users for have access to the supplied folder
+     * @return <type>
+     */
+    public function __getusers() {
+        $foldername=$this->getParam('foldername');
+        return $this->folderPermissions->getusers($foldername);
+    }
+    /**
+     * gets all users in the database based on the search filter
+     * @return <type>
+     */
+    public function __getallusers() {
+        $searchfield=$this->getParam('searchfield');
+        return $this->folderPermissions->getallusers($searchfield);
+    }
+
+    /**
+     * adds a user access rights to the selected folder
+     * @return <type>
+     */
+    public function __adduser() {
+        $userid=$this->getParam('userid');
+        $folderpath=$this->getParam('folderpath');
+        $viewfiles=$this->getParam('viewfiles');
+        $uploadfiles=$this->getParam('uploadfiles');
+        $createfolder=$this->getParam('createfolder');
+
+        return $this->folderPermissions->addPermission($userid,$folderpath,$viewfiles,
+                $uploadfiles,$createfolder);
+    }
+    /**
+     * deletes permisions of the selected user on the selected folder
+     * @return <type>
+     */
+    public function __removeuser() {
+        $userid=$this->getParam('userid');
+        $folderpath=$this->getParam('folderpath');
+        return $this->folderPermissions->removePermission($userid,$folderpath);
+    }
+    /**
+     * returns a list of file extensions as json list
+     * @return <type>
+     */
+    public function  __getFileExtensions() {
+        return $this->objPermitted->getFileExtensions();
+    }
+    /**
+     * saves a new file extension into the database
+     * @return <type>
+     */
+    public  function __addfileextension() {
+        $ext=$this->getParam('ext');
+        $desc=$this->getParam('desc');
+        return $this->objPermitted->saveFileType($desc,$ext);
+    }
+    /**
+     *  returns true / false, if admin
+     */
+    public function __isadmin() {
+        echo $this->objUser->isAdmin()?"true":"false";
     }
 }

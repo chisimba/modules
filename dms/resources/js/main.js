@@ -1,6 +1,6 @@
 var url,
-    searchURL,
-    adminURL;
+searchURL,
+adminURL;
 Ext.onReady(function() {
     url = Ext.get('uploadURL').dom.value;
     searchURL = Ext.get('searchURL').dom.value,
