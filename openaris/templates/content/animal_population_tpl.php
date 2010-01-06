@@ -114,7 +114,16 @@ $partitionNDrop->setSelected($pname);
 
 //$monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 23);
 $dateBox = new textinput('reportdate', date('Y/m/d', strtotime($calendardate)),'text', 30);
-$yearBox = new textinput('year', date('Y'), 'text', 4);
+
+//create year dropdown
+$year = date('Y',strtotime($yearBox));
+$yearBox = new dropdown('year');
+
+	for($i=$year;$i>=$year-10;$i--){
+$date = strtotime("01-01-$i");
+$yearBox->addOption(date('y',$date),date('Y',$date));
+}
+$yearBox->setSelected($dyear);
 
 $repDate = $this->newObject('datepicker','htmlelements');
 $repDate->setName('rDate');
@@ -289,8 +298,7 @@ $form->addRule('repOfficerId', $this->objLanguage->languageText('mod_ahis_valrep
 $form->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
 //$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
 $form->addRule('year', $this->objLanguage->languageText('mod_ahis_promptyear', 'openaris'), 'required');
-$form->addRule(array('month'=>'month','year'=>'year'), $this->objLanguage->languageText('mod_ahis_valdate', 'openaris'), 'twofielddate');
-$form->addRule('rDate', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'valreportdate');
+$form->addRule('rDate', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'datenotfuture');
 $form->addRule('iDate', $this->objLanguage->languageText('mod_ahis_valdateibar', 'openaris'), 'datenotfuture');
 $form->addRule(array('rDate','iDate'), $this->objLanguage->languageText('mod_ahis_valdateibarafterprepared', 'openaris'), 'datenotbefore');
 $form->addRule('countryId', $this->objLanguage->languageText('mod_ahis_valcountry', 'openaris'), 'select');

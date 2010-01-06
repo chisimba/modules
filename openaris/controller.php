@@ -21,7 +21,7 @@
  * 
  * @category  Chisimba
  * @package   ahis
- * @author    Nic Appleby <nappleby@uwc.ac.za>,Rosina Ntow<rntow@ug.edu.gh>
+ * @author    Nic Appleby <nappleby@uwc.ac.za>,Rosina Ntow<rntow@ug.edu.gh>,Patrick Kuti<pkuti@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id: controller.php 13885 2009-07-08 14:38:03Z nic $
@@ -3021,6 +3021,8 @@ class openaris extends controller {
                 $this->setVar('arrayAdmin1',$ptype);
                 $this->setVar('arrayAdmin2', $plevel);
                 $this->setVar('arrayAdmin3', $pname);
+                $this->setVar('dyear',$this->getSession('ps_year'));
+                $this->setVar('yearBox',$this->getSession('ps_calendardate',date('Y-m-d')));
                 
                 $this->setVar('arrayrepoff', $this->objAhisUser->getListByRole('init_01'));
                 $this->setVar('arraydataoff', $this->objAhisUser->getListByRole('init_02'));
@@ -3052,8 +3054,8 @@ class openaris extends controller {
                 $this->setVar('arraybreed', $animBreeds);             
                 
                 //$this->setVar('arrayBreed',$this->objBreed->getAll());
-                $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
-                $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));
+                $this->setVar('iDate',$this->getSession('ps_ibardate',date('Y-m-d')));
+                $this->setVar('rDate', $this->getSession('ps_repdate', date('Y-m-d')));
 			 		$id=$this->getSession('ps_geo2Id');
 			 		
 			 	  		 		
@@ -3125,8 +3127,8 @@ class openaris extends controller {
                $animBreeds = $this->objBreed->getAll();
                $this->setVar('arraybreed', $animBreeds);     
                $this->setVar('arrayspecies', $this->objSpecies ->getAll("ORDER BY speciesname"));		
-               $this->setVar('iDate',$this->getSession('ps_repdate',date('Y-m-d')));
-               $this->setVar('rDate', $this->getSession('ps_ibardate', date('Y-m-d')));	
+               $this->setVar('iDate',$this->getSession('ps_ibardate',date('Y-m-d')));
+               $this->setVar('rDate', $this->getSession('ps_repdate', date('Y-m-d')));	
                $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      
 			      $this->setVar('species',$this->getSession('ps_species'));	
 			      $this->setVar('breed', $this->getSession('ps_breed'));		 
@@ -3149,7 +3151,7 @@ class openaris extends controller {
          				
 			case 'animal_population2':
 			   
-	     		   $data['reporterid']= $this->getSession('ps_officerId');
+	     		   $data['reporterid']= $this->getSession('ps_repOfficerId');
 	     		   $data['dataentryid']= $this->getSession('ps_dataoff');
 	     		   $data['vetofficerid']=$this->getSession('ps_vetoff');
 	     		   $data['ibardate']=$this->getSession('ps_ibardate');
@@ -5464,6 +5466,9 @@ class openaris extends controller {
 	             $this->unsetSession('ps_locname');
 	             $this->unsetSession('ps_lattitude');
 	             $this->unsetSession('ps_longitude');
+	             $this->unsetSession('ps_rphone');
+	             $this->unsetSession('ps_remail');
+	             $this->unsetSession('ps_rfax');
 	             $this->unsetSession('ps_dphone');
 	             $this->unsetSession('ps_demail');
 	             $this->unsetSession('ps_dfax');
@@ -5471,7 +5476,7 @@ class openaris extends controller {
 	             $this->unsetSession('ps_vemail');
 	             $this->unsetSession('ps_vfax');	
 	             $this->unsetSession('ps_species'); 
-	             $this->unsetSession('ps_breedId');
+	             $this->unsetSession('ps_breed');
 	             $this->unsetSession('ps_prodname');       
 	    	           	    
 	    }
