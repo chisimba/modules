@@ -54,8 +54,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
-class blogprofiles extends object
-{
+class blogprofiles extends object {
     /**
      * Description for public
      *
@@ -69,8 +68,7 @@ class blogprofiles extends object
      * @access public
      * @return NULL
      */
-    public function init() 
-    {
+    public function init() {
         try {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objDbBlog = $this->getObject('dbblog');
@@ -97,8 +95,7 @@ class blogprofiles extends object
      * @return object  Return description (if any) ...
      * @access public
      */
-    public function profileEditor($userid, $profile = NULL) 
-    {
+    public function profileEditor($userid, $profile = NULL) {
         // print_r($profile);
         // profile editor and creator
         // start a form object
@@ -108,14 +105,14 @@ class blogprofiles extends object
         $this->loadClass('label', 'htmlelements');
         if ($profile != NULL) {
             $pform = new form('setprofile', $this->uri(array(
-                'action' => 'editprofile',
-                'mode' => 'editprofile',
-                'id' => $profile['id']
+                    'action' => 'editprofile',
+                    'mode' => 'editprofile',
+                    'id' => $profile['id']
             )));
         } else {
             $pform = new form('setprofile', $this->uri(array(
-                'action' => 'setprofile',
-                'mode' => 'saveprofile',
+                    'action' => 'setprofile',
+                    'mode' => 'saveprofile',
             )));
         }
         $pfieldset = $this->newObject('fieldset', 'htmlelements');
@@ -172,7 +169,7 @@ class blogprofiles extends object
         // $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_setprofile", "blog") , $pform);
         return $pform;
         // return $ret;
-        
+
     }
     /**
      * Short description for public
@@ -183,50 +180,47 @@ class blogprofiles extends object
      * @return mixed  Return description (if any) ...
      * @access public
      */
-    public function showProfile($userid) 
-    {
+    public function showProfile($userid) {
         $objFeatureBox = $this->getObject("featurebox", "navigation");
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('href', 'htmlelements');
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $tllink = new href($this->uri(array(
-            'module' => 'blog',
-            'action' => 'timeline',
-            'userid' => $userid
-        )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
-        // go back to your blog
-        $viewmyblog = new href($this->uri(array(
-            'action' => 'viewblog'
-        )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
-        $check = $this->objDbBlog->checkProfile($userid);
-        $numgeoposts = $this->objDbBlog->countGeoPosts($userid);
-        $viewgeoblog = NULL;
-        if($numgeoposts > 0)
-        {
-        	// create a link to view a map of geoposts
-        	$viewgeoblog = new href($this->uri(array(
-            	'action' => 'viewgeoblog',
-            	'userid' => $userid,
-        	)) , $this->objLanguage->languageText("mod_blog_viewgeoblog", "blog"));
-        	$viewgeoblog = $viewgeoblog->show();
-        }
-        $this->objModules = $this->getObject('modules', 'modulecatalogue');
-        if(!$this->objModules->checkIfRegistered('simplemap'))
-        {
-        	$viewgeoblog = NULL;
-        }
-        if ($check != FALSE && $check['blog_name'] != NULL || $check['blog_descrip'] != NULL || $check['blogger_profile'] != NULL) {
-            $link = new href($this->uri(array(
-                'module' => 'blog',
-                'action' => 'viewprofile',
-                'userid' => $userid
-            )) , $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
-            $tllink = new href($this->uri(array(
                 'module' => 'blog',
                 'action' => 'timeline',
                 'userid' => $userid
-            )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+                )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+        // go back to your blog
+        $viewmyblog = new href($this->uri(array(
+                'action' => 'viewblog'
+                )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
+        $check = $this->objDbBlog->checkProfile($userid);
+        $numgeoposts = $this->objDbBlog->countGeoPosts($userid);
+        $viewgeoblog = NULL;
+        if($numgeoposts > 0) {
+            // create a link to view a map of geoposts
+            $viewgeoblog = new href($this->uri(array(
+                    'action' => 'viewgeoblog',
+                    'userid' => $userid,
+                    )) , $this->objLanguage->languageText("mod_blog_viewgeoblog", "blog"));
+            $viewgeoblog = $viewgeoblog->show();
+        }
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
+        if(!$this->objModules->checkIfRegistered('simplemap')) {
+            $viewgeoblog = NULL;
+        }
+        if ($check != FALSE && $check['blog_name'] != NULL || $check['blog_descrip'] != NULL || $check['blogger_profile'] != NULL) {
+            $link = new href($this->uri(array(
+                    'module' => 'blog',
+                    'action' => 'viewprofile',
+                    'userid' => $userid
+                    )) , $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
+            $tllink = new href($this->uri(array(
+                    'module' => 'blog',
+                    'action' => 'timeline',
+                    'userid' => $userid
+                    )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
             $foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/" . $userid . ".rdf";
             @$rdfcont = file($foaffile);
             if (!empty($rdfcont)) {
@@ -254,8 +248,7 @@ class blogprofiles extends object
      * @return mixed  Return description (if any) ...
      * @access public
      */
-    public function showFullProfile($userid) 
-    {
+    public function showFullProfile($userid) {
         if ($this->showfullname == 'FALSE') {
             $pname = $this->objUser->userName($userid);
         } else {
@@ -266,51 +259,61 @@ class blogprofiles extends object
         $this->loadClass('href', 'htmlelements');
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
-        $userimg = "<center>" . $this->objUser->getUserImage($userid) . "</center>";
+        $imageUrl = $this->objConfig->getsiteRoot().'/user_images/';
+        $imagePath = $this->objConfig->getsiteRootPath().'/user_images/';
+        $imagePath= str_replace("//", "/", $imagePath);
+        $img="";
+       // $userId=$this->objUser->userid();d
+        if (file_exists($imagePath.$userid.'.jpg')) {
+            $img= '<img src="'.$imageUrl.$userid.'.jpg'.'" '.$alt.' />';
+        } else {
+            $img= '<img src="'.$imageUrl.'default.jpg" '.$alt.' />';
+        }
+        
+
+        $userimg = "<center>" . $img . "</center>";
         $tllink = new href($this->uri(array(
-            'module' => 'blog',
-            'action' => 'timeline',
-            'userid' => $userid
-        )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+                'module' => 'blog',
+                'action' => 'timeline',
+                'userid' => $userid
+                )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
         // geotagged posts link
         $numgeoposts = $this->objDbBlog->countGeoPosts($userid);
         $viewgeoblog = NULL;
-        if($numgeoposts > 0)
-        {
-        	// create a link to view a map of geoposts
-        	$viewgeoblog = new href($this->uri(array(
-            	'action' => 'viewgeoblog',
-            	'userid' => $userid,
-        	)) , $this->objLanguage->languageText("mod_blog_viewgeoblog", "blog"));
-        	$viewgeoblog = $viewgeoblog->show();
+        if($numgeoposts > 0) {
+            // create a link to view a map of geoposts
+            $viewgeoblog = new href($this->uri(array(
+                    'action' => 'viewgeoblog',
+                    'userid' => $userid,
+                    )) , $this->objLanguage->languageText("mod_blog_viewgeoblog", "blog"));
+            $viewgeoblog = $viewgeoblog->show();
         }
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
-        if(!$this->objModules->checkIfRegistered('simplemap'))
-        {
-        	$viewgeoblog = NULL;
+        if(!$this->objModules->checkIfRegistered('simplemap')) {
+            $viewgeoblog = NULL;
         }
         // go back to your blog
         if ($this->objUser->isLoggedIn()) {
             $viewmyblog = new href($this->uri(array(
-                'action' => 'viewblog'
-            )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
+                    'action' => 'viewblog'
+                    )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
         } else {
             $viewmyblog = new href($this->uri(array(
-                'action' => 'allblogs'
-            )) , $this->objLanguage->languageText("mod_blog_viewallblogs", "blog"));
+                    'action' => 'allblogs'
+                    )) , $this->objLanguage->languageText("mod_blog_viewallblogs", "blog"));
         }
         $check = $this->objDbBlog->checkProfile($userid);
         if ($check != FALSE) {
             $link = new href($this->uri(array(
-                'module' => 'blog',
-                'action' => 'viewprofile',
-                'userid' => $userid
-            )) , $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
+                    'module' => 'blog',
+                    'action' => 'viewprofile',
+                    'userid' => $userid
+                    )) , $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
             $tllink = new href($this->uri(array(
-                'module' => 'blog',
-                'action' => 'timeline',
-                'userid' => $userid
-            )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+                    'module' => 'blog',
+                    'action' => 'timeline',
+                    'userid' => $userid
+                    )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
             $foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/" . $userid . ".rdf";
             @$rdfcont = file($foaffile);
             if (!empty($rdfcont)) {
@@ -319,14 +322,14 @@ class blogprofiles extends object
                 $lficon = new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/" . $userid . ".rdf", $objFIcon->show() , NULL);
                 $ficon = $lficon->show();
                 // new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
-                return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $link->show() . "<br />" . $ficon . "<br />" . $tllink->show()."<br />".$viewgeoblog);
+                return  $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $link->show() . "<br />" . $ficon . "<br />" . $tllink->show()."<br />".$viewgeoblog);
             } else {
                 $objFeatureBox = $this->getObject("featurebox", "navigation");
                 return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $link->show() . "<br />" . $tllink->show() . "<br />" . $viewmyblog->show()."<br />".$viewgeoblog);
             }
         } else {
             $objFeatureBox = $this->getObject("featurebox", "navigation");
-            return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $userimg . "<br />" . $tllink->show()."<br />".$viewgeoblog . "<br />" . $viewmyblog->show());
+            return  $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $userimg . "<br />" . $tllink->show()."<br />".$viewgeoblog . "<br />" . $viewmyblog->show());
         }
     }
     /**
@@ -339,8 +342,7 @@ class blogprofiles extends object
      * @return mixed   Return description (if any) ...
      * @access public
      */
-    public function displayProfile($userid, $profile) 
-    {
+    public function displayProfile($userid, $profile) {
         $objFeatureBox = $this->getObject("featurebox", "navigation");
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
