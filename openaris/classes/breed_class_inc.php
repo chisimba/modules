@@ -60,6 +60,7 @@ $GLOBALS['kewl_entry_point_run']) {
 	
 public function getBreed($speciesId) {
 		$breeds = $this->getAll("WHERE speciesid = '$speciesId'");
+		
 		$breedArray = array();
 		foreach ($breeds as $breed) {
 		$breedArray[$breed['id']] = $breed['name']; 

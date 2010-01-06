@@ -51,18 +51,6 @@ $this->loadClass('layer','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('label', 'htmlelements');
 
-//buttons
-$button = new button ('animal_population_save', 'Submit');
-$button->setCSS('submitButton');
-$button->setToSubmit();
-$backUri = $this->uri(array('action'=>'animal_population_add'));
-$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$bButton->setCSS('backButton');
-$btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
-$btcancel->setCSS('cancelButton');
-
-
-
 $classDrop = new dropdown('classification');
 
 $classDrop->addFromDB($arrayspecies, 'speciesname', 'id'); 
@@ -116,7 +104,22 @@ $prodNumber = new textinput('productionno', $productionno, 'text');
 $prodNumber->extra = 'onchange="javascript:checkProdNoSpecies();"';
 
 $commentsBox = new textarea('comments', $comments , 4, 40);
+$commentsBox->extra = 'onkeyup="javascript:limitcomment();"';
 
+//buttons
+//checking max and min number of total species 
+if ($totspecies > 400000) {
+    $message = $this->objLanguage->languageText('mod_ahis_totalspecieslimit', 'openaris');
+    $valtot = "javascript: alert('$message')";
+}
+$button = new button ('animal_population_save', 'Submit',$valtot);
+$button->setCSS('submitButton');
+$button->setToSubmit();
+$backUri = $this->uri(array('action'=>'animal_population_add'));
+$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$bButton->setCSS('backButton');
+$btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
+$btcancel->setCSS('cancelButton');
 
 $objTable = $this->newObject('htmltable', 'htmlelements');
 $objTable->cellspacing = 2;

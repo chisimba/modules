@@ -144,26 +144,26 @@ $valOfficerDrop->setSelected($vetoff);
 $valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
 
-$rphoneBox = new textinput('repOfficerTel', $rphone, 'text');
-$rphoneBox->extra = 'disabled';
-$rfaxBox = new textinput('repOfficerFax', $rfax, 'text');
-$rfaxBox->extra = 'disabled';
-$remailBox = new textinput('repOfficerEmail', $remail, 'text');
-$remailBox->extra = 'disabled';
+$rphone = new textinput('repOfficerTel', $rphone);
+$rphone->extra = 'disabled';
+$rfax = new textinput('repOfficerFax', $rfax);
+$rfax->extra = 'disabled';
+$remail = new textinput('repOfficerEmail', $remail);
+$remail->extra = 'disabled';
 
-$phoneBox = new textinput('dataOfficerTel', $dphone, 'text');
-$phoneBox->extra = 'disabled';
-$faxBox = new textinput('dataOfficerFax', $dfax, 'text');
-$faxBox->extra = 'disabled';
-$emailBox = new textinput('dataOfficerEmail', $demail, 'text');
-$emailBox->extra = 'disabled';
+$dphone = new textinput('dataOfficerTel', $dphone);
+$dphone->extra = 'disabled';
+$dfax = new textinput('dataOfficerFax', $dfax);
+$dfax->extra = 'disabled';
+$demail = new textinput('dataOfficerEmail', $demail);
+$demail->extra = 'disabled';
 
-$vphoneBox = new textinput('vetOfficerTel', $vphone, 'text');
-$vphoneBox->extra = 'disabled';
-$vfaxBox = new textinput('vetOfficerFax', $vfax, 'text');
-$vfaxBox->extra = 'disabled';
-$vemailBox = new textinput('vetOfficerEmail', $vemail, 'text');
-$vemailBox->extra = 'disabled';
+$vphone = new textinput('vetOfficerTel', $vphone);
+$vphone->extra = 'disabled';
+$vfax = new textinput('vetOfficerFax', $vfax);
+$vfax->extra = 'disabled';
+$vemail = new textinput('vetOfficerEmail', $vemail);
+$vemail->extra = 'disabled';
 
 
 
@@ -195,11 +195,11 @@ $objRepOfficerTable->addCell($reportOfficerDrop->show());
 
 $objRepOfficerTable->startRow();
 $objRepOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_phone', 'openaris').": ");
-$objRepOfficerTable->addCell($rphoneBox->show());
+$objRepOfficerTable->addCell($rphone->show());
 $objRepOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_faxn','openaris').": ");
-$objRepOfficerTable->addCell($rfaxBox->show());
+$objRepOfficerTable->addCell($rfax->show());
 $objRepOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_email','openaris').": ");
-$objRepOfficerTable->addCell($remailBox->show());
+$objRepOfficerTable->addCell($remail->show());
 $objRepOfficerTable->endRow();
 
 //Data entry officer
@@ -214,11 +214,11 @@ $objEntryOfficerTable->endRow();
 
 $objEntryOfficerTable->startRow();
 $objEntryOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_phone', 'openaris').": ");
-$objEntryOfficerTable->addCell($phoneBox->show());
+$objEntryOfficerTable->addCell($dphone->show());
 $objEntryOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_faxn','openaris').": ");
-$objEntryOfficerTable->addCell($faxBox->show());
+$objEntryOfficerTable->addCell($dfax->show());
 $objEntryOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_email','openaris').": ");
-$objEntryOfficerTable->addCell($emailBox->show());
+$objEntryOfficerTable->addCell($demail->show());
 $objEntryOfficerTable->endRow();
 //vet officer
 $objVetOfficerTable = $this->newObject('htmltable', 'htmlelements');
@@ -232,11 +232,11 @@ $objVetOfficerTable->endRow();
 
 $objVetOfficerTable->startRow();
 $objVetOfficerTable->addCell($this->objLanguage->languageText('mod_ahis_phone', 'openaris').": ");
-$objVetOfficerTable->addCell($vphoneBox->show());
+$objVetOfficerTable->addCell($vphone->show());
 $objVetOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_faxn','openaris').": ");
-$objVetOfficerTable->addCell($vfaxBox->show());
+$objVetOfficerTable->addCell($vfax->show());
 $objVetOfficerTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_email','openaris').": ");
-$objVetOfficerTable->addCell($vemailBox->show());
+$objVetOfficerTable->addCell($vemail->show());
 $objVetOfficerTable->endRow();
 
 $objBottomTable = $this->newObject('htmltable', 'htmlelements');
@@ -287,7 +287,7 @@ $form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
 $form->addRule('repOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
 $form->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
-$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
+//$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
 $form->addRule('year', $this->objLanguage->languageText('mod_ahis_promptyear', 'openaris'), 'required');
 $form->addRule(array('month'=>'month','year'=>'year'), $this->objLanguage->languageText('mod_ahis_valdate', 'openaris'), 'twofielddate');
 $form->addRule('rDate', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'valreportdate');

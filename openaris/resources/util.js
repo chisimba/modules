@@ -458,6 +458,14 @@ function getTLU(){
 var nospecies= jQuery('#input_totalNumSpecies').val();
 if (nospecies !=-1){
 var nospecies= jQuery('#input_totalNumSpecies').val();
+if(nospecies> 40000){ 
+	alert('Total Number should be less than 400,000');
+	jQuery('#input_totalNumSpecies').val('');
+	}
+	if(nospecies< 0){ 
+	alert('Total Number cannot be less than 0');
+	jQuery('#input_totalNumSpecies').val('');
+	}
 jQuery.getJSON("index.php?module=openaris&action=ajax_gettlu&speciesno="+nospecies,
 				   function(data) {
 							jQuery('#input_tropicalLivestock').val(data.prod);

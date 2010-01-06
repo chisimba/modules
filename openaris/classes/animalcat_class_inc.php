@@ -76,6 +76,7 @@ class animalcat extends dbtable {
 public function getCategory($speciesId) {
 		$animcats = $this->getAll("WHERE species_id = '$speciesId'");
 		//print_r($animcats);
+		
 		return $animcats;
 	}
 	}
