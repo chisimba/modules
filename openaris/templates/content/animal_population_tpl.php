@@ -145,25 +145,25 @@ $valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
 
 $rphone = new textinput('repOfficerTel', $rphone);
-$rphone->extra = 'disabled';
+//$rphone->extra = 'disabled';
 $rfax = new textinput('repOfficerFax', $rfax);
-$rfax->extra = 'disabled';
+//$rfax->extra = 'disabled';
 $remail = new textinput('repOfficerEmail', $remail);
-$remail->extra = 'disabled';
+//$remail->extra = 'disabled';
 
 $dphone = new textinput('dataOfficerTel', $dphone);
-$dphone->extra = 'disabled';
+//$dphone->extra = 'disabled';
 $dfax = new textinput('dataOfficerFax', $dfax);
-$dfax->extra = 'disabled';
+//$dfax->extra = 'disabled';
 $demail = new textinput('dataOfficerEmail', $demail);
-$demail->extra = 'disabled';
+//$demail->extra = 'disabled';
 
 $vphone = new textinput('vetOfficerTel', $vphone);
-$vphone->extra = 'disabled';
+//$vphone->extra = 'disabled';
 $vfax = new textinput('vetOfficerFax', $vfax);
-$vfax->extra = 'disabled';
+//$vfax->extra = 'disabled';
 $vemail = new textinput('vetOfficerEmail', $vemail);
-$vemail->extra = 'disabled';
+//$vemail->extra = 'disabled';
 
 
 
@@ -287,7 +287,7 @@ $form = new form ('add', $this->uri(array('action'=>'animal_population1')));
 $form->addToForm($content);
 $form->addRule('repOfficerId', $this->objLanguage->languageText('mod_ahis_valreportofficer', 'openaris'), 'select');
 $form->addRule('dataOfficerId', $this->objLanguage->languageText('mod_ahis_valentryofficer', 'openaris'), 'select');
-$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
+//$form->addRule('vetOfficerId', $this->objLanguage->languageText('mod_ahis_valvalidationofficer', 'openaris'), 'select');
 $form->addRule('year', $this->objLanguage->languageText('mod_ahis_promptyear', 'openaris'), 'required');
 $form->addRule(array('month'=>'month','year'=>'year'), $this->objLanguage->languageText('mod_ahis_valdate', 'openaris'), 'twofielddate');
 $form->addRule('rDate', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'openaris'), 'valreportdate');
