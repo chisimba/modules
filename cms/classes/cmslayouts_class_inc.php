@@ -37,14 +37,14 @@ class cmslayouts extends object
 
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			$this->_objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-			$this->_objSecurity =$this->newObject('dbsecurity', 'cmsadmin');
-			$this->_objSections =$this->newObject('dbsections', 'cmsadmin');
-			$this->_objContent =$this->newObject('dbcontent', 'cmsadmin');
-			$this->_objFrontPage =$this->newObject('dbcontentfrontpage', 'cmsadmin');
-			$this->_objMenuStyles =$this->newObject('dbmenustyles', 'cmsadmin');
-			$this->_objHtmlBlock =$this->newObject('dbhtmlblock', 'cmsadmin');
-			$this->_objCmsUtils =$this->newObject('cmsutils', 'cmsadmin');
-			$this->objModule=&$this->getObject('modules','modulecatalogue');
+			$this->_objSecurity = $this->newObject('dbsecurity', 'cmsadmin');
+			$this->_objSections = $this->newObject('dbsections', 'cmsadmin');
+			$this->_objContent = $this->newObject('dbcontent', 'cmsadmin');
+			$this->_objFrontPage = $this->newObject('dbcontentfrontpage', 'cmsadmin');
+			$this->_objMenuStyles = $this->newObject('dbmenustyles', 'cmsadmin');
+			$this->_objHtmlBlock = $this->newObject('dbhtmlblock', 'cmsadmin');
+			$this->_objCmsUtils = $this->newObject('cmsutils', 'cmsadmin');
+			$this->objModule = $this->getObject('modules','modulecatalogue');
 
 			$this->objUser = $this->newObject('user', 'security');
 			$this->objDate = $this->getObject('dateandtime', 'utilities');
@@ -78,7 +78,7 @@ class cmslayouts extends object
 	 */
 	public function getLeftMenu($currentNode, $rss = NULL, $contentId = '')
 	{
-		$style = $this->getMenuStyle();
+		$style = $this->getMenuStyle(TRUE);
 
 		//Supressing the menu if the "none" menu style was selected.
 		if ($style == 'none') {

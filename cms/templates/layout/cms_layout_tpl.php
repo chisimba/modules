@@ -30,7 +30,6 @@ if(!isset($rss)){
 $contentId = $this->getParam('id', '');
 
 $leftSide = $this->objLayout->getLeftMenu($currentNode, $rss, $contentId);
-
 $leftSide .= '<div id="cmsleftblockscontainer">';
 
 // Add blocks
