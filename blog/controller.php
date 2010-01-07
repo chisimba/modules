@@ -564,6 +564,15 @@ class blog extends controller {
                 echo $this->objblogMail->mail2blog();
                 break;
 
+            //Added by Derek Keats for the blog export functionality 2010 01 05
+            case 'export':
+                $objBlogItem = $this->getObject('blogexport', 'blog');
+                $str = $objBlogItem->show();
+                $this->setPageTemplate('plain_tpl.php');
+                $this->setVarByRef('str', $str);
+                return "dump_tpl.php";
+                break;
+
             case 'listmail2blog':
                 echo $this->objblogMail->listmail2blog();
                 break;
