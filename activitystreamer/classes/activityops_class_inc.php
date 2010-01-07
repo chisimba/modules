@@ -69,8 +69,7 @@ class activityops extends object
      * @param object $notification
      */
     public function postmade($notification) 
-    {        
-        
+    {
         //add to database
         $this->objActDB->insertPost($notification);
         
