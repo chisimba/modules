@@ -51,43 +51,43 @@ $GLOBALS['kewl_entry_point_run'])
  */
 class activityops extends object
 {
-	/**
-	 * Constructor
-	 *
-	 */
-	
-	public function init()
-	{
-		$this->objFeeds = $this->getObject('feeder', 'feed');
-		$this->objActDB = $this->getObject('activitydb');
-	}
-	
-	/**
-	 * This method will for the base for all 
-	 * posts to be listed and distributed
-	 *
-	 * @param object $notification
-	 */
-	public function postmade($notification) 
-	{		
-		
-		//add to database
-		$this->objActDB->insertPost($notification);
-		
-		//send to somewhere with XMPP or something
-		
-		//email it if you like
+    /**
+     * Constructor
+     *
+     */
+    
+    public function init()
+    {
+        $this->objFeeds = $this->getObject('feeder', 'feed');
+        $this->objActDB = $this->getObject('activitydb');
+    }
+    
+    /**
+     * This method will for the base for all 
+     * posts to be listed and distributed
+     *
+     * @param object $notification
+     */
+    public function postmade($notification) 
+    {        
+        
+        //add to database
+        $this->objActDB->insertPost($notification);
+        
+        //send to somewhere with XMPP or something
+        
+        //email it if you like
 
     }
     
     public function createFeeds($notification)
     {
-    	$this->objFeeds->setupFeed(false, 'Latest Activity',' some description', $this->uri(array()), 'http://localhost/somefeeds.rss');
-    	$content = $notification->getNotificationInfo();
-    	$this->objFeeds->addItem($notification->getNotificationName(), $content['link'], $content['description'], "wwww.somewhere.com", $content['author'] );
-    	error_log($this->objFeeds->output());
-    	
-    	//
+        $this->objFeeds->setupFeed(false, 'Latest Activity',' some description', $this->uri(array()), 'http://localhost/somefeeds.rss');
+        $content = $notification->getNotificationInfo();
+        $this->objFeeds->addItem($notification->getNotificationName(), $content['link'], $content['description'], "wwww.somewhere.com", $content['author'] );
+        error_log($this->objFeeds->output());
+        
+        //
     }
     
     
