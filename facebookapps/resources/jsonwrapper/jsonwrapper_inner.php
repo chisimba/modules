@@ -2,7 +2,7 @@
 
 require_once 'JSON/JSON.php';
 
-function json_encode($arg)
+function json_encoder($arg)
 {
 	global $services_json;
 	if (!isset($services_json)) {
@@ -11,7 +11,7 @@ function json_encode($arg)
 	return $services_json->encode($arg);
 }
 
-function json_decode($arg)
+function json_decoder($arg)
 {
 	global $services_json;
 	if (!isset($services_json)) {
