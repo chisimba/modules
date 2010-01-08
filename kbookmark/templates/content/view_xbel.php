@@ -17,8 +17,8 @@ $link->href = $this->uri(NULL);
 $link->link=$this->objLanguage->languageText("word_back");
 echo '<p>'.$link->show().'</p>';
 
-
-
+?>
+<script>
 function savefile(f) {
  f = f.elements;  //  reduce overhead
 
@@ -59,5 +59,4 @@ function savefile(f) {
  w.close();
  return false;  //  don't submit the form
 };
-
-?>
+</script>
