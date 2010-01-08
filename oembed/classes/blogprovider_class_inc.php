@@ -118,7 +118,7 @@ class imageprovider extends object
     {
         
             return TRUE;
-        }
+        
     }
 
     /**
