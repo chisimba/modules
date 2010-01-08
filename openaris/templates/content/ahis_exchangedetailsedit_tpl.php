@@ -56,13 +56,13 @@ $formTable->cellspacing = 2;
 $formTable->width = NULL;
 $exchange_rate= new textinput('exchangerateid',$exchangeratedetails['0']['exchangerateid']);
 $formTable->startRow();
-$formTable->addCell($this->objLanguage->languageText('phrase_exchangecurrency');
+$formTable->addCell($this->objLanguage->languageText('phrase_exchangecurrency'));
 $formTable->addCell($exchange_rate->show());
 $formTable->endRow();
 
 $conversion_factor= new textinput('conversionfactor',$exchangeratedetails['0']['conversionfactor']);
 $formTable->startRow();
-$formTable->addCell($this->objLanguage->languageText('phrase_conversionfactor');
+$formTable->addCell($this->objLanguage->languageText('phrase_conversionfactor'));
 $formTable->addCell($conversion_factor->show());
 $formTable->endRow();
 
@@ -70,7 +70,7 @@ $formTable->endRow();
 $dateStartPicker = $this->newObject('datepicker', 'htmlelements');
 $dateStartPicker->name = 'startdate';
 $formTable->startRow();
-$formTable->addCell($this->objLanguage->languageText('phrase_startdate',NULL,NULL,'right');
+$formTable->addCell($this->objLanguage->languageText('phrase_startdate',NULL,NULL,'right'));
 $formTable->addCell($dateStartPicker->show(),NULL,NULL,'left');
 $formTable->endRow();
 
@@ -78,7 +78,7 @@ $formTable->endRow();
 $dateEndPicker = $this->newObject('datepicker', 'htmlelements');
 $dateEndPicker->name = 'enddate';
 $formTable->startRow();
-$formTable->addCell($this->objLanguage->languageText('phrase_enddate',NULL,NULL,'right');
+$formTable->addCell($this->objLanguage->languageText('phrase_enddate',NULL,NULL,'right'));
 $formTable->addCell($dateEndPicker->show(),NULL,NULL,'left');
 $formTable->endRow();
 
