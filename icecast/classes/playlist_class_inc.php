@@ -9,7 +9,7 @@ class playlist extends object
 	/**
 	* @var array List of *.ogg files to play
 	*/
-	 $playlist;
+	 public $playlist;
    public function init()
 	{
         // Create an instance of the language object
@@ -40,7 +40,7 @@ class playlist extends object
 		}
 		// Send file through socket to icecast server
 		if (!$fp = @fsockopen ("127.0.0.1", 7, $errno, $errstr, 30)) {
-		    die "$errstr ($errno)<br>\n";
+		    die ("$errstr ($errno)<br>\n");
 		} else {
 			$lines = @file($filename);
 			if (!empty($lines)) {

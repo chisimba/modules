@@ -64,7 +64,7 @@ class parse_icecast_info{
 			$this->temp->samplerate=$dato;
 	}
 	
-	publicfunction fine($parser,$name) {
+	public function fine($parser,$name) {
 		if ($name == "SOURCE") {
 			array_push($this->infila,$this->temp);
 			$this->temp=null;
