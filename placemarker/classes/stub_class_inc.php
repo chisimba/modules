@@ -55,4 +55,4 @@
         	// add the lot to the headerparams...
         	$this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
         	$this->appendArrayVar('bodyOnLoad', "init();");
-        
+       } 
