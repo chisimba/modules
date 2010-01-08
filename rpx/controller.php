@@ -34,7 +34,7 @@ class rpx extends controller
     public function init()
     {
         $this->objAltConfig      = $this->getObject('altconfig', 'config');
-        $this->objRpxIdentifiers = $this->getObject('dbrpxidentifiers', 'rpx')
+        $this->objRpxIdentifiers = $this->getObject('dbrpxidentifiers', 'rpx');
         $this->objSysConfig      = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
