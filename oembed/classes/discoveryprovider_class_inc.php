@@ -125,7 +125,7 @@ class discoveryprovider extends object
     public function show($imageUrl)
     {
              return TRUE;
-        }
+        
     }
 
 }
