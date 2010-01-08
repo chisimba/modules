@@ -18,7 +18,7 @@ echo $objFreeMindMap->show();
 $link = new link ($this->uri(array('action'=>'forum', 'id'=>$forum['id'])));
 $link->link = 'Return to Forum - '.$forum['forum_name'];
 
-echo '<p align="center">'.$link->show().'</p>';\
+echo '<p align="center">'.$link->show().'</p>';
 
 $display = ob_get_contents();
 ob_end_clean();
