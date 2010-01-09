@@ -186,7 +186,7 @@ $sessionmanager= $this->getObject("sessionmanager", "realtime");
 echo $table->show();
 
 $homeLink = new link ($this->uri(NULL));
-$homeLink->link = $this->objLanguage->languageText("phrase_backhome");
+$homeLink->link = $this->objLanguage->languageText("phrase_backhome",'Back Home');
 
 $bottomLinks = array();
 
