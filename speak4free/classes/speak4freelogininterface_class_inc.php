@@ -140,8 +140,8 @@ class speak4freeloginInterface extends object
             $resetLink = new Link($this->uri(array('action'=>'needpassword'),'security'));
             $resetLink->link ="<b><font style=\"color:#ffffff;\">". $this->objLanguage->languageText('mod_security_forgotpassword')."</font></b>";
             // the help link
-
-            $registerLink=new link($this->uri(array('action'=>'showregisterform')));
+///http://localhost/chisimba/index.php?module=userregistration&action=showregister&facebox=1
+            $registerLink=new link($this->uri(array('action'=>'showregister','facebox'=>'1'),'userregistration'));
             $registerLink->link="<b><font style=\"color:#f68939;\">Not a member? Create account.</font></b>";
 
             // the help link

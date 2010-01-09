@@ -60,7 +60,10 @@ class block_uploads extends object{
             $table->addCell($file['dateuploaded']);
             $table->endRow();
         }
-        return $table->show();
+        $fieldset=$this->getObject('fieldsetex','htmlelements');
+        $fieldset->addLabel($table->show());
+        $fieldset->setLegend('Uploaded files');
+        return $fieldset->show();
     }
 }
 ?>
