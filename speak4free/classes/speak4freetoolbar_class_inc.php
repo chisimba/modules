@@ -28,10 +28,9 @@ class speak4freetoolbar extends object {
 
         $menuOptions = array();
 
-        $menuOptions[]= array('action'=>'upload', 'text'=>'Upload', 'actioncheck'=>array(), 'module'=>'speak4free', 'status'=>'loggedin');
+        $menuOptions[]= array('action'=>'poems', 'text'=>'My Poems', 'actioncheck'=>array(), 'module'=>'speak4free', 'status'=>'loggedin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin');
         $menuOptions[]= array('action'=>NULL, 'text'=>'My details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin');
-
         $menuOptions[]= array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin');
 
 
@@ -92,7 +91,7 @@ class speak4freetoolbar extends object {
         // Add Home Link
         if($userIsLoggedIn) {
             $home = $this->generateItem(NULL, '_default', 'HOME', $usedDefault);
-            $preview= $this->generateItem('home', 'speak4free', 'PREVIEW', $usedDefault);
+           
         }
 
         // Return Toolbar

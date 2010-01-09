@@ -89,6 +89,11 @@ class dbspeak4freefiles extends dbtable
     {
         return $this->getAll(' ORDER BY dateuploaded DESC LIMIT 4');
     }
+
+        public function getMyUploads()
+    {
+        return $this->getAll(" where creatorid ='".$this->objUser->userid()."' ORDER BY dateuploaded DESC");
+    }
     public function getLatestPresentation()
     {
         return $this->getAll(' ORDER BY dateuploaded DESC LIMIT 1');

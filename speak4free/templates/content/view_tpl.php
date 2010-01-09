@@ -179,23 +179,6 @@ $table->addCell($rightCell);
 
 
 
-/**
- *      * We need the agenda, so find it. If the presentation was not given any specific
- * title (which is used as default agenda), then use the file name.
- * However, the presenter will be given a chance to modify this (just temporarily
- * for the presentation) before starting a live presentation
- */
-
-
-$agenda='';
-if (trim($file['title']) == '') {
-    $agenda = $file['filename'];
-} else {
-    $agenda = htmlentities($file['title']);
-}
-
-
-
 $script_src = '<script type="text/javascript" language="javascript" src="/chisimba_modules/speak4free/resources/gwt/avoir.realtime.base.gwt.Invite.nocache.js"></script>';
 $this->appendArrayVar('headerParams', $script_src);
 

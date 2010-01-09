@@ -463,5 +463,9 @@ class speak4free extends controller {
         return 'view_tpl.php';
     }
 
+
+    function __poems(){
+        return "poemshome_tpl.php";
+    }
 }
 ?>
