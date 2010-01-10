@@ -65,7 +65,7 @@ $bloglink->link='<img src="'.$this->getResourceUri("images/social/blogbutton.png
 
 $socialbuttons.=$bloglink->show();
 $socialbuttons.="</div>";
-$homecontent= $this->objViewerUtils->getTopic('homepage');
+$homecontent= $this->objViewerUtils->getTopic('homepage',false);
 $slideshow.='
 </div>
 <div id="homepagecontent">

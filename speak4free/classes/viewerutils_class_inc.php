@@ -157,28 +157,28 @@ class viewerutils extends object {
         return $content;
     }
 
-    public function getTopic($category) {
+    public function getTopic($category,$showhomelink=true) {
 
         $objTrim = $this->getObject('trimstr', 'strings');
         $objStories=$this->getObject('storyparser');
         $data= $this->topics->getTopic($category);
         $homelink=new link($this->uri(array("action"=>"home")));
         $homelink->link="Home";
-
+        $title=$showhomelink?$data['title']:"";
         $content='';
         $content='
 
             <ul class="paneltabs">
 
-             <font style="font-family:Arial;font-size:20;">  '.$navbar.'</font><hr>
-       
-             <font style="font-family:Arial;font-size:18;font-weight:bold;color:#f68939;">'.$data['title'].'</font><br/>
+             
+             <font style="font-family:Arial;font-size:18;font-weight:bold;color:#f68939;">'.$title.'</font><br/>
             <font style="font-family:Arial;font-size:14;"> '.$this->objWashout->parseText($data['maintext']).'</font>
 
             </ul>
             <br/>
               ';
-        return $homelink->show().$content;
+       $home= $showhomelink?$homelink->show():"";
+        return $home.$content;
     }
     public function getArticleContent($storyid,$articleid) {
 
