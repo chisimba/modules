@@ -65,18 +65,11 @@ $bloglink->link='<img src="'.$this->getResourceUri("images/social/blogbutton.png
 
 $socialbuttons.=$bloglink->show();
 $socialbuttons.="</div>";
+$homecontent= $this->objViewerUtils->getTopic('homepage');
 $slideshow.='
 </div>
 <div id="homepagecontent">
-Speak 2B Free is a company with exclusive rights to develop an online entertainment and media community platform designed to promote spoken word and performance poetry both online and offline. Speak 2B Free has identified an online space where artists worldwide aspire to perform but do not have access to an exclusive online global community. Spoken word poetry lends people a voice and allows them to say their truth and this is essentially what speaking to be free is. We must Speak 2B Free but we must B Free 2 Speak. Because as Martin Luther King said:
-<ul>
-<li>
-1) “Freedom is never voluntarily given by the oppressor; it must be demanded by the oppressed.”
-</li>
-<li>
-2) “Our lives begin to end the day we become silent about things that matter.”
-</li>
-</ul>
+'.$homecontent.'
 </div>
 ';
 
