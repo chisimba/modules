@@ -99,14 +99,15 @@ $styleList .= $objForm->show();
 
 // Preview of the menu style
 
-$menuPreview = $this->_objCMSLayouts->getMenu($activeStyle);
+//Nic Appleby removed this as the script hangs for vary large menus (uwc portal)
+//$menuPreview = $this->_objCMSLayouts->getMenu($activeStyle);
 
 // Display
 $objTable = new htmltable();
 $objTable->startRow();
 $objTable->addCell($styleList, '60%');
-$objTable->addCell('', '2%');
-$objTable->addCell($menuPreview, '38%');
+//$objTable->addCell('', '2%');
+//$objTable->addCell($menuPreview, '38%');
 $objTable->endRow();
 
 $str .= $objTable->show();
