@@ -94,7 +94,7 @@ class liftclub extends controller
                     return $this->nextAction ( NULL, NULL, 'prelogin' );
                 case 'startregister':
                     $this->setVar('pageSuppressToolbar', TRUE);
-                    return 'registrationstart_tpl.php';
+                    return $this->modifyRegistrationInitial();
                 case 'findlift':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftclubfind_tpl.php';
@@ -304,22 +304,30 @@ class liftclub extends controller
         return 'registrationhome_tpl.php';
     }
     /**
+     * Method to show the step one of modify registration
+     **/
+    protected function modifyRegistrationInitial() 
+    {
+        $userDetails = $this->objDBDetails->userDetails($this->objUser->userId());
+        $userneed = $userDetails[0]["needtype"];
+        $this->setSession('userneed', $userneed);
+        $needtype = $userDetails[0]["needtype"];
+        $this->setSession('needtype', $needtype);
+        $this->setVar('mode', 'add');
+        $this->setVar('userneed', $userneed);
+        $this->setVar('needtype', $needtype);
+        $this->setVar('id',$userInfo['id']);
+        return 'registrationstart_tpl.php';
+   }
+    /**
      * Method to show the registration page
      **/
     protected function modifyRegistration() 
     {
-        $userInfo = $this->objUserAdmin->getUserDetails($this->objUser->PKId($this->objUser->userId()));
+        //$userInfo = $this->objUserAdmin->getUserDetails($this->objUser->PKId($this->objUser->userId()));
         $userOrigin = $this->objDBOrigin->userOrigin($this->objUser->userId());
         $userDestiny = $this->objDBDestiny->userDestiny($this->objUser->userId());
         $userDetails = $this->objDBDetails->userDetails($this->objUser->userId());
-        /*var_dump($userInfo);
-        echo '<br />'; 
-        var_dump($userOrigin);
-        echo '<br />';
-        var_dump($userDestiny);
-        echo '<br />';
-        var_dump($userDetails);
-        exit;*/        
         $userstring = $this->getParam('user');
         $userneed = $userDetails[0]["needtype"];
         $this->setSession('userneed', $userneed);
@@ -327,9 +335,14 @@ class liftclub extends controller
         $this->setSession('needtype', $needtype);
         $this->setVar('userstring', $userstring);
         $this->setVar('mode', 'add');
+        if( empty( $userneed ) )
+        $userneed = $this->getParam('userneed');
+        if( empty( $needtype ) )
+        $needtype = $this->getParam('needtype');        
         $this->setVar('userneed', $userneed);
         $this->setVar('needtype', $needtype);
         $this->setVar('id',$userInfo['id']);
+        /*
         $this->setVar('register_username',$userInfo['username']);
         $this->setVar('register_title',$userInfo['title']);
         $this->setVar('register_firstname',$userInfo['firstname']);
@@ -339,6 +352,7 @@ class liftclub extends controller
         $this->setVar('register_sex',$userInfo['sex']);
         $this->setVar('country',$userInfo['country']);
         $this->setVar('register_email',$userInfo['emailaddress']);
+        */
         $this->setVar('originid',$userOrigin[0]['id']);
         $this->setVar('street_name',$userOrigin[0]['street']);
         $this->setVar('suburborigin',$userOrigin[0]['suburb']);
@@ -600,7 +614,7 @@ class liftclub extends controller
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber, 'useradmin', $accountstatus);
             // Email Details to User
             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
-            $userId = $this->objUser->getItemFromPkId($pkid,$field='userid');            
+            $userId = $this->objUser->getItemFromPkId($pkid,$field='userid');
             $origin = $this->objDBOrigin->insertSingle($userId, $streetname, $suburb, $citytown, $province, $neighbour);
             $destiny = $this->objDBDestiny->insertSingle($userId, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
             $details = $this->objDBDetails->insertSingle($userId, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
@@ -710,13 +724,14 @@ class liftclub extends controller
             return $this->nextAction(NULL);
         }
         // Generate User Id
-        $userId = $this->objUserAdmin->generateUserId();
+        //$userId = $this->objUserAdmin->generateUserId();
         // Capture all Submitted Fields
         $id = $this->getParam('id');
         $originid = $this->getParam('originid');
         $destinyid = $this->getParam('destinyid');
         $detailsid = $this->getParam('detailsid');
         $captcha = $this->getParam('request_captcha');
+        /*
         $username = $this->getParam('register_username');
         $password = $this->getParam('register_password');
         $repeatpassword = $this->getParam('register_confirmpassword');
@@ -729,6 +744,7 @@ class liftclub extends controller
         $cellnumber = $this->getParam('register_cellnum');
         $staffnumber = $this->getParam('register_staffnum');
         $country = $this->getParam('country');
+        */
         //From (Home or Trip Origin)
         $streetname = $this->getParam('street_name');
         $suburb = $this->getParam('suburb');
@@ -743,9 +759,12 @@ class liftclub extends controller
         $province2 = $this->getParam('province2'); 
         $neighbour2 = $this->getParam('neighbour2');                       
         //Trip Details
-        $needtype = $this->getSession('needtype');
-        $userneed = $this->getSession('userneed');     
-
+        //$needtype = $this->getSession('needtype');
+        //$userneed = $this->getSession('userneed');     
+        if( empty( $userneed ) )
+        $userneed = $this->getParam('userneed');
+        if( empty( $needtype ) )
+        $needtype = $this->getParam('needtype');        
         if($this->getSession('needtype')!=='Trip'){
          $daterequired = null;
 		       $traveltimes = $this->getParam('traveltimes');
@@ -779,11 +798,6 @@ class liftclub extends controller
         // Create an array of fields that cannot be empty
         $checkFields = array(
             $captcha,
-            $username,
-            $firstname,
-            $surname,
-            $email,
-            $repeatemail,
             $streetname,
             $suburb,
             $citytown,
@@ -818,11 +832,13 @@ class liftclub extends controller
         if ($citytown2 == '') {
             $problems[] = 'nocitytownentered2';
         }
+        /*
         // Check for any problems with password
         if ($password !== '') {
          if ($password != $repeatpassword)
             $problems[] = 'passwordsdontmatch';
         }        
+        */
         // Check for any problems with travel times
         if($this->getSession('needtype')!=='Trip'){
 				     if ($traveltimes == '') {
@@ -837,10 +853,12 @@ class liftclub extends controller
             $problems[] = 'missingfields';
         }
         }
+        /*
         // Check that email address is valid
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
+        */
         // Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('captcha')) {
             $problems[] = 'captchadoesntmatch';
@@ -849,13 +867,26 @@ class liftclub extends controller
         if (count($problems) > 0) {
             $this->setVar('mode', 'addfixup');
             $this->setVarByRef('problems', $problems);
-            return 'registrationhome_tpl.php';
+            return 'modifyregistration_tpl.php';
         } else {
             // Else add to database
-            $pkid = $this->objUserAdmin->updateUserDetails($id,$username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='', $accountstatus); 
-            $origin = $this->objDBOrigin->updateSingle($originid, $streetname, $suburb, $citytown, $province, $neighbour);
-            $destiny = $this->objDBDestiny->updateSingle($destinyid, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
-            $details = $this->objDBDetails->updateSingle($detailsid, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+            //$pkid = $this->objUserAdmin->updateUserDetails($id,$username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='', $accountstatus); 
+            $userId = $this->objUser->userId();
+            if( empty($originid) ){
+             $origin = $this->objDBOrigin->insertSingle($userId, $streetname, $suburb, $citytown, $province, $neighbour);
+            }else{
+             $origin = $this->objDBOrigin->updateSingle($originid, $streetname, $suburb, $citytown, $province, $neighbour);
+            }
+            if( empty($destinyid) ){
+             $destiny = $this->objDBDestiny->insertSingle($userId, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
+            }else{
+             $destiny = $this->objDBDestiny->updateSingle($destinyid, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
+            }
+            if( empty($detailsid) ){
+             $details = $this->objDBDetails->insertSingle($userId, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+            }else{
+             $details = $this->objDBDetails->updateSingle($detailsid, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+            }
             $this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             $this->setSession('time', $password);

@@ -46,7 +46,7 @@ $header->str = $this->objLanguage->languageText("phrase_registeron", 'liftclub',
 echo '<div style="padding:10px;">'.$header->show();
 
 
-$form = new form ('startregister', $this->uri(array('action'=>'showregister')));
+$form = new form ('startregister', $this->uri(array('action'=>'modifydetails')));
 
 $messages = array();
 

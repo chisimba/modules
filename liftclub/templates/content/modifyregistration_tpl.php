@@ -69,11 +69,11 @@ $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
 echo '<p>'.$str.'<br />';
 echo $this->objLanguage->languageText('mod_liftclub_pleaseenterdetails', 'liftclub', 'Please enter your details, email address and desired user name in the form below.').'</p>';
 
-$form = new form ('register', $this->uri(array('action'=>'updateregister', 'id'=>$id, 'originid'=>$originid, 'destinyid'=>$destinyid, 'detailsid'=>$detailsid)));
-
+$form = new form ('register', $this->uri(array('action'=>'updateregister', 'id'=>$id, 'originid'=>$originid, 'destinyid'=>$destinyid, 'detailsid'=>$detailsid, 'userneed'=>$userneed, 'needtype'=>$needtype)));
 $messages = array();
 
 $table = $this->newObject('htmltable', 'htmlelements');
+/*
 $table->startRow();
 $username = new textinput('register_username');
 $username->extra = "maxlength=255";
@@ -286,6 +286,7 @@ $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
+*/
 //Add from (home or trip origin) details
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
@@ -799,7 +800,6 @@ $button->setToSubmit();
 $form->addToForm('<p align="center"><br />'.$button->show().'</p><br/ ><br/ >');
 
 if ($mode == 'addfixup') {
-
     foreach ($problems as $problem)
     {
         $messages[] = $this->explainProblemsInfo($problem);
