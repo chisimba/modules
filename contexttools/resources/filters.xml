@@ -133,14 +133,14 @@
         </input>
     </filter>
     <filter>
-        <name>screenshot</name>
-        <type>basicinput</type>
-        <label>Site Screenshot</label>
+        <name>slide share</name>
+        <type>directpasteinput</type>
+        <label>Slideshare (Wordpress format)</label>
         <params />
-        <instructions>Provide a URL to a site you wish to have a screenshot</instructions>
-        <tag>SCREENSHOT</tag>
+        <instructions>Provide the slideshare embed link (wordpress format)</instructions>
+        <tag>slideshare</tag>
         <input>
-            <inputparam name="url">Provide a URL to a site you wish to have a screenshot</inputparam>
+            <inputparam name="value">Provide the slideshare embed link (wordpress format)</inputparam>
         </input>
     </filter>
     <filter>

@@ -159,7 +159,7 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
     },
     [
     {
-        name:'name'
+        name:'filtername'
     },
 
     {
@@ -188,6 +188,8 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
        
         }
         );
+
+
     var filterlistfield = new Ext.form.ComboBox({
         store: filtersds,
         displayField:'label',
@@ -200,7 +202,7 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
         triggerAction: 'all',
         emptyText:'Select filter...',
         selectOnFocus:true,
-        valueField:'name',
+        valueField:'filtername',
         hiddenName : 'filterlistfield',
         listeners:{
             select: function(combo, record, index){
@@ -216,7 +218,7 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
                 Ext.getCmp('xparamlistfield').disabled=false;
                 filterparamssds.load();
-                if(filterType=='basicinput'){
+                if(filterType=='basicinput' || filterType == 'directpasteinput'){
                     conn.request({
                         url: inputurl+"&filtername="+filtername,
                         method: 'GET',
@@ -245,8 +247,8 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
         fieldLabel:'Parameters list',
         typeAhead: true,
         mode: 'local',
-        width: 250,
         editable:false,
+        width: 250,
         forceSelection: true,
         triggerAction: 'all',
         emptyText:'Select parameter...',
@@ -274,14 +276,12 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
 
     var filterlistform = new Ext.form.FormPanel({
-
         baseCls: 'x-plain',
         width:550,
-        labelWidth: 145,
         bodyStyle:'margin-left:2em;margin-top:2em;margin-bottom:2em;background-color:transparent;',
         renderTo: 'filterlist',
-        collapsible: true,
-        buttonAlign: 'left',
+        collapsible: false,
+        buttonAlign: 'right',
         border:false,
         items:[
        
@@ -390,7 +390,9 @@ function showResult(btn,text){
     if(btn == 'ok'){
         filterInputValue=text;
         filter='['+filterTag+']' +filterInputValue+'[/'+filterTag+']';
-
+        if(filterType == 'directpasteinput'){
+            filter=filterInputValue;
+        }
         window.opener.CKEDITOR.instances[instancename].insertHtml(filter);
         window.close();
     }else{
