@@ -98,6 +98,12 @@ class liftclub extends controller
                 case 'startregister':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->modifyRegistrationInitial();
+                case 'modifyuserdetails':
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    return $this->modifyUserDetails();
+                case 'updateuserdetails':
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    return $this->updateUserDetails();
                 case 'findlift':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftclubfind_tpl.php';
@@ -386,6 +392,26 @@ class liftclub extends controller
         $this->setVar('varydays',$userDetails[0]['daysvary']);
         return 'modifyregistration_tpl.php';
     }
+    /**
+     * Method to show the registration page
+     **/
+    protected function modifyUserDetails() 
+    {
+        $userInfo = $this->objUserAdmin->getUserDetails($this->objUser->PKId($this->objUser->userId()));
+        $this->setVar('mode', 'add');
+        $this->setVar('id',$userInfo['id']);
+        $this->setVar('register_username',$userInfo['username']);
+        $this->setVar('register_title',$userInfo['title']);
+        $this->setVar('register_firstname',$userInfo['firstname']);
+        $this->setVar('register_surname',$userInfo['surname']);
+        $this->setVar('register_staffnum',$userInfo['staffnumber']);
+        $this->setVar('register_cellnum',$userInfo['cellnumber']);
+        $this->setVar('register_sex',$userInfo['sex']);
+        $this->setVar('country',$userInfo['country']);
+        $this->setVar('register_email',$userInfo['emailaddress']);
+        return 'modifyuserdetails_tpl.php';
+    }
+
     /**
      * Method to show the registration page
      **/
@@ -909,6 +935,96 @@ class liftclub extends controller
             return $this->nextAction('liftclubhome');
         }
     }
+    /**
+     * Method to update user details
+     */
+    protected function updateUserDetails() 
+    {
+        if (!$_POST) { // Check that user has submitted a page
+            return $this->nextAction(NULL);
+        }
+        // Generate User Id
+        //$userId = $this->objUserAdmin->generateUserId();
+        // Capture all Submitted Fields
+        $id = $this->getParam('id');
+
+        $username = $this->getParam('register_username');
+        $password = $this->getParam('register_password');
+        $repeatpassword = $this->getParam('register_confirmpassword');
+        $title = $this->getParam('register_title');
+        $firstname = $this->getParam('register_firstname');
+        $surname = $this->getParam('register_surname');
+        $email = $this->getParam('register_email');
+        $repeatemail = $this->getParam('register_confirmemail');
+        $sex = $this->getParam('register_sex');
+        $cellnumber = $this->getParam('register_cellnum');
+        $staffnumber = $this->getParam('register_staffnum');
+        $country = $this->getParam('country');
+        // Create an array of fields that cannot be empty
+        $userDetails = array(
+            'password'=>$password,
+            'repeatpassword'=>$repeatpassword,
+            'title'=>$title,
+            'firstname'=>$firstname,
+            'surname'=>$surname,
+            'email'=>$email,
+            'sex'=>$sex,
+            'country'=>$country
+            );
+            
+        $this->setSession('userDetails', $userDetails);
+        
+        // List Compulsory Fields, Cannot be Null
+        $checkFields = array($firstname, $surname, $email);
+        
+        $results = array();
+        
+        // Check Fields
+        if (!$this->checkFields($checkFields)) {
+            $this->setVar('mode', 'addfixup');
+            $this->setSession('showconfirmation', FALSE);
+            return 'modifyuserdetails_tpl.php';
+        }
+        
+        // Check Email Address
+        if (!$this->objUrl->isValidFormedEmailAddress($email) && $email != $this->user['emailaddress']) {
+            $this->setVar('mode', 'addfixup');
+            $this->setSession('showconfirmation', FALSE);
+            return 'modifyuserdetails_tpl.php';
+        }
+        
+        $results['detailschanged']=TRUE;
+        
+        // check for password changed
+        if ($password == '') { // none given, user does not want to change password
+            $password = '';
+            $results['passwordchanged'] = FALSE;
+        } else if ($password != $repeatpassword) { // do not match, user tried to change, but didn't match
+            $password = '';
+            $results['passwordchanged'] = FALSE;
+            $results['passworderror'] = 'passworddonotmatch';
+        } else { // OK - user tried, and passwords match
+            $results['passwordchanged'] = TRUE;
+        }
+        
+        // Process Update
+        $update = $this->objUserAdmin->updateUserDetails($this->user['id'], $this->user['username'], $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password);
+        
+        if (count($results) > 0) {
+            $results['change'] = 'details';
+        }
+        
+        $this->setSession('showconfirmation', TRUE);
+        
+        $this->objUser->updateUserSession();
+        // Process Update Results
+        if ($update) {
+            return $this->nextAction(NULL, $results);
+        } else {
+            return $this->nextAction(NULL, array('change'=>'details', 'error'=>'detailscouldnotbeupdated'));
+        }
+    }
+
     /**
      * Method to display the error messages/problems in the user registration
      * @param string $problem Problem Code
