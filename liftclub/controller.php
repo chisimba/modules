@@ -92,9 +92,6 @@ class liftclub extends controller
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->objUser->logout();
                     return $this->nextAction ( NULL, NULL, 'prelogin' );
-                 case 'changeuserdetails':
-                    $this->setVar('pageSuppressToolbar', TRUE);
-                    return $this->nextAction ( NULL, NULL, 'userdetails' );
                 case 'startregister':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->modifyRegistrationInitial();
@@ -351,17 +348,6 @@ class liftclub extends controller
         $this->setVar('userneed', $userneed);
         $this->setVar('needtype', $needtype);
         $this->setVar('id',$userInfo['id']);
-        /*
-        $this->setVar('register_username',$userInfo['username']);
-        $this->setVar('register_title',$userInfo['title']);
-        $this->setVar('register_firstname',$userInfo['firstname']);
-        $this->setVar('register_surname',$userInfo['surname']);
-        $this->setVar('register_staffnum',$userInfo['staffnumber']);
-        $this->setVar('register_cellnum',$userInfo['cellnumber']);
-        $this->setVar('register_sex',$userInfo['sex']);
-        $this->setVar('country',$userInfo['country']);
-        $this->setVar('register_email',$userInfo['emailaddress']);
-        */
         $this->setVar('originid',$userOrigin[0]['id']);
         $this->setVar('street_name',$userOrigin[0]['street']);
         $this->setVar('suburborigin',$userOrigin[0]['suburb']);
@@ -422,14 +408,6 @@ class liftclub extends controller
         $userOrigin = $this->objDBOrigin->userOrigin($userid);
         $userDestiny = $this->objDBDestiny->userDestiny($userid);
         $userDetails = $this->objDBDetails->userDetails($userid);
-        /*var_dump($userInfo);
-        echo '<br />'; 
-        var_dump($userOrigin);
-        echo '<br />';
-        var_dump($userDestiny);
-        echo '<br />';
-        var_dump($userDetails);
-        exit;*/        
         $userstring = $this->getParam('user');
         $userneed = $userDetails[0]["userneed"];
         $this->setSession('userneed', $userneed);
@@ -752,28 +730,12 @@ class liftclub extends controller
         if (!$_POST) { // Check that user has submitted a page
             return $this->nextAction(NULL);
         }
-        // Generate User Id
-        //$userId = $this->objUserAdmin->generateUserId();
         // Capture all Submitted Fields
         $id = $this->getParam('id');
         $originid = $this->getParam('originid');
         $destinyid = $this->getParam('destinyid');
         $detailsid = $this->getParam('detailsid');
         $captcha = $this->getParam('request_captcha');
-        /*
-        $username = $this->getParam('register_username');
-        $password = $this->getParam('register_password');
-        $repeatpassword = $this->getParam('register_confirmpassword');
-        $title = $this->getParam('register_title');
-        $firstname = $this->getParam('register_firstname');
-        $surname = $this->getParam('register_surname');
-        $email = $this->getParam('register_email');
-        $repeatemail = $this->getParam('register_confirmemail');
-        $sex = $this->getParam('register_sex');
-        $cellnumber = $this->getParam('register_cellnum');
-        $staffnumber = $this->getParam('register_staffnum');
-        $country = $this->getParam('country');
-        */
         //From (Home or Trip Origin)
         $streetname = $this->getParam('street_name');
         $suburb = $this->getParam('suburb');
@@ -788,8 +750,6 @@ class liftclub extends controller
         $province2 = $this->getParam('province2'); 
         $neighbour2 = $this->getParam('neighbour2');                       
         //Trip Details
-        //$needtype = $this->getSession('needtype');
-        //$userneed = $this->getSession('userneed');     
         if( empty( $userneed ) )
         $userneed = $this->getParam('userneed');
         if( empty( $needtype ) )
@@ -861,13 +821,6 @@ class liftclub extends controller
         if ($citytown2 == '') {
             $problems[] = 'nocitytownentered2';
         }
-        /*
-        // Check for any problems with password
-        if ($password !== '') {
-         if ($password != $repeatpassword)
-            $problems[] = 'passwordsdontmatch';
-        }        
-        */
         // Check for any problems with travel times
         if($this->getSession('needtype')!=='Trip'){
 				     if ($traveltimes == '') {
@@ -882,12 +835,6 @@ class liftclub extends controller
             $problems[] = 'missingfields';
         }
         }
-        /*
-        // Check that email address is valid
-        if (!$this->objUrl->isValidFormedEmailAddress($email)) {
-            $problems[] = 'emailnotvalid';
-        }
-        */
         // Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('captcha')) {
             $problems[] = 'captchadoesntmatch';
@@ -899,7 +846,6 @@ class liftclub extends controller
             return 'modifyregistration_tpl.php';
         } else {
             // Else add to database
-            //$pkid = $this->objUserAdmin->updateUserDetails($id,$username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='', $accountstatus); 
             $userId = $this->objUser->userId();
             if( empty($originid) ){
              $origin = $this->objDBOrigin->insertSingle($userId, $streetname, $suburb, $citytown, $province, $neighbour);
@@ -944,8 +890,6 @@ class liftclub extends controller
             return $this->nextAction(NULL);
         }
         // Generate User Id
-        //$userId = $this->objUserAdmin->generateUserId();
-        // Capture all Submitted Fields
         $id = $this->getParam('id');
 
         $username = $this->getParam('register_username');
