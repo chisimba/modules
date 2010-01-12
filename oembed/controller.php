@@ -160,7 +160,7 @@ class oembed extends controller
     */
     private function __provideimage()
     {
-        $imageUrl = $this->getParam('image', NULL);
+        $imageUrl = $this->getParam('url', NULL);
         $objImage =  $this->getObject('imageprovider', 'oembed');
         if ($objImage->extractComponents($imageUrl)) {
             if ($objImage->json !== NULL) {

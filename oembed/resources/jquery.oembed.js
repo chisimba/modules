@@ -9,7 +9,7 @@
 				resourceURL = (url != null) ? url : container.attr("href"),
 				provider;
 
-            if (!callback) callback = function(container, oembed) {			
+if (!callback) callback = function(container, oembed) {			
 				 $.fn.oembed.insertCode(container, options.embedMethod, oembed);
             };
 
@@ -33,10 +33,11 @@
     $.fn.oembed.defaults = {
         maxWidth: null,
         maxHeight: null,
-		embedMethod: "replace" // "auto", "append", "fill"
+	embedMethod: "replace" // "auto", "append", "fill"
     };
 	
 	$.fn.oembed.insertCode = function(container, embedMethod, oembed) {
+
 		switch(embedMethod)
 		{
 			case "auto":				
@@ -125,13 +126,13 @@
         new OEmbedProvider("vimeo", "vimeo.com", "http://vimeo.com/api/oembed.json"),
         new OEmbedProvider("wikipedia", "wikipedia.org"),
         new OEmbedProvider("wordpress", "wordpress.com"),
-        new OEmbedProvider("youtube", "youtube.com"),
-        new OEmbedProvider("localhost", "localhost", "http://localhost/ch/index.php?module=oembed&action=provideimage&image=")
-
+        new OEmbedProvider("localhost", "localhost", "http://localhost/ch/index.php?module=oembed&action=provideimage&"),
+        new OEmbedProvider("youtube", "youtube.com")
     ];
 
     function OEmbedProvider(name, urlPattern, oEmbedUrl, callbackparameter) {
         this.name = name;
+         
         this.urlPattern = urlPattern;
         this.oEmbedUrl = (oEmbedUrl != null) ? oEmbedUrl : "http://oohembed.com/oohembed/";
         this.callbackparameter = (callbackparameter != null) ? callbackparameter : "callback";
@@ -173,18 +174,15 @@
 			url += "&url=" + escape(externalUrl) + 			
 					qs + 
 					"&" + this.callbackparameter + "=?";
-					
             return url;
         }
 
         this.embedCode = function(container, externalUrl, callback) {
 
             var request = this.getRequestUrl(externalUrl);
-
             $.getJSON(request, function(data) {
-
                 var oembed = $.extend(data);
-
+                 
                 var code, type = data.type;
 
                 switch (type) {

@@ -89,7 +89,7 @@ class jqoembed extends object
     public function loadOembedPlugin()
     {
         $script = '<script language="javascript" src="'
-          . $this->getResourceUri("jquery.oembed.min.js", "oembed")
+          . $this->getResourceUri("jquery.oembed.js", "oembed")
           . '" type="text/javascript"></script>';
         $this->appendArrayVar('headerParams', $script);
         return TRUE;

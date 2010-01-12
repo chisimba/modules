@@ -233,14 +233,14 @@ class imageprovider extends object
           'type' => $this->type,
           'version' => $this->version,
           'title' => $this->title,
-          'author_name' => $this->author_name,
-          'author_url' => $this->author_url,
-          'provider_name' => $this->provider_name,
-          'provider_url' => $this->provider_url,
-          'cache_age' => $this->cache_age,
-          'thumbnail_url' => $this->thumbnail_url,
-          'thumbnail_width' => $this->thumbnail_width,
-          'thumbnail_height' => $this->thumbnail_height,
+          //'author_name' => $this->author_name,
+          //'author_url' => $this->author_url,
+          //'provider_name' => $this->provider_name,
+          //'provider_url' => $this->provider_url,
+          //'cache_age' => $this->cache_age,
+          //'thumbnail_url' => $this->thumbnail_url,
+          //'thumbnail_width' => $this->thumbnail_width,
+          //'thumbnail_height' => $this->thumbnail_height,
           'url' => $this->url,
           'width' => $this->width,
           'height' => $this->height);
@@ -258,7 +258,13 @@ class imageprovider extends object
     */
     private function makeJson($ar)
     {
-        return $this->json = json_encode($ar);
+        $weirdThingy = $this->getParam("callback", NULL);
+        if ($weirdThingy) {
+            return $weirdThingy . "(" . $this->json = json_encode($ar) . ")";
+        } else {
+            return $this->json = json_encode($ar);
+        }
+        
     }
 
     /**
