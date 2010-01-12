@@ -90,21 +90,18 @@ class brandmonday extends controller {
                 break;
                 
             case 'getplusmap':
-                $data = file_get_contents($this->objConfig->getModulePath()."brandmonday/plusmarkers.xml");
                 header('Content-type: text/xml');
-                echo $data;
+                echo $this->objDbBm->getLastByUser('plus');
                 break;
                 
             case 'getminusmap':
-                $data = file_get_contents($this->objConfig->getModulePath()."brandmonday/minusmarkers.xml");
                 header('Content-type: text/xml');
-                echo $data;
+                echo $this->objDbBm->getLastByUser('minus');
                 break;
             
             case 'getmentionsmap':
-                $data = file_get_contents($this->objConfig->getModulePath()."brandmonday/mentionsmarkers.xml");
                 header('Content-type: text/xml');
-                echo $data;
+                echo $this->objDbBm->getLastByUser('mentions');
                 break;
                 
             case 'main' :

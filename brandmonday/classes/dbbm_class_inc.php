@@ -177,6 +177,8 @@ class dbbm extends dbTable {
             chmod($path, 0777);
         }
         file_put_contents($path, $data);
+        
+        return $data;
     }
     
     public function getMsgRecordCount ($table) {
@@ -338,8 +340,38 @@ class dbbm extends dbTable {
         return $this->getRange($table, 0, $num);
     }
 
+    public function getLocations() {
+        parent::init('tbl_bmlocations');
+        return $this->getAll("WHERE location != ', '");
+    }
+    
+    public function getLastByUser($mood) {
+        $locs = $this->getLocations();
+        
+        foreach($locs as $loc) {
+            $user = $loc['user'];
+            $location = $loc['location'];
+            $lastTweet = $this->getLastTweet($user, $mood); 
+            if($lastTweet == "") {
+                continue;
+            }
+            $location = explode(",", $location);
+            $lat =  trim($location[0]);
+            $lon = trim($location[1]);
+            $dataArray[] = array('lat' => $lat, 'lon' => $lon, 'tweet' => $lastTweet);
+        }
+        $markers = $this->tweetMapMarkers($dataArray, $mood);
+        
+        return $markers;
+    }
 
-
+    public function getLastTweet($user, $mood) {
+        $sql = "SELECT tweet FROM tbl_bm".$mood." WHERE from_user = '$user' ORDER BY tweettime desc LIMIT 0, 1";
+        $res = $this->getArray($sql);
+        if(!empty($res)) {
+            return $res[0]['tweet'];
+        }
+    }
     
     public function getUserCount () {
         $users = $this->getArray("SELECT DISTINCT screen_name FROM tbl_twitterizer ORDER BY id");
