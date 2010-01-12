@@ -61,6 +61,8 @@ class contexttoolsutils extends object {
                 $tag=(string)$filter->tag;
                 $params=$filter->params;
                 $input=$filter->input;
+                $defaultvalue=(string)$filter->defaultvalue;
+                $preinputvalue=(string)$filter->preinputvalue;
                 $paramJson="";
                 if(count($params) > 0) {
                     $paramJson='{"paramcount":"'.count($params).'","params":[';
@@ -87,7 +89,9 @@ class contexttoolsutils extends object {
                     "label"=> $label,
                     "instructions"=> $instructions,
                     "tag"=>$tag,
+                    "defaultvalue"=>$defaultvalue,
                     "params"=>$paramJson,
+                    "preinputvalue"=>$preinputvalue,
                     "input"=>$inputParamJson
                 );
                 $index++;
@@ -99,6 +103,8 @@ class contexttoolsutils extends object {
                 $json.='{"name":"'.$entry['name'].'",';
                 $json.='"type":"'.$entry['type'].'",';
                 $json.='"label":"'.$entry['label'].'",';
+                $json.='"defaultvalue":"'.$entry['defaultvalue'].'",';
+                $json.='"preinputvalue":"'.$entry['preinputvalue'].'",';
                 $json.='"instructions":"'.$entry['instructions'].'",';
                 $json.='"tag":"'.$entry['tag'].'"},';
             // $json.='"params":"'.$entry['params'].'"},';

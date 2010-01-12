@@ -154,7 +154,7 @@ class contexttools extends controller {
         return $this->dbstories->getStories();
     }
     /**
-     * this gets input fileds for a filter
+     * this gets input fields for a filter
      * @return <type>
      */
     function __getfilterinput() {

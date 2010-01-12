@@ -7,6 +7,9 @@ var filterType;
 var filterParamName;
 var filterParamValue;
 var filterInputValue;
+var defaultValue;
+var preinputValue;
+
 var conn = new Ext.data.Connection();
 
 function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
@@ -150,6 +153,11 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
     },
     {
         name:'tag'
+    },
+    {
+        name:'defaultvalue'
+    },{
+        name:'preinputvalue'
     }
     ]);
 
@@ -210,6 +218,8 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
                 filterInstructions=record.data.instructions;
                 filterType=record.data.type;
                 filtername=record.data.name;
+                defaultValue=record.data.defaultvalue;
+                preinputValue=record.data.preinputvalue;
                 instructionsfield.setValue('<h4>'+filterInstructions+'</h4>' );
                 filterparamssds.proxy=new Ext.data.HttpProxy({
                     url: baseurl+"&filtername="+filtername,
@@ -218,7 +228,8 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
                 Ext.getCmp('xparamlistfield').disabled=false;
                 filterparamssds.load();
-                if(filterType=='basicinput' || filterType == 'directpasteinput'){
+                if(filterType=='basicinput' || filterType == 'directpasteinput'
+                    || filterType == 'pasteinput_singletag'){
                     conn.request({
                         url: inputurl+"&filtername="+filtername,
                         method: 'GET',
@@ -231,7 +242,18 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
                 if(filterType=='parametizedall'){
                     Ext.getCmp('xparamlistfield').disabled=true;
                     Ext.MessageBox.alert('Instructions', filterInstructions);
+                    var paramList="";
+                    var filter="";
+                    filterparamssds.each(function(r) {
+                        paramList+= r.data['name']+"="+r.data['value']+",";
 
+                    });
+                    if(paramList.endsWith(",")){
+                        paramList=paramList.substring(0,paramList.length-1);
+                    }
+                    filter='['+filterTag+':'+paramList+']' +selectedText+'[/'+filterTag+']';
+                    window.opener.CKEDITOR.instances[instancename].insertHtml(filter);
+                    window.close();
                 }
 
             }
@@ -319,7 +341,7 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
 
                 if(CKEDITOR.env.ie)
                 {
-                     CKEDITOR.instances[instancename].getSelection().unlock(true);
+                    CKEDITOR.instances[instancename].getSelection().unlock(true);
                    
                     selectedText = CKEDITOR.instances[instancename].getSelection().getNative().createRange().text;
                 }else{
@@ -393,9 +415,12 @@ function showResult(btn,text){
         if(filterType == 'directpasteinput'){
             filter=filterInputValue;
         }
+        if(filterType == 'pasteinput_singletag'){
+            filter='['+filterTag+': '+preinputValue+filterInputValue+' '+defaultValue+"]";
+        }
         window.opener.CKEDITOR.instances[instancename].insertHtml(filter);
         window.close();
     }else{
         filterInputValue=null;
     }
-};
+}
