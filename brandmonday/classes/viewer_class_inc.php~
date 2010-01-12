@@ -358,7 +358,7 @@ class viewer extends object {
         return $objLogin->renderLoginBox('brandmonday');
     }
 
-    public function tweetMap($dataArray) {
+    public function tweetMapMarkers($dataArray) {
         // build up a set of markers for a google map
         $head = "<markers>";
         $body = NULL;

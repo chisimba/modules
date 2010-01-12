@@ -88,7 +88,25 @@ class brandmonday extends controller {
                 echo json_encode(array('totalCount' =>count($resMentions->results), 'tweets'=> $resMentions->results));
                 exit(0);
                 break;
+                
+            case 'getplusmap':
+                $data = file_get_contents($this->objConfig->getModulePath()."brandmonday/plusmarkers.xml");
+                header('Content-type: text/xml');
+                echo $data;
+                break;
+                
+            case 'getminusmap':
+                $data = file_get_contents($this->objConfig->getModulePath()."brandmonday/minusmarkers.xml");
+                header('Content-type: text/xml');
+                echo $data;
+                break;
             
+            case 'getmentionsmap':
+                $data = file_get_contents($this->objConfig->getModulePath()."brandmonday/mentionsmarkers.xml");
+                header('Content-type: text/xml');
+                echo $data;
+                break;
+                
             case 'main' :
                 break;
 
