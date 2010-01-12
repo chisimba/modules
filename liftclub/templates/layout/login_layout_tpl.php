@@ -20,7 +20,7 @@ $modifyLink =new link($this->uri(array('action'=>'startregister')));
 $modifyLink->link = $this->objLanguage->languageText("mod_liftclub_tripinfo","liftclub","Add/Modify Trip Info");
 $modifyLink->title = $this->objLanguage->languageText("mod_liftclub_tripinfo","liftclub","Add/Modify Trip Info");
 
-$userDetailsLink =new link($this->uri(array('action'=>'updateuserdetails')));
+$userDetailsLink =new link($this->uri(array('action'=>'modifyuserdetails')));
 $userDetailsLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 $userDetailsLink->title = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 
