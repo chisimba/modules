@@ -17,8 +17,12 @@ $registerLink->link = $this->objLanguage->languageText("mod_liftclub_register","
 $registerLink->title = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 
 $modifyLink =new link($this->uri(array('action'=>'startregister')));
-$modifyLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
-$modifyLink->title = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
+$modifyLink->link = $this->objLanguage->languageText("mod_liftclub_tripinfo","liftclub","Add/Modify Trip Info");
+$modifyLink->title = $this->objLanguage->languageText("mod_liftclub_tripinfo","liftclub","Add/Modify Trip Info");
+
+$userDetailsLink =new link($this->uri(array('action'=>'changeuserdetails')));
+$userDetailsLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
+$userDetailsLink->title = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 
 $findLink =new link($this->uri(array('action'=>'findlift')));
 $findLink->link = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
@@ -54,10 +58,11 @@ $pageLink = "<ul>";
 $mailFeatBox = "";
 if($this->objUser->userId()!==null){ 
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>"; 
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$favLink->show()."</li>";
+	$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$userDetailsLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
- $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$favLink->show()."</li>";
- $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>"; 
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$actyLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$exitLink->show()."</li>";  
  $mailLink = "<ul>";

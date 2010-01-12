@@ -92,6 +92,9 @@ class liftclub extends controller
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->objUser->logout();
                     return $this->nextAction ( NULL, NULL, 'prelogin' );
+                 case 'changeuserdetails':
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    return $this->nextAction ( NULL, NULL, 'userdetails' );
                 case 'startregister':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->modifyRegistrationInitial();

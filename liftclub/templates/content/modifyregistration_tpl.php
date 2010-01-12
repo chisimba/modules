@@ -56,7 +56,7 @@ $this->appendArrayVar('headerParams', $ext);
 
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $this->objLanguage->languageText("phrase_registeron", 'liftclub', "Register On").' '.$this->objConfig->getSitename();
+$header->str = $this->objLanguage->languageText("mod_liftclub_tripinfo", 'liftclub', "Add/Modify Trip Info");
 
 echo '<div style="padding:10px;">'.$header->show();
 
