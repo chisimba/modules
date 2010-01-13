@@ -101,7 +101,7 @@ class blogcategories extends object
             'action' => 'catadd',
             'mode' => 'quickadd'
         )));
-        $qcatform->addRule('catname', $this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog") , 'required');
+        // $qcatform->addRule('catname', $this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog") , 'required');
         $qcatname = new textinput('catname');
         $qcatname->size = 15;
         $qcatform->addToForm($qcatname->show());
@@ -210,7 +210,7 @@ class blogcategories extends object
         $catform = new form('catadd', $this->uri(array(
             'action' => 'catadd'
         )));
-        $catform->addRule('catname', $this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog") , 'required');
+        // $catform->addRule('catname', $this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog") , 'required');
         $cfieldset = $this->getObject('fieldset', 'htmlelements');
         $cfieldset->setLegend($this->objLanguage->languageText('mod_blog_catdetails', 'blog'));
         $catadd = $this->newObject('htmltable', 'htmlelements');
@@ -251,7 +251,7 @@ class blogcategories extends object
         $catadd->addCell($cdesc->show());
         // showFCKEditor());
         $catadd->endRow();
-        $catform->addRule('catname', $this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog") , 'required');
+        // $catform->addRule('catname', $this->objLanguage->languageText("mod_blog_phrase_titlereq", "blog") , 'required');
         $cfieldset->addContent($catadd->show());
         $catform->addToForm($cfieldset->show());
         $this->objCButton = &new button($this->objLanguage->languageText('word_update', 'system'));

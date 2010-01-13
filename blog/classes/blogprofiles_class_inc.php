@@ -263,6 +263,7 @@ class blogprofiles extends object {
         $imagePath = $this->objConfig->getsiteRootPath().'/user_images/';
         $imagePath= str_replace("//", "/", $imagePath);
         $img="";
+        $alt = "alt='User Image'";
        // $userId=$this->objUser->userid();d
         if (file_exists($imagePath.$userid.'.jpg')) {
             $img= '<img src="'.$imageUrl.$userid.'.jpg'.'" '.$alt.' />';
