@@ -416,7 +416,7 @@ function showResult(btn,text){
             filter=filterInputValue;
         }
         if(filterType == 'pasteinput_singletag'){
-            filter='['+filterTag+': '+preinputValue+filterInputValue+' '+defaultValue+"]";
+            filter='['+filterTag+': '+preinputValue+filterInputValue+', '+defaultValue+"]";
         }
         window.opener.CKEDITOR.instances[instancename].insertHtml(filter);
         window.close();
