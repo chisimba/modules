@@ -6,8 +6,8 @@ ob_start();
 /**
 * This template displays a topic in a flat view format
 */
-?>
 
+$js='
 <script type="text/javascript">
     //<![CDATA[
 
@@ -18,8 +18,10 @@ ob_start();
 
     //]]>
 </script>
+';
 
-<?
+echo $js;
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');

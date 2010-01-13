@@ -1,20 +1,19 @@
 <?php
 //Sending display to 1 column layout
 ob_start();
-?>
 
-<script type="text/javascript">
-    //<![CDATA[
 
-    function SubmitForm()
+$js='<script type="text/javascript">
+      function SubmitForm()
     {
         document.forms["newTopicForm"].submit();
     }
 
-    //]]>
-</script>
 
-<?
+</script>';
+echo $js;
+
+
 
 
 $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
@@ -202,19 +201,7 @@ $addTable->endRow();
 
 if ($forum['attachments'] == 'Y') {
     $addTable->startRow();
-/*
-    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
-    $addTable->addCell($attachmentsLabel->show(), 120);
 
-    $attachmentIframe = new iframe();
-    $attachmentIframe->width='100%';
-    $attachmentIframe->height='100';
-    $attachmentIframe->frameborder='0';
-    $attachmentIframe->src= $this->uri(array('action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forumid, 'type'=>$forumtype));
-
-    $addTable->addCell($attachmentIframe->show());
-
-    $addTable->endRow();*/
 
     $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
     $addTable->addCell($attachmentsLabel->show(), 120);
@@ -233,8 +220,8 @@ if ($forum['attachments'] == 'Y') {
     //$button->setToSubmit();
     //$form->addToForm(' &nbsp; &nbsp; '.$button->show());
 
-   
-   
+
+
     if (count($files) > 0) {
 
     foreach ($files AS $file)
