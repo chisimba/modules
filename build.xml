@@ -46,10 +46,10 @@
   <property name="modrepo" value="https://cvs2.uwc.ac.za/chisimba/modules/trunk/" />
  
   <!-- FTP properties -->
-  <property name="ftp.host" value="207.45.176.90" />
+  <property name="ftp.host" value="" />
   <property name="ftp.port" value="21" />
-  <property name="ftp.username" value="paulscot" />
-  <property name="ftp.password" value="pongid56" />
+  <property name="ftp.username" value="" />
+  <property name="ftp.password" value="" />
   <property name="ftp.dir" value="/public_html/packageserver/packages/" />
   <property name="ftp.mode" value="null" />
   <property name="ftp.clearFirst" value="true" />  
