@@ -1,8 +1,8 @@
 <?php
 //Sending display to 1 column layout
 ob_start();
-?>
 
+$js='
 <script type="text/javascript">
     //<![CDATA[
 
@@ -13,8 +13,9 @@ ob_start();
 
     //]]>
 </script>
+';
 
-<?
+echo $js;
 
 
 $this->loadClass('form', 'htmlelements');

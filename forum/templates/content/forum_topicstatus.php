@@ -1,7 +1,7 @@
 <?PHP
 //Sending display to 1 column layout
 ob_start();
-?>
+$js='
 <script language="JavaScript" type="text/javascript">
 
 if(!document.getElementById && document.all)
@@ -12,9 +12,9 @@ document.getElementById = function(id){ return document.all[id]}
     {
         if (document.topicStatusForm.topic_status[1].checked)
             {
-                    showhide('closeReason', 'block');
+                    showhide(\'closeReason\', \'block\');
             } else{
-                    showhide('closeReason', 'none');
+                    showhide(\'closeReason\', \'none\');
             }
 
     }
@@ -24,15 +24,15 @@ document.getElementById = function(id){ return document.all[id]}
         var itemstyle = document.getElementById(id).style
         itemstyle.display = visible;
         /*
-        if (visible = 'hidden')
+        if (visible = \'hidden\')
         {
-            itemstyle.style.display = 'none';
+            itemstyle.style.display = \'none\';
         } else {
-            itemstyle.style.display = 'block';
+            itemstyle.style.display = \'block\';
         }*/
     }
-</script>
-<?PHP
+</script>';
+echo $js;
 
 
 $this->loadClass('htmlheading', 'htmlelements');

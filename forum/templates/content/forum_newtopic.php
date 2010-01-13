@@ -6,7 +6,12 @@ ob_start();
 $js='<script type="text/javascript">
       function SubmitForm()
     {
+    if (document.getElementById("title").value == ""){
+    alert("Provide title");
+    }else
+    {
         document.forms["newTopicForm"].submit();
+    }
     }
 
 
@@ -64,6 +69,7 @@ $addTable->addCell($subjectLabel->show(), 120);
 
 $titleInput = new textinput('title');
 $titleInput->size = 50;
+$titleInput->setId('title');
 
 if ($mode == 'fix') {
     $titleInput->value = $details['title'];

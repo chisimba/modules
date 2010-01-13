@@ -1,7 +1,7 @@
 <?php
 //Sending display to 1 column layout
 ob_start();
-?>
+$js='
 <script type="text/javascript">
     //<![CDATA[
 
@@ -12,7 +12,8 @@ ob_start();
 
     //]]>
 </script>
-<?
+';
+echo $js;
 /**
 * This template displays a topic in a threaded view format
 */
