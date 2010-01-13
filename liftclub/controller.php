@@ -83,54 +83,63 @@ class liftclub extends controller
             return $this->showDisabledMessage();
         } else {
             switch ($action) {
-                case 'liftclubhome':
-                default:
-                    $this->setVar('pageSuppressToolbar', TRUE);
-                    //return $this->liftclubHome();
-                    return $this->nextAction ( NULL, NULL, 'prelogin' );
                 case 'liftclubsignout':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->objUser->logout();
                     return $this->nextAction ( NULL, NULL, 'prelogin' );
+                    break;
                 case 'startregister':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->modifyRegistrationInitial();
+                    break;
                 case 'modifyuserdetails':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->modifyUserDetails();
+                    break;
                 case 'updateuserdetails':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->updateUserDetails();
+                    break;
                 case 'findlift':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftclubfind_tpl.php';
+                    break;
                 case 'myfavourites':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftclubfavourites_tpl.php';
+                    break;
                 case 'offeredlifts':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftcluboffer_tpl.php'; 
+                    break;
                 case 'messages':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'messages_tpl.php'; 
+                    break;
                 case 'trashedmessages':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'trashmessages_tpl.php'; 
+                    break;
                 case 'outboxmessages':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'outboxmessages_tpl.php'; 
+                    break;
                 case 'viewactivities':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'liftclubactivities_tpl.php'; 
+                    break;
                 case 'showregister':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->registrationHome();
+                    break;
                 case 'modifydetails':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->modifyRegistration();
+                    break;
                 case 'viewlift':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->viewMembership();
+                    break;
                 case 'confirm':
                     $id = $this->getParam('newId');
                     if (!empty($id)) {
@@ -138,12 +147,16 @@ class liftclub extends controller
                         return $this->nextAction('detailssent');
                     }
                     return $this->nextAction('');
+                    break;
                 case 'register':
                     return $this->saveNewUser();
+                    break;
                 case 'updateregister':
                     return $this->updateUser();
+                    break;
                 case 'sendmessage':
                     return $this->sendMessage();
+                    break;
                 case 'extjssendmessage':
 				               $this->setLayoutTemplate(NULL);
 				               $this->setVar('pageSuppressToolbar', TRUE);
@@ -151,15 +164,17 @@ class liftclub extends controller
 				               $this->setVar('pageSuppressSearch', TRUE);
 				               $this->setVar('suppressFooter', TRUE);
                     return $this->sendMessageExtJs();
+                    break;
                 case 'addfavourite':
                     return $this->addFavourite();
+                    break;
                 case 'detailssent':
                     return $this->detailsSent();
+                    break;
                 case 'invitefriend':
                     $this->setLayoutTemplate(NULL);
                     return 'invite_tpl.php';
                     break;
-
                 case 'sendinvite':
                     $fn = ucwords($this->getParam('friend_firstname'));
                     $sn = ucwords($this->getParam('friend_surname'));
@@ -181,6 +196,7 @@ class liftclub extends controller
                     $objMailer->setValue('body', strip_tags($msg));
                     $objMailer->send();
                     $this->nextAction('', array() , '_default');
+                    break;
                 case 'jsongetcities':
                     //query coming from the ext lib. combobox auto complete. The post var is called query.
                     if (isset($_GET['query'])){
@@ -281,6 +297,12 @@ class liftclub extends controller
                     $lifts= $this->objLiftSearch->jsonGetSentMessages($id, $start, $limit, $read=NULL, $trash=0);
                     echo $lifts;
                     exit(0);
+                    break;
+                case 'liftclubhome':
+                default:
+                    $this->setVar('pageSuppressToolbar', TRUE);
+                    //return $this->liftclubHome();
+                    return $this->nextAction ( NULL, NULL, 'prelogin' );
                     break;
             }
         }
@@ -968,7 +990,6 @@ class liftclub extends controller
             return $this->nextAction(NULL, array('change'=>'details', 'error'=>'detailscouldnotbeupdated'));
         }
     }
-
     /**
      * Method to display the error messages/problems in the user registration
      * @param string $problem Problem Code
@@ -1051,6 +1072,5 @@ class liftclub extends controller
         }
         return 'liftclubhome_tpl.php';
     }
-
 }
 ?>
