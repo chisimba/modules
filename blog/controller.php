@@ -1294,16 +1294,18 @@ class blog extends controller {
                             'geolon' => $lon,
                     );
                     $this->objblogPosts->quickPostAdd($userid, $insarredit, $mode);
+                    $etags = $this->objDbBlog->getPostTags($id);
+                    foreach($etags as $rmtags) {
+                        $this->objDbBlog->removeAllTags($rmtags['id']);
+                    }
                     if (!empty($tagarray) && $tagarray[0] != "") {
-                        $etags = $this->objDbBlog->getPostTags($id);
-                        if (count($tagarray) < count($etags)) {
+                        
+                        //if (count($tagarray) < count($etags)) {
                             //remove all the tags for the post so that we can populate with the new ones
-                            foreach($etags as $rmtags) {
-                                $this->objDbBlog->removeAllTags($rmtags['id']);
-                            }
+                            
                             $this->objDbBlog->insertTags($tagarray, $userid, $id);
-                        }
-                        //clean out the duplicate tags
+                    }
+                    /*    //clean out the duplicate tags
                         //adding the extra tags
                         $tagarray = array_diff($tagarray, $etags);
                         if (!empty($etags)) {
@@ -1315,7 +1317,7 @@ class blog extends controller {
                         }
                         $tagarray = array_diff($tagarray, $things);
                         $this->objDbBlog->insertTags($tagarray, $userid, $id);
-                    }
+                    }*/
                     if ($status == 1) {
                         $this->nextAction('blogadmin', array('mode'=>'editpost'));
                     } else {
