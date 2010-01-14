@@ -119,15 +119,44 @@ class provider extends object
     public function getRequestType($targetUrl)
     {
         if ($this->isHttp($targetUrl)) {
-            $ext = $this->getExtenstion($targetUrl);
-            if ($this->isImage($ext)) {
-                return "image";
+            if ($ext = $this->getExtenstion($targetUrl)) {
+                if ($this->isImage($ext)) {
+                    return "image";
+                }
+                if ($this->isMp3($ext)) {
+                    return "podcast";
+                }
+            } else {
+                return $this->getTypeNoExt($targetUrl);
             }
-            if ($this->isMp3($ext)) {
-                return "podcast";
-            }
+        } else {
+            return "unknown";
         }
         return "unknown";
+    }
+
+    private function getTypeNoExt($targetUrl)
+    {
+        // Instantiate the configuration object.
+        $objConfig = $this->getObject('altconfig', 'config');
+        // Get the site root as a URL.
+        $siteRoot = $objConfig->getsiteRoot();
+        // Take off the siteRoot from the image URL.
+        $targetForExplode = str_replace($siteRoot, NULL, $targetUrl, $count);
+        // If we didn't remove the siteRoot then it can't be a local request
+        if ($count == 0) {
+            $this->err = "404 Not Found";
+            return FALSE;
+        }
+        // Explode it into an array, the easiest way to get the file name
+        $ar = explode("/", $targetForExplode);
+        //There should be two entries
+        if (count($ar) !==2) {
+            $this->err = "404 Not Found";
+            return FALSE;
+        }
+        $this->id = $ar[1];
+        return $ar[0];
     }
 
     /**

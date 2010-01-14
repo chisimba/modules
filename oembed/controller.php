@@ -223,8 +223,19 @@ class oembed extends controller
                     $this->setVarByRef('str', $objPod->err);
                 }
                 break;
+            case "blog":
+                $objBlog =  $this->getObject('blogprovider', 'oembed');
+                $objBlog->parseId($objProvider->id);
+                if ($objBlog->json !== NULL) {
+                    $this->setPageTemplate('json_tpl.php');
+                    $this->setVarByRef('str', $objBlog->json);
+                } else {
+                    $this->setPageTemplate('plain_tpl.php');
+                    $this->setVarByRef('str', $objBlog->err);
+                }
+                break;
             default:
-
+                $this->setVar('str', "UNKNOWN");
                 break;
             
         }

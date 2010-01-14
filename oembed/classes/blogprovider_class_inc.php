@@ -70,7 +70,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @package oembed
 *
 */
-class imageprovider extends object
+class blogprovider extends object
 {
     // Note that these properties violate naming standards in Chisimba
     // but that is necessary for the oembed naming standards.
@@ -114,37 +114,49 @@ class imageprovider extends object
     *   false if not
     *
     */
-    public function extractComponents($imageUrl)
+    public function parseId($id)
     {
-        
+        if ($id) {
+            $blogDb = $this->getObject('dbblog', 'blog');
+            $item = $blogDb->getPostByPostID($id);
+            $this->title = $item[0]['post_title'];
+            $content = $item[0]["post_content"];
+            $content = $this->parseContent($content);
+            $excerpt = $item[0]["post_excerpt"];
+            $postDate = $item[0]["post_date"];
+            $userId = $item[0]["userid"];
+            $objUser = $this->getObject('user', 'security');
+            $user = $objUser->fullname($userId);
+            $this->html = $this->formatAsHtml($this->title, $excerpt, $content, $postDate, $user);
+            $this->author_name = $user;
+            $this->width=800;
+            $this->height=600;
+            // Turn the appropriate class properties into an array.
+            $ar = $this->createArray();
+            $this->xml = NULL;
+            $this->json = $this->makeJson($ar);
             return TRUE;
-        
+        } else {
+            $this->err = "404 Not Found";
+            return FALSE;
+        }
     }
 
-    /**
-    * Method to test if the link is valid HTML
-    *
-    * @param string $imageUrl The URL for the image being tested
-    * @return boolean TRUE | FALSE
-    * @access private
-    *
-    */
-    private function testHttp($imageUrl)
+    private function parseContent($content)
     {
-         return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $imageUrl);
+        $objWashout = $this->getObject('washout', 'utilities');
+        // Avoid parsing the Ajax-based filters
+        return $objWashout->parseText($content, TRUE,
+          array('blog','deltags','tweets'));
     }
 
-    /**
-    * Method to get the filename from the exploded array
-    *
-    * @param string array $ar The exploded array from the URL
-    * @return string The filename for the image
-    * @access private
-    * 
-    */
-    private function getFileName($ar)
+    private function formatAsHtml($title, $excerpt, $content, $postDate, $user)
     {
-        return $ar[count($ar)-1];
+        //@Todo multilingualize
+        $ret = $content .
+          "<br /><span class = \"small\">Originally posted as:"
+          . $title . " on " . $postDate . " by " . $user . "</span>";
+        return $ret;
     }
 
     /**
@@ -157,20 +169,13 @@ class imageprovider extends object
     private function createArray()
     {
         $ar = array(
-          'type' => $this->type,
-          'version' => $this->version,
+          'type' => 'rich',
+          'version' => '1.0',
           'title' => $this->title,
-          'author_name' => $this->author_name,
-          'author_url' => $this->author_url,
-          'provider_name' => $this->provider_name,
-          'provider_url' => $this->provider_url,
-          'cache_age' => $this->cache_age,
-          'thumbnail_url' => $this->thumbnail_url,
-          'thumbnail_width' => $this->thumbnail_width,
-          'thumbnail_height' => $this->thumbnail_height,
           'url' => $this->url,
           'width' => $this->width,
-          'height' => $this->height);
+          'height' => $this->height,
+          'html' => $this->html);
         return $ar;
     }
 
@@ -185,7 +190,12 @@ class imageprovider extends object
     */
     private function makeJson($ar)
     {
-        return $this->json = json_encode($ar);
+        $callBack = $this->getParam("callback", NULL);
+        if ($callBack) {
+            return $callBack . "(" . $this->json = json_encode($ar) . ")";
+        } else {
+            return $this->json = json_encode($ar);
+        }
     }
 
     /**

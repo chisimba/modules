@@ -1,8 +1,8 @@
 /**
  *
- * jQuery oembed for Chisimba. Modified from the
- * original by Derek Keats to enable us to provide
- * plugins for Chisimba sites.
+ * jQuery oembed for Chisimba. Modified by Derek Keats from the
+ * original  to enable us to provide plugins for
+ * Chisimba sites.
  *
  */
 ﻿(function($) {
@@ -36,40 +36,37 @@
 	embedMethod: "replace" // "auto", "append", "fill"
     };
 	
-	$.fn.oembed.insertCode = function(container, embedMethod, oembed) {
-
-		switch(embedMethod)
-		{
-			case "auto":				
+    $.fn.oembed.insertCode = function(container, embedMethod, oembed) {
+        switch(embedMethod) {
+            case "auto":
                 if (container.attr("href") != null) {
-					insertCode(container, "append", oembed);
-				}
-				else {
-					insertCode(container, "replace", oembed);
-				};
-				break;
-			case "replace":	
-				container.replaceWith(oembed.code);
-				break;
-			case "fill":
-				container.html(oembed.code);
-				break;
-			case "append":
+                    insertCode(container, "append", oembed);
+                } else {
+                    insertCode(container, "replace", oembed);
+                };
+                break;
+            case "replace":
+                container.replaceWith(oembed.code);
+                break;
+            case "fill":
+                container.html(oembed.code);
+                break;
+            case "append":
                 var oembedContainer = container.next();
-				if (oembedContainer == null || !oembedContainer.hasClass("oembed-container")) {
-					oembedContainer = container
-						.after('<div class="oembed-container"></div>')
-						.next(".oembed-container");
-					if (oembed != null && oembed.provider_name != null)
-					    oembedContainer.toggleClass("oembed-container-" + oembed.provider_name);		
-				}
-				oembedContainer.html(oembed.code);				
-				break;			
-		}
-	}	
+                if (oembedContainer == null || !oembedContainer.hasClass("oembed-container")) {
+                    oembedContainer = container
+                        .after('<div class="oembed-container"></div>')
+                        .next(".oembed-container");
+                    if (oembed != null && oembed.provider_name != null)
+                        oembedContainer.toggleClass("oembed-container-" + oembed.provider_name);
+                }
+                oembedContainer.html(oembed.code);
+                break;
+            }
+    }
 
     $.fn.oembed.getPhotoCode = function(url, data) {
-	    var alt = data.title ? data.title : '';
+	var alt = data.title ? data.title : '';
         alt += data.author_name ? ' - ' + data.author_name : '';
         alt += data.provider_name ? ' - ' +data.provider_name : '';
         var code = '<div><a href="' + url + '" target="_blank"><img src="' + data.url + '" alt="' + alt + '"/></a></div>';
