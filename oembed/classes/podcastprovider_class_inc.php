@@ -175,13 +175,13 @@ class podcastprovider extends object
               . "id=\"audioplayer1\" height=\"24\" width=\"290\">\n"
               . "<param name=\"movie\" "
               . "value=\"core_modules/files/resources/flashmp3/player.swf\">\n"
-              . "<param name=\"FlashVars\" value=\"playerID=1&amp;soundFile=$targetForExplode\">\n"
+              . "<param name=\"FlashVars\" value=\"playerID=1&amp;soundFile=$targetUrl\">\n"
               . "<param name=\"quality\" value=\"high\">\n"
               . "<param name=\"menu\" value=\"false\">\n"
               . "<param name=\"wmode\" value=\"transparent\">\n"
               . "<embed src=\"core_modules/files/resources/flashmp3/player.swf\" "
               . "width=\"290\" height=\"24\" "
-              . "flashvars=\"playerID=1&amp;soundFile=$targetForExplode\" quality=\"high\" "
+              . "flashvars=\"playerID=1&amp;soundFile=$targetUrl\" quality=\"high\" "
               . "menu=\"false\" wmode=\"transparent\"></embed>\n"
               . "</object>\n\n";
             // Turn the appropriate class properties into an array.
