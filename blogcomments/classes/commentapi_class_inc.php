@@ -308,16 +308,11 @@ class commentapi extends object
 			//get the userid
 			$viewerid = $this->objUser->userId();
 			$vemail = $this->objUser->email($viewerid);
-			if($post['userid'] == $this->objUser->userId())
+			//var_dump($comm); var_dump($this->objUser->userId());
+			if($comm['userid'] == $this->objUser->userId())
 			{
-				//$this->objConfig = $this->getObject('altconfig', 'config');
-				//$scripts = '<script type="text/javascript" src="core_modules/htmlelements/resources/scriptaculous/1.6.5/scriptaculous.js"></script>';
-				//echo file_get_contents("/var/www/chisimba_framework/app/core_modules/htmlelements/resources/scriptaculous/1.6.5/scriptaculous.js");
-                   //   <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                   //   <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        		//$this->appendArrayVar('headerParams',$scripts);
 				//display the inline editor
-				$updateuri = 'index.php'; //$this->uri(array('module' =>'blogcomments','action' => 'updatecomment'));
+				$updateuri = 'index.php';
 				$commid = $comm['id'];
 				$commcont = $comm['comment_content'];
 				$commcont = str_replace("<p>", '', $commcont);
@@ -334,19 +329,11 @@ class commentapi extends object
                     'commentid' => $comm['id'],
                     'postid' => $pid
                 ) , 'blogcomments');
-                //$delic = $delIcon->show();
 
-				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
+				$fboxcontent = $script."<br /><br />".$delIcon;
 			}
 			elseif($vemail == $comm['comment_author_email'])
 			{
-				//$scripts = '<script type="text/javascript" src="core_modules/htmlelements/resources/scriptaculous/1.6.5/scriptaculous.js"></script>';
-				//$this->appendArrayVar('headerParams',$scripts);
-				//$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-                      //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        		//$this->appendArrayVar('headerParams',$scripts);
-
                 //display the inline editor
 				$updateuri = 'index.php'; //$this->uri(array('module' =>'blogcomments','action' => 'updatecomment'));
 				$commid = $comm['id'];
@@ -373,12 +360,20 @@ class commentapi extends object
 
 				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
 			}
+			elseif ($this->objUser->inAdminGroup($this->objUser->userId())) {
+			    $this->objIcon = $this->getObject('geticon', 'htmlelements');
+			    $delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
+                    'module' => 'blogcomments',
+                    'action' => 'deletecomment',
+                    'commentid' => $comm['id'],
+                    'postid' => $pid
+                ) , 'blogcomments');
+                
+                $fboxcontent = stripslashes($comm['comment_content'])."<br /><br />".$delIcon;
+			}
 			else {
 				$fboxcontent = stripslashes($comm['comment_content']);
 			}
-			//$link = new href(urlencode($authurl), $auth, NULL);
-			//$link->show();
-
 			$authemail = "[".$authemail."]";
 			$authhead = $auth; // . " " . $authemail; // . " (".htmlentities($authurl).")";
 			if(isset($delIcon))
