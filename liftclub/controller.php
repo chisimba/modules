@@ -817,7 +817,7 @@ class liftclub extends controller
             return $this->nextAction(NULL);
         }
         // Generate User Id
-        $id = $this->getParam('id');
+        $id = $this->objUser->userId();
 
         $username = $this->getParam('register_username');
         $password = $this->getParam('register_password');
