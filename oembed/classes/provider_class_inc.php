@@ -1,16 +1,16 @@
 <?php
 /**
  *
- * An image provider for oembed
+ * An oembed provider for oembed
  *
- * An image provider for oembed. oEmbed is an open format designed to allow
+ * An oembed provider for Chisimba. oEmbed is an open format designed to allow
  * embedding content from a website into another page. This content is of the
  * types photo, video, link or rich. An oEmbed exchange occurs between a
  * consumer and a provider. A consumer wishes to show an embedded representation
  * of a third-party resource on their own website, such as a photo or an
  * embedded video. A provider implements the oEmbed API to allow consumers to
- * fetch that representation. This is a provider for images stored in Chisimba
- * using Chisimba's file manager.
+ * fetch that representation. This is a master provider that calls other
+ * providers depending on what is requested.
  *
  * PHP version 5
  *
@@ -72,28 +72,6 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class provider extends object
 {
-    // Note that these properties violate naming standards in Chisimba
-    // but that is necessary for the oembed naming standards.
-   
-    public $type;
-    public $version;
-    public $title;
-    public $author_name;
-    public $author_url;
-    public $provider_name;
-    public $provider_url;
-    public $cache_age;
-    public $thumbnail_url;
-    public $thumbnail_width;
-    public $thumbnail_height;
-    public $url;
-    public $width;
-    public $height;
-    // The HTML required to display the resource. The HTML should have no
-    // padding or margins. Consumers may wish to load the HTML in an
-    // off-domain iframe to avoid XSS vulnerabilities
-    public $html;
-
     /**
     *
     * Constructor for the provider class
@@ -104,7 +82,7 @@ class provider extends object
     */
     public function init()
     {
-        $this->objLanguage = $this->getObject('language', 'language');
+
     }
 
     /**
@@ -114,6 +92,7 @@ class provider extends object
     *
     * @param string $targetUrl The url being evaluated
     * @return string The type of request
+    * @access public
     *
     */
     public function getRequestType($targetUrl)
@@ -135,6 +114,20 @@ class provider extends object
         return "unknown";
     }
 
+    /**
+     *
+     * Get the type from URLs where there is no file extension. The default
+     * format for this is http://site/path/module/uniqueid
+     *
+     * @todo add a Type so it becomes http://site/path/type/module/uniqueid
+     * where type is the jason or xml.
+     *
+     *
+     * @param <type> $targetUrl
+     * @return <type>
+     * @access private
+     *
+     */
     private function getTypeNoExt($targetUrl)
     {
         // Instantiate the configuration object.
@@ -165,9 +158,10 @@ class provider extends object
     *
     * @param string $targetUrl The url being evaluated
     * @return string The file extension
+    * http://site/path/module/uniqueid
     *
     */
-    public function getExtenstion($targetUrl) {
+    private function getExtenstion($targetUrl) {
         $tmpAr = explode(".", $targetUrl);
         if (count($tmpAr) > 1) {
             $extLocation = count($tmpAr)-1;
@@ -184,9 +178,10 @@ class provider extends object
     *
     * @param string $ext The file extension from the URL
     * @return boolean TRUE|FALSE
+    * @access private
     *
     */
-    public function isImage($ext)
+    private function isImage($ext)
     {
         
         $fileTypes=array('jpg', 'jpeg', 'png', 'gif');
@@ -203,9 +198,10 @@ class provider extends object
     *
     * @param string $ext The file extension from the URL
     * @return boolean TRUE|FALSE
+    * @access private
     *
     */
-    public function isMp3($ext)
+    private function isMp3($ext)
     {
         $fileTypes = array('mp3');
         if (in_array($ext, $fileTypes)) {

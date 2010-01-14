@@ -235,7 +235,8 @@ class oembed extends controller
                 }
                 break;
             default:
-                $this->setVar('str', "UNKNOWN");
+                $this->setPageTemplate('plain_tpl.php');
+                $this->setVar('str', "404 not found");
                 break;
             
         }
