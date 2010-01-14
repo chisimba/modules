@@ -971,8 +971,7 @@ class liftclub extends controller
             $results['passworderror'] = 'passworddonotmatch';
         } else { // OK - user tried, and passwords match
             $results['passwordchanged'] = TRUE;
-        }
-        
+        }        
         // Process Update
         $update = $this->objUserAdmin->updateUserDetails($this->user['id'], $this->user['username'], $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password);
         

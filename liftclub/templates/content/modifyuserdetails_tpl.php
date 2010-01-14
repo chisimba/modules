@@ -61,12 +61,12 @@ $header->str = $this->objLanguage->languageText("mod_userdetails_updatedetails",
 echo '<div style="padding:10px;">'.$header->show();
 
 $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
-
+/*
 $str = $this->objLanguage->languageText('mod_liftclub_firstneedtoregister', 'liftclub', 'In order to be able to access [[SITENAME]], you first need to register');
 
 $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
 
-//echo '<p>'.$str.'<br />';
+echo '<p>'.$str.'<br />';*/
 echo $this->objLanguage->languageText('mod_liftclub_pleaseenterdetails', 'liftclub', 'Please enter your details, email address and desired user name in the form below.').'</p>';
 
 $form = new form ('register', $this->uri(array('action'=>'updateuserdetails', 'id'=>$id)));
