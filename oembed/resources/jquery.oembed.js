@@ -1,30 +1,30 @@
+/**
+ *
+ * jQuery oembed for Chisimba. Modified from the
+ * original by Derek Keats to enable us to provide
+ * plugins for Chisimba sites.
+ *
+ */
 ﻿(function($) {
     $.fn.oembed = function(url, options, callback) {
-
         options = $.extend(true, $.fn.oembed.defaults, options);
-
         return this.each(function() {
-
             var container = $(this),
-				resourceURL = (url != null) ? url : container.attr("href"),
-				provider;
-
-if (!callback) callback = function(container, oembed) {			
-				 $.fn.oembed.insertCode(container, options.embedMethod, oembed);
+              resourceURL = (url != null) ? url : container.attr("href"),
+              provider;
+            if (!callback) callback = function(container, oembed) {
+                $.fn.oembed.insertCode(container, options.embedMethod, oembed);
             };
-
             if (resourceURL != null) {
                 provider = getOEmbedProvider(resourceURL);
-
                 if (provider != null) {
                     provider.maxWidth = options.maxWidth;
                     provider.maxHeight = options.maxHeight;					
-					provider.params = options[provider.name] || {};
+		    provider.params = options[provider.name] || {};
                     provider.embedCode(container, resourceURL, callback);
                     return;
                 }
             }
-
             callback(container, null);
         });
     };
@@ -126,7 +126,11 @@ if (!callback) callback = function(container, oembed) {
         new OEmbedProvider("vimeo", "vimeo.com", "http://vimeo.com/api/oembed.json"),
         new OEmbedProvider("wikipedia", "wikipedia.org"),
         new OEmbedProvider("wordpress", "wordpress.com"),
-        new OEmbedProvider("localhost", "localhost", "http://localhost/ch/index.php?module=oembed&action=provideimage&"),
+        new OEmbedProvider("localhost.ch", "localhost/elearn", "http://localhost/elearn/index.php?module=oembed&action=provide&"),
+        new OEmbedProvider("localhost.elearn", "localhost/ch", "http://localhost/ch/index.php?module=oembed&action=provide&"),
+        new OEmbedProvider("dkeats.com", "www.dkeats.com", "http://www.dkeats.com/index.php?module=oembed&action=provide&"),
+        new OEmbedProvider("kim", "kim.wits.ac.za", "http://kim.wits.ac.za/index.php?module=oembed&action=provide&"),
+        new OEmbedProvider("avoir", "avoir.uwc.ac.za", "http://avoir.uwc.ac.za/index.php?module=oembed&action=provideimage&"),
         new OEmbedProvider("youtube", "youtube.com")
     ];
 
@@ -178,8 +182,8 @@ if (!callback) callback = function(container, oembed) {
         }
 
         this.embedCode = function(container, externalUrl, callback) {
-
             var request = this.getRequestUrl(externalUrl);
+
             $.getJSON(request, function(data) {
                 var oembed = $.extend(data);
                  

@@ -1,16 +1,16 @@
 <?php
 /**
  *
- * An image provider for oembed
+ * A podcast provider for oembed
  *
- * An image provider for oembed. oEmbed is an open format designed to allow
+ * An podcast provider for oembed. oEmbed is an open format designed to allow
  * embedding content from a website into another page. This content is of the
  * types photo, video, link or rich. An oEmbed exchange occurs between a
  * consumer and a provider. A consumer wishes to show an embedded representation
  * of a third-party resource on their own website, such as a photo or an
  * embedded video. A provider implements the oEmbed API to allow consumers to
- * fetch that representation. This is a provider for images stored in Chisimba
- * using Chisimba's file manager.
+ * fetch that representation. This is a provider for MP3 files stored in Chisimba
+ * using Chisimba's file manager or podcast module.
  *
  * PHP version 5
  *
@@ -55,22 +55,23 @@ $GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* An image provider for oembed
+* A podcast provider for oembed
 *
-* An image provider for oembed. oEmbed is an open format designed to allow
+* An podcast provider for oembed. oEmbed is an open format designed to allow
 * embedding content from a website into another page. This content is of the
 * types photo, video, link or rich. An oEmbed exchange occurs between a
 * consumer and a provider. A consumer wishes to show an embedded representation
 * of a third-party resource on their own website, such as a photo or an
 * embedded video. A provider implements the oEmbed API to allow consumers to
-* fetch that representation. This is a provider for images stored in Chisimba
-* using Chisimba's file manager.
+* fetch that representation. This is a provider for MP3 files stored in Chisimba
+* using Chisimba's file manager or podcast module.
+*
 *
 * @author Derek Keats
 * @package oembed
 *
 */
-class imageprovider extends object
+class podcastprovider extends object
 {
     // Note that these properties violate naming standards in Chisimba
     // but that is necessary for the oembed naming standards.
@@ -83,12 +84,8 @@ class imageprovider extends object
     public $provider_name;
     public $provider_url;
     public $cache_age;
-    public $thumbnail_url;
-    public $thumbnail_width;
-    public $thumbnail_height;
     public $url;
-    public $width;
-    public $height;
+    public $html;
 
     /**
     *
@@ -117,9 +114,9 @@ class imageprovider extends object
     *   false if not
     *
     */
-    public function extractComponents($imageUrl)
+    public function extractComponents($targetUrl)
     {
-        if (!$this->testHttp($imageUrl)) {
+        if (!$this->testHttp($targetUrl)) {
             $this->err = "404 Not Found";
             return FALSE;
         } else {
@@ -134,19 +131,19 @@ class imageprovider extends object
             // Unset the config object as we don't need it any more.
             unset($objConfig);
             // Take off the siteRoot from the image URL.
-            $imageForExplode = str_replace($siteRoot, NULL, $imageUrl, $count);
+            $targetForExplode = str_replace($siteRoot, NULL, $targetUrl, $count);
             // If we didn't remove the siteRoot then it can't be a local image
             if ($count == 0) {
                 $this->err = "404 Not Found";
                 return FALSE;
             }
             // Verify that the file exists.
-            if (!file_exists($siteRootPath . $imageForExplode)) {
+            if (!file_exists($siteRootPath . $targetForExplode)) {
                 $this->err = "404 Not Found";
                 return FALSE;
             }
             // Explode it into an array, the easiest way to get the file name
-            $ar = explode("/", $imageForExplode);
+            $ar = explode("/", $targetForExplode);
             // Get an insteance of the filemanager database connector.
             $objFileDb = $this->getObject('dbfile', 'filemanager');
             // Get the filename from the exploded array
@@ -164,22 +161,29 @@ class imageprovider extends object
             $mediaInfo = $this->getObject("dbmediafileinfo", "filemanager");
             $mediaInfoAr = $mediaInfo->getRow('fileid', $fileId);
             // Start setting the properties that will generate the json.
-            $this->type = "photo";
+            $this->type = "rich";
             $this->version = "1.0";
             $this->author_name = $objUser->fullName($fileUser);
-            // Get the thumbnail from standard location.
-            $thumbFile = "usrfiles/filemanager_thumbnails/"
-              . $fileId . ".jpg";
-            $size = getimagesize($siteRootPath . $thumbFile);
-            $this->thumbnail_url = $siteRoot . $thumbFile;
-            $this->thumbnail_width = $size[0];
-            $this->thumbnail_height = $size[1];
             $this->provider_url = $siteRoot;
             $this->author_url = $this->provider_url;
             $this->cache_age = 600;
-            $this->url = $imageUrl;
-            $this->width = $mediaInfoAr['width'];
-            $this->height = $mediaInfoAr['height'];
+            $this->url = $targetUrl;
+            $this->width = 290;
+            $this->height = 24;
+            $this->html = "\n\n<object type=\"application/x-shockwave-flash\" "
+              . "data=\"core_modules/files/resources/flashmp3/player.swf\" "
+              . "id=\"audioplayer1\" height=\"24\" width=\"290\">\n"
+              . "<param name=\"movie\" "
+              . "value=\"core_modules/files/resources/flashmp3/player.swf\">\n"
+              . "<param name=\"FlashVars\" value=\"playerID=1&amp;soundFile=$targetForExplode\">\n"
+              . "<param name=\"quality\" value=\"high\">\n"
+              . "<param name=\"menu\" value=\"false\">\n"
+              . "<param name=\"wmode\" value=\"transparent\">\n"
+              . "<embed src=\"core_modules/files/resources/flashmp3/player.swf\" "
+              . "width=\"290\" height=\"24\" "
+              . "flashvars=\"playerID=1&amp;soundFile=$targetForExplode\" quality=\"high\" "
+              . "menu=\"false\" wmode=\"transparent\"></embed>\n"
+              . "</object>\n\n";
             // Turn the appropriate class properties into an array.
             $ar = $this->createArray();
             // Set either XML or json with the default being json.
@@ -202,9 +206,9 @@ class imageprovider extends object
     * @access private
     *
     */
-    private function testHttp($imageUrl)
+    private function testHttp($targetUrl)
     {
-         return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $imageUrl);
+         return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $targetUrl);
     }
 
     /**
@@ -238,12 +242,10 @@ class imageprovider extends object
           'provider_name' => $this->provider_name,
           'provider_url' => $this->provider_url,
           'cache_age' => $this->cache_age,
-          'thumbnail_url' => $this->thumbnail_url,
-          'thumbnail_width' => $this->thumbnail_width,
-          'thumbnail_height' => $this->thumbnail_height,
           'url' => $this->url,
           'width' => $this->width,
-          'height' => $this->height);
+          'height' => $this->height,
+          'html' => $this->html);
         return $ar;
     }
 

@@ -177,6 +177,60 @@ class oembed extends controller
         return "conts_tpl.php";
     }
 
+    /**
+    *
+    * Image provider method. This returns the json or an HTML error
+    * without any Chisimba template / header information.
+    *
+    * @return string The populated template
+    * @access private
+    *
+    */
+    private function __provide()
+    {
+        $targetUrl = $this->getParam('url', NULL);
+        $objProvider =  $this->getObject('provider', 'oembed');
+        switch ($objProvider->getRequestType($targetUrl)) {
+            case "image":
+                $imageUrl = $targetUrl;
+                unset($targetUrl);
+                $objImage =  $this->getObject('imageprovider', 'oembed');
+                if ($objImage->extractComponents($imageUrl)) {
+                    if ($objImage->json !== NULL) {
+                        $this->setPageTemplate('json_tpl.php');
+                        $this->setVarByRef('str', $objImage->json);
+                    } else {
+                        $this->setPageTemplate('xml_tpl.php');
+                        $this->setVarByRef('str', $objImage->xml);
+                    }
+                } else {
+                    $this->setPageTemplate('plain_tpl.php');
+                    $this->setVarByRef('str', $objImage->err);
+                }
+                break;
+            case "podcast":
+                $objPod =  $this->getObject('podcastprovider', 'oembed');
+                if ($objPod->extractComponents($targetUrl)) {
+                    if ($objPod->json !== NULL) {
+                        $this->setPageTemplate('json_tpl.php');
+                        $this->setVarByRef('str', $objPod->json);
+                    } else {
+                        $this->setPageTemplate('xml_tpl.php');
+                        $this->setVarByRef('str', $objPod->xml);
+                    }
+                } else {
+                    $this->setPageTemplate('plain_tpl.php');
+                    $this->setVarByRef('str', $objPod->err);
+                }
+                break;
+            default:
+
+                break;
+            
+        }
+        return "conts_tpl.php";
+    }
+
     // --------------------------------------------------------
 
     /**
