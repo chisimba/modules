@@ -375,7 +375,7 @@ class functions_assignment extends object
 		    $submitData = $this->dbSubmit->getStudentAssignment($thisUserId, $assignment['id']);
 		    //var_dump($submitData);
 		    if(!empty($submitData[0]["mark"])){
-			    $studentsMark = (($submitData[0]["mark"]/$assignment['mark'])*100);
+			    $studentsMark = number_format((($submitData[0]["mark"]/$assignment['mark'])*100),2);
 			    $assgnId = $submitData[0]['assignmentid'];
 		    }else{
 			    $studentsMark = Null;

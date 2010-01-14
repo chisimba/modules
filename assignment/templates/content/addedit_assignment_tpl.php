@@ -45,7 +45,9 @@ if ($mode == 'edit') {
 else { // Mode is add so we can always change the type of the assignment
     $canChangeType = true;
 }
+
 if (!$canChangeType) {
+    echo 'cannot change';
 //if ($mode == 'edit') {
     $textinput = new textinput('type');
     $textinput->size = 20;
@@ -61,11 +63,13 @@ if (!$canChangeType) {
 //} else {
 }
 else {
+    echo "can change and mode = $mode and format is ".$assignment['format'];
     $radio = new radio ('type');
     $radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
     $radio->addOption(1, $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
     if ($mode == 'edit') {
         $radio->setSelected($assignment['format']);
+        echo '&nbsp;&nbsp;&nbsp;set selected';
     }
     $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
     $table->addCell($radio->show());
@@ -97,6 +101,9 @@ if ($mode == 'edit') {
 $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
 $table->addCell($radio->show());
 $table->endRow();
+
+
+
 
 $table->startRow();
 $label = new label ($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark'), 'input_mark');

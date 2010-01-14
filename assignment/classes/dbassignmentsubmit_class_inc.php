@@ -91,7 +91,7 @@ class dbassignmentsubmit extends dbtable
      */
     public function getStudentAssignment($studentId, $assignmentId)
     {
-        return $this->getAll(" WHERE assignmentid='{$assignmentId}' AND userid='{$studentId}' ");
+        return $this->getAll(" WHERE assignmentid='{$assignmentId}' AND userid='{$studentId}' ORDER BY datesubmitted DESC");
     }
 
     /**
