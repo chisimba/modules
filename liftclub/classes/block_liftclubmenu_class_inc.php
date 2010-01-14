@@ -104,7 +104,7 @@ class block_liftclubmenu extends object
 							$exitLink->link = $this->objLanguage->languageText("mod_liftclub_signout","liftclub","Sign Out");
 							$exitLink->title = $this->objLanguage->languageText("mod_liftclub_signout","liftclub","Sign Out");
 
-							$registerLink =new link($this->uri(array('action'=>'startregister')));
+							$registerLink =new link($this->uri(array('action'=>'showregister')));
 							$registerLink->link = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 							$registerLink->title = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 
@@ -169,7 +169,7 @@ class block_liftclubmenu extends object
 
 							}else{
 								//$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
-								//$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
+								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
 							}

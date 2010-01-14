@@ -12,7 +12,7 @@ $exitLink =new link($this->uri(array('action'=>'liftclubsignout')));
 $exitLink->link = $this->objLanguage->languageText("mod_liftclub_signout","liftclub","Sign Out");
 $exitLink->title = $this->objLanguage->languageText("mod_liftclub_signout","liftclub","Sign Out");
 
-$registerLink =new link($this->uri(array('action'=>'startregister')));
+$registerLink =new link($this->uri(array('action'=>'showregister')));
 $registerLink->link = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 $registerLink->title = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 
@@ -76,7 +76,7 @@ if($this->objUser->userId()!==null){
  $mailFeatBox = $mailFeatBox."<br /><br /><br /><br />";
 }else{
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
- //$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
 }
