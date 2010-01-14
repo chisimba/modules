@@ -21,6 +21,9 @@ function showResponse (originalRequest) {
 </script>
 <?php
 $middleColumn = NULL;
+if (!isset($cats)) {
+    $cats = NULL;
+}
 if (isset($comment) && isset($useremail)) {
     //$middleColumn = "CAPTCHA was kakka";
     $comment = urldecode($comment);
@@ -51,7 +54,7 @@ if ($layoutToUse == 'elearn') {
     // left hand blocks
     $leftCol = $objUi->leftBlocks($userid);
     // right side blocks
-    $rightSideColumn = $objUi->rightBlocks($userid, NULL);
+    $rightSideColumn = $objUi->rightBlocks($userid, $cats);
     if ($leftCol == NULL || $rightSideColumn == NULL) {
         $cssLayout->setNumColumns(2);
     } else {
