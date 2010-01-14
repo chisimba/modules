@@ -118,6 +118,7 @@ $surname=array();
 $firstName = $this->objGradebook->getStudentInContextInfo('firstname');
 $surname = $this->objGradebook->getStudentInContextInfo('surname');
 $userId = $this->objGradebook->getStudentInContextInfo('userid');
+$username= $this->objGradebook->getStudentInContextInfo('username');
 
 $numberStudents=0;
 $numberStudents=$this->objGradebook->getNumberStudentsInContext();
@@ -130,7 +131,7 @@ if(!$numberStudents) {
 	for($i=1;$i<=$numberStudents;$i++) {
 		
 		$this->TableInstructions->startRow(!($i%2)?"odd":"even");
-		$this->TableInstructions->addCell($userId[$i-1]);
+		$this->TableInstructions->addCell($username[$i-1]);
 		$objLink = new link($this->uri(array('action'=>'assessmentDetails','assessment'=>$dropdownAssessments,'studentuserid'=>$userId[$i-1])));
 		$objLink->link=$firstName[$i-1].' '.$surname[$i-1];
 		$this->TableInstructions->addCell('&nbsp;&nbsp;'.$objLink->show());

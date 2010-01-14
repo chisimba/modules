@@ -61,7 +61,7 @@ $this->objH->str.=' - ';
 $this->objH->str.=$this->objUser->fullname($studentUserId);
 echo $this->objH->show();
 echo '<br />';
-echo '<strong>'.$objLanguage->languageText('mod_gradebook_studentNumber','gradebook').':</strong> '.$studentUserId;
+echo '<strong>'.$objLanguage->languageText('mod_gradebook_studentNumber','gradebook').':</strong> '.$this->objUser->username($studentUserId);
 
 //select course text, for proper alignment, fit within table
 $this->TableInstructions = $this->newObject('htmltable', 'htmlelements');
