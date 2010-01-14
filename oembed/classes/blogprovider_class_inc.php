@@ -79,10 +79,6 @@ class blogprovider extends object
     public $version;
     public $title;
     public $author_name;
-    public $author_url;
-    public $provider_name;
-    public $provider_url;
-    public $cache_age;
     public $url;
     public $width;
     public $height;
@@ -97,7 +93,6 @@ class blogprovider extends object
     */
     public function init()
     {
-        $this->objLanguage = $this->getObject('language', 'language');
     }
 
 
@@ -119,7 +114,8 @@ class blogprovider extends object
         if ($id) {
             $blogDb = $this->getObject('dbblog', 'blog');
             $item = $blogDb->getPostByPostID($id);
-            $this->title = $item[0]['post_title'];
+            $title = $item[0]['post_title'];
+            $this->title = $title;
             $content = $item[0]["post_content"];
             $content = $this->parseContent($content);
             $excerpt = $item[0]["post_excerpt"];
@@ -127,7 +123,12 @@ class blogprovider extends object
             $userId = $item[0]["userid"];
             $objUser = $this->getObject('user', 'security');
             $user = $objUser->fullname($userId);
-            $this->html = $this->formatAsHtml($this->title, $excerpt, $content, $postDate, $user);
+            $this->url = $this->uri(array(
+                'action' => 'viewsingle',
+                'postid' => $id,
+                'userid' => $userId
+            ), 'blog');
+            $this->html = $this->formatAsHtml($title, $excerpt, $content, $postDate, $user);
             $this->author_name = $user;
             $this->width=800;
             $this->height=600;
@@ -142,6 +143,16 @@ class blogprovider extends object
         }
     }
 
+    /**
+    *
+    * Parse the content to create the HTML to return in the
+    * html of the rich oembed type
+    *
+    * @param string $content The content to parse
+    * @return string The parsed content
+    * @access private
+    *
+    */
     private function parseContent($content)
     {
         $objWashout = $this->getObject('washout', 'utilities');
@@ -150,12 +161,27 @@ class blogprovider extends object
           array('blog','deltags','tweets'));
     }
 
+    /**
+     *
+     * Format the blog content as HTML for returning as the html
+     * of the rich type
+     *
+     * @param string $title The blog post title
+     * @param string $excerpt An excerpt of the blog post
+     * @param string $content The content of the blog post
+     * @param string $postDate The date of the blog post
+     * @param string $user The username of the blogger
+     * @return string The parsed content formatted as required in HTML
+     * @access private
+     *
+     */
     private function formatAsHtml($title, $excerpt, $content, $postDate, $user)
     {
         //@Todo multilingualize
         $ret = $content .
-          "<br /><span class = \"small\">Originally posted as:"
-          . $title . " on " . $postDate . " by " . $user . "</span>";
+          "<br /><span class = \"minute\">Originally posted as:"
+          . "<a href=\"$this->url\" target=\"_blank\">"
+          . $title . "</a> on " . $postDate . " by " . $user . "</span>";
         return $ret;
     }
 
