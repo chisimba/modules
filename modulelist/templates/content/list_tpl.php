@@ -1,24 +1,40 @@
 <?php
-	$objButtons=&$this->getObject('navbuttons','navigation');
-    if ($moduleList)
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(2);
+
+// get the sidebar object
+$this->leftMenu = $this->newObject('usermenu', 'toolbar');
+$this->loadClass('htmlheading', 'htmlelements');
+$this->objLanguage = $this->getObject('language', 'language');
+$this->objUser = $this->getObject('user', 'security');
+        
+$middleColumn = NULL;
+$leftColumn = NULL;
+
+// Add in a heading
+$header = new htmlHeading();
+$header->str = $this->objLanguage->languageText('mod_modulelist_header', 'modulelist');
+$header->type = 1;
+
+$middleColumn .= $header->show();
+
+if ($moduleList)
+{
+    $objFb = $this->newObject('featurebox', 'navigation');
+    foreach($moduleList as $moduleRow)
     {
-        $tblclass=$this->newObject('htmltable','htmlelements');
-        $tblclass->width='';
-        $tblclass->attributes=" align='' border='0' ";
-        $tblclass->cellspacing='5';
-        $tblclass->cellpadding='5';
-        foreach ($moduleList as $moduleRow)
-        {
-            $tblclass->startRow();
-            $link=$objButtons->pseudoButton($this->uri(array(),$moduleRow['module_id'] ),$moduleRow['title']);
-            $tblclass->addCell($link, "", Null, 'left', 'heading', '');
-            //$tblclass->endRow();
+        $header = new htmlHeading();
+        $header->str = "Module: ".ucwords($moduleRow['modname']);
+        $header->type = 3;
+        $middleColumn .= $objFb->show($header->show(), $moduleRow['description']);
+    }
+}
 
-            //$tblclass->startRow();
-            $tblclass->addCell($moduleRow['description'], "", Null, 'left', 'even', '');
-            $tblclass->endRow();
-        } // end foreach
-        print $tblclass->show();
-     } //end if
+if($this->objUser->isLoggedIn()) {
+    $leftColumn .= $this->leftMenu->show();
+}
 
+$cssLayout->setMiddleColumnContent($middleColumn);
+$cssLayout->setLeftColumnContent($leftColumn);
+echo $cssLayout->show();
 ?>

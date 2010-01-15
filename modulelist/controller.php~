@@ -13,7 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 *
 * @author Paul Scott <pscott@uwc.ac.za>
 *
-* $Id$
+* $Id: $
 */
 class modulelist extends controller
 {
@@ -59,7 +59,7 @@ class modulelist extends controller
      * @return bool
      * @access public
      */
-    public function requiresLogin() {
+    public function requiresLogin($action) {
         return FALSE;
     }
 
