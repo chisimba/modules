@@ -134,6 +134,51 @@ if ($mode == 'edit') {
 
 $form->addRule('menutitle', $this->objLanguage->languageText('mod_contextcontent_pleaseenterpagetitle','contextcontent'), 'required');
 
-echo $form->show();
 
+  /*   $menutitle = stripslashes($this->getParam('menutitle'));
+        $headerscripts = stripslashes($this->getParam('headerscripts'));
+        $language = 'en';
+        $pagecontent = stripslashes($this->getParam('pagecontent'));
+        $parent = stripslashes($this->getParam('parentnode'));
+        $chapter = stripslashes($this->getParam('chapter'));
+        $chapterTitle = $this->objContextChapters->getContextChapterTitle($chapter);
+        $titleId = $this->objContentTitles->addTitle('', $menutitle, $pagecontent, $language, $headerscripts);
+   *         $pageId = $this->getParam('id');
+        $contextCode = $this->getParam('context');
+        $menutitle = stripslashes($this->getParam('menutitle'));
+        $headerScripts = stripslashes($this->getParam('headerscripts'));
+        $pagecontent = stripslashes($this->getParam('pagecontent'));
+        $parentnode = stripslashes($this->getParam('parentnode'));
+   *
+   *
+   *
+*/
+echo $form->show();
+$autosave = 'jQuery(document).ready(function() {
+var saved=false;
+var id="";
+ window.setInterval(
+   function(){
+     var url;
+     if(saved){
+      url=\''.str_replace("amp;", "",$this->uri(array('action'=>'updatepage'))).'\';
+     }else{
+      url=\''.str_replace("amp;", "",$this->uri(array('action'=>'savepage'))).'\';
+     }
+    data = jQuery("form").serialize();
+    menutitle="";
+     jQuery.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        success: function(msg) {
+                saved=true;
+        }
+    });
+}, 10000);
+
+});
+';
+
+echo "<div id=\"search-xwin\"><script type='text/javascript'>".$autosave."</script></div>";;
 ?>

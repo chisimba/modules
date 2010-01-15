@@ -162,6 +162,8 @@ class contextcontent extends controller {
                 return $this->addPage($this->getParam('chapter'), $this->getParam('id', ''), $this->getParam('context', ''));
             case 'savepage':
                 return $this->savePage();
+            case 'autosavepage':
+                return $this->autoSavePage();
             case 'addscorm':
                 return $this->addScormChapter();
             case 'addscormpage':
@@ -641,6 +643,26 @@ class contextcontent extends controller {
         return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'pagesaved'));
     }
 
+    /**
+     * Method to save a newly added page
+     */
+    protected  function autoSavePage() {
+
+        $menutitle = stripslashes($this->getParam('menutitle'));
+        $headerscripts = stripslashes($this->getParam('headerscripts'));
+        $language = 'en';
+        $pagecontent = stripslashes($this->getParam('pagecontent'));
+        $parent = stripslashes($this->getParam('parentnode'));
+        $chapter = stripslashes($this->getParam('chapter'));
+        $chapterTitle = $this->objContextChapters->getContextChapterTitle($chapter);
+        $titleId = $this->objContentTitles->addTitle('', $menutitle, $pagecontent, $language, $headerscripts);
+
+
+        $pageId = $this->objContentOrder->addPageToContext($titleId, $parent, $this->contextCode, $chapter);
+        echo $pageId;
+        die();
+
+    }
 
     /**
      * Method to save a newly added scorm page
