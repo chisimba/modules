@@ -19,6 +19,7 @@ $fields = array(
         ),
 	'slidetitle' => array(
         'type' => 'text',
+        'length' => 255,
 		'notnull' => TRUE,
         ),
 	'slideorder' => array(
