@@ -62,7 +62,13 @@ $fields = array(
         ),
     'datemodified' => array(
         'type' => 'timestamp'
-        )
+        ),
+    'scorm' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'N'
+        ),
     );
     
 $name = 'tbl_contextcontent_pages_idx';
