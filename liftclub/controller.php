@@ -817,7 +817,7 @@ class liftclub extends controller
             return $this->nextAction(NULL);
         }
         // Generate User Id
-        $id = $this->objUser->userId();
+        $id = $this->objUser->PKid();
 
         $username = $this->getParam('register_username');
         $password = $this->getParam('register_password');
@@ -878,8 +878,8 @@ class liftclub extends controller
             $results['passwordchanged'] = TRUE;
         }        
         // Process Update
-        $update = $this->objUserAdmin->updateUserDetails($this->user['id'], $this->user['username'], $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password);
-        
+        $update = $this->objUserAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password);
+        //updateUserDetails($id, $username='', $firstname, $surname, $title, $email, $sex, $country, $cellnumber='', $staffnumber='', $password='', $accountType='', $accountstatus='')
         if (count($results) > 0) {
             $results['change'] = 'details';
         }
