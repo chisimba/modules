@@ -126,20 +126,20 @@ $rightCell = '<div style="float:right">'.$objBookMarks->diggThis().'</div>';
 
 if ($file['description'] != '') {
     $rightCell .= '<p><strong>'
-        . $this->objLanguage->languageText("word_description")
-        . ':</strong><br /> '
-        .nl2br(htmlentities($file['description']))
-        .'</p>';
+            . $this->objLanguage->languageText("word_description")
+            . ':</strong><br /> '
+            .nl2br(htmlentities($file['description']))
+            .'</p>';
 }
 
 $rightCell .=  '<p><strong>'
-    . $this->objLanguage->languageText("word_tags")
-    . ':</strong> ';
+        . $this->objLanguage->languageText("word_tags")
+        . ':</strong> ';
 
 if (count($tags) == 0) {
     $rightCell .=  '<em>'
-        . $this->objLanguage->languageText("mod_webpresent_notags", "webpresent")
-        . ' </em>';
+            . $this->objLanguage->languageText("mod_webpresent_notags", "webpresent")
+            . ' </em>';
 } else {
     $divider = '';
     foreach ($tags as $tag) {
@@ -159,8 +159,8 @@ $license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']);
 $rightCell .=  '<p>'.$objDisplayLicense->show($license).'</p>';
 
 $rightCell .=  '<h3>'
-    . $this->objLanguage->languageText("word_download")
-    . '</h3>';
+        . $this->objLanguage->languageText("word_download")
+        . '</h3>';
 
 $fileTypes = array('odp'=>'OpenOffice Impress Presentation', 'ppt'=>'PowerPoint Presentation', 'pdf'=>'PDF Document');
 
@@ -174,7 +174,7 @@ foreach ($fileTypes as $fileType=>$fileName) {
     $fullPath = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
 
     if (file_exists($fullPath)) {
-    //$relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
+        //$relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
         $link = new link($this->uri(array('action'=>'download', 'id'=>$file['id'], 'type'=>$fileType)));
         $link->link = $objFileIcons->getExtensionIcon($fileType).' '.$fileName;
 
@@ -199,16 +199,16 @@ $flashUrl = $this->uri(array('action'=>'getflash', 'id'=>$file['id']));
 
 
 $flashUrl =  $this->objConfig->getsiteRoot()
-    . $this->objConfig->getcontentPath()
-    .'webpresent/'  .$file['id'] .'/'. $file['id'].'.swf';
+        . $this->objConfig->getcontentPath()
+        .'webpresent/'  .$file['id'] .'/'. $file['id'].'.swf';
 
 
 $filterText = "[WPRESENT: type=byurl, url=" . $flashUrl . "]";
 $filterBox->setValue($filterText);
 $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filterbyurl", "webpresent")
-    . "</strong>: " . $filterBox->show() . "<br />"
-    . $this->objLanguage->languageText("mod_webpresent_filterbyurlexplained", "webpresent")
-    . "</p>";
+        . "</strong>: " . $filterBox->show() . "<br />"
+        . $this->objLanguage->languageText("mod_webpresent_filterbyurlexplained", "webpresent")
+        . "</p>";
 unset($filterText);
 
 $snippetText = '<div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
@@ -221,10 +221,10 @@ $snippetText = '<div style="border: 1px solid #000; width: 534px; height: 402px;
 $this->loadClass('textarea', 'htmlelements');
 $snippetBox=new textarea('snippet', $snippetText, 4, 80);
 $rightCell  .= "<p><strong>"
-    . $this->objLanguage->languageText("mod_webpresent_snippet", "webpresent")
-    . "</strong>:" . $snippetBox->show() . "<br />"
-    .  $this->objLanguage->languageText("mod_webpresent_snippetexplained", "webpresent")
-    . "</p>";
+        . $this->objLanguage->languageText("mod_webpresent_snippet", "webpresent")
+        . "</strong>:" . $snippetBox->show() . "<br />"
+        .  $this->objLanguage->languageText("mod_webpresent_snippetexplained", "webpresent")
+        . "</p>";
 
 
 // End of output the filter code.
@@ -237,7 +237,8 @@ $objModule = $this->getObject('modules','modulecatalogue');
 $isRegistered = $objModule->checkIfRegistered('disqus');
 if ($isRegistered) {
     $disqus=$this->getObject('disquselems','disqus');
-    $leftContents = $flashContent.'<br/>'.$disqus->addWidget();;
+    $leftContents = $flashContent.'<br/>'.$disqus->addWidget();
+    ;
 }
 //$this->objComments = &$this->getObject('commentapi', 'blogcomments');
 //$this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
@@ -284,8 +285,14 @@ $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_transcript", "
 $script_src = '<script type="text/javascript" language="javascript" src="/chisimba_modules/webpresent/resources/gwt/avoir.realtime.base.gwt.Invite.nocache.js"></script>';
 $this->appendArrayVar('headerParams', $script_src);
 
-$sessionmanager= $this->getObject("sessionmanager", "realtime");
-$objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $sessionmanager->showSessionList($file['id'],$agenda,$this->objUser->fullname()));
+$objModule = $this->getObject('modules','modulecatalogue');
+//See if the mathml module is registered and set params
+$isRegistered = $objModule->checkIfRegistered('realtime');
+if ($isRegistered) {
+    $sessionmanager= $this->getObject("sessionmanager", "realtime");
+    $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $sessionmanager->showSessionList($file['id'],$agenda,$this->objUser->fullname()));
+
+}
 
 $objTabs->width = '95%';
 //then display the tabs
