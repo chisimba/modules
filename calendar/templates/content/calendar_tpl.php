@@ -24,7 +24,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadclass('checkbox','htmlelements');
 
-$this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'htmlelements'));
+$this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
 
 
 $message = $this->getParam('message');
