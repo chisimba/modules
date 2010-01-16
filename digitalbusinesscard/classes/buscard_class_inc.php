@@ -77,6 +77,8 @@ class buscard extends object
         // Get an instance of the userparams object to look up additional info.
         $this->objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         $this->objUserParams->readConfig();
+        // Load the style sheet
+        $this->loadCss();
     }
 
     public function show($userId)
@@ -86,8 +88,29 @@ class buscard extends object
         $ret = "\n\n<div class='vcard'>\n"
           . $ret . "</div>\n\n"
           . '</div>';
+        $ret .= $this->getHomePage($userId);
         $ret .= $this->getTwitter($userId);
-        return $ret;
+        $ret .= $this->getDelicious($userId);
+        $ret .= $this->getFacebook($userId);
+        return $this->addToOuterContainer($ret);
+    }
+
+    public function showBlock($userId)
+    {
+
+    }
+
+    /**
+    *
+    * Add the content to an outer DIV layer
+    *
+    * @param string $ret The content to add to the layer
+    * @return string The content inside the layer tags
+    *
+    */
+    private function addToOuterContainer($ret)
+    {
+        return "<div class='hcardOuter'>$ret</div>";
     }
 
     /**
@@ -107,10 +130,10 @@ class buscard extends object
 
     public function getFn($userId)
     {
-        $givenName = '<span class="given-name">'
+        $givenName = '<span class="name-wrapper"><span class="given-name">'
           . $this->objUser->getFirstname($userId) . '</span>';
         $surName = '<span class="family-name">'
-          . $this->objUser->getSurName($userId) . '</span>';
+          . $this->objUser->getSurName($userId) . '</span></span>';
         return '<div class="vcard"><span class="fn n">'
           . $givenName . ' ' . $surName . '</span></div>'
           . "\n\n";
@@ -119,25 +142,60 @@ class buscard extends object
     public function getEmail($userId)
     {
         $email = $this->objUser->email($userId);
-         $ret = 'Email: <a class="email" href="mailto:'
-           . $email . '">' . $email . '</a>';
+         $ret = $this->getLinkIcon("email")
+           . '<a class="email" href="mailto:'
+           . $email . '">' . $email . '</a><br />';
          return $ret;
     }
 
     public function getTwitter($userId)
     {
-        $twit = "http://twitter.com/"
-          . $this->objUserParams->getValue("twittername");
-        $twitA = $this->getLinkIcon("twitter")
-          . "<a href='$twit'>$twit</a>";
-        return $twitA;
+        if ($twit = $this->objUserParams->getValue("twitterurl")) {
+            return $this->getLinkIcon("twitter")
+              . "<a rel='me' href='$twit' target='_blank'>$twit</a><br />\n";
+        }
 
     }
+
+    public function getDelicious($userId)
+    {
+        if ($url = $this->objUserParams->getValue("deliciousurl")) {
+            return $this->getLinkIcon("delicious")
+              . "<a rel='me' href='$url' target='_blank'>$url</a><br />\n";
+        }
+
+    }
+
+    public function getFacebook($userId)
+    {
+        if ($url = $this->objUserParams->getValue("facebookurl")) {
+            return $this->getLinkIcon("facebook")
+              . "<a rel='me' href='$url' target='_blank'>$url</a><br />\n";
+        }
+
+    }
+
+    public function getHomePage($userId)
+    {
+        if ($url = $this->objUserParams->getValue("homepage")) {
+            return $this->getLinkIcon("home")
+              . "<a rel='home me' href='$url' target='_blank'>$url</a><br />\n";
+        }
+    }
+
 
     private function getLinkIcon($network)
     {
         $img = $this->getResourceUri("icons/$network.png", "digitalbusinesscard");
-        return "<img class='snicon' src='$img' /> ";
+        return "<img style='border: 0px none; vertical-align:middle' class='snicon' src='$img' /> ";
+    }
+
+    private function loadCss()
+    {
+        $css = "<link rel=\"stylesheet\" type=\"text/css\" href=\""
+          . $this->getResourceUri("css/vcard.css", "digitalbusinesscard")
+          . "\" />";
+        $this->appendArrayVar('headerParams', $css);
     }
 
 }
