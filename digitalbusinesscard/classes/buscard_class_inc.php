@@ -81,9 +81,18 @@ class buscard extends object
         $this->loadCss();
     }
 
+    /**
+     *
+     * Default show method to show the Digital Business card
+     *
+     * @param <type> $userId
+     * @return <type>
+     *
+     */
     public function show($userId)
     {
-        $ret = $this->getFn($userId);
+        $ret = $this->getUserImage($userId);
+        $ret .= $this->getFn($userId);
         $ret .= $this->getEmail($userId);
         $ret = "\n\n<div class='vcard'>\n"
           . $ret . "</div>\n\n"
@@ -92,13 +101,32 @@ class buscard extends object
         $ret .= $this->getTwitter($userId);
         $ret .= $this->getDelicious($userId);
         $ret .= $this->getFacebook($userId);
+        $ret .= $this->getDigg($userId);
+        $ret .= $this->getFlickr($userId);
+        $ret .= $this->getYouTube($userId);
+        $ret .= $this->getPicasa($userId);
         $ret .= $this->getLatLong($userId);
         return $this->addToOuterContainer($ret);
     }
 
     public function showBlock($userId)
     {
-
+        $ret = $this->getUserImage($userId);
+        $ret .= $this->getFn($userId);
+        $ret .= $this->getEmail($userId);
+        $ret = "\n\n<div class='vcard'>\n"
+          . $ret . "</div>\n\n"
+          . '</div>';
+        $ret .= $this->getHomePage($userId, TRUE);
+        $ret .= $this->getTwitter($userId, TRUE);
+        $ret .= $this->getDelicious($userId, TRUE);
+        $ret .= $this->getFacebook($userId, TRUE);
+        $ret .= $this->getDigg($userId, TRUE);
+        $ret .= $this->getFlickr($userId, TRUE);
+        $ret .= $this->getYouTube($userId, TRUE);
+        $ret .= $this->getPicasa($userId, TRUE);
+        $ret .= $this->getLatLong($userId, FALSE);
+        return $this->addToOuterContainer($ret);
     }
 
     /**
@@ -140,47 +168,129 @@ class buscard extends object
           . "\n\n";
     }
 
-    public function getEmail($userId)
+    public function getEmail($userId, $noText=FALSE)
     {
         $email = $this->objUser->email($userId);
-         $ret = $this->getLinkIcon("email")
-           . '<a class="email" href="mailto:'
-           . $email . '">' . $email . '</a><br />';
-         return $ret;
+        $icon = $this->getLinkIcon("email");
+        if ($noText) {
+            return "<a class='email' href='mailto:$email'>$icon</a><br />\n";
+        } else {
+            return "<a class='url' rel='me' href='mailto:$email'>$icon $email</a><br />\n";
+        }
     }
 
-    public function getTwitter($userId)
+    public function getTwitter($userId, $noText=FALSE)
     {
-        if ($twit = $this->objUserParams->getValue("twitterurl")) {
-            return $this->getLinkIcon("twitter")
-              . "<a class='url' rel='me' href='$twit' target='_blank'>$twit</a><br />\n";
+        if ($url = $this->objUserParams->getValue("twitterurl")) {
+            $icon = $this->getLinkIcon("twitter");
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
         }
 
     }
 
-    public function getDelicious($userId)
+    public function getDelicious($userId, $noText=FALSE)
     {
         if ($url = $this->objUserParams->getValue("deliciousurl")) {
-            return $this->getLinkIcon("delicious")
-              . "<a class='url' rel='me' href='$url' target='_blank'>$url</a><br />\n";
+            $icon = $this->getLinkIcon("delicious");
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
         }
 
     }
 
-    public function getFacebook($userId)
+    public function getFacebook($userId, $noText=FALSE)
     {
         if ($url = $this->objUserParams->getValue("facebookurl")) {
-            return $this->getLinkIcon("facebook")
-              . "<a class='url' rel='me' href='$url' target='_blank'>$url</a><br />\n";
+            $icon = $this->getLinkIcon("facebook");
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
         }
-
     }
 
-    public function getHomePage($userId)
+    public function getDigg($userId, $noText=FALSE)
+    {
+        if ($url = $this->objUserParams->getValue("diggurl")) {
+            $icon = $this->getLinkIcon("digg");
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
+        }
+    }
+
+    public function getFlickr($userId, $noText=FALSE)
+    {
+        if ($url = $this->objUserParams->getValue("flickrurl")) {
+            $icon = $this->getLinkIcon("flickr");
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
+        }
+    }
+
+    public function getYouTube($userId, $noText=FALSE)
+    {
+        if ($url = $this->objUserParams->getValue("youtubeurl")) {
+            $icon = $this->getLinkIcon("youtube");
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
+        }
+    }
+
+    public function getPicasa($userId, $noText=FALSE)
+    {
+        if ($url = $this->objUserParams->getValue("picasaurl")) {
+            $icon = $this->getLinkIcon("picasa");
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
+        }
+    }
+
+
+    public function getHomePage($userId, $noText=FALSE)
     {
         if ($url = $this->objUserParams->getValue("homepage")) {
-            return $this->getLinkIcon("home")
-              . "<a class='url' rel='home me' href='$url' target='_blank'>$url</a><br />\n";
+            $icon = $this->getLinkIcon("home");
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
         }
     }
 
@@ -199,7 +309,7 @@ class buscard extends object
         $this->appendArrayVar('headerParams', $css);
     }
 
-    private function getLatLong($userId)
+    private function getLatLong($userId, $showMap=TRUE)
     {
         $latitude = $this->objUserParams->getValue("latitude");
         $longitude = $this->objUserParams->getValue("longitude");
@@ -210,8 +320,11 @@ class buscard extends object
               .  '<abbr class="longitude" title="'
               . $longitude . '">' . $longitude . "</abbr>\n"
               . "</span>\n";
-            return $this->getLinkIcon("earth") . $ret
-              . $this->getMap($latitude, $longitude);
+            $ret = $this->getLinkIcon("earth") . $ret;
+            if ($showMap) {
+                $ret .= $this->getMap($latitude, $longitude);
+            }
+            return $ret;
         }
     }
 
@@ -225,6 +338,11 @@ class buscard extends object
           . $latitude .',' . $longitude 
           . '&amp;output=embed"></iframe>';
         return $ret;
+    }
+
+    public function getUserImage($userId)
+    {
+        return $this->objUser->getSmallUserImage($userId);
     }
 
 }

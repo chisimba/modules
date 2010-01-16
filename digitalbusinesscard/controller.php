@@ -152,6 +152,22 @@ class digitalbusinesscard extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
+
+    /**
+    *
+    * Method corresponding to the view action. It fetches the stories
+    * into an array and passes it to a main_tpl content template.
+    * @access private
+    *
+    */
+    private function __showblock()
+    {
+        $objCard = $this->getObject('buscard', 'digitalbusinesscard');
+        $userId = $this->getParam('userid', $this->objUser->userId());
+        $str = $objCard->showBlock($userId);
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
     
     /**
     * 
@@ -230,7 +246,7 @@ class digitalbusinesscard extends controller
     {
         $this->setVar('str', "<h3>"
           . $this->objLanguage->languageText("phrase_unrecognizedaction")
-          .": " . $action . "</h3>");
+          .": " . $this->getParam('action', NULL) . "</h3>");
         return 'dump_tpl.php';
     }
     

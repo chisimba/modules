@@ -10,7 +10,10 @@ a { outline:none; }
 .aright { float:right; }
 
 
-a:hover img { margin-left: 5px;}
+a:hover img {
+    margin-left: -5px;
+}
+
 a strong { display: block; font:bold 14px Arial, Helvetica, sans-serif; color: #000; }
 
 .about { background:url(images/hr.png) repeat-x bottom; padding:0px 20px 10px 20px; overflow:hidden; margin-bottom:10px;  }
