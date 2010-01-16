@@ -1,7 +1,7 @@
 <?PHP
 
 //Loading the jQuery Grid Plugin
-$jQuery = $this->newObject('jquery', 'htmlelements');
+$jQuery = $this->newObject('jquery', 'jquery');
 //$jQuery->loadJqGridPlugin('3.2.4', 'coffee');
 //$jQuery->loadJqGridPlugin('3.2.4', 'green');
 //$jQuery->loadJqGridPlugin('3.2.4', 'sand');

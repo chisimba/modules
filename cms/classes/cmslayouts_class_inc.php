@@ -31,7 +31,7 @@ class cmslayouts extends object
 			$this->setVar('SUPPRESS_JQUERY', false);
 			$this->setVar('JQUERY_VERSION', '1.3.2');			
 
-			$this->_objJQuery = $this->newObject('jquery', 'htmlelements');
+			$this->_objJQuery = $this->newObject('jquery', 'jquery');
 
 			$this->_objJQuery->loadCluetipPlugin();
 
@@ -206,7 +206,7 @@ class cmslayouts extends object
 
 
 		//jQuery SuperFish Menu
-		$jQuery = $this->newObject('jquery', 'htmlelements');
+		$jQuery = $this->newObject('jquery', 'jquery');
 
 		//Testing jQuery 1.2.6 SuperFish Menu
 		$jQuery->loadSuperFishMenuPlugin();

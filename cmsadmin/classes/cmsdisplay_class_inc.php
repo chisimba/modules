@@ -126,8 +126,8 @@
             try {
                 $this->_objUserPerm = $this->getObject ('dbuserpermissions', 'cmsadmin');
                 $this->objOps = $this->getObject ('groupops', 'groupadmin');
-                $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
-                $this->_objBox = $this->newObject('jqboxy', 'htmlelements');
+                $this->_objQuery =  $this->newObject('jquery', 'jquery');
+                $this->_objBox = $this->newObject('jqboxy', 'jquery');
                 $this->_objUtils =  $this->newObject('cmsutils', 'cmsadmin');
                 $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
                 $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');

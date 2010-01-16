@@ -122,8 +122,8 @@
         public function init()
         {
             try {
-                $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
-                $this->_objBox = $this->newObject('jqboxy', 'htmlelements');
+                $this->_objQuery =  $this->newObject('jquery', 'jquery');
+                $this->_objBox = $this->newObject('jqboxy', 'jquery');
                 $this->_objUserPerm = $this->newObject('dbuserpermissions', 'cmsadmin');
                 $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
                 $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');
@@ -1153,7 +1153,7 @@
             //$tabs =$this->newObject('tabcontent','htmlelements');
 
             //Using jQuery UI Tabs
-            $tabs =$this->newObject('jqtabs','htmlelements');
+            $tabs =$this->newObject('jqtabs','jquery');
 
             $tbl_basic = $this->newObject('htmltable','htmlelements');
             $tbl_advanced = $this->newObject('htmltable','htmlelements');
@@ -1284,7 +1284,7 @@
             //$tabs =$this->newObject('tabcontent','htmlelements');
 
             //Using jQuery UI Tabs
-            $tabs =$this->newObject('jqtabs','htmlelements');
+            $tabs =$this->newObject('jqtabs','jquery');
 
             $tbl_basic = $this->newObject('htmltable','htmlelements');
             $tbl_advanced = $this->newObject('htmltable','htmlelements');
@@ -3377,7 +3377,7 @@
             //$tabs =$this->newObject('tabcontent','htmlelements');
 
             //Using jQuery UI Tabs
-            $tabs =$this->newObject('jqtabs','htmlelements');
+            $tabs =$this->newObject('jqtabs','jquery');
 
             $tbl_basic = $this->newObject('htmltable','htmlelements');
             $tbl_advanced = $this->newObject('htmltable','htmlelements');

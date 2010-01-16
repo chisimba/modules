@@ -150,7 +150,7 @@ class codewriter extends controller
         //$this->appendArrayVar('headerParams', $js1);
         
         // Load the jquery forms library for the ajax work
-        $js2 = $this->getJavascriptFile('jquery/jquery.form.js', 'htmlelements');
+        $js2 = $this->getJavascriptFile('jquery/jquery.form.js', 'jquery');
         $this->appendArrayVar('headerParams', $js2);
         
         // Load the form rendering javascript

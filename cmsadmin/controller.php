@@ -163,7 +163,7 @@
                 $this->setVar('SUPPRESS_JQUERY', false);
                 $this->setVar('JQUERY_VERSION', '1.3.2');			
                 
-                $this->_objJQuery = $this->newObject('jquery', 'htmlelements');
+                $this->_objJQuery = $this->newObject('jquery', 'jquery');
                 
                 $this->_objUserPerm = $this->getObject ('dbuserpermissions', 'cmsadmin');
                 $this->_objDisplay = $this->newObject('cmsdisplay', 'cmsadmin');
@@ -246,7 +246,7 @@
                 $this->_objJQuery->loadFgMenuPlugin();
 
 				//jQuery SuperFish Menu
-				$jQuery = $this->newObject('jquery', 'htmlelements');
+				$jQuery = $this->newObject('jquery', 'jquery');
 
 				//jQuery 1.2.6 SuperFish Menu
 				$jQuery->loadSuperFishMenuPlugin();

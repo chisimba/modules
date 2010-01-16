@@ -26,7 +26,7 @@ class cmsadminlayouts extends object
     public function init()
     {
         try{
-			$this->_objJQuery = $this->newObject('jquery', 'htmlelements');
+			$this->_objJQuery = $this->newObject('jquery', 'jquery');
 			$this->_objUtils =  $this->newObject('cmsutils', 'cmsadmin');
 
 			$this->objConfig = $this->getObject('altconfig', 'config');
@@ -144,7 +144,7 @@ class cmsadminlayouts extends object
 
 
 //jQuery SuperFish Menu
-$jQuery = $this->newObject('jquery', 'htmlelements');
+$jQuery = $this->newObject('jquery', 'jquery');
 
 //Testing jQuery 1.2.6 SuperFish Menu
 $jQuery->loadSuperFishMenuPlugin();

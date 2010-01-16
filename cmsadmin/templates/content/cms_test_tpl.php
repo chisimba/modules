@@ -325,7 +325,7 @@ echo $objForm->show();
 */
 
 //Testing SimpleTree Plugin
-$jQuery = $this->newObject('jquery', 'htmlelements');
+$jQuery = $this->newObject('jquery', 'jquery');
 $jQuery->loadSimpleTreePlugin();
 
 ob_start();
