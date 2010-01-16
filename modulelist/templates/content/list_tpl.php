@@ -16,7 +16,12 @@ $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_modulelist_header', 'modulelist');
 $header->type = 1;
 
+$countheader = new htmlHeading();
+$countheader->str = count($moduleList)." ".$this->objLanguage->languageText('mod_modulelist_countavailable', 'modulelist');
+$countheader->type = 2;
+
 $middleColumn .= $header->show();
+$middleColumn .= $countheader->show();
 
 if ($moduleList)
 {

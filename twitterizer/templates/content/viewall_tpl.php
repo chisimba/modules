@@ -36,7 +36,7 @@ setTimeout("beginrefresh()",1000)
 window.onload=beginrefresh
 //-->
 </script>';
-$this->appendArrayVar('headerParams', $script);
+// $this->appendArrayVar('headerParams', $script);
 
 header ( "Content-Type: text/html;charset=utf-8" );
 $cssLayout = $this->newObject ( 'csslayout', 'htmlelements' );

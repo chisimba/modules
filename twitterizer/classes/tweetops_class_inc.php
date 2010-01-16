@@ -68,6 +68,7 @@ class tweetops extends object {
     public $objWashout;
     public $objUser;
     public $objDbTweets;
+    public $conn;
 
     /**
      * Constructor
@@ -82,6 +83,17 @@ class tweetops extends object {
         $this->objWashout = $this->getObject('washout', 'utilities');
         $this->objUser = $this->getObject('user', 'security');
         $this->objDbTweets = $this->getObject('dbtweets');
+        // Get the sysconfig variables for the Jabber user to set up the connection.
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->jserver = $this->objSysConfig->getValue ( 'jabberserver', 'twitterizer' );
+        $this->jport = $this->objSysConfig->getValue ( 'jabberport', 'twitterizer' );
+        $this->juser = $this->objSysConfig->getValue ( 'jabberuser', 'twitterizer' );
+        $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'twitterizer' );
+        $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'twitterizer' );
+        $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'twitterizer' );
+          
+        // set up the connection
+        $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
     }
 
     /**
@@ -135,6 +147,17 @@ class tweetops extends object {
                          // make an array for db record insert
                          $insarr = array('tweet' => $text, 'createdat' => $created, 'tstamp'=> strtotime($created), 'screen_name' => $screen_name, 'name' => $name, 'image' => $image, 'location' => $location);
                          $this->objDbTweets->addRec($insarr);
+                         // send to XMPP bot as well...
+                         log_debug("connecting to xmpp server");
+                         $this->conn->connect ();
+                         log_debug("connectde");
+                         // get a list of the subscribers
+                         $objSubs = $this->getObject('dbsubs');
+                         $subscribers = $objSubs->getActive();
+                         foreach($subscribers as $subs) {
+                             log_debug($subs);
+                             $this->conn->message($subs['jid'], $text);
+                         }
                      }
                      unlink($prev);
                  }

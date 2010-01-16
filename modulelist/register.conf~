@@ -17,3 +17,4 @@ TAGS: user|modules|list
 MENU_CATEGORY: user
 
 TEXT: mod_modulelist_header|list of modules|List of modules on this server
+TEXT: mod_modulelist_countavailable|count available|modules available on this server

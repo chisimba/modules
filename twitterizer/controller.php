@@ -72,16 +72,42 @@ class twitterizer extends controller
     {
         try {
             $this->requiresLogin();
+            // Include the needed libs from resources
+            include ($this->getResourcePath ( 'XMPPHP/XMPP.php', 'im' ));
+            $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
             $this->objLanguage = $this->getObject ( 'language', 'language' );
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objOps = $this->getObject('tweetops');
             $this->objDbTweets = $this->getObject('dbtweets');
+            $this->objDbSubs = $this->getObject('dbsubs');
+            $this->objBack = $this->getObject ( 'background', 'utilities' );
+            if ($this->objModules->checkIfRegistered ( 'twitter' )) {
+                // Get other places to upstream content to
+                $this->objTwitterLib = $this->getObject ( 'twitterlib', 'twitter' );
+            }
+            if ($this->objModules->checkIfRegistered ( 'twitoaster' )) {
+                // Get other places to upstream content to
+                $this->objTwtOps = $this->getObject ( 'twitoasterops', 'twitoaster' );
+            }
+
             // Get the sysconfig variables for the Jabber user to set up the connection.
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             $this->objUser = $this->getObject('user', 'security');
             if(!file_exists($this->objConfig->getcontentBasePath()."tracking")) {
                 $this->objOps->createTrackFile();
             }
+            // Get the sysconfig variables for the Jabber user to set up the connection.
+            $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+            $this->jserver = $this->objSysConfig->getValue ( 'jabberserver', 'twitterizer' );
+            $this->jport = $this->objSysConfig->getValue ( 'jabberport', 'twitterizer' );
+            $this->juser = $this->objSysConfig->getValue ( 'jabberuser', 'twitterizer' );
+            $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'twitterizer' );
+            $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'twitterizer' );
+            $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'twitterizer' );
+            
+            // set up the connection
+            $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
+
         } catch ( customException $e ) {
             customException::cleanUp ();
             exit ();
@@ -102,8 +128,9 @@ class twitterizer extends controller
         	case 'json_gettweets': 
         		if($this->getParam('query')){
         			echo $this->objOps->searchTweets($this->getParam('query'));
-        		}else{
-        			echo $this->objOps->getJsonTweets(
+        		}
+        		else{
+        		    echo $this->objOps->getJsonTweets(
         					$this->getParam('start', 0), 
         					$this->getParam('limit', 20), 
         					$this->getParam('lastTimeCheck')
@@ -114,7 +141,7 @@ class twitterizer extends controller
         		
         	case 'twit_poll':
 				//$updates = $this->getJsonTwitUpadtes($this->getParam('lastTimeCheck'));
-				error_log(var_export($_REQUEST, true));
+				//error_log(var_export($_REQUEST, true));
 				if($this->objOps->hasUpdates($this->getParam('lastTimeCheck')))				
 				{
 					$hasUpdates = 'yes';
@@ -126,8 +153,6 @@ class twitterizer extends controller
 					'name' => 'twit_updates',
 					'data' => array('hasUpdates' => $hasUpdates)
 				));
-				
-				
 				exit(0);
 				break;
         		
@@ -229,7 +254,115 @@ class twitterizer extends controller
 
             case 'connect' :
                 $this->objOps->getData();
-                //$this->nextAction('');
+                break;
+                
+            case 'messagehandler':
+                log_debug("Starting messagehandler");
+                // This is a looooong running task... Lets use the background class to handle it
+                //check the connection status
+                $status = $this->objBack->isUserConn ();
+                //keep the user connection alive even if the browser is closed
+                $callback = $this->objBack->keepAlive ();
+                // Now the code is backrounded and cannot be aborted! Be careful now...
+                $this->conn->autoSubscribe ();
+                try {
+                    $this->conn->connect ();
+                    while ( ! $this->conn->isDisconnected () ) {
+                        $payloads = $this->conn->processUntil ( array ('message', 'presence', 'end_stream', 'session_start' ) );
+                        foreach ( $payloads as $event ) {
+                            $pl = $event [1];
+
+                            switch ($event [0]) {
+                                case 'message' :
+                                    switch ($pl ['body']) {
+                                        // administrative functions that only the owner should be able to do
+                                        case 'quit' :
+                                            $poster = explode('/', $pl['from']);
+                                            $poster = $poster[0];
+                                            if($poster == 'pscott209@gmail.com') {
+                                               log_debug("Quit command given");
+                                               $this->conn->disconnect ();
+                                               die();
+                                            }
+                                            else {
+                                                continue;
+                                            }
+
+                                        case 'break' :
+                                            $poster = explode('/', $pl['from']);
+                                            $poster = $poster[0];
+                                            if($poster == 'pscott209@gmail.com') {
+                                                log_debug("break received");
+                                                $this->conn->send ( "</end>" );
+                                                break;
+                                            }
+                                            else {
+                                                continue;
+                                            }
+
+                                        case 'subscribe':
+                                            $poster = explode('/', $pl['from']);
+                                            $poster = $poster[0];
+                                            $this->objDbSubs->addRecord($poster);
+                                            log_debug("$poster has subscribed");
+                                            // send a message saying that you are now subscribed back
+                                            $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_twitterizer_subscribed', 'twitterizer'));
+                                            continue;
+
+                                        case 'unsubscribe':
+                                            $poster = explode('/', $pl['from']);
+                                            $poster = $poster[0];
+                                            // remove the JID to the subscribers table
+                                            $this->objDbSubs->inactiveRecord($poster);
+                                            log_debug("$poster has unsubscribed");
+                                            // send a message saying that you are now unsubscribed back
+                                            $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_twitterizer_unsubscribed', 'twitterizer'));
+                                            continue;
+
+                                        case 'NULL' :
+                                            continue;
+                                        
+                                        default: 
+                                            continue;
+                                    }
+                                    // Send a response message
+                                    if ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break") {
+                                        log_debug($pl['body']);
+                                        $poster = explode('/', $pl['from']);
+                                        $poster = $poster[0];
+                                        if ($this->objTwitterLib && $pl ['body']) {
+                                            // check for 140 char length restriction.
+                                            if(strlen($pl['body']) < 100 ) {
+                                                $this->objTwitterLib->updateStatus ( $pl ['body'].": ".$this->uri('') );
+                                            }
+                                            else {
+                                                $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_twitterizer_msgtoolongtotweet', 'twitterizer'));
+                                            }
+                                            $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_twitterizer_msgadded', 'twitterizer'));
+                                        }
+                                    }
+                                    break;
+                                    
+                                    case 'presence' :
+                                    // Update the table presence info
+                                    //$this->objDbImPres->updatePresence ( $pl );
+                                    break;
+                                    
+                                case 'session_start' :
+                                    $this->conn->getRoster ();
+                                    $this->conn->presence ( $status = $this->objLanguage->languageText ( 'mod_im_presgreeting', 'im' ) );
+                                    break;
+
+                            }
+                        }
+                    }
+                } catch ( customException $e ) {
+                    customException::cleanUp ();
+                    exit ();
+                }
+                // OK something went wrong, make sure the sysadmin knows about it!
+                $email = $this->objConfig->getsiteEmail ();
+                $call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
                 break;
 
             case 'search' :
