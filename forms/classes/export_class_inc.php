@@ -66,7 +66,7 @@ class export extends object
     public function init()
     {
         try {
-            $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
+            $this->_objQuery =  $this->newObject('jquery', 'jquery');
             $this->_objConfig =$this->newObject('altconfig', 'config');
             $this->_objSysConfig =$this->newObject('dbsysconfig', 'sysconfig');
             $this->objSkin =$this->newObject('skin', 'skin');

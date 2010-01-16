@@ -46,7 +46,7 @@ class forms extends controller
         $this->setVar('SUPPRESS_JQUERY', false);
         $this->setVar('JQUERY_VERSION', '1.2.6');
     
-        $this->jQuery =$this->newObject('jquery', 'htmlelements');
+        $this->jQuery =$this->newObject('jquery', 'jquery');
         $this->objUi =  & $this->getObject("ui", "forms");
         $this->objForms =  & $this->getObject("dbforms", "forms");
         $this->objFormRecords =  & $this->getObject("dbformrecords", "forms");
@@ -56,7 +56,7 @@ class forms extends controller
         $this->objLanguage = &$this->getObject("language", "language");
         $this->objLog=$this->newObject('logactivity', 'logger');
 
-        $this->objBox = $this->newObject('jqboxy', 'htmlelements');
+        $this->objBox = $this->newObject('jqboxy', 'jquery');
         //$this->objConfig =$this->newObject('altconfig', 'config');
 
         //Live Query

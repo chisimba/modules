@@ -34,7 +34,7 @@ if ($objUser->isAdmin()) {
 // ]]>
 </script>
 <?php
-    $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'htmlelements'));
+    $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
     echo $this->getJavaScriptFile('newsblocks.js');
 } // End Addition of JavaScript
 

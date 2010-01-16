@@ -78,7 +78,7 @@
                 $this->objForms =  $this->newObject('dbforms', 'forms');
                 $this->objFormRecords =  $this->newObject('dbformrecords', 'forms');
                 $this->objFormSubRecords =  $this->newObject('dbformsubrecords', 'forms');
-                $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
+                $this->_objQuery =  $this->newObject('jquery', 'jquery');
                 $this->_objConfig =$this->newObject('altconfig', 'config');
                 $this->_objSysConfig =$this->newObject('dbsysconfig', 'sysconfig');
                 $this->objSkin =$this->newObject('skin', 'skin');
@@ -340,7 +340,7 @@
             //Defining Basic items to be displayed for First Tab
 
             //Using jQuery UI Tabs
-            $tabs =$this->newObject('jqtabs','htmlelements');
+            $tabs =$this->newObject('jqtabs','jquery');
 
             $tbl_basic = $this->newObject('htmltable','htmlelements');
             $tbl_advanced = $this->newObject('htmltable','htmlelements');

@@ -95,7 +95,7 @@ if($hasBlocks){
     $cssLayout->setNumColumns(2);
 }
 
-$objQuery = $this->getObject('jquery', 'htmlelements');
+$objQuery = $this->getObject('jquery', 'jquery');
 $objQuery->loadSimpleTreePlugin();
 
 $leftColumn = $this->getVar('leftContent');
