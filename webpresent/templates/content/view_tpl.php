@@ -242,7 +242,7 @@ if ($isRegistered) {
 //$this->objComments = &$this->getObject('commentapi', 'blogcomments');
 //$this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
 
-
+$leftContents="";
 $leftContents .= '<br /><p>'.$objBookMarks->addThis();
 $divider = ' &nbsp;';
 
