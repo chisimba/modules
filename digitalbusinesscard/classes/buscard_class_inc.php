@@ -92,6 +92,7 @@ class buscard extends object
         $ret .= $this->getTwitter($userId);
         $ret .= $this->getDelicious($userId);
         $ret .= $this->getFacebook($userId);
+        $ret .= $this->getLatLong($userId);
         return $this->addToOuterContainer($ret);
     }
 
@@ -152,7 +153,7 @@ class buscard extends object
     {
         if ($twit = $this->objUserParams->getValue("twitterurl")) {
             return $this->getLinkIcon("twitter")
-              . "<a rel='me' href='$twit' target='_blank'>$twit</a><br />\n";
+              . "<a class='url' rel='me' href='$twit' target='_blank'>$twit</a><br />\n";
         }
 
     }
@@ -161,7 +162,7 @@ class buscard extends object
     {
         if ($url = $this->objUserParams->getValue("deliciousurl")) {
             return $this->getLinkIcon("delicious")
-              . "<a rel='me' href='$url' target='_blank'>$url</a><br />\n";
+              . "<a class='url' rel='me' href='$url' target='_blank'>$url</a><br />\n";
         }
 
     }
@@ -170,7 +171,7 @@ class buscard extends object
     {
         if ($url = $this->objUserParams->getValue("facebookurl")) {
             return $this->getLinkIcon("facebook")
-              . "<a rel='me' href='$url' target='_blank'>$url</a><br />\n";
+              . "<a class='url' rel='me' href='$url' target='_blank'>$url</a><br />\n";
         }
 
     }
@@ -179,7 +180,7 @@ class buscard extends object
     {
         if ($url = $this->objUserParams->getValue("homepage")) {
             return $this->getLinkIcon("home")
-              . "<a rel='home me' href='$url' target='_blank'>$url</a><br />\n";
+              . "<a class='url' rel='home me' href='$url' target='_blank'>$url</a><br />\n";
         }
     }
 
@@ -196,6 +197,34 @@ class buscard extends object
           . $this->getResourceUri("css/vcard.css", "digitalbusinesscard")
           . "\" />";
         $this->appendArrayVar('headerParams', $css);
+    }
+
+    private function getLatLong($userId)
+    {
+        $latitude = $this->objUserParams->getValue("latitude");
+        $longitude = $this->objUserParams->getValue("longitude");
+        if ($latitude && $longitude) {
+            $ret = '<span class="geo">'
+              . '<abbr class="latitude" title="' . $latitude
+              . '">' . $latitude . "</abbr>\n"
+              .  '<abbr class="longitude" title="'
+              . $longitude . '">' . $longitude . "</abbr>\n"
+              . "</span>\n";
+            return $this->getLinkIcon("earth") . $ret
+              . $this->getMap($latitude, $longitude);
+        }
+    }
+
+    private function getMap($latitude, $longitude)
+    {
+        $ret = '<br /><iframe width="425" height="350" '
+          . 'frameborder="0" scrolling="no" '
+          . 'marginheight="0" marginwidth="0" '
+          . 'src="http://maps.google.com/maps?f=q&amp;'
+          . 'source=s_q&amp;hl=en&amp;geocode=&amp;q='
+          . $latitude .',' . $longitude 
+          . '&amp;output=embed"></iframe>';
+        return $ret;
     }
 
 }
