@@ -18,7 +18,7 @@
 </script>
 <?php
 
-$this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'htmlelements'));
+$this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
