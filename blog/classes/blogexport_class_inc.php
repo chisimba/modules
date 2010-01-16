@@ -136,7 +136,7 @@ class blogexport extends object
         $objWashout = $this->getObject('washout', 'utilities');
         // Avoid parsing the Ajax-based filters
         return $objWashout->parseText($content, TRUE, 
-          array('blog','deltags','tweets'));
+          array('blog','deltags','tweets', 'quickembed'));
     }
 }
 ?>

@@ -41,7 +41,7 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
-$GLOBALS['_globalObjEngine']->loadClass('jqdialogue', 'htmlelements');
+$GLOBALS['_globalObjEngine']->loadClass('jqdialogue', 'jquery');
 
 /**
  * Class to create dialogues using the jQuery UI for accepting blog terms.
