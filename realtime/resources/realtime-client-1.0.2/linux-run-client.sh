@@ -1,1 +1,0 @@
-java -cp commons-collections-3.1-rt.jar:jspeex.jar:realtime-xmpp.jar:commons-logging-api-rt.jar:jta-rt.jar:smack.jar:systray4j.jar:DJNativeSwing.jar:kunstsoff-rt.jar:smackx.jar:DJNativeSwing-SWT.jar:libwrapper.so:linux-libsystray4j.jar:swt-linux-x32.jar:jna-3.0.7.jar:quartz-all-1.6.0.jar org.avoir.realtime.gui.main.Main
