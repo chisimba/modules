@@ -1,50 +1,49 @@
 <?php
 // security check - must be included in all scripts
 if (!
-       /**
-        * Description for $GLOBALS
-        * @global string $GLOBALS['kewl_entry_point_run']
-        * @name   $kewl_entry_point_run
-        */
-    $GLOBALS['kewl_entry_point_run']) {
+/**
+ * Description for $GLOBALS
+ * @global string $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-class sessionmanager extends object{
-        /**
-         * Setup display to ask the user to enter email address for the participant
-         * who are to be invited.
-         * Added by David Wafula
-         * @return <type>
-         */
-            /**
-        *
-        * @var $objLanguage String object property for holding the
-        * language object
-        * @access private
-        *
-        */
+class sessionmanager extends object {
+    /**
+     * Setup display to ask the user to enter email address for the participant
+     * who are to be invited.
+     * Added by David Wafula
+     * @return <type>
+     */
+    /**
+     *
+     * @var $objLanguage String object property for holding the
+     * language object
+     * @access private
+     *
+     */
     public $objLanguage;
 
-        /**
-        *
-        * @var $objUser String object property for holding the
-        * user object
-        * @access private
-        *
-        */
+    /**
+     *
+     * @var $objUser String object property for holding the
+     * user object
+     * @access private
+     *
+     */
     public $objUser;
 
-        /**
-        *
-        * @var $objUser String object property for holding the
-        * cobnfiguration object
-        * @access private
-        *
-        */
+    /**
+     *
+     * @var $objUser String object property for holding the
+     * cobnfiguration object
+     * @access private
+     *
+     */
     public $objConfig;
 
-    public function init()
-    {
+    public function init() {
         // Instantiate the language object.
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDbScheduleMembers=$this->getObject('dbschedulemembers');
@@ -55,33 +54,29 @@ class sessionmanager extends object{
         $this->objAltConfig = $this->getObject('altconfig','config');
         $this->objDbSchedules=$this->getObject('dbschedules');
         // scripts
-       // $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-       // $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0.3/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-       // $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0.3/resources/css/ext-all.css','htmlelements').'"/>';
+        // $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+        // $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0.3/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+        // $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0.3/resources/css/ext-all.css','htmlelements').'"/>';
 
 
-       $extjs=$this->getObject('extjs','htmlelements');
-       $extjs->show();
-       $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/session.css').'"/>';
+        $extjs=$this->getObject('extjs','htmlelements');
+        $extjs->show();
+        $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/session.css').'"/>';
         $schedulejs = '<script language="JavaScript" src="'.$this->getResourceUri('js/schedule.js').'" type="text/javascript"></script>';
 
-        $this->appendArrayVar('headerParams', $extbase);
-        $this->appendArrayVar('headerParams', $extalljs);
-        $this->appendArrayVar('headerParams', $extallcss);
         $this->appendArrayVar('headerParams', $maincss);
         $this->appendArrayVar('headerParams', $schedulejs);
     }
-    public function showSessionList($presentationId,$presentationName,$xxslidesDir)
-    {
-        if(!$this->objUser->isLoggedIn()){
-                        // Create an instance of the css layout class
+    public function showSessionList($presentationId,$presentationName,$xxslidesDir) {
+        if(!$this->objUser->isLoggedIn()) {
+            // Create an instance of the css layout class
             $cssLayout =$this->getObject('csslayout', 'htmlelements');// Set columns to 2
             $security=$this->getObject('security');
             $this->loadclass('link','htmlelements');
             $objBlocks = $this->getObject('blocks', 'blocks');
             $cssLayout->setNumColumns(2);
             $registerLink=new link();
-            
+
             $registerLink->link($this->uri(array('action'=>'showregister'),'userregistration'));
             $registerLink->link="New user? Register here";
             $rightSideColumn .=  '<h1>Please Login</h1>In order to use live presentations, please login first<br/>
@@ -93,8 +88,8 @@ class sessionmanager extends object{
 
             //Output the content to the page
             return $cssLayout->show();
-            
-            
+
+
         }
         //where we render the 'popup' window
         $renderSurface='<div id="addsession-win" class="x-hidden">
@@ -110,9 +105,9 @@ class sessionmanager extends object{
          </p>
          ';
         $registerLink2=new link();
-         $registerLink2->link($this->uri(array('action'=>'signinagain')));
-         $registerLink2->link='<h4><font color="red">Seeing blank page? Sign in again here</font></h4>';
-         // $scheduleTitle.=$registerLink2->show();
+        $registerLink2->link($this->uri(array('action'=>'signinagain')));
+        $registerLink2->link='<h4><font color="red">Seeing blank page? Sign in again here</font></h4>';
+        // $scheduleTitle.=$registerLink2->show();
 
         //load class
         $this->loadclass('link','htmlelements');
@@ -143,7 +138,7 @@ class sessionmanager extends object{
         $addButton->setId('add-session-btn');
 
         //prints out add comment message
-        if ($this->addCommentMessage){
+        if ($this->addCommentMessage) {
             $message = "<span id=\"commentSuccess\">".$this->objLanguage->languageText('mod_ads_commentSuccess', 'ads')."</span><br />";
             $this->addCommentMessage = false;
         } else $message = "";
@@ -159,77 +154,77 @@ class sessionmanager extends object{
         $total=count($dbdata);
         $index=1;
         $prevTitle='';
-        foreach($dbdata as $row){
+        foreach($dbdata as $row) {
             $xsessionData=$this->objDbSchedules->getSchedule($row['sessionid']);
 
-            foreach($xsessionData as $sessionData){
+            foreach($xsessionData as $sessionData) {
                 $sessionTitle=addslashes($sessionData['title']);
                 $sessionOwner=addslashes($sessionData['owner']);
                 $creationDate=$sessionData['creation_date'];
             }
 
-           if($prevTitle != $sessionTitle){
+            if($prevTitle != $sessionTitle) {
 
-            $prevTitle=$sessionTitle;
-            $deleteLink=new link();
-            $editLink=new link();
-            $detailsLink=new link();
-            $roomUrl='';
-            $roomUrl.=$servletURL.'?';
-            $roomUrl.='port='.$openfirePort.'&';
-            $roomUrl.='host='.$openfireHost.'&';
-            $roomUrl.='username='.$username.'&';
-            $roomUrl.='roomname='.$sessionTitle.'&';
-            $roomUrl.='audiovideourl='.$openfireHttpBindUrl.'&';
-            $roomUrl.='slidesdir='.$slidesDir.'&';
-            $roomUrl.=$this->objDbSchedules->isScheduleOwner($row['sessionid'])?'ispresenter=yes&':'ispresenter=no&';
+                $prevTitle=$sessionTitle;
+                $deleteLink=new link();
+                $editLink=new link();
+                $detailsLink=new link();
+                $roomUrl='';
+                $roomUrl.=$servletURL.'?';
+                $roomUrl.='port='.$openfirePort.'&';
+                $roomUrl.='host='.$openfireHost.'&';
+                $roomUrl.='username='.$username.'&';
+                $roomUrl.='roomname='.$sessionTitle.'&';
+                $roomUrl.='audiovideourl='.$openfireHttpBindUrl.'&';
+                $roomUrl.='slidesdir='.$slidesDir.'&';
+                $roomUrl.=$this->objDbSchedules->isScheduleOwner($row['sessionid'])?'ispresenter=yes&':'ispresenter=no&';
 
-            $roomUrl.='presentationid='.$presentationId.'&';
-            $roomUrl.='presentationName='.$presentationName.'&';
-            $roomUrl.='names='.$fullnames.'&';
-            $roomUrl.='email='.$email.'&';
-            $roomUrl.='inviteurl='.$inviteUrl.'&';
-            $roomUrl.='useec2=false&';
-            $roomUrl.='joinid=none&';
-            $roomUrl.='codebase='.$codebase.'&';
-            $roomUrl.='skinclass='.$skinclass.'&';
-            $roomUrl.='skinjar='.$skinjars;
+                $roomUrl.='presentationid='.$presentationId.'&';
+                $roomUrl.='presentationName='.$presentationName.'&';
+                $roomUrl.='names='.$fullnames.'&';
+                $roomUrl.='email='.$email.'&';
+                $roomUrl.='inviteurl='.$inviteUrl.'&';
+                $roomUrl.='useec2=false&';
+                $roomUrl.='joinid=none&';
+                $roomUrl.='codebase='.$codebase.'&';
+                $roomUrl.='skinclass='.$skinclass.'&';
+                $roomUrl.='skinjar='.$skinjars;
 
-            $deleteLink->link($this->uri(array('action'=>'deleteschedule','id'=>$row['id'])));
-            $objIcon->setIcon('delete');
-            $deleteLink->link=$objIcon->show();
+                $deleteLink->link($this->uri(array('action'=>'deleteschedule','id'=>$row['id'])));
+                $objIcon->setIcon('delete');
+                $deleteLink->link=$objIcon->show();
 
 
-            $editLink->link($this->uri(array('action'=>'editschedule','id'=>$row['id'])));
-            $objIcon->setIcon('edit');
-            $editLink->link=$objIcon->show();
+                $editLink->link($this->uri(array('action'=>'editschedule','id'=>$row['id'])));
+                $objIcon->setIcon('edit');
+                $editLink->link=$objIcon->show();
 
-            $detailsLink->link($this->uri(array('action'=>'showdetails','id'=>$row['sessionid'])));
-            $detailsLink->link='Details';
+                $detailsLink->link($this->uri(array('action'=>'showdetails','id'=>$row['sessionid'])));
+                $detailsLink->link='Details';
 
-            $editDeleteLink=$this->objDbSchedules->isScheduleOwner($row['id'])? $editLink->show().$deleteLink->show():"N/A";
-            $detailsL=$this->objDbSchedules->isScheduleOwner($row['sessionid'])?$detailsLink->show():"Details";
-            $data.="[";
-            $data.= "'<a href=\"".$roomUrl."\">".$sessionTitle."</a>',";
-            $data.="'".$creationDate."',";
-            $data.="'".addslashes($detailsL)."',";
-            $data.="'".addslashes($this->objUser->fullname($sessionOwner))."'";
+                $editDeleteLink=$this->objDbSchedules->isScheduleOwner($row['id'])? $editLink->show().$deleteLink->show():"N/A";
+                $detailsL=$this->objDbSchedules->isScheduleOwner($row['sessionid'])?$detailsLink->show():"Details";
+                $data.="[";
+                $data.= "'<a href=\"".$roomUrl."\">".$sessionTitle."</a>',";
+                $data.="'".$creationDate."',";
+                $data.="'".addslashes($detailsL)."',";
+                $data.="'".addslashes($this->objUser->fullname($sessionOwner))."'";
 
-            $data.="]";
+                $data.="]";
 
-            
-            if($index < $total){
-                $data.=',';
+
+                if($index < $total) {
+                    $data.=',';
+                }
             }
-         }
-          $index++;
+            $index++;
         }
-     
+
         $lastChar = $data[strlen($data)-1];
         $len=strlen($data);
-         if($lastChar == ','){
-             $data=substr($data, 0, (strlen ($data)) - (strlen (strrchr($data,','))));
-         }
+        if($lastChar == ',') {
+            $data=substr($data, 0, (strlen ($data)) - (strlen (strrchr($data,','))));
+        }
         $submitUrl = $this->uri(array('action' => 'saveschedule'));
 
         $title='Title';
@@ -263,9 +258,8 @@ class sessionmanager extends object{
     }
 
 
-    public function showSessionMembersList($sessionid)
-    {
-        if(!$this->objUser->isLoggedIn()){
+    public function showSessionMembersList($sessionid) {
+        if(!$this->objUser->isLoggedIn()) {
             $objBlocks = $this->getObject('blocks', 'blocks');
             return $objBlocks->showBlock('login', 'security');
         }
@@ -302,7 +296,7 @@ class sessionmanager extends object{
         $returnUrl = $this->uri(array('action' => 'home'));
         $listButton->setOnClick("window.location='$returnUrl'");
         //prints out add comment message
-        if ($this->addCommentMessage){
+        if ($this->addCommentMessage) {
             $message = "<span id=\"commentSuccess\">".$this->objLanguage->languageText('mod_ads_commentSuccess', 'ads')."</span><br />";
             $this->addCommentMessage = false;
         } else $message = "";
@@ -318,7 +312,7 @@ class sessionmanager extends object{
         $timeFrom='v';
         $timeTo='b';
         $xsessionData=$this->objDbSchedules->getSchedule($sessionid);
-       
+
         $editLink=new link();
         $editLink->link($this->uri(array('action'=>'editschedule','id'=>$sessionid)));
         $objIcon->setIcon('edit');
@@ -333,13 +327,13 @@ class sessionmanager extends object{
 <script language=\"JavaScript\">
          var sessionid='$sessionid';
 </script>
-         ";
+                ";
         $this->appendArrayVar('headerParams', $vars);
         $deleteLink->extra='onClick="deleteSchedule(sessionid);return false;"';
 
         $showEdit=$this->objDbSchedules->isScheduleOwner($sessionid)?$editLink->show().$deleteLink->show():"";
 
-        foreach($xsessionData as $sessionData){
+        foreach($xsessionData as $sessionData) {
             $sessionTitle=$sessionData['title'];
             $meetingDate=$sessionData['meeting_date'];
             $timeFrom=$sessionData['start_time'];
@@ -351,7 +345,7 @@ class sessionmanager extends object{
         $dbdata=$this->objDbScheduleMembers->getScheduleMembers($sessionid);
         $total=count($dbdata);
         $index=0;
-        foreach($dbdata as $row){
+        foreach($dbdata as $row) {
             $deleteLink=new link();
 
             $deleteLink->link($this->uri(array('action'=>'deleteroommember','userid'=>$row['userid'],'sessionid'=>$sessionid)));
@@ -364,7 +358,7 @@ class sessionmanager extends object{
             $data.="'".$deleteLink->show()."'";
             $data.="]";
             $index++;
-            if($index <= $total-1){
+            if($index <= $total-1) {
                 $data.=',';
             }
         }
@@ -373,13 +367,13 @@ class sessionmanager extends object{
         $total=count($usrdata);
         $index=0;
         $userlist="";
-        foreach($usrdata as $row){
+        foreach($usrdata as $row) {
             $userlist.="[";
             $userlist.="'".$row['userid']."',";
             $userlist.="'".$row['surname']." ".$row['firstname']."'";
             $userlist.="]";
             $index++;
-            if($index <= $total-1){
+            if($index <= $total-1) {
                 $userlist.=',';
             }
         }
@@ -416,7 +410,7 @@ class sessionmanager extends object{
                 var membersdata=[$data];
                 showSessionDetails(sessiondata,membersdata);
                 });
-               ";
+                ";
 
         $content.= "<div id=\"buttons-layer\"></div><script type=\"text/javascript\">".$mainjs."</script>";
 
