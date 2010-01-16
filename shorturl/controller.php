@@ -45,7 +45,7 @@ class shorturl extends controller
                 $this->setVar('JQUERY_VERSION', '1.2.6');
 
                 // instantiate the database object for sections
-                $this->objQuery = $this->getObject('jquery', 'htmlelements');
+                $this->objQuery = $this->getObject('jquery', 'jquery');
                 $this->objMap = $this->getObject('dbmap', 'shorturl');
                 $this->objUi = $this->getObject('ui', 'shorturl');
                 $this->objLanguage =  $this->newObject('language', 'language');

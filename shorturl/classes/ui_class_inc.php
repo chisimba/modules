@@ -35,12 +35,12 @@
         {
             try {
                 $this->objMap =$this->newObject('dbmap', 'shorturl');
-                $this->objGrid =$this->newObject('jqgrid', 'htmlelements');
+                $this->objGrid =$this->newObject('jqgrid', 'jquery');
 
                 $this->setVar('jquery_boxy_theme', 'shorturl');
 
-                $this->objBox = $this->newObject('jqboxy', 'htmlelements');
-                $this->jQuery =$this->newObject('jquery', 'htmlelements');
+                $this->objBox = $this->newObject('jqboxy', 'jquery');
+                $this->jQuery =$this->newObject('jquery', 'jquery');
                 //$this->objConfig =$this->newObject('altconfig', 'config');
                 $this->objLanguage =$this->newObject('language', 'language');
 
@@ -63,7 +63,7 @@
                 //$this->loadClass('textarea','htmlelements');
                 $this->loadClass('htmltable','htmlelements');
                 $this->loadClass('layer', 'htmlelements');
-                $this->loadClass('jqboxy', 'htmlelements');
+                $this->loadClass('jqboxy', 'jquery');
 
             } catch (Exception $e){
                 throw customException($e->getMessage());

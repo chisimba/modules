@@ -78,7 +78,7 @@ class phpunit extends controller
 
 			$this->objCodeAnalyzer = $this->getObject('codeanalyzer', 'phpunit');
 			$this->objMdb2 =$this->getObject('cp_mdb2', 'phpunit');
-			$this->objQuery = $this->getObject('jquery', 'htmlelements');
+			$this->objQuery = $this->getObject('jquery', 'jquery');
 			$this->objUi = $this->getObject('ui', 'phpunit');
 			$this->objGenerate = $this->getObject('generate', 'phpunit');
 			$this->objLanguage =  $this->newObject('language', 'language');

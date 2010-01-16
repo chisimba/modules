@@ -102,8 +102,8 @@
 
                 $this->setVar('jquery_boxy_theme', 'default');
 
-                $this->objBox = $this->getObject('jqboxy', 'htmlelements');
-                $this->jQuery =$this->getObject('jquery', 'htmlelements');
+                $this->objBox = $this->getObject('jqboxy', 'jquery');
+                $this->jQuery =$this->getObject('jquery', 'jquery');
                 $this->objConfig =$this->getObject('altconfig', 'config');
                 $this->objLanguage =$this->getObject('language', 'language');
 
@@ -123,7 +123,7 @@
                 $this->loadClass('textarea','htmlelements');
                 $this->loadClass('htmltable','htmlelements');
                 $this->loadClass('layer', 'htmlelements');
-                $this->loadClass('jqboxy', 'htmlelements');
+                $this->loadClass('jqboxy', 'jquery');
 
             } catch (Exception $e){
                 throw customException($e->getMessage());
