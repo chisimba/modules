@@ -197,7 +197,7 @@ class tweetbox extends object
     public function sendWidget()
     {
         //Load the Ajax form processing
-        $objJQuery = $this->getObject('jquery', 'htmlelements');
+        $objJQuery = $this->getObject('jquery', 'jquery');
         $objJQuery->loadFormPlugin();
         
         $js2 = $this->renderFormScript();

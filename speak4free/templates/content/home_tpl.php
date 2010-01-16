@@ -1,6 +1,6 @@
 <?php
 $this->loadclass('link','htmlelements');
-$minjs = '<script src="'.$this->getResourceUri('jquery/1.3.2/jquery-1.3.2.min.js','htmlelements').'" type="text/javascript"></script>';
+$minjs = '<script src="'.$this->getResourceUri('jquery/1.3.2/jquery-1.3.2.min.js','jquery').'" type="text/javascript"></script>';
 
 $mainjs = '<script src="'.$this->getResourceUri('js/jquery.cycle.js').'" type="text/javascript"></script>';
 $imagetransjs = '<script src="'.$this->getResourceUri('js/imagetrans.js').'" type="text/javascript"></script>';

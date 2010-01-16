@@ -200,7 +200,6 @@ class twitter extends controller
             // Note that the CSS should always be loaded first
             $jqTwit->loadTweetCss();
             $jqJuitter->loadJuitterCss();
-            //$jqTwit->loadJquery();
             $jqTwit->loadTweetPlugin();
             $jqTwit->initializeTweetPlugin($userName);
             $this->setVar('searchForm', $jqJuitter->loadJuitterSearchForm());
