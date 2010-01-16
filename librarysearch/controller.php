@@ -52,7 +52,7 @@ class librarysearch extends controller
                 $this->setVar('SUPPRESS_JQUERY', false);
                 $this->setVar('JQUERY_VERSION', '1.2.6');
 
-                $this->objQuery = $this->getObject('jquery', 'htmlelements');
+                $this->objQuery = $this->getObject('jquery', 'jquery');
                 $this->objLanguage =  $this->newObject('language', 'language');
                 $this->objConf = $this->getObject('altconfig', 'config');
 

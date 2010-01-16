@@ -59,13 +59,15 @@ $this->appendArrayVar('headerParams', '
                 doUpdateMessage = false;
                                 
             // Else Need to do Ajax Call
-            } else {                
+            } else {
+                
                 // Check that existing code is not in use
                 if (currentCode != code) {
                     
                     // Set message to checking
                     jQuery("#favmessage").removeClass("success");
-                    jQuery("#favmessage").html("<span id=\"favusercheck\">'.addslashes($objIcon->show()).' Processing ...</span>");                                     
+                    jQuery("#favmessage").html("<span id=\"favusercheck\">'.addslashes($objIcon->show()).' Processing ...</span>");
+                                     
                     // Set current Code
                     currentCode = code;
                     
@@ -132,13 +134,15 @@ $this->appendArrayVar('headerParams', '
                 jQuery("#erroronsendmessage").removeClass("error");
                 jQuery("#erroronsendmessage").removeClass("success");
                 doUpdateMessage = false;            
-            } else {                
+            } else {
+                
                 // Check that existing code is not in use
                 if (currentCode != code) {
                     
                     // Set message to checking
                     jQuery("#erroronsendmessage").removeClass("success");
-                    jQuery("#erroronsendmessage").html("<span id=\"favusercheck\">'.addslashes($objIcon->show()).' Sending ...</span>");                                     
+                    jQuery("#erroronsendmessage").html("<span id=\"favusercheck\">'.addslashes($objIcon->show()).' Sending ...</span>");
+                                     
                     // Set current Code
                     currentCode = code;
                     
