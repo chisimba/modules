@@ -138,8 +138,9 @@ class digitalbusinesscard extends controller
 
     /**
     * 
-    * Method corresponding to the view action. It fetches the stories
-    * into an array and passes it to a main_tpl content template.
+    * Method corresponding to the view action.
+    *
+    * @return string The populated template
     * @access private
     * 
     */
@@ -155,8 +156,9 @@ class digitalbusinesscard extends controller
 
     /**
     *
-    * Method corresponding to the view action. It fetches the stories
-    * into an array and passes it to a main_tpl content template.
+    * Method corresponding to the showblock action.
+    *
+    * @return string The populated template
     * @access private
     *
     */
@@ -168,70 +170,25 @@ class digitalbusinesscard extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
-    
-    /**
-    * 
-    * Method corresponding to the edit action. It sets the mode to 
-    * edit and returns the edit template.
-    * @access private
-    * 
-    */
-    private function __edit()
-    {
-        $this->setvar('mode', "edit");
-        return 'editform_tpl.php';
-    }
 
     /**
-    * 
-    * Method corresponding to the add action. It sets the mode to 
-    * add and returns the edit content template.
+    *
+    * Method corresponding to the showblock action.
+    *
+    * @return string The populated template
     * @access private
-    * 
+    *
     */
-    private function __add()
+    private function __showjson()
     {
-        $this->setvar('mode', 'add');
-        return 'editform_tpl.php';
+        $objCard = $this->getObject('buscard', 'digitalbusinesscard');
+        $userId = $this->getParam('userid', $this->objUser->userId());
+        $str = $objCard->showJson($userId);
+        $this->setVarByRef('str', $str);
+        $this->setPageTemplate('json_tpl.php');
+        return "conts_tpl.php";
     }
-    
-   
-    /**
-    * 
-    * Method corresponding to the save action. It gets the mode from 
-    * the querystring to and saves the data then sets nextAction to be 
-    * null, which returns the {yourmodulename} module in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __save()
-    {
-        $mode = $this->getParam("mode", NULL);
-        $this->objDbdigitalbusinesscard->save($mode);
-        return $this->nextAction(NULL);
-    }
-    
-    /**
-    * 
-    * Method corresponding to the delete action. It requires a 
-    * confirmation, and then delets the item, and then sets 
-    * nextAction to be null, which returns the {yourmodulename} module 
-    * in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __delete()
-    {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
-        }
-    }
-    
+
     
     /**
     * 

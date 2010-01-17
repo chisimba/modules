@@ -151,6 +151,35 @@ class buscard extends object
 
     /**
     *
+    * Method to show the Digital Business cars in
+    * JSON format
+    *
+    * @param string $userId The userid of the user to lookup
+    * @return string The rendered business card
+    * @access public
+    *
+    */
+    public function showJson($userId, $includeHtml=FALSE)
+    {
+        $networkAr = array();
+        foreach ($this->networks as $network) {
+            $identifier = $network . 'url';
+            if ($item = $this->objUserParams->getValue($identifier)) {
+                $networkAr[$network] = $item;
+            }
+        }
+        $ar = array(
+            'given_name' => $this->objUser->getFirstname($userId),
+            'family_name' => $this->objUser->getSurName($userId),
+            'email' => $this->objUser->email($userId),
+            'latitude' => $this->objUserParams->getValue("latitude"),
+            'longitude' => $this->objUserParams->getValue("longitude"),
+            'urls' => $networkAr );
+        return json_encode($ar);
+    }
+
+    /**
+    *
     * Add the content to an outer DIV layer
     *
     * @param string $ret The content to add to the layer
@@ -352,6 +381,5 @@ class buscard extends object
     {
         return $this->objUser->getSmallUserImage($userId);
     }
-
 }
 ?>
