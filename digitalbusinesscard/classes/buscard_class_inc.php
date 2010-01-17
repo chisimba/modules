@@ -112,6 +112,8 @@ class buscard extends object
     public function show($userId)
     {
         if ($this->objUser->isActive($userId)) {
+            $this->objUserParams->setUserId($userId);
+            $this->objUserParams->readConfig();
             $ret = $this->getUserImage($userId);
             $ret .= $this->getFn($userId);
             $ret .= $this->addToTextInfo($this->getInfo('tagline'));
@@ -125,8 +127,10 @@ class buscard extends object
             $ret .= $this->addToRightCol($this->getLatLong($userId));
             // Start rendering.
             $ret = $this->addToVcard($ret);
+            unset($this->objUserParams);
             return $this->addToOuterContainer($ret);
         } else {
+            unset($this->objUserParams);
             return $this->objLanguage->languageText(
               'mod_digitalbusinesscard_usernotfound',
               'digitalbusinesscard'

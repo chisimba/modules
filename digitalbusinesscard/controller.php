@@ -149,8 +149,15 @@ class digitalbusinesscard extends controller
         $objCard = $this->getObject('buscard', 'digitalbusinesscard');
         $userId = $this->getParam('userid', FALSE);
         if (!$userId) {
-            if ($this->objUser->isLoggedIn()) {
-                $userId = $this->objUser->userId();
+            $userName = $this->getParam('username', FALSE);
+            // Get the userId from the username.
+            if ($userName) {
+                $userId = $this->objUser->getUserId($userName);
+            } else {
+                // Fall back to the logged in user.
+                if ($this->objUser->isLoggedIn()) {
+                    $userId = $this->objUser->userId();
+                }
             }
         }
         if ($userId) {
