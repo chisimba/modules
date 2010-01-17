@@ -130,6 +130,21 @@ class dbuserparamsadmin extends object
 		$this->readConfig();
 	}
 
+     /**
+      *
+      * Set the userId to a value other than that of the
+      * logged in user.
+      *
+      * @param stri8ng $userId The userId to set
+      * @return VOID
+      * @access public
+      *
+      */
+     public function setUserId($userId)
+     {
+         $this->uid = $userId;
+     }
+
     /**
      *
      * Change the userId based on the username passed in
@@ -450,7 +465,6 @@ class dbuserparamsadmin extends object
     * @var string $module The module code of the module owning the config item
     * @var string $name The name of the parameter being set
     */
-
     public function checkIfSet($pname, $userId=NULL)
     {
 
@@ -460,7 +474,4 @@ class dbuserparamsadmin extends object
             return false;
        } #if
     } #function checkIfSet
-
-
-
 }
