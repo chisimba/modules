@@ -7,6 +7,8 @@
  * and display it in a nice, CSS based layout. This class generates output
  * in microformat.
  *
+ * @todo Add privacy settings
+ *
  * PHP version 5
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +64,21 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class buscard extends object
 {
+
+     /**
+     *
+     * This is a hardcoded array of the known social network providers
+     * that will be supported by having Icons stored in this module
+     *
+     * @var array
+     * @access public
+     *
+     */
+    public $networks = array ('africator', 'delicious', 'digg', 'facebook',
+        'flickr', 'friendfeed', 'google', 'linkedin', 'muti', 'picasa',
+        'technorati', 'twitter', 'youtube' );
+
+
     /**
     *
     * Constructor for the provider class
@@ -87,6 +104,7 @@ class buscard extends object
      *
      * @param <type> $userId
      * @return <type>
+     * @access public
      *
      */
     public function show($userId)
@@ -98,17 +116,23 @@ class buscard extends object
           . $ret . "</div>\n\n"
           . '</div>';
         $ret .= $this->getHomePage($userId);
-        $ret .= $this->getTwitter($userId);
-        $ret .= $this->getDelicious($userId);
-        $ret .= $this->getFacebook($userId);
-        $ret .= $this->getDigg($userId);
-        $ret .= $this->getFlickr($userId);
-        $ret .= $this->getYouTube($userId);
-        $ret .= $this->getPicasa($userId);
+        foreach ($this->networks as $network) {
+            $ret .= $this->getSocialNetwork($network, $userId);
+        }
         $ret .= $this->getLatLong($userId);
         return $this->addToOuterContainer($ret);
     }
 
+    /**
+    *
+    * Method to show the Digital Business cars in
+    * a block
+    *
+    * @param string $userId The userid of the user to lookup
+    * @return string The rendered business card
+    * @access public
+    *
+    */
     public function showBlock($userId)
     {
         $ret = $this->getUserImage($userId);
@@ -118,13 +142,9 @@ class buscard extends object
           . $ret . "</div>\n\n"
           . '</div>';
         $ret .= $this->getHomePage($userId, TRUE);
-        $ret .= $this->getTwitter($userId, TRUE);
-        $ret .= $this->getDelicious($userId, TRUE);
-        $ret .= $this->getFacebook($userId, TRUE);
-        $ret .= $this->getDigg($userId, TRUE);
-        $ret .= $this->getFlickr($userId, TRUE);
-        $ret .= $this->getYouTube($userId, TRUE);
-        $ret .= $this->getPicasa($userId, TRUE);
+        foreach ($this->networks as $network) {
+            $ret .= $this->getSocialNetwork($network, $userId, TRUE);
+        }
         $ret .= $this->getLatLong($userId, FALSE);
         return $this->addToOuterContainer($ret);
     }
@@ -135,6 +155,7 @@ class buscard extends object
     *
     * @param string $ret The content to add to the layer
     * @return string The content inside the layer tags
+    * @access private
     *
     */
     private function addToOuterContainer($ret)
@@ -144,20 +165,14 @@ class buscard extends object
 
     /**
     *
-    * 
-    * @param string $userFullName The full name of the card owner
-    * @return string The formatted card heading
-    * @access public
+    * Get the full name of the user and render in in hcard format
+    *
+    * @param string $userId The userid of the user to look up
+    * @return string The rendered full name
+    * @access private
     *
     */
-    public function getUserWithTagLine($userFullName, $tagLine)
-    {
-        $ret = "<div class=\"about clearfix\"><h1>$fullname</h1></div>\n"
-          . "<p>$tagLine</p>\n";
-        return $ret;
-    }
-
-    public function getFn($userId)
+    private function getFn($userId)
     {
         $givenName = '<span class="name-wrapper"><span class="given-name">'
           . $this->objUser->getFirstname($userId) . '</span>';
@@ -168,7 +183,16 @@ class buscard extends object
           . "\n\n";
     }
 
-    public function getEmail($userId, $noText=FALSE)
+    /**
+    *
+    * Get the email address of the user and render in in hcard format
+    *
+    * @param string $userId The userid of the user to look up
+    * @return string The rendered email
+    * @access private
+    *
+    */
+    private function getEmail($userId, $noText=FALSE)
     {
         $email = $this->objUser->email($userId);
         $icon = $this->getLinkIcon("email");
@@ -179,40 +203,23 @@ class buscard extends object
         }
     }
 
-    public function getTwitter($userId, $noText=FALSE)
+    /**
+    *
+    * Get the social network and return it with linked icon
+    * and optionally with or without text
+    *
+    * @param string $network The social network from the array of networks
+    * @param string $userId The userid of the person to look up
+    * @param boolean $noText TRUE|FALSE whether to return text, default yes
+    * @return string The rendered icon/text
+    * @access public
+    *
+    */
+    public function getSocialNetwork($network, $userId, $noText=FALSE)
     {
-        if ($url = $this->objUserParams->getValue("twitterurl")) {
-            $icon = $this->getLinkIcon("twitter");
-            if ($noText) {
-                return "<a class='url' rel='me' href='$url' "
-                 . "target='_blank'>$icon</a><br />\n";
-            } else {
-                return "<a class='url' rel='me' href='$url' "
-                  . "target='_blank'>$icon $url</a><br />\n";
-            }
-        }
-
-    }
-
-    public function getDelicious($userId, $noText=FALSE)
-    {
-        if ($url = $this->objUserParams->getValue("deliciousurl")) {
-            $icon = $this->getLinkIcon("delicious");
-            if ($noText) {
-                return "<a class='url' rel='me' href='$url' "
-                 . "target='_blank'>$icon</a><br />\n";
-            } else {
-                return "<a class='url' rel='me' href='$url' "
-                  . "target='_blank'>$icon $url</a><br />\n";
-            }
-        }
-
-    }
-
-    public function getFacebook($userId, $noText=FALSE)
-    {
-        if ($url = $this->objUserParams->getValue("facebookurl")) {
-            $icon = $this->getLinkIcon("facebook");
+        $identifier = $network . "url";
+        if ($url = $this->objUserParams->getValue($identifier)) {
+            $icon = $this->getLinkIcon($network);
             if ($noText) {
                 return "<a class='url' rel='me' href='$url' "
                  . "target='_blank'>$icon</a><br />\n";
@@ -223,63 +230,16 @@ class buscard extends object
         }
     }
 
-    public function getDigg($userId, $noText=FALSE)
-    {
-        if ($url = $this->objUserParams->getValue("diggurl")) {
-            $icon = $this->getLinkIcon("digg");
-            if ($noText) {
-                return "<a class='url' rel='me' href='$url' "
-                 . "target='_blank'>$icon</a><br />\n";
-            } else {
-                return "<a class='url' rel='me' href='$url' "
-                  . "target='_blank'>$icon $url</a><br />\n";
-            }
-        }
-    }
-
-    public function getFlickr($userId, $noText=FALSE)
-    {
-        if ($url = $this->objUserParams->getValue("flickrurl")) {
-            $icon = $this->getLinkIcon("flickr");
-            if ($noText) {
-                return "<a class='url' rel='me' href='$url' "
-                 . "target='_blank'>$icon</a><br />\n";
-            } else {
-                return "<a class='url' rel='me' href='$url' "
-                  . "target='_blank'>$icon $url</a><br />\n";
-            }
-        }
-    }
-
-    public function getYouTube($userId, $noText=FALSE)
-    {
-        if ($url = $this->objUserParams->getValue("youtubeurl")) {
-            $icon = $this->getLinkIcon("youtube");
-            if ($noText) {
-                return "<a class='url' rel='me' href='$url' "
-                 . "target='_blank'>$icon</a><br />\n";
-            } else {
-                return "<a class='url' rel='me' href='$url' "
-                  . "target='_blank'>$icon $url</a><br />\n";
-            }
-        }
-    }
-
-    public function getPicasa($userId, $noText=FALSE)
-    {
-        if ($url = $this->objUserParams->getValue("picasaurl")) {
-            $icon = $this->getLinkIcon("picasa");
-            if ($noText) {
-                return "<a class='url' rel='me' href='$url' "
-                 . "target='_blank'>$icon</a><br />\n";
-            } else {
-                return "<a class='url' rel='me' href='$url' "
-                  . "target='_blank'>$icon $url</a><br />\n";
-            }
-        }
-    }
-
-
+    /**
+    *
+    * Get the home page of the user
+    *
+    * @param string $userId The userid of the person to look up
+    * @param boolean $noText TRUE|FALSE whether to return text, default yes
+    * @return string The rendered icon/text
+    * @access public
+    *
+    */
     public function getHomePage($userId, $noText=FALSE)
     {
         if ($url = $this->objUserParams->getValue("homepage")) {
@@ -294,13 +254,31 @@ class buscard extends object
         }
     }
 
-
+    /**
+    *
+    * Method to get an icon for a particular link from the resources/icons
+    * directory in this module. The file $network.png must exist.
+    *
+    * @param string $network The network icon to look up
+    * @return string The rendered icon
+    * @access private
+    *
+    */
     private function getLinkIcon($network)
     {
         $img = $this->getResourceUri("icons/$network.png", "digitalbusinesscard");
         return "<img style='border: 0px none; vertical-align:middle' class='snicon' src='$img' /> ";
     }
 
+    /**
+    *
+    * Load the CSS required for some of the extended
+    * functionality and layout
+    *
+    * @return VOID
+    * @access private
+    *
+    */
     private function loadCss()
     {
         $css = "<link rel=\"stylesheet\" type=\"text/css\" href=\""
@@ -309,6 +287,17 @@ class buscard extends object
         $this->appendArrayVar('headerParams', $css);
     }
 
+    /**
+     *
+     * Get the latitude and longitude of the user and return it in hcard format
+     * while optionally rendering a google map
+     *
+     * @param string $userId The userid of the user to lookup
+     * @param boolean $showMap Whether or not to show the map, default TRUE
+     * @return string The rendered output
+     * @access private
+     *
+     */
     private function getLatLong($userId, $showMap=TRUE)
     {
         $latitude = $this->objUserParams->getValue("latitude");
@@ -328,6 +317,16 @@ class buscard extends object
         }
     }
 
+    /**
+     *
+     * Method to render a simple google map
+     *
+     * @param string $latitude Latitude of user
+     * @param string $longitude Longitude of user
+     * @return string The rendered map
+     * @access private
+     *
+     */
     private function getMap($latitude, $longitude)
     {
         $ret = '<br /><iframe width="425" height="350" '
@@ -340,7 +339,16 @@ class buscard extends object
         return $ret;
     }
 
-    public function getUserImage($userId)
+    /**
+    *
+    * Return a rendered icon-sized image of the user
+    *
+    * @param string $userId The userid of the user to lookup
+    * @return string the rendered image
+    * @access private
+    * 
+    */
+    private function getUserImage($userId)
     {
         return $this->objUser->getSmallUserImage($userId);
     }
