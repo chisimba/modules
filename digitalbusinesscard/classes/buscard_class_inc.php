@@ -112,14 +112,14 @@ class buscard extends object
         $ret = $this->getUserImage($userId);
         $ret .= $this->getFn($userId);
         $ret .= $this->getEmail($userId);
-        $ret = "\n\n<div class='vcard'>\n"
-          . $ret . "</div>\n\n"
-          . '</div>';
         $ret .= $this->getHomePage($userId);
         foreach ($this->networks as $network) {
             $ret .= $this->getSocialNetwork($network, $userId);
         }
-        $ret .= $this->getLatLong($userId);
+        $ret = $this->addToLeftCol($ret);
+        $ret .= $this->addToRightCol($this->getLatLong($userId));
+        // Start rendering.
+        $ret = $this->addToVcard($ret);
         return $this->addToOuterContainer($ret);
     }
 
@@ -194,6 +194,48 @@ class buscard extends object
 
     /**
     *
+    * Add the content to an vcard layer
+    *
+    * @param string $ret The content to add to the layer
+    * @return string The content inside the layer tags
+    * @access private
+    *
+    */
+    private function addToVcard($ret)
+    {
+        return "<div class='vcard'>$ret</div>";
+    }
+
+    /**
+    *
+    * Add the content to an floated left layer
+    *
+    * @param string $ret The content to add to the layer
+    * @return string The content inside the layer tags
+    * @access private
+    *
+    */
+    private function addToLeftCol($ret)
+    {
+        return "<div class='vcard_left'>$ret</div>";
+    }
+
+    /**
+    *
+    * Add the content to an floated right layer
+    *
+    * @param string $ret The content to add to the layer
+    * @return string The content inside the layer tags
+    * @access private
+    *
+    */
+    private function addToRightCol($ret)
+    {
+        return "<div class='vcard_right'>$ret</div>";
+    }
+
+    /**
+    *
     * Get the full name of the user and render in in hcard format
     *
     * @param string $userId The userid of the user to look up
@@ -207,8 +249,9 @@ class buscard extends object
           . $this->objUser->getFirstname($userId) . '</span>';
         $surName = '<span class="family-name">'
           . $this->objUser->getSurName($userId) . '</span></span>';
-        return '<div class="vcard"><span class="fn n">'
-          . $givenName . ' ' . $surName . '</span></div>'
+        return '<span class="fn n">'
+          . $givenName . ' '
+          . $surName . '</span><br />'
           . "\n\n";
     }
 
@@ -358,13 +401,14 @@ class buscard extends object
      */
     private function getMap($latitude, $longitude)
     {
-        $ret = '<br /><iframe width="425" height="350" '
+        $ret = '<br /><div class="vcard_map">'
+          . '<iframe width="425" height="350" '
           . 'frameborder="0" scrolling="no" '
           . 'marginheight="0" marginwidth="0" '
           . 'src="http://maps.google.com/maps?f=q&amp;'
           . 'source=s_q&amp;hl=en&amp;geocode=&amp;q='
           . $latitude .',' . $longitude 
-          . '&amp;output=embed"></iframe>';
+          . '&amp;output=embed"></iframe></div>';
         return $ret;
     }
 

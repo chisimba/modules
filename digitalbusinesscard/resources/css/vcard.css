@@ -5,10 +5,27 @@ CSS for Digital Business Card
 .name-wrapper {
     font-size: 160%;
 }
+
 blockquote:before, blockquote:after { content:""; }
+
 a { outline:none; } 
 .aright { float:right; }
 
+.vcard_left {
+    float:left;
+}
+.vcard_right {
+    float:right;
+}
+.vcard_map {
+
+}
+
+.vcard {
+    width: 850px;
+    padding-left: 20px;
+    padding-top: 20px;
+}
 
 a:hover img {
     margin-left: -5px;

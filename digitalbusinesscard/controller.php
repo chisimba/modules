@@ -146,10 +146,9 @@ class digitalbusinesscard extends controller
     */
     private function __view()
     {
-        $str="<h1>Business card:</h1>";
         $objCard = $this->getObject('buscard', 'digitalbusinesscard');
         $userId = $this->getParam('userid', $this->objUser->userId());
-        $str .= $objCard->show($userId);
+        $str = $objCard->show($userId);
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
