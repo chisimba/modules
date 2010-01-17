@@ -21,6 +21,11 @@ a { outline:none; }
 
 }
 
+.vcard_textinfo {
+    width: 340px;
+    color: grey;
+}
+
 .vcard {
     width: 850px;
     padding-left: 20px;

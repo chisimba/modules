@@ -111,11 +111,13 @@ class buscard extends object
     {
         $ret = $this->getUserImage($userId);
         $ret .= $this->getFn($userId);
+        $ret .= $this->addToTextInfo($this->getInfo('tagline'));
         $ret .= $this->getEmail($userId);
         $ret .= $this->getHomePage($userId);
         foreach ($this->networks as $network) {
             $ret .= $this->getSocialNetwork($network, $userId);
         }
+        $ret .= "<br />" . $this->getLinkIcon('mf_hcard');
         $ret = $this->addToLeftCol($ret);
         $ret .= $this->addToRightCol($this->getLatLong($userId));
         // Start rendering.
@@ -232,6 +234,20 @@ class buscard extends object
     private function addToRightCol($ret)
     {
         return "<div class='vcard_right'>$ret</div>";
+    }
+
+    /**
+    *
+    * Add the content to an limited width textinfo span
+    *
+    * @param string $ret The content to add to the span
+    * @return string The content inside the layer tags
+    * @access private
+    *
+    */
+    private function addToTextInfo($ret)
+    {
+        return "<div class='vcard_textinfo'>$ret</div>";
     }
 
     /**
@@ -424,6 +440,13 @@ class buscard extends object
     private function getUserImage($userId)
     {
         return $this->objUser->getSmallUserImage($userId);
+    }
+
+    private function getInfo($param)
+    {
+        if ($ret = $this->objUserParams->getValue($param)) {
+            return $ret;
+        }
     }
 }
 ?>
