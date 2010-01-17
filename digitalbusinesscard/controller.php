@@ -147,8 +147,19 @@ class digitalbusinesscard extends controller
     private function __view()
     {
         $objCard = $this->getObject('buscard', 'digitalbusinesscard');
-        $userId = $this->getParam('userid', $this->objUser->userId());
-        $str = $objCard->show($userId);
+        $userId = $this->getParam('userid', FALSE);
+        if (!$userId) {
+            if ($this->objUser->isLoggedIn()) {
+                $userId = $this->objUser->userId();
+            }
+        }
+        if ($userId) {
+            $str = $objCard->show($userId);
+        } else {
+            $str =  $this->objLanguage->languageText(
+              'mod_digitalbusinesscard_usernotfound',
+              'digitalbusinesscard');
+        }
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
@@ -263,7 +274,7 @@ class digitalbusinesscard extends controller
     */
     public function requiresLogin()
     {
-        $action=$this->getParam('action','NULL');
+        $action=$this->getParam('action','view');
         switch ($action)
         {
             case 'view':

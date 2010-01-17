@@ -75,8 +75,8 @@ class buscard extends object
      *
      */
     public $networks = array ('africator', 'delicious', 'digg', 'facebook',
-        'flickr', 'friendfeed', 'google', 'linkedin', 'muti', 'picasa',
-        'technorati', 'twitter', 'youtube' );
+        'flickr', 'friendfeed', 'google', 'identica', 'linkedin', 'muti',
+        'picasa', 'qik', 'slideshare', 'technorati', 'twitter', 'youtube' );
 
 
     /**
@@ -93,6 +93,8 @@ class buscard extends object
         $this->objUser = $this->getObject('user', 'security');
         // Get an instance of the userparams object to look up additional info.
         $this->objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
+        // Get an instance of the language object.
+        $this->objLanguage = $this->getObject('language', 'language');
         $this->objUserParams->readConfig();
         // Load the style sheet
         $this->loadCss();
@@ -109,20 +111,27 @@ class buscard extends object
      */
     public function show($userId)
     {
-        $ret = $this->getUserImage($userId);
-        $ret .= $this->getFn($userId);
-        $ret .= $this->addToTextInfo($this->getInfo('tagline'));
-        $ret .= $this->getEmail($userId);
-        $ret .= $this->getHomePage($userId);
-        foreach ($this->networks as $network) {
-            $ret .= $this->getSocialNetwork($network, $userId);
+        if ($this->objUser->isActive($userId)) {
+            $ret = $this->getUserImage($userId);
+            $ret .= $this->getFn($userId);
+            $ret .= $this->addToTextInfo($this->getInfo('tagline'));
+            $ret .= $this->getEmail($userId);
+            $ret .= $this->getHomePage($userId);
+            foreach ($this->networks as $network) {
+                $ret .= $this->getSocialNetwork($network, $userId);
+            }
+            $ret .= "<br />" . $this->getLinkIcon('mf_hcard');
+            $ret = $this->addToLeftCol($ret);
+            $ret .= $this->addToRightCol($this->getLatLong($userId));
+            // Start rendering.
+            $ret = $this->addToVcard($ret);
+            return $this->addToOuterContainer($ret);
+        } else {
+            return $this->objLanguage->languageText(
+              'mod_digitalbusinesscard_usernotfound',
+              'digitalbusinesscard'
+            );
         }
-        $ret .= "<br />" . $this->getLinkIcon('mf_hcard');
-        $ret = $this->addToLeftCol($ret);
-        $ret .= $this->addToRightCol($this->getLatLong($userId));
-        // Start rendering.
-        $ret = $this->addToVcard($ret);
-        return $this->addToOuterContainer($ret);
     }
 
     /**

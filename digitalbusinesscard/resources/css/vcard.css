@@ -6,8 +6,6 @@ CSS for Digital Business Card
     font-size: 160%;
 }
 
-blockquote:before, blockquote:after { content:""; }
-
 a { outline:none; } 
 .aright { float:right; }
 
