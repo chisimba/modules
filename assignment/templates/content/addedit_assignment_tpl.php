@@ -9,6 +9,16 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
+$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+$extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+$rrbutton = '<script language="JavaScript" src="'.$this->getResourceUri('rradiobuttons.js').'" type="text/javascript"></script>';
+
+$assgTypeDiv='<div id="assgtype"></div>';
+$this->appendArrayVar('headerParams', $extbase);
+$this->appendArrayVar('headerParams', $extalljs);
+$this->appendArrayVar('headerParams', $extallcss);
+$this->appendArrayVar('headerParams', $rrbutton);
 if ($mode == 'edit') {
     $headStr = $this->objLanguage->languageText('mod_assignment_editassignment', 'assignment', 'Edit Assignment').': '.$assignment['name'];
     $action = 'updateassignment';
@@ -25,6 +35,17 @@ echo $header->show();
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
+
+$initJS="
+Ext.onReady(function(){
+var assgtype='".$assignment['format']."';
+var reflection='".$assignment['assesment_type']."';
+var resubmit='".$assignment['resubmit']."';
+initRadioButtons(assgtype,reflection,resubmit);
+});
+";
+
+echo "<script type='text/javascript'>".$initJS."</script>";
 $table->startRow();
 $label = new label ($this->objLanguage->languageText('mod_assignment_assignmentname', 'assignment', 'Assignment Name'), 'input_name');
 $textinput = new textinput('name');
@@ -63,7 +84,8 @@ if (!$canChangeType) {
 //} else {
 }
 else {
-    
+   
+ 
     $radio = new radio ('type');
     $radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
     $radio->addOption(1, $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
@@ -72,7 +94,10 @@ else {
         
     }
     $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
-    $table->addCell($radio->show());
+    //$table->addCell($radio->show());
+    $table->addCell($assgTypeDiv);
+  
+
 //}
 }
 $table->endRow();
@@ -87,7 +112,8 @@ $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
 if ($mode == 'edit') {
 	$objRadio->setSelected($assignment['assesment_type']);
 }
-$table->addCell($objRadio->show());
+$reflection='<div id="reflection"></div>';
+$table->addCell($reflection);
 $table->endRow();
 
 $table->startRow();
@@ -99,7 +125,8 @@ if ($mode == 'edit') {
     $radio->setSelected($assignment['resubmit']);
 }
 $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
-$table->addCell($radio->show());
+$sub='<div id="submissions"></div>';
+$table->addCell($sub);
 $table->endRow();
 
 
