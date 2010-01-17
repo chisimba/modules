@@ -88,19 +88,14 @@ class toolbardwk extends object
         $spacer = "&nbsp;|&nbsp;";
         // Home link
         $homeLink = new link('home');
-        $homeLink->link = '<strong>Home</strong>';
+        $homeLink->link = 'Home';
         $homeLink->href = $this->uri(array(), "_default");
         $str .= $spacer . $homeLink->show();
         // Podcast link
         $podLink = new link('podcast');
-        $podLink->link = '<strong>Podcasts</strong>';
+        $podLink->link = 'Podcasts';
         $podLink->href = $this->uri(array(), "podcast");
         $str .= $spacer . $podLink->show();
-        // CMS link
-        $cmsLink = new link('cms');
-        $cmsLink->link = '<strong>View other content</strong>';
-        $cmsLink->href = $this->uri(array(), "cms");
-        $str .= $spacer . $cmsLink->show();
         $str .= $spacer;
         // Close the opening div
         $str .= "</div>";
