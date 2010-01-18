@@ -136,12 +136,12 @@ $objLayer->str = '';
 //$objLayer->border = '; clear:both; margin:0px; padding:0px;';
 $objLayer->id = 'cms_header_clear';
 $objLayer->cssClass = 'clearboth';
-//$headShow = $objLayer->show();
+$headShow = $objLayer->show();
 
 //Get Selectall js
 echo $this->getJavascriptFile('selectall.js');
 
-$header = $header.$headShow;//$tbl->show());
+$header = $header;//.$headShow;//$tbl->show());
 
 //counter for records
 $cnt = 1;
