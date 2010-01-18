@@ -58,6 +58,7 @@ $form->addToForm("<strong>" . $label->show() . ":</strong>");
 $answer = $this->newObject('htmlarea', 'htmlelements');
 $answer->name = 'answer';
 $answer->value = $item['answer'];
+$answer->setDefaultToolBarSetWithoutSave();
 $form->addToForm($answer->show());
 
 

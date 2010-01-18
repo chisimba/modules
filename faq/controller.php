@@ -1,19 +1,17 @@
 <?php
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 
 /**
-* Controller class for FAQ module
-* @author Jeremy O'Connor , remade by Stelio Macumbe
-* @copyright 2004 University of the Western Cape
-* $Id$
-*/
-class faq extends controller
-{
+ * Controller class for FAQ module
+ * @author Jeremy O'Connor , remade by Stelio Macumbe
+ * @copyright 2004 University of the Western Cape
+ * $Id$
+ */
+class faq extends controller {
     public $objUser;
 
     protected $objGroup;
@@ -33,10 +31,9 @@ class faq extends controller
     public $categoryId;
 
     /**
-    * The Init function
-    */
-    public function init()
-    {
+     * The Init function
+     */
+    public function init() {
         $this->objUser = $this->getObject('user', 'security');
         $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -46,17 +43,16 @@ class faq extends controller
         $this->objTags = $this->getObject('dbfaqtags');
         // Get the activity logger class
         $this->objLog = $this->newObject('logactivity', 'logger');
-		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+        $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
         // Log this module call
         $this->objLog->log();
     }
 
     /**
-    * The dispatch funtion
-    * @param string $action The action
-    */
-    public function dispatch($action=NULL)
-    {
+     * The dispatch funtion
+     * @param string $action The action
+     */
+    public function dispatch($action=NULL) {
         // Set the layout template for faq - includes the context menu
         $this->setLayoutTemplate("context_layout_tpl.php");
 
@@ -97,11 +93,11 @@ class faq extends controller
 
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
-        switch($action){
+        switch($action) {
             // Change the category
             case 'changecategory':
                 return $this->view();
-           // Add an entry
+            // Add an entry
             case "add":
                 return $this->add();
             //Add confirm
@@ -111,8 +107,8 @@ class faq extends controller
             case "edit":
                 return $this->edit();
             case "tag":
-             $tag = $this->getParam('tag');
-              return $this->viewByTag($tag);
+                $tag = $this->getParam('tag');
+                return $this->viewByTag($tag);
             //Edit confirm
             case "editconfirm":
                 return $this->editConfirm();
@@ -122,9 +118,9 @@ class faq extends controller
             // Default : view entries
 
             case "search":
-            $query = $this->getParam('q');
-            $this->setVarByRef('query', $query);
-            return 'search_tpl.php';
+                $query = $this->getParam('q');
+                $this->setVarByRef('query', $query);
+                return 'search_tpl.php';
             // Add an entry
             case "addcategory":
                 return "add_category_tpl.php";
@@ -145,11 +141,11 @@ class faq extends controller
                 $this->deleteCategoryConfirm();
                 break;
             case "managecategories":
-                    $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
-                                $this->setVarByRef('categories', $categories);
-                                return "main_tpl.php";
-                                break;
- //************************************************************************************************/
+                $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
+                $this->setVarByRef('categories', $categories);
+                return "main_tpl.php";
+                break;
+            //************************************************************************************************/
             case "view":
                 return $this->view();
             default:
@@ -158,17 +154,16 @@ class faq extends controller
 
 
     }
-     /**
-    *
-    * This is a method that overrides the parent class to stipulate whether
-    * the current module requires login. Having it set to false gives public
-    * access to this module including all its actions.
-    *
-    * @access public
-    * @return bool FALSE
-    */
-    public function requiresLogin($action)
-    {
+    /**
+     *
+     * This is a method that overrides the parent class to stipulate whether
+     * the current module requires login. Having it set to false gives public
+     * access to this module including all its actions.
+     *
+     * @access public
+     * @return bool FALSE
+     */
+    public function requiresLogin($action) {
         $requiresLogin = array ('add', 'addcategory');
 
         if (in_array($action, $requiresLogin)) {
@@ -177,8 +172,8 @@ class faq extends controller
             return FALSE;
         }
     }
-    
-      /**
+
+    /**
      * Method to override isValid to enable administrators to perform certain action
      *
      * @param $action Action to be taken
@@ -192,8 +187,7 @@ class faq extends controller
         }
     }
 
-    public function listCategories()
-    {
+    public function listCategories() {
         $tagCloud = $this->objTags->getTagCloud();
         $this->setVarByRef('tagCloud', $tagCloud);
 
@@ -201,28 +195,26 @@ class faq extends controller
         $this->setVarByRef('categories', $categories);
         return "main_tpl.php";
     }
-  /**
-    * View all FAQ entries by tag.
-    */
-    public function viewByTag($tag)
-    {
+    /**
+     * View all FAQ entries by tag.
+     */
+    public function viewByTag($tag) {
         $list = $this->objFaqEntries->listAllByTag($tag);
         $this->setVarByRef('list', $list);
 
-       // Get all the categories
+        // Get all the categories
         $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
         return "view_tpl.php";
     }
 
     /**
-    * View all FAQ entries.
-    */
-    public function view()
-    {
-       // Get all FAQ entries
-       // $list = $this->objFaqEntries->listAll($this->contextId, $this->categoryId);
-       // $this->setVarByRef('list', $list);
+     * View all FAQ entries.
+     */
+    public function view() {
+        // Get all FAQ entries
+        // $list = $this->objFaqEntries->listAll($this->contextId, $this->categoryId);
+        // $this->setVarByRef('list', $list);
 
         // Get all FAQ entries
         $list = $this->objFaqEntries->listAllWithNav($this->contextId, $this->categoryId);
@@ -235,10 +227,9 @@ class faq extends controller
     }
 
     /**
-    * Add a FAQ entry.
-    */
-    public function add()
-    {
+     * Add a FAQ entry.
+     */
+    public function add() {
         // Get all the categories
         $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
@@ -247,33 +238,31 @@ class faq extends controller
     }
 
     /**
-    * Confirm add.
-    */
-    public function addConfirm()
-    {
+     * Confirm add.
+     */
+    public function addConfirm() {
         $question = $this->getParam("question");
         $answer = $this->getParam("answer");
         $category = $this->getParam("category");
         $tags = $this->getParam("faqtags");
         // Insert a record into the database
         $this->objFaqEntries->insertSingle(
-            $this->contextId,
-            $category,
-            $question,
-            $answer,
-            $this->objUser->userId(),
-            mktime(),
-            $tags
+                $this->contextId,
+                $category,
+                $question,
+                $answer,
+                $this->objUser->userId(),
+                mktime(),
+                $tags
         );
 
         return $this->nextAction('view', array('category'=>$category));
     }
 
     /**
-    * Edit a FAQ entry.
-    */
-    public function edit()
-    {
+     * Edit a FAQ entry.
+     */
+    public function edit() {
         $id = $this->getParam('id', null);
         $item = $this->objFaqEntries->listSingle($id);
         $this->setVarByRef('item', $item);
@@ -288,10 +277,9 @@ class faq extends controller
     }
 
     /**
-    * Confirm edit.
-    */
-    public function editConfirm()
-    {
+     * Confirm edit.
+     */
+    public function editConfirm() {
         $id = $this->getParam('id');
         $question = $this->getParam('question');
         $answer = $this->getParam('answer');
@@ -300,66 +288,65 @@ class faq extends controller
         $tags = $this->getParam("faqtags");
         // Update the record in the database
         $this->objFaqEntries->updateSingle(
-            $id,
-            $question,
-            $answer,
-            $category,
-            $this->objUser->userId(),
-            mktime()
+                $id,
+                $question,
+                $answer,
+                $category,
+                $this->objUser->userId(),
+                mktime()
         );
 
+
         $objTags->updateFaqTags($id,$tags);
+
         return $this->nextAction('view', array('category'=>$category));
     }
 
     /**
-    * Confirm delete.
-    */
-    public function deleteConfirm()
-    {
+     * Confirm delete.
+     */
+    public function deleteConfirm() {
         $id = $this->getParam('id', null);
         // Delete the record from the database
         $this->objFaqEntries->deleteSingle($id);
+        $objTags = $this->getObject('dbfaqtags');
+        $objTags->clearFaqTags($id);
         return $this->nextAction('view', array('category'=>$this->categoryId));
     }
 
-     /**
+    /**
      * Method to load an HTML element's class.
      * @param string $name The name of the element
      * @return The element object
      */
-     public function loadHTMLElement($name)
-     {
-         return $this->loadClass($name, 'htmlelements');
-     }
+    public function loadHTMLElement($name) {
+        return $this->loadClass($name, 'htmlelements');
+    }
 
-     /**
+    /**
      * Method to get a new HTML element.
      * @param string $name The name of the element
      * @return The element object
      */
-     public function &newHTMLElement($name)
-     {
-         return $this->newObject($name, 'htmlelements');
-     }
+    public function &newHTMLElement($name) {
+        return $this->newObject($name, 'htmlelements');
+    }
 
-     /**
+    /**
      * Method to get an HTML element.
      * @param string $name The name of the element
      * @return The element object
      */
-     public function getHTMLElement($name)
-     {
-         return $this->getObject($name, 'htmlelements');
-     }
+    public function getHTMLElement($name) {
+        return $this->getObject($name, 'htmlelements');
+    }
 
 
 
     /**
-    * Confirm add.
-    */
-    public function addCategoryConfirm()
-    {
+     * Confirm add.
+     */
+    public function addCategoryConfirm() {
         $categoryName = $this->getParam("category");
 
 
@@ -368,46 +355,43 @@ class faq extends controller
         } else {
             // Insert the category into the database
             $result = $this->objFaqCategories->insertSingle(
-                $this->contextId,
-                $categoryName,
-                $this->objUser->userId()
+                    $this->contextId,
+                    $categoryName,
+                    $this->objUser->userId()
             );
             return $this->nextAction(NULL, array('message'=>'categoryadded', 'result'=>$result));
         }
     }
 
     /**
-    * Edit a FAQ entry.
-    */
-    public function editCategory()
-    {
+     * Edit a FAQ entry.
+     */
+    public function editCategory() {
         $id = $this->getParam('id', null);
         $list = $this->objFaqCategories->listSingleId($id);
         $this->setVarByRef('list', $list);
     }
 
     /**
-    * Confirm edit.
-    */
-    public function editCategoryConfirm()
-    {
+     * Confirm edit.
+     */
+    public function editCategoryConfirm() {
         $id = $this->getParam('id', null);
         $categoryId = $_POST["category"];
         // Update the record in the database
         $this->objFaqCategories->updateSingle(
-            $id,
-            $categoryId,
-            $this->objUser->userId(),
-            mktime()
+                $id,
+                $categoryId,
+                $this->objUser->userId(),
+                mktime()
         );
         return $this->nextAction(NULL);
     }
 
     /**
-    * Confirm delete.
-    */
-    public function deleteCategoryConfirm()
-    {
+     * Confirm delete.
+     */
+    public function deleteCategoryConfirm() {
         $id = $this->getParam('id', null);
         // Delete the record from the database
         $this->objFaqCategories->deleteSingle($id);
@@ -420,8 +404,7 @@ class faq extends controller
      *
      * @return boolean True if the user can make modifications, false otherwise.
      */
-    protected function userHasModifyAccess()
-    {
+    protected function userHasModifyAccess() {
         $limitedUsers = $this->objSysConfig->getValue('mod_faq_limited_users', 'faq');
         if ($limitedUsers) {
             $userId = $this->objUser->userId();
@@ -446,8 +429,7 @@ class faq extends controller
      * @param string $action The name of the action to check.
      * @return boolean True if the action is restricted, false otherwise.
      */
-    protected function isRestricted($action)
-    {
+    protected function isRestricted($action) {
         $restrictedActions = array('add', 'addconfirm', 'edit', 'editconfirm', 'deleteconfirm', 'addcategory', 'addcategoryconfirm', 'editcategory', 'editcategoryconfirm', 'deletecategoryconfirm', 'managecategories');
         return in_array($action, $restrictedActions);
     }

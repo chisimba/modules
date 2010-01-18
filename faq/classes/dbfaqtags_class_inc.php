@@ -1,23 +1,19 @@
 <?php
 
-class dbfaqtags extends dbtable
-{
+class dbfaqtags extends dbtable {
 
-    public function init()
-    {
+    public function init() {
         parent::init('tbl_faq_tags');
-		$this->objUser = $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
-        
 
- public function prepArrayForTagCloud($array)
-    {
+
+    public function prepArrayForTagCloud($array) {
         $finalArray = array();
 
         if (count($array) > 0) {
-            foreach ($array as $item)
-            {
+            foreach ($array as $item) {
                 $finalArray[$item['tag']] = $item;
             }
         }
@@ -25,8 +21,7 @@ class dbfaqtags extends dbtable
         return $finalArray;
     }
 
-     public function getLastLimitTags($limit=50)
-    {
+    public function getLastLimitTags($limit=50) {
         $sql = 'SELECT tbl_faq_tags.* , (SELECT count(tag) FROM tbl_faq_tags AS tags2 WHERE tbl_faq_tags.tag = tags2.tag) AS tagcount
 FROM tbl_faq_tags GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
 
@@ -36,12 +31,11 @@ FROM tbl_faq_tags GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
 
         return $this->prepArrayForTagCloud($this->getArray($sql));
     }
-     /**
+    /**
      * Method to take all the existing tags, and build them into a Tag Cloud
      * @return string Tag Cloud
      */
-    public function getTagCloud()
-    {
+    public function getTagCloud() {
         // Get All Tags
         $tags = $this->getLastLimitTags();
 
@@ -53,8 +47,7 @@ FROM tbl_faq_tags GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
             $objTagCloud = $this->newObject('tagcloud', 'utilities');
 
             // Loop through tags
-            foreach ($tags as $tag)
-            {
+            foreach ($tags as $tag) {
                 // Link to File
                 $uri = $this->uri(array('action'=>'tag', 'tag'=>$tag['tag']));
 
@@ -68,75 +61,67 @@ FROM tbl_faq_tags GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
     }
 
 
-    public function addFaqTags($faqId, $tags)
-	{
-		$tags = explode(',', $tags);
-		
-		//$this->clearFaqTags($faqId);
-		
-		if (count($tags) > 0) {
-			foreach ($tags as $tag)
-			{
-				$tag = trim(stripslashes($tag));
-				
-				if ($tag != '') {
-					$this->addTag($faqId, $tag);
-				}
-			}
-		}
-	}
+    public function addFaqTags($faqId, $tags) {
+        $tags = explode(',', $tags);
+
+        //$this->clearFaqTags($faqId);
+
+        if (count($tags) > 0) {
+            foreach ($tags as $tag) {
+                $tag = trim(stripslashes($tag));
+
+                if ($tag != '') {
+                    $this->addTag($faqId, $tag);
+                }
+            }
+        }
+    }
 
 
-    public function updateFaqTags($faqId, $tags)
-	{
-		$tags = explode(',', $tags);
+    public function updateFaqTags($faqId, $tags) {
+        $tags = explode(',', $tags);
 
-		$this->clearFaqTags($faqId);
+        $this->clearFaqTags($faqId);
 
-		if (count($tags) > 0) {
-			foreach ($tags as $tag)
-			{
-				$tag = trim(stripslashes($tag));
+        if (count($tags) > 0) {
+            foreach ($tags as $tag) {
+                $tag = trim(stripslashes($tag));
 
-				if ($tag != '') {
-					$this->addTag($faqId, $tag);
-				}
-			}
-		}
-	}
+                if ($tag != '') {
+                    $this->addTag($faqId, $tag);
+                }
+            }
+        }
+    }
 
-	private function addTag($faqId, $tag)
-	{
-		return $this->insert(array(
-				'faqid'=>$faqId,
-				'tag'=>$tag, 
-				'creatorid' => $this->objUser->userId(),
-				'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
-			));
-	}
-    
-    public function getFaqTags($faqId)
-    {
+    private function addTag($faqId, $tag) {
+        return $this->insert(array(
+                'faqid'=>$faqId,
+                'tag'=>$tag,
+                'creatorid' => $this->objUser->userId(),
+                'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+        ));
+    }
+
+    public function getFaqTags($faqId) {
         $results = $this->getAll(' WHERE faqid=\''.$faqId.'\'');
-        
+
         if (count($results) == 0) {
             return '';
         } else {
             $returnArray = array();
-            
-            foreach ($results as $result)
-            {
+
+            foreach ($results as $result) {
                 $returnArray[] = $result['tag'];
             }
-            
+
             return $returnArray;
         }
     }
-	
-	public function clearFaqTags($faqId)
-	{
-		return $this->delete('faqid', $faqId);
-	}
+
+    public function clearFaqTags($faqId) {
+        return $this->delete('faqid', $faqId);
+    }
 
 }
 ?>
