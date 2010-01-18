@@ -289,6 +289,7 @@ class buscard extends object
     * Get the email address of the user and render in in hcard format
     *
     * @param string $userId The userid of the user to look up
+    * @param boolean $noText TRUE|FALSE whether to return text, default yes
     * @return string The rendered email
     * @access private
     *
