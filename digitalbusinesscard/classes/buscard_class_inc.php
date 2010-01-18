@@ -301,7 +301,7 @@ class buscard extends object
         if ($noText) {
             return "<a class='email' href='mailto:$email'>$icon</a><br />\n";
         } else {
-            return "<a class='url' rel='me' href='mailto:$email'>$icon $email</a><br />\n";
+            return "<a class='email' href='mailto:$email'>$icon $email</a><br />\n";
         }
     }
 
