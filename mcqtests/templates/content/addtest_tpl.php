@@ -168,7 +168,7 @@ for ($x = 0 ; $x < 100 ; $x++) {
 }
 $objDropDown->setSelected($decimal);
 $dropStr.= '&nbsp;<b>.</b>&nbsp;&nbsp;'.$objDropDown->show() .'&nbsp;%&nbsp;&nbsp;&nbsp;';
-$dropStr.= '<font class="warning">'.$lbTotalPercent.':&nbsp;'.$allPercent.'%</font>';
+//$dropStr.= '<font class="warning">'.$lbTotalPercent.':&nbsp;'.$allPercent.'%</font>';
 $objTable->addRow(array(
     $objLabel->show() ,
     $dropStr

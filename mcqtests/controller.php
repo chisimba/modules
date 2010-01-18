@@ -89,7 +89,7 @@ class mcqtests extends controller {
         $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 
         $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
-        
+
         if($this->objModuleCatalogue->checkIfRegistered('activitystreamer')) {
             $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
             $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
@@ -120,7 +120,7 @@ class mcqtests extends controller {
         if ($this->contextCode == '') {
             return $this->nextAction(NULL, NULL, '_default');
         }
-//http://localhost/chisimba/index.php?module=mcqtests&action=answertest&id=gen1Srv45Nme53_48244_1258481346&mode=notoolbar
+        //http://localhost/chisimba/index.php?module=mcqtests&action=answertest&id=gen1Srv45Nme53_48244_1258481346&mode=notoolbar
         // Now the main switch for $action
         switch ($action) {
             case 'activatetest':
@@ -129,14 +129,38 @@ class mcqtests extends controller {
                 return $this->nextAction('view', array(
                 'id' => $id
                 ));
+            case 'addnewquestion': {
+                    $option=$this->getParam('qnoption');
+                    if($option == 'mcq') {
+                        return $this->addMcqQuestion();
+                    }
+                    if($option == 'freeform') {
+                        return $this->addFreeForm();
+                    }
+                }
             // create an interface to choose a questiontype
             case 'choosequestiontype':
                 $this->viewtest();
+                $id = $this->getParam('id');
+                $this->setVarByRef('testid',$id);
+                $this->setVarByRef('count',$this->getParam('count'));
+                $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
+
+                // Get the total number of questions if this isn't the first
+                if ($count > 1) {
+                    $count = $this->dbQuestions->countQuestions($id);
+                }
+                $test[0]['count'] = $count;
+                $this->setVarByRef('test', $test[0]);
+                $this->setVar('mode', 'add');
+
                 return 'choosequestiontype_tpl.php';
                 break;
+
             case 'addquestion':
                 $id = $this->getParam('id', NULL);
                 $count = $this->getParam('count');
+
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
 
                 // Get the total number of questions if this isn't the first
@@ -165,6 +189,9 @@ class mcqtests extends controller {
                     $qType = $this->getParam('type');
                     $fields = array();
                     $fields['testid'] = $id;
+                    if($this->getParam('formtype') == 'freeform')
+                    $fields['question'] = $this->getParam('freeformquestion', '');
+                    else
                     $fields['question'] = $this->getParam('question', '');
                     $hint = $this->getParam('hint', '');
                     if ($hintConfirm == 'no') {
@@ -901,6 +928,44 @@ class mcqtests extends controller {
     }
 
     /**
+     * this brings the default add mcq questions
+     * @return <type>
+     */
+    private function addMcqQuestion() {
+        $id = $this->getParam('id', NULL);
+        $count = $this->getParam('count');
+        $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
+
+        // Get the total number of questions if this isn't the first
+        if ($count > 1) {
+            $count = $this->dbQuestions->countQuestions($id);
+        }
+        $test[0]['count'] = $count;
+        $this->setVarByRef('test', $test[0]);
+        $this->setVar('mode', 'add');
+        return 'addquestion_tpl.php';
+    }
+    /**
+     * this returns a form for freefomrm questions
+     * @return template
+     */
+    private function addFreeForm() {
+        $id = $this->getParam('id', NULL);
+        $count = $this->getParam('count');
+        $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
+
+        // Get the total number of questions if this isn't the first
+        if ($count > 1) {
+            $count = $this->dbQuestions->countQuestions($id);
+        }
+        $test[0]['count'] = $count;
+        $this->setVarByRef('test', $test[0]);
+        $this->setVar('mode', 'add');
+
+        return 'addfreeform_tpl.php';
+    }
+
+    /**
      * Method to set up test data for editing.
      *
      * @access private
@@ -1323,7 +1388,7 @@ class mcqtests extends controller {
                 $data[0]['qnum'] = $num;
             }
         }
- 
+
         $this->setVarByRef('test', $test[0]);
         $this->setVarByRef('data', $data);
 

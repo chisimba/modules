@@ -10,7 +10,10 @@ $this->setLayoutTemplate('mcqtests_layout_tpl.php');
 $this->loadclass('htmltable','htmlelements');
 $this->loadclass('htmlheading','htmlelements');
 $this->loadclass('geticon','htmlelements');
-$this->loadclass('link','htmlelements'); 
+$this->loadclass('link','htmlelements');
+$this->loadClass('label', 'htmlelements');
+$this->loadClass('fieldsetex', 'htmlelements');
+
 $this->dbQuestions = $this->newObject('dbquestions');
 
 
@@ -21,69 +24,70 @@ $mcqtestLabel=$this->objLanguage->languageText('mod_mcqtests_mcqtestlabel','mcqt
 $clozetestLabel=$this->objLanguage->languageText('mod_mcqtests_clozetestlabel','mcqtests');
 $freeformLabel=$this->objLanguage->languageText('mod_mcqtests_freeformlabel','mcqtests');
 $selectLabel=$this->objLanguage->languageText('mod_mcqtests_selectlabel','mcqtests');
-
 //get the addicon
 $objIcon=$this->newObject('geticon', 'htmlelements');
-  
 $count = count($questions);
-	if (empty($questions)) {
-		$count = 0;
-	}
-	
-//add a new mcq question 
-	$mcqUrl = $this->uri(array(
-	'action' => 'addquestion',
-		'id' => $data['id'],
-		'count' => $count	
-	));
-// create the add icon 
-	$chseMcq = $objIcon->getAddIcon($mcqUrl);
+if (empty($questions)) {
+    $count = 0;
+}
 
+$batchOptions = new dropdown('qnoption');
+$batchOptions->setId("qnoption");
+$batchOptions->addOption('-', '[-Select question type-]');
+$batchOptions->addOption('mcq', 'MCQ questions');
+$batchOptions->addOption('freeform', 'Free form test entry questions');
+$batchLabel = new label ('Select question type ', 'input_qnoptionlabel');
 
-//add a new free form question 
-$freeFormUrl = $this->uri(array(
-		'action' => 'addfreeform',
-		'id' => $data['id'],
-		'count' => $count
-	));
-	//create the add icon 
-	$chseFree = $objIcon->getAddIcon($freeFormUrl);
+echo '<strong><h1>'.$test['name'].'</h1></strong>';
+$fd=$this->getObject('fieldsetex','htmlelements');
 
+$fd->addLabel('<strong>'.$batchLabel->show().'</strong>'.$batchOptions->show());
+$fd->setLegend('Select question type');
+$formmanager=$this->getObject('formmanager');
 
-//Set heading
+$questionContentStr='<div id="addquestion">'.$formmanager->createAddQuestionForm($test).'</div>';
+$questionContentStr.='<div id="freeform">'.$formmanager->createAddFreeForm($test).'</div>';
 
-    $this->setVarByRef('heading', $choosetype);
+$fd->addLabel($questionContentStr);
+echo $fd->show();
 
 
 
-//Header for the table
-
-//$objHead=new htmlheading();
-//$objHead->type=3;
-
-
-$objTable=new htmltable();
-$objTable->cellpadding = 5;
-$objTable->cellspacing = 3;
-$objTable->width = '99%';
-
-$objTable->startRow();
-$objTable->addCell('<b><h3>'.$typeLabel.'</h3></b>','','','','heading');
-$objTable->addCell('<b><h3>'.$selectLabel.'</h3></b>','','','','heading');
-$objTable->endRow();
-
-$objTable->startRow();
-$objTable->addCell($mcqtestLabel,'','','','heading');
-$objTable->addCell($chseMcq,'','','','heading');
-$objTable->endRow();
-
-
-$objTable->startRow();
-$objTable->addCell($freeformLabel,'','','','heading');
-$objTable->addCell($chseFree,'','','','heading');
-$objTable->endRow();
-
-//show table
-$tpl=$objTable->show();
-echo $tpl;
 ?>
+<script type="text/javascript" language="javascript">
+    //<![CDATA[
+
+    jQuery(document).ready(function() {
+
+        jQuery('#freeform').hide();
+        jQuery('#addquestion').hide();
+        jQuery("#qnoption").change(function(){
+            var val=this.value;
+
+            if(val == 'freeform'){
+                jQuery('#freeform').show();
+                jQuery('#addquestion').hide();
+            }else if(val == 'mcq'){
+                jQuery('#addquestion').show();
+                jQuery('#freeform').hide();
+            }else{
+                jQuery('#freeform').hide();
+                jQuery('#addquestion').hide();
+            }
+
+        });
+    });
+
+    function processQuestionType()
+    {
+        if (document.getElementById('input_qnoption').value == '-')
+        {
+            alert('Please select an action');
+            document.getElementById('input_qnoption').focus();
+        }  else {
+            //document.getElementById('form_qnform').submit();
+            document.getElementById('input_qnoptionlabel').textContent='Updated!';
+        }
+    }
+    //]]>
+</script>
