@@ -460,7 +460,7 @@ class essayadmin extends controller
                 $comment=$this->getParam('comment', '');
 
                 // get fileid
-                $booking=$this->dbbook->getBooking("where id='$book'",'fileid');
+//                $booking=$this->dbbook->getBooking("where id='$book'",'studentfileid');
 
                 // upload file to database, overwrite original file
                 $arrayfiledetails = $this->objFile->uploadFile('file');
