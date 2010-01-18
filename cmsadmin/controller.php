@@ -173,7 +173,7 @@
                 $this->_objFlagEmail =  $this->newObject('dbflagemail', 'cmsadmin');
                 $this->_objFlagUtils =  $this->newObject('flagutils', 'cmsadmin');
 
-                $this->_objBox = $this->newObject('jqboxy', 'htmlelements');
+                $this->_objBox = $this->newObject('jqboxy', 'jquery');
                 
                 $this->_objValidate =  $this->newObject('validate', 'utilities');
                 $this->_objTemplate =  $this->newObject('dbtemplate', 'cmsadmin');
@@ -203,10 +203,6 @@
                 
                 //feeds classes
                 $this->objFeed = $this->getObject('feeds', 'feed');
-
-                //Load the ajax classes
-                //$this->loadClass('xajax', 'ajaxwrapper');
-                //$this->loadClass('xajaxresponse', 'ajaxwrapper');
 
                 if ($this->objModule->checkIfRegistered('context')) {
                     $this->inContextMode = $this->_objContext->isInContext();
@@ -360,12 +356,9 @@ $jQuery->loadSimpleTreePlugin();
             $this->setVar('pageSuppressXML',TRUE);
             $myid = $this->_objUser->userId();
 
-            //The security class handles this now
-            /*
             if (!($this->_objUser->inAdminGroup($myid,'CMSAuthors')) && !($this->_objUser->inAdminGroup($myid,'Site Admin'))) {
-                            return 'cms_nopermissions_tpl.php';
+                return 'cms_nopermissions_tpl.php';
             }
-            */
 
             switch ($action) {
 
