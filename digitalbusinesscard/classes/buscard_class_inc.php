@@ -76,7 +76,8 @@ class buscard extends object
      */
     public $networks = array ('africator', 'delicious', 'digg', 'facebook',
         'flickr', 'friendfeed', 'google', 'identica', 'linkedin', 'muti',
-        'picasa', 'qik', 'slideshare', 'technorati', 'twitter', 'youtube' );
+        'opera', 'picasa', 'qik', 'slideshare', 'technorati', 'twitter',
+        'youtube' );
 
 
     /**
@@ -112,12 +113,16 @@ class buscard extends object
     public function show($userId)
     {
         if ($this->objUser->isActive($userId)) {
+            // Read all the properties at once
+            $this->setUserProperties($userId);
             $this->objUserParams->setUserId($userId);
             $this->objUserParams->readConfig();
-            $ret = $this->getUserImage($userId);
-            $ret .= $this->getFn($userId);
+            $userImage = $this->getUserImage($userId);
+            $fn = $this->getFn();
+            $ret = "<table><tr><td>$userImage</td><td>$fn</td></tr></table>";
             $ret .= $this->addToTextInfo($this->getInfo('tagline'));
-            $ret .= $this->getEmail($userId);
+            $ret .= $this->getCountry();
+            $ret .= $this->getEmail();
             $ret .= $this->getHomePage($userId);
             foreach ($this->networks as $network) {
                 $ret .= $this->getSocialNetwork($network, $userId);
@@ -135,6 +140,17 @@ class buscard extends object
               'mod_digitalbusinesscard_usernotfound',
               'digitalbusinesscard'
             );
+        }
+    }
+
+    private function setUserProperties($userId)
+    {
+        $userDetails = $this->objUser->getUserDetails($userId);
+        if (count($userDetails) > 0) {
+            foreach ($userDetails as $property=>$value) {
+                $this->$property = $value;
+                //echo $property . " = " .$value . "<br />";
+            }
         }
     }
 
@@ -272,12 +288,12 @@ class buscard extends object
     * @access private
     *
     */
-    private function getFn($userId)
+    private function getFn()
     {
         $givenName = '<span class="name-wrapper"><span class="given-name">'
-          . $this->objUser->getFirstname($userId) . '</span>';
+          . $this->firstname . '</span>';
         $surName = '<span class="family-name">'
-          . $this->objUser->getSurName($userId) . '</span></span>';
+          . $this->surname . '</span></span>';
         return '<span class="fn n">'
           . $givenName . ' '
           . $surName . '</span><br />'
@@ -294,15 +310,25 @@ class buscard extends object
     * @access private
     *
     */
-    private function getEmail($userId, $noText=FALSE)
+    private function getEmail($noText=FALSE)
     {
-        $email = $this->objUser->email($userId);
+        $email = $this->emailaddress;
         $icon = $this->getLinkIcon("email");
         if ($noText) {
             return "<a class='email' href='mailto:$email'>$icon</a><br />\n";
         } else {
             return "<a class='email' href='mailto:$email'>$icon $email</a><br />\n";
         }
+    }
+
+    private function getCountry($noText=FALSE)
+    {
+        // Use this to get the country flag
+        $objCountries = $this->getObject('countries', 'utilities');
+        $countryName = $objCountries->getCountryName($this->country);
+        $countryFlag = $objCountries->getCountryFlag($this->country);
+        $ret = "<div class=\"country-name\">$countryName</div>";
+        return "<table><tr><td> $countryFlag</td><td>$ret</td></tr></table>";
     }
 
     /**
