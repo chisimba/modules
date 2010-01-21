@@ -244,11 +244,11 @@ if(!$numberAssignments) {
 							$classAvg=array();
 							$classAvg=$objWorksheetresults->getAnnualResults("worksheet_id='".$iassignment["id"]."'","avg(mark) classAvg");
 							$ca=0;				
-							$ca=($classAvg[0]["classavg"]<0?0:$classAvg[0]["classavg"]);
+							$ca=($classAvg[0]["classavg"]<0?0:($classAvg[0]["classavg"]/$iassignment["total_mark"])*100);
 							$totalAvgMark+=$ca;
 							if(!empty($xstudentResult)) {
 								foreach($xstudentResult as $studentResult) {
-									$this->TableInstructions->addCell(round(($studentResult["mark"]<0?0:$studentResult["mark"]),2));
+									$this->TableInstructions->addCell(round(($studentResult["mark"]<0?0:($studentResult["mark"]/$iassignment["total_mark"])*100),2));
 									$this->TableInstructions->addCell(round($ca,2));
 									$this->TableInstructions->addCell('<font color="red">'.round(((($studentResult["mark"]<0?0:$studentResult["mark"])/100)*$iassignment["percentage"]),2).'</font>');
 									$totalMark+=round((($studentResult["mark"]<0?0:$studentResult["mark"])/100)*$iassignment["percentage"],2);
@@ -286,11 +286,11 @@ if(!$numberAssignments) {
 						$classAvg=array();
 						$classAvg=$objWorksheetresults->getAnnualResults("worksheet_id='".$iassignment["id"]."'","avg(mark) classAvg");
 						$ca=0;				
-						$ca=($classAvg[0]["classavg"]<0?0:$classAvg[0]["classavg"]);
+						$ca=($classAvg[0]["classavg"]<0?0:($classAvg[0]["classavg"]/$iassignment["total_mark"])*100);
 						$totalAvgMark+=$ca;
 						if(!empty($xstudentResult)) {
 							foreach($xstudentResult as $studentResult) {
-								$this->TableInstructions->addCell(round(($studentResult["mark"]<0?0:$studentResult["mark"]),2));
+								$this->TableInstructions->addCell(round(($studentResult["mark"]<0?0:($studentResult["mark"]/$iassignment["total_mark"])*100),2));
 								$this->TableInstructions->addCell(round($ca,2));
 								$this->TableInstructions->addCell('<font color="red">'.round(((($studentResult["mark"]<0?0:$studentResult["mark"])/100)*$iassignment["percentage"]),2).'</font>');
 								$totalMark+=round((($studentResult["mark"]<0?0:$studentResult["mark"])/100)*$iassignment["percentage"],2);
@@ -460,17 +460,18 @@ if(!$numberAssignments) {
 							$classAvg=array();
 							$classAvg=$objAssignmentSubmit->getSubmittedAssignments("assignmentId='".$iassignment["id"]."'","avg(mark) classAvg");
 							$ca=0;				
-							$ca=$classAvg[0]["classavg"];
+							$ca=($classAvg[0]["classavg"]/$iassignment["total_mark"])*100;
 							$totalAvgMark+=$ca;
+                                                        $studentResult=$xstudentResult[count($xstudentResult)-1];
 							if(!empty($xstudentResult)) {
-								foreach($xstudentResult as $studentResult) {
-									$this->TableInstructions->addCell(round($studentResult["mark"],2));
+								//foreach($xstudentResult as $studentResult) {
+									$this->TableInstructions->addCell(round(($studentResult["mark"]/$iassignment["mark"])*100,2));
 									$this->TableInstructions->addCell(round($ca,2));
 									$this->TableInstructions->addCell('<font color="red">'.round((($studentResult["mark"]/100)*$iassignment["percentage"]),2).'</font>');
 									$totalMark+=round(($studentResult["mark"]/100)*$iassignment["percentage"],2);
-									$totalPercentMark+=$studentResult["mark"];
+									$totalPercentMark+=($studentResult["mark"]/$iassignment["mark"])*100;
 									$count+=1;
-								}
+								//}
 							} else {
 								$this->TableInstructions->addCell('');
 								$this->TableInstructions->addCell(($ca?round($ca,2):''));
@@ -504,15 +505,16 @@ if(!$numberAssignments) {
 						$ca=0;				
 						$ca=$classAvg[0]["classavg"];
 						$totalAvgMark+=$ca;
+                                                 $studentResult=$xstudentResult[count($xstudentResult)-1];
 						if(!empty($xstudentResult)) {
-							foreach($xstudentResult as $studentResult) {
-								$this->TableInstructions->addCell(round($studentResult["mark"],2));
+							//foreach($xstudentResult as $studentResult) {
+								$this->TableInstructions->addCell(round(($studentResult["mark"]/$iassignment["mark"])*100,2));
 								$this->TableInstructions->addCell(round($ca,2));
 								$this->TableInstructions->addCell('<font color="red">'.round((($studentResult["mark"]/100)*$iassignment["percentage"]),2).'</font>');
 								$totalMark+=round(($studentResult["mark"]/100)*$iassignment["percentage"],2);
-								$totalPercentMark+=$studentResult["mark"];
+								$totalPercentMark+=($studentResult["mark"]/$iassignment["mark"])*100;
 								$count+=1;
-							}
+							//}
 						} else {
 							$this->TableInstructions->addCell('');
 							$this->TableInstructions->addCell(($ca?round($ca,2):''));
