@@ -58,7 +58,7 @@ class block_userinfo extends object {
             if($studentNumber){
                 $groupid=$this->objGroups->getId('Students');
                 $userid=$this->objUser->userid();
-                $puid=$this->dbextra->getUserPiud($userid);
+                $puid=$this->dbextra->getUserPuid($userid);
                 $res=$this->objGroups->addGroupUser($groupid, $puid);
                 $this->setSession("studentstatus","true");
             }
