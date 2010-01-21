@@ -14,7 +14,7 @@ $GLOBALS['kewl_entry_point_run']) {
 class block_userinfo extends object {
     function init() {
         $this->objLanguage=$this->getObject('language','language');
-        $this->title=$this->objLanguage->languageText('mod_userextra_title');
+        $this->title=$this->objLanguage->languageText('mod_userextra_title','userextra','Identifitation');
         $this->objUser=$this->getObject('user','security');
         $this->objGroups = $this->getObject('groupadminmodel','groupadmin');
         $this->objOps = $this->getObject ( 'groupops','groupadmin');
