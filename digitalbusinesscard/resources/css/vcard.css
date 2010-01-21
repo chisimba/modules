@@ -27,6 +27,11 @@ CSS for Digital Business Card
     padding-top: 20px;
 }
 
+.tel {
+    font-size: 70%;
+    line-height: 130%;
+}
+
 a:hover img {
     margin-left: -5px;
 }

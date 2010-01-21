@@ -121,13 +121,16 @@ class buscard extends object
             $fn = $this->getFn();
             $ret = "<table><tr><td>$userImage</td><td>$fn</td></tr></table>";
             $ret .= $this->addToTextInfo($this->getInfo('tagline'));
+            $ret .= $this->getPhones($userId);
             $ret .= $this->getCountry();
             $ret .= $this->getEmail();
             $ret .= $this->getHomePage($userId);
             foreach ($this->networks as $network) {
                 $ret .= $this->getSocialNetwork($network, $userId);
             }
-            $ret .= "<br />" . $this->getLinkIcon('mf_hcard');
+            $ret .= "<a rel=\"profile\" "
+              . "href=\"http://microformats.org/profile/hcard\">"
+              . $this->getLinkIcon('mf_hcard') . "</a>";
             $ret = $this->addToLeftCol($ret);
             $ret .= $this->addToRightCol($this->getLatLong($userId));
             // Start rendering.
@@ -356,6 +359,30 @@ class buscard extends object
                   . "target='_blank'>$icon $url</a><br />\n";
             }
         }
+    }
+
+    private function getPhones($userId)
+    {
+        $home = $this->objUserParams->getValue("phone_home");
+        $work = $this->objUserParams->getValue("phone_work");
+        $mobile = $this->objUserParams->getValue("phone_mobile");
+        if ($home || $work || $mobile) {
+            $ret = '<span class="tel">';
+            if ($home) {
+                $ret .= "<span class=\"type\">home</span>: "
+                  . "<span class=\"value\">$home</span><br />";
+            }
+            if ($work) {
+                $ret .= "<span class=\"type\">work</span>: "
+                  . "<span class=\"value\">$work</span><br />";
+            }
+            if ($mobile) {
+                $ret .= "<span class=\"type\">cell</span>: "
+                  . "<span class=\"value\">$mobile</span><br />";
+            }
+            $ret .= "</span>";
+        }
+        return $ret;
     }
 
     /**
