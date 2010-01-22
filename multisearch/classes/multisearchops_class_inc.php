@@ -90,8 +90,9 @@ class multisearchops extends object {
         $qseekterm = new textinput('query');
         $qseekterm->size = 15;
         $qseekform->addToForm($qseekterm->show());
-        $this->objsTButton = &new button($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton = new button($this->objLanguage->languageText('word_search', 'system'));
         $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setIconClass('find');
         $this->objsTButton->setToSubmit();
         $qseekform->addToForm($this->objsTButton->show());
         $qseekform = $qseekform->show();
