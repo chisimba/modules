@@ -298,7 +298,8 @@ if(!$numberAssignments) {
                         $classAvg=array();
                         $classAvg=$objWorksheetresults->getAnnualResults("worksheet_id='".$iassignment["id"]."'","avg(mark) classAvg");
                         $ca=0;
-                        $ca=($classAvg[0]["classavg"]<0?0:($classAvg[0]["classavg"]/$iassignment["total_mark"])*100);
+                        if($iassignment["total_mark"] > 0 && $classAvg[0] > 0)
+                            $ca=($classAvg[0]["classavg"]<0?0:($classAvg[0]["classavg"]/$iassignment["total_mark"])*100);
                         $totalAvgMark+=$ca;
                         if(!empty($xstudentResult)) {
                             foreach($xstudentResult as $studentResult) {
@@ -411,7 +412,7 @@ if(!$numberAssignments) {
                         $sMark=array();
                         $sMark=$objTestresults->getAnnualResults("tbl_test_results.testId='".$iassignment["id"]."' and tbl_test_results.studentId='$studentUserId' and tbl_test_results.testId=tbl_tests.id","(tbl_test_results.mark/tbl_tests.totalMark)*100 studentMark","tbl_test_results,tbl_tests");
                         $mark=0;
-                      //  $mark = isset($sMark[0]['studentMark']) ? $sMark[0]['studentMark'] : 0;
+                        //  $mark = isset($sMark[0]['studentMark']) ? $sMark[0]['studentMark'] : 0;
                         $totalAvgMark+=$ca;
                         if(!empty($xstudentResult)) {
                             foreach($xstudentResult as $studentResult) {
@@ -519,7 +520,8 @@ if(!$numberAssignments) {
                         $classAvg=array();
                         $classAvg=$objAssignmentSubmit->getSubmittedAssignments("assignmentId='".$iassignment["id"]."'","avg(mark) classAvg");
                         $ca=0;
-                        $ca=$classAvg[0]["classavg"]/$iassignment["mark"];
+                        if($classAvg[0]["classavg"] > 0 && $iassignment["mark"] > 0)
+                            $ca=$classAvg[0]["classavg"]/$iassignment["mark"];
                         $totalAvgMark+=$ca;
                         $studentResult=$xstudentResult[(count($xstudentResult)-1)];
                         if(!empty($xstudentResult)) {
