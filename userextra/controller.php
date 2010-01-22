@@ -98,20 +98,7 @@ class userextra extends controller {
     }
 
     public function __getremoteuserinformation() {
-       /* $json='{"objects":[{"value1":"0","value2":"1"}],"totalCount":1}';
-        $jsonArray=json_decode($json);
-       // print_r($jsonArray);
-        $index=0;
-       echo $jsonArray->objects[0]->value2;
-       */
-        $username=$this->getParam('username');
-        $url="http://paxdev.wits.ac.za:8080/wits-wims-services-0.1-SNAPSHOT/wims/staff/position/$username";
-        $ch=curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $r=curl_exec($ch);
-        curl_close($ch);
-        echo $r;
-        
+
         
     }
 }

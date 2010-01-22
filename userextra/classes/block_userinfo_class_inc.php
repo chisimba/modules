@@ -29,7 +29,7 @@ class block_userinfo extends object {
         $displaymessage=$objSysConfig->getValue('WELCOME_MESSAGE','userextra');
         $staffurl.="/$username";
         $studenturl.="/$username";
-
+/*
         //first test to see if user is staff
 
         if(!$this->getSession('academicstatus')) {
@@ -62,7 +62,7 @@ class block_userinfo extends object {
                 $res=$this->objGroups->addGroupUser($groupid, $puid);
                 $this->setSession("studentstatus","true");
             }
-        }
+        }*/
         return  $displaymessage;
     }
 
