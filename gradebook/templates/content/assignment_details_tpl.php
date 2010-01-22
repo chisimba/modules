@@ -70,7 +70,7 @@ $this->objH->str.=' - ';
 $this->objH->str.=$this->objUser->fullname($studentUserId);
 echo $this->objH->show();
 echo '<br />';
-echo '<strong>'.$objLanguage->languageText('mod_gradebook_studentNumber','gradebook').':</strong> '.$studentUserId;
+echo '<strong>'.$objLanguage->languageText('mod_gradebook_studentNumber','gradebook').':</strong> '.$this->objUser->username($studentUserId);
 
 //select course text, for proper alignment, fit within table
 $this->TableInstructions = $this->newObject('htmltable', 'htmlelements');
@@ -365,10 +365,11 @@ if(!$numberAssignments) {
                             $sMark=array();
                             $sMark=$objTestresults->getAnnualResults("tbl_test_results.testId='".$iassignment["id"]."' and tbl_test_results.studentId='$studentUserId' and tbl_test_results.testId=tbl_tests.id","((tbl_test_results.mark/tbl_tests.totalmark)*100)  studentMark","tbl_test_results,tbl_tests");
                             $mark=0;
-                            $mark=($sMark[0]["studentMark"]!=NULL?$sMark[0]["studentMark"]:0);
+                           // $mark=($sMark[0]["studentMark"]!=NULL?$sMark[0]["studentMark"]:0);
                             $totalAvgMark+=$ca;
                             if(!empty($xstudentResult)) {
                                 foreach($xstudentResult as $studentResult) {
+                                    $mark=($studentResult['mark']/$iassignment['totalmark'])*100;
                                     $this->TableInstructions->addCell(round($mark,2));
                                     $this->TableInstructions->addCell(round($ca,2));
                                     $this->TableInstructions->addCell('<font color="red">'.round((($mark/100)*$iassignment["percentage"]),2).'</font>');
