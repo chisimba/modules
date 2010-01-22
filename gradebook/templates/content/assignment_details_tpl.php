@@ -362,7 +362,7 @@ if(!$numberAssignments) {
                             $ca=0;
                             $ca=$classAvg[0]["classavg"];
                             $sMark=array();
-                            $sMark=$objTestresults->getAnnualResults("tbl_test_results.testId='".$iassignment["id"]."' and tbl_test_results.studentId='$studentUserId' and tbl_test_results.testId=tbl_tests.id","((tbl_test_results.mark/tbl_tests.totalMark)*100) studentMark","tbl_test_results,tbl_tests");
+                            $sMark=$objTestresults->getAnnualResults("tbl_test_results.testId='".$iassignment["id"]."' and tbl_test_results.studentId='$studentUserId' and tbl_test_results.testId=tbl_tests.id","((tbl_test_results.mark/tbl_tests.totalmark)*100)  studentMark","tbl_test_results,tbl_tests");
                             $mark=0;
                             $mark=($sMark[0]["studentMark"]!=NULL?$sMark[0]["studentMark"]:0);
                             $totalAvgMark+=$ca;
@@ -403,6 +403,7 @@ if(!$numberAssignments) {
                         $studentResult=array();
                         $xstudentResult=array();
                         $xstudentResult=$objTestresults->getResult($studentUserId,$iassignment["id"]);
+
                         $classAvg=array();
                         $classAvg=$objTestresults->getAnnualResults("tbl_test_results.testId='".$iassignment["id"]."' and tbl_test_results.testId=tbl_tests.id","avg((tbl_test_results.mark/tbl_tests.totalMark)*100) classAvg","tbl_test_results,tbl_tests");
                         $ca=0;
@@ -410,10 +411,11 @@ if(!$numberAssignments) {
                         $sMark=array();
                         $sMark=$objTestresults->getAnnualResults("tbl_test_results.testId='".$iassignment["id"]."' and tbl_test_results.studentId='$studentUserId' and tbl_test_results.testId=tbl_tests.id","(tbl_test_results.mark/tbl_tests.totalMark)*100 studentMark","tbl_test_results,tbl_tests");
                         $mark=0;
-                        $mark = isset($sMark[0]['studentMark']) ? $sMark[0]['studentMark'] : 0;
+                      //  $mark = isset($sMark[0]['studentMark']) ? $sMark[0]['studentMark'] : 0;
                         $totalAvgMark+=$ca;
                         if(!empty($xstudentResult)) {
                             foreach($xstudentResult as $studentResult) {
+                                $mark=($studentResult['mark']/$iassignment['totalmark'])*100;
                                 $this->TableInstructions->addCell(round($mark,2));
                                 $this->TableInstructions->addCell(round($ca,2));
                                 $this->TableInstructions->addCell('<font color="red">'.round((($mark/100)*$iassignment["percentage"]),2).'</font>');
