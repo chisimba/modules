@@ -12,4 +12,4 @@ $package->setAbstract('Test Abstract');
 $package->create();
 
 $client = new SWORDAPPClient();
-$client->deposit('http://localhost:8080/sword', 'fedoraAdmin', 'charlvn', '', 'tmp/test.zip', 'http://purl.org/net/sword-types/METSDSpaceSIP', 'application/zip', false, true);
+$client->deposit('http://localhost:8080/sword', 'fedoraAdmin', 'charlvn', 'Charl van Niekerk', 'tmp/test.zip', 'http://purl.org/net/sword-types/METSDSpaceSIP', 'application/zip', false, true);
