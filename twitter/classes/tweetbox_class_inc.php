@@ -199,6 +199,13 @@ class tweetbox extends object
         //Load the Ajax form processing
         $objJQuery = $this->getObject('jquery', 'jquery');
         $objJQuery->loadFormPlugin();
+        $this->loadClass('button', 'htmlelements');
+        //--- Create a Tweet button (not translatable!)
+        $objButton = new button('submit','Tweet');
+        // Add the login icon
+        $objButton->setIconClass("twitter");
+        // Set the button type to submit
+        $objButton->setToSubmit();
         
         $js2 = $this->renderFormScript();
         $this->appendArrayVar('headerParams', $js2);
@@ -210,8 +217,7 @@ class tweetbox extends object
               . "</span></td><td><span class=\"error\"><div name=\"charlimitinfo\" id=\"charlimitinfo\">140</div></span></td></tr></table>"
               . "<textarea name=\"tweet\" id=\"chisimba_tweet\" cols=\"19\" rows=\"4\">"
               . "</textarea><br />"
-              . "<input type=\"submit\" value=\"Tweet\" />"
-              . "</form>";
+              . $objButton->show() . "</form>";
         } else {
             $ret = $this->objLanguage->languageText("mod_twitter_nologon", "twitter");
         }
