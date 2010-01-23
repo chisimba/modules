@@ -105,8 +105,8 @@ class buscard extends object
      *
      * Default show method to show the Digital Business card
      *
-     * @param <type> $userId
-     * @return <type>
+     * @param string $userId The userid of the user
+     * @return string The rendered hcard
      * @access public
      *
      */
@@ -121,8 +121,11 @@ class buscard extends object
             $fn = $this->getFn();
             $ret = "<table><tr><td>$userImage</td><td>$fn</td></tr></table>";
             $ret .= $this->addToTextInfo($this->getInfo('tagline'));
-            $ret .= $this->getPhones($userId);
-            $ret .= $this->getCountry();
+            $ret .= $this->getPhones();
+            // Put all the addr stuff here.
+            $addr = $this->getCountry();
+            $ret .= $this->addToAddress($addr);
+            // End of addr stuff.
             $ret .= $this->getEmail();
             $ret .= $this->getHomePage($userId);
             foreach ($this->networks as $network) {
@@ -146,13 +149,22 @@ class buscard extends object
         }
     }
 
+    /**
+     *
+     * Set class properties for all the userdetails obtained by the 
+     * getUserDetails method.
+     *
+     * @param string $userId The userid to base it on
+     * @return VOID
+     * @access private
+     *
+     */
     private function setUserProperties($userId)
     {
         $userDetails = $this->objUser->getUserDetails($userId);
         if (count($userDetails) > 0) {
             foreach ($userDetails as $property=>$value) {
                 $this->$property = $value;
-                //echo $property . " = " .$value . "<br />";
             }
         }
     }
@@ -242,6 +254,20 @@ class buscard extends object
 
     /**
     *
+    * Add the content to an addr vcard layer
+    *
+    * @param string $addr The content to add to the layer
+    * @return string The content inside the layer tags
+    * @access private
+    *
+    */
+    private function addToAddress($addr)
+    {
+        return "<div class=\"adr\">$addr</div>";
+    }
+
+    /**
+    *
     * Add the content to an floated left layer
     *
     * @param string $ret The content to add to the layer
@@ -324,6 +350,15 @@ class buscard extends object
         }
     }
 
+    /**
+    *
+    * Get the country of the user and render in in hcard format
+    *
+    * @param boolean $noText TRUE|FALSE whether to return text, default yes
+    * @return string The rendered country with flag
+    * @access private
+    *
+    */
     private function getCountry($noText=FALSE)
     {
         // Use this to get the country flag
@@ -361,7 +396,14 @@ class buscard extends object
         }
     }
 
-    private function getPhones($userId)
+    /**
+     *
+     * Retrieve the stored phone numbers
+     *
+     * @return string The rendered phone numbers
+     *
+     */
+    private function getPhones()
     {
         $home = $this->objUserParams->getValue("phone_home");
         $work = $this->objUserParams->getValue("phone_work");
@@ -509,6 +551,13 @@ class buscard extends object
         return $this->objUser->getSmallUserImage($userId);
     }
 
+    /**
+     * Get any user information stored in userparams using the param code
+     *
+     * @param string $param The parameter to look up
+     * @return string The value of the parameter
+     *
+     */
     private function getInfo($param)
     {
         if ($ret = $this->objUserParams->getValue($param)) {
