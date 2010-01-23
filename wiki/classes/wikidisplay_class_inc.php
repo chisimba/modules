@@ -935,7 +935,7 @@ class wikidisplay extends object
     private function _showEditPage($id)
     {
         // add header params
-        $objMk = $this->getObject('markitup', 'htmlelements');
+        $objMk = $this->getObject('markitup', 'markitup');
         $objMk->setType('chiki');
         $headerParams = $objMk->show('id', 'input_wikiContent');
         $this->appendArrayVar('headerParams', $headerParams);
@@ -1068,7 +1068,7 @@ class wikidisplay extends object
     public function showAddPage($name = NULL)
     {
         // add  javascript
-        $objMk = $this->getObject('markitup', 'htmlelements');
+        $objMk = $this->getObject('markitup', 'markitup');
         $objMk->setType('chiki');
         $headerParams = $objMk->show('id', 'input_wikiContent');
         $this->appendArrayVar('headerParams', $headerParams);
