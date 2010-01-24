@@ -116,7 +116,7 @@ class digitalbusinesscard extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'view');
+        $action=$this->getParam('action', 'viewtabbed');
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -146,22 +146,32 @@ class digitalbusinesscard extends controller
     */
     private function __view()
     {
-        $objCard = $this->getObject('buscard', 'digitalbusinesscard');
-        $userId = $this->getParam('userid', FALSE);
-        if (!$userId) {
-            $userName = $this->getParam('username', FALSE);
-            // Get the userId from the username.
-            if ($userName) {
-                $userId = $this->objUser->getUserId($userName);
-            } else {
-                // Fall back to the logged in user.
-                if ($this->objUser->isLoggedIn()) {
-                    $userId = $this->objUser->userId();
-                }
-            }
-        }
-        if ($userId) {
+        if ($userId = $this->getUserId()) {
+            $objCard = $this->getObject('buscard', 'digitalbusinesscard');
             $str = $objCard->show($userId);
+        } else {
+            $str =  $this->objLanguage->languageText(
+              'mod_digitalbusinesscard_usernotfound',
+              'digitalbusinesscard');
+        }
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
+
+    /**
+    *
+    * Method corresponding to the viewtabbed action. It shows
+    * the hcard in a tabbed format
+    *
+    * @return string The populated template
+    * @access private
+    *
+    */
+    private function __viewtabbed()
+    {
+        if ($userId = $this->getUserId()) {
+            $objCard = $this->getObject('buscard', 'digitalbusinesscard');
+            $str = $objCard->showTabbed($userId);
         } else {
             $str =  $this->objLanguage->languageText(
               'mod_digitalbusinesscard_usernotfound',
@@ -266,6 +276,34 @@ class digitalbusinesscard extends controller
     
     /*------------- END: Set of methods to replace case selection ------------*/
     
+    /**
+    * Get the userId by first trying the querystring, then trying
+    * username lookup, falling back to the logged in user
+    * 
+    * @return string The userId or boolean FALSE if not found
+    * 
+    */
+    private function getUserId()
+    {
+        $userId = $this->getParam('userid', FALSE);
+        if (!$userId) {
+            $userName = $this->getParam('username', FALSE);
+            // Get the userId from the username.
+            if ($userName) {
+                $userId = $this->objUser->getUserId($userName);
+                return $userId;
+            } else {
+                // Fall back to the logged in user.
+                if ($this->objUser->isLoggedIn()) {
+                    $userId = $this->objUser->userId();
+                    return $userId;
+                }
+            }
+        } else {
+            return $userId;
+        }
+        return FALSE;
+    }
 
 
     /**

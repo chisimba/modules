@@ -65,15 +65,15 @@ $GLOBALS['kewl_entry_point_run'])
 class buscard extends object
 {
 
-     /**
-     *
-     * This is a hardcoded array of the known social network providers
-     * that will be supported by having Icons stored in this module
-     *
-     * @var array
-     * @access public
-     *
-     */
+    /**
+    *
+    * This is a hardcoded array of the known social network providers
+    * that will be supported by having Icons stored in this module
+    *
+    * @var array
+    * @access public
+    *
+    */
     public $networks = array ('africator', 'delicious', 'digg', 'facebook',
         'flickr', 'friendfeed', 'google', 'identica', 'linkedin', 'muti',
         'opera', 'picasa', 'qik', 'slideshare', 'technorati', 'twitter',
@@ -102,32 +102,18 @@ class buscard extends object
     }
 
     /**
-     *
-     * Default show method to show the Digital Business card
-     *
-     * @param string $userId The userid of the user
-     * @return string The rendered hcard
-     * @access public
-     *
-     */
+    *
+    * Default show method to show the Digital Business card
+    *
+    * @param string $userId The userid of the user
+    * @return string The rendered hcard
+    * @access public
+    *
+    */
     public function show($userId)
     {
-        if ($this->objUser->isActive($userId)) {
-            // Read all the properties at once
-            $this->setUserProperties($userId);
-            $this->objUserParams->setUserId($userId);
-            $this->objUserParams->readConfig();
-            $userImage = $this->getUserImage($userId);
-            $fn = $this->getFn();
-            $ret = "<table><tr><td>$userImage</td><td>$fn</td></tr></table>";
-            $ret .= $this->addToTextInfo($this->getInfo('tagline'));
-            $ret .= $this->getPhones();
-            // Put all the addr stuff here.
-            $addr = $this->getCountry();
-            $ret .= $this->addToAddress($addr);
-            // End of addr stuff.
-            $ret .= $this->getEmail();
-            $ret .= $this->getHomePage($userId);
+        if ($this->readParams($userId)) {
+            $ret = $this->getContact($userId);
             foreach ($this->networks as $network) {
                 $ret .= $this->getSocialNetwork($network, $userId);
             }
@@ -150,15 +136,136 @@ class buscard extends object
     }
 
     /**
-     *
-     * Set class properties for all the userdetails obtained by the 
-     * getUserDetails method.
-     *
-     * @param string $userId The userid to base it on
-     * @return VOID
-     * @access private
-     *
-     */
+    *
+    * Show the Digital Business card in a tabbed pane view
+    *
+    * @param string $userId The userid of the user
+    * @return string The rendered hcard
+    * @access public
+    *
+    */
+    public function showTabbed($userId)
+    {
+        if ($this->readParams($userId)) {
+            // Get the Map tab content.
+            $mapTab = $this->getLatLong($userId);
+            // Get the social networks tab content.
+            $socialTab = "";
+            foreach ($this->networks as $network) {
+                $socialTab .= $this->getSocialNetwork($network, $userId);
+            }
+            // Get the contact info tab content.
+            $contactTab = $this->getContact($userId, TRUE);
+            $objTab = $this->newObject('tabpane', 'htmlelements');
+            $objTab->addTab(array('name'=>' Contact ','url'=>'http://localhost','content' => $contactTab,'nested' => FALSE),'webfx-tab-style-sheet');
+            $objTab->addTab(array('name'=>' Social networks ','url'=>'http://localhost','content' => $socialTab,'nested' => FALSE),'webfx-tab-style-sheet');
+            $objTab->addTab(array('name'=>' Map ','url'=>'http://localhost','content' => $mapTab,'nested' => FALSE),'webfx-tab-style-sheet');
+            return $objTab->show();
+            
+            unset($this->objUserParams);
+        } else {
+            unset($this->objUserParams);
+            return $this->objLanguage->languageText(
+              'mod_digitalbusinesscard_usernotfound',
+              'digitalbusinesscard'
+            );
+        }
+    }
+
+    /**
+    *
+    * Get the contact info for the hcard
+    *
+    * @param string $userId The userid of the user
+    * @return string The rendered contact info
+    * @access private
+    *
+    */
+    public function getContact($userId, $useTable=FALSE)
+    {
+            $userImage = $this->getUserImage($userId);
+            $fn = $this->getFn();
+            $ret = "";
+            if ($useTable) {
+                $ret .= "<table class=\"vcard-contact\"><tr><td valign='top'>";
+            }
+            $ret .= "<table><tr><td>$userImage</td><td>$fn</td></tr></table>";
+            $ret .= $this->addToTextInfo($this->getInfo('tagline'));
+            $ret .= $this->getPhones();
+            if ($useTable) {
+                $ret .= "</td><td valign='top'>";
+            }
+            // Put all the addr stuff here.
+            $this->extractAddress();
+            $addr="";
+            if ($this->hasHome) {
+                $addr .= $this->homeAddr . "<br />";
+            }
+            if ($this->hasWork) {
+                $addr .= $this->workAddr . "<br />";
+            }
+            $ret .= $this->addToAddress($addr
+              . $this->getCountry());
+            if ($useTable) {
+                $ret .= "</td><td valign='top'>";
+            }
+            // End of addr stuff.
+            $ret .= $this->getEmail();
+            $ret .= $this->getHomePage($userId);
+            if ($useTable) {
+                $ret .= "</td></tr></table>";
+            }
+            return $ret;
+    }
+
+    /**
+    *
+    * Read the user parameters, which we should only have to do once
+    * in a particular instance.
+    *
+    * @param string $userId The userid to read
+    * @return boolean TRUE | FALSE True if read, false otherwise
+    * @access private
+    *
+    */
+    private function readParams($userId)
+    {
+        if ($this->objUser->isActive($userId)) {
+            // Read all the properties at once
+            $this->setUserProperties($userId);
+            $this->objUserParams->setUserId($userId);
+            $this->objUserParams->readConfig();
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+    *
+    * Show in text area so user can copy their own hcard and use
+    * in a static way somewhere.
+    *
+    * @param string $userId The userId of the user
+    * @return string The text area with the vcard
+    *
+    */
+    public function showInTextbox($userId)
+    {
+        return '<textarea name="hcard" rows="20" cols="60">'
+          . $this->show($userId) . '</textarea>';
+    }
+
+    /**
+    *
+    * Set class properties for all the userdetails obtained by the 
+    * getUserDetails method.
+    *
+    * @param string $userId The userid to base it on
+    * @return VOID
+    * @access private
+    *
+    */
     private function setUserProperties($userId)
     {
         $userDetails = $this->objUser->getUserDetails($userId);
@@ -263,7 +370,7 @@ class buscard extends object
     */
     private function addToAddress($addr)
     {
-        return "<div class=\"adr\">$addr</div>";
+        return "<span class=\"vcard-addr\"><div class=\"adr\">$addr</div></span>";
     }
 
     /**
@@ -305,7 +412,7 @@ class buscard extends object
     */
     private function addToTextInfo($ret)
     {
-        return "<div class='vcard_textinfo'>$ret</div>";
+        return "<div class='vcard-textinfo'>$ret</div>";
     }
 
     /**
@@ -319,7 +426,7 @@ class buscard extends object
     */
     private function getFn()
     {
-        $givenName = '<span class="name-wrapper"><span class="given-name">'
+        $givenName = '<span class="vcard-name-wrapper"><span class="given-name">'
           . $this->firstname . '</span>';
         $surName = '<span class="family-name">'
           . $this->surname . '</span></span>';
@@ -397,19 +504,20 @@ class buscard extends object
     }
 
     /**
-     *
-     * Retrieve the stored phone numbers
-     *
-     * @return string The rendered phone numbers
-     *
-     */
+    *
+    * Retrieve the stored phone numbers
+    *
+    * @return string The rendered phone numbers
+    *
+    */
     private function getPhones()
     {
         $home = $this->objUserParams->getValue("phone_home");
         $work = $this->objUserParams->getValue("phone_work");
         $mobile = $this->objUserParams->getValue("phone_mobile");
+        $ret ="";
         if ($home || $work || $mobile) {
-            $ret = '<span class="tel">';
+            $ret = '<span class="vcard-tel"><span class="vtel">';
             if ($home) {
                 $ret .= "<span class=\"type\">home</span>: "
                   . "<span class=\"value\">$home</span><br />";
@@ -422,10 +530,53 @@ class buscard extends object
                 $ret .= "<span class=\"type\">cell</span>: "
                   . "<span class=\"value\">$mobile</span><br />";
             }
-            $ret .= "</span>";
+            $ret .= "</span></span>";
         }
         return $ret;
     }
+
+    /**
+    *
+    * Extract the addresses and set class properties to correspond to
+    * them.
+    *
+    * @return TRUE
+    * @access private
+    *
+    */
+    private function extractAddress()
+    {
+        $validAddr = array('addr_home', 'addr_work',
+          'addr_city_home', 'addr_city_work',
+          'addr_postalcode_home', 'addr_postalcode_work');
+        foreach ($validAddr as $addrItem) {
+            $this->$addrItem = $this->getInfo($addrItem);
+        }
+        $this->hasHome = FALSE;
+        $this->hasWork = FALSE;
+        // Note that the hard coded english is due to the specification
+        if ($this->addr_work && $this->addr_city_work
+          && $this->addr_postalcode_work) {
+            $this->addr_work = str_replace("--", "<br />", $this->addr_work);
+            $this->workAddr = "<span class=\"type\"><em>Work</em></span>:"
+            . "<div class=\"street-address\">$this->addr_work</div>"
+            . "<span class=\"locality\">$this->addr_city_work</span>&nbsp;&nbsp;"
+            . "<span class=\"postal-code\">$this->addr_postalcode_work</span>";
+            $this->hasWork = TRUE;
+        }
+        if ($this->addr_home && $this->addr_city_home
+          && $this->addr_postalcode_home) {
+            $this->addr_home = str_replace("--", "<br />", $this->addr_home);
+            $this->homeAddr = "<span class=\"type\"><em>Home</em>:</span>:"
+              . "<div class=\"street-address\">$this->addr_home</div>"
+              . "<span class=\"locality\">$this->addr_city_home</span>&nbsp;&nbsp;"
+              . "<span class=\"postal-code\">$this->addr_postalcode_home</span>";
+            $this->hasHome = TRUE;
+        }
+        return TRUE;
+    }
+
+
 
     /**
     *
@@ -485,16 +636,16 @@ class buscard extends object
     }
 
     /**
-     *
-     * Get the latitude and longitude of the user and return it in hcard format
-     * while optionally rendering a google map
-     *
-     * @param string $userId The userid of the user to lookup
-     * @param boolean $showMap Whether or not to show the map, default TRUE
-     * @return string The rendered output
-     * @access private
-     *
-     */
+    *
+    * Get the latitude and longitude of the user and return it in hcard format
+    * while optionally rendering a google map
+    *
+    * @param string $userId The userid of the user to lookup
+    * @param boolean $showMap Whether or not to show the map, default TRUE
+    * @return string The rendered output
+    * @access private
+    *
+    */
     private function getLatLong($userId, $showMap=TRUE)
     {
         $latitude = $this->objUserParams->getValue("latitude");
@@ -515,15 +666,15 @@ class buscard extends object
     }
 
     /**
-     *
-     * Method to render a simple google map
-     *
-     * @param string $latitude Latitude of user
-     * @param string $longitude Longitude of user
-     * @return string The rendered map
-     * @access private
-     *
-     */
+    *
+    * Method to render a simple google map
+    *
+    * @param string $latitude Latitude of user
+    * @param string $longitude Longitude of user
+    * @return string The rendered map
+    * @access private
+    *
+    */
     private function getMap($latitude, $longitude)
     {
         $ret = '<br /><div class="vcard_map">'
@@ -552,12 +703,12 @@ class buscard extends object
     }
 
     /**
-     * Get any user information stored in userparams using the param code
-     *
-     * @param string $param The parameter to look up
-     * @return string The value of the parameter
-     *
-     */
+    * Get any user information stored in userparams using the param code
+    *
+    * @param string $param The parameter to look up
+    * @return string The value of the parameter
+    *
+    */
     private function getInfo($param)
     {
         if ($ret = $this->objUserParams->getValue($param)) {

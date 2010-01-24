@@ -2,23 +2,15 @@
 CSS for Digital Business Card
 */
 
-.name-wrapper {
+.vcard-name-wrapper {
     font-size: 160%;
 }
 
-.vcard_left {
-    float:left;
-}
-.vcard_right {
-    float:right;
-}
-.vcard_map {
-
-}
-
-.vcard_textinfo {
+.vcard-textinfo {
     width: 340px;
     color: grey;
+    line-height: 130%;
+    margin-bottom: 30px;
 }
 
 .vcard {
@@ -27,12 +19,20 @@ CSS for Digital Business Card
     padding-top: 20px;
 }
 
-.tel {
-    font-size: 70%;
+.vcard-tel {
+    font-size: 85%;
     line-height: 130%;
 }
 
-a:hover img {
+.vcard-addr {
+    font-size: 85%;
+    line-height: 130%;
+}
+
+.vcard a:hover img {
     margin-left: -5px;
 }
 
+table.vcard-contact td {
+    padding-right: 20px;
+}
