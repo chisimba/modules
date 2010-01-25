@@ -159,7 +159,9 @@ class buscard extends object
             $objTab = $this->newObject('tabpane', 'htmlelements');
             $objTab->addTab(array('name'=>' Contact ','url'=>'http://localhost','content' => $contactTab,'nested' => FALSE),'webfx-tab-style-sheet');
             $objTab->addTab(array('name'=>' Social networks ','url'=>'http://localhost','content' => $socialTab,'nested' => FALSE),'webfx-tab-style-sheet');
-            $objTab->addTab(array('name'=>' Map ','url'=>'http://localhost','content' => $mapTab,'nested' => FALSE),'webfx-tab-style-sheet');
+            if ($mapTab !== NULL) {
+                $objTab->addTab(array('name'=>' Map ','url'=>'http://localhost','content' => $mapTab,'nested' => FALSE),'webfx-tab-style-sheet');
+            }
             return $objTab->show();
             
             unset($this->objUserParams);
