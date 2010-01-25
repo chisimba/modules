@@ -453,10 +453,10 @@ class blogposts extends object
                     }
                     $fboxcontent = $post['post_content']
                       . $this->cleaner->cleanHtml("<br /><hr />"
-                      . "<center><em><b>"
+                      . "<div class='blog-item-base'><center><em><b>"
                       . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog")
                       . "</b><br />" . $linkstr . "</em><hr />"
-                      . $tbl->show() . "</center>");
+                      . $tbl->show() . "</center></div>");
                     $ret.= $objFeatureBox->showContent($head, $fboxcontent);
                 } else {
                     // table of non logged in options
@@ -534,10 +534,10 @@ class blogposts extends object
                         $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
                     $ret.= $objFeatureBox->showContent($head, $post['post_content']
-                      . $this->cleaner->cleanHtml("<br /><hr /><center><em><b>"
+                      . $this->cleaner->cleanHtml("<br /><hr /><div class='blog-item-base'><center><em><b>"
                       . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") 
                       . "</b><br />" . $linkstr . "</em><hr />"
-                      .  $tblnl->show() . "</center>" ));
+                      .  $tblnl->show() . "</center></div>" ));
                 }
             }
         } else {
