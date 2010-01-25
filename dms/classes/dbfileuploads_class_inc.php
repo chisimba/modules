@@ -86,7 +86,9 @@ class dbfileuploads extends dbtable {
      */
     public function getFileInfo($filename, $filepath) {
       $filepath=  str_replace("//", "/", $filepath);
-        $sql="select * from $this->tablename where filename = '$filename' and filepath = '$filepath'";
+        $sql="select * from $this->tablename  fls,tbl_dms_documents docs
+                where fls.filename = '$filename' and fls.filepath = '$filepath'
+                and fls.docid=docs.id and docs.active='Y'";
         $data = $this->getArray($sql);
         return $data;
     }

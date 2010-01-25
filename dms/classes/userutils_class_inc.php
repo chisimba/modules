@@ -20,7 +20,7 @@
  * @package   dms (document management system)
  * @author    Nguni Phakela, david wafula
  * @copyright 2010
-=
+ =
  */
 
 if (!
@@ -124,18 +124,19 @@ class userutils extends object {
         return $data;
     }
 
-    public function saveFile($id,$path) {
+    public function saveFile($path,$docname,$docid) {
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'dms');
         $filepath = $dir.$path;
         $filepath = str_replace("//", "/", $filepath);
         $objUser = $this->getObject('user', 'security');
-        $userid = $objUser->userId();
+        $userid=$objUser->userId();
+        //$userid ="1";//
         $this->objUploadTable->setUserId($userid);
         $destinationDir = $filepath;
         $objFileUpload = $this->getObject('upload');
         $objFileUpload->overWrite = TRUE;
         $objFileUpload->uploadFolder = $destinationDir.'/';
-        $result = $objFileUpload->doUpload($id);
+        $result = $objFileUpload->doUpload($docname,$docid);
 
         if ($result['success'] == FALSE) {
 
@@ -151,17 +152,16 @@ class userutils extends object {
                 @chmod($file, 0777);
             }
 
-
-
             // save the file information into the database
             $data = array(
-                    'filename'=>$filename,
+                    'filename'=>$docname.'.'.$ext,
                     'filetype'=>$ext,
                     'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),
-                    'userid'=>$objUser->userId(),
+                    'userid'=>$userid,
                     'parent'=>$parent,
                     'refno'=>'1234',
-                    'filepath'=>$file);
+                    'docid'=>$docid,
+                    'filepath'=>$path);
             $result = $this->objUploadTable->saveFileInfo($data);
 
             return "success";
@@ -277,13 +277,14 @@ class userutils extends object {
             $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
 
             if(!is_dir($dir.$node.'/'.$f)) {
-                $fileinfo=$this->objUploadTable->getFileInfo($f,$dir.$node.'/'.$f);
+                $fileinfo=$this->objUploadTable->getFileInfo($f,$node);
                 foreach ($fileinfo as $file) {
                     $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
                     $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
                     $nodes[] = array(
                             'text'=>$f,
                             'id'=>$node.'/'.$f,
+                            'docid'=>$file['docid'],
                             'refno'=>$file['id'],
                             'owner'=>$this->objUser->fullname($file['userid']),
                             'lastmod'=>$lastmod,
@@ -314,6 +315,7 @@ class userutils extends object {
         $result="<items>";
 
         $d = dir($dir.$node);
+
         while($f = $d->read()) {
             if($f == '.' || $f == '..' || substr($f, 0, 1) == '.')continue;
             $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
@@ -324,7 +326,9 @@ class userutils extends object {
                 $isadmin=$this->objUser->isAdmin()?"true":"false";
 
                 foreach ($permissions as $permission) {
+                    //echo "perms";
                     $isowner=$this->objUser->userid() == $permission['userid']?"true":"false";
+
                     $result.='<item
                         folder="true"
                         name="'.$f.'"
@@ -338,13 +342,15 @@ class userutils extends object {
                         isowner="'.$isowner.'"
                         parent="'.$node.'">
                        </item>';
+
                 }
             }
         }
-       
+
         $result.="</items>";
         $d->close();
         echo $result;
+        die();
     }
 
 
@@ -427,10 +433,10 @@ class userutils extends object {
         $this->objMkdir = $this->getObject('mkdir', 'files');
         $path =$this->objSysConfig->getValue('FILES_DIR', 'dms').'/'.$folderpath.'/'.$foldername;
         $result = $this->objMkdir->mkdirs($path);
-
+        $userid= $this->objUser->userid();
         //if($result != FALSE) {
         $this->folderPermissions->addPermission(
-                $this->objUser->userid(),$folderpath.'/'.$foldername,
+                $userid,$folderpath.'/'.$foldername,
                 'true','true','true');
         //}
     }
@@ -516,6 +522,31 @@ class userutils extends object {
         $ext = $exts[$n];
 
         return $filename.'.'.$ext;
+    }
+
+
+    /**
+     * loops for a miximum of 10 mins, waiting for upload to complete
+     * @param <type> $filename
+     * @param <type> $folderpath
+     */
+    function monitorupload($filename,$folderpath) {
+        $micro_seconds=2000;
+        $count=1;
+        $state="";
+        while (true) {
+            if(file_exists($folderpath.'/'. $filename)) {
+                $state= "succeed";
+                break;
+
+            }
+            if($count > 30) {
+                break;
+            }
+            usleep($micro_seconds);
+            $count++;
+        }
+        echo $state;
     }
 }
 ?>

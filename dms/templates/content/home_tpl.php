@@ -1,8 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <?php
-$utils=$this->getObject('userutils');
 
-$meta = '<meta name=\'gwt:module\' content=\'org.dms.Test1=org.dms.Test1\'>';
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 $uxcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/ux/css/ux-all.css','htmlelements').'"/>';
 
@@ -16,6 +14,13 @@ $this->appendArrayVar('headerParams', $meta);
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $uxcss);
 $this->appendArrayVar('headerParams', $dataviewcss);
-echo '<script language="JavaScript" src="'.$this->getResourceUri('js/org.dms.Startup/org.dms.Startup.nocache.js').'" type="text/javascript"></script>';
-
+$content= '<h1>WICID</h1><div id="surface"></div><script language="JavaScript" src="'.$this->getResourceUri('js/wicid/wicid.nocache.js').'" type="text/javascript"></script>';
+$surface = '<div id="onecolumn">
+	    <div id="content">
+	    <div id="contentcontent">
+	    '.$content.'
+	    </div>
+	   </div>
+	  </div>';
+echo $content;
 ?>

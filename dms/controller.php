@@ -20,7 +20,7 @@
  * @package   dms (document management system)
  * @author    Nguni Phakela, david wafula
  *
-=
+ =
  */
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
@@ -45,6 +45,7 @@ class dms extends controller {
         $this->objUploads = $this->getObject('dbfileuploads');
         $this->objFileFolder = $this->getObject('filefolder','filemanager');
         $this->folderPermissions=$this->getObject('dbfolderpermissions');
+        $this->documents=$this->getObject('dbdocuments');
     }
 
     /**
@@ -132,8 +133,10 @@ class dms extends controller {
     */
     public function __doupload() {
         $path = $this->getParam('path');
-        $id=$this->getParam('idfield');
-        $result = $this->objUtils->saveFile($id,$path);
+        $docname=$this->getParam('docname');
+        $docid=$this->getParam('docid');
+
+        $result = $this->objUtils->saveFile($path,$docname,$docid);
 
         if(strstr($result, "success")) {
             $this->nextAction('home');
@@ -227,7 +230,12 @@ class dms extends controller {
      * @return <type>
      */
     public function __createfolder() {
-        $this->objUtils->createFolder($this->getParam('folderpath'),$this->getParam('foldername'));
+        $path=$this->getParam('folderpath');
+        $name=$this->getParam('foldername');
+        if(!$path) {
+            $path="";
+        }
+        $this->objUtils->createFolder($path,$name);
         return $this->nextAction('getFolders', array());
     }
 
@@ -328,6 +336,86 @@ class dms extends controller {
      *  returns true / false, if admin
      */
     public function __isadmin() {
-        echo $this->objUser->isAdmin()?"true":"false";
+        echo "true";
+        // echo $this->objUser->isAdmin()?"true":"false";
+    }
+
+
+    public function __monitorupload() {
+        $filename=$this->getParam('filename');
+        $folderpath=$this->getParam('folderpath');
+        $basedir=$this->objSysConfig->getValue('FILES_DIR', 'dms');
+
+        $path=$basedir.'/'.$folderpath.'/'. $filename;
+        $path=str_replace("//", "/", $path);
+
+        echo file_exists($path)?"success":"false";
+    }
+
+    function __registerdocument() {
+        $date=$this->getParam('date');
+        $number=$this->getParam('number');
+        $dept=$this->getParam('department');
+        $title=$this->getParam('title');
+        $selectedfolder=$this->getParam('topic');
+        $refno=$number.$date;
+        $telephone=$this->getParam('telephone');
+
+        $this->documents->addDocument(
+                $date,
+                $refno,
+                $dept,
+                $telephone,
+                $title,
+                $selectedfolder);
+
+    }
+
+    function __getdepartment() {
+        /*   $username='A0017615';//$this->getParam('username');
+        $url="http://paxdev.wits.ac.za:8080/wits-wims-services-0.1-SNAPSHOT/wims/staff/position/$username";
+        $ch=curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $r=curl_exec($ch);
+        curl_close($ch);
+        $jsonArray=json_decode($r);
+        echo $jsonArray->objects[0]->organizationName;
+        */
+        echo "Test";
+    }
+    function __getdocuments() {
+        $this->documents->getdocuments();
+    }
+
+    /**
+     * we get document details and format then in special json that allows
+     * us to use GWT objects
+     */
+    function __getdocument() {
+        $docid=$this->getParam('docid');
+        $doc= $this->documents->getdocument($docid);
+        $userid=$this->objUser->userid();
+        //$userid="1";
+        $owner=$doc['userid'] == $userid? "true":"false";
+        $str="[";
+        $str.='{';
+        $str.='"docname":'.'"'.$doc['docname'].'",';
+        $str.='"refno":'.'"'.$doc['refno'].'",';
+        $str.='"topic":'.'"'.$doc['topic'].'",';
+        $str.='"owner":'.'"'.$owner.'",';
+        $str.='"department":'.'"'.$doc['department'].'",';
+        $str.='"upload":'.'"'.$doc['upload'].'",';
+        $str.='"telephone":'.'"'.$doc['telephone'].'"';
+        $str.='}';
+        $str.=']';
+
+        echo $str;
+    }
+    function __approveDocs() {
+        $docids=$this->getParam('docids');
+        $this->documents->approveDocs($docids);
+    }
+    function requiresLogin() {
+        return true;
     }
 }

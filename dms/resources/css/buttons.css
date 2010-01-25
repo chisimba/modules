@@ -59,4 +59,15 @@ h2 {
 .user_edit {
     background-image: url(images/user_edit.png) !important;
 }
-
+.docs {
+    background-image: url(images/page_white_stack.png) !important;
+}
+.accept {
+    background-image: url(images/accept.png) !important;
+}
+.edit {
+    background-image: url(images/page_edit.png) !important;
+}
+.details {
+    background-image: url(images/table.png) !important;
+}

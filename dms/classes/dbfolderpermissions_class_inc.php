@@ -64,6 +64,7 @@ class dbfolderpermissions extends dbtable {
      * @return <type>
      */
     public function getPermmissions($folderpath) {
+        $this->userid="1";
         $sql="select * from ".$this->tablename." where userid = '".$this->userid."' and folderpath= '".$folderpath."'";
         $rows=$this->getArray($sql);
         return $rows;

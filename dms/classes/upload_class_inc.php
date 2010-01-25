@@ -20,7 +20,7 @@
  * @package   dms (document management system)
  * @author    Nguni Phakela, david wafula
  * @copyright 2010
-=
+ =
  */
 if (!
 /**
@@ -78,9 +78,11 @@ class upload extends object {
         $this->objLanguage =  $this->getObject('language', 'language');
         $this->objPermittedTypes = $this->getObject('dbpermittedtypes');
         $this->permittedTypes = $this->getTypes();
-        //Set the default overwrite
+        //Set the default overwrite  $dir=$this->objSysConfig->getValue('FILES_DIR', 'dms');
+
         $this->overWrite = FALSE;
         $this->objUploadTable = $this->getObject('dbfileuploads');
+        $this->documents=$this->getObject('dbdocuments');
     }
 
     function getTypes() {
@@ -96,7 +98,7 @@ class upload extends object {
         return $types;
     }
 
-    function doUpload($id) {
+    function doUpload($docname,$docid) {
         //Make sure that there are no accidental double slashes
         $this->uploadFolder = str_replace("//", "/", $this->uploadFolder);
         //Check for errors
@@ -119,7 +121,7 @@ class upload extends object {
 
 
             if ($this->checkExtension()) {
-                if (!$this->overWrite && $this->checkExists()) {
+                if (!$this->overWrite && $this->checkExists($docname.'.'.$this->type)) {
                     $this->isError = TRUE;
                     return array(
                             'success' => FALSE,
@@ -128,7 +130,7 @@ class upload extends object {
 
                 }
                 else {
-                    $this->moveUploadedFile();
+                    $this->moveUploadedFile($docname,$docid);
 
                     // check if the file actually exists, i.e., it has been uploaded
                     if($this->checkExists()) {
@@ -275,8 +277,8 @@ class upload extends object {
      * @return boolean TRUE|FALSE True if file exists, false if not.
      *
      */
-    function checkExists() {
-        if (file_exists($this->uploadFolder . $this->fileName)) {
+    function checkExists($filename) {
+        if (file_exists($this->uploadFolder . $fileName)) {
             return TRUE;
         } else {
             return FALSE;
@@ -295,7 +297,7 @@ class upload extends object {
      *
      * @param string $storedName The name to store the file as (if not the original name)
      */
-    function moveUploadedFile() {
+    function moveUploadedFile($docname,$docid) {
 
         $instances=$this->objUploadTable->getFileInstances( $this->fileName, $this->uploadFolder);
         $instanceNo=count($instances);
@@ -310,6 +312,7 @@ class upload extends object {
         $instances=$this->objUploadTable->getFileInstances( $this->fileName, $this->fullFilePath );
         $instanceNo=count($instances);
         $fn=$this->getFileName($this->fileName);
+
         $ext=$this->getFileExtension();
         $this->clonename=$this->fileName;
         if($instanceNo > 0) {
@@ -319,6 +322,9 @@ class upload extends object {
 
         // now verify if file was successfully uploaded
         move_uploaded_file($_FILES['filenamefield']['tmp_name'], $this->fullFilePath);
+        $newname=$this->uploadFolder . $docname.'.na';
+        $this->documents->updateDocument($docid,array('ext'=>$ext));
+        rename($this->fullFilePath, $newname);
     }
 
     function getFileName($filepath) {

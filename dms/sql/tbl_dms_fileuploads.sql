@@ -8,5 +8,6 @@
                     'userid' => array('type' => 'text','length' => 15, 'notnull'=>TRUE),
                     'refno' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'parent' => array('type' => 'text', 'notnull'=>TRUE),
+                    'docid' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'filepath' => array('type' => 'text', 'notnull'=>TRUE));
 ?>
