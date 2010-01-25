@@ -114,8 +114,8 @@ class block_browseactivities extends object
         $this->appendArrayVar('headerParams', $ext);
         
 								//Div to render content
-        $str = '<input type="button" id="show-btn" value="Site Activities" /><br /><br />
-        <div id="hello-win" class="x-hidden">
+        $str = '<input type="button" id="show-btn-siteupdates" value="Site Activities" /><br /><br />
+        <div id="hello-win-siteupdates" class="x-hidden">
     <div class="x-window-header">'.$this->objConfig->getSiteName()." ".$this->title.'</div>
     <div id="hello-tabs">
         <!-- Auto create tab 1 -->

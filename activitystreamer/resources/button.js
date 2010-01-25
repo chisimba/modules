@@ -128,13 +128,13 @@ var contextdata = new Ext.data.JsonStore({
 
 Ext.onReady(function(){
 	 var win;
-    var button = Ext.get('show-btn');
+    var button = Ext.get('show-btn-siteupdates');
 
     button.on('click', function(){
         // create the window on the first click and reuse on subsequent clicks
         if(!win){
             win = new Ext.Window({
-                applyTo:'hello-win',
+                applyTo:'hello-win-siteupdates',
                 layout:'fit',
                 width:800,
                 height:320,
