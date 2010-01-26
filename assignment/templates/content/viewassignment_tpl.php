@@ -84,7 +84,7 @@ if ($this->isValid('markassignments')) {
 
     $table = $this->newObject('htmltable', 'htmlelements');
     $table->startHeaderRow();
-    $table->addHeaderCell($this->objLanguage->code2Txt('mod_assignment_studname', 'assignment', NULL, '[-readonly-] Name'));
+    $table->addHeaderCell(ucwords($this->objLanguage->code2Txt('mod_assignment_studname', 'assignment', NULL, '[-readonly-] Name')));
     $table->addHeaderCell($this->objLanguage->languageText('mod_assignment_datesubmitted', 'assignment', 'Date Submitted'));
     $table->addHeaderCell($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark'));
     $table->addHeaderCell($this->objLanguage->languageText('mod_assignment_comment', 'assignment', 'Comment'));
@@ -158,13 +158,13 @@ if ($this->isValid('markassignments')) {
 
             if($assignment['closing_date'] > date('Y-m-d H:i')) {
                 $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
-                $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
+                //$table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
 
             } else {
 
                 if ($submission['mark'] == NULL) {
                     $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
-                    $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
+                    //$table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
                 } else {
                     $table->addCell($submission['mark']);
 /*
