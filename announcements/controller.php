@@ -56,9 +56,10 @@ class announcements extends controller
         $this->userId = $this->objUser->userId();
        
         $objUserContext = $this->getObject('usercontext', 'context');
-        $this->userContext = $objUserContext->getUserContext($this->userId);
-        $this->lecturerContext = $objUserContext->getContextWhereLecturer($this->userId);
-        
+        if(!empty($this->userId)){
+         $this->userContext = $objUserContext->getUserContext($this->userId);
+         $this->lecturerContext = $objUserContext->getContextWhereLecturer($this->userId);
+        }        
         $this->isAdmin = $this->objUser->isAdmin();
         
         $this->itemsPerPage = 10;

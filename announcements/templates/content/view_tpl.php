@@ -64,11 +64,9 @@ $addLink = new link ($this->uri(array('action'=>'add')));
 $addLink->link = $this->objLanguage->languageText('mod_announcements_postnewannouncement', 'announcements', 'Post New Announcement');
 
 echo '<p>'.$backLink->show();
-
 if ($isAdmin || count($lecturerContext) > 0) {
     echo ' / '.$addLink->show();
 }
-
 echo '</p>';
 
 
