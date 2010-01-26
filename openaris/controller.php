@@ -507,7 +507,7 @@ class openaris extends controller {
 				$this->setSession('ps_countryId', $countryId);
 				$this->setSession('ps_partitionTypeId', $partitionTypeId);
 				$this->setSession('ps_partitionLevelId', $partitionLevelId);
-				$this->setSession('ps_partitionNameId', $partitionNameId);
+				$this->setSession('ps_partitionNameId', $partitionId);
 				$this->setSession('ps_month', $month);
 				$this->setSession('ps_year', $year);
 				$this->setSession('ps_datePrepared', $datePrepared);

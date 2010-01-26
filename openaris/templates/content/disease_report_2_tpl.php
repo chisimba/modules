@@ -55,39 +55,39 @@ $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 $objTableArea1 = $this->getObject('htmltable','htmlelements');
 $objTableArea1->cellspacing = 2;
 $objTableArea1->width = NULL;
+$objTableArea1->cssClass = 'areatable';
 
 $objTableArea1->startHeaderRow();
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('phrase_partitiontype'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris')." ", NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('phrase_partitiontype')." ", NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris')." ", NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris')." ", NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month')." ", NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year')." &nbsp;", NULL, NULL, 'center');
 $objTableArea1->endHeaderRow();
 
-   // print_r($outbreaks);exit;
-    
+$class = 'odd';
 foreach ($outbreaks as $outbreak) {
-    $objTableArea1->startRow();
+    $objTableArea1->startRow($class);
     $outbreakcode= $outbreak['outbreakCode'];
     $LinkUri = $this->uri(array('action'=>'disease_report_screen_2','outbreakCode1'=>$outbreakcode));
-
     $objLink = new link($LinkUri);
     $objLink->link = $outbreak['outbreakCode'];
-//echo $deLink//;
 
-    $objTableArea1->addCell($objLink->show());
-    $objTableArea1->addCell($outbreak['partitionType']);
-    $objTableArea1->addCell($outbreak['partitionLevel']);
-    $objTableArea1->addCell($outbreak['partitionName']);
-    $objTableArea1->addCell($outbreak['month']);
-    $objTableArea1->addCell($outbreak['year']);
+    $objTableArea1->addCell($objLink->show(), NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['partitionType'], NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['partitionLevel'], NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['partitionName'], NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['month'], NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['year'], NULL, NULL, 'center');
     $objTableArea1->endRow();
+    //$class = ($class == 'odd')? 'even' : 'odd';
 }
+
 $countryBox = new textinput('countryId',$countryId,'hidden');
 $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
 $outbreakCodeBox->extra = 'readonly';
-$outbreakCodeBox->setCss('passive_surveillance');
+$outbreakCodeBox->setCss('passive_surveillance outbreakcode');
 
 $latitudeBox = new textinput('lattitude', $latitude);
 $latitudeBox->setCss('geo');
@@ -133,7 +133,7 @@ $createdBox->extra = $createdDateBox->extra = $modifiedBox->extra = $modifiedDat
 
 $objTableArea2 = $this->newObject('htmltable','htmlelements');
 $objTableArea2->cellspacing = 2;
-$objTableArea2->width = NULL;
+$objTableArea2->width = '99%';
 
 $nextUri = $this->uri(array('action'=>'disease_report_screen_3', 'outbreakCode'=>$outbreakCode));
 if (count($numloc) > 0) {
@@ -155,7 +155,7 @@ $aButton->setToSubmit();
 
 
 $objTableArea2->startRow();
-$objTableArea2->addCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
+$objTableArea2->addCell("<span class='outbreakcode'>".$this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris')."</span>");
 $objTableArea2->addCell($outbreakCodeBox->show());
 $objTableArea2->addCell($this->objLanguage->languageText('word_latitude'));
 $objTableArea2->addCell($latitudeBox->show()." ".$latDirecDrop->show());
@@ -179,7 +179,11 @@ $objTableArea2->addCell($this->objLanguage->languageText('word_modifiedby'));
 $objTableArea2->addCell($modifiedBox->show());
 $objTableArea2->endRow();
 $objTableArea2->startRow();
-$objTableArea2->addCell($this->objLanguage->languageText('phrase_modifieddate'), NULL, 'top', 'right', NULL, 'colspan="5"');
+$objTableArea2->addCell(' ');
+$objTableArea2->addCell(' ');
+$objTableArea2->addCell(' ');
+$objTableArea2->addCell(' ');
+$objTableArea2->addCell($this->objLanguage->languageText('phrase_modifieddate'));
 $objTableArea2->addCell($modifiedDateBox->show());
 $objTableArea2->addCell($countryBox->show());
 $objTableArea2->endRow();
@@ -189,7 +193,7 @@ $objTableArea2->endRow();
 
 
 $localitySet = new fieldset('localitySet');
-$localitySet->setExtra('style="max-width: 822px;"');
+$localitySet->setExtra('class="diseasereport"');
 $localitySet->setLegend($this->objLanguage->languageText('mod_ahis_localitydataentry', 'openaris'));
 $localitySet->addContent($objTableArea2->show());
 
@@ -202,45 +206,62 @@ $objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_vallon
 $objTableArea3 = $this->newObject('htmltable','htmlelements');
 $objTableArea3->cellspacing = 2;
 $objTableArea3->width = NULL;
+$objTableArea3->cssClass = 'areatable widetable';
 
 $objTableArea3->startHeaderRow();
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_localitytype', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_localityname', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_latitude'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_direction'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_longitude'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_direction'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_farmingsystem'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createddate'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_localitytype', 'openaris')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_localityname', 'openaris')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_latitude')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_direction')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_longitude')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_direction')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_farmingsystem')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createddate')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby')." &nbsp;", NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate')." &nbsp;", NULL, NULL, 'center');
 $objTableArea3->endHeaderRow();
 
+$class = 'odd';
 foreach ($diseaseLocalities as $locality) {
     $localityType  = $this->objLocalityType->getRow('id', $locality['localitytypeid']);
     $farmingSystem = $this->objFarmingSystem->getRow('id', $locality['farmingsystemid']);
-    $objTableArea3->startRow();
-    $objTableArea3->addCell($locality['outbreakcode']);
-    $objTableArea3->addCell($localityType['locality_type']);
-    $objTableArea3->addCell($locality['name']);
-    $objTableArea3->addCell($locality['latitude']);
-    $objTableArea3->addCell($locality['latdirection']);
-    $objTableArea3->addCell($locality['longitude']);
-    $objTableArea3->addCell($locality['longdirection']);
-    $objTableArea3->addCell($farmingSystem['farmingsystem']);
-    $objTableArea3->addCell($this->objUser->Username($locality['created_by']));
-    $objTableArea3->addCell($locality['date_created']);
+    $objTableArea3->startRow($class);
+    $objTableArea3->addCell($locality['outbreakcode'], NULL, NULL, 'center');
+    $objTableArea3->addCell($localityType['locality_type'], NULL, NULL, 'center');
+    $objTableArea3->addCell($locality['name'], NULL, NULL, 'center');
+    $objTableArea3->addCell($locality['latitude'], NULL, NULL, 'center');
+    $objTableArea3->addCell($locality['latdirection'], NULL, NULL, 'center');
+    $objTableArea3->addCell($locality['longitude'], NULL, NULL, 'center');
+    $objTableArea3->addCell($locality['longdirection'], NULL, NULL, 'center');
+    $objTableArea3->addCell($farmingSystem['farmingsystem'], NULL, NULL, 'center');
+    $objTableArea3->addCell($this->objUser->Username($locality['created_by']), NULL, NULL, 'center');
+    $objTableArea3->addCell($locality['date_created'], NULL, NULL, 'center');
     $modifier = ($locality['modified_by'] == NULL)? '' : $this->objUser->Username($locality['modified_by']);
-    $objTableArea3->addCell($modifier);
-    $objTableArea3->addCell($locality['date_modified']);
+    $objTableArea3->addCell($modifier, NULL, NULL, 'center');
+    $objTableArea3->addCell($locality['date_modified'], NULL, NULL, 'center');
     $objTableArea3->endRow();
+    //$class = ($class == 'odd')? 'even' : 'odd';
 
 }
 
-$scriptUri = $this->getResourceURI('util.js');
-$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
+$bSet = new fieldset('bSet');
+$bSet->setExtra('class="diseasereport"');
+$bSet->setLegend($this->objLanguage->languageText('mod_ahis_outbreakhistory', 'openaris'));
+$bSet->addContent("<div class='scroll5'>".$objTableArea1->show()."</div>");
+$cSet = new fieldset('cSet');
+$cSet->setExtra('class="diseasereport"');
+$cSet->setLegend($this->objLanguage->languageText('mod_ahis_localitydataview', 'openaris'));
+$cSet->addContent("<div class='scroll5'>".$objTableArea3->show()."</div>");
 
-$content = $objTableArea1->show()."<br />".$objForm->show()."<br />".$objTableArea3->show();
-echo $objHeading->show()."<br />".$content;
+
+$this->objJquery = $this->getObject('jquery', 'jquery');
+$this->objJquery->loadTablesorterPlugin();
+$scriptUri = $this->getResourceURI('util.js');
+$script = "jQuery(document).ready(function() { jQuery('.areatable').tablesorter(); });";
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
+$this->appendArrayVar('headerParams', "<script type='text/javascript'>$script</script>");
+				
+$content = $objForm->show()."<!--hr class='blue' /-->".$bSet->show().$cSet->show();
+echo $objHeading->show().$content;

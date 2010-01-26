@@ -10,9 +10,9 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),	
-    'speciesid' => array(
+    'species_id' => array(
 		'type' => 'text',
-		'length' => 64,
+		'length' => 32,
         'notnull' => TRUE
 		),
 	 'agegroup' => array(
@@ -22,50 +22,44 @@ $fields = array(
 		),
 	'abbreviation' => array(
 		'type' => 'text',
-		'length' => 108,
+		'length' => 10,
         'notnull' => TRUE
 		),
 	'description' => array(
-		'type' => 'text',
-		'length' => 108,
-        'notnull' => TRUE
+		'type' => 'clob',
 		),
 	 'lowerlimit' => array(
-		'type' => 'text',
-		'length' => 64,
-        'notnull' => TRUE
-		),
+		'type' => 'integer',
+		'length' => 5,
+        ),
 	 'upperlimit' => array(
-		'type' => 'text',
-		'length' => 64,
+		'type' => 'integer',
+		'length' => 5,
+        ),
+	'start_date' => array(
+		'type' => 'datetime',
         'notnull' => TRUE
 		),
-	'startdate' => array(
-		'type' => 'text',
-        'notnull' => TRUE
-		),
-	'enddate' => array(
-		'type' => 'text',
+	'end_date' => array(
+		'type' => 'datetime',
         'notnull' => FALSE
 		),
-      'createdon' => array(
-		'type' => 'date',
+    'date_created' => array(
+		'type' => 'datetime',
         'notnull' => TRUE
 		),
-	'createdby' => array(
+	'created_by' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'modifiedon' => array(
-		'type' => 'date',
-        'notnull' => TRUE
-		),
-	'modifiedby' => array(
+	'date_modified' => array(
+		'type' => 'datetime',
+        ),
+	'modified_by' => array(
 		'type' => 'text',
 		'length' => 32,
-        'notnull' => TRUE
-		),
+        ),
     );
 //create other indexes here...
 
