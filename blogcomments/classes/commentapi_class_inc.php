@@ -18,44 +18,44 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class commentapi extends object
 {
-	/**
-	 * The user object inherited from the security class
-	 *
-	 * @var object
-	 */
-	protected $objUser;
+    /**
+     * The user object inherited from the security class
+     *
+     * @var object
+     */
+    protected $objUser;
 
-	/**
-	 * The language Object inherited from the language object
-	 *
-	 * @var object
-	 */
-	protected $objLanguage;
+    /**
+     * The language Object inherited from the language object
+     *
+     * @var object
+     */
+    protected $objLanguage;
 
-	public $showfullname;
+    public $showfullname;
 
-	/**
-	 * Standard init function to __construct the class
-	 *
-	 * @param void
-	 * @return void
-	 * @access public
-	 */
-	public function init()
-	{
-		try {
-			$this->objLanguage = $this->getObject('language', 'language');
-			$this->objUser =  $this->getObject("user", "security");
-			$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    /**
+     * Standard init function to __construct the class
+     *
+     * @param void
+     * @return void
+     * @access public
+     */
+    public function init()
+    {
+        try {
+            $this->objLanguage = $this->getObject('language', 'language');
+            $this->objUser =  $this->getObject("user", "security");
+            $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
-		}
-		catch (customException $e)
-		{
-			customException::cleanUp();
-			exit;
-		}
+        }
+        catch (customException $e)
+        {
+            customException::cleanUp();
+            exit;
+        }
 
-	}
+    }
 
 	/**
 	 * Method to return a nicely formatted form to add a comment
@@ -184,6 +184,8 @@ class commentapi extends object
  		//end off the form and add the buttons
 		$this->objCButton = &new button($this->objLanguage->languageText('word_save', 'system'));
 		$this->objCButton->setValue($this->objLanguage->languageText('word_save', 'system'));
+                // Add the save icon
+                $this->objCButton->setIconClass("save");
 		$this->objCButton->setToSubmit();
 
 		$cfieldset->addContent($ctbl->show());
