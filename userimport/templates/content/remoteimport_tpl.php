@@ -66,10 +66,11 @@ if (isset($modules)){
         $objModuleDrop->setSelected($this->getParam('classmodule',NULL));
         $objForm3->addToForm($objModuleDrop->show());
         $objForm3->addToForm($objButton->show());
-        $hidden= new textinput('faculty',$this->getParam('faculty',NULL),'hidden');
+        $hidden1= new textinput('faculty',$this->getParam('faculty',NULL),'hidden');
         $objForm3->addToForm($hidden->show());
-        $hidden= new textinput('program',$this->getParam('program',NULL),'hidden');
-        $objForm3->addToForm($hidden->show());
+        $hidden2= new textinput('program',$this->getParam('program',NULL),'hidden');
+        $objForm3->addToForm($hidden1->show());
+        $objForm3->addToForm($hidden2->show());
         print $this->objLanguage->LanguageText('mod_userimport_selectmodule','userimport');
         print $objForm3->show()."\n";
     } else {
@@ -112,6 +113,10 @@ if (isset($remoteCode)){
     }
 }
 
-
+$objForm7=new form('remoteimport',$this->uri(array('action'=>'remoteimport')));
+$objText= new textinput('classmodule','');
+$objForm7->addToForm($objText->show());
+$objForm7->addToForm("<input type=submit>");
+print $objForm7->show();
 
 ?>
