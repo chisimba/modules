@@ -122,6 +122,7 @@ class blogsearching extends object
         $qseekform->addToForm($qseekterm->show());
         $this->objsTButton = &new button($this->objLanguage->languageText('word_search', 'system'));
         $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setIconClass("search");
         $this->objsTButton->setToSubmit();
         $qseekform->addToForm($this->objsTButton->show());
         $qseekform = $qseekform->show();

@@ -107,6 +107,7 @@ class blogcategories extends object
         $qcatform->addToForm($qcatname->show());
         $this->objqCButton = &new button($this->objLanguage->languageText('word_update', 'system'));
         $this->objqCButton->setValue($this->objLanguage->languageText('word_update', 'system'));
+        $this->objqCButton->setIconClass("lightning");
         $this->objqCButton->setToSubmit();
         $qcatform->addToForm($this->objqCButton->show());
         $qcatform = $qcatform->show();
@@ -255,6 +256,7 @@ class blogcategories extends object
         $cfieldset->addContent($catadd->show());
         $catform->addToForm($cfieldset->show());
         $this->objCButton = &new button($this->objLanguage->languageText('word_update', 'system'));
+        $this->objCButton->setIconClass("save");
         $this->objCButton->setValue($this->objLanguage->languageText('word_update', 'system'));
         $this->objCButton->setToSubmit();
         $catform->addToForm($this->objCButton->show());

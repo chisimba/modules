@@ -291,6 +291,7 @@ class bloglinksandroll extends object
         $ladd->endRow();
         // end off the form and add the buttons
         $this->objLButton = new button($this->objLanguage->languageText('word_save', 'system'));
+        $this->objLButton->setIconClass("save");
         $this->objLButton->setValue($this->objLanguage->languageText('word_save', 'system'));
         $this->objLButton->setToSubmit();
         $lfieldset->addContent($ladd->show());
@@ -411,6 +412,7 @@ class bloglinksandroll extends object
         $pfieldset->addContent($ptable->show());
         $pform->addToForm($pfieldset->show());
         $this->objPButton = new button($this->objLanguage->languageText('word_save', 'system'));
+        $this->objPButton->setIconClass("save");
         $this->objPButton->setValue($this->objLanguage->languageText('word_save', 'system'));
         $this->objPButton->setToSubmit();
         $pform->addToForm($this->objPButton->show());

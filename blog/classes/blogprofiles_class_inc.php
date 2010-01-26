@@ -160,6 +160,7 @@ class blogprofiles extends object {
         $pfieldset->addContent($ptable->show());
         $pform->addToForm($pfieldset->show());
         $this->objPButton = new button($this->objLanguage->languageText('word_save', 'system'));
+        $this->objPButton->setIconClass("save");
         $this->objPButton->setValue($this->objLanguage->languageText('word_save', 'system'));
         $this->objPButton->setToSubmit();
         $pform->addToForm($this->objPButton->show());

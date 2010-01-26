@@ -846,6 +846,7 @@ class blogposts extends object
         $pfieldset->addContent($ptable->show());
         $postform->addToForm($pfieldset->show() . $ts->show());
         $this->objPButton = &new button($this->objLanguage->languageText('mod_blog_word_post', 'blog'));
+        $this->objPButton->setIconClass("save");
         $this->objPButton->setValue($this->objLanguage->languageText('mod_blog_word_post', 'blog'));
         $this->objPButton->setToSubmit();
         // $postform->addToForm($this->objPButton->show());
@@ -1056,6 +1057,7 @@ class blogposts extends object
         // submit button for multidelete
         $this->objdelButton = &new button('deleteposts');
         $this->objdelButton->setValue($this->objLanguage->languageText('mod_blog_word_deleteselected', 'blog'));
+        $this->objdelButton->setIconClass("delete");
         $this->objdelButton->setToSubmit();
         $editform->addToForm($edtable->show());
         $editform->addToForm($this->objdelButton->show());
@@ -1107,6 +1109,7 @@ class blogposts extends object
         $qpform->addToForm("<br />");
         $qpform->addToForm($qpcattxt . $qpDrop->show());
         $this->objqpCButton = &new button('blogit');
+        $this->objqpCButton->setIconClass("save");
         $this->objqpCButton->setValue($this->objLanguage->languageText('mod_blog_word_blogit', 'blog'));
         $this->objqpCButton->setToSubmit();
         $qpform->addToForm($this->objqpCButton->show());
