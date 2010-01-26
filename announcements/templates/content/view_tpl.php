@@ -8,7 +8,7 @@ $header = new htmlHeading();
 $header->type = 1;
 $header->str = $announcement['title'];
 
-
+//var_dump($this->objContext->isInContext());
 
 // Check if User has permission
 if ($this->checkPermission($announcement['id'])) {

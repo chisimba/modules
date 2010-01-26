@@ -346,7 +346,7 @@ class dbAnnouncements extends dbTable
     {
         $where = '';
         $or = '';
-
+       if(!empty($this->userId)){
         if (count($contexts) > 0) {
             foreach($contexts as $context)
             {
@@ -358,7 +358,9 @@ class dbAnnouncements extends dbTable
         if ($this->isAdmin) {
             $where .= "{$or} tbl_announcements.contextid = 'site'";
         }
-
+       }else{
+            $where .= "{$or} tbl_announcements.contextid != 'context'";
+       }
         if ($where != '') {
             $where = 'WHERE '.$where;
         }
@@ -445,19 +447,21 @@ class dbAnnouncements extends dbTable
     {
         $where = '';
         $or = '';
-
-        if (count($contexts) > 0) {
+       if(!empty($this->userId)){
+         if (count($contexts) > 0) {
             foreach($contexts as $context)
             {
                 $where .= "{$or} tbl_announcements_context.contextid = '{$context}'";
                 $or = " OR ";
             }
-        }
+         }
 
-        if ($this->isAdmin) {
+         if ($this->isAdmin) {
             $where .= "{$or} tbl_announcements.contextid = 'site'";
+         }
+        }else{
+            $where .= "{$or} tbl_announcements.contextid != 'context'";
         }
-
         if ($where != '') {
             $where = 'WHERE '.$where;
         }
