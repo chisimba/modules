@@ -169,17 +169,21 @@ class blogposts extends object
         // Middle column (posts)!
         // break out the ol featurebox...
         if (!empty($posts)) {
+            // get the washout class and parse for all the bits and pieces
+            $washer = $this->getObject('washout', 'utilities');
+            // Humanize date object
+            $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+            // Loop over the posts
             foreach($posts as $post) {
-                // get the washout class and parse for all the bits and pieces
-                $washer = $this->getObject('washout', 'utilities');
                 $post['post_content'] = $washer->parseText($post['post_content']);
-                 if($cleanPost  == 'true'){
-                $post['post_content'] = $this->cleanPost($post['post_content']);
+                if($cleanPost  == 'true'){
+                    $post['post_content'] = $this->cleanPost($post['post_content']);
                 }
                 //$post['post_content']=quoted_printable_decode($post['post_content']);
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 // build the top level stuff
-                $dt = date('r', $post['post_ts']);
+                $rawDate = date('Y-m-d H:i:s', $post['post_ts']);
+                $dt = $objHumanizeDate->getDifference($rawDate);
                 $this->objUser = $this->getObject('user', 'security');
                 $userid = $this->objUser->userId();
                 if ($showsticky == FALSE) {
@@ -206,22 +210,21 @@ class blogposts extends object
                 if ($post['stickypost'] == 1) {
                     $objStickyIcon = $this->newObject('geticon', 'htmlelements');
                     $objStickyIcon->setIcon('sticky_yes');
-                    if($post['post_status'] == 1)
-                    {
+                    if($post['post_status'] == 1) {
                     	$headLink = new href($this->uri(array(
                         'action' => 'viewsingle',
                         'postid' => $post['id'],
                         'userid' => $post['userid']
-                    )) , stripslashes($this->objLanguage->languageText("mod_blog_draft","blog")." ".$post['post_title']) , NULL);
-                    }
-                    else {
+                        )) , stripslashes($this->objLanguage->languageText("mod_blog_draft","blog")." ".$post['post_title']) , NULL);
+                    } else {
                     	$headLink = new href($this->uri(array(
-                        	'action' => 'viewsingle',
-                        	'postid' => $post['id'],
-                        	'userid' => $post['userid']
+                        'action' => 'viewsingle',
+                        'postid' => $post['id'],
+                        'userid' => $post['userid']
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
-                    $head = $objStickyIcon->show() . $headLink->show() . " $icons<br />" . $dt;
+                    $head = $objStickyIcon->show() . $headLink->show() 
+                      . " $icons<br /><span class='blog-head-date'>$dt</span>";
                 } else {
                 	if($post['post_status'] == 1)
                     {
@@ -238,7 +241,8 @@ class blogposts extends object
                         	'userid' => $post['userid']
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
-                    $head = $headLink->show() . " $icons<br />" . $dt . "<br />";
+                    $head = $headLink->show() 
+                      . " $icons<br /><span class='blog-head-date'>$dt</span><br />";
                 }
                 // dump in the post content and voila! you have it...
                 // build the post content plus comment count and stats???
