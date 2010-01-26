@@ -51,41 +51,41 @@ class rubric extends controller
         $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
         $this->objUser =& $this->getObject('user', 'security');
         $this->objLanguage =& $this->getObject('language','language');
-		  $this->objDbRubricTables =& $this->getObject('dbrubrictables'); 
-		  $this->objDbRubricPerformances =& $this->getObject('dbrubricperformances'); 
-		  $this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives'); 
-		  $this->objDbRubricCells =& $this->getObject('dbrubriccells'); 
-		  $this->objDbRubricAssessments =& $this->getObject('dbrubricassessments'); 
+		  $this->objDbRubricTables =& $this->getObject('dbrubrictables');
+		  $this->objDbRubricPerformances =& $this->getObject('dbrubricperformances');
+		  $this->objDbRubricObjectives =& $this->getObject('dbrubricobjectives');
+		  $this->objDbRubricCells =& $this->getObject('dbrubriccells');
+		  $this->objDbRubricAssessments =& $this->getObject('dbrubricassessments');
         //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');       
+        $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
 		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
     }
-    
+
    /**
      * Method to override isValid to enable administrators to perform certain action
      *
      * @param $action Action to be taken
      * @return boolean
      */
-    public function isValid($action) {	
-    	
-    	$validActions = array('viewtable','assessments');
-    		
+    public function isValid($action) {
+
+    	$validActions = array('viewtable', 'assessments', 'viewassessment');
+
         if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer() || in_array($action, $validActions)) {
             return TRUE;
         } else {
             return FALSE;//parent::isValid ( $action );
         }
     }
-    
+
     /**
     * The dispatch funtion
     * @param string $action The action
     * @return string The content template file
     */
-    public function dispatch($action=Null)
+public function dispatch($action=Null)
     {
         // Set the layout template.
         $this->setLayoutTemplate("layout_tpl.php");
@@ -99,11 +99,11 @@ class rubric extends controller
         // 2. load the data object (calls the magical getObject which finds the
         //    appropriate file, includes it, and either instantiates the object,
         //    or returns the existing instance if there is one. In this case we
-        //    are not actually getting a data object, just a helper to the 
+        //    are not actually getting a data object, just a helper to the
         //    controller.
         // 3. Pass variables to the template
         $this->setVarByRef('objUser', $this->objUser);
-		  $this->setVarByRef('objLanguage', $this->objLanguage);        
+		  $this->setVarByRef('objLanguage', $this->objLanguage);
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
 		  $this->objDbContext = &$this->getObject('dbcontext','context');
@@ -128,10 +128,10 @@ class rubric extends controller
 		}
 	    $this->setVarByRef('contextTitle', $contextTitle);
 		switch($action){
-			case "createtable": 
+			case "createtable":
 				$this->setVarByRef("_type", $this->getParam("type", ""));
 		        return "create_tpl.php";
-			case "createtableconfirm": 
+			case "createtableconfirm":
 				$this->setLayoutTemplate(NULL);
                 $type = $this->getParam("type", "");
                 // Insert a record into the database
@@ -153,12 +153,12 @@ class rubric extends controller
 				$this->setVarByRef("rows", $rows);
 				$this->setVarByRef("cols", $cols);
 				// Build the performances array
-				
+
 		        //return "edit_tpl.php";
-                
+
                 return $this->nextAction('edittable', array('tableId'=>$tableId, 'new'=>'yes'));
 			// Rename a rubric
-			case "renametable": 
+			case "renametable":
 				$tableId = $this->getParam("tableId", "");
 				$this->setVarByRef("tableId", $tableId);
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
@@ -168,7 +168,7 @@ class rubric extends controller
 				$this->setVarByRef("description", $description);
 		        return "rename_tpl.php";
             // Rename the rubric
-			case "renametableconfirm": 
+			case "renametableconfirm":
 				$tableId = $this->getParam("tableId", "");
 				$this->objDbRubricTables->updateSingle(
 					$tableId,
@@ -177,7 +177,7 @@ class rubric extends controller
 				);
 				break;
 			// Clone a rubric
-			case 'clonetable': 
+			case 'clonetable':
 				$tableId = $this->getParam('tableId', "");
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
 				$contextCode = $tableInfo[0]['contextcode'];
@@ -190,7 +190,7 @@ class rubric extends controller
 				$_tableId = $this->objDbRubricTables->insertSingle(
 					$contextCode,
 					"Copy of $title",
-					$description,	
+					$description,
 					$rows,
 					$cols,
 					$userId
@@ -200,13 +200,13 @@ class rubric extends controller
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				// Build the objectives array
 				$objectives = array();
 				for ($i=0;$i<$rows;$i++) {
 					$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
 					$objectives[] = $objective[0]['objective'];
-				}				
+				}
 				// Build the cells matrix
 				$cells = array();
 				for ($i=0;$i<$rows;$i++) {
@@ -221,7 +221,7 @@ class rubric extends controller
 					$this->objDbRubricPerformances->insertSingle(
 						$_tableId,
 						"{$j}",
-						$performances[$j]						
+						$performances[$j]
 					);
 				}
                 // Insert the objectives into the database
@@ -245,7 +245,7 @@ class rubric extends controller
 				}
 				break;
 			// Copy a rubric
-			case "copytable": 
+			case "copytable":
 				$tableId = $this->getParam("tableId", "");
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
 				$title = $tableInfo[0]['title'];
@@ -256,7 +256,7 @@ class rubric extends controller
 				$_tableId = $this->objDbRubricTables->insertSingle(
 					$this->contextCode,
 					"Copy of $title",
-					$description,	
+					$description,
 					$rows,
 					$cols,
 					NULL
@@ -266,13 +266,13 @@ class rubric extends controller
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				// Build the objectives array
 				$objectives = array();
 				for ($i=0;$i<$rows;$i++) {
 					$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
 					$objectives[] = $objective[0]['objective'];
-				}				
+				}
 				// Build the cells matrix
 				$cells = array();
 				for ($i=0;$i<$rows;$i++) {
@@ -287,7 +287,7 @@ class rubric extends controller
 					$this->objDbRubricPerformances->insertSingle(
 						$_tableId,
 						"{$j}",
-						$performances[$j]						
+						$performances[$j]
 					);
 				}
                 // Insert the objectives into the database
@@ -311,7 +311,7 @@ class rubric extends controller
 				}
 				break;
 			// Edit the rubric
-			case "edittable": 
+			case "edittable":
 				$tableId = $this->getParam("tableId", "");
 				$this->setVarByRef("tableId", $tableId);
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
@@ -323,7 +323,7 @@ class rubric extends controller
 				$this->setVarByRef("description", $description);
 				$this->setVarByRef("rows", $rows);
 				$this->setVarByRef("cols", $cols);
-                
+
                 // Check if this is a new rubric being created or one being edited
                 if ($this->getParam('new', 'no') == 'yes') {
                     $performances = array();
@@ -347,21 +347,21 @@ class rubric extends controller
                     }
                     $this->setVarByRef("cells", $cells);
                     $this->setVar('suppressModify', true);
-                
+
                 } else {
                     // Build the performances array
                     $performances = array();
                     for ($j=0;$j<$cols;$j++) {
                         $performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
                         $performances[] = $performance[0]['performance'];
-                    }				
+                    }
                     $this->setVarByRef("performances", $performances);
                     // Build the objectives array
                     $objectives = array();
                     for ($i=0;$i<$rows;$i++) {
                         $objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
                         $objectives[] = $objective[0]['objective'];
-                    }				
+                    }
                     $this->setVarByRef("objectives", $objectives);
                     // Build the cells matrix
                     $cells = array();
@@ -375,7 +375,7 @@ class rubric extends controller
                     $this->setVarByRef("cells", $cells);
                 }
 		        return "edit_tpl.php";
-			case "edittableconfirm": 
+			case "edittableconfirm":
 				$tableId = $this->getParam("tableId", "");
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
 				$title = $tableInfo[0]['title'];
@@ -416,12 +416,12 @@ class rubric extends controller
 						);
 					}
 				}
-                
+
                 return $this->nextAction('viewtable', array('tableId'=>$tableId));
-                
+
 				//return "view_tpl.php";
             case 'addrow':
-                $this->setLayoutTemplate(NULL);
+                //$this->setLayoutTemplate(NULL);
 				$tableId = $this->getParam("tableId", "");
 				$this->setVarByRef("tableId", $tableId);
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
@@ -438,7 +438,7 @@ class rubric extends controller
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
@@ -478,11 +478,11 @@ class rubric extends controller
 					}
 				}
 				$this->setVarByRef("cells", $cells);
-                $rows++;            
+                $rows++;
                 $this->objDbRubricTables->updateRows($tableId, $rows);
 		        return "edit_tpl.php";
             case 'addcol':
-                $this->setLayoutTemplate(NULL);
+                //$this->setLayoutTemplate(NULL);
 				$tableId = $this->getParam("tableId", "");
 				$this->setVarByRef("tableId", $tableId);
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
@@ -508,7 +508,7 @@ class rubric extends controller
 						$performance
 					);
                     $performances[] = $performance;
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
@@ -536,11 +536,11 @@ class rubric extends controller
 					}
 				}
 				$this->setVarByRef("cells", $cells);
-                $cols++;            
+                $cols++;
                 $this->objDbRubricTables->updateCols($tableId, $cols);
 		        return "edit_tpl.php";
             case 'delrow':
-                $this->setLayoutTemplate(NULL);
+                //$this->setLayoutTemplate(NULL);
 				$tableId = $this->getParam("tableId", "");
 				$this->setVarByRef("tableId", $tableId);
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
@@ -557,7 +557,7 @@ class rubric extends controller
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
@@ -582,11 +582,11 @@ class rubric extends controller
                     }
                 }
 				$this->setVarByRef("cells", $cells);
-                $rows--;            
+                $rows--;
                 $this->objDbRubricTables->updateRows($tableId, $rows);
 		        return "edit_tpl.php";
             case 'delcol':
-                $this->setLayoutTemplate(NULL);
+                //$this->setLayoutTemplate(NULL);
 				$tableId = $this->getParam("tableId", "");
 				$this->setVarByRef("tableId", $tableId);
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
@@ -641,7 +641,7 @@ class rubric extends controller
 				$this->objDbRubricAssessments->deleteAll($tableId);
 				return $this->nextAction(NULL);
 			// View a rubric
-			case "viewtable": 
+			case "viewtable":
 				$tableId = $this->getParam("tableId", "");
 				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
 				$title = $tableInfo[0]['title'];
@@ -657,14 +657,14 @@ class rubric extends controller
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
 				for ($i=0;$i<$rows;$i++) {
 					$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
 					$objectives[] = $objective[0]['objective'];
-				}				
+				}
 				$this->setVarByRef("objectives", $objectives);
 				// Build the cells matrix
 				$cells = array();
@@ -681,10 +681,10 @@ class rubric extends controller
 			case 'assessments':
 				$tableId = $this->getParam('tableId', '');
 				$this->setVarByRef('tableId', $tableId);
-				$tableInfo = $this->objDbRubricTables->listSingle($tableId);   
+				$tableInfo = $this->objDbRubricTables->listSingle($tableId);
 				$title = $tableInfo[0]['title'];
             //foreach($tableInfo1 as $tableInfo)
-            //{		
+            //{
 				//$title = $tableInfo['title'];
 				$description = $tableInfo[0]['description'];
 				//$description = $tableInfo['description'];
@@ -693,19 +693,19 @@ class rubric extends controller
 				$cols = $tableInfo[0]['cols'];
 				//$cols = $tableInfo['cols'];
 				//}
-				
+
 				$this->setVarByRef("title", $title);
 				$this->setVarByRef("description", $description);
 				$this->setVar('maxtotal',$cols*$rows);
 				$assessments = $this->objDbRubricAssessments->listAll($tableId);
-				
+
 				$this->setVarByRef("assessments", $assessments);
 				// Do we want to show student names ?
 				$showStudentNames = $this->getParam("showStudentNames", "yes");
 				$this->setVarByRef("showStudentNames", $showStudentNames);
 				return "assessments_tpl.php";
 			// Add an assessment
-			case 'addassessment': 
+			case 'addassessment':
 				$tableId = $this->getParam('tableId', "");
 				$this->setVarByRef("tableId", $tableId);
 				// Get table information
@@ -723,14 +723,14 @@ class rubric extends controller
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
 				for ($i=0;$i<$rows;$i++) {
 					$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
 					$objectives[] = $objective[0]['objective'];
-				}				
+				}
 				$this->setVarByRef("objectives", $objectives);
 				// Build the cells matrix
 				$cells = array();
@@ -805,7 +805,7 @@ class rubric extends controller
 					else {
 						$scores[$i] = 0;
 					}
-						
+
 				}
 				$this->setVarByRef("scores", $scores);
 				$this->setVarByRef("total", $total);
@@ -821,20 +821,20 @@ class rubric extends controller
 					$timestamp
 				);
 				$date = $timestamp;
-				$this->setVarByRef("date", $date);				
+				$this->setVarByRef("date", $date);
 				// Build the performances array
 				$performances = array();
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
 				for ($i=0;$i<$rows;$i++) {
 					$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
 					$objectives[] = $objective[0]['objective'];
-				}				
+				}
 				$this->setVarByRef("objectives", $objectives);
 				// Build the cells matrix
 				$cells = array();
@@ -849,7 +849,7 @@ class rubric extends controller
 				$this->setVar("IsAssessment", 1);
 				return "view_tpl.php";
 			// Add an assessment
-			case "editassessment": 
+			case "editassessment":
 				$tableId = $this->getParam("tableId", "");
 				$this->setVarByRef("tableId", $tableId);
 				// Get table information
@@ -883,14 +883,14 @@ class rubric extends controller
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
 				for ($i=0;$i<$rows;$i++) {
 					$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
 					$objectives[] = $objective[0]['objective'];
-				}				
+				}
 				$this->setVarByRef("objectives", $objectives);
 				// Build the cells matrix
 				$cells = array();
@@ -922,7 +922,7 @@ class rubric extends controller
 				$teacher = $this->objUser->fullname();
 				$this->setVarByRef("teacher", $teacher);
 				$studentNo = $_POST['studentNo'];
-				
+
 				$this->setVarByRef("studentNo", $studentNo);
 				//$student = $_POST['student'];
 				if ($studentNo == "") {
@@ -950,7 +950,7 @@ class rubric extends controller
 					else {
 						$scores[$i] = 0;
 					}
-						
+
 				}
 				$this->setVarByRef("scores", $scores);
 				$this->setVarByRef("total", $total);
@@ -967,20 +967,20 @@ class rubric extends controller
 					$timestamp
 				);
 				$date = $timestamp;
-				$this->setVarByRef("date", $date);				
+				$this->setVarByRef("date", $date);
 				// Build the performances array
 				$performances = array();
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
 				for ($i=0;$i<$rows;$i++) {
 					$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
 					$objectives[] = $objective[0]['objective'];
-				}				
+				}
 				$this->setVarByRef("objectives", $objectives);
 				// Build the cells matrix
 				$cells = array();
@@ -1023,10 +1023,10 @@ class rubric extends controller
 				$this->setVarByRef("studentNo", $studentNo);
 				// Check to see if user has tried to alter the URL manualy...
 				if (!(
-					$this->isValid('viewassessment') 
+					$this->isValid('viewassessment')
 					&& (
-						$this->objUser->isContextLecturer() 
-						|| $this->objUser->isContextStudent() 
+						$this->objUser->isContextLecturer($this->objUser->userId(), $this->contextCode)
+						|| $this->objUser->isContextStudent($this->contextCode)
 						&& $this->objUser->userName() == $studentNo
 					)
 				)) {
@@ -1050,14 +1050,14 @@ class rubric extends controller
 				for ($j=0;$j<$cols;$j++) {
 					$performance = $this->objDbRubricPerformances->listSingle($tableId, $j);
 					$performances[] = $performance[0]['performance'];
-				}				
+				}
 				$this->setVarByRef("performances", $performances);
 				// Build the objectives array
 				$objectives = array();
 				for ($i=0;$i<$rows;$i++) {
 					$objective = $this->objDbRubricObjectives->listSingle($tableId, $i);
 					$objectives[] = $objective[0]['objective'];
-				}				
+				}
 				$this->setVarByRef("objectives", $objectives);
 				// Build the cells matrix
 				$cells = array();
@@ -1123,5 +1123,5 @@ class rubric extends controller
         $restrictedActions = array('createtable');
         return in_array($action, $restrictedActions);
     }
-}    
+}
 ?>
