@@ -143,7 +143,7 @@ class filemanager2 extends controller
             
             
             if ($folderId == FALSE) {
-                $objIndexFileProcessor = $this->getObject('indexfileprocessor');
+                $objIndexFileProcessor = $this->getObject('indexfileprocessor', 'filemanager');
                 $list = $objIndexFileProcessor->indexUserFiles($this->objUser->userId());
             }
         }
@@ -241,6 +241,48 @@ class filemanager2 extends controller
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+    public function __json_uploadFile()
+    {	//debugging staff
+	//$files = $this->getParam('files');
+	$folder = $this->getParam('selectedfolder');
+	$str = $_FILES['userfile1'];
+	error_log(var_dump($str), true);
+	//echo '{success:true, file:'.json_encode($_FILES['photo-path']).'}';
+
+/*
+    	if ($files) {
+
+    		$filepaths = substr_replace($files, "",strlen($files) - 1);
+    		
+		$files = explode(',', $filepaths);
+    		error_log(var_dump($files), true);
+    		foreach ($files as $file)
+    		{
+    			//echo 'here';
+    			//error_log('here');
+
+    			if($file){
+    				//var_dump($file);
+    				$res = $results = $this->objUpload->uploadFiles();
+    				//var_dump($res);
+    			error_log('Result'.$res);
+    			}
+    		}
+
+     		$extjs['success'] = true;
+		}
+		else {
+		     $extjs['success'] = false;
+		     $extjs['errors']['message'] = 'Unable to connect to DB';
+		}*/
+		//$extjs = 1;
+		//echo json_encode(array('success' => true, 'data' => $extjs));
+
+	//echo $this->getJsonTree('users', $this->objUser->userId(), $this->getParam('node'));
+       // exit(0);
+    }
+
 
     public function __getDirectory()
     {

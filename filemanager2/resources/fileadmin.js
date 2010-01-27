@@ -13,49 +13,96 @@
     var filename;
     var winup;
     var selectedfolder;
+    //Ext.QuickTips.init();
+
+	// turn on validation errors beside the field globally
+    //Ext.form.Field.prototype.msgTarget = 'side';
     //var newIndex = 3;
 
     var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Please wait..."});
     
-   /* var up = new Ext.ux.form.FileUploadField({
-        listeners: {
-            'fileselected': function(fb, v){
-                var el = Ext.fly('fi-button-msg');
-                el.update('<b>Selected:</b> '+v);
-                if(!el.isVisible()){
-                    el.slideIn('t', {
-                        duration: .2,
-                        easing: 'easeIn',
-                        callback: function(){
-                            el.highlight();
-                        }
-                    });
-                }else{
-                    el.highlight();
-                }
-            }
-        }
-    	});
+    /*var up1 = new Ext.form.TextField({
+		fieldLabel: 'file 1',
+		name: 'userfile',
+		width:275,
+		inputType: 'file'});*/
 
 
     //Uploading form
     var uploadform = new Ext.FormPanel({
 	//standardSubmit: true,
-	url: baseuri + "",
+	//url: baseuri + "",
 	frame:true,
-	title: 'Add User',
+	title: 'Upload File(s)',
 	bodyStyle:'padding:5px 5px 0',
-	width: 600,
-	items: [{
-	layout:'column',
-	items:[up],
+	width: 700,
+	hieght: 200,
+	defaultType: 'textfield',
+	items:[{
+		fieldLabel: 'file 1',
+		name: 'userfile1',
+		//allowBlank:false,
+		itemId: 'userfile1',
+		width:275,
+		inputType: 'file'
+		},{
+		fieldLabel: 'file 2',
+		name: 'userfile2',
+		itemId: 'userfile2',
+		width:275,
+		inputType: 'file'
+		},{
+		fieldLabel: 'file 3',
+		itemId: 'userfile3',
+		name: 'userfile3',
+		width:275,
+		inputType: 'file'
+		},{
+		fieldLabel: 'file 4',
+		itemId: 'userfile4',
+		name: 'userfile4',
+		width:275,
+		inputType: 'file'
+		},{
+		fieldLabel: 'file 5',
+		itemId: 'userfile5',
+		name: 'userfile5',
+		width:275,
+		inputType: 'file'
+		}],
+		
 	buttons: [{
 		text: 'Upload File(s)',
-		handler: function (){}
+		handler: function (){
+
+			if(uploadform.getForm().isValid())
+					{
+						//var v = uploadform.get('userfile1').getValue()+','+uploadform.get('userfile2').getValue()+','+uploadform.get('userfile3').getValue()+','+uploadform.get('userfile4').getValue()+','+uploadform.get('userfile4').getValue();
+/*
+						uploadform.getForm().submit({
+								url: baseuri,
+								//waitMsg: 'Uploading your file(s)...',
+								params:{
+										module: 'filemanager2',
+										action: 'json_uploadFile',
+										selectedfolder: selectedfolder//,
+										//files:v
+								},
+								success: function(action){
+									datastore.load({params:{id:selectedfolder}});
+									uploadform.getForm().reset();	
+								},        	
+				            	failure:function(action){}
+								});
+*/						uploadform.getForm().reset();
+						winup.hide();
+						
+				}
+		}
 		
 	}]
-	}]});
-*/
+	});
+
     
 
 
@@ -65,19 +112,17 @@
 	iconCls: 'silk-add',
 	disabled: true,
 	handler: function (){
-		/*if(!winup){
 		    winup = new Ext.Window({
 		    layout:'fit',
-				width:320,
-				height:320,
+				width:450,
+				height:280,
 				closeAction:'hide',
 				plain: true,					
 				items: [uploadform]	
 		     });
-		}
-			winup.show(this);
+		winup.show(this);
 		
-		;*/}	
+		}	
         })
 
     var dlButton = new Ext.Button({
@@ -119,7 +164,7 @@
     var tb = new Ext.Toolbar({
 	items:[{
 	    text: 'New Folder',
-    	    iconCls: 'silk-folder',
+    	    iconCls: 'silk-folder_add',
 	    disabled: true,
             handler: function(){
 	        /*var node = root.appendChild(new Ext.tree.TreeNode({
