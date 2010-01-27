@@ -14,7 +14,10 @@ Alf Magne Kalleland
 
 ************************************************************************************************************/
 
-var form_widget_amount_slider_handle = 'packages/essayadmin/resources/slider_handle.gif';
+var form_widget_amount_slider_handle = '';
+function set_form_widget_amount_slider_handle(handle){
+    form_widget_amount_slider_handle = handle;
+}
 var slider_handle_image_obj = false;
 var sliderObjectArray = new Array();
 var slider_counter = 0;

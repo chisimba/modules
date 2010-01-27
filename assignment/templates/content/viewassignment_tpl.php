@@ -154,7 +154,7 @@ if ($this->isValid('markassignments')) {
             $link->link = $this->objLanguage->languageText('mod_assignment_viewscoremark','assignment');
             $table->addCell($link->show());
 
-            $table->addCell($submission['datesubmitted']);
+            $table->addCell($objDateTime->formatDate($submission['datesubmitted']));
 
             if($assignment['closing_date'] > date('Y-m-d H:i')) {
                 $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
