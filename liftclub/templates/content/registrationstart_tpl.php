@@ -56,13 +56,12 @@ $userneedRadio = new radio ('userneed');
 $userneedRadio->addOption('find', $this->objLanguage->languageText('phrase_find', 'liftclub','Find'));
 $userneedRadio->addOption('offer', $this->objLanguage->languageText('phrase_offer', 'liftclub', 'Offer'));
 $userneedRadio->setBreakSpace(' &nbsp; ');
-
 if ($mode == 'addfixup') {
     $userneedRadio->setSelected($this->getSession('userneed'));
 } else {
     $userneedRadio->setSelected('find');
 }
-$userneedLabel = $this->objLanguage->languageText('phrase_iwanto', 'liftclub', 'I want to').'&nbsp;';
+$userneedLabel = $this->objLanguage->languageText('phrase_iwanto', 'liftclub', 'I want tossss').'&nbsp;';
 
 $needtypeDropdown = new dropdown('needtype');
 $needtypeLabel = new label($this->objLanguage->languageText('phrase_thefollowing', 'liftclub','the following').'&nbsp;', 'input_register_title');

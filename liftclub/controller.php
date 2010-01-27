@@ -133,6 +133,10 @@ class liftclub extends controller
                     return $this->registrationHome();
                     break;
                 case 'modifydetails':
+                    $userneed = $this->getParam('userneed');
+                    $needtype = $this->getParam('needtype');
+                    $this->setSession('userneed', $userneed);
+                    $this->setSession('needtype', $needtype);
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return $this->modifyRegistration();
                     break;
@@ -337,7 +341,7 @@ class liftclub extends controller
     protected function modifyRegistrationInitial() 
     {
         $userDetails = $this->objDBDetails->userDetails($this->objUser->userId());
-        $userneed = $userDetails[0]["needtype"];
+        $userneed = $userDetails[0]["userneed"];
         $this->setSession('userneed', $userneed);
         $needtype = $userDetails[0]["needtype"];
         $this->setSession('needtype', $needtype);
@@ -680,7 +684,8 @@ class liftclub extends controller
         if( empty( $userneed ) )
         $userneed = $this->getParam('userneed');
         if( empty( $needtype ) )
-        $needtype = $this->getParam('needtype');        
+        $needtype = $this->getParam('needtype');  
+
         if($this->getSession('needtype')!=='Trip'){
          $daterequired = null;
 		       $traveltimes = $this->getParam('traveltimes');

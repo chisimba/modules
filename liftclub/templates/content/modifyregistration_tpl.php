@@ -68,7 +68,8 @@ $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
 
 echo '<p>'.$str.'<br />';
 echo $this->objLanguage->languageText('mod_liftclub_pleaseenterdetails', 'liftclub', 'Please enter your details, email address and desired user name in the form below.').'</p>';
-
+$needtype = $this->getParam('needtype');
+$userneed = $this->getParam('userneed'); 
 $form = new form ('register', $this->uri(array('action'=>'updateregister', 'id'=>$id, 'originid'=>$originid, 'destinyid'=>$destinyid, 'detailsid'=>$detailsid, 'userneed'=>$userneed, 'needtype'=>$needtype)));
 $messages = array();
 
@@ -304,9 +305,10 @@ $fieldset->contents = $table->show();
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
+
 //Add Trip details
 	$table = $this->newObject('htmltable', 'htmlelements');
-if($this->getSession('needtype')=='Trip'){
+if($userneed=='Trip'){
 	$table->startRow();
 	$dateRequired = $this->newObject('datepicker','htmlelements');
  $dateRequired->setName('daterequired');
