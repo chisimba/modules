@@ -67,14 +67,12 @@ $objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year')." &n
 $objTableArea1->endHeaderRow();
 
 foreach ($outbreaks as $outbreak) {
-
     $objTableArea1->startRow();
     $outbreakcode= $outbreak['outbreakCode'];
     $LinkUri = $this->uri(array('action'=>'disease_report_screen_3','outbreakCode1'=>$outbreakcode));
 
     $objLink = new link($LinkUri);
     $objLink->link = $outbreak['outbreakCode'];
-//echo $deLink//;
 
     $objTableArea1->addCell($objLink->show(), NULL, NULL, 'center');
     $objTableArea1->addCell($outbreak['partitionType'], NULL, NULL, 'center');
@@ -84,7 +82,7 @@ foreach ($outbreaks as $outbreak) {
     $objTableArea1->addCell($outbreak['year'], NULL, NULL, 'center');
     $objTableArea1->endRow();
 }
-//print_r($diagnoses);
+
 $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
 $outbreakCodeBox->extra = 'readonly';
 $outbreakCodeBox->setCss('passive_surveillance outbreakcode');
@@ -177,18 +175,23 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedb
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate')." &nbsp;", NULL, NULL, 'center');
 $objTableArea3->endHeaderRow();
 
-foreach ($diagnoses as $diagnosis) {
-    $diagnosisNature  = $this->objDiagnosticMethod->getRow('id', $diagnosis['diagnosticmethodid']);
+if (!empty($diagnoses)) {
+    foreach ($diagnoses as $diagnosis) {
+        $diagnosisNature  = $this->objDiagnosticMethod->getRow('id', $diagnosis['diagnosticmethodid']);
+        $objTableArea3->startRow();
+        $objTableArea3->addCell($diagnosis['outbreakcode'], NULL, NULL, 'center');
+        $objTableArea3->addCell($diagnosisNature['diagnostic_method'], NULL, NULL, 'center');
+        $objTableArea3->addCell($this->objUser->Username($diagnosis['created_by']), NULL, NULL, 'center');
+        $objTableArea3->addCell($diagnosis['date_created'], NULL, NULL, 'center');
+        $modifier = ($diagnosis['modified_by'] == NULL)? '' : $this->objUser->Username($diagnosis['modified_by']);
+        $objTableArea3->addCell($modifier, NULL, NULL, 'center');
+        $objTableArea3->addCell($diagnosis['date_modified'], NULL, NULL, 'center');
+        $objTableArea3->endRow();
+    }
+} else {
     $objTableArea3->startRow();
-    $objTableArea3->addCell($diagnosis['outbreakcode'], NULL, NULL, 'center');
-    $objTableArea3->addCell($diagnosisNature['diagnostic_method'], NULL, NULL, 'center');
-    $objTableArea3->addCell($this->objUser->Username($diagnosis['created_by']), NULL, NULL, 'center');
-    $objTableArea3->addCell($diagnosis['date_created'], NULL, NULL, 'center');
-    $modifier = ($diagnosis['modified_by'] == NULL)? '' : $this->objUser->Username($diagnosis['modified_by']);
-    $objTableArea3->addCell($modifier, NULL, NULL, 'center');
-    $objTableArea3->addCell($diagnosis['date_modified'], NULL, NULL, 'center');
-    $objTableArea3->endRow();
-
+    $objTableArea3->addCell("<i>".$this->objLanguage->languageText('phrase_norecords')."</i>", NULL, NULL, 'left', NULL, 'colspan="6"');
+    $objTableArea3->endRow();         
 }
 
 $this->objJquery = $this->getObject('jquery', 'jquery');

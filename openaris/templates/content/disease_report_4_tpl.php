@@ -55,36 +55,36 @@ $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 $objTableArea1 = $this->getObject('htmltable','htmlelements');
 $objTableArea1->cellspacing = 2;
 $objTableArea1->width = NULL;
+$objTableArea1->cssClass = 'areatable';
 
 $objTableArea1->startHeaderRow();
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('phrase_partitiontype'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'));
-$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'));
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'), NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('phrase_partitiontype'), NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionlevel', 'openaris'), NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('mod_ahis_partitionname', 'openaris'), NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_month'), NULL, NULL, 'center');
+$objTableArea1->addHeaderCell($this->objLanguage->languageText('word_year'), NULL, NULL, 'center');
 $objTableArea1->endHeaderRow();
 
 foreach ($outbreaks as $outbreak) {
     $objTableArea1->startRow();
-     $objTableArea1->startRow();
-     $outbreakcode= $outbreak['outbreakCode'];
+    $outbreakcode= $outbreak['outbreakCode'];
     $LinkUri = $this->uri(array('action'=>'disease_report_screen_4','outbreakCode1'=>$outbreakcode));
 
     $objLink = new link($LinkUri);
     $objLink->link = $outbreak['outbreakCode'];
-    $objTableArea1->addCell($objLink->show());
-    $objTableArea1->addCell($outbreak['partitionType']);
-    $objTableArea1->addCell($outbreak['partitionLevel']);
-    $objTableArea1->addCell($outbreak['partitionName']);
-    $objTableArea1->addCell($outbreak['month']);
-    $objTableArea1->addCell($outbreak['year']);
+    $objTableArea1->addCell($objLink->show(), NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['partitionType'], NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['partitionLevel'], NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['partitionName'], NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['month'], NULL, NULL, 'center');
+    $objTableArea1->addCell($outbreak['year'], NULL, NULL, 'center');
     $objTableArea1->endRow();
 }
 
 $outbreakCodeBox = new textinput('outbreakCode', $outbreakCode);
 $outbreakCodeBox->extra = 'readonly';
-$outbreakCodeBox->setCss('passive_surveillance');
+$outbreakCodeBox->setCss('passive_surveillance outbreakcode');
 
 $speciesDrop = new dropdown('speciesId');
 $speciesDrop->addFromDB($arraySpecies, 'common_name', 'id');
@@ -134,7 +134,7 @@ $objTableSpecies->cellspacing = 2;
 $objTableSpecies->width = NULL;
 
 $objTableSpecies->startRow();
-$objTableSpecies->addCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
+$objTableSpecies->addCell("<span class='outbreakcode'>".$this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris')."</span>&nbsp;");
 $objTableSpecies->addCell($outbreakCodeBox->show());
 $objTableSpecies->endRow();
 $objTableSpecies->startRow();
@@ -186,7 +186,7 @@ $objTableActual->addCell($this->objLanguage->languageText('mod_ahis_destroyed', 
 $objTableActual->addCell($destroyedBox->show());
 $objTableActual->endRow();
 $objTableActual->startRow();
-$objTableActual->addCell($this->objLanguage->languageText('mod_ahis_slaughtered', 'openaris'));
+$objTableActual->addCell($this->objLanguage->languageText('mod_ahis_slaughtered', 'openaris').'&nbsp;');
 $objTableActual->addCell($slaughteredBox->show());
 $objTableActual->endRow();
 
@@ -219,7 +219,7 @@ $objTableCumulative->addCell($this->objLanguage->languageText('mod_ahis_cumulati
 $objTableCumulative->addCell($cumulativeDestroyedBox->show());
 $objTableCumulative->endRow();
 $objTableCumulative->startRow();
-$objTableCumulative->addCell($this->objLanguage->languageText('mod_ahis_cumulativeslaughtered', 'openaris'));
+$objTableCumulative->addCell($this->objLanguage->languageText('mod_ahis_cumulativeslaughtered', 'openaris').'&nbsp;');
 $objTableCumulative->addCell($cumulativeSlaughteredBox->show());
 $objTableCumulative->endRow();
 
@@ -241,6 +241,7 @@ $cumulativeSet->addContent($objTableCumulative->show());
 $objTableArea2 = $this->newObject('htmltable','htmlelements');
 $objTableArea2->cellspacing = 2;
 $objTableArea2->width = NULL;
+//$objTableArea2->cssClass = 'areatable';
 
 $objTableArea2->startRow();
 $objTableArea2->addCell($speciesSet->show(), NULL, 'top', 'right', 'layout');
@@ -274,48 +275,72 @@ $objForm->addRule('localityName', $this->objLanguage->languageText('mod_ahis_val
 $objTableArea3 = $this->newObject('htmltable','htmlelements');
 $objTableArea3->cellspacing = 2;
 $objTableArea3->width = NULL;
+$objTableArea3->cssClass = 'areatable widetable';
 
 $objTableArea3->startHeaderRow();
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_species'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_age'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_sex'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_norisk', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nocases', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nodeaths', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nodestroyed', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_noslaughtered', 'openaris'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createddate'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'));
-$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'));
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_species'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_age'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('word_sex'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_norisk', 'openaris'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nocases', 'openaris'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nodeaths', 'openaris'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_nodestroyed', 'openaris'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_noslaughtered', 'openaris'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createdby'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_createddate'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedby'), NULL, NULL, 'center');
+$objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifieddate'), NULL, NULL, 'center');
 $objTableArea3->endHeaderRow();
 
-foreach ($diseaseSpeciesNumber as $numbers) {
-    $species  = $this->objSpeciesNames->getRow('id', $numbers['speciesid']);
-    $age = $this->objSpeciesAgeGroup->getRow('id', $numbers['agegroupid']);
-    $sex = $this->objSex->getRow('id', $numbers['sexid']);
+if (!empty($diseaseSpeciesNumber)) {
+    foreach ($diseaseSpeciesNumber as $numbers) {
+        $species  = $this->objSpeciesNames->getRow('id', $numbers['speciesid']);
+        $age = $this->objSpeciesAgeGroup->getRow('id', $numbers['agegroupid']);
+        $sex = $this->objSex->getRow('id', $numbers['sexid']);
+        $objTableArea3->startRow();
+        $objTableArea3->addCell($numbers['outbreakcode'], NULL, NULL, 'center');
+        $objTableArea3->addCell($species['common_name'], NULL, NULL, 'center');
+        $objTableArea3->addCell($age['agegroup'], NULL, NULL, 'center');
+        $objTableArea3->addCell($sex['name'], NULL, NULL, 'center');
+        $objTableArea3->addCell($numbers['risk'], NULL, NULL, 'center');
+        $objTableArea3->addCell($numbers['cases'], NULL, NULL, 'center');
+        $objTableArea3->addCell($numbers['deaths'], NULL, NULL, 'center');
+        $objTableArea3->addCell($numbers['destroyed'], NULL, NULL, 'center');
+        $objTableArea3->addCell($numbers['slaughtered'], NULL, NULL, 'center');
+        $objTableArea3->addCell($this->objUser->Username($numbers['created_by']), NULL, NULL, 'center');
+        $objTableArea3->addCell($numbers['date_created'], NULL, NULL, 'center');
+        $modifier = ($numbers['modified_by'] == NULL)? '' : $this->objUser->Username($numbers['modified_by']);
+        $objTableArea3->addCell($modifier, NULL, NULL, 'center');
+        $objTableArea3->addCell($numbers['date_modified'], NULL, NULL, 'center');
+        $objTableArea3->endRow();
+    }
+} else {
     $objTableArea3->startRow();
-    $objTableArea3->addCell($numbers['outbreakcode']);
-    $objTableArea3->addCell($species['common_name']);
-    $objTableArea3->addCell($age['agegroup']);
-    $objTableArea3->addCell($sex['name']);
-    $objTableArea3->addCell($numbers['risk']);
-    $objTableArea3->addCell($numbers['cases']);
-    $objTableArea3->addCell($numbers['deaths']);
-    $objTableArea3->addCell($numbers['destroyed']);
-    $objTableArea3->addCell($numbers['slaughtered']);
-    $objTableArea3->addCell($this->objUser->Username($numbers['created_by']));
-    $objTableArea3->addCell($numbers['date_created']);
-    $modifier = ($numbers['modified_by'] == NULL)? '' : $this->objUser->Username($numbers['modified_by']);
-    $objTableArea3->addCell($modifier);
-    $objTableArea3->addCell($numbers['date_modified']);
-    $objTableArea3->endRow();
-
+    $objTableArea3->addCell("<i>".$this->objLanguage->languageText('phrase_norecords')."</i>", NULL, NULL, 'left', NULL, 'colspan="6"');
+    $objTableArea3->endRow();         
 }
 
-$scriptUri = $this->getResourceURI('util.js');
-$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
+$aSet = new fieldset('aSet');
+$aSet->setExtra('style="max-width: 972px; width: 972px; border: 2px solid blue;"');
+$aSet->setLegend($this->objLanguage->languageText('mod_ahis_speciesnumber', 'openaris'));
+$aSet->addContent($objForm->show());
+$bSet = new fieldset('bSet');
+$bSet->setExtra('class="diseasereport"');
+$bSet->setLegend($this->objLanguage->languageText('mod_ahis_outbreakhistory', 'openaris'));
+$bSet->addContent("<div class='scroll5'>".$objTableArea1->show()."</div>");
+$cSet = new fieldset('cSet');
+$cSet->setExtra('class="diseasereport"');
+$cSet->setLegend($this->objLanguage->languageText('mod_ahis_speciesnumberview', 'openaris'));
+$cSet->addContent("<div class='scroll5'>".$objTableArea3->show()."</div>");
 
-$content = $objTableArea1->show()."<br />".$objForm->show()."<br />".$objTableArea3->show();
-echo $objHeading->show()."<br />".$content;
+
+$this->objJquery = $this->getObject('jquery', 'jquery');
+$this->objJquery->loadTablesorterPlugin();
+$scriptUri = $this->getResourceURI('util.js');
+$script = "jQuery(document).ready(function() { jQuery('.areatable').tablesorter(); });";
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
+$this->appendArrayVar('headerParams', "<script type='text/javascript'>$script</script>");
+				
+$content = $aSet->show()."<!--hr class='blue' /-->".$bSet->show().$cSet->show();
+echo $objHeading->show().$content;

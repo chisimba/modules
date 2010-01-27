@@ -224,26 +224,31 @@ $objTableArea3->addHeaderCell($this->objLanguage->languageText('phrase_modifiedd
 $objTableArea3->endHeaderRow();
 
 $class = 'odd';
-foreach ($diseaseLocalities as $locality) {
-    $localityType  = $this->objLocalityType->getRow('id', $locality['localitytypeid']);
-    $farmingSystem = $this->objFarmingSystem->getRow('id', $locality['farmingsystemid']);
-    $objTableArea3->startRow($class);
-    $objTableArea3->addCell($locality['outbreakcode'], NULL, NULL, 'center');
-    $objTableArea3->addCell($localityType['locality_type'], NULL, NULL, 'center');
-    $objTableArea3->addCell($locality['name'], NULL, NULL, 'center');
-    $objTableArea3->addCell($locality['latitude'], NULL, NULL, 'center');
-    $objTableArea3->addCell($locality['latdirection'], NULL, NULL, 'center');
-    $objTableArea3->addCell($locality['longitude'], NULL, NULL, 'center');
-    $objTableArea3->addCell($locality['longdirection'], NULL, NULL, 'center');
-    $objTableArea3->addCell($farmingSystem['farmingsystem'], NULL, NULL, 'center');
-    $objTableArea3->addCell($this->objUser->Username($locality['created_by']), NULL, NULL, 'center');
-    $objTableArea3->addCell($locality['date_created'], NULL, NULL, 'center');
-    $modifier = ($locality['modified_by'] == NULL)? '' : $this->objUser->Username($locality['modified_by']);
-    $objTableArea3->addCell($modifier, NULL, NULL, 'center');
-    $objTableArea3->addCell($locality['date_modified'], NULL, NULL, 'center');
-    $objTableArea3->endRow();
-    //$class = ($class == 'odd')? 'even' : 'odd';
-
+if (!empty($diseaseLocalities)) {
+    foreach ($diseaseLocalities as $locality) {
+        $localityType  = $this->objLocalityType->getRow('id', $locality['localitytypeid']);
+        $farmingSystem = $this->objFarmingSystem->getRow('id', $locality['farmingsystemid']);
+        $objTableArea3->startRow($class);
+        $objTableArea3->addCell($locality['outbreakcode'], NULL, NULL, 'center');
+        $objTableArea3->addCell($localityType['locality_type'], NULL, NULL, 'center');
+        $objTableArea3->addCell($locality['name'], NULL, NULL, 'center');
+        $objTableArea3->addCell($locality['latitude'], NULL, NULL, 'center');
+        $objTableArea3->addCell($locality['latdirection'], NULL, NULL, 'center');
+        $objTableArea3->addCell($locality['longitude'], NULL, NULL, 'center');
+        $objTableArea3->addCell($locality['longdirection'], NULL, NULL, 'center');
+        $objTableArea3->addCell($farmingSystem['farmingsystem'], NULL, NULL, 'center');
+        $objTableArea3->addCell($this->objUser->Username($locality['created_by']), NULL, NULL, 'center');
+        $objTableArea3->addCell($locality['date_created'], NULL, NULL, 'center');
+        $modifier = ($locality['modified_by'] == NULL)? '' : $this->objUser->Username($locality['modified_by']);
+        $objTableArea3->addCell($modifier, NULL, NULL, 'center');
+        $objTableArea3->addCell($locality['date_modified'], NULL, NULL, 'center');
+        $objTableArea3->endRow();
+        //$class = ($class == 'odd')? 'even' : 'odd';
+    }
+} else {
+    $objTableArea3->startRow();
+    $objTableArea3->addCell("<i>".$this->objLanguage->languageText('phrase_norecords')."</i>", NULL, NULL, 'left', NULL, 'colspan="6"');
+    $objTableArea3->endRow();         
 }
 
 $bSet = new fieldset('bSet');
@@ -254,7 +259,6 @@ $cSet = new fieldset('cSet');
 $cSet->setExtra('class="diseasereport"');
 $cSet->setLegend($this->objLanguage->languageText('mod_ahis_localitydataview', 'openaris'));
 $cSet->addContent("<div class='scroll5'>".$objTableArea3->show()."</div>");
-
 
 $this->objJquery = $this->getObject('jquery', 'jquery');
 $this->objJquery->loadTablesorterPlugin();
