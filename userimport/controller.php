@@ -222,8 +222,12 @@ class userimport extends controller
             $this->setVar('classlist',$classlist);
             $this->setVar('remoteCode',$module);
             $classNameData=$objRemoteImport->getModuleName($module);
-            $classNameData=(array)$classNameData[0];
-            $this->setVar('remoteDesc',$classNameData['desc']);
+            if (is_array($classNameData)){
+                $classNameData=(array)$classNameData[0];
+                $this->setVar('remoteDesc',$classNameData['desc']);
+            } else {
+                $this->setVar('remoteDesc',$module);
+            }
         }
         if ($program!=''){
             $modulelist=$objRemoteImport->getModules($program);

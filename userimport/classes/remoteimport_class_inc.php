@@ -118,7 +118,8 @@ class remoteimport extends object
     */
     function getClassList($module)
     {
-        return $this->getSOAP('getClassList',$module);
+        $catch= $this->getSOAP('getClassList',$module);
+        return $catch;
     }
     
     /**
