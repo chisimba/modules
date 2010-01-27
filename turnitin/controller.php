@@ -52,6 +52,10 @@ class turnitin extends controller
 			//$this->setVar('JQUERY_VERSION', '1.3.2');
 			$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
 		 	$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+		 	
+		 	//log the user into TII
+		 	//$this->objUtils->getUserSession();		
+		 	
 		}catch(Exception $e){
             throw customException($e->getMessage());
             exit();
@@ -117,13 +121,21 @@ class turnitin extends controller
 														$this->objUtils->getSubmissionInfo()));
 				break;
 			//student submit a paper
-			case 'sub':				
-				print $this->objTOps->redirectSubmit(array_merge(
+			case 'sub':			    
+			     $sessionid = $this->objUtils->getUserSession();
+			     if(!$sessionid==false){
+				    print $this->objTOps->redirectSubmit(array_merge(
+				                                        array('sessionid' => $sessionid),
 														$this->objUtils->getUserParams(), 
 														$this->objUtils->getClassParams(),  
 														$this->objUtils->getAssessmentParams(),
 														$this->objUtils->getSubmissionInfo()));
+			     } else {
+			         print "FAILED to get the session id";
+			     }
+			    exit(0);
 				break;
+				
 			case 'ajax_returnreport':
 			case 'returnreport':
 				print $this->objTOps->getReport(array_merge(
@@ -162,7 +174,9 @@ class turnitin extends controller
 				
 			
 			case 'callback':
-				
+				//log the callbacks
+				var_dump($_REQUEST);
+				exit(0);
 				return 'callback_tpl.php';
 				break;
 			default:

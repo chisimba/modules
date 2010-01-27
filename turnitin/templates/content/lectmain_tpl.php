@@ -4,8 +4,10 @@
 
 
 	$objSysConfig  = $this->getObject('altconfig','config');
-	$ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
-	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'htmlelements');
+	$objExtJS = $this->getObject('extjs','ext');
+	$objExtJS->show();
+	
+	$ext = "";
 	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/FileUploadField.js', 'htmlelements');
 	//$ext .= '<script type="text/javascript" src="http://extjs.com/deploy/dev/examples/ux/fileuploadfield/FileUploadField.js"></script>';
 	
@@ -20,13 +22,14 @@
 	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/tree/column-tree.js', 'htmlelements');
 	$ext .=$this->getJavaScriptFile('lecturers.js', 'turnitin');
 	//$ext .=$this->getJavaScriptFile('students.js', 'turnitin');
-	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+	/*$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
 	
 	
 	$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
 	$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'htmlelements').'" type="text/css" />';
 	$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
 	//$ext .= '<link rel="stylesheet" href=" <link rel="stylesheet" type="text/css" href="http://extjs.com/deploy/dev/examples/ux/fileuploadfield/css/fileuploadfield.css"/>" type="text/css" />';
+	*/
 	$ext .= '<style type="text/css">
 
        

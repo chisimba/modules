@@ -74,6 +74,8 @@ class utilities extends object
 			$this->setVar('SUPPRESS_PROTOTYPE', true); //Can't stop prototype in the public space as this might impact blocks
 			//$this->setVar('SUPPRESS_JQUERY', true);
 			//$this->setVar('JQUERY_VERSION', '1.3.2');
+			
+			$this->userSessionID = "";
 		
 		}catch(Exception $e){
             throw customException($e->getMessage());
@@ -181,26 +183,30 @@ class utilities extends object
 	 * @return unknown
 	 */
 	public function userTemplate()
-	{
+	{	   
+	    
+	    
+	    
 		//return "lectmain_tpl.php";
 		$this->setVar('errorMessage','');
 		$objContextGroups = $this->getObject('managegroups', 'contextgroups');	
 		if ($this->objUser->isAdmin () || $objContextGroups->isContextLecturer()) 
-		{
-			
+		{  
+		    
 			//create user on TII if he does not exist
 			$res = $this->objTOps->createLecturer($this->getUserParams());
-
+			//take the userid that TII returned and save it to the database
+			
 			//create the course on TII if it does not exist and 
 			//make this user the instructor					
-			//print $res;
+			
 			//insert the instructor email
 			$this->objEmails->addEmail($this->objDBContext->getContextCode(), $this->objUser->email() );
 			$res =  $this->objTOps->createClass(array_merge(
 													$this->getUserParams(), 
 													$this->getClassParams(),
 													array('instructoremail' => $this->objUser->email())));
-			//print $res;die;
+			
 			if(is_array($res))
 			{
 				if(!$this->objTOps->isSuccess(2, $res['code']))
@@ -213,14 +219,53 @@ class utilities extends object
 		} else {
 			
 			$res = $this->objTOps->createStudent($this->getUserParams());
-			//var_dump($res);
+			//var_dump($res);die;
 			$res2 = $this->objTOps->joinClass(array_merge(
 													$this->getUserParams(), 
 													$this->getClassParams()));
+											
+			
 			//print $res2;
 			return "student_tpl.php";
 		}
 	
+	}
+	
+	function getUserSession(){
+	    $res = $this->objTOps->loginSession(array_merge( $this->getUserParams(),                                                 													$this->getClassParams()));
+	     if($res['code'] == 92)
+	       {	          
+	         return (string)$res['xmlobject']->sessionid;     
+	          
+	       } else{
+	          return false;
+	       }
+	}
+	
+	function getUserSession2(){
+	   //var_dump($_SESSION);
+	  // $this->setSession('tii_session', "");
+	   if (!$this->getSession('tii_session')) {
+	     
+	       //try to login
+	       $res = $this->objTOps->loginSession(array_merge( $this->getUserParams(),                                                 													$this->getClassParams()));
+	      
+	      // var_dump((string)$res['xmlobject']->sessionid);
+	       //process the result
+	       if($res['code'] == 92)
+	       {	          
+	          $this->setSession('tii_session', (string)$res['xmlobject']->sessionid);     
+	          return $this->getSession('tii_session');
+	       } else{
+	           print '4';
+	           error_log("TURNITIN LOGIN FAILED :::::: code:".$res['xmlobject']->rcode." :::::: ".$res['xmlobject']->rmessage);
+	       }
+	       
+	    } else {
+	        
+	        return $this->getSession('tii_session');
+	    }
+                                                													
 	}
 	
 	/**
@@ -400,25 +445,29 @@ class utilities extends object
 	
 	function send_alert($message,$users = array('wesleynitsckie@gmail.com'))
 	  {
-	    // email or SMS code goes here
-	    include ($this->getResourcePath('XMPPHP/XMPP.php', "im"));
-	    include ($this->getResourcePath('XMPPHP/XMPPHP_Log.php', "im"));
-	    //include ('../im/classes/XMPPHP/XMPPHP_Log.php' );
-	
-	    $jserver = "talk.google.com";
-	    $jport = "5222";
-	    $juser = "eteaching2009";
-	    $jpass = "3t3ach1ng2009";
-	    $jclient = "ChisimbaIM";
-	    $jdomain = "gmail.com";
-	    
-	    $conn2 = new XMPPHP_XMPP ( $jserver, intval ( $jport ), $juser, $jpass, $jclient, $jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
-	    $conn2->connect ();
-	    $conn2->processUntil ( 'session_start' );
-	    foreach ($users as $user){
-	        $conn2->message ( $user, $message );
-	    }
-	    $conn2->disconnect ();  
+	      $objModCat = $this->getObject('modules', 'modulecatalogue');
+	      if ($objModCat-> checkIfRegistered('im')){          
+	      
+        	    // email or SMS code goes here
+        	    include ($this->getResourcePath('XMPPHP/XMPP.php', "im"));
+        	    include ($this->getResourcePath('XMPPHP/XMPPHP_Log.php', "im"));
+        	    //include ('../im/classes/XMPPHP/XMPPHP_Log.php' );
+        	
+        	    $jserver = "talk.google.com";
+        	    $jport = "5222";
+        	    $juser = "eteaching2009";
+        	    $jpass = "3t3ach1ng2009";
+        	    $jclient = "ChisimbaIM";
+        	    $jdomain = "gmail.com";
+        	    
+        	    $conn2 = new XMPPHP_XMPP ( $jserver, intval ( $jport ), $juser, $jpass, $jclient, $jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
+        	    $conn2->connect ();
+        	    $conn2->processUntil ( 'session_start' );
+        	    foreach ($users as $user){
+        	        $conn2->message ( $user, $message );
+        	    }
+        	    $conn2->disconnect ();  
+	      }
 	  }
 	  
 	public function doFileUpload()

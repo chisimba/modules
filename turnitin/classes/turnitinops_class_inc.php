@@ -69,6 +69,8 @@ class turnitinops extends object
 	public $ctl, $cpw, $tem, $assign, $dtstart, $dtdue, $ainst, $newassign, $ptl, $pdata, $ptype, $pfn, $pln;
 	public $oid, $newupw, $username;
 	
+	//session
+	public $sessionid;
 	
 	//config
 	public $remote_host, $shared_secret_key;
@@ -197,7 +199,7 @@ class turnitinops extends object
 		$url .= "&aid=".$this->aid;
 		$url .= "&said=".$this->said;
 		$url .= "&diagnostic=".$this->diagnostic;
-		$url .= "&uem=".$this->uem;
+		$url .= "&uem=".urlencode($this->uem);
 		$url .= "&upw=".urlencode($this->upw);
 		$url .= "&ufn=".urlencode($this->ufn);
 		$url .= "&uln=".urlencode($this->uln);
@@ -219,6 +221,9 @@ class turnitinops extends object
 		$url .= "&s_view_report=".urlencode($this->s_view_report);
 		$url .= "&ptype=".urlencode($this->ptype);
 		$url .= "&pdata=".urlencode($this->pdata);
+		if($this->sessionid){
+		 // $url .= "&session-id=".urlencode($this->sessionid);
+		}
 		
 		error_log($url);
 		return $url;
@@ -230,6 +235,7 @@ class turnitinops extends object
 	 * @return unknown
 	 */
 	public function getRedirectUrl(){
+	    $this->utp = 3;
 		return $this->remote_host.'?'.$this->getParams();
 	}
 	
@@ -403,7 +409,7 @@ class turnitinops extends object
     	$this->uem = $params['email'];   
     	$this->tem = $params['instructoremail'];
     	$this->ctl = $params['classtitle'];    	
-    	$this->cid = $params['classid'];    	
+    	//$this->cid = $params['classid'];    	
     	
     	$this->diagnostic = 0;
     	//var_dump(($params));die;
@@ -553,13 +559,15 @@ class turnitinops extends object
     	$this->uln = $params['lastname'];
     	$this->uem = $params['email'];
     	$this->upw = $params['password'];
+    	$this->sessionid = $params['sessionid'];
+    	
     	
     	$this->diagnostic = 0;
     	
     	//var_dump($params);
     	//var_dump($this->ctl);die;
     	error_log("going to redirect to TII now...");
-    	
+    	//var_dump($params);die;
     	$this->doGet();
     }
     
@@ -656,5 +664,34 @@ class turnitinops extends object
     	error_log("get score for $this->ctl -> $this->assign -> $this->oid");
     	
     	return $this->doPost();
+    }
+    
+    /**
+     * Login Session
+     * 
+     * The API function will log in the user 
+     * described by the user email, first name, 
+     * last name, and user type
+     */
+    function loginSession($params){
+        $this->fid = 17;
+    	$this->fcmd = 2;
+    	$this->utp = 2;
+    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email'];
+    	$this->upw = "";//$params['password'];
+    	//$this->userid = 18882189;
+    	$this->sessionid = "7de114699da17b7df28605e403c7f275";
+    	
+    	$this->log('logSession', $params['firstname']. ' '. $params['lastname']);
+    	
+    	return $this->doPost();
+        
+    }
+    
+    function log($function, $message){
+        error_log("\nTURNITIN DEBUG: $function() -> :::: -> $message");
     }
 }
