@@ -61,64 +61,57 @@ $this->Table->addHeader($tableHd, "heading");
 //Loop through and display the records
 $rowcount = 0;
 if (isset($ar['root']['Settings'][1])){
-$ar = $ar['root']['Settings'][0];
-}else{
+    $ar = $ar['root']['Settings'][0];
+} else {
 	$ar = $ar['root']['Settings'];
 }
 if (isset($ar)) {
     if (count($ar) > 0) {
-    	
         foreach ($ar as $key =>$value) {
             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
             if($key=='creatorId'||$key=='dateCreated'){
             	continue;
             }else{
-	            $tableRow[] = $key;
-	            $tableRow[]= $value;
-	            $tableRow[]=$this->objUser->fullName();
-	            
+	        $tableRow[] = $key;
+                $tableRow[]= $value;
+                $tableRow[]=$this->objUser->fullName();
             	#----------------add to tableadmin
-            //The URL for the edit link
-            $editLink=$this->uri(array('action' => 'edit',
-              'key' => $key,
-              'value'=>$value), 'userparamsadmin');
-            $rep = array('PARAM', $key);
-            $objEditIcon->alt=$this->objLanguage->code2Txt("mod_userparams_edit",'userparamsadmin');
-            $ed = $objEditIcon->getEditIcon($editLink);
-            
-            // The delete icon with link uses confirm delete utility
-            $objDelIcon->setIcon("delete");
-            $rep = array('PARAM' => $key);
-            $objDelIcon->alt=$this->objLanguage->code2Txt("mod_userparams_delete",'userparamsadmin');
-            $delLink = $this->uri(array(
-        	  'action' => 'delete',
-        	  'confirm' => 'yes',
-              'key' => $key,
-              'value'=>$value), 'userparamsadmin');
-            $objConfirm=&$this->newObject('confirm','utilities');
-            $rep = array('PARAM', $key);
-            $objConfirm->setConfirm($objDelIcon->show(),
-               $delLink,$this->objLanguage->code2Txt("mod_userparams_confirmdelete",'userparamsadmin'));
-            $conf = $objConfirm->show();
-            
-            
-            
-            
-            if ($allowAdmin) {
-                $editArray = array('action' => 'edit',
-                  'id' => $key);
-                $deleteArray = array('action' => 'delete',
-                  'id' => $key);
-                 $tableRow[]=$ed."&nbsp;".$conf;
-               
-                //Add the row to the table for output
-               $this->Table->addRow($tableRow, $oddOrEven);
-               $tableRow=array(); // clear it out               // Set rowcount for bitwise determination of odd or even
-               $rowcount = ($rowcount == 0) ? 1 : 0;
+                //The URL for the edit link
+                $editLink=$this->uri(array('action' => 'edit',
+                  'key' => $key,
+                  'value'=>$value), 'userparamsadmin');
+                $rep = array('PARAM', $key);
+                $objEditIcon->alt=$this->objLanguage->code2Txt("mod_userparams_edit",'userparamsadmin');
+                $ed = $objEditIcon->getEditIcon($editLink);
+
+                // The delete icon with link uses confirm delete utility
+                $objDelIcon->setIcon("delete");
+                $rep = array('PARAM' => $key);
+                $objDelIcon->alt=$this->objLanguage->code2Txt("mod_userparams_delete",'userparamsadmin');
+                $delLink = $this->uri(array(
+                      'action' => 'delete',
+                      'confirm' => 'yes',
+                  'key' => $key,
+                  'value'=>$value), 'userparamsadmin');
+                $objConfirm=&$this->newObject('confirm','utilities');
+                $rep = array('PARAM', $key);
+                $objConfirm->setConfirm($objDelIcon->show(),
+                   $delLink,$this->objLanguage->code2Txt("mod_userparams_confirmdelete",'userparamsadmin'));
+                $conf = $objConfirm->show();
+          
+                if ($allowAdmin) {
+                    $editArray = array('action' => 'edit',
+                      'id' => $key);
+                    $deleteArray = array('action' => 'delete',
+                      'id' => $key);
+                     $tableRow[]=$ed."&nbsp;".$conf;
+
+                    //Add the row to the table for output
+                   $this->Table->addRow($tableRow, $oddOrEven);
+                   $tableRow=array(); // clear it out               // Set rowcount for bitwise determination of odd or even
+                   $rowcount = ($rowcount == 0) ? 1 : 0;
+                }
             }
-            }
-                        
-            
         }
     }
 }
@@ -133,6 +126,4 @@ $this->center->addToStr($objAddLink->show());
 //Output the content to the page
 $tab->addTab(array('name'=>'Userparams','url'=>'http://localhost','content' => $this->center->show()),'luna-tab-style-sheet');
 echo $tab->show();
-
-
 ?>
