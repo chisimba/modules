@@ -355,9 +355,9 @@
 	height: 350,
 	title:'File Manager',
 	items: [
-	{
-/*region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, maxSize: 200, collapsible: true, title: 'South', margins: '0 0 0 0'*/
-	},
+	/*{
+region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, maxSize: 200, collapsible: true, title: 'South', margins: '0 0 0 0'
+	},*/
 	{
 	region: 'west',
 	id: 'west-panel',
@@ -420,7 +420,7 @@
 	
     Ext.onReady(function(){
     //alert(uri);
-    datastore.load({params:{id:defId}});
+    //datastore.load({params:{id:defId}});
     viewport.render();
     });
 
