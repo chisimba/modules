@@ -127,7 +127,7 @@ var liftdata = new Ext.data.JsonStore({
             store: liftdata,
             displayInfo: true,
             displayMsg: lang["displayingpage"]+' {0} - {1} '+lang["wordof"]+' {2}',
-            emptyMsg: "No Lifts to display",
+            emptyMsg: lang["noliftstodisplay"],
             items:[
                 /*'-', {
                 pressed: false,

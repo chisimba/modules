@@ -16,7 +16,8 @@ lang["needtype"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_needt
 lang["tripdays"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_tripdays', 'liftclub', NULL, 'Trip Days')).'";
 lang["wordview"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_view', 'liftclub', NULL, 'View Lift')).'";
 lang["wordcreated"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordcreated', 'liftclub', NULL, 'Created')).'";
-lang["wordof"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordof', 'liftclub', NULL, 'of')).'";
+lang["wordof"] =   "'.$this->objLanguage->code2Txt('mod_liftclub_wordof', 'liftclub', NULL, 'of').'";
+lang["noliftstodisplay"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_noliftstodisplay', 'liftclub', NULL, 'No Lifts To Display')).'";
 lang["displayingpage"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_displayingpage', 'liftclub', NULL, 'Displaying Page')).'";
 var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
