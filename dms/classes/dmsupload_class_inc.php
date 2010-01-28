@@ -31,7 +31,7 @@ if (!
 $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-class upload extends object {
+class dmsupload extends object {
     /**
      * @var array $permittedTypes The permitted file types
      */

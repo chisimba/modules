@@ -36,14 +36,15 @@ class dbdocuments extends dbtable {
         $this->objUser=$this->getObject('user','security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUploadTable = $this->getObject('dbfileuploads');
+        $this->userutils=$this->getObject('userutils');
     }
     public function getdocuments() {
         $sql="select * from tbl_dms_documents where active = 'N'";
         if(!$this->objUser->isadmin()) {
-               $sql.=" and userid = '".$this->objUser->userid()."'";
+            //$sql.=" and userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
-        $owner="1";//$this->objUser->fullname($row['userid']);
+        $owner=$this->userutils->getUserId();
         $rows=$this->getArray($sql);
         $docs=array();
 
@@ -82,8 +83,7 @@ class dbdocuments extends dbtable {
     ) {
 
 
-        $userid=$this->objUser->userid();
-       // $userid='1';
+        $userid=$this->userutils->getUserId();
         $data=array(
                 'docname'=>$title,
                 'date_created'=>$date,
@@ -105,17 +105,26 @@ class dbdocuments extends dbtable {
     function approveDocs($docids) {
         $data=array('active'=>'Y');
         $ids=explode(",", $docids);
-        $userid=$this->objUser->userId();
-        //$userid="1";
+        $userid=$this->userutils->getUserId();
         $ext='.na';
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'dms');
         foreach ($ids as $id) {
             $this->update('id',$id,$data);
             $doc=$this->getDocument($id);
+            //print_r($doc);
+
             $filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].$ext;
+            $filename= str_replace("//", "/", $filename);
             $newname=$dir.'/'.$doc['topic'].'/'. $doc['docname'].'.'.$doc['ext'];
+            $newname= str_replace("//", "/", $newname);
+
+            /*  $fh = fopen("/dwaf/dmstest/log.txt", 'w') or die("can't open file ".$doc['docname']);
+            $stringData = "renaming on approve $filename\n$newname\n===================";
+            fwrite($fh, $stringData);
+            fclose($fh);
+            */
             if(!file_exists($filename)) {
-                $filename= str_replace("//", "/", $filename);
+
                 $fh = fopen($filename, 'w') or die("can't open file ".$doc['docname']);
                 $stringData = "\n";
                 fwrite($fh, $stringData);
@@ -127,10 +136,10 @@ class dbdocuments extends dbtable {
                         'userid'=>$userid,
                         'parent'=>$doc['topic'],
                         'docid'=>$id,
-                        'refno'=>'1234',
-                        'filepath'=>$doc['topic']);
+                        'refno'=>$this->userutils->getRefNo(),
+                        'filepath'=>$doc['topic'].'/'.$doc['docname'].$ext);
                 $result = $this->objUploadTable->saveFileInfo($data);
-            }else{
+            }else {
                 rename($filename,$newname);
             }
         }
@@ -144,7 +153,7 @@ class dbdocuments extends dbtable {
         return $this->getRow('id',$id);
     }
 
-    function updateDocument($id,$data){
+    function updateDocument($id,$data) {
         $this->update('id',$id,$data);
     }
 }

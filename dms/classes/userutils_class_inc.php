@@ -55,6 +55,11 @@ class userutils extends object {
         $this->objUser=$this->getObject('user','security');
     }
 
+    public function getUserId() {
+        $userid=$this->objUser->userid();
+        //$userid=1;
+        return $userid;
+    }
     public function showPageHeading($page=null) {
         if($page != null) {
             return $this->heading." - ".ucfirst($page);
@@ -129,11 +134,10 @@ class userutils extends object {
         $filepath = $dir.$path;
         $filepath = str_replace("//", "/", $filepath);
         $objUser = $this->getObject('user', 'security');
-        $userid=$objUser->userId();
-        //$userid ="1";//
+        $userid=$this->getUserId();
         $this->objUploadTable->setUserId($userid);
         $destinationDir = $filepath;
-        $objFileUpload = $this->getObject('upload');
+        $objFileUpload = $this->getObject('dmsupload');
         $objFileUpload->overWrite = TRUE;
         $objFileUpload->uploadFolder = $destinationDir.'/';
         $result = $objFileUpload->doUpload($docname,$docid);
@@ -277,7 +281,7 @@ class userutils extends object {
             $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
 
             if(!is_dir($dir.$node.'/'.$f)) {
-                $fileinfo=$this->objUploadTable->getFileInfo($f,$node);
+                $fileinfo=$this->objUploadTable->getFileInfo($f,$node.'/'.$f);
                 foreach ($fileinfo as $file) {
                     $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
                     $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
@@ -433,7 +437,7 @@ class userutils extends object {
         $this->objMkdir = $this->getObject('mkdir', 'files');
         $path =$this->objSysConfig->getValue('FILES_DIR', 'dms').'/'.$folderpath.'/'.$foldername;
         $result = $this->objMkdir->mkdirs($path);
-        $userid= $this->objUser->userid();
+        $userid= $this->getUserId();
         //if($result != FALSE) {
         $this->folderPermissions->addPermission(
                 $userid,$folderpath.'/'.$foldername,
@@ -474,12 +478,12 @@ class userutils extends object {
         $filename = strtolower($filename) ;
         $exts = split("[/\\.]", $filename) ;
         $n = count($exts)-1;
-        $exts = $exts[$n];
+        $ext = $exts[$n];
 
         //check if icon for this exists, else return unknown
-        $filePath=$this->objConfig->getModulePath().'/dms/resources/images/ext/'.$exts.'.png';
+        $filePath=$this->objConfig->getModulePath().'/dms/resources/images/ext/'.$ext.'.png';
         if(file_exists($filePath) ) {
-            return $exts;
+            return $ext;
         }else {
             return "unknown";
         }
@@ -547,6 +551,10 @@ class userutils extends object {
             $count++;
         }
         echo $state;
+    }
+
+    function getRefNo() {
+        return "1234";
     }
 }
 ?>
