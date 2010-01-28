@@ -46,6 +46,8 @@ class dms extends controller {
         $this->objFileFolder = $this->getObject('filefolder','filemanager');
         $this->folderPermissions=$this->getObject('dbfolderpermissions');
         $this->documents=$this->getObject('dbdocuments');
+        $this->userutils=$this->getObject('userutils');
+        $this->objUploadTable = $this->getObject('dbfileuploads');
     }
 
     /**
@@ -123,8 +125,15 @@ class dms extends controller {
      *
     */
     public function __uploadFile() {
+        $topic=$this->getParam('topic');
+        $docname=$this->getParam('docname');
+        $docid=$this->getParam('docid');
         $this->setVarByRef('action','upload');
-        return "uploadFile_tpl.php";
+        $this->setVar('pageSuppressXML', TRUE);
+        $this->setVarByRef('topic',$topic);
+        $this->setVarByRef('docname',$docname);
+        $this->setVarByRef('docid',$docid);
+        return "upload_tpl.php";
     }
 
     /*
@@ -394,8 +403,7 @@ class dms extends controller {
     function __getdocument() {
         $docid=$this->getParam('docid');
         $doc= $this->documents->getdocument($docid);
-        $userid=$this->objUser->userid();
-        //$userid="1";
+        $userid=$this->userutils->getUserId();
         $owner=$doc['userid'] == $userid? "true":"false";
         $str="[";
         $str.='{';
@@ -418,4 +426,112 @@ class dms extends controller {
     function requiresLogin() {
         return true;
     }
+
+    /**
+     * Used to do the actual upload
+     *
+     */
+    function __doajaxupload() {
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'dms');
+        $generatedid = $this->getParam('id');
+        $filename = $this->getParam('filename');
+
+        $objMkDir = $this->getObject('mkdir', 'files');
+        $topic=$this->getParam('topic');
+        $docname=$this->getParam('docname');
+        $docid=$this->getParam('docid');
+        $destinationDir = $dir.'/'.$topic;
+
+        //$objMkDir->mkdirs($destinationDir);
+        //@chmod($destinationDir, 0777);
+
+        $objUpload = $this->newObject('upload', 'files');
+        $objUpload->permittedTypes = array(
+                'txt',
+                'doc',
+                'odt',
+                'pdf',
+                'docx',
+                'ppt',
+                'pptx',
+                'xml',
+                'launch'
+        );
+        $objUpload->overWrite = TRUE;
+        $objUpload->uploadFolder = $destinationDir.'/';
+
+        $result = $objUpload->doUpload(TRUE, $docname);
+
+
+        if ($result['success'] == FALSE) {
+
+            $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
+
+            return $this->nextAction('erroriframe', array('message'=>'Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf', 'file'=>$filename, 'id'=>$generatedid));
+        } else {
+
+            $filename = $result['filename'];
+            $mimetype = $result['mimetype'];
+            $path_parts = $result['storedname'];
+            //$ext = $path_parts['extension'];
+            $filename = strtolower($filename) ;
+            $exts = split("[/\\.]", $filename) ;
+            $n = count($exts)-1;
+            $ext = $exts[$n];
+            $doc=$this->documents->getDocument($docid);
+            $placeholder=$file = $dir.'/'.$topic.'/'.$docname.'.na';
+            $file="";
+            if($doc['active'] == 'Y') {
+                unlink($placeholder);
+            }else {
+                $oldname = $dir.'/'.$topic.'/'.$docname.'.'.$ext;
+                $newname = $dir.'/'.$topic.'/'.$docname.'.na';
+                $oldname= str_replace("//", "/", $oldname);
+                $newname= str_replace("//", "/", $newname);
+               
+                rename($oldname, $newname);
+
+            }
+
+            $uploadedFiles = $this->getSession('uploadedfiles', array());
+            $uploadedFiles[] = $id;
+            $this->setSession('uploadedfiles', $uploadedFiles);
+            $path=$topic.'/'.$docname.'.'.$ext;
+            // save the file information into the database
+            $data = array(
+                    'filename'=>$docname.'.'.$ext,
+                    'filetype'=>$ext,
+                    'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),
+                    'userid'=>$this->userutils->getUserId(),
+                    'parent'=>"/",
+                    'refno'=>$this->userutils->getRefNo(),
+                    'docid'=>$docid,
+                    'filepath'=>$path);
+            $result = $this->objUploadTable->saveFileInfo($data);
+            //update the latest ext
+            $this->documents->updateDocument($docid,array('ext'=>$ext));
+            return $this->nextAction('ajaxuploadresults', array('id'=>$generatedid, 'fileid'=>$id, 'filename'=>$filename));
+        }
+    }
+
+    /**
+     * Used to push through upload results for AJAX
+     */
+    function __ajaxuploadresults() {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+
+        $fileid = $this->getParam('fileid');
+        $this->setVarByRef('fileid', $fileid);
+
+        $filename = $this->getParam('filename');
+        $this->setVarByRef('filename', $filename);
+
+        return 'ajaxuploadresults_tpl.php';
+    }
+
 }
