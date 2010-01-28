@@ -120,7 +120,7 @@ class liftclub extends controller
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'trashmessages_tpl.php'; 
                     break;
-                case 'outboxmessages':
+                case 'sentmessages':
                     $this->setVar('pageSuppressToolbar', TRUE);
                     return 'outboxmessages_tpl.php'; 
                     break;

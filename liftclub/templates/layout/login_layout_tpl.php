@@ -44,9 +44,9 @@ $msgLink =new link($this->uri(array('action'=>'messages')));
 $msgLink->link = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
 $msgLink->title = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
 
-$msgOutLink =new link($this->uri(array('action'=>'outboxmessages')));
-$msgOutLink->link = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Outbox");
-$msgOutLink->title = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Outbox");
+$msgOutLink =new link($this->uri(array('action'=>'sentmessages')));
+$msgOutLink->link = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Sent");
+$msgOutLink->title = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Sent");
 
 $msgTrashLink =new link($this->uri(array('action'=>'trashedmessages')));
 $msgTrashLink->link = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
