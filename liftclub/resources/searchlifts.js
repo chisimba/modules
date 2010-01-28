@@ -35,11 +35,11 @@ var liftdata = new Ext.data.JsonStore({
  }
  function renderDetails(record){
      return String.format(
-     		'<p>{0} ( {1} )<br />Created: {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times);
+     		'<p>{0} ( {1} )<br />'+lang['wordcreated']+': {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times);
  }
     var grid = new Ext.grid.GridPanel({
         el:'find-grid',
-        width:900,
+        width:700,
         height:400,
         title:liftitle,
         store: liftdata,
@@ -50,46 +50,46 @@ var liftdata = new Ext.data.JsonStore({
         // grid columns
         columns:[
         {
-            header: "Origin(Suburb)",
+            header: lang['triporigin'],
             dataIndex: 'orisuburb',
-            width: 120,
+            width: 135,
             hidden: false,
             sortable: true
         },{
-            header: "Destiny(Suburb)",
+            header: lang["tripdestiny"],
             dataIndex: 'desuburb',
-            width: 120,
+            width: 135,
             hidden: false,
             sortable: true
         },{
-            header: "Find/Offer",
+            header: lang["needtype"],
+            dataIndex: 'needtype',
+            width: 60,
+            hidden: false,
+            sortable: true
+        }/*,{
+            header: lang["findoffer"],
             dataIndex: 'userneed',
             width: 70,
             hidden: false,
             sortable: true
         },{
-            header: "Type",
-            dataIndex: 'needtype',
-            width: 60,
-            hidden: false,
-            sortable: true
-        },{
-            header: "Created",
+            header: lang["datecreated"],
             dataIndex: 'createdormodified',
             width: 130,
             hidden: false,
             sortable: true
-        },{
-            header: "Selected Days",
+        }*/,{
+            header: lang["tripdays"],
             dataIndex: 'selectedays',
             width: 300,
             hidden: false,
             sortable: true
         },{
             id: 'detuserid', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
-            header: "View",
+            header: lang["wordview"],
             dataIndex: 'detuserid',
-            width: 50,
+            width: 60,
             renderer: renderTitle,            
             hidden: false,
             sortable: true
@@ -104,9 +104,9 @@ var liftdata = new Ext.data.JsonStore({
                 if(this.showPreview){
                 //<p>{0} ( {1} )<br />Created: {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times
                  if(record.data.daterequired == null){
-                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />Created: '+record.data.createdormodified+'<br />'+record.data.selectedays+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';
+                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />'+lang["datecreated"]+' '+lang["wordcreated"]+': '+record.data.createdormodified+'<br />'+record.data.selectedays+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';
                  }else{
-                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />Created: '+record.data.createdormodified+'<br />'+record.data.daterequired+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';                 
+                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />'+lang["datecreated"]+' '+lang["wordcreated"]+': '+record.data.createdormodified+'<br />'+record.data.daterequired+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';                 
                  }   
                     return 'x-grid3-row-expanded';
                 }
@@ -126,7 +126,7 @@ var liftdata = new Ext.data.JsonStore({
             pageSize: 5,
             store: liftdata,
             displayInfo: true,
-            displayMsg: 'Displaying Page {0} - {1} of {2}',
+            displayMsg: lang["displayingpage"]+' {0} - {1} '+lang["wordof"]+' {2}',
             emptyMsg: "No Lifts to display",
             items:[
                 /*'-', {
