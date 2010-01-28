@@ -58,7 +58,7 @@ var liftdata = new Ext.data.JsonStore({
         columns:[
         {
 	            id: 'timesent', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
-	            header: "Time",
+	            header: lang["time"],
 	            dataIndex: 'timesent',
 	            width: 100,
 	            align: 'left',
@@ -66,7 +66,7 @@ var liftdata = new Ext.data.JsonStore({
 	            sortable: true
 	        },{
 	            id: 'sender', 
-	            header: "Sender",
+	            header: lang["sender"],
 	            dataIndex: 'sender',
 	            width: 100,
 	            align: 'left',
@@ -74,7 +74,7 @@ var liftdata = new Ext.data.JsonStore({
 	            sortable: true
 	        },{
 	            id: 'messagetitle', 
-	            header: "Title",
+	            header: lang["title"],
 	            dataIndex: 'messagetitle',
 	            width: 220,
 	            align: 'left',
@@ -91,9 +91,9 @@ var liftdata = new Ext.data.JsonStore({
                 if(this.showPreview){
                 //<p>{0} ( {1} )<br />Created: {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times
                  if(record.data.daterequired == null){
-                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />Created: '+record.data.createdormodified+'<br />'+record.data.selectedays+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';
+                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />'+lang["wordcreated"]+': '+record.data.createdormodified+'<br />'+record.data.selectedays+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';
                  }else{
-                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />Created: '+record.data.createdormodified+'<br />'+record.data.daterequired+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';                 
+                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />'+lang["wordcreated"]+': '+record.data.createdormodified+'<br />'+record.data.daterequired+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';                 
                  }   
                     return 'x-grid3-row-expanded';
                 }
@@ -113,8 +113,8 @@ var liftdata = new Ext.data.JsonStore({
             pageSize: 5,
             store: liftdata,
             displayInfo: true,
-            displayMsg: 'Displaying Messages {0} - {1} of {2}',
-            emptyMsg: "No Messages to display",
+            displayMsg: lang["displayingrecords"]+' {0} - {1} of {2}',
+            emptyMsg: lang["norecordstodisplay"],
             items:[
                 /*'-', {
                 pressed: false,

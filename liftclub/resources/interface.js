@@ -176,7 +176,7 @@ var groupsPageNavigation = new Ext.PagingToolbar({
             store: alphaGroupStore,
             displayInfo: true,
             
-            displayMsg: lang["message"]+' {0} - {1} of {2}',
+            displayMsg: lang["message"]+' {0} - {1} '+lang["wordof"]+' {2}',
             emptyMsg: lang["norecordstodisplay"],
             listeners:{ 
             	beforechange: function(ptb, params){	    			

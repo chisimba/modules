@@ -154,8 +154,8 @@ var pageNavigation = new Ext.PagingToolbar({
             store: abstractStore,
             displayInfo: true,
             
-            displayMsg: 'Displaying Users {0} - {1} of {2}',
-            emptyMsg: "No Users to display",
+            displayMsg: lang["displayingrecords"]+' {0} - {1} of {2}',
+            emptyMsg: lang["norecordstodisplay"],
             listeners:{ 	    		
 	    		beforechange: function(ptb, params){	
 	    			userOffset = params.start; 			
@@ -171,8 +171,8 @@ var groupsPageNavigation = new Ext.PagingToolbar({
             store: alphaGroupStore,
             displayInfo: true,
             
-            displayMsg: 'Messages {0} - {1} of {2}',
-            emptyMsg: "No Messages to display",
+            displayMsg: lang["message"]+' {0} - {1} '+lang["wordof"]+' {2}',
+            emptyMsg: lang["norecordstodisplay"],
             listeners:{ 
             	beforechange: function(ptb, params){	    			
 	    			proxyGroupStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&trash=1&limit='+params.start+'&start='+params.start);	    			
@@ -207,8 +207,8 @@ var subGroupsCombo = new Ext.form.ComboBox({
 var scrollMenu = new Ext.menu.Menu();
 
 var rmButton = new Ext.Button({
-            text:'Restore to Inbox/Outbox',
-            tooltip:'Send message to back to Inbox/Outbox',
+            text: lang["restoremsg"],
+            tooltip:lang["sendmsgback"],
             iconCls:'silk-delete',
 			id:'rmgroup',
             // Place a reference in the GridPanel
@@ -262,7 +262,7 @@ var groupsGrid = new Ext.grid.GridPanel({
         height:300,
        // frame:true,
         store: alphaGroupStore,
-        title:'Trashed Messages',
+        title:lang["trashedmessages"],
         iconCls:'icon-grid',
         loadMask: true,
 		//stripeRows: true,//msgid sender recipentuserid timesent markasread markasdeleted messagetitle messagebody
@@ -273,7 +273,7 @@ var groupsGrid = new Ext.grid.GridPanel({
         
         columns:[{
 	            id: 'timesent', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
-	            header: "Time",
+	            header: lang["time"],
 	            dataIndex: 'timesent',
 	            width: 110,
 	            align: 'left',
@@ -281,7 +281,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            sortable: true
 	        },{
 	            id: 'sender', 
-	            header: "Sender",
+	            header: lang["sender"],
 	            dataIndex: 'sender',
 	            width: 110,
 	            align: 'left',
@@ -289,7 +289,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            sortable: true
 	        },{
 	            id: 'messagetitle', 
-	            header: "Title",
+	            header: lang["title"],
 	            dataIndex: 'messagetitle',
 	            width: 200,
 	            align: 'left',
@@ -298,7 +298,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	        }],
 	    	viewConfig: {
             //forceFit:true,
-             emptyText: 'No Messages found'
+             emptyText: lang["norecordstodisplay"]
 
         	}, plugins:[new Ext.ux.grid.Search({
 				 iconCls:'zoom'
@@ -307,7 +307,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 				 ,minChars:2
 				 ,position:'top'
 				 ,autoFocus:true
-				 ,minCharsTipText:'Type at least 2 characters'
+				 ,minCharsTipText:lang["atleasttwochar"]
 				 //,searchTipText :'Type at least 2 characters'
 				 // ,menuStyle:'radio'
 		 })],
@@ -331,7 +331,7 @@ function renderBody(value, p, record){
         		'<TEXTAREA NAME="MESSAGE" COLS=54 ROWS=15 WRAP=SOFT readonly="readonly">'+record.data.messagebody+'</TEXTAREA>');
 }
 var SiteAdminGrid = new Ext.grid.GridPanel({
-	title:'Mesage',
+	title:lang["message"],
 	region: 'center',
 	split:true,
 	frame:true,
@@ -350,7 +350,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
     cm: new Ext.grid.ColumnModel([
             {
 	            id: 'msgid',
-            header: "Message",
+            header: lang["message"],
             dataIndex: 'messagebody',
 	           renderer: renderBody,            
             resizable: true,
@@ -360,7 +360,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
         }]),    
      viewConfig: {
         forceFit:true,
-        emptyText: 'Message Body not found'
+        emptyText: lang["phrasemsgnotfound"]
 
     	}
 });
@@ -371,7 +371,7 @@ var myBorderPanel = new Ext.Panel({
     height: 400,
     margins: '10 10 10 10',
     padding: '10 10 10 10',
-    title: 'Lift Club Messages',
+    title: lang["liftclubname"]+' '+lang["messages"],
     layout: 'border',
     items: [groupsGrid, SiteAdminGrid]
 });
@@ -454,7 +454,7 @@ function restoreMessage()
 	   		msgid: selectedGroupId
 	    },
 	    success: function(xhr,params) {
-	        alert('Message Restored Successfully!\n');
+	        alert(lang["mod_liftclub_restoredsuccessfully"]+'!\n');
 	        SiteAdminGrid.setVisible(false);
 	        alphaGroupStore.load({params:{start:0, limit:25}});
 /*	        abstractStore.load({
@@ -469,7 +469,7 @@ function restoreMessage()
 	        myMask.hide();
 	    },
 	    failure: function(xhr,params) {
-	        alert('Failure!\n'+xhr.responseText);
+	        alert(lang["failure"]+'!\n'+xhr.responseText);
 	        myMask.hide();
 	    }
 	});
@@ -515,7 +515,7 @@ function restoreMessage()
 	        myMask.hide();
 	    },
 	    failure: function(xhr,params) {
-	        alert('Failure!\n'+xhr.responseText);
+	        alert(lang["failure"]+'!\n'+xhr.responseText);
 	        myMask.hide();
 	    }
 	});
