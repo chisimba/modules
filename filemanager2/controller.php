@@ -244,11 +244,14 @@ class filemanager2 extends controller
 	
     public function __json_uploadFile()
     {	//debugging staff
+
+
+
+	echo '{success:true, file:'.json_encode($_FILES['Fileconten']['name']).'}';
 	//$files = $this->getParam('files');
-	$folder = $this->getParam('selectedfolder');
-	$str = $_FILES['userfile1'];
-	error_log(var_dump($str), true);
-	//echo '{success:true, file:'.json_encode($_FILES['photo-path']).'}';
+	//$folder = $this->getParam('selectedfolder');
+	//$str = $_FILES['userfile1'];
+		//echo '{success:true, file:'.json_encode($_FILES['photo-path']).'}';
 
 /*
     	if ($files) {

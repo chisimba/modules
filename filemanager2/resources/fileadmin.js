@@ -13,7 +13,8 @@
     var filename;
     var winup;
     var selectedfolder;
-    //Ext.QuickTips.init();
+    var fp;
+    Ext.QuickTips.init();
 
 	// turn on validation errors beside the field globally
     //Ext.form.Field.prototype.msgTarget = 'side';
@@ -21,15 +22,9 @@
 
     var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Please wait..."});
     
-    /*var up1 = new Ext.form.TextField({
-		fieldLabel: 'file 1',
-		name: 'userfile',
-		width:275,
-		inputType: 'file'});*/
-
-
+    
     //Uploading form
-    var uploadform = new Ext.FormPanel({
+    /*var uploadform = new Ext.FormPanel({
 	//standardSubmit: true,
 	//url: baseuri + "",
 	frame:true,
@@ -78,7 +73,7 @@
 			if(uploadform.getForm().isValid())
 					{
 						//var v = uploadform.get('userfile1').getValue()+','+uploadform.get('userfile2').getValue()+','+uploadform.get('userfile3').getValue()+','+uploadform.get('userfile4').getValue()+','+uploadform.get('userfile4').getValue();
-/*
+
 						uploadform.getForm().submit({
 								url: baseuri,
 								//waitMsg: 'Uploading your file(s)...',
@@ -94,7 +89,7 @@
 								},        	
 				            	failure:function(action){}
 								});
-*/						uploadform.getForm().reset();
+						uploadform.getForm().reset();
 						winup.hide();
 						
 				}
@@ -103,29 +98,50 @@
 	}]
 	});
 
+    */
     
-
-
-    var upButton = new Ext.Button({
-	text:'Upload',
-	tooltip:'Upload File',
-	iconCls: 'silk-add',
-	disabled: true,
-	handler: function (){
-		    winup = new Ext.Window({
-		    layout:'fit',
-				width:450,
-				height:280,
-				closeAction:'hide',
-				plain: true,					
-				items: [uploadform]	
-		     });
-		winup.show(this);
+	var upButton = new Ext.ux.form.FileUploadField({
+	buttonOnly: true,
+	buttonCfg: {
+                //iconCls: 'silk-add',
+		fileUpload: true,
+		name: 'Fileconten',
+		tooltip:'Upload File',
+		disabled: true
+            },
+   	listeners: {
+	    'fileselected': function(fb, v){
+		//var el = Ext.fly('fi-button-msg');
+		Ext.Msg.alert(fb);
+		//post to server
 		
-		}	
-        })
+		Ext.Ajax.request({
+	                    url: baseuri+'?module=filemanager2&action=json_uploadfile',
+	                    waitMsg: 'Uploading your file...',
+	                    success: function(fp, o){
+	                        Ext.Msg.alert('Success', 'Processed file "'+o.result.file+'" on the server');
+	                    }
+	                });
+	    }
+	}
+    });
 
-    var dlButton = new Ext.Button({
+   fp = new Ext.FormPanel({
+        //renderTo: 'fi-form',
+        fileUpload: true,
+        width: 50,
+        frame: false,
+        //title: 'File Upload Form',
+        //autoHeight: true,
+        //bodyStyle: 'padding: 10px 10px 0 10px;',
+        //labelWidth: 50,
+        items: [upButton]
+        
+    });
+
+
+
+   var dlButton = new Ext.Button({
 	text:'Download',
 	tooltip:'Download File',
 	iconCls: 'silk-disk',
@@ -158,33 +174,40 @@
 	    disabled: true,
             handler: function (){}
         });
+
+    
+
         
     var Tree = Ext.tree;
+
+    var newIndex = 3;
+
+    var tree;
 
     var tb = new Ext.Toolbar({
 	items:[{
 	    text: 'New Folder',
-    	    iconCls: 'silk-folder_add',
+    	    iconCls: 'silk-folder',
 	    disabled: true,
             handler: function(){
-	        /*var node = root.appendChild(new Ext.tree.TreeNode({
-		
-	        text:'Album ' + (++newIndex),
-	        cls:'album-node',
+	        var node = root.appendChild(new Ext.tree.TreeNode({
+		text:'New Folder' + (++newIndex),
+	        cls:'folder',
 	        allowDrag:false
 	        }));
-		alert(node);
+		//Ext.Msg.alert(node);
 	      tree.getSelectionModel().select(node);
+
 	      setTimeout(function(){
 	      ge.editNode = node;
 	      ge.startEdit(node.ui.textNode);
-	 }, 10);*/
-    }
-}]
-});
+	 }, 0);
+	    }
+	}]
+	});
 
 
-    var tree = new Tree.TreePanel({
+    tree = new Tree.TreePanel({
         animate:true, 
         autoScroll:true,
         loader: new Tree.TreeLoader({dataUrl: baseuri+'?module=filemanager2&action=getDirectory'}),
@@ -217,9 +240,17 @@
         draggable:false, // disable root node dragging
         id:defId
     });
+
     tree.setRootNode(root);
                         
-    //root.expand(false, /*no anim*/ false);
+    //root.expand(true, /*no anim*/ true);
+
+     // add an inline editor for the nodes
+    var ge = new Ext.tree.TreeEditor(tree, {/* fieldconfig here */ }, {
+        allowBlank:false,
+        blankText:'A name is required',
+        selectOnFocus:true
+    });
 
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 

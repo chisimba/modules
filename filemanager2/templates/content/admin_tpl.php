@@ -1,6 +1,6 @@
 <?php
     $objSysConfig  = $this->getObject('altconfig','config');
-    $objExtJS = $this->getObject('extjs','htmlelements');
+    $objExtJS = $this->getObject('extjs','ext');
     $objExtJS->show();
 
     $this->appendArrayVar('headerParams', '
@@ -12,6 +12,7 @@
 
     $ext = $this->getJavaScriptFile('FileUploadField.js', 'filemanager2');
     $ext .= $this->getJavaScriptFile('fileadmin.js', 'filemanager2');
+    $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('fileuploadfield.css', 'filemanager2').'" type="text/css" />';
     
     $ext .= "<style>
 	
