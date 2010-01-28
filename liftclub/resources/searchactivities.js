@@ -40,7 +40,7 @@ var liftdata = new Ext.data.JsonStore({
  }
     var grid = new Ext.grid.GridPanel({
         el:'activities-grid',
-        width:850,
+        width:700,
         height:400,
         title:liftitle,
         store: liftdata,
@@ -52,14 +52,14 @@ var liftdata = new Ext.data.JsonStore({
         columns:[
         {
             id: 'id', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
-            header: "Description",
+            header: lang["description"],
             dataIndex: 'id',
-            width: 700,
+            width: 550,
             renderer: renderTitle,            
             hidden: false,
             sortable: true
         },{
-            header: "Date",
+            header: lang["datecreated"],
             dataIndex: 'createdon',
             width: 150,
             hidden: false,
@@ -91,8 +91,8 @@ var liftdata = new Ext.data.JsonStore({
             pageSize: 5,
             store: liftdata,
             displayInfo: true,
-            displayMsg: 'Displaying Page {0} - {1} of {2}',
-            emptyMsg: "No LiftClub Activities to display",
+            displayMsg: lang["displayingpage"]+' {0} - {1} '+lang["wordof"]+' {2}',
+            emptyMsg: lang["noliftsclubactivities"],
             items:[
                 /*'-', {
                 pressed: false,

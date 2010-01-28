@@ -16,6 +16,7 @@
 	$this->appendArrayVar('headerParams', '
 	        	<script type="text/javascript">	        		
 	        		var baseUri = "'.$objSysConfig->getsiteRoot().'index.php";
+	        		
 	        	</script>');
 
 			$extbase_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
