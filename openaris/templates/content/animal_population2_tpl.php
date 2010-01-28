@@ -67,11 +67,11 @@ $breedDrop->extra='disabled';
 //animal category dropdown
 $animalCatDrop=new dropdown('animalCat');
 $animalCatDrop->addFromDB($arrayanimalCat, 'agegroup', 'id');
-$animalCatDrop->setSelected($animalcat);
+//$animalCatDrop->setSelected($animalcat);
 
 
-$monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 23);
-$dateBox = new textinput('reportdate', date('Y/m/d', strtotime($calendardate)),'text', 30);
+$monthBox = new textinput('month', date('F'), 'text', 23);
+$dateBox = new textinput('reportdate', date('Y/m/d'),'text', 30);
 $yearBox = new textinput('year', date('Y'), 'text', 4);
 
 $repDate = new textinput('rDate',$rDate);
@@ -87,7 +87,7 @@ $reportOfficerDrop->addFromDB($userList, 'name', 'userid');
 $reportOfficerDrop->setSelected($repoff);
 $reportOfficerDrop->extra='disabled';
 
-$totalNumSpecies = new textinput('totalNumSpecies', $totalNumSpecies);
+$totalNumSpecies = new textinput('totalNumSpecies', $totSpecies);
 $totalNumSpecies->extra = 'onblur="javascript:getTLU();"';
 
 $breedNumber = new textinput('breedNumber', $breedNumber, 'text');
@@ -103,14 +103,16 @@ $catNumber->extra = 'onchange="javascript:checkAnimCatSpecies();"';
 $prodNumber = new textinput('productionno', $productionno, 'text');
 $prodNumber->extra = 'onchange="javascript:checkProdNoSpecies();"';
 
-$commentsBox = new textarea('comments', $comments , 4, 40);
+$commentsBox = new textarea('comments', '' , 4, 40);
 $commentsBox->extra = 'onkeyup="javascript:limitcomment();"';
 
 //buttons
 //checking max and min number of total species 
-if ($totspecies > 400000) {
+if ($totSpecies > 400000) {
     $message = $this->objLanguage->languageText('mod_ahis_totalspecieslimit', 'openaris');
     $valtot = "javascript: alert('$message')";
+} else {
+    $valtot = '';
 }
 $button = new button ('animal_population_save', 'Submit',$valtot);
 $button->setCSS('submitButton');
@@ -126,7 +128,9 @@ $objTable->cellspacing = 2;
 $objTable->width = NULL;
 
 //Reporting Officer
-$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";$objTable->startRow();
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+$tabs = "$tab$tab$tab";
+$objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').": $tab");
 $objTable->addCell($reportOfficerDrop->show().$tab);
 
@@ -152,7 +156,8 @@ $label = new label ('Production Name:', ' input_production');
 $production = new textinput('animal_production',$prodname);
 $production->extra = 'disabled';
 $objTable->startRow();
-$objTable->addCell($label->show());
+
+$objTable->addCell($label->show());
 $objTable->addCell($production->show());
 $objTable->endRow();	
 
@@ -164,25 +169,25 @@ $middleTable->width = NULL;
 
 $middleTable->startRow();
 $middleTable->addCell($this->objLanguage->languageText('mod_ahis_totalnumberspecies', 'openaris'));
-$middleTable->addCell($totalNumSpecies->show());
-$middleTable->addCell($this->objLanguage->languageText('mod_ahis_breedno','openaris'));
-$middleTable->addCell($breedNumber->show());
-$middleTable->addCell($this->objLanguage->languageText('mod_ahis_animalcat','openaris'));
-$middleTable->addCell($animalCatDrop->show());
+$middleTable->addCell($tab.$totalNumSpecies->show());
+$middleTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_breedno','openaris'));
+$middleTable->addCell($tab.$breedNumber->show());
+$middleTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_animalcat','openaris'));
+$middleTable->addCell($tab.$animalCatDrop->show());
 $middleTable->endRow();
 
 $middleTable->startRow();
 $middleTable->addCell($this->objLanguage->languageText('mod_ahis_tropicallivestock','openaris'));
-$middleTable->addCell($tropicalLivestock->show());
-$middleTable->addCell($this->objLanguage->languageText('mod_ahis_crossbreed','openaris'));
-$middleTable->addCell($crossBreed->show());
-$middleTable->addCell($this->objLanguage->languageText('mod_ahis_categoryno','openaris'));
-$middleTable->addCell($catNumber->show());
+$middleTable->addCell($tab.$tropicalLivestock->show());
+$middleTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_crossbreed','openaris'));
+$middleTable->addCell($tab.$crossBreed->show());
+$middleTable->addCell($tab.$this->objLanguage->languageText('mod_ahis_categoryno','openaris'));
+$middleTable->addCell($tab.$catNumber->show());
 $middleTable->endRow();
 
 $middleTable->startRow();
 $middleTable->addCell($this->objLanguage->languageText('mod_ahis_productionno','openaris'));
-$middleTable->addCell($prodNumber->show());
+$middleTable->addCell($tab.$prodNumber->show());
 $middleTable->endRow();
 
 //bottom Table
@@ -192,18 +197,16 @@ $bottomTable->width=NULL;
 
 $bottomTable->startRow();
 $bottomTable->addCell($this->objLanguage->languageText('word_comments'));
-$bottomTable->addCell($commentsBox->show());
+$bottomTable->addCell($tab.$commentsBox->show());
 $bottomTable->endRow();
 
 
 
 $objButtonTable = $this->newObject('htmltable','htmlelements');
 $objButtonTable->cellspacing = 2;
-$objButtonTable->width = '60%';
+$objButtonTable->width = '99%';
 $objButtonTable->startRow();
-$objButtonTable->addCell($bButton->show(), NULL, 'top', 'center');
-$objButtonTable->addCell($btcancel->show(), NULL, 'top', 'center');
-$objButtonTable->addCell($button->show(), NULL, 'top', 'center');
+$objButtonTable->addCell($bButton->show().$tabs.$btcancel->show().$tabs.$button->show(), NULL, 'top', 'center');
 $objButtonTable->endRow();
 
 // Create Form

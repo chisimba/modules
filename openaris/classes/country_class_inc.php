@@ -74,45 +74,31 @@ class country extends dbtable
 			
 	} 
 	
-	public function getData($filter,$direct,$countryId){
-	$status = 0;
-
-    $function = "javascript: alert('hello')";
+	public function getData($filter,$direct,$countryId) {
+		$status = $nlatt = $slatt = $wlong = $elong = 0;
+		$function = "javascript: alert('hello')";
 		$direction = $this->getAll("WHERE id='$countryId'");
-	if($filter == 'latt'){
+		if ($filter == 'latt') {
+			foreach ($direction as $dir) {
+				$nlatt = $dir['north_latitude'];
+				$slatt = $dir['south_latitude'];
+				if ($direct<$nlatt || $direct>$slatt) {
+					$status = 1;
+				}
+			}
 	
-	foreach($direction as $dir){
-	$nlatt = $dir['north_latitude'];
-	$slatt = $dir['south_latitude'];
-	if($direct<$nlatt || $direct>$slatt){
+		} else {
+			foreach ($direction as $dir) {
+				$wlong = $dir['west_longitude'];
+				$elong = $dir['east_longitude'];
+				if ($direct<$wlong || $direct>$elong) {
+					$status = 2;
+				}
+			}
+		}
 
-	 $status = 1;
-	
+		$dataarray[] = array('status'=>$status,'nlatt'=>$nlatt,'slatt'=>$slatt,'wlong'=>$wlong,'elong'=>$elong,'direct'=>round($direct,5));
+		return $dataarray;
 	}
-	
-	}
-	
-	}else{
-	
-	foreach($direction as $dir){
-	$wlong = $dir['west_longitude'];
-	$elong = $dir['east_longitude'];
-	if($direct<$wlong || $direct>$elong){
-	
-    $status = 2;
-   
-	
-	}
-	
-	
-	
-	}
-	
-	
-	}
-
-	$dataarray[] = array('status'=>$status,'nlatt'=>$nlatt,'slatt'=>$slatt,'wlong'=>$wlong,'elong'=>$elong,'direct'=>round($direct,5));
-	return $dataarray;
-}
 }
 ?>

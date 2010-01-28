@@ -536,8 +536,7 @@ class openaris extends controller {
 				return $this->nextAction('disease_report_screen_2', array('outbreakCode'=>$outbreakCode));
 				
 			case "disease_report_screen_2":
-				$outbreakCode1 = $this->getParam('outbreakCode1');
-				$outbreakCode = $this->getSession('ps_outbreakCode');
+				$outbreakCode = $this->getSession('ps_outbreakCode', $this->getParam('outbreakCode1'));
 				$this->setVar('outbreakCode1', $outbreakCode1);
 				$this->setVar('outbreakCode',$outbreakCode);
 				
@@ -547,11 +546,7 @@ class openaris extends controller {
 				$this->setVar('arrayLocalityType', $this->objLocalityType->getAll("ORDER BY locality_type"));
 				$this->setVar('arrayFarmingSystem', $this->objFarmingSystem->getAll("ORDER BY farmingsystem"));
 				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks($country));
-            if(!empty($outbreakCode1)){
-				$this->setVar('diseaseLocalities', $this->objDiseaseLocality->getAll("WHERE outbreakcode = '$outbreakCode1' ORDER BY date_created"));
-				}else{
 				$this->setVar('diseaseLocalities', $this->objDiseaseLocality->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
-				}
 				$this->setVar('localityTypeId', $this->getSession('ps_localityTypeId'));
 				$this->setVar('localityName', $this->getSession('ps_localityName'));
 				$this->setVar('latitude', $this->getSession('ps_latitude'));
@@ -3119,7 +3114,7 @@ class openaris extends controller {
 			      $this->setSession('ps_breed',$this->getParam('breedId'));	
 			      $this->setSession('ps_prodname',$this->getParam('animal_production'));
 
-			       return $this->nextAction(animal_population_screen2);
+			       return $this->nextAction('animal_population_screen2');
          
          case 'animal_population_screen2':         
                $this->setVar('userList', $this->objAhisUser->getList());                 		  
@@ -3132,7 +3127,7 @@ class openaris extends controller {
                $this->setVar('prodname',$this->getSession('ps_prodname'));	      			      			      			      
 			      $this->setVar('species',$this->getSession('ps_species'));	
 			      $this->setVar('breed', $this->getSession('ps_breed'));		 
-               $this->setVar('totalNumSpecies', '');
+               $this->setVar('totSpecies', '');
 					$this->setVar('breedNumber', '');
 					$speciesId= $this->getParam('speciesId', $this->getSession('ps_species')); 
                $animalcat = $this->objAnimCat->getCategory($speciesId);
