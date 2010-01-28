@@ -155,16 +155,17 @@ class buscard extends object
                 $socialTab .= $this->getSocialNetwork($network, $userId);
             }
             // Get the contact info tab content.
-            $contactTab = $this->getContact($userId, TRUE);
+            $contactTab = $this->getContact($userId, TRUE) . "<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;";
             $objTab = $this->newObject('tabpane', 'htmlelements');
             $objTab->addTab(array('name'=>' Contact ','url'=>'http://localhost','content' => $contactTab,'nested' => FALSE),'webfx-tab-style-sheet');
             $objTab->addTab(array('name'=>' Social networks ','url'=>'http://localhost','content' => $socialTab,'nested' => FALSE),'webfx-tab-style-sheet');
             if ($mapTab !== NULL) {
                 $objTab->addTab(array('name'=>' Map ','url'=>'http://localhost','content' => $mapTab,'nested' => FALSE),'webfx-tab-style-sheet');
             }
-            return $objTab->show();
-            
+            $tags = $this->getTags();
+            $objTab->addTab(array('name'=>' My tags ','url'=>'http://localhost','content' => $tags,'nested' => FALSE),'webfx-tab-style-sheet');
             unset($this->objUserParams);
+            return $objTab->show();
         } else {
             unset($this->objUserParams);
             return $this->objLanguage->languageText(
@@ -539,6 +540,60 @@ class buscard extends object
 
     /**
     *
+    * Get tags stored in the format tag1-tag2-tag3
+    *
+    * @return string The rendered tags or boolean FALSE if no tags found
+    *
+    */
+    private function getTags()
+    {
+        $tags = $this->objUserParams->getValue("tags");
+        if ($tags) {
+            $tagsAr = explode("-", $tags);
+            $ret = "";
+            $terms="";
+            $tagNo = count($tagsAr);
+            $counter = 1;
+            foreach ($tagsAr as $tag) {
+                if ($counter == $tagNo) {
+                    $terms .= $tag;
+                } else {
+                    $terms .= $tag . " OR ";
+                }
+                $ret .= $this->relTag($tag);
+                $counter ++;
+            }
+            $terms = $this->widgetize("terms: $terms");
+            return "<center>$terms <br /> $ret</center";
+        } else {
+            return FALSE;
+        }
+    }
+
+
+    public function relTag($tag)
+    {
+        $ret = "<a href=\"http://widget.collecta.com/widget.html?query=term:$tag\" target=\"widgetframe\" rel=\"tag\">$tag</a> ";
+        return $ret;
+    }
+
+    public function widgetize($terms) {
+        $collecta = "";
+        $title ="My favorite tags";
+        $widget = '<iframe style="border: medium none ; overflow: hidden; width:640px; height:480px;"
+                  src="http://widget.collecta.com/widget.html?query='.urlencode($terms).'&alias='.$title.'&
+                  headerimg=&stylesheet=&delay=" id="widgetframe" frameborder="0" scrolling="no">
+                  </iframe>';
+        /*$widget = "<iframe style=\"border: medium none ; overflow: hidden; width: 600px; height: 400px;\""
+           . "src=\"http://widget.collecta.com/widget.html?query="
+          . "$terms&alias=$title&headerimg=&stylesheet=&delay= "
+          . "id=\"widgetframe\" frameborder=\"0\" scrolling=\"no\"></iframe>";*/
+
+        return $widget;
+    }
+
+    /**
+    *
     * Extract the addresses and set class properties to correspond to
     * them.
     *
@@ -680,7 +735,7 @@ class buscard extends object
     private function getMap($latitude, $longitude)
     {
         $ret = '<br /><div class="vcard_map">'
-          . '<iframe width="425" height="350" '
+          . '<iframe width="640" height="480" '
           . 'frameborder="0" scrolling="no" '
           . 'marginheight="0" marginwidth="0" '
           . 'src="http://maps.google.com/maps?f=q&amp;'
