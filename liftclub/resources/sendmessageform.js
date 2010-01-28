@@ -16,25 +16,25 @@ Ext.onReady(function(){
         labelWidth: 75, // label settings here cascade unless overridden
         url:baseUri+'?module=liftclub&action=sendmessage',
         frame:true,
-        title: 'Send Message Form',
+        title: lang["sendmsgform"],
         bodyStyle:'padding:5px 5px 0',
         width: 350,
         defaults: {width: 230},
         defaultType: 'textfield',
         items: [{
-                fieldLabel: 'Title',
+                fieldLabel: lang["title"],
                 name: 'msgtitle',
                 allowBlank:false
             },{
-                fieldLabel: 'Message',
+                fieldLabel: lang["message"],
                 name: 'msgbody',
                 allowBlank:false
             }
         ],
         buttons: [{
-            text: 'Save'
+            text: lang["wordsave"]
         },{
-            text: 'Cancel'
+            text: lang["wordcancel"]
         }]
     });
 

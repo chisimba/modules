@@ -137,9 +137,9 @@ class block_liftclubmenu extends object
 							$msgLink->link = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
 							$msgLink->title = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
 
-							$msgOutLink =new link($this->uri(array('action'=>'sentmessages')));
-							$msgOutLink->link = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Sent");
-							$msgOutLink->title = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Sent");
+							$msgSentLink =new link($this->uri(array('action'=>'sentmessages')));
+							$msgSentLink->link = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Sent");
+							$msgSentLink->title = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Sent");
 
 							$msgTrashLink =new link($this->uri(array('action'=>'trashedmessages')));
 							$msgTrashLink->link = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
@@ -160,7 +160,7 @@ class block_liftclubmenu extends object
 										
 								$mailLink = "<ul>";
 								$mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgLink->show()."</li>";
-								$mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgOutLink->show()."</li>";
+								$mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgSentLink->show()."</li>";
 								$mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgTrashLink->show()."</li>";
 								$mailLink .= "</ul>";
 								$mailfieldset = $this->newObject('fieldset', 'htmlelements');

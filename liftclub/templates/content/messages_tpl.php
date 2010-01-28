@@ -16,7 +16,34 @@
 	$this->appendArrayVar('headerParams', '
 	        	<script type="text/javascript">	        		
 	        		var baseUri = "'.$objSysConfig->getsiteRoot().'index.php";
-	        		
+           var lang = new Array();
+           lang["time"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_time', 'liftclub', NULL, 'Time')).'";
+           lang["sender"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_sender', 'liftclub', NULL, 'Sender')).'";
+           lang["title"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_title', 'liftclub', NULL, 'Title')).'";
+           lang["messages"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_messages', 'liftclub', NULL, 'Messages')).'";
+           lang["message"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_message', 'liftclub', NULL, 'Message')).'";
+           lang["failure"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_failure', 'liftclub', NULL, 'Failure')).'";
+           lang["msgtrashsuccess"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_msgtrashsuccess', 'liftclub', NULL, 'Message Trashed Successfully')).'";
+           lang["phrasemsgnotfound"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_phrasemsgnotfound', 'liftclub', NULL, 'Message Body not found')).'";
+           lang["wordof"] =   "'.$this->objLanguage->code2Txt('mod_liftclub_wordof', 'liftclub', NULL, 'of').'";
+           lang["inbox"] =   "'.$this->objLanguage->code2Txt('mod_liftclub_receivedmessages', 'liftclub', NULL, 'Inbox').'";
+           lang["replyto"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_replyto', 'liftclub', NULL, 'Reply to sender')).'";
+           lang["page"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordpage', 'liftclub', NULL, 'Page')).'";
+           lang["reply"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_reply', 'liftclub', NULL, 'Reply')).'";
+           lang["trashit"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_trashit', 'liftclub', NULL, 'Send to trash')).'";
+           lang["message"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_message', 'liftclub', NULL, 'Message')).'";
+           lang["atleasttwochar"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_atleasttwochar', 'liftclub', NULL, 'Type at least 2 characters')).'";
+           lang["wordsave"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordsave', 'liftclub', NULL, 'Save')).'";
+           lang["wordprocessing"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordprocessing', 'liftclub', NULL, 'Processing')).'";
+           lang["mod_liftclub_senderror"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_senderror', 'liftclub', NULL, 'Error Encountered, try again!')).'";
+           lang["wordreset"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordreset', 'liftclub', NULL, 'Reset')).'";
+           lang["mod_liftclub_pleasewait"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_pleasewait', 'liftclub', NULL, 'Please wait')).'";
+           lang["mod_liftclub_wordcomplete"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordcomplete', 'liftclub', NULL, 'Complete')).'";
+           lang["mod_liftclub_sentsuccessfully"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_sentsuccessfully', 'liftclub', NULL, 'Message Sent Successfully')).'";
+           lang["wordcancel"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordcancel', 'liftclub', NULL, 'Cancel')).'";
+           lang["sendmsgform"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_sendmsgform', 'liftclub', NULL, 'Send Message Form')).'";
+           lang["displayingrecords"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_displayingrecords', 'liftclub', NULL, 'Displaying Records')).'";
+           lang["norecordstodisplay"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_norecordstodisplay', 'liftclub', NULL, 'No Records To Display')).'";
 	        	</script>');
 
 			$extbase_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';

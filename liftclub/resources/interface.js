@@ -159,8 +159,8 @@ var pageNavigation = new Ext.PagingToolbar({
             store: abstractStore,
             displayInfo: true,
             
-            displayMsg: 'Displaying Users {0} - {1} of {2}',
-            emptyMsg: "No Users to display",
+            displayMsg: lang["displayingrecords"]+' {0} - {1} of {2}',
+            emptyMsg: lang["norecordstodisplay"],
             listeners:{ 	    		
 	    		beforechange: function(ptb, params){	
 	    			userOffset = params.start; 			
@@ -176,8 +176,8 @@ var groupsPageNavigation = new Ext.PagingToolbar({
             store: alphaGroupStore,
             displayInfo: true,
             
-            displayMsg: 'Messages {0} - {1} of {2}',
-            emptyMsg: "No Messages to display",
+            displayMsg: lang["message"]+' {0} - {1} of {2}',
+            emptyMsg: lang["norecordstodisplay"],
             listeners:{ 
             	beforechange: function(ptb, params){	    			
 	    			proxyGroupStore.setUrl(baseUri+'?module=liftclub&action=json_getallmessages&limit='+params.start+'&start='+params.start);	    			
@@ -212,8 +212,8 @@ var subGroupsCombo = new Ext.form.ComboBox({
 var scrollMenu = new Ext.menu.Menu();
 
 var rmButton = new Ext.Button({
-            text:'Send to Trash',
-            tooltip:'Send message to trash',
+            text:lang["trashit"],
+            tooltip:lang["trashit"],
             iconCls:'silk-delete',
 			id:'rmgroup',
             // Place a reference in the GridPanel
@@ -230,34 +230,34 @@ var rmButton = new Ext.Button({
         labelWidth: 75, // label settings here cascade unless overridden
         url:baseUri+'?module=liftclub&action=extjssendmessage&msgid='+selectedGroupId,
         frame:true,
-        title: 'Send Message Form',
+        title: lang["sendmsgform"],
         bodyStyle:'padding:5px 5px 0',
         width: 650,
         defaults: {width: 500},
         defaultType: 'textfield',
         items: [{
                 xtype:'textfield',
-                fieldLabel: 'Title',
+                fieldLabel: lang["title"],
                 name: 'msgtitle',
                 allowBlank:false
             },new Ext.form.HtmlEditor({
              id:'msgbody',
-             fieldLabel:'Message',
+             fieldLabel:lang["messages"],
              width:550,
              height:180
             })
         ],
         buttons: [{
-            text: 'Save',
+            text: lang["wordsave"],
             handler: function() {
                 Ext.getCmp('mainForm').getForm().submit({
                     url:baseUri+'?module=liftclub&action=extjssendmessage&favusrid='+senderId,
                     method: 'POST',
                     //params: { msgid: selectedGroupId },
-                    waitTitle: 'Processing...',
-                    waitMsg: 'Please wait...',
+                    waitTitle: lang["wordprocessing"]+'...',
+                    waitMsg: lang["mod_liftclub_pleasewait"]+'...',
                     success: function(f, a){
-																				 Ext.Msg.alert('Processing Complete','Message Sent Successfully');
+																				 Ext.Msg.alert(lang["mod_liftclub_wordcomplete"],lang["mod_liftclub_sentsuccessfully"]);
 																				 sendmsgFormPanel.getForm().reset();
 																				 win.hide();
 																					SiteAdminGrid.setVisible(false);
@@ -265,18 +265,18 @@ var rmButton = new Ext.Button({
 																				},
 																				failure: function(f, a)
 																				{
-																			  Ext.Msg.alert('Processing Complete','Error Encountered, try again!');
+																			  Ext.Msg.alert(lang["wordprocessing"]+" "+lang["mod_liftclub_wordcomplete"],lang["mod_liftclub_senderror"]);
 																			  //win.hide();
 																				}
                 });
             }
         },{
-												text: 'Reset',
+												text: lang["wordreset"],
 												handler: function() {
 												 sendmsgFormPanel.getForm().reset();
 								    }
 								},{
-            text: 'Cancel',
+            text: lang["wordcancel"],
             handler: function(){
                        win.hide();
             }
@@ -286,8 +286,8 @@ var rmButton = new Ext.Button({
 // The toolbar for the user grid
 var toolBar = new Ext.Toolbar({
 	items:[{
-            text:'Reply',
-            tooltip:'Reply to sender',
+            text: lang["reply"],
+            tooltip: lang["replyto"],
             iconCls: 'silk-add',
             handler: function (){
 	        	if(!win){
@@ -343,7 +343,7 @@ var groupsGrid = new Ext.grid.GridPanel({
         height:300,
        // frame:true,
         store: alphaGroupStore,
-        title:'Inbox',
+        title:lang["inbox"],
         iconCls:'icon-grid',
         loadMask: true,
 		//stripeRows: true,//msgid sender recipentuserid timesent markasread markasdeleted messagetitle messagebody
@@ -354,7 +354,7 @@ var groupsGrid = new Ext.grid.GridPanel({
         
         columns:[{
 	            id: 'timesent', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
-	            header: "Time",
+	            header: lang["time"],
 	            dataIndex: 'timesent',
 	            width: 110,
 	            align: 'left',
@@ -362,7 +362,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            sortable: true
 	        },{
 	            id: 'sender', 
-	            header: "Sender",
+	            header: lang["sender"],
 	            dataIndex: 'sender',
 	            width: 110,
 	            align: 'left',
@@ -370,7 +370,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            sortable: true
 	        },{
 	            id: 'messagetitle', 
-	            header: "Title",
+	            header: lang["title"],
 	            dataIndex: 'messagetitle',
 	            width: 200,
 	            align: 'left',
@@ -379,7 +379,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	        }],
 	    	viewConfig: {
             //forceFit:true,
-             emptyText: 'No Messages found'
+             emptyText: lang["norecordstodisplay"]
 
         	}, plugins:[new Ext.ux.grid.Search({
 				 iconCls:'zoom'
@@ -388,7 +388,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 				 ,minChars:2
 				 ,position:'top'
 				 ,autoFocus:true
-				 ,minCharsTipText:'Type at least 2 characters'
+				 ,minCharsTipText:lang["atleasttwochar"]
 				 //,searchTipText :'Type at least 2 characters'
 				 // ,menuStyle:'radio'
 		 })],
@@ -421,7 +421,7 @@ function renderBody(value, p, record){
         		//'<TEXTAREA NAME="MESSAGE" COLS=54 ROWS=15 WRAP=SOFT readonly="readonly">'+record.data.messagebody+'</TEXTAREA>');
 }
 var SiteAdminGrid = new Ext.grid.GridPanel({
-	title:'Mesage',
+	title:lang["message"],
 	region: 'center',
 	split:true,
 	frame:true,
@@ -440,7 +440,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
     cm: new Ext.grid.ColumnModel([
             {
 	            id: 'msgid',
-            header: "Message",
+            header: lang["message"],
             dataIndex: 'messagebody',
 	           renderer: renderBody,            
             resizable: true,
@@ -450,7 +450,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
         }]),    
      viewConfig: {
         forceFit:true,
-        emptyText: 'Message Body not found'
+        emptyText: lang["phrasemsgnotfound"]
 
     	}
 });
@@ -544,7 +544,7 @@ function sendToTrash()
 	   		msgid: selectedGroupId
 	    },
 	    success: function(xhr,params) {
-	        alert('Message Trashed Successfully!\n');
+	        alert(lang["msgtrashsuccess"]+'!\n');
 	        SiteAdminGrid.setVisible(false);
 	        alphaGroupStore.load({params:{start:0, limit:25}});
 /*	        abstractStore.load({
@@ -559,7 +559,7 @@ function sendToTrash()
 	        myMask.hide();
 	    },
 	    failure: function(xhr,params) {
-	        alert('Failure!\n'+xhr.responseText);
+	        alert(lang["failure"]+'!\n'+xhr.responseText);
 	        myMask.hide();
 	    }
 	});
@@ -605,9 +605,8 @@ function sendToTrash()
 	        myMask.hide();
 	    },
 	    failure: function(xhr,params) {
-	        alert('Failure!\n'+xhr.responseText);
+	        alert(lang["failure"]+'!\n'+xhr.responseText);
 	        myMask.hide();
 	    }
 	});
-	
  }
