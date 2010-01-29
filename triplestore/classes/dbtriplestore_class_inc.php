@@ -55,7 +55,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za/
  */
 
-class dbtriplestore extends dbTable 
+class dbtriplestore extends dbTable
 {
     /**
      * Initialise the instance of the triplestore data access class.
