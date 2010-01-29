@@ -125,7 +125,7 @@ class triplesubject
     {
         $this->predicates = array();
         $this->subject    = $subject;
-        $this->triples    = $this->objTriplestore->getAll("subject = '$subject'");
+        $this->triples    = $this->objTriplestore->getAllBySubject($subject);
     }
 }
 
