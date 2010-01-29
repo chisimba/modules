@@ -79,6 +79,8 @@ class buscard extends object
         'opera', 'picasa', 'qik', 'slideshare', 'technorati', 'twitter',
         'youtube' );
 
+    public $mapApiKey = "ABQIAAAASzlWuBpqyHQoPD8OwyyFRhT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSWc071UMpm8NTrMcdPC-cIwpN4VA";
+
 
     /**
     *
@@ -163,7 +165,9 @@ class buscard extends object
                 $objTab->addTab(array('name'=>' Map ','url'=>'http://localhost','content' => $mapTab,'nested' => FALSE),'webfx-tab-style-sheet');
             }
             $tags = $this->getTags();
-            $objTab->addTab(array('name'=>' My tags ','url'=>'http://localhost','content' => $tags,'nested' => FALSE),'webfx-tab-style-sheet');
+            if ($tags) {
+                $objTab->addTab(array('name'=>' My tags ','url'=>'http://localhost','content' => $tags,'nested' => FALSE),'webfx-tab-style-sheet');
+            }
             unset($this->objUserParams);
             return $objTab->show();
         } else {
@@ -735,14 +739,25 @@ class buscard extends object
     private function getMap($latitude, $longitude)
     {
         $ret = '<br /><div class="vcard_map">'
-          . '<iframe width="640" height="480" '
+          . '<iframe width="512" height="512" '
           . 'frameborder="0" scrolling="no" '
           . 'marginheight="0" marginwidth="0" '
-          . 'src="http://maps.google.com/maps?f=q&amp;'
-          . 'source=s_q&amp;hl=en&amp;geocode=&amp;q='
+          . 'src="http://maps.google.com/maps/api/staticmap?center='
           . $latitude .',' . $longitude 
-          . '&amp;output=embed"></iframe></div>';
+          . '&zoom=17&size=512x512&maptype=hybrid'
+          . '&markers=color:red|' . $latitude .','
+          . $longitude . '&sensor=false&key=' . $this->mapApiKey
+          . '"></iframe></div>';
         return $ret;
+    }
+
+    private function insertMap($latitude, $longitude)
+    {
+          $ret = "<iframe width=\"425\" height=\"350\" frameborder=\"0\" "
+            . "scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" "
+            . "src=\"http://maps.google.com/maps?f=q&amp;source=s_q&amp;"
+            . "hl=en&amp;geocode=&amp;q=$latitude,$longitude&amp;"
+            . "sll=$latitude,$longitude&amp;ie=UTF8&amp;ll=$latitude,$longitude&amp;spn=0.00982,0.020857&amp;t=h&amp;z=16&amp;output=embed\"></iframe><br /><small><a href=\"http://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=-26.193161,+28.030544&amp;sll=37.0625,-95.677068&amp;sspn=34.259599,68.90625&amp;ie=UTF8&amp;ll=-26.19288,28.03038&amp;spn=0.00982,0.020857&amp;t=h&amp;z=16\" style=\"color:#0000FF;text-align:left\">View Larger Map</a></small>";
     }
 
     /**
