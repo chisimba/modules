@@ -57,14 +57,54 @@ $GLOBALS['kewl_entry_point_run']) {
 
 class triplesubject
 {
+    /**
+     * Instance of the dbtriplestore class of the triplestore module.
+     *
+     * @access protected
+     * @var    object
+     */
     protected $objTriplestore;
 
     /**
+     * The subject id.
+     *
+     * @access protected
+     * @var    string
+     */
+    protected $subject;
+
+    /**
+     * The triples associated with this subject.
+     *
+     * @access protected
+     * @var    array
+     */
+    protected $triples;
+
+    /**
      * Initialise the instance of the triplesubject class.
+     *
+     * @access public
      */
     public function init()
     {
         $this->objTriplestore = $this->getObject('dbtriplestore', 'triplestore');
+    }
+
+    public function __get($name)
+    {
+    }
+
+    /**
+     * Loads a new subject and its associated triples.
+     *
+     * @access public
+     * @param  string $subject The id of the subject to load.
+     */
+    public function load($subject)
+    {
+        $this->subject = $subject;
+        $this->triples = $this->objTriplestore->getAll("subject = '$subject'");
     }
 }
 
