@@ -55,13 +55,16 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za/
  */
 
-class triplesubject extends dbTable
+class triplesubject
 {
+    protected $objTriplestore;
+
     /**
      * Initialise the instance of the triplesubject class.
      */
     public function init()
     {
+        $this->objTriplestore = $this->getObject('dbtriplestore', 'triplestore');
     }
 }
 
