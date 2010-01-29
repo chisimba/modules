@@ -58,7 +58,7 @@ $GLOBALS['kewl_entry_point_run']) {
 class dbtriplestore extends dbTable
 {
     /**
-     * Initialise the instance of the triplestore data access class.
+     * Initialises the instance of the triplestore data access class.
      */
     public function init()
     {
