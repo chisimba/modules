@@ -115,6 +115,20 @@ class triplesubject extends object
         return $this->predicates[$name];
     }
 
+    public function __isset($name)
+    {
+        $set = false;
+
+        foreach ($this->triples as $triple) {
+            if ($triple['predicate'] === $name) {
+                $set = true;
+                break;
+            }
+        }
+
+        return $set;
+    }
+
     /**
      * Loads a new subject and its associated triples.
      *
