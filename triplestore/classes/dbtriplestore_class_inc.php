@@ -38,6 +38,25 @@ class dbtriplestore extends dbTable
     {
         parent::init('tbl_triplestore');
     }
+
+    /**
+     * Adds a new triple into the triplestore.
+     *
+     * @access public
+     * @param  string $subject   The subject of the triple.
+     * @param  string $predicate The predicate of the triple.
+     * @param  string $object    The object of the triple.
+     * @return string The id of the new triple.
+     */
+    public function add($subject, $predicate, $object)
+    {
+        $row              = array();
+        $row['subject']   = $subject;
+        $row['predicate'] = $predicate;
+        $row['object']    = $object;
+
+        return $this->insert($row);
+    }
 }
 
 ?>
