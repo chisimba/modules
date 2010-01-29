@@ -66,6 +66,14 @@ class triplesubject
     protected $objTriplestore;
 
     /**
+     * Associative array of instances of the triplepredicate class of the triplestore module.
+     *
+     * @access protected
+     * @var    array
+     */
+    protected $predicates;
+
+    /**
      * The subject id.
      *
      * @access protected
@@ -74,7 +82,7 @@ class triplesubject
     protected $subject;
 
     /**
-     * The triples associated with this subject.
+     * Array of the triples associated with this subject.
      *
      * @access protected
      * @var    array
@@ -93,6 +101,18 @@ class triplesubject
 
     public function __get($name)
     {
+        if (!array_key_exists($name, $this->predicates)) {
+            $objects = array();
+            foreach ($this->triples as $triple) {
+                if ($triple['predicate'] === $name) {
+                    $objects[] = $triple['object'];
+                }
+            }
+            $this->predicates[$name] = $this->newObject('triplepredicate', 'triplestore');
+            $this->predicates[$name]->setObjects($objects);
+        }
+
+        return $this->predicates[$name];
     }
 
     /**
@@ -103,8 +123,9 @@ class triplesubject
      */
     public function load($subject)
     {
-        $this->subject = $subject;
-        $this->triples = $this->objTriplestore->getAll("subject = '$subject'");
+        $this->predicates = array();
+        $this->subject    = $subject;
+        $this->triples    = $this->objTriplestore->getAll("subject = '$subject'");
     }
 }
 
