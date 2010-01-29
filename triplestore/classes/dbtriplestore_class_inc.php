@@ -91,6 +91,22 @@ class dbtriplestore extends dbTable
     }
 
     /**
+     * Fetches all of the triples associated with a particular subject out of the triplestore.
+     *
+     * @access public
+     * @param  string $subject The id of the subject.
+     * @return array  The array of triples.
+     */
+    public function getAllBySubject($subject)
+    {
+        // Retrieve the triples associated with the subject.
+        $triples = $this->getAll("subject = '$subject'");
+
+        // Return the retrieved triples.
+        return $triples;
+    }
+
+    /**
      * Modifies an existing triple in the triplestore.
      *
      * @access public
