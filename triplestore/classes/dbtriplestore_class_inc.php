@@ -3,7 +3,7 @@
 /**
  * Triplestore data access class
  * 
- * Class to interact with the database for the triplestore module.
+ * Class to facilitate interaction with the framework triplestore.
  * 
  * PHP version 5
  * 
@@ -23,19 +23,46 @@
  * @category  chisimba
  * @package   triplestore
  * @author    Charl van Niekerk <charlvn@charlvn.com>
- * @copyright 2010 Charl van Niekerk / AVOIR
+ * @copyright 2010 Charl van Niekerk
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id$
- * @link      http://avoir.uwc.ac.za
+ * @link      http://avoir.uwc.ac.za/
+ */
+
+// security check - must be included in all scripts
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
+
+/**
+ * Triplestore data access class
+ * 
+ * Class to facilitate interaction with the framework triplestore.
+ * 
+ * @category  chisimba
+ * @package   triplestore
+ * @author    Charl van Niekerk <charlvn@charlvn.com>
+ * @copyright 2010 Charl van Niekerk
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   $Id$
+ * @link      http://avoir.uwc.ac.za/
  */
 
 class dbtriplestore extends dbTable 
 {
     /**
-     * Constructor
+     * Initialise the instance of the triplestore data access class.
      */
     public function init()
     {
+        // Set the associated database table name.
         parent::init('tbl_triplestore');
     }
 
