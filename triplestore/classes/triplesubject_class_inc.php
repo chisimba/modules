@@ -135,7 +135,7 @@ class triplesubject extends object
      * @access public
      * @param  string $subject The id of the subject to load.
      */
-    public function load($subject)
+    public function setSubject($subject)
     {
         $this->data    = $this->objTriplestore->getSubject($subject);
         $this->objects = array();
