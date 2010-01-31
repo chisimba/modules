@@ -137,9 +137,9 @@ class triplesubject extends object
      */
     public function load($subject)
     {
-        $this->predicates = array();
-        $this->subject    = $subject;
-        $this->triples    = $this->objTriplestore->getAllBySubject($subject);
+        $this->data    = $this->objTriplestore->getSubject($subject);
+        $this->objects = array();
+        $this->subject = $subject;
     }
 }
 
