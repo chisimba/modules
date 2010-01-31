@@ -117,16 +117,7 @@ class triplesubject extends object
 
     public function __isset($name)
     {
-        $set = false;
-
-        foreach ($this->triples as $triple) {
-            if ($triple['predicate'] === $name) {
-                $set = true;
-                break;
-            }
-        }
-
-        return $set;
+        return array_key_exists($name, $this->data);
     }
 
     /**
