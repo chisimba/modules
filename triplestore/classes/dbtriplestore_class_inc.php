@@ -92,7 +92,7 @@ class dbtriplestore extends dbTable
     public function getSubject($subject)
     {
         // Retrieve the triples associated with the subject.
-        $triples = $this->getAll("subject = '$subject'");
+        $triples = $this->getAll("WHERE subject = '$subject'");
 
         // Initialise the array of predicates and objects to be returned.
         $predicates = array();
