@@ -7,7 +7,7 @@
  * By Qhamani Fenama
  * qfenama@gmail.com/qfenama@uwc.ac.za
  */
-
+    var node1;
     var filepath;  
     var fileid;
     var filename;
@@ -16,81 +16,60 @@
     var fp;
     Ext.QuickTips.init();
 
-	// turn on validation errors beside the field globally
-    //Ext.form.Field.prototype.msgTarget = 'side';
-    //var newIndex = 3;
-
     var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Please wait..."});
-    
-    
+        
     //Uploading form
-    /*var uploadform = new Ext.FormPanel({
-	//standardSubmit: true,
-	//url: baseuri + "",
+    var uploadform = new Ext.FormPanel({
+	fileUpload: true,
 	frame:true,
 	title: 'Upload File(s)',
 	bodyStyle:'padding:5px 5px 0',
 	width: 700,
-	hieght: 200,
-	defaultType: 'textfield',
-	items:[{
-		fieldLabel: 'file 1',
-		name: 'userfile1',
-		//allowBlank:false,
-		itemId: 'userfile1',
-		width:275,
-		inputType: 'file'
-		},{
-		fieldLabel: 'file 2',
-		name: 'userfile2',
-		itemId: 'userfile2',
-		width:275,
-		inputType: 'file'
-		},{
-		fieldLabel: 'file 3',
-		itemId: 'userfile3',
-		name: 'userfile3',
-		width:275,
-		inputType: 'file'
-		},{
-		fieldLabel: 'file 4',
-		itemId: 'userfile4',
-		name: 'userfile4',
-		width:275,
-		inputType: 'file'
-		},{
-		fieldLabel: 'file 5',
-		itemId: 'userfile5',
-		name: 'userfile5',
-		width:275,
-		inputType: 'file'
-		}],
+	autoHeight: true,
+	bodyStyle: 'padding: 10px 10px 0 10px;',
+        labelWidth: 50,
+      	items: [{
+            xtype: 'fileuploadfield',
+            id: 'form-file1',
+            emptyText: 'Select an file',
+            fieldLabel: 'File',
+            name: 'photo-path1',
+            buttonText: 'Browse...'            
+        },{
+            xtype: 'fileuploadfield',
+            id: 'form-file2',
+            emptyText: 'Select an file',
+            fieldLabel: 'File',
+            name: 'photo-path2',
+            buttonText: 'Browse...'            
+        },{
+            xtype: 'fileuploadfield',
+            id: 'form-file3',
+            emptyText: 'Select an file',
+            fieldLabel: 'File',
+            name: 'photo-path3',
+            buttonText: 'Browse...'            
+        }],
 		
 	buttons: [{
 		text: 'Upload File(s)',
 		handler: function (){
+		if(uploadform.getForm().isValid())
+		{
+			uploadform.getForm().submit({
+				url: baseuri,
+				params:{
+					module: 'filemanager2',
+					action: 'json_uploadFile',
+					selectedfolder: selectedfolder
+				},
+				waitMsg: 'Uploading your file...',
+				success: function(fp, o){
+				datastore.load({params:{id:selectedfolder}});
+    					//Ext.Msg.alert('Success', 'Processed file "'+o.result.file+'" on the server');
+				}});
 
-			if(uploadform.getForm().isValid())
-					{
-						//var v = uploadform.get('userfile1').getValue()+','+uploadform.get('userfile2').getValue()+','+uploadform.get('userfile3').getValue()+','+uploadform.get('userfile4').getValue()+','+uploadform.get('userfile4').getValue();
-
-						uploadform.getForm().submit({
-								url: baseuri,
-								//waitMsg: 'Uploading your file(s)...',
-								params:{
-										module: 'filemanager2',
-										action: 'json_uploadFile',
-										selectedfolder: selectedfolder//,
-										//files:v
-								},
-								success: function(action){
-									datastore.load({params:{id:selectedfolder}});
-									uploadform.getForm().reset();	
-								},        	
-				            	failure:function(action){}
-								});
-						uploadform.getForm().reset();
-						winup.hide();
+				winup.hide();
 						
 				}
 		}
@@ -98,48 +77,21 @@
 	}]
 	});
 
-    */
-    
-	var upButton = new Ext.ux.form.FileUploadField({
-	buttonOnly: true,
-	buttonCfg: {
-                //iconCls: 'silk-add',
-		fileUpload: true,
-		name: 'Fileconten',
-		tooltip:'Upload File',
-		disabled: true
-            },
-   	listeners: {
-	    'fileselected': function(fb, v){
-		//var el = Ext.fly('fi-button-msg');
-		Ext.Msg.alert(fb);
-		//post to server
-		
-		Ext.Ajax.request({
-	                    url: baseuri+'?module=filemanager2&action=json_uploadfile',
-	                    waitMsg: 'Uploading your file...',
-	                    success: function(fp, o){
-	                        Ext.Msg.alert('Success', 'Processed file "'+o.result.file+'" on the server');
-	                    }
-	                });
-	    }
-	}
-    });
-
-   fp = new Ext.FormPanel({
-        //renderTo: 'fi-form',
-        fileUpload: true,
-        width: 50,
-        frame: false,
-        //title: 'File Upload Form',
-        //autoHeight: true,
-        //bodyStyle: 'padding: 10px 10px 0 10px;',
-        //labelWidth: 50,
-        items: [upButton]
-        
-    });
-
-
+   var upButton = new Ext.Button({
+	text:'Upload',
+	tooltip:'Upload File',
+	iconCls: 'silk-add',
+	disabled: true,
+	handler: function (){
+	winup = new Ext.Window({
+		                layout:'fit',
+		                width:400,
+		                height:150,
+		                closeAction:'hide',
+		                plain: true,						
+		                items: [uploadform]});	
+	winup.show(this);
+        }});
 
    var dlButton = new Ext.Button({
 	text:'Download',
@@ -147,7 +99,6 @@
 	iconCls: 'silk-disk',
 	disabled: true,
 	handler: function (){
-
 	doDownloadFile();	
         }});
 
@@ -157,8 +108,7 @@
 	iconCls: 'silk-delete',
 	disabled: true,
 	handler: function (){
-
-    Ext.MessageBox.confirm('Delete User', "Are you sure you want to delete the selected File(s)?", function(btn, text) 			{
+    	Ext.MessageBox.confirm('Delete User', "Are you sure you want to delete the selected File(s)?", function(btn, text) 			{
 	if (btn == 'yes')
 	{
 		doRemoveFiles()
@@ -190,18 +140,8 @@
     	    iconCls: 'silk-folder',
 	    disabled: true,
             handler: function(){
-	        var node = root.appendChild(new Ext.tree.TreeNode({
-		text:'New Folder' + (++newIndex),
-	        cls:'folder',
-	        allowDrag:false
-	        }));
-		//Ext.Msg.alert(node);
-	      tree.getSelectionModel().select(node);
 
-	      setTimeout(function(){
-	      ge.editNode = node;
-	      ge.startEdit(node.ui.textNode);
-	 }, 0);
+		createNewDir(node1);
 	    }
 	}]
 	});
@@ -222,6 +162,7 @@
             'render': function(tp){
 		
         tp.getSelectionModel().on('selectionchange', function(tree, node){
+		node1 = node
 		upButton.enable();
 		tb.enable();
 		selectedfolder = node.id;
@@ -246,11 +187,11 @@
     //root.expand(true, /*no anim*/ true);
 
      // add an inline editor for the nodes
-    var ge = new Ext.tree.TreeEditor(tree, {/* fieldconfig here */ }, {
+    /*var ge = new Ext.tree.TreeEditor(tree, {}, {
         allowBlank:false,
         blankText:'A name is required',
         selectOnFocus:true
-    });
+    });*/
 
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 
@@ -301,7 +242,7 @@
         }
     });
 
-    var dirbrowser = new Ext.grid.GridPanel({
+   var dirbrowser = new Ext.grid.GridPanel({
 	region: 'center',
 	id: 'center-panel', 
 	split: true,
@@ -367,10 +308,6 @@ region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, max
 	maxSize: 400,
 	collapsible: true,
 	margins: '0 0 0 5',
-	//layout: {
-	//    type: 'accordion',
-	//    animate: true
-	//},
 	items: [tree]
 	},dirbrowser]
 	});
@@ -378,8 +315,8 @@ region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, max
     function doDownloadFile()
     {
 	filepath = encodeURIComponent(dirbrowser.getSelectionModel().getSelected().get('filepath'));
-	var link = uri+'usrfiles/'+filepath.replace(/%2F/g, "/");
-	window.open(link,'Download');  
+	var path = uri+'usrfiles/'+filepath.replace(/%2F/g, "/");
+	window.open(path,'Download'); 
     }
 
     //method that removes files from a folder
@@ -416,7 +353,65 @@ region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, max
 		    }
 	});
     }
-
+	function createNewDir(node){
+	 
+	 /* fire beforenewdir event
+	# if(true !== this.eventsSuspended && false === this.fireEvent('beforenewdir', this, node)) {
+	# return;
+	# }*/
+	  
+	var treeEditor =  new Ext.tree.TreeEditor(tree, {
+		allowBlank:false
+		,cancelOnEsc:true
+		,completeOnEnter:true
+		,ignoreNoChange:true
+		,selectOnFocus:true
+		});
+	var newNode;
+	 
+	// get node to append the new directory to
+	var appendNode = node.isLeaf() ? node.parentNode : node;
+	 
+	// create new folder after the appendNode is expanded
+	appendNode.expand(false, false, function(n) {
+	// create new node
+	newNode = n.appendChild(new Ext.tree.AsyncTreeNode({text:'New Folder', iconCls:'folder'}));
+	 
+	// setup one-shot event handler for editing completed
+	treeEditor.on("complete",
+	function(o,newText,oldText){
+	
+	//post to server
+		Ext.Ajax.request({
+		    url: baseuri,
+		    method: 'POST',
+		    params: {
+		       	module: 'filemanager2',
+		   	action: 'jsoncreatefolder',
+		   	parentfolder: selectedfolder,
+			foldername: newText
+		    },
+		    success: function(response) {
+		    var jsonData = Ext.util.JSON.decode(response.responseText);
+		    //alert(jsonData.error);
+		    },
+		    failure: function(xhr,params) {
+			
+		    }
+		});
+		
+	
+	}, this, true
+	);
+	 
+	// creating new directory flag
+	treeEditor.creatingNewDir = true;
+	  
+	// start editing after short delay
+	(function(){treeEditor.triggerEdit(newNode);}.defer(10));
+	// expand callback needs to run in this context
+	}.createDelegate(this));
+    }
 	
     Ext.onReady(function(){
     //alert(uri);

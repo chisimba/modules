@@ -243,47 +243,35 @@ class filemanager2 extends controller
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
     public function __json_uploadFile()
-    {	//debugging staff
+    {	
+	//error_log(var_export($_FILES, true));
+	
+        $folder = $this->objFolders->getFolder($this->getParam('selectedfolder'));
 
+        if ($folder != FALSE) {
+            $this->objUpload->setUploadFolder($folder['folderpath']);
+        }
 
+        // Upload Files
+        $results = $this->objUpload->uploadFiles();
 
-	echo '{success:true, file:'.json_encode($_FILES['Fileconten']['name']).'}';
-	//$files = $this->getParam('files');
-	//$folder = $this->getParam('selectedfolder');
-	//$str = $_FILES['userfile1'];
-		//echo '{success:true, file:'.json_encode($_FILES['photo-path']).'}';
+        // Check if User entered page by typing in URL
+        if ($results == FALSE) {
+            return $this->nextAction(NULL);
+        }
 
-/*
-    	if ($files) {
+        // Check if no files were provided
+        if (count($results) == 1 && array_key_exists('nofileprovided', $results)) {
+            //return $this->nextAction('uploadresults', array('error'=>'nofilesprovided'));
+        }
 
-    		$filepaths = substr_replace($files, "",strlen($files) - 1);
-    		
-		$files = explode(',', $filepaths);
-    		error_log(var_dump($files), true);
-    		foreach ($files as $file)
-    		{
-    			//echo 'here';
-    			//error_log('here');
-
-    			if($file){
-    				//var_dump($file);
-    				$res = $results = $this->objUpload->uploadFiles();
-    				//var_dump($res);
-    			error_log('Result'.$res);
-    			}
-    		}
-
-     		$extjs['success'] = true;
-		}
-		else {
-		     $extjs['success'] = false;
-		     $extjs['errors']['message'] = 'Unable to connect to DB';
-		}*/
-		//$extjs = 1;
-		//echo json_encode(array('success' => true, 'data' => $extjs));
-
-	//echo $this->getJsonTree('users', $this->objUser->userId(), $this->getParam('node'));
-       // exit(0);
+        // Put Message into Array
+        //$messages = $this->objUploadMessages->processMessageUrl($results);
+        //$messages['folder'] = $this->getParam('folder');
+	$extjs['success'] = true;
+	echo json_encode($extjs);
+	exit(0);
+        //return $this->nextAction('uploadresults', $messages);
     }
 
 
@@ -314,7 +302,7 @@ class filemanager2 extends controller
         }
                       
         $files = $this->objFiles->getFolderFiles($folder['folderpath']);
-	//error_log(var_export($files, true));
+	
 	$allarr = array();
 	
 	if (count($files) > 0) {
@@ -392,7 +380,7 @@ class filemanager2 extends controller
                 $folderText = basename($folder['folderpath']);
 		$folderShortText = substr(basename($folder['folderpath']), 0, 60) . '...';
 		$arr['text'] = $folderText;
-		$arr['leaf'] = false;
+		//$arr['leaf'] = true;
 		$arr['id'] = $folder['id'];
 		$arr['cls'] = 'folder';
 
@@ -401,6 +389,49 @@ class filemanager2 extends controller
         }
                 
 	return json_encode($allarr);
+    }
+
+   public function __jsoncreatefolder()
+    {
+	$parentId = $this->getParam('parentfolder', 'ROOT');
+        $foldername = $this->getParam('foldername');
+	
+        if (preg_match('/\\\|\/|\\||:|\\*|\\?|"|<|>/', $foldername)) {
+            $error = "Illigal charectors in a folder name\n";
+	    $extjs['error'] = $error;
+            echo json_encode($extjs);
+	    exit(0);
+        }
+        
+        // Replace spaces with underscores
+        $foldername = str_replace(' ', '_', $foldername);
+
+        if ($parentId == 'ROOT') {
+            $folderpath = 'users/'.$this->objUser->userId();
+        } else {
+            $folder = $this->objFolders->getFolder($parentId);
+
+            if ($folder == FALSE) {
+                return $this->nextAction(NULL, array('error'=>'couldnotfindparentfolder'));
+            }
+            $folderpath = $folder['folderpath'];
+        }
+
+        $this->objMkdir = $this->getObject('mkdir', 'files');
+
+	$path = $this->objConfig->getcontentBasePath().'/'.$folderpath.'/'.$foldername;
+
+	$result = $this->objMkdir->mkdirs($path);
+
+	if ($result) {
+            $folderId = $this->objFolders->indexFolder($path);
+        }
+
+	$extjs['success'] = false;
+	$extjs['data'] = $folderId;
+	echo json_encode($extjs);
+	exit(0);
+       
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
