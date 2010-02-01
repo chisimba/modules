@@ -22,7 +22,7 @@ class block_userinfo extends object {
     }
 
     function show() {
-        $username='364586';//$this->objUser->username();
+        $username=$this->objUser->username();
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $staffurl=$objSysConfig->getValue('STAFFURL', 'userextra');
         $studenturl=$objSysConfig->getValue('STUDENTURL', 'userextra');
