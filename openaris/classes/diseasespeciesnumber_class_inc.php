@@ -104,4 +104,12 @@ class diseasespeciesnumber extends dbtable {
 		return $number[0]['number'];
 	}
 	
+	public function getSpecies($outbreakCode) {
+		$sql = "SELECT sn.id, sn.speciesname
+				FROM tbl_ahis_speciesnew AS sn, tbl_ahis_diseasespeciesnumber AS dsn
+				WHERE sn.id = dsn.speciesid AND dsn.outbreakcode = '$outbreakCode'
+				ORDER BY sn.speciesname";
+		return $this->getArray($sql);
+	}
+	
 }

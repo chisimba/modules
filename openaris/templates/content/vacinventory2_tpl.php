@@ -85,7 +85,8 @@ $ibarDate->extra='disabled';
 $outbreakRef = new dropdown('outbreakref');
 $outbreakRef->addOption('-1', $this->objLanguage->languageText('phrase_selectone'));
 $outbreakRef->addFromDB($arrayoutbreak,'outbreakcode','outbreakcode');
-$outbreakRef->extra = 'onchange="javascript:changeDisease();"';
+$outbreakRef->cssClass = "passive_surveillance";
+$outbreakRef->extra = 'onchange="javascript:changeOutbreak();"';
 //$outbreakRef->setSelected($outbreakref);
 //print_r($arraydisease); exit;
 //dropdown for disease
@@ -93,10 +94,12 @@ $disease = new dropdown('diseaseId');
 $disease->addOption('-1', $this->objLanguage->languageText('phrase_selectone'));
 $disease->addFromDB($arraydisease,'disease_name','id');
 //$disease->setSelected($diseases);
+$disease->cssClass = "passive_surveillance";
 $disease->extra = 'onchange="javascript:changeDisease();"';
 //dropdown form disease
 $species = new dropdown('speciesId');
 $species->addOption('-1', $this->objLanguage->languageText('phrase_selectone'));
+$species->cssClass = "passive_surveillance";
 $species->addFromDB($arrayspecies,'speciesname','id');
 //$species->setSelected($species);
 
@@ -144,7 +147,7 @@ foreach($arraycon as $dat){
 
 }
 $cumprovac = new textinput('cumprovac',$cumprovac);
-
+$cumprovac->extra ='disabled';
 
 //text input field for planned control vaccination
 if(!isset($planconvac)){
@@ -165,6 +168,7 @@ foreach($arraycon as $dat){
 
 }
 $cumconvac = new textinput('cumconvac',$cumconvac);
+$cumconvac->extra ='disabled';
 
 //text area for comments 
 $comments = new textarea('comment',$comments);

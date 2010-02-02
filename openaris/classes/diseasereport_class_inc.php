@@ -203,9 +203,15 @@ $sdat =$this->objSpeciesNew->getAll("WHERE speciestypeid = '$ddat[id]'");
 	}
 	
 	
-	public function getOutbreak($month,$year,$district){
+	public function getOutbreak($countryId){
 	
-	$sql = $this->getAll("WHERE partitionid='$district'");
-	return $sql;
+		$sql = "SELECT dr.id AS id, dr.outbreakcode AS outbreakcode
+				FROM tbl_ahis_diseasereport AS dr, tbl_ahis_diseasecontrolmeasure AS dcm,
+					 tbl_ahis_partitions AS p
+				WHERE p.id = dr.partitionid AND p.countryid = '$countryId'
+					AND dr.outbreakcode = dcm.outbreakcode
+					AND dcm.controlmeasureid = 'init_02'";
+					
+		return $this->getArray($sql);
 	}
 }

@@ -301,6 +301,19 @@ function changeBreed() {
 	}
 }
 
+function changeOutbreak() {
+	jQuery('#input_diseaseId').attr('disabled', true);
+	jQuery('#input_diseaseId >option').remove();
+	var outbreakCode = jQuery('#input_outbreakref').val();
+	jQuery.getJSON("index.php?module=openaris&action=ajax_getdisease&outbreakcode="+outbreakCode,
+		function(data) {
+			jQuery('#input_diseaseId').append(jQuery("<option></option>").attr("value",data.id).text(data.disease_name));
+			if (data.length != 0) {
+				jQuery('#input_diseaseId').removeAttr('disabled');
+				changeDisease();
+			}
+		});
+}
 
 function changeDisease() {
 	//jQuery('#input_diseaseId >option').remove();
@@ -308,7 +321,8 @@ function changeDisease() {
 	jQuery('#input_speciesId').attr('disabled', true);
 	jQuery('#input_speciesId >option').remove();
 	var diseaseId = jQuery('#input_diseaseId').val();
-	jQuery.getJSON("index.php?module=openaris&action=ajax_getspecies&diseaseId="+diseaseId,
+	var outbreakCode = jQuery('#input_outbreakref').val();
+	jQuery.getJSON("index.php?module=openaris&action=ajax_getspecies&diseaseId="+diseaseId+"&outbreakCode="+outbreakCode,
 				   function(data) {
 						jQuery.each(data, function(key, value) {
 							jQuery('#input_speciesId').append(jQuery("<option></option>").attr("value",value.id).text(value.speciesname));
@@ -317,7 +331,7 @@ function changeDisease() {
 							jQuery('#input_speciesId').removeAttr('disabled');
 						}
 				   });
-	}
+}
 
 
 function changeSpecies() {

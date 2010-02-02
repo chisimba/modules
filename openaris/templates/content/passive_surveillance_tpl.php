@@ -288,7 +288,7 @@ $outbreakDrop->extra = 'style="display: none;"';
 
 $outbreakBox = new textinput('outbreakCode');
 $outbreakBox->setCss('passive_surveillance');
-$outbreakBox->extra = 'disabled';
+$outbreakBox->extra = 'readonly';
 
 $diseaseDrop = new dropdown('diseaseId');
 $diseaseDrop->addFromDB($arrayDisease, 'short_name', 'id');

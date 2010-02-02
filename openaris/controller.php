@@ -404,14 +404,13 @@ class openaris extends controller {
 				$countryId 	= $this->getParam('countryId');
 				echo json_encode($this->objDiseaseReport->genOutbreakCountry($countryId));
 				break;	
-			case "ajax_getdiseasenames":
-				$district = $this->getSession('ps_admin3');
-				$diseaseId = $this->getParam('outbreakcode');
-				echo json_encode($this->objDiseaseReport->getdisease($diseaseId,$district));
+			case "ajax_getdisease":
+				$outbreakCode = $this->getParam('outbreakcode');
+				echo json_encode($this->objDiseases->getRow('id', $this->objDiseaseReport->getDiseaseId($outbreakCode)));
 			  	break;
 			case "ajax_getspecies":
-				$diseaseId = $this->getParam('diseaseId');
-				echo json_encode($this->objDiseasespecies->getSpecies($diseaseId));
+				$outbreakCode = $this->getParam('outbreakCode');
+				echo json_encode($this->objDiseaseSpeciesNumber->getSpecies($outbreakCode));
 			  	break;   
 			case "ajax_getvalues":
 			   $filter = $this->getParam('filter');
@@ -623,7 +622,7 @@ class openaris extends controller {
 				$diseaseId = $this->objDiseaseReport->getDiseaseId($outbreakCode);
 				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks($country));
 				$this->setVar('arraySpecies', $this->objDiseasespecies->getSpecies($diseaseId));
-				$this->setVar('arrayAgeGroup', $this->objSpeciesAgeGroup->getAll("ORDER BY agegroup"));
+				$this->setVar('arrayAgeGroup', $this->objSpeciesAgeGroup->getUniqueGroups());
 				$this->setVar('arraySex', $this->objSex->getAll("ORDER BY name"));
 				
 				$this->setVar('risk', $this->getSession('ps_risk'));
@@ -2857,6 +2856,7 @@ class openaris extends controller {
 			   	$month = $this->getSession('ps_month');
 			   	$year = $this->getSession('ps_year');
 			      $district = $this->getSession('ps_admin3');
+				  $countryid = $this->getSession('ps_country');
 			   	$this->setVar('datemonth',$this->getSession('ps_month'));
 			   	$this->setVar('arraycon',$this->objVacinventory->getCon($month,$year,$district));
 			   	//$this->setVar('arraymonth',$this->objVacinventory->getData($month,$year));
@@ -2888,10 +2888,7 @@ class openaris extends controller {
 	            $this->setVar('vetoff', $this->getSession('ps_vetoff'));
 	     			$this->setVar('dataoff', $this->getSession('ps_dataoff'));	   			  				     				     			
 			      $this->setVar('userList', $this->objAhisUser->getList());
-			      $this->setVar('arrayoutbreak',$this->objDiseaseReport->getOutbreak($month,$year,$district));
-			      //$data =$this->objDiseaseReport->getOutbreak($month,$year,$district);
-			      //print_r($data);
-			      //$this->setVar('arraydisease',$this->objDiseaseReport->getdiseasename());
+			      $this->setVar('arrayoutbreak',$this->objDiseaseReport->getOutbreak($countryid));
 			      $this->setVar('arrayspecies',$this->objSpeciesNew->getAll("ORDER BY speciesname"));
 			      return 'vacinventory2_tpl.php';
 			      

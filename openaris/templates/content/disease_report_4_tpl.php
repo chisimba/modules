@@ -295,12 +295,12 @@ $objTableArea3->endHeaderRow();
 
 if (!empty($diseaseSpeciesNumber)) {
     foreach ($diseaseSpeciesNumber as $numbers) {
-        $species  = $this->objSpeciesNames->getRow('id', $numbers['speciesid']);
+        $species  = $this->objSpeciesNew->getRow('id', $numbers['speciesid']);
         $age = $this->objSpeciesAgeGroup->getRow('id', $numbers['agegroupid']);
         $sex = $this->objSex->getRow('id', $numbers['sexid']);
         $objTableArea3->startRow();
         $objTableArea3->addCell($numbers['outbreakcode'], NULL, NULL, 'center');
-        $objTableArea3->addCell($species['common_name'], NULL, NULL, 'center');
+        $objTableArea3->addCell($species['speciesname'], NULL, NULL, 'center');
         $objTableArea3->addCell($age['agegroup'], NULL, NULL, 'center');
         $objTableArea3->addCell($sex['name'], NULL, NULL, 'center');
         $objTableArea3->addCell($numbers['risk'], NULL, NULL, 'center');

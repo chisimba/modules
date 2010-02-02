@@ -95,6 +95,8 @@ $breedNumber = new textinput('breedNumber', $breedNumber, 'text');
 $breedNumber->extra = 'onchange="javascript:checkBreedSpecies();"';
 
 $tropicalLivestock = new textinput('tropicalLivestock', $tropicalLivestock, 'text');
+$tropicalLivestock->extra = 'disabled';
+
 $crossBreed = new textinput('crossBreed', $crossBreed, 'text');
 
 $catNumber = new textinput('catNumber', $catNumber, 'text');
