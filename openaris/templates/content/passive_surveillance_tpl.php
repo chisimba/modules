@@ -83,7 +83,7 @@ $monthDrop = new dropdown('month');
 for ($i=1; $i<13; $i++) {
     $monthDrop->addOption($i, date('F', mktime(0,0,0,$i)));
 }
-$monthDrop->setSelected(date('m'));
+$monthDrop->setSelected(date('n'));
 $monthDrop->cssClass = 'passive_surveillance';
 
 $yearBox = new textinput('year', date('Y'), 'text', 4);

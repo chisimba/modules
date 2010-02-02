@@ -87,7 +87,7 @@ $outbreakCodeBox->extra = 'readonly';
 $outbreakCodeBox->setCss('passive_surveillance outbreakcode');
 
 $speciesDrop = new dropdown('speciesId');
-$speciesDrop->addFromDB($arraySpecies, 'common_name', 'id');
+$speciesDrop->addFromDB($arraySpecies, 'speciesname', 'id');
 $speciesDrop->setSelected($speciesId);
 $speciesDrop->cssClass = 'passive_surveillance';
 

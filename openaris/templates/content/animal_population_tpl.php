@@ -171,21 +171,21 @@ $vemail = new textinput('vetOfficerEmail', $vemail);
 $vemail->extra = 'disabled';
 
 
-$tab= "&nbsp;&nbsp;&nbsp;&nbsp;";
-$tabs=$tab.$tab.$tab;
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+$tabs = $tab.$tab.$tab;
  
 $objTable = $this->newObject('htmltable', 'htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
 
 //Reporting Date 
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','openaris'),NULL,'centre');
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','openaris').$tab,NULL,'centre');
 $objTable->addCell($repDate->show());
 $objTable->endRow();
 
 //IBAR date
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris'));
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris').$tab);
 $objTable->addCell($ibarDate->show());
 $objTable->endRow();
 

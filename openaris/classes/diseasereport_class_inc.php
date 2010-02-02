@@ -136,28 +136,33 @@ class diseasereport extends dbtable {
 	}
 	
 	public function getdiseasename(){
-	$data = $this->getAll("ORDER BY outbreakcode");
-	$array = array();
-	foreach($data as $vars){
-	$disease = $this->objDisease->getRow('id',$vars['diseaseid']);
-	$array[] = array('diseasename'=>$disease['disease_name'],'outbreakcode'=>$vars['outbreakcode']);
+		$data = $this->getAll("ORDER BY outbreakcode");
+		$array = array();
+		foreach($data as $vars){
+			$disease = $this->objDisease->getRow('id',$vars['diseaseid']);
+			$array[] = array('diseasename'=>$disease['disease_name'],'outbreakcode'=>$vars['outbreakcode']);
+	
+		}
+		return $array;
 	
 	}
-	return $array;
 	
+	public function getDiseaseId($outbreakCode) {
+		$report = $this->getRow('outbreakcode', $outbreakCode);
+		return $report['diseaseid'];
 	}
 	
 	public function getdisease($diseaseId,$district){
 
-    $disease = $this->objDiseaseControlMeasure->getAll("WHERE outbreakcode ='$diseaseId' AND controlmeasureid='init_02'");
+		$disease = $this->objDiseaseControlMeasure->getAll("WHERE outbreakcode ='$diseaseId' AND controlmeasureid='init_02'");
 		$diseaseArray = array();
-//print_r($disease);exit;
-foreach ($disease as $dis) {
-      $val = $dis['outbreakcode'];
-    $data = $this->getRow('outbreakcode',$val);
-
-	$datv = $this->objDisease->getRow('id',$data['diseaseid']);
-
+		//print_r($disease);exit;
+		foreach ($disease as $dis) {
+		    $val = $dis['outbreakcode'];
+			$data = $this->getRow('outbreakcode',$val);
+	
+			$datv = $this->objDisease->getRow('id',$data['diseaseid']);
+	
 			//$diseaseArray[$datv['disease_name']] = $datv['disease_name']; 
 			$diseaseArray[$datv['id']] = $datv['disease_name'];
 		}
@@ -165,6 +170,7 @@ foreach ($disease as $dis) {
 		return $diseaseArray;
 	
 	}
+	
 	public function getspecies($diseaseId,$district){
 
     $disease = $this->objDiseaseControlMeasure->getAll("WHERE outbreakcode ='$diseaseId' AND controlmeasureid='init_02'");

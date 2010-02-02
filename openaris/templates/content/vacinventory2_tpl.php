@@ -25,46 +25,46 @@ $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str =$this->objLanguage->languageText('phrase_vaccinationreport');
 $objHeading->type = 2;
 
-//create finish button
-$finButton = new button('fin', $this->objLanguage->languageText('word_finish'));
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+$tabs = "$tab$tab$tab$tab";
 
-$finButton->setToSubmit();
+//create finish button
+//$finButton = new button('fin', $this->objLanguage->languageText('word_finish'));
+//$finButton->setToSubmit();
 
 //create clear all button 
 
 $clearButton = $this->uri(array('action'=>'vacinventory2_clear'));
 $clearButton = new button('clear', $this->objLanguage->languageText('phrase_clearall'), "javascript: document.location='$clearButton'");
+$clearButton->cssClass = 'clearButton';
 
 //create back button
 $backButton = $this->uri(array('action'=>'vacinventory'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backButton'");
+$backButton->cssClass = 'backButton';
 
 //create next button
 $nextButton = new button('fin', $this->objLanguage->languageText('word_next'));
-
+$nextButton->cssClass = 'nextButton';
 $nextButton->setToSubmit();
-
-//print_r($repoff);
-//print_r($dataoff);
-//print_r($vetoff);
 
 //create fields for form
 //text input for report officer 
 $repOff = new dropdown('repoff');
-$repOff->addOption('null','Select');
+//$repOff->addOption('null', $this->objLanguage->languageText('phrase_selectone'));
 $repOff->addFromDB($userList, 'name', 'userid');
 $repOff->setSelected($repoff);
 $repOff->extra = 'disabled';
 
 //text input for data entry officer 
 $dataOff = new dropdown('dataoff');
-$dataOff->addOption('null','Select');
+//$dataOff->addOption('null','Select');
 $dataOff->addFromDB($userList, 'name', 'userid');
 $dataOff->setSelected($dataoff);
 $dataOff->extra = 'disabled';
 //text input for vetofficer
 $vetOff = new dropdown('vetoff');
-$vetOff->addOption('null','Select');
+//$vetOff->addOption('null','Select');
 $vetOff->addFromDB($userList, 'name', 'userid');
 $vetOff->setSelected($vetoff);
 $vetOff->extra = 'disabled';
@@ -83,31 +83,31 @@ $ibarDate->extra='disabled';
 
 //dropdown for outbreak ref number
 $outbreakRef = new dropdown('outbreakref');
-$outbreakRef->addOption('-1','Select');
+$outbreakRef->addOption('-1', $this->objLanguage->languageText('phrase_selectone'));
 $outbreakRef->addFromDB($arrayoutbreak,'outbreakcode','outbreakcode');
 $outbreakRef->extra = 'onchange="javascript:changeDisease();"';
 //$outbreakRef->setSelected($outbreakref);
 //print_r($arraydisease); exit;
 //dropdown for disease
 $disease = new dropdown('diseaseId');
-$disease->addOption('-1','Select');
+$disease->addOption('-1', $this->objLanguage->languageText('phrase_selectone'));
 $disease->addFromDB($arraydisease,'disease_name','id');
 //$disease->setSelected($diseases);
-//$disease->extra = 'onchange="javascript:changeDisease();"';
+$disease->extra = 'onchange="javascript:changeDisease();"';
 //dropdown form disease
 $species = new dropdown('speciesId');
-$species->addOption('-1','Select');
+$species->addOption('-1', $this->objLanguage->languageText('phrase_selectone'));
 $species->addFromDB($arrayspecies,'speciesname','id');
 //$species->setSelected($species);
 
 //text input field for vaccine source
-$vaccinesource = "NULL";
+$vaccinesource = null;
 $vaccineSource = new textinput('vaccinesource',$vaccinesource);
 
 //text input field for lot number
 if(!isset($lotnumber)){
 
-$lotnumber = "NULL1";
+$lotnumber = null;
 }
 $lotNumber = new textinput('lotnumber',$lotnumber);
 
@@ -175,18 +175,6 @@ $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
 
-
-
-//textinput field for location type
-$loctype = new textinput('loctype',$loctype);
-
-//textinput field for location name
-$locname = new textinput('locname',$locname);
-
-//textinput field for lattitude and longitude
-$lattitude = new textinput('lattitude',$lattitude);
-$longitude = new textinput('longitude',$longitude);
-
 //get htmltable object
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
@@ -194,29 +182,27 @@ $objTable->width = NULL;
 
 //create table rows and place text fields and labels 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris'));
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','openaris').$tab);
 $objTable->addCell($repOff->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_dataentryofficer'));
-$objTable->addCell($dataOff->show());
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','openaris'));
+$objTable->addCell($this->objLanguage->languageText('phrase_dataentryofficer').$tab);
+$objTable->addCell($dataOff->show().$tab);
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','openaris').$tab);
 $objTable->addCell($reportDate->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_vetofficer'));
-$objTable->addCell($vetOff->show());
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris'));
+$objTable->addCell($this->objLanguage->languageText('phrase_vetofficer').$tab);
+$objTable->addCell($vetOff->show().$tab);
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris').$tab);
 $objTable->addCell($ibarDate->show());
 $objTable->endRow();
 
-
-
 //get htmltable object
 $objTable1 = new htmlTable();
-$objTable1->cellpadding =4;
+$objTable1->cellpadding = 4;
 $objTable1->cellspacing = 2;
 $objTable1->width = '90%';
 $objTable1->cssClass = 'min50';
@@ -285,10 +271,7 @@ $objTable2->endRow();
 
 
 $objTable2->startRow();
-$objTable2->addCell($clearButton->show());
-$objTable2->addCell($backButton->show());
-$objTable2->addCell($nextButton->show());
-$objTable2->addCell($finButton->show());
+$objTable2->addCell($backButton->show().$tabs.$clearButton->show().$tabs.$nextButton->show(), NULL, 'top', 'center', NULL, 'colspan="4"');
 $objTable2->endRow();
 
 

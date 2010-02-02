@@ -91,7 +91,14 @@ $GLOBALS['kewl_entry_point_run']) {
 			else
 			return false;
 			
-	} 	
+	}
+	
+	public function getSpecies($diseaseId) {
+		$sql = "SELECT s.id AS id, s.speciesname AS speciesname
+				FROM tbl_ahis_speciesnew AS s, tbl_ahis_diseasespecies AS ds
+				WHERE ds.diseaseid = '$diseaseId' AND ds.speciesid = s.id";
+		return $this->getArray($sql);	
+	}
  }
 
 

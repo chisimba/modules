@@ -86,7 +86,6 @@ for ($i=1; $i<=12; $i++) {
     $monthdate->addOption(date('m', $date), date('F', $date));
 }
 $monthdate->setSelected($month);
-
 //dropdown for year
 
 $year = date('Y',strtotime($dateyear));
@@ -106,32 +105,32 @@ $admin1->extra = 'onchange="javascript:changePartitionType();"';
 
  //text field for phone
  $phone= new textinput('dataOfficerTel',$phone);
- $phone->extra = 'readonly';
+ $phone->extra = 'disabled';
  //text field for fax
  $fax = new textinput('dataOfficerFax',$fax);
-   $fax->extra = 'readonly';
+   $fax->extra = 'disabled';
   //text field for email
   $email = new textinput('dataOfficerEmail',$email);
-   $email->extra = 'readonly';
+   $email->extra = 'disabled';
   //text field for phone
  $phone1= new textinput('vetOfficerTel',$phone1);
-  $phone1->extra = 'readonly';
+  $phone1->extra = 'disabled';
  //text field for fax
  $fax1 = new textinput('vetOfficerFax',$fax1);
-   $fax1->extra = 'readonly';
+   $fax1->extra = 'disabled';
   //text field for email
   $email1 = new textinput('vetOfficerEmail',$email1); 
 //get htmltable object
- $email1->extra = 'readonly';
+ $email1->extra = 'disabled';
 //text field for phone
  $phone2= new textinput('repOfficerTel',$phone2);
-  $phone2->extra = 'readonly';
+  $phone2->extra = 'disabled';
  //text field for fax
  $fax2 = new textinput('repOfficerFax',$fax2);
-   $fax2->extra = 'readonly';
+   $fax2->extra = 'disabled';
   //text field for email
   $email2 = new textinput('repOfficerEmail',$email2);
-   $email2->extra = 'readonly';
+   $email2->extra = 'disabled';
 //dropdown for admin2
 $admin2 = new dropdown('partitionLevelId');
 $admin2->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
@@ -204,7 +203,7 @@ $objTable4->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','o
 $objTable4->addCell($tab.$repOff->show());
 $objTable4->endRow();
 $objTable4->startRow();
-$objTable4->addCell($tab.$this->objLanguage->languageText('mod_ahis_word_phone','openaris'));
+$objTable4->addCell($this->objLanguage->languageText('mod_ahis_word_phone','openaris'));
 $objTable4->addCell($tab.$phone2->show());
 $objTable4->addCell($tab.$this->objLanguage->languageText('mod_ahis_word_fax','openaris'));
 $objTable4->addCell($tab.$fax2->show());
