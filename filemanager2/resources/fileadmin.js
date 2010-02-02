@@ -66,8 +66,7 @@
 				waitMsg: 'Uploading your file...',
 				success: function(fp, o){
 				datastore.load({params:{id:selectedfolder}});
-    					//Ext.Msg.alert('Success', 'Processed file "'+o.result.file+'" on the server');
-				}});
+    				}});
 
 				winup.hide();
 						
@@ -84,12 +83,12 @@
 	disabled: true,
 	handler: function (){
 	winup = new Ext.Window({
-		                layout:'fit',
-		                width:400,
-		                height:150,
-		                closeAction:'hide',
-		                plain: true,						
-		                items: [uploadform]});	
+	                layout:'fit',
+	                width:400,
+	                height:200,
+	                closeAction:'hide',
+	                plain: true,						
+	                items: [uploadform]});	
 	winup.show(this);
         }});
 
@@ -117,17 +116,7 @@
 	}
        });
 
-    var rnButton = new Ext.Button({
-            text:'Rename',
-            tooltip:'Rename File',
-            iconCls: 'silk-pencil',
-	    disabled: true,
-            handler: function (){}
-        });
-
-    
-
-        
+          
     var Tree = Ext.tree;
 
     var newIndex = 3;
@@ -148,7 +137,8 @@
 
 
     tree = new Tree.TreePanel({
-        animate:true, 
+	//id:'itree',
+	animate:true, 
         autoScroll:true,
         loader: new Tree.TreeLoader({dataUrl: baseuri+'?module=filemanager2&action=getDirectory'}),
         enableDD:true,
@@ -173,7 +163,7 @@
     });
     
     // add a tree sorter in folder mode
-    //new Tree.TreeSorter(tree, {folderSort:true});
+    new Tree.TreeSorter(tree, {folderSort:true});
     
     // set the root node
     var root = new Tree.AsyncTreeNode({
@@ -186,13 +176,7 @@
                         
     //root.expand(true, /*no anim*/ true);
 
-     // add an inline editor for the nodes
-    /*var ge = new Ext.tree.TreeEditor(tree, {}, {
-        allowBlank:false,
-        blankText:'A name is required',
-        selectOnFocus:true
-    });*/
-
+   
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 
     // create the Data Store
@@ -218,24 +202,20 @@
     }
 
     var toolBar = new Ext.Toolbar({
-	items:[upButton, dlButton, dltButton, rnButton		
-	]});
+	items:[upButton, dlButton, dltButton]});
 	
     var sm2 = new Ext.grid.CheckboxSelectionModel({
         listeners: {
             // On selection change, set enabled state of the removeButton
 	    selectionchange: function(sm) {
 		dlButton.disable();
-		rnButton.disable();
-
+		
 		if (sm.getCount()) {
 		    if (sm.getCount() == 1){
 		    	dlButton.enable();
-			rnButton.enable();
 			}
 		    dltButton.enable();
-		    
-		} else {
+		    } else {
 		    dltButton.disable();
 	       }
 	    }
@@ -268,26 +248,24 @@
 	header: "Icon",
 	dataIndex: 'fileicon',
 	renderer: renderIcon,
-	width: 120           
+	width: 80           
 	},
 	{
 	id: 'filename',
 	header: "File Name",
 	dataIndex: 'filename',
-	width: 300,            
+	width: 320,            
 	sortable: true
 	},
 	{
 	id: 'filesize',
 	header: "Size",
 	dataIndex: 'filesize',
-	width: 150,            
+	width: 170,            
 	sortable: true
 	}
 	]),
-    
-
-	});
+    	});
         
     var viewport = new Ext.Panel({
 	el:'mainpanel',
@@ -296,12 +274,8 @@
 	height: 350,
 	title:'File Manager',
 	items: [
-	/*{
-region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, maxSize: 200, collapsible: true, title: 'South', margins: '0 0 0 0'
-	},*/
 	{
 	region: 'west',
-	id: 'west-panel',
 	title: 'My Files',
 	width: 200,
 	minSize: 175,
@@ -352,14 +326,10 @@ region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, max
 			myMask.hide();
 		    }
 	});
-    }
-	function createNewDir(node){
-	 
-	 /* fire beforenewdir event
-	# if(true !== this.eventsSuspended && false === this.fireEvent('beforenewdir', this, node)) {
-	# return;
-	# }*/
-	  
+     }
+
+    function createNewDir(node){
+	 	 
 	var treeEditor =  new Ext.tree.TreeEditor(tree, {
 		allowBlank:false
 		,cancelOnEsc:true
@@ -393,20 +363,23 @@ region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, max
 		    },
 		    success: function(response) {
 		    var jsonData = Ext.util.JSON.decode(response.responseText);
-		    //alert(jsonData.error);
+		    if(jsonData.error)
+			{
+			Ext.Msg.alert('Error', jsonData.error);
+			n.removeChild(newNode);
+			}
+		    else{
+			newNode.setId(jsonData.data);
+			}
 		    },
 		    failure: function(xhr,params) {
-			
-		    }
+		}
 		});
-		
-	
+			
 	}, this, true
 	);
 	 
-	// creating new directory flag
-	treeEditor.creatingNewDir = true;
-	  
+		  
 	// start editing after short delay
 	(function(){treeEditor.triggerEdit(newNode);}.defer(10));
 	// expand callback needs to run in this context
@@ -414,8 +387,7 @@ region: 'south', contentEl: 'south', split: true, height: 100, minSize: 100, max
     }
 	
     Ext.onReady(function(){
-    //alert(uri);
-    //datastore.load({params:{id:defId}});
+    // render mainpanel
     viewport.render();
     });
 

@@ -262,13 +262,13 @@ class filemanager2 extends controller
 
         // Check if no files were provided
         if (count($results) == 1 && array_key_exists('nofileprovided', $results)) {
-            //return $this->nextAction('uploadresults', array('error'=>'nofilesprovided'));
+            $extjs['success'] = true;
+	    $extjs['error'] = 'No files were provided';
+	    echo json_encode($extjs);
+	    exit(0);
         }
 
-        // Put Message into Array
-        //$messages = $this->objUploadMessages->processMessageUrl($results);
-        //$messages['folder'] = $this->getParam('folder');
-	$extjs['success'] = true;
+        $extjs['success'] = true;
 	echo json_encode($extjs);
 	exit(0);
         //return $this->nextAction('uploadresults', $messages);
@@ -397,8 +397,8 @@ class filemanager2 extends controller
         $foldername = $this->getParam('foldername');
 	
         if (preg_match('/\\\|\/|\\||:|\\*|\\?|"|<|>/', $foldername)) {
-            $error = "Illigal charectors in a folder name\n";
-	    $extjs['error'] = $error;
+	    $extjs['success'] = true;
+            $extjs['error'] = "Illigal charectors in a folder name";
             echo json_encode($extjs);
 	    exit(0);
         }
@@ -427,7 +427,7 @@ class filemanager2 extends controller
             $folderId = $this->objFolders->indexFolder($path);
         }
 
-	$extjs['success'] = false;
+	$extjs['success'] = true;
 	$extjs['data'] = $folderId;
 	echo json_encode($extjs);
 	exit(0);

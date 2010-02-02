@@ -14,6 +14,19 @@
     $ext .= $this->getJavaScriptFile('fileadmin.js', 'filemanager2');
     $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('fileuploadfield.css', 'filemanager2').'" type="text/css" />';
     
+    $ext .= "
+	<style>
+
+        #itree{
+    	float:left;
+    	margin:20px;
+    	border:1px solid #c3daf9;
+    	overflow:auto;
+    }
+    </style>";
+
+
+
     $ext .= "<style>
 	
 	html, body {
@@ -37,9 +50,4 @@
     $this->appendArrayVar('headerParams', $ext);
 
     echo '<br/><center><div id="mainpanel"></div><center>';
-	/*<div id="west" class="x-hide-display"></div>
-    	<div id="center2" class="x-hide-display"><a id="hideit" href="#">Toggle the west region</a><hr></div>
-    	<div id="center1" class="x-hide-display"></div>
-    	<div id="props-panel" class="x-hide-display" style="width:200px;height:200px;overflow:hidden;"></div>
-	<div id="south" class="x-hide-display"></div><br/><br/>';*/
 ?>
