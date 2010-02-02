@@ -536,17 +536,17 @@ class openaris extends controller {
 				return $this->nextAction('disease_report_screen_2', array('outbreakCode'=>$outbreakCode));
 				
 			case "disease_report_screen_2":
-				$outbreakCode = $this->getSession('ps_outbreakCode', $this->getParam('outbreakCode1'));
+				$outbreakCode = $this->getSession('ps_outbreakCode');
+                $outbreakCode1 = $this->getParam('outbreakCode1', $outbreakCode);
 				$this->setVar('outbreakCode1', $outbreakCode1);
 				$this->setVar('outbreakCode',$outbreakCode);
-				
 				$this->setVar('numloc', $this->objDiseaseLocality->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
-				$country =$this->getSession('ps_countryId');
+				$country = $this->getSession('ps_countryId');
 				$this->setVar('countryId', $country);
 				$this->setVar('arrayLocalityType', $this->objLocalityType->getAll("ORDER BY locality_type"));
 				$this->setVar('arrayFarmingSystem', $this->objFarmingSystem->getAll("ORDER BY farmingsystem"));
 				$this->setVar('outbreaks', $this->objDiseaseReport->getOutbreaks($country));
-				$this->setVar('diseaseLocalities', $this->objDiseaseLocality->getAll("WHERE outbreakcode = '$outbreakCode' ORDER BY date_created"));
+                $this->setVar('diseaseLocalities', $this->objDiseaseLocality->getAll("WHERE outbreakcode = '$outbreakCode1' ORDER BY date_created"));
 				$this->setVar('localityTypeId', $this->getSession('ps_localityTypeId'));
 				$this->setVar('localityName', $this->getSession('ps_localityName'));
 				$this->setVar('latitude', $this->getSession('ps_latitude'));
@@ -3006,7 +3006,7 @@ class openaris extends controller {
              case 'animal_population_add':
                 $countlist = $this->objCountry->getAll("ORDER BY official_name");	
                 $ptype = $this->objPartitionCategory->getAll("ORDER BY partitioncategory");
-			       $plevel = $this->objPartitionLevel->getAll("ORDER BY partitionlevel");
+			    $plevel = $this->objPartitionLevel->getAll("ORDER BY partitionlevel");
 			       $pname = $this->objPartition->getAll();                		       
 			       $this->setVar('arrayCountry', $countlist);
 			       $this->setVar('count',$this->getSession('ps_country'));

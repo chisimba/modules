@@ -199,7 +199,7 @@ $cumulativeDestroyedBox->setCss('geo');
 $cumulativeSlaughteredBox = new textinput('cumulativeslaughtered', $cumulativeSlaughtered, 'text');
 $cumulativeSlaughteredBox->setCss('geo');
 $cumulativeSlaughteredBox->extra = $cumulativeDestroyedBox->extra =
-    $cumulativeDeathsBox->extra = $cumulativeCasesBox->extra = 'readonly';
+    $cumulativeDeathsBox->extra = $cumulativeCasesBox->extra = 'disabled';
 
 
 $objTableCumulative = $this->newObject('htmltable','htmlelements');

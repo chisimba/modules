@@ -15,7 +15,7 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-	 'agegroup' => array(
+	'agegroup' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
@@ -37,15 +37,15 @@ $fields = array(
 		'length' => 5,
         ),
 	'start_date' => array(
-		'type' => 'datetime',
+		'type' => 'date',
         'notnull' => TRUE
 		),
 	'end_date' => array(
-		'type' => 'datetime',
+		'type' => 'date',
         'notnull' => FALSE
 		),
     'date_created' => array(
-		'type' => 'datetime',
+		'type' => 'date',
         'notnull' => TRUE
 		),
 	'created_by' => array(
@@ -54,7 +54,7 @@ $fields = array(
         'notnull' => TRUE
 		),
 	'date_modified' => array(
-		'type' => 'datetime',
+		'type' => 'date',
         ),
 	'modified_by' => array(
 		'type' => 'text',

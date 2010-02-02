@@ -164,7 +164,7 @@ $objForm->addToForm($diagnosisSet->show());
 $objTableArea3 = $this->newObject('htmltable','htmlelements');
 $objTableArea3->cellspacing = 2;
 $objTableArea3->width = NULL;
-$objTableArea3->cssClass = 'areatable widetable';
+$objTableArea3->cssClass = 'areatable halfwide';
 
 $objTableArea3->startHeaderRow();
 $objTableArea3->addHeaderCell($this->objLanguage->languageText('mod_ahis_outbreakcode', 'openaris')." &nbsp;", NULL, NULL, 'center');

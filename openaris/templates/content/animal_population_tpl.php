@@ -115,7 +115,7 @@ $partitionNDrop->setSelected($pname);
 $year = date('Y',strtotime($yearBox));
 $yearBox = new dropdown('year');
 
-	for($i=$year;$i>=$year-10;$i--){
+for($i=$year;$i>=$year-10;$i--){
 $date = strtotime("01-01-$i");
 $yearBox->addOption(date('y',$date),date('Y',$date));
 }
@@ -150,25 +150,25 @@ $valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("vet");\'';
 
 
 $rphone = new textinput('repOfficerTel', $rphone);
-$rphone->extra = 'readonly';
+$rphone->extra = 'disabled';
 $rfax = new textinput('repOfficerFax', $rfax);
-$rfax->extra = 'readonly';
+$rfax->extra = 'disabled';
 $remail = new textinput('repOfficerEmail', $remail);
-$remail->extra = 'readonly';
+$remail->extra = 'disabled';
 
 $dphone = new textinput('dataOfficerTel', $dphone);
-$dphone->extra = 'readonly';
+$dphone->extra = 'disabled';
 $dfax = new textinput('dataOfficerFax', $dfax);
-$dfax->extra = 'readonly';
+$dfax->extra = 'disabled';
 $demail = new textinput('dataOfficerEmail', $demail);
-$demail->extra = 'readonly';
+$demail->extra = 'disabled';
 
 $vphone = new textinput('vetOfficerTel', $vphone);
-$vphone->extra = 'readonly';
+$vphone->extra = 'disabled';
 $vfax = new textinput('vetOfficerFax', $vfax);
-$vfax->extra = 'readonly';
+$vfax->extra = 'disabled';
 $vemail = new textinput('vetOfficerEmail', $vemail);
-$vemail->extra = 'readonly';
+$vemail->extra = 'disabled';
 
 
 $tab= "&nbsp;&nbsp;&nbsp;&nbsp;";

@@ -12,7 +12,7 @@ $fields = array(
 		),
     'outbreakcode' => array(
 		'type' => 'text',
-		'length' => 11,
+		'length' => 32,
         'notnull' => TRUE
 		),
     'speciesid' => array(

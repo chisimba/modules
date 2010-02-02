@@ -11,7 +11,7 @@ $fields = array(
         'notnull' => TRUE
 		),
 	
-    'SPECIESid' => array(
+    'speciesid' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
