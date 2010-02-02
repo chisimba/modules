@@ -61,7 +61,7 @@ $cButton->setCSS('clearButton');
 $countryDrop = new dropdown('countryId');
 $countryDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $countryDrop->addFromDB($arrayCountry, 'common_name', 'id');
-$countryDrop->setSelected($countryId);
+$countryDrop->setSelected(-1);
 $countryDrop->cssClass = 'passive_surveillance';
 $countryDrop->extra = 'onchange="javascript:changeCountry();"';
 
@@ -145,7 +145,7 @@ $objTable->endRow();
 $reportOfficerDrop = new dropdown('reportOfficerId');
 $reportOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $reportOfficerDrop->addFromDB($arrayROfficer, 'name', 'userid');
-$reportOfficerDrop->setSelected($reportOfficerId);
+//$reportOfficerDrop->setSelected($reportOfficerId);
 $reportOfficerDrop->cssClass = 'passive_surveillance';
 $reportOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("report");\'';
 $reportOfficerFaxBox = new textinput('reportOfficerFax', $reportOfficerFax, 'text');
@@ -161,7 +161,7 @@ $reportOfficerFaxBox->extra =
 $dataEntryOfficerDrop = new dropdown('dataEntryOfficerId');
 $dataEntryOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $dataEntryOfficerDrop->addFromDB($arrayDEOfficer, 'name', 'userid');
-$dataEntryOfficerDrop->setSelected($dataEntryOfficerId);
+//$dataEntryOfficerDrop->setSelected($dataEntryOfficerId);
 $dataEntryOfficerDrop->cssClass = 'passive_surveillance';
 $dataEntryOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("dataEntry");\'';
 $dataEntryOfficerFaxBox = new textinput('dataEntryOfficerFax', $dataEntryOfficerFax, 'text');
@@ -177,7 +177,7 @@ $dataEntryOfficerFaxBox->extra =
 $valOfficerDrop = new dropdown('valOfficerId');
 $valOfficerDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $valOfficerDrop->addFromDB($arrayVOfficer, 'name', 'userid');
-$valOfficerDrop->setSelected($valOfficerId);
+//$valOfficerDrop->setSelected($valOfficerId);
 $valOfficerDrop->cssClass = 'passive_surveillance';
 $valOfficerDrop->extra = 'onchange = \'javascript:getOfficerInfo("val");\'';
 $valOfficerFaxBox = new textinput('valOfficerFax', $valOfficerFax, 'text');
@@ -276,36 +276,36 @@ $objTopTable->endRow();
 $reportTypeDrop = new dropdown('reportTypeId');
 $reportTypeDrop->addOption('0', $this->objLanguage->languageText('word_new'));
 $reportTypeDrop->addOption('1', $this->objLanguage->languageText('phrase_followup'));
-$reportTypeDrop->setSelected($reportTypeId);
+//$reportTypeDrop->setSelected($reportTypeId);
 $reportTypeDrop->cssClass = 'passive_surveillance';
 $reportTypeDrop->extra = 'onchange="javascript:toggleReportType();"';
 
 $outbreakDrop = new dropdown('outbreakId');
 //$outbreakDrop->addFromDB($arrayOutbreak, 'outbreakcode', 'id');
-$outbreakDrop->setSelected($outbreakCode);
+//$outbreakDrop->setSelected($outbreakCode);
 $outbreakDrop->cssClass = 'passive_surveillance';
 $outbreakDrop->extra = 'style="display: none;"';
 
 $outbreakBox = new textinput('outbreakCode');
 $outbreakBox->setCss('passive_surveillance');
-$outbreakBox->extra = 'readonly';
+$outbreakBox->extra = 'disabled';
 
 $diseaseDrop = new dropdown('diseaseId');
 $diseaseDrop->addFromDB($arrayDisease, 'short_name', 'id');
-$diseaseDrop->setSelected($diseaseId);
+//$diseaseDrop->setSelected($diseaseId);
 $diseaseDrop->cssClass = 'passive_surveillance';
 $diseaseDrop->extra = 'onchange="javascript:changeOutbreakCode();"';
 
 $occurenceDrop = new dropdown('occurenceId');
 $occurenceDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $occurenceDrop->addFromDB($arrayOccurence, 'occurencecode', 'id');
-$occurenceDrop->setSelected($occurenceId);
+//$occurenceDrop->setSelected($occurenceId);
 $occurenceDrop->cssClass = 'passive_surveillance';
 
 $infectionDrop = new dropdown('infectionId');
 $infectionDrop->addOption('-1', $this->objLanguage->languageText('mod_ahis_selectdefault', 'openaris'));
 $infectionDrop->addFromDB($arrayInfection, 'possiblesource', 'id');
-$infectionDrop->setSelected($infectionId);
+//$infectionDrop->setSelected($infectionId);
 $infectionDrop->cssClass = 'passive_surveillance';
 
 $diseaseTable = $this->newObject('htmltable','htmlelements');
