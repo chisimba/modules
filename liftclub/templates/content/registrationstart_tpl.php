@@ -41,6 +41,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
+
 $header->str = $this->objLanguage->languageText("phrase_registeron", 'liftclub', "Register On").' '.$this->objConfig->getSitename().'&nbsp;( '.$this->objLanguage->languageText("phrase_step", 'liftclub', "Step")." 1 )";
 
 echo '<div style="padding:10px;">'.$header->show();
@@ -51,11 +52,11 @@ $form = new form ('startregister', $this->uri(array('action'=>'modifydetails')))
 $messages = array();
 
 $table = $this->newObject('htmltable', 'htmlelements');
-
+$table->width = '60%';
 $userneedRadio = new radio ('userneed');
 $userneedRadio->addOption('find', $this->objLanguage->languageText('phrase_find', 'liftclub','Find'));
 $userneedRadio->addOption('offer', $this->objLanguage->languageText('phrase_offer', 'liftclub', 'Offer'));
-$userneedRadio->setBreakSpace(' &nbsp; ');
+$userneedRadio->setBreakSpace('table');
 if ($mode == 'addfixup') {
     $userneedRadio->setSelected($this->getSession('userneed'));
 } else {
@@ -75,8 +76,12 @@ foreach ($titles as $title)
 if ($mode == 'addfixup') {
     $needtypeDropdown->setSelected($this->getSession('needtype'));
 }
+
 $table->startRow();
-$table->addCell($userneedLabel.$userneedRadio->show()."&nbsp;&nbsp;--&nbsp;&nbsp;".$needtypeLabel->show()."&nbsp;".$needtypeDropdown->show(), 50, NULL, 'left');
+$table->addCell($userneedLabel,'16%',"bottom");
+$table->addCell($userneedRadio->show(),'14%',"bottom");
+$table->addCell($needtypeLabel->show(),'20%',"bottom");
+$table->addCell($needtypeDropdown->show(),'10%',"bottom");
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
