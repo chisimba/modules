@@ -31,21 +31,21 @@
       	items: [{
             xtype: 'fileuploadfield',
             id: 'form-file1',
-            emptyText: 'Select an file',
+            emptyText: 'Select a file',
             fieldLabel: 'File',
             name: 'photo-path1',
             buttonText: 'Browse...'            
         },{
             xtype: 'fileuploadfield',
             id: 'form-file2',
-            emptyText: 'Select an file',
+            emptyText: 'Select a file',
             fieldLabel: 'File',
             name: 'photo-path2',
             buttonText: 'Browse...'            
         },{
             xtype: 'fileuploadfield',
             id: 'form-file3',
-            emptyText: 'Select an file',
+            emptyText: 'Select a file',
             fieldLabel: 'File',
             name: 'photo-path3',
             buttonText: 'Browse...'            
@@ -63,7 +63,7 @@
 					action: 'json_uploadFile',
 					selectedfolder: selectedfolder
 				},
-				waitMsg: 'Uploading your file...',
+				waitMsg: 'Uploading your file(s)...',
 				success: function(fp, o){
 				datastore.load({params:{id:selectedfolder}});
     				}});
@@ -137,16 +137,15 @@
 
 
     tree = new Tree.TreePanel({
-	//id:'itree',
 	animate:true, 
         autoScroll:true,
         loader: new Tree.TreeLoader({dataUrl: baseuri+'?module=filemanager2&action=getDirectory'}),
         enableDD:true,
         containerScroll: true,
-        border: true,
+        border: false,
         width: 250,
         height: 300,
-        dropConfig: {appendOnly:false},
+        dropConfig: {appendOnly:true},
 	tbar: tb,
 	listeners: {
             'render': function(tp){
@@ -174,10 +173,9 @@
 
     tree.setRootNode(root);
                         
-    //root.expand(true, /*no anim*/ true);
+    root.expand(false, /*no anim*/ false);
 
-   
-    Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+    //Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 
     // create the Data Store
     var datastore = new Ext.data.JsonStore({
@@ -268,6 +266,7 @@
     	});
         
     var viewport = new Ext.Panel({
+	id:'main',
 	el:'mainpanel',
 	layout: 'border',
 	width: 800,
@@ -367,9 +366,11 @@
 			{
 			Ext.Msg.alert('Error', jsonData.error);
 			n.removeChild(newNode);
+			treeEditor.destroy();
 			}
 		    else{
 			newNode.setId(jsonData.data);
+			treeEditor.destroy();
 			}
 		    },
 		    failure: function(xhr,params) {
@@ -378,8 +379,7 @@
 			
 	}, this, true
 	);
-	 
-		  
+	 		  
 	// start editing after short delay
 	(function(){treeEditor.triggerEdit(newNode);}.defer(10));
 	// expand callback needs to run in this context

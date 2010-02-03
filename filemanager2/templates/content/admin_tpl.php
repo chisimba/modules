@@ -16,38 +16,27 @@
     
     $ext .= "
 	<style>
-
-        #itree{
-    	float:left;
-    	margin:20px;
-    	border:1px solid #c3daf9;
-    	overflow:auto;
-    }
-    </style>";
-
-
-
-    $ext .= "<style>
+	#mainpanel{
+	float:center;
+	margin-top: 70px;
+	margin-right: 70px;
+	margin-bottom: 70px;
+	margin-left: 170px;
+	border:1px solid #c3daf9;
+	overflow:auto;
+	}
 	
 	html, body {
-        font:normal 12px verdana;
-        margin:0;
-        padding:0;
-        border:0 none;
-        overflow:hidden;
-        height:100%;
-    }
-    p {
-        margin:5px;
-    }
-    .settings {
-        background-image:url(../shared/icons/fam/folder_wrench.png);
-    }
-    .nav {
-        background-image:url(../shared/icons/fam/folder_go.png);
-    }</style>";
+	font:normal 12px verdana;
+	margin:0;
+	padding:0;
+	border:0 none;
+	overflow:hidden;
+	height:100%;
+	}
+	</style>";
         
     $this->appendArrayVar('headerParams', $ext);
 
-    echo '<br/><center><div id="mainpanel"></div><center>';
+    echo '<br/><div id="mainpanel"></div>';
 ?>
