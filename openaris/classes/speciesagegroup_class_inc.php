@@ -98,13 +98,8 @@ class speciesagegroup extends dbtable {
 	}
 	
 	public function getUniqueGroups() {
-		return $this->getAll("WHERE species_id = 'init_02'
-								OR species_id = 'init_09'
-								OR id = 'init_16'
-								OR id = 'init_17'
-								OR id = 'init_18'
-								OR id = 'init_19'
-							  ORDER BY agegroup");
+		return $this->getAll("WHERE position != 0
+							  ORDER BY position");
 		
 	}
 	public function editSpeciesAgeGroup($id,$speciesid,$agegroup,$abbreviation,$description,$lowerlimit,$upperlimit,$startdate,$enddate)

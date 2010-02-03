@@ -29,8 +29,9 @@ $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 $tabs = "$tab$tab$tab$tab";
 
 //create finish button
-//$finButton = new button('fin', $this->objLanguage->languageText('word_finish'));
-//$finButton->setToSubmit();
+$finishButton = $this->uri(array('action'=>'select_officer'));
+$finButton = new button('fin', $this->objLanguage->languageText('word_finish'), "javascript: document.location='$finishButton'");
+//$finButton->cssClass = 'submitButton';
 
 //create clear all button 
 
@@ -45,7 +46,7 @@ $backButton->cssClass = 'backButton';
 
 //create next button
 $nextButton = new button('fin', $this->objLanguage->languageText('word_next'));
-$nextButton->cssClass = 'nextButton';
+$nextButton->cssClass = 'addButton';
 $nextButton->setToSubmit();
 
 //create fields for form
@@ -275,7 +276,7 @@ $objTable2->endRow();
 
 
 $objTable2->startRow();
-$objTable2->addCell($backButton->show().$tabs.$clearButton->show().$tabs.$nextButton->show(), NULL, 'top', 'center', NULL, 'colspan="4"');
+$objTable2->addCell($backButton->show().$tabs.$clearButton->show().$tabs.$nextButton->show().$tabs.$finButton->show(), NULL, 'top', 'center', NULL, 'colspan="4"');
 $objTable2->endRow();
 
 

@@ -3125,7 +3125,7 @@ class openaris extends controller {
                $this->setVar('totSpecies', '');
 					$this->setVar('breedNumber', '');
 					$speciesId= $this->getParam('speciesId', $this->getSession('ps_species')); 
-               $animalcat = $this->objAnimCat->getCategory($speciesId);
+               $animalcat = $this->objSpeciesAgeGroup->getUniqueGroups();//$this->objAnimCat->getCategory($speciesId);
               //print_r($animalcat);
 					$this->setVar('arrayanimalCat', $animalcat);
 					$totspecies=$this->getParam('totalNumSpecies');
