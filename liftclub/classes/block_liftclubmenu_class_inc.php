@@ -177,7 +177,7 @@ class block_liftclubmenu extends object
 
 							$fieldset = $this->newObject('fieldset', 'htmlelements');
 							$fieldset->contents = $pageLink;
-       return $fieldset->show()."<br />".$mailBox."<br />";
+       return $fieldset->show().$mailBox;
     }
 }
 ?>
