@@ -44,32 +44,32 @@ function initRadioButtons(
             ]
         }
         );
-        customPanel.override({
-            renderTo : 'isReflection'
-        });
-        var panel2 = new customPanel(
-        {
-            defaultType: 'radio',
-            border:false,
-            width:100,
-            items: [
-            {
-                checked: isReflection,
-                boxLabel: 'Yes',
-                name: 'assesment_type',
-                inputValue: '1'
-            }, {
-                fieldLabel: '',
-                checked: !isReflection,
-                labelSeparator: '',
-                boxLabel: 'No',
-                name: 'assesment_type',
-                inputValue: '0'
-            }
-            ]
-        }
-        );
     }
+    customPanel.override({
+        renderTo : 'isReflection'
+    });
+    var panel2 = new customPanel(
+    {
+        defaultType: 'radio',
+        border:false,
+        width:100,
+        items: [
+        {
+            checked: isReflection,
+            boxLabel: 'Yes',
+            name: 'assesment_type',
+            inputValue: '1'
+        }, {
+            fieldLabel: '',
+            checked: !isReflection,
+            labelSeparator: '',
+            boxLabel: 'No',
+            name: 'assesment_type',
+            inputValue: '0'
+        }
+        ]
+    }
+    );
     customPanel.override({
         renderTo : 'allowMultiple'
     });

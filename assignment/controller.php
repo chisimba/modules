@@ -112,7 +112,7 @@ class assignment extends controller
             $this->context = $this->objContext->getTitle();
         }
         $this->objIcon= $this->newObject('geticon','htmlelements');
-	$this->loadclass('link','htmlelements');
+    	$this->loadclass('link','htmlelements');
         $this->objLink=new link();
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
@@ -298,21 +298,12 @@ class assignment extends controller
     // display notes in a pop up window
     private function __showcomment(){
         $this->setLayoutTemplate('');
-        // get assignment id
-        $assignId=$this->getParam('id');
-        // get comment form booking details
-        $onlineSubmission=$this->objAssignment->getAssignment($assignId);
-
-        $mydata[0]['name']=$onlineSubmission['name'];
-        $mydata[0]['description']=$onlineSubmission['description'];
-        // add head
-        $head=$this->objLanguage->languageText('mod_essay_comment','essay');
-        // remove left navigation
-        $left='';
-        $this->setVarByRef('head',$head);
-        $this->setVarByRef('mydata',$mydata);
-        $this->setVarByRef('assignId',$assignId);
-        $this->setVarByRef('leftNav',$left);
+        $id = $this->getParam('id');
+        $submissionId=$this->getParam('submissionid');
+        $assignment = $this->objAssignment->getAssignment($id);
+        $submission = $this->objAssignmentSubmit->getSubmission($submissionId);
+        $this->setVarByRef('assignment',$assignment);
+        $this->setVarByRef('submission', $submission);
         return 'onlineview_tpl.php';
     }
 
@@ -451,6 +442,8 @@ class assignment extends controller
     function __downloadfile()
     {
         $id = $this->getParam('id');
+        //$mode = $this->getParam('mode');
+        $fileId = $this->getParam('fileid');
 
         $submission = $this->objAssignmentSubmit->getSubmission($id);
 
@@ -460,18 +453,28 @@ class assignment extends controller
 
         $assignment = $this->objAssignment->getAssignment($submission['assignmentid']);
 
-        if ($submission == FALSE) {
+        if ($assignment == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unknownassignment'));
         }
 
+//        switch($mode){
+//            case 'submitted':
+//                $fileid = $submission['studentfileid'];
+//                break;
+//            case 'marked':
+//                $fileid = $submission['lecturerfileid'];
+//                break;
+//            default:
+//                return $this->nextAction(NULL, array('error'=>'unknownmode'));
+//        }
 
-        $filePath = $this->objAssignmentSubmit->getAssignmentFilename($submission['id'], $submission['studentfileid']);
+        $filePath = $this->objAssignmentSubmit->getAssignmentFilename($submission['id'], $fileId);
 
         $objDateTime = $this->getObject('dateandtime', 'utilities');
 
         $objFile = $this->getObject('dbfile', 'filemanager');
 
-        $file = $objFile->getFile($submission['studentfileid']);
+        $file = $objFile->getFile($fileId);
 
         $extension = $file['datatype'];
 
@@ -486,6 +489,7 @@ class assignment extends controller
             header('Content-Disposition: attachment; filename="'.$filename.'.'.$extension.'"');
             // Load file
             readfile($filePath);
+            exit;
         }
 
 
@@ -544,9 +548,18 @@ class assignment extends controller
 
     function __viewhtmlsubmission()
     {
+        //die;
+//        echo '<pre>';
+//        var_dump($_GET);
+//        echo '</pre>';
         $id = $this->getParam('id');
+        $fileId = $this->getParam('fileid');
+//        echo "Id==$id";
+//        echo "FileId==$fileId";
+//        die;
+        $filePath = $this->objAssignmentSubmit->getAssignmentFilename($id, $fileId).'.php';
 
-        $filePath = $this->objConfig->getcontentBasePath().'/assignment/submissions/'.$id.'/'.$id.'.php';
+        //$filePath = $this->objConfig->getcontentBasePath().'/assignment/submissions/'.$id.'/'.$filename;
 
         $objCleanUrl = $this->getObject('cleanurl', 'filemanager');
         $filePath = $objCleanUrl->cleanUpUrl($filePath);

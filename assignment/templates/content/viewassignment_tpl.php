@@ -44,7 +44,7 @@ $table->addCell($objWashout->parseText($assignment['description']), NULL, NULL, 
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<strong>'.$this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]').':</strong>', 130);
+$table->addCell('<strong>'.ucfirst($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]')).':</strong>', 130);
 $table->addCell($this->objUser->fullName($assignment['userid']));
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark').'</strong>', 130);
 $table->addCell($assignment['mark']);
@@ -156,7 +156,7 @@ if ($this->isValid('markassignments')) {
 
             $table->addCell($objDateTime->formatDate($submission['datesubmitted']));
 
-            if($assignment['closing_date'] > date('Y-m-d H:i')) {
+            if($assignment['closing_date'] >= date('Y-m-d H:i:s')) {
                 $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
                 //$table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
 
@@ -259,7 +259,7 @@ if ($this->isValid('markassignments')) {
 
 $backLink = new link ($this->uri(NULL));
 $backLink->link = $this->objLanguage->languageText('mod_assignment_backtolist', 'assignment', 'Back to List of Assignments');
-
+echo '<br />';
 echo '<p>'.$backLink->show().'</p>';
 
 ?>

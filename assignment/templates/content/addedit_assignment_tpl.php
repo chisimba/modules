@@ -10,11 +10,11 @@ else { // Mode is add so we can always change the type of the assignment
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 $extbasejs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-$localjs = '<script language="JavaScript" src="'.$this->getResourceUri('local.js').'" type="text/javascript"></script>';
+$js = '<script language="JavaScript" src="'.$this->getResourceUri('addedit_assignment.js').'" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $extbasejs);
 $this->appendArrayVar('headerParams', $extalljs);
-$this->appendArrayVar('headerParams', $localjs);
+$this->appendArrayVar('headerParams', $js);
 // Ext onReady
 if ($mode == 'edit') {
     $onReady = "
@@ -106,6 +106,7 @@ $table->endRow();
 // Reflection
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_isreflection', 'assignment', 'Is it a Reflection?'));
+/*
 if (!$canChangeField) {
     $textinput = new textinput('assesment_type');
     $textinput->value = $assignment['assesment_type'];
@@ -118,6 +119,7 @@ if (!$canChangeField) {
     $table->addCell($textinput->show().$isReflection.'<sup>1</sup>');
 }
 else {
+*/
     /*
     $radio = new radio ('assesment_type');
     $radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
@@ -130,7 +132,9 @@ else {
     $table->addCell($radio->show());
     */
     $table->addCell('<div id="isReflection"></div>');
+/*
 }
+*/
 $table->endRow();
 // Multiple submissions
 $table->startRow();

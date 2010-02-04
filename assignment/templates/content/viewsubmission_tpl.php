@@ -1,4 +1,5 @@
 <?php
+$isLecturerRole = $this->objUser->isCourseAdmin($this->contextCode);
 //echo '<pre>';
 //var_dump($submission);
 //echo '</pre>';
@@ -19,7 +20,7 @@ $css="
 ";
 $this->appendArrayVar('headerParams', $css);
 // JavaScript for the slider
-$js='<script language="JavaScript" src="'.$this->getResourceUri('dhtmlslider.js').'" type="text/javascript"></script>';
+$js='<script language="JavaScript" src="'.$this->getResourceUri('dhtmlgoodies_slider.js').'" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
 // Load classes
 $this->loadClass('htmlheading', 'htmlelements');
@@ -33,9 +34,12 @@ $this->loadclass('textinput','htmlelements');
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 $objTrimStr = $this->getObject('trimstr', 'strings');
 $objWashout = $this->getObject('washout', 'utilities');
+/*
 if (!is_null($submission['mark'])) {
     $submission['mark'] = (int)$submission['mark'];
+//is_null($submission['mark'])?'0':(int)$submission['mark']
 }
+*/
 // Section 1
 // Heading
 $header = new htmlHeading();
@@ -74,9 +78,16 @@ echo $table->show();
 // Section 2
 // Heading
 $header = new htmlHeading();
-$str = $this->objLanguage->code2Txt('mod_assignment_viewassgnby', 'assignment', NULL); //'View ssignment Submitted by [-person-] at [-time-]'
-$str = str_replace('[-person-]', $this->objUser->fullName($submission['userid']), $str);
-$str = str_replace('[-time-]', $objDateTime->formatDate($submission['datesubmitted']), $str);
+if ($isLecturerRole) {
+    $str = $this->objLanguage->code2Txt('mod_assignment_viewassgnby', 'assignment', NULL); //'View ssignment Submitted by [-person-] at [-time-]'
+    $str = str_replace('[-person-]', $this->objUser->fullName($submission['userid']), $str);
+    $str = str_replace('[-time-]', $objDateTime->formatDate($submission['datesubmitted']), $str);
+}
+else {
+    $str = $this->objLanguage->code2Txt('mod_assignment_viewmarkedassignment', 'assignment', NULL); //'View ssignment Submitted by [-person-] at [-time-]'
+    $str = str_replace('[-person-]', $this->objUser->fullName($submission['userid']), $str);
+    $str = str_replace('[-time-]', $objDateTime->formatDate($submission['datesubmitted']), $str);
+}
 $header->str = $str;
 $header->type = 3;
 echo $header->show();
@@ -86,54 +97,75 @@ $objFileIcon = $this->getObject('fileicons', 'files');
 $objMark = $this->getObject('markimage', 'utilities');
 if ($assignment['format'] == '1') {
     // Upload
+    if ($isLecturerRole) {
+        //$mode = 'submitted';
+        $fileId = $submission['studentfileid'];
+    }
+    else {
+        //$mode = 'marked';
+        $fileId = $submission['lecturerfileid'];
+    }
     $objFile = $this->getObject('dbfile', 'filemanager');
-    $fileName = $objFile->getFileName($submission['studentfileid']);
-    $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$submission['id'])));
+    $fileName = $objFile->getFileName($fileId);
+    $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$submission['id'], 'fileid'=>$fileId)));
     $downloadLink->link = $this->objLanguage->languageText('word_download', 'system', 'Download');
     echo '<p>'.$objFileIcon->getFileIcon($fileName).' '.$downloadLink->show().'</p>';
-    $filePath = $this->objAssignmentSubmit->getAssignmentFilename($submission['id'], $submission['studentfileid']);
-    // PHP File that is assignment
-    $destination1 = dirname($filePath).'/'.$submission['id'].'.php';
-    // HTML file - needed for conversion
-    $destination2 = dirname($filePath).'/'.$submission['id'].'.html';
-    // CHeck if file exists, else need to convert
-    if (!file_exists($destination1)) {
-        if (!file_exists($destination2)) {
+    $filePath = $this->objAssignmentSubmit->getAssignmentFilename($submission['id'], $fileId);
+    // PHP file which will contain the assignment
+    $destinationPhp = $filePath.'.php';
+    // HTML file needed for conversion
+    $destinationHtml = $filePath.'.html';
+    // Check if the file exists, else we need to convert the document
+    if (!file_exists($destinationPhp)) {
+        if (file_exists($destinationHtml)) {
+            unlink($destinationHtml);
+        }
+        //if (!file_exists($destinationHtml)) {
             // Convert Document
             $objConvert = $this->getObject('convertdoc', 'documentconverter');
-            $objConvert->convert($filePath, $destination2);
-        }
-        // If successfully converted, rename to .php
-        if (file_exists($destination2)) {
-            copy($destination2, $destination1);
-            unlink($destination2);
-            $contents =  file_get_contents($destination1);
+            $conversionOK = $objConvert->convert($filePath, $destinationHtml);
+            /*
+            if (!$conversionOK) {
+                 die('Conversion failed!');
+            }
+            */
+        //}
+        //else {
+            //$conversionOK = TRUE;
+        //}
+        // If successfully converted, rename .html to .php
+        if ($conversionOK && file_exists($destinationHtml)) {
+            rename($destinationHtml, $destinationPhp);
+            //copy($destinationHtml, $destinationPhp);
+            //unlink($destinationHtml);
+            $contents =  file_get_contents($destinationPhp);
             $contents = '<?php if (isset($permission) && $permission) { ?>'.$contents.'<?php } ?>';
-            //var_dump(chmod($destination1, 0777));
-            file_put_contents($destination1, $contents);
+            file_put_contents($destinationPhp, $contents);
         }
     }
-    //var_dump($filePath);
-    //var_dump($destination);
-    if (file_exists($destination1)) {
+    if (file_exists($destinationPhp)) {
         $this->loadClass('iframe', 'htmlelements');
         $header = new htmlHeading();
         $header->str = $this->objLanguage->languageText('word_preview', 'system', 'Preview');
         $header->type = 1;
-        echo '<br />'.$header->show();
+        echo $header->show();
         $iframe = new iframe();
         $iframe->width = '100%';
         $iframe->height = 400;
-        $iframe->src = $this->uri(array('action'=>'viewhtmlsubmission', 'id'=>$submission['id']));
+        //$iframe->src = $this->uri(array('action'=>'viewhtmlsubmission', '1'=>'1', '2'=>'2', '3'=>'3'));
+        $iframe->src = $this->uri(array('action'=>'viewhtmlsubmission', 'id'=>$submission['id'],'fileid'=>$fileId));
+//        echo '<pre>';
+//        echo $iframe->src;
+//        echo '</pre>';
         echo $iframe->show();
     }
-    if ($submission['mark'] != NULL && ($assignment['closing_date'] < date('Y-m-d H:i') || $this->isValid('edit'))) {
+    if ($submission['mark'] != NULL && ($assignment['closing_date'] < date('Y-m-d H:i:s') || $this->isValid('edit'))) {
         $header = new htmlHeading();
         $header->str = $this->objLanguage->languageText('mod_worksheet_result', 'worksheet', 'Result');
         $header->type = 3;
         echo $header->show();
         $table = $this->newObject('htmltable', 'htmlelements');
-        $objMark->value = (float)$submission['mark'];
+        $objMark->value = $submission['mark'];
         $table->startRow();
         $table->addCell($objMark->show(), 120);
         $content = '<p><strong>'.$this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark').': '.$submission['mark'].'/'.$assignment['mark'].'</strong></p>';
@@ -168,7 +200,7 @@ if ($assignment['format'] == '1') {
     	$objSubTable = new htmltable();
     	$objSubTable->width="60%";
     	//Insert mark
-        $objTextinput = new textinput('mark',is_null($submission['mark'])?'0':$submission['mark']);
+        $objTextinput = new textinput('mark',is_null($submission['mark'])?'0':(int)$submission['mark']);
     	$objTextinput->size='5';
     	$objTextinput->extra=' maxlength=\'4\'';
     	$objSubTable->startRow();
@@ -222,7 +254,7 @@ else {
         echo $header->show();
         // Table
         $table = $this->newObject('htmltable', 'htmlelements');
-        $objMark->value = (float)$submission['mark'];
+        $objMark->value = $submission['mark'];
         $table->startRow();
         $table->addCell($objMark->show(), 120);
         $content = '<p><strong>'.$this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark').': '.$submission['mark'].'/'.$assignment['mark'].'</strong></p>';
@@ -255,7 +287,7 @@ else {
     	$objSubTable = new htmltable();
     	$objSubTable->width="60%";
     	//Insert mark
-    	$objTextinput = new textinput('mark',is_null($submission['mark'])?'0':$submission['mark']);
+    	$objTextinput = new textinput('mark',is_null($submission['mark'])?'0':(int)$submission['mark']);
     	$objTextinput->size='5';
     	$objTextinput->extra=' maxlength=\'4\'';
     	$objSubTable->startRow();

@@ -57,7 +57,7 @@ class functions_assignment extends object
 	$objFile = $this->getObject('dbfile', 'filemanager');
 	$this->userId = $this->objUser->userId();
 	$this->loadClass('link', 'htmlelements');
-	$objIcon = $this->getObject('geticon', 'htmlelements');	
+	$objIcon = $this->getObject('geticon', 'htmlelements');
 	$objFileIcon = $this->getObject('fileicons', 'files');
         $this->objIcon= $this->newObject('geticon','htmlelements');
 	$objPopup=&$this->loadClass('windowpop','htmlelements');
@@ -68,7 +68,7 @@ class functions_assignment extends object
         $this->test = FALSE;
 		$this->essay = FALSE;
 		$this->ws = FALSE;
-		$this->rubric = FALSE;       
+		$this->rubric = FALSE;
 
 
     }
@@ -149,7 +149,7 @@ class functions_assignment extends object
             }
         }
 		return $data;
-        
+
     }
     /**
     * Method to display the Students home page.
@@ -241,9 +241,9 @@ class functions_assignment extends object
     public function isValid($action)
     {
         $restrictedActions = array ('add', 'edit', 'saveassignment', 'updateassignment', 'delete', 'markassignments', 'saveuploadmark', 'saveonlinemark');
-        
+
         if (in_array($action, $restrictedActions)) {
-            if ($this->objUser->isCourseAdmin()) {
+            if ($this->objUser->isCourseAdmin($this->contextCode)) {
                 return TRUE;
             } else {
                 return FALSE;
@@ -252,7 +252,7 @@ class functions_assignment extends object
             return TRUE;
         }
     }
-    
+
     /**
     * Method to display the Students assignments.
     * @return The template with assignments including marks.
@@ -264,7 +264,8 @@ class functions_assignment extends object
 	if(empty($thisUserId)){
 		$thisUserId = $this->objUser->userId();
 	}
-        $assignments = $this->dbAssignment->getAssignments($contextCode);
+    //$isLecturerRole = $this->objUser->isCourseAdmin($contextCode);
+    $assignments = $this->dbAssignment->getAssignments($contextCode);
 	$openLabel = $this->objLanguage->languageText('mod_assignment_open','assignment');
 	$closedLabel = $this->objLanguage->languageText('mod_assignment_closed','assignment');
 	$viewLabel = $this->objLanguage->languageText('mod_assignment_view','assignment');
@@ -283,13 +284,13 @@ class functions_assignment extends object
 	$objHead = new htmlheading();
 	$objHead->str=$this->objLanguage->languageText('mod_assignment_assignments', 'assignment', 'Assignments');
 	$objHead->type=1;
-	
+
 	if ($this->isValid('add')) {
-	    
+
 	    $objIcon->setIcon('add');
 	    $link = new link ($this->uri(array('action'=>'add')));
 	    $link->link = $objIcon->show();
-	    
+
 	    $objHead->str .= ' '.$link->show();
 	}
 
@@ -313,128 +314,147 @@ class functions_assignment extends object
 	$objTable->endHeaderRow();
 
 	if (count($assignments) == 0) {
-	    
-	    
-	    
+
+
+
 	    $objTable->startRow();
 	    $objTable->addCell($this->objLanguage->languageText('mod_assignment_noassignments', 'assignment', 'No Assignments'),'','','','noRecordsMessage','colspan="6"');
 	    $objTable->endRow();
-	    
-	    
+
+
 	} else {
-	    
+
 	    $i = 0;
 	    $status = '';
-	    
+
 	    $objIcon->setIcon('edit');
 	    $editIcon = $objIcon->show();
-	    
+
 	    $objIcon->setIcon('delete');
 	    $deleteIcon = $objIcon->show();
-	    
+
 	    $counter = 0;
-	    
-	    
+
+
 	    foreach ($assignments as $assignment)
 	    {
+	        $submitData = $this->dbSubmit->getStudentAssignment($thisUserId, $assignment['id']);
+	        if (empty($submitData)) {
+	            continue;
+	        }
+
 		$class = ($i++%2 == 0) ? 'odd' : 'even';
-		
+
 		if($assignment['closing_date'] > date('Y-m-d H:i')) {
 		    if(($assignment['opening_date'] < date('Y-m-d H:i')) || $assignment['opening_date'] == NULL) {
 		        $status = $openLabel;
 		    } else {
 		        $status = $this->objLanguage->languageText('mod_assignment_notopenforentry', 'assignment', 'Not Open for Entry');
 		    }
-		    
+
 		} else {
 		    $status = $closedLabel;
 		}
-		
+
 		// Display whether the assignment is online or uploadable
 		if($assignment['format'] == 1){
 		    $format = $uploadLabel;
 		}else{
 		    $format = $onlineLabel;
 		}
-		
+
 		$okToShow = FALSE;
-		
-		if(($assignment['opening_date'] < date('Y-m-d H:i')) || $assignment['opening_date'] == NULL) {
+
+    		if(($assignment['opening_date'] <= date('Y-m-d H:i:s')) || $assignment['opening_date'] == NULL) {
 		    $okToShow = TRUE;
 		}
-		
+
 		if ($this->isValid('edit')) {
 		    $okToShow = TRUE;
 		}
-		
+
 		if ($okToShow) {
-		    
+
 		    $counter++;
 		    // "userid='".$thisUserId."'"
 		    //$submitData = $this->dbSubmit->getStudentSubmissions($assignment['id'], $orderBy = 'firstname, datesubmitted');
-		    $submitData = $this->dbSubmit->getStudentAssignment($thisUserId, $assignment['id']);
+		    //$submitData = $this->dbSubmit->getStudentAssignment($thisUserId, $assignment['id']);
 		    //var_dump($submitData);
-		    if(!empty($submitData[0]["mark"])){
+		    // Check if before closing date
+		    if (date('Y-m-d H:i:s') <= $assignment['closing_date']) {
+		        $studentsMark = NULL;
+		    } else if (!is_null($submitData[0]["mark"])){
 			    $studentsMark = number_format((($submitData[0]["mark"]/$assignment['mark'])*100),2);
-			    $assgnId = $submitData[0]['assignmentid'];
-		    }else{
-			    $studentsMark = Null;
+			    //$assgnId = $submitData[0]['assignmentid'];
+		    } else {
+			    $studentsMark = NULL;
 		    }
 		    $objTable->startRow();
 		    $objTable->addCell($assignment['name'],'20%','','',$class);
 		    $objTable->addCell($format,'13%','','',$class);
 		    //$objTable->addCell($objTrim->strTrim(strip_tags($assignment['description']), 50),'','','',$class);
 		    $objTable->addCell($this->objDate->formatDate($assignment['closing_date']),'15%','','',$class);
-		    $objTable->addCell($this->objDate->formatDate($assignment['last_modified']),'15%','','',$class);
-		    if(!empty($studentsMark)){
-		    $objTable->addCell($studentsMark. '%','8%','','',$class);
+		    $objTable->addCell($this->objDate->formatDate($submitData[0]['datesubmitted']),'15%','','',$class);
+		    if(is_null($studentsMark)){
+    		    $objTable->addCell( $this->objLanguage->languageText('mod_assignment_notmarked','assignment'),'8%','','',$class);
 		    }else{
-		    $objTable->addCell('&nbsp;','8%','','',$class);
+    		    $objTable->addCell($studentsMark. '%','8%','','',$class);
 		    }
-		    if ($assignment['format'] == 1) {
-		    	$objFile = $this->getObject('dbfile', 'filemanager');
-		    	$objIcon = $this->getObject('geticon', 'htmlelements');
-			$objFileIcon = $this->getObject('fileicons', 'files');
+		    if (is_null($studentsMark)) {
+    		    $objTable->addCell( $this->objLanguage->languageText('mod_assignment_notmarked','assignment'),'8%','','',$class);
+		    }
+		    else {
+    		    if ($assignment['format'] == 1) {
+    		        if (is_null($submitData[0]['lecturerfileid'])) {
+    		            $objTable->addCell( $this->objLanguage->languageText('mod_assignment_nomarkedassignmentavailable','assignment'),'8%','','',$class);
+    		        }
+    		        else {
+        		        $lecturerfileid = $submitData[0]['lecturerfileid'];
+        		    	$objFile = $this->getObject('dbfile', 'filemanager');
+        		        $fileName = $objFile->getFileName($lecturerfileid);
+        		    	$objIcon = $this->getObject('geticon', 'htmlelements');
+            			$objFileIcon = $this->getObject('fileicons', 'files');
 
-			    $fileName = $objFile->getFileName($submitData[0]['studentfileid']);
-			    
-			    $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$submitData[0]['id'])));
-			    $downloadLink->link = $this->objLanguage->languageText('word_download', 'system', 'Download');
-			    
-			    $objTable->addCell('<p>'.$objFileIcon->getFileIcon($fileName).' '.$downloadLink->show().'</p>','8%','','',$class);
-		    }else{
-			$this->objIcon->title=$viewLabel;
-		    	$this->objIcon->setIcon('comment_view');
-		   	$commentIcon = $this->objIcon->show();
+        			    $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$submitData[0]['id'], 'fileid'=>$lecturerfileid)));
+        			    $downloadLink->link = $this->objLanguage->languageText('word_download', 'system', 'Download');
 
-			$objPopup = new windowpop();
-		    	$objPopup->set('location',$this->uri(array('action'=>'showcomment','id'=>$assgnId,'contextCode'=>$contextCode)));
-		    	$objPopup->set('linktext',$commentIcon);
-		    	$objPopup->set('width','600');
-		    	$objPopup->set('height','350');
-		    	$objPopup->set('left','200');
-		    	$objPopup->set('top','200');
-		    	$objPopup->putJs(); // you only need to do this once per page
-			    
-			$objTable->addCell('<p>'.$objPopup->show().'</p>','8%','','',$class);
+        			    $objTable->addCell('<p>'.$objFileIcon->getFileIcon($fileName).' '.$downloadLink->show().'</p>','8%','','',$class);
+    		        }
+    		    }else{
+        			$this->objIcon->title=$viewLabel;
+    		    	$this->objIcon->setIcon('comment_view');
+        		   	$commentIcon = $this->objIcon->show();
+
+        			$objPopup = new windowpop();
+    		    	//$objPopup->set('location',$this->uri(array('action'=>'showcomment','id'=>$assignment['id'],'contextCode'=>$contextCode)));
+    		        $objPopup->set('location',$this->uri(array('action'=>'showcomment','id'=>$assignment['id'],'submissionid'=>$submitData[0]['id'])));
+    		    	$objPopup->set('linktext',$commentIcon);
+    		    	$objPopup->set('width','600');
+    		    	$objPopup->set('height','350');
+    		    	$objPopup->set('left','200');
+    		    	$objPopup->set('top','200');
+    		    	$objPopup->putJs(); // you only need to do this once per page
+
+        			$objTable->addCell('<p>'.$objPopup->show().'</p>','8%','','',$class);
+    		    }
 		    }
 
 		    if ($this->isValid('edit')) {
 		        $editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$assignment['id'])));
 		        $editLink->link = $editIcon;
-		        
+
 		        $deleteLink = new link ($this->uri(array('action'=>'delete', 'id'=>$assignment['id'])));
 		        $deleteLink->link = $deleteIcon;
-		        
+
 		        $objTable->addCell($editLink->show().'&nbsp;'.$deleteLink->show(), '60');
 		    }
 		    $objTable->endRow();
 		}
 	    }
-	    
+
 	    if ($counter == 0) {
 		$objTable->startRow();
-		$objTable->addCell($this->objLanguage->languageText('mod_assignment_noassignments', 'assignment', 'No Assignments'),'','','','noRecordsMessage','colspan="6"');
+		$objTable->addCell($this->objLanguage->languageText('mod_assignment_noassignmentssubmitted', 'assignment'),'','','','noRecordsMessage','colspan="6"');
 		$objTable->endRow();
 	    }
 	}
@@ -445,11 +465,11 @@ class functions_assignment extends object
 	if ($this->isValid('add')) {
 	    $link = new link ($this->uri(array('action'=>'add')));
 	    $link->link = $this->objLanguage->languageText('mod_assignment_addassignment', 'assignment', 'Add Assignment');
-	    
+
 	    echo '<p>'.$link->show().'</p>';
 	}
 */
-	return $objTable->show();    
+	return $objTable->show();
     }
     /**
     * Method to display the Students assignments.
@@ -482,7 +502,7 @@ class functions_assignment extends object
 					$objTable->cellspacing = '1';
 					$objTable->width = "100%";
 
-					if (count($assignments) == 0) { 
+					if (count($assignments) == 0) {
 						$objTable->startRow();
 						$objTable->addCell($this->objLanguage->languageText('mod_assignment_noassignments', 'assignment', 'No Assignments'),'','','','noRecordsMessage','colspan="6"');
 						$objTable->endRow();
@@ -545,18 +565,18 @@ class functions_assignment extends object
 								$objTable->endRow();
 								$objTable->startRow();
 								$objTable->addCell($assignment['name'],"","","","","bgcolor='#FFFFFF'");
-								$objTable->endRow();	
-								$objTable->startRow();		    		    
+								$objTable->endRow();
+								$objTable->startRow();
 								$objTable->addCell("<b>".$this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type').": </b>","","","","","bgcolor='#D3D3D3'");
 								$objTable->endRow();
-								$objTable->startRow();		    		    
+								$objTable->startRow();
 								$objTable->addCell($format,"","","","","bgcolor='#FFFFFF'");
 								$objTable->endRow();
-								$objTable->startRow();		    		    
+								$objTable->startRow();
 								//$objTable->addCell($objTrim->strTrim(strip_tags($assignment['description']), 50),'','','',$class);
 								$objTable->addCell("<b>".$this->objLanguage->languageText('mod_assignment_closingdate', 'assignment', 'Closing Date').": </b>","","","","","bgcolor='#D3D3D3'");
 								$objTable->endRow();
-								$objTable->startRow();		    		    
+								$objTable->startRow();
 								//$objTable->addCell($objTrim->strTrim(strip_tags($assignment['description']), 50),'','','',$class);
 								$objTable->addCell($this->objDate->formatDate($assignment['closing_date']),"","","","","bgcolor='#FFFFFF'");
 								$objTable->endRow();
@@ -594,11 +614,11 @@ class functions_assignment extends object
 									$objTable->addCell('','','','',$class,"bgcolor='#FFFFFF'");
 									$objTable->endRow();
 								}else{
-									$objTable->startRow();			    
+									$objTable->startRow();
 									$onlineSubmission=$this->dbAssignment->getAssignment($assgnId);
 									$objTable->addCell("<b>".$viewLabel.": </b>","","","","","bgcolor='#D3D3D3'");
 									$objTable->endRow();
-									$objTable->startRow();			    
+									$objTable->startRow();
 									$onlineSubmission=$this->dbAssignment->getAssignment($assgnId);
 									$objTable->addCell($onlineSubmission['description'],"","","","","bgcolor='#FFFFFF'");
 									$objTable->endRow();
@@ -623,7 +643,7 @@ class functions_assignment extends object
 					echo '<p>'.$link->show().'</p>';
 					}
 					*/
-					//return $objTable->show();    
+					//return $objTable->show();
     }
  }//end of class
 ?>

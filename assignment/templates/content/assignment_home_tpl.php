@@ -37,7 +37,7 @@ $objTable->startHeaderRow();
 $objTable->addHeaderCell($this->objLanguage->languageText('word_name', 'system', 'Name'),'20%');
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type'), '13%');
 //$objTable->addHeaderCell($this->objLanguage->languageText('word_description', 'system', 'Description'));
-$objTable->addHeaderCell($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]'),'15%');
+$objTable->addHeaderCell(ucfirst($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]')),'15%');
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_closingdate', 'assignment', 'Closing Date'),'15%');
 $objTable->addHeaderCell($this->objLanguage->languageText('word_status', 'system', 'Status'),'8%');
 
@@ -149,9 +149,13 @@ if ($this->isValid('add')) {
     echo '<p>'.$link->show().'</p>';
 }
 
+
+if ($this->objUser->isContextStudent($this->contextCode)) {
 	$this->objLink->link($this->uri(array('action'=>'displaylist')));
-	$this->objLink->link=$this->objLanguage->languageText('mod_assignment_submittedassignments', 'assignment', 'Submitted Assignments')." ".$this->objLanguage->languageText('word_list', 'system', 'List');
+	$this->objLink->link=$this->objLanguage->languageText('mod_assignment_submittedassignmentslist', 'assignment');
 
 	echo $this->objLink->show();
+}
+
 
 ?>
