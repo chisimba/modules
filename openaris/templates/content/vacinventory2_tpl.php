@@ -31,7 +31,7 @@ $tabs = "$tab$tab$tab$tab";
 //create finish button
 $finishButton = $this->uri(array('action'=>'select_officer'));
 $finButton = new button('fin', $this->objLanguage->languageText('word_finish'), "javascript: document.location='$finishButton'");
-//$finButton->cssClass = 'submitButton';
+$finButton->cssClass = 'submitButton';
 
 //create clear all button 
 
