@@ -10,7 +10,7 @@
 */
 $this->setLayoutTemplate('assignmentadmin_layout_tpl.php');
 
-// set up html elements 
+// set up html elements
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('textarea','htmlelements');
 $this->loadClass('radio','htmlelements');
@@ -78,6 +78,7 @@ if(!empty($data)){
     $percent = $data[0]['percentage'];
     $date = $data[0]['closing_date'];
     $description = $data[0]['description'];
+    $assessmenttype = $data[0]['assesment_type'];
 }else{
     $format = $this->getParam('type', 0);
 
@@ -89,6 +90,7 @@ if(!empty($data)){
     $percent = 0;
     $date = date('Y-m-d');
     $description = '';
+    $assessmenttype = '';
 }
 
 $this->setVarByRef('heading', $heading);
@@ -136,7 +138,7 @@ $objRadio = new radio('assesment_type');
 $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
 $objRadio->addOption(1,$yesLabel);
 $objRadio->addOption(0,$noLabel);
-$objRadio->setSelected($assesmentype);
+$objRadio->setSelected($assessmenttype);
 
 $objTable->startRow();
 $objTable->addCell($objLabel->show());
