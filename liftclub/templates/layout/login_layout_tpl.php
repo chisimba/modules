@@ -54,7 +54,7 @@ $msgTrashLink->title = $this->objLanguage->languageText("mod_liftclub_trashedmes
 
 $objFeatureBox = $this->newObject ( 'featurebox', 'navigation' );
 
-$pageLink = "<ul>";
+$pageLink = "<div id='liftclubmenu'><ul>";
 $mailFeatBox = "";
 if($this->objUser->userId()!==null){ 
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
@@ -80,7 +80,7 @@ if($this->objUser->userId()!==null){
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
 }
-$pageLink .= "</ul>";
+$pageLink .= "</ul></div>";
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->contents = $pageLink;
