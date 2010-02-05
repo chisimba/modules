@@ -76,88 +76,118 @@ if ($assignment['format'] == '0') {
 $table->endRow();
 echo $table->show();
 // Section 2
-// Heading
-$header = new htmlHeading();
-if ($isLecturerRole) {
-    $str = $this->objLanguage->code2Txt('mod_assignment_viewassgnby', 'assignment', NULL); //'View ssignment Submitted by [-person-] at [-time-]'
-    $str = str_replace('[-person-]', $this->objUser->fullName($submission['userid']), $str);
-    $str = str_replace('[-time-]', $objDateTime->formatDate($submission['datesubmitted']), $str);
-}
-else {
-    $str = $this->objLanguage->code2Txt('mod_assignment_viewmarkedassignment', 'assignment', NULL); //'View ssignment Submitted by [-person-] at [-time-]'
-    $str = str_replace('[-person-]', $this->objUser->fullName($submission['userid']), $str);
-    $str = str_replace('[-time-]', $objDateTime->formatDate($submission['datesubmitted']), $str);
-}
-$header->str = $str;
-$header->type = 3;
-echo $header->show();
-//
 $objIcon = $this->getObject('geticon', 'htmlelements');
-$objFileIcon = $this->getObject('fileicons', 'files');
 $objMark = $this->getObject('markimage', 'utilities');
+//
+$isMarked = $submission['mark'] != NULL && $assignment['closing_date'] < date('Y-m-d H:i:s');
+//
 if ($assignment['format'] == '1') {
     // Upload
+    define('ASSIGNMENT_FT_STUDENT',1);
+    define('ASSIGNMENT_FT_LECTURER',2);
     if ($isLecturerRole) {
-        //$mode = 'submitted';
-        $fileId = $submission['studentfileid'];
+        $fileType = ASSIGNMENT_FT_STUDENT;
     }
     else {
-        //$mode = 'marked';
-        $fileId = $submission['lecturerfileid'];
-    }
-    $objFile = $this->getObject('dbfile', 'filemanager');
-    $fileName = $objFile->getFileName($fileId);
-    $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$submission['id'], 'fileid'=>$fileId)));
-    $downloadLink->link = $this->objLanguage->languageText('word_download', 'system', 'Download');
-    echo '<p>'.$objFileIcon->getFileIcon($fileName).' '.$downloadLink->show().'</p>';
-    $filePath = $this->objAssignmentSubmit->getAssignmentFilename($submission['id'], $fileId);
-    // PHP file which will contain the assignment
-    $destinationPhp = $filePath.'.php';
-    // HTML file needed for conversion
-    $destinationHtml = $filePath.'.html';
-    // Check if the file exists, else we need to convert the document
-    if (!file_exists($destinationPhp)) {
-        if (file_exists($destinationHtml)) {
-            unlink($destinationHtml);
-        }
-        //if (!file_exists($destinationHtml)) {
-            // Convert Document
-            $objConvert = $this->getObject('convertdoc', 'documentconverter');
-            $conversionOK = $objConvert->convert($filePath, $destinationHtml);
-            /*
-            if (!$conversionOK) {
-                 die('Conversion failed!');
-            }
-            */
-        //}
-        //else {
-            //$conversionOK = TRUE;
-        //}
-        // If successfully converted, rename .html to .php
-        if ($conversionOK && file_exists($destinationHtml)) {
-            rename($destinationHtml, $destinationPhp);
-            //copy($destinationHtml, $destinationPhp);
-            //unlink($destinationHtml);
-            $contents =  file_get_contents($destinationPhp);
-            $contents = '<?php if (isset($permission) && $permission) { ?>'.$contents.'<?php } ?>';
-            file_put_contents($destinationPhp, $contents);
+        if (!$isMarked) {
+            $fileType = ASSIGNMENT_FT_STUDENT;
+        } else {
+            $fileType = ASSIGNMENT_FT_LECTURER;
         }
     }
-    if (file_exists($destinationPhp)) {
-        $this->loadClass('iframe', 'htmlelements');
+    switch($fileType){
+        case ASSIGNMENT_FT_LECTURER:
+            $fileId = $submission['lecturerfileid'];
+            break;
+        case ASSIGNMENT_FT_STUDENT:
+            $fileId = $submission['studentfileid'];
+            break;
+        default:
+            ;
+    } // switch
+    if (is_null($fileId)) {
         $header = new htmlHeading();
-        $header->str = $this->objLanguage->languageText('word_preview', 'system', 'Preview');
-        $header->type = 1;
+        if ($fileType == ASSIGNMENT_FT_STUDENT) {
+            $str = '<em>'.$this->objLanguage->languageText('mod_assignment_noassignmentavailable', 'assignment').'</em>';
+        } else if ($fileType == ASSIGNMENT_FT_LECTURER) {
+            $str = '<em>'.$this->objLanguage->languageText('mod_assignment_nomarkedassignmentavailable', 'assignment').'</em>';
+        } else {
+            $str = 'Unkown assignment filetype!';
+        }
+        $header->str = $str;
+        $header->type = 3;
         echo $header->show();
-        $iframe = new iframe();
-        $iframe->width = '100%';
-        $iframe->height = 400;
-        //$iframe->src = $this->uri(array('action'=>'viewhtmlsubmission', '1'=>'1', '2'=>'2', '3'=>'3'));
-        $iframe->src = $this->uri(array('action'=>'viewhtmlsubmission', 'id'=>$submission['id'],'fileid'=>$fileId));
-//        echo '<pre>';
-//        echo $iframe->src;
-//        echo '</pre>';
-        echo $iframe->show();
+    } else {
+        // Header
+        $header = new htmlHeading();
+        if ($fileType == ASSIGNMENT_FT_STUDENT) {
+            $str = $this->objLanguage->code2Txt('mod_assignment_viewassgnby', 'assignment', NULL); //'View ssignment Submitted by [-person-] at [-time-]'
+            $str = str_replace('[-person-]', $this->objUser->fullName($submission['userid']), $str);
+            $str = str_replace('[-time-]', $objDateTime->formatDate($submission['datesubmitted']), $str);
+        } else if ($fileType == ASSIGNMENT_FT_LECTURER) {
+            $str = $this->objLanguage->code2Txt('mod_assignment_viewmarkedassignment', 'assignment', NULL); //'View ssignment Submitted by [-person-] at [-time-]'
+            $str = str_replace('[-person-]', $this->objUser->fullName($submission['userid']), $str);
+            $str = str_replace('[-time-]', $objDateTime->formatDate($submission['datesubmitted']), $str);
+        }
+        $header->str = $str;
+        $header->type = 3;
+        echo $header->show();
+        // Content
+        $objFile = $this->getObject('dbfile', 'filemanager');
+        $fileName = $objFile->getFileName($fileId);
+        $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$submission['id'], 'fileid'=>$fileId)));
+        $downloadLink->link = $this->objLanguage->languageText('word_download', 'system', 'Download');
+        $objFileIcon = $this->getObject('fileicons', 'files');
+        echo '<p>'.$objFileIcon->getFileIcon($fileName).' '.$downloadLink->show().'</p>';
+        $filePath = $this->objAssignmentSubmit->getAssignmentFilename($submission['id'], $fileId);
+        // PHP file which will contain the assignment
+        $destinationPhp = $filePath.'.php';
+        // HTML file needed for conversion
+        $destinationHtml = $filePath.'.html';
+        // Check if the file exists, else we need to convert the document
+        if (!file_exists($destinationPhp)) {
+            if (file_exists($destinationHtml)) {
+                unlink($destinationHtml);
+            }
+            //if (!file_exists($destinationHtml)) {
+                // Convert Document
+                $objConvert = $this->getObject('convertdoc', 'documentconverter');
+                $conversionOK = $objConvert->convert($filePath, $destinationHtml);
+                /*
+                if (!$conversionOK) {
+                     die('Conversion failed!');
+                }
+                */
+            //}
+            //else {
+                //$conversionOK = TRUE;
+            //}
+            // If successfully converted, rename .html to .php
+            if ($conversionOK && file_exists($destinationHtml)) {
+                rename($destinationHtml, $destinationPhp);
+                //copy($destinationHtml, $destinationPhp);
+                //unlink($destinationHtml);
+                $contents =  file_get_contents($destinationPhp);
+                $contents = '<?php if (isset($permission) && $permission) { ?>'.$contents.'<?php } ?>';
+                file_put_contents($destinationPhp, $contents);
+            }
+        }
+        if (file_exists($destinationPhp)) {
+            $this->loadClass('iframe', 'htmlelements');
+            $header = new htmlHeading();
+            $header->str = $this->objLanguage->languageText('word_preview', 'system', 'Preview');
+            $header->type = 1;
+            echo $header->show();
+            $iframe = new iframe();
+            $iframe->width = '100%';
+            $iframe->height = 400;
+            //$iframe->src = $this->uri(array('action'=>'viewhtmlsubmission', '1'=>'1', '2'=>'2', '3'=>'3'));
+            $iframe->src = $this->uri(array('action'=>'viewhtmlsubmission', 'id'=>$submission['id'],'fileid'=>$fileId));
+    //        echo '<pre>';
+    //        echo $iframe->src;
+    //        echo '</pre>';
+            echo $iframe->show();
+        }
     }
     if ($submission['mark'] != NULL && ($assignment['closing_date'] < date('Y-m-d H:i:s') || $this->isValid('edit'))) {
         $header = new htmlHeading();
@@ -173,6 +203,11 @@ if ($assignment['format'] == '1') {
         $table->addCell($content);
         $table->endRow();
         echo $table->show();
+    } else {
+        $header = new htmlHeading();
+        $header->str = '<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>';
+        $header->type = 3;
+        echo $header->show();
     }
     if ($this->isValid('saveuploadmark')) {
         // Header
@@ -245,8 +280,17 @@ if ($assignment['format'] == '1') {
 }
 else {
     // Online
+    // Heading
+    $header = new htmlHeading();
+    $str = $this->objLanguage->code2Txt('mod_assignment_viewassgnby', 'assignment', NULL); //'View ssignment Submitted by [-person-] at [-time-]'
+    $str = str_replace('[-person-]', $this->objUser->fullName($submission['userid']), $str);
+    $str = str_replace('[-time-]', $objDateTime->formatDate($submission['datesubmitted']), $str);
+    $header->str = $str;
+    $header->type = 3;
+    echo $header->show();
+    // Content
     echo '<div style="border: 1px solid #000; padding: 10px;">'.$submission['online'].'</div>';
-    if ($submission['mark'] != NULL  && ($assignment['closing_date'] < date('Y-m-d H:i') || $this->isValid('edit'))) {
+    if ($submission['mark'] != NULL  && ($assignment['closing_date'] < date('Y-m-d H:i:s') || $this->isValid('edit'))) {
         // Header
         $header = new htmlHeading();
         $header->str = $this->objLanguage->languageText('mod_worksheet_result', 'worksheet', 'Result');
@@ -262,6 +306,11 @@ else {
         $table->addCell($content);
         $table->endRow();
         echo $table->show();
+    } else {
+        $header = new htmlHeading();
+        $header->str = '<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>';
+        $header->type = 3;
+        echo $header->show();
     }
     if ($this->isValid('saveonlinemark')) {
         // Header

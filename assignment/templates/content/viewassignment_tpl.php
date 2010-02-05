@@ -146,17 +146,25 @@ if ($this->isValid('markassignments')) {
         foreach ($submissions as $submission)
         {
 
-        $table->startRow();
+            $isMarked = date('Y-m-d H:i:s') > $assignment['closing_date'];
 
+            $table->startRow();
+            /*
+            if (!$isMarked) {
+                 $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
+            }
+            else {
+            */
             $link = new link ($this->uri(array('action'=>'viewsubmission', 'id'=>$submission['id'])));
-
-
             $link->link = $this->objLanguage->languageText('mod_assignment_viewscoremark','assignment');
             $table->addCell($link->show());
+            /*
+            }
+            */
 
             $table->addCell($objDateTime->formatDate($submission['datesubmitted']));
 
-            if($assignment['closing_date'] >= date('Y-m-d H:i:s')) {
+            if(!$isMarked) {
                 $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
                 //$table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
 
