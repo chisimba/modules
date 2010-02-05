@@ -20,7 +20,7 @@ $css="
 ";
 $this->appendArrayVar('headerParams', $css);
 // JavaScript for the slider
-$js='<script language="JavaScript" src="'.$this->getResourceUri('dhtmlgoodies_slider.js').'" type="text/javascript"></script>';
+$js='<script language="JavaScript" src="'.$this->getResourceUri('dhtmlslider.js').'" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
 // Load classes
 $this->loadClass('htmlheading', 'htmlelements');
