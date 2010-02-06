@@ -57,58 +57,124 @@ $GLOBALS['kewl_entry_point_run']) {
 
 class triplepredicate extends object implements Iterator
 {
+    /**
+     * The objects associated with this predicate.
+     *
+     * @var array
+     */
     protected $objects;
 
+    /**
+     * Initialise the instance of the triplepredicate class.
+     *
+     * @access public
+     */
     public function init()
     {
         $this->objects = array();
     }
 
+    /**
+     * Converts this instance to a string by impoding the object array.
+     *
+     * @access public
+     * @return string The imploded object array.
+     */
     public function __toString()
     {
         return implode(' ', $this->objects);
     }
 
+    /**
+     * Adds an object to this predicate.
+     *
+     * @access public
+     * @param  string $object The new object to add.
+     */
     public function addObject($object)
     {
         $this->objects[] = $object;
     }
 
+    /**
+     * Part of the Iterator interface.
+     *
+     * @access public
+     */
     public function current()
     {
         return current($this->objects);
     }
 
+    /**
+     * Gets an object at a particular index.
+     *
+     * @access public
+     * @param  integer $index The index of the object to return.
+     * @return string  The object at the index specified.
+     */
     public function getObject($index)
     {
         return $this->objects[$index];
     }
 
+    /**
+     * Part of the Iterator interface.
+     *
+     * @access public
+     */
     public function key()
     {
         return key($this->objects);
     }
 
+    /**
+     * Part of the Iterator interface.
+     *
+     * @access public
+     */
     public function next()
     {
         return next($this->objects);
     }
 
+    /**
+     * Part of the Iterator interface.
+     *
+     * @access public
+     */
     public function rewind()
     {
         reset($this->objects);
     }
 
+    /**
+     * Sets the objects on this predicate.
+     *
+     * @access public
+     * @param  array $objects The object array.
+     */
     public function setObjects($objects)
     {
         $this->objects = $objects;
     }
 
+    /**
+     * Returns an array of objects on this predicate.
+     *
+     * @access public
+     * @return array The array of objects.
+     */
     public function toArray()
     {
         return $this->objects;
     }
 
+    /**
+     * Part of the Iterator interface.
+     *
+     * @access public
+     */
     public function valid()
     {
         return $this->current() !== false;
