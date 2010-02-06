@@ -117,9 +117,10 @@ class triplepredicate extends object implements Iterator
      * @access public
      * @param  string $object The new object to add.
      */
-    public function addObject($object)
+    public function add($object)
     {
         $this->objects[] = $object;
+        $this->objTriplestore->insert($this->subject, $this->predicate, $object);
     }
 
     /**
@@ -139,7 +140,7 @@ class triplepredicate extends object implements Iterator
      * @param  integer $index The index of the object to return.
      * @return string  The object at the index specified.
      */
-    public function getObject($index)
+    public function get($index)
     {
         return $this->objects[$index];
     }
