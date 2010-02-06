@@ -115,13 +115,32 @@ class triplesubject extends object
         return $this->predicates[$name];
     }
 
-    public function __isset($name)
+    /**
+     * Checks if at least one triple with the given predicate exists on this subject.
+     *
+     * @access public
+     * @param  string  $predicate The predicate to check.
+     * @return boolean TRUE if the predicate is found on this subject; FALSE otherwise.
+     */
+    public function __isset($predicate)
     {
-        return array_key_exists($name, $this->data);
+        // Assume the predicate could not be found.
+        $found = FALSE;
+
+        // Search the triple cache for the given predicate.
+        foreach ($this->triples as $triple) {
+            if ($triple['predicate'] == $predicate) {
+                $found = TRUE;
+                break;
+            }
+        }
+
+        // Return the result.
+        return $found;
     }
 
     /**
-     * Sets the triplestore subject of this instance.
+     * Sets the triple subject of this instance.
      *
      * @access public
      * @param  string $subject The id of the subject to load.
@@ -132,7 +151,7 @@ class triplesubject extends object
     }
 
     /**
-     * Sets the triplestore cache of this instance.
+     * Sets the triple cache of this instance.
      *
      * @access public
      * @param  array $triples The triples to load.
