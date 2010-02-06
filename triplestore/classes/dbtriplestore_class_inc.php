@@ -82,6 +82,15 @@ class dbtriplestore extends dbTable
         return $result;
     }
 
+    public function getSubject($subject)
+    {
+        // Retrieve the triples associated with the subject.
+        $triples = $this->getAll("WHERE subject = '$subject'");
+
+        $objSubject = $this->newObject('triplesubject', 'dbtriplestore');
+        $objSubject->populate($triples);
+    }
+
     /**
      * Fetches all of the triples associated with a particular subject out of the triplestore.
      *
