@@ -99,12 +99,19 @@ class triplesubject extends object
         $this->objTriplestore = $this->getObject('dbtriplestore', 'triplestore');
     }
 
-    public function __get($name)
+    /**
+     * Gets an object representing a predicate associated with this subject.
+     *
+     * @access public
+     * @param  string $predicate The predicate to retrieve.
+     * @return object An instance of the triplepredicate class.
+     */
+    public function __get($predicate)
     {
-        if (!array_key_exists($name, $this->predicates)) {
+        if (!array_key_exists($predicate, $this->predicates)) {
             $objects = array();
             foreach ($this->triples as $triple) {
-                if ($triple['predicate'] === $name) {
+                if ($triple['predicate'] === $predicate) {
                     $objects[] = $triple['object'];
                 }
             }
