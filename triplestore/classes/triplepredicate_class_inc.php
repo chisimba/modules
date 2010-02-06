@@ -189,13 +189,17 @@ class triplepredicate extends object implements Iterator
     }
 
     /**
-     * Sets the objects on this predicate.
+     * Sets the object or objects on this predicate.
      *
      * @access public
-     * @param  array $objects The object array.
+     * @param  mixed $objects A single object or an array of objects.
      */
-    public function setObjects($objects)
+    public function set($objects)
     {
+        if (!is_array($objects)) {
+            $objects = array($objects);
+        }
+
         $this->objects = $objects;
         $this->objTriplestore->setObjects($this->subject, $this->predicate, $objects);
     }
