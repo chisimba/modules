@@ -124,14 +124,19 @@ class triplesubject extends object
      */
     public function __isset($predicate)
     {
-        // Assume the predicate could not be found.
-        $found = FALSE;
+        // First check the array of predicate objects (for efficiency).
+        if (array_key_exists($predicate, $this->predicates)) {
+            $found = TRUE;
+        } else {
+            // Assume the predicate could not be found.
+            $found = FALSE;
 
-        // Search the triple cache for the given predicate.
-        foreach ($this->triples as $triple) {
-            if ($triple['predicate'] == $predicate) {
-                $found = TRUE;
-                break;
+            // Search the triple cache for the given predicate.
+            foreach ($this->triples as $triple) {
+                if ($triple['predicate'] == $predicate) {
+                    $found = TRUE;
+                    break;
+                }
             }
         }
 
