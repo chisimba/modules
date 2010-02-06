@@ -121,16 +121,26 @@ class triplesubject extends object
     }
 
     /**
-     * Loads a new subject and its associated triples.
+     * Sets the triplestore subject of this instance.
      *
      * @access public
      * @param  string $subject The id of the subject to load.
      */
     public function setSubject($subject)
     {
-        $this->data    = $this->objTriplestore->getSubject($subject);
-        $this->objects = array();
         $this->subject = $subject;
+    }
+
+    /**
+     * Sets the triplestore cache of this instance.
+     *
+     * @access public
+     * @param  array $triples The triples to load.
+     */
+    public function setTriples($triples)
+    {
+        $this->triples    = $triples;
+        $this->predicates = array();
     }
 }
 
