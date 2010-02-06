@@ -65,6 +65,14 @@ class triplepredicate extends object implements Iterator
     protected $objects;
 
     /**
+     * Instance of the dbtriplestore class of the triplestore module.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objTriplestore;
+
+    /**
      * Initialise the instance of the triplepredicate class.
      *
      * @access public
@@ -72,6 +80,7 @@ class triplepredicate extends object implements Iterator
     public function init()
     {
         $this->objects = array();
+        $this->objTriplestore = $this->getObject('dbtriplestore', 'triplestore');
     }
 
     /**
