@@ -25,7 +25,7 @@
  * @author    Charl van Niekerk <charlvn@charlvn.com>
  * @copyright 2010 Charl van Niekerk
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: dbtriplestore_class_inc.php 16584 2010-01-29 21:29:56Z charlvn $
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za/
  */
 
@@ -51,7 +51,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @author    Charl van Niekerk <charlvn@charlvn.com>
  * @copyright 2010 Charl van Niekerk
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: dbtriplestore_class_inc.php 16584 2010-01-29 21:29:56Z charlvn $
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za/
  */
 
