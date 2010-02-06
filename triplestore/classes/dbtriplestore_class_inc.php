@@ -82,6 +82,13 @@ class dbtriplestore extends dbTable
         return $result;
     }
 
+    /**
+     * Returns an easy to use object to access and modify triples associated with a particular subject.
+     *
+     * @access public
+     * @param  string $subject The id of the subject.
+     * @return object Instance of the triplesubject class representing the subject requested.
+     */
     public function getSubject($subject)
     {
         // Retrieve the triples associated with the subject.
