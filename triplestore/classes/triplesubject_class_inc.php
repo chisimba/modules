@@ -153,33 +153,21 @@ class triplesubject extends object
 
     public function __set($predicate, $objects)
     {
-        if (!is_array($objects)) {
-            $objects = array($objects);
-        }
         $this->__get($predicate)->set($objects);
     }
 
     /**
-     * Sets the triple subject of this instance.
+     * Populates the properties of the object.
      *
      * @access public
-     * @param  string $subject The id of the subject to load.
+     * @param  string $subject The name of the subject.
+     * @param  array  $triples The triples associated with the subject.
      */
-    public function setSubject($subject)
+    public function populate($subject, $triples)
     {
-        $this->subject = $subject;
-    }
-
-    /**
-     * Sets the triple cache of this instance.
-     *
-     * @access public
-     * @param  array $triples The triples to load.
-     */
-    public function setTriples($triples)
-    {
-        $this->triples    = $triples;
         $this->predicates = array();
+        $this->subject    = $subject;
+        $this->triples    = $triples;
     }
 }
 
