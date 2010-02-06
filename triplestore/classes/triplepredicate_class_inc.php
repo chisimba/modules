@@ -60,7 +60,8 @@ class triplepredicate extends object implements Iterator
     /**
      * The objects associated with this predicate.
      *
-     * @var array
+     * @access protected
+     * @var    array
      */
     protected $objects;
 
