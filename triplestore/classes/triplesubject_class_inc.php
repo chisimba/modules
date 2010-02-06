@@ -116,7 +116,7 @@ class triplesubject extends object
                 }
             }
             $this->predicates[$predicate] = $this->newObject('triplepredicate', 'triplestore');
-            $this->predicates[$predicate]->setObjects($objects);
+            $this->predicates[$predicate]->populate($this->subject, $predicate, $objects);
         }
 
         return $this->predicates[$predicate];
@@ -156,8 +156,7 @@ class triplesubject extends object
         if (!is_array($objects)) {
             $objects = array($objects);
         }
-        $this->predicates[$predicate] = $this->newObject('triplepredicate', 'triplestore');
-        $this->predicates[$predicate]->setObjects($objects);
+        $this->__get($predicate)->set($objects);
     }
 
     /**
