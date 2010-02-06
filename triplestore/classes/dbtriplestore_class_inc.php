@@ -96,8 +96,7 @@ class dbtriplestore extends dbTable
 
         // Initialise and populate a new instance of the triplesubject class.
         $objSubject = $this->newObject('triplesubject', 'triplestore');
-        $objSubject->setSubject($subject);
-        $objSubject->setTriples($triples);
+        $objSubject->populate($subject, $triples);
 
         // Return the newly created triplesubject.
         return $objSubject;
