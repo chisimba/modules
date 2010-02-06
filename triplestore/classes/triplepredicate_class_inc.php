@@ -177,6 +177,7 @@ class triplepredicate extends object implements Iterator
     public function setObjects($objects)
     {
         $this->objects = $objects;
+        $this->objTriplestore->setObjects($this->subject, $this->predicate, $objects);
     }
 
     /**
