@@ -73,6 +73,22 @@ class triplepredicate extends object implements Iterator
     protected $objTriplestore;
 
     /**
+     * The name of the predicate.
+     *
+     * @access protected
+     * @var    string
+     */
+    protected $predicate;
+
+    /**
+     * The name of the subject.
+     *
+     * @access protected
+     * @var    string
+     */
+    protected $subject;
+
+    /**
      * Initialise the instance of the triplepredicate class.
      *
      * @access public
