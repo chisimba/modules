@@ -115,11 +115,11 @@ class triplesubject extends object
                     $objects[] = $triple['object'];
                 }
             }
-            $this->predicates[$name] = $this->newObject('triplepredicate', 'triplestore');
-            $this->predicates[$name]->setObjects($objects);
+            $this->predicates[$predicate] = $this->newObject('triplepredicate', 'triplestore');
+            $this->predicates[$predicate]->setObjects($objects);
         }
 
-        return $this->predicates[$name];
+        return $this->predicates[$predicate];
     }
 
     /**
@@ -149,6 +149,15 @@ class triplesubject extends object
 
         // Return the result.
         return $found;
+    }
+
+    public function __set($predicate, $objects)
+    {
+        if (!is_array($objects)) {
+            $objects = array($objects);
+        }
+        $this->predicates[$predicate] = $this->newObject('triplepredicate', 'triplestore');
+        $this->predicates[$predicate]->setObjects($objects);
     }
 
     /**
