@@ -139,6 +139,17 @@ class triplepredicate extends object implements Iterator
     }
 
     /**
+     * Populates this predicate with the objects retrieved from the triplestore.
+     *
+     * @access public
+     * @param  array $objects The objects retrieved from the triplestore.
+     */
+    public function populate($objects)
+    {
+        $this->objects = $objects;
+    }
+
+    /**
      * Part of the Iterator interface.
      *
      * @access public
