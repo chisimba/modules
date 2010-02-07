@@ -521,16 +521,21 @@ class bloglinksandroll extends object
         )) , $this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , NULL);
         $defmodLink = new href($this->uri(array() , '_default') , $this->objLanguage->languageText("mod_blog_returntosite", "blog") , NULL);
         if ($featurebox == FALSE) {
-            $ret = $oblogs->show() . "<br />" . $defmodLink->show();
+            $ret = "<span class=\"featureboxlink\">" 
+              . $oblogs->show() . "<br /></span>"
+              . "<span class=\"featureboxlink\">" 
+              . $defmodLink->show() . "</span>";
         } else {
-            $boxContent = $oblogs->show() . "<br />";
-            $boxContent.= $defmodLink->show() . "<br />";
+            $boxContent = "<span class=\"featureboxlink\">"
+              . $oblogs->show() . "<br /></span>";
+            $boxContent.= "<span class=\"featureboxlink\">"
+              . $defmodLink->show() . "<br /></span>";
             //
             // database abstraction object
             $this->objDbBlog = $this->getObject('dbblog');
             $postresults = $this->objDbBlog->getAllPosts($userid = 1, null);
             if (!$postresults == null) {
-                $boxContent.= $ositeblogs->show() . "<br />";
+                $boxContent.= "<span class=\"featureboxlink\">" . $ositeblogs->show() . "<br /></span>";
             }
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $boxContent);

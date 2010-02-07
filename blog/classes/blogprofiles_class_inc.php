@@ -279,6 +279,7 @@ class blogprofiles extends object {
                 'action' => 'timeline',
                 'userid' => $userid
                 )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+        $ttlinkTxt = "<span class=\"featureboxlink\">" . $tllink->show() . "</span>";
         // geotagged posts link
         $numgeoposts = $this->objDbBlog->countGeoPosts($userid);
         $viewgeoblog = NULL;
@@ -288,7 +289,8 @@ class blogprofiles extends object {
                     'action' => 'viewgeoblog',
                     'userid' => $userid,
                     )) , $this->objLanguage->languageText("mod_blog_viewgeoblog", "blog"));
-            $viewgeoblog = $viewgeoblog->show();
+            $viewgeoblog = "<span class=\"featureboxlink\">" 
+              . $viewgeoblog->show() . "</span>";
         }
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
         if(!$this->objModules->checkIfRegistered('simplemap')) {
@@ -304,18 +306,23 @@ class blogprofiles extends object {
                     'action' => 'allblogs'
                     )) , $this->objLanguage->languageText("mod_blog_viewallblogs", "blog"));
         }
+        $viewmyblogTxt = "<span class=\"featureboxlink\">"
+          . $viewmyblog->show() . "</span>";
         $check = $this->objDbBlog->checkProfile($userid);
         if ($check != FALSE) {
             $link = new href($this->uri(array(
                     'module' => 'blog',
                     'action' => 'viewprofile',
                     'userid' => $userid
-                    )) , $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") . " " . $this->objUser->userName($userid));
+                    )) , $this->objLanguage->languageText("mod_blog_viewprofileof", "blog") 
+                    . " " . $this->objUser->userName($userid));
+            $linkTxt = "<span class=\"featureboxlink\">" . $link->show() . "</span>";
             $tllink = new href($this->uri(array(
                     'module' => 'blog',
                     'action' => 'timeline',
                     'userid' => $userid
                     )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
+            $tllinkTxt = "<span class=\"featureboxlink\">" . $tllink->show() . "</span>";
             $foaffile = $this->objConfig->getsiteRoot() . "usrfiles/users/" . $userid . "/" . $userid . ".rdf";
             @$rdfcont = file($foaffile);
             if (!empty($rdfcont)) {
@@ -324,14 +331,14 @@ class blogprofiles extends object {
                 $lficon = new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/" . $userid . ".rdf", $objFIcon->show() , NULL);
                 $ficon = $lficon->show();
                 // new href($this->objConfig->getsiteRoot() . "/usrfiles/users/" . $userid . "/". $userid . ".rdf", $this->objLanguage->languageText("mod_blog_foaflink", "blog"));
-                return  $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $link->show() . "<br />" . $ficon . "<br />" . $tllink->show()."<br />".$viewgeoblog);
+                return  $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $linkTxt . "<br />" . $ficon . "<br />" . $tllinkTxt ."<br />".$viewgeoblog);
             } else {
                 $objFeatureBox = $this->getObject("featurebox", "navigation");
-                return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $link->show() . "<br />" . $tllink->show() . "<br />" . $viewmyblog->show()."<br />".$viewgeoblog);
+                return $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $linkTxt . "<br />" . $ttlinkTxt . "<br />" . $viewmyblogTxt ."<br />".$viewgeoblog);
             }
         } else {
             $objFeatureBox = $this->getObject("featurebox", "navigation");
-            return  $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $userimg . "<br />" . $tllink->show()."<br />".$viewgeoblog . "<br />" . $viewmyblog->show());
+            return  $objFeatureBox->show($this->objLanguage->languageText("mod_blog_viewfullprofile", "blog") . " " . $pname, $userimg . "<br />" . $tllinkTxt."<br />".$viewgeoblog . "<br />" . $viewmyblogTxt);
         }
     }
     /**

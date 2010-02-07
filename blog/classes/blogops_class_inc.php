@@ -261,7 +261,10 @@ class blogops extends object
             }
             foreach($linksarr as $links) {
                 $objFeatureBox = $this->newObject('featurebox', 'navigation');
-                $ret.= $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_admin", "blog") , $links->show());
+                // Make it stylable #BLOGSTYLE.
+                $linkTxt = "<span class=\"featureboxlink\">" 
+                  . $links->show() . "</span>";
+                $ret.= $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_admin", "blog") , $linkTxt);
             }
             return $ret;
         } else {
@@ -269,15 +272,52 @@ class blogops extends object
             $this->objUser = $this->getObject('user', 'security');
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
                 if ($this->mail2blog == FALSE) {
-                    $topper = $newpost->show() . "<br />" . $editpost->show() . "<br />" . $viewmyblog->show();
-                    $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $modcomms->show() . "<br />" . $viewblogs->show();
+                    // Make it stylable #BLOGSTYLE.
+                    $topper = "<span class=\"featureboxlink\">" 
+                      . $newpost->show() . "<br /></span>"
+                      . "<span class=\"featureboxlink\">"
+                      . $editpost->show() . "<br /></span>"
+                      . "<span class=\"featureboxlink\">"
+                      . $viewmyblog->show() . "</span>";
+                    $ret.= "<span class=\"featureboxlink\">" . $admin->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $profile->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $import->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $editcats->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $rssedits->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $linksedits->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $addeditpages->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $modcomms->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $viewblogs->show() . "</span>";
                 } else {
-                    $topper = $newpost->show() . "<br />" . $editpost->show() . "<br />" . $viewmyblog->show();
-                    $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $mailsetup->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $modcomms->show() . "<br />" . $viewblogs->show();
+                    // Make it stylable #BLOGSTYLE.
+                    $topper = "<span class=\"featureboxlink\">" . $newpost->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $editpost->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $viewmyblog->show() . "</span>";
+                    $ret.= "<span class=\"featureboxlink\">" . $admin->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $profile->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $import->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $mailsetup->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $editcats->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $rssedits->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $linksedits->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $addeditpages->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $modcomms->show() . "<br /></span>" 
+                      . "<span class=\"featureboxlink\">" . $viewblogs->show() . "</span>";
                 }
             } else {
-                $topper = $newpost->show() . "<br />" . $editpost->show() . "<br />" . $viewmyblog->show();
-                $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $modcomms->show() . "<br />" . $viewblogs->show();
+                // Make it stylable #BLOGSTYLE.
+                $topper =  "<span class=\"featureboxlink\">" .$newpost->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$editpost->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$viewmyblog->show() . "</span></span>";
+                $ret.=  "<span class=\"featureboxlink\">" .$admin->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$profile->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$import->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$editcats->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$rssedits->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$linksedits->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$addeditpages->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$modcomms->show() . "<br /></span>" 
+                  .  "<span class=\"featureboxlink\">" .$viewblogs->show() . "</span>";
             }
         }
         if ($featurebox == FALSE) {
@@ -295,6 +335,7 @@ class blogops extends object
             return $box;
         }
     }
+
     /**
      * Method to scrub grubby html
      *
