@@ -82,8 +82,20 @@ class triplestore extends controller
      */
     public function dispatch()
     {
+        $filters     = array();
+        $filterTypes = array('subject', 'predicate', 'object');
+
+        foreach ($filterTypes as $filterType) {
+            $filter = $this->getParam($filterType);
+            if ($filter) {
+                $filters[$filterType] = $filter;
+            }
+        }
+
+        $nestedTriples = $this->objTriplestore->getNestedTriples($filters);
+
         header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode($this->objTriplestore->getNestedTriples());
+        echo json_encode($nestedTriples);
     }
 
     /**
