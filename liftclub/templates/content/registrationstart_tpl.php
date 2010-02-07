@@ -52,11 +52,11 @@ $form = new form ('startregister', $this->uri(array('action'=>'modifydetails')))
 $messages = array();
 
 $table = $this->newObject('htmltable', 'htmlelements');
-$table->width = '60%';
+$table->width = '100%';
 $userneedRadio = new radio ('userneed');
-$userneedRadio->addOption('find', $this->objLanguage->languageText('phrase_find', 'liftclub','Find'));
+$userneedRadio->addOption('find', "".$this->objLanguage->languageText('phrase_find', 'liftclub','Find'));
 $userneedRadio->addOption('offer', $this->objLanguage->languageText('phrase_offer', 'liftclub', 'Offer'));
-$userneedRadio->setBreakSpace('table');
+$userneedRadio->setBreakSpace('');
 if ($mode == 'addfixup') {
     $userneedRadio->setSelected($this->getSession('userneed'));
 } else {
@@ -76,14 +76,9 @@ foreach ($titles as $title)
 if ($mode == 'addfixup') {
     $needtypeDropdown->setSelected($this->getSession('needtype'));
 }
-
 $table->startRow();
-$table->addCell($userneedLabel,'16%',"bottom");
-$table->addCell($userneedRadio->show(),'14%',"bottom");
-$table->addCell($needtypeLabel->show(),'20%',"bottom");
-$table->addCell($needtypeDropdown->show(),'10%',"bottom");
+$table->addCell($userneedLabel.$userneedRadio->show()."&nbsp;&nbsp;--&nbsp;&nbsp;".$needtypeLabel->show()."&nbsp;".$needtypeDropdown->show(), 50, NULL, 'left');
 $table->endRow();
-
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend = $this->objLanguage->languageText('phrase_membership', 'liftclub', 'Membership Information');
 $fieldset->contents = $table->show();
