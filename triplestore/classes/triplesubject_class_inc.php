@@ -158,6 +158,11 @@ class triplesubject extends object
             // If the instance exists, use the triplepredicate class to set the new objects.
             $this->__get($predicate)->set($objects);
         } else {
+            // Ensure $objects is an array.
+            if (!is_array($objects)) {
+                $objects = array($objects);
+            }
+
             // Delete the old triples.
             foreach ($this->triples as $i => $triple) {
                 if ($triple['predicate'] == $predicate) {
