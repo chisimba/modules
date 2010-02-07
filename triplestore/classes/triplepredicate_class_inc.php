@@ -198,12 +198,18 @@ class triplepredicate extends object implements Iterator
      */
     public function set($objects)
     {
+        // Ensure $objects is an array.
         if (!is_array($objects)) {
             $objects = array($objects);
         }
 
-        $this->objTriplestore->delete($this->subject, $this->predicate);
+        // Delete the old objects.
+        foreach ($this->objects as $id => $object) {
+            $this->objTriplestore->delete($id);
+        }
         $this->objects = array();
+
+        // Insert the new objects.
         foreach ($objects as $object) {
             $id = $this->objTriplestore->insert($this->subject, $this->predicate, $object);
             $this->objects[$id] = $object;
