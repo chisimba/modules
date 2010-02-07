@@ -119,8 +119,9 @@ class triplepredicate extends object implements Iterator
      */
     public function add($object)
     {
-        $this->objects[] = $object;
-        $this->objTriplestore->insert($this->subject, $this->predicate, $object);
+        $id = $this->objTriplestore->insert($this->subject, $this->predicate, $object);
+        $this->objects[$id] = $this->newObject('tripleobject', 'triplestore');
+        $this->objects[$id]->populate($id, $object);
     }
 
     /**
