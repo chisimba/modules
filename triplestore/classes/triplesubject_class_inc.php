@@ -195,6 +195,11 @@ class triplesubject extends object
         }
     }
 
+    /**
+     * Deletes all triples associated with this subject.
+     *
+     * @access public
+     */
     public function delete()
     {
         foreach ($this->predicates as $predicate) {
