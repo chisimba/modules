@@ -135,6 +135,22 @@ class triplepredicate extends object implements Iterator
     }
 
     /**
+     * Deletes all the objects in this predicate.
+     *
+     * @access public
+     */
+    public function delete()
+    {
+        // Delete the objects from the triplestore.
+        foreach ($this->objects as $id => $object) {
+            $this->objTriplestore->delete($id);
+        }
+
+        // Clear the object array.
+        $this->objects = array();
+    }
+
+    /**
      * Gets an object at a particular index.
      *
      * @access public
@@ -204,16 +220,13 @@ class triplepredicate extends object implements Iterator
      */
     public function set($objects)
     {
+        // Delete the old objects.
+        $this->delete();
+
         // Ensure $objects is an array.
         if (!is_array($objects)) {
             $objects = array($objects);
         }
-
-        // Delete the old objects.
-        foreach ($this->objects as $id => $object) {
-            $this->objTriplestore->delete($id);
-        }
-        $this->objects = array();
 
         // Insert the new objects.
         foreach ($objects as $object) {
