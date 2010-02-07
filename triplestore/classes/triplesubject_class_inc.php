@@ -112,7 +112,7 @@ class triplesubject extends object
             $objects = array();
             foreach ($this->triples as $triple) {
                 if ($triple['predicate'] === $predicate) {
-                    $objects[] = $triple['object'];
+                    $objects[$triple['id']] = $triple['object'];
                 }
             }
             $this->predicates[$predicate] = $this->newObject('triplepredicate', 'triplestore');
