@@ -82,7 +82,7 @@ class triplestore extends controller
      */
     public function dispatch()
     {
-        //header('Content-Type: application/json; charset=UTF-8');
+        header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($this->objTriplestore->getNestedTriples());
     }
 
