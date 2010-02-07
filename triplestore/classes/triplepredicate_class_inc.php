@@ -139,7 +139,7 @@ class triplepredicate extends object implements Iterator
      *
      * @access public
      * @param  integer $index The index of the object to return.
-     * @return string  The object at the index specified.
+     * @return object  An instance of the tripleobject class.
      */
     public function get($index)
     {
@@ -226,11 +226,17 @@ class triplepredicate extends object implements Iterator
      * Returns an array of objects on this predicate.
      *
      * @access public
-     * @return array The array of objects.
+     * @return array An associative array of the string values of the objects.
      */
     public function toArray()
     {
-        return $this->objects;
+        $objects = array();
+
+        foreach ($this->objects as $id => $object) {
+            $objects[$id] = (string) $object;
+        }
+
+        return $objects;
     }
 
     /**
