@@ -124,7 +124,7 @@ class dbtriplestore extends dbTable
             }
 
             // Ensure the predicate array exists on the subject.
-            if (!array_key_exists($triple['predicate'], $subject[$triple['subject']]) {
+            if (!array_key_exists($triple['predicate'], $subject[$triple['subject']])) {
                 $subject[$triple['subject']][$triple['predicate']] = array();
             }
 
