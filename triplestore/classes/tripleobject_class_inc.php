@@ -3,8 +3,8 @@
 class tripleobject extends object
 {
     protected $id;
-    protected $value;
     protected $objTriplestore;
+    protected $value;
 
     public function init()
     {
@@ -18,8 +18,8 @@ class tripleobject extends object
 
     public function edit($value)
     {
-        $this->value = $value;
         $this->objTriplestore->update($this->id, FALSE, FALSE, $value);
+        $this->value = $value;
     }
 
     public function populate($id, $value)
