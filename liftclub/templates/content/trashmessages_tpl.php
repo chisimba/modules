@@ -4,14 +4,14 @@
 
 
 	$objSysConfig  = $this->getObject('altconfig','config');
-	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'htmlelements');
+	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'extjs');
 	
 	//$ext .=$this->getJavaScriptFile('ColumnNodeUI.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('Ext.ux.grid.Search.js', 'liftclub');
 	//$ext .=$this->getJavaScriptFile('sendmessagesform.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('trashinterface.js', 'liftclub');
 
-	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'extjs');
 	
 	//setup the dynamicuri
 	$this->appendArrayVar('headerParams', '
@@ -53,11 +53,11 @@
            lang["norecordstodisplay"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_norecordstodisplay', 'liftclub', NULL, 'No Records To Display')).'";
 	        	</script>');
 
-			$extbase_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+			$extbase_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','extjs').'" type="text/javascript"></script>';
 		
-			$extall_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js', 'htmlelements').'" type="text/javascript"></script>';
+			$extall_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js', 'extjs').'" type="text/javascript"></script>';
 		
-			$extall_css = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
+			$extall_css = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'extjs').'" type="text/css" />';
 		
 			$this->appendArrayVar('headerParams', $extbase_js);
 			$this->appendArrayVar('headerParams', $extall_js);

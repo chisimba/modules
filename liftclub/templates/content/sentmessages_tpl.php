@@ -4,14 +4,14 @@
 
 
 	$objSysConfig  = $this->getObject('altconfig','config');
-	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'htmlelements');
+	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'extjs');
 	
 //	$ext .=$this->getJavaScriptFile('extjsExtendHTMLEditorToolbar.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('Ext.ux.grid.Search.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('sendmessagesform.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('outboxinterface.js', 'liftclub');
 
-	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+	//$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'extjs');
 
 	
 	//setup the dynamicuri
@@ -53,17 +53,17 @@
            lang["displayingrecords"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_displayingrecords', 'liftclub', NULL, 'Displaying Records')).'";
            lang["norecordstodisplay"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_norecordstodisplay', 'liftclub', NULL, 'No Records To Display')).'";
 	        	</script>');
-			$extall_css = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
+			$extall_css = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'extjs').'" type="text/css" />';
 
-			$extbase_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+			$extbase_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','extjs').'" type="text/javascript"></script>';
 
 			//$extall_js = '<script language="JavaScript" src="'.$this->getResourceUri('extFCKEditor.js', 'liftclub').'" type="text/javascript"></script>';
 
-			$extall_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js', 'htmlelements').'" type="text/javascript"></script>';
+			$extall_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js', 'extjs').'" type="text/javascript"></script>';
 
-			$extalldebug_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all-debug.js', 'htmlelements').'" type="text/javascript"></script>';
+			$extalldebug_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all-debug.js', 'extjs').'" type="text/javascript"></script>';
 
-			$exteditor_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/source/wigets/form/HtmlEditor.js', 'htmlelements').'" type="text/javascript"></script>';
+			$exteditor_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/source/wigets/form/HtmlEditor.js', 'extjs').'" type="text/javascript"></script>';
 		
 			$this->appendArrayVar('headerParams', $extall_css);		
 			$this->appendArrayVar('headerParams', $extbase_js);
