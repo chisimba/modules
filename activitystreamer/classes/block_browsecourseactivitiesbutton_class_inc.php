@@ -105,9 +105,9 @@ class block_browsecourseactivitiesbutton extends object
         $ext .=$this->getJavaScriptFile('searchcourseactivitiesbutton.js', 'activitystreamer');
         $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
        
-        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
-        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'htmlelements').'" type="text/css" />';
-        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'extjs').'" type="text/css" />';
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'extjs').'" type="text/css" />';
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'extjs').'" type="text/css" />';
         $this->appendArrayVar('headerParams', $ext);
         
 								//Div to render content
