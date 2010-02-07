@@ -103,6 +103,40 @@ class dbtriplestore extends dbTable
     }
 
     /**
+     * Returns a nested associative array of all the triples in the triplestore.
+     *
+     * @access public
+     * @return array The nested array of triples.
+     */
+    public function getNestedTriples()
+    {
+        // Retrieve all the triples out of the triplestore.
+        $triples = $this->getAll();
+
+        // Initialise the data array to be returned.
+        $subjects = array();
+
+        // Add each triple to the data array.
+        foreach ($triples as $triple) {
+            // Ensure the subject array exists.
+            if (!array_key_exists($triple['subject'], $subjects)) {
+                $subject[$triple['subject']] = array();
+            }
+
+            // Ensure the predicate array exists on the subject.
+            if (!array_key_exists($triple['predicate'], $subject[$triple['subject']]) {
+                $subject[$triple['subject']][$triple['predicate']] = array();
+            }
+
+            // Add the object to the predicate array on the subject.
+            $subject[$triple['subject']][$triple['predicate']][$triple['id']] = $triple['object'];
+        }
+
+        // Return the nested array of data.
+        return $subjects;
+    }
+
+    /**
      * Fetches all of the triples associated with a particular subject out of the triplestore.
      *
      * @access public
