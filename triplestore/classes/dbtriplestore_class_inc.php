@@ -129,7 +129,7 @@ class dbtriplestore extends dbTable
             }
 
             // Add the object to the predicate array on the subject.
-            $subject[$triple['subject']][$triple['predicate']][$triple['id']] = $triple['object'];
+            $subjects[$triple['subject']][$triple['predicate']][$triple['id']] = $triple['object'];
         }
 
         // Return the nested array of data.
