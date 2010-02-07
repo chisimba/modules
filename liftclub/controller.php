@@ -688,7 +688,11 @@ class liftclub extends controller
 
         if($this->getSession('needtype')!=='Trip'){
          $daterequired = null;
-		       $traveltimes = $this->getParam('traveltimes');
+         $hour = $this->getParam('hour');
+         $minute = $this->getParam('minute');
+         $pm = $this->getParam('pm');
+         $tripTime = $hour.":".$minute." ".$pm;         
+		       $traveltimes = $tripTime;
 		       $monday = $this->getParam('monday');
 		       $tuesday = $this->getParam('tuesday');
 		       $wednesday = $this->getParam('wednesday');

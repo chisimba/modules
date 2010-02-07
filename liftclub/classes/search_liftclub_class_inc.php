@@ -529,5 +529,52 @@ class search_liftclub extends dbTable
         }
         return json_encode(array('liftcount' => $liftCount, 'searchresults' =>  $searchArray));
     }
+   function hourmin($hval = "", $mval = "", $pval = "")
+   {
+      $hid = "hour"; 
+      $mid = "minute";
+      $pid = "pm";
+      $this->loadClass('dropdown', 'htmlelements');
+      if(empty($hval)) $hval = date("h");
+
+      if(empty($mval)) $mval = date("i");
+   
+      if(empty($pval)) $pval = date("a");
+
+
+      $hours = array(12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+
+      $out = "";
+      $hourRadio = new dropdown ($hid);
+      foreach($hours as $hour){
+       $hourRadio->addOption($hour, $hour);
+       if(intval($hval) == intval($hour)) $hourRadio->setSelected($hour);
+      }
+      $out .= $hourRadio->show();
+
+       
+      $minutes = array("00", 15, 30, 45);
+
+      $minRadio = new dropdown ($mid);
+
+      foreach($minutes as $minute){
+       $minRadio->addOption($minute, $minute);
+       if(intval($mval) == intval($minute)) $minRadio->setSelected($minute);
+      }
+      $out .= $minRadio->show();
+
+      $pmRadio = new dropdown ($pid);
+
+      $pmRadio->addOption('am', 'am');
+      if($pval == "am")  $pmRadio->setSelected('am');
+
+      $pmRadio->addOption('pm', 'pm');
+      if($pval == "pm")  $pmRadio->setSelected('pm');
+                
+      $out .= $pmRadio->show();
+
+      return $out;
+
+      }    
 }
 ?>

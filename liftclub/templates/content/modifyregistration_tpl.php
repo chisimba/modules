@@ -334,9 +334,28 @@ if($userneed=='Trip'){
 
 }else{
 	$table->startRow();
-	$traveltimes = new textinput('traveltimes');
+	//$traveltimes = new textinput('traveltimes');
+	
+	if(!empty($triptimes)){
+	$triptimesA = explode(":",$triptimes);
+	 if(count($triptimesA)==2){
+	  $hval = $triptimesA[0];
+	  $triptimesB = explode(" ",$triptimesA[1]);
+	  $mval = $triptimesB[0];
+	  $pval = $triptimesB[1];
+	 }else{
+	  $hval = "";
+	  $mval = "";
+	  $pval = "";	 
+	 }
+	}else{
+	  $hval = "";
+	  $mval = "";
+	  $pval = "";	 	
+	}
+	$hourMin = $this->objLiftSearch->hourmin($hval, $mval, $pval);
 	$traveltimesLabel = new label($this->objLanguage->languageText('mod_liftclub_traveltimes', 'liftclub', "Travel Times").'&nbsp;', 'input_traveltimes');
- $traveltimes->value = $triptimes;
+ //$traveltimes->value = $triptimes;
 	if ($mode == 'addfixup') {
 		   $traveltimes->value = $this->getParam('traveltimes');
 
@@ -347,7 +366,7 @@ if($userneed=='Trip'){
 
 	$table->addCell($traveltimesLabel->show(), 150, NULL, 'right');
 	$table->addCell('&nbsp;', 5);
-	$table->addCell($traveltimes->show().$required);
+	$table->addCell($hourMin.$required);
 	$table->endRow();
 
 	$table->startRow();
