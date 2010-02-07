@@ -56,7 +56,7 @@ $table->width = '100%';
 $userneedRadio = new radio ('userneed');
 $userneedRadio->addOption('find', "".$this->objLanguage->languageText('phrase_find', 'liftclub','Find'));
 $userneedRadio->addOption('offer', $this->objLanguage->languageText('phrase_offer', 'liftclub', 'Offer'));
-$userneedRadio->setBreakSpace('');
+$userneedRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;');
 if ($mode == 'addfixup') {
     $userneedRadio->setSelected($this->getSession('userneed'));
 } else {
