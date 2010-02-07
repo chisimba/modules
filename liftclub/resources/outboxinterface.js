@@ -560,7 +560,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
 
 var myBorderPanel = new Ext.Panel({
     //renderTo: document.body,
-    width: 950,
+    width: '100%',
     height: 400,
     margins: '10 10 10 10',
     padding: '10 10 10 10',

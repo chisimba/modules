@@ -39,7 +39,7 @@ var liftdata = new Ext.data.JsonStore({
  }
     var grid = new Ext.grid.GridPanel({
         el:'find-grid',
-        width:700,
+        width:'100%',
         height:400,
         title:liftitle,
         store: liftdata,
