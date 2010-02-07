@@ -188,6 +188,20 @@ class triplesubject extends object
         }
     }
 
+    public function delete()
+    {
+        foreach ($this->predicates as $predicate) {
+            $predicate->delete();
+        }
+
+        foreach ($this->triples as $i => $triple) {
+            if (!array_key_exists($triple['predicate'], $this->predicates)) {
+                $this->objTriplestore->delete($triple['id']);
+                unset($this->triples[$i]);
+            }
+        }
+    }
+
     /**
      * Populates the properties of the object.
      *
