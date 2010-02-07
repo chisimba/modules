@@ -92,6 +92,17 @@ class tripleobject extends object
     }
 
     /**
+     * Converts this object to a string.
+     *
+     * @access public
+     * @return string The value of this object.
+     */
+    public function __toString()
+    {
+        return $this->value;
+    }
+
+    /**
      * Deletes the triple containing this object.
      *
      * @access public
