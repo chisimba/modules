@@ -153,7 +153,34 @@ class triplesubject extends object
 
     public function __set($predicate, $objects)
     {
-        $this->__get($predicate)->set($objects);
+        // Check if an instance of triplepredicate has already been created for this predicate.
+        if (array_key_exists($predicate, $this->predicates)) {
+            // If the instance exists, use the triplepredicate class to set the new objects.
+            $this->__get($predicate)->set($objects);
+        } else {
+            // Delete the old triples.
+            foreach ($this->triples as $i => $triple) {
+                if ($triple['predicate'] == $predicate) {
+                    $this->objTriplestore->delete($triple['id']);
+                    unset($this->triples[$i]);
+                }
+            }
+
+            // Add the new triples.
+            foreach ($objects as $object) {
+                // Insert the new triple into the triplestore.
+                $id = $this->objTriplestore->insert($this->subject, $predicate, $object);
+
+                // Compile the triple array.
+                $triple              = array();
+                $triple['id']        = $id;
+                $triple['subject']   = $this->subject;
+                $triple['predicate'] = $predicate;
+
+                // Add the new triple to the triples property.
+                $this->triples[] = $triple;
+            }
+        }
     }
 
     /**
