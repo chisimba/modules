@@ -519,6 +519,7 @@ class bloglinksandroll extends object
         $ositeblogs = new href($this->uri(array(
             'action' => 'siteblog'
         )) , $this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , NULL);
+
         $defmodLink = new href($this->uri(array() , '_default') , $this->objLanguage->languageText("mod_blog_returntosite", "blog") , NULL);
         if ($featurebox == FALSE) {
             $ret = "<span class=\"featureboxlink\">" 
