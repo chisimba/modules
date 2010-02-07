@@ -151,6 +151,13 @@ class triplesubject extends object
         return $found;
     }
 
+    /**
+     * Sets the object or objects associated with a particular predicate on this subject.
+     *
+     * @access public
+     * @param  string $predicate The predicate to set.
+     * @param  mixed  $objects   The object value or an array of objects.
+     */
     public function __set($predicate, $objects)
     {
         // Check if an instance of triplepredicate has already been created for this predicate.
