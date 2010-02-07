@@ -67,6 +67,26 @@ class dbtriplestore extends dbTable
     }
 
     /**
+     * Returns an easy to use object to access and modify triples associated with a particular subject.
+     *
+     * @access public
+     * @param  string $subject The id of the subject.
+     * @return object Instance of the triplesubject class representing the subject requested.
+     */
+    public function __get($subject)
+    {
+        // Retrieve the triples associated with the subject.
+        $triples = $this->getAll("WHERE subject = '$subject'");
+
+        // Initialise and populate a new instance of the triplesubject class.
+        $objSubject = $this->newObject('triplesubject', 'triplestore');
+        $objSubject->populate($subject, $triples);
+
+        // Return the newly created triplesubject.
+        return $objSubject;
+    }
+
+    /**
      * Deletes a triple from the triplestore.
      *
      * @access public
@@ -80,26 +100,6 @@ class dbtriplestore extends dbTable
 
         // Return the result of the delete.
         return $result;
-    }
-
-    /**
-     * Returns an easy to use object to access and modify triples associated with a particular subject.
-     *
-     * @access public
-     * @param  string $subject The id of the subject.
-     * @return object Instance of the triplesubject class representing the subject requested.
-     */
-    public function getSubject($subject)
-    {
-        // Retrieve the triples associated with the subject.
-        $triples = $this->getAll("WHERE subject = '$subject'");
-
-        // Initialise and populate a new instance of the triplesubject class.
-        $objSubject = $this->newObject('triplesubject', 'triplestore');
-        $objSubject->populate($subject, $triples);
-
-        // Return the newly created triplesubject.
-        return $objSubject;
     }
 
     /**
