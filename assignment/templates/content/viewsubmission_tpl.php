@@ -4,6 +4,7 @@ $isLecturerRole = $this->objUser->isCourseAdmin($this->contextCode);
 //var_dump($submission);
 //echo '</pre>';
 // StyleSheet for the slider
+/*
 $css="
 <style type=\"text/css\">
 .form_widget_amount_slider{
@@ -22,6 +23,7 @@ $this->appendArrayVar('headerParams', $css);
 // JavaScript for the slider
 $js='<script language="JavaScript" src="'.$this->getResourceUri('dhtmlslider.js').'" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
+*/
 // Load classes
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -243,7 +245,13 @@ if ($assignment['format'] == '1') {
     	$objSubTable->addCell("&nbsp;");
     	$objSubTable->endRow();
      	$objSubTable->startRow();
-    	$objSubTable->addCell("&nbsp;",'70%','','left','',' id=\'slider_target\'');
+        $objSlider = $this->newObject('dhtmlgoodies_slider', 'dhtmlgoodies');
+        $objSlider->setTargetId('slider_target');
+        $objSlider->setFieldRef('document._form.mark');
+        $objSlider->setWidth(200);
+        $objSlider->setMin(0);
+        $objSlider->setmax($assignment['mark']);
+    	$objSubTable->addCell('<span id=\'slider_target\'></span>'.$objSlider->show(),'70%','','left');
     	$objSubTable->addCell("&nbsp;");
     	$objSubTable->endRow();
         $table->startRow();
@@ -374,11 +382,11 @@ $link->link = $this->objLanguage->languageText('mod_assignment_returntoassgn', '
 echo '<p>'.$link->show().'</p>';
 //last portion of the slider's script
 //function form_widget_amount_slider(targetElId,formTarget,width,min,max,onchangeAction)
-$sliderJS="
-    <script type=\"text/javascript\">
-    set_form_widget_amount_slider_handle('".$this->getResourceUri('slider_handle.gif')."');
-    form_widget_amount_slider('slider_target',document._form.mark,200,0,".$assignment['mark'].",false);
-    </script>
-";
-echo $sliderJS;
+//$sliderJS="
+//    <script type=\"text/javascript\">
+//    set_form_widget_amount_slider_handle('".$this->getResourceUri('slider_handle.gif')."');
+//    form_widget_amount_slider('slider_target',document._form.mark,200,0,"..",false);
+//    </script>
+//";
+//echo $sliderJS;
 ?>
