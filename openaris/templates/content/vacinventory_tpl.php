@@ -187,7 +187,7 @@ $objTable->addCell($reportDate->show());
 $objTable->endRow();
 $objTable->startRow();
 
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate','openaris').$tab);
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibarrecdate','openaris').$tab);
 $objTable->addCell($ibarDate->show());
 $objTable->endRow();
 
