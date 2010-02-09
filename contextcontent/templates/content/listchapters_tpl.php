@@ -340,5 +340,14 @@ if ($this->isValid('addchapter')) {
     echo $link->show();
 }
 
+    
+    $link = new link($this->uri(array(
+    		'action' => 'rss', 'title' => $this->objContext->getTitle(), 'rss_contextcode' => $this->contextCode)));
+    $objIcon->setIcon('rss');
+    $objIcon->alt = null;
+    $objIcon->title = null;
+    $link->link = $objIcon->show();
+    echo '<br/><br clear="left" />'.$link->show();
+
 
 ?>

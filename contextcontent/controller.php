@@ -87,28 +87,26 @@ class contextcontent extends controller {
             $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 
             // Load Context Object
-            $this->objContext = $this->getObject('dbcontext', 'context');
-
-            //Load the Logger
-            $this->objLog = $this->getObject('logactivity','logger');
-            //Load this module call
-            $this->objLog->log();
+            $this->objContext = $this->getObject('dbcontext', 'context');            
 
             // Store Context Code
             $this->contextCode = $this->objContext->getContextCode();
+
 
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
             $this->userId = $this->objUser->userId();
             $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
             //Load Activity Streamer
-            if($this->objModuleCatalogue->checkIfRegistered('activitystreamer')) {
-                $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-                $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+
+            if($this->objModuleCatalogue->checkIfRegistered('activitystreamer') && $this->objUser->isLoggedIn()) {
+               // $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+               // $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
                 $this->eventsEnabled = TRUE;
             } else {
                 $this->eventsEnabled = FALSE;
             }
+		
 
 
             $this->objMenuTools = $this->getObject('tools', 'toolbar');
@@ -121,6 +119,8 @@ class contextcontent extends controller {
             //we don't want to even attempt anything else right now.
             die();
         }
+
+
     }
 
 
@@ -131,11 +131,21 @@ class contextcontent extends controller {
      * @return boolean
      */
     function requiresLogin($action) {
-        if ($action=='' || $action == 'viewpage') {
+	$actions = array('viewchapter','viewpage', 'rss', '');
+	if(in_array($action, $actions)){
+		return FALSE;
+		var_dump($action);
+	}else{
+		return TRUE;
+	}
+
+  /*if ($action=='' || $action == 'viewpage') {
             return FALSE;
-        } else {
+        } else if($action=='rss'){
+	    return FALSE;
+    	} else{
             return TRUE;
-        }
+        }*/
     }
 
 
@@ -145,10 +155,16 @@ class contextcontent extends controller {
      * @param string $action
      */
     public function dispatch($action) {
+
+	$this->contextCode = ($this->getParam('rss_contextcode') != "") ? $this->getParam('rss_contextcode') : $this->contextCode ;
+
+	//$this->getParam('contextcode');
         if ($this->contextCode == '' && $action != 'notincontext') {
             $action = 'notincontext';
         }
-
+//var_dump($action);
+//var_dump($this->contextCode);
+//die;
         $this->setLayoutTemplate('layout_chapter_tpl.php');
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
 
@@ -225,6 +241,8 @@ class contextcontent extends controller {
                 return $this->showcontexttools();
             case 'chapterlistastree':
                 return $this->getChapterListAsTree();
+	    	case 'rss':
+				return $this->viewRss();
             default:
             //return $this->home_debug();
                 return $this->showContextChapters();
@@ -957,9 +975,10 @@ class contextcontent extends controller {
      * @param string $id Record Id of the Chapter
      */
     protected function viewChapter($id) {
+
         $firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id, $this->contextCode);
-        if ($ischapterlogged==FALSE) {
+        if ($ischapterlogged==FALSE && $this->eventsEnabled) {
             $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $id, $this->contextCode);
         }
         if ($firstPage == FALSE) {
@@ -1261,5 +1280,53 @@ class contextcontent extends controller {
         $this->objContentOrder->rebuildContext($this->contextCode);
     }
 
+    /**
+     * Used to display the latest presentations of a user RSS Feed
+     *
+     */
+    public function viewRss()
+    {
+        $this->objFeedCreator = $this->getObject('feeder', 'feed');
+        $format = 'RSS2.0'; // $this->getParam('feedselector');
+        //grab the feed items
+        $posts = $this->objContextChapters->getContextChapters($this->getParam('rss_contextcode'));
+    	error_log(var_export($posts, true));
+        //set up the feed...
+        $fullname = $this->getParam('title');
+        //title of the feed
+        $feedtitle = htmlentities($fullname);
+        //description
+        $feedDescription = "RSS2.0 Feed of the $fullname stream";
+
+        //link back to the blog
+        $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&rss_contextcode=".$this->getParam('rss_contextcode');
+        //sanitize the link
+        $feedLink = htmlentities($feedLink);
+        //set up the url
+        $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&action=rss";
+        $feedURL = htmlentities($feedURL);
+        //set up the feed
+        $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
+        //loop through the posts and create feed items from them
+        foreach($posts as $feeditems) {
+            	//use the post title as the feed item title
+		$itemTitle = $fullname.': '.$feeditems['chaptertitle'];
+		$itemLink = str_replace('&amp;', '&', $this->uri(array('action' => 'viewchapter', 'id' => $feeditems['chapterid'], 'rss_contextcode' => $this->getParam('rss_contextcode'))));
+                //description
+		$itemDescription = substr(strip_tags($feeditems['introduction']), 0, 200).'...';
+                //where are we getting this from
+                $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&rss_contextcode=".$this->getParam('rss_contextcode');
+                //feed author
+                //$auth = $feeditem['from_user'];
+                //$itemAuthor = htmlentities($auth."<$auth@capetown.peeps.co.za>");
+                //add this item to the feed
+                $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
+          }
+        //check which format was chosen and output according to that
+        $feed = $this->objFeedCreator->output(); //defaults to RSS2.0
+        echo htmlentities($feed);
+        break;
+
+    }
 }
 ?>
