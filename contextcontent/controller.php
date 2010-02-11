@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Context Content controller
  *
@@ -255,7 +254,8 @@ class contextcontent extends controller {
      * @param $action Action to be taken
      * @return boolean
      */
-    public function isValid($action) {
+    public function isValid($action) {        
+        $courseDetails = $this->objContext->getField('access',$this->contextCode);        
         if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
             return TRUE;
         } else {
@@ -739,12 +739,13 @@ class contextcontent extends controller {
             ),
             'scorm');
         }
-        //Log in activity streamer
-        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
-        if ($ischapterlogged==FALSE) {
+        //Log in activity streamer if logged in
+        if(!empty($this->userId)){
+         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
+         if ($ischapterlogged==FALSE) {
             $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);
+         }
         }
-
         if ($page == FALSE) {
         //echo 'page does not exist';
             return $this->nextAction(NULL, array('error'=>'pagedoesnotexist'));
