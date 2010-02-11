@@ -180,5 +180,5 @@ var id="";
 });
 ';
 
-echo "<div id=\"search-xwin\"><script type='text/javascript'>".$autosave."</script></div>";;
+//echo "<div id=\"search-xwin\"><script type='text/javascript'>".$autosave."</script></div>";;
 ?>
