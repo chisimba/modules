@@ -669,7 +669,13 @@ class db_contextcontent_order extends dbtable
         
         if (count($results) == 0) {
             $page = $this->getArray("SELECT chaptertitle FROM tbl_contextcontent_chaptercontent WHERE chapterid = '$chapter'");
-            $link = new link ($this->uri(array("action"=>"home"), $module)."#$chapter");
+            //If user is logged in specify action, otherwise for public courses, just go to contextcontent home
+            $userId = $this->objUser->userId();
+            if(!empty($userId)){
+             $link = new link ($this->uri(array("action"=>"showcontextchapters","chapterid"=>$chapter), $module));
+            }else{
+             $link = new link ($this->uri(Null, $module));
+            }
             $link->link = '&#171; '.'Back to Chapter: '.htmlentities($page[0]['chaptertitle']);
         } else {
             $page = $results[0];

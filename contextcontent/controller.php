@@ -156,7 +156,6 @@ class contextcontent extends controller {
     public function dispatch($action) {
 
 	$this->contextCode = ($this->getParam('rss_contextcode') != "") ? $this->getParam('rss_contextcode') : $this->contextCode ;
-
 	//$this->getParam('contextcode');
         if ($this->contextCode == '' && $action != 'notincontext') {
             $action = 'notincontext';
@@ -240,6 +239,8 @@ class contextcontent extends controller {
                 return $this->showcontexttools();
             case 'chapterlistastree':
                 return $this->getChapterListAsTree();
+            case 'showcontextchapters':
+                return $this->showContextChapters();
 	    	case 'rss':
 				return $this->viewRss();
             default:
