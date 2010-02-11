@@ -739,7 +739,7 @@ class contextcontent extends controller {
             ),
             'scorm');
         }
-        //Log in activity streamer if logged in
+        //Log in activity streamer only if logged in (Public courses dont need login)
         if(!empty($this->userId)){
          $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
          if ($ischapterlogged==FALSE) {
