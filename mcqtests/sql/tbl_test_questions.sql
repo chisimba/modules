@@ -60,8 +60,8 @@ $name = 'test_questions_index';
 
 $indexes = array(
                 'fields' => array(
-                    'testid' => array(),
-                    'imageid' => array(),
+                    'testid' => array() //,
+                    //'imageid' => array(),
                 ),
         );
 ?>
