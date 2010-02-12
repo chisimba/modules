@@ -57,7 +57,7 @@ class userutils extends object {
 
     public function getUserId() {
         $userid=$this->objUser->userid();
-        //$userid=1;
+        $userid=1;
         return $userid;
     }
     public function showPageHeading($page=null) {
@@ -307,36 +307,49 @@ class userutils extends object {
     /**
      * retrieves folders that this user has access to
      */
-    function getFolders() {
+    function getFolders($mode) {
         $objUser = $this->getObject("user", "security");
         $dir=$this->objSysConfig->getValue('FILES_DIR', 'dms');
-
+        $apodir=$this->objSysConfig->getValue('APO_DIR', 'dms');
         $node = isset($_REQUEST['id'])?$_REQUEST['id']:"";
+        $isadmin=$this->objUser->isAdmin()?"true":"false";
+        $isadmin="true";
+        //is it apo?
+        if($mode == 'apo' && $node=="" && $isadmin != 'true') {
+            $node=$apodir;
+        }
 
         if(strpos($node, '..') !== false) {
             die('Nice try buddy.');
         }
         $result="<items>";
+        $cdir=$dir.'/'.$node;
+        $cdir=str_replace("//", "/", $cdir);
 
-        $d = dir($dir.$node);
+        $d = dir($cdir);
 
         while($f = $d->read()) {
-            if($f == '.' || $f == '..' || substr($f, 0, 1) == '.')continue;
-            $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
 
-            if(is_dir($dir.$node.'/'.$f)) {
+            if($f == '.' || $f == '..' || substr($f, 0, 1) == '.')continue;
+
+            $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
+            $rdir=$dir.$node.'/'.$f;
+            $rdir=str_replace("//", "/", $rdir);
+            if(is_dir($rdir)) {
                 //set permission before adding
-                $permissions=$this->folderPermissions->getPermmissions($node.'/'.$f);
-                $isadmin=$this->objUser->isAdmin()?"true":"false";
+                $pdir=$node.'/'.$f;
+                $pdir=str_replace("//", "/", $pdir);
+                $permissions=$this->folderPermissions->getPermmissions($pdir);
 
                 foreach ($permissions as $permission) {
-                    //echo "perms";
-                    $isowner=$this->objUser->userid() == $permission['userid']?"true":"false";
+               
+                    $userid=$this->getUserId();
+                    $isowner= $userid== $permission['userid']?"true":"false";
 
                     $result.='<item
                         folder="true"
                         name="'.$f.'"
-                        id="'.$node.'/'.$f.'"
+                        id="'.$pdir.'"
                         lastmodified="'.$lastmod.'"
                         size="'.$size.'"
                         viewfiles="'.$permission['viewfiles'].'"
@@ -353,7 +366,7 @@ class userutils extends object {
 
         $result.="</items>";
         $d->close();
-        echo $result;
+        echo  $result;
         die();
     }
 

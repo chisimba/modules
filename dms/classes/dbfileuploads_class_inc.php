@@ -28,6 +28,14 @@ class dbfileuploads extends dbtable {
 
     public function init() {
         parent::init($this->tablename);
+        $this->objUser=$this->getObject('user','security');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objAltConfig = $this->getObject('altconfig','config');
+        $this->resourcePath=$this->objAltConfig->getModulePath();
+        $replacewith="";
+        $docRoot=$_SERVER['DOCUMENT_ROOT'];
+        $location = "http://" . $_SERVER['HTTP_HOST'];
+        $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
     }
 
     public function setUserId($userid) {
@@ -85,13 +93,91 @@ class dbfileuploads extends dbtable {
      * @return <type>
      */
     public function getFileInfo($filename, $filepath) {
-      $filepath=  str_replace("//", "/", $filepath);
+        $filepath=  str_replace("//", "/", $filepath);
         $sql="select * from $this->tablename  fls,tbl_dms_documents docs
                 where fls.filename = '$filename' and fls.filepath = '$filepath'
                 and fls.docid=docs.id and docs.active='Y'";
+
         $data = $this->getArray($sql);
         return $data;
     }
 
+    function searchfiles($filter) {
+        $objUserutils=$this->getObject('userutils');
+        $sql="select * from tbl_dms_fileuploads where filename like '%$filter%'";
+
+        $sql.=' order by date_uploaded DESC';
+
+        $owner=$objUserutils->getUserId();
+        $rows=$this->getArray($sql);
+        $files=array();
+
+        foreach ($rows as $row) {
+            $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
+            $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
+            $files[] = array(
+                    'text'=>$row['filename'],
+                    'id'=>$row['filepath'],
+                    'docid'=>$row['docid'],
+                    'refno'=>$row['id'],
+                    'owner'=>$this->objUser->fullname($row['userid']),
+                    'lastmod'=>$lastmod,
+                    'filesize'=>$size,
+                    'thumbnailpath'=>$this->sitePath.'/dms/resources/images/ext/'.$this->findexts($row['filename']).'.png'
+            );
+
+        }
+        echo json_encode(array("files"=>$files));
+
+        die();
+    }
+    // from php manual page
+    function formatBytes($val, $digits = 3, $mode = "SI", $bB = "B") { //$mode == "SI"|"IEC", $bB == "b"|"B"
+        $si = array("", "K", "M", "G", "T", "P", "E", "Z", "Y");
+        $iec = array("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi", "Yi");
+        switch(strtoupper($mode)) {
+            case "SI" : $factor = 1000;
+                $symbols = $si;
+                break;
+            case "IEC" : $factor = 1024;
+                $symbols = $iec;
+                break;
+            default : $factor = 1000;
+                $symbols = $si;
+                break;
+        }
+        switch($bB) {
+            case "b" : $val *= 8;
+                break;
+            default : $bB = "B";
+                break;
+        }
+        for($i=0;$i<count($symbols)-1 && $val>=$factor;$i++)
+            $val /= $factor;
+        $p = strpos($val, ".");
+        if($p !== false && $p > $digits) $val = round($val);
+        elseif($p !== false) $val = round($val, $digits-$p);
+        return round($val, $digits) . " " . $symbols[$i] . $bB;
+    }
+
+    /**
+     *  used to get ext to a file
+     * @param <type> $filename
+     * @return <type>
+     */
+    function findexts ($filename) {
+        $filename = strtolower($filename) ;
+        $exts = split("[/\\.]", $filename) ;
+        $n = count($exts)-1;
+        $ext = $exts[$n];
+
+        //check if icon for this exists, else return unknown
+        $filePath=$this->objConfig->getModulePath().'/dms/resources/images/ext/'.$ext.'.png';
+        if(file_exists($filePath) ) {
+            return $ext;
+        }else {
+            return "unknown";
+        }
+    }
 }
 ?>

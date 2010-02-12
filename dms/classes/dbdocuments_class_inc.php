@@ -38,8 +38,8 @@ class dbdocuments extends dbtable {
         $this->objUploadTable = $this->getObject('dbfileuploads');
         $this->userutils=$this->getObject('userutils');
     }
-    public function getdocuments() {
-        $sql="select * from tbl_dms_documents where active = 'N'";
+    public function getdocuments($mode="default") {
+        $sql="select * from tbl_dms_documents where active = 'N' and mode ='$mode'";
         if(!$this->objUser->isadmin()) {
             //$sql.=" and userid = '".$this->objUser->userid()."'";
         }
@@ -79,7 +79,11 @@ class dbdocuments extends dbtable {
             $department,
             $telephone,
             $title,
-            $path
+            $groupid,
+            $path,
+            $mode="default",
+            $approved="N"
+
     ) {
 
 
@@ -89,13 +93,16 @@ class dbdocuments extends dbtable {
                 'date_created'=>$date,
                 'userid'=>$userid,
                 'refno'=>$refno,
+                'groupid'=>$groupid,
                 'department'=>$department,
                 'telephone'=>$telephone,
                 'topic'=>$path,
-                'active'=>'N'
+                'mode'=>$mode,
+                'active'=>$approved
         );
         $id=$this->insert($data);
         echo $refno.','.$id;
+        return $id;
     }
 
     /**
