@@ -55,4 +55,18 @@
 
         </data>
     </update>
+
+        <update>
+        <table>tbl_dms_documents</table>
+        <version>0.019</version>
+        <description>Added the mode field</description>
+        <data>
+            <add>
+                <name>mode</name>
+                <type>text</type>
+                <length>10</length>
+            </add>
+
+        </data>
+    </update>
 </updates>
