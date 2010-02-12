@@ -223,7 +223,8 @@ class dms extends controller {
      * @return <type>
      */
     public function __getFolders() {
-        return $this->objUtils->getFolders();
+        $mode=$this->getParam("mode");
+        return $this->objUtils->getFolders($mode);
     }
     /**
      * gets a list of files in a selected dir. Thel list is given in json format
@@ -344,8 +345,9 @@ class dms extends controller {
     /**
      *  returns true / false, if admin
      */
-    public function __isadmin() {
-        echo "true";
+    public function __determinepermissions() {
+        $mode=$this->objSysConfig->getValue('MODE', 'dms');
+        echo "admin=true,mode=$mode";
         // echo $this->objUser->isAdmin()?"true":"false";
     }
 
@@ -361,11 +363,12 @@ class dms extends controller {
         echo file_exists($path)?"success":"false";
     }
 
-    function __registerdocument() {
+        function __registerdocument() {
         $date=$this->getParam('date');
         $number=$this->getParam('number');
         $dept=$this->getParam('department');
         $title=$this->getParam('title');
+
         $selectedfolder=$this->getParam('topic');
         $refno=$number.$date;
         $telephone=$this->getParam('telephone');
@@ -376,10 +379,70 @@ class dms extends controller {
                 $dept,
                 $telephone,
                 $title,
+                "default",
                 $selectedfolder);
 
     }
 
+    function __updatedocument() {
+        $date=$this->getParam('date');
+        $number=$this->getParam('number');
+        $dept=$this->getParam('department');
+        $title=$this->getParam('title');
+       
+        $selectedfolder=$this->getParam('topic');
+        $refno=$number.$date;
+        $telephone=$this->getParam('telephone');
+
+        $this->documents->addDocument(
+                $date,
+                $refno,
+                $dept,
+                $telephone,
+                $title,
+                "default",
+                $selectedfolder);
+
+    }
+
+    /**
+     * used for creating proposals , in apo mode
+     */
+    function __createproposal() {
+        $date=$this->getParam('date');
+        $number="A";
+        $dept=$this->getParam('department');
+        $title=$this->getParam('title');
+        $ext="doc";
+        $selectedfolder=$this->getParam('topic');
+        $refno=$number.$date;
+        $telephone=$this->getParam('telephone');
+        $mode=$this->getParam("mode");
+        $docid=$this->documents->addDocument(
+                $date,
+                $refno,
+                $dept,
+                $telephone,
+                $title,
+                $selectedfolder,$mode,"Y");
+        $basedir=$this->objSysConfig->getValue('FILES_DIR', 'dms');
+        $template=$this->objSysConfig->getValue('GENERAL_TEMPLATE', 'dms');
+        $source=$basedir.'/resources/'.$template;
+        $dest=$basedir.'/'.$selectedfolder.'/'.$title.'.'.$ext;
+        
+        copy($source, $dest);
+        // save the file information into the database
+        $data = array(
+                'filename'=>$title.'.'.$ext,
+                'filetype'=>$ext,
+                'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),
+                'userid'=>$this->userutils->getUserId(),
+                'parent'=>"/",
+                'refno'=>$refno,
+                'docid'=>$docid,
+                'filepath'=>$selectedfolder.'/'.$title.'.'.$ext);
+        $result = $this->objUploadTable->saveFileInfo($data);
+    }
     function __getdepartment() {
         /*   $username='A0017615';//$this->getParam('username');
         $url="http://paxdev.wits.ac.za:8080/wits-wims-services-0.1-SNAPSHOT/wims/staff/position/$username";
@@ -392,8 +455,14 @@ class dms extends controller {
         */
         echo "Test";
     }
+    function __searchfiles() {
+        $filter=$this->getParam("filter");
+        $this->objUploadTable->searchfiles($filter);
+    }
+
     function __getdocuments() {
-        $this->documents->getdocuments();
+        $mode=$this->getParam("mode");
+        $this->documents->getdocuments($mode);
     }
 
     /**
@@ -427,6 +496,11 @@ class dms extends controller {
         return true;
     }
 
+    function __registeracademicpresenters(){
+        print_r($_POST);
+        
+    }
+
     /**
      * Used to do the actual upload
      *
@@ -455,6 +529,8 @@ class dms extends controller {
                 'ppt',
                 'pptx',
                 'xml',
+                'xls',
+                'xlsx',
                 'launch'
         );
         $objUpload->overWrite = TRUE;
@@ -488,7 +564,7 @@ class dms extends controller {
                 $newname = $dir.'/'.$topic.'/'.$docname.'.na';
                 $oldname= str_replace("//", "/", $oldname);
                 $newname= str_replace("//", "/", $newname);
-               
+
                 rename($oldname, $newname);
 
             }
