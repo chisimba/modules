@@ -1,7 +1,7 @@
 <?php
 
 $objFile = $this->getObject('dbfile', 'filemanager');
-
+$objHead = $this->newObject('htmlheading', 'htmlelements');
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
 
@@ -224,6 +224,69 @@ else {
   echo $topTable->show().$content.'<hr />'.$table->show().$form;
 }
 
+if(strtolower($this->objSysConfig->getValue('CONTEXTCONTENT_ENABLECOMMENTS', 'contextcontent')) == 'true')
+{
+	$head = $this->objLanguage->languageText('mod_contextcontent_word_comment','contextcontent');
+	$objHead->type = 1;
+	$objHead->str = $head;
+	echo '<br/>'.$objHead->show().'<br/>';
+
+	$commentpost = $this->objContextComments->getPageComments($currentPage);
+	if (count($commentpost) < 1)
+	{
+		
+		echo $this->objLanguage->languageText('mod_contextcontent_nocomment','contextcontent').'<br/>';
+	}
+	else{
+		$cnt = 0;
+		$oddcolor = $this->objSysConfig->getValue('CONTEXTCONTENT_ODD', 'contextcontent');
+		$evencolor = $this->objSysConfig->getValue('CONTEXTCONTENT_EVEN', 'contextcontent');
+
+		foreach($commentpost as $comment)
+		{
+			$objOutput = '<strong>'.$this->objUser->fullname($comment['userid']).'</strong><br/>';
+			$objOutput .= '<i>'.$comment['datecreated'].'</i><br/>';
+			$objOutput .= $comment['comment'];
+
+			if($cnt%2 == 0)
+				{
+					echo '<div class="colorbox '.$evencolor.'box">'.$objOutput.'</div>';
+				}
+			else
+				{
+					echo '<div class="colorbox '.$oddcolor.'box">'.$objOutput.'</div>';
+				}
+			$cnt++;
+		}
+	}
+	$this->loadClass('textarea', 'htmlelements');
+	$cform = new form('contextcontent', $this->uri(array('action' => 'addcomment', 'pageid' => $currentPage)));
+	
+	//start a fieldset
+	$cfieldset = $this->getObject('fieldset', 'htmlelements');
+	$ct = $this->newObject('htmltable', 'htmlelements');
+	$ct->cellpadding = 5;
+
+	//Text
+	$ct->startRow();
+	$ctvlabel = new label($this->objLanguage->languageText('mod_contextcontent_writecomment', 'contextcontent').':','input_cvalue');
+	$ct->addCell($ctvlabel->show());
+	$ct->endRow();
+
+	//Textarea
+	$ct->startRow();
+	$ctv = new textarea('comment', '', 8, 70);
+	$ct->addCell($ctv->show());
+	$ct->endRow();
+	//end off the form and add the button
+	$this->objconvButton = new button($this->objLanguage->languageText('mod_contextcontent_submitcomment', 'contextcontent'));
+	$this->objconvButton->setValue($this->objLanguage->languageText('mod_contextcontent_submitcomment', 'contextcontent'));
+	$this->objconvButton->setToSubmit();
+	$cfieldset->addContent($ct->show());
+	$cform->addToForm($cfieldset->show());
+	$cform->addToForm($this->objconvButton->show());
+	echo '<br/>'.$cform->show();
+}
 
 /*
 <script type="text/javascript">

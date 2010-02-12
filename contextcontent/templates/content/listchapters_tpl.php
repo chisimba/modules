@@ -346,8 +346,8 @@ if ($this->isValid('addchapter')) {
     $objIcon->setIcon('rss');
     $objIcon->alt = null;
     $objIcon->title = null;
-    $link->link = $objIcon->show();
-    echo '<br/><br clear="left" />'.$link->show();
+    $link->link = $this->objLanguage->languageText('mod_contextcontent_feedstext','contextcontent');
+    echo '<br/><br clear="left" />'.$objIcon->show().' '.$link->show();
 
 
 ?>

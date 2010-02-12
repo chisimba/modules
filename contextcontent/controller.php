@@ -110,6 +110,8 @@ class contextcontent extends controller {
 
             $this->objMenuTools = $this->getObject('tools', 'toolbar');
             $this->objConfig = $this->getObject('altconfig', 'config');
+			$this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig');
+			$this->objContextComments = $this->getObject('db_contextcontent_comment', 'contextcontent');
             $this->setVar('pageSuppressXML',TRUE);
         }
         catch(customException $e) {
@@ -133,18 +135,10 @@ class contextcontent extends controller {
 	$actions = array('viewchapter','viewpage', 'rss', '');
 	if(in_array($action, $actions)){
 		return FALSE;
-		var_dump($action);
+		//var_dump($action);
 	}else{
 		return TRUE;
 	}
-
-  /*if ($action=='' || $action == 'viewpage') {
-            return FALSE;
-        } else if($action=='rss'){
-	    return FALSE;
-    	} else{
-            return TRUE;
-        }*/
     }
 
 
@@ -160,9 +154,7 @@ class contextcontent extends controller {
         if ($this->contextCode == '' && $action != 'notincontext') {
             $action = 'notincontext';
         }
-//var_dump($action);
-//var_dump($this->contextCode);
-//die;
+
         $this->setLayoutTemplate('layout_chapter_tpl.php');
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
 
@@ -243,6 +235,8 @@ class contextcontent extends controller {
                 return $this->showContextChapters();
 	    	case 'rss':
 				return $this->viewRss();
+			case 'addcomment':
+				return $this->addComment();
             default:
             //return $this->home_debug();
                 return $this->showContextChapters();
@@ -726,7 +720,7 @@ class contextcontent extends controller {
         if ($pageId == '') {
             return $this->nextAction(NULL);
         }
-
+		
         $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
         if($page['scorm'] == 'Y') {
             return $this->nextAction('viewscorm',
@@ -740,14 +734,16 @@ class contextcontent extends controller {
             ),
             'scorm');
         }
+		
         //Log in activity streamer only if logged in (Public courses dont need login)
         if(!empty($this->userId)){
-         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
-         if ($ischapterlogged==FALSE) {
+	         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
+        if ($ischapterlogged==FALSE) {
             $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);
          }
         }
-        if ($page == FALSE) {
+
+		if ($page == FALSE) {
         //echo 'page does not exist';
             return $this->nextAction(NULL, array('error'=>'pagedoesnotexist'));
         }
@@ -783,7 +779,6 @@ class contextcontent extends controller {
 
         return 'viewpage_tpl.php';
     }
-
 
     /**
      * Method to edit a page
@@ -1209,7 +1204,6 @@ class contextcontent extends controller {
 
         return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>$result));
     }
-
     /**
      * Method to toggle the status of a bookmarked page
      */
@@ -1281,6 +1275,22 @@ class contextcontent extends controller {
     protected function fixLeftRightValues() {
         $this->objContentOrder->rebuildContext($this->contextCode);
     }
+	
+	/**
+     * Used to add the comment on the page
+     *
+     */
+	public function addComment()
+	{	
+		$comment = htmlentities($this->getParam('comment') , ENT_QUOTES);
+		$userid = $this->objUser->userId();
+		$pageid = $this->getParam('pageid');
+		if(!empty($comment) && !empty($userid) && !empty($pageid))
+		{
+			$id = $this->objContextComments->addPageComment($userid, $pageid, $comment);
+		}
+        return $this->nextAction('viewpage', array('id'=>$pageid));
+	}
 
     /**
      * Used to display the latest presentations of a user RSS Feed
