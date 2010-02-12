@@ -11,6 +11,7 @@
                     'telephone' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'groupid' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'ext' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
+                    'mode' => array('type' => 'text','length' => 10, 'notnull'=>TRUE),
                     'active' => array('type' => 'text','length' => 1, 'notnull'=>TRUE),
                     'upload' => array('type' => 'text','length' => 1, 'notnull'=>TRUE)
           );
