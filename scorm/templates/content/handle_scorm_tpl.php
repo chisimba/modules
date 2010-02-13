@@ -117,6 +117,7 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
 	{
 		var page;
 		var folderpath;
+		
                     // DO Ajax
 		// prepare the form when the DOM is ready 
                     jQuery.ajax({
@@ -124,7 +125,7 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
                         url: 'index.php?', 
                         data: 'module=scorm&action=getNext&page='+current+'&folderpath='+fpath, 
                         success: function(msg){
-				nextPage = msg;
+				                            nextPage = msg;
                                 // IF next page exists
                                 if (msg=='omega') {
                                     jQuery('#span_next').html('Last Page');
@@ -156,7 +157,8 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
                     jQuery.ajax({
                         type: 'GET', 
                         url: 'index.php?', 
-                        data: 'module=scorm&action=getPrev&page='+current+'&folderpath='+fpath, 
+                        data: 'module=scorm&action=getPrev&page='+current+'&folderpath='+fpath
+                        , 
                         success: function(msg){
 				prevPage = msg;
                                 // IF next page exists

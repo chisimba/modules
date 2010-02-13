@@ -29,13 +29,13 @@
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
-if (!
+
 /**
  * Description for $GLOBALS
  * @global entry point $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
  */
-$GLOBALS['kewl_entry_point_run']) {
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -65,6 +65,7 @@ class scorm extends controller {
      * Constructor
      */
     public function init() {
+    
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
         // Load Scorm Classes
@@ -96,7 +97,6 @@ class scorm extends controller {
      */
     public function dispatch($action) {
     //check if in context, if not, give in
-
         if(!$this->objContext->isInContext()) {
             return "notincontext_tpl.php";
         }
@@ -115,6 +115,17 @@ class scorm extends controller {
         */
         return $this->$method();
     }
+    /**
+     * Method to turn off login requirement for certain actions
+     */
+    public function requiresLogin($action) {
+        $requiresLogin = array ('viewscorm', 'getNext', 'getPrev','checkfolder');
+        if (in_array ( $action, $requiresLogin )) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }    
     private function __viewscorm() {
         $folderId = $this->getParam('folderId', NULL);
         if($folderId == null) {
@@ -123,11 +134,12 @@ class scorm extends controller {
 
         $chapterId = $this->getParam('chapterid',$this->objContextChapter->getChapterId($this->contextCode ));
 
-
-        //Log in activity streamer
-        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapterId, $this->contextCode);
-        if ($ischapterlogged==FALSE) {
+        if(!empty($this->userId)){
+         //Log in activity streamer
+         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapterId, $this->contextCode);
+         if ($ischapterlogged==FALSE) {
             $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $chapterId, $this->contextCode);
+         }
         }
         $this->setVarByRef('folderId',$folderId);
         if($this->getParam('mode') == 'page') {
@@ -149,6 +161,7 @@ class scorm extends controller {
     }
     //Ajax function to get the next page
     private function __getNext() {
+        $this->requiresLogin('getNext');
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
 
@@ -166,6 +179,7 @@ class scorm extends controller {
     }
     //Ajax function to get the next page
     private function __getPrev() {
+        $this->requiresLogin('getPrev');
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
 
