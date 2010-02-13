@@ -144,7 +144,11 @@ class block_liftclubmenu extends object
 							$msgTrashLink =new link($this->uri(array('action'=>'trashedmessages')));
 							$msgTrashLink->link = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
 							$msgTrashLink->title = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
-
+       if($this->objUser->isAdmin ()){
+        $siteAdminLink =new link($this->uri(Null,'toolbar'));
+        $siteAdminLink->link = $this->objLanguage->languageText("mod_toolbar_siteadmin","toolbar","Site Administration");
+        $siteAdminLink->title = $this->objLanguage->languageText("mod_toolbar_siteadmin","toolbar","Site Administration"); 
+       }
 							$objFeatureBox = $this->newObject ( 'featurebox', 'navigation' );
 
 							$pageLink = "<div id='liftclubmenu'><ul>";
@@ -157,7 +161,9 @@ class block_liftclubmenu extends object
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
         $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$actyLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$exitLink->show()."</li>";
-										
+        if($this->objUser->isAdmin ()){
+								 $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$siteAdminLink->show()."</li>";
+								}
 								$mailLink = "<ul>";
 								$mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgLink->show()."</li>";
 								$mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgSentLink->show()."</li>";
