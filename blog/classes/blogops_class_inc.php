@@ -273,51 +273,51 @@ class blogops extends object
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
                 if ($this->mail2blog == FALSE) {
                     // Make it stylable #BLOGSTYLE.
-                    $topper = "<span class=\"featureboxlink\">" 
+                    $topper = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
                       . $newpost->show() . "<br /></span>"
-                      . "<span class=\"featureboxlink\">"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
                       . $editpost->show() . "<br /></span>"
-                      . "<span class=\"featureboxlink\">"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
                       . $viewmyblog->show() . "</span>";
-                    $ret.= "<span class=\"featureboxlink\">" . $admin->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $profile->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $import->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $editcats->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $rssedits->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $linksedits->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $addeditpages->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $modcomms->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $viewblogs->show() . "</span>";
+                    $ret.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $admin->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $profile->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $import->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $editcats->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $rssedits->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $linksedits->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $addeditpages->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $modcomms->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $viewblogs->show() . "</span>";
                 } else {
                     // Make it stylable #BLOGSTYLE.
-                    $topper = "<span class=\"featureboxlink\">" . $newpost->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $editpost->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $viewmyblog->show() . "</span>";
-                    $ret.= "<span class=\"featureboxlink\">" . $admin->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $profile->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $import->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $mailsetup->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $editcats->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $rssedits->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $linksedits->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $addeditpages->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $modcomms->show() . "<br /></span>" 
-                      . "<span class=\"featureboxlink\">" . $viewblogs->show() . "</span>";
+                    $topper = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $newpost->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $editpost->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $viewmyblog->show() . "</span>";
+                    $ret.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $admin->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $profile->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $import->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $mailsetup->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $editcats->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $rssedits->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $linksedits->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $addeditpages->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $modcomms->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $viewblogs->show() . "</span>";
                 }
             } else {
                 // Make it stylable #BLOGSTYLE.
-                $topper =  "<span class=\"featureboxlink\">" .$newpost->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$editpost->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$viewmyblog->show() . "</span></span>";
-                $ret.=  "<span class=\"featureboxlink\">" .$admin->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$profile->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$import->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$editcats->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$rssedits->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$linksedits->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$addeditpages->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$modcomms->show() . "<br /></span>" 
-                  .  "<span class=\"featureboxlink\">" .$viewblogs->show() . "</span>";
+                $topper =  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$newpost->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$editpost->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$viewmyblog->show() . "</span></span>";
+                $ret.=  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$admin->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$profile->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$import->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$editcats->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$rssedits->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$linksedits->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$addeditpages->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$modcomms->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$viewblogs->show() . "</span>";
             }
         }
         if ($featurebox == FALSE) {

@@ -106,7 +106,7 @@ class bloglinksandroll extends object
         $str = NULL;
         foreach($links as $link) {
             $hr = new href($link['link_url'], $link['link_name'], 'target="' . $link['link_target'] . '" alt="' . $link['link_description'] . '"');
-            $str.= "<ul>" . $hr->show() . "</ul>";
+            $str.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $hr->show() . "<br /></span>";
         }
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
@@ -131,15 +131,14 @@ class bloglinksandroll extends object
             $ret = "<em>" . $lc['catname'] . "</em><br />";
             $linkers = $this->objDbBlog->getLinksCats($this->objUser->userid() , $lc['id']);
             if (!empty($linkers)) {
-                $ret.= "<ul>";
+                $ret.= "";
                 foreach($linkers as $lk) {
-                    $ret.= "<li>";
+                    $ret.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">";
                     $alt = htmlentities($lk['link_description']);
                     $link = new href(htmlentities($lk['link_url']) , htmlentities($lk['link_name']) , "alt='{$alt}'");
                     $ret.= $link->show();
-                    $ret.= "</li>";
+                    $ret.= "<br /></span>";
                 }
-                $ret.= "</ul>";
             }
         }
         if ($featurebox == FALSE) {
@@ -175,7 +174,7 @@ class bloglinksandroll extends object
         $str = NULL;
         foreach($links as $link) {
             $hr = new href($link['link_url'], $link['link_name'], 'target="' . $link['link_target'] . '" alt="' . $link['link_description'] . '"');
-            $str.= "<ul>" . $hr->show() . "</ul>";
+            $str.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $hr->show() ."<br /></span>";
         }
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
@@ -491,7 +490,7 @@ class bloglinksandroll extends object
                 'pageid' => $page['id']
             ));
             $hr = new href($link, $page['page_name'], ' alt="' . $page['page_name'] . '"');
-            $str.= "<ul>" . $hr->show() . "</ul>";
+            $str.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $hr->show() . "<br /></span>";
         }
         if ($featurebox == TRUE) {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
@@ -522,21 +521,21 @@ class bloglinksandroll extends object
 
         $defmodLink = new href($this->uri(array() , '_default') , $this->objLanguage->languageText("mod_blog_returntosite", "blog") , NULL);
         if ($featurebox == FALSE) {
-            $ret = "<span class=\"featureboxlink\">" 
+            $ret = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
               . $oblogs->show() . "<br /></span>"
-              . "<span class=\"featureboxlink\">" 
+              . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
               . $defmodLink->show() . "</span>";
         } else {
-            $boxContent = "<span class=\"featureboxlink\">"
+            $boxContent = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
               . $oblogs->show() . "<br /></span>";
-            $boxContent.= "<span class=\"featureboxlink\">"
+            $boxContent.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
               . $defmodLink->show() . "<br /></span>";
             //
             // database abstraction object
             $this->objDbBlog = $this->getObject('dbblog');
             $postresults = $this->objDbBlog->getAllPosts($userid = 1, null);
             if (!$postresults == null) {
-                $boxContent.= "<span class=\"featureboxlink\">" . $ositeblogs->show() . "<br /></span>";
+                $boxContent.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $ositeblogs->show() . "<br /></span>";
             }
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $boxContent);
