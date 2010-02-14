@@ -128,22 +128,34 @@ class blogops extends object
         $oblogs = new href($this->uri(array(
             'action' => 'allblogs'
         )) , $this->objLanguage->languageText("mod_blog_viewallblogs", "blog") , NULL);
+        $oblogsTxt = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
+          . $oblogs->show() . "<br /></span>";
+
         // Link for siteblogs Added by Irshaad Hoodain
         $ositeblogs = new href($this->uri(array(
             'action' => 'siteblog'
         )) , $this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , NULL);
-        $defmodLink = new href($this->uri(array() , '_default') , $this->objLanguage->languageText("mod_blog_returntosite", "blog") , NULL);
+        $ositeblogsTxt = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" 
+          . $ositeblogs->show() . "<br /></span>";
+
+        $defmodLink = new href($this->uri(array() , '_default'),
+           $this->objLanguage->languageText("mod_blog_returntosite", "blog"),
+           NULL);
+        $defmodLinkTxt = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" 
+          . $defmodLink->show()  . "<br /></span>";
+
         if ($featurebox == FALSE) {
-            $ret = $oblogs->show() . "<br />" . $defmodLink->show();
+            $ret = $oblogsTxt . $defmodLinkTxt;
         } else {
-            $boxContent = $oblogs->show() . "<br />";
-            $boxContent.= $defmodLink->show() . "<br />";
+            $boxContent = $oblogsTxt;
+            $boxContent.= $defmodLinkTxt;
             //
             // database abstraction object
             $this->objDbBlog = $this->getObject('dbblog');
+            //@@@@@@@ BUG NEEDS FIXING
             $postresults = $this->objDbBlog->getAllPosts($userid = 1, null);
             if (!$postresults == null) {
-                $boxContent.= $ositeblogs->show() . "<br />";
+                $boxContent.= $ositeblogsTxt;
             }
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $boxContent);
@@ -279,10 +291,14 @@ class blogops extends object
                       . $editpost->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
                       . $viewmyblog->show() . "</span>";
-                    $ret.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $admin->show() . "<br /></span>"
-                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $profile->show() . "<br /></span>"
-                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $import->show() . "<br /></span>"
-                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $editcats->show() . "<br /></span>"
+                    $ret.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
+                      . $admin->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
+                      . $profile->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
+                      . $import->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
+                      . $editcats->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $rssedits->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $linksedits->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $addeditpages->show() . "<br /></span>"
