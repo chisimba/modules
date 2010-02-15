@@ -68,10 +68,11 @@ if($this->objUser->userId()!==null){
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$offerLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$actyLink->show()."</li>";
- $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$exitLink->show()."</li>";
- if($this->objUser->isAdmin ()){
-  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$siteAdminLink."</li>";
+
+ if($this->objUser->isAdmin()){
+  $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$siteAdminLink->show()."</li>";
  }
+ $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$exitLink->show()."</li>";
  $mailLink = "<ul>";
  $mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgLink->show()."</li>";
  $mailLink .= "<li>&nbsp;&nbsp;&nbsp;".$msgSentLink->show()."</li>";
