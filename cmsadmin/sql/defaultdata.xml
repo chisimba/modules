@@ -56,9 +56,11 @@
     	<modified>2006-11-14</modified>
     	<modified_by>0</modified_by> 
     	<checked_out>0</checked_out> 
-    	<checked_out_time></checked_out_time>
-    	<publish_up></publish_up>
-    	<publish_down> </publish_down> 
+    	<checked_out_time>2006-11-14</checked_out_time>
+    	<publish_up>2006-11-14</publish_up>
+    	<publish_down>2006-11-14</publish_down>
+		<override_date>2006-11-14</override_date>
+		<end_publish>2006-11-14</end_publish>
     	<images></images>
     	<urls></urls>
     	<attribs></attribs>
