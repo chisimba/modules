@@ -116,15 +116,15 @@ class block_popuphandler extends object
 
         //Ext stuff
         $ext = "";
-        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements');
-        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'htmlelements');
+        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'ext');
+        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'ext');
         //$ext .=$this->getJavaScriptFile('search.js', 'activitystreamer');
         $ext .=$this->getJavaScriptFile('button.js', 'activitystreamer');
-        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
+        $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'ext');
        
-        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements').'" type="text/css" />';
-        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'htmlelements').'" type="text/css" />';
-        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'htmlelements').'" type="text/css" />';
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'ext').'" type="text/css" />';
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-example.css', 'ext').'" type="text/css" />';
+        $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'ext').'" type="text/css" />';
         $this->appendArrayVar('headerParams', $ext);
 								
         
