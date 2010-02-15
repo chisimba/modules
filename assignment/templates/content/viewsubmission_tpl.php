@@ -351,8 +351,15 @@ else {
     	$objSubTable->addCell($objTextinput->show().' / '.$assignment['mark']." ".$this->objLanguage->languageText('mod_assignment_typeorslider', 'assignment', 'Mark'),'70%','','left');
     	$objSubTable->addCell("&nbsp;");
     	$objSubTable->endRow();
+        $objSlider = $this->newObject('dhtmlgoodies_slider', 'dhtmlgoodies');
+        $objSlider->setTargetId('slider_target');
+        $objSlider->setFieldRef('document._form.mark');
+        $objSlider->setWidth(200);
+        $objSlider->setMin(0);
+        $objSlider->setmax($assignment['mark']);
      	$objSubTable->startRow();
-    	$objSubTable->addCell("&nbsp;",'70%','','left','',' id=\'slider_target\'');
+    	//$objSubTable->addCell("&nbsp;",'70%','','left','',' id=\'slider_target\'');
+    	$objSubTable->addCell('<span id=\'slider_target\'></span>'.$objSlider->show(),'70%','','left');
     	$objSubTable->addCell("&nbsp;");
     	$objSubTable->endRow();
         $table->startRow();
