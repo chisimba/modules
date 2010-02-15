@@ -60,9 +60,9 @@
                 parent::init('tbl_cms_sections');
                 $this->table = 'tbl_cms_sections';
                 $this->_objLanguage = $this->getObject('language', 'language');
-                //$this->_objSections =  $this->getObject('dbsections', 'cmsadmin');
                 $this->_objUser =  $this->getObject('user', 'security');
                 $this->_objGroupAdmin =  $this->getObject('groupadminmodel', 'groupadmin');
+                $this->_objSectionGroup = $this->getObject('dbsection_group');
             } catch (Exception $e){
                 throw customException($e->getMessage());
                 exit();
@@ -194,22 +194,42 @@
      * @param contentid, userid
      * @return boolean
      */
-        public function canUserWriteContent($contentid = NULL, $userid = null)
+        public function canUserWriteContent($contentId, $userId = NULL)
         {
-
-            if ($userid == NULL){
-                $userid = $this->_objUser->userId();
+            if ($userId == NULL){
+                $userId = $this->_objUser->userId();
+            }
+            
+            if (!$this->_objUser->isLoggedIn() || !$this->_objGroupAdmin->isGroupMember($userId, $this->_objGroupAdmin->getId('CMSAuthors'))) {
+                return FALSE;
             }
 
-            //Admin Edits All
+            // Admin Edits All
             if ($this->_objUser->isAdmin()){
-                return true;
+                return TRUE;
             }
-
-            if (!$this->canUserReadContent($contentid)){
-                return false;
+            
+            $content    = $this->getContentRow($contentId);
+            $sectionId  = $content['sectionid'];
+            
+            // Get groups that have write access to section
+            $groups     = $this->_objSectionGroup->getAll("WHERE section_id = '$sectionId' AND write_access = 1");
+            
+            // If there are no groups explicitly set up for write access then any CMSAuthor can write
+            if (empty($groups)) {
+                return TRUE;
             }
+            
+            // Cycle through all groups, if user is a member then they can write, exit.
+            foreach ($groups as $group) {
+                if ($this->_objGroupAdmin->isGroupMember($userId, $group['group_id'])) {
+                    return TRUE;
+                }
+            }
+            
+            return FALSE;
         
+            /*
             //User ID to compare with when checking groups is the
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
@@ -286,7 +306,7 @@
                 }       //End Loop
             }
 
-            $sql = "";	
+            $sql = "";	*/
         }
 
 
@@ -298,11 +318,15 @@
      * @param contentid, userid
      * @return boolean
      */
-        public function canUserReadContent($contentid = NULL, $userid = null)
+        public function canUserReadContent($contentid, $userid = NULL)
         {	
             //Admin Sees All
             if ($this->_objUser->isAdmin()){
-                return true;
+                return TRUE;
+            }
+            
+            if ($userid == NULL){
+                $userid = $this->_objUser->userId();
             }
 
             //Checking Public Access
@@ -311,12 +335,7 @@
 				$this->setVar('SECURITY_IS_CONTENT_PUBLIC', FALSE);
                 return false;        
             }
-        
-
-            if ($userid == NULL){
-                $userid = $this->_objUser->userId();
-            }
-
+            
             //User ID to compare with when checking groups is the
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
@@ -425,95 +444,38 @@
      * @param sectionid, userid
      * @return boolean
      */
-        public function canUserWriteSection($sectionid = NULL, $userid = null)
+        public function canUserWriteSection($sectionId, $userId = NULL)
         {
         
-            if ($userid == NULL){
-                $userid = $this->_objUser->userId();
+            if ($userId == NULL){
+                $userId = $this->_objUser->userId();
             }
-        
-            //Admin Edits All
+            
+            if (!$this->_objUser->isLoggedIn() || !$this->_objGroupAdmin->isGroupMember($userId, $this->_objGroupAdmin->getId('CMSAuthors'))) {
+                return FALSE;
+            }
+
+            // Admin Edits All
             if ($this->_objUser->isAdmin()){
-                return true;
+                return TRUE;
             }
-
-            if (!$this->canUserReadSection($sectionid)){
-                return false;
+            
+            // Get groups that have write access to section
+            $groups = $this->_objSectionGroup->getAll("WHERE section_id = '$sectionId' AND write_access = 1");
+            
+            // If there are no groups explicitly set up for write access then any CMSAuthor can write
+            if (empty($groups)) {
+                return TRUE;
             }
-        
-            //User ID to compare with when checking groups is the
-            //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
-            $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
-            $data = $this->getArray($sql);
-            if (isset($data[0])) {
-                $userRawId = $data[0]['id'];
-            }
-
-            //Preparing a list of USER ID's
-            $usersList = $this->getAssignedSectionUsers($sectionid);
-            $usersCount = count($usersList);
-
-            //Preparing a list of GROUP_ID's
-            $groupsList = $this->getAssignedSectionGroups($sectionid);
-            $groupsCount = count($groupsList);
-            $globalChkCounter = 0;
-
-            $section_row = $this->getSectionRow($sectionid);
-            $ownerid = $section_row['userid'];
-
-            //If user is the owner of this section then offcourse return true
-            if ($userid == $ownerid){
-                return true;
-            }
-
-            //Checking Users
-            $isMemberDefined = false;
-            for ($x = 0; $x < $usersCount; $x++){
-                $memberId = $usersList[$x]['user_id'];
-                $memberReadAccess = $usersList[$x]['read_access'];
-                $memberWriteAccess = $usersList[$x]['write_access'];
-
-                $canRead = (($memberReadAccess == 1) ? true : false);
-                $canWrite = (($memberWriteAccess == 1) ? true : false);
-
-                if ($canWrite){
-                    if ($userid == $memberId){
-                        return true;
-                    }
+            
+            // Cycle through all groups, if user is a member then they can write, exit.
+            foreach ($groups as $group) {
+                if ($this->_objGroupAdmin->isGroupMember($userId, $group['group_id'])) {
+                    return TRUE;
                 }
-
-                if ($memberId == $userid){
-                    $isMemberDefined = true;
-                }
-
-
-            }       //End Loop
-
-
-            //No luck, lets check the groups that the user belongs to
-            //Displaying Groups
-            if (!$isMemberDefined){
-                for ($x = 0; $x < $groupsCount; $x++){
-                    $memberId = $groupsList[$x]['group_id'];
-                    $memberReadAccess = $groupsList[$x]['read_access'];
-                    $memberWriteAccess = $groupsList[$x]['write_access'];
-
-                    $canRead = (($memberReadAccess == 1) ? true : false);
-                    $canWrite = (($memberWriteAccess == 1) ? true : false);
-
-                    if ($canWrite){
-                        $this->tableName = 'tbl_groupadmin_groupuser';
-                        $isGroupMember = $this->_objGroupAdmin->isGroupMember($userRawId, $memberId);
-
-                        if ($isGroupMember){
-                            return true;
-                        }
-
-                    }
-                }       //End Loop
-
             }
-            $sql = "";	
+            
+            return FALSE;
         }
 
 
@@ -1219,7 +1181,7 @@
         public function getAuthorizedSectionMembers($sectionid = null){
 
             //Getting a list of Authorized User ID's for the current section
-            $sql = "SELECT user_id as `id` FROM tbl_cms_section_user WHERE section_id = '$sectionid'";
+            $sql = "SELECT user_id as id FROM tbl_cms_section_user WHERE section_id = '$sectionid'";
             $userMemberIds = $this->getArray($sql);
             //Building a comma separated list of id's to be used in the IN sql statement
             $in_part = '';
@@ -1237,12 +1199,12 @@
             $in_part = substr($in_part, 0, strlen($in_part) - 1);
             //Getting the list of USERS if any
             if ($in_part != ''){
-                $sql = "SELECT userId as `id`, username, firstname, surname FROM tbl_users WHERE `userId` IN ($in_part)";
+                $sql = "SELECT userId as id, username, firstname, surname FROM tbl_users WHERE userId IN ($in_part)";
                 $userMembers = $this->getArray($sql);
             }
 
             //Getting a list of Authorized Goup ID's for the current section
-            $sql = "SELECT group_id as `id` FROM tbl_cms_section_group WHERE section_id = '$sectionid'";
+            $sql = "SELECT group_id as id FROM tbl_cms_section_group WHERE section_id = '$sectionid'";
             $groupMemberIds = $this->getArray($sql);
 
             //Building a comma separated list of id's to be used in the IN sql statement
@@ -1259,7 +1221,7 @@
             //Getting the list of GROUPS if any
             if ($in_part != ''){
 
-                $sql = "SELECT id, name as `username`, description FROM tbl_groupadmin_group WHERE id IN ($in_part)";
+                $sql = "SELECT id, name as username, description FROM tbl_groupadmin_group WHERE id IN ($in_part)";
                 $groupMembers = $this->getArray($sql);
             }
 
@@ -1295,7 +1257,7 @@
         public function getAuthorizedContentMembers($contentid = null){
 
             //Getting a list of Authorized User ID's for the current content
-            $sql = "SELECT user_id as `id` FROM tbl_cms_content_user WHERE content_id = '$contentid'";
+            $sql = "SELECT user_id as id FROM tbl_cms_content_user WHERE content_id = '$contentid'";
             $userMemberIds = $this->getArray($sql);
             //Building a comma separated list of id's to be used in the IN sql statement
             $in_part = '';
@@ -1313,12 +1275,12 @@
             $in_part = substr($in_part, 0, strlen($in_part) - 1);
             //Getting the list of USERS if any
             if ($in_part != ''){
-                $sql = "SELECT userId as `id`, username, firstname, surname FROM tbl_users WHERE `userId` IN ($in_part)";
+                $sql = "SELECT userId as id, username, firstname, surname FROM tbl_users WHERE userId IN ($in_part)";
                 $userMembers = $this->getArray($sql);
             }
 
             //Getting a list of Authorized Goup ID's for the current content
-            $sql = "SELECT group_id as `id` FROM tbl_cms_content_group WHERE content_id = '$contentid'";
+            $sql = "SELECT group_id as id FROM tbl_cms_content_group WHERE content_id = '$contentid'";
             $groupMemberIds = $this->getArray($sql);
 
             //Building a comma separated list of id's to be used in the IN sql statement
@@ -1335,7 +1297,7 @@
             //Getting the list of GROUPS if any
             if ($in_part != ''){
 
-                $sql = "SELECT id, name as `username`, description FROM tbl_groupadmin_group WHERE id IN ($in_part)";
+                $sql = "SELECT id, name as username, description FROM tbl_groupadmin_group WHERE id IN ($in_part)";
                 $groupMembers = $this->getArray($sql);
             }
 
@@ -1372,7 +1334,7 @@
         public function getAssignedSectionUsers($sectionid = null){
 
             $sql = "SELECT su.id, su.user_id, su.read_access, su.write_access, u.username, u.firstname, u.surname 
-                                            FROM tbl_cms_section_user as `su`, tbl_users as `u` 
+                                            FROM tbl_cms_section_user as su, tbl_users as u 
                                             WHERE su.user_id = u.userid 
                                             AND su.section_id = '$sectionid'
                                             ORDER BY u.firstname ASC";
@@ -1393,7 +1355,7 @@
 
         public function getAssignedSectionGroups($sectionid = null){
             $sql = "SELECT sg.id, sg.group_id, sg.read_access, sg.write_access, g.name, g.description 
-                                            FROM tbl_cms_section_group as `sg`, tbl_groupadmin_group as `g`
+                                            FROM tbl_cms_section_group as sg, tbl_groupadmin_group as g
                                             WHERE sg.group_id = g.id 
                                             AND sg.section_id = '$sectionid'
                                             ORDER BY g.name ASC";
@@ -1415,7 +1377,7 @@
         public function getAssignedContentUsers($contentid = null){
 
             $sql = "SELECT su.id, su.user_id, su.read_access, su.write_access, u.username, u.firstname, u.surname 
-                                            FROM tbl_cms_content_user as `su`, tbl_users as `u` 
+                                            FROM tbl_cms_content_user as su, tbl_users as u 
                                             WHERE su.user_id = u.userid 
                                             AND su.content_id = '$contentid'
                                             ORDER BY u.firstname ASC";
@@ -1436,7 +1398,7 @@
 
         public function getAssignedContentGroups($contentid = null){
             $sql = "SELECT sg.id, sg.group_id, sg.read_access, sg.write_access, g.name, g.description 
-                                            FROM tbl_cms_content_group as `sg`, tbl_groupadmin_group as `g`
+                                            FROM tbl_cms_content_group as sg, tbl_groupadmin_group as g
                                             WHERE sg.group_id = g.id 
                                             AND sg.content_id = '$contentid'
                                             ORDER BY g.name ASC";
@@ -1477,7 +1439,7 @@
 
             //Getting the list of Authorized members so we can compare
             //Getting a list of Authorized User ID's for the current section
-            $sql = "SELECT user_id as `id` FROM tbl_cms_section_user WHERE section_id = '$sectionid'";
+            $sql = "SELECT user_id as id FROM tbl_cms_section_user WHERE section_id = '$sectionid'";
             $userMemberIds = $this->getArray($sql);
 
             //Building a comma separated list of id's to be used in the IN sql statement
@@ -1494,16 +1456,16 @@
             if ($in_part != ''){
                 $in_part = substr($in_part, 0, strlen($in_part) - 1);
 
-                $sql = "SELECT userId as `id`, username, firstname, surname FROM tbl_users WHERE userId NOT IN ($in_part) ORDER BY firstname, surname ASC ";
+                $sql = "SELECT userId as id, username, firstname, surname FROM tbl_users WHERE userId NOT IN ($in_part) ORDER BY firstname, surname ASC ";
                 $userMembers = $this->getArray($sql);
             } else {
                 //No ID's to exclude so we query all users
-                $sql = "SELECT userId as `id`, username, firstname, surname FROM tbl_users ORDER BY firstname, surname ASC";
+                $sql = "SELECT userId as id, username, firstname, surname FROM tbl_users ORDER BY firstname, surname ASC";
                 $userMembers = $this->getArray($sql);
             }
 
             //Getting a list of Authorized Goup ID's for the current section
-            $sql = "SELECT group_id as `id` FROM tbl_cms_section_group WHERE section_id = '$sectionid'";
+            $sql = "SELECT group_id as id FROM tbl_cms_section_group WHERE section_id = '$sectionid'";
             $groupMemberIds = $this->getArray($sql);
 
             //Building a comma separated list of id's to be used in the IN sql statement
@@ -1520,11 +1482,11 @@
             if ($in_part != ''){
                 $in_part = substr($in_part, 0, strlen($in_part) - 1);
 
-                $sql = "SELECT id, name as `username`, description FROM tbl_groupadmin_group WHERE id NOT IN ($in_part) ORDER BY username ASC";
+                $sql = "SELECT id, name as username, description FROM tbl_groupadmin_group WHERE id NOT IN ($in_part) ORDER BY username ASC";
                 $groupMembers = $this->getArray($sql);
             } else {
                 //No ID's to exclude so we query all groups
-                $sql = "SELECT id, name as `username`, description FROM tbl_groupadmin_group ORDER BY username ASC";
+                $sql = "SELECT id, name as username, description FROM tbl_groupadmin_group ORDER BY username ASC";
                 $groupMembers = $this->getArray($sql);
             }
 
@@ -1563,7 +1525,7 @@
 
             //Getting the list of Authorized members so we can compare
             //Getting a list of Authorized User ID's for the current content
-            $sql = "SELECT user_id as `id` FROM tbl_cms_content_user WHERE content_id = '$contentid'";
+            $sql = "SELECT user_id as id FROM tbl_cms_content_user WHERE content_id = '$contentid'";
             $userMemberIds = $this->getArray($sql);
 
             //Building a comma separated list of id's to be used in the IN sql statement
@@ -1580,16 +1542,16 @@
             if ($in_part != ''){
                 $in_part = substr($in_part, 0, strlen($in_part) - 1);
 
-                $sql = "SELECT userId as `id`, username, firstname, surname FROM tbl_users WHERE userId NOT IN ($in_part) ORDER BY firstname, surname ASC ";
+                $sql = "SELECT userId as id, username, firstname, surname FROM tbl_users WHERE userId NOT IN ($in_part) ORDER BY firstname, surname ASC ";
                 $userMembers = $this->getArray($sql);
             } else {
                 //No ID's to exclude so we query all users
-                $sql = "SELECT userId as `id`, username, firstname, surname FROM tbl_users ORDER BY firstname, surname ASC";
+                $sql = "SELECT userId as id, username, firstname, surname FROM tbl_users ORDER BY firstname, surname ASC";
                 $userMembers = $this->getArray($sql);
             }
 
             //Getting a list of Authorized Goup ID's for the current content
-            $sql = "SELECT group_id as `id` FROM tbl_cms_content_group WHERE content_id = '$contentid'";
+            $sql = "SELECT group_id as id FROM tbl_cms_content_group WHERE content_id = '$contentid'";
             $groupMemberIds = $this->getArray($sql);
 
             //Building a comma separated list of id's to be used in the IN sql statement
@@ -1606,11 +1568,11 @@
             if ($in_part != ''){
                 $in_part = substr($in_part, 0, strlen($in_part) - 1);
 
-                $sql = "SELECT id, name as `username`, description FROM tbl_groupadmin_group WHERE id NOT IN ($in_part) ORDER BY username ASC";
+                $sql = "SELECT id, name as username, description FROM tbl_groupadmin_group WHERE id NOT IN ($in_part) ORDER BY username ASC";
                 $groupMembers = $this->getArray($sql);
             } else {
                 //No ID's to exclude so we query all groups
-                $sql = "SELECT id, name as `username`, description FROM tbl_groupadmin_group ORDER BY username ASC";
+                $sql = "SELECT id, name as username, description FROM tbl_groupadmin_group ORDER BY username ASC";
                 $groupMembers = $this->getArray($sql);
             }
 
