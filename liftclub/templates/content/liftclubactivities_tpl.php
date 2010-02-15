@@ -16,15 +16,15 @@ var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
 
 //Ext stuff
-$ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'extjs');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'extjs');
+$ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'ext');
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'ext');
 $ext .=$this->getJavaScriptFile('Ext.ux.grid.Search.js', 'liftclub');
 $ext .=$this->getJavaScriptFile('searchactivities.js', 'liftclub');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/grid/paging.js', 'extjs');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'extjs');
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/grid/paging.js', 'ext');
+$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'ext');
 
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'extjs').'" type="text/css" />';
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-examples.css', 'extjs').'" type="text/css" />';
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'ext').'" type="text/css" />';
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-examples.css', 'ext').'" type="text/css" />';
 $this->appendArrayVar('headerParams', $ext);
 
 echo '<div id="activities-grid"></div>';
