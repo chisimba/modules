@@ -7,7 +7,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 
 /*
-$objBox = $this->newObject('jqboxy', 'htmlelements');
+$objBox = $this->newObject('jqboxy', 'jquery');
 $objBox->setHtml($this->objUi->getAddMappingForm());
 $objBox->setTitle('Add URL');
 $objBox->attachClickEvent('box_01');

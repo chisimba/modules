@@ -87,7 +87,7 @@
             $objForm->setDisplayType(3);
 
             $table_list = new htmlTable();
-            $table_list->width = "100%";
+            $table_list->width = "99%";
             $table_list->cellspacing = "0";
             $table_list->cellpadding = "0";
             $table_list->border = "0";
@@ -97,10 +97,10 @@
             $this->bindDeleteConfirmEvents();
 
             $table_list->startHeaderRow();
-            $table_list->addHeaderCell('Match URL', '100px');
-            $table_list->addHeaderCell('Target URL', '200px');
+            $table_list->addHeaderCell('Match URL');
+            $table_list->addHeaderCell('Target URL');
             //$this->objGrid->addColumn('Dynamic', 'is_dynamic', '70', 'center', false);
-            $table_list->addHeaderCell('Order');
+            //$table_list->addHeaderCell('Order');
             $table_list->addHeaderCell('Options');
             $table_list->addHeaderCell('Date');
             $table_list->endHeaderRow();
@@ -110,7 +110,7 @@
             
             if (!empty($arrMaps)){
             
-		$count = 1;
+				$class = 'odd';
 
                 //Adding Mappings Here
                 foreach ($arrMaps as $map){
@@ -175,21 +175,16 @@
             
                     $options = $editIcon.$delIcon;
 
-                    $count = $count* -1;
+                    $class = ($class == 'odd')? 'even' : 'odd';
 
-		    if ($count>0) {
-                        $table_list->startRow('odd');
-		    } else {
-                        $table_list->startRow('even');
-		    }
-		    
-
-                    $matchUrl = '<div class="matchchopper"> <a href="' . $matchUrl . '"> ' . $matchUrl . ' </a></div>';
-                    $targetUrl = '<div class="urlchopper"> <a href="' . $targetUrl . '"> ' . $targetUrl . ' </a></div>';
+					$table_list->startRow($class);
+					
+                    $matchUrl = '<div> <a href="' . $matchUrl . '"> ' . $matchUrl . ' </a></div>';
+                    $targetUrl = '<div> <a href="' . $targetUrl . '"> ' . $targetUrl . ' </a></div>';
                     
                     $table_list->addCell($matchUrl);
                     $table_list->addCell($targetUrl);
-                    $table_list->addCell($order);
+                    //$table_list->addCell($order);
                     $table_list->addCell($options);
                     $table_list->addCell($date);
                     
