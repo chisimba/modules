@@ -96,52 +96,56 @@ if(!empty($data)){
 
         // if essay submitted: allow download
         if($item['studentfileid']){
+            if (!is_null($item['submitdate'])) {
+                $submitdate = $this->objDateformat->formatDate($item['submitdate']);
+            } else {
+                $submitdate = '*internal error*';
+            }
+            if($item['mark']){
+                $mark=$item['mark'].' %';
+            }else{
+    			$uriMark = 0;
+    			$uriMark = $this->uri(array('action'=>'upload','book'=>$item['id'],'id'=>$item['topicid']));
+    			$this->objLink = new link($uriMark);
+    			$this->objLink->link=$markrow;
+                $mark=$unmarked.'<br>'.$this->objLink->show();
+            }
             $this->objIcon->setIcon('download');
         	$this->objIcon->extra='';
             $this->objIcon->title=$titledownload;
         	$this->objLink = new link($this->uri(array('action'=>'download','fileid'=>$item['studentfileid'])));
         	$this->objLink->link=$this->objIcon->show();
             $loadicons=$this->objLink->show();
-
+            /*
         	$this->objIcon->setIcon('submit2');
         	$this->objIcon->title=$titleupload;
         	$uriUp = $this->uri(array('action'=>'upload','book'=>$item['id'],'id'=>$item['topicid']));
         	$objLink = new link($uriUp);
         	$objLink->link=$this->objIcon->show();
         	//$loadicons.='&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLink->show();
-            if (!is_null($item['submitdate'])) {
-                $submitdate = $this->objDateformat->formatDate($item['submitdate']);
-            } else {
-                $submitdate = '*internal error*';
-            }
+            */
         } else {
-            $loadicons='';
-            $submitdate = $this->objLanguage->languageText('mod_essayadmin_notyetsubmitted','essayadmin');
+            $submitdate = $this->objLanguage->languageText('mod_essayadmin_bookedbutnotyetsubmitted','essayadmin');
+            $mark = $this->objLanguage->languageText('mod_essayadmin_bookedbutnotyetsubmitted','essayadmin');
+            $loadicons=$this->objLanguage->languageText('mod_essayadmin_bookedbutnotyetsubmitted','essayadmin');
         }
 
-        if($item['mark']){
-            $mark=$item['mark'].' %';
-        }else{
-			$uriMark = 0;
-			$uriMark = $this->uri(array('action'=>'upload','book'=>$item['id'],'id'=>$item['topicid']));
-			$this->objLink = new link($uriMark);
-			$this->objLink->link=$markrow;
-            $mark=$unmarked.'<br>'.$this->objLink->show();
-        }
-
+        /*
         $uriUp = $this->uri(array('action'=>'upload','book'=>$item['id'],'id'=>$item['topicid']));
         $objLink = new link($uriUp);
         $objLink->link = $item['student'];
         $objLink->title = $titleupload;
         $studentLink = $objLink->show();
+        */
 
         $objTable->startRow();
-/*      $objTable->addCell($studentLink,'','','',$class);
+        /*
+        $objTable->addCell($studentLink,'','','',$class);
 		$objTable->addCell($item['essay'],'','','',$class);
         $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
         $objTable->addCell($mark,'','','center',$class);
         $objTable->addCell($loadicons,'','','center',$class,' colspan=2');
-*/
+        */
         $objTable->addCell($item['studentNo'],'','','',$class);
         $objTable->addCell($item['student'],'','','',$class);
         $objTable->addCell($item['essay']/*$topicdata[0]['name']*/,'','','',$class);
