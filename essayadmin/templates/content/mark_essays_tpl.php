@@ -109,7 +109,15 @@ if(!empty($data)){
         	$objLink = new link($uriUp);
         	$objLink->link=$this->objIcon->show();
         	//$loadicons.='&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLink->show();
-        }else $loadicons='';
+            if (!is_null($item['submitdate'])) {
+                $submitdate = $this->objDateformat->formatDate($item['submitdate']);
+            } else {
+                $submitdate = '*internal error*';
+            }
+        } else {
+            $loadicons='';
+            $submitdate = $this->objLanguage->languageText('mod_essayadmin_notyetsubmitted','essayadmin');
+        }
 
         if($item['mark']){
             $mark=$item['mark'].' %';
@@ -137,7 +145,7 @@ if(!empty($data)){
         $objTable->addCell($item['studentNo'],'','','',$class);
         $objTable->addCell($item['student'],'','','',$class);
         $objTable->addCell($item['essay']/*$topicdata[0]['name']*/,'','','',$class);
-        $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
+        $objTable->addCell($submitdate,'','','',$class);
         $objTable->addCell($mark,'','','center',$class);
         $objTable->addCell($loadicons,'','','center',$class,' colspan=2');
         $objTable->endRow();
