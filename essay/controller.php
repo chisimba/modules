@@ -163,10 +163,10 @@ class essay extends controller
                 $studentBooking=$this->dbbook->getBooking($filter);
 
                 // get table display[0]['essayid']
-		ob_start();
+		//ob_start();
                 $list=$this->getEssays($essays,$topic,$studentBooking,$allBookings,$topic[0]['forceone']==1);
-		$this->setVar('buffer', ob_get_contents());
-		ob_end_clean();
+		//$this->setVar('buffer', ob_get_contents());
+		//ob_end_clean();
 
 				//print_r($essays)."  ".print_r($topic)."  ".print_r($studentbook)."  ".print_r($booked);
 
@@ -248,10 +248,10 @@ class essay extends controller
  	    // display students essays details
             case 'viewallessays':
             case 'viewessays':
-		ob_start();
+		//ob_start();
            		$data=$this->objEssayView->getStudentEssays();
-		$this->setVar('buffer', ob_get_contents());
-		ob_end_clean();
+		//$this->setVar('buffer', ob_get_contents());
+		//ob_end_clean();
 		//return "dump_tpl.php";
             	$this->setVarByRef('data',$data);
            	$template='view_essays_tpl.php';
@@ -315,12 +315,12 @@ class essay extends controller
             break;
 
             default:
-		ob_start();
+		//ob_start();
                 $topics = $this->getTopicData();
                 $list=$this->getTopics($topics);
                 $this->setVarByRef('list',$list);
-		$this->setVar('buffer', ob_get_contents());
-		ob_end_clean();
+		//$this->setVar('buffer', ob_get_contents());
+		//ob_end_clean();
                 $template='essay_tpl.php';
                 break;
             }
@@ -804,7 +804,7 @@ class essay extends controller
         ."' and studentid='".$this->userId."'");
 	}else{
         $data=$this->dbbook->getBooking("where context='".$contextcode
-        ."' and studentid='".$this->userId."'");	
+        ."' and studentid='".$this->userId."'");
 	}
         if($data){
             foreach($data as $key=>$item){
@@ -838,7 +838,7 @@ class essay extends controller
             }
         }
 
-    //return data 
+    //return data
         return $data;
     }
 */

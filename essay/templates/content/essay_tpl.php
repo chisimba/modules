@@ -17,7 +17,7 @@ $this->loadclass('link','htmlelements');
 echo $list;
 
 
-if ($objUser->isCourseAdmin()) {
+if ($objUser->isCourseAdmin($this->contextcode)) {
     $link = new link ($this->uri(NULL, 'essayadmin'));
     $link->link = $this->objLanguage->languageText('mod_essayadmin_desc', 'essayadmin', 'Essay Management');
 
