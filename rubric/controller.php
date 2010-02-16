@@ -810,7 +810,7 @@ public function dispatch($action=Null)
 				$this->setVarByRef("scores", $scores);
 				$this->setVarByRef("total", $total);
 				$this->setVar('maxtotal', $cols*$rows);
-				$timestamp = strftime('%Y-%m-%d %H:%M:%S', mktime());
+				$timestamp = strftime('%Y-%m-%d', mktime());
 				// Add the assessment to the database
 				$this->objDbRubricAssessments->insertSingle(
 					$tableId,
