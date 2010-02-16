@@ -167,7 +167,7 @@ function initContextTools(url,contexturl,filtersurl,baseurl,storyurl,inputurl){
     },
     [
     {
-        name:'filtername'
+        name:'name'
     },
 
     {
