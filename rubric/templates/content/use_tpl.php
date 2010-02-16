@@ -63,8 +63,8 @@
 	    foreach ($students_ as $student_) {
 	        $students[] = array(
     	    'display'=>
-        	    $student_['title']
-        	    .'&nbsp;'.$student_['firstname']
+        	    /*$student_['title']
+        	    .'&nbsp;'.*/$student_['firstname']
                 .'&nbsp;'.$student_['surname'],
             'username'=>$student_['username']
             );
@@ -102,7 +102,7 @@
 		for ($j=0;$j<$cols;$j++) {
 			//$checked = '';
 			$checked = $mode == 'edit' ? ($scores[$i] == ($j+1) ? 'checked' : '') : '';
-         $cell = "<input type=\"radio\" name=\"row{$i}\" id=\"row{$i}col{$j}\" value=\"{$j}\"/>" .$checked."";
+         $cell = "<input type=\"radio\" name=\"row{$i}\" id=\"row{$i}col{$j}\" value=\"{$j}\" ".$checked." />";
 
          $cell .= "<label for=\"row{$i}col{$j}\">" . $cells[$i][$j] . "</label>";
          $table->addCell($cell);

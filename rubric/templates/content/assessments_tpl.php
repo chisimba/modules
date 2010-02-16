@@ -120,7 +120,7 @@
 						'tableId'=>$tableId,
 	            		'id'=>$assessment['id']
 	            	)),
-	                $objLanguage->languageText('mod_rubric_suredeleteassessment'));
+	                $objLanguage->languageText('mod_rubric_suredeleteassessment','rubric'));
 	            $options .= $objConfirm->show();
 			}
 
