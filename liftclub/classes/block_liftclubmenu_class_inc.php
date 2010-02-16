@@ -144,16 +144,17 @@ class block_liftclubmenu extends object
 							$msgTrashLink =new link($this->uri(array('action'=>'trashedmessages')));
 							$msgTrashLink->link = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
 							$msgTrashLink->title = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
-       if($this->objUser->isAdmin ()){
-        $siteAdminLink =new link($this->uri(Null,'toolbar'));
-        $siteAdminLink->link = $this->objLanguage->languageText("mod_toolbar_siteadmin","toolbar","Site Administration");
-        $siteAdminLink->title = $this->objLanguage->languageText("mod_toolbar_siteadmin","toolbar","Site Administration"); 
-       }
+       
+       $siteAdminLink =new link($this->uri(array('action'=>'default'),'toolbar'));
+       $siteAdminLink->link = $this->objLanguage->languageText("mod_toolbar_siteadmin","toolbar","Site Administration");
+       $siteAdminLink->title = $this->objLanguage->languageText("mod_toolbar_siteadmin","toolbar","Site Administration"); 
+       
 							$objFeatureBox = $this->newObject ( 'featurebox', 'navigation' );
 
 							$pageLink = "<div id='liftclubmenu'><ul>";
 							$mailBox = "";
-							if($this->objUser->userId()!==null){ 
+
+							if($this->objUser->userId()!==Null){ 
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$modifyLink->show()."</li>"; 
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$favLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$userDetailsLink->show()."</li>";
@@ -161,7 +162,7 @@ class block_liftclubmenu extends object
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$findLink->show()."</li>";
         $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$actyLink->show()."</li>";
 
-        if($this->objUser->isAdmin ()){
+        if($this->objUser->isAdmin ()!==Null){
 								 $pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$siteAdminLink->show()."</li>";
 								}
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$exitLink->show()."</li>";
@@ -174,7 +175,6 @@ class block_liftclubmenu extends object
 								$mailfieldset = $this->newObject('fieldset', 'htmlelements');
 								$mailfieldset->contents = $mailLink;
 								$mailBox = $objFeatureBox->show ($this->objLanguage->languageText("mod_liftclub_mailbox","liftclub","Mail Box"), $mailfieldset->show()."<br />","mailbox", $blockType = NULL, $titleLength = 20, $wrapStr = TRUE, $showToggle = TRUE, $hidden = 'default', $showTitle = TRUE, $cssClass = 'featurebox', $cssId = '');
-
 							}else{
 								//$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$homeLink->show()."</li>";
 								$pageLink .= "<li>&nbsp;&nbsp;&nbsp;".$registerLink->show()."</li>";
