@@ -16,4 +16,18 @@
 			</rename>
 		</data>
 	</update>
+	<update>
+		<table>tbl_faq_entries</table>
+		<version>2.609</version>
+		<description>Change the question field to type clob</description>
+		<data>
+            <change>
+                <question>
+                    <definition>
+                        <type>clob</type>
+                    </definition>
+                </question>
+            </change>
+		</data>
+	</update>
 </updates>
