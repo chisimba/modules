@@ -285,7 +285,7 @@ $objForm->addToForm($objTable->show()."<hr class='openaris' />".$objTable1->show
 
 $objForm->addRule('condprovac', $this->objLanguage->languageText('mod_ahis_condproreq','openaris'),'numeric');
 $objForm->addRule('condconvac', $this->objLanguage->languageText('mod_ahis_condconreq','openaris'),'numeric');
-$objForm->addRule('outbreakref', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
+$objForm->addRule('outbreakref', $this->objLanguage->languageText('mod_ahis_valoutbreakref','openaris'),'select');
 $objForm->addRule('diseaseId', $this->objLanguage->languageText('mod_ahis_admin1req','openaris'),'select');
 $objForm->addRule('lotnumber', $this->objLanguage->languageText('mod_ahis_validatevac', 'openaris'), 'alphanumeric');
 $objForm->addRule('mandate', $this->objLanguage->languageText('mod_ahis_validatemandate', 'openaris'), 'datenotfuture');
