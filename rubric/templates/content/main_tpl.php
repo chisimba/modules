@@ -195,7 +195,7 @@
                     'module'=>'rubric',
                     'action'=>'deletetable',
                     'tableId'=>$table['id'])),
-            $objLanguage->languageText('mod_rubric_suredelete','rubric'));
+            $objLanguage->languageText('mod_rubric_confirmdelete','rubric')." ".$table['title']."?");
             $options .= $objConfirm->show();
 		}
 

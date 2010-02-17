@@ -633,7 +633,7 @@ public function dispatch($action=Null)
 		        return "edit_tpl.php";
             // Delete the rubric
 			case "deletetable":
-				$tableId = $this->getParam("tableId", "");
+				$tableId = $this->getParam("tableId", "");				
 				$this->objDbRubricTables->deleteSingle($tableId);
 				$this->objDbRubricPerformances->deleteAll($tableId);
 				$this->objDbRubricObjectives->deleteAll($tableId);

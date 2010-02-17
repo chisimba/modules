@@ -256,9 +256,9 @@ class functions_rubric extends object
 						// Load needed class
 						$this->loadClass('link', 'htmlelements');
 						$tblclassB = $this->newObject('htmltable','htmlelements');
-						$tblclassB->width='100%';
-						$tblclassB->border='0';
-						$tblclassB->cellspacing='0';
+						$tblclassB->width=500;
+						$tblclassB->border=1;
+						$tblclassB->cellspacing=1;
 						$tblclassB->cellpadding='0';	
 
 						// Display tables.	
@@ -284,23 +284,29 @@ class functions_rubric extends object
 								$pageTitle->str=$this->objLanguage->languageText('rubric_rubric','rubric')." : " . $title;
 
 								// Show Title
-								$fststr = $pageTitle->show();
-
-								// Show Description
-								$fststr .= $description."<br />";
-
-
-
+								//$fststr = $pageTitle->show();
+								$fststr = "";
 								$tblclass = $this->newObject('htmltable','htmlelements');
-								$tblclass->width='100%';
-								$tblclass->border='0';
-								$tblclass->cellspacing='0';
-								$tblclass->cellpadding='0';	
-								$oddOrEven = "odd";    
+								$tblclass->width=490;
+								$tblclass->border=1;
+								$tblclass->cellspacing=1;
+								$tblclass->cellpadding=1;	
+								$oddOrEven = "odd";
+								//Title
+								$fstitle = "<b>".$this->objLanguage->languageText('rubric_rubric','rubric')." : " . $title."</b>";	
+								$tblclass->startRow();
+								$tblclass->addCell($fstitle,"490","","","","bgcolor='#D3D3D3' colspan=2");
+								$tblclass->endRow();
+								//Description
+								$tblclass->startRow();
+								$tblclass->addCell($description,"490","","","","bgcolor='#FFFFFF' colspan=2");
+								$tblclass->endRow();
+
 								foreach ($assessments as $assessment) {
-									$tblclass->startRow();
 									$oddOrEven = ($oddOrEven=="even")? "odd":"even";
-									$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_name','rubric').": </b>".$assessment['studentno']);
+									$tblclass->startRow();
+									$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_name','rubric').": </b>","90","","","","bgcolor='#D3D3D3'");
+									$tblclass->addCell($assessment['studentno'],"400","","","","bgcolor='#FFFFFF'");
 									$tblclass->endRow();
 
 
@@ -311,20 +317,26 @@ class functions_rubric extends object
 									}
 									if ($total==0 || $maxtotal == 0){
 										$tblclass->startRow();
-										$tblclass->addCell("<b>" . "" . "</b>", "null", "top", "left", $oddOrEven, null);
+										$tblclass->addCell("<b>" . "" . "</b>","490","","","","colspan=2");
 										$tblclass->endRow();
 									}else{
 										$tblclass->startRow();
-										$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_score','rubric').": </b>" . "$total/$maxtotal");
+										$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_score','rubric').": </b>","90","","","","bgcolor='#D3D3D3'");
+										$tblclass->addCell("$total/$maxtotal","400","","","","");
+										$tblclass->endRow();
+										$tblclass->startRow();
+										$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_score','rubric').": </b>","90","","","","bgcolor='#D3D3D3'");
+										$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_score','rubric').": </b>" . "$total/$maxtotal","400","","","","bgcolor='#FFFFFF'");
 										$tblclass->endRow();
 									}
 									$tblclass->startRow();
-									$tblclass->addCell("<b>".ucfirst($this->objLanguage->code2Txt('rubric_teacher','rubric')).": </b>".$assessment['teacher']);
+									$tblclass->addCell("<b>".ucfirst($this->objLanguage->code2Txt('rubric_teacher','rubric')).": </b>","90","","","","bgcolor='#D3D3D3'");
+									$tblclass->addCell($assessment['teacher'],"400","","","","bgcolor='#FFFFFF'");	
 									$tblclass->endRow();
 									$tblclass->startRow();
-									$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_date','rubric').": </b>".$assessment['timestamp']);
-									$tblclass->endRow();
-									
+									$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_date','rubric').": </b>".$assessment['timestamp'],"90","","","","bgcolor='#D3D3D3'");
+									$tblclass->addCell("<b>".$this->objLanguage->languageText('rubric_date','rubric').": </b>".$assessment['timestamp'],"400","","","","bgcolor='#FFFFFF'");
+									$tblclass->endRow();									
 								}								
 							}
 							// View table.
@@ -359,42 +371,55 @@ class functions_rubric extends object
 							$pageTitle->type=3;
 							$pageTitle->align='left';
 							$pageTitle->str=$this->objLanguage->languageText('rubric_rubric','rubric') . " : " . $title ;
-							$sndstr = $pageTitle->show();
+							//$sndstr = $pageTitle->show();
+							$sndstr = "";
+							/*
+							$sndstr = "<b>".$this->objLanguage->languageText('rubric_rubric','rubric') . " : " . $title ."</b><br />";
 
 							$labelDescription = $description."<br />";
 
 							$sndstr .= $labelDescription;
+							*/
 							// If this is an assessment then display details.
 							if (isset($IsAssessment)) {
 								$objTable =& $this->newObject('htmltable','htmlelements');
-								$objTable->border = '0';
-								$objTable->width='100%';        
-								$objTable->cellspacing='0';
+								$objTable->border = 1;
+								$objTable->width=500;        
+								$objTable->cellspacing=1;
 								$objTable->cellpadding='0';
 
 								$objTable->startRow();
-								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_teacher","rubric"))."</b>");
-								$objTable->addCell($teacher);
+								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_teacher","rubric"))."</b>","100","","","","");
+								$objTable->addCell($teacher,"400","","","","");
 								$objTable->endRow();
 								$objTable->startRow();
-								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_studentno","rubric"))."</b>");
-								$objTable->addCell($studentNo);
+								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_studentno","rubric"))."</b>","100","","","","");
+								$objTable->addCell($studentNo,"100","","","","");
 								$objTable->endRow();
 								$objTable->startRow();
-								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_student","rubric"))."</b>");
-								$objTable->addCell($student);
+								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_student","rubric"))."</b>","100","","","","");
+								$objTable->addCell($student,"400","","","","");
 								$objTable->endRow();
 								$objTable->startRow();
-								$objTable->addCell("<b>".$this->objLanguage->languageText("rubric_datesubmitted","rubric")."</b>");
-								$objTable->addCell($date);
+								$objTable->addCell("<b>".$this->objLanguage->languageText("rubric_datesubmitted","rubric")."</b>","100","","","","");
+								$objTable->addCell($date,"400","","","","");
 								$objTable->endRow();
-								$sndstr .= $objTable->show();
 							}
 							$mytable =& $this->newObject("htmltable","htmlelements");
-							$mytable->border = '0';
-							$mytable->width = '100%';	
-							$mytable->cellspacing='0';
+							$mytable->border = 1;
+							$mytable->width = 490;	
+							$mytable->cellspacing=1;
 							$mytable->cellpadding='0'; 
+
+							//Title
+							$sndtitle = "<b>".$this->objLanguage->languageText('rubric_rubric','rubric') . " : " . $title ."</b>";
+							$mytable->startRow();
+							$mytable->addCell($sndtitle,"490","","","","bgcolor='#D3D3D3' colspan=2");
+							$mytable->endRow();							
+							//Description
+							$mytable->startRow();
+							$mytable->addCell($description,"490","","","","bgcolor='#FFFFFF' colspan=2");
+							$mytable->endRow();							
 							
 							//Get Rubric
 							$tableInfo = $this->objDbRubricTables->listSingle($table['id']);
@@ -425,72 +450,87 @@ class functions_rubric extends object
 							}
 
 							$mytable->startRow();
-							$mytable->addCell("<b>".$this->objLanguage->languageText("word_objectives","rubric")."</b>");
+							$mytable->addCell("<b>".$this->objLanguage->languageText("word_objectives","rubric")."</b>","490","","","","bgcolor='#D3D3D3' colspan=2");
+							$mytable->endRow();							
+
 							// Display performances.
 							if(!empty($performances[$j])){
 								for ($j=0;$j<$cols;$j++) {
-									if(!empty($performances[$j]))
-										$mytable->addCell("<b>".$performances[$j]."</b>");
+									if(!empty($performances[$j])){
+										$mytable->startRow();
+										$mytable->addCell("<b>".$performances[$j]."</b>","490","","","","colspan=2");
+										$mytable->endRow();							
+									}	
 								}
 							}
 							if (isset($IsAssessment)) {
-								$mytable->addCell("<b>Score</b>");
+								$mytable->startRow();
+								$mytable->addCell("<b>Score</b>","490","","","","colspan=2");
+								$mytable->endRow();
 							}
 
-							$mytable->endRow();							
-
 							for ($i=0;$i<$rows;$i++) {
-
-								$mytable->startRow();
 								// Display objective.
-								$mytable->addCell($objectives[$i]);
-								// Display cells.
+								if(!empty($objectives[$i])){
+									$mytable->startRow();
+									$mytable->addCell($objectives[$i],"490","","","","colspan=2");
+									$mytable->endRow();
+								}
 								for ($j=0;$j<$cols;$j++) {
-									$mytable->addCell($cells[$i][$j]);
+									if(!empty($cells[$i][$j])){
+										$mytable->startRow();
+										$mytable->addCell($cells[$i][$j],"490","","","","colspan=2");
+										$mytable->endRow();
+									}
 								}
-								if (isset($IsAssessment)) {
-									$mytable->addCell($scores[$i]);
+								if (isset($IsAssessment) && !empty($scores[$i])) {
+									$mytable->startRow();
+									$mytable->addCell($scores[$i],"490","","","","colspan=2");
+									$mytable->endRow();
 								}
-								$mytable->endRow();
 							}
 							// If this is an assessment display the total score.
 							if (isset($IsAssessment)) {
-
-								$mytable->startRow();
-								$mytable->addCell("&nbsp;");
+								/*
 								for ($j=0;$j<($cols-1);$j++) {
-									$mytable->addCell("&nbsp;");
-								}
-								$mytable->addCell($this->objLanguage->languageText("rubric_total","rubric") . "&nbsp;", Null, Null, "right");
+								 //Do nothing
+								}*/
+									$mytable->startRow();
+									$mytable->addCell($this->objLanguage->languageText("rubric_total","rubric") . "&nbsp;","490","","","","bgcolor='#D3D3D3' colspan=2");
+									$mytable->endRow();
 								if ($total==0 || $maxtotal == 0){
 								}else{
-								 $mytable->addCell($total/$maxtotal);
+									$mytable->startRow();
+								 $mytable->addCell($total/$maxtotal,"490","","","","colspan=2");
+									$mytable->endRow();
 								}	
-								$mytable->endRow();
-
 							}
+
 							$sndstr .= $mytable->show();
-		
+							// If this is an assessment then display details.
+							if (isset($IsAssessment)) {
+								$sndstr .= $objTable->show();
+							}
 							if ($contextCode != "root") {
 
 								$tblclassB->startRow();
-								$tblclassB->addCell($fststr.$tblclass->show());
+								$tblclassB->addCell($fststr.$tblclass->show(),"500","","","","colspan=2");
 								$tblclassB->endRow();
 
 								$tblclassB->startRow();
-								$tblclassB->addCell($sndstr);
+								$tblclassB->addCell($sndstr,"500","","","","colspan=2");
 								$tblclassB->endRow();
 
 							}else{
 								$tblclassB->startRow();
-								$tblclassB->addCell($sndstr);
+								$tblclassB->addCell($sndstr,"500","","","","colspan=2");
 								$tblclassB->endRow();
 							}
 						}
 						if (empty($tables)) {        
 
 						$tblclassB->startRow();        
-						$tblclassB->addCell("<div class=\"noRecordsMessage\">" . $this->objLanguage->languageText('mod_rubric_norecords','rubric') . "</div>");
+						$tblclassB->addCell("<div class=\"noRecordsMessage\">" . $this->objLanguage->languageText('mod_rubric_norecords','rubric') . "</div>","500","","","","colspan=2");
 						$tblclassB->endRow();
 						}
 
@@ -500,32 +540,35 @@ class functions_rubric extends object
 						$pageTitle->type=3;
 						$pageTitle->align='left';
 						$pageTitle->str=$this->objLanguage->languageText('rubric_rubrics','rubric');
-
+/*
 						$tblclassC=$this->newObject('htmltable','htmlelements');
-						$tblclassC->width='100%';
-						$tblclassC->border='0';
-						$tblclassC->cellspacing='0';
+						$tblclassC->width=500;
+						$tblclassC->border=1;
+						$tblclassC->cellspacing=1;
 						$tblclassC->cellpadding='0';    
 
 						$tblclassC->startRow();
 
 						$tblclassC->addCell($pageTitle->show());
 						$tblclassC->endRow();
-
+*/
 						$tblclassD = $this->newObject('htmltable','htmlelements');
-						$tblclassD->width='100%';
-						$tblclassD->border='0';
-						$tblclassD->cellspacing='0';
+						$tblclassD->width=500;
+						$tblclassD->border='1';
+						$tblclassD->cellspacing=1;
 						$tblclassD->cellpadding='0';	
 						if (isset($pdtables)) {
 						foreach ($pdtables as $pdtable) {
+/*
 							$tblclassD->startRow();
-							$tblclassD->addCell("<b>".$this->objLanguage->languageText('word_title').": ". "</b>". $pdtable['title'] );
-							$tblclassD->endRow();
+							$tblclassD->addCell("<b>".$this->objLanguage->languageText('word_title').": ". "</b>","100","","","", "bgcolor='#D3D3D3'");
+							$tblclassD->addCell($pdtable['title'],"400","","","", "bgcolor='#FFFFFF'");
+						$tblclassD->endRow();
 							$tblclassD->startRow();						
-							$tblclassD->addCell("<b>" .$this->objLanguage->languageText('rubric_description','rubric').": ". "</b>". $pdtable['description'] );
+							$tblclassD->addCell("<b>" .$this->objLanguage->languageText('rubric_description','rubric').": ". "</b>","100","","","", "bgcolor='#FFFFFF'");
+							$tblclassD->addCell($pdtable['description'] ,"400","","","", "bgcolor='#FFFFFF'");
 							$tblclassD->endRow();
-						
+*/						
 							$tableInfo = $this->objDbRubricTables->listSingle($pdtable['id']);
 							$title = $tableInfo[0]['title'];
 							$description = $tableInfo[0]['description'];
@@ -557,59 +600,72 @@ class functions_rubric extends object
 							$pageTitle->type=3;
 							$pageTitle->align='left';
 							$pageTitle->str=$this->objLanguage->languageText('rubric_rubric','rubric') . " : " . $title ;
-							$thrdstr = $pageTitle->show();
-
+							//$thrdstr = $pageTitle->show();
+							$thrdstr = "";
+							/*
+							$thrdstr = "<b>".$this->objLanguage->languageText('rubric_rubric','rubric') . " : " . $title."</b><br />";
 							$labelDescription = "" . $description . "<br />";
-
 							$thrdstr .= $labelDescription;
-
+							*/
 							// If this is an assessment then display details.
 							if (isset($IsAssessment)) {
 								$objTable =& $this->newObject('htmltable','htmlelements');
-								$objTable->border = '0';
-								$objTable->width='100%';        
-								$objTable->cellspacing='0';
+								$objTable->border = 1;
+								$objTable->width=490;        
+								$objTable->cellspacing=1;
 								$objTable->cellpadding='0';
 
 								$objTable->startRow();
-								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_teacher","rubric"))."</b>");
-								$objTable->addCell($teacher);
+								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_teacher","rubric"))."</b>","90","","","", "bgcolor='#D3D3D3'");
+								$objTable->addCell($teacher,"400","","","", "bgcolor='#FFFFFF'");
 								$objTable->endRow();
 								$objTable->startRow();
-								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_studentno","rubric"))."</b>");
-								$objTable->addCell($studentNo);
+								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_studentno","rubric"))."</b>","90","","","", "bgcolor='#D3D3D3'");
+								$objTable->addCell($studentNo,"400","","","", "bgcolor='#FFFFFF'");
 								$objTable->endRow();
 								$objTable->startRow();
-								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_student","rubric"))."</b>");
-								$objTable->addCell($student);
+								$objTable->addCell("<b>".ucfirst($this->objLanguage->code2Txt("rubric_student","rubric"))."</b>","90","","","", "bgcolor='#D3D3D3'");
+								$objTable->addCell($student,"400","","","", "bgcolor='#FFFFFF'");
 								$objTable->endRow();
 								$objTable->startRow();
-								$objTable->addCell("<b>".$this->objLanguage->languageText("rubric_datesubmitted","rubric")."</b>");
-								$objTable->addCell($date);
+								$objTable->addCell("<b>".$this->objLanguage->languageText("rubric_datesubmitted","rubric")."</b>","90","","","", "bgcolor='#D3D3D3'");
+								$objTable->addCell($date,"400","","","", "bgcolor='#FFFFFF'");
 								$objTable->endRow();
-								$thrdstr .= $objTable->show();
 							}
-							$table =& $this->newObject("htmltable","htmlelements");
-							$table->border = '0';
-							$table->width = '100%';	
-							$table->cellspacing='0';
-							$table->cellpadding='0'; 
+							$ftable =& $this->newObject("htmltable","htmlelements");
+							$ftable->border = 1;
+							$ftable->width = 490;	
+							$ftable->cellspacing = 1;
+							
+								$ftable->startRow();
+								$ftable->addCell("<b>".$this->objLanguage->languageText('rubric_rubric','rubric') . " : ".$title." </b>","490","","","","bgcolor='#D3D3D3' colspan=2");
+								$ftable->endRow();
+								$ftable->startRow();
+								$ftable->addCell($description,"490","","","", "bgcolor='#FFFFFF' colspan=2");
+								$ftable->endRow();
 							//$class = 'odd';
 							for ($i=0;$i<$rows;$i++) {
-								$table->startRow();
 								// Display objective.
-								$table->addCell("<b>".$this->objLanguage->languageText("word_objectives","rubric").": </b><br />".$objectives[$i]);
-								$table->endRow();
+								$ftable->startRow();
+								$ftable->addCell("<b>".$this->objLanguage->languageText("word_objectives","rubric")." </b>","490","","","", "bgcolor='#D3D3D3' colspan=2");
+								$ftable->endRow();
+								$ftable->startRow();
+								$ftable->addCell($objectives[$i],"490","","","", "bgcolor='#FFFFFF' colspan=2 ");
+								$ftable->endRow();
 								// Display cells.								
 								for ($j=0;$j<$cols;$j++) {
-									$table->startRow();
-									$table->addCell("<b>".$performances[$j].": </b><br />".$cells[$i][$j]);
-									$table->endRow();
+									$ftable->startRow();
+									$ftable->addCell("<b>".$performances[$j]."</b>","490","","","", "bgcolor='#D3D3D3' colspan=2");
+									$ftable->endRow();
+									$ftable->startRow();
+									$ftable->addCell($cells[$i][$j],"490","","","", "bgcolor='#FFFFFF' colspan=2");
+									$ftable->endRow();
 								}
 								if (isset($IsAssessment)) {
-								 $table->startRow();
-									$table->addCell("<b>"."Score".": </b>".$scores[$i]);
-								 $table->endRow();
+								 $ftable->startRow();
+									$ftable->addCell("<b>"."Score".": </b>","90","","","", "bgcolor='#D3D3D3'");
+									$ftable->addCell($scores[$i],"400","","","", "bgcolor='#FFFFFF'");
+								 $ftable->endRow();
 								}
 
 
@@ -617,32 +673,40 @@ class functions_rubric extends object
 							}
 							// If this is an assessment display the total score.
 							if (isset($IsAssessment)) {
-								$table->startRow();
-								$table->addCell("&nbsp;");
+
 								for ($j=0;$j<($cols-1);$j++) {
-									$table->addCell("&nbsp;");
+
 								}
-								$table->addCell($this->objLanguage->languageText("rubric_total","rubric") . "&nbsp;", Null, Null, "right");
+								$ftable->startRow();
+								$ftable->addCell($this->objLanguage->languageText("rubric_total","rubric") . "&nbsp;","490","","","", "bgcolor='#FFFFFF' colspan=2");
+								$ftable->endRow();
 								if ($total==0 || $maxtotal == 0){
-									$table->addCell("");
+
 								}else{
-									$table->addCell($total/$maxtotal);
+									$ftable->startRow();
+									$ftable->addCell($total/$maxtotal,"490","","","", "bgcolor='#FFFFFF' colspan=2");
+									$ftable->endRow();
 								}
-								$table->endRow();
+
 							}
-							$thrdstr .= $table->show();
+							$thrdstr .= $ftable->show();
+							// If this is an assessment then display details.
+							if (isset($IsAssessment)) {
+								$thrdstr .= $objTable->show();
+							}
 							$tblclassD->startRow();
-							$tblclassD->addCell($thrdstr);
+							$tblclassD->addCell($thrdstr,"500","","","", "colspan=2");
 							$tblclassD->endRow();
 						}
 						}
 
 						if (empty($pdtables)) {
 						$tblclassD->startRow();       
-						$tblclassD->addCell("<div class=\"noRecordsMessage\">" . $this->objLanguage->languageText('mod_rubric_norecords','rubric') . "</div>", "null", "top", "left", "", 'colspan="3"');
+						$tblclassD->addCell("<div class=\"noRecordsMessage\">" . $this->objLanguage->languageText('mod_rubric_norecords','rubric') . "</div>", "500", "top", "left", "", 'colspan="2"');
 						$tblclassD->endRow();
 						}
-						return $tblclassB->show().$tblclassC->show().$tblclassD->show();
+						//return $ftable->show();
+						return $tblclassB->show().$tblclassD->show();
 						}else{
 						return $tblclassB->show();
 						}
