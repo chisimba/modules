@@ -22,18 +22,16 @@ class viewerutils extends object {
     public function getHomePageContent() {
 
         $objTrim = $this->getObject('trimstr', 'strings');
-        $objStories=$this->getObject('storyparser');
+        $objStories=$this->getObject('ocsstoryparser');
         $storyid=$this->objDbSysconfig->getValue('DEFAULT_STORY_ID','ocsinterface');
         $data= $objStories->getStory($storyid);
         $content='';
 
         $content='
           
-            <ul class="paneltabs">             
-           
+            
             '.$this->objWashout->parseText($data['maintext']).'
             
-            </ul>
             <br/>
               ';
 
@@ -43,7 +41,7 @@ class viewerutils extends object {
 
 
         $objTrim = $this->getObject('trimstr', 'strings');
-        $objStories=$this->getObject('storyparser');
+        $objStories=$this->getObject('ocsstoryparser');
 
         if($parentid == '') {
             $category=$this->objDbSysconfig->getValue('TOPIC_CATEGORY','ocsinterface');
@@ -83,7 +81,7 @@ class viewerutils extends object {
 
 
         $objTrim = $this->getObject('trimstr', 'strings');
-        $objStories=$this->getObject('storyparser');
+        $objStories=$this->getObject('ocsstoryparser');
         $topics=$objStories->getTopics($id);
         $content='';
         $navlinks='';
@@ -125,7 +123,7 @@ class viewerutils extends object {
 
         $this->loadClass('link', 'htmlelements');
         $objTrim = $this->getObject('trimstr', 'strings');
-        $objStories=$this->getObject('storyparser');
+        $objStories=$this->getObject('ocsstoryparser');
 
         $title == '' ?'Living off the river':$title;
         $articlecontent=$objStories->getStoryByTitle($title,'juk_articles');
@@ -189,17 +187,16 @@ cell content can go in here
     public function getContent($id) {
 
         $objTrim = $this->getObject('trimstr', 'strings');
-        $objStories=$this->getObject('storyparser');
+        $objStories=$this->getObject('ocsstoryparser');
         $data= $objStories->getStory($id);
 
         $content='';
         $content='
 
-            <ul class="paneltabs">
-
+          
             '.$this->objWashout->parseText($data['maintext']).'
 
-            </ul>
+        
             <br/>
               ';
 
