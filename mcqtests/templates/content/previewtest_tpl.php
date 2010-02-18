@@ -37,6 +37,7 @@ $hintLabel = $this->objLanguage->languageText('mod_mcqtests_hint', 'mcqtests');
 $markLabel = $this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests');
 $selectLabel = $this->objLanguage->languageText('mod_mcqtests_selectcorrect', 'mcqtests');
 $submitLabel = $this->objLanguage->languageText('word_submit', 'system', 'Submit');
+$closeLabel = $this->objLanguage->languageText('mod_mcqtests_closethiswindow', 'mcqtests','Close this window');
 $continueLabel = $this->objLanguage->languageText('mod_mcqtests_continue', 'mcqtests');
 $durationLabel = $this->objLanguage->languageText('mod_mcqtests_timeleft', 'mcqtests');
 $gotoLabel = $this->objLanguage->languageText('mod_mcqtests_gotoquestions', 'mcqtests');
@@ -228,7 +229,7 @@ $nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10) .'
 $str.= $nav;
 $objLayer = new layer();
 $objLayer->padding = '10px';
-$objLayer->str = $str;
+$objLayer->str = $str.'<br/><a href="javascript:window.close();">'.$closeLabel.'</a>';
 $pageLayer = $objLayer->show();
 echo $pageLayer;
 
