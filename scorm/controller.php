@@ -122,6 +122,8 @@ class scorm extends controller {
         $requiresLogin = array ('viewscorm', 'getNext', 'getPrev','checkfolder');
         if (in_array ( $action, $requiresLogin )) {
             return FALSE;
+        } else if(empty($this->userId)){         
+            return FALSE;
         } else {
             return TRUE;
         }
@@ -161,7 +163,7 @@ class scorm extends controller {
     }
     //Ajax function to get the next page
     private function __getNext() {
-        $this->requiresLogin('getNext');
+        //$this->requiresLogin('getNext');
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
 
@@ -179,7 +181,7 @@ class scorm extends controller {
     }
     //Ajax function to get the next page
     private function __getPrev() {
-        $this->requiresLogin('getPrev');
+        //$this->requiresLogin('getPrev');
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
 

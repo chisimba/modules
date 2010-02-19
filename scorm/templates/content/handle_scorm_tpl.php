@@ -239,8 +239,8 @@ if($mode == 'page') {
             $divider = ' / ';
         }
     }
-
-    if ($this->isValid('movepageup')) {
+    if(!empty($this->userId)){
+     if ($this->isValid('movepageup')) {
 
         $middle .= '<br />';
 
@@ -261,6 +261,7 @@ if($mode == 'page') {
             $link->link = $this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent');
             $middle .= $link->show();
         }
+     }
     }
 
 }
@@ -318,8 +319,8 @@ if($mode == 'page') {
     $objTable->endRow();
 }
 
-
-if (count($chapters) > 1 && $this->isValid('movetochapter')) {
+if(!empty($this->userId)){
+ if (count($chapters) > 1 && $this->isValid('movetochapter')) {
    
     $this->loadClass('dropdown', 'htmlelements');
     $this->loadClass('hiddeninput', 'htmlelements');
@@ -339,10 +340,8 @@ if (count($chapters) > 1 && $this->isValid('movetochapter')) {
     $button = new button ('movepage', $this->objLanguage->languageText('mod_contextcontent_move','contextcontent'));
     $button->setToSubmit();
 
-    $form->addToForm($hiddenInput->show().$label->show().$dropdown->show().' '.$button->show());
-
-   
-
+    $form->addToForm($hiddenInput->show().$label->show().$dropdown->show().' '.$button->show()); 
+ }
 }
 $objWashout = $this->getObject('washout', 'utilities');
 $form->addToForm($objWashout->parseText($objTable->show()));
