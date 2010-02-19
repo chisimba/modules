@@ -10,8 +10,14 @@ $this->loadClass('button', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('loader');
 
-//AJAX to check if selected folder contains scorm
-    
+//Array to contain language items for JS
+$arrLang = array();
+$arrLang['reservedfolder'] = $this->objLanguage->languageText('mod_scorm_reservedfolder','scorm');
+$arrLang['containsscorm'] = $this->objLanguage->languageText('mod_scorm_containsscorm','scorm');
+$arrLang['buttondisabled'] = $this->objLanguage->languageText('mod_scorm_buttondisabled','scorm');
+$arrLang['doesntcontainscorm'] = $this->objLanguage->languageText('mod_scorm_doesntcontainscorm','scorm');
+$arrLang['unknownerror'] = $this->objLanguage->languageText('mod_scorm_unknownerror','scorm');
+//AJAX to check if selected folder contains scorm    
     $this->appendArrayVar('headerParams', '
     <script type="text/javascript">
         
@@ -50,7 +56,7 @@ $objIcon->setIcon('loader');
                 
                 currentCode = code;
                 
-                jQuery("#contextcodemessage").html("This folder is reserved. You cannot extract scorm in the ROOT folder.");
+                jQuery("#contextcodemessage").html("'.$arrLang['reservedfolder'].'");
                 jQuery("#contextcodemessage").addClass("error");
                 jQuery("#input_contextcode").addClass("inputerror");
                 jQuery("#contextcodemessage").removeClass("success");
@@ -87,32 +93,29 @@ $objIcon->setIcon('loader');
                                 // IF code exists
                                 if (msg == "ok") {
                                     jQuery("#contextcodemessage2").html("");                                
-                                    jQuery("#contextcodemessage").html("Good! It contains scorm");
+                                    jQuery("#contextcodemessage").html("'.$arrLang['containsscorm'].'");
                                     jQuery("#contextcodemessage").addClass("success");
                                     jQuery("#contextcodemessage2").removeClass("error");                                    
                                     jQuery("#contextcodemessage").removeClass("error");
                                     jQuery("#input_parentfolder").removeClass("inputerror");
                                     jQuery("#submitbutton").removeAttr("disabled");
-
-                                // Else
                                 } else if(msg == "notok") {
-                                    jQuery("#contextcodemessage2").html("Button is Disabled");
+                                    jQuery("#contextcodemessage2").html("'.$arrLang['buttondisabled'].'");
                                     jQuery("#contextcodemessage2").addClass("error");
-                                    jQuery("#contextcodemessage").html("That folder does not contain a scorm course");
+                                    jQuery("#contextcodemessage").html("'.$arrLang['doesntcontainscorm'].'");
                                     jQuery("#contextcodemessage").addClass("error");
                                     jQuery("#input_parentfolder").addClass("inputerror");
                                     jQuery("#contextcodemessage").removeClass("success");
                                     jQuery("#submitbutton").attr("disabled", "disabled");                                    
                                 } else {
-                                    jQuery("#contextcodemessage2").html("Button is Disabled");
+                                    jQuery("#contextcodemessage2").html("'.$arrLang['buttondisabled'].'");
                                     jQuery("#contextcodemessage2").addClass("error");
-                                    jQuery("#contextcodemessage").html("Unknown error! Kindly select another folder");
+                                    jQuery("#contextcodemessage").html("'.$arrLang['unknownerror'].'");
                                     jQuery("#contextcodemessage").addClass("error");
                                     jQuery("#input_parentfolder").addClass("inputerror");
                                     jQuery("#contextcodemessage").removeClass("success");
-                                    jQuery("#submitbutton").attr("disabled", "disabled");                                
-                                }
-                                
+                                    jQuery("#submitbutton").attr("disabled", "disabled");
+                                }                                
                             }
                         }
                     });
