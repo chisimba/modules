@@ -9,8 +9,12 @@ $form = new form("default",
     'module'=>'contextcontent','action' =>'movetochapter'
 )));
 
+//Array to contain language items for JS
+$arrLang = array();
+$arrLang['previous'] = $this->objLanguage->languageText('mod_scorm_previous','scorm');
+$arrLang['next'] = $this->objLanguage->languageText('mod_scorm_next','scorm');
+$arrLang['home'] = $this->objLanguage->languageText('mod_scorm_home','scorm');
 //AJAX to check if selected folder contains scorm
-
 $this->appendArrayVar('headerParams', "<style type='text/css'>
   div.small-box {
   width:250px;
@@ -29,17 +33,16 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
 
 </style>
     <script type='text/javascript'>
-        
         // Flag Variable - Update message or not
         var doUpdateMessage = false;
-	var nextPage;
-	var prevPage;        
+       	var nextPage;
+       	var prevPage;        
         // Var Current Entered Code
         var currentCode;
 
-	//var fpath = jQuery('#rootFolder').attr(\"value\");
+       	//var fpath = jQuery('#rootFolder').attr(\"value\");
 
-/*        
+        /*        
         // Action to be taken once page has loaded
         jQuery(document).ready(function(){
             jQuery('#div_navigators').bind(\"mouseover\", function() {
@@ -47,38 +50,37 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
             });
         });
         jQuery(document).ready(function(){
-		jQuery('#div_navigators a').click(function() {
-			getIframeID(this.href);
-			return confirm('You are going to visit: ' + this.href);
-		});
+         		jQuery('#div_navigators a').click(function() {
+          			getIframeID(this.href);
+         			return confirm('You are going to visit: ' + this.href);
+      		});
         });
-//jQuery('#rootFolder').attr(\"value\")
-*/
-	// prepare the form when the DOM is ready 
+        //jQuery('#rootFolder').attr(\"value\")
+        */
+       	// prepare the form when the DOM is ready 
         jQuery(document).ready(function(){
 
-		jQuery('#span_next').click(function() {
-			jQuery('#span_next').html('');
-			getNextPage(nextPage,jQuery('#input_rootfolder').attr(\"value\"));
-			getPrevPage(nextPage,jQuery('#input_rootfolder').attr(\"value\"));
+      		jQuery('#span_next').click(function() {
+      			jQuery('#span_next').html('');
+      			getNextPage(nextPage,jQuery('#input_rootfolder').attr(\"value\"));
+      			getPrevPage(nextPage,jQuery('#input_rootfolder').attr(\"value\"));
 			
-		});
-		jQuery('#span_prev').click(function() {
-			jQuery('#span_next').html('');
-			getNextPage(prevPage,jQuery('#input_rootfolder').attr(\"value\"));
-			getPrevPage(prevPage,jQuery('#input_rootfolder').attr(\"value\"));
-			
-		});
-		jQuery('#span_nextb').click(function() {
-			jQuery('#span_nextb').html('');
-			getNextPage(nextPage,jQuery('#input_rootfolder').attr(\"value\"));
-			getPrevPage(nextPage,jQuery('#input_rootfolder').attr(\"value\"));
-			
-		});
-		jQuery('#span_prevb').click(function() {
-			jQuery('#span_nextb').html('');
-			getNextPage(prevPage,jQuery('#input_rootfolder').attr(\"value\"));
-			getPrevPage(prevPage,jQuery('#input_rootfolder').attr(\"value\"));
+      		});
+      		jQuery('#span_prev').click(function() {
+      			jQuery('#span_next').html('');
+      			getNextPage(prevPage,jQuery('#input_rootfolder').attr(\"value\"));
+      			getPrevPage(prevPage,jQuery('#input_rootfolder').attr(\"value\"));
+ 			
+	      	});
+      		jQuery('#span_nextb').click(function() {
+      			jQuery('#span_nextb').html('');
+      			getNextPage(nextPage,jQuery('#input_rootfolder').attr(\"value\"));
+      			getPrevPage(nextPage,jQuery('#input_rootfolder').attr(\"value\"));			
+      		});
+      		jQuery('#span_prevb').click(function() {
+      			jQuery('#span_nextb').html('');
+      			getNextPage(prevPage,jQuery('#input_rootfolder').attr(\"value\"));
+      			getPrevPage(prevPage,jQuery('#input_rootfolder').attr(\"value\"));
 			
 		});
 
@@ -118,76 +120,75 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
 		var page;
 		var folderpath;
 		
-                    // DO Ajax
-		// prepare the form when the DOM is ready 
-                    jQuery.ajax({
-                        type: 'GET', 
-                        url: 'index.php?', 
-                        data: 'module=scorm&action=getNext&page='+current+'&folderpath='+fpath, 
-                        success: function(msg){
-				                            nextPage = msg;
-                                // IF next page exists
-                                if (msg=='omega') {
-                                    jQuery('#span_next').html('Last Page');
-                                    jQuery('#span_next').addClass('error');
-                                    jQuery('#span_next').removeClass('success');			
-                                    jQuery('#span_nextb').html('Last Page');
-                                    jQuery('#span_nextb').addClass('error');
-                                    jQuery('#span_nextb').removeClass('success');			
-                                }else{
-                                    jQuery('#span_next').html('<a href=\''+nextPage+'\' target = \'content\' id = \'next\'>Next</a>');
-                                    jQuery('#span_next').addClass('success');
-                                    jQuery('#span_next').removeClass('error');
-                                    jQuery('#span_nextb').html('<a href=\''+nextPage+'\' target = \'content\' id = \'next\'>Next</a>');
-                                    jQuery('#span_nextb').addClass('success');
-                                    jQuery('#span_nextb').removeClass('error');
+   // DO Ajax
+ 		// prepare the form when the DOM is ready 
+   jQuery.ajax({
+       type: 'GET', 
+       url: 'index.php?', 
+       data: 'module=scorm&action=getNext&page='+current+'&folderpath='+fpath, 
+       success: function(msg){
+        nextPage = msg;
+        // IF next page exists
+        if (msg=='omega') {
+            jQuery('#span_next').html('Last Page');
+            jQuery('#span_next').addClass('error');
+            jQuery('#span_next').removeClass('success');			
+            jQuery('#span_nextb').html('Last Page');
+            jQuery('#span_nextb').addClass('error');
+            jQuery('#span_nextb').removeClass('success');			
+        }else{
+            jQuery('#span_next').html('<a href=\''+nextPage+'\' target = \'content\' id = \'next\'>".$arrLang['next']."</a>');
+            jQuery('#span_next').addClass('success');
+            jQuery('#span_next').removeClass('error');
+            jQuery('#span_nextb').html('<a href=\''+nextPage+'\' target = \'content\' id = \'next\'>".$arrLang['next']."</a>');
+            jQuery('#span_nextb').addClass('success');
+            jQuery('#span_nextb').removeClass('error');
 
-				}
+   				}
   	                              
-                            }
-                    });
+   }
+ });
 
 	}
 	function getPrevPage(current,fpath)
 	{
-		var page;
-		var folderpath;
-                    // DO Ajax
-		// prepare the form when the DOM is ready 
-                    jQuery.ajax({
-                        type: 'GET', 
-                        url: 'index.php?', 
-                        data: 'module=scorm&action=getPrev&page='+current+'&folderpath='+fpath
-                        , 
-                        success: function(msg){
-				prevPage = msg;
-                                // IF next page exists
-                                if (msg=='alpha') {
-                                    jQuery('#span_prev').html('First Page');
-                                    jQuery('#span_prev').addClass('error');
-                                    jQuery('#span_prev').removeClass('success');			
-                                    jQuery('#span_prevb').html('First Page');
-                                    jQuery('#span_prevb').addClass('error');
-                                    jQuery('#span_prevb').removeClass('success');			
-                                }else{
-                                    jQuery('#span_prev').html('<a href=\''+prevPage+'\' target = \'content\' id = \'next\'>Previous</a>');
-                                    jQuery('#span_prev').addClass('success');
-                                    jQuery('#span_prev').removeClass('error');
-                                    jQuery('#span_prevb').html('<a href=\''+prevPage+'\' target = \'content\' id = \'next\'>Previous</a>');
-                                    jQuery('#span_prevb').addClass('success');
-                                    jQuery('#span_prevb').removeClass('error');
+		 var page;
+		 var folderpath;
+   // DO Ajax
+ 		// prepare the form when the DOM is ready 
+   jQuery.ajax({
+    type: 'GET', 
+    url: 'index.php?', 
+    data: 'module=scorm&action=getPrev&page='+current+'&folderpath='+fpath, 
+    success: function(msg){
+      prevPage = msg;
+       // IF next page exists
+       if (msg=='alpha') {
+           jQuery('#span_prev').html('First Page');
+           jQuery('#span_prev').addClass('error');
+           jQuery('#span_prev').removeClass('success');			
+           jQuery('#span_prevb').html('First Page');
+           jQuery('#span_prevb').addClass('error');
+           jQuery('#span_prevb').removeClass('success');			
+       }else{
+           jQuery('#span_prev').html('<a href=\''+prevPage+'\' target = \'content\' id = \'next\'>".$arrLang['previous']."</a>');
+           jQuery('#span_prev').addClass('success');
+           jQuery('#span_prev').removeClass('error');
+           jQuery('#span_prevb').html('<a href=\''+prevPage+'\' target = \'content\' id = \'next\'>".$arrLang['previous']."</a>');
+           jQuery('#span_prevb').addClass('success');
+           jQuery('#span_prevb').removeClass('error');
 
 				}
   	                              
-                            }
-                    });
+  }
+ });
 
 	}
 
 	function getIframeID(el,path)
 	{
 		jQuery('#contextcodemessage').html(el+' '+path);
-                jQuery('#contextcodemessage').addClass('success');
+  jQuery('#contextcodemessage').addClass('success');
 
 	}
     </script>");
@@ -298,14 +299,12 @@ $objTable->startRow();
 
 $objTable->addCell($apiIFrame);
 $objTable->addCell('<div id="div_navigators" class="small-box">'.$navigators."</div>");
-//	    $objTable->addCell($readXml);
 $objTable->addCell('<div class="big-box">'.$testNavs."<br /><div id='divContent' align = 'center'>".$content."</div><br />".$testNavsB).'</div>';
+//$objTable->addCell('<div class="big-box">'.'test'."<br /><div id='divContent' align = 'center'>".$content."</div><br />").'</div>';
 $objTable->startRow();
 $objTable->addCell("&nbsp;");
 $objTable->addCell("&nbsp;");
 $objTable->addCell(' <span id="contextcodemessage">'.$contextCodeMessage.'</span>');
-//	    $objTable->addCell($readXml);
-//	    $objTable->addCell($content);
 
 $objTable->endRow();
 
