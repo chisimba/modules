@@ -139,14 +139,12 @@ class assignment extends controller
         $restrictedActions = array ('add', 'edit', 'saveassignment', 'updateassignment', 'delete', 'markassignments', 'saveuploadmark', 'saveonlinemark');
 
         if (in_array($action, $restrictedActions)) {
-            if ($this->objUser->isCourseAdmin($this->contextCode)) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
+            $valid = $this->objUser->isCourseAdmin($this->contextCode);
         } else {
-            return TRUE;
+            $valid = TRUE;
         }
+
+        return $valid;
     }
 
     /**
