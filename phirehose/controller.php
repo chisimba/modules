@@ -16,6 +16,7 @@ class phirehose extends controller
         $username = $this->objSysConfig->getValue('username', 'phirehose');
         $password = $this->objSysConfig->getValue('password', 'phirehose');
         $keywords = $this->objSysConfig->getValue('keywords', 'phirehose');
+        $keywords = explode('|', $keywords);
         $callback = array($this, 'push');
         $this->objPhirehoseOps->track($username, $password, $keywords, $callback);
     }
