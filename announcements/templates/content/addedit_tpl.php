@@ -60,7 +60,8 @@ $title->size = 60;
 if ($mode == 'edit') {
     $title->value = $announcement['title'];
 }
-
+//Check if title is empty
+$form->addRule('title', $this->objLanguage->languageText('mod_announcements_titlerequired','announcements'), 'required');
 $table->addCell($label->show(), 120);
 $table->addCell($title->show());
 $table->endRow();
@@ -140,7 +141,7 @@ if ($mode == 'add') {
         
         $label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
         $title = new textinput('title');
-        
+        $form->addRule('title', $this->objLanguage->languageText('mod_announcements_titlerequired','announcements'), 'required');
         $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to').':');
         
         $str = $this->objLanguage->code2Txt('mod_announcements_followingcontexts', 'announcements', NULL, 'the following [-contexts-]').':';
@@ -156,6 +157,7 @@ $table->startRow();
 
 $htmlArea = $this->newObject('htmlarea', 'htmlelements');
 $htmlArea->name = 'message';
+
 if ($mode == 'edit') {
     $htmlArea->value = $announcement['message'];
 }
@@ -163,7 +165,6 @@ if ($mode == 'edit') {
 $table->addCell($this->objLanguage->languageText('word_message', 'system', 'Message'));
 $table->addCell($htmlArea->show());
 $table->endRow();
-
 
 $table->startRow();
 
@@ -209,7 +210,4 @@ $backLink = new link ($this->uri(NULL));
 $backLink->link = $this->objLanguage->languageText('mod_announcements_back', 'announcements', 'Back to Announcements');
 
 echo '<p>'.$backLink->show().'</p>';
-
-
-
 ?>
