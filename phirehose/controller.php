@@ -25,7 +25,12 @@ class phirehose extends controller
         var_dump($data);
         ob_flush();
         flush();
-    }        
+    }
+
+    public function requiresLogin($action)
+    {
+        return FALSE;
+    }
 }
 
 ?>
