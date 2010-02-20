@@ -10,7 +10,7 @@ class phirehoseops extends object
 
     public function track($username, $password, $keywords, $callback)
     {
-        $stream = new phirehosestream($username, $password, Phirehose::METHOD_FILTER);
+        $stream = new phirehosestream($username, $password, Phirehoselib::METHOD_FILTER);
         $stream->setTrack($keywords);
         $stream->setCallback($callback);
         $stream->consume();
