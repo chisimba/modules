@@ -59,6 +59,8 @@ $title->size = 60;
 
 if ($mode == 'edit') {
     $title->value = $announcement['title'];
+}elseif(!empty($title)){
+    $title->value = $title;
 }
 //Check if title is empty
 $form->addRule('title', $this->objLanguage->languageText('mod_announcements_titlerequired','announcements'), 'required');

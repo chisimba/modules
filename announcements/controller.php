@@ -309,9 +309,10 @@ class announcements extends controller
             $this->setVar('mode', 'fixup');
             $this->setVar('lecturerContext', $this->lecturerContext);
             $this->setVar('isAdmin', $this->isAdmin);
+            $this->setVar('title', $title);
             return 'addedit_tpl.php';
         } else if ($mode == 'add') {
-            
+
             $result = $this->objAnnouncements->addAnnouncement($title, $message, $recipienttarget, $contexts, $email);
             	//add to activity streamer/log
             	if($this->eventsEnabled)
