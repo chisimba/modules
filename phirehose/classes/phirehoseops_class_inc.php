@@ -8,7 +8,7 @@ class phirehoseops extends object
         $this->loadClass('phirehosestream', 'phirehose');
     }
 
-    public function filter($username, $password, $keywords, $callback)
+    public function track($username, $password, $keywords, $callback)
     {
         $stream = new phirehosestream($username, $password, Phirehose::METHOD_FILTER);
         $stream->setTrack($keywords);
