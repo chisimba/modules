@@ -1,6 +1,6 @@
 <?php
 
-class phirehosestream extends Phirehose
+class phirehosestream extends Phirehoselib
 {
     protected $callback;
 

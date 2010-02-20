@@ -7,7 +7,7 @@
  * @author  Fenn Bailey <fenn.bailey@gmail.com>
  * @version 0.2.0 ($Id: Phirehose.php 20 2010-01-19 03:04:22Z fenn.bailey $)
  */
-abstract class Phirehose
+abstract class Phirehoselib
 {
   
   /**
