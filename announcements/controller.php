@@ -302,16 +302,21 @@ class announcements extends controller
         $mode = $this->getParam('mode');
         $recipienttarget = $this->getParam('recipienttarget');
         $contexts = $this->getParam('contexts');
-        
+        //If context checked, target set to context by default
+        if(!empty($contexts))
+         $recipienttarget = 'context';
         $email = ($email == 'Y') ? TRUE : FALSE;
         
         if ($mode == 'add' && ($title == '' || strip_tags($message) == '')) {
             $this->setVar('mode', 'fixup');
             $this->setVar('lecturerContext', $this->lecturerContext);
             $this->setVar('isAdmin', $this->isAdmin);
-            $this->setVar('title', $title);
+            $this->setVar('enteredtitle', $title);
+            $this->setVar('enteredmessage', $message);
+            $this->setVar('enteredrecipienttarget', $recipienttarget);
+            $this->setVar('enteredcontexts', $contexts);
             return 'addedit_tpl.php';
-        } else if ($mode == 'add') {
+        } else if ($mode == 'add' || $mode == 'fixup' || $mode == 'save') {
 
             $result = $this->objAnnouncements->addAnnouncement($title, $message, $recipienttarget, $contexts, $email);
             	//add to activity streamer/log

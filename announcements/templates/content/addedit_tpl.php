@@ -56,11 +56,10 @@ $table->startRow();
 $label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
 $title = new textinput('title');
 $title->size = 60;
-
-if ($mode == 'edit') {
+if(!empty($enteredtitle)){
+    $title->value = $enteredtitle;
+}elseif ($mode == 'edit') {
     $title->value = $announcement['title'];
-}elseif(!empty($title)){
-    $title->value = $title;
 }
 //Check if title is empty
 $form->addRule('title', $this->objLanguage->languageText('mod_announcements_titlerequired','announcements'), 'required');
@@ -84,6 +83,11 @@ if (count($lecturerContext) > 0) {
         
         if ($mode == 'edit') {
             if (in_array($context, $contextAnnouncementList)) {
+                $checkbox->ischecked = TRUE;
+            }
+        }
+        if ($mode == 'fixup') {
+            if (in_array($context, $enteredcontexts)) {
                 $checkbox->ischecked = TRUE;
             }
         }
@@ -130,6 +134,7 @@ if ($mode == 'add') {
         $form->addToForm($recipientTarget->show());
     }
 } else {
+echo "I am the else";
     $recipientTarget = new hiddeninput('recipienttarget', $announcement['contextid']);
     $form->addToForm($recipientTarget->show());
     
@@ -143,13 +148,29 @@ if ($mode == 'add') {
         
         $label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
         $title = new textinput('title');
+	if(!empty($enteredtitle)){
+	    $title->value = $enteredtitle;
+	}elseif ($mode == 'edit') {
+	    $title->value = $announcement['title'];
+	}
         $form->addRule('title', $this->objLanguage->languageText('mod_announcements_titlerequired','announcements'), 'required');
         $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to').':');
         
         $str = $this->objLanguage->code2Txt('mod_announcements_followingcontexts', 'announcements', NULL, 'the following [-contexts-]').':';
+        $recipientTarget = new radio ('recipienttarget');
+        $recipientTarget->setBreakSpace('<br />');
+        $recipientTarget->addOption('site', $this->objLanguage->languageText('mod_announcements_allusers', 'announcements', 'Site - All Users'));
+        $recipientTarget->addOption('context', $this->objLanguage->code2Txt('mod_announcements_onlytofollowing', 'announcements', NULL, 'Only to the following [-contexts-]'));
+        if(!empty($enteredrecipienttarget)){
+         $recipientTarget->setSelected($enteredrecipienttarget);
+        }else{
+         $recipientTarget->setSelected('site');
+        }
         
-        $table->addCell($str.$contextsList);
-        
+        $str2 = $recipientTarget->show();
+
+        //$table->addCell($str.$contextsList);
+        $table->addCell($str2.$contextsList);
         $table->endRow();
     }
 }
@@ -159,8 +180,9 @@ $table->startRow();
 
 $htmlArea = $this->newObject('htmlarea', 'htmlelements');
 $htmlArea->name = 'message';
-
-if ($mode == 'edit') {
+if(!empty($enteredmessage)){
+    $title->value = $enteredmessage;
+}elseif ($mode == 'edit') {
     $htmlArea->value = $announcement['message'];
 }
 
