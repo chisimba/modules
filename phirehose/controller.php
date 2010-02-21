@@ -3,6 +3,14 @@
 class phirehose extends controller
 {
     /**
+     * Keywords to track on Twitter.
+     *
+     * @access protected
+     * @var    array
+     */
+    protected $keywords;
+
+    /**
      * Instance of the curlwrapper class of the utilities module.
      *
      * @access protected
@@ -27,6 +35,22 @@ class phirehose extends controller
     protected $objSysConfig;
 
     /**
+     * The password of the Twitter account to connect as.
+     *
+     * @access protected
+     * @var    string
+     */
+    protected $password;
+
+    /**
+     * The username of the Twitter account to connect as.
+     *
+     * @access protected
+     * @var    string
+     */
+    protected $username;
+
+    /**
      * List of webhooks to push to.
      *
      * @access protected
@@ -42,9 +66,12 @@ class phirehose extends controller
      */
     public function init()
     {
+        $this->keywords        = explode('|', $this->objSysConfig->getValue('keywords', 'phirehose'));
         $this->objCurl         = $this->getObject('curlwrapper', 'utilities');
         $this->objPhirehoseOps = $this->getObject('phirehoseops', 'phirehose');
         $this->objSysConfig    = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->password        = $this->objSysConfig->getValue('password', 'phirehose');
+        $this->username        = $this->objSysConfig->getValue('username', 'phirehose');
         $this->webhooks        = explode('|', $this->objSysConfig->getValue('webhooks', 'phirehose'));
     }
 
@@ -55,12 +82,8 @@ class phirehose extends controller
      */
     public function dispatch()
     {
-        $username = $this->objSysConfig->getValue('username', 'phirehose');
-        $password = $this->objSysConfig->getValue('password', 'phirehose');
-        $keywords = $this->objSysConfig->getValue('keywords', 'phirehose');
-        $keywords = explode('|', $keywords);
         $callback = array($this, 'push');
-        $this->objPhirehoseOps->track($username, $password, $keywords, $callback);
+        $this->objPhirehoseOps->track($this->username, $this->password, $this->keywords, $callback);
     }
 
     /**
