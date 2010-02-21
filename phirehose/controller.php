@@ -64,24 +64,26 @@ class phirehose extends controller
     protected $webhooks;
 
     /**
-     * Standard constructor to load the necessary resources
-     * and populate the new object's instance variables.
+     * Initialises the object properties.
      *
      * @access public
      */
     public function init()
     {
-        $this->keywords        = explode(self::CONFIG_SEPARATOR, $this->objSysConfig->getValue('keywords', 'phirehose'));
+        // Initialise the object properties.
         $this->objCurl         = $this->getObject('curlwrapper', 'utilities');
         $this->objPhirehoseOps = $this->getObject('phirehoseops', 'phirehose');
         $this->objSysConfig    = $this->getObject('dbsysconfig', 'sysconfig');
-        $this->password        = $this->objSysConfig->getValue('password', 'phirehose');
-        $this->username        = $this->objSysConfig->getValue('username', 'phirehose');
-        $this->webhooks        = explode(self::CONFIG_SEPARATOR, $this->objSysConfig->getValue('webhooks', 'phirehose'));
+
+        // Initialise the data properties.
+        $this->keywords = explode(self::CONFIG_SEPARATOR, $this->objSysConfig->getValue('keywords', 'phirehose'));
+        $this->password = $this->objSysConfig->getValue('password', 'phirehose');
+        $this->username = $this->objSysConfig->getValue('username', 'phirehose');
+        $this->webhooks = explode(self::CONFIG_SEPARATOR, $this->objSysConfig->getValue('webhooks', 'phirehose'));
     }
 
     /**
-     * Standard dispatch method to handle the various possible actions.
+     * Links into the Twitter Streaming API and listens for new tweets.
      *
      * @access public
      */
