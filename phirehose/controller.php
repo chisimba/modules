@@ -71,9 +71,10 @@ class phirehose extends controller
      */
     public function push($data)
     {
-        var_dump($data);
-        ob_flush();
-        flush();
+        $json = json_encode($data);
+        foreach ($this->webhooks as $webhook) {
+            $this->objCurl->postCurl($webhook, $json);
+        }
     }
 
     /**
