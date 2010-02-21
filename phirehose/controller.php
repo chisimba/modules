@@ -59,7 +59,7 @@ class phirehose extends controller
     /**
      * The character to separate list configuration parameters on.
      */
-    const CONFIG_SEPARATOR;
+    const CONFIG_SEPARATOR = '|';
 
     /**
      * Keywords to track on Twitter.
