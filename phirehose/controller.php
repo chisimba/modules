@@ -3,6 +3,11 @@
 class phirehose extends controller
 {
     /**
+     * The character to separate list configuration parameters on.
+     */
+    const CONFIG_SEPARATOR;
+
+    /**
      * Keywords to track on Twitter.
      *
      * @access protected
@@ -66,13 +71,13 @@ class phirehose extends controller
      */
     public function init()
     {
-        $this->keywords        = explode('|', $this->objSysConfig->getValue('keywords', 'phirehose'));
+        $this->keywords        = explode(self::CONFIG_SEPARATOR, $this->objSysConfig->getValue('keywords', 'phirehose'));
         $this->objCurl         = $this->getObject('curlwrapper', 'utilities');
         $this->objPhirehoseOps = $this->getObject('phirehoseops', 'phirehose');
         $this->objSysConfig    = $this->getObject('dbsysconfig', 'sysconfig');
         $this->password        = $this->objSysConfig->getValue('password', 'phirehose');
         $this->username        = $this->objSysConfig->getValue('username', 'phirehose');
-        $this->webhooks        = explode('|', $this->objSysConfig->getValue('webhooks', 'phirehose'));
+        $this->webhooks        = explode(self::CONFIG_SEPARATOR, $this->objSysConfig->getValue('webhooks', 'phirehose'));
     }
 
     /**
