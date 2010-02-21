@@ -108,11 +108,11 @@ class phirehose extends controller
     }
 
     /**
-     * Overide the login object in the parent class.
+     * Allows all methods without login.
      *
      * @access public
-     * @param  string $action The name of the action
-     * @return bool
+     * @param  string  $action The name of the action
+     * @return boolean Always returns FALSE.
      */
     public function requiresLogin($action)
     {
