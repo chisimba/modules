@@ -78,6 +78,14 @@ class phirehose extends controller
     protected $objCurl;
 
     /**
+     * Instance of the json class of the utilities module.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objJson;
+
+    /**
      * Instance of the phirehoseops class of the phirehose module.
      *
      * @access protected
@@ -126,6 +134,7 @@ class phirehose extends controller
     {
         // Initialise the object properties.
         $this->objCurl         = $this->getObject('curlwrapper', 'utilities');
+        $this->objJson         = $this->getObject('json', 'utilities');
         $this->objPhirehoseOps = $this->getObject('phirehoseops', 'phirehose');
         $this->objSysConfig    = $this->getObject('dbsysconfig', 'sysconfig');
 
@@ -157,7 +166,7 @@ class phirehose extends controller
      */
     public function push($data)
     {
-        $json = json_encode($data);
+        $json = $this->objJson->encode($data);
         foreach ($this->webhooks as $webhook) {
             $this->objCurl->postCurl($webhook, $json);
         }
