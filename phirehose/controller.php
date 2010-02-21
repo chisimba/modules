@@ -143,8 +143,10 @@ class phirehose extends controller
      */
     public function dispatch()
     {
-        $callback = array($this, 'push');
-        $this->objPhirehoseOps->track($this->username, $this->password, $this->keywords, $callback);
+        if ($this->username && $this->password) {
+            $callback = array($this, 'push');
+            $this->objPhirehoseOps->track($this->username, $this->password, $this->keywords, $callback);
+        }
     }
 
     /**
