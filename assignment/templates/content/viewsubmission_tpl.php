@@ -142,32 +142,46 @@ if ($assignment['format'] == '1') {
         $objFileIcon = $this->getObject('fileicons', 'files');
         echo '<p>'.$objFileIcon->getFileIcon($fileName).' '.$downloadLink->show().'</p>';
         $filePath = $this->objAssignmentSubmit->getAssignmentFilename($submission['id'], $fileId);
+        // HTML file needed for conversion
+        //$file_ = $objFile->getFile($fileId);
+	//$fileName_ = $file_['filename'];
+	$submissionId = $submission['id'];
+	$tempFilePath = sys_get_temp_dir().'/chisimba/assignment/submissions/'.$submissionId; //'/'.$fileName;
+        $objCleanUrl = $this->getObject('cleanurl', 'filemanager');
+        $tempFilePath = $objCleanUrl->cleanUpUrl($tempFilePath);
+        $objMkdir = $this->getObject('mkdir', 'files');
+        $objMkdir->mkdirs($tempFilePath);
+	chmod($tempFilePath, 0777);
+	$tempFile = $tempFilePath . '/' . $fileName . '.html';
+	//$temp_file_ = tempnam(sys_get_temp_dir(), 'CHA');
+	//$temp_file = $temp_file_ . '.html';
+	//rename($temp_file_, $temp_file);
+	//chmod($temp_file, 0777);
+        $destinationHtml = $tempFile; //$filePath.'.html';
         // PHP file which will contain the assignment
         $destinationPhp = $filePath.'.php';
-        // HTML file needed for conversion
-        $destinationHtml = $filePath.'.html';
         // Check if the file exists, else we need to convert the document
         if (!file_exists($destinationPhp)) {
-            if (file_exists($destinationHtml)) {
-                unlink($destinationHtml);
-            }
+            //if (file_exists($destinationHtml)) {
+            //    unlink($destinationHtml);
+            //}
             //if (!file_exists($destinationHtml)) {
-                // Convert Document
-                $objConvert = $this->getObject('convertdoc', 'documentconverter');
-                $conversionOK = $objConvert->convert($filePath, $destinationHtml);
-                /*
-                if (!$conversionOK) {
-                     die('Conversion failed!');
-                }
-                */
+	    // Convert Document
+	    $objConvert = $this->getObject('convertdoc', 'documentconverter');
+	    $conversionOK = $objConvert->convert($filePath, $destinationHtml);
+	    /*
+	    if (!$conversionOK) {
+		 die('Conversion failed!');
+	    }
+	    */
             //}
             //else {
-                //$conversionOK = TRUE;
+	    //$conversionOK = TRUE;
             //}
             // If successfully converted, rename .html to .php
             if ($conversionOK && file_exists($destinationHtml)) {
-                rename($destinationHtml, $destinationPhp);
-                //copy($destinationHtml, $destinationPhp);
+                //rename($destinationHtml, $destinationPhp);
+                copy($destinationHtml, $destinationPhp);
                 //unlink($destinationHtml);
                 $contents =  file_get_contents($destinationPhp);
                 $contents = '<?php if (isset($permission) && $permission) { ?>'.$contents.'<?php } ?>';
