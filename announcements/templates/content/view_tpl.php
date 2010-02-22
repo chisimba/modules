@@ -17,6 +17,16 @@ if ($this->checkPermission($announcement['id'])) {
     $objIcon->setIcon('edit');
     
     $editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$announcement['id'])));
+    $editLink->link = $objIcon->show();      
+    $header->str .= ' '.$editLink->show();
+}
+
+if ($this->checkPermission($announcement['id'])) {
+
+    $objIcon = $this->newObject('geticon', 'htmlelements');
+    $objIcon->setIcon('delete');
+    
+    $editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$announcement['id'])));
     $editLink->link = $objIcon->show();
     //Removed by Wesley Nitscke .. cannot edit an announcement once it has been sent out.. post a new one rather
    // $header->str .= ' '.$editLink->show();

@@ -393,8 +393,6 @@ class announcements extends controller
             $this->loadClass('htmlheading', 'htmlelements');
             $objDateTime = $this->getObject('dateandtime', 'utilities');
             $objTrimString = $this->getObject('trimstr', 'strings');
-            $objIcon = $this->getObject('geticon', 'htmlelements');
-			$objIcon->setIcon('delete');
             
             $table = $this->newObject('htmltable', 'htmlelements');
 			$table->width= '80%';
@@ -411,9 +409,18 @@ class announcements extends controller
             {
                 $link = new link ($this->uri(array('action'=>'view', 'id'=>$announcement['id'])));
                 $link->link = $announcement['title'];
-                
-				$deleteLink = new link ($this->uri(array('action'=>'delete', 'id'=>$announcement['id'])));
-                $deleteLink->link = $objIcon->show();
+                //Get and set the edit icon
+                $objEdIcon = $this->getObject('geticon', 'htmlelements');
+	 		            $objEdIcon->setIcon('edit');
+                //Link to edit using the edit icon
+            				$editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$announcement['id'])));
+                $editLink->link = $objEdIcon->show();
+                //Get and set the delete icon
+                $objIcon = $this->getObject('geticon', 'htmlelements');
+	 		            $objIcon->setIcon('delete');
+                //Link to delete using the delete icon
+                $deleteArray = array('action'=>'delete', 'id'=>$announcement['id']);    
+                $deleteLink = $objIcon->getDeleteIconWithConfirm($announcement['id'], $deleteArray, 'announcements');
 				
                 $table->startRow();
                 $table->addCell($objDateTime->formatDate($announcement['createdon']), '15%');
@@ -428,7 +435,7 @@ class announcements extends controller
                 
                 $table->addCell($type, 200);
 				if ($this->checkPermission($announcement['id'])) {
-					$table->addCell($deleteLink->show(), '15%');
+					$table->addCell($editLink->show()."&nbsp;&nbsp;".$deleteLink, '15%');
 				}
                 $table->endRow();
                 
