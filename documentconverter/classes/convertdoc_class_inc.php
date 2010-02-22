@@ -90,11 +90,13 @@ class convertdoc extends object
     */
     private function makeOSPath($path)
     {
-        return $path;
-        //return escapeshellarg($path);
+        //return $path;
+        return escapeshellarg($path);
+        /*
         $isWindowsOS = strtoupper(substr(php_uname('s'), 0, 7)) === 'WINDOWS';
         //return $isWindowsOS?('"'.str_replace('/', '\\', $path).'"'):$path;
         return $isWindowsOS?escapeshellarg($path):$path;
+        */
     }
     /**
     * Method to convert a document using Java
