@@ -4,8 +4,10 @@
 
 
 	$objSysConfig  = $this->getObject('altconfig','config');
-	$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all-debug.js', 'ext');
-	
+ $objExtJs  = $this->getObject('extjs','ext');
+ $objExtJs->show();
+ $ext = "";
+
 	//$ext .=$this->getJavaScriptFile('ColumnNodeUI.js', 'liftclub');
 	$ext .=$this->getJavaScriptFile('Ext.ux.grid.Search.js', 'liftclub');
 	//$ext .=$this->getJavaScriptFile('sendmessagesform.js', 'liftclub');
@@ -53,15 +55,6 @@
            lang["norecordstodisplay"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_norecordstodisplay', 'liftclub', NULL, 'No Records To Display')).'";
 	        	</script>');
 
-			$extbase_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','ext').'" type="text/javascript"></script>';
-		
-			$extall_js = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js', 'ext').'" type="text/javascript"></script>';
-		
-			$extall_css = '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'ext').'" type="text/css" />';
-		
-			$this->appendArrayVar('headerParams', $extbase_js);
-			$this->appendArrayVar('headerParams', $extall_js);
-			$this->appendArrayVar('headerParams', $extall_css);
 	
 	//$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ColumnNodeUI.css', 'liftclub').'" type="text/css" />';
 	$ext .= '<link rel="stylesheet" href="skins/_common/css/extjs/silk/silk.css" type="text/css" />';

@@ -23,15 +23,11 @@ var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
  </script>');
 
 //Ext stuff
-$ext =$this->getJavaScriptFile('ext-3.0-rc2/adapter/ext/ext-base.js', 'ext');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/ext-all.js', 'ext');
+$objExtJs  = $this->getObject('extjs','ext');
+$objExtJs->show();
+$ext = "";
 $ext .=$this->getJavaScriptFile('Ext.ux.grid.Search.js', 'liftclub');
 $ext .=$this->getJavaScriptFile('searchlifts.js', 'liftclub');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/grid/paging.js', 'ext');
-$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'ext');
-
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'ext').'" type="text/css" />';
-$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/grid/grid-examples.css', 'ext').'" type="text/css" />';
 $this->appendArrayVar('headerParams', $ext);
 
 echo '<div id="find-grid"></div>';
