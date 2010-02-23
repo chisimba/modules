@@ -1117,7 +1117,7 @@ $this->_objJQuery->loadSimpleTreePlugin();
                 if ($contentid != ''){      
                     //Security Check for Write Access
                     if(!$this->_objSecurity->canUserWriteContent($contentid)){
-                        $this->setVarByRef('securityType', 'no_write');
+                        $this->setVar('securityType', 'no_write');
                         return 'cms_content_no_permissions_tpl.php';
                     }
                 }
@@ -1126,18 +1126,18 @@ $this->_objJQuery->loadSimpleTreePlugin();
                 $treeCount = $this->_objTree->getTreeCount();
 
                 if ($treeCount == 0){
-                    $this->setVarByRef('securityType', 'no_sections');
+                    $this->setVar('securityType', 'no_sections');
                     return 'cms_content_no_permissions_tpl.php';
                 }
 
                 $parentid = $this->getParam('parent', NULL);
                 //Get top navigation
                 $topNav = $this->_objUtils->topNav('createcontent');
-                $this->setVarByRef('topNav',$topNav);
+                $this->setVar('topNav',$topNav);
                 $addEditForm = $this->_objUtils->getAddEditContentForm($contentid, $parentid,$this->getParam('frommodule'),$this->getParam('fromaction'),$this->getParam('s_param'));
-                $this->setVarByRef('addEditForm', $addEditForm);
-                $this->setVarByRef('section', $parentid);
-                $this->setVarByRef('id', $this->getParam('id'));
+                $this->setVar('addEditForm', $addEditForm);
+                $this->setVar('section', $parentid);
+                $this->setVar('id', $this->getParam('id'));
                 return 'cms_content_add_tpl.php';
 
 
