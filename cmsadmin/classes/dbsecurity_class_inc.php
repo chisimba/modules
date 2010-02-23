@@ -203,13 +203,13 @@
                 $userId = $this->_objUser->userId();
             }
             
-            if (!$this->_objUser->isLoggedIn() || !$this->_objGroupAdmin->isGroupMember($userId, $this->_objGroupAdmin->getId('CMSAuthors'))) {
-                return FALSE;
-            }
-
             // Admin Edits All
             if ($this->_objUser->isAdmin()){
                 return TRUE;
+            }
+            
+            if (!$this->_objUser->isLoggedIn() || !$this->_objGroupAdmin->isGroupMember($userId, $this->_objGroupAdmin->getId('CMSAuthors'))) {
+                return FALSE;
             }
             
             // Check user permissions first
@@ -376,14 +376,15 @@
                 $userId = $this->_objUser->userId();
             }
             
-            if (!$this->_objUser->isLoggedIn() || !$this->_objGroupAdmin->isGroupMember($userId, $this->_objGroupAdmin->getId('CMSAuthors'))) {
-                return FALSE;
-            }
-
             // Admin Edits All
             if ($this->_objUser->isAdmin()){
                 return TRUE;
             }
+            
+            if (!$this->_objUser->isLoggedIn() || !$this->_objGroupAdmin->isGroupMember($userId, $this->_objGroupAdmin->getId('CMSAuthors'))) {
+                return FALSE;
+            }
+
             
             // Check user permissions first
             $userRecord = $this->_objSectionUser->getRow('user_id', $userId);
