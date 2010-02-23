@@ -1028,7 +1028,7 @@
                     $innerHtml = $this->_objDisplay->getAlertForm('', $message);
                     $this->_objBox->setHtml($innerHtml);
                     $this->_objBox->setTitle('Notice: Access Denied');
-                    $this->_objBox->attachClickEvent('btn_frontpage' . $userPerm['id']);
+                    $this->_objBox->attachClickEvent('btn_frontpage');// . $userPerm['id']);
 
                     $url = '#';
                     $linkText = $this->objLanguage->languageText('mod_cmsadmin_frontpagemanager', 'cmsadmin');

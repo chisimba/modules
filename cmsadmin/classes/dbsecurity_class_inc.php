@@ -62,7 +62,10 @@
                 $this->_objLanguage = $this->getObject('language', 'language');
                 $this->_objUser =  $this->getObject('user', 'security');
                 $this->_objGroupAdmin =  $this->getObject('groupadminmodel', 'groupadmin');
+                $this->_objContentGroup = $this->getObject('dbcontent_group');
+                $this->_objContentUser = $this->getObject('dbcontent_user');
                 $this->_objSectionGroup = $this->getObject('dbsection_group');
+                $this->_objSectionUser = $this->getObject('dbsection_user');
             } catch (Exception $e){
                 throw customException($e->getMessage());
                 exit();
@@ -209,104 +212,26 @@
                 return TRUE;
             }
             
-            $content    = $this->getContentRow($contentId);
-            $sectionId  = $content['sectionid'];
-            
-            // Get groups that have write access to section
-            $groups     = $this->_objSectionGroup->getAll("WHERE section_id = '$sectionId' AND write_access = 1");
-            
-            // If there are no groups explicitly set up for write access then any CMSAuthor can write
-            if (empty($groups)) {
-                return TRUE;
+            // Check user permissions first
+            $userRecord = $this->_objContentUser->getRow('user_id', $userId);
+            if ($userRecord) {
+                if ($userRecord['write_access'] == 1) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
             }
             
-            // Cycle through all groups, if user is a member then they can write, exit.
+            // Now check groups
+            $groups = $this->_objContentGroup->getAll("WHERE content_id = '$contentId' AND write_access = '1'");
             foreach ($groups as $group) {
                 if ($this->_objGroupAdmin->isGroupMember($userId, $group['group_id'])) {
                     return TRUE;
                 }
             }
             
+            // If nothing matched return false
             return FALSE;
-        
-            /*
-            //User ID to compare with when checking groups is the
-            //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
-            $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
-            $data = $this->getArray($sql);
-            if (isset($data[0])) {
-                $userRawId = $data[0]['id'];
-            }
-
-
-            //Preparing a list of USER ID's
-            $usersList = $this->getAssignedContentUsers($contentid);
-            $usersCount = count($usersList);
-
-            //Preparing a list of GROUP_ID's
-            $groupsList = $this->getAssignedContentGroups($contentid);
-            $groupsCount = count($groupsList);
-            $globalChkCounter = 0;
-
-            $content_row = $this->getContentRow($contentid);
-            $ownerid = $content_row['created_by'];
-
-            //If user is the owner of this content then offcourse return true
-            if ($userid == $ownerid){
-                return true;
-            }
-
-            $isMemberDefined = false;
-
-            //Checking Users
-            for ($x = 0; $x < $usersCount; $x++){
-                $memberId = $usersList[$x]['user_id'];
-                $memberReadAccess = $usersList[$x]['read_access'];
-                $memberWriteAccess = $usersList[$x]['write_access'];
-
-                $canRead = (($memberReadAccess == 1) ? true : false);
-                $canWrite = (($memberWriteAccess == 1) ? true : false);
-
-                if ($canWrite){
-                    if ($userid == $memberId){
-                        return true;
-                    }
-                }
-
-                if ($memberId == $userid){
-                    $isMemberDefined = true;
-                }
-
-            }       //End Loop
-
-            //Only checking GROUPS when a user hasn't been denied access
-            //Users are denied access by adding them to the Users list and taking away the
-            //respective permissions
-
-            if (!$isMemberDefined){
-                //No luck, lets check the groups that the user belongs to
-                //Displaying Groups
-                for ($x = 0; $x < $groupsCount; $x++){
-                    $memberId = $groupsList[$x]['group_id'];
-                    $memberReadAccess = $groupsList[$x]['read_access'];
-                    $memberWriteAccess = $groupsList[$x]['write_access'];
-
-                    $canRead = (($memberReadAccess == 1) ? true : false);
-                    $canWrite = (($memberWriteAccess == 1) ? true : false);
-
-                    if ($canWrite){
-                        $this->tableName = 'tbl_groupadmin_groupuser';
-                        $isGroupMember = $this->_objGroupAdmin->isGroupMember($userRawId, $memberId);
-
-                        if ($isGroupMember){
-                            return true;
-                        }
-
-                    }
-                }       //End Loop
-            }
-
-            $sql = "";	*/
         }
 
 
@@ -324,7 +249,7 @@
             if ($this->_objUser->isAdmin()){
                 return TRUE;
             }
-            
+            return true;
             if ($userid == NULL){
                 $userid = $this->_objUser->userId();
             }
@@ -447,7 +372,7 @@
         public function canUserWriteSection($sectionId, $userId = NULL)
         {
         
-            if ($userId == NULL){
+           if ($userId == NULL){
                 $userId = $this->_objUser->userId();
             }
             
@@ -460,21 +385,25 @@
                 return TRUE;
             }
             
-            // Get groups that have write access to section
-            $groups = $this->_objSectionGroup->getAll("WHERE section_id = '$sectionId' AND write_access = 1");
-            
-            // If there are no groups explicitly set up for write access then any CMSAuthor can write
-            if (empty($groups)) {
-                return TRUE;
+            // Check user permissions first
+            $userRecord = $this->_objSectionUser->getRow('user_id', $userId);
+            if ($userRecord) {
+                if ($userRecord['write_access'] == 1) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
             }
             
-            // Cycle through all groups, if user is a member then they can write, exit.
+            // Now check groups
+            $groups = $this->_objSectionGroup->getAll("WHERE section_id = '$sectionId' AND write_access = '1'");
             foreach ($groups as $group) {
                 if ($this->_objGroupAdmin->isGroupMember($userId, $group['group_id'])) {
                     return TRUE;
                 }
             }
             
+            // If nothing matched return false
             return FALSE;
         }
 
@@ -493,7 +422,7 @@
             if ($this->_objUser->isAdmin()){
                 return true;
             }
-
+return true;
             //Checking Public Access
             if (!$this->isSectionPublic($sectionid)){
                 return false;        
@@ -1542,11 +1471,11 @@
             if ($in_part != ''){
                 $in_part = substr($in_part, 0, strlen($in_part) - 1);
 
-                $sql = "SELECT userId as id, username, firstname, surname FROM tbl_users WHERE userId NOT IN ($in_part) ORDER BY firstname, surname ASC ";
+                $sql = "SELECT userid as id, username, firstname, surname FROM tbl_users WHERE userId NOT IN ($in_part) ORDER BY firstname, surname ASC ";
                 $userMembers = $this->getArray($sql);
             } else {
                 //No ID's to exclude so we query all users
-                $sql = "SELECT userId as id, username, firstname, surname FROM tbl_users ORDER BY firstname, surname ASC";
+                $sql = "SELECT userid as id, username, firstname, surname FROM tbl_users ORDER BY firstname, surname ASC";
                 $userMembers = $this->getArray($sql);
             }
 

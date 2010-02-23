@@ -182,7 +182,6 @@
                 $this->_objSecurity =  $this->newObject('dbsecurity', 'cmsadmin');
                 $this->_objTree =  $this->newObject('cmstree', 'cmsadmin');
                 $this->_objSections =  $this->newObject('dbsections', 'cmsadmin');
-                $this->_objDBContext = $this->getObject('dbcontext', 'context');
                 $this->_objContent =  $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objBlocks =  $this->newObject('dbblocks', 'cmsadmin');
                 $this->_objHtmlBlock =  $this->newObject('dbhtmlblock', 'cmsadmin');
@@ -193,7 +192,6 @@
                 $this->objLanguage =  $this->newObject('language', 'language');
                 $this->_objFrontPage =  $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objConfig =  $this->newObject('altconfig', 'config');
-                $this->_objContext =  $this->newObject('dbcontext', 'context');
                 $this->objProxy = $this->newObject('proxyparser', 'utilities');
                 $this->objModule = $this->newObject('modules', 'modulecatalogue');
                 $this->objTreeMenu = $this->newObject('buildtree', 'cmsadmin');
@@ -205,8 +203,9 @@
                 $this->objFeed = $this->getObject('feeds', 'feed');
 
                 if ($this->objModule->checkIfRegistered('context')) {
-                    $this->inContextMode = $this->_objContext->isInContext();
-                    $this->contextCode = $this->_objContext->getContextCode();
+                    $this->_objDBContext =  $this->newObject('dbcontext', 'context');
+                    $this->inContextMode = $this->_objDBContext->isInContext();
+                    $this->contextCode = $this->_objDBContext->getContextCode();
                 } else {
                     $this->inContextMode = FALSE;
                     $this->contextCode = NULL;
@@ -241,11 +240,8 @@
 				//Loading the ipod style menu
                 $this->_objJQuery->loadFgMenuPlugin();
 
-				//jQuery SuperFish Menu
-				$jQuery = $this->newObject('jquery', 'jquery');
-
 				//jQuery 1.2.6 SuperFish Menu
-				$jQuery->loadSuperFishMenuPlugin();
+				$this->_objJQuery->loadSuperFishMenuPlugin();
 
 				ob_start();
 ?>
@@ -290,7 +286,7 @@ afterAjax:function()
 {
 		//alert('Loaded');
 		},
-		 */
+		 * /
 animate:true
 //,docToFolderConvert:true
 });
@@ -302,7 +298,7 @@ ob_end_clean();
 
 $this->appendArrayVar('headerParams', $script);
 
-$jQuery->loadSimpleTreePlugin();
+$this->_objJQuery->loadSimpleTreePlugin();
 
             } catch (customException $e){
                 throw customException($e->getMessage());
@@ -341,7 +337,6 @@ $jQuery->loadSimpleTreePlugin();
 			}
         }
 		
-		
        /**
         * Method to handle actions from templates
         * 
@@ -357,9 +352,9 @@ $jQuery->loadSimpleTreePlugin();
             $myid = $this->_objUser->userId();
 
             if (!($this->_objUser->inAdminGroup($myid,'CMSAuthors')) && !($this->_objUser->inAdminGroup($myid,'Site Admin'))) {
+                $this->setVar('message', $this->objLanguage->languageText('mod_cmsadmin_nopermissions', 'cmsadmin'));
                 return 'cms_nopermissions_tpl.php';
             }
-
             switch ($action) {
 
                 default:
@@ -1232,13 +1227,13 @@ $jQuery->loadSimpleTreePlugin();
 				
 					//Validation
 					$valid = $this->_objValidate->valRequired($contentId);
-					$this->setVarByRef('cmsErrorMessage', 'Content ID Wasn\'t Specified');
+					$this->setVar('cmsErrorMessage', 'Content ID Wasn\'t Specified');
 					if ($valid) {
 						$valid = $this->_objValidate->valRequired($title);
-						$this->setVarByRef('cmsErrorMessage', 'Please specify a title');
+						$this->setVar('cmsErrorMessage', 'Please specify a title');
 					} else if ($valid) {
 						$valid = $this->_objValidate->valRequired($fullText);
-						$this->setVarByRef('cmsErrorMessage', 'Please enter some text in the body');
+						$this->setVar('cmsErrorMessage', 'Please enter some text in the body');
 					} else if ($valid) {
 						//Fetching the parent from the db if non submitted
 						if ($sectionId == '') {
@@ -1246,7 +1241,7 @@ $jQuery->loadSimpleTreePlugin();
 							$sectionId = $contentRecord['sectionid'];
 						}
 						$valid = $this->_objValidate->valRequired($sectionId);
-						$this->setVarByRef('cmsErrorMessage', 'No section id was specified. Please select a section.');
+						$this->setVar('cmsErrorMessage', 'No section id was specified. Please select a section.');
 					}
 
 					if ($valid) {
@@ -1271,7 +1266,7 @@ $jQuery->loadSimpleTreePlugin();
                                                     $show_print,
 													$show_flag);
 
-						$this->setVarByRef('cmsErrorMessage', '');
+						$this->setVar('cmsErrorMessage', '');
 					} else {
                         return $this->nextAction('addcontent', array('id' => $contentId), 'cmsadmin');
 					}
