@@ -45,6 +45,8 @@ class tcpdfwrapper extends object
         //set image scale factor
         $this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         //set some language-dependent strings
+        if(empty($l))
+         $l = Null;
         $this->pdf->setLanguageArray($l);
         //initialize document
         $this->pdf->AliasNbPages();
@@ -91,6 +93,8 @@ class tcpdfwrapper extends object
         //set image scale factor
         $this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         //set some language-dependent strings
+        if(empty($l))
+         $l = Null;
         $this->pdf->setLanguageArray($l);
         //initialize document
         $this->pdf->AliasNbPages();
