@@ -132,7 +132,7 @@ class contextcontent extends controller {
      * @return boolean
      */
     function requiresLogin($action) {
-	$actions = array('viewchapter','viewpage', 'rss', '');
+	$actions = array('viewchapter','viewpage', 'rss', 'rsscall','notincontext', '');
 	if(in_array($action, $actions)){
 		return FALSE;
 		//var_dump($action);
@@ -150,8 +150,7 @@ class contextcontent extends controller {
     public function dispatch($action) {
 
 	$this->contextCode = ($this->getParam('rss_contextcode') != "") ? $this->getParam('rss_contextcode') : $this->contextCode ;
-	//$this->getParam('contextcode');
-        if ($this->contextCode == '' && $action != 'notincontext') {
+	   if ($this->contextCode == '' && $action != 'notincontext') {
             $action = 'notincontext';
         }
 
@@ -237,6 +236,8 @@ class contextcontent extends controller {
 				return $this->viewRss();
 			case 'addcomment':
 				return $this->addComment();
+			case 'rsscall':
+				return $this->rssCall();
             default:
             //return $this->home_debug();
                 return $this->showContextChapters();
@@ -258,6 +259,26 @@ class contextcontent extends controller {
         }
     }
 
+	/**
+     * Method that is used by the rss feeds and bookmark to go direct to contextcontent and/or chapter 
+     *
+     **/
+	public function rssCall()
+	{
+		$contextcode = $this->getParam('rss_contextcode');
+		$chapterid = $this->getParam('id');
+		$status = $this->objContext->joinContext ( $contextcode );
+		if($chapterid && $status)
+		{
+			return $this->nextAction('viewchapter', array('id' => $chapterid));
+		}else if($status)
+		{
+			return $this->showContextChapters();
+		}
+		return $this->nextAction('notincontext');
+		
+	}
+
     /**
      * Method to display the list of chapters in a context
      *
@@ -268,6 +289,7 @@ class contextcontent extends controller {
         $numContextChapters = $this->objContextChapters->getNumContextChapters($this->contextCode);
 
         $this->setVarByRef('numContextChapters', $numContextChapters);
+		$this->setVar('userId', $this->userId);
 
         if ($numContextChapters == 0) {
 
@@ -1311,7 +1333,7 @@ class contextcontent extends controller {
         $feedDescription = "RSS2.0 Feed of the $fullname stream";
 
         //link back to the blog
-        $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&rss_contextcode=".$this->getParam('rss_contextcode');
+        $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&action=rsscall&rss_contextcode=".$this->getParam('rss_contextcode');
         //sanitize the link
         $feedLink = htmlentities($feedLink);
         //set up the url
@@ -1322,12 +1344,12 @@ class contextcontent extends controller {
         //loop through the posts and create feed items from them
         foreach($posts as $feeditems) {
             	//use the post title as the feed item title
-		$itemTitle = $fullname.': '.$feeditems['chaptertitle'];
-		$itemLink = str_replace('&amp;', '&', $this->uri(array('action' => 'viewchapter', 'id' => $feeditems['chapterid'], 'rss_contextcode' => $this->getParam('rss_contextcode'))));
+				$itemTitle = $fullname.': '.$feeditems['chaptertitle'];
+				$itemLink = str_replace('&amp;', '&', $this->uri(array('action' => 'rsscall', 'id' => $feeditems['chapterid'], 'rss_contextcode' => $this->getParam('rss_contextcode'))));
                 //description
-		$itemDescription = substr(strip_tags($feeditems['introduction']), 0, 200).'...';
+				$itemDescription = substr(strip_tags($feeditems['introduction']), 0, 200).'...';
                 //where are we getting this from
-                $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&rss_contextcode=".$this->getParam('rss_contextcode');
+                $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&action=rsscall&rss_contextcode=".$this->getParam('rss_contextcode');
                 //feed author
                 //$auth = $feeditem['from_user'];
                 //$itemAuthor = htmlentities($auth."<$auth@capetown.peeps.co.za>");

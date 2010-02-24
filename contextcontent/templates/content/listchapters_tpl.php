@@ -340,7 +340,10 @@ if ($this->isValid('addchapter')) {
     echo $link->show();
 }
 
-    
+
+if($this->objModuleCatalogue->checkIfRegistered('feed'))
+{
+	//creating the rss feeds link
     $link = new link($this->uri(array(
     		'action' => 'rss', 'title' => $this->objContext->getTitle(), 'rss_contextcode' => $this->contextCode)));
     $objIcon->setIcon('rss');
@@ -348,6 +351,13 @@ if ($this->isValid('addchapter')) {
     $objIcon->title = null;
     $link->link = $this->objLanguage->languageText('mod_contextcontent_feedstext','contextcontent');
     echo '<br/><br clear="left" />'.$objIcon->show().' '.$link->show();
+}
 
-
+if($this->objModuleCatalogue->checkIfRegistered('kbookmark') && $this->objUser->isLoggedIn())
+{
+	//creating the bookmark button
+	$this->bookmarkbutton = $this->getObject('bookmarkbutton', 'kbookmark');
+	$this->bookmarkbutton->bookmark_button($this->objContext->getTitle(), str_replace('&amp;', '&', $this->uri(array('action' => 'rsscall', 'rss_contextcode' => $this->contextCode))), '', '');
+	echo $this->bookmarkbutton->show();
+}
 ?>
