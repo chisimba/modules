@@ -603,25 +603,26 @@ class functions_assignment extends object
 									$objFile = $this->getObject('dbfile', 'filemanager');
 									$objIcon = $this->getObject('geticon', 'htmlelements');
 									$objFileIcon = $this->getObject('fileicons', 'files');
-
-									$fileName = $objFile->getFileName($submitData[0]['studentfileid']);
-
-									$downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$submitData[0]['id'])));
-									$downloadLink->link = $this->objLanguage->languageText('word_download', 'system', 'Download');
-
+         if(!empty($submitData[0]['studentfileid'])){
+									 $fileName = $objFile->getFileName($submitData[0]['studentfileid']);
+									 $downloadLink = new link ($this->uri(array('action'=>'downloadfile', 'id'=>$submitData[0]['id'])));
+									 $downloadLink->link = $this->objLanguage->languageText('word_download', 'system', 'Download');
+         }
 									//$objTable->addCell('<p>'.$objFileIcon->getFileIcon($fileName).' '.$downloadLink->show().'</p>','8%','','',$class);
 									$objTable->startRow();
 									$objTable->addCell('','','','',$class,"bgcolor='#FFFFFF'");
 									$objTable->endRow();
 								}else{
-									$objTable->startRow();
-									$onlineSubmission=$this->dbAssignment->getAssignment($assgnId);
-									$objTable->addCell("<b>".$viewLabel.": </b>","","","","","bgcolor='#D3D3D3'");
-									$objTable->endRow();
-									$objTable->startRow();
-									$onlineSubmission=$this->dbAssignment->getAssignment($assgnId);
-									$objTable->addCell($onlineSubmission['description'],"","","","","bgcolor='#FFFFFF'");
-									$objTable->endRow();
+								 if(!empty($assgnId)){
+ 									$objTable->startRow();
+	 								$onlineSubmission=$this->dbAssignment->getAssignment($assgnId);
+		 							$objTable->addCell("<b>".$viewLabel.": </b>","","","","","bgcolor='#D3D3D3'");
+			 						$objTable->endRow();
+				 					$objTable->startRow();
+					 				$onlineSubmission=$this->dbAssignment->getAssignment($assgnId);
+						 			$objTable->addCell($onlineSubmission['description'],"","","","","bgcolor='#FFFFFF'");
+							 		$objTable->endRow();
+							 	}	
 								}
 							}
 						}
