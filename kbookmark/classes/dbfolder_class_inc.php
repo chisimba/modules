@@ -1,14 +1,14 @@
 <?php
 /**
  * Abstract base class bookmark folders.
- * @author James Kariuki Njenga
- * @version $Id$
+ * @author James Kariuki Njenga, Qhamani Fenama
+ * @version $Id: dbgroup_class_inc.php 6231 2007-04-26 15:42:08Z dkeats $
  * @copyright 2005, University of the Western Cape & AVOIR Project
  * @license GNU GPL
  * @package context
 */
 
-class dbGroup extends dbTable
+class dbfolder extends dbTable
 {
 
     /**
@@ -17,9 +17,7 @@ class dbGroup extends dbTable
 
     function init()
     {
-        parent::init('tbl_bookmarks_groups');
-        //$this->USE_PREPARED_STATEMENTS=True;
-        $this->objLanguage = $this->getObject('language', 'language');
+        parent::init('tbl_bookmarks_folders');
     }
     
     /**
@@ -38,58 +36,65 @@ class dbGroup extends dbTable
     /**
     * Function to return the id of a group or folder
     *
-    * @param foldername string
-    * return string
+    * @param foldername string, parentid string, userid string
+    * return boolean
     */
-    function folderById($folder)
-    {
-        $row=$this->getRow('title',$folder);
-        return $row['id'];
-    }
+    function isFolderExist($fname, $parentid, $userid)
+	{
+		$res = TRUE;
+		$sql = "SELECT * FROM tbl_bookmarks_folders WHERE fname = '{$fname}' AND parentid = '{$parentid}' AND userid = 			'{$userid}'";
+		$sqlres = $this->getArray($sql);
+		error_log(var_export(count($sqlres), true));
+		if(count($sqlres) == 0)
+		{
+			$res = FALSE;
+		}
+		return $res;
+	}
     
     /**
     * Method to insert a single record in the database table
-    * @param title string
-    * @param description string
-    * @param isprivate char, 0 or 1
-    * @param datecreated datetime
-    * @param datemodified dateteim
-    * @param isdefault char
-    * @param creatorid string
+	* @param foldername
+	* @param folderparentid
+	* @param $userid
     *
+	* return id string
     */
-    function insertSingle($title,$description,
-             $isprivate,$datecreated,$isdefault,$creatorId)
+    function insertSingle($foldername, $folderparentid, $userid)
     {
-        $this->insert(array(
-            'title'  		=> $title,
-            'description'	=> $description,
-            'isprivate' 	=> $isprivate,
-            'datecreated'	=> $datecreated,
-            'isdefault'     =>$isdefault,
-            'creatorid'    =>$creatorId
-    	));
-    	return;
+        $arrayOfRecords =  array(
+            'userid'    => $userid,
+            'fname'	    => $foldername,
+            'parentid' 	=> $folderparentid
+             );
+    	return $this->insert($arrayOfRecords, 'tbl_bookmarks_folders');
     }
     
-    
-    /**
-    * Method to create the root folder of a new user.
-    *
-    */
-    function createDefaultFolder($userId)
-    {
-        $title=$this->objLanguage->LanguageText('mod_bookmark_defaultfolder','kbookmark');
-        $description=$this->objLanguage->LanguageText('mod_bookmark_defaultfolder','kbookmark');
-        $isprivate='0';
-        $datecreated=$this->now();
-        $isdefault='1';
-        $creatorId=$userId;
-        
-        $this->insertSingle($title,$description,
-        $isprivate,$datecreated,$isdefault,$creatorId);
-    }
 
+	/**
+    * Method to get the user's folder
+	* @param userid
+	* @param parentid
+    *
+	* return array
+    */
+	function getUserFolders($userid, $parentid)
+	{
+		$sql = "SELECT * FROM tbl_bookmarks_folders WHERE userid = '{$userid}' AND parentid = '{$parentid}'";
+		return $this->getArray($sql);
+	}
+
+	/**
+    * Method to delete the folder a user with any field
+    * @param id
+	* @param field default set to 'id'
+    *
+	*/
+	function deleteFolder($id, $field = 'id')
+	{
+		return $this->delete($field, $id, 'tbl_bookmarks_folders');
+	}
+   
     /**
     * Function to get the default folder for display
     * checks if the default folder is created, if not creates it

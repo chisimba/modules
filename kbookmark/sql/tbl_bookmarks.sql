@@ -10,7 +10,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'groupid' => array(
+	'folderid' => array(
 		'type' => 'text',
 		'length' => 32
 		),
@@ -26,19 +26,12 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255
 		),
+	'tags' => array(
+		'type' => 'text',
+		'length' => 255
+		),
 	'datecreated' => array(
 		'type' => 'timestamp'
-		),
-	'isprivate' => array(
-		'type' => 'text',
-		'length' => 1
-		),
-	'datelastaccessed' => array(
-		'type' => 'timestamp'
-		),
-	'creatorid' => array(
-		'type' => 'text',
-		'length' => 32
 		),
 	'visitcount' => array(
 		'type' => 'integer',
@@ -46,10 +39,6 @@ $fields = array(
 		),
 	'datemodified' => array(
 		'type' => 'timestamp'
-		),
-	'isdeleted' => array(
-		'type' => 'text',
-		'length' => 1
 		)
 	);
 ?>

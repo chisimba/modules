@@ -1,7 +1,7 @@
 <?php
 /**
  * Abstract base class bookmark.
- * @author James Kariuki Njenga
+ * @author James Kariuki Njenga, Qhamani Fenama
  * @version $Id$
  * @copyright 2005, University of the Western Cape & AVOIR Project
  * @license GNU GPL
@@ -23,53 +23,65 @@ class dbBookmark extends dbTable
     /**
     * Method to insert a single record into the database table
     *
-    * @param groupid string
-    * @param title string
-    * @param url string
-    * @param description string
-    * @param datecreated datetime
-    * @param isprivate char
-    * @param datelastaccessed Datetime
-    * @param creatorid string
-    * @param visitcount char
-    * @param datemodified datetime
-    * @param isdeleted char
-    *
-    *
-    *
     */
-    function insertSingle($groupid,$title, $url,
-            $description, $datecreated, $isprivate,
-            $creatorid, $visitcount)
+    function insertSingle($folderid, $title, $url, $tags, $description)
     {
-        $this->insert(array(
-             'groupid' =>$groupid,
-             'title'   =>$title,
-             'url'     =>$url,
-             'description'=>$description,
-             'datecreated'=> $datecreated,
-             'isprivate'  =>$isprivate,
-             'creatorid'   => $creatorid,
-             'visitcount'  =>$visitcount));
-         return;
+        $alldata = array(
+             'folderid'    => $folderid,
+             'title'       => $title,
+             'url'         => $url,
+             'description' => $description,
+             'tags'		   => $tags,
+             'datecreated' => $this->now(),
+             'visitcount'  => 0);
+
+         return $this->insert($alldata);
+    }
+
+	/**
+    * Method to get a all bookmarks of the folder
+    *
+	* @param $folderid
+	*
+	* @return array
+    */
+    function getUserFolderBookmark($folderid)
+    {
+        $sql = "SELECT * FROM tbl_bookmarks WHERE folderid = '{$folderid}'";
+        return $this->getArray($sql);
     }
     
     /**
     * Method to update a bookmark
-    *
-    * @access public
+    * @param id
+	* @param title
+	* @param url
+	* @param description
+	* @param tags
+	*
     */
-    function updateBookmark()
+    function updateBookmark($id, $title, $url, $description, $tags)
     {
-        $id=$this->getParam('id');
-	    $fields = array();
-	    $fields['groupid']=$this->getParam('parent');
-        $fields['title']=$this->getParam('title');
-        $fields['url']=$this->getParam('url');
-        $fields['description']=$this->getParam('description');
-        $fields['isprivate']= $this->getParam('private');
-        $fields['datemodified']=$this->now();
-        $this->update('id', $id, $fields);
+        $fields = array();
+	    $fields['title']		= $title;
+        $fields['url']			= $url;
+        $fields['description']	= $description;
+        $fields['tags']			= $tags;
+        $fields['datemodified'] = $this->now();
+		$this->update('id', $id, $fields);
+    }
+
+	/**
+    * Method to update the bookmark table on accessing a bookmark
+    * Sets the date of access and also increased the hit count
+    *
+    */
+    
+    function updateVisitHit($pageId)
+    {
+		$visitcount=$this->getHits($pageId);
+		$visitcount=$visitcount+1;
+		return $this->update('id',$pageId, array('visitcount'=>$visitcount));
     }
     
     /**
@@ -80,29 +92,40 @@ class dbBookmark extends dbTable
     */
     function isEmpty($folderId)
     {
-        $filter="WHERE groupid='$folderId'";
-        $rows=$this->getRecordCount($filter);
-        if ($rows>0){
+        $filter="WHERE id='$folderId'";
+        $rows = $this->getRecordCount($filter);
+        if ($rows > 0){
             return False;
         } else {
             return True;
         }
     }
-    
-    /**
-    * Method to update the bookmark table on accessing a bookmark
-    * Sets the date of access and also increased the hit count
-    *
-    */
-    
-    function updateVisitHit($pageId)
-    {
-		$hitTime=$this->now();
-		$visitcount=$this->getHits($pageId);
 
-		$visitcount=$visitcount+1;
-		return $this->update('id',$pageId, array('datelastaccessed'=>$hitTime,'visitcount'=>$visitcount));
-    }
+	/**
+	* function that delete the bookmark via any field
+	*
+	* @param id string
+	* @param field string
+	*
+	**/
+	function deleteBookmark($id, $field)
+	{
+		return $this->delete($field, $id, 'tbl_bookmarks');
+	}
+
+	/**
+	* function that get the single bookmark via the id
+	*
+	* @param id
+	*
+	* return array
+	**/
+	function getSingleBookmark($id)
+	{
+		$onerec = $this->getRow('id', $id);
+        return $onerec;
+	}
+    
     
     /**
     * Method to get the number of hits a bookmark has
@@ -120,22 +143,6 @@ class dbBookmark extends dbTable
         }
         return $count;
         
-    }
-    
-    /**
-    * Function to do a search on the bookmark table
-    *
-    * @param $searchTerm , the search term
-    * return array
-    */
-
-    function search($searchTerm,$userId)
-    {
-       $filter="WHERE (title LIKE '%$searchTerm%' OR description
-                LIKE '%$searchTerm%' OR url Like '%$searchTerm%')
-                AND (isprivate='0' or creatorid='$userId')";
-       $searchResults=$this->getAll($filter);
-       return $searchResults;
     }
 }
 ?>

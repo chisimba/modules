@@ -67,26 +67,287 @@ class kbookmark extends controller
      
     function init()
     {
-        $this->objLanguage= $this->getObject('language', 'language');
-        $this->objIcon= $this->getObject('geticon','htmlelements');
         $this->objUser= $this->getObject('user','security');
-        $this->objLink= $this->newObject('link','htmlelements');
-        $this->objDbBookmark= $this->newObject('dbbookmark','kbookmark');
-        $this->objDbGroup= $this->newObject('dbgroup','kbookmark');
-        $this->xbel= $this->newObject('xbookmark','kbookmark');
-	    $this->urlVal= $this->newObject('url','strings');
+        $this->objDbBookmark = $this->newObject('dbbookmark','kbookmark');
+        $this->objDbfolder = $this->newObject('dbfolder','kbookmark');
     }
-    
+	  
+
+    public function dispatch($action='home')
+    {
+        /*
+        * Convert the action into a method (alternative to 
+        * using case selections)
+        */
+        $method = $this->__getMethod($action);
+        /*
+        * Return the template determined by the method resulting 
+        * from action
+        */
+        return $this->$method();
+    }
+
     /**
-    * The standard dispatch method for the module.
-    * he dispatch() method returns the name of
-    * a page body template which will render the module output
-    *
-    * @return string The template to display
+    * 
+    * Method to convert the action parameter into the name of 
+    * a method of this class.
+    * 
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return stromg the name of the method
+    * 
     */
+    function __getMethod(& $action)
+    {
+        if ($this->__validAction($action)) {
+            return "__" . $action;
+        } else {
+            return "__home";
+        }
+    }
+
+    /**
+    * Default Action for Bookmark module
+    * @access private
+    */
+    private function __home()
+    {
+		//Get Folder Details
+		$userid = $this->objUser->userId();
+		$this->setVarByRef('userId',$userid);
+        return 'bookmarkhome_tpl.php';
+    }
+
+	/**
+    * 
+    * Method to check if a given action is a valid method
+    * of this class preceded by double underscore (__). If it __action 
+    * is not a valid method it returns FALSE, if it is a valid method
+    * of this class it returns TRUE.
+    * 
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return boolean TRUE|FALSE
+    * 
+    */
+    function __validAction(& $action)
+    {
+        if (method_exists($this, "__".$action)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+	function __getDir()
+	{
+		$allarr = array();
+		$parentid = $this->getParam('node');
+		$userid = $this->objUser->userId();		
+		$dirs = $this->objDbfolder->getUserFolders($userid, $parentid);
+		if(count($dirs) > 0)
+		{
+			foreach($dirs as $dir)
+			{
+				$arr['text'] = $dir['fname'];
+				$arr['id'] = $dir['id'];
+				$arr['cls'] = 'folder';
+			$allarr[] = $arr;
+			}
+		}
+		else
+		{
+			$allarr = array();
+		}
+		echo json_encode($allarr);
+	}
+
+	function __creatFolder()
+	{
+		$parentid = $this->getParam('parentfolder');
+		$userid = $this->objUser->userId();
+		$fname = $this->getParam('foldername');
+		if($this->objDbfolder->isFolderExist($fname, $parentid, $userid)){
+			$extjs['success'] = true;
+            $extjs['error'] = "Folder name specified already exist";
+            echo json_encode($extjs);
+	    	exit(0);
+		}
+		else if(preg_match('/\\\|\/|\\||:|\\*|\\?|"|<|>/', $fname)){
+	    	$extjs['success'] = true;
+            $extjs['error'] = "Illigal charectors in a folder name";
+            echo json_encode($extjs);
+	    	exit(0);
+        }
+		else{
+			$id = $this->objDbfolder->insertSingle($fname, $parentid, $userid);
+			$extjs['success'] = true;
+            $extjs['data'] = $id;
+            echo json_encode($extjs);
+	    	exit(0);
+		}
+		
+	}
+
+	/**
+    * Method to get all the bookmarks for a specific folder
+	*
+    */
+	function __getBookmarks()
+	{
+		$folderid = $this->getParam('id');
+		$bookmarks = $this->objDbBookmark->getUserFolderBookmark($folderid);
+		$count = count($bookmarks);
+		if($count > 0)
+		{
+			$allarr = array();
+			foreach($bookmarks as $bookmark)
+			{
+				$arr = array();
+				$arr['id'] 			= $bookmark['id'];
+        		$arr['title']		= $bookmark['title'];
+        		$arr['url'] 		= $bookmark['url'];
+	    		$arr['description'] = $bookmark['description'];
+				$allarr[] = $arr;
+			}
+			echo json_encode(array('totalCount' => $count, 'bookmarks' =>  $allarr));
+		}
+		else
+		{
+			$allarr['totalCount'] = "0";
+			$allarr['bookmarks'] = array();
+			echo json_encode($allarr);
+		}
+		
+	}
     
+	/**
+    * Method to add a bookmark
+    *
+    */
+    function __addBookmark()
+	{
+		$folderid = $this->getParam('folderid');
+		$title = $this->getParam('add_title');
+        $url = $this->getParam('add_url');
+	    $description = $this->getParam('add_description');
+		$tags = $this->getParam('add_tags');
+		$id = $this->objDbBookmark->insertSingle($folderid, $title, $url, $tags, $description);
+		if($id)
+		{
+			echo json_encode(array('success' => true));
+			exit(0);
+		}
+		else
+		{
+			echo json_encode(array('success' => false));
+			exit(0);
+		}
+	}
+
+	/**
+    * Method to delete a bookmark
+    *
+    */
+	function __deleteBookmark()
+	{	
+
+		$ids = $this->getParam('ids');
+
+    	if ($ids) {
+    		$bookmarkIds = substr_replace($ids, "",strlen($ids) - 1);
+    		
+			$bookmarks = explode(',', $bookmarkIds);
+    		foreach ($bookmarks as $id)
+    		{
+				$res = $this->objDbBookmark->deleteBookmark($id, 'id');
+    		}
+     		echo json_encode(array('success' => true));
+			exit(0);
+		}
+		else
+		{
+		    echo json_encode(array('success' => false));
+			exit(0);
+		}
+	}
+
+	/**
+    * Method to update a bookmark
+    *
+    */
+
+	function __upadateBookmark()
+	{
+		$id = $this->getParam('id');
+		$title = $this->getParam('edit_title');
+        $url = $this->getParam('edit_url');
+	    $description = $this->getParam('edit_description');
+		$tags = $this->getParam('edit_tags');
+		$id = $this->objDbBookmark->updateBookmark($id, $title, $url, $description, $tags);
+		
+		echo json_encode(array('success' => true));
+		exit(0);
+	}
+
+	/**
+    * Method to get a single bookmark data
+    *
+    * returns array as json
+    *
+    */
+	function __getSingleBookmark()
+	{
+		$id = $this->getParam('id');
+		$bookmark = $this->objDbBookmark->getSingleBookmark($id);
+		$arr = array();
+		$arr['edit_title'] = $bookmark['title'];
+		$arr['edit_url'] = $bookmark['url'];
+		$arr['edit_description'] = $bookmark['description'];
+		$arr['edit_tags'] = $bookmark['tags'];
+		echo json_encode(array('success' => true, 'data' => $arr));
+		exit(0);
+	}
+
+	/**
+    * Method to delete a bookmark folder
+    *
+    */
+	function __deleteFolder()
+	{
+		$folderid = $this->getParam('folderid');
+		//first delete all the bookmark in the folder 
+		$res = $this->objDbBookmark->deleteBookmark($folderid, 'folderid');
+		//then delete folder
+		$res = $this->objDbfolder->deleteFolder($folderid, 'id');
+		echo json_encode(array('success' => true));
+		exit(0);
+	}
+
+	/**
+    * Method to open a bookmark on a new page
+    *
+    * returns string
+    *
+    */
+    function __openPage()
+    {
+		$pageid = $this->getParam('pageid');
+        $this->objDbBookmark->updateVisitHit($pageid);
+        $list = $this->objDbBookmark->getSingleBookmark($pageid);
+        $this->setVarByRef('list',$list);
+		$url = $list['url'];
+     
+	    header("Location: ".$url);
+        exit(0);
+    }
+
+
+
+  /*  
     function dispatch ($action)
     {
+
         //set the layout template
         $this->setLayoutTemplate('user_layout_tpl.php');
         $userId=$this->objUser->userId();
@@ -264,36 +525,7 @@ class kbookmark extends controller
 				$this->setPageTemplate('no_page_tpl.php');
 
 				//return "view_xbel.php";
-/*
-		$filename = "/home/bookmarkExport.xml";
-		if (is_writable($filename)) {
-		   // In our example we're opening $filename in append mode.
-		   // The file pointer is at the bottom of the file hence
-		   // that's where $somecontent will go when we fwrite() it.
-		   if (!$handle = fopen($filename, 'w')) {
-		         echo "Cannot open file ($filename)";
-		         exit;
-		   }
-		   // Write $somecontent to our opened file.
-		   if (fwrite($handle, $somecontent) === FALSE) {
-		       echo "Cannot write to file ($filename)";
-		       exit;
-		   }
-  
-		   echo "Success, wrote ($somecontent) to file ($filename)";
-  
-		   fclose($handle);
-		} else {
-		   echo "The file $filename is not writable";
-			}	
 
-$data = "This is a new file entry!\n";  
-$file = "/home/newfile.txt";   
-if (!$file_handle = fopen($file,"w")) { echo "Cannot open file"; }  
-if (!fwrite($file_handle, $data)) { echo "Cannot write to file"; }  
-echo "You have successfully written data to $file";   
-fclose($file_handle);   			
-*/
 
 				return "no_page_tpl.php"; 
 				break;
@@ -347,7 +579,7 @@ fclose($file_handle);
         }
 
     }
-    
+    */
     /**
     * Function to return the name of a group or folder
     *
