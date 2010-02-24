@@ -18,6 +18,16 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 class functions_mcqtests extends object
 {
+    public $dbTestadmin;
+    public $dbQuestions;
+    public $dbResults;
+    public $dbMarked;
+    public $objWashout;
+    public $objLanguage;
+    public $objContext;
+    public $objIcon;
+    public $objUser;
+    public $contextCode;
 
     public function init()
     {
@@ -34,6 +44,8 @@ class functions_mcqtests extends object
         $this->objIcon= $this->newObject('geticon','htmlelements');
         $this->objUser = &$this->getObject('user', 'security');
 								$objPopup=&$this->loadClass('windowpop','htmlelements');							
+      		// Get the context
+      		$this->contextCode = $this->objContext->getContextCode();
     }
     
     /**
@@ -158,12 +170,13 @@ if(!empty($resultdata))
 							}
 
 							//foreach($resultsData as $myResults){
-                                          if(!empty($resultsData)){
-                                                $myResults = $resultsData;
+       if(!empty($resultsData)){
+        $myResults = $resultsData[0];
 								if($myResults["studentid"] == $userId){
 									$studentMark = $myResults["mark"];
 								}
 								$result = $this->dbResults->getResult($userId, $myData['id']);
+
 								$test = $this->dbTestadmin->getTests($this->contextCode, 'name, totalmark', $myData['id']);
 								if(!empty($result))
 								$result = array_merge($result[0], $test[0]);
@@ -224,7 +237,7 @@ if(!empty($resultdata))
 									$this->objIcon->setIcon('redcross');
 									$crossIcon = $this->objIcon->show();
 									foreach($data as $line) {
-										$ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['answerorder']];
+										$ansNum = '&nbsp;&nbsp;&nbsp;'.$line['answerorder'];
 										$content = '<b>'.$yourAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['answer'];
 										if (!$line['studcorrect']) {
 										if (!empty($line['studorder']) && !empty($line['studans'])) {
