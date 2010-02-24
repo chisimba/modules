@@ -44,28 +44,28 @@ class functions_rubric extends object
      */
     public function displayrubric($contextCode, $userId=Null, $uriModule, $assessmentAction, $viewTableAction)
     { 
-	$tables = $this->objDbRubricTables->listAll($contextCode, $contextCode == 'root' ? $userId : NULL);
-	if(!empty($tables)){
-	if ($this->contextCode != 'root') {
-		$pdtables = $this->objDbRubricTables->listAll("root", $userId);
-	}
-    // Load needed classes
-    $this->loadClass('link', 'htmlelements');
-    $tblclassB = $this->newObject('htmltable','htmlelements');
-    $tblclassB->width='100%';
-    $tblclassB->border='0';
-    $tblclassB->cellspacing='0';
-    $tblclassB->cellpadding='5';	
+     	$tables = $this->objDbRubricTables->listAll($contextCode, $contextCode == 'root' ? $userId : NULL);
+     	if(!empty($tables)){
+      	if ($this->contextCode != 'root') {
+      		$pdtables = $this->objDbRubricTables->listAll("root", $userId);
+     	}
+      // Load needed classes
+      $this->loadClass('link', 'htmlelements');
+      $tblclassB = $this->newObject('htmltable','htmlelements');
+      $tblclassB->width='100%';
+      $tblclassB->border='0';
+      $tblclassB->cellspacing='0';
+      $tblclassB->cellpadding='5';	
         
-    $tblclassB->startHeaderRow();
-    $tblclassB->addHeaderCell($this->objLanguage->languageText('word_title'), '30%');
-    $tblclassB->addHeaderCell($this->objLanguage->languageText('rubric_description','rubric'), '53%');
-    $tblclassB->addHeaderCell($this->objLanguage->languageText('word_view'), '17%');
-    $tblclassB->endHeaderRow();    
+      $tblclassB->startHeaderRow();
+      $tblclassB->addHeaderCell($this->objLanguage->languageText('word_title'), '30%');
+      $tblclassB->addHeaderCell($this->objLanguage->languageText('rubric_description','rubric'), '53%');
+      $tblclassB->addHeaderCell($this->objLanguage->languageText('word_view'), '17%');
+      $tblclassB->endHeaderRow();    
 	
-    // Display tables.	
-    $oddOrEven = "odd";
-	foreach ($tables as $table) {        
+      // Display tables.	
+      $oddOrEven = "odd";
+     	foreach ($tables as $table) {        
         $tblclassB->startRow();
         $oddOrEven = ($oddOrEven=="even")? "odd":"even";		    
         $tblclassB->addCell($table['title'], "null", "top", "left", $oddOrEven, null);
@@ -75,77 +75,45 @@ class functions_rubric extends object
         $options = NULL;
         
         if ($contextCode != "root") {
+       		$this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("word_assessments","rubric");
+       		$this->objIcon->setIcon('assessments');
+       		$commentIconA = $this->objIcon->show();
+ 
+	       	$objPopupA = new windowpop();
+       		$objPopupA->set('location',$this->uri(array('action' => $assessmentAction,'tableId'=>$table['id'],'studentId' => $userId),$uriModule));
+       		$objPopupA->set('linktext',$commentIconA);
+       		$objPopupA->set('width','600');
+       		$objPopupA->set('height','150');
+       		$objPopupA->set('left','200');
+       		$objPopupA->set('top','200');
+       		$objPopupA->set('scrollbars','yes');
+       		$objPopupA->set('resizable','yes');
+       		$objPopupA->putJs(); // you only need to do this once per page
 
-/*        
-	       $icon = $this->getObject('geticon','htmlelements');
-               $icon->setIcon('assessments');
-               $icon->title = $this->objLanguage->languageText("word_assessment");
-	  				$icon->alt = $this->objLanguage->languageText("word_assessment");
-            
-				$options .= "<a href=\"" . 
-					$this->uri(array(
-				    	'module'=>$uriModule,
-						'action'=>$assessmentAction,
-						'tableId'=>$table['id']
-					),$uriModule)	
-				. "\">" .$icon->show() . "</a>";
-				$options .= "&nbsp;";	
-*/
-		$this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("word_assessments","rubric");
-		$this->objIcon->setIcon('assessments');
-		$commentIconA = $this->objIcon->show();
-
-		$objPopupA = new windowpop();
-		$objPopupA->set('location',$this->uri(array('action' => $assessmentAction,'tableId'=>$table['id'],'studentId' => $userId),$uriModule));
-		$objPopupA->set('linktext',$commentIconA);
-		$objPopupA->set('width','600');
-		$objPopupA->set('height','150');
-		$objPopupA->set('left','200');
-		$objPopupA->set('top','200');
-		$objPopupA->set('scrollbars','yes');
-		$objPopupA->set('resizable','yes');
-		$objPopupA->putJs(); // you only need to do this once per page
-
-		}
+      		}
 	        // View table.
 
-	$this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("rubric_rubric","rubric");
-	$this->objIcon->setIcon('comment_view');
-	$commentIconB = $this->objIcon->show();
+       	$this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("rubric_rubric","rubric");
+       	$this->objIcon->setIcon('comment_view');
+       	$commentIconB = $this->objIcon->show();
 
-	$objPopupB = new windowpop();
-	$objPopupB->set('location',$this->uri(array('action' => $viewTableAction,'tableId'=>$table['id'],'studentId' => $userId),$uriModule));
-	$objPopupB->set('linktext',$commentIconB);
-	$objPopupB->set('width','600');
-	$objPopupB->set('height','150');
-	$objPopupB->set('left','200');
-	$objPopupB->set('top','200');
-	$objPopupB->set('scrollbars','yes');
-	$objPopupB->set('resizable','yes');
-	//$objPopupB->putJs(); // you only need to do this once per page
-	/*        
-            $icon = $this->getObject('geticon','htmlelements');
-            $icon->setIcon('preview');
-            $icon->title = $this->objLanguage->languageText("word_view");
-            $icon->alt = $this->objLanguage->languageText("word_view");
-            $icon->align=false;            
-            $options .= "<a href=\"" . 
-                $this->uri(array(
-                    'module'=>$uriModule,
-                    'action'=>$viewTableAction,
-                    'tableId'=>$table['id']
-                ),$uriModule)	
-            . "\">" . $icon->show() . "</a>";        
-			$options .= "&nbsp;";
-	*/
+       	$objPopupB = new windowpop();
+       	$objPopupB->set('location',$this->uri(array('action' => $viewTableAction,'tableId'=>$table['id'],'studentId' => $userId),$uriModule));
+       	$objPopupB->set('linktext',$commentIconB);
+       	$objPopupB->set('width','600');
+       	$objPopupB->set('height','150');
+       	$objPopupB->set('left','200');
+       	$objPopupB->set('top','200');
+       	$objPopupB->set('scrollbars','yes');
+       	$objPopupB->set('resizable','yes');
         if ($contextCode != "root") {
          $tblclassB->addCell($objPopupA->show().$objPopupB->show(), "null", "top", "left", $oddOrEven, null);
-	}else{
-	 $tblclassB->addCell($objPopupB->show(), "null", "top", "left", $oddOrEven, null);
-	}
-        $tblclassB->endRow();
+       	}else{
+       	 $tblclassB->addCell($objPopupB->show(), "null", "top", "left", $oddOrEven, null);
+       	}
+         $tblclassB->endRow();
 
-	}
+	       }
     if (empty($tables)) {        
 
         $tblclassB->startRow();        
@@ -184,60 +152,44 @@ class functions_rubric extends object
         $tblclassD->endHeaderRow();        
         
         $oddOrEven = "odd";
-    if (isset($pdtables)) {
+        if (isset($pdtables)) {
         foreach ($pdtables as $pdtable) {
             $tblclassD->startRow();
             $oddOrEven = ($oddOrEven=="even")? "odd":"even";
         
             $tblclassD->addCell("<b>" . $pdtable['title'] . "</b>", "null", "top", "left", $oddOrEven, null);
             $tblclassD->addCell("<b>" . $pdtable['description'] . "</b>", "null", "top", "left", $oddOrEven, null);        
-            /*
-            // View table.            
-                $icon = $this->getObject('geticon','htmlelements');
-                $icon->setIcon('preview');
-                $icon->title = $this->objLanguage->languageText("word_view");
-                $icon->alt = $this->objLanguage->languageText("word_view");
-                $icon->align=false;            
-                $options .= "<a href=\"" . 
-                    $this->uri(array(
-                        'module'=>$uriModule,
-                        'action'=>$viewTableAction,
-                        'tableId'=>$pdtable['id']
-                    ),$uriModule)	
-                . "\">" . $icon->show() . "</a>";
-                $options .= "&nbsp;";
-	*/
-	    $this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("rubric_rubric","rubric");
-	    $this->objIcon->setIcon('comment_view');
-	    $commentIconC = $this->objIcon->show();
+       	    $this->objIcon->title=$this->objLanguage->languageText("word_view")."&nbsp;".$this->objLanguage->languageText("rubric_rubric","rubric");
+      	     $this->objIcon->setIcon('comment_view');
+       	    $commentIconC = $this->objIcon->show();
 
-	    $objPopupC = new windowpop();
-	    $objPopupC->set('location',$this->uri(array('action' => $viewTableAction,'tableId'=>$pdtable['id'],'studentId' => $userId),$uriModule));
-	    $objPopupC->set('linktext',$commentIconC);
-	    $objPopupC->set('width','600');
-	    $objPopupC->set('height','150');
-	    $objPopupC->set('left','200');
-	    $objPopupC->set('top','200');
-	    $objPopupC->set('scrollbars','yes');
-	    $objPopupC->set('resizable','yes');
+       	    $objPopupC = new windowpop();
+       	    $objPopupC->set('location',$this->uri(array('action' => $viewTableAction,'tableId'=>$pdtable['id'],'studentId' => $userId),$uriModule));
+       	    $objPopupC->set('linktext',$commentIconC);
+       	    $objPopupC->set('width','600');
+       	    $objPopupC->set('height','150');
+       	    $objPopupC->set('left','200');
+       	    $objPopupC->set('top','200');
+       	    $objPopupC->set('scrollbars','yes');
+       	    $objPopupC->set('resizable','yes');
 
             $tblclassD->addCell($objPopupC->show(), "null", "top", "left", $oddOrEven, null);
             $tblclassD->endRow();
-        }
-    }
+         }
+       }
     
-    if (empty($pdtables)) {
+      if (empty($pdtables)) {
         $tblclassD->startRow();       
         $tblclassD->addCell("<div class=\"noRecordsMessage\">" . $this->objLanguage->languageText('mod_rubric_norecords','rubric') . "</div>", "null", "top", "left", "", 'colspan="3"');
         $tblclassD->endRow();
+      }
+       return $tblclassB->show().$tblclassC->show().$tblclassD->show();
+      }else{
+       return $tblclassB->show();
+      }
+      }else{
+       return False;
     }
-     return $tblclassB->show().$tblclassC->show().$tblclassD->show();
-    }else{
-     return $tblclassB->show();
-    }
-   }else{
-    return False;
-   }
    }    
     /**
      * 
@@ -250,7 +202,7 @@ class functions_rubric extends object
     { 
 					$tables = $this->objDbRubricTables->listAll($contextCode, $contextCode == 'root' ? $userId : NULL);
 					if(!empty($tables)){
-							if ($this->contextCode != 'root') {
+							if ($contextCode != 'root') {
 								$pdtables = $this->objDbRubricTables->listAll("root", $userId);
 							}
 						// Load needed class
@@ -349,12 +301,14 @@ class functions_rubric extends object
 							$performances = array();
 							for ($j=0;$j<$cols;$j++) {
 								$performance = $this->objDbRubricPerformances->listSingle($table['id'], $j);
-								$performances[] = $performance[0]['performance'];
+								if(!empty($performance))
+ 								$performances[] = $performance[0]['performance'];
 							}				
 							// Build the objectives array
 							$objectives = array();
 							for ($i=0;$i<$rows;$i++) {
 								$objective = $this->objDbRubricObjectives->listSingle($table['id'], $i);
+							if(!empty($objective))
 								$objectives[] = $objective[0]['objective'];
 							}
 							// Build the cells matrix
@@ -363,7 +317,8 @@ class functions_rubric extends object
 								$cells[$i] = array();
 								for ($j=0;$j<$cols;$j++) {
 									$cell = $this->objDbRubricCells->listSingle($table['id'], $i, $j);
-									$cells[$i][$j] = $cell[0]['contents'];
+									if(!empty($cell))
+									 $cells[$i][$j] = $cell[0]['contents'];
 								}
 							}
 
@@ -431,12 +386,14 @@ class functions_rubric extends object
 							$performances = array();
 							for ($j=0;$j<$cols;$j++) {
 								$performance = $this->objDbRubricPerformances->listSingle($table['id'], $j);
+							if(!empty($performance))
 								$performances[] = $performance[0]['performance'];
 							}				
 							// Build the objectives array
 							$objectives = array();
 							for ($i=0;$i<$rows;$i++) {
 								$objective = $this->objDbRubricObjectives->listSingle($table['id'], $i);
+							if(!empty($objective))
 								$objectives[] = $objective[0]['objective'];
 							}
 							// Build the cells matrix
@@ -445,6 +402,7 @@ class functions_rubric extends object
 								$cells[$i] = array();
 								for ($j=0;$j<$cols;$j++) {
 									$cell = $this->objDbRubricCells->listSingle($table['id'], $i, $j);
+							if(!empty($cell))
 									$cells[$i][$j] = $cell[0]['contents'];
 								}
 							}
