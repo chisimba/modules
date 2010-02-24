@@ -134,8 +134,6 @@ class mysqlxml_Eportfolio extends object
         //create User-Names tags
         $this->xmlIdentification->roottag->curtag->add_subtag("NAME", array());
         $tagIdent = &$this->xmlIdentification->roottag->curtag->curtag;
-        //Type Name
-        $mytype = $this->objDbCategorytypeList->listSingle($mainRow['type']);
         $tagIdent->add_subtag("TYPENAME", array());
         $tagIdent->curtag->add_subtag("TYSOURCE", array(
             'sourcetype' => 'imsdefault'

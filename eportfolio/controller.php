@@ -29,6 +29,7 @@ class eportfolio extends controller
     public $objButtons;
     public $objUserAdmin;
     public $objUser;
+    public $userPid;
     public $isAdmin;
     /**
      * Constructor
@@ -112,7 +113,7 @@ class eportfolio extends controller
         $this->_arrSubGroups = array();
         $this->_arrSubGroups['Group 1']['id'] = NULL;
         $this->_arrSubGroups['Group 1']['members'] = array(
-            $userPid
+            $this->userPid
         );
         $this->_arrSubGroups['Group 2']['id'] = NULL;
         $this->_arrSubGroups['Group 2']['members'] = array();

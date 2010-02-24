@@ -17,6 +17,7 @@ class getall_Eportfolio extends object
      * @access public
      *
      */
+    public $userPid;
     public function init() 
     {
         // Get the DB object.

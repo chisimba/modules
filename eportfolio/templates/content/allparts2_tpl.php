@@ -11,7 +11,6 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('mouseoverpopup', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
-$objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objinfoTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objactivityTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objaddressTitles = &$this->getObject('htmlheading', 'htmlelements');
@@ -56,8 +55,8 @@ $categorypage = '';
 $categorytypepage = '';
 //Get Group Name
 $groupname = $this->_objGroupAdmin->getName($groupId);
-
-$objHeading->align = center;
+$objHeading = &$this->getObject('htmlheading', 'htmlelements');
+$objHeading->align = 'center';
 $objHeading->type = 2;
 $objHeading->str = '<font color="#FF8800">' . $objUser->getSurname() . ', ' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $groupname . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . '</font>';
 echo $objHeading->show();
@@ -81,7 +80,7 @@ $form = new form("add", $this->uri(array(
 //Save button
 $button = new button("submit", $objLanguage->languageText("word_save")); //word_save
 $button->setToSubmit();
-$objHeading->align = left;
+$objHeading->align = 'left';
 $objinfoTitles->type = 1;
 $objaddressTitles->type = 1;
 $objcontactTitles->type = 1;
@@ -871,7 +870,7 @@ $this->objTab = $this->newObject('tabber', 'htmlelements');
 $namesLabel = $userTable->show();
 $addressLabel = $addressTable->show();
 $contactLabel = $contactTable->show();
-$demographicsLabel = $addressTab . $demographicsTable->show();
+$demographicsLabel = $demographicsTable->show();
 $emailLabel = $emailTable->show();
 $activityLabel = $activityTable->show();
 $this->objTab->init();

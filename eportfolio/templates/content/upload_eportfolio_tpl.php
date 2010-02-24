@@ -88,7 +88,7 @@ $this->appendArrayVar('headerParams', '
                                 // Else
                                 } else {
                                     jQuery("#contextcodemessage").html("The folder contents do NOT comply to IMS Global eportfolio Specification");
-                                    jQuery("#contextcodemessage2").html("Button is Disabled"+ifok+" "+result);
+                                    jQuery("#contextcodemessage2").html("Button is Disabled");
                                     jQuery("#contextcodemessage2").addClass("error");
                                     jQuery("#contextcodemessage").addClass("error");
                                     jQuery("#input_parentfolder").addClass("inputerror");
@@ -109,6 +109,8 @@ $formaction = 'uploadeportfolio';
 $form = new form('uploadeportfolio', $this->uri(array(
     'action' => $formaction
 )));
+//Empty string
+$contextCodeMessage3 = "";
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->width = '100%';
 $table->attributes = " align='left' border='0'";
@@ -124,7 +126,7 @@ $usrFolders = $this->objFolders->getTreedropdown(Null);
 $table->startRow();
 $table->addCell($label->show() . " ", 190, 'top', 'left');
 //$table->addCell($htmlArea->show());
-$table->addCell($usrFolders . ' <span id="contextcodemessage">' . $contextCodeMessage . '</span>', Null, 'top', 'left');
+$table->addCell($usrFolders . ' <span id="contextcodemessage">' . $contextCodeMessage3 . '</span>', Null, 'top', 'left');
 $table->endRow();
 //spacer
 $table->startRow();
@@ -139,7 +141,7 @@ $table->addCell($button->show());
 $table->addCell("&nbsp;");
 $table->endRow();
 $table->startRow();
-$table->addCell(' <span id="contextcodemessage2">' . $contextCodeMessage . '</span>');
+$table->addCell(' <span id="contextcodemessage2">' . $contextCodeMessage3 . '</span>');
 $table->addCell("&nbsp;");
 $table->endRow();
 $form->addToForm($table->show());

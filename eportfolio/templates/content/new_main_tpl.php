@@ -1377,12 +1377,12 @@ if(class_exists('groupops',false)){
         $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
         $assertionstable->endRow();
     }
-   //Else if groupops does not exist
-			}else{
+//Else if groupops does not exist
+}else{
     // user Pk id
     $userPid = $this->objUser->PKId($this->objUser->userId());
 				$Id = $this->_objGroupAdmin->getUserGroups($userPid);
-    // Step through the list of addresses.
+    // Step through the list of assertions.
     $class = NULL;
     if (!empty($Id)) {
         foreach($Id as $groupId) {
@@ -1393,7 +1393,7 @@ if(class_exists('groupops',false)){
                 $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                 $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                 if (!empty($assertionslist)) {
-                    // Display each field for activities
+                    // Display each field
                     $assertionstable->startRow();
                     $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
                     $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
@@ -1516,10 +1516,16 @@ if(class_exists('groupops',false)){
             $assertionstable->endRow();
             //Check if assertion group exists and add in contextgroups
             $contextCode = $item["id"];
-            $contextgrpList = $this->_objGroupAdmin->getLeafId(array(
+            $groupName = $item['rationale'];
+            if(empty($groupName)){
+             $groupName = Null;
+             $contextgrpList = Null;
+            } else {
+             $contextgrpList = $this->_objGroupAdmin->getLeafId(array(
                 $contextCode,
                 $groupName
-            ));
+             ));
+            } 
             if (empty($contextgrpList)) {
                 //Add Assertion to context groups
                 $title = $item['rationale'];
