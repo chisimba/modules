@@ -31,22 +31,24 @@ $this->appendArrayVar('headerParams', '
         
         // Action to be taken once page has loaded
         jQuery(document).ready(function(){
-            jQuery("#input_addtofav").bind(\'change\', function() {
-                sitepath = jQuery("#input_sitepath").val();
-                checkCode(jQuery("#input_favusrid").attr(\'value\'));
-            });
+           // use this to reset several forms at once
+           getActions();           
+        });
+        function getActions(){
             jQuery("#button_submitmessage").bind(\'click\', function() {
                 sitepath = jQuery("#input_sitepath").val();
                 recipentid = jQuery("#input_favusrid").attr(\'value\');
                 messagetitle = jQuery("#input_msgtitle").attr(\'value\');
                 messagebody = jQuery("#input_msgbody").attr(\'value\');
                 sendmessage(recipentid, messagetitle, messagebody);
+            });        
+            jQuery("#input_addtofav").bind(\'change\', function() {
+                sitepath = jQuery("#input_sitepath").val();
+                checkCode(jQuery("#input_favusrid").attr(\'value\'));
             });
-        });
-        
-        // Function to check whether context code is taken
+        }       
         function checkCode(code)
-        {
+        {            
             // Messages can be updated
             doUpdateMessage = true;
             
@@ -86,19 +88,37 @@ $this->appendArrayVar('headerParams', '
                                     jQuery("#favmessage2").html(" ");
                                     jQuery("#favmessage").addClass("success");
                                     jQuery("#favmessage").removeClass("error");
+                                    jQuery("#sendmessage").html("");
+                                    jQuery("#sendmessage1").addClass("error");
+                                    jQuery("#sendmessage1").html("Kindly refresh page to send a message!");
+                                    jQuery("#sendmessage2").html("");
+                                    jQuery("#sendmessage3").html("");
+                                    jQuery("#sendmessage4").html("");
                                 } else if (msg == "exists") {
                                     jQuery("#favmessage").html("Already part of your favourites!");
                                     jQuery("#favmessage2").html(" ");
                                     jQuery("#favmessage").addClass("success");
                                     jQuery("#favmessage").removeClass("error");
+                                    jQuery("#sendmessage").html("");
+                                    jQuery("#sendmessage1").addClass("error");
+                                    jQuery("#sendmessage1").html("Kindly refresh page to send a message!");
+                                    jQuery("#sendmessage2").html("");
+                                    jQuery("#sendmessage3").html("");
+                                    jQuery("#sendmessage4").html("");
                                 } else if (msg == "notlogged") {
                                     jQuery("#favmessage").addClass("error");
                                     jQuery("#favmessage").html("kindly log in to be able to add lift to favourites!");
                                     jQuery("#favmessage2").html(" ");
+                                    jQuery("#sendmessage").html("");
+                                    jQuery("#sendmessage1").addClass("error");
+                                    jQuery("#sendmessage1").html("Sending a message requires login!");
+                                    jQuery("#sendmessage2").html("");
+                                    jQuery("#sendmessage3").html("");
+                                    jQuery("#sendmessage4").html("");                                    
                                 // Else
                                 } else {
                                     jQuery("#favmessage").html("Unexpected error occured!");
-                                    jQuery("#favmessage").addClass("error");
+                                    jQuery("#favmessage").addClass("error");                                    
                                 }
                                 
                             }
@@ -157,8 +177,16 @@ $this->appendArrayVar('headerParams', '
                                 
                                 // IF code exists
                                 if (msg == "ok") {
-                                    jQuery("#erroronsendmessage").html("Message sent successfully!");
+                                    jQuery("#erroronsendmessage").html("");
+                                    jQuery("#sendmessage").html("");
+                                    jQuery("#sendmessage1").html("Message sent successfully!");
+
+                                    jQuery("#sendmessage2").html("");
+                                    jQuery("#sendmessage3").html("");
+                                    jQuery("#sendmessage4").html("");
+                                    jQuery("#favmessage2").html("");
                                     jQuery("#erroronsendmessage").addClass("success");
+                                    jQuery("#sendmessage1").addClass("success");
                                     jQuery("#erroronsendmessage").removeClass("error");
                                     jQuery("#input_msgtitle").val("");
                                     jQuery("#input_msgbody").val("");
@@ -167,7 +195,7 @@ $this->appendArrayVar('headerParams', '
                                     jQuery("#erroronsendmessage").html("kindly log in to be able to send the message!");
                                 // Else
                                 } else {
-                                    jQuery("#erroronsendmessage").html("Unexpected error occured!"+messagebody+code+messagetitle+msg);
+                                    jQuery("#erroronsendmessage").html("Unexpected error occured!");
                                     jQuery("#erroronsendmessage").addClass("error");
                                 }
                                 
@@ -199,11 +227,17 @@ if(!empty($thisuserid)){
 	$sysSiteRoot = $this->objConfig->getsiteRoot()."index.php";
 	$sitepathtitle = new textinput('sitepath',$sysSiteRoot,"hidden",10);
 	$table = $this->newObject('htmltable', 'htmlelements');
-	$table->startRow();
-	$table->addCell("<br /><div id='favmessage2'><b>".$this->objLanguage->languageText('mod_liftclub_addfavourite', 'liftclub', "Add to favourite")."? ".$addfav->show()." </b></div>".$favUsrId->show().$sitepathtitle->show(), 150, 'top', 'right');
-	$table->addCell("<br /><div id='favmessage'> </div>", NULL, 'top', 'left');
-	$table->endRow();
-
+ if($isFavourite == 1){
+	 $table->startRow();
+	 $table->addCell("<br /><div id='favmessage2'><b>".$this->objLanguage->languageText('mod_liftclub_addfavourite', 'liftclub', "Add to favourite")."? ".$addfav->show()." </b></div>".$favUsrId->show().$sitepathtitle->show(), 150, 'top', 'right');
+	 $table->addCell("<br /><div id='favmessage'> </div>", NULL, 'top', 'left');
+	 $table->endRow();
+ }else{
+	 $table->startRow();
+	 $table->addCell("<br /><div id='favmessage2'><b> </b></div>".$favUsrId->show().$sitepathtitle->show(), 150, 'top', 'right');
+	 $table->addCell("<br /><div id='favmessage'> </div>", NULL, 'top', 'left');
+	 $table->endRow();
+ }
 	$form->addToForm($table->show());
 	$form->addToForm('<br />');
 
@@ -214,15 +248,15 @@ $messageBody = new textarea($name='msgbody',$value='',$rows=4,$cols=50);
 $titleLabel = new label($this->objLanguage->languageText('mod_liftclub_messagetitle', 'liftclub', 'Title'));
 $bodyLabel = new label($this->objLanguage->languageText('mod_liftclub_messagebody', 'liftclub', 'Body'));
 $table->startRow();
-$table->addCell("<b>".$titleLabel->show().": </b>", 150, NULL, 'right');
+$table->addCell("<b><div id='sendmessage'>".$titleLabel->show().": </div></b>", 150, NULL, 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($messageTitle->show());
+$table->addCell("<b><div id='sendmessage1'>".$messageTitle->show()."</div></b>");
 $table->endRow();
 
 $table->startRow();
-$table->addCell("<b>".$bodyLabel->show().": </b>", 150, 'top', 'right');
+$table->addCell("<b><div id='sendmessage2'>".$bodyLabel->show().": </div></b>", 150, 'top', 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($messageBody->show());
+$table->addCell("<div id='sendmessage3'>".$messageBody->show()."</div>");
 $table->endRow();
 
 $button = new button ('submitmessage', 'Send Message');
@@ -230,7 +264,7 @@ $button->setId('button_submitmessage');
 $table->startRow();
 $table->addCell("&nbsp;", 150, 'top', 'right');
 $table->addCell('&nbsp;', 5);
-$table->addCell($button->show());
+$table->addCell("<div id='sendmessage4'>".$button->show()."</div>");
 $table->endRow();
 $table->startRow();
 $table->addCell("&nbsp;", 150, 'top', 'right');

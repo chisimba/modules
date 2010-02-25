@@ -481,6 +481,13 @@ class liftclub extends controller
         $this->setVar('daysatur',$userDetails[0]['saturday']);
         $this->setVar('daysun',$userDetails[0]['sunday']);
         $this->setVar('varydays',$userDetails[0]['daysvary']);
+        $recexists = $this->objFavourites->checkIfExists($this->objUser->userId(), $userid);
+        if($recexists==TRUE){
+         $isFavourite = 1;
+        } else {
+         $isFavourite = 0;
+        }
+        $this->setVar('isFavourite',$isFavourite);
         return 'viewmembership_tpl.php';
     }
 
