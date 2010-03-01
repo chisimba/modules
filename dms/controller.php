@@ -128,7 +128,8 @@ class dms extends controller {
         $topic=$this->getParam('topic');
         $docname=$this->getParam('docname');
         $docid=$this->getParam('docid');
-        $this->setVarByRef('action','upload');
+        $action="upload";
+        $this->setVarByRef('action',$action);
         $this->setVar('pageSuppressXML', TRUE);
         $this->setVarByRef('topic',$topic);
         $this->setVarByRef('docname',$docname);
@@ -363,7 +364,7 @@ class dms extends controller {
         echo file_exists($path)?"success":"false";
     }
 
-        function __registerdocument() {
+    function __registerdocument() {
         $date=$this->getParam('date');
         $number=$this->getParam('number');
         $dept=$this->getParam('department');
@@ -372,14 +373,14 @@ class dms extends controller {
         $selectedfolder=$this->getParam('topic');
         $refno=$number.$date;
         $telephone=$this->getParam('telephone');
-
+        $group=$this->getParam('group');
         $this->documents->addDocument(
                 $date,
                 $refno,
                 $dept,
                 $telephone,
                 $title,
-                "default",
+                $group,
                 $selectedfolder);
 
     }
@@ -389,7 +390,7 @@ class dms extends controller {
         $number=$this->getParam('number');
         $dept=$this->getParam('department');
         $title=$this->getParam('title');
-       
+
         $selectedfolder=$this->getParam('topic');
         $refno=$number.$date;
         $telephone=$this->getParam('telephone');
@@ -429,7 +430,7 @@ class dms extends controller {
         $template=$this->objSysConfig->getValue('GENERAL_TEMPLATE', 'dms');
         $source=$basedir.'/resources/'.$template;
         $dest=$basedir.'/'.$selectedfolder.'/'.$title.'.'.$ext;
-        
+
         copy($source, $dest);
         // save the file information into the database
         $data = array(
@@ -473,6 +474,7 @@ class dms extends controller {
         $docid=$this->getParam('docid');
         $doc= $this->documents->getdocument($docid);
         $userid=$this->userutils->getUserId();
+        $ownername=$this->objUser->fullname($userid);
         $owner=$doc['userid'] == $userid? "true":"false";
         $str="[";
         $str.='{';
@@ -480,8 +482,9 @@ class dms extends controller {
         $str.='"refno":'.'"'.$doc['refno'].'",';
         $str.='"topic":'.'"'.$doc['topic'].'",';
         $str.='"owner":'.'"'.$owner.'",';
+        $str.='"ownername":'.'"'.$ownername.'",';
         $str.='"department":'.'"'.$doc['department'].'",';
-        $str.='"upload":'.'"'.$doc['upload'].'",';
+        $str.='"attachmentstatus":'.'"'.$doc['upload'].'",';
         $str.='"telephone":'.'"'.$doc['telephone'].'"';
         $str.='}';
         $str.=']';
@@ -492,13 +495,18 @@ class dms extends controller {
         $docids=$this->getParam('docids');
         $this->documents->approveDocs($docids);
     }
+
+    function __deleteDocs() {
+        $docids=$this->getParam('docids');
+        $this->documents->deleteDocs($docids);
+    }
     function requiresLogin() {
         return true;
     }
 
-    function __registeracademicpresenters(){
+    function __registeracademicpresenters() {
         print_r($_POST);
-        
+
     }
 
     /**
@@ -559,6 +567,9 @@ class dms extends controller {
             $file="";
             if($doc['active'] == 'Y') {
                 unlink($placeholder);
+                $xxpath='/'. $topic.'/'.$docname.'.na';
+                $xxpath= str_replace("//", "/", $xxpath);
+                $this->objUploadTable->deleteNAFile($xxpath,$docname.'.na');
             }else {
                 $oldname = $dir.'/'.$topic.'/'.$docname.'.'.$ext;
                 $newname = $dir.'/'.$topic.'/'.$docname.'.na';
@@ -585,7 +596,7 @@ class dms extends controller {
                     'filepath'=>$path);
             $result = $this->objUploadTable->saveFileInfo($data);
             //update the latest ext
-            $this->documents->updateDocument($docid,array('ext'=>$ext));
+            $this->documents->updateDocument($docid,array('ext'=>$ext,'upload'=>'Y'));
             return $this->nextAction('ajaxuploadresults', array('id'=>$generatedid, 'fileid'=>$id, 'filename'=>$filename));
         }
     }
