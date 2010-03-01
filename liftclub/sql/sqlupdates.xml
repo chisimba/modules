@@ -2,6 +2,18 @@
 <updates>
     <update>
         <table>tbl_liftclub_details</table>
+        <version>0.21</version>
+        <description>Added the safety and privacy terms field</description>
+        <data>
+        	<add>
+    			    <name>safetyterms</name>
+		    	    <type>text</type>
+    			    <length>2</length>
+			      </add>
+		      </data>
+	  </update>
+    <update>
+        <table>tbl_liftclub_details</table>
         <version>0.15</version>
         <description>Added a field for user need</description>
         <data>

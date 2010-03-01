@@ -48,23 +48,28 @@ class liftclub extends controller
 								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 
 								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
-
-								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
-								{
-									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
-									$this->eventsEnabled = TRUE;
-								} else {
-									$this->eventsEnabled = FALSE;
-								}
-
+								$actioncheck = $this->getParam('action');
+        if($this->objUser->isLoggedIn() == TRUE && $actioncheck !== 'liftclubsignout'){
+ 								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
+	 							{
+		 							$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+			 						$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+				 					$this->eventsEnabled = TRUE;
+					 			} else {
+						 			$this->eventsEnabled = FALSE;
+							 	}
+							 }	
     }
     /**
-     * Method to turn off login requirement for all actions in this module
+     * Method to turn off login requirement for certain actions
      */
-    public function requiresLogin() 
-    {
-        return FALSE;
+    public function requiresLogin($action) {
+        $requiresLogin = array ('liftclubhome','showregister', 'offeredlifts', 'findlift', 'viewlift', 'jsongetlifts','');
+        if (!in_array ( $action, $requiresLogin )) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
     /**
      * Dispatch Method
@@ -341,14 +346,21 @@ class liftclub extends controller
     protected function modifyRegistrationInitial() 
     {
         $userDetails = $this->objDBDetails->userDetails($this->objUser->userId());
-        $userneed = $userDetails[0]["userneed"];
-        $this->setSession('userneed', $userneed);
-        $needtype = $userDetails[0]["needtype"];
+        if(!empty($userDetails)){
+         $userneed = $userDetails[0]["userneed"];
+         $userDetailsId = $userDetails[0]["id"];
+         $needtype = $userDetails[0]["needtype"];
+        } else {
+         $userneed = "";
+         $userDetailsId = "";
+         $needtype = "";
+        }
+        $this->setSession('userneed', $userneed);        
         $this->setSession('needtype', $needtype);
         $this->setVar('mode', 'add');
         $this->setVar('userneed', $userneed);
         $this->setVar('needtype', $needtype);
-        $this->setVar('id',$userInfo['id']);
+        $this->setVar('id',$userDetailsId);
         return 'registrationstart_tpl.php';
    }
     /**
@@ -361,47 +373,89 @@ class liftclub extends controller
         $userDestiny = $this->objDBDestiny->userDestiny($this->objUser->userId());
         $userDetails = $this->objDBDetails->userDetails($this->objUser->userId());
         $userstring = $this->getParam('user');
-        $userneed = $userDetails[0]["needtype"];
-        $this->setSession('userneed', $userneed);
-        $needtype = $userDetails[0]["needtype"];
-        $this->setSession('needtype', $needtype);
+        if(!empty($userDetails)){
+         $userneed = $userDetails[0]["needtype"];
+         $this->setSession('userneed', $userneed);
+        }
+        if(!empty($userDetails)){
+         $needtype = $userDetails[0]["needtype"];
+         $this->setSession('needtype', $needtype);
+        }
         $this->setVar('userstring', $userstring);
         $this->setVar('mode', 'add');
         if( empty( $userneed ) )
         $userneed = $this->getParam('userneed');
         if( empty( $needtype ) )
-        $needtype = $this->getParam('needtype');        
+        $needtype = $this->getParam('needtype');
         $this->setVar('userneed', $userneed);
         $this->setVar('needtype', $needtype);
-        $this->setVar('id',$userInfo['id']);
-        $this->setVar('originid',$userOrigin[0]['id']);
-        $this->setVar('street_name',$userOrigin[0]['street']);
-        $this->setVar('suburborigin',$userOrigin[0]['suburb']);
-        $this->setVar('citytownorigin',$userOrigin[0]['city']);
-        $this->setVar('province',$userOrigin[0]['province']);
-        $this->setVar('neighbourorigin',$userOrigin[0]['neighbour']);
-        $this->setVar('destinyid',$userDestiny[0]['id']);
-        $this->setVar('destinstitution',$userDestiny[0]['institution']);
-        $this->setVar('deststreetname',$userDestiny[0]['street']);
-        $this->setVar('destsuburb',$userDestiny[0]['suburb']);
-        $this->setVar('destcity',$userDestiny[0]['city']);
-        $this->setVar('destprovince',$userDestiny[0]['province']);
-        $this->setVar('destneighbour',$userDestiny[0]['neighbour']);
-        $this->setVar('detailsid',$userDetails[0]['id']);
-        $this->setVar('tripdaterequired',$userDetails[0]['daterequired']);
-        $this->setVar('triptimes',$userDetails[0]['times']);
-        $this->setVar('tripsmoke',$userDetails[0]['smoke']);
-        $this->setVar('tripadditionalinfo',$userDetails[0]['additionalinfo']);
-        $this->setVar('tripacceptoffers',$userDetails[0]['specialoffer']);
-        $this->setVar('tripemailnotifications',$userDetails[0]['emailnotifications']);
-        $this->setVar('daymon',$userDetails[0]['monday']);
-        $this->setVar('daytues',$userDetails[0]['tuesday']);
-        $this->setVar('daywednes',$userDetails[0]['wednesday']);
-        $this->setVar('daythurs',$userDetails[0]['thursday']);
-        $this->setVar('dayfri',$userDetails[0]['friday']);
-        $this->setVar('daysatur',$userDetails[0]['saturday']);
-        $this->setVar('daysun',$userDetails[0]['sunday']);
-        $this->setVar('varydays',$userDetails[0]['daysvary']);
+        if(!empty($userDetails)){
+         $this->setVar('id',$userDetails[0]['id']);
+         $this->setVar('detailsid',$userDetails[0]['id']);
+         $this->setVar('tripdaterequired',$userDetails[0]['daterequired']);
+         $this->setVar('triptimes',$userDetails[0]['times']);
+         $this->setVar('tripsmoke',$userDetails[0]['smoke']);
+         $this->setVar('tripadditionalinfo',$userDetails[0]['additionalinfo']);
+         $this->setVar('tripacceptoffers',$userDetails[0]['specialoffer']);
+         $this->setVar('tripemailnotifications',$userDetails[0]['emailnotifications']);
+         $this->setVar('daymon',$userDetails[0]['monday']);
+         $this->setVar('daytues',$userDetails[0]['tuesday']);
+         $this->setVar('daywednes',$userDetails[0]['wednesday']);
+         $this->setVar('daythurs',$userDetails[0]['thursday']);
+         $this->setVar('dayfri',$userDetails[0]['friday']);
+         $this->setVar('daysatur',$userDetails[0]['saturday']);
+         $this->setVar('daysun',$userDetails[0]['sunday']);
+         $this->setVar('varydays',$userDetails[0]['daysvary']);         
+        } else {
+         $this->setVar('id',Null);
+         $this->setVar('detailsid',Null);
+         $this->setVar('tripdaterequired',Null);
+         $this->setVar('triptimes',Null);
+         $this->setVar('tripsmoke',Null);
+         $this->setVar('tripadditionalinfo',Null);
+         $this->setVar('tripacceptoffers',Null);
+         $this->setVar('tripemailnotifications',Null);
+         $this->setVar('daymon',Null);
+         $this->setVar('daytues',Null);
+         $this->setVar('daywednes',Null);
+         $this->setVar('daythurs',Null);
+         $this->setVar('dayfri',Null);
+         $this->setVar('daysatur',Null);
+         $this->setVar('daysun',Null);
+         $this->setVar('varydays',Null);
+        }
+        if(!empty($userOrigin)){
+         $this->setVar('originid',$userOrigin[0]['id']);
+         $this->setVar('street_name',$userOrigin[0]['street']);
+         $this->setVar('suburborigin',$userOrigin[0]['suburb']);
+         $this->setVar('citytownorigin',$userOrigin[0]['city']);
+         $this->setVar('province',$userOrigin[0]['province']);
+         $this->setVar('neighbourorigin',$userOrigin[0]['neighbour']);
+        } else {
+         $this->setVar('originid',Null);
+         $this->setVar('street_name',Null);
+         $this->setVar('suburborigin',Null);
+         $this->setVar('citytownorigin',Null);
+         $this->setVar('province',Null);
+         $this->setVar('neighbourorigin',Null);        
+        }
+        if(!empty($userDestiny)){
+         $this->setVar('destinyid',$userDestiny[0]['id']);
+         $this->setVar('destinstitution',$userDestiny[0]['institution']);
+         $this->setVar('deststreetname',$userDestiny[0]['street']);
+         $this->setVar('destsuburb',$userDestiny[0]['suburb']);
+         $this->setVar('destcity',$userDestiny[0]['city']);
+         $this->setVar('destprovince',$userDestiny[0]['province']);
+         $this->setVar('destneighbour',$userDestiny[0]['neighbour']);
+        } else {
+         $this->setVar('destinyid',Null);
+         $this->setVar('destinstitution',Null);
+         $this->setVar('deststreetname',Null);
+         $this->setVar('destsuburb',Null);
+         $this->setVar('destcity',Null);
+         $this->setVar('destprovince',Null);
+         $this->setVar('destneighbour',Null);        
+        }
         return 'modifyregistration_tpl.php';
     }
     /**
@@ -515,6 +569,7 @@ class liftclub extends controller
         $cellnumber = $this->getParam('register_cellnum');
         $staffnumber = $this->getParam('register_staffnum');
         $country = $this->getParam('country');
+        $accountstatus = 1; // Default Status Active
         // Create an array of fields that cannot be empty
         $checkFields = array(
             $captcha,
@@ -686,7 +741,8 @@ class liftclub extends controller
         $suburb2 = $this->getParam('suburb2');
         $citytown2 = $this->getParam('citytown2');
         $province2 = $this->getParam('province2'); 
-        $neighbour2 = $this->getParam('neighbour2');                       
+        $neighbour2 = $this->getParam('neighbour2');
+        $safetyterms = $this->getParam('safetyterms');
         //Trip Details
         if( empty( $userneed ) )
         $userneed = $this->getParam('userneed');
@@ -740,6 +796,10 @@ class liftclub extends controller
         );
         // Create an Array to store problems  
         $problems = array();
+        // Check for any problems with safetyterms
+        if ($safetyterms == '') {
+            $problems[] = 'nosafetyterms';
+        }
         // Check for any problems with streetname
         if ($streetname == '') {
             $problems[] = 'nostreetnameentered';
@@ -805,9 +865,9 @@ class liftclub extends controller
             }else{
              $details = $this->objDBDetails->updateSingle($detailsid, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
             }
-            $this->setSession('id', $pkid);
+            $this->setSession('id', $this->objUser->PKId($this->objUser->userId()));
             //$this->setSession('password', $password);
-            $this->setSession('time', $password);
+            //$this->setSession('time', $password);
 							   //add to activity log
 			       if($this->eventsEnabled) {
 			           $username = $this->objUser->username();
@@ -934,6 +994,8 @@ class liftclub extends controller
                 return 'No password was entered';
             case 'norepeatpasswordentered':
                 return 'No Repeat password was entered';
+            case 'nosafetyterms':
+                return 'Safety and Privacy Terms were not selected. Kindly read the Phrase Safety and Privacy Terms and accept by checking the required field if you agree';
             case 'nostreetnameentered':
                 return 'No Street name was entered for (Home or Trip Origin)';            
             case 'nosuburbentered':

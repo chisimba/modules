@@ -68,6 +68,10 @@ $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
 
 echo '<p>'.$str.'<br />';
 echo $this->objLanguage->languageText('mod_liftclub_pleaseenterdetails', 'liftclub', 'Please enter your details, email address and desired user name in the form below.').'</p>';
+$id = $this->getParam('id');
+$originid = $this->getParam('originid');
+$destinyid = $this->getParam('destinyid');
+$detailsid = $this->getParam('detailsid');
 $needtype = $this->getParam('needtype');
 $userneed = $this->getParam('userneed'); 
 $form = new form ('register', $this->uri(array('action'=>'updateregister', 'id'=>$id, 'originid'=>$originid, 'destinyid'=>$destinyid, 'detailsid'=>$detailsid, 'userneed'=>$userneed, 'needtype'=>$needtype)));
@@ -81,13 +85,15 @@ $table->startRow();
 $streetname = new textinput('street_name');
 $streetname->extra = "maxlength=350";
 $streetnameLabel = new label($this->objLanguage->languageText('mod_liftclub_streetname', 'liftclub', "Street Name").'&nbsp;', 'input_street_name');
-$streetname->value = $street_name;
+
 if ($mode == 'addfixup') {
     $streetname->value = $this->getParam('street_name');
 
     if ($this->getParam('street_name') == '') {
         $messages[] = $this->objLanguage->languageText('enterstreetname', 'system', 'Please enter Street Name');
     }
+}else{
+ $streetname->value = $street_name;
 }
 
 $table->addCell($streetnameLabel->show(), 150, NULL, 'right');
@@ -99,13 +105,14 @@ $table->startRow();
 $suburb = new textinput('suburb');
 $suburb->extra = "maxlength=350";
 $suburbLabel = new label($this->objLanguage->languageText('mod_liftclub_suburb', 'liftclub', "Suburb").'&nbsp;', 'input_suburb');
-$suburb->value = $suburborigin;
 if ($mode == 'addfixup') {
     $suburb->value = $this->getParam('suburb');
 
     if ($this->getParam('suburb') == '') {
         $messages[] = $this->objLanguage->languageText('entersuburb', 'system', 'Please enter Suburb');
     }
+} else {
+ $suburb->value = $suburborigin;
 }
 
 $table->addCell($suburbLabel->show(), 150, NULL, 'right');
@@ -122,11 +129,6 @@ $citytowna = new textinput('citytowna');
 $citytowna->size = 41;
 $citytowna->extra = 'disabled = "true"';
 $citytownLabel = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub', "City/Town").'&nbsp;', 'input_citytownb');
-if($citytownorigin!==null){
-$townname = $this->objDBCities->listSingle($citytownorigin);
-$citytown->value = $citytownorigin;
-$citytowna->value = $townname[0]["city"];
-}
 if ($mode == 'addfixup') {
     $citytown->value = $this->getParam('citytown');
     $townname = $this->objDBCities->listSingle($this->getParam('citytown'));
@@ -134,7 +136,12 @@ if ($mode == 'addfixup') {
     if ($this->getParam('citytown') == '' || strlen($this->getParam('citytown')) < 1) {
         $messages[] = $this->objLanguage->languageText('entercitytown', 'system', 'Please enter City/Town');
     }
+} elseif ($citytownorigin!==null) {
+$townname = $this->objDBCities->listSingle($citytownorigin);
+$citytown->value = $citytownorigin;
+$citytowna->value = $townname[0]["city"];
 }
+
 
 $table->addCell($citytownLabel->show(), 150, 'top', 'right');
 $table->addCell('&nbsp;', 5);
@@ -149,12 +156,10 @@ foreach ($provinces as $myprovince)
     $_province=trim($this->objLanguage->languageText($myprovince, 'liftclub'));
     $provinceDropdown->addOption($_province,$_province);
 }
-if($province !== null)
-$provinceDropdown->setSelected($province);
 if ($mode == 'addfixup') {
     $provinceDropdown->setSelected($this->getParam('province'));
 }else{
- if($province == null)
+ if($province !== null)
   $provinceDropdown->setSelected($province);
 }
 $table->startRow();
@@ -167,9 +172,10 @@ $table->startRow();
 $neighbour = new textinput('neighbour');
 $neighbour->extra = "maxlength=350";
 $neighbourLabel = new label($this->objLanguage->languageText('mod_liftclub_neighbour', 'liftclub', "Neighbour").'&nbsp;', 'input_neighbour');
-$neighbour->value = $neighbourorigin;
 if ($mode == 'addfixup') {
     $neighbour->value = $this->getParam('neighbour');
+} else {
+ $neighbour->value = $neighbourorigin;
 }
 
 $table->addCell($neighbourLabel->show(), 150, NULL, 'right');
@@ -190,9 +196,11 @@ $table->startRow();
 $institution = new textinput('institution');
 $institution->extra = "maxlength=350";
 $institutionLabel = new label($this->objLanguage->languageText("mod_liftclub_institution", "liftclub", "Institution").'&nbsp;:', 'input_institution');
-$institution->value = $destinstitution;
+
 if ($mode == 'addfixup') {
-    $institution->value = $this->getParam('institution');
+ $institution->value = $this->getParam('institution');
+} else {
+ $institution->value = $destinstitution;
 }
 
 $table->addCell($institutionLabel->show(), 150, NULL, 'right');
@@ -204,13 +212,14 @@ $table->startRow();
 $streetname2 = new textinput('street_name2');
 $streetname2->extra = "maxlength=350";
 $streetnameLabel2 = new label($this->objLanguage->languageText('mod_liftclub_streetname', 'liftclub', "Street Name").'&nbsp;', 'input_street_name2');
-$streetname2->value = $deststreetname;
 if ($mode == 'addfixup') {
     $streetname2->value = $this->getParam('street_name2');
 
     if ($this->getParam('street_name2') == '') {
         $messages[] = $this->objLanguage->languageText('enterstreetname', 'system', 'Please enter Street Name');
     }
+} else {
+ $streetname2->value = $deststreetname;
 }
 
 $table->addCell($streetnameLabel2->show(), 150, NULL, 'right');
@@ -222,13 +231,14 @@ $table->startRow();
 $suburb2 = new textinput('suburb2');
 $suburb2->extra = "maxlength=350";
 $suburbLabel2 = new label($this->objLanguage->languageText('mod_liftclub_suburb', 'liftclub', "Suburb").'&nbsp;', 'input_suburb2');
-$suburb2->value = $destsuburb;
 if ($mode == 'addfixup') {
     $suburb2->value = $this->getParam('suburb2');
 
     if ($this->getParam('suburb2') == '') {
         $messages[] = $this->objLanguage->languageText('entersuburb', 'system', 'Please enter Suburb');
     }
+} else {
+ $suburb2->value = $destsuburb;
 }
 
 $table->addCell($suburbLabel2->show(), 150, NULL, 'right');
@@ -246,11 +256,6 @@ $citytown2b = new textinput('citytown2b');
 $citytown2b->size = 40;
 $citytown2b->extra = 'maxlength=350';
 $citytownLabel2 = new label($this->objLanguage->languageText('mod_liftclub_citytown', 'liftclub', "City/Town").'&nbsp;', 'input_citytown2a');
-if($destcity !== null){
-    $citytown2->value = $destcity;
-    $townname2 = $this->objDBCities->listSingle($destcity);
-    $citytown2a->value = $townname2[0]["city"];
-}
 if ($mode == 'addfixup') {
     $citytown2->value = $this->getParam('citytown2');
     $townname2 = $this->objDBCities->listSingle($this->getParam('citytown2'));
@@ -258,6 +263,10 @@ if ($mode == 'addfixup') {
     if ($this->getParam('citytown2') == '') {
         $messages[] = $this->objLanguage->languageText('entercitytown', 'system', 'Please enter City/Town');
     }
+} elseif($destcity !== null){
+    $citytown2->value = $destcity;
+    $townname2 = $this->objDBCities->listSingle($destcity);
+    $citytown2a->value = $townname2[0]["city"];
 }
 
 $table->addCell($citytownLabel2->show(), 150, 'top', 'right');
@@ -273,9 +282,10 @@ foreach ($provinces as $myprovince)
     $_province=trim($this->objLanguage->languageText($myprovince, 'liftclub'));
     $provinceDropdown2->addOption($_province,$_province);
 }
-$provinceDropdown2->setSelected($destprovince);
 if ($mode == 'addfixup') {
     $provinceDropdown2->setSelected($this->getParam('province2'));
+} else {
+ $provinceDropdown2->setSelected($destprovince);
 }
 $table->startRow();
 $table->addCell($provinceLabel2->show(), 150, NULL, 'right');
@@ -287,9 +297,10 @@ $table->startRow();
 $neighbour2 = new textinput('neighbour2');
 $neighbour2->extra = "maxlength=350";
 $neighbourLabel2 = new label($this->objLanguage->languageText('mod_liftclub_neighbour', 'liftclub',"Neighbour").'&nbsp;', 'input_neighbour2');
-$neighbour2->value = $destneighbour;
 if ($mode == 'addfixup') {
     $neighbour2->value = $this->getParam('neighbour2');
+} else {
+ $neighbour2->value = $destneighbour;
 }
 
 $table->addCell($neighbourLabel2->show(), 150, NULL, 'right');
@@ -357,11 +368,10 @@ if($userneed=='Trip'){
 	$traveltimesLabel = new label($this->objLanguage->languageText('mod_liftclub_traveltimes', 'liftclub', "Travel Times").'&nbsp;', 'input_traveltimes');
  //$traveltimes->value = $triptimes;
 	if ($mode == 'addfixup') {
-		   $traveltimes->value = $this->getParam('traveltimes');
-
-		   if ($this->getParam('traveltimes') == '') {
-		       $messages[] = $this->objLanguage->languageText('entertraveltimes', 'liftclub', 'Please Specify the Travel Times');
-		   }
+	  $hval = $this->getParam('hour');
+	  $mval = $this->getParam('minute');
+	  $pval = $this->getParam('pm');
+  	$hourMin = $this->objLiftSearch->hourmin($hval, $mval, $pval);
 	}
 
 	$table->addCell($traveltimesLabel->show(), 150, NULL, 'right');
@@ -527,9 +537,11 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $additionalinfo = new textarea('additionalinfo');
 $additionalinfoLabel = new label($this->objLanguage->languageText('mod_liftclub_additionalinfo', 'liftclub', "Additional Information").'&nbsp;', 'input_additionalinfo');
-$additionalinfo->value = $tripadditionalinfo;
+
 if ($mode == 'addfixup') {
-    $additionalinfo->value = $this->getParam('additionalinfo');
+ $additionalinfo->value = $this->getParam('additionalinfo');
+} else {
+ $additionalinfo->value = $tripadditionalinfo;
 }
 
 $table->addCell($additionalinfoLabel->show(), 150, "top", 'right');
@@ -590,6 +602,29 @@ $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
+//Add additional Information
+$table = $this->newObject('htmltable', 'htmlelements');
+$safetyprivterms = new checkbox('safetyterms',Null,false);
+if ($mode == 'addfixup') {
+    $safetyprivterms->value = $this->getParam('safetyterms');
+
+    if ($this->getParam('safetyterms') == '') {
+        $messages[] = $this->objLanguage->languageText('entersafetyprivterms', 'system', 'Kindly read the Phrase Safety and Privacy Terms and accept by checking the required field if you agree');
+    }
+}
+$table->startRow();
+$table->addCell('&nbsp;&nbsp;&nbsp;'.$this->objLanguage->languageText('mod_liftclub_iread', 'liftclub', 'I have read and agree with your').'&nbsp;'.$this->objLanguage->languageText('mod_liftclub_safeprivterms', 'liftclub', 'Safety and Privacy Terms').'&nbsp;'.$this->objLanguage->languageText('mod_liftclub_ofuse', 'liftclub', 'of use agreement').'&nbsp;'.$safetyprivterms->show().$required, 150, Null, 'left',Null,'colspan=2');
+//$table->addCell('&nbsp;', 5);
+//$table->addCell($safetyprivterms->show().$required,"","bottom");
+$table->endRow();
+
+$fieldset = $this->newObject('fieldset', 'htmlelements');
+$fieldset->legend = $this->objLanguage->languageText('mod_liftclub_safeprivterms', 'liftclub', 'Safety and Privacy Terms');
+$fieldset->contents = $table->show();
+
+$form->addToForm($fieldset->show());
+$form->addToForm('<br />');
+
 //Add form captcha
 $objCaptcha = $this->getObject('captcha', 'utilities');
 $captcha = new textinput('request_captcha');

@@ -63,8 +63,9 @@ class dbLiftclub_details extends dbTable
      * @param string $friday friday
      * @param string $saturday saturday
      * @param string $sunday sunday
+     * @param string $safetyterms the safety and privacy terms field
      */
-    function insertSingle($userid, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday)
+    function insertSingle($userid, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms)
     {
         $id = $this->insert(array(
             'times' => $times,
@@ -84,7 +85,9 @@ class dbLiftclub_details extends dbTable
             'thursday' => $thursday,
             'friday' => $friday,
             'saturday' => $saturday,
-            'sunday' => $sunday
+            'sunday' => $sunday,
+            'safetyterms' => $safetyterms
+            
          ));
         return $id;
     }
@@ -103,8 +106,9 @@ class dbLiftclub_details extends dbTable
      * @param string $friday friday
      * @param string $saturday saturday
      * @param string $sunday sunday
+     * @param string $safetyterms the safety and privacy terms field
      */
-    function updateSingle($id, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday)
+    function updateSingle($id, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms)
     {
         $this->update("id", $id, array(
             'times' => $times,
@@ -123,7 +127,8 @@ class dbLiftclub_details extends dbTable
             'thursday' => $thursday,
             'friday' => $friday,
             'saturday' => $saturday,
-            'sunday' => $sunday
+            'sunday' => $sunday,
+            'safetyterms' => $safetyterms
         ));
     }
     /**

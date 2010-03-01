@@ -182,19 +182,19 @@ $table->addCell($surnameLabel->show(), 150, NULL, 'right');
 $table->addCell($surname->show().$required);
 $table->endRow();
 
-$staffnum = new textinput('register_staffnum');
+$staffnum = new textinput('register_staffnum','','hidden');
 $staffnumLabel = new label($this->objLanguage->languageText('phrase_staffstudnumber', 'liftclub', 'Staff / Student number').'&nbsp;', 'input_register_staffnum');
 $staffnumguestLabel = new label($this->objLanguage->languageText('mod_liftclub_ifguestleaveblank', 'liftclub', 'If you are a guest, please leave this blank'), 'input_register_staffnum');
 $staffnum->value = $register_staffnum;
 if ($mode == 'addfixup') {
     $staffnum->value = $this->getParam('register_staffnum');
 }
-
+/*
 $table->startRow();
 $table->addCell($staffnumLabel->show(), 150, NULL, 'right');
 $table->addCell($staffnum->show().' <em>'.$staffnumguestLabel->show().'</em>');
 $table->endRow();
-
+*/
 $cellnum = new textinput('register_cellnum');
 $cellnumLabel = new label($this->objLanguage->languageText('phrase_cellnumber', 'liftclub', 'Cell Number').'&nbsp;', 'input_register_cellnum');
 $cellnum->value = $register_cellnum;
@@ -204,7 +204,7 @@ if ($mode == 'addfixup') {
 
 $table->startRow();
 $table->addCell($cellnumLabel->show(), 150, NULL, 'right');
-$table->addCell($cellnum->show());
+$table->addCell($cellnum->show().$staffnum->show());
 $table->endRow();
 
 $sexRadio = new radio ('register_sex');

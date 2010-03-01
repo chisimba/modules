@@ -109,8 +109,8 @@ class block_liftclubmenu extends object
 							$registerLink->title = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 
 							$modifyLink =new link($this->uri(array('action'=>'startregister')));
-							$modifyLink->link = $this->objLanguage->languageText("mod_liftclub_tripinfo","liftclub","Add/Modify Trip Info");
-							$modifyLink->title = $this->objLanguage->languageText("mod_liftclub_tripinfo","liftclub","Add/Modify Trip Info");
+							$modifyLink->link = $this->objLanguage->languageText("mod_liftclub_addmodify","liftclub","Add/Modify Lift");
+							$modifyLink->title = $this->objLanguage->languageText("mod_liftclub_addmodify","liftclub","Add/Modify Lift");
 
 							$userDetailsLink =new link($this->uri(array('action'=>'modifyuserdetails')));
 							$userDetailsLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
@@ -118,12 +118,12 @@ class block_liftclubmenu extends object
 
 
 							$findLink =new link($this->uri(array('action'=>'findlift')));
-							$findLink->link = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
-							$findLink->title = $this->objLanguage->languageText("mod_liftclub_liftneeded","liftclub","Lifts Needed");
+							$findLink->link = $this->objLanguage->languageText("mod_liftclub_viewneeded","liftclub","View Needed Lifts");
+							$findLink->title = $this->objLanguage->languageText("mod_liftclub_viewneeded","liftclub","View Needed Lifts");
 
 							$offerLink =new link($this->uri(array('action'=>'offeredlifts')));
-							$offerLink->link = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
-							$offerLink->title = $this->objLanguage->languageText("mod_liftclub_liftonoffer","liftclub","Lifts On Offer");
+							$offerLink->link = $this->objLanguage->languageText("mod_liftclub_viewavailable","liftclub","View Available Lifts");
+							$offerLink->title = $this->objLanguage->languageText("mod_liftclub_viewavailable","liftclub","View Available Lifts");
 
 							$favLink =new link($this->uri(array('action'=>'myfavourites')));
 							$favLink->link = $this->objLanguage->languageText("mod_liftclub_myfavourites","liftclub","My Favourites");

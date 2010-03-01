@@ -80,6 +80,10 @@ $fields = array(
 	'sunday' => array(
 		'type' => 'text',
 		'length' => 2,
+		),
+	'safetyterms' => array(
+		'type' => 'text',
+		'length' => 2,
 		)
 	);
 ?>
