@@ -117,7 +117,7 @@ $objIcon->setIcon('select_date');
 $objIcon->title = $this->objLanguage->languageText('mod_gradebook_selectDate','gradebook');
 $url = 0;
 
-$this->objpopcal->show('closingDate','yes','no',$objClosingDate);
+$this->TableOptions->addCell($this->objpopcal->show('closingDate','yes','no',$objClosingDate->value));
 $this->TableOptions->endRow(); 
 //$url = $this->uri(array('action'=>'', 'field'=>'document.upload.closingDate', 'fieldvalue'=>date('Y-m-d H:m')), 'popupcalendar');
 /*$onclick = 0;
