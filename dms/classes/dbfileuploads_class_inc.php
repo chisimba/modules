@@ -102,6 +102,12 @@ class dbfileuploads extends dbtable {
         return $data;
     }
 
+    function deleteNAFile($filepath,$filename){
+        $sql=
+        "delete from tbl_dms_fileuploads where filename ='$filename' and filepath='$filepath'";
+        $this->getArray($sql);
+
+    }
     function searchfiles($filter) {
         $objUserutils=$this->getObject('userutils');
         $sql="select * from tbl_dms_fileuploads where filename like '%$filter%'";

@@ -44,21 +44,25 @@ class dbdocuments extends dbtable {
             //$sql.=" and userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
-        $owner=$this->userutils->getUserId();
+
         $rows=$this->getArray($sql);
         $docs=array();
 
         foreach ($rows as $row) {
+            //$owner=$this->userutils->getUserId();
+            $owner=$this->objUser->fullname($row['userid']);
             $docs[]=array(
                     'userid'=> $row['userid'],
                     'owner'=>$owner,
                     'refno'=> $row['refno'],
                     'title'=> $row['docname'],
+                    'group'=> $row['groupid'],
                     'docid'=> $row['id'],
                     'topic'=> $row['topic'],
                     'department'=> $row['department'],
                     'telephone'=> $row['telephone'],
                     'date'=> $row['date_created'],
+                    'attachmentstatus'=> $row['upload']
             );
         }
         echo json_encode(array("documents"=>$docs));
@@ -105,6 +109,7 @@ class dbdocuments extends dbtable {
         return $id;
     }
 
+
     /**
      * sets active to Y to docs with supplied id
      * @param <type> $docids
@@ -149,6 +154,28 @@ class dbdocuments extends dbtable {
             }else {
                 rename($filename,$newname);
             }
+        }
+    }
+
+    /**
+     * sets active to Y to docs with supplied id
+     * @param <type> $docids
+     */
+    function deleteDocs($docids) {
+
+        $ids=explode(",", $docids);
+        $ext='.na';
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'dms');
+        foreach ($ids as $id) {
+
+            $doc=$this->getDocument($id);
+
+            //$filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].$ext;
+            //$filename= str_replace("//", "/", $filename);
+            $filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].'.'.$doc['ext'];
+            $filename= str_replace("//", "/", $newname);
+            //unlink($filename);
+            $this->delete('id',$id);
         }
     }
     /**

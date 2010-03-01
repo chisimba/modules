@@ -290,6 +290,7 @@ class userutils extends object {
                             'id'=>$node.'/'.$f,
                             'docid'=>$file['docid'],
                             'refno'=>$file['id'],
+                            'group'=>$file['groupid'],
                             'owner'=>$this->objUser->fullname($file['userid']),
                             'lastmod'=>$lastmod,
                             'filesize'=>$size,
