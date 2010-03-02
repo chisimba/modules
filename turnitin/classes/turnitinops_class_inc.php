@@ -191,39 +191,72 @@ class turnitinops extends object
 	 * @return string
 	 */
 	public function getParams(){
-		$url = "gmtime=".$this->gmtime;
+		/*$url = "gmtime=".$this->gmtime;
 		$url .= "&fid=".$this->fid;
 		$url .= "&fcmd=".$this->fcmd;
 		$url .= "&encrypt=".$this->encrypt;
 		$url .= "&md5=".$this->getMD5();
 		$url .= "&aid=".$this->aid;
-		$url .= "&said=".$this->said;
-		$url .= "&diagnostic=".$this->diagnostic;
-		$url .= "&uem=".urlencode($this->uem);
-		$url .= "&upw=".urlencode($this->upw);
-		$url .= "&ufn=".urlencode($this->ufn);
-		$url .= "&uln=".urlencode($this->uln);
-		$url .= "&utp=".$this->utp;
-		$url .= "&ctl=".urlencode($this->ctl);
-		$url .= "&cpw=".urlencode($this->cpw);
-		$url .= "&tem=".$this->tem;
-		$url .= "&oid=".$this->oid;
-		$url .= "&newupw=".urlencode($this->newupw);
-		$url .= "&assign=".urlencode($this->assign);
-		$url .= "&dis=".$this->dis;
-		$url .= "&uid=".urlencode($this->uid);
-		$url .= "&cid=".urlencode($this->cid);
-		$url .= "&idsync=".urlencode($this->idsync);
-		$url .= "&assignid=".urlencode($this->assignid);
-		$url .= "&dtstart=".urlencode($this->dtstart);
-		$url .= "&dtdue=".urlencode($this->dtdue);
-		$url .= "&ptl=".urlencode($this->ptl);
-		$url .= "&s_view_report=".urlencode($this->s_view_report);
-		$url .= "&ptype=".urlencode($this->ptype);
-		$url .= "&pdata=".urlencode($this->pdata);
-		if($this->sessionid){
-		 // $url .= "&session-id=".urlencode($this->sessionid);
-		}
+		$url .= ($this->said) ? "&said=".urlencode($this->said) : "";
+		$url .= ($this->diagnostic) ? "&diagnostic=".urlencode($this->diagnostic) : "";
+		$url .= ($this->uem) ? "&uem=".urlencode($this->uem) : "";
+		$url .= ($this->upw) ? "&upw=".urlencode($this->upw) : "";
+		$url .= ($this->ufn) ? "&ufn=".urlencode($this->ufn) : "";
+		$url .= ($this->uln) ? "&uln=".urlencode($this->uln) : "";
+		$url .= ($this->utp) ? "&utp=".urlencode($this->utp) : "";
+		$url .= ($this->ctl) ? "&ctl=".urlencode($this->ctl) : "";
+		$url .= ($this->cpw) ? "&cpw=".urlencode($this->cpw) : "";
+		$url .= ($this->tem) ? "&tem=".urlencode($this->tem) : "";
+		$url .= ($this->oid) ? "&oid=".urlencode($this-oid) : "";
+		$url .= ($this->newupw) ? "&newupw=".urlencode($this->newupw) : "";
+		$url .= ($this->assign) ? "&assign=".urlencode($this->assign) : "";
+		$url .= ($this->dis) ? "&dis=".urlencode($this->dis) : $this->dis;
+		$url .= ($this->uid) ? "&uid=".urlencode($this->uid) : "";
+		$url .= ($this->cid) ? "&cid=".urlencode($this->cid) : "";
+		$url .= ($this->idsync) ? "&idsync=".urlencode($this->idsync) : "";
+		$url .= ($this->assignid) ? "&assignid=".urlencode($this->assignid) : "";
+		$url .= ($this->dtstart) ? "&dtstart=".urlencode($this->dtstart) : "";
+		$url .= ($this->dtdue) ? "&dtdue=".urlencode($this->dtdue) : "";
+		$url .= ($this->ptl) ? "&ptl=".urlencode($this->ptl) : "";
+		$url .= ($this->s_view_report) ? "&s_view_report=".urlencode($this->s_view_report) : "";
+		$url .= ($this->ptype) ? "&ptype=".urlencode($this->ptype) : "";
+		$url .= ($this->pdata) ? "&pdata=".urlencode($this->pdata) : "";
+		$url .= ($this->sessionid) ? "&session-id=".urlencode($this->sessionid) : "";
+		*/
+		
+		$url = "gmtime=".$this->gmtime;
+        $url .= "&fid=".$this->fid;
+        $url .= "&fcmd=".$this->fcmd;
+        $url .= "&encrypt=".$this->encrypt;
+        $url .= "&md5=".$this->getMD5();
+        $url .= "&aid=".$this->aid;
+        $url .= "&said=".$this->said;
+        $url .= "&diagnostic=".$this->diagnostic;
+        $url .= "&uem=".urlencode($this->uem);
+        $url .= "&upw=".urlencode($this->upw);
+        $url .= "&ufn=".urlencode($this->ufn);
+        $url .= "&uln=".urlencode($this->uln);
+        $url .= "&utp=".$this->utp;
+        $url .= "&ctl=".urlencode($this->ctl);
+        $url .= "&cpw=".urlencode($this->cpw);
+        $url .= "&tem=".$this->tem;
+        $url .= "&oid=".$this->oid;
+        $url .= "&newupw=".urlencode($this->newupw);
+        $url .= "&assign=".urlencode($this->assign);
+        $url .= "&dis=".$this->dis;
+        $url .= "&uid=".urlencode($this->uid);
+        $url .= "&cid=".urlencode($this->cid);
+        $url .= "&idsync=".urlencode($this->idsync);
+        $url .= "&assignid=".urlencode($this->assignid);
+        $url .= "&dtstart=".urlencode($this->dtstart);
+        $url .= "&dtdue=".urlencode($this->dtdue);
+	    $url .= "&ptl=".urlencode($this->ptl);
+        $url .= "&s_view_report=".urlencode($this->s_view_report);
+	    $url .= "&ptype=".urlencode($this->ptype);
+        $url .= "&pdata=".urlencode($this->pdata);
+	    if($this->sessionid){
+	          $url .= "&session-id=".urlencode($this->sessionid);
+        }
 		
 		error_log($url);
 		return $url;
@@ -379,14 +412,33 @@ class turnitinops extends object
     	$this->fcmd = 2;
     	$this->utp = $type;
     	
-    	$this->upw = $params['password'];    	
+    	$this->newupw = 'nitsckie';//$params['password'];    	
     	$this->uid = $params['username'];    	
     	$this->ufn = $params['firstname'];
     	$this->uln = $params['lastname'];
-    	$this->uem = $params['email'];    	
+    	$this->uem = $params['email']; 
+    	$this->upw = 'i23456';
     	
     	//$this->diagnostic = 1;
+    	//print $this->getParams();die;
     	return $this->doPost();
+    }
+    
+    function changePassword($params)
+    {
+        $this->fid = 9;
+    	$this->fcmd = 2;
+    	$this->utp = 2;
+    	
+    	$this->npw = 'nitsckie';//$params['password'];    	
+    	$this->newupw = 'nitsckie';//$params['password'];    	
+    	$this->upw = '123456';//$params['password'];    	
+    	$this->uid = $params['username'];    	
+    	$this->ufn = $params['firstname'];
+    	$this->uln = $params['lastname'];
+    	$this->uem = $params['email']; 
+        
+        return $this->doPost();    
     }
     
     /**
@@ -554,12 +606,12 @@ class turnitinops extends object
     	$this->assign = $params['assignmenttitle'];
     	$this->tem = $params['instructoremail'];
     	$this->ctl = $params['classtitle'];
-    	$this->cid = null;
+    	//$this->cid = null;
     	$this->ufn = $params['firstname'];
     	$this->uln = $params['lastname'];
     	$this->uem = $params['email'];
     	$this->upw = $params['password'];
-    	$this->sessionid = $params['sessionid'];
+    	//$this->sessionid = $params['sessionid'];
     	
     	
     	$this->diagnostic = 0;
@@ -567,6 +619,7 @@ class turnitinops extends object
     	//var_dump($params);
     	//var_dump($this->ctl);die;
     	error_log("going to redirect to TII now...");
+    	//print $this->getParams();
     	//var_dump($params);die;
     	$this->doGet();
     }
@@ -683,7 +736,7 @@ class turnitinops extends object
     	$this->uem = $params['email'];
     	$this->upw = "";//$params['password'];
     	//$this->userid = 18882189;
-    	$this->sessionid = "7de114699da17b7df28605e403c7f275";
+    	//$this->sessionid = "7de114699da17b7df28605e403c7f275";
     	
     	$this->log('logSession', $params['firstname']. ' '. $params['lastname']);
     	

@@ -202,7 +202,7 @@ Ext.onReady(function(){
 
     		});*/
     	}else {
-    	//dont forget to change the object id 
+    	
         	return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseUri+'?module=turnitin&action=returnreport&objectid={2}\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>', 
         	value, record.data.contextcode, record.data.objectid);
     	}

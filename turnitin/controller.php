@@ -124,12 +124,16 @@ class turnitin extends controller
 			case 'sub':			    
 			     $sessionid = $this->objUtils->getUserSession();
 			     if(!$sessionid==false){
-				    print $this->objTOps->redirectSubmit(array_merge(
+			         $ar = array_merge(
 				                                        array('sessionid' => $sessionid),
 														$this->objUtils->getUserParams(), 
 														$this->objUtils->getClassParams(),  
 														$this->objUtils->getAssessmentParams(),
-														$this->objUtils->getSubmissionInfo()));
+														$this->objUtils->getSubmissionInfo());
+					error_log($ar);
+					//var_dump($ar);
+					//die;
+				    print $this->objTOps->redirectSubmit($ar);
 			     } else {
 			         print "FAILED to get the session id";
 			     }

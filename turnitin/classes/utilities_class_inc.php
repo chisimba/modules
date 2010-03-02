@@ -184,7 +184,8 @@ class utilities extends object
 	 */
 	public function userTemplate()
 	{	   
-	    
+	    //$res = $this->objTOps->changePassword($this->getUserParams());
+			//var_dump($res);die;
 	    
 	    
 		//return "lectmain_tpl.php";
@@ -195,6 +196,7 @@ class utilities extends object
 		    
 			//create user on TII if he does not exist
 			$res = $this->objTOps->createLecturer($this->getUserParams());
+			//var_dump($res);die;
 			//take the userid that TII returned and save it to the database
 			
 			//create the course on TII if it does not exist and 
@@ -560,7 +562,7 @@ class utilities extends object
 											array('assignmenttitle' => $assRec['title'], 'instructoremail' => $assRec['instructoremail'])
 											));
 		
-		
+		error_log(var_export($check, true));
 		//check if the user has submitted an assessment
 		if ($check['xmlobject']->objectID != 0)
 		{			
