@@ -95,10 +95,11 @@ class youtube extends controller
     */
     private function __view()
     {
-        $apiXml = $this->objYouTube->show($this->objYouTube->setupCall());
+        /*$apiXml = $this->objYouTube->show($this->objYouTube->setupCall());
         $vw = $this->getObject('youtubetpl','youtube');
         $str = $vw->showVideos($apiXml);
-        unset($apiXml);
+        unset($apiXml);*/
+        $str = "This module has no end user functionality. You should not be able to access this module from any menu item. Please ask your system administrator to remove it from the menu if you came by it via menu entry.";
         $this->setVarByRef('str', $str);
         return "view_tpl.php";
     }
