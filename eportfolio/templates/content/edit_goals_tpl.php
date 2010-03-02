@@ -186,7 +186,7 @@ $objCancel->link($this->uri(array(
     'action' => 'view_goals'
 )));
 //$objCancel->link = $buttonCancel->show();
-$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome","eportfolio");
+$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager") . " " . $objLanguage->languageText("mod_eportfolio_eportfoliohome", "eportfolio");
 $linkCancel = $objCancel->show();
 $row = array(
     $button->show()

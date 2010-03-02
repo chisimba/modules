@@ -103,7 +103,6 @@ $objTable->addCell($row[0], 140, 'bottom', 'right');
 $strtdate = &$this->getObject('datepicker', 'htmlelements');
 $strtdate->setName('start');
 $strtdate->setDateFormat("YYYY-MM-DD");
-
 $row = array(
     $strtdate->show()
 );
@@ -171,7 +170,7 @@ $objCancel->link($this->uri(array(
     'action' => 'view_affiliation'
 )));
 //$objCancel->link = $buttonCancel->show();
-$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome","eportfolio");
+$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager") . " " . $objLanguage->languageText("mod_eportfolio_eportfoliohome", "eportfolio");
 $linkCancel = $objCancel->show();
 $row = array(
     $button->show()

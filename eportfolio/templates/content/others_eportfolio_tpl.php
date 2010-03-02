@@ -920,7 +920,6 @@ $this->objTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordDemographics", 'eportfolio') ,
     'content' => $demographicsLabel
 ));
-
 //Information tab
 $this->objmainTab->init();
 $this->objmainTab->tabId = FALSE;

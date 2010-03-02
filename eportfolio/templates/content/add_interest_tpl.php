@@ -60,7 +60,6 @@ $objTable->addCell($row[0], 140, 'bottom', 'right');
 $strtdate = &$this->getObject('datepicker', 'htmlelements');
 $strtdate->setName('creation_date');
 $strtdate->setDateFormat("YYYY-MM-DD");
-
 $form->addRule('creation_date', 'Please enter the creation date', 'required');
 $row = array(
     $strtdate->show()
@@ -109,7 +108,7 @@ $objCancel->link($this->uri(array(
     'action' => 'view_interest'
 )));
 //$objCancel->link = $buttonCancel->show();
-$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome","eportfolio");
+$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager") . " " . $objLanguage->languageText("mod_eportfolio_eportfoliohome", "eportfolio");
 $linkCancel = $objCancel->show();
 $row = array(
     $button->show()

@@ -209,21 +209,20 @@ class viewassessments_Eportfolio extends object
         $tableHd[] = "<b>" . $submithead . "</b>";
         $tableHd[] = "<b>" . $markhead . "</b>";
         $tableHd[] = "<b>" . $essayComment . "</b>";
-/*
+        /*
         $objTable->row_attributes = 'height="5"';
         $objTable->cellspacing = 1;
         $objTable->cellpadding = 1;
-*/
-        $objTable->addHeader($tableHd, 'Heading',$row_attributes = 'bgcolor="#D3D3D3"');
+        */
+        $objTable->addHeader($tableHd, 'Heading', $row_attributes = 'bgcolor="#D3D3D3"');
         $objTable->row_attributes = 'height="5"';
         /********************* display data *************************/
         $i = 0;
         $bgcolor = "#FFFFFF";
-
         foreach($data as $item) {
             $class = ($i++%2) ? 'even' : 'odd';
             $bgcolor = ($i++%2) ? "#D3D3D3" : "#FFFFFF";
-												$i = $i + 1;
+            $i = $i+1;
             if ($item['mark'] == 'submit') {
                 // if essay hasn't been submitted: display submit icon
                 // check if closing date has passed
@@ -262,7 +261,6 @@ class viewassessments_Eportfolio extends object
                 // get comment form booking details
                 $comment = $this->dbbook->getBooking("where id='" . $item['id'] . "'", 'comment');
                 $notes = $comment[0]['comment'];
-
                 //$observersEmailPopup=$objPopup->show();
                 //       $this->objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay']))."', "essaycomment", "width=400", "height=200", "scrollbars=1")\" ";
                 //$this->objIcon->title=$commenthead;
@@ -274,28 +272,27 @@ class viewassessments_Eportfolio extends object
                 $mark = '';
                 $load = $lblSubmitted;
             }
-
             $objTable->startRow();
-            $objTable->addCell($item['name'], '', '', '', $class, "bgcolor='".$bgcolor."'");
+            $objTable->addCell($item['name'], '', '', '', $class, "bgcolor='" . $bgcolor . "'");
             //$objTable->addCell($item['essayid'],'','','',$class);
-            $objTable->addCell($item['essay'], '', '', '', $class, "bgcolor='".$bgcolor."'");
-            $objTable->addCell($this->objDateformat->formatDate($item['date']) , '', '', '', $class, "bgcolor='".$bgcolor."'");
-            $objTable->addCell($item['bypass'], '', '', '', $class, "bgcolor='".$bgcolor."'");
+            $objTable->addCell($item['essay'], '', '', '', $class, "bgcolor='" . $bgcolor . "'");
+            $objTable->addCell($this->objDateformat->formatDate($item['date']) , '', '', '', $class, "bgcolor='" . $bgcolor . "'");
+            $objTable->addCell($item['bypass'], '', '', '', $class, "bgcolor='" . $bgcolor . "'");
             if (!empty($item['submitdate'])) {
-                $objTable->addCell($this->objDateformat->formatDate($item['submitdate']) , '', '', '', $class, "bgcolor='".$bgcolor."'");
+                $objTable->addCell($this->objDateformat->formatDate($item['submitdate']) , '', '', '', $class, "bgcolor='" . $bgcolor . "'");
             } else {
-                $objTable->addCell('', '', '', '', $class, "bgcolor='".$bgcolor."'");
+                $objTable->addCell('', '', '', '', $class, "bgcolor='" . $bgcolor . "'");
             }
-            $objTable->addCell($mark, '', '', '', $class, "bgcolor='".$bgcolor."'");
-            $objTable->addCell($notes, '', '', '', $class, "bgcolor='".$bgcolor."'");            
+            $objTable->addCell($mark, '', '', '', $class, "bgcolor='" . $bgcolor . "'");
+            $objTable->addCell($notes, '', '', '', $class, "bgcolor='" . $bgcolor . "'");
             $objTable->endRow();
-/*
+            /*
             $objTable->startRow();
             $objTable->addCell("<b>".$essayComment.": </b>".$notes, '', '', '', $class,'colspan="6"');
             //$objTable->addCell("<b>".$essayComment.": </b></br>".$notes,'', '', '', $class);
-  //          $objTable->row_attributes = 'colspan="6"';
+            //          $objTable->row_attributes = 'colspan="6"';
             $objTable->endRow();
-*/
+            */
         }
         //$objTable->row_attributes = 'height="10"';
         /********************* display table ************************/

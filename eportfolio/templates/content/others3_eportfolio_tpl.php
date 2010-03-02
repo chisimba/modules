@@ -67,7 +67,6 @@ $myparentId = $parentId[0];
 $userId = $this->_objGroupAdmin->getname($myparentId[parent_id]);
 $fullname = $this->objUserAdmin->getUserDetails($userId);
 $groupId = $groupId;
-
 $objHeading->align = center;
 $objHeading->type = 2;
 $objHeading->str = '<font color="#F38C0B">' . $objUser->fullName($fullname[userid]) . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '</font>';
@@ -144,7 +143,7 @@ if (!empty($addressList)) {
         }
     }
     unset($addressItem);
-} 
+}
 if ($addcnt == 0) {
     $addressTable->startRow();
     $addressTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
@@ -189,7 +188,7 @@ if (!empty($contactList)) {
         }
     }
     unset($contactItem);
-} 
+}
 if ($concnt == 0) {
     $contactTable->startRow();
     $contactTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
@@ -214,7 +213,7 @@ $emailTable->endRow();
 // Step through the list of addresses.
 $class = 'even';
 if (!empty($emailList)) {
-  $emcnt = 0;
+    $emcnt = 0;
     foreach($emailList as $emailItem) {
         //Check if contact exists in group
         $isMember = $this->checkIfExists($emailItem['id'], $groupId);
@@ -229,7 +228,7 @@ if (!empty($emailList)) {
         }
     }
     unset($emailItem);
-} 
+}
 if ($emcnt == 0) {
     $emailTable->startRow();
     $emailTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
@@ -267,7 +266,7 @@ if (!empty($demographicsList)) {
         }
     }
     unset($demographicsItem);
-} 
+}
 if ($demcnt == 0) {
     $demographicsTable->startRow();
     $demographicsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
@@ -371,7 +370,7 @@ if (!empty($activitylist)) {
         }
     }
     unset($item);
-} 
+}
 if ($actcnt == 0) {
     $activityTable->startRow();
     $activityTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
@@ -420,8 +419,8 @@ if (!empty($affiliationList)) {
         }
     }
     unset($affiliationItem);
-} 
-if($affcnt == 0) {
+}
+if ($affcnt == 0) {
     $affiliationTable->startRow();
     $affiliationTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
     $affiliationTable->endRow();
@@ -471,7 +470,7 @@ if (!empty($transcriptlist)) {
         }
     }
     unset($item);
-} 
+}
 if ($tracnt == 0) {
     $transcriptTable->startRow();
     $transcriptTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
@@ -518,7 +517,7 @@ if (!empty($qclList)) {
         }
     }
     unset($qclItem);
-} 
+}
 if ($qclcnt == 0) {
     $qclTable->startRow();
     $qclTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
@@ -555,7 +554,7 @@ if (!empty($goalsList)) {
         }
     }
     unset($item);
-} 
+}
 if ($goalcnt == 0) {
     $goalsTable->startRow();
     $goalsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
@@ -611,7 +610,7 @@ if (!empty($competencyList)) {
         }
     }
     unset($item);
-} 
+}
 if ($comcnt == 0) {
     $competencyTable->startRow();
     $competencyTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
@@ -667,7 +666,7 @@ if (!empty($interestList)) {
         }
     }
     unset($item);
-} 
+}
 if ($incnt == 0) {
     $interestTable->startRow();
     $interestTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
@@ -722,7 +721,7 @@ if (!empty($reflectionList)) {
         }
     }
     unset($item);
-} 
+}
 if ($refcount == 0) {
     $reflectionTable->startRow();
     $reflectionTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
@@ -777,7 +776,7 @@ if (!empty($assertionslist)) {
         }
     }
     unset($item);
-} 
+}
 if ($asscount == 0) {
     $assertionstable->startRow();
     $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
@@ -827,7 +826,6 @@ $this->objTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordDemographics", 'eportfolio') ,
     'content' => $demographicsLabel
 ));
-
 //Information tab
 $this->objmainTab->init();
 $this->objmainTab->tabId = FALSE;

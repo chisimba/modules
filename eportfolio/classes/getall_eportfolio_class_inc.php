@@ -113,41 +113,41 @@ class getall_Eportfolio extends object
             $addressTable->width = "100%";
             $objaddressTitles->str = $this->objLanguage->languageText("mod_eportfolio_wordAddress", 'eportfolio');
             // Add the table heading.
-/*
+            /*
             $addressTable->startRow();
             $addressTable->addCell($objaddressTitles->show() , '', '', '', '', 'colspan="7"');
             $addressTable->endRow();
             addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-*/
+            */
             $addressTable->startRow();
-            $addressTable->addCell("<b>&nbsp;&nbsp;&nbsp;" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>","","","","",$attrib='bgcolor="#FFFFFF"');
-            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_streetno", 'eportfolio') . "</b>","","","","",$attrib='bgcolor="#FFFFFF"');
-            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_streetname", 'eportfolio') . "</b>","","","","",$attrib='bgcolor="#FFFFFF"');
-            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_locality", 'eportfolio') . "</b>","","","","",$attrib='bgcolor="#FFFFFF"');
-            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_city", 'eportfolio') . "</b>","","","","",$attrib='bgcolor="#FFFFFF"');
-            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_postcode", 'eportfolio') . "</b>","","","","",$attrib='bgcolor="#FFFFFF"');
-            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_postaddress", 'eportfolio') . "</b>","","","","",$attrib='bgcolor="#FFFFFF"');
+            $addressTable->addCell("<b>&nbsp;&nbsp;&nbsp;" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>", "", "", "", "", $attrib = 'bgcolor="#FFFFFF"');
+            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_streetno", 'eportfolio') . "</b>", "", "", "", "", $attrib = 'bgcolor="#FFFFFF"');
+            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_streetname", 'eportfolio') . "</b>", "", "", "", "", $attrib = 'bgcolor="#FFFFFF"');
+            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_locality", 'eportfolio') . "</b>", "", "", "", "", $attrib = 'bgcolor="#FFFFFF"');
+            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_city", 'eportfolio') . "</b>", "", "", "", "", $attrib = 'bgcolor="#FFFFFF"');
+            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_postcode", 'eportfolio') . "</b>", "", "", "", "", $attrib = 'bgcolor="#FFFFFF"');
+            $addressTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_postaddress", 'eportfolio') . "</b>", "", "", "", "", $attrib = 'bgcolor="#FFFFFF"');
             $addressTable->endRow();
             // Step through the list of addresses.
             if (!empty($addressList)) {
                 $addressNo = 1;
-																$i = 0;
-																$bgcolor = "#FFFFFF";
+                $i = 0;
+                $bgcolor = "#FFFFFF";
                 foreach($addressList as $addressItem) {
-												        //$class = ($i++%2) ? 'even' : 'odd';
-												        $bgcolor = ($i++%2) ? "#FFFFFF" : "#D3D3D3";
+                    //$class = ($i++%2) ? 'even' : 'odd';
+                    $bgcolor = ($i++%2) ? "#FFFFFF" : "#D3D3D3";
                     // Display each field for addresses
                     $addressTable->startRow();
                     $cattype = $this->objDbCategorytypeList->listSingle($addressItem['type']);
                     //$addressTable->startRow();
-//                    $addressTable->addCell($addressNo . ")&nbsp;&nbsp;&nbsp;" . $cattype[0]['type'], "", NULL, NULL, NULL, '');
-                    $addressTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $addressTable->addCell($addressItem['street_no'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $addressTable->addCell($addressItem['street_name'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $addressTable->addCell($addressItem['locality'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $addressTable->addCell($addressItem['city'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $addressTable->addCell($addressItem['postcode'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $addressTable->addCell($addressItem['postal_address'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
+                    //                    $addressTable->addCell($addressNo . ")&nbsp;&nbsp;&nbsp;" . $cattype[0]['type'], "", NULL, NULL, NULL, '');
+                    $addressTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $addressTable->addCell($addressItem['street_no'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $addressTable->addCell($addressItem['street_name'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $addressTable->addCell($addressItem['locality'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $addressTable->addCell($addressItem['city'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $addressTable->addCell($addressItem['postcode'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $addressTable->addCell($addressItem['postal_address'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
                     $addressTable->endRow();
                     $addressNo = $addressNo+1;
                 }
@@ -157,7 +157,7 @@ class getall_Eportfolio extends object
                 $addressTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="7"');
                 $addressTable->endRow();
             }
-            $addressLabel = $objaddressTitles->show(). $addressTable->show() . '<br></br>';
+            $addressLabel = $objaddressTitles->show() . $addressTable->show() . '<br></br>';
             return $addressLabel;
         } //end if
         
@@ -236,18 +236,18 @@ class getall_Eportfolio extends object
                 $contactNo = 1;
                 $i = 0;
                 foreach($contactList as $contactItem) {
-												        //$class = ($i++%2) ? 'even' : 'odd';
-												        $bgcolor = ($i++%2) ? "#FFFFFF" : "#D3D3D3";
+                    //$class = ($i++%2) ? 'even' : 'odd';
+                    $bgcolor = ($i++%2) ? "#FFFFFF" : "#D3D3D3";
                     // Display each field for contacts
                     $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
                     $modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
                     $contactTable->startRow();
                     //$contactTable->addCell($contactNo . ')&nbsp;&nbsp;&nbsp;' . $cattype[0]['type'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-																				$contactTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $contactTable->addCell($modetype[0]['type'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $contactTable->addCell($contactItem['country_code'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $contactTable->addCell($contactItem['area_code'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $contactTable->addCell($contactItem['id_number'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
+                    $contactTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $contactTable->addCell($modetype[0]['type'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $contactTable->addCell($contactItem['country_code'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $contactTable->addCell($contactItem['area_code'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $contactTable->addCell($contactItem['id_number'], "", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
                     $contactTable->endRow();
                     $contactNo = $contactNo+1;
                 }
@@ -258,7 +258,7 @@ class getall_Eportfolio extends object
                 $contactTable->endRow();
             }
             //echo $contactTable->show();
-            $contacts = $objcontactTitles->show().$contactTable->show() . '<br></br>';
+            $contacts = $objcontactTitles->show() . $contactTable->show() . '<br></br>';
             return $contacts;
         } //end if
         
@@ -324,8 +324,8 @@ class getall_Eportfolio extends object
             $emailTable->width = "50%";
             // Add the table heading.
             $emailTable->startRow();
-            $emailTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>","60");
-            $emailTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_email", 'eportfolio') . "</b>","150");
+            $emailTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>", "60");
+            $emailTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_email", 'eportfolio') . "</b>", "150");
             $emailTable->endRow();
             // Step through the list of emails.
             $class = 'even';
@@ -333,13 +333,13 @@ class getall_Eportfolio extends object
                 $emailNo = 1;
                 $i = 0;
                 foreach($emailList as $emailItem) {
-												        $bgcolor = ($i++%2) ? "#FFFFFF" : "#D3D3D3";
+                    $bgcolor = ($i++%2) ? "#FFFFFF" : "#D3D3D3";
                     // Display each field for emails
                     $cattype = $this->objDbCategorytypeList->listSingle($emailItem['type']);
                     $emailTable->startRow();
                     //$emailTable->addCell($emailNo . ')&nbsp;&nbsp;&nbsp;' . $cattype[0]['type'], "", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $emailTable->addCell($cattype[0]['type'], "60", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $emailTable->addCell($emailItem['email'], "150", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
+                    $emailTable->addCell($cattype[0]['type'], "60", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $emailTable->addCell($emailItem['email'], "150", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
                     $emailTable->endRow();
                     $emailNo = $emailNo+1;
                 }
@@ -349,7 +349,7 @@ class getall_Eportfolio extends object
                 $emailTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
                 $emailTable->endRow();
             }
-            $emailtbl = $emailobjHeading->show().$emailTable->show() . '</br>';
+            $emailtbl = $emailobjHeading->show() . $emailTable->show() . '</br>';
             return $emailtbl;
         } //end if
         
@@ -413,31 +413,31 @@ class getall_Eportfolio extends object
             $demographicsTable->width = "50%";
             // Show the heading
             $demographicsobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio');
-/*
+            /*
             $demographicsTable->startRow();
             $demographicsTable->addCell($demographicsobjHeading->show() , '', '', '', '', 'colspan="3"');
             $demographicsTable->endRow();
-*/            
+            */
             $demographicsTable->startRow();
             //$demographicsTable->addCell("<b>&nbsp;&nbsp;&nbsp;" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>","60");
-            $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . "</b>","100");
-            $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_nationality", 'eportfolio') . "</b>","150");
+            $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . "</b>", "100");
+            $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_nationality", 'eportfolio') . "</b>", "150");
             $demographicsTable->endRow();
             // Step through the list of Demographics.
             if (!empty($demographicsList)) {
                 $demNo = 1;
                 $i = 0;
                 foreach($demographicsList as $demographicsItem) {
-												        $bgcolor = ($i++%2) ? "#FFFFFF" : "#D3D3D3";
-                    $datetime = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
+                    $bgcolor = ($i++%2) ? "#FFFFFF" : "#D3D3D3";
+                    $datetime = explode("-", $this->objDate->formatDate($demographicsItem['birth']));
                     //var_dump($datetime);
                     // Display each field for Demographics
                     $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
                     $demographicsTable->startRow();
                     //$demographicsTable->addCell($demNo . ')&nbsp;&nbsp;&nbsp;' . $cattype[0]['type'], "", NULL, NULL, NULL, '');
                     //$demographicsTable->addCell($cattype[0]['type'], "60", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $demographicsTable->addCell($datetime[0], "100", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
-                    $demographicsTable->addCell($demographicsItem['nationality'], "150", NULL, NULL, NULL, "bgcolor='".$bgcolor."'");
+                    $demographicsTable->addCell($datetime[0], "100", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
+                    $demographicsTable->addCell($demographicsItem['nationality'], "150", NULL, NULL, NULL, "bgcolor='" . $bgcolor . "'");
                     $demographicsTable->endRow();
                     $demNo = $demNo+1;
                 }
@@ -447,7 +447,7 @@ class getall_Eportfolio extends object
                 $demographicsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
                 $demographicsTable->endRow();
             }
-            $demographicstbl = $demographicsobjHeading->show().$demographicsTable->show();
+            $demographicstbl = $demographicsobjHeading->show() . $demographicsTable->show();
             return $demographicstbl;
         } //end if
         
@@ -482,7 +482,7 @@ class getall_Eportfolio extends object
                     $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . '&nbsp;:&nbsp;&nbsp;</b>' . $cattype[0]['type'], "", NULL, NULL, NULL, '');
                     $demographicsTable->endRow();
                     $demographicsTable->startRow();
-                    $mybirth = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
+                    $mybirth = explode("-", $this->objDate->formatDate($demographicsItem['birth']));
                     $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . " : </b>" . $mybirth[0], "", NULL, NULL, NULL, '');
                     $demographicsTable->endRow();
                     $demographicsTable->startRow();
@@ -517,23 +517,23 @@ class getall_Eportfolio extends object
             $activityTable->cellspacing = '1';
             $activityTable->width = "100%";
             // Add the table heading.
-/*
+            /*
             $activityTable->startRow();
             $activityTable->addCell($activityobjHeading->show() , '', '', '', '', Null);
             $activityTable->endRow();
-*/
+            */
             // Step through the list of activities
             $class = NULL;
             if (!empty($activitylist)) {
                 $i = 0;
                 $actyNo = 1;
                 foreach($activitylist as $item) {
-																				//Spacer
-																				If ($actyNo>1){
-		                   $activityTable->startRow();
-		                   $activityTable->addCell("", "", NULL, NULL, $class, "bgcolor='#D3D3D3' COLSPAN=2");
-		                   $activityTable->endRow();
-																					}
+                    //Spacer
+                    If ($actyNo > 1) {
+                        $activityTable->startRow();
+                        $activityTable->addCell("", "", NULL, NULL, $class, "bgcolor='#D3D3D3' COLSPAN=2");
+                        $activityTable->endRow();
+                    }
                     //Get context title
                     $objDbContext = &$this->getObject('dbcontext', 'context');
                     $mycontextRecord = $objDbContext->getContextDetails($item['contextid']);
@@ -545,31 +545,31 @@ class getall_Eportfolio extends object
                     // Display each field for activities
                     $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
                     $activityTable->startRow();
-                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordActivity", 'eportfolio') . '&nbsp;&nbsp;' . $actyNo . "</b>","","","","","bgcolor='#FFFFFF' COLSPAN=2");
+                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordActivity", 'eportfolio') . '&nbsp;&nbsp;' . $actyNo . "</b>", "", "", "", "", "bgcolor='#FFFFFF' COLSPAN=2");
                     $activityTable->endRow();
-                    if(!empty($mycontextTitle) && $mycontextTitle!=="None"){
-		                   $activityTable->startRow();
-		                   $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contexttitle", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3' COLSPAN=2");
-		                   $activityTable->endRow();
-		                   $activityTable->startRow();
-		                   $activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, "bgcolor='#FFFFFF' COLSPAN=2");
-		                   $activityTable->endRow();
+                    if (!empty($mycontextTitle) && $mycontextTitle !== "None") {
+                        $activityTable->startRow();
+                        $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contexttitle", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3' COLSPAN=2");
+                        $activityTable->endRow();
+                        $activityTable->startRow();
+                        $activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, "bgcolor='#FFFFFF' COLSPAN=2");
+                        $activityTable->endRow();
                     }
                     $activityTable->startRow();
-                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activitytype", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3' COLSPAN=2");
+                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activitytype", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3' COLSPAN=2");
                     $activityTable->endRow();
                     $activityTable->startRow();
                     $activityTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, "bgcolor='#FFFFFF' COLSPAN=2");
                     $activityTable->endRow();
                     $activityTable->startRow();
-                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
-                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
+                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $activityTable->endRow();
                     $activityTable->startRow();
                     $activityTable->addCell($this->objDate->formatDate($item['start']) , "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $activityTable->addCell($this->objDate->formatDate($item['finish']) , "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $activityTable->endRow();
-																				/*
+                    /*
                     $activityTable->startRow();
                     $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3' COLSPAN=2");
                     $activityTable->endRow();
@@ -578,13 +578,13 @@ class getall_Eportfolio extends object
                     $activityTable->endRow();
                     */
                     $activityTable->startRow();
-                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3' COLSPAN=2");
+                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3' COLSPAN=2");
                     $activityTable->endRow();
                     $activityTable->startRow();
                     $activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF' COLSPAN=2");
                     $activityTable->endRow();
                     $activityTable->startRow();
-                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3' COLSPAN=2");
+                    $activityTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3' COLSPAN=2");
                     $activityTable->endRow();
                     $activityTable->startRow();
                     $activityTable->addCell($item['longdescription'], "", "top", NULL, $class, "bgcolor='#FFFFFF' COLSPAN=2");
@@ -597,7 +597,7 @@ class getall_Eportfolio extends object
                 $activityTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
                 $activityTable->endRow();
             }
-            $activitytbl = $activityobjHeading->show().$activityTable->show();
+            $activitytbl = $activityobjHeading->show() . $activityTable->show();
             return $activitytbl;
         } //end if
         
@@ -672,13 +672,13 @@ class getall_Eportfolio extends object
             $affiliationTable->border = 1;
             $affiliationTable->cellspacing = '1';
             $affiliationTable->width = "100%";
-/*
+            /*
             // Add the table heading.
             $affiliationTable->startRow();
             //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
             $affiliationTable->addCell($affiliationobjHeading->show() , '', '', '', '', 'colspan="6"', Null);
             $affiliationTable->endRow();
-
+            
             $affiliationTable->startRow();
             $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>","","","","","");
             $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_classificationView", 'eportfolio') . "</b>");
@@ -687,32 +687,32 @@ class getall_Eportfolio extends object
             $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>");
             $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>");
             $affiliationTable->endRow();
-*/
+            */
             // Step through the list of affiliations
             $class = NULL;
             if (!empty($affiliationList)) {
                 $i = 0;
                 $affNo = 1;
                 foreach($affiliationList as $affiliationItem) {
-                				//Add spacer
-                				if($affNo>1){
-		               				$affiliationTable->startRow();
-										           $affiliationTable->addCell("","","","","","bgcolor='#D3D3D3' COLSPAN=2");
-										           $affiliationTable->endRow();
-                				}
+                    //Add spacer
+                    if ($affNo > 1) {
+                        $affiliationTable->startRow();
+                        $affiliationTable->addCell("", "", "", "", "", "bgcolor='#D3D3D3' COLSPAN=2");
+                        $affiliationTable->endRow();
+                    }
                     $affiliationTable->startRow();
-								            $affiliationTable->addCell("<b>" .$this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio')." ".$affNo. "</b>","","","","","bgcolor='#FFFFFF' COLSPAN=2");
-								            $affiliationTable->endRow();
+                    $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio') . " " . $affNo . "</b>", "", "", "", "", "bgcolor='#FFFFFF' COLSPAN=2");
+                    $affiliationTable->endRow();
                     // Display each field for affiliations
                     $cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
                     $affiliationTable->startRow();
-								            $affiliationTable->addCell("<b>" .$this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio')." ". $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3' COLSPAN=2");
-								            $affiliationTable->endRow();
+                    $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio') . " " . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3' COLSPAN=2");
+                    $affiliationTable->endRow();
                     $affiliationTable->startRow();
                     $affiliationTable->addCell($cattype[0]['type'], "", NULL, NULL, Null, "bgcolor='#FFFFFF' COLSPAN=2");
                     $affiliationTable->endRow();
                     $affiliationTable->startRow();
-                    $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_classificationView", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3' COLSPAN=2");
+                    $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_classificationView", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3' COLSPAN=2");
                     $affiliationTable->endRow();
                     $affiliationTable->startRow();
                     $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, NULL, "bgcolor='#FFFFFF' COLSPAN=2");
@@ -722,13 +722,13 @@ class getall_Eportfolio extends object
                     $affiliationTable->endRow();
                     $affiliationTable->startRow();
                     $affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, NULL, "bgcolor='#FFFFFF' COLSPAN=2");
-                    $affiliationTable->endRow();                    
+                    $affiliationTable->endRow();
                     $affiliationTable->startRow();
                     $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . "</b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3' COLSPAN=2");
                     $affiliationTable->endRow();
                     $affiliationTable->startRow();
                     $affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, NULL, "bgcolor='#FFFFFF' COLSPAN=2");
-                    $affiliationTable->endRow();                    
+                    $affiliationTable->endRow();
                     $affiliationTable->startRow();
                     $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3'");
                     $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3'");
@@ -738,18 +738,17 @@ class getall_Eportfolio extends object
                     $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']) , "", NULL, NULL, NULL, "bgcolor='#FFFFFF'");
                     $affiliationTable->endRow();
                     $affiliationTable->startRow();
-                    $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3' COLSPAN=2");                    
+                    $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3' COLSPAN=2");
                     $affiliationTable->endRow();
                     $affiliationTable->startRow();
                     $affiliationTable->addCell($affiliationItem['shortdescription'], "", NULL, NULL, NULL, "bgcolor='#FFFFFF' COLSPAN=2");
                     $affiliationTable->endRow();
                     $affiliationTable->startRow();
-                    $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3' COLSPAN=2");                    
+                    $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3' COLSPAN=2");
                     $affiliationTable->endRow();
                     $affiliationTable->startRow();
                     $affiliationTable->addCell($affiliationItem['longdescription'], "", NULL, NULL, NULL, "bgcolor='#FFFFFF' COLSPAN=2");
                     $affiliationTable->endRow();
-
                     $affNo = $affNo+1;
                 }
                 unset($affiliationItem);
@@ -758,7 +757,7 @@ class getall_Eportfolio extends object
                 $affiliationTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
                 $affiliationTable->endRow();
             }
-            $affiliationtbl = $affiliationobjHeading->show().$affiliationTable->show();
+            $affiliationtbl = $affiliationobjHeading->show() . $affiliationTable->show();
             return $affiliationtbl;
         } //end if
         
@@ -824,12 +823,12 @@ class getall_Eportfolio extends object
         $transcriptTable->border = 0;
         $transcriptTable->cellspacing = '1';
         $transcriptTable->width = "100%";
-/*
+        /*
         // Add the table heading.
         $transcriptTable->startRow();
         $transcriptTable->addCell($transcriptobjHeading->show() , '', '', '', '', Null);
         $transcriptTable->endRow();
-*/
+        */
         $hasAssessment = 0;
         //Get DB Object
         $objDbContext = &$this->getObject('dbcontext', 'context');
@@ -843,7 +842,6 @@ class getall_Eportfolio extends object
                 //Get student essays for this course
                 $contextEssay = $this->objEssayView->getStudentEssays($contextCode);
                 if (!empty($contextEssay)) {
-				
                     $hasAssessment = 1;
                     $hasEssays = 1;
                     $viewEssays = $this->viewAssessments->viewEssaysFull($contextEssay);
@@ -856,8 +854,8 @@ class getall_Eportfolio extends object
                 }
                 //Get student essays for this course
                 $contextAssignments = $this->objAssignmentFunctions->displayAssignmentFull($contextCode);
-                if (!empty($contextAssignments)) {		
-				    $hasAssessment = 1;
+                if (!empty($contextAssignments)) {
+                    $hasAssessment = 1;
                     //$viewEssays = $this->viewAssessments->viewEssays($contextEssay);
                     $list = $this->objLanguage->languageText('word_list');
                     $head = $objDbContext->getTitle($contextCode) . " : " . $this->objLanguage->languageText('mod_assignment_assignments', 'assignment');
@@ -875,7 +873,7 @@ class getall_Eportfolio extends object
                 }
                 //Get mcqtests
                 $objmcq = $this->objMcqtestsFunctions->displaymcqFull($contextCode, $userId);
-                if (!empty($objmcq) && $objmcq!==false) {
+                if (!empty($objmcq) && $objmcq !== false) {
                     $hasAssessment = 1;
                     $mcqHead = $objDbContext->getTitle($contextCode) . " : " . $this->objLanguage->languageText('mod_mcqtests_mcq', 'mcqtests');
                     $transcriptTable->startRow();
@@ -897,30 +895,30 @@ class getall_Eportfolio extends object
             // Step through the list of transcripts.
             $class = NULL;
             if (!empty($transcriptlist)) {
-																$objtransTable = new htmltable();
-																$objtransTable->border = 1;
-																$objtransTable->cellspacing = '1';
-																$objtransTable->width = "100%";            
+                $objtransTable = new htmltable();
+                $objtransTable->border = 1;
+                $objtransTable->cellspacing = '1';
+                $objtransTable->width = "100%";
                 $transNo = 1;
                 foreach($transcriptlist as $item) {
-                				//Spacer
-                				if($transNo>1){
-		                   $objtransTable->startRow();
-		                   $objtransTable->addCell("&nbsp;","","","","","bgcolor='#D3D3D3'");
-		                   $objtransTable->endRow();                				
-                				}
+                    //Spacer
+                    if ($transNo > 1) {
+                        $objtransTable->startRow();
+                        $objtransTable->addCell("&nbsp;", "", "", "", "", "bgcolor='#D3D3D3'");
+                        $objtransTable->endRow();
+                    }
                     // Display each field for transcripts
                     $objtransTable->startRow();
-                    $objtransTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordtranscript", 'eportfolio') . '&nbsp;&nbsp;' . $transNo . "</b>","","","","","bgcolor='#FFFFFF'");
+                    $objtransTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordtranscript", 'eportfolio') . '&nbsp;&nbsp;' . $transNo . "</b>", "", "", "", "", "bgcolor='#FFFFFF'");
                     $objtransTable->endRow();
                     $objtransTable->startRow();
-                    $objtransTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $objtransTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $objtransTable->endRow();
                     $objtransTable->startRow();
                     $objtransTable->addCell($item['shortdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $objtransTable->endRow();
                     $objtransTable->startRow();
-                    $objtransTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $objtransTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $objtransTable->endRow();
                     $objtransTable->startRow();
                     $objtransTable->addCell($item['longdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
@@ -929,8 +927,8 @@ class getall_Eportfolio extends object
                 }
                 unset($item);
                 $transcriptTable->startRow();
-                $transcriptTable->addCell($objtransTable->show(), '', '', '', '', "");
-                $transcriptTable->endRow();                
+                $transcriptTable->addCell($objtransTable->show() , '', '', '', '', "");
+                $transcriptTable->endRow();
             } else {
                 $transcriptTable->startRow();
                 $transcriptTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', "bgcolor='#FFFFFF'");
@@ -938,7 +936,7 @@ class getall_Eportfolio extends object
             }
         } //end if
         if ($hasAssessment == 1 || !empty($transcriptlist)) {
-            $transcripttbl = $transcriptobjHeading->show().$transcriptTable->show();
+            $transcripttbl = $transcriptobjHeading->show() . $transcriptTable->show();
             return $transcripttbl;
         }
     } //end function
@@ -1002,65 +1000,65 @@ class getall_Eportfolio extends object
             $qclTable->border = 1;
             $qclTable->cellspacing = '1';
             $qclTable->width = "100%";
-/*
+            /*
             // Add the table heading.
             $qclTable->startRow();
             $qclTable->addCell($qclobjHeading->show() , '', '', '', '', Null);
             $qclTable->endRow();
-*/
+            */
             // Step through the list of qcl.
             $class = NULL;
             if (!empty($qclList)) {
                 $qclNo = 1;
                 foreach($qclList as $qclItem) {
-                				if($qclNo>1){
-		                   $qclTable->startRow();
-		                   $qclTable->addCell("&nbsp;","","","","","bgcolor='#D3D3D3'");
-		                   $qclTable->endRow();                				
-                				}
+                    if ($qclNo > 1) {
+                        $qclTable->startRow();
+                        $qclTable->addCell("&nbsp;", "", "", "", "", "bgcolor='#D3D3D3'");
+                        $qclTable->endRow();
+                    }
                     // Display each field for qcl
                     $cattype = $this->objDbCategorytypeList->listSingle($qclItem['qcl_type']);
                     $qclTable->startRow();
-                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio') . "&nbsp;&nbsp;" . $qclNo . "</b>","","","","","bgcolor='#FFFFFF'");
+                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio') . "&nbsp;&nbsp;" . $qclNo . "</b>", "", "", "", "", "bgcolor='#FFFFFF'");
                     $qclTable->endRow();
                     $qclTable->startRow();
-                    $qclTable->addCell("<b>" .$this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio') . "&nbsp;&nbsp;". $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio') . "&nbsp;&nbsp;" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $qclTable->endRow();
                     $qclTable->startRow();
                     $qclTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $qclTable->endRow();
                     $qclTable->startRow();
-                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordtitle", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordtitle", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $qclTable->endRow();
                     $qclTable->startRow();
                     $qclTable->addCell($qclItem['qcl_title'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $qclTable->endRow();
                     $qclTable->startRow();
-                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $qclTable->endRow();
                     $qclTable->startRow();
                     $qclTable->addCell($qclItem['organisation'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $qclTable->endRow();
                     $qclTable->startRow();
-                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_level", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_level", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $qclTable->endRow();
                     $qclTable->startRow();
                     $qclTable->addCell($qclItem['qcl_level'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $qclTable->endRow();
                     $qclTable->startRow();
-                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $qclTable->endRow();
                     $qclTable->startRow();
                     $qclTable->addCell($this->objDate->formatDate($qclItem['award_date']) , "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $qclTable->endRow();
                     $qclTable->startRow();
-                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $qclTable->endRow();
                     $qclTable->startRow();
                     $qclTable->addCell($qclItem['shortdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $qclTable->endRow();
                     $qclTable->startRow();
-                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $qclTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $qclTable->endRow();
                     $qclTable->startRow();
                     $qclTable->addCell($qclItem['longdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
@@ -1073,7 +1071,7 @@ class getall_Eportfolio extends object
                 $qclTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
                 $qclTable->endRow();
             }
-            $qcltbl = $qclobjHeading->show().$qclTable->show();
+            $qcltbl = $qclobjHeading->show() . $qclTable->show();
             return $qcltbl;
         } //end if
         
@@ -1137,35 +1135,35 @@ class getall_Eportfolio extends object
             $goalsTable->border = 1;
             $goalsTable->cellspacing = '1';
             $goalsTable->width = "100%";
-/*
+            /*
             // Add the table heading.
             $goalsTable->startRow();
             $goalsTable->addCell($goalsobjHeading->show() , '', '', '', '', Null);
             $goalsTable->endRow();
-*/            
+            */
             // Step through the list of goals.
             $class = NULL;
             if (!empty($goalsList)) {
                 $i = 0;
                 $goalNo = 1;
                 foreach($goalsList as $item) {
-																				if($goalNo>1){
-		                   $goalsTable->startRow();
-		                   $goalsTable->addCell("&nbsp;","","","","","bgcolor='#D3D3D3'");
-		                   $goalsTable->endRow();
-																				}
+                    if ($goalNo > 1) {
+                        $goalsTable->startRow();
+                        $goalsTable->addCell("&nbsp;", "", "", "", "", "bgcolor='#D3D3D3'");
+                        $goalsTable->endRow();
+                    }
                     // Display each field for goals
                     $goalsTable->startRow();
-                    $goalsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordGoal", 'eportfolio') . "&nbsp;" . $goalNo . "</b>","","","","","bgcolor='#FFFFFF'");
+                    $goalsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordGoal", 'eportfolio') . "&nbsp;" . $goalNo . "</b>", "", "", "", "", "bgcolor='#FFFFFF'");
                     $goalsTable->endRow();
                     $goalsTable->startRow();
-                    $goalsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $goalsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $goalsTable->endRow();
                     $goalsTable->startRow();
                     $goalsTable->addCell($item['shortdescription'], "", NULL, NULL, "", "bgcolor='#FFFFFF'");
                     $goalsTable->endRow();
                     $goalsTable->startRow();
-                    $goalsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $goalsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $goalsTable->endRow();
                     $goalsTable->startRow();
                     $goalsTable->addCell($item['longdescription'], "", "", "", "", "bgcolor='#FFFFFF'");
@@ -1178,7 +1176,7 @@ class getall_Eportfolio extends object
                 $goalsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
                 $goalsTable->endRow();
             }
-            $goalstbl = $goalsobjHeading->show().$goalsTable->show();
+            $goalstbl = $goalsobjHeading->show() . $goalsTable->show();
             return $goalstbl;
         } //end if
         
@@ -1240,47 +1238,47 @@ class getall_Eportfolio extends object
             $competencyTable->cellspacing = '1';
             $competencyTable->width = "100%";
             // Add the table heading.
-/*
+            /*
             $competencyTable->startRow();
             $competencyTable->addCell($competencyobjHeading->show() , '', '', '', '', NULL);
             $competencyTable->endRow();
-*/
+            */
             // Step through the list of competencies.
             $class = NULL;
             if (!empty($competencyList)) {
                 $compNo = 1;
                 foreach($competencyList as $item) {
-																				//Spacer
-																				if($compNo>1){
-		                   $competencyTable->startRow();
-		                   $competencyTable->addCell("&nbsp;&nbsp;","","","","","bgcolor='#D3D3D3'");
-		                   $competencyTable->endRow();																				
-																				}
+                    //Spacer
+                    if ($compNo > 1) {
+                        $competencyTable->startRow();
+                        $competencyTable->addCell("&nbsp;&nbsp;", "", "", "", "", "bgcolor='#D3D3D3'");
+                        $competencyTable->endRow();
+                    }
                     // Display each field for competencies
                     $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
                     $competencyTable->startRow();
-                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordCompetency", 'eportfolio') . "&nbsp;&nbsp;" . $compNo . "</b>","","","","","bgcolor='#FFFFFF'");
+                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordCompetency", 'eportfolio') . "&nbsp;&nbsp;" . $compNo . "</b>", "", "", "", "", "bgcolor='#FFFFFF'");
                     $competencyTable->endRow();
                     $competencyTable->startRow();
-                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $competencyTable->endRow();
                     $competencyTable->startRow();
                     $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $competencyTable->endRow();
                     $competencyTable->startRow();
-                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $competencyTable->endRow();
                     $competencyTable->startRow();
                     $competencyTable->addCell($this->objDate->formatDate($item['award_date']) , "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $competencyTable->endRow();
                     $competencyTable->startRow();
-                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $competencyTable->endRow();
                     $competencyTable->startRow();
                     $competencyTable->addCell($item['shortdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $competencyTable->endRow();
                     $competencyTable->startRow();
-                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $competencyTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $competencyTable->endRow();
                     $competencyTable->startRow();
                     $competencyTable->addCell($item['longdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
@@ -1288,7 +1286,7 @@ class getall_Eportfolio extends object
                     $compNo = $compNo+1;
                 }
                 unset($item);
-                $competencytbl = $competencyobjHeading->show().$competencyTable->show();
+                $competencytbl = $competencyobjHeading->show() . $competencyTable->show();
                 return $competencytbl;
             }
         } //end if
@@ -1347,47 +1345,47 @@ class getall_Eportfolio extends object
             $interestTable->cellspacing = '1';
             $interestTable->width = "100%";
             // Add the table heading.
-/*
+            /*
             $interestTable->startRow();
             $interestTable->addCell($interestobjHeading->show() , '', '', '', '', Null);
             $interestTable->endRow();
-*/
+            */
             // Step through the list of interests.
             $class = NULL;
             if (!empty($interestList)) {
                 $intNo = 1;
                 foreach($interestList as $item) {
-																				//Spacer
-																				if($intNo>1){
-		                   $interestTable->startRow();
-		                   $interestTable->addCell("&nbsp;","","","","","bgcolor='#D3D3D3'");
-		                   $interestTable->endRow();																				
-																				}
+                    //Spacer
+                    if ($intNo > 1) {
+                        $interestTable->startRow();
+                        $interestTable->addCell("&nbsp;", "", "", "", "", "bgcolor='#D3D3D3'");
+                        $interestTable->endRow();
+                    }
                     // Display each field for interests
                     $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
                     $interestTable->startRow();
-                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordInterest", 'eportfolio') . "&nbsp;&nbsp;" . $intNo . "</b>","","","","","bgcolor='#FFFFFF'");
+                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordInterest", 'eportfolio') . "&nbsp;&nbsp;" . $intNo . "</b>", "", "", "", "", "bgcolor='#FFFFFF'");
                     $interestTable->endRow();
                     $interestTable->startRow();
-                    $interestTable->addCell("<b>" .$this->objLanguage->languageText("mod_eportfolio_wordInterest", 'eportfolio')." ". $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordInterest", 'eportfolio') . " " . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $interestTable->endRow();
                     $interestTable->startRow();
                     $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $interestTable->endRow();
                     $interestTable->startRow();
-                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $interestTable->endRow();
                     $interestTable->startRow();
                     $interestTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $interestTable->endRow();
                     $interestTable->startRow();
-                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $interestTable->endRow();
                     $interestTable->startRow();
                     $interestTable->addCell($item['shortdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
                     $interestTable->endRow();
                     $interestTable->startRow();
-                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>","","","","","bgcolor='#D3D3D3'");
+                    $interestTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>", "", "", "", "", "bgcolor='#D3D3D3'");
                     $interestTable->endRow();
                     $interestTable->startRow();
                     $interestTable->addCell($item['longdescription'], "", NULL, NULL, $class, "bgcolor='#FFFFFF'");
@@ -1395,7 +1393,7 @@ class getall_Eportfolio extends object
                     $intNo = $intNo+1;
                 }
                 unset($item);
-                $interesttbl = $interestobjHeading->show().$interestTable->show();
+                $interesttbl = $interestobjHeading->show() . $interestTable->show();
                 return $interesttbl;
             }
         } //end if
@@ -1453,23 +1451,23 @@ class getall_Eportfolio extends object
             $reflectionTable->border = 1;
             $reflectionTable->cellspacing = '1';
             $reflectionTable->width = "100%";
-/*
+            /*
             // Add the table heading.
             $reflectionTable->startRow();
             $reflectionTable->addCell($reflectionobjHeading->show() , '', '', '', '', Null);
             $reflectionTable->endRow();
-*/
+            */
             // Step through the list of reflections.
             $class = NULL;
             if (!empty($reflectionList)) {
                 $refNo = 1;
                 foreach($reflectionList as $item) {
                     //Spacer
-																				if($refNo>1){
-		                   $reflectionTable->startRow();
-		                   $reflectionTable->addCell("&nbsp;", "", NULL, NULL, NULL, "bgcolor='#D3D3D3'");
-		                   $reflectionTable->endRow();
-																				}
+                    if ($refNo > 1) {
+                        $reflectionTable->startRow();
+                        $reflectionTable->addCell("&nbsp;", "", NULL, NULL, NULL, "bgcolor='#D3D3D3'");
+                        $reflectionTable->endRow();
+                    }
                     // Display each field for reflections
                     $reflectionTable->startRow();
                     $reflectionTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordReflection", 'eportfolio') . "&nbsp;&nbsp;" . $refNo . "</b>", "", NULL, NULL, NULL, "bgcolor='#FFFFFF'");
@@ -1502,9 +1500,8 @@ class getall_Eportfolio extends object
                     $mycomments = $this->objDbComment->listAll($item['id']);
                     if (!empty($mycomments)) {
                         $reflectionTable->startRow();
-                        $reflectionTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordComment", 'eportfolio'). " : </b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3'");
+                        $reflectionTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordComment", 'eportfolio') . " : </b>", "", NULL, NULL, NULL, "bgcolor='#D3D3D3'");
                         $reflectionTable->endRow();
-
                         foreach($mycomments as $comment) {
                             //$this->objUser
                             $commentor = $this->objUser->fullName($comment["commentoruserid"]);
@@ -1524,7 +1521,7 @@ class getall_Eportfolio extends object
                 }
                 unset($item);
             }
-            $reflectiontbl = $reflectionobjHeading->show().$reflectionTable->show();
+            $reflectiontbl = $reflectionobjHeading->show() . $reflectionTable->show();
             return $reflectiontbl;
         } //end if
         
@@ -1598,7 +1595,7 @@ class getall_Eportfolio extends object
                         $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                         $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                         if (!empty($assertionslist)) {
-																												$emptyChecker = 1;
+                            $emptyChecker = 1;
                             // Display each field for assertions
                             $assertionstable->startRow();
                             $assertionstable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_assertion", 'eportfolio') . "&nbsp;&nbsp;" . "</b>");
@@ -1655,19 +1652,19 @@ class getall_Eportfolio extends object
                     unset($groupId);
                 }
             }
-												if($emptyChecker==1){
-		           // Create a table object
-		           $asserTable = &$this->newObject("htmltable", "htmlelements");
-		           $asserTable->border = 0;
-		           $asserTable->cellspacing = '1';
-		           $asserTable->width = "100%";
-		           // Add the table heading.
-		           $asserTable->startRow();
-		           $asserTable->addCell($assertionstable->show() , '', '', '', '', Null);
-		           $asserTable->endRow();
-		           $assertionstbl = $assertionstable->show();
-												}else{
-            $assertionstbl = "";
+            if ($emptyChecker == 1) {
+                // Create a table object
+                $asserTable = &$this->newObject("htmltable", "htmlelements");
+                $asserTable->border = 0;
+                $asserTable->cellspacing = '1';
+                $asserTable->width = "100%";
+                // Add the table heading.
+                $asserTable->startRow();
+                $asserTable->addCell($assertionstable->show() , '', '', '', '', Null);
+                $asserTable->endRow();
+                $assertionstbl = $assertionstable->show();
+            } else {
+                $assertionstbl = "";
             }
             return $assertionstbl;
         } //end if

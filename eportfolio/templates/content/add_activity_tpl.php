@@ -82,10 +82,9 @@ $row = array(
 $objTable->addCell($row[0], 140, 'bottom', 'right');
 $activityStart = &$this->getObject('datepicker', 'htmlelements');
 $activityStart->setName('activityStart');
-
 $form->addRule('activityStart', 'Please enter Activity Start Date', 'required');
 $row = array(
- $activityStart->show()
+    $activityStart->show()
 );
 $objTable->addCell($row[0], NULL, 'top', 'left');
 $objTable->endRow();
@@ -95,10 +94,8 @@ $row = array(
     "<b>" . $label = $objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . ":</b>"
 );
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-
 $activityFinish = &$this->getObject('datepicker', 'htmlelements');
 $activityFinish->setName('activityFinish');
-
 //$form->addRule('activityFinish', 'Please enter Activity Finish Date', 'required');
 $row = array(
     $activityFinish->show()
@@ -151,7 +148,7 @@ $objCancel->link($this->uri(array(
     'action' => 'view_activity'
 )));
 //$objCancel->link = $buttonCancel->show();
-$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome","eportfolio");
+$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager") . " " . $objLanguage->languageText("mod_eportfolio_eportfoliohome", "eportfolio");
 $linkCancel = $objCancel->show();
 $row = array(
     $button->show()

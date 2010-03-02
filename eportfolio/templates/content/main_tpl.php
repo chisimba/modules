@@ -59,16 +59,16 @@ echo "</br>";
 $iconPdf = $this->getObject('geticon', 'htmlelements');
 $iconPdf->setIcon('pdf');
 $iconPdf->alt = $objLanguage->languageText("mod_eportfolio_saveaspdf", 'eportfolio');
-if(class_exists('groupops',false)){
-	$mngpdflink = new link($this->uri(array(
-		   'module' => 'eportfolio',
-		   'action' => 'makepdf'
-	)));
-}else{
-	$mngpdflink = new link($this->uri(array(
-    'module' => 'eportfolio',
-    'action' => 'makepdf'
-	)));
+if (class_exists('groupops', false)) {
+    $mngpdflink = new link($this->uri(array(
+        'module' => 'eportfolio',
+        'action' => 'makepdf'
+    )));
+} else {
+    $mngpdflink = new link($this->uri(array(
+        'module' => 'eportfolio',
+        'action' => 'makepdf'
+    )));
 }
 $mngpdflink->link = $iconPdf->show();
 $linkpdfManage = $mngpdflink->show();
@@ -132,22 +132,20 @@ $link = new link($this->uri(array(
 $link->link = 'View Identification Details';
 //echo '<br clear="left" />'.$link->show();
 //Create Owner and Guest group for user
-if(class_exists('groupops',false)){
-	$eportfoliogrpList = $this->_objGroupAdmin->getId($name = $this->objUser->PKId($this->objUser->userId()));
-	if (empty($eportfoliogrpList)) {
-		   //Add User to context groups
-		   $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
-		   $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
-	}
-}else{
-	$eportfoliogrpList = $this->_objGroupAdmin->getId( $this->objUser->PKId($this->objUser->userId()), $pkField = 'name' );
-	if(empty($eportfoliogrpList))
-	{
-		
-		//Add User to context groups
-		$title = $this->objUser->PKId($this->objUser->userId()).' '.$objUser->getSurname();
-	        $this->createGroupsOld($this->objUser->PKId($this->objUser->userId()), $title);
-	}
+if (class_exists('groupops', false)) {
+    $eportfoliogrpList = $this->_objGroupAdmin->getId($name = $this->objUser->PKId($this->objUser->userId()));
+    if (empty($eportfoliogrpList)) {
+        //Add User to context groups
+        $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
+        $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
+    }
+} else {
+    $eportfoliogrpList = $this->_objGroupAdmin->getId($this->objUser->PKId($this->objUser->userId()) , $pkField = 'name');
+    if (empty($eportfoliogrpList)) {
+        //Add User to context groups
+        $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
+        $this->createGroupsOld($this->objUser->PKId($this->objUser->userId()) , $title);
+    }
 }
 //End Create
 //View Other's eportfolio
@@ -162,222 +160,222 @@ $epTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_owner", 'ep
 $epTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . "</b>", '', '', 'left', '', '');
 $epTable->endRow();
 //Loading View others portfolio. Checks if the system contains groupops, otherwise uses old framework
-if(class_exists('groupops',false)){
-	//getUserDirectGroups
-	$groupexists = 0;
-	$myPid = $this->objUser->PKId($this->objUser->userId());
-	//$myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->userId());
-	$myGroupsId = $this->_objGroupAdmin->getId($myPid);
-	$myGroups = $this->_objGroupAdmin->getSubgroups($myGroupsId);
-
-	//Get all groups and determine which ones the user belongs to
-	$userGroupsArray = array();
-	//Get the perm_user_d
-	if(class_exists('groupops',false)){
-		$usrGrpId = $this->objGroupsOps->getUserByUserId($this->objUser->userId());
-	}
-	$permUserId = $usrGrpId['perm_user_id'];
-	if(class_exists('groupops',false)){
-		$allGrps = $this->objGroupsOps->getAllGroups();
-		foreach($allGrps as $thisGrp) {
-			$isGpMbr = $this->objGroupsOps->isGroupMember($thisGrp['group_id'], $this->objUser->userId());
-			if ($isGpMbr) {
-				$userGroupsArray[] = $thisGrp['group_id'];
-			}
-		}
-	}
-	//Array to store grpUsers inorder to get the owner of the group
-	$usersListArr = array();
-	$usersPidListArr = array();
-	$buddiesListArr = array();
-	$buddiesPidListArr = array();
-	if (!empty($userGroupsArray)) {
-		foreach($userGroupsArray as $userGroup) {
-			$grpUsers = $this->objGroupsOps->getUsersInGroup($userGroup);
-			foreach($grpUsers as $grpUser) {
-				//Get the users in these groups
-				if (!in_array($grpUser['auth_user_id'], $usersListArr)) {
-					//Store user Pid
-					$userPid = $this->objUser->PKId($grpUser['auth_user_id']);
-					$usersPidListArr[] = $userPid;
-					//Store User Id
-					$usersListArr[] = $grpUser['auth_user_id'];
-					//Get the user's groupId (the root)
-					$userGrpId = $this->_objGroupAdmin->getId($userPid);
-					if (!empty($userGrpId)) {
-						//Get the user's sub groups
-						$userSubGrps = $this->_objGroupAdmin->getSubgroups($userGrpId);
-						//Check if empty
-						if(!empty($userSubGrps)){
-							foreach($userSubGrps[0] as $key => $userSubGrp) {
-								//					echo "<br>userSubGrp<br>";
-								//The fields to use in the select for getting group users
-								$fields = array(
-								'firstName',
-								'surname',
-								'tbl_users.id'
-								);
-								//Get the group users
-								$membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
-								foreach($membersList as $users) {
-								//Check if the logged in user is a user here, if true store userid and groupid
-									if ($users['id'] == $this->userPid) {
-										$buddiesPidListArr[$userGrpId] = $userPid;
-										$buddiesListArr[$userGrpId] = $grpUser['auth_user_id'];
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			$usrGrpOwner = array();
-			foreach($userGroupsArray as $usrSubGrp) {
-				$parentGrp = $this->_objGroupAdmin->getParent($usrSubGrp);
-				if ($myPid !== $parentGrp) $usrGrpOwner[$usrSubGrp] = $parentGrp;
-			}
-	}
-	foreach($buddiesPidListArr as $grpIdKey => $buddy) {
-		//get the array key value
-		$groupId = $grpIdKey;
-		$filter = " WHERE id = '" . $groupId . "'";
-		if ($buddy !== $myPid) {
-			//    $fullname = $this->objUserAdmin->getUserDetails($ownerId);
-			$fullname = $this->objUserAdmin->getUserDetails($buddy);
-			if (!empty($fullname)) {
-				//Get the buddys' sub groups
-				$userSubGrps = $this->_objGroupAdmin->getSubgroups($groupId);
-				foreach($userSubGrps[0] as $key => $userSubGrp) {
-					//The fields to use in the select for getting group users
-					$fields = array(
-					'firstName',
-					'surname',
-					'tbl_users.id'
-					);
-					//Get the group users
-					$membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
-					foreach($membersList as $users) {
-						//Check if the logged in user is a user here, if true store userid and groupid
-						if ($users['id'] == $this->userPid) {
-							//Select View
-							$iconSelect = $this->getObject('geticon', 'htmlelements');
-							$iconSelect->setIcon('view');
-							$iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
-							$mnglink = new link($this->uri(array(
-							'module' => 'eportfolio',
-							'action' => 'view_others_eportfolio',
-							'id' => $key,
-							'ownerId' => $buddy
-							)));
-							$mnglink->link = $iconSelect->show();
-							$linkManage = $mnglink->show();
-							//Store Group id
-							$textinput = new textinput("groupId", $key);
-							$epTable->startRow();
-							$epTable->addCell($linkManage, '', '', 'left', '', '');
-							$epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
-							$epTable->addCell($userSubGrp['group_define_name'], '', '', 'left', '', '');
-							$epTable->endRow();
-							$groupexists = $groupexists+1;
-						}
-					}
-				}
-			}
-		}
-	}
-	}else{
-		$allGrps = $this->_objGroupAdmin->getUserGroups( $this->objUser->PKId($this->objUser->userId()));
-		$myPid = $this->objUser->PKId($this->objUser->userId());
-		foreach( $myGroups as $groupId ) {
-			$filter = " WHERE id = '$groupId'";
-			$parentId = $this->_objGroupAdmin->getGroups( $fields = array( "id", "name", "parent_id" ), $filter );
-
-			$myparentId = $parentId[0];
-
-			$ownerId = $this->_objGroupAdmin->getname( $myparentId[parent_id] );		
-			if ( $ownerId !== $myPid ){
-				$fullname = $this->objUserAdmin->getUserDetails($ownerId);
-
-				if(!empty($fullname)){			
-					// Add row with user details.
-					$groupname = $this->_objGroupAdmin->getName( $groupId );
-					//Select View 
-					$iconSelect = $this->getObject('geticon','htmlelements');
-					$iconSelect->setIcon('view');	
-					$iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view",'eportfolio').' '.$fullname[firstname].$objLanguage->languageText("mod_eportfolio_viewEportfolio",'eportfolio');
-					$mnglink = new link($this->uri(array(
-					'module'=>'eportfolio',
-					'action'=>'view_others_eportfolio', 
-					'id' => $groupId
-					)));
-					$mnglink->link = $iconSelect->show();
-					$linkManage = $mnglink->show();     
-					//Store Group id
-					$textinput = new textinput("groupId",$groupId);
-					$epTable->startRow();
-					$epTable->addCell($linkManage,'','','left','','');
-					$epTable->addCell($fullname[title].' '.$fullname[firstname].' '.$fullname[surname],'','','left','','');
-					$epTable->addCell($groupname,'','','left','','');				
-					$epTable->endRow();
-					$groupexists = $groupexists + 1;
-				}
-			}
-		}
-	}
-	if ($groupexists == 0) {
-		$notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
-		$epTable->startRow();
-		$epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
-		$epTable->endRow();
-	}
-}else{
-//Else if groupops not found, use old groupadmin
-	//getUserDirectGroups
-	$groupexists = 0;
-	$myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->PKId($this->objUser->userId()));
-	$myPid = $this->objUser->PKId($this->objUser->userId());
-	foreach($myGroups as $groupId) {
-		$filter = " WHERE id = '$groupId'";
-		$parentId = $this->_objGroupAdmin->getGroups($fields = array(
-		"id",
-		"name",
-		"parent_id"
-		) , $filter);
-		$myparentId = $parentId[0];
-		$ownerId = $this->_objGroupAdmin->getname($myparentId['parent_id']);
-		if ($ownerId !== $myPid) {
-			$fullname = $this->objUserAdmin->getUserDetails($ownerId);
-			if (!empty($fullname)) {
-				// Add row with user details.
-				$groupname = $this->_objGroupAdmin->getName($groupId);
-				//Select View
-				$iconSelect = $this->getObject('geticon', 'htmlelements');
-				$iconSelect->setIcon('view');
-				$iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
-				$mnglink = new link($this->uri(array(
-				'module' => 'eportfolio',
-				'action' => 'view_others3_eportfolio',
-				'id' => $groupId
-				)));
-				$mnglink->link = $iconSelect->show();
-				$linkManage = $mnglink->show();
-				//Store Group id
-				$textinput = new textinput("groupId", $groupId);
-				$epTable->startRow();
-				$epTable->addCell($linkManage, '', '', 'left', '', '');
-				$epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
-				$epTable->addCell($groupname, '', '', 'left', '', '');
-				$epTable->endRow();
-				$groupexists = $groupexists+1;
-			}
-		}
-	}
-	if ($groupexists == 0) {
-		$notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
-		$epTable->startRow();
-		$epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
-		$epTable->endRow();
-	}
+if (class_exists('groupops', false)) {
+    //getUserDirectGroups
+    $groupexists = 0;
+    $myPid = $this->objUser->PKId($this->objUser->userId());
+    //$myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->userId());
+    $myGroupsId = $this->_objGroupAdmin->getId($myPid);
+    $myGroups = $this->_objGroupAdmin->getSubgroups($myGroupsId);
+    //Get all groups and determine which ones the user belongs to
+    $userGroupsArray = array();
+    //Get the perm_user_d
+    if (class_exists('groupops', false)) {
+        $usrGrpId = $this->objGroupsOps->getUserByUserId($this->objUser->userId());
+    }
+    $permUserId = $usrGrpId['perm_user_id'];
+    if (class_exists('groupops', false)) {
+        $allGrps = $this->objGroupsOps->getAllGroups();
+        foreach($allGrps as $thisGrp) {
+            $isGpMbr = $this->objGroupsOps->isGroupMember($thisGrp['group_id'], $this->objUser->userId());
+            if ($isGpMbr) {
+                $userGroupsArray[] = $thisGrp['group_id'];
+            }
+        }
+    }
+    //Array to store grpUsers inorder to get the owner of the group
+    $usersListArr = array();
+    $usersPidListArr = array();
+    $buddiesListArr = array();
+    $buddiesPidListArr = array();
+    if (!empty($userGroupsArray)) {
+        foreach($userGroupsArray as $userGroup) {
+            $grpUsers = $this->objGroupsOps->getUsersInGroup($userGroup);
+            foreach($grpUsers as $grpUser) {
+                //Get the users in these groups
+                if (!in_array($grpUser['auth_user_id'], $usersListArr)) {
+                    //Store user Pid
+                    $userPid = $this->objUser->PKId($grpUser['auth_user_id']);
+                    $usersPidListArr[] = $userPid;
+                    //Store User Id
+                    $usersListArr[] = $grpUser['auth_user_id'];
+                    //Get the user's groupId (the root)
+                    $userGrpId = $this->_objGroupAdmin->getId($userPid);
+                    if (!empty($userGrpId)) {
+                        //Get the user's sub groups
+                        $userSubGrps = $this->_objGroupAdmin->getSubgroups($userGrpId);
+                        //Check if empty
+                        if (!empty($userSubGrps)) {
+                            foreach($userSubGrps[0] as $key => $userSubGrp) {
+                                //					echo "<br>userSubGrp<br>";
+                                //The fields to use in the select for getting group users
+                                $fields = array(
+                                    'firstName',
+                                    'surname',
+                                    'tbl_users.id'
+                                );
+                                //Get the group users
+                                $membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
+                                foreach($membersList as $users) {
+                                    //Check if the logged in user is a user here, if true store userid and groupid
+                                    if ($users['id'] == $this->userPid) {
+                                        $buddiesPidListArr[$userGrpId] = $userPid;
+                                        $buddiesListArr[$userGrpId] = $grpUser['auth_user_id'];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $usrGrpOwner = array();
+            foreach($userGroupsArray as $usrSubGrp) {
+                $parentGrp = $this->_objGroupAdmin->getParent($usrSubGrp);
+                if ($myPid !== $parentGrp) $usrGrpOwner[$usrSubGrp] = $parentGrp;
+            }
+        }
+        foreach($buddiesPidListArr as $grpIdKey => $buddy) {
+            //get the array key value
+            $groupId = $grpIdKey;
+            $filter = " WHERE id = '" . $groupId . "'";
+            if ($buddy !== $myPid) {
+                //    $fullname = $this->objUserAdmin->getUserDetails($ownerId);
+                $fullname = $this->objUserAdmin->getUserDetails($buddy);
+                if (!empty($fullname)) {
+                    //Get the buddys' sub groups
+                    $userSubGrps = $this->_objGroupAdmin->getSubgroups($groupId);
+                    foreach($userSubGrps[0] as $key => $userSubGrp) {
+                        //The fields to use in the select for getting group users
+                        $fields = array(
+                            'firstName',
+                            'surname',
+                            'tbl_users.id'
+                        );
+                        //Get the group users
+                        $membersList = $this->_objGroupAdmin->getGroupUsers($key, $fields);
+                        foreach($membersList as $users) {
+                            //Check if the logged in user is a user here, if true store userid and groupid
+                            if ($users['id'] == $this->userPid) {
+                                //Select View
+                                $iconSelect = $this->getObject('geticon', 'htmlelements');
+                                $iconSelect->setIcon('view');
+                                $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
+                                $mnglink = new link($this->uri(array(
+                                    'module' => 'eportfolio',
+                                    'action' => 'view_others_eportfolio',
+                                    'id' => $key,
+                                    'ownerId' => $buddy
+                                )));
+                                $mnglink->link = $iconSelect->show();
+                                $linkManage = $mnglink->show();
+                                //Store Group id
+                                $textinput = new textinput("groupId", $key);
+                                $epTable->startRow();
+                                $epTable->addCell($linkManage, '', '', 'left', '', '');
+                                $epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
+                                $epTable->addCell($userSubGrp['group_define_name'], '', '', 'left', '', '');
+                                $epTable->endRow();
+                                $groupexists = $groupexists+1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        $allGrps = $this->_objGroupAdmin->getUserGroups($this->objUser->PKId($this->objUser->userId()));
+        $myPid = $this->objUser->PKId($this->objUser->userId());
+        foreach($myGroups as $groupId) {
+            $filter = " WHERE id = '$groupId'";
+            $parentId = $this->_objGroupAdmin->getGroups($fields = array(
+                "id",
+                "name",
+                "parent_id"
+            ) , $filter);
+            $myparentId = $parentId[0];
+            $ownerId = $this->_objGroupAdmin->getname($myparentId[parent_id]);
+            if ($ownerId !== $myPid) {
+                $fullname = $this->objUserAdmin->getUserDetails($ownerId);
+                if (!empty($fullname)) {
+                    // Add row with user details.
+                    $groupname = $this->_objGroupAdmin->getName($groupId);
+                    //Select View
+                    $iconSelect = $this->getObject('geticon', 'htmlelements');
+                    $iconSelect->setIcon('view');
+                    $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
+                    $mnglink = new link($this->uri(array(
+                        'module' => 'eportfolio',
+                        'action' => 'view_others_eportfolio',
+                        'id' => $groupId
+                    )));
+                    $mnglink->link = $iconSelect->show();
+                    $linkManage = $mnglink->show();
+                    //Store Group id
+                    $textinput = new textinput("groupId", $groupId);
+                    $epTable->startRow();
+                    $epTable->addCell($linkManage, '', '', 'left', '', '');
+                    $epTable->addCell($fullname[title] . ' ' . $fullname[firstname] . ' ' . $fullname[surname], '', '', 'left', '', '');
+                    $epTable->addCell($groupname, '', '', 'left', '', '');
+                    $epTable->endRow();
+                    $groupexists = $groupexists+1;
+                }
+            }
+        }
+    }
+    if ($groupexists == 0) {
+        $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+        $epTable->startRow();
+        $epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
+        $epTable->endRow();
+    }
+} else {
+    //Else if groupops not found, use old groupadmin
+    //getUserDirectGroups
+    $groupexists = 0;
+    $myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->PKId($this->objUser->userId()));
+    $myPid = $this->objUser->PKId($this->objUser->userId());
+    foreach($myGroups as $groupId) {
+        $filter = " WHERE id = '$groupId'";
+        $parentId = $this->_objGroupAdmin->getGroups($fields = array(
+            "id",
+            "name",
+            "parent_id"
+        ) , $filter);
+        $myparentId = $parentId[0];
+        $ownerId = $this->_objGroupAdmin->getname($myparentId['parent_id']);
+        if ($ownerId !== $myPid) {
+            $fullname = $this->objUserAdmin->getUserDetails($ownerId);
+            if (!empty($fullname)) {
+                // Add row with user details.
+                $groupname = $this->_objGroupAdmin->getName($groupId);
+                //Select View
+                $iconSelect = $this->getObject('geticon', 'htmlelements');
+                $iconSelect->setIcon('view');
+                $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
+                $mnglink = new link($this->uri(array(
+                    'module' => 'eportfolio',
+                    'action' => 'view_others3_eportfolio',
+                    'id' => $groupId
+                )));
+                $mnglink->link = $iconSelect->show();
+                $linkManage = $mnglink->show();
+                //Store Group id
+                $textinput = new textinput("groupId", $groupId);
+                $epTable->startRow();
+                $epTable->addCell($linkManage, '', '', 'left', '', '');
+                $epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
+                $epTable->addCell($groupname, '', '', 'left', '', '');
+                $epTable->endRow();
+                $groupexists = $groupexists+1;
+            }
+        }
+    }
+    if ($groupexists == 0) {
+        $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+        $epTable->startRow();
+        $epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
+        $epTable->endRow();
+    }
 }
 //View Other's eportfolio
 //Start Address View
@@ -700,10 +698,10 @@ if (!empty($demographicsList)) {
     foreach($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
-        $datetime = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
+        $datetime = explode("-", $this->objDate->formatDate($demographicsItem['birth']));
         $demographicsTable->startRow();
         $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-        $demographicsTable->addCell($datetime[0] , "", NULL, NULL, NULL, '');
+        $demographicsTable->addCell($datetime[0], "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
@@ -1685,68 +1683,18 @@ if (!$hasAccess) {
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
     $assertionstable->endRow();
-if(class_exists('groupops',false)){
-    // Step through the list of addresses.
-    $class = NULL;
-    //    if (!empty($Id))
-    if (!empty($myGroups)) {
-        foreach($myGroups as $groupId) {
-            //Get the group parent_id
-            foreach(array_keys($groupId) as $myGrpId) $groupId = $myGrpId;
-            //            $parentId = $this->_objGroupAdmin->getParent($groupId);
-            $myownerId = $this->_objGroupAdmin->getGroupUsers($groupId, $fields = null, $filter = null);
-            //var_dump($myownerId[0]['perm_user_id']);
-            //            foreach($parentId as $myparentId) {
-            //Get the name from group table
-            $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
-            $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
-            if (!empty($assertionslist)) {
-                // Display each field for activities
-                $assertionstable->startRow();
-                $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
-                $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-                $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
-                $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
-                // Show the view link
-                //Display Icon
-                $atyiconView = $this->getObject('geticon', 'htmlelements');
-                $atyiconView->setIcon('bookopen');
-                $atyiconView->alt = $objLanguage->languageText("mod_eportfolio_display", 'eportfolio');
-                $atymnglink = new link($this->uri(array(
-                    'module' => 'eportfolio',
-                    'action' => 'displayassertion',
-                    'thisid' => $assertionslist[0]["id"]
-                )));
-                $atymnglink->link = $atyiconView->show();
-                $atylinkManage = $atymnglink->show();
-                $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
-                $assertionstable->endRow();
-            }else {
-														 $assertionstable->startRow();
-														 $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
-														 $assertionstable->endRow();
-											}
-            unset($myparentId);
-            //}
-            unset($groupId);
-        }
-    } else {
-        $assertionstable->startRow();
-        $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
-        $assertionstable->endRow();
-    }
-   //Else if groupops does not exist
-			}else{
-    // user Pk id
-    $userPid = $this->objUser->PKId($this->objUser->userId());
-				$Id = $this->_objGroupAdmin->getUserGroups($userPid);
-    // Step through the list of addresses.
-    $class = NULL;
-    if (!empty($Id)) {
-        foreach($Id as $groupId) {
-            //Get the group parent_id
-            $parentId = $this->_objGroupAdmin->getParent($groupId);
-            foreach($parentId as $myparentId) {
+    if (class_exists('groupops', false)) {
+        // Step through the list of addresses.
+        $class = NULL;
+        //    if (!empty($Id))
+        if (!empty($myGroups)) {
+            foreach($myGroups as $groupId) {
+                //Get the group parent_id
+                foreach(array_keys($groupId) as $myGrpId) $groupId = $myGrpId;
+                //            $parentId = $this->_objGroupAdmin->getParent($groupId);
+                $myownerId = $this->_objGroupAdmin->getGroupUsers($groupId, $fields = null, $filter = null);
+                //var_dump($myownerId[0]['perm_user_id']);
+                //            foreach($parentId as $myparentId) {
                 //Get the name from group table
                 $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                 $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
@@ -1771,19 +1719,68 @@ if(class_exists('groupops',false)){
                     $atylinkManage = $atymnglink->show();
                     $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
                     $assertionstable->endRow();
+                } else {
+                    $assertionstable->startRow();
+                    $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+                    $assertionstable->endRow();
                 }
                 unset($myparentId);
+                //}
+                unset($groupId);
             }
-            unset($groupId);
+        } else {
+            $assertionstable->startRow();
+            $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $assertionstable->endRow();
         }
+        //Else if groupops does not exist
+        
     } else {
-        $assertionstable->startRow();
-        $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
-        $assertionstable->endRow();
+        // user Pk id
+        $userPid = $this->objUser->PKId($this->objUser->userId());
+        $Id = $this->_objGroupAdmin->getUserGroups($userPid);
+        // Step through the list of addresses.
+        $class = NULL;
+        if (!empty($Id)) {
+            foreach($Id as $groupId) {
+                //Get the group parent_id
+                $parentId = $this->_objGroupAdmin->getParent($groupId);
+                foreach($parentId as $myparentId) {
+                    //Get the name from group table
+                    $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                    $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
+                    if (!empty($assertionslist)) {
+                        // Display each field for activities
+                        $assertionstable->startRow();
+                        $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
+                        $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
+                        $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                        $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
+                        // Show the view link
+                        //Display Icon
+                        $atyiconView = $this->getObject('geticon', 'htmlelements');
+                        $atyiconView->setIcon('bookopen');
+                        $atyiconView->alt = $objLanguage->languageText("mod_eportfolio_display", 'eportfolio');
+                        $atymnglink = new link($this->uri(array(
+                            'module' => 'eportfolio',
+                            'action' => 'displayassertion',
+                            'thisid' => $assertionslist[0]["id"]
+                        )));
+                        $atymnglink->link = $atyiconView->show();
+                        $atylinkManage = $atymnglink->show();
+                        $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
+                        $assertionstable->endRow();
+                    }
+                    unset($myparentId);
+                }
+                unset($groupId);
+            }
+        } else {
+            $assertionstable->startRow();
+            $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $assertionstable->endRow();
+        }
     }
-		}
-    
-    
 } else {
     //Language Items
     $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
@@ -2276,16 +2273,16 @@ $tabBox->addTab(array(
     'name' => $this->objLanguage->code2Txt("phrase_othersePortfolio", 'eportfolio') ,
     'content' => $epTable->show()
 ) , 'winclassic-tab-style-sheet');
-if(class_exists('groupops',false)){
-$tabBox->addTab(array(
-    'name' => $this->objLanguage->code2Txt("phrase_manage", 'eportfolio') ,
-    'content' => $this->getEportfolioUsers()
-) , 'winclassic-tab-style-sheet');
-}else{
-$tabBox->addTab(array(
-    'name' => $this->objLanguage->code2Txt("phrase_manage", 'eportfolio') ,
-    'content' => $this->getEportfolioUsersOld()
-) , 'winclassic-tab-style-sheet');
+if (class_exists('groupops', false)) {
+    $tabBox->addTab(array(
+        'name' => $this->objLanguage->code2Txt("phrase_manage", 'eportfolio') ,
+        'content' => $this->getEportfolioUsers()
+    ) , 'winclassic-tab-style-sheet');
+} else {
+    $tabBox->addTab(array(
+        'name' => $this->objLanguage->code2Txt("phrase_manage", 'eportfolio') ,
+        'content' => $this->getEportfolioUsersOld()
+    ) , 'winclassic-tab-style-sheet');
 }
 echo $tabBox->show();
 if ($this->getParam('message') == 'uploadsuccessful') {

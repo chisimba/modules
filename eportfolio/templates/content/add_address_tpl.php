@@ -5,7 +5,6 @@ $this->loadClass("textinput", "htmlelements");
 $this->loadClass("button", "htmlelements");
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
-
 //	$objLabel =& $this->newObject('label', 'htmlelements');
 $objWindow = &$this->newObject('windowpop', 'htmlelements');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
@@ -162,10 +161,10 @@ $objCancel->link($this->uri(array(
 )));
 //$objLanguage->languageText("mod_filemanager_returnto")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome");
 //$objCancel->link = $buttonCancel->show();
-$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome","eportfolio");
+$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager") . " " . $objLanguage->languageText("mod_eportfolio_eportfoliohome", "eportfolio");
 $linkCancel = $objCancel->show();
 $row = array(
-    $button->show() 
+    $button->show()
 );
 $objTable->startRow();
 $objTable->addCell('&nbsp;', 140, 'top', 'right');

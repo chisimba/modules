@@ -67,7 +67,6 @@ $iconSelect->setIcon('home');
 $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_eportfoliohome", 'eportfolio');
 $mnglink = new link($this->uri(array(
     'module' => 'eportfolio'
-
 )));
 $mnglink->link = $iconSelect->show();
 $linkManage = $mnglink->show();
@@ -899,7 +898,6 @@ $this->objTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordDemographics", 'eportfolio') ,
     'content' => $demographicsLabel
 ));
-
 //Information tab
 $this->objmainTab->init();
 $this->objmainTab->tabId = FALSE;

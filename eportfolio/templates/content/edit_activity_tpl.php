@@ -82,12 +82,11 @@ $row = array(
 );
 $objTable->addCell($row[0], 140, 'bottom', 'right');
 //$startField = $this->objPopupcal->show('activityStart', 'yes', 'no', $activityStart);
-$activityStart = explode(" ",$activityStart);
+$activityStart = explode(" ", $activityStart);
 $activtyStart = &$this->getObject('datepicker', 'htmlelements');
 $activtyStart->setName('activityStart');
 $activtyStart->setDateFormat("YYYY-MM-DD");
 $activtyStart->setDefaultDate($activityStart[0]);
-
 $form->addRule('activityStart', 'Please enter Activity Start Date', 'required');
 $row = array(
     $activtyStart->show()
@@ -101,12 +100,11 @@ $row = array(
 );
 $objTable->addCell($row[0], 140, 'bottom', 'right');
 //$startField = $this->objPopupcal->show('activityFinish', 'yes', 'no', $activityFinish);
-$activityFinish = explode(" ",$activityFinish);
+$activityFinish = explode(" ", $activityFinish);
 $activtyFinish = &$this->getObject('datepicker', 'htmlelements');
 $activtyFinish->setName('activityFinish');
 $activtyFinish->setDateFormat("YYYY-MM-DD");
 $activtyFinish->setDefaultDate($activityFinish[0]);
-
 //$form->addRule('activityFinish', 'Please enter Activity Finish Date', 'required');
 $row = array(
     $activtyFinish->show()
@@ -155,7 +153,7 @@ $objCancel->link($this->uri(array(
     'action' => 'view_activity'
 )));
 //$objCancel->link = $buttonCancel->show();
-$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText("mod_eportfolio_eportfoliohome","eportfolio");
+$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager") . " " . $objLanguage->languageText("mod_eportfolio_eportfoliohome", "eportfolio");
 $linkCancel = $objCancel->show();
 $row = array(
     $button->show()

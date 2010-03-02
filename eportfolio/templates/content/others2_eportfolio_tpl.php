@@ -59,7 +59,6 @@ $categorytypepage = '';
 $groupname = $this->_objGroupAdmin->getName($groupId);
 //Get the subgroups which represent the various parts of the eportfolio ie a goal item, an activity item
 $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
-
 $objHeading->align = center;
 $objHeading->type = 2;
 //Get Owner Details
@@ -258,7 +257,7 @@ if (!empty($emailList)) {
     }
     unset($emailItem);
 }
-if($emcount == 0) {
+if ($emcount == 0) {
     $emailTable->startRow();
     $emailTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
     $emailTable->endRow();
@@ -293,10 +292,10 @@ if (!empty($demographicsList)) {
             }
             if ($demoCheck == 1) {
                 $democount = 1;
-									       $datetime = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
+                $datetime = explode("-", $this->objDate->formatDate($demographicsItem['birth']));
                 $demographicsTable->startRow();
                 $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-                $demographicsTable->addCell($datetime[0] , "", NULL, NULL, NULL, '');
+                $demographicsTable->addCell($datetime[0], "", NULL, NULL, NULL, '');
                 $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
                 $demographicsTable->endRow();
             }
@@ -304,12 +303,11 @@ if (!empty($demographicsList)) {
     }
     unset($demographicsItem);
 }
-if($democount==0) {
+if ($democount == 0) {
     $demographicsTable->startRow();
     $demographicsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
     $demographicsTable->endRow();
 }
-
 //echo $demographicsTable->show();
 //End Demographics view
 //view name
@@ -458,7 +456,7 @@ if (!empty($affiliationList)) {
         }
     }
     unset($affiliationItem);
-} 
+}
 if ($affcount == 0) {
     $affiliationTable->startRow();
     $affiliationTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
@@ -555,7 +553,7 @@ if (!empty($qclList)) {
         }
     }
     unset($qclItem);
-} 
+}
 if ($qclcount == 0) {
     $qclTable->startRow();
     $qclTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
@@ -572,9 +570,8 @@ $goalsTable->border = 0;
 $goalsTable->cellspacing = '12';
 $goalsTable->width = "60%";
 $goalsTable->startRow();
-$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>" , '', '', '', '', 'colspan="2"');
+$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>", '', '', '', '', 'colspan="2"');
 $goalsTable->endRow();
-
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($goalsList)) {
@@ -928,7 +925,6 @@ $this->objTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordDemographics", 'eportfolio') ,
     'content' => $demographicsLabel
 ));
-
 //Information tab
 $this->objmainTab->init();
 $this->objmainTab->tabId = FALSE;

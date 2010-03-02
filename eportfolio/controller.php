@@ -50,10 +50,10 @@ class eportfolio extends controller
         $this->objUrl = $this->getObject('url', 'strings');
         $this->_objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
-								//TEMPORARY Check if class groupops exists
-								if(file_exists($this->objConfig->getsiteRootPath()."core_modules/groupadmin/classes/groupops_class_inc.php")){
-		       $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
-								}
+        //TEMPORARY Check if class groupops exists
+        if (file_exists($this->objConfig->getsiteRootPath() . "core_modules/groupadmin/classes/groupops_class_inc.php")) {
+            $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
+        }
         $this->objGroupUsers = $this->getObject('groupusersdb', 'groupadmin');
         $this->_objDBContext = &$this->newObject('dbcontext', 'context');
         $this->objContextUsers = $this->getObject('contextusers', 'contextgroups');
@@ -357,18 +357,18 @@ class eportfolio extends controller
             $interests = $this->objGetall->getInterests($myid);
             $reflections = $this->objGetall->getReflections($myid);
             $assertions = $this->objGetall->getAssertions($myPid);
-												//Avoid empty pdf output
-												$createPdf = False;
-												if(!empty($address)||!empty($contacts)||!empty($emails)||!empty($demographics)||!empty($activity)||!empty($affiliation)||!empty($transcripts)||!empty($qualification)||!empty($goals)||!empty($competency)||!empty($interests)||!empty($reflections)||!empty($assertions)){
-													$createPdf = True;
-												}
+            //Avoid empty pdf output
+            $createPdf = False;
+            if (!empty($address) || !empty($contacts) || !empty($emails) || !empty($demographics) || !empty($activity) || !empty($affiliation) || !empty($transcripts) || !empty($qualification) || !empty($goals) || !empty($competency) || !empty($interests) || !empty($reflections) || !empty($assertions)) {
+                $createPdf = True;
+            }
             //get the pdfmaker classes
             $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
             $text = '<h1>' . $fullnames . "</h1><br></br>\r\n" . $address . $contacts . $emails . $demographics;
             $otherText = $activity . $affiliation . $transcripts . $qualification . $goals . $competency . $interests . $reflections . $assertions;
             //Write pdf
             $objPdf->initWrite();
-            if ($createPdf == True)$objPdf->partWrite($text);
+            if ($createPdf == True) $objPdf->partWrite($text);
             if (!empty($activity)) $objPdf->partWrite($activity);
             if (!empty($affiliation)) $objPdf->partWrite($affiliation);
             if (!empty($transcripts)) $objPdf->partWrite($transcripts);
@@ -378,15 +378,15 @@ class eportfolio extends controller
             if (!empty($interests)) $objPdf->partWrite($interests);
             if (!empty($reflections)) $objPdf->partWrite($reflections);
             if (!empty($assertions)) $objPdf->partWrite($assertions);
-            if ($createPdf == True){
-             return $objPdf->show();
-            }else{
-		           return $this->nextAction('main', array(
-		               'message' => 'sorryemptypdf'
-		           ));
-            }            
+            if ($createPdf == True) {
+                return $objPdf->show();
+            } else {
+                return $this->nextAction('main', array(
+                    'message' => 'sorryemptypdf'
+                ));
+            }
             break;
-            
+
         case 'emptypdfmessage':
             $this->setPageTemplate(NULL);
             $this->setLayoutTemplate(NULL);
@@ -394,94 +394,94 @@ class eportfolio extends controller
             break;
 
         case 'addparts':
-									if(class_exists('groupops',false)){
-										$selectedParts = $this->getArrayParam('arrayList');
-										$groupId = $this->getParam('mygroupId', NULL);
-										if (empty($groupId)) $groupId = $this->getSession('groupId', $groupId);
-										$this->setVarByRef('groupId', $groupId);
-										//Get user Groups
-										$userGroups = $this->_objGroupAdmin->getSubgroups($groupId);
-										if (!empty($userGroups[0])) {
-											foreach($userGroups[0] as $userGroup) {
-												$group_define_name[] = $userGroup['group_define_name'];
-											}
-											foreach($group_define_name as $partPid) {
-												$grpId = $this->_objGroupAdmin->getId($partPid);
-												$this->_objGroupAdmin->deleteGroup($grpId);
-											}
-										}
-										//Get the group_define_name which is similar from the selectedpartId from the userGroups array
-										$group_define_name = array();
-										if (empty($selectedParts)) {
-											if (!empty($userGroups[0])) {
-												foreach($userGroups[0] as $userGroup) {
-													$group_define_name[] = $userGroup['group_define_name'];
-												}
-												foreach($group_define_name as $partPid) {
-													$grpId = $this->_objGroupAdmin->getId($partPid);
-													$this->_objGroupAdmin->deleteGroup($grpId);
-												}
-											}
-										} else {
-										// Get the added member ids
-										$addList = array_diff($selectedParts, $group_define_name);
-										// Get the deleted member ids
-										$delList = array_diff($group_define_name, $selectedParts);
-										// Delete these members
-										if (count($delList) > 0) {
-											foreach($delList as $partPid) {
-												$grpId = $this->_objGroupAdmin->getId($partPid);
-												$this->_objGroupAdmin->deleteGroup($grpId);
-											}
-										}
-										// Add these members
-										if (count($addList) > 0) {
-											$this->manageEportfolioViewers($addList, $groupId);
-										}
-										//Empty array
-										$selectedParts = array();
-         }
-           $this->setLayoutTemplate('eportfolio_layout_tpl.php');      
-          return 'allparts_tpl.php';
-         }else{
-										$selectedParts = $this->getArrayParam('arrayList');
-										$groupId = $this->getParam('groupId', NULL);
-										$this->setVarByRef('groupId', $groupId);
-										//Get user Groups
-										$userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
-										if (empty($selectedParts)) {
-											$this->deleteGroupUsers($userGroups, $groupId);
-										} else {
-											// Get the added member ids
-											$addList = array_diff($selectedParts, $userGroups);
-											// Get the deleted member ids
-											$delList = array_diff($userGroups, $selectedParts);
-											// Delete these members
-											foreach($delList as $partPid) {
-												$this->_objGroupAdmin->deleteGroupUser($partPid['group_id'], $groupId);
-											}
-											// Add these members
-											if (count($addList) > 0) {
-												$this->manageEportfolioViewersOld($addList, $groupId);
-											}
-											//Empty array
-											$selectedParts = array();
-										}
-           $this->setLayoutTemplate('eportfolio_layout_tpl.php');      
-          return 'allparts2_tpl.php';
-         }
+            if (class_exists('groupops', false)) {
+                $selectedParts = $this->getArrayParam('arrayList');
+                $groupId = $this->getParam('mygroupId', NULL);
+                if (empty($groupId)) $groupId = $this->getSession('groupId', $groupId);
+                $this->setVarByRef('groupId', $groupId);
+                //Get user Groups
+                $userGroups = $this->_objGroupAdmin->getSubgroups($groupId);
+                if (!empty($userGroups[0])) {
+                    foreach($userGroups[0] as $userGroup) {
+                        $group_define_name[] = $userGroup['group_define_name'];
+                    }
+                    foreach($group_define_name as $partPid) {
+                        $grpId = $this->_objGroupAdmin->getId($partPid);
+                        $this->_objGroupAdmin->deleteGroup($grpId);
+                    }
+                }
+                //Get the group_define_name which is similar from the selectedpartId from the userGroups array
+                $group_define_name = array();
+                if (empty($selectedParts)) {
+                    if (!empty($userGroups[0])) {
+                        foreach($userGroups[0] as $userGroup) {
+                            $group_define_name[] = $userGroup['group_define_name'];
+                        }
+                        foreach($group_define_name as $partPid) {
+                            $grpId = $this->_objGroupAdmin->getId($partPid);
+                            $this->_objGroupAdmin->deleteGroup($grpId);
+                        }
+                    }
+                } else {
+                    // Get the added member ids
+                    $addList = array_diff($selectedParts, $group_define_name);
+                    // Get the deleted member ids
+                    $delList = array_diff($group_define_name, $selectedParts);
+                    // Delete these members
+                    if (count($delList) > 0) {
+                        foreach($delList as $partPid) {
+                            $grpId = $this->_objGroupAdmin->getId($partPid);
+                            $this->_objGroupAdmin->deleteGroup($grpId);
+                        }
+                    }
+                    // Add these members
+                    if (count($addList) > 0) {
+                        $this->manageEportfolioViewers($addList, $groupId);
+                    }
+                    //Empty array
+                    $selectedParts = array();
+                }
+                $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+                return 'allparts_tpl.php';
+            } else {
+                $selectedParts = $this->getArrayParam('arrayList');
+                $groupId = $this->getParam('groupId', NULL);
+                $this->setVarByRef('groupId', $groupId);
+                //Get user Groups
+                $userGroups = $this->_objGroupAdmin->getUserDirectGroups($groupId);
+                if (empty($selectedParts)) {
+                    $this->deleteGroupUsers($userGroups, $groupId);
+                } else {
+                    // Get the added member ids
+                    $addList = array_diff($selectedParts, $userGroups);
+                    // Get the deleted member ids
+                    $delList = array_diff($userGroups, $selectedParts);
+                    // Delete these members
+                    foreach($delList as $partPid) {
+                        $this->_objGroupAdmin->deleteGroupUser($partPid['group_id'], $groupId);
+                    }
+                    // Add these members
+                    if (count($addList) > 0) {
+                        $this->manageEportfolioViewersOld($addList, $groupId);
+                    }
+                    //Empty array
+                    $selectedParts = array();
+                }
+                $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+                return 'allparts2_tpl.php';
+            }
         case "add_group":
             return "add_group_tpl.php";
             break;
 
         case 'manage_eportfolio':
-            $this->setLayoutTemplate('eportfolio_layout_tpl.php');      
+            $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             $groupId = $this->getParam('id', null);
             $this->setVarByRef('groupId', $groupId);
-            if(class_exists('groupops',false)){
-            	return "allparts_tpl.php";
-            }else{
-            	return "allparts2_tpl.php";
+            if (class_exists('groupops', false)) {
+                return "allparts_tpl.php";
+            } else {
+                return "allparts2_tpl.php";
             }
             break;
 
@@ -555,6 +555,7 @@ class eportfolio extends controller
             $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             return "add_interest_tpl.php";
             break;
+
         case "view_assertion":
         case "view_product":
         case "view_category":
@@ -604,7 +605,6 @@ class eportfolio extends controller
             $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             return "add_assertion_tpl.php";
             break;
-
 
         case "add_product":
             $this->setLayoutTemplate('eportfolio_layout_tpl.php');
@@ -814,12 +814,11 @@ class eportfolio extends controller
             break;
 
         case "addgroupconfirm":
-												if(class_exists('groupops',false)){
-            	$id = $this->addGroups($this->getParam('group', NULL));
-            }else{
-            	$id = $this->addGroupsOld($this->getParam('group', NULL));
+            if (class_exists('groupops', false)) {
+                $id = $this->addGroups($this->getParam('group', NULL));
+            } else {
+                $id = $this->addGroupsOld($this->getParam('group', NULL));
             }
-
             return $this->nextAction('main', NULL);
             break;
 
@@ -1476,6 +1475,7 @@ class eportfolio extends controller
         $this->setLayoutTemplate('eportfolio_layout_tpl.php');
         return "view_others_tpl.php";
         break;
+
     case "configureviews":
         $this->setLayoutTemplate('eportfolio_layout_tpl.php');
         return "manage_views_tpl.php";
@@ -1489,7 +1489,7 @@ class eportfolio extends controller
 }
 private function showUserDetailsForm() 
 {
-//    return 'main_tpl.php';
+    //    return 'main_tpl.php';
     return "new_main_tpl.php";
 }
 /**
@@ -1506,10 +1506,9 @@ private function removeUserFromGroup($userId = NULL, $groupId = NULL)
     }
     //$pkId = $this->objUser->PKId($userId);
     //Check if class groupops exists
-				if(class_exists('groupops', false)) 
-				{
-	    $permid = $this->objGroupsOps->getUserByUserId($userId);
-				}
+    if (class_exists('groupops', false)) {
+        $permid = $this->objGroupsOps->getUserByUserId($userId);
+    }
     $pkId = $permid['perm_user_id'];
     $deleteMember = $this->_objGroupAdmin->deleteGroupUser($groupId, $pkId);
     return $this->nextAction('viewgroups', array(
@@ -1587,14 +1586,13 @@ private function updateUserRoles()
     $changedItems = array_unique($changedItems);
     $groups = $this->_objGroupAdmin->getTopLevelGroups();
     foreach($changedItems as $item) {
-								//Check if class groupops exists
-								if(class_exists('groupops', false)) 
-								{
-		       $permid = $this->objGroupsOps->getUserByUserId($item);
-		       $pkId = $permid['perm_user_id'];
-		       //remove users
-		       $this->objGroupsOps->removeUser($groupId, $pkId);
-								}
+        //Check if class groupops exists
+        if (class_exists('groupops', false)) {
+            $permid = $this->objGroupsOps->getUserByUserId($item);
+            $pkId = $permid['perm_user_id'];
+            //remove users
+            $this->objGroupsOps->removeUser($groupId, $pkId);
+        }
         $this->_objGroupAdmin->addGroupUser($groupId, $pkId);
     }
     // die;
@@ -1807,14 +1805,15 @@ function processManagegroup($myId)
             $list = array();
         }
         // Get the original member ids
-        $fields = array('tbl_users.id');
-
+        $fields = array(
+            'tbl_users.id'
+        );
         $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, Null, Null);
-	       $member = array();
-        if(!empty($memberList)){
-		       foreach($memberList as $theList){
-		        $member[]= $theList['id'];
-		       } 
+        $member = array();
+        if (!empty($memberList)) {
+            foreach($memberList as $theList) {
+                $member[] = $theList['id'];
+            }
         }
         //$oldList = $this->_objGroupAdmin->getField($memberList, 'id');
         // Get the added member ids
@@ -1823,16 +1822,16 @@ function processManagegroup($myId)
         // Get the deleted member ids
         $delList = array_diff($member, $list);
         // Add these members
-        foreach($addList as $userId) {        
-									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == FALSE){
-            $this->_objGroupAdmin->addGroupUser($groupId, $userId);
-									}
+        foreach($addList as $userId) {
+            if ($this->_objGroupAdmin->isGroupMember($userId, $groupId) == FALSE) {
+                $this->_objGroupAdmin->addGroupUser($groupId, $userId);
+            }
         }
         // Delete these members
         foreach($delList as $userId) {
-									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == TRUE){
-            $this->_objGroupAdmin->deleteGroupUser($groupId, $userId);
-         }   
+            if ($this->_objGroupAdmin->isGroupMember($userId, $groupId) == TRUE) {
+                $this->_objGroupAdmin->deleteGroupUser($groupId, $userId);
+            }
         }
     }
     if ($this->getParam('button') == 'cancel' && $groupId <> '') {
@@ -1870,15 +1869,15 @@ function processManage($groupName, $myId)
         $delList = array_diff($oldList, $list);
         // Add these members
         foreach($addList as $userId) {
-									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == FALSE){
-          $this->_objGroupAdmin->addGroupUser($groupId, $userId);
-									}
+            if ($this->_objGroupAdmin->isGroupMember($userId, $groupId) == FALSE) {
+                $this->_objGroupAdmin->addGroupUser($groupId, $userId);
+            }
         }
         // Delete these members
         foreach($delList as $userId) {
-									if($this->_objGroupAdmin->isGroupMember( $userId, $groupId) == TRUE){
-            $this->_objGroupAdmin->deleteGroupUser($groupId, $userId);
-         }
+            if ($this->_objGroupAdmin->isGroupMember($userId, $groupId) == TRUE) {
+                $this->_objGroupAdmin->deleteGroupUser($groupId, $userId);
+            }
         }
     }
     if ($this->getParam('button') == 'cancel' && $groupId <> '') {
@@ -1886,109 +1885,108 @@ function processManage($groupName, $myId)
     // After processing return to main
     return $this->nextAction('view_assertion', array());
 }
-
- /**
-  * Method to show the manage member group template.
-  * @param string the group id to be managed.
-  */
- function showManagegroup($myid) 
- {
-     // The member list of this group
-     $fields = array(
-         'firstName',
-         'surname',
-         'tbl_users.id'
-     );
-     $memberList = $this->_objGroupAdmin->getGroupUsers($myid, $fields);
-     $memberIds = $this->_objGroupAdmin->getField($memberList, 'id');
-     $filter = "'" . implode("', '", $memberIds) . "'";
-     // Users list need the firstname, surname, and userId fields.
-     $fields = array(
-         'firstName',
-         'surname',
-         'id'
-     );
-     $usersList = $this->_objGroupAdmin->getUsers($fields, " WHERE id NOT IN($filter)");
-     sort($usersList);
-     // Members list dropdown
-     $lstMembers = $this->newObject('dropdown', 'htmlelements');
-     $lstMembers->name = 'list2[]';
-     $lstMembers->extra = ' multiple="multiple" style="width:100pt" size="10" ondblclick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true); "';
-     foreach($memberList as $user) {
-         $fullName = $user['firstname'] . " " . $user['surname'];
-         $userPKId = $user['id'];
-         //echo "<h1>userPKId ".$userPKId."</h1>";
-         $lstMembers->addOption($userPKId, $fullName);
-     }
-     $tblLayoutM = &$this->newObject('htmltable', 'htmlelements');
-     $tblLayoutM->row_attributes = 'align="center" ';
-     $tblLayoutM->width = '100px';
-     $tblLayoutM->startRow();
-     $tblLayoutM->endRow();
-     $tblLayoutM->startRow();
-     $tblLayoutM->addCell($lstMembers->show());
-     $tblLayoutM->endRow();
-     $this->setVarByRef('lstMembers', $tblLayoutM);
-     // Users list dropdown
-     $lstUsers = $this->newObject('dropdown', 'htmlelements');
-     $lstUsers->name = 'list1[]';
-     $lstUsers->extra = ' multiple="multiple" style="width:100pt"  size="10" ondblclick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
-     foreach($usersList as $user) {
-         $fullName = $user['firstname'] . " " . $user['surname'];
-         $userPKId = $user['id'];
-         $lstUsers->addOption($userPKId, $fullName);
-     }
-     $tblLayoutU = &$this->newObject('htmltable', 'htmlelements');
-     $tblLayoutU->row_attributes = 'align="center"';
-     $tblLayoutU->width = '100px';
-     $tblLayoutU->startRow();
-     $tblLayoutU->addCell($this->objLanguage->code2Txt('mod_contextgroups_ttlUsers', 'contextgroups') , '10%', null, null, 'heading');
-     $tblLayoutU->endRow();
-     $tblLayoutU->startRow();
-     $tblLayoutU->addCell($lstUsers->show());
-     $tblLayoutU->endRow();
-     $this->setVarByRef('lstUsers', $tblLayoutU);
-     // Link method
-     $lnkSave = $this->newObject('link', 'htmlelements');
-     $lnkSave->href = '#';
-     $lnkSave->extra = 'onclick="javascript:';
-     $lnkSave->extra.= 'selectAllOptions( document.forms[\'frmManage\'][\'list2[]\'] ); ';
-     $lnkSave->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'save\'; ';
-     $lnkSave->extra.= 'document.forms[\'frmManage\'].submit(); "';
-     $lnkSave->link = $this->objLanguage->languageText('word_save');
-     $lnkCancel = $this->newObject('link', 'htmlelements');
-     $lnkCancel->href = '#';
-     $lnkCancel->extra = 'onclick="javascript:';
-     $lnkCancel->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'cancel\'; ';
-     $lnkCancel->extra.= 'document.forms[\'frmManage\'].submit(); "';
-     $lnkCancel->link = $this->objLanguage->languageText('word_cancel');
-     $ctrlButtons = array();
-     $ctrlButtons['lnkSave'] = $lnkSave->show();
-     $ctrlButtons['lnkCancel'] = $lnkCancel->show();
-     $this->setVar('ctrlButtons', $ctrlButtons);
-     $navButtons = array();
-     $navButtons['lnkRight'] = $this->navLink('>>', 'Selected', "forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
-     $navButtons['lnkRightAll'] = $this->navLink('All >>', 'All', "forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
-     $navButtons['lnkLeft'] = $this->navLink('<<', 'Selected', "forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
-     $navButtons['lnkLeftAll'] = $this->navLink('All <<', 'All', "forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
-     $this->setVar('navButtons', $navButtons);
-     $frmManage = &$this->getObject('form', 'htmlelements');
-     $frmManage->name = 'frmManage';
-     $frmManage->displayType = '3';
-     $frmManage->action = $this->uri(array(
-         'action' => 'manage_form',
-         'id' => $myid
-     ));
-     //$frmManage->action = $this->uri ( array( 'module'=>'eportfolio', 'action' => 'main', 'id'=>$myid) );
-     $frmManage->addToForm("<input type='hidden' name='button' value='' />");
-     $this->setVarByRef('frmManage', $frmManage);
-     $title = $this->objLanguage->code2Txt('mod_contextgroups_ttlManageMembers', 'contextgroups', array(
-         'GROUPNAME' => $groupName,
-         'TITLE' => $this->_objDBContext->getTitle()
-     ));
-     $this->setVar('title', $title);
-     return 'manage2_group_tpl.php';
- }
+/**
+ * Method to show the manage member group template.
+ * @param string the group id to be managed.
+ */
+function showManagegroup($myid) 
+{
+    // The member list of this group
+    $fields = array(
+        'firstName',
+        'surname',
+        'tbl_users.id'
+    );
+    $memberList = $this->_objGroupAdmin->getGroupUsers($myid, $fields);
+    $memberIds = $this->_objGroupAdmin->getField($memberList, 'id');
+    $filter = "'" . implode("', '", $memberIds) . "'";
+    // Users list need the firstname, surname, and userId fields.
+    $fields = array(
+        'firstName',
+        'surname',
+        'id'
+    );
+    $usersList = $this->_objGroupAdmin->getUsers($fields, " WHERE id NOT IN($filter)");
+    sort($usersList);
+    // Members list dropdown
+    $lstMembers = $this->newObject('dropdown', 'htmlelements');
+    $lstMembers->name = 'list2[]';
+    $lstMembers->extra = ' multiple="multiple" style="width:100pt" size="10" ondblclick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true); "';
+    foreach($memberList as $user) {
+        $fullName = $user['firstname'] . " " . $user['surname'];
+        $userPKId = $user['id'];
+        //echo "<h1>userPKId ".$userPKId."</h1>";
+        $lstMembers->addOption($userPKId, $fullName);
+    }
+    $tblLayoutM = &$this->newObject('htmltable', 'htmlelements');
+    $tblLayoutM->row_attributes = 'align="center" ';
+    $tblLayoutM->width = '100px';
+    $tblLayoutM->startRow();
+    $tblLayoutM->endRow();
+    $tblLayoutM->startRow();
+    $tblLayoutM->addCell($lstMembers->show());
+    $tblLayoutM->endRow();
+    $this->setVarByRef('lstMembers', $tblLayoutM);
+    // Users list dropdown
+    $lstUsers = $this->newObject('dropdown', 'htmlelements');
+    $lstUsers->name = 'list1[]';
+    $lstUsers->extra = ' multiple="multiple" style="width:100pt"  size="10" ondblclick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
+    foreach($usersList as $user) {
+        $fullName = $user['firstname'] . " " . $user['surname'];
+        $userPKId = $user['id'];
+        $lstUsers->addOption($userPKId, $fullName);
+    }
+    $tblLayoutU = &$this->newObject('htmltable', 'htmlelements');
+    $tblLayoutU->row_attributes = 'align="center"';
+    $tblLayoutU->width = '100px';
+    $tblLayoutU->startRow();
+    $tblLayoutU->addCell($this->objLanguage->code2Txt('mod_contextgroups_ttlUsers', 'contextgroups') , '10%', null, null, 'heading');
+    $tblLayoutU->endRow();
+    $tblLayoutU->startRow();
+    $tblLayoutU->addCell($lstUsers->show());
+    $tblLayoutU->endRow();
+    $this->setVarByRef('lstUsers', $tblLayoutU);
+    // Link method
+    $lnkSave = $this->newObject('link', 'htmlelements');
+    $lnkSave->href = '#';
+    $lnkSave->extra = 'onclick="javascript:';
+    $lnkSave->extra.= 'selectAllOptions( document.forms[\'frmManage\'][\'list2[]\'] ); ';
+    $lnkSave->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'save\'; ';
+    $lnkSave->extra.= 'document.forms[\'frmManage\'].submit(); "';
+    $lnkSave->link = $this->objLanguage->languageText('word_save');
+    $lnkCancel = $this->newObject('link', 'htmlelements');
+    $lnkCancel->href = '#';
+    $lnkCancel->extra = 'onclick="javascript:';
+    $lnkCancel->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'cancel\'; ';
+    $lnkCancel->extra.= 'document.forms[\'frmManage\'].submit(); "';
+    $lnkCancel->link = $this->objLanguage->languageText('word_cancel');
+    $ctrlButtons = array();
+    $ctrlButtons['lnkSave'] = $lnkSave->show();
+    $ctrlButtons['lnkCancel'] = $lnkCancel->show();
+    $this->setVar('ctrlButtons', $ctrlButtons);
+    $navButtons = array();
+    $navButtons['lnkRight'] = $this->navLink('>>', 'Selected', "forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
+    $navButtons['lnkRightAll'] = $this->navLink('All >>', 'All', "forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
+    $navButtons['lnkLeft'] = $this->navLink('<<', 'Selected', "forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
+    $navButtons['lnkLeftAll'] = $this->navLink('All <<', 'All', "forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
+    $this->setVar('navButtons', $navButtons);
+    $frmManage = &$this->getObject('form', 'htmlelements');
+    $frmManage->name = 'frmManage';
+    $frmManage->displayType = '3';
+    $frmManage->action = $this->uri(array(
+        'action' => 'manage_form',
+        'id' => $myid
+    ));
+    //$frmManage->action = $this->uri ( array( 'module'=>'eportfolio', 'action' => 'main', 'id'=>$myid) );
+    $frmManage->addToForm("<input type='hidden' name='button' value='' />");
+    $this->setVarByRef('frmManage', $frmManage);
+    $title = $this->objLanguage->code2Txt('mod_contextgroups_ttlManageMembers', 'contextgroups', array(
+        'GROUPNAME' => $groupName,
+        'TITLE' => $this->_objDBContext->getTitle()
+    ));
+    $this->setVar('title', $title);
+    return 'manage2_group_tpl.php';
+}
 /**
  * Method to show the manage member group template.
  * @param string the group to be managed.
@@ -2145,9 +2143,7 @@ function createGroups($userid, $title)
             'group_id' => $eportfolioGroupId,
             'subgroup_id' => $newGroupId
         );
-
         $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
-
         $this->_arrSubGroups[$groupName]['id'] = $newGroupId;
         $newGroupId = $this->_objGroupAdmin->addGroupUser($newGroupId, $this->objUser->userId());
     } // End foreach subgroup
@@ -2155,31 +2151,25 @@ function createGroups($userid, $title)
     //$this->addGroupMembers();
     // Now create the ACLS
     $this->_objManageGroups->createAcls($userid, $title);
-} 
-	/**
-	* Method to create the groups for a new eportfolio user on kewl2
-	* @param string The user id.
-	* @param string The Title of a new context.
-	*/
-	function createGroupsOld( $userid, $title )
-	{
-		   // Context node
-		   $eportfolioGroupId = $this->_objGroupAdmin->addGroup($userid,$title,NULL);
-		   // For each subgroup
-		   foreach( $this->_arrSubGroups as $groupName=>$groupId ) {
-
-		       $newGroupId = $this->_objGroupAdmin->addGroup(
-		           $groupName,
-		           $this->objUser->PKId($this->objUser->userId()).' '.$groupName,
-		           $eportfolioGroupId);
-		       $this->_arrSubGroups[$groupName]['id'] = $newGroupId;
-		   } // End foreach subgroup
-
-		   // Add groupMembers
-		   $this->addGroupMembers();
-					$this->_objManageGroups->createAcls( $userid, $title );
-	} 
-
+}
+/**
+ * Method to create the groups for a new eportfolio user on kewl2
+ * @param string The user id.
+ * @param string The Title of a new context.
+ */
+function createGroupsOld($userid, $title) 
+{
+    // Context node
+    $eportfolioGroupId = $this->_objGroupAdmin->addGroup($userid, $title, NULL);
+    // For each subgroup
+    foreach($this->_arrSubGroups as $groupName => $groupId) {
+        $newGroupId = $this->_objGroupAdmin->addGroup($groupName, $this->objUser->PKId($this->objUser->userId()) . ' ' . $groupName, $eportfolioGroupId);
+        $this->_arrSubGroups[$groupName]['id'] = $newGroupId;
+    } // End foreach subgroup
+    // Add groupMembers
+    $this->addGroupMembers();
+    $this->_objManageGroups->createAcls($userid, $title);
+}
 /**
  * Method to create more groups for an eportfolio user
  * @param string The user id.
@@ -2205,27 +2195,23 @@ function addGroups($title)
     $this->_objManageGroups->createAcls($userPid, $title);
 } // End addGroups
 
-    /**
-    * Method to create more groups for an eportfolio user for kewl 2.0
-    * @param string The user id.
-    * @param string The Title of a new context.
-    */
-    function addGroupsOld( $title )
-    {
-        // user Pk id
-	$userPid = $this->objUser->PKId($this->objUser->userId());
-        $usergroupId = $this->_objGroupAdmin->getId( $userPid, $pkField = 'name' );  
-        // Add subgroup
-        $newGroupId = $this->_objGroupAdmin->addGroup($title,$userPid.' '.$groupName,$usergroupId);
-
-        // Add groupMembers
-        $this->addGroupMembers();
-
-        // Now create the ACLS
-
-	$this->_objManageGroups->createAcls( $userPid, $title );
-
-    } // End createGroups
+/**
+ * Method to create more groups for an eportfolio user for kewl 2.0
+ * @param string The user id.
+ * @param string The Title of a new context.
+ */
+function addGroupsOld($title) 
+{
+    // user Pk id
+    $userPid = $this->objUser->PKId($this->objUser->userId());
+    $usergroupId = $this->_objGroupAdmin->getId($userPid, $pkField = 'name');
+    // Add subgroup
+    $newGroupId = $this->_objGroupAdmin->addGroup($title, $userPid . ' ' . $groupName, $usergroupId);
+    // Add groupMembers
+    $this->addGroupMembers();
+    // Now create the ACLS
+    $this->_objManageGroups->createAcls($userPid, $title);
+} // End createGroups
 
 /**
  * Method to add members to the groups for a new eportfolio user
@@ -2287,184 +2273,186 @@ public function getEportfolioUsers()
     $userPid = $this->objUser->PKId($this->objUser->userId());
     $this->setVarByRef('userPid', $this->userPid);
     //get the descendents.
-    if(class_exists('groupops',false)){
-    	$usergroupId = $this->_objGroupAdmin->getId($userPid);
-	    $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
-					//Check if empty
-					if(!empty($usersubgroups)){
-				  foreach($usersubgroups as $subgroup) {
-				      // The member list of this group
-				      $myGroupId = array();
-				      foreach(array_keys($subgroup) as $myGrpId) {
-				          $myGroupId[] = $myGrpId;
-				      }
-				  }
-    	}
-	    $fields = array(
-        'firstName',
-        'surname',
-        'tbl_users.id'
-    );
-					//Check if empty
-					if(!empty($usersubgroups)){
-				  foreach($myGroupId as $groupId) {
-				      $membersList = $this->_objGroupAdmin->getGroupUsers($groupId, $fields);
-				      $groupName = $this->_objGroupAdmin->getName($groupId);
-				      foreach($membersList as $users) {
-				          if ($users) {
-				              $fullName = $users['firstname'] . " " . $users['surname'];
-				              $userPKId = $users['id'];
-				              $tableRow = array(
-				                  $fullName
-				              );
-				              $table->addRow($tableRow);
-				          } else {
-				              $tableRow = array(
-				                  '<div align="left" style="font-size:small;font-weight:bold;color:#sCCCCCC;font-family: Helvetica, sans-serif;">' . $this->objLanguage->languageText('mod_eportfolio_wordManage', 'eportfolio') . '</div>'
-				              );
-				              $table->addRow($tableRow);
-				          }
-				      }
-				      //Add Users
-				      $iconManage = $this->getObject('geticon', 'htmlelements');
-				      $iconManage->setIcon('add_icon');
-				      $iconManage->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $groupName;
-				      $iconManage->title = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $groupName;
-				      $mnglink = new link($this->uri(array(
-				          'module' => 'eportfolio',
-				          'action' => 'viewgroups',
-				          'id' => $groupId
-				      )));
-				      //	    		$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$subgroup['name'].' '.$iconManage->show();
-				      $mnglink->link = $iconManage->show();
-				      $linkManage = $mnglink->show();
-				      //Manage Group
-				      $iconShare = $this->getObject('geticon', 'htmlelements');
-				      $iconShare->setIcon('fileshare');
-				      $iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
-				      $iconShare->title = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
-				      $mnglink = new link($this->uri(array(
-				          'module' => 'eportfolio',
-				          'action' => 'manage_eportfolio',
-				          'id' => $groupId
-				      )));
-				      $mnglink->link = $iconShare->show();
-				      $linkMng = $mnglink->show();
-				      $tableRow = array(
-				          '<hr/>' . $linkManage . '   ' . $linkMng
-				      );
-				      $table->addRow($tableRow);
-				      $textinput = new textinput("groupname", $groupName);
-				      $str.= $mngfeatureBox->show($groupName, $table->show());
-				      $table = &$this->newObject('htmltable', 'htmlelements');
-				      $managelink = new link();
-				  	} //end foreach
-    	}
+    if (class_exists('groupops', false)) {
+        $usergroupId = $this->_objGroupAdmin->getId($userPid);
+        $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
+        //Check if empty
+        if (!empty($usersubgroups)) {
+            foreach($usersubgroups as $subgroup) {
+                // The member list of this group
+                $myGroupId = array();
+                foreach(array_keys($subgroup) as $myGrpId) {
+                    $myGroupId[] = $myGrpId;
+                }
+            }
+        }
+        $fields = array(
+            'firstName',
+            'surname',
+            'tbl_users.id'
+        );
+        //Check if empty
+        if (!empty($usersubgroups)) {
+            foreach($myGroupId as $groupId) {
+                $membersList = $this->_objGroupAdmin->getGroupUsers($groupId, $fields);
+                $groupName = $this->_objGroupAdmin->getName($groupId);
+                foreach($membersList as $users) {
+                    if ($users) {
+                        $fullName = $users['firstname'] . " " . $users['surname'];
+                        $userPKId = $users['id'];
+                        $tableRow = array(
+                            $fullName
+                        );
+                        $table->addRow($tableRow);
+                    } else {
+                        $tableRow = array(
+                            '<div align="left" style="font-size:small;font-weight:bold;color:#sCCCCCC;font-family: Helvetica, sans-serif;">' . $this->objLanguage->languageText('mod_eportfolio_wordManage', 'eportfolio') . '</div>'
+                        );
+                        $table->addRow($tableRow);
+                    }
+                }
+                //Add Users
+                $iconManage = $this->getObject('geticon', 'htmlelements');
+                $iconManage->setIcon('add_icon');
+                $iconManage->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $groupName;
+                $iconManage->title = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $groupName;
+                $mnglink = new link($this->uri(array(
+                    'module' => 'eportfolio',
+                    'action' => 'viewgroups',
+                    'id' => $groupId
+                )));
+                //	    		$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$subgroup['name'].' '.$iconManage->show();
+                $mnglink->link = $iconManage->show();
+                $linkManage = $mnglink->show();
+                //Manage Group
+                $iconShare = $this->getObject('geticon', 'htmlelements');
+                $iconShare->setIcon('fileshare');
+                $iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
+                $iconShare->title = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
+                $mnglink = new link($this->uri(array(
+                    'module' => 'eportfolio',
+                    'action' => 'manage_eportfolio',
+                    'id' => $groupId
+                )));
+                $mnglink->link = $iconShare->show();
+                $linkMng = $mnglink->show();
+                $tableRow = array(
+                    '<hr/>' . $linkManage . '   ' . $linkMng
+                );
+                $table->addRow($tableRow);
+                $textinput = new textinput("groupname", $groupName);
+                $str.= $mngfeatureBox->show($groupName, $table->show());
+                $table = &$this->newObject('htmltable', 'htmlelements');
+                $managelink = new link();
+            } //end foreach
+            
+        }
     }
-
     $str.= $mngfeatureBox->show(NULL, $linkstable->show());
     return $str;
     unset($users);
 } //end method
+
 /**
-* Method to get the eportfolio users for kewl 2.0
-* @return string
-*/
-public function getEportfolioUsersOld()
+ * Method to get the eportfolio users for kewl 2.0
+ * @return string
+ */
+public function getEportfolioUsersOld() 
 {
-	//manage eportfolio users
-	$objLink =  new link();
-	$objLanguage = &$this->getObject('language', 'language');
-	$icon =  & $this->newObject('geticon', 'htmlelements');
-	$table = & $this->newObject('htmltable' , 'htmlelements');
-	$linkstable = & $this->newObject('htmltable' , 'htmlelements');
-	$objGroups = & $this->newObject('managegroups', 'contextgroups');
-	$mngfeatureBox =  & $this->newObject('featurebox', 'navigation');
-	$table->width = '40%';
-	$linkstable->width = '40%';
-	$str = '';
-
-	//Add Group Link
-	$iconAdd = $this->getObject('geticon','htmlelements');
-	$iconAdd->setIcon('add');	
-	$iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');			
-	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_group')));
-	$addlink->link = $objLanguage->languageText("mod_eportfolio_add",'eportfolio').' '.$objLanguage->languageText("mod_eportfolio_wordGroup",'eportfolio').' '.$iconAdd->show();
-	//$addlink->link = 'Add Group'.' '.$iconAdd->show();
-	$linkAdd = $addlink->show();     
-	$linkstableRow = array('<hr/>'.$linkAdd);
-	$linkstable->addRow($linkstableRow);	 
-	//	$str .= $mngfeatureBox->show(NULL,$linkstable->show());	    
-
-	//Get group members
-	//Get group id
-	$userPid = $this->objUser->PKId($this->objUser->userId());
-	$this->setVarByRef('userPid', $this->userPid);
-	$usergroupId = $this->_objGroupAdmin->getId( $userPid, $pkField = 'name' );  
-
-	//get the descendents.
-	$usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
-	foreach ($usersubgroups as $subgroup)
-	{
-
-	// The member list of this group
-	$fields = array ( 'firstName', 'surname', 'tbl_users.id' );
-	$membersList = $this->_objGroupAdmin->getGroupUsers($subgroup['id'], $fields);
-	foreach ( $membersList as $users ) {
-		if ($users)
-		{
-			$fullName = $users['firstname'] . " " . $users['surname'];
-			$userPKId = $users['id'];
-		 $tableRow = array($fullName);
-		 $table->addRow($tableRow);
-		}else{
-			$tableRow = array('<div align="center" style="font-size:small;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.$this->objLanguage->languageText('mod_eportfolio_wordManage','eportfolio').'</div>');
-   $table->addRow($tableRow);
-		}
-	}
-		//Add Users
-		$iconManage = $this->getObject('geticon','htmlelements');
-		$iconManage->setIcon('add_icon');	
-		$iconManage->alt = $objLanguage->languageText("mod_eportfolio_add",'eportfolio').' / '.$objLanguage->languageText("word_edit").' '.$subgroup['name'];
-		$mnglink = new link($this->uri(array(
-		'module'=>'eportfolio',
-		'action'=>'manage_group', 
-		'id' => $subgroup["id"]
-		)));
-		//$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$subgroup['name'].' '.$iconManage->show();
-		$mnglink->link = $iconManage->show();
-		$linkManage = $mnglink->show();     
-		//Manage Group
-
-		$iconShare = $this->getObject('geticon','htmlelements');
-		$iconShare->setIcon('fileshare');	
-		$iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure",'eportfolio').' '.$subgroup['name'].' '.$this->objLanguage->code2Txt("mod_eportfolio_view",'eportfolio');
-		$mnglink = new link($this->uri(array(
-		'module'=>'eportfolio',
-		'action'=>'manage_eportfolio', 
-		'id' => $subgroup["id"]
-		)));
-		//$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio').' '.$iconShare->show();
-		$mnglink->link = $iconShare->show();
-
-		$linkMng = $mnglink->show();     
-
-
-		$tableRow = array('<hr/>'.$linkManage.'   '.$linkMng);
-		$table->addRow($tableRow);	 
-
-		$textinput = new textinput("groupname",$subgroup['name']);
-		$str .= $mngfeatureBox->show($subgroup['name'],$table->show());
-		$table = & $this->newObject('htmltable' , 'htmlelements');
-		$managelink = new link();          
-	}//end foreach
-	$str .= $mngfeatureBox->show(NULL,$linkstable->show());
-
-	return $str;
-	unset($users);
-
-}//end method
-
+    //manage eportfolio users
+    $objLink = new link();
+    $objLanguage = &$this->getObject('language', 'language');
+    $icon = &$this->newObject('geticon', 'htmlelements');
+    $table = &$this->newObject('htmltable', 'htmlelements');
+    $linkstable = &$this->newObject('htmltable', 'htmlelements');
+    $objGroups = &$this->newObject('managegroups', 'contextgroups');
+    $mngfeatureBox = &$this->newObject('featurebox', 'navigation');
+    $table->width = '40%';
+    $linkstable->width = '40%';
+    $str = '';
+    //Add Group Link
+    $iconAdd = $this->getObject('geticon', 'htmlelements');
+    $iconAdd->setIcon('add');
+    $iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');
+    $addlink = new link($this->uri(array(
+        'module' => 'eportfolio',
+        'action' => 'add_group'
+    )));
+    $addlink->link = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . ' ' . $iconAdd->show();
+    //$addlink->link = 'Add Group'.' '.$iconAdd->show();
+    $linkAdd = $addlink->show();
+    $linkstableRow = array(
+        '<hr/>' . $linkAdd
+    );
+    $linkstable->addRow($linkstableRow);
+    //	$str .= $mngfeatureBox->show(NULL,$linkstable->show());
+    //Get group members
+    //Get group id
+    $userPid = $this->objUser->PKId($this->objUser->userId());
+    $this->setVarByRef('userPid', $this->userPid);
+    $usergroupId = $this->_objGroupAdmin->getId($userPid, $pkField = 'name');
+    //get the descendents.
+    $usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
+    foreach($usersubgroups as $subgroup) {
+        // The member list of this group
+        $fields = array(
+            'firstName',
+            'surname',
+            'tbl_users.id'
+        );
+        $membersList = $this->_objGroupAdmin->getGroupUsers($subgroup['id'], $fields);
+        foreach($membersList as $users) {
+            if ($users) {
+                $fullName = $users['firstname'] . " " . $users['surname'];
+                $userPKId = $users['id'];
+                $tableRow = array(
+                    $fullName
+                );
+                $table->addRow($tableRow);
+            } else {
+                $tableRow = array(
+                    '<div align="center" style="font-size:small;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">' . $this->objLanguage->languageText('mod_eportfolio_wordManage', 'eportfolio') . '</div>'
+                );
+                $table->addRow($tableRow);
+            }
+        }
+        //Add Users
+        $iconManage = $this->getObject('geticon', 'htmlelements');
+        $iconManage->setIcon('add_icon');
+        $iconManage->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $subgroup['name'];
+        $mnglink = new link($this->uri(array(
+            'module' => 'eportfolio',
+            'action' => 'manage_group',
+            'id' => $subgroup["id"]
+        )));
+        //$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$subgroup['name'].' '.$iconManage->show();
+        $mnglink->link = $iconManage->show();
+        $linkManage = $mnglink->show();
+        //Manage Group
+        $iconShare = $this->getObject('geticon', 'htmlelements');
+        $iconShare->setIcon('fileshare');
+        $iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $subgroup['name'] . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
+        $mnglink = new link($this->uri(array(
+            'module' => 'eportfolio',
+            'action' => 'manage_eportfolio',
+            'id' => $subgroup["id"]
+        )));
+        //$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio').' '.$iconShare->show();
+        $mnglink->link = $iconShare->show();
+        $linkMng = $mnglink->show();
+        $tableRow = array(
+            '<hr/>' . $linkManage . '   ' . $linkMng
+        );
+        $table->addRow($tableRow);
+        $textinput = new textinput("groupname", $subgroup['name']);
+        $str.= $mngfeatureBox->show($subgroup['name'], $table->show());
+        $table = &$this->newObject('htmltable', 'htmlelements');
+        $managelink = new link();
+    } //end foreach
+    $str.= $mngfeatureBox->show(NULL, $linkstable->show());
+    return $str;
+    unset($users);
+} //end method
 //Function for managing eportfolio group items/parts
 public function manageEportfolioViewers($selectedParts, $groupId) 
 {
@@ -2531,7 +2519,6 @@ public function manageEportfolioViewersOld($selectedParts, $groupId)
         }
     }
 } //end function
-
 public function checkIfExists($partId, $groupId) 
 {
     // user Pk id

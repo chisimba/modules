@@ -1,8 +1,6 @@
 <?php
-
 $hasAccess = $this->objUser->isContextLecturer();
 $hasAccess|= $this->objUser->isAdmin();
-
 $this->_objUser = $this->getObject('user', 'security');
 $hasAccess = $this->_objUser->isContextLecturer();
 $hasAccess = $this->_objUser->isAdmin();
@@ -76,10 +74,9 @@ if (!$hasAccess) {
     $objTable->startRow();
     $objTable->addCell($row[0], 140, 'bottom', 'right');
     //$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', "");
-				$strtdate = &$this->getObject('datepicker', 'htmlelements');
-				$strtdate->setName('creation_date');
-				$strtdate->setDateFormat("YYYY-MM-DD");
-
+    $strtdate = &$this->getObject('datepicker', 'htmlelements');
+    $strtdate->setName('creation_date');
+    $strtdate->setDateFormat("YYYY-MM-DD");
     $form->addRule('creation_date', 'Please enter the creation date', 'required');
     $row = array(
         $strtdate->show()
@@ -128,8 +125,7 @@ if (!$hasAccess) {
         'action' => 'view_assertion'
     )));
     //$objCancel->link = $buttonCancel->show();
-				$objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager")." ".$objLanguage->languageText	("mod_eportfolio_eportfoliohome","eportfolio");
-
+    $objCancel->link = $objLanguage->languageText("mod_filemanager_returnto", "filemanager") . " " . $objLanguage->languageText("mod_eportfolio_eportfoliohome", "eportfolio");
     $linkCancel = $objCancel->show();
     $row = array(
         $button->show()
@@ -138,11 +134,10 @@ if (!$hasAccess) {
     $objTable->addCell('&nbsp;', 140, 'top', 'right');
     $objTable->addCell($row[0], Null, 'top', 'left');
     $objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell('&nbsp;', 140, 'top', 'right');
-				$objTable->addCell($linkCancel, Null, 'top', 'left');
-				$objTable->endRow();
-
+    $objTable->startRow();
+    $objTable->addCell('&nbsp;', 140, 'top', 'right');
+    $objTable->addCell($linkCancel, Null, 'top', 'left');
+    $objTable->endRow();
     $form->addToForm($objTable->show());
     echo $form->show();
 }

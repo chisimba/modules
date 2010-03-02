@@ -33,14 +33,11 @@ $objinterestTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objreflectionTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objassertionsTitles = &$this->getObject('htmlheading', 'htmlelements');
 $objcategoryTitles = &$this->getObject('htmlheading', 'htmlelements');
-
 //Check if user is admin or lecturer
 $hasAccess = $this->objUser->isAdmin();
-$hasAccess |= $this->objUser->isContextLecturer();
-
+$hasAccess|= $this->objUser->isContextLecturer();
 //Get user contexts
 $myContexts = $this->objContextUser->getUserContext($this->userId);
-
 $this->viewAssessments = $this->newObject('viewassessments_Eportfolio', 'eportfolio');
 $featureBox = &$this->newObject('featurebox', 'navigation');
 /*
@@ -53,16 +50,16 @@ echo "</br>";*/
 $iconPdf = $this->getObject('geticon', 'htmlelements');
 $iconPdf->setIcon('pdf');
 $iconPdf->alt = $objLanguage->languageText("mod_eportfolio_saveaspdf", 'eportfolio');
-if(class_exists('groupops',false)){
-	$mngpdflink = new link($this->uri(array(
-		   'module' => 'eportfolio',
-		   'action' => 'makepdf'
-	)));
-}else{
-	$mngpdflink = new link($this->uri(array(
-    'module' => 'eportfolio',
-    'action' => 'makepdf'
-	)));
+if (class_exists('groupops', false)) {
+    $mngpdflink = new link($this->uri(array(
+        'module' => 'eportfolio',
+        'action' => 'makepdf'
+    )));
+} else {
+    $mngpdflink = new link($this->uri(array(
+        'module' => 'eportfolio',
+        'action' => 'makepdf'
+    )));
 }
 $mngpdflink->link = $iconPdf->show();
 $linkpdfManage = $mngpdflink->show();
@@ -100,26 +97,23 @@ $linkImportManage = $mngImportlink->show();
 //echo "</br>";
 $objHeading->type = 2;
 $objHeading->align = 'center';
-$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio'). '</font>';
+$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '</font>';
 echo $objHeading->show();
-
 //Create Group 1 and Group 2 for user eportfolio
-if(class_exists('groupops',false)){
-	$eportfoliogrpList = $this->_objGroupAdmin->getId($name = $this->objUser->PKId($this->objUser->userId()));
-	if (empty($eportfoliogrpList)) {
-		   //Add User to context groups
-		   $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
-		   $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
-	}
-}else{
-	$eportfoliogrpList = $this->_objGroupAdmin->getId( $this->objUser->PKId($this->objUser->userId()), $pkField = 'name' );
-	if(empty($eportfoliogrpList))
-	{
-		
-		//Add User to context groups
-		$title = $this->objUser->PKId($this->objUser->userId()).' '.$objUser->getSurname();
-	        $this->createGroupsOld($this->objUser->PKId($this->objUser->userId()), $title);
-	}
+if (class_exists('groupops', false)) {
+    $eportfoliogrpList = $this->_objGroupAdmin->getId($name = $this->objUser->PKId($this->objUser->userId()));
+    if (empty($eportfoliogrpList)) {
+        //Add User to context groups
+        $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
+        $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
+    }
+} else {
+    $eportfoliogrpList = $this->_objGroupAdmin->getId($this->objUser->PKId($this->objUser->userId()) , $pkField = 'name');
+    if (empty($eportfoliogrpList)) {
+        //Add User to context groups
+        $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
+        $this->createGroupsOld($this->objUser->PKId($this->objUser->userId()) , $title);
+    }
 }
 //view name
 // Show the heading
@@ -140,7 +134,7 @@ $userTable->width = "40%";
 $userTable->addCell("<b>" . $objLanguage->languageText('word_title', 'system') . "</b>");
 $userTable->addCell("<b>" . $objLanguage->languageText('word_surname', 'system') . "</b>");
 $userTable->addCell("<b>" . $objLanguage->languageText('phrase_othernames', 'eportfolio') . "</b>");
-    $userTable->addCell("", "", NULL, NULL, NULL, '');
+$userTable->addCell("", "", NULL, NULL, NULL, '');
 $userTable->endRow();
 // Step through the list of addresses.
 if (!empty($user)) {
@@ -149,7 +143,7 @@ if (!empty($user)) {
     $userTable->addCell($user['title'], "", NULL, NULL, NULL, '');
     $userTable->addCell($user['surname'], "", NULL, NULL, NULL, '');
     $userTable->addCell($user['firstname'], "", NULL, NULL, NULL, '');
-    $userTable->addCell($objLink->show(), "", NULL, NULL, NULL, '');
+    $userTable->addCell($objLink->show() , "", NULL, NULL, NULL, '');
     $userTable->endRow();
     $userTable->startRow();
     $userTable->addCell('', '', '', '', '', 'colspan="3"');
@@ -174,7 +168,6 @@ $objLink->link($this->uri(array(
     'action' => 'add_address',
 )));
 $objLink->link = $iconAdd->show();
-
 $linkaddressAdd = $objLink->show();
 // Show the heading
 $objaddressTitles->type = 3;
@@ -262,7 +255,6 @@ $addressTable->addCell('', '', '', '', '', 'noRecordsMessage', 'colspan="8"');
 $addressTable->endRow();
 //echo '<br clear="left" />'.$mainlink->show();
 //End Address View
-
 //Start Contacts View
 // Show the add link
 $iconAdd = $this->getObject('geticon', 'htmlelements');
@@ -277,7 +269,6 @@ $objLink->link($this->uri(array(
 $objLink->link = $iconAdd->show();
 //echo $objHeading->show();
 $contactList = $this->objDbContactList->getByItem($userId);
-
 // Create a table object
 $contactTable = &$this->newObject("htmltable", "htmlelements");
 $contactTable->border = 0;
@@ -353,8 +344,6 @@ $contactTable->startRow();
 $contactTable->addCell('', '', '', '', 'noRecordsMessage', 'colspan="6"');
 $contactTable->endRow();
 //End Contact View
-
-
 //Start Email View
 $emailList = $this->objDbEmailList->getByItem($userId);
 $iconAdd = $this->getObject('geticon', 'htmlelements');
@@ -443,21 +432,21 @@ $demographicsTable->cellspacing = '3';
 $demographicsTable->width = "50%";
 // Add the table heading.
 //if (empty($demographicsList)) {
-    // Show the add link
-    $iconAdd = $this->getObject('geticon', 'htmlelements');
-    $iconAdd->setIcon('add');
-    $iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');
-    $iconAdd->align = false;
-    $objLink = &$this->getObject('link', 'htmlelements');
-    $objLink->link($this->uri(array(
-        'module' => 'eportfolio',
-        'action' => 'add_demographics'
-    )));
-    $objLink->link = $iconAdd->show();
-    $demographicsTable->startRow();
-    $demographicsTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_add", 'eportfolio').'&nbsp;'.$objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio') . '&nbsp;&nbsp;&nbsp;</b>'.$objLink->show() , '', 'left', '', '', 'colspan="4"');
-    $demographicsTable->endRow();
-    //echo $objHeading->show();    
+// Show the add link
+$iconAdd = $this->getObject('geticon', 'htmlelements');
+$iconAdd->setIcon('add');
+$iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');
+$iconAdd->align = false;
+$objLink = &$this->getObject('link', 'htmlelements');
+$objLink->link($this->uri(array(
+    'module' => 'eportfolio',
+    'action' => 'add_demographics'
+)));
+$objLink->link = $iconAdd->show();
+$demographicsTable->startRow();
+$demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . '&nbsp;' . $objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio') . '&nbsp;&nbsp;&nbsp;</b>' . $objLink->show() , '', 'left', '', '', 'colspan="4"');
+$demographicsTable->endRow();
+//echo $objHeading->show();
 //}
 $demographicsTable->startRow();
 $demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
@@ -469,10 +458,10 @@ if (!empty($demographicsList)) {
     foreach($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
-        $datetime = explode("-",$this->objDate->formatDate($demographicsItem['birth']));
+        $datetime = explode("-", $this->objDate->formatDate($demographicsItem['birth']));
         $demographicsTable->startRow();
         $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-        $demographicsTable->addCell($datetime[0] , "", NULL, NULL, NULL, '');
+        $demographicsTable->addCell($datetime[0], "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
@@ -1276,7 +1265,7 @@ if (!empty($reflectionList)) {
         )) , $objLanguage->languageText('mod_eportfolio_suredelete', 'eportfolio'));
         //echo $objConfirm->show();
         $reflectionTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
-        $reflectionTable->addCell( $linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
+        $reflectionTable->addCell($linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
         $reflectionTable->endRow();
     }
     unset($item);
@@ -1327,73 +1316,23 @@ if (!$hasAccess) {
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
     $assertionstable->endRow();
-if(class_exists('groupops',false)){
-    // Step through the list of addresses.
-    $class = NULL;
-    //    if (!empty($Id))
-    if (!empty($myGroups)) {
-        foreach($myGroups as $groupId) {
-            //Get the group parent_id
-            foreach(array_keys($groupId) as $myGrpId) $groupId = $myGrpId;
-            //            $parentId = $this->_objGroupAdmin->getParent($groupId);
-            $myownerId = $this->_objGroupAdmin->getGroupUsers($groupId, $fields = null, $filter = null);
-            //var_dump($myownerId[0]['perm_user_id']);
-            //            foreach($parentId as $myparentId) {
-            //Get the name from group table
-            $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
-            $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
-            if (!empty($assertionslist)) {
-                // Display each field for activities
-                $assertionstable->startRow();
-                $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
-                $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-                $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
-                $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
-                // Show the view link
-                //Display Icon
-                $atyiconView = $this->getObject('geticon', 'htmlelements');
-                $atyiconView->setIcon('bookopen');
-                $atyiconView->alt = $objLanguage->languageText("mod_eportfolio_display", 'eportfolio');
-                $atymnglink = new link($this->uri(array(
-                    'module' => 'eportfolio',
-                    'action' => 'displayassertion',
-                    'thisid' => $assertionslist[0]["id"]
-                )));
-                $atymnglink->link = $atyiconView->show();
-                $atylinkManage = $atymnglink->show();
-                $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
-                $assertionstable->endRow();
-            }else {
-														 $assertionstable->startRow();
-														 $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
-														 $assertionstable->endRow();
-											}
-            unset($myparentId);
-            //}
-            unset($groupId);
-        }
-    } else {
-        $assertionstable->startRow();
-        $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
-        $assertionstable->endRow();
-    }
-//Else if groupops does not exist
-}else{
-    // user Pk id
-    $userPid = $this->objUser->PKId($this->objUser->userId());
-				$Id = $this->_objGroupAdmin->getUserGroups($userPid);
-    // Step through the list of assertions.
-    $class = NULL;
-    if (!empty($Id)) {
-        foreach($Id as $groupId) {
-            //Get the group parent_id
-            $parentId = $this->_objGroupAdmin->getParent($groupId);
-            foreach($parentId as $myparentId) {
+    if (class_exists('groupops', false)) {
+        // Step through the list of addresses.
+        $class = NULL;
+        //    if (!empty($Id))
+        if (!empty($myGroups)) {
+            foreach($myGroups as $groupId) {
+                //Get the group parent_id
+                foreach(array_keys($groupId) as $myGrpId) $groupId = $myGrpId;
+                //            $parentId = $this->_objGroupAdmin->getParent($groupId);
+                $myownerId = $this->_objGroupAdmin->getGroupUsers($groupId, $fields = null, $filter = null);
+                //var_dump($myownerId[0]['perm_user_id']);
+                //            foreach($parentId as $myparentId) {
                 //Get the name from group table
                 $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                 $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                 if (!empty($assertionslist)) {
-                    // Display each field
+                    // Display each field for activities
                     $assertionstable->startRow();
                     $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
                     $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
@@ -1413,19 +1352,68 @@ if(class_exists('groupops',false)){
                     $atylinkManage = $atymnglink->show();
                     $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
                     $assertionstable->endRow();
+                } else {
+                    $assertionstable->startRow();
+                    $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+                    $assertionstable->endRow();
                 }
                 unset($myparentId);
+                //}
+                unset($groupId);
             }
-            unset($groupId);
+        } else {
+            $assertionstable->startRow();
+            $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $assertionstable->endRow();
         }
+        //Else if groupops does not exist
+        
     } else {
-        $assertionstable->startRow();
-        $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
-        $assertionstable->endRow();
+        // user Pk id
+        $userPid = $this->objUser->PKId($this->objUser->userId());
+        $Id = $this->_objGroupAdmin->getUserGroups($userPid);
+        // Step through the list of assertions.
+        $class = NULL;
+        if (!empty($Id)) {
+            foreach($Id as $groupId) {
+                //Get the group parent_id
+                $parentId = $this->_objGroupAdmin->getParent($groupId);
+                foreach($parentId as $myparentId) {
+                    //Get the name from group table
+                    $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                    $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
+                    if (!empty($assertionslist)) {
+                        // Display each field
+                        $assertionstable->startRow();
+                        $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
+                        $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
+                        $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                        $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
+                        // Show the view link
+                        //Display Icon
+                        $atyiconView = $this->getObject('geticon', 'htmlelements');
+                        $atyiconView->setIcon('bookopen');
+                        $atyiconView->alt = $objLanguage->languageText("mod_eportfolio_display", 'eportfolio');
+                        $atymnglink = new link($this->uri(array(
+                            'module' => 'eportfolio',
+                            'action' => 'displayassertion',
+                            'thisid' => $assertionslist[0]["id"]
+                        )));
+                        $atymnglink->link = $atyiconView->show();
+                        $atylinkManage = $atymnglink->show();
+                        $assertionstable->addCell($atylinkManage, "", NULL, NULL, $class, '');
+                        $assertionstable->endRow();
+                    }
+                    unset($myparentId);
+                }
+                unset($groupId);
+            }
+        } else {
+            $assertionstable->startRow();
+            $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $assertionstable->endRow();
+        }
     }
-		}
-    
-    
 } else {
     //Language Items
     $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
@@ -1517,15 +1505,15 @@ if(class_exists('groupops',false)){
             //Check if assertion group exists and add in contextgroups
             $contextCode = $item["id"];
             $groupName = $item['rationale'];
-            if(empty($groupName)){
-             $groupName = Null;
-             $contextgrpList = Null;
+            if (empty($groupName)) {
+                $groupName = Null;
+                $contextgrpList = Null;
             } else {
-             $contextgrpList = $this->_objGroupAdmin->getLeafId(array(
-                $contextCode,
-                $groupName
-             ));
-            } 
+                $contextgrpList = $this->_objGroupAdmin->getLeafId(array(
+                    $contextCode,
+                    $groupName
+                ));
+            }
             if (empty($contextgrpList)) {
                 //Add Assertion to context groups
                 $title = $item['rationale'];
@@ -1671,9 +1659,9 @@ if ($hasAccess) {
     $categorytypetable->width = "50%";
     //Check for categories
     if (!empty($categoryList)) {
-		   $categorytypetable->startRow();
-		   $categorytypetable->addCell($objLink->show() , '', '', '', '', 'colspan="3"');
-		   $categorytypetable->endRow();
+        $categorytypetable->startRow();
+        $categorytypetable->addCell($objLink->show() , '', '', '', '', 'colspan="3"');
+        $categorytypetable->endRow();
     }
     $categorytypetable->startRow();
     $categorytypetable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_category", 'eportfolio') . "</b>");
@@ -1742,8 +1730,6 @@ if ($hasAccess) {
     
 }
 //End View categorytype
-
-
 //Information Title
 $objinfoTitles->str = $objUser->getSurname() . $objLanguage->languageText("phrase_eportfolio_userinformation", 'eportfolio');
 $this->objmainTab = $this->newObject('tabber', 'htmlelements');
@@ -1780,7 +1766,6 @@ $this->objTab->addTab(array(
     'content' => $demographicsTable->show()
 ));
 $infotabs = $this->objTab->show();
-
 $this->objmainTab->init();
 $this->objmainTab->tabId = "maintab001";
 $this->objmainTab->addTab(array(
@@ -1864,9 +1849,7 @@ if ($hasAccess) {
         'content' => $categoryTab
     ));
 }
-
 $myeportfolioTab = $this->objmainTab->show();
-
 echo $myeportfolioTab;
 if ($this->getParam('message') == 'uploadsuccessful') {
     //$uploadstatus = $this->getParam('status');
