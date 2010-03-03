@@ -25,17 +25,15 @@ var liftdata = new Ext.data.JsonStore({
     		'load': function(){
     				//alert('load');	
     			}
-    	},
+    	}
 	});
 	liftdata.setDefaultSort('createdon', 'desc');
  // pluggable renders
  function renderTitle(value, p, record){
      if(record.data.link == null ){
-     return String.format(
-     		'<b>{0}</b>', record.data.title, record.data.link);
+     return String.format('<b>{0}</b>', record.data.title, record.data.link);
      }else{
-     return String.format(
-     		'<b><a href="'+baseuri+'?{1}">{0}</a></b>', record.data.title, record.data.link);     
+     return String.format('<b><a href="'+baseuri+'?{1}">{0}</a></b>', record.data.title, record.data.link);
      }		
  }
     var grid = new Ext.grid.GridPanel({
@@ -51,7 +49,7 @@ var liftdata = new Ext.data.JsonStore({
         // grid columns
         columns:[
         {
-            id: 'id', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            id: 'id',
             header: lang["description"],
             dataIndex: 'id',
             width: 550,
@@ -80,11 +78,9 @@ var liftdata = new Ext.data.JsonStore({
         },
 								plugins:[new Ext.ux.grid.Search({
 											iconCls:'zoom'
-											//,readonlyIndexes:['lecturers']
 											,disableIndexes:['id','createdby']
 											,minChars:1
 											,autoFocus:true
-											// ,menuStyle:'radio'
 									})],
         // paging bar on the bottom
         bbar: new Ext.PagingToolbar({
