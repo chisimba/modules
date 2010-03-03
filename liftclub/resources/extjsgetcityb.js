@@ -10,18 +10,14 @@ Ext.onReady(function(){
      url: uri, method: 'GET'
     }),
     reader: new Ext.data.JsonReader({  
-      root: 'searchresults',
-     },[  
-      {name: 'id', mapping :'id' },  
-      {name: 'city', mapping : 'city' }  
+      root: 'searchresults'
+     },[
+      {name:'id',mapping:'id' },
+      {name:'city',mapping:'city'}
      ])
     });
-    var resultTpl = new Ext.XTemplate(
-        '<tpl for="."><div class="search-item">',
-            '{city}',
-        '</div></tpl>'
-    );
-         
+    var resultTpl = new Ext.XTemplate('<tpl for="."><div class="search-item">','{city}','</div></tpl>');
+
     var jsearch2 = new Ext.form.ComboBox({
         store: dataStoreParts,
         displayField:'city',
@@ -36,7 +32,7 @@ Ext.onReady(function(){
         tpl: resultTpl,
         applyTo: 'input_citytown2b',
         itemSelector: 'div.search-item',
-        onSelect: function(record){ // override default onSelect to do redirect]
+        onSelect: function(record){
             jQuery("input[id='input_citytown2']").val(record.data.id);
             jQuery("input[id='input_citytown2a']").val(record.data.city);
             this.collapse();
