@@ -25,17 +25,15 @@ var liftdata = new Ext.data.JsonStore({
     		'load': function(){
     				//alert('load');	
     			}
-    	},
+    	}
 	});
-	liftdata.setDefaultSort('createdormodified', 'asc');
+	liftdata.setDefaultSort('createdormodified','asc');
  // pluggable renders
  function renderTitle(value, p, record){
-     return String.format(
-     		'<b><a href="'+baseuri+'?module=liftclub&action=viewlift&liftuserid={0}">View</a></b>', record.data.detuserid, record.data.orisuburb, record.data.desuburb);
+     return String.format('<b><a href="'+baseuri+'?module=liftclub&action=viewlift&liftuserid={0}">View</a></b>', record.data.detuserid, record.data.orisuburb, record.data.desuburb);
  }
  function renderDetails(record){
-     return String.format(
-     		'<p>{0} ( {1} )<br />'+lang['wordcreated']+': {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times);
+     return String.format('<p>{0} ( {1} )<br />'+lang['wordcreated']+': {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times);
  }
     var grid = new Ext.grid.GridPanel({
         el:'find-grid',
@@ -46,8 +44,6 @@ var liftdata = new Ext.data.JsonStore({
         trackMouseOver:false,
         disableSelection:true,
         loadMask: true,
-
-        // grid columns
         columns:[
         {
             header: lang['triporigin'],
@@ -67,26 +63,14 @@ var liftdata = new Ext.data.JsonStore({
             width: 60,
             hidden: false,
             sortable: true
-        }/*,{
-            header: lang["findoffer"],
-            dataIndex: 'userneed',
-            width: 70,
-            hidden: false,
-            sortable: true
         },{
-            header: lang["datecreated"],
-            dataIndex: 'createdormodified',
-            width: 130,
-            hidden: false,
-            sortable: true
-        }*/,{
             header: lang["tripdays"],
             dataIndex: 'selectedays',
             width: 300,
             hidden: false,
             sortable: true
         },{
-            id: 'detuserid', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            id: 'detuserid',
             header: lang["wordview"],
             dataIndex: 'detuserid',
             width: 60,
@@ -94,7 +78,6 @@ var liftdata = new Ext.data.JsonStore({
             hidden: false,
             sortable: true
         }],
-
         // customize view config
         viewConfig: {
             forceFit:true,
@@ -104,9 +87,9 @@ var liftdata = new Ext.data.JsonStore({
                 if(this.showPreview){
                 //<p>{0} ( {1} )<br />Created: {2}<br /> {3}{4} {5}</p>', record.data.needtype, record.data.userneed, record.data.createdormodified, record.data.selectedays, record.data.daterequired, record.data.times
                  if(record.data.daterequired == null){
-                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />'+lang["datecreated"]+' '+lang["wordcreated"]+': '+record.data.createdormodified+'<br />'+record.data.selectedays+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';
+                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />'+lang["datecreated"]+' '+lang["wordcreated"]+': '+record.data.createdormodified+'<br />'+record.data.selectedays+' '+record.data.times+' </p>';
                  }else{
-                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />'+lang["datecreated"]+' '+lang["wordcreated"]+': '+record.data.createdormodified+'<br />'+record.data.daterequired+' '+record.data.times+' </p>';//'<p>'+record.data.needtype+'</p>';                 
+                    p.body = '<p>'+record.data.needtype+' ('+record.data.userneed+')<br />'+lang["datecreated"]+' '+lang["wordcreated"]+': '+record.data.createdormodified+'<br />'+record.data.daterequired+' '+record.data.times+' </p>';
                  }   
                     return 'x-grid3-row-expanded';
                 }
@@ -115,13 +98,10 @@ var liftdata = new Ext.data.JsonStore({
         },
 								plugins:[new Ext.ux.grid.Search({
 											iconCls:'zoom'
-											//,readonlyIndexes:['lecturers']
 											,disableIndexes:['detuserid','createdormodified','selectedays','userneed']
 											,minChars:1
 											,autoFocus:true
-											// ,menuStyle:'radio'
 									})],
-        // paging bar on the bottom
         bbar: new Ext.PagingToolbar({
             pageSize: 5,
             store: liftdata,
