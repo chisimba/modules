@@ -60,7 +60,7 @@
         
         
         
-        adjustLayout();
+        //adjustLayout();
         
         
     });
@@ -113,7 +113,7 @@
                     alert(unableMoveBlock);
                 }
                 
-                adjustLayout();
+                //adjustLayout();
             }
         });
         
@@ -134,7 +134,7 @@
                     alert(unableDeleteBlock);
                 }
                 
-                adjustLayout();
+                //adjustLayout();
             }
         });
     }
@@ -165,7 +165,7 @@
 
                 }
                 
-                adjustLayout();
+                //adjustLayout();
             }
         });
     }
@@ -173,12 +173,12 @@
     function getPreview(blockid, side)
     {
         jQuery("#"+side+"button").hide();
-        adjustLayout();
+        //adjustLayout();
             
         if (blockid=="") {
             jQuery("#"+side+"previewcontent").hide();
             jQuery("#"+side+"button").hide();
-            adjustLayout();
+            //adjustLayout();
         } else {
         
             
@@ -202,7 +202,7 @@
                         jQuery("#"+side+"button").show();
                     }
                     
-                    adjustLayout();
+                    //adjustLayout();
                 }
             });
             
@@ -236,6 +236,6 @@
             inEditMode = true;
         }
         
-        adjustLayout();
+        //adjustLayout();
     }
 
