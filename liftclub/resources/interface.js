@@ -340,7 +340,7 @@ var groupsGrid = new Ext.grid.GridPanel({
     	id: 'west-region-container',
     	layout: 'fit',
 		
-		width:460,
+		width:"50%",
         height:300,
        // frame:true,
         store: alphaGroupStore,
@@ -357,7 +357,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            id: 'timesent', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
 	            header: lang["time"],
 	            dataIndex: 'timesent',
-	            width: 110,
+	            width: 100,
 	            align: 'left',
 	            //renderer: renderTopic,
 	            sortable: true
@@ -365,7 +365,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            id: 'sender', 
 	            header: lang["sender"],
 	            dataIndex: 'sender',
-	            width: 110,
+	            width: 100,
 	            align: 'left',
 	            //renderer: renderTopic,
 	            sortable: true
@@ -373,7 +373,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            id: 'messagetitle', 
 	            header: lang["title"],
 	            dataIndex: 'messagetitle',
-	            width: 200,
+	            width: 150,
 	            align: 'left',
 	            //renderer: renderTopic,
 	            sortable: true
@@ -430,7 +430,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
     margins: '10 10 10 10',	 
 	tbar: toolBar,        
     //bbar:pageNavigation,    
-    width:400,
+    width:'50%',
     height:300,   
     store: abstractStore,    
     iconCls:'icon-grid',
@@ -445,12 +445,12 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
             dataIndex: 'messagebody',
 	           renderer: renderBody,            
             resizable: true,
-            width: 500,
+            width: 600,
 	           align: 'center',
             sortable: false
         }]),    
      viewConfig: {
-        forceFit:true,
+        forceFit:false,
         emptyText: lang["phrasemsgnotfound"]
 
     	}
