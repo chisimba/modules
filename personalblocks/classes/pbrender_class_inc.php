@@ -707,7 +707,7 @@ class pbrender extends dbTable
           . $this->objLanguage->languageText("mod_personalblocks_content", "personalblocks")
           . "</td><td>" . $widgetTxt->show() . "</td></tr>";
         //Make it an expanding textarea
-        $aG = $this->getObject("jqexpanding", "htmlelements");
+        $aG = $this->getObject("jqexpanding", "jquery");
         $aG->show("input_blockcontent");
         // Add a radio set for choosing location.
         $this->loadClass("radio", "htmlelements");
