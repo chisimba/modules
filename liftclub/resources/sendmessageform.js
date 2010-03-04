@@ -4,9 +4,9 @@
  * licensing@extjs.com
  * http://www.extjs.com/license
  */
-/*
+
 Ext.onReady(function(){
-*/
+
     Ext.QuickTips.init();
 
     // turn on validation errors beside the field globally
@@ -38,7 +38,7 @@ Ext.onReady(function(){
         }]
     });
 
-/*
+
     sendmsgFormPanel.render(document.body);
 });
-*/
+

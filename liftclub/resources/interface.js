@@ -233,6 +233,7 @@ var rmButton = new Ext.Button({
         title: lang["sendmsgform"],
         bodyStyle:'padding:5px 5px 0',
         width: 650,
+        height: 250,
         defaults: {width: 500},
         defaultType: 'textfield',
         items: [{
