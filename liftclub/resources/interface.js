@@ -249,7 +249,7 @@ var rmButton = new Ext.Button({
             })
         ],
         buttons: [{
-            text: lang["wordsave"],
+            text: lang["wordsubmit"],
             handler: function() {
                 Ext.getCmp('mainForm').getForm().submit({
                     url:baseUri+'?module=liftclub&action=extjssendmessage&favusrid='+senderId,

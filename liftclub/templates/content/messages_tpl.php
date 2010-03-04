@@ -41,6 +41,7 @@
            lang["trashit"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_trashit', 'liftclub', NULL, 'Send to trash')).'";
            lang["message"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_message', 'liftclub', NULL, 'Message')).'";
            lang["atleasttwochar"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_atleasttwochar', 'liftclub', NULL, 'Type at least 2 characters')).'";
+           lang["wordsubmit"] =   "'.ucWords($this->objLanguage->code2Txt('word_submit', 'system', NULL, 'Submit')).'";
            lang["wordsave"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordsave', 'liftclub', NULL, 'Save')).'";
            lang["wordprocessing"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_wordprocessing', 'liftclub', NULL, 'Processing')).'";
            lang["mod_liftclub_senderror"] =   "'.ucWords($this->objLanguage->code2Txt('mod_liftclub_senderror', 'liftclub', NULL, 'Error Encountered, try again!')).'";

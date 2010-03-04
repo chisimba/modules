@@ -335,16 +335,17 @@ Ext.override(Ext.form.HtmlEditor, {
         title: 'Send Message Form',
         bodyStyle:'padding:5px 5px 0',
         width: 650,
+        height: 250,
         defaults: {width: 500},
         defaultType: 'textfield',
         items: [{
                 xtype:'textfield',
-                fieldLabel: 'Title',
+                fieldLabel:lang["title"],
                 name: 'msgtitle',
                 allowBlank:false
             },new Ext.form.HtmlEditor({
              id:'msgbody',
-             fieldLabel:'Message',
+             fieldLabel:lang["message"],
              width:550,
              height:180
             }),{
@@ -356,7 +357,7 @@ Ext.override(Ext.form.HtmlEditor, {
 												}
         ],
         buttons: [{
-            text: 'Save',
+            text: lang["wordsubmit"],
             handler: function() {
                 Ext.getCmp('mainForm').getForm().submit({
                     url:baseUri+'?module=liftclub&action=extjssendmessage&favusrid='+recipentId,
