@@ -334,7 +334,7 @@ Ext.override(Ext.form.HtmlEditor, {
         frame:true,
         title: 'Send Message Form',
         bodyStyle:'padding:5px 5px 0',
-        width: 650,
+        width: "50%",
         height: 250,
         defaults: {width: 500},
         defaultType: 'textfield',
@@ -346,7 +346,7 @@ Ext.override(Ext.form.HtmlEditor, {
             },new Ext.form.HtmlEditor({
              id:'msgbody',
              fieldLabel:lang["message"],
-             width:550,
+             width:650,
              height:180
             }),{
 																		xtype: 'htmleditor',
@@ -447,7 +447,7 @@ var groupsGrid = new Ext.grid.GridPanel({
     	id: 'west-region-container',
     	layout: 'fit',
 		
-		width:460,
+		width:"50%",
         height:300,
        // frame:true,
         store: alphaGroupStore,
@@ -464,7 +464,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            id: 'timesent', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
 	            header: "Time",
 	            dataIndex: 'timesent',
-	            width: 110,
+	            width: 100,
 	            align: 'left',
 	            //renderer: renderTopic,
 	            sortable: true
@@ -472,7 +472,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            id: 'recipent', 
 	            header: "Recipent",
 	            dataIndex: 'recipent',
-	            width: 110,
+	            width: 100,
 	            align: 'left',
 	            //renderer: renderTopic,
 	            sortable: true
@@ -480,7 +480,7 @@ var groupsGrid = new Ext.grid.GridPanel({
 	            id: 'messagetitle', 
 	            header: "Title",
 	            dataIndex: 'messagetitle',
-	            width: 200,
+	            width: 150,
 	            align: 'left',
 	            //renderer: renderTopic,
 	            sortable: true
@@ -533,7 +533,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
     margins: '10 10 10 10',	 
 	tbar: toolBar,        
     //bbar:pageNavigation,    
-    width:400,
+    width:"50%",
     height:350,   
     store: abstractStore,    
     iconCls:'icon-grid',
@@ -548,7 +548,7 @@ var SiteAdminGrid = new Ext.grid.GridPanel({
             dataIndex: 'messagebody',
 	           renderer: renderBody,            
             resizable: true,
-            width: 500,
+            width: 650,
 	           align: 'center',
             sortable: false
         }]),    
