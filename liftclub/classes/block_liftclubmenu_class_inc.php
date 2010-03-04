@@ -96,52 +96,52 @@ class block_liftclubmenu extends object
 							$objBlocks = $this->getObject('blocks', 'blocks');
 							$cssLayout = $this->getObject('csslayout', 'htmlelements');
 
-							$homeLink =new link($this->uri(array('action'=>'liftclubhome')));
+							$homeLink =new link($this->uri(array('action'=>'liftclubhome'),'liftclub'));
 							$homeLink->link = $this->objLanguage->languageText("word_home","system","Home");
 							$homeLink->title = $this->objLanguage->languageText("word_home","system","Home");
 
-							$exitLink =new link($this->uri(array('action'=>'liftclubsignout')));
+							$exitLink =new link($this->uri(array('action'=>'liftclubsignout'),'liftclub'));
 							$exitLink->link = $this->objLanguage->languageText("mod_liftclub_signout","liftclub","Sign Out");
 							$exitLink->title = $this->objLanguage->languageText("mod_liftclub_signout","liftclub","Sign Out");
 
-							$registerLink =new link($this->uri(array('action'=>'showregister')));
+							$registerLink =new link($this->uri(array('action'=>'showregister'),'liftclub'));
 							$registerLink->link = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 							$registerLink->title = $this->objLanguage->languageText("mod_liftclub_register","liftclub","Register");
 
-							$modifyLink =new link($this->uri(array('action'=>'startregister')));
+							$modifyLink =new link($this->uri(array('action'=>'startregister'),'liftclub'));
 							$modifyLink->link = $this->objLanguage->languageText("mod_liftclub_addmodify","liftclub","Add/Modify Lift");
 							$modifyLink->title = $this->objLanguage->languageText("mod_liftclub_addmodify","liftclub","Add/Modify Lift");
 
-							$userDetailsLink =new link($this->uri(array('action'=>'modifyuserdetails')));
+							$userDetailsLink =new link($this->uri(array('action'=>'modifyuserdetails'),'liftclub'));
 							$userDetailsLink->link = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 							$userDetailsLink->title = $this->objLanguage->languageText("mod_liftclub_modifyregister","liftclub","Modify Registration");
 
 
-							$findLink =new link($this->uri(array('action'=>'findlift')));
+							$findLink =new link($this->uri(array('action'=>'findlift'),'liftclub'));
 							$findLink->link = $this->objLanguage->languageText("mod_liftclub_viewneeded","liftclub","View Needed Lifts");
 							$findLink->title = $this->objLanguage->languageText("mod_liftclub_viewneeded","liftclub","View Needed Lifts");
 
-							$offerLink =new link($this->uri(array('action'=>'offeredlifts')));
+							$offerLink =new link($this->uri(array('action'=>'offeredlifts'),'liftclub'));
 							$offerLink->link = $this->objLanguage->languageText("mod_liftclub_viewavailable","liftclub","View Available Lifts");
 							$offerLink->title = $this->objLanguage->languageText("mod_liftclub_viewavailable","liftclub","View Available Lifts");
 
-							$favLink =new link($this->uri(array('action'=>'myfavourites')));
+							$favLink =new link($this->uri(array('action'=>'myfavourites'),'liftclub'));
 							$favLink->link = $this->objLanguage->languageText("mod_liftclub_myfavourites","liftclub","My Favourites");
 							$favLink->title = $this->objLanguage->languageText("mod_liftclub_myfavourites","liftclub","My Favourites");
 							
-							$actyLink =new link($this->uri(array('action'=>'viewactivities')));
+							$actyLink =new link($this->uri(array('action'=>'viewactivities'),'liftclub'));
 							$actyLink->link = $this->objLanguage->languageText("mod_liftclub_liftclubactivities","liftclub","LiftClub Activities");
 							$actyLink->title = $this->objLanguage->languageText("mod_liftclub_liftclubactivities","liftclub","LiftClub Activities");
 
-							$msgLink =new link($this->uri(array('action'=>'messages')));
+							$msgLink =new link($this->uri(array('action'=>'messages'),'liftclub'));
 							$msgLink->link = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
 							$msgLink->title = $this->objLanguage->languageText("mod_liftclub_receivedmessages","liftclub","Inbox");
 
-							$msgSentLink =new link($this->uri(array('action'=>'sentmessages')));
+							$msgSentLink =new link($this->uri(array('action'=>'sentmessages'),'liftclub'));
 							$msgSentLink->link = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Sent");
 							$msgSentLink->title = $this->objLanguage->languageText("mod_liftclub_sentmessages","liftclub","Sent");
 
-							$msgTrashLink =new link($this->uri(array('action'=>'trashedmessages')));
+							$msgTrashLink =new link($this->uri(array('action'=>'trashedmessages'),'liftclub'));
 							$msgTrashLink->link = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
 							$msgTrashLink->title = $this->objLanguage->languageText("mod_liftclub_trashedmessages","liftclub","Trash");
        
