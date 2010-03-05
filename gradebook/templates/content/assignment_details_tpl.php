@@ -349,7 +349,7 @@ if(!$numberAssignments) {
                             $objAssignmentCheckBox->setValue("1");
                             $this->TableInstructions->addCell($objAssignmentCheckBox->show());
                             //closing date
-                            $this->TableInstructions->addCell($objDatetime->formatDate($iassignment["closing_date"]));
+                            $this->TableInstructions->addCell($objDatetime->formatDate($iassignment["closingdate"]));
                             //assignment name
                             $objAssignmentLink = new link($this->uri(array('action'=>'assignmentDetails','assignment'=>'MCQ Tests','assignmentId'=>$iassignment["id"])));
                             $objAssignmentLink->link=$iassignment["name"];
@@ -396,7 +396,7 @@ if(!$numberAssignments) {
                         $objAssignmentCheckBox->setValue("1");
                         $this->TableInstructions->addCell($objAssignmentCheckBox->show());
                         //closing date
-                        $this->TableInstructions->addCell($objDatetime->formatDate(isset($iassignment['closing_date'])?$iassignment['closing_date']:null));
+                        $this->TableInstructions->addCell($objDatetime->formatDate(isset($iassignment['closingdate'])?$iassignment['closingdate']:null));
                         //assignment name
                         $objAssignmentLink = new link($this->uri(array('action'=>'assignmentDetails','assignment'=>'MCQ Tests','assignmentId'=>$iassignment["id"])));
                         $objAssignmentLink->link=$iassignment["name"];
@@ -464,6 +464,7 @@ if(!$numberAssignments) {
                             $objAssignmentCheckBox->setValue("1");
                             $this->TableInstructions->addCell($objAssignmentCheckBox->show());
                             //closing date
+                            
                             $this->TableInstructions->addCell($objDatetime->formatDate($iassignment["closing_date"]));
                             //assignment name
                             $objAssignmentLink = new link($this->uri(array('action'=>'assignmentDetails','assignment'=>'Assignments','assignmentId'=>$iassignment["id"])));

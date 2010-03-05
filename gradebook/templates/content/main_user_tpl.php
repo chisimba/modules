@@ -393,7 +393,7 @@ if(!$numberAssignments) {
                         $studentResult=array();
                         $xstudentResult=array();
                         $xstudentResult=$objTestresults->getResult($studentUserId,$iassignment["id"]);
-
+                        
                         $classAvg=array();
                         $classAvg=$objTestresults->getAnnualResults("tbl_test_results.testId='".$iassignment["id"]."' and tbl_test_results.testId=tbl_tests.id","avg((tbl_test_results.mark/tbl_tests.totalMark)*100) classAvg","tbl_test_results,tbl_tests");
                         $ca=0;
