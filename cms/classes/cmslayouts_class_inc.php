@@ -1002,13 +1002,24 @@ function _layoutSummaries($arrSection, $module)
 function _layoutPage($arrSection, $module)
 {
 	$pageId = $this->getParam('pageid', '');
-	$showIntro = $arrSection['showintroduction'];
-	$description = $arrSection['description'];
-	$orderType = $arrSection['ordertype'];
-	$showDate = $arrSection['showdate'];
-	$imagesrc = $arrSection['link'];
+	if(empty($arrSection)){
+	 $showIntro = Null;
+	 $description = Null;
+	 $orderType = Null;
+ 	$showDate = Null;
+	 $imagesrc = Null;
+	 $intId = Null;
+	 $intTitle = Null;
+	}else{
+ 	$showIntro = $arrSection['showintroduction'];
+	 $description = $arrSection['description'];
+	 $orderType = $arrSection['ordertype'];
+	 $showDate = $arrSection['showdate'];
+	 $imagesrc = $arrSection['link'];
+	 $intId = $arrSection['id'];
+	 $intTitle = $arrSection['title'];
+	}
 	$introStr = null;
-
 	switch ($orderType) {
 
 		case 'pagedate_asc':
@@ -1033,7 +1044,7 @@ function _layoutPage($arrSection, $module)
 			break;
 	}
 
-	$arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 AND trash=0 '.$filter);
+	$arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$intId.'\' AND published=1 AND trash=0 '.$filter);
 
 	$cnt = 0;
 	$topStr = '';
@@ -1048,7 +1059,7 @@ function _layoutPage($arrSection, $module)
 
 	if(!empty($description)) {
 		$introStr = null;
-		$introStr .= '<p><hr /><span>'.$arrSection['title'].'&nbsp;'.'</span>';
+		$introStr .= '<p><hr /><span>'.$intTitle.'&nbsp;'.'</span>';
 		$introStr .= '</p>';
 		$introStr .=  '<em><span>'.$description.'</span>';
 		$introStr .= '<br /></em><hr />';
