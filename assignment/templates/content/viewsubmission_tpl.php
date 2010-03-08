@@ -146,7 +146,7 @@ if ($assignment['format'] == '1') {
         //$file_ = $objFile->getFile($fileId);
 	//$fileName_ = $file_['filename'];
 	$submissionId = $submission['id'];
-	$tempFilePath = sys_get_temp_dir().'chisimba'.DIRECTORY_SEPARATOR.$this->objConfig->serverName().DIRECTORY_SEPARATOR.'assignment'.DIRECTORY_SEPARATOR.'submissions'.DIRECTORY_SEPARATOR.$submissionId; //'/'.$fileName;
+	$tempFilePath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'chisimba'.DIRECTORY_SEPARATOR.$this->objConfig->serverName().DIRECTORY_SEPARATOR.'assignment'.DIRECTORY_SEPARATOR.'submissions'.DIRECTORY_SEPARATOR.$submissionId; //'/'.$fileName;
         //echo "[$tempFilePath]";
         $objCleanUrl = $this->getObject('cleanurl', 'filemanager');
         $tempFilePath = $objCleanUrl->cleanUpUrl($tempFilePath);
