@@ -66,6 +66,7 @@ class kngimport extends controller
      */
     public function init()
     {
+                
         $this->_objDBContext = $this->getObject('dbcontext', 'context');
         $this->_objDBContextModules = $this->getObject('dbcontextmodules', 'context');
         $this->_objUser = $this->getObject('user', 'security');
@@ -106,12 +107,13 @@ class kngimport extends controller
             case '':
 	        case 'default':
 	            $this->setLayoutTemplate('main_layout_tpl.php');
-	            $this->setVar('contextList', $this->_objUtils->getContextList());
+	            //$this->setVar('contextList', $this->_objUtils->getContextList());
 	            $this->setVar('otherCourses', $this->_objUtils->getOtherContextList());
 	            $this->setVar('filter', $this->_objUtils->getFilterList($this->_objUtils->getContextList()));
 	            $this->setVar('archivedCourses', $this->_objUtils->getArchivedContext());
 
 	            return 'main_tpl.php';
+	                        
                 
             //the following cases deals with adding a context.
             

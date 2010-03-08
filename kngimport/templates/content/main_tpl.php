@@ -20,6 +20,7 @@ $objH = new htmlheading();
 $objH->str = ucwords($objLanguage->code2Txt('mod_contextadmin_contextadmin', 'contextadmin')).' '.$icon->getAddIcon($this->uri(array('action' => 'addstep1')));
 $objH->type = 3;
 echo $objH->show();
+     
 
 
 
@@ -33,12 +34,19 @@ $conf = '';
 $heading = '';
 $currentContextCode = $this->_objDBContext->getContextCode();
 //registered courses
+$icon = $this->newObject('geticon', 'htmlelements');
+/*
 if (isset($contextList))
-{	
+{
+//var_dump(	count($contextList));
 	foreach ($contextList as $context)
 	{
+		if ($i < 100){
+		    $i++;
 		
 		$lecturers = $this->_objUtils->getContextLecturers($context['contextcode']);
+		
+		
 		$lects = '';
 		if(is_array($lecturers))
 		{
@@ -54,8 +62,9 @@ if (isset($contextList))
 		} else {
 			$lects = 'No Instructor for this course';
 		}
+		
 		//print_r($objContextGroups->getUserCount($context['contextcode']));
-		$userCount = $objContextGroups->getUserCount($context['contextcode'])+1;
+		$userCount = 0;//$objContextGroups->getUserCount($context['contextcode'])+1;
 		$content = $this->_objLanguage->languageText("mod_context_instructors",'context') .': <span class="highlight">'.$lects.'</span>';
 		$content .= '<p>'.$this->_objLanguage->languageText("mod_context_status",'context') .' : <span class="highlight">'.$context['status'].'</span>';
 		$content .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->_objLanguage->languageText("mod_context_access",'context') .' : <span class="highlight">'.$context['access'].'</span>';
@@ -67,7 +76,7 @@ if (isset($contextList))
 		
 		//administer context
 		//enter context
-		$icon = $this->newObject('geticon', 'htmlelements');
+		
 		$objLink->href = $this->uri(array('action' => 'admincontext', 'contextcode' => $context['contextcode']), 'contextadmin');
 		$icon->setModuleIcon('contextadmin');
 		$icon->alt = 'Administer Course';
@@ -91,7 +100,7 @@ if (isset($contextList))
 		$title = ($context['title'] == '') ? $context['menutext'] : $context['title'];
 		if($context['contextcode'] == $this->_objDBContext->getContextCode())
 		{
-		      $heading = preg_replace('/_.*/', '', $context['contextcode']);
+		      $heading = preg_replace('/_.*', '', $context['contextcode']); //remeber the / after the * when it is commented out
 			$other .= '&nbsp;'.$featureBox->show($heading .' - '.$title.'   '.$conf, $content ).'<hr />';
 		} else {
 			$str .= '&nbsp;'.$featureBox->show($context['contextcode'] .' - '.$title.'   '.$conf, $content ).'<hr />';
@@ -99,18 +108,22 @@ if (isset($contextList))
 		
 		//$icon = null;
 	}
+	//$this->Timer->endTimer();
+
+	}
 } else {
 	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.$this->_objLanguage->languageText("mod_context_noasscontext",'context') .'</div>';
 }
 
 
+//die('here');
 
 if ($this->_objDBContext->isInContext()) {
 	$other .= $this->_objUtils->getContextAdminToolBox();
 	$tabBox->addTab(array('name'=> $this->_objDBContext->getTitle(). ' Admin','content' => $other));	
 }
 $tabBox->addTab(array('name'=>ucwords($this->_objLanguage->code2Txt('mod_contextadmin_mycontext','contextadmin',array('contexts' => 'Courses'))),'content' => $str));
-
+*/
 // if the user is admin then show him all the other courses as well.
 if($this->_objUser->isAdmin())
 {
