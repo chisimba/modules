@@ -36,12 +36,12 @@
     $tblclass->cellpadding='5';
 
     $tblclass->startHeaderRow();
-    $tblclass->addHeaderCell(ucfirst($objLanguage->code2Txt('rubric_studentno','rubric')), 60);
+    $tblclass->addHeaderCell(ucfirst($objLanguage->code2Txt('word_username','system'))." / ".ucfirst($objLanguage->code2Txt('rubric_studentno','rubric')), 150);
     if ($showStudentNames == "yes") {
-        $tblclass->addHeaderCell($objLanguage->languageText('rubric_name','rubric'), 60);
+        $tblclass->addHeaderCell($objLanguage->languageText('rubric_name','rubric'), 150);
     }
     $tblclass->addHeaderCell($objLanguage->languageText('rubric_score','rubric'), 60);
-    $tblclass->addHeaderCell(ucfirst($objLanguage->code2Txt('rubric_teacher','rubric')), 60);
+    $tblclass->addHeaderCell(ucfirst($objLanguage->code2Txt('rubric_teacher','rubric')), 150);
     $tblclass->addHeaderCell($objLanguage->languageText('rubric_date','rubric'), 60);
     $tblclass->addHeaderCell("&nbsp;",'rubric', 60);
     $tblclass->endHeaderRow();
@@ -64,19 +64,26 @@
     	){
 
 			$tblclass->startRow();
-	        $oddOrEven = ($oddOrEven=="even")? "odd":"even";
-
-			$option = "<a href=\"" .
-			$this->uri(array(
-			 	'module'=>'rubric',
-				'action'=>'viewassessment',
-				'tableId'=>$tableId,
-				'id'=>$assessment['id']
+	  $oddOrEven = ($oddOrEven=="even")? "odd":"even";
+   $studUsedId = $this->objUser->getUserId($assessment['studentno']);
+   if(!empty($studUsedId)){
+			 $option = "<a href=\"" .
+			 $this->uri(array(
+			  	'module'=>'rubric',
+				  'action'=>'viewassessment',
+  				'tableId'=>$tableId,
+		  		'id'=>$assessment['id']
+				))."\">".$studUsedId."</a>";
+			}	else {
+			 $option = "<a href=\"" .
+			 $this->uri(array(
+			  	'module'=>'rubric',
+				  'action'=>'viewassessment',
+  				'tableId'=>$tableId,
+		  		'id'=>$assessment['id']
 				))."\">".$assessment['studentno']."</a>";
-//				))."\">".$assessment['studentNo']."</a>";
-
-         $tblclass->addCell($option, "null", "top", "left", $oddOrEven, null);
-	          // $tblclass->addCell("<b>" . $assessment['studentNo'] . "</b>", "null", "top", "left", $oddOrEven, null);
+			}
+   $tblclass->addCell($option, "null", "top", "left", $oddOrEven, null);
 
 			if ($showStudentNames == "yes"){
 	            $tblclass->addCell("<b>" . $assessment['student'] . "</b>", "null", "top", "left", $oddOrEven, null);
