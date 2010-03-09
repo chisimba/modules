@@ -31,6 +31,7 @@ class flickrshow extends controller {
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objConfig = $this->getObject('altconfig', 'config');
         
     }
     
@@ -45,14 +46,18 @@ class flickrshow extends controller {
             $id = $this->getParam('id');
             $photoset = $this->getParam('photoset');
             $size = $this->getParam('size');
-            $aContext = array(
-                'http' => array(
-                    'proxy' => 'tcp://192.102.9.227:3128', // This needs to be the server and the port of the NTLM Authentication Proxy Server.
-                    'request_fulluri' => true,
-                ),
-            );
-            $cxContext = stream_context_create($aContext);
-
+            $proxy = $this->objConfig->getProxy();
+            if ($proxy) {
+                $aContext = array(
+                    'http' => array(
+                        'proxy' => str_replace('http', 'tcp', $proxy), // This needs to be the server and the port of the NTLM Authentication Proxy Server.
+                        'request_fulluri' => true,
+                    ),
+                );
+                $cxContext = stream_context_create($aContext);
+            } else {
+                $cxContext = null;
+            }
             // Now all file stream functions can use this context.
             $url = "http://api.flickr.com/services/rest/?method=flickr.photosets.getphotos&photoset_id=$photoset&api_key=$apiKey&format=json&extras=url_o";
             $response = file_get_contents($url, false, $cxContext);
