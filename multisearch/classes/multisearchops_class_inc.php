@@ -127,7 +127,7 @@ class multisearchops extends object {
                         $bing = '<h2>Bing</h2><ul>';
                         break;
                     default:
-                        $bing = "=== Bing ===\n";
+                        $bing = "=== Bing ===\n\n";
                 }
                 $all = sizeof($res);
                 for($i=0;$i<$all;$i++) {      
@@ -144,19 +144,44 @@ class multisearchops extends object {
                 }
             } 
             else {
-                $bing = "<h2>Bing</h2><h3>".$this->objLanguage->languageText("mod_multisearch_noresults", "multisearch")."</h3>";
+                switch ($format) {
+                    case 'html':
+                        $bing = "<h2>Bing</h2><h3>".$this->objLanguage->languageText("mod_multisearch_noresults", "multisearch")."</h3>";
+                        break;
+                    default:
+                        $bing = sprintf("=== Bing ===\n\n%s\n\n", $this->objLanguage->languageText("mod_multisearch_noresults", "multisearch"));
             }
             if($data->query->results->results[1]) {
                 $res = $data->query->results->results[1]->result;
-                $yahoo = '<h2>Yahoo</h2><ul>';
-                $all = sizeof($res);
-                for($i=0;$i<$all;$i++) {      
-                    $yahoo .= '<li><h3><a href="'.$res[$i]->clickurl.'" target ="_blank">'.$res[$i]->title.'</a></h3><p>'.$res[$i]->abstract.'<span>('.$res[$i]->dispurl.')</span></p></li>';
+                switch ($format) {
+                    case 'html':
+                        $yahoo = '<h2>Yahoo</h2><ul>';
+                        break;
+                    default:
+                        $yahoo = "=== Yahoo ===\n\n";
                 }
-                $yahoo .= '</ul>';
+                $all = sizeof($res);
+                for($i=0;$i<$all;$i++) {
+                    switch ($format) {
+                        case 'html':
+                            $yahoo .= '<li><h3><a href="'.$res[$i]->clickurl.'" target ="_blank">'.$res[$i]->title.'</a></h3><p>'.$res[$i]->abstract.'<span>('.$res[$i]->dispurl.')</span></p></li>';
+                            break;
+                        default:
+                            $yahoo .= sprintf("%s\n%s\n%s (%s)\n\n", $res[$i]->title, $res[$i]->clickurl, $res[$i]->abstract, $res[$i]->dispurl);
+                    }
+                }
+                if ($format === 'html') {
+                    $yahoo .= '</ul>';
+                }
             } 
             else {
-                $yahoo = "<h2>Yahoo</h2><h3>".$this->objLanguage->languageText("mod_multisearch_noresults", "multisearch")."</h3>";
+                switch ($format) {
+                    case 'html':
+                        $yahoo = "<h2>Yahoo</h2><h3>".$this->objLanguage->languageText("mod_multisearch_noresults", "multisearch")."</h3>";
+                        break;
+                    default:
+                        $yahoo = sprintf("=== Yahoo ===\n\n%s\n\n", $this->objLanguage->languageText("mod_multisearch_noresults", "multisearch"));
+                }
             }
             if($data->query->results->results[2]) {
                 $res = $data->query->results->results[2]->results;
