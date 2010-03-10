@@ -222,6 +222,11 @@ class multisearchops extends object {
         else {
            $out = $this->objLanguage->languageText("mod_multisearch_noresults", "multisearch");
         }
+        if ($format === 'plaintext') {
+            foreach ($out as &$i) {
+                $i = strip_tags($i);
+            }
+        }
         return $out;
     }
     
