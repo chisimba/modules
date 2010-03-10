@@ -224,7 +224,7 @@ class multisearchops extends object {
         }
         if ($format === 'plaintext') {
             foreach ($out as &$i) {
-                $i = strip_tags($i);
+                $i = html_entity_decode(strip_tags($i));
             }
         }
         return $out;
