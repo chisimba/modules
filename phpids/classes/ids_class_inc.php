@@ -68,7 +68,7 @@ class ids extends object
     * @var string The version of the phpids library.
     * @access private
     */
-    private $ver = 'phpids-0.6.3.1';
+    private $phpids_rel = 'phpids-0.6.3.1';
     /**
     * The initialization method.
     * @return void
@@ -80,7 +80,7 @@ class ids extends object
         set_include_path(
             get_include_path()
             . PATH_SEPARATOR
-            . $this->getResourcePath("{$this->ver}",'phpids').'/lib/'
+            . $this->getResourcePath("{$this->phpids_rel}",'phpids').'/lib/'
         );
     }
     /**
@@ -109,7 +109,7 @@ class ids extends object
                 'COOKIE' => $_COOKIE
             );
 
-            $init = IDS_Init::init(dirname(__FILE__) . "/../resources/{$this->ver}/lib/IDS/Config/Config.ini.php");
+            $init = IDS_Init::init(dirname(__FILE__) . "/../resources/{$this->phpids_rel}/lib/IDS/Config/Config.ini.php");
 
             /**
              * You can also reset the whole configuration
@@ -124,7 +124,7 @@ class ids extends object
              * or you can access the config directly like here:
              */
 
-            $init->config['General']['base_path'] = dirname(__FILE__) . "/../resources/{$this->ver}/lib/IDS/";
+            $init->config['General']['base_path'] = dirname(__FILE__) . "/../resources/{$this->phpids_rel}/lib/IDS/";
             $init->config['General']['use_base_path'] = true;
             $init->config['Caching']['caching'] = 'none';
 
