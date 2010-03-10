@@ -19,6 +19,10 @@
             switch ($action) {
                 //Default to view and display view template
                 case "add":
+                    if(!file_exists($this->objConfig->getContentBasepath().'users/'.$this->objUser->userId())) {
+                        mkdir ($this->objConfig->getContentBasepath().'users/'.$this->objUser->userId(), 0777);
+                        chmod ($this->objConfig->getContentBasepath().'users/'.$this->objUser->userId(), 0777);
+                    }
                     if(!file_exists($this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/')) {
                         mkdir ($this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/', 0777);
                         chmod ($this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/', 0777);
