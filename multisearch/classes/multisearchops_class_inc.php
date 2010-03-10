@@ -118,16 +118,30 @@ class multisearchops extends object {
         return $data;
     }
     
-    public function formatQuery($data) {
+    public function formatQuery($data, $format='html') {
         if($data->query) {
             if($data->query->results->results[0]) {
                 $res = $data->query->results->results[0]->WebResult;
-                $bing = '<h2>Bing</h2><ul>';
+                switch ($format) {
+                    case 'html':
+                        $bing = '<h2>Bing</h2><ul>';
+                        break;
+                    default:
+                        $bing = "=== Bing ===\n";
+                }
                 $all = sizeof($res);
                 for($i=0;$i<$all;$i++) {      
-                    $bing .= '<li><h3><a href="'.$res[$i]->Url.'" target ="_blank">'.$res[$i]->Title.'</a></h3><p>'.@$res[$i]->Description.'<span>('.$res[$i]->DisplayUrl.')</span></p></li>';
+                    switch ($format) {
+                        case 'html':
+                            $bing .= '<li><h3><a href="'.$res[$i]->Url.'" target ="_blank">'.$res[$i]->Title.'</a></h3><p>'.@$res[$i]->Description.'<span>('.$res[$i]->DisplayUrl.')</span></p></li>';
+                            break;
+                        default:
+                            $bing .= sprintf("%s\n%s\n%s (%s)\n\n", $res[$i]->Title, $res[$i]->Url, $res[$i]->Description, $res[$i]->DisplayUrl);
+                    }
                 }
-                $bing .= '</ul>';
+                if ($format === 'html') {
+                    $bing .= '</ul>';
+                }
             } 
             else {
                 $bing = "<h2>Bing</h2><h3>".$this->objLanguage->languageText("mod_multisearch_noresults", "multisearch")."</h3>";
