@@ -150,6 +150,7 @@ class multisearchops extends object {
                         break;
                     default:
                         $bing = sprintf("=== Bing ===\n\n%s\n\n", $this->objLanguage->languageText("mod_multisearch_noresults", "multisearch"));
+                }
             }
             if($data->query->results->results[1]) {
                 $res = $data->query->results->results[1]->result;
