@@ -185,15 +185,35 @@ class multisearchops extends object {
             }
             if($data->query->results->results[2]) {
                 $res = $data->query->results->results[2]->results;
-                $google = '<h2>Google</h2><ul>';
-                $all = sizeof($res);
-                for($i=0;$i<$all;$i++) {      
-                    $google .= '<li><h3><a href="'.$res[$i]->url.'" target ="_blank">'.$res[$i]->titleNoFormatting.'</a></h3><p>'.$res[$i]->content.'<span>('.$res[$i]->visibleUrl.')</span></p></li>';
+                switch ($format) {
+                    case 'html':
+                        $google = '<h2>Google</h2><ul>';
+                        break;
+                    default:
+                        $google = "=== Google ===\n\n";
                 }
-                $google .= '</ul>';
+                $all = sizeof($res);
+                for($i=0;$i<$all;$i++) {
+                    switch ($format) {
+                        case 'html':
+                            $google .= '<li><h3><a href="'.$res[$i]->url.'" target ="_blank">'.$res[$i]->titleNoFormatting.'</a></h3><p>'.$res[$i]->content.'<span>('.$res[$i]->visibleUrl.')</span></p></li>';
+                            break;
+                        default:
+                            $google .= sprintf("%s\n%s\n%s (%s)\n\n", $res[$i]->titleNoFormatting, $res[$i]->url, $res[$i]->content, $res[$i]->visibleUrl);
+                    }
+                }
+                if ($format === 'html') {
+                    $google .= '</ul>';
+                }
             } 
             else {
-                $google = "<h2>Google</h2><h3>".$this->objLanguage->languageText("mod_multisearch_noresults", "multisearch")."</h3>";
+                switch ($format) {
+                    case 'html':
+                        $google = "<h2>Google</h2><h3>".$this->objLanguage->languageText("mod_multisearch_noresults", "multisearch")."</h3>";
+                        break;
+                    default:
+                        $google = sprintf("=== Google ===\n\n%s\n\n", $this->objLanguage->languageText("mod_multisearch_noresults", "multisearch"));
+                }
             }
   
             $out = array('google' => $google, 'yahoo' => $yahoo, 'bing' => $bing);
