@@ -200,11 +200,10 @@
         * @access public
         * @return string Html for radio buttons
         */
-        public function getYesNoRadion($name, $selected = '1', $showIcon = true)
+        public function getYesNoRadion($name, $selected = 1, $showIcon = true)
         {
             $visibleIcon = '';
             $notVisibleIcon = '';
-
             if ($showIcon) {
                 //Get visible not visible icons
                 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -220,12 +219,12 @@
     
             $objRadio = new radio ($name);
 
-            $objRadio->addOption('1', $visibleIcon.$this->objLanguage->languageText('word_yes'));
-            $objRadio->addOption('0', $notVisibleIcon.$this->objLanguage->languageText('word_no').'&nbsp;'.'&nbsp;');
+            $objRadio->addOption(1, $visibleIcon.$this->objLanguage->languageText('word_yes'));
+            $objRadio->addOption(0, $notVisibleIcon.$this->objLanguage->languageText('word_no').'&nbsp;'.'&nbsp;');
 
             $objRadio->setSelected($selected);
 
-            $objRadio->setBreakSpace(' &nbsp; ');
+            //$objRadio->setBreakSpace(' &nbsp; ');
 
             return $objRadio->show();
         }
@@ -1234,7 +1233,7 @@
                 //Initializing options
 
                 $published->setChecked(TRUE);
-                $visible = TRUE;
+                $visible = 1;
                 $hide_title = '0';
                 $hide_user = '1';
                 $hide_date = '1';
@@ -1404,7 +1403,7 @@
                 //Initializing options
 
                 $published->setChecked(TRUE);
-                $visible = TRUE;
+                $visible = 1;
                 $hide_title = '0';
                 $hide_user = '1';
                 $hide_date = '1';
@@ -5534,10 +5533,8 @@
             
 	        //Add validation for title            
             $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
-            $errBodyLength = $this->objLanguage->languageText('mod_cmsadmin_enterbodylength', 'cmsadmin');
             $objForm->addRule('title', $errTitle, 'required');
-			$objForm->addRule(array('name'=>'body', 'length'=>64086), $errBodyLength, 'fckmaxlength');
-            $objForm->addToForm($tableContainer->show() /*$wrapLayer->show()*/);
+			$objForm->addToForm($tableContainer->show() /*$wrapLayer->show()*/);
             $objForm->addToForm('<input type="hidden" name="must_apply" id="must_apply" value="0">');
 
             //add action

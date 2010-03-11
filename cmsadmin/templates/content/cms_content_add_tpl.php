@@ -92,7 +92,7 @@ $objBlockIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveb
 $blockIcon = $objBlockIcon->show();
 
 //Check if blocks module is registered
-$this->objModule = &$this->newObject('modules', 'modulecatalogue');
+$this->objModule = $this->newObject('modules', 'modulecatalogue');
 $isRegistered = $this->objModule->checkIfRegistered('blocks');
 
 // set up link to view block form
