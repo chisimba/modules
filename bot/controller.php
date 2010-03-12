@@ -2,10 +2,12 @@
 
 class bot extends controller
 {
+    protected $objLanguage;
     protected $objMultisearch;
 
     public function init()
     {
+        $this->objLanguage    = $this->getObject('language', 'language');
         $this->objMultisearch = $this->getObject('multisearchops', 'multisearch');
     }
 
@@ -23,7 +25,7 @@ class bot extends controller
                 $response = implode('', $text);
                 break;
             default:
-                $response = 'No commands matching your query. Please try again.';
+                $response = $this->objLanguage->languageText('mod_bot_invalidcommand', 'bot')
         }
 
         header('Content-Type: text/plain; charset=UTF-8');
