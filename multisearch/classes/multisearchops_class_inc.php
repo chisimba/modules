@@ -102,11 +102,11 @@ class multisearchops extends object {
         return $ret;
     }
 
-    public function buildQuery($query) {
+    public function buildQuery($query, $limit=20) {
         $queries = NULL;
-        $queries[] = 'select Title,Description,Url,DisplayUrl '.'from microsoft.bing.web(20) where query="'.$query.'"';
-        $queries[] = 'select title,clickurl,abstract,dispurl '.'from search.web(20) where query = "'.$query.'"';
-        $queries[] = 'select titleNoFormatting,url,content,visibleUrl '.'from google.search(20) where q="'.$query.'"';
+        $queries[] = 'select Title,Description,Url,DisplayUrl '.'from microsoft.bing.web('.$limit.') where query="'.$query.'"';
+        $queries[] = 'select title,clickurl,abstract,dispurl '.'from search.web('.$limit.') where query = "'.$query.'"';
+        $queries[] = 'select titleNoFormatting,url,content,visibleUrl '.'from google.search('.$limit.') where q="'.$query.'"';
         $url = "select * from query.multi where queries='".join($queries,';')."'";
         $api = 'http://query.yahooapis.com/v1/public/yql?q='.urlencode($url).'&format=json&env=store'.'%3A%2F%2Fdatatables.org%2Falltableswithkeys&diagnostics=false';
         
