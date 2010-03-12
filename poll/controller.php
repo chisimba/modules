@@ -72,7 +72,7 @@ class poll extends controller
                 $contextCode = $this->objContext->getContextCode();
 		$poll = $this->dbPoll->getPoll($contextCode);	        
                 $pollData = $this->dbQuestions->getQuestions($poll);
-		$hasAccess = $this->objEngine->_objUser->isContextLecturer();
+		$hasAccess = $this->objUser->isContextLecturer();
 		if($hasAccess){
 	                $display = $this->pollTools->showContextPolls($pollData);
 		}else{
@@ -99,7 +99,7 @@ class poll extends controller
                 $contextCode = $this->objContext->getContextCode();
 		$poll = $this->dbPoll->getPoll($contextCode);	        
                 $pollData = $this->dbQuestions->getQuestions($poll);
-		$hasAccess = $this->objEngine->_objUser->isContextLecturer();
+		$hasAccess = $this->objUser->isContextLecturer();
 		if(!$hasAccess){
 	                $display = $this->pollTools->castContextPolls($pollData);
 		}else{
