@@ -25,7 +25,7 @@ class bot extends controller
                 $response = implode('', $text);
                 break;
             default:
-                $response = $this->objLanguage->languageText('mod_bot_invalidcommand', 'bot')
+                $response = $this->objLanguage->languageText('mod_bot_invalidcommand', 'bot');
         }
 
         header('Content-Type: text/plain; charset=UTF-8');
