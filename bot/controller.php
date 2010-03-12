@@ -19,7 +19,7 @@ class bot extends controller
 
         switch ($command) {
             case 'search':
-                $query    = $this->objMultisearch->buildQuery($arguments, 3);
+                $query    = $this->objMultisearch->buildQuery($arguments, 2);
                 $results  = $this->objMultisearch->doQuery($query);
                 $text     = $this->objMultisearch->formatQuery($results, 'plaintext');
                 $response = implode('', $text);
