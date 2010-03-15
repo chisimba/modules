@@ -1,13 +1,12 @@
 <?php
 
-$scripts = $this->getJavaScriptFile('jquery/jquery-ui-personalized-1.6rc6/jquery-1.3.1.js', 'jquery');
-$scripts .= $this->getJavaScriptFile('jquery/jquery-ui-personalized-1.6rc6/jquery-ui-personalized-1.6rc6.js', 'jquery');
-$scripts .= '<link type="text/css" href="'.$this->getResourceUri('jquery/jquery-ui-personalized-1.6rc6/theme/ui.all.css', 'jquery').'" rel="Stylesheet" />';
+$scripts = $this->getJavaScriptFile('jquery-ui-personalized-1.6rc6/jquery-1.3.1.js', 'jquery');
+$scripts .= $this->getJavaScriptFile('jquery-ui-personalized-1.6rc6/jquery-ui-personalized-1.6rc6.js', 'jquery');
+$scripts .= '<link type="text/css" href="'.$this->getResourceUri('jquery-ui-personalized-1.6rc6/theme/ui.all.css', 'jquery').'" rel="Stylesheet" />';
 $this->appendArrayVar('headerParams', $scripts);
 
-
 $this->appendArrayVar('bodyOnLoad', 'loadRecipientList();');
-
+	
 
 
 
@@ -361,9 +360,9 @@ echo $pageLayer;
 
 
 
-$script = $this->getJavaScriptFile('jquery/jquery.autocomplete.js', 'jquery');
+$script = $this->getJavaScriptFile('jquery.autocomplete.js', 'jquery');
 $this->appendArrayVar('headerParams', $script);
-$str = '<link rel="stylesheet" href="'.$this->getResourceUri('jquery/jquery.autocomplete.css', 'jquery').'" type="text/css" />';
+$str = '<link rel="stylesheet" href="'.$this->getResourceUri('jquery.autocomplete.css', 'jquery').'" type="text/css" />';
 $this->appendArrayVar('headerParams', $str);
 
 	
