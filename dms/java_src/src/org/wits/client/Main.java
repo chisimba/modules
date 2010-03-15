@@ -91,6 +91,10 @@ public class Main {
     private MenuItem downloadFileMenuItem = new MenuItem();
     private MenuItem editMenuItem = new MenuItem();
     private NewDocumentDialog newDocumentDialog;
+    private ResourcesAndCollaboration newResourcesForm;
+    private CollaborationAndContracts newContractsForm;
+    private Review newReviewForm;
+    private ContactDetails newContactDetailsForm;
     private DocumentListPanel documentListPanel;
     private TabPanel tab = new TabPanel();
     private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=dms&action=getfolders";
@@ -100,6 +104,10 @@ public class Main {
     private boolean admin = false;
     private TextField<String> searchField = new TextField<String>();
     private Button searchButton = new Button("Search");
+    private Button formButtonE = new Button("Form E");
+    private Button formButtonF = new Button("Form F");
+    private Button formButtonG = new Button("Form G");
+    private Button formButtonH = new Button("Form H");
 
     /**
      * Creates a new instance of Main
@@ -130,7 +138,7 @@ public class Main {
         ToolBar toolBar = new ToolBar();
 
         newFolderButton.setIconStyle("folderadd");
-        newFolderButton.setEnabled(false);
+        //newFolderButton.setEnabled(false);
         newFolderButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
@@ -272,16 +280,62 @@ public class Main {
                 }
             }
         });
+
         searchButton.setIconStyle("search");
+        formButtonE.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                if (newResourcesForm == null) {
+                    newResourcesForm = new ResourcesAndCollaboration();
+                }
+                newResourcesForm.show();
+            }
+        });
+        
+        formButtonF.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                if (newContractsForm == null) {
+                    newContractsForm = new CollaborationAndContracts();
+                }
+                newContractsForm.show();
+            }
+        });
+
+        formButtonG.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                if (newReviewForm == null) {
+                    newReviewForm = new Review();
+                }
+                newReviewForm.show();
+            }
+        });
+
+        formButtonH.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                if (newContactDetailsForm == null) {
+                    newContactDetailsForm = new ContactDetails();
+                }
+                newContactDetailsForm.show();
+            }
+        });
+
         toolBar2.add(newDocumentButton);
         toolBar2.add(newCourseProposalButton);
-        // toolBar2.add(folderUserButton);
-        // toolBar2.add(fileExtButton);
         toolBar2.add(new SeparatorToolItem());
         toolBar2.add(new Label("Search"));
         toolBar2.add(searchField);
         toolBar2.add(searchButton);
-
+        toolBar2.add(formButtonE);
+        toolBar2.add(formButtonF);
+        toolBar2.add(formButtonG);
+        toolBar2.add(formButtonH);
 
         center.setTopComponent(toolBar2);
 
@@ -629,12 +683,12 @@ public class Main {
                             newFolderButton.setEnabled(true);
                             unapprovedDocsButton.setEnabled(true);
                         }
-                        if (mode.equalsIgnoreCase("apo")) {
+                        /*if (mode.equalsIgnoreCase("apo")) {
                             newDocumentButton.setEnabled(false);
                             docsTab.setEnabled(false);
                         } else {
                             newCourseProposalButton.setEnabled(false);
-                        }
+                        }*/
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot determine your permissions", null);
                     }
@@ -709,7 +763,7 @@ public class Main {
 
         newFolderMenuItem.setText("New Topic");
         newFolderMenuItem.setIconStyle("folderadd");
-        newFolderButton.setEnabled(false);
+        //newFolderButton.setEnabled(false);
         newFolderMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
             public void componentSelected(MenuEvent ce) {
