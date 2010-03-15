@@ -1,42 +1,26 @@
-package org.wits.client;
+package org.wits.client.ads;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
-import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
-import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.extjs.gxt.ui.client.widget.form.ComboBox.TriggerAction;
-import com.extjs.gxt.ui.client.widget.form.DateField;
 
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.Radio;
 import com.extjs.gxt.ui.client.widget.form.RadioGroup;
-import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.form.TextField;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  *
  * @author nguni
  */
 public class CollaborationAndContracts {
+
     private Dialog newResourcesDialog = new Dialog();
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
@@ -51,8 +35,8 @@ public class CollaborationAndContracts {
     private final TextField<String> F3a = new TextField<String>();
     private final TextField<String> F3b = new TextField<String>();
     private final TextField<String> F4 = new TextField<String>();
-    private Button saveButton = new Button("Save");
-    
+    private Button saveButton = new Button("Next");
+
     public CollaborationAndContracts() {
         createUI();
     }
@@ -70,11 +54,11 @@ public class CollaborationAndContracts {
         radioNo2.setBoxLabel("No");
         radioYes2.setBoxLabel("Yes");
         radioYes2.setValue(true);
-        
+
         F1a.setFieldLabel("F.1.a Is approval for the course/unit required from a professional body?");
         F1a.add(radioYes1);
         F1a.add(radioNo1);
-        
+
         F1b.setFieldLabel("F.1.b If yes, state the name of the professional body and provide details of the body's prerequisites and/or contraints.");
         F1b.setAllowBlank(false);
         F1b.setName("F1b");
@@ -115,20 +99,21 @@ public class CollaborationAndContracts {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-
+                Review review = new Review();
+                review.show();
+                newResourcesDialog.hide();
             }
         });
         mainForm.addButton(saveButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         newResourcesDialog.setBodyBorder(false);
-        newResourcesDialog.setHeading("Section E: Resources");
+        newResourcesDialog.setHeading("Section F: Collaboration and Contracts");
         newResourcesDialog.setWidth(800);
         //newResourcesDialog.setHeight(450);
         newResourcesDialog.setHideOnButtonClick(true);
         newResourcesDialog.setButtons(Dialog.CLOSE);
         newResourcesDialog.setButtonAlign(HorizontalAlignment.LEFT);
-
         newResourcesDialog.add(mainForm);
     }
 

@@ -1,4 +1,4 @@
-package org.wits.client;
+package org.wits.client.ads;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
@@ -9,34 +9,17 @@ import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.extjs.gxt.ui.client.widget.form.ComboBox.TriggerAction;
-import com.extjs.gxt.ui.client.widget.form.DateField;
 
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.Radio;
-import com.extjs.gxt.ui.client.widget.form.RadioGroup;
-import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.form.TextField;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  *
  * @author nguni
  */
-public class ResourcesAndCollaboration {
+public class Resources {
     private Dialog newResourcesDialog = new Dialog();
     private ModelData selectedFolder;
     private FormPanel mainForm = new FormPanel();
@@ -52,10 +35,10 @@ public class ResourcesAndCollaboration {
     private final TextField<String> E4 = new TextField<String>();
     private final TextField<String> E5a = new TextField<String>();
     private final TextField<String> E5b = new TextField<String>();
-    private Button saveButton = new Button("Save");
+    private Button saveButton = new Button("Next");
     private String title = "";
 
-    public ResourcesAndCollaboration() {
+    public Resources() {
         createUI();
     }
 
@@ -140,6 +123,9 @@ public class ResourcesAndCollaboration {
                     MessageBox.info("Missing title", "Provide title", null);
                     return;
                 }
+                CollaborationAndContracts collaborationAndContracts=new CollaborationAndContracts();
+                collaborationAndContracts.show();
+                newResourcesDialog.hide();
             }
         });
         mainForm.addButton(saveButton);

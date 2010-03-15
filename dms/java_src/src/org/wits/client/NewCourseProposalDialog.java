@@ -37,6 +37,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 import java.util.Date;
+import org.wits.client.ads.OverView;
 
 /**
  *
@@ -53,7 +54,7 @@ public class NewCourseProposalDialog {
     private final TextField<String> deptField = new TextField<String>();
     private final TextField<String> telField = new TextField<String>();
     private final TextField<String> numberField = new TextField<String>();
-    private Button saveButton = new Button("Save");
+    private Button saveButton = new Button("Next");
     private Button browseTopicsButton = new Button("Browse Faculties");
     private FormPanel uploadpanel = new FormPanel();
     private Button uploadButton = new Button("Upload Proposal");
@@ -246,8 +247,8 @@ public class NewCourseProposalDialog {
                         + "?module=dms&action=createproposal&date=" + fmt.format(date)
                         + "&department=" + dept + "&telephone=" + telephone
                         + "&topic=" + topic + "&title=" + title+"&mode="+main.getMode();
-                updateDocument(url);
-
+             //   updateDocument(url);
+              createProposal();
 
             }
         });
@@ -273,6 +274,11 @@ public class NewCourseProposalDialog {
         newDocumentDialog.show();
     }
 
+    private void createProposal(){
+        OverView overView=new OverView();
+        overView.show();
+        newDocumentDialog.hide();
+    }
     private void setDepartment() {
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=dms&action=getdepartment";
 

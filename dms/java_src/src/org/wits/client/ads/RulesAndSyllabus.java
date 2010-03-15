@@ -2,75 +2,55 @@
  * class to create an instance of the overview section of the main document. It will
  * initially serve as a test to ensure that the implemented stuff works
  */
-
-
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.wits.client;
+package org.wits.client.ads;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
-import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.extjs.gxt.ui.client.widget.form.ComboBox.TriggerAction;
-import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.TextField;
-import com.extjs.gxt.ui.client.widget.form.CheckBox;
-import com.extjs.gxt.ui.client.widget.CheckBoxListView;
-import com.extjs.gxt.ui.client.data.BeanModel;
-import com.extjs.gxt.ui.client.data.BeanModelReader;
-import com.extjs.gxt.ui.client.util.Format;
-import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.data.BeanModel;
 
 
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.Radio;
 import com.extjs.gxt.ui.client.widget.form.RadioGroup;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.wits.client.Document;
+import org.wits.client.EditDocumentDialog;
 
 /**
  *
  * @author davidwaf
  */
-public class rulesAndSyllabus {
+public class RulesAndSyllabus {
 
     private Dialog overViewDialog = new Dialog();
-   // private Dialog topicListingDialog = new Dialog();
+    // private Dialog topicListingDialog = new Dialog();
     private ModelData selectedFolder;
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
     private DateTimeFormat fmt = DateTimeFormat.getFormat("y/M/d");
-    private Button saveButton = new Button("Save");
+    private Button saveButton = new Button("Next");
     private Button browseTopicsButton = new Button("Browse Topics");
     private TextArea topicField = new TextArea();
-    private String qB1 = "",qB2="",qB3a="",qB3b="", qB4a="",qB4b="", qB4c, qB5a="", qB5b="",qB6a="", qB6b="", qB6c="";
+    private String qB1 = "", qB2 = "", qB3a = "", qB3b = "", qB4a = "", qB4b = "", qB4c, qB5a = "", qB5b = "", qB6a = "", qB6b = "", qB6c = "";
     //private ComboBox<Group> groupField = new ComboBox<Group>();
     TextField<String> questionA1 = new TextField<String>();
     TextField<String> questionB1 = new TextField<String>();
@@ -81,14 +61,12 @@ public class rulesAndSyllabus {
     TextField<String> questionB4c = new TextField<String>();
     TextField<String> questionB5b = new TextField<String>();
 
-
-    public rulesAndSyllabus() {
+    public RulesAndSyllabus() {
         createUI();
     }
 
     //creates the GUI in which the selected text will be displayed. sets only one
     //layer for the interface.
-
     private void createUI() {
 
         mainForm.setFrame(false);
@@ -222,7 +200,7 @@ public class rulesAndSyllabus {
         radio23.setBoxLabel("attendance course/unit");
 
         Radio radio24 = new Radio();
-        radio24.setPagePosition(96,500);
+        radio24.setPagePosition(96, 500);
         radio24.setBoxLabel("other ");
 
         Radio radio25 = new Radio();
@@ -276,7 +254,7 @@ public class rulesAndSyllabus {
         questionB5a.add(radio12);
 
         mainForm.add(questionB5a, formData);
-        
+
         questionB5b.setFieldLabel("B.5.b. In which year/s of study is the course/unit to be taught?  ");
         questionB5b.setEmptyText("Enter the course/unit name");
         questionB5b.setAllowBlank(false);
@@ -320,7 +298,7 @@ public class rulesAndSyllabus {
 
 
         //dont forget to add constraints for radioGroups. need to find out how.
-         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+        saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
@@ -331,8 +309,8 @@ public class rulesAndSyllabus {
                 }
 
 
-                qB2=questionB2.getValue();
-                if (qB2 == null){
+                qB2 = questionB2.getValue();
+                if (qB2 == null) {
                     MessageBox.info("Missing selection", "Please make a selection for question A.2.", null);
                     return;
                 }
@@ -368,27 +346,39 @@ public class rulesAndSyllabus {
                 }
 
             }
-         });
+        });
 
-        //mainForm.addButton(saveButton);
+        mainForm.addButton(saveButton);
+        saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                Resources resources = new Resources();
+                resources.show();
+                overViewDialog.hide();
+            }
+        });
         mainForm.setButtonAlign(HorizontalAlignment.RIGHT);
+
         //FormButtonBinding binding = new FormButtonBinding(mainForm);
         //binding.addButton(saveButton);
 
         overViewDialog.setBodyBorder(false);
-        overViewDialog.setHeading("New Document");
+        overViewDialog.setHeading("Section B: Rules and Syllabus Book");
         overViewDialog.setWidth(800);
-        overViewDialog.setHeight(700);
+        overViewDialog.setHeight(730);
         overViewDialog.setHideOnButtonClick(true);
         overViewDialog.setButtons(Dialog.CLOSE);
         overViewDialog.setButtonAlign(HorizontalAlignment.LEFT);
         overViewDialog.setHideOnButtonClick(true);
-        overViewDialog.setButtons(Dialog.YES);
+        overViewDialog.setButtons(Dialog.CLOSE);
+
         overViewDialog.setButtonAlign(HorizontalAlignment.RIGHT);
         overViewDialog.setHideOnButtonClick(true);
+        mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         //newDocumentDialog.setButtons(Dialog.);
         //newDocumentDialog.setButtonAlign(HorizontalAlignment.RIGHT);
-
+        overViewDialog.setButtonAlign(HorizontalAlignment.LEFT);
         overViewDialog.add(mainForm);
 
         //setDepartment();
@@ -397,7 +387,6 @@ public class rulesAndSyllabus {
     public void show() {
         overViewDialog.show();
     }
-
 
     public void setSelectedFolder(ModelData selectedFolder) {
         this.selectedFolder = selectedFolder;
@@ -431,7 +420,7 @@ public class rulesAndSyllabus {
                         doc.setQuestion(qB5b);
                         /*doc.setQuestion(qA4);
                         doc.setQuestion(qA5);*/
-                        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(doc,"all",null);
+                        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(doc, "all", null);
                         editDocumentDialog.show();
                         overViewDialog.setVisible(false);
                         wait.close();
@@ -444,5 +433,4 @@ public class rulesAndSyllabus {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
     }
-
 }

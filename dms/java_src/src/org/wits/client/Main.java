@@ -56,6 +56,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 
 import java.util.List;
+import org.wits.client.ads.*;
 
 /**
  * Main entry point.
@@ -76,9 +77,6 @@ public class Main {
     private ModelData selectedFolder;
     private ModelData selectedFile;
     private Button newDocumentButton = new Button("Register a Document");
-    private Button overViewButton = new Button("Test");
-    private Button subsidyRequirementsButton = new Button("Test");
-    private Button rulesButton = new Button("rules and syllabus");
     private Button newCourseProposalButton = new Button("Course Proposal");
     private PermissionsFrame permissionsFrame;
     private ExtPanel extPanel;
@@ -94,9 +92,9 @@ public class Main {
     private MenuItem downloadFileMenuItem = new MenuItem();
     private MenuItem editMenuItem = new MenuItem();
     private NewDocumentDialog newDocumentDialog;
-    private overView overView;
-    private rulesAndSyllabus rulesAndSyllabus;
-    private ResourcesAndCollaboration newResourcesForm;
+    private OverView overView;
+    private RulesAndSyllabus rulesAndSyllabus;
+    private Resources newResourcesForm;
     private CollaborationAndContracts newContractsForm;
     private Review newReviewForm;
     private ContactDetails newContactDetailsForm;
@@ -108,12 +106,9 @@ public class Main {
     private String mode = "default";
     private boolean admin = false;
     private TextField<String> searchField = new TextField<String>();
-    private Button searchButton = new Button("Search");
-    private Button formButtonE = new Button("Form E");
-    private Button formButtonF = new Button("Form F");
-    private Button formButtonG = new Button("Form G");
-    private Button formButtonH = new Button("Form H");
 
+    private Button searchButton = new Button("Search");
+    
     /**
      * Creates a new instance of Main
      */
@@ -164,10 +159,6 @@ public class Main {
             }
         });
         toolBar.add(newFolderButton);
-        toolBar.add(refreshFolders);
-        west.setTopComponent(toolBar);
-        west.setHeading("Topic Index");
-
 
         BorderLayoutData westData = new BorderLayoutData(LayoutRegion.WEST, Window.getClientWidth() / 4, 100, 600);
         westData.setMargins(new Margins(5, 0, 5, 5));
@@ -273,40 +264,6 @@ public class Main {
         unapprovedDocsButton.setEnabled(false);
         unapprovedDocsButton.setIconStyle("docs");
 
-        //set overView button to display
-        
-        overViewButton.setIconStyle("add");
-        overViewButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                if (overView == null) {
-                    overView = new overView();
-                }
-                overView.show();
-
-            }
-        });
-        toolBar2.add(overViewButton);
-        toolBar.add(refreshFolders);
-        west.setTopComponent(toolBar);
-        west.setHeading("Topic Index");
-
-        //set overView button to display
-
-        rulesButton.setIconStyle("add");
-        rulesButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                if (rulesAndSyllabus == null) {
-                    rulesAndSyllabus = new rulesAndSyllabus();
-                }
-                rulesAndSyllabus.show();
-
-            }
-        });
-        toolBar2.add(rulesButton);
         toolBar.add(refreshFolders);
         west.setTopComponent(toolBar);
         west.setHeading("Topic Index");
@@ -328,61 +285,12 @@ public class Main {
         });
 
         searchButton.setIconStyle("search");
-        formButtonE.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                if (newResourcesForm == null) {
-                    newResourcesForm = new ResourcesAndCollaboration();
-                }
-                newResourcesForm.show();
-            }
-        });
-        
-        formButtonF.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                if (newContractsForm == null) {
-                    newContractsForm = new CollaborationAndContracts();
-                }
-                newContractsForm.show();
-            }
-        });
-
-        formButtonG.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                if (newReviewForm == null) {
-                    newReviewForm = new Review();
-                }
-                newReviewForm.show();
-            }
-        });
-
-        formButtonH.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                if (newContactDetailsForm == null) {
-                    newContactDetailsForm = new ContactDetails();
-                }
-                newContactDetailsForm.show();
-            }
-        });
-
         toolBar2.add(newDocumentButton);
         toolBar2.add(newCourseProposalButton);
         toolBar2.add(new SeparatorToolItem());
         toolBar2.add(new Label("Search"));
         toolBar2.add(searchField);
         toolBar2.add(searchButton);
-        toolBar2.add(formButtonE);
-        toolBar2.add(formButtonF);
-        toolBar2.add(formButtonG);
-        toolBar2.add(formButtonH);
-
         center.setTopComponent(toolBar2);
 
         loader2.load();
