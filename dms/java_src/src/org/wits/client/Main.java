@@ -77,6 +77,7 @@ public class Main {
     private ModelData selectedFile;
     private Button newDocumentButton = new Button("Register a Document");
     private Button overViewButton = new Button("Test");
+    private Button subsidyRequirementsButton = new Button("Test");
     private Button rulesButton = new Button("rules and syllabus");
     private Button newCourseProposalButton = new Button("Course Proposal");
     private PermissionsFrame permissionsFrame;
