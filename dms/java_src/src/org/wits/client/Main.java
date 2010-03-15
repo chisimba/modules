@@ -76,6 +76,8 @@ public class Main {
     private ModelData selectedFolder;
     private ModelData selectedFile;
     private Button newDocumentButton = new Button("Register a Document");
+    private Button overViewButton = new Button("Test");
+    private Button rulesButton = new Button("rules and syllabus");
     private Button newCourseProposalButton = new Button("Course Proposal");
     private PermissionsFrame permissionsFrame;
     private ExtPanel extPanel;
@@ -91,6 +93,8 @@ public class Main {
     private MenuItem downloadFileMenuItem = new MenuItem();
     private MenuItem editMenuItem = new MenuItem();
     private NewDocumentDialog newDocumentDialog;
+    private overView overView;
+    private rulesAndSyllabus rulesAndSyllabus;
     private ResourcesAndCollaboration newResourcesForm;
     private CollaborationAndContracts newContractsForm;
     private Review newReviewForm;
@@ -213,6 +217,7 @@ public class Main {
                 newDocumentDialog.show();
             }
         });
+
         newCourseProposalButton.setIconStyle("addform");
         newCourseProposalButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
@@ -225,6 +230,7 @@ public class Main {
             }
         });
         newDocumentButton.setIconStyle("upload");
+
         folderUserButton.setEnabled(false);
         folderUserButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
@@ -265,6 +271,45 @@ public class Main {
 
         unapprovedDocsButton.setEnabled(false);
         unapprovedDocsButton.setIconStyle("docs");
+
+        //set overView button to display
+        
+        overViewButton.setIconStyle("add");
+        overViewButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                if (overView == null) {
+                    overView = new overView();
+                }
+                overView.show();
+
+            }
+        });
+        toolBar2.add(overViewButton);
+        toolBar.add(refreshFolders);
+        west.setTopComponent(toolBar);
+        west.setHeading("Topic Index");
+
+        //set overView button to display
+
+        rulesButton.setIconStyle("add");
+        rulesButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                if (rulesAndSyllabus == null) {
+                    rulesAndSyllabus = new rulesAndSyllabus();
+                }
+                rulesAndSyllabus.show();
+
+            }
+        });
+        toolBar2.add(rulesButton);
+        toolBar.add(refreshFolders);
+        west.setTopComponent(toolBar);
+        west.setHeading("Topic Index");
+
 
         searchButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 

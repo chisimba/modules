@@ -15,6 +15,6 @@ public class Wicid implements EntryPoint {
     public void onModuleLoad() {
        
         RootLayoutPanel.get().add(new Main().createGUI());
-        RootPanel.get("surface").add(RootLayoutPanel.get());
+        RootPanel.get().add(RootLayoutPanel.get());
     }
 }
