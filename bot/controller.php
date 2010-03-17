@@ -17,7 +17,7 @@ class bot extends controller
     {
         $message = $this->getParam('body');
         header('Content-Type: text/plain; charset=UTF-8');
-        echo $this->objBotops->process($response);
+        echo $this->objBotops->process($message);
     }
 
     /**
