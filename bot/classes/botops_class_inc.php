@@ -3,10 +3,12 @@
 class botops extends object
 {
     protected $objLanguage;
+    protected $objMultisearch;
 
     public function init()
     {
-        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objLanguage    = $this->getObject('language', 'language');
+        $this->objMultisearch = $this->getObject('multisearchops', 'multisearch');
     }
 
     public function process($message)
