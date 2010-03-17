@@ -2,6 +2,13 @@
 
 class botops extends object
 {
+    protected $objLanguage;
+
+    public function init()
+    {
+        $this->objLanguage = $this->getObject('language', 'language');
+    }
+
     public function process($message)
     {
         $command   = strtolower(strtok($message, ' '));
