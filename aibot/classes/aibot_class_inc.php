@@ -16,11 +16,11 @@ class aibot extends object
         $this->objClient    = new XML_RPC_Client($url['path'], $url['host'], $url['port']);
     }
 
-    public function chat($text)
+    public function chat($text, $name)
     {
-        $params   = array(new XML_RPC_Value($text, 'string'));
+        $params   = array(new XML_RPC_Value($text, 'string'), new XML_RPC_Value($name, 'string'));
         $message  = new XML_RPC_Message('chat', $params);
-        $response = $client->send($message)->value()->serialize();
+        $response = $this->objClient->send($message)->value()->me['string'];
 
         return $response;
     }
