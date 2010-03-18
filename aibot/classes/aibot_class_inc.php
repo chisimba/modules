@@ -20,7 +20,7 @@ class aibot extends object
     {
         $params   = array(new XML_RPC_Value($text, 'string'), new XML_RPC_Value($name, 'string'));
         $message  = new XML_RPC_Message('chat', $params);
-        $response = $this->objClient->send($message)->value()->me['string'];
+        $response = $this->objClient->send($message)->value()->getval();
 
         return $response;
     }
