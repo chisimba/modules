@@ -27,7 +27,7 @@ class botops extends object
                 break;
             default:
                 if ($this->objAibot->isEnabled()) {
-                    $this->objAibot->chat($message);
+                    $response = $this->objAibot->chat($message);
                 } else {
                     $response = $this->objLanguage->languageText('mod_bot_invalidcommand', 'bot');
                 }
