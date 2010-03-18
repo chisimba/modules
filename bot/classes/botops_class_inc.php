@@ -2,11 +2,13 @@
 
 class botops extends object
 {
+    protected $objAibot;
     protected $objLanguage;
     protected $objMultisearch;
 
     public function init()
     {
+        $this->objAibot       = $this->getObject('aibot', 'aibot');
         $this->objLanguage    = $this->getObject('language', 'language');
         $this->objMultisearch = $this->getObject('multisearchops', 'multisearch');
     }
@@ -24,7 +26,11 @@ class botops extends object
                 $response = implode('', $text);
                 break;
             default:
-                $response = $this->objLanguage->languageText('mod_bot_invalidcommand', 'bot');
+                if ($this->objAibot->isEnabled()) {
+                    $this->objAibot->chat($message);
+                } else {
+                    $response = $this->objLanguage->languageText('mod_bot_invalidcommand', 'bot');
+                }
         }
 
         return $response;
