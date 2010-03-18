@@ -20,7 +20,7 @@ class bot extends controller
         $body   = $this->getParam('body');
 
         header('Content-Type: text/plain; charset=UTF-8');
-        echo $this->objBotops->process($sender, $to, $message);
+        echo $this->objBotops->process($sender, $to, $body);
     }
 
     /**
