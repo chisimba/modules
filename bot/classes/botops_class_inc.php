@@ -13,9 +13,9 @@ class botops extends object
         $this->objMultisearch = $this->getObject('multisearchops', 'multisearch');
     }
 
-    public function process($message)
+    public function process($sender, $to, $body)
     {
-        $command   = strtolower(strtok($message, ' '));
+        $command   = strtolower(strtok($body, ' '));
         $arguments = strtok('');
 
         switch ($command) {
@@ -27,7 +27,7 @@ class botops extends object
                 break;
             default:
                 if ($this->objAibot->isEnabled()) {
-                    $response = $this->objAibot->chat($message);
+                    $response = $this->objAibot->chat($body, $sender);
                 } else {
                     $response = $this->objLanguage->languageText('mod_bot_invalidcommand', 'bot');
                 }
