@@ -30,7 +30,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class resdevelopment extends controller {
     function init() {
-        
+        $this->objStudents = $this->getObject('dbstudents');
     }
 
     /**
@@ -70,7 +70,7 @@ class resdevelopment extends controller {
         }
     }
 
-    /**
+    /**"
      *
      * Method to check if a given action is a valid method
      * of this class preceded by double underscore (__). If it __action
@@ -96,6 +96,27 @@ class resdevelopment extends controller {
      */
     public function __home() {
         return "home_tpl.php";
+    }
+
+    /*
+     * Method to show the page for adding student
+     *
+     */
+    public function __addstudent() {
+        return "student_tpl.php";
+    }
+
+    public function __savestudent() {
+        // save the student info
+        $this->objStudents->saveStudentInfo($this->getParam('firstname'), $this->getParam('lastname'));
+        $this->nextAction("addstudent");
+    }
+
+    public function __deletenames() {
+        // delete student from database
+        $studentID = $this->getParam('id');
+        $this->objStudents->deleteStudent($studentID);
+        $this->nextAction("addstudent");
     }
 
 }
