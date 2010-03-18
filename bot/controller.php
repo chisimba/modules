@@ -15,9 +15,12 @@ class bot extends controller
 
     public function dispatch()
     {
-        $message = $this->getParam('body');
+        $sender = $this->getParam('sender');
+        $to     = $this->getParam('to');
+        $body   = $this->getParam('body');
+
         header('Content-Type: text/plain; charset=UTF-8');
-        echo $this->objBotops->process($message);
+        echo $this->objBotops->process($sender, $to, $message);
     }
 
     /**
