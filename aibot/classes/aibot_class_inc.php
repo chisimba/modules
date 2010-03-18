@@ -20,8 +20,10 @@ class aibot extends object
     {
         $params   = array(new XML_RPC_Value($text, 'string'));
         $message  = new XML_RPC_Message('chat', $params);
-        $response = $client->send($message);
-        var_dump($response);
+        $response = $client->send($message)->value();
+        $response = $response->serialize($response);
+
+        return $response;
     }
 
     public function isEnabled()
