@@ -157,10 +157,12 @@ $addTable->startRow();
 $addTable->addCell(' ');
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('word_submit'));
+$submitButton->cssClass = 'save';
 //$submitButton->setToSubmit();
 $submitButton->extra = ' onclick="SubmitForm()"';
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$cancelButton->cssClass = 'cancel';
 $returnUrl = $this->uri(array('action'=>'thread', 'id'=>$post['topic_id']));
 $cancelButton->setOnClick("window.location='$returnUrl'");
 

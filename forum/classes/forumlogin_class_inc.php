@@ -38,6 +38,7 @@ class forumlogin extends object
         $password->fldType = 'password';
         
         $button = new button ('submitform');
+        $button->cssClass = 'login';
         $button->value = $this->objLanguage->languageText('word_login', 'Login');
         $button->setToSubmit();
         

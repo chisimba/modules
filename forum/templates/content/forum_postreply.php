@@ -285,9 +285,10 @@ $addTable->startRow();
 $addTable->addCell(' ');
 
 $submitButton = new button('submitbutton', $this->objLanguage->languageText('word_submit', 'system'));
-//$submitButton->setToSubmit();
+$submitButton->cssClass = 'save';
 $submitButton->extra = ' onclick="SubmitForm()"';
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel', 'system'));
+$cancelButton->cssClass = 'cancel';
 $returnUrl = $this->uri(array('action'=>'thread', 'id'=>$post['topic_id'], 'type'=>$forumtype));
 $cancelButton->setOnClick("window.location='$returnUrl'");
 

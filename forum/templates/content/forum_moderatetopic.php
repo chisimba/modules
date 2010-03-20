@@ -137,6 +137,7 @@ if ($topicParent != '') {
     }
 
     $button = new button ('confirmdelete');
+    $button->cssClass = 'delete';
     $button->value = $this->objLanguage->languageText('mod_forum_confirmdelete', 'forum', 'Confirm Delete');
     $button->setToSubmit();
 
@@ -263,6 +264,7 @@ if ($topic['topic_tangent_parent'] != '0') {
     $moveToNewTopicForm->addToForm($deleteConfirm->show().'</p>');
 
     $button = new button ('confirmdelete');
+    $button->cssClass = 'delete';
     $button->value = $this->objLanguage->languageText('mod_forum_confirmmovetonewtopic', 'forum', 'Confirm Move to New Topic');
     $button->setToSubmit();
 
@@ -333,6 +335,7 @@ $topicStatusForm->addToForm( $editor);
 $topicStatusForm->addToForm('</div>');
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('mod_forum_updatetopicstatus', 'forum', 'Update Topic Status'));
+$submitButton->cssClass = 'save';
 $submitButton->setToSubmit();
 
 $topicStatusForm->addToForm('<p>'.$submitButton->show().'</p>');
@@ -368,6 +371,7 @@ if ($topic['topic_tangent_parent'] == '0') {
     $stickyTopicForm->addToForm('<p>'.$objElement->show().'</p>');
 
     $submitButton = new button('submitform2', $this->objLanguage->languageText('mod_forum_updatestickystatus', 'forum', 'Update Sticky Status'));
+    $submitButton->cssClass = 'save';
     $submitButton->setToSubmit();
 
     $stickyTopicForm->addToForm('<p>'.$submitButton->show().'</p>');

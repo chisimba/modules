@@ -87,9 +87,11 @@ $formTable->startRow();
 $formTable->addCell(' ');
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('word_submit'));
+$submitButton->cssClass = 'save';
 $submitButton->setToSubmit();
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$cancelButton->cssClass = 'cancel';
 $returnUrl = $this->uri(array('action'=>'thread', 'id'=>$post['topic_id'], 'type'=>$forumtype));
 $cancelButton->setOnClick("window.location='$returnUrl'");
 

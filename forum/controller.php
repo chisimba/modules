@@ -1682,6 +1682,7 @@ class forum extends controller
         $forumTable = $this->newObject('htmltable', 'htmlelements');
 
         $iconsFieldset = $this->newObject('fieldset', 'htmlelements');
+        $iconsFieldset->setExtra(' class="forumBlock"');
         $iconsFieldset->setLegend($this->objLanguage->languageText('mod_forum_meaningoficons', 'forum'));
 
         $icon = $this->getObject('geticon', 'htmlelements');
@@ -1707,6 +1708,7 @@ class forum extends controller
         // -----------------------------------------------
 
         $forumFieldset = $this->newObject('fieldset', 'htmlelements');
+        $forumFieldset->setExtra(' class="forumBlock"');
         $forumFieldset->setLegend($this->objLanguage->languageText('mod_forum_forumSettings', 'forum'));
 
         $forumDetails = $this->objForum->getRow('id', $forum_id);

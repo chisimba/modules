@@ -57,6 +57,7 @@ $hiddenId->value = $forum;
 $attachmentForm->addToForm($hiddenId->show());
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('mod_forum_attachselected'));
+$submitButton->cssClass = 'upload';
 $submitButton->setToSubmit();
 $attachmentForm->addToForm($submitButton->show());
 
@@ -99,6 +100,7 @@ $hiddenId->value = $id;
 $table->addCell($hiddenId->show());
 
 $submitButton = new button('submitform2', $this->objLanguage->languageText('mod_forum_uploadfile'));
+$submitButton->cssClass = 'upload';
 $submitButton->setToSubmit();
 $table->addCell($submitButton->show());
 

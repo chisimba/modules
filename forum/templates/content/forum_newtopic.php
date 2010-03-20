@@ -222,6 +222,7 @@ if ($forum['attachments'] == 'Y') {
     $form->addToForm($hiddeninput->show());
 
     $button = new button('save_attachment_button', 'Attach File');
+    $button->cssClass = 'save';
     $button->extra='onclick="saveAttachment(this.parentNode)"';
     //$button->setToSubmit();
     //$form->addToForm(' &nbsp; &nbsp; '.$button->show());
@@ -281,10 +282,12 @@ $addTable->startRow();
 $addTable->addCell(' ');
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('word_submit'));
+$submitButton->cssClass = 'save';
 //$submitButton->setToSubmit();
 $submitButton->extra = ' onclick="SubmitForm()"';
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$cancelButton->cssClass = 'cancel';
 $returnUrl = $this->uri(array('action'=>'forum', 'id'=>$forumid, 'type'=>$forumtype));
 $cancelButton->setOnClick("window.location='$returnUrl'");
 

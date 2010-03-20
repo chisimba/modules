@@ -88,7 +88,8 @@ class forumsearch extends dbtable
         $searchFor->size = 70;
         
         $button = new button ('submitform');
-        $button->value = $this->objLanguage->languageText('word_go', 'forum', 'Go');
+        $button->cssClass = 'search';
+        $button->value = $this->objLanguage->languageText('word_search', 'forum', 'Search');
         $button->setToSubmit();
         
         $hiddenItems = '';

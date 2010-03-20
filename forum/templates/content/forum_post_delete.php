@@ -55,6 +55,7 @@ if ($post['postleft'] == 1) {
     }
 
     $button = new button('save', $this->objLanguage->languageText('mod_forum_confirmdelete', 'forum'));
+    $button->cssClass = 'delete';
     $button->setToSubmit();
     $form->addToForm('<p>'.$button->show().'</p>');
     

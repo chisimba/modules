@@ -44,9 +44,11 @@ if ($forum['defaultforum'] == 'Y') {
     
     $button = new button('deleteforum');
     $button->value = $this->objLanguage->languageText('mod_forum_confirmdeleteforumbutton', 'forum');
+    $button->cssClass = 'delete';
     $button->setToSubmit();
     
     $button2 = new button ('cancel');
+    $button2->cssClass = 'cancel';
     $button2->value = $this->objLanguage->languageText('word_cancel');
     // fix up Cancel
     

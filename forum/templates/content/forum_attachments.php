@@ -17,6 +17,7 @@ $objSelectFile->name = 'attachment';
 $form->addToForm($objSelectFile->show());
 
 $button = new button('save', 'Attach File');
+$button->cssClass = 'save';
 $button->setToSubmit();
 $form->addToForm(' &nbsp; &nbsp; '.$button->show());
 

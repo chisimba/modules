@@ -1172,6 +1172,7 @@ class dbPost extends dbTable
             $addTable->addCell(' ');
 
             $submitButton = new button('submitbutton', $this->objLanguage->languageText('word_submit'));
+            $submitButton->cssClass = 'save';
             $submitButton->extra = ' onclick="SubmitForm()"';
             //$submitButton->setToSubmit();
 

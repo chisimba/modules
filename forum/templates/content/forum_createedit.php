@@ -232,6 +232,7 @@ if ($action == 'edit') {
 
 // --------- End Row ---------- //
 $submitButton = new button('submitbtn', $this->objLanguage->languageText('word_submit'));
+$submitButton->cssClass = 'save';
 $submitButton->setToSubmit();
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
