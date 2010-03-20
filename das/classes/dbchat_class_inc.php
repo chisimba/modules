@@ -96,7 +96,17 @@ class dbchat extends dbTable {
 	}
 	
 	
-	
+	/**
+     * Method to search all messages
+     * @param string $keyword
+     * @return array
+     */
+    public function searchMessages($keyword)
+    {
+        $ret = $this->getAll("WHERE msgbody LIKE '%%$keyword%%' OR msgfrom LIKE '%%$keyword%%' ORDER BY datesent DESC LIMIT 50");
+	    return $ret;
+    }
+    
 	/**
 	* Method to get the person's alias
 	* @param string $personId

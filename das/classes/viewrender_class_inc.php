@@ -433,6 +433,29 @@ class viewrender extends object {
 		$str .= '</table>';
 		return $this->objFeatureBox->show('Stats', $str);
 	}
+	
+	/**
+	 * Method to render a search form
+	 */
+	public function searchBox() {
+        $this->loadClass('textinput', 'htmlelements');
+        $qseekform = new form('qseek', $this->uri(array(
+            'action' => 'searchmessages',
+        )));
+        $qseekform->addRule('keyword', $this->objLanguage->languageText("mod_das_phrase_searchtermreq", "das") , 'required');
+        $qseekterm = new textinput('keyword');
+        $qseekterm->size = 15;
+        $qseekform->addToForm($qseekterm->show());
+        $this->objsTButton = &new button($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setToSubmit();
+        $qseekform->addToForm($this->objsTButton->show());
+        $qseekform = $qseekform->show();
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_das_qseek", "das") , $this->objLanguage->languageText("mod_das_qseekinstructions", "das") . "<br />" . $qseekform);
+
+        return $ret;
+    }
 
     /**
     * Method to get the left blocks
@@ -447,6 +470,9 @@ class viewrender extends object {
 	
 	//Conversations Block
 	$blocks .= $this->getCounselorStatBox();
+	
+	// Search Block
+	$blocks .= $this->searchBox();
 	
 	//Chat block
 	//$blocks .= $this->getChatBlock();//$objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);

@@ -349,6 +349,15 @@ class das extends controller {
                 echo "Messages were sent to ".count($users)." users <br> Time taking ".number_format($time, 2, '.', '')." seconds";
 				exit(0);
                 break;
+                
+            case 'searchmessages':
+                $keyword = $this->getParam('keyword', NULL);
+                $this->objDbDas = $this->getObject ( 'dbdas', 'das' );
+                $data = $this->objDbDas->searchMessages($keyword);
+                $this->setVarByRef('data', $data);
+                return 'searchresults_tpl.php';
+                break;
+                
 			default :
 					die ( "unknown action" );
 					break;
