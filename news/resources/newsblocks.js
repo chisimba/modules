@@ -21,11 +21,14 @@
             '<a class="deleteblock" href="javascript:;">'+deleteIcon+'</a> </div>');
         
         if (inEditMode) {
+            jQuery("#ddrightblocks").show();
             jQuery("#leftaddblock").show();
             jQuery("#rightaddblock").show();
+
             jQuery("#middleaddblock").show();
             jQuery(".blockoptions").show();
         } else {
+           // jQuery("#rightblocks").hide();
             jQuery("#leftaddblock").hide();
             jQuery("#rightaddblock").hide();
             jQuery("#middleaddblock").hide();
@@ -228,7 +231,7 @@
             jQuery("#leftaddblock").show();
             jQuery("#rightaddblock").show();
             jQuery("#middleaddblock").show();
-            jQuery("#editmodeswitchbutton").attr('value', turnEditingOff);
+            jQuery("#editmodeswitchbutton").text(turnEditingOff);
             jQuery(".blockoptions").show();
             
             jQuery(".block").addClass('highlightblock');

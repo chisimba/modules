@@ -158,7 +158,7 @@ $right .= '<div id="editmode">'.$editOnButton->show().'</div>';
 }
 
 
-$right .= '<div id="rightblocks">'.$rightBlocks.'</div>';
+//$right .= '<div id="rightblocks">'.$rightBlocks.'</div>';
 
 $left = '';
 
@@ -168,7 +168,7 @@ $left .= $leftContent;
 
 
 
-$left .= '<div id="leftblocks">'.$leftBlocks.'</div>';
+//$left .= '<div id="leftblocks">'.$leftBlocks.'</div>';
 
 if ($objUser->isAdmin()) {
 
