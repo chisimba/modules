@@ -722,7 +722,7 @@ class blogposts extends object
         // post content
         $pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') . ':', 'input_postcontent');
         $pcon = $this->newObject('htmlarea', 'htmlelements');
-        $pcon->setName('postcontent');
+        $pcon->setName('postcontent2');
         $pcon->height = 400;
         $pcon->width = '100%';
         $pcon->setDefaultToolbarSet();
