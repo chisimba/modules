@@ -65,7 +65,7 @@ class block_wiki extends object
             $objDrop->addOption($line['id'], $line['wiki_name']);
         }
         $objDrop->setSelected($this->getSession('wiki_id'));
-        $objDrop->extra = 'onchange="javascript:if(this.value != \'\'){$(\'form_select\').submit();}else{return false}" style="max-width:140px"';
+        $objDrop->extra = 'onchange="javascript:if(this.value != \'\'){$(\'form_select\').submit();}else{return false}"';
         $selectDrop = $objDrop->show();
         
         $objForm = new form('select', $this->uri(array(

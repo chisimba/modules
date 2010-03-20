@@ -363,13 +363,13 @@ class wikidisplay extends object
         $objDrop->addOption(2, $titleLabel);
         $objDrop->addOption(3, $contentLabel);
         $objDrop->setSelected(1);
-        $objDrop->extra = 'style="width: 140px;"';
         $fieldDrop = $objDrop->show();
 
         $objInput = new textinput('value', '', '', '');
         $valueInput = $objInput->show();
 
         $objButton = new button('search', $searchLabel);
+        $objButton->setIconClass("search");
         $objButton->setToSubmit();
         $searchButton = $objButton->show();
 
@@ -1025,11 +1025,13 @@ class wikidisplay extends object
 
         // create button
         $objButton = new button('update', $updateLabel);
+        $objButton->setIconClass("save");
         $objButton->extra = 'onclick="javascript: validateUpdatePage(\''.$summaryErrorLabel.'\', \''.$contentErrorLabel.'\', \''.$commentErrorLabel.'\');"';
         $updateButton = $objButton->show();
 
         // create button
         $objButton = new button('cancel', $cancelLabel);
+        $objButton->setIconClass("cancel");
         $objButton->extra = 'onclick="javascript:exitEdit();"';
         $cancelButton = $objButton->show();
 
@@ -3308,7 +3310,7 @@ You can create tables using pairs of vertical bars:
             $objDrop->addOption($line['id'], $line['wiki_name']);
         }
         $objDrop->setSelected($this->getSession('wiki_id'));
-        $objDrop->extra = 'onchange="javascript:if(this.value != \'\'){$(\'form_select\').submit();}else{return false}" style="max-width:140px"';
+        $objDrop->extra = 'onchange="javascript:if(this.value != \'\'){$(\'form_select\').submit();}else{return false}"';
         $selectDrop = $objDrop->show();
 
         $objForm = new form('select', $this->uri(array(
