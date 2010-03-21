@@ -213,7 +213,7 @@ class pbrender extends dbTable
                         $blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
                     }
                     $blockcontent = $blockname . $this->objWashout->parseText($line['blockcontent']);
-                    $ret .= "<br />" . $blockcontent . "<br />";
+                    $ret .= "<div class=\"middleblock\">" . $blockcontent . "</div>";
                 }
             } else {
                 $ret = $this->emptyBlocks("middle");
