@@ -1260,7 +1260,7 @@ class blog extends controller {
                 }
                 //post quick add
                 if ($mode == 'quickadd') {
-                     $postcontent = $this->getParam('quickadd_postcontent');
+                    $postcontent = $this->getParam('quickpost_postcontent');
                     $this->objblogPosts->quickPostAdd($userid, array(
                             'posttitle' => $posttitle,
                             'postcontent' => nl2br(htmlentities($postcontent)) ,
