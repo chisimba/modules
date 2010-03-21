@@ -722,9 +722,9 @@ class blogposts extends object
         // post content
         $pclabel = new label($this->objLanguage->languageText('mod_blog_pcontent', 'blog') . ':', 'input_postcontent');
         $pcon = $this->newObject('htmlarea', 'htmlelements');
-        $pcon->setName('postcontent2');
+        $pcon->setName('postcontent');
         $pcon->height = 400;
-        $pcon->width = '100%';
+        $pcon->width = '80%';
         $pcon->setDefaultToolbarSet();
         if (isset($editparams['post_content'])) {
             $pcon->setcontent((stripslashes(($editparams['post_content']))));
@@ -1087,7 +1087,7 @@ class blogposts extends object
         $qptitle = new textinput('posttitle');
         // post content textarea
         $qpcontenttxt = $this->objLanguage->languageText("mod_blog_pcontent", "blog") . "<br />";
-        $qpcontent = new textarea('postcontent');
+        $qpcontent = new textarea('quickpost_postcontent');
         // $qpcontent->setName('postcontent');
         // $qpcontent->setBasicToolBar();
         // dropdown of cats
