@@ -34,9 +34,10 @@ if ($layoutToUse == 'elearn') {
         $cssLayout->setLeftColumnContent($leftCol);
         echo $cssLayout->show();
     } else {
+        $cssLayout->setNumColumns(2);
         $cssLayout->setMiddleColumnContent($middleColumn);
         $cssLayout->setLeftColumnContent($leftCol);
-        $cssLayout->setRightColumnContent($rightSideColumn);
+    //    $cssLayout->setRightColumnContent($rightSideColumn);
         echo $cssLayout->show();
     }
 }

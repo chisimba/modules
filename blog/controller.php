@@ -1083,7 +1083,7 @@ class blog extends controller {
 
                     case 'editpost':
                     //$this->setPageTemplate(NULL);
-                    //$this->setLayoutTemplate(NULL);
+                        //$this->setLayoutTemplate("block_2layout_tpl.php");
                         return 'editpost_tpl.php';
                         break;
 
@@ -1260,6 +1260,7 @@ class blog extends controller {
                 }
                 //post quick add
                 if ($mode == 'quickadd') {
+                     $postcontent = $this->getParam('quickadd_postcontent');
                     $this->objblogPosts->quickPostAdd($userid, array(
                             'posttitle' => $posttitle,
                             'postcontent' => nl2br(htmlentities($postcontent)) ,
@@ -1414,6 +1415,7 @@ class blog extends controller {
                 $this->setVarByRef('editid', $id);
                 $this->setVarByRef('userid', $userid);
                 // $this->setVar('pageSuppressXML', TRUE);
+               $this->setLayoutTemplate("block_2layout_tpl.php");
                 return 'postedit_tpl.php';
                 break;
 

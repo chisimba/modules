@@ -724,7 +724,7 @@ class blogposts extends object
         $pcon = $this->newObject('htmlarea', 'htmlelements');
         $pcon->setName('postcontent');
         $pcon->height = 400;
-        $pcon->width = '80%';
+        $pcon->width = '100%';
         $pcon->setDefaultToolbarSet();
         if (isset($editparams['post_content'])) {
             $pcon->setcontent((stripslashes(($editparams['post_content']))));
