@@ -44,7 +44,7 @@ class block_followers extends object
         if ($userName!==NULL && $password !==NULL) {
             $objTwitterRemote = $this->getObject('twitterremote', 'twitter');
             $objTwitterRemote->initializeConnection($userName, $password);
-            return $objTwitterRemote->showFollowers();
+            return $objTwitterRemote->showFollowers(6);
         } else {
             //Don't even display it if its not there, just show message
             return $this->objLanguage->languageText("mod_twitter_nologonshort", "twitter");

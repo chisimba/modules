@@ -23,7 +23,7 @@
  *
  * @category  Chisimba
  * @package   twitter
- * @author    Derek Keats _EMAIL
+ * @author    Derek Keats <derek.keats@wits.ac.za>
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id$
@@ -182,33 +182,44 @@ class twitterremote extends object
     /**
     *
     * Returns your followers latest status, for example for use in a block
+    *
+    * @param int $numToReturn The number of items to return
     * @return string Formatted view of followers' status
     * @access public
     *
     */
-    public function showFollowers()
+    public function showFollowers($numToReturn=10)
     {
         $xml = $this->getFollowers();
+        $ret="";
         if ($xml) {
-            $ret="<table>";
+            $ret="<div class=\"query\"><ul class=\"tweet_list\">";
             $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+            $count=0;
             foreach ($xml->user as $user) {
-               $img="";
-               $link="";
-               $fixedTime = strtotime($user->status->created_at);
-               $fixedTime = date('Y-m-d H:i:s', $fixedTime);
-               $humanTime = $objHumanizeDate->getDifference($fixedTime);
-               $link = "<a href=\"" . $user->url
+                $count++;
+                (($count%2) == 0) ? $oddOrEven = 'tweet_even' : $oddOrEven = 'tweet_odd';
+                $img="";
+                $link="";
+                $fixedTime = strtotime($user->status->created_at);
+                $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+                $humanTime = $objHumanizeDate->getDifference($fixedTime);
+                $link = "<a href=\"" . $user->url
                  . "\" class=\"tweet_avatar\"><img src=\"" . $user->profile_image_url
                  . "\" align=\"left\" width=\"32\" height=\"32\"/>"
-                 . $user->name ."</a> ";
-               $text = $user->status->text ."<br />";
-               $ret .="<tr><td><div id=\"touser\" class=\"query\">" . $link . $text
-               . "<span class=\"minute\">"
-               . $humanTime . "<br /><br /></span></div></td></tr>";
+                 ."</a> ";
+                $text = $user->name . $user->status->text ."<br />";
+                $ret .="<li class=\"$oddOrEven\">" . $link . $text
+                  . "<span class=\"minute\">"
+                  . $humanTime . "<br /></span></li>";
+                if ($count == $numToReturn) {
+                    $ret .= "</ul></div>";
+                    return $ret;
+                }
             }
-            $ret .= "</table>";
         }
+        // in case there are less than $numToReturn
+        $ret .= "</ul></div>";
         return $ret;
     }
 
@@ -239,29 +250,55 @@ class twitterremote extends object
         return @simplexml_load_string($xmlStr);
     }
 
-    public function showFollowed()
+    /**
+    *
+    * Returns the latest status of those whom you follower, for example for
+    * use in a block
+    *
+    * @param int $numToReturn The number of items to return
+    * @return string Formatted view of followed status
+    * @access public
+    *
+    */
+    public function showFollowed($numToReturn=10)
     {
+        $ret="";
         $xml = $this->getFollowed();
         if ($xml) {
-            $ret="<table>";
+            $ret="<div class=\"query\"><ul class=\"tweet_list\">";
             $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+            $count=0;
             foreach ($xml->user as $user) {
-               $img="";
-               $link="";
-               $fixedTime = strtotime($user->status->created_at);
-               $fixedTime = date('Y-m-d H:i:s', $fixedTime);
-               $humanTime = $objHumanizeDate->getDifference($fixedTime);
-               $link = "<img src=\"" . $user->profile_image_url
-                 . "\" align=\"left\" style=\"margin-bottom: 3px; margin-right: 5px;\"/><a href=\"" . $user->url . "\">"
-                 . $user->name ."</a> ";
-               $text = $user->status->text ."<br />";
-               $ret .="<tr><td>" . $link . $text
-               . "<span class=\"minute\">"
-               . $humanTime . "<br /><br /></span>"
-               . "</td></tr>";
+                $count++;
+                (($count%2) == 0) ? $oddOrEven = 'tweet_even' : $oddOrEven = 'tweet_odd';
+                $img="";
+                $link="";
+                $fixedTime = strtotime($user->status->created_at);
+                $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+                $humanTime = $objHumanizeDate->getDifference($fixedTime);
+                /*$link = "<img src=\"" . $user->profile_image_url
+                  . "\" align=\"left\" style=\"margin-bottom: 3px; margin-right: 5px;\"/><a href=\"" . $user->url . "\">"
+                  . $user->name ."</a> ";*/
+                $link = "<a href=\"" . $user->url
+                 . "\" class=\"tweet_avatar\"><img src=\"" . $user->profile_image_url
+                 . "\" align=\"left\" width=\"32\" height=\"32\"/>"
+                 ."</a> ";
+                $text = $user->status->text ."<br />";
+                /*$ret .="<tr><td>" . $link . $text
+                  . "<span class=\"minute\">"
+                  . $humanTime . "<br /><br /></span>"
+                  . "</td></tr>";*/
+                $ret .="<li class=\"$oddOrEven\">" . $link . $text
+                  . "<span class=\"minute\">"
+                  . $humanTime . "<br /></span></li>";
+                if ($count == $numToReturn) {
+                    $ret .= "</ul></div>";
+                    return $ret;
+                }
             }
-            $ret .= "</table>";
         }
+        // in case there are less than $numToReturn
+        $ret .= "</ul></div>";
         return $ret;
     }
 
