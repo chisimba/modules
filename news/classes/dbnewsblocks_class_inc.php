@@ -74,7 +74,7 @@ class dbnewsblocks extends dbTable
         $this->objUser = $this->getObject('user','security');
     }
     
-    public function getBlocksAndSendToTemplate($pageType, $pageId,$side)
+    public function getBlocksAndSendToTemplate($pageType, $pageId,$side="right")
     {
         // Blocks
         $rightBlocks = $this->getPageBlocks($pageType, $pageId, $side);
