@@ -98,7 +98,7 @@
         jQuery.ajax({
             type: "GET",
             url: "index.php",
-            data: "module="+theModule+"&action=moveblock&blockid="+blockId+'&direction='+direction,
+            data: "module="+theModule+"&action=moveblock&pagetype="+pageid+"&pageid="+pageid+"&blockid="+blockId+'&direction='+direction,
             success: function(msg){
 
                 if (msg == 'ok') {

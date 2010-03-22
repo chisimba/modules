@@ -266,7 +266,7 @@ class dbnewsblocks extends dbTable
     public function moveBlockDown($id, $pageType, $pageId)
     {
         $record = $this->getRow('id', $id);
-        
+      
         if ($record == FALSE) {
             return FALSE;
         } else {
