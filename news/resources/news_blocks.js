@@ -147,7 +147,7 @@
         jQuery.ajax({
             type: "GET",
             url: "index.php",
-            data: "module="+theModule+"&action=addblock&pagetype=frontpage&pageid=frontpage&blockid="+blockid+"&side="+side,
+            data: "module="+theModule+"&action=addblock&pagetype="+pageid+"&pageid="+pageid+"&blockid="+blockid+"&side="+side,
             success: function(msg){
 
                 if (msg == '') {

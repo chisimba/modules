@@ -29,6 +29,7 @@ if ($this->objUser->isAdmin()) {
     turnEditingOn = '<?php echo $objLanguage->languageText('mod_context_turneditingon', 'context', 'Turn Editing On'); ?>';
     turnEditingOff = '<?php echo $objLanguage->languageText('mod_context_turneditingoff', 'context', 'Turn Editing Off'); ?>';
     theModule = 'news';
+    pageid="frontpage";
 
     // ]]>
 </script>
@@ -104,7 +105,7 @@ $objCssLayout->rightColumnContent = '';
 if ($this->objUser->isAdmin()) {
     $objCssLayout->rightColumnContent .= '<div id="editmode">'.$editOnButton->show().'</div>';
 }
-$objCssLayout->rightColumnContent .= '<div id="rightblocks">'.$rightBlocksStr.'</div>';
+$objCssLayout->rightColumnContent .= '<div id="rightblocks">'.$rightBlocks.'</div>';
 
 if ($this->objUser->isAdmin()) {
     $objCssLayout->rightColumnContent .= '<div id="rightaddblock">'.$header->show().$rightBlocksDropDown->show();
