@@ -92,6 +92,7 @@ class block_lastsix extends object
         $this->objDbBlog = $this->getObject('dbblog');
         $this->objUser = $this->getObject('user', 'security');
         $this->title = $this->objLanguage->languageText("mod_blog_block_intheblog", "blog");
+        $this->objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
     }
     /**
      * Standard block show method.
@@ -122,10 +123,12 @@ class block_lastsix extends object
                         'userid' => $item['userid']
                     ));
                     $link = new href($linkuri, stripslashes($item['post_title']));
-                    $posterName = '<span class="minute">'
+                    $posterName = '<div class="blogpreviewuser">'
                       . $this->objUser->fullname($item['userid'])
-                      . '</span>';
-                    $postDate = $item['post_date'];
+                      . '</div>';
+                    $fixedTime = strtotime($item['post_date']);
+                    $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+                    $postDate = $this->objHumanizeDate->getDifference($fixedTime);
                     $postExcerpt = $item['post_excerpt'];
                     if ($count == 1) {
                         $before="<tr>";
@@ -138,9 +141,10 @@ class block_lastsix extends object
                         $after="";
                     }
                     $ret .= $before . "<td width='33.3%' valign='top'><div class='blogpreview'>"
-                      .  $link->show()
+                      .  "<div class='blogpreviewtitle'>" . $link->show() . "</div>"
                       . $postExcerpt . "<br />" . $posterName
-                      . "<br />" . $postDate
+                      . "<div class='blogpreviewpostdate'>"
+                      . $postDate . "</div>"
                       . "</div></td>" . $after;
                     $count++;
                 }
