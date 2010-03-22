@@ -168,8 +168,9 @@ class news extends controller
     */
     private function __home()
     {
-        $this->setLayoutTemplate('blocks_layout_tpl.php');
-        
+       // $this->setLayoutTemplate('blocks_layout_tpl.php');
+        $this->setLayoutTemplate ( NULL );
+
         $topStories = $this->objNewsStories->getTopStoriesFormatted();
         $this->setVarByRef('topStories', $topStories['stories']);
         $this->setVarByRef('topStoriesId', $topStories['topstoryids']);
@@ -178,13 +179,15 @@ class news extends controller
         $this->setVarByRef('categories', $categories);
         
         // Load Blocks
-        $rightBlocks=$this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage');
-        
+        $rightBlocks=$this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage','right');
+        $leftBlocks=$this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage','left');
         $this->setVar('pageType', 'frontpage');
         $this->setVar('pageTypeId', 'frontpage');
         $this->setVar('rightBlocks', $rightBlocks);
-        
-        return 'home.php';
+        $this->setVar('leftBlocks', $leftBlocks);
+
+        $this->setLayoutTemplate ("newslayout_tpl.php" );
+        return 'newshome_tpl.php';
     }
     
     
