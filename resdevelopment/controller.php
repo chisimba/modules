@@ -29,8 +29,9 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 class resdevelopment extends controller {
-    function init() {
+  public function init() {
         $this->objStudents = $this->getObject('dbstudents');
+        $this->objGroup = $this->getObject('dbgroup');
     }
 
     /**
@@ -106,10 +107,23 @@ class resdevelopment extends controller {
         return "student_tpl.php";
     }
 
+     /*
+     * Method to show the page for adding group
+     *
+     */
+    public function __addgroup() {
+        return "groupmanagement_tpl.php";
+    }
+
     public function __savestudent() {
         // save the student info
         $this->objStudents->saveStudentInfo($this->getParam('firstname'), $this->getParam('lastname'));
         $this->nextAction("addstudent");
+    }
+     public function __savegroup() {
+        // save the group info
+        $this->objGroup->saveGroupInfo($this->getParam('groupname'));
+        $this->nextAction("addgroup");
     }
 
     public function __deletenames() {
@@ -118,5 +132,10 @@ class resdevelopment extends controller {
         $this->objStudents->deleteStudent($studentID);
         $this->nextAction("addstudent");
     }
-
+    public function __deletegroup() {
+        // delete group from database
+        $groupID = $this->getParam('id');
+        $this->objGroup->deleteGroup($groupID);
+        $this->nextAction("addgroup");
+    }
 }

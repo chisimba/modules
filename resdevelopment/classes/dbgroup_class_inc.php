@@ -22,24 +22,24 @@
  * @copyright 2010
 =
  */
-class dbstudents extends dbtable {
-    private $tablename = "tbl_resdev_student";
-    
+class dbgroup extends dbtable {
+    private $tablename = "tbl_resdev_group";
+
     public function init() {
         parent::init($this->tablename);
     }
 
-    public function saveStudentInfo($firstname, $lastname) {
-        $data = array("firstname"=>$firstname, "lastname"=>$lastname, "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
+    public function saveGroupInfo($groupname) {
+        $data = array("groupname"=>$groupname,  "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
         $this->insert($data);
     }
 
-    public function getStudentData() {
+    public function getGroupData() {
         return $this->getAll();
     }
 
-    public function deleteStudent($studentID) {
-        $this->delete("id", $studentID);
+    public function deleteGroup($groupID) {
+        $this->delete("id", $groupID);
     }
 }
 ?>
