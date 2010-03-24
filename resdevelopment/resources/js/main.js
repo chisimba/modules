@@ -81,7 +81,7 @@ function addStudent(typeURL) {
         items: fileTypeAddForm
     });
 
-    if(!win){
+     if(!win){
         win = new Ext.Window({
             applyTo:'addtype-win',
             layout:'fit',
@@ -110,4 +110,16 @@ function addStudent(typeURL) {
         });
         win.show(this);
     }
+}
+
+function goEdit(myID) {
+    addStudent(myID);
+}
+
+function goDelete(myURL) {
+    Ext.Msg.confirm('Confirmation Of Student Deletion', 'Are you sure you want to delete this student?', function(btn){
+        if (btn == 'yes'){
+            window.location.href = myURL;
+        }
+    });
 }

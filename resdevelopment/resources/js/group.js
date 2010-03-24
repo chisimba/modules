@@ -54,12 +54,14 @@ function showGrid(typeURL, myData) {
     grid.render('grid-example');
 }
 
-function addGroup(typeURL) {
+function addGroup(typeURL, xmyID) {
+    //myID = Ext.get(xmyID);
     var fileTypeAddForm = [{
         fieldLabel: 'Group Name',
         name: 'groupname',
         id: 'groupname_title',
         allowBlank: false,
+        value: myID,
         width: 250
     }];
 
@@ -104,4 +106,16 @@ function addGroup(typeURL) {
         });
         win.show(this);
     }
+}
+
+function goEdit(myID) {
+    addGroup(myID);
+}
+
+function goDelete(myURL) {
+    Ext.Msg.confirm('Confirmation Of Group Deletion', 'Are you sure you want to delete this group?', function(btn){
+        if (btn == 'yes'){
+            window.location.href = myURL;
+        }
+    });
 }

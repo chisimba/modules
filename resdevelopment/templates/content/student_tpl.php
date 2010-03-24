@@ -34,7 +34,7 @@ foreach($getStudentData as $row) {
     $editName->link=$objIcon->show();
 
     // this is the delete icon
-    $deleteName->link($this->uri(array('action'=>'deletenames','id'=>$row['id'])));
+    $deleteName->link("javascript: goDelete(\'".$this->uri(array('action'=>'deletegroup','id'=>$row['id']))."\')");
     $objIcon->setIcon('delete');
     $deleteName->link=$objIcon->show();
     
