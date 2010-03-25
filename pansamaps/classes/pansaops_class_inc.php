@@ -83,9 +83,9 @@ class pansaops extends object {
 	public function searchBox() {
         $this->loadClass('textinput', 'htmlelements');
         $qseekform = new form('qseek', $this->uri(array(
-            'action' => 'searchmessages',
+            'action' => 'searchvenues',
         )));
-        $qseekform->addRule('keyword', $this->objLanguage->languageText("mod_das_phrase_searchtermreq", "das") , 'required');
+        $qseekform->addRule('keyword', $this->objLanguage->languageText("mod_pansamaps_phrase_searchtermreq", "pansamaps") , 'required');
         $qseekterm = new textinput('keyword');
         $qseekterm->size = 15;
         $qseekform->addToForm($qseekterm->show());
@@ -95,10 +95,35 @@ class pansaops extends object {
         $qseekform->addToForm($this->objsTButton->show());
         $qseekform = $qseekform->show();
         $objFeatureBox = $this->getObject('featurebox', 'navigation');
-        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_das_qseek", "das") , $this->objLanguage->languageText("mod_das_qseekinstructions", "das") . "<br />" . $qseekform);
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_pansamaps_qseek", "pansamaps") , $this->objLanguage->languageText("mod_pansamaps_qseekinstructions", "pansamaps") . "<br />" . $qseekform);
 
         return $ret;
     }
+    
+    /**
+	 * Method to render an input form
+	 */
+	public function inputForm() {
+        $this->loadClass('textinput', 'htmlelements');
+        $iform = new form('iform', $this->uri(array(
+            'action' => 'adddata',
+        )));
+        $iform->addRule('keyword', $this->objLanguage->languageText("mod_pansamaps_phrase_searchtermreq", "pansamaps") , 'required');
+        
+        $iterm = new textinput('keyword');
+        $qseekterm->size = 15;
+        $qseekform->addToForm($qseekterm->show());
+        $this->objsTButton = &new button($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setToSubmit();
+        $qseekform->addToForm($this->objsTButton->show());
+        $qseekform = $qseekform->show();
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_pansamaps_qseek", "pansamaps") , $this->objLanguage->languageText("mod_pansamaps_qseekinstructions", "pansamaps") . "<br />" . $qseekform);
+
+        return $ret;
+    }
+    
     
     public function viewLocMap($lat, $lon, $zoom = 15) {
         $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
@@ -172,7 +197,7 @@ class pansaops extends object {
           }
         });
 
-        window.setTimeout(\"refresh()\", 30000);
+        // window.setTimeout(\"refresh()\", 30000);
 
       }
     }

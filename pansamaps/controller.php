@@ -120,6 +120,37 @@ class pansamaps extends controller
                 header('Content-type: text/xml');
                 echo $this->objDbPansa->getData();
                 break;
+                
+            case 'searchvenues':
+                $term = $this->getParam('keyword');
+                break;
+                
+            case 'adddata':
+                $venuename = $this->getParam('venuname');
+                $venueaddress1 = $this->getParam('venueaddress1');
+                $venueaddress2 = $this->getParam('venueaddress2');
+                $city = $this->getParam('city');
+                $zip = $this->getParam('zip');
+                $phonecode = $this->getParam('phonecode');
+                $phone = $this->getParam('phone');
+                $faxcode = $this->getParam('faxcode');
+                $fax = $this->getParam('fax');
+                $email = $this->getParam('email');
+                $url = $this->getParam('url');
+                $contactperson = $this->getParam('contactperson');
+                $otherinfo = $this->getParam('otherinfo');
+                $venuedescription = $this->getParam('venuedescription');
+                $geolat = $this->getParam('geolat');
+                $geolon = $this->getParam('geolon');
+                $venuelocation = $this->getParam('venuelocation');
+                
+                $dataArray = array('venuname' => $venuname, 'venueaddress1' => $venueaddress1, 'venueaddress2' => $venueaddress2, 'city' => $city,
+                                   'zip' => $zip, 'phonecode' => $phonecode, 'phone' => $phone, 'faxcode' => $faxcode, 'fax' => $fax,'email' => $email,
+                                   'url' => $url, 'contactperson' => $contactperson, 'otherinfo' => $otherinfo, 'venuedescription' => $venuedescription,
+                                   'geolat' => $geolat, 'geolon' => $geolon, 'venuelocation' => $venuelocation, );
+                $this->objDbPansa->insertRecord($dataArray);
+                return 'mapview_tpl.php';
+                break;
                           
             default:
                 $this->nextAction('');

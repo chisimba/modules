@@ -119,10 +119,11 @@ class dbpansa extends dbtable {
     }
     
     public function getData() {
-        return $this->getAll();
+        $dataArray = $this->getAll();
+        return $this->makeMapMarkers($dataArray);
     }
     
-    public function makeMapMarkers($dataArray, $resultset) {
+    public function makeMapMarkers($dataArray) {
         // build up a set of markers for a google map
         $head = "<markers>";
         $body = NULL;
@@ -149,6 +150,18 @@ class dbpansa extends dbtable {
         file_put_contents($path, $data);
         
         return $data;
+    }
+    
+    public function addRecord($data) {
+        $this->insert($data, 'tbl__pansa_venues');
+    }
+    
+    public function editRecord() {
+    
+    }
+    
+    public function deleteRecord() {
+    
     }
     
 }
