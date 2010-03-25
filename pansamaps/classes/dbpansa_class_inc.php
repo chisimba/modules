@@ -132,7 +132,7 @@ class dbpansa extends dbtable {
                 continue;
             }
             else {
-                $body .= '<marker lat="'.$data['lat'].'" lng="'.$data['lon'].'" info="'.htmlentities($data['info']).'" />';
+                $body .= '<marker lat="'.$data['lat'].'" lng="'.$data['lon'].'" info="'.htmlentities($data['venuename']."<br />".$data['venuedescription']).'" />';
             }
         }
         $tail = "</markers>";
