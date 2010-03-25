@@ -104,22 +104,165 @@ class pansaops extends object {
 	 * Method to render an input form
 	 */
 	public function inputForm() {
+	    $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'pansamaps', 'Required').'</span>';
         $this->loadClass('textinput', 'htmlelements');
         $iform = new form('iform', $this->uri(array(
             'action' => 'adddata',
         )));
-        $iform->addRule('keyword', $this->objLanguage->languageText("mod_pansamaps_phrase_searchtermreq", "pansamaps") , 'required');
+        $iform->addRule('venuname', $this->objLanguage->languageText("mod_pansamaps_phrase_vnamereq", "pansamaps") , 'required');
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->startRow();
+        $venuename = new textinput('venuename');
+        $venuename->size = 15;
+        $venuenameLabel = new label($this->objLanguage->languageText('venuename', 'pansamaps').'&nbsp;', 'input_venuename');
+        $table->addCell($venuenameLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($venuename->show().$required);
+        $table->endRow();
         
-        $iterm = new textinput('keyword');
-        $qseekterm->size = 15;
-        $qseekform->addToForm($qseekterm->show());
-        $this->objsTButton = &new button($this->objLanguage->languageText('word_search', 'system'));
-        $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+        $table->startRow();
+        $venueaddress1 = new textinput('venueaddress1');
+        $venueaddress1->size = 15;
+        $venueaddress1Label = new label($this->objLanguage->languageText('venueaddress1', 'pansamaps').'&nbsp;', 'input_venueaddress1');
+        $table->addCell($venueaddress1Label->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($venueaddress1->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $venueaddress2 = new textinput('venueaddress2');
+        $venueaddress2->size = 15;
+        $venueaddress2Label = new label($this->objLanguage->languageText('venueaddress2', 'pansamaps').'&nbsp;', 'input_venueaddress2');
+        $table->addCell($venueaddress2Label->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($venueaddress2->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $city = new textinput('city');
+        $city->size = 15;
+        $cityLabel = new label($this->objLanguage->languageText('city', 'pansamaps').'&nbsp;', 'input_city');
+        $table->addCell($cityLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($city->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $zip = new textinput('zip');
+        $zip->size = 15;
+        $zipLabel = new label($this->objLanguage->languageText('zip', 'pansamaps').'&nbsp;', 'input_zip');
+        $table->addCell($zipLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($zip->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $phonecode = new textinput('phonecode');
+        $phonecode->size = 15;
+        $phonecodeLabel = new label($this->objLanguage->languageText('phonecode', 'pansamaps').'&nbsp;', 'input_phonecode');
+        $table->addCell($phonecodeLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($phonecode->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $phone = new textinput('phone');
+        $phone->size = 15;
+        $phoneLabel = new label($this->objLanguage->languageText('phone', 'pansamaps').'&nbsp;', 'input_phone');
+        $table->addCell($phoneLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($phone->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $faxcode = new textinput('faxcode');
+        $faxcode->size = 15;
+        $faxcodeLabel = new label($this->objLanguage->languageText('faxcode', 'pansamaps').'&nbsp;', 'input_faxcode');
+        $table->addCell($faxcodeLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($faxcode->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $fax = new textinput('fax');
+        $fax->size = 15;
+        $faxLabel = new label($this->objLanguage->languageText('fax', 'pansamaps').'&nbsp;', 'input_fax');
+        $table->addCell($faxLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($fax->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $email = new textinput('email');
+        $email->size = 15;
+        $emailLabel = new label($this->objLanguage->languageText('email', 'pansamaps').'&nbsp;', 'input_email');
+        $table->addCell($emailLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($email->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $url = new textinput('url');
+        $url->size = 15;
+        $urlLabel = new label($this->objLanguage->languageText('url', 'pansamaps').'&nbsp;', 'input_url');
+        $table->addCell($urlLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($url->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $contactperson = new textinput('contactperson');
+        $contactperson->size = 15;
+        $contactpersonLabel = new label($this->objLanguage->languageText('contactperson', 'pansamaps').'&nbsp;', 'input_contactperson');
+        $table->addCell($contactpersonLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($contactperson->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $otherinfo = new textinput('otherinfo');
+        $otherinfo->size = 15;
+        $otherinfoLabel = new label($this->objLanguage->languageText('otherinfo', 'pansamaps').'&nbsp;', 'input_otherinfo');
+        $table->addCell($otherinfoLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($otherinfo->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $venuedescription = new textinput('venuedescription');
+        $venuedescription->size = 15;
+        $venuedescriptionLabel = new label($this->objLanguage->languageText('venuedescription', 'pansamaps').'&nbsp;', 'input_venuedescription');
+        $table->addCell($venuedescriptionLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($venuedescription->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $geolat = new textinput('geolat');
+        $geolat->size = 15;
+        $geolatLabel = new label($this->objLanguage->languageText('geolat', 'pansamaps').'&nbsp;', 'input_geolat');
+        $table->addCell($geolatLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($geolat->show().$required);
+        $table->endRow();
+        
+        $table->startRow();
+        $geolon = new textinput('geolon');
+        $geolon->size = 15;
+        $geolonLabel = new label($this->objLanguage->languageText('geolon', 'pansamaps').'&nbsp;', 'input_geolon');
+        $table->addCell($geolonLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($geolon->show().$required);
+        $table->endRow();
+                
+        $iform->addToForm($table->show());
+        $this->objsTButton = new button($this->objLanguage->languageText('word_add', 'system'));
+        $this->objsTButton->setValue($this->objLanguage->languageText('word_add', 'system'));
         $this->objsTButton->setToSubmit();
-        $qseekform->addToForm($this->objsTButton->show());
-        $qseekform = $qseekform->show();
+        $iform->addToForm($this->objsTButton->show());
+        $iform = $iform->show();
         $objFeatureBox = $this->getObject('featurebox', 'navigation');
-        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_pansamaps_qseek", "pansamaps") , $this->objLanguage->languageText("mod_pansamaps_qseekinstructions", "pansamaps") . "<br />" . $qseekform);
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_pansamaps_inputvenue", "pansamaps") , $this->objLanguage->languageText("mod_pansamaps_inputinstructions", "pansamaps") . "<br />" . $iform);
 
         return $ret;
     }
