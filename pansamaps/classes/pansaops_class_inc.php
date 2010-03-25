@@ -351,7 +351,7 @@ class pansaops extends object {
             var xml = GXml.parse(data);
             var markers = xml.documentElement.getElementsByTagName(\"marker\");
             for (var i = 0; i < markers.length; i++) {
-              var tweet = markers[i].getAttribute(\"tweet\");
+              var tweet = markers[i].getAttribute(\"info\");
               var point = new GLatLng(parseFloat(markers[i].getAttribute(\"lat\")), parseFloat(markers[i].getAttribute(\"lng\")));
               var marker = createMarker(point, tweet)
               map.addOverlay(marker);
@@ -380,7 +380,7 @@ class pansaops extends object {
             var xml = GXml.parse(data);
             var markers = xml.documentElement.getElementsByTagName(\"marker\");
             for (var i = 0; i < markers.length; i++) {
-              var tweet = markers[i].getAttribute(\"tweet\");
+              var tweet = markers[i].getAttribute(\"info\");
               var point = new GLatLng(parseFloat(markers[i].getAttribute(\"lat\")), parseFloat(markers[i].getAttribute(\"lng\")));
               var marker = createMarker(point, tweet)
               map.addOverlay(marker);
