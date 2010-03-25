@@ -258,9 +258,8 @@ class pansaops extends object {
         $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
         $css = '<link href="http://www.google.com/apis/maps/base.css" rel="stylesheet" type="text/css"></link>';
         
-        $google = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=$gmapsapikey
-            type=\"text/javascript\"></script>
-    <script type=\"text/javascript\">
+        $google = '<script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key="'.$gmapsapikey.'" type="text/javascript"></script>';
+        $code = "<script type=\"text/javascript\">
     //<![CDATA[
     
     function createMarker(point,html) {
@@ -335,7 +334,7 @@ class pansaops extends object {
     </script>";
     
         // add the lot to the headerparams...
-        $this->appendArrayVar('headerParams', $css.$google);
+        $this->appendArrayVar('headerParams', $css.$google.$code);
         $this->appendArrayVar('bodyOnLoad', "load();");
         
         $gtags = '<div id="map" style="width: 768px; height: 768px"></div>';
