@@ -103,7 +103,59 @@ class pansaops extends object {
     /**
 	 * Method to render an input form
 	 */
-	public function inputForm() {
+	public function inputForm($editparams = NULL) {
+	
+	    $ret = NULL;
+        $lat = 0;
+        $lon = 0;
+        $zoom = 2;
+        $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+        $css = '<style type="text/css">
+        #map {
+            width: 100%;
+            height: 350px;
+            border: 1px solid black;
+            background-color: white;
+        }
+    </style>';
+
+        $google = "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$gmapsapikey."' type=\"text/javascript\"></script>";
+        $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
+        $js = "<script type=\"text/javascript\">
+        var lon = 5;
+        var lat = 40;
+        var zoom = 17;
+        var map, layer, drawControl, g;
+
+        OpenLayers.ProxyHost = \"/proxy/?url=\";
+        function init(){
+            g = new OpenLayers.Format.GeoRSS();
+            map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20, projection: new OpenLayers.Projection(\"EPSG:900913\"), displayProjection: new OpenLayers.Projection(\"EPSG:4326\") });
+            var normal = new OpenLayers.Layer.Google( \"Google Map\" , {type: G_NORMAL_MAP, 'maxZoomLevel':18} );
+            var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
+            
+            map.addLayers([normal, hybrid]);
+
+            map.addControl(new OpenLayers.Control.MousePosition());
+            map.addControl( new OpenLayers.Control.MouseDefaults() );
+            map.addControl( new OpenLayers.Control.LayerSwitcher() );
+            map.addControl( new OpenLayers.Control.PanZoomBar() );
+
+            map.setCenter(new OpenLayers.LonLat($lon,$lat), $zoom);
+
+            map.events.register(\"click\", map, function(e) {
+                var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
+                                          + lonlat.lon
+            });
+
+        }
+    </script>";
+
+        // add the lot to the headerparams...
+        $this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
+        $this->appendArrayVar('bodyOnLoad', "init();");
+        
 	    $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'pansamaps', 'Required').'</span>';
         $this->loadClass('textinput', 'htmlelements');
         $iform = new form('iform', $this->uri(array(
@@ -111,6 +163,20 @@ class pansaops extends object {
         )));
         $iform->addRule('venuname', $this->objLanguage->languageText("mod_pansamaps_phrase_vnamereq", "pansamaps") , 'required');
         $table = $this->newObject('htmltable', 'htmlelements');
+        $mtable = $this->newObject('htmltable', 'htmlelements');
+        
+        // and now the map
+        $mtable->startRow();
+        $gtlabel = new label($this->objLanguage->languageText("mod_pansamaps_geoposition", "pansamaps") . ':', 'input_geotags');
+        $gtags = '<div id="map"></div>';
+        $geotags = new textinput('geotag', NULL, NULL, '100%');
+        if (isset($editparams['geolat']) && isset($editparams['geolon'])) {
+            $geotags->setValue($editparams['geolat'].", ".$editparams['geolon']);
+        }
+        //$ptable->addCell($gtlabel->show());
+        $mtable->addCell($gtags.$geotags->show());
+        $mtable->endRow();
+        
         $table->startRow();
         $venuename = new textinput('venuename');
         $venuename->size = 15;
@@ -240,8 +306,9 @@ class pansaops extends object {
         $table->addCell('&nbsp;', 5);
         $table->addCell($geolon->show());
         $table->endRow();*/
-                
-        $iform->addToForm($table->show());
+        
+        $t = $mtable->show().$table->show();
+        $iform->addToForm($t);
         $this->objsTButton = new button($this->objLanguage->languageText('word_add', 'system'));
         $this->objsTButton->setValue($this->objLanguage->languageText('word_add', 'system'));
         $this->objsTButton->setToSubmit();

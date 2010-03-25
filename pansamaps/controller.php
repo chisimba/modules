@@ -126,6 +126,10 @@ class pansamaps extends controller
                 break;
                 
             case 'adddata':
+                $geotag = $this->getParam('geotag');
+                $geo = explode(",  ", $geotag);
+                $geolat = $geo[0];
+                $geolon = $geo[1];
                 $venuename = $this->getParam('venuename');
                 $venueaddress1 = $this->getParam('venueaddress1');
                 $venueaddress2 = $this->getParam('venueaddress2');
@@ -140,8 +144,6 @@ class pansamaps extends controller
                 $contactperson = $this->getParam('contactperson');
                 $otherinfo = $this->getParam('otherinfo');
                 $venuedescription = $this->getParam('venuedescription');
-                $geolat = $this->getParam('geolat');
-                $geolon = $this->getParam('geolon');
                 $venuelocation = $this->getParam('venuelocation');
                 
                 $dataArray = array('venuename' => $venuename, 'venueaddress1' => $venueaddress1, 'venueaddress2' => $venueaddress2, 'city' => $city,
