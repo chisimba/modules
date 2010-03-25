@@ -158,7 +158,7 @@ class pansamaps extends controller
                                    'url' => $url, 'contactperson' => $contactperson, 'otherinfo' => $otherinfo, 'venuedescription' => $venuedescription,
                                    'geolat' => $geolat, 'geolon' => $geolon, 'venuelocation' => $venuelocation, );
                 $this->objDbPansa->addRecord($dataArray);
-                return 'mapview_tpl.php';
+                $this->nextAction('');
                 break;
                           
             default:
