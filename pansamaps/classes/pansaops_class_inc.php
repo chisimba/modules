@@ -104,7 +104,7 @@ class pansaops extends object {
 	 * Method to render an input form
 	 */
 	public function inputForm($editparams = NULL) {
-	
+	    $this->loadClass('label', 'htmlelements');
 	    $ret = NULL;
         $lat = 0;
         $lon = 0;
