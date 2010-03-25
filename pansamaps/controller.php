@@ -126,7 +126,7 @@ class pansamaps extends controller
                 break;
                 
             case 'adddata':
-                $venuename = $this->getParam('venuname');
+                $venuename = $this->getParam('venuename');
                 $venueaddress1 = $this->getParam('venueaddress1');
                 $venueaddress2 = $this->getParam('venueaddress2');
                 $city = $this->getParam('city');
@@ -144,11 +144,11 @@ class pansamaps extends controller
                 $geolon = $this->getParam('geolon');
                 $venuelocation = $this->getParam('venuelocation');
                 
-                $dataArray = array('venuname' => $venuname, 'venueaddress1' => $venueaddress1, 'venueaddress2' => $venueaddress2, 'city' => $city,
+                $dataArray = array('venuename' => $venuename, 'venueaddress1' => $venueaddress1, 'venueaddress2' => $venueaddress2, 'city' => $city,
                                    'zip' => $zip, 'phonecode' => $phonecode, 'phone' => $phone, 'faxcode' => $faxcode, 'fax' => $fax,'email' => $email,
                                    'url' => $url, 'contactperson' => $contactperson, 'otherinfo' => $otherinfo, 'venuedescription' => $venuedescription,
                                    'geolat' => $geolat, 'geolon' => $geolon, 'venuelocation' => $venuelocation, );
-                $this->objDbPansa->insertRecord($dataArray);
+                $this->objDbPansa->addRecord($dataArray);
                 return 'mapview_tpl.php';
                 break;
                           

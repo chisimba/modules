@@ -135,7 +135,7 @@ class pansaops extends object {
         $venueaddress2Label = new label($this->objLanguage->languageText('venueaddress2', 'pansamaps').'&nbsp;', 'input_venueaddress2');
         $table->addCell($venueaddress2Label->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($venueaddress2->show().$required);
+        $table->addCell($venueaddress2->show());
         $table->endRow();
         
         $table->startRow();
@@ -153,52 +153,38 @@ class pansaops extends object {
         $zipLabel = new label($this->objLanguage->languageText('zip', 'pansamaps').'&nbsp;', 'input_zip');
         $table->addCell($zipLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($zip->show().$required);
+        $table->addCell($zip->show());
         $table->endRow();
         
         $table->startRow();
         $phonecode = new textinput('phonecode');
-        $phonecode->size = 15;
-        $phonecodeLabel = new label($this->objLanguage->languageText('phonecode', 'pansamaps').'&nbsp;', 'input_phonecode');
-        $table->addCell($phonecodeLabel->show(), 150, NULL, 'right');
-        $table->addCell('&nbsp;', 5);
-        $table->addCell($phonecode->show().$required);
-        $table->endRow();
-        
-        $table->startRow();
+        $phonecode->size = 3;
         $phone = new textinput('phone');
         $phone->size = 15;
-        $phoneLabel = new label($this->objLanguage->languageText('phone', 'pansamaps').'&nbsp;', 'input_phone');
-        $table->addCell($phoneLabel->show(), 150, NULL, 'right');
+        $phonecodeLabel = new label($this->objLanguage->languageText('phone', 'pansamaps').'&nbsp;', 'input_phonecode');
+        $table->addCell($phonecodeLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($phone->show().$required);
+        $table->addCell("(".$phonecode->show().") ".$phone->show());
         $table->endRow();
         
         $table->startRow();
         $faxcode = new textinput('faxcode');
-        $faxcode->size = 15;
-        $faxcodeLabel = new label($this->objLanguage->languageText('faxcode', 'pansamaps').'&nbsp;', 'input_faxcode');
-        $table->addCell($faxcodeLabel->show(), 150, NULL, 'right');
-        $table->addCell('&nbsp;', 5);
-        $table->addCell($faxcode->show().$required);
-        $table->endRow();
-        
-        $table->startRow();
+        $faxcode->size = 3;
         $fax = new textinput('fax');
         $fax->size = 15;
-        $faxLabel = new label($this->objLanguage->languageText('fax', 'pansamaps').'&nbsp;', 'input_fax');
-        $table->addCell($faxLabel->show(), 150, NULL, 'right');
+        $faxcodeLabel = new label($this->objLanguage->languageText('fax', 'pansamaps').'&nbsp;', 'input_faxcode');
+        $table->addCell($faxcodeLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($fax->show().$required);
+        $table->addCell("(".$faxcode->show().") ".$fax->show());
         $table->endRow();
         
         $table->startRow();
         $email = new textinput('email');
         $email->size = 15;
-        $emailLabel = new label($this->objLanguage->languageText('email', 'pansamaps').'&nbsp;', 'input_email');
+        $emailLabel = new label($this->objLanguage->languageText('emailaddr', 'pansamaps').'&nbsp;', 'input_email');
         $table->addCell($emailLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($email->show().$required);
+        $table->addCell($email->show());
         $table->endRow();
         
         $table->startRow();
@@ -207,7 +193,7 @@ class pansaops extends object {
         $urlLabel = new label($this->objLanguage->languageText('url', 'pansamaps').'&nbsp;', 'input_url');
         $table->addCell($urlLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($url->show().$required);
+        $table->addCell($url->show());
         $table->endRow();
         
         $table->startRow();
@@ -216,7 +202,7 @@ class pansaops extends object {
         $contactpersonLabel = new label($this->objLanguage->languageText('contactperson', 'pansamaps').'&nbsp;', 'input_contactperson');
         $table->addCell($contactpersonLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($contactperson->show().$required);
+        $table->addCell($contactperson->show());
         $table->endRow();
         
         $table->startRow();
@@ -225,7 +211,7 @@ class pansaops extends object {
         $otherinfoLabel = new label($this->objLanguage->languageText('otherinfo', 'pansamaps').'&nbsp;', 'input_otherinfo');
         $table->addCell($otherinfoLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($otherinfo->show().$required);
+        $table->addCell($otherinfo->show());
         $table->endRow();
         
         $table->startRow();
@@ -234,16 +220,16 @@ class pansaops extends object {
         $venuedescriptionLabel = new label($this->objLanguage->languageText('venuedescription', 'pansamaps').'&nbsp;', 'input_venuedescription');
         $table->addCell($venuedescriptionLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($venuedescription->show().$required);
+        $table->addCell($venuedescription->show());
         $table->endRow();
         
-        $table->startRow();
+        /*$table->startRow();
         $geolat = new textinput('geolat');
         $geolat->size = 15;
         $geolatLabel = new label($this->objLanguage->languageText('geolat', 'pansamaps').'&nbsp;', 'input_geolat');
         $table->addCell($geolatLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($geolat->show().$required);
+        $table->addCell($geolat->show());
         $table->endRow();
         
         $table->startRow();
@@ -252,8 +238,8 @@ class pansaops extends object {
         $geolonLabel = new label($this->objLanguage->languageText('geolon', 'pansamaps').'&nbsp;', 'input_geolon');
         $table->addCell($geolonLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($geolon->show().$required);
-        $table->endRow();
+        $table->addCell($geolon->show());
+        $table->endRow();*/
                 
         $iform->addToForm($table->show());
         $this->objsTButton = new button($this->objLanguage->languageText('word_add', 'system'));
