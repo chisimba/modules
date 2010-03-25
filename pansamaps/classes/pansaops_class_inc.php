@@ -258,7 +258,7 @@ class pansaops extends object {
         $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
         $css = '<link href="http://www.google.com/apis/maps/base.css" rel="stylesheet" type="text/css"></link>';
         
-        $google = '<script src=\"http://maps.google.com/maps?file=api&amp;v=2.x&amp;key="'.$gmapsapikey.'"
+        $google = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2.x&amp;key="$gmapsapikey"
             type=\"text/javascript\"></script>
     <script type=\"text/javascript\">
     //<![CDATA[
