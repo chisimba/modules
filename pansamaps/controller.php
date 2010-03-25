@@ -114,6 +114,7 @@ class pansamaps extends controller
             case 'main' :
                 $this->setVar('pageSuppressSkin', TRUE);
                 $this->setVar('pageSuppressBanner', TRUE);
+                
                 return 'mapview_tpl.php';
                 break;
                 

@@ -128,11 +128,11 @@ class dbpansa extends dbtable {
         $head = "<markers>";
         $body = NULL;
         foreach($dataArray as $data) {
-            if($data['lat'] == "" || $data['lon'] == "") {
+            if($data['geolat'] == "" || $data['geolon'] == "") {
                 continue;
             }
             else {
-                $body .= '<marker lat="'.$data['lat'].'" lng="'.$data['lon'].'" info="'.htmlentities($data['venuename']."<br />".$data['venuedescription']).'" />';
+                $body .= '<marker lat="'.$data['geolat'].'" lng="'.$data['geolon'].'" info="'.htmlentities($data['venuename']."<br />".$data['venuedescription']).'" />';
             }
         }
         $tail = "</markers>";
