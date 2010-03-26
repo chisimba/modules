@@ -45,8 +45,8 @@ class dbGlossary extends dbTable
     * @return array All Terms in the database for a particular context
     */
     public function fetchAllRecords($context=null)
-    {   
-    	$sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition '; 
+    {
+    	$sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition ';
         //$sql.= ', tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
         $sql.= 'FROM tbl_glossary ';
         //$sql.= ' LEFT JOIN bridge_glossary_seealso ON ';
@@ -54,11 +54,11 @@ class dbGlossary extends dbTable
         //$sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
         //$sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
         //$sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
-        
+
         if ($context != '') {
             $sql.= "WHERE tbl_glossary.context = '".$context."' ";
         }
-        
+
        // $sql.= 'GROUP BY tbl_glossary.id ';
         $sql.= 'ORDER BY tbl_glossary.term';
 
@@ -85,8 +85,8 @@ class dbGlossary extends dbTable
     */
     public function searchGlossaryDB($term, $context=null)
     {
-    
-     	$sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition '; 
+
+     	$sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition ';
         //$sql.= ', tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
         $sql.= 'FROM tbl_glossary ';
         //$sql.= 'LEFT JOIN bridge_glossary_seealso ON ';
@@ -94,13 +94,13 @@ class dbGlossary extends dbTable
         //$sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
         //$sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
         //$sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
-        $sql.= "WHERE tbl_glossary.term LIKE '$term' OR tbl_glossary.term LIKE '".strtolower($term)."' 
-                        OR tbl_glossary.term LIKE '".strtoupper($term)."' ";
-        
+        $sql.= "WHERE (tbl_glossary.term LIKE '$term' OR tbl_glossary.term LIKE '".strtolower($term)."'
+                        OR tbl_glossary.term LIKE '".strtoupper($term)."') ";
+
         if ($context != '') {
             $sql.= "AND tbl_glossary.context='".$context."' ";
         }
-        
+
         //$sql.= 'GROUP BY item_id ';
         $sql.= 'ORDER BY tbl_glossary.term';
         return $this->getArray($sql);
@@ -127,8 +127,8 @@ class dbGlossary extends dbTable
     * @return array Term with indicators of whether the terms has urls, images or see alsos.
     */
     public function showFullSingle($id, $context)
-    {       	
-        $sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition, '; 
+    {
+        $sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition, ';
         $sql.= 'tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
         $sql.= 'FROM tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
         $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
@@ -139,7 +139,7 @@ class dbGlossary extends dbTable
         $sql.= "AND tbl_glossary.context='".$context."' ";
         //$sql.= 'GROUP BY tbl_glossary.id ';
         $sql.= 'ORDER BY tbl_glossary.term';
-      
+
         return $this->getArray($sql);
     }
 
@@ -147,7 +147,7 @@ class dbGlossary extends dbTable
     * Method to insert a new record
     *
     * @param string $term:            Term
-    * @param string $definition:      Definition 
+    * @param string $definition:      Definition
     * @param string $context:         ContextCode
     * @param string $userID:          UserId of person inserting the record
     * @param datetine $dateLastUpdated: Date/Time of entry
@@ -169,7 +169,7 @@ class dbGlossary extends dbTable
          $contents = "$term $definition";
          $teaser = $definition;
          $indexData->luceneIndex($docId, $date, $url, $title, $contents, $teaser, "glossary", $userID, null, $context);
-        
+
         return;
     }
 
@@ -184,7 +184,7 @@ class dbGlossary extends dbTable
         $indexData = $this->getObject('indexdata','search');
         $docId = "glossary_entry_$id";
         $indexData->removeIndex($docId);
-        return;	
+        return;
     }
 
     /**
@@ -192,7 +192,7 @@ class dbGlossary extends dbTable
     *
     * @param string $id:              Id
     * @param string $term:            Term
-    * @param string $definition:      Definition 
+    * @param string $definition:      Definition
     * @param string $context:         ContextCode
     * @param string $userID:          UserId of person inserting the record
     * @param datetine $dateLastUpdated: Date/Time of entry
@@ -214,7 +214,7 @@ class dbGlossary extends dbTable
          $contents = "$term $definition";
          $teaser = $this->objLanguage->languageText('mod_glossary_teaser','glossary')." $term";
          $indexData->luceneIndex($docId, $date, $url, $title, $contents, $teaser, "glossary", $userID, null, $context);
-        
+
         return;
     }
 
@@ -246,7 +246,7 @@ class dbGlossary extends dbTable
         } else {
             $sql = '';
         }
-        
+
         return $this->getRecordCount($sql);
     }
 
@@ -260,28 +260,28 @@ class dbGlossary extends dbTable
     *
     * @return string $text text with glossary terms replaced by mouse over popups
     */
-    public function parse($text, $context) 
+    public function parse($text, $context)
     {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        
+
         // Check if Glossary Parsing is allowed
         $allowParse = $objSysConfig->getValue('ALLOW_PARSE', 'glossary');
-        
+
         // If not, immediately return text, no further action is required.
         if ($allowParse == '0') {
             return $text;
         }
-        
+
         // First get a list of terms in the context
         // If there are terms, start parsing, otherwise stop altogether
         if ($this->getNumAllRecords($context) > 0) {
             $getList = $this->fetchAllRecords($context);
-            
+
             // Send JavaScript to the Header
             $this->appendArrayVar('headerParams', $this->getJavascriptFile('domLib.js','htmlelements'));
             $this->appendArrayVar('headerParams', $this->getJavascriptFile('domTT.js','htmlelements'));
             $this->appendArrayVar('headerParams', $this->getJavascriptFile('domTT_drag.js','htmlelements'));
-            
+
             // Create JavaScript Style
             $iframeStyle= '
 <style type="text/css">
@@ -292,25 +292,25 @@ class dbGlossary extends dbTable
 </style>';
             // Send to Header
             $this->appendArrayVar('headerParams', $iframeStyle);
-            
-            
-            
+
+
+
             // Need to strip slashes if it comes with slashes
             $text = stripslashes($text);
-            
+
             $objIcon = $this->getObject('geticon', 'htmlelements');
             $objIcon->setIcon('glossary_link');
             $objIcon->title = ' ';
             $objIcon->alt = ' ';
             $objIcon->extra = ' style="cursor:pointer;" ';
-            
+
             // Tag to Use to Surround Item
             $tag = 'span';
-            
+
             // Parse One Word at a time.
             foreach ($getList as $term)
             {
-                
+
                 // ********** START BUILDING OF REPLACEMENT ********** //
                 $starttag =  '<'.$tag.' ';
                 $endtag = '</'.$tag.'>';
@@ -319,59 +319,59 @@ class dbGlossary extends dbTable
                 $onmouseover = '';
                 $cursor = 'help';
                 $icon = NULL;
-                
-                
+
+
                 // Title
                 $title = $term['term']; // Convert to Capital Letters
-                
+
                 // If the term has URLS or relates to other terms or has images
                 // Add them to the output
-                if ($term['urls'] != '' OR $term['seealsos'] != '' OR $term['images'] != '') 
+                if ($term['urls'] != '' OR $term['seealsos'] != '' OR $term['images'] != '')
                 {
                     $popupUrl = $this->uri(array('module'=>'glossary', 'action'=>'singlepopup', 'id'=>$term['item_id']));
-                    
+
                     $onclick = ' onclick="return makeFalse(domTT_activate(this, event, \'caption\', \''.$title.'\', \'content\', \'<iframe class=iframepopup frameborder=0 src='.$popupUrl.' ></iframe>\', \'type\', \'sticky\', \'classPrefix\', \'domTT\', \'closeLink\'));" ';
                     //style=\"width: 98%; height: 200px;\"
                     $cursor = 'pointer';
-                    
+
                     $icon = $objIcon->show();
-                
+
                 } // End if Term has urls or see alsos
 
                 $onmouseout = ' onmouseout="domTT_mouseout(this, event);"';
-                $onmouseover = ' onmouseover="domTT_activate(this, event, '."'".'content'."'".', '; 
-                
+                $onmouseover = ' onmouseover="domTT_activate(this, event, '."'".'content'."'".', ';
+
                 $definition = nl2br(htmlentities($term['definition']));
                 $definition = str_replace("\n", ' ', $definition);
                 $definition = str_replace("\r", ' ', $definition);
                 $definition = str_replace("'", "\'", $definition);
-                
+
                 $onmouseover .= "'".$definition."' ";
                 $onmouseover .= ", 'trail', true, 'fade', 'in', 'maxWidth', '500');\" ";
-                
+
                 $style = 'style="border-bottom: 1px dotted red; cursor:'.$cursor.'" class="glossaryparse"';
-                
+
                 $matchReplacement = $starttag.$onclick.$onmouseout.$onmouseover.$style.'>'."\\0".$icon.$endtag;
-                
+
                 // ********** END BUILDING OF REPLACEMENT ********** //
-                
+
                 // Word to search for - Allow Spaces to be one or more
                 $lookfor = str_replace(' ', '\s+', $term['term']);
-                
+
                 // regexp pattern - case insensitive
                 $pattern = '#(?!<.*?)(?!<a)(\\b'.$lookfor.'\\b)(?!<\/a>)(?![^<>]*?>)#i';
-                
+
                 // Replace the Text
                 $text = preg_replace($pattern, $matchReplacement, $text );
-                
+
             } // End foreach keyword
-            
+
         }// End of If Num Records > 0
-        
+
         return $text;
-    
+
     }
-    
+
     /**
     * Method to Generate an Alphabetical listing to Browse the Glossary
     * It only activates a link, if there are words starting with that letter
@@ -381,10 +381,10 @@ class dbGlossary extends dbTable
     {
         // Get the list of terms in the array
         $wordsList = $this->fetchAllRecords($contextCode);
-        
+
         // Separate Array for Letters
         $alphaArray = array();
-        
+
         if(!empty($wordsList)){
         		// Get the First Letter of each word
         		foreach ($wordsList as $word)
@@ -392,19 +392,19 @@ class dbGlossary extends dbTable
             		$alphaArray[] = strtoupper(substr($word['term'], 0, 1));
         		}
         }
-        
+
         // Make elements in array unique
         $result = array_unique($alphaArray);
-        
+
         // String for Final Output
         $output = '';
-        
+
         // Loop from A to Z
         for($i = 65; $i <= 90; $i++)
         {
             // Convert to Character
             $letter = chr($i);
-            
+
             // If Letter in Array, Add Link
             if (in_array($letter, $alphaArray)) {
                 $url=$this->uri(array('action'=>'viewbyletter','letter'=>$letter),'glossary');
@@ -412,15 +412,15 @@ class dbGlossary extends dbTable
             } else { // Else just add letter
                 $output .= $letter.' | ';
             }
-            
+
         }
-        
+
         // Text: List All Words
         $listAllName = $this->objLanguage->languageText('mod_glossary_listAllWords', 'glossary');
-        
+
         // Add List all words to string
         $output.=' <a href="'.$this->uri(array('action'=>'viewbyletter','letter'=>'listall'),'glossary').'">'.$listAllName.'</a>';
-        
+
         return $output;
     }
 
