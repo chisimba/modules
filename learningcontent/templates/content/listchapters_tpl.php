@@ -23,8 +23,8 @@ $objIcon->setIcon('delete');
 $deleteIcon = $objIcon->show();
 
 $objIcon->setIcon('add');
-$objIcon->alt = $this->objLanguage->languageText('mod_learningcontent_addanewchapter','learningcontent');
-$objIcon->title = $this->objLanguage->languageText('mod_learningcontent_addanewchapter','learningcontent');
+$objIcon->alt = $this->objLanguage->languageText('mod_learningcontent_txtformulanpicschapter','learningcontent');
+$objIcon->title = $this->objLanguage->languageText('mod_learningcontent_txtformulanpicschapter','learningcontent');
 $addIcon = $objIcon->show();
 
 $objIcon->setIcon('create_page');
