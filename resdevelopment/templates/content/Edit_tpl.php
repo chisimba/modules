@@ -3,44 +3,43 @@
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','ext').'" type="text/javascript"></script>';
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','ext').'" type="text/javascript"></script>';
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','ext').'"/>';
-$groupjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/group.js').'" type="text/javascript"></script>';
+$mainjs = '<script language="JavaScript" src="'.$this->getResourceUri('js/main.js').'" type="text/javascript"></script>';
 
 $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
-$this->appendArrayVar('headerParams', $groupjs);
+$this->appendArrayVar('headerParams', $mainjs);
 
 $objIcon= $this->newObject('geticon','htmlelements');
 
-// we create a link for adding the Groups
+// we create a link for adding the students
 $this->loadclass('link','htmlelements');
-$addGroupUrl = str_replace("amp;", "", $this->uri(array('action'=>'savegroup')));
-$editGroupUrl = str_replace("amp;", "", $this->uri(array('action'=>'editgroup')));
+$addStudentUrl = str_replace("amp;", "", $this->uri(array('action'=>'saveStudent')));
 
-// get the group information data from the database
-$getGroupData = $this->objGroup->getGroupData();
+// get the student information data from the database
+$getStudentData = $this->objStudents->getStudentData();
 
 $data = "[";
-$numRows = count($getGroupData);
+$numRows = count($getStudentData);
 $count = 1;
 
-$editGroup = new link();
-$deleteGroup = new link();
+$editName = new link();
+$deleteName = new link();
 
-// save the Group information in a format that extjs grid will understand.
-foreach($getGroupData as $row) {
+// save the student information in a format that extjs grid will understand.
+foreach($getStudentData as $row) {
     // this is the edit icon
-    $editGroup->link("javascript: goEdit(\'".$editGroupUrl."\',\'".$row['id']."\')");
+    $editName->link("javascript: goEdit(\'".$row['id']."\')");
     $objIcon->setIcon('edit');
-    $editGroup->link=$objIcon->show();
+    $editName->link=$objIcon->show();
 
     // this is the delete icon
-    $deleteGroup->link("javascript: goDelete(\'".$this->uri(array('action'=>'deletegroup','id'=>$row['id']))."\')");
+    $deleteName->link("javascript: goDelete(\'".$this->uri(array('action'=>'deletestudent','id'=>$row['id']))."\')");
     $objIcon->setIcon('delete');
-    $deleteGroup->link=$objIcon->show();
+    $deleteName->link=$objIcon->show();
 
     $data .= "[";
-    $data .= "'".$row['groupname']."', '".$editGroup->show()."', '".$deleteGroup->show()."'";
+    $data .= "'".$row['firstname']." ".$row['lastname']."', '".$editName->show()."', '".$deleteName->show()."'";
     $data .= "]";
 
     if($count != $numRows) {
@@ -58,7 +57,7 @@ $mainjs = "/*!
  * http://www.extjs.com/license
  */
 Ext.onReady(function(){
-    var typeURL='".$addGroupUrl."',
+    var typeURL='".$editStudentUrl."',
         data = ".$data.";
 
     showGrid(typeURL, data);

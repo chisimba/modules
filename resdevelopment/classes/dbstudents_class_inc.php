@@ -34,6 +34,11 @@ class dbstudents extends dbtable {
         $this->insert($data);
     }
 
+    public function editStudentInfo($firstname, $lastname, $id) {
+        $data = array("firstname"=>$firstname, "lastname"=>$lastname, "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
+        $this->update('id', $id, $data);
+    }
+
     public function getStudentData() {
         return $this->getAll();
     }

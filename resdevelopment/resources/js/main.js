@@ -54,7 +54,15 @@ function showGrid(typeURL, myData) {
     grid.render('grid-example');
 }
 
-function addStudent(typeURL) {
+function addStudent() {
+    typeURL = arguments[0];
+    myID = arguments[1];
+    btnText = 'Add';
+    if(typeof(myID) != "undefined") {
+        typeURL = typeURL + "&id=" + myID;
+        btnText = 'Edit';
+    }
+    
     var fileTypeAddForm = [{
         fieldLabel: 'First Name',
         name: 'firstname',
@@ -94,7 +102,7 @@ function addStudent(typeURL) {
             items: myForm,
 
             buttons: [{
-                text: 'Add',
+                text: btnText,
                 handler: function(){
                     if (myForm.url)
                         myForm.getForm().getEl().dom.action = myForm.url;
@@ -112,8 +120,8 @@ function addStudent(typeURL) {
     }
 }
 
-function goEdit(myID) {
-    addStudent(myID);
+function goEdit(typeURL, myID) {
+    addStudent(typeURL, myID);
 }
 
 function goDelete(myURL) {

@@ -120,7 +120,20 @@ class resdevelopment extends controller {
         $this->objStudents->saveStudentInfo($this->getParam('firstname'), $this->getParam('lastname'));
         $this->nextAction("addstudent");
     }
-     public function __savegroup() {
+
+    public function __editstudent() {
+        // save the student info
+        $this->objStudents->editStudentInfo($this->getParam('firstname'), $this->getParam('lastname'), $this->getParam('id'));
+        $this->nextAction("addstudent");
+    }
+
+    public function __editgroup() {
+        // save the student info
+        $this->objGroup->editGroupInfo($this->getParam('groupname'), $this->getParam('id'));
+        $this->nextAction("addgroup");
+    }
+
+    public function __savegroup() {
         // save the group info
         $this->objGroup->saveGroupInfo($this->getParam('groupname'));
         $this->nextAction("addgroup");
@@ -137,5 +150,12 @@ class resdevelopment extends controller {
         $groupID = $this->getParam('id');
         $this->objGroup->deleteGroup($groupID);
         $this->nextAction("addgroup");
+    }
+
+     public function __deletestudent() {
+        // delete group from database
+        $studentID = $this->getParam('id');
+        $this->objStudents->deleteStudent($studentID);
+        $this->nextAction("addstudent");
     }
 }

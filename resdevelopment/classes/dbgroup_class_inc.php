@@ -34,12 +34,22 @@ class dbgroup extends dbtable {
         $this->insert($data);
     }
 
+    public function editGroupInfo($groupname, $id) {
+        $data = array("groupname"=>$groupname, "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
+        $this->update('id', $id, $data);
+    }
+
     public function getGroupData() {
         return $this->getAll();
     }
 
     public function deleteGroup($groupID) {
         $this->delete("id", $groupID);
+    }
+
+    public function editGroup($groupID){
+        $sql="update tbl_resdev_group set groupname=jkshgfjhkgj where id=$groupId";
+        return $this->getAll();
     }
 }
 ?>

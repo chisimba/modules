@@ -54,14 +54,20 @@ function showGrid(typeURL, myData) {
     grid.render('grid-example');
 }
 
-function addGroup(typeURL, xmyID) {
-    //myID = Ext.get(xmyID);
+function addGroup() {
+    typeURL = arguments[0];
+    myID = arguments[1];
+    btnText = 'Add';
+    if(typeof(myID) != "undefined") {
+        typeURL = typeURL + "&id=" + myID;
+        btnText = 'Edit';
+    }
+
     var fileTypeAddForm = [{
         fieldLabel: 'Group Name',
         name: 'groupname',
         id: 'groupname_title',
         allowBlank: false,
-        value: myID,
         width: 250
     }];
 
@@ -90,7 +96,7 @@ function addGroup(typeURL, xmyID) {
             items: myForm,
 
             buttons: [{
-                text: 'Add',
+                text: btnText,
                 handler: function(){
                     if (myForm.url)
                         myForm.getForm().getEl().dom.action = myForm.url;
@@ -108,8 +114,8 @@ function addGroup(typeURL, xmyID) {
     }
 }
 
-function goEdit(myID) {
-    addGroup(myID);
+function goEdit(typeURL, myID) {
+    addGroup(typeURL, myID);
 }
 
 function goDelete(myURL) {

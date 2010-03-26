@@ -14,7 +14,8 @@ $objIcon= $this->newObject('geticon','htmlelements');
 
 // we create a link for adding the students
 $this->loadclass('link','htmlelements');
-$addStudentUrl = str_replace("amp;", "", $this->uri(array('action'=>'saveStudent')));
+$addStudentUrl = str_replace("amp;", "", $this->uri(array('action'=>'savestudent')));
+$editStudentUrl = str_replace("amp;", "", $this->uri(array('action'=>'editstudent')));
 
 // get the student information data from the database
 $getStudentData = $this->objStudents->getStudentData();
@@ -29,12 +30,12 @@ $deleteName = new link();
 // save the student information in a format that extjs grid will understand.
 foreach($getStudentData as $row) {
     // this is the edit icon
-    $editName->link($this->uri(array('action'=>'editname','id'=>$row['id'])));
+    $editName->link("javascript: goEdit(\'".$editStudentUrl."\',\'".$row['id']."\')");
     $objIcon->setIcon('edit');
     $editName->link=$objIcon->show();
 
     // this is the delete icon
-    $deleteName->link("javascript: goDelete(\'".$this->uri(array('action'=>'deletegroup','id'=>$row['id']))."\')");
+    $deleteName->link("javascript: goDelete(\'".$this->uri(array('action'=>'deletestudent','id'=>$row['id']))."\')");
     $objIcon->setIcon('delete');
     $deleteName->link=$objIcon->show();
     
