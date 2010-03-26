@@ -146,6 +146,13 @@ if(!empty($pagepicture)){
    $picid = $hpicture;
    $hpics .= $objFilePreviewFilter->parse('[FILEPREVIEW id="'.$picid.'" comment="'.$picname.'" /]');
   }
+  if(!empty($hpics)){
+   $objPHead = $this->newObject('htmlheading', 'htmlelements');
+	  $wordPicture = $this->objLanguage->languageText('mod_learningcontent_picture','learningcontent');
+  	$objPHead->type = 2;
+  	$objPHead->str = $wordPicture;  
+  	$hpics = $objPHead->show()."<p>".$hpics."</p>"
+  }
  }
 }
 $pageformula = $page['pageformula'];
@@ -160,17 +167,16 @@ if(!empty($pageformula)){
    $hformula .= $objFilePreviewFilter->parse('[FILEPREVIEW id="'.$fmlaid.'" comment="'.$fmlaname.'" /]');
   }
  }
+ if(!empty($hformula)){
+  $objFHead = $this->newObject('htmlheading', 'htmlelements');
+	 $wordFormula = $this->objLanguage->languageText('mod_learningcontent_formula','learningcontent');
+	 $objFHead->type = 2;
+ 	$objFHead->str = $wordFormula; 
+ 	$hformula = $objFHead->show()."<p>".$hformula."</p>";
+ }
 }
- $objPHead = $this->newObject('htmlheading', 'htmlelements');
-	$wordPicture = $this->objLanguage->languageText('mod_learningcontent_picture','learningcontent');
-	$objPHead->type = 2;
-	$objPHead->str = $wordPicture;
- $objFHead = $this->newObject('htmlheading', 'htmlelements');
-	$wordFormula = $this->objLanguage->languageText('mod_learningcontent_formula','learningcontent');
-	$objFHead->type = 2;
-	$objFHead->str = $wordFormula;
 
-$content = $content.$objPHead->show()."<p>".$hpics."</p>".$objFHead->show()."<p>".$hformula."</p>";
+$content = $content.$hpics.$hformula;
 
 $form = "";
 
