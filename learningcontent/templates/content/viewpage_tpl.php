@@ -3,7 +3,8 @@
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
-
+$this->loadClass("htmltable", 'htmlelements');
+    
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_learningcontent_addcontextpages','learningcontent');
 
@@ -137,8 +138,15 @@ if (trim($page['headerscripts']) != '') {
 $objWashout = $this->getObject('washout', 'utilities');
 
 $content = $objWashout->parseText($page['pagecontent']);
-$pagepicture = $page['pagepicture'];
+//Table to hold content pictures and formula in one row but separate columns
+$objTable = new htmltable();
+$objTable->width = '100%';
+$objTable->attributes = " align='center' border='0'";
+$objTable->cellspacing = '12';
+$objTable->startRow();
+$objTable->addCell($content, '50%', 'top', 'left');
 //Get the name of each pagepicture
+$pagepicture = $page['pagepicture'];
 if(!empty($pagepicture)){
  $hpictures = explode(',',$page['pagepicture']);
  $hpics = "<ul>";
@@ -173,8 +181,10 @@ if(!empty($pagepicture)){
   	$objPHead->type = 2;
   	$objPHead->str = $wordPicture;  
   	$hpics = $objPHead->show()."<p>".$hpics."</p>";
+  	$objTable->addCell($hpics, '25%', 'top', 'left');
   }
 }
+//Get the formula id if any
 $pageformula = $page['pageformula'];
 //Get the name of each headerscripts
 if(!empty($pageformula)){
@@ -208,10 +218,12 @@ if(!empty($pageformula)){
 	 $objFHead->type = 2;
  	$objFHead->str = $wordFormula; 
  	$hformula = $objFHead->show()."<p>".$hformula."</p>";
+ 	$objTable->addCell($hformula, '25%', 'top', 'left');
  }
 }
 
-$content = $content.$hpics.$hformula;
+//$content = $content.$hpics.$hformula;
+$content = $objTable->show();
 
 $form = "";
 
