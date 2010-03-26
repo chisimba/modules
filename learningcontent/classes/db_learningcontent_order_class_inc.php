@@ -88,7 +88,7 @@ class db_learningcontent_order extends dbtable
     */
     public function getFirstPage($contextCode)
     {
-        $sql = 'SELECT tbl_learningcontent_order.id, tbl_learningcontent_order.parentid, tbl_learningcontent_pages.menutitle, pagecontent, headerscripts, lft, rght
+        $sql = 'SELECT tbl_learningcontent_order.id, tbl_learningcontent_order.parentid, tbl_learningcontent_pages.menutitle, pagecontent, headerscripts, pagepicture, pageformula, lft, rght
         FROM tbl_learningcontent_order 
         INNER JOIN tbl_learningcontent_titles ON (tbl_learningcontent_order.titleid = tbl_learningcontent_titles.id) 
         INNER JOIN tbl_learningcontent_pages ON (tbl_learningcontent_pages.titleid = tbl_learningcontent_titles.id AND original=\'Y\') 
@@ -111,7 +111,7 @@ class db_learningcontent_order extends dbtable
     */
     public function getFirstChapterPage($contextCode, $chapter)
     {
-        $sql = 'SELECT tbl_learningcontent_order.id, tbl_learningcontent_order.parentid, tbl_learningcontent_pages.menutitle, pagecontent, headerscripts, lft, rght
+        $sql = 'SELECT tbl_learningcontent_order.id, tbl_learningcontent_order.parentid, tbl_learningcontent_pages.menutitle, pagecontent, headerscripts, pagepicture, pageformula, lft, rght
         FROM tbl_learningcontent_order 
         INNER JOIN tbl_learningcontent_titles ON (tbl_learningcontent_order.titleid = tbl_learningcontent_titles.id) 
         INNER JOIN tbl_learningcontent_pages ON (tbl_learningcontent_pages.titleid = tbl_learningcontent_titles.id AND original=\'Y\') 
@@ -136,7 +136,7 @@ class db_learningcontent_order extends dbtable
     */
     public function getPage($pageId, $contextCode)
     {
-        $sql = 'SELECT tbl_learningcontent_order.id, tbl_learningcontent_order.chapterid, tbl_learningcontent_order.parentid,tbl_learningcontent_pages.scorm, tbl_learningcontent_pages.menutitle, pagecontent, headerscripts, lft, rght, tbl_learningcontent_pages.id as pageid, tbl_learningcontent_order.titleid, isbookmarked
+        $sql = 'SELECT tbl_learningcontent_order.id, tbl_learningcontent_order.chapterid, tbl_learningcontent_order.parentid,tbl_learningcontent_pages.scorm, tbl_learningcontent_pages.menutitle, pagecontent, headerscripts, pagepicture, pageformula, lft, rght, tbl_learningcontent_pages.id as pageid, tbl_learningcontent_order.titleid, isbookmarked
         FROM tbl_learningcontent_order 
         INNER JOIN tbl_learningcontent_titles ON (tbl_learningcontent_order.titleid = tbl_learningcontent_titles.id) 
         INNER JOIN tbl_learningcontent_pages ON (tbl_learningcontent_pages.titleid = tbl_learningcontent_titles.id AND original=\'Y\') 

@@ -132,56 +132,45 @@ if (trim($page['headerscripts']) != '') {
 }
 
 
-//$tab = $this->getObject('tabpane','htmlelements');
-//$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
-//echo $tab->show();
-
-/*
-if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid('changebookmark')) {
-    echo '<div style="float: right; background-color: lightyellow; padding: 5px; border: 1px solid #000; margin-top: 10px;">'; 
-    echo '<h5><a href="javascript:togglePageOptions();">'.$this->objLanguage->languageText('mod_learningcontent_pageoptions', 'learningcontent', 'Page Options').'...</a></h5>';
-    echo '<div id="pageoptions" style="display:none">';
-
-    $options = array();
-    
-    if ($this->isValid('editpage')) {
-        $options[] = $editLink->show();
-    }
-    
-    if ($this->isValid('deletepage')) {
-        $options[] = $deleteLink->show();
-    }
-    
-    if ($this->isValid('changebookmark')) {
-        if ($page['isbookmarked'] == 'Y') {
-            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'off\');">'.$this->objLanguage->languageText('mod_learningcontent_removebookmark', 'learningcontent', 'Remove Bookmark').'</a></div>';
-        } else {
-            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'on\');">'.$this->objLanguage->languageText('mod_learningcontent_bookmarkpage', 'learningcontent', 'Bookmark Page').'</a></div>';
-        }
-    }
-    
-    if (count($options) > 0) {
-        $divider = '';
-        foreach ($options as $option)
-        {
-            echo $divider.$option;
-            $divider = '<br />';
-        }
-    }
-
-    
-    echo '</div>';
-    echo '</div>';
-}
-*/
 $objWashout = $this->getObject('washout', 'utilities');
+$objFilePreviewFilter = $this->getObject('parse4filepreview', 'filters');
 $content = $objWashout->parseText($page['pagecontent']);
+$pagepicture = $page['pagepicture'];
+//Get the name of each pagepicture
+if(!empty($pagepicture)){
+ $hpictures = explode(',',$page['pagepicture']);
+ $hpics = "";
+ foreach($hpictures as $hpicture){
+  if(!empty($hpicture)){
+   $picname = $this->objFiles->getFileName($hpicture);
+   $picid = $hpicture;
+   $hpics .= $objFilePreviewFilter->parse('[FILEPREVIEW id="'.$picid.'" comment="'.$picname.'" /]');
+  }
+ }
+}
+$pageformula = $page['pageformula'];
+//Get the name of each headerscripts
+if(!empty($pageformula)){
+ $hformulas = explode(',',$page['pageformula']);
+ $hformula = "";
+ foreach($hformulas as $fmla){
+  if(!empty($fmla)){
+   $fmlaname = $this->objFiles->getFileName($fmla);
+   $fmlaid = $fmla;
+   $hformula .= $objFilePreviewFilter->parse('[FILEPREVIEW id="'.$fmlaid.'" comment="'.$fmlaname.'" /]');
+  }
+ }
+}
+ $objPHead = $this->newObject('htmlheading', 'htmlelements');
+	$wordPicture = $this->objLanguage->languageText('mod_learningcontent_picture','learningcontent');
+	$objPHead->type = 2;
+	$objPHead->str = $wordPicture;
+ $objFHead = $this->newObject('htmlheading', 'htmlelements');
+	$wordFormula = $this->objLanguage->languageText('mod_learningcontent_formula','learningcontent');
+	$objFHead->type = 2;
+	$objFHead->str = $wordFormula;
 
-//echo $content;
-
-//echo '<hr />';
-
-//echo $table->show();
+$content = $content.$objPHead->show()."<p>".$hpics."</p>".$objFHead->show()."<p>".$hformula."</p>";
 
 $form = "";
 

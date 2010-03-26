@@ -70,6 +70,7 @@ if ($mode=='edit') {
     $headerScripts->setDefaultFiles($page['headerscripts']);
 }
 
+
 $label = new label ('<strong>'.$this->objLanguage->languageText('mod_learningcontent_metatags_javascript','learningcontent').'</strong>', 'input_headerscripts');
 
 $jsForHeader = $this->objLanguage->languageText('mod_learningcontent_enterjavascriptmetatags','learningcontent', 'Enter any JavaScript or Meta Tags that you need to be loaded into the [-HEAD-] tags');
