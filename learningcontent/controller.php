@@ -188,9 +188,21 @@ class learningcontent extends controller {
             case 'viewpicorformula':
                 $this->setPageTemplate(NULL);
                 $this->setLayoutTemplate(NULL);
-                return $this->viewImage($this->getParam('imageId'));
+                return $this->viewImage($this->getParam('imageId'));                
                 break;
-            case 'deletepage':
+            case 'imagewindowpopup':
+                $this->setPageTemplate(NULL);
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressIM', TRUE);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressContainer', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $this->appendArrayVar('bodyOnLoad', 'window.focus();');
+                $imgString = $this->viewImage2($this->getParam('imageId'));
+                $this->setVarByRef('imgString', $imgString);
+                return 'viewimage_popup_tpl.php';
+            case 'deletepage':            
                 return $this->deletePage($this->getParam('id'), $this->getParam('context'));
             case 'deletepageconfirm':
                 return $this->deletePageConfirm();

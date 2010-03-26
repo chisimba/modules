@@ -170,8 +170,20 @@ if(!empty($pagepicture)){
    $picdesc = $objIcon->show()." ".$picdesc;
    $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
    $picViewLink->link = $picdesc;
-
-   $hpics .= "<li>".$picViewLink->show()."</li>";
+   $link = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $picid));
+ 		// Load the window popup class
+  	$objPop = $this->newObject('windowpop', 'htmlelements');
+   $objPop->set('location', $link);
+   $objPop->set('linktext', $picdesc);
+   $objPop->set('window_name','forum_attachments');
+   $objPop->set('width','600');
+   $objPop->set('height','400');
+   $objPop->set('left','100');
+   $objPop->set('top','100');
+   $objPop->set('resizable','yes');
+   $objPop->set('scrollbars','yes');
+//   $hpics .= "<li>".$picViewLink->show()."</li>";
+   $hpics .= "<li>".$objPop->show()."</li>";
   }
   $hpics .= "</ul>";
  }
@@ -207,8 +219,21 @@ if(!empty($pageformula)){
    $fmladesc = $objIcon->show()." ".$fmladesc;
    $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
    $fmlaViewLink->link = $fmladesc;
+   $fmlalink = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $fmlaid));
+ 		// Load the window popup class
+  	$objPop = $this->newObject('windowpop', 'htmlelements');
+   $objPop->set('location', $fmlalink);
+   $objPop->set('linktext', $fmladesc);
+   $objPop->set('window_name','forum_attachments');
+   $objPop->set('width','600');
+   $objPop->set('height','400');
+   $objPop->set('left','100');
+   $objPop->set('top','100');
+   $objPop->set('resizable','yes');
+   $objPop->set('scrollbars','yes');
 
-    $hformula .= "<li>".$fmlaViewLink->show()."</li>";
+   //$hformula .= "<li>".$fmlaViewLink->show()."</li>";
+   $hformula .= "<li>".$objPop->show()."</li>";
   }
   $hformula .= "</ol>";
  }
@@ -330,14 +355,33 @@ if(strtolower($this->objSysConfig->getValue('learningcontent_ENABLECOMMENTS', 'l
 	echo '<br/>'.$cform->show();
 }
 if (!empty($imageId)) {
+   $imageName = $this->objFiles->getFileName($imageId);
+   $imageDesc = $this->objFiles->getFileInfo($imageId);
+   if(empty($imageDesc['filedescription'])){
+    $imageDesc = $imageName;
+   }else{
+    $imageDesc = $imageDesc['filedescription'];
+   }
+   $link = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $imageId));
+ 		// Load the window popup class
+  	$objPop = $this->newObject('windowpop', 'htmlelements');
+   $objPop->set('location', $link);
+   $objPop->set('linktext', $imageDesc);
+   $objPop->set('window_name','forum_attachments');
+   $objPop->set('width','600');
+   $objPop->set('height','400');
+   $objPop->set('left','100');
+   $objPop->set('top','100');
+   echo $objPop->show(); 
+
     //$uploadstatus = $this->getParam('status');
     $alertBox = $this->getObject('alertbox', 'htmlelements');
     $alertBox->putJs();
     echo "<script type='text/javascript'>
  var browser=navigator.appName;
  var b_version=parseFloat(b_version);
- if(browser=='Microsoft Internet Explorer'){
-	alert('" .$this->objLanguage->languageText('mod_eportfolio_congratulations', 'eportfolio') . '! ' . $this->objLanguage->languageText('mod_eportfolio_successMessage', 'eportfolio') . "');
+ if(browser!=='Microsoft Internet Explorer'){
+	alert('Kindly use Mozilla');
  }else{
 	 jQuery.facebox(function() {
 	  jQuery.get('" . str_replace('&amp;', '&', $this->uri(array(
