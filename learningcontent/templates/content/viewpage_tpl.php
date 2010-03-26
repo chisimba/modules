@@ -146,14 +146,14 @@ if(!empty($pagepicture)){
    $picid = $hpicture;
    $hpics .= $objFilePreviewFilter->parse('[FILEPREVIEW id="'.$picid.'" comment="'.$picname.'" /]');
   }
+ }
   if(!empty($hpics)){
    $objPHead = $this->newObject('htmlheading', 'htmlelements');
 	  $wordPicture = $this->objLanguage->languageText('mod_learningcontent_picture','learningcontent');
   	$objPHead->type = 2;
   	$objPHead->str = $wordPicture;  
-  	$hpics = $objPHead->show()."<p>".$hpics."</p>"
+  	$hpics = $objPHead->show()."<p>".$hpics."</p>";
   }
- }
 }
 $pageformula = $page['pageformula'];
 //Get the name of each headerscripts
