@@ -186,7 +186,7 @@ $discussionType->setSelected($defaultForum['id']);
 $form->addToForm($discussionType->show());
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('word_submit', 'system'));
-$submitButton>cssClass = 'save';
+$submitButton->cssClass = 'save';
 $submitButton->setToSubmit();
 
 $form->addToForm($submitButton->show());
