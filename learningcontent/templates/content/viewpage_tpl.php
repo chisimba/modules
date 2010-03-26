@@ -2,6 +2,8 @@
 
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_learningcontent_addcontextpages','learningcontent');
 
@@ -133,19 +135,37 @@ if (trim($page['headerscripts']) != '') {
 
 
 $objWashout = $this->getObject('washout', 'utilities');
-$objFilePreviewFilter = $this->getObject('parse4filepreview', 'filters');
+
 $content = $objWashout->parseText($page['pagecontent']);
 $pagepicture = $page['pagepicture'];
 //Get the name of each pagepicture
 if(!empty($pagepicture)){
  $hpictures = explode(',',$page['pagepicture']);
- $hpics = "";
+ $hpics = "<ul>";
  foreach($hpictures as $hpicture){
   if(!empty($hpicture)){
    $picname = $this->objFiles->getFileName($hpicture);
+   $pictype = $this->objFiles->getType($hpicture);
    $picid = $hpicture;
-   $hpics .= $objFilePreviewFilter->parse('[FILEPREVIEW id="'.$picid.'" comment="'.$picname.'" /]');
+   $picdesc = $this->objFiles->getFileInfo($picid);
+   if(empty($picdesc['filedescription'])){
+    $picdesc = $picname;
+   }else{
+    $picdesc = $picdesc['filedescription'];    
+   }
+
+   $picid = $hpicture;
+
+   $objIcon->setIcon($pictype, $type = 'gif', $iconfolder='icons/filetypes/');
+   $objIcon->alt = $picdesc;
+   $objIcon->title = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
+   $picdesc = $objIcon->show()." ".$picdesc;
+   $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
+   $picViewLink->link = $picdesc;
+
+   $hpics .= "<li>".$picViewLink->show()."</li>";
   }
+  $hpics .= "</ul>";
  }
   if(!empty($hpics)){
    $objPHead = $this->newObject('htmlheading', 'htmlelements');
@@ -159,13 +179,28 @@ $pageformula = $page['pageformula'];
 //Get the name of each headerscripts
 if(!empty($pageformula)){
  $hformulas = explode(',',$page['pageformula']);
- $hformula = "";
+ $hformula = "<ul>";
  foreach($hformulas as $fmla){
   if(!empty($fmla)){
    $fmlaname = $this->objFiles->getFileName($fmla);
+   $fmlatype = $this->objFiles->getType($fmla);
    $fmlaid = $fmla;
-   $hformula .= $objFilePreviewFilter->parse('[FILEPREVIEW id="'.$fmlaid.'" comment="'.$fmlaname.'" /]');
+   $fmladesc = $this->objFiles->getFileInfo($fmlaid);
+   if(empty($fmladesc['filedescription'])){
+    $fmladesc = $fmlaname;
+   }else{
+    $fmladesc = $fmladesc['filedescription'];
+   }
+   $objIcon->setIcon($fmlatype, $type = 'gif', $iconfolder='icons/filetypes/');
+   $objIcon->alt = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
+   $objIcon->title = $fmladesc;
+   $fmladesc = $objIcon->show()." ".$fmladesc;
+   $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
+   $fmlaViewLink->link = $fmladesc;
+
+    $hformula .= "<li>".$fmlaViewLink->show()."</li>";
   }
+  $hformula .= "</ol>";
  }
  if(!empty($hformula)){
   $objFHead = $this->newObject('htmlheading', 'htmlelements');
@@ -282,34 +317,24 @@ if(strtolower($this->objSysConfig->getValue('learningcontent_ENABLECOMMENTS', 'l
 	$cform->addToForm($this->objconvButton->show());
 	echo '<br/>'.$cform->show();
 }
-
-/*
-<script type="text/javascript">
-//<![CDATA[
-
-function togglePageOptions()
-{
-    Effect.toggle('pageoptions', 'slide');
-    window.setInterval("adjustLayout();", 200);
-
+if (!empty($imageId)) {
+    //$uploadstatus = $this->getParam('status');
+    $alertBox = $this->getObject('alertbox', 'htmlelements');
+    $alertBox->putJs();
+    echo "<script type='text/javascript'>
+ var browser=navigator.appName;
+ var b_version=parseFloat(b_version);
+ if(browser=='Microsoft Internet Explorer'){
+	alert('" .$this->objLanguage->languageText('mod_eportfolio_congratulations', 'eportfolio') . '! ' . $this->objLanguage->languageText('mod_eportfolio_successMessage', 'eportfolio') . "');
+ }else{
+	 jQuery.facebox(function() {
+	  jQuery.get('" . str_replace('&amp;', '&', $this->uri(array(
+        'action' => 'viewpicorformula','imageId'=>$imageId
+    ))) . "', function(data) {
+	    jQuery.facebox(data);
+	  })
+	 })
+ }
+</script>";
 }
-
-function changeBookmark (type) {
-	var url = 'index.php';
-	var pars = 'module=learningcontent&action=changebookmark&id=<?php echo $page['id']; ?>&type='+type;
-	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showBookmarkResponse} );
-}
-
-function showBookmarkResponse (originalRequest) {
-	var newData = originalRequest.responseText;
-    
-    if (newData != '') {
-        $('bookmarkOptions').innerHTML = newData;
-        adjustLayout();
-    }
-}
-//]]>
-</script>
-*/
-
 ?>

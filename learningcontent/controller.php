@@ -90,7 +90,7 @@ class learningcontent extends controller {
             // Store Context Code
             $this->contextCode = $this->objContext->getContextCode();
 
-
+            $this->objFilePreviewFilter = $this->getObject('parse4filepreview', 'filters');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
             $this->userId = $this->objUser->userId();
@@ -183,6 +183,13 @@ class learningcontent extends controller {
                 return $this->updatePage();
             case 'viewpage':
                 return $this->viewPage($this->getParam('id'));
+            case 'viewpageimage':
+                return $this->viewPage($this->getParam('id'),$this->getParam('imageId'));
+            case 'viewpicorformula':
+                $this->setPageTemplate(NULL);
+                $this->setLayoutTemplate(NULL);
+                return $this->viewImage($this->getParam('imageId'));
+                break;
             case 'deletepage':
                 return $this->deletePage($this->getParam('id'), $this->getParam('context'));
             case 'deletepageconfirm':
@@ -279,8 +286,32 @@ class learningcontent extends controller {
         return 'listchapters_tpl.php';
 
     }
-
-
+    /**
+    *Method to return an image for viewing for jQuery
+    */
+    protected function viewImage($imageId) {
+        $imageName = $this->objFiles->getFileName($imageId);
+        $imageDesc = $this->objFiles->getFileInfo($imageId);
+        if(empty($imageDesc['filedescription'])){
+         $imageDesc = $imageName;
+        }else{
+         $imageDesc = $imageDesc['filedescription'];
+        }
+        echo '<div align="center"><h3>'.$imageDesc.'</h3>'.$this->objFilePreviewFilter->parse('[FILEPREVIEW id="'.$imageId.'" comment="'.$imageName.'" /]')."<br /></div>";
+    }
+    /**
+    *Method to return an image
+    */
+    protected function viewImage2($imageId) {
+        $imageName = $this->objFiles->getFileName($imageId);
+        $imageDesc = $this->objFiles->getFileInfo($imageId);
+        if(empty($imageDesc['filedescription'])){
+         $imageDesc = $imageName;
+        }else{
+         $imageDesc = $imageDesc['filedescription'];
+        }
+        return '<h3>'.$imageDesc.'</h3>'.$this->objFilePreviewFilter->parse('[FILEPREVIEW id="'.$imageId.'" comment="'.$imageName.'" /]')."<br />";
+    }
     /**
      * Method to add a new chapter
      */
@@ -722,12 +753,15 @@ class learningcontent extends controller {
     /**
      * Method to view a page
      * @param string $pageId Record Id of the Page
+     * @param string $imageId Selected Image Id
      */
-    protected  function viewPage($pageId='') {
+    protected  function viewPage($pageId='', $imageId='') {
         if ($pageId == '') {
             return $this->nextAction(NULL);
         }
-		
+        if (!empty($imageId)) {
+		        $this->setVarByRef('imageId', $imageId);
+        }
         $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
         if($page['scorm'] == 'Y') {
             return $this->nextAction('viewscorm',
