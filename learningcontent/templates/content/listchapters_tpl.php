@@ -71,7 +71,7 @@ $imgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/learningcontent/r
 $streamerimg ='<img src="'.$imgPath.'">';
 
 if ($this->isValid('addchapter')) {
-    $link = new link ($this->uri(array('action'=>'addchapter')));
+    $link = new link ($this->uri(array('action'=>'addtfpicschapter')));
     $link->link = $addIcon;
     
     $addChapter = $link->show();
@@ -104,12 +104,12 @@ if ($this->isValid('addchapter')) {
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     $enableOther=$objSysConfig->getValue('ENABLE_JUSTTEXT', 'learningcontent');
 
-    $addOtherChapter =$enableOther == 'true'? $link->show()." ".$tnplink->show()." ".$tnflink->show()." ".$tnfnplink->show():'';
+    //$addOtherChapter =$enableOther == 'true'? $link->show()." ".$tnplink->show()." ".$tnflink->show()." ".$tnfnplink->show():'';
 } else {
     $addOtherChapter = '';
 }
 
-echo '<h1>'.$this->objLanguage->languageText("mod_learningcontent_contextpagesfor",'learningcontent')." ".$this->objContext->getTitle().' '.$addChapter.' '.$addScormChapter.' '.$addOtherChapter.'</h1>';
+echo '<h1>'.$this->objLanguage->languageText("mod_learningcontent_contextpagesfor",'learningcontent')." ".$this->objContext->getTitle().' '.$addChapter.' '.$addScormChapter.'</h1>';
 
 $counter = 1;
 $notVisibleCounter=0;
