@@ -96,7 +96,7 @@ class db_learningcontent_chaptercontent extends dbtable
     * @param string $language Language of the Chapter
     * @return boolean Result of Insert
     */
-    public function addChapter($chapterId, $title, $intro, $picture=Null, $formula=Null, $language)
+    public function addChapter($chapterId, $title, $intro=null, $picture=Null, $formula=Null, $language=null)
     {
         $language=$this->objSysConfig->getValue('LANGUAGE', 'learningcontent');
         if (!$this->checkChapterExists($chapterId, $language)) {
