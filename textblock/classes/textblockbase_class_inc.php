@@ -24,7 +24,7 @@ class textblockbase extends object
     /**
     * Constructor for the class
     */
-    function init()
+    public function init()
     {
     	//Create an instance of the textblock DBtable object
         $this->objDb = $this->getObject("dbtextblock", "textblock");
@@ -33,20 +33,30 @@ class textblockbase extends object
     }
     
     /**
-    * Method to output a block with information on how help works
+    * Method to render the block with the text item
+    * @param string $textItem The content to render
+    * @access public
+    *
     */
-    function setData($textItem)
-	{
-		$ar = $this->objDb->getRow("blockid", $textItem);
-		if (count($ar) > 0 ) {
-		    $this->title = $ar['title'];
+    public function setData($textItem)
+    {
+        $ar = $this->objDb->getRow("blockid", $textItem);
+        if (count($ar) > 0 ) {
+            $this->showTitle = $ar['show_title'];
+            if ($this->showTitle=="1") {
+                $this->title = $ar['title'];
+            } else {
+                $this->title = FALSE;
+            }
+            $this->cssId = $ar['css_id'];
+            $this->cssClass = $ar['css_class'];
             $objWashout = $this->getObject("washout", "utilities");
-		    $this->blockContents = $objWashout->parseText($ar['blocktext']);
-		} else {
-		    $this->title = $textItem;
-		    $this->blockContents = $this->objLanguage->languageText("mod_textblock_nocontent", "textblock");
-		}
-       	return TRUE;
+            $this->blockContents = $objWashout->parseText($ar['blocktext']);
+        } else {
+            $this->title = $textItem;
+            $this->blockContents = $this->objLanguage->languageText("mod_textblock_nocontent", "textblock");
+        }
+        return TRUE;
     }
 }
 ?>

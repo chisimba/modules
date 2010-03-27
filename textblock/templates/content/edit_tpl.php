@@ -80,9 +80,14 @@ if (isset($title)) {
 
 //Checkbox to toggle title display
 $this->loadClass('checkbox', 'htmlelements');
-if ($showTitle == '') {
-	$showTitle = TRUE;
+if (isset($showTitle)) {
+     if ($showTitle == '') {
+	 $showTitle = TRUE;
+     }
+} else {
+    $showTitle = TRUE;
 }
+
 $objCheck = new checkbox('show_title', 'Show title for this block?', $showTitle);
 
 // Create label for blocktext
