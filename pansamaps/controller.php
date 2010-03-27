@@ -130,7 +130,13 @@ class pansamaps extends controller
                 break;
                 
             case 'searchvenues':
+                $this->setVar('pageSuppressSkin', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
                 $term = $this->getParam('keyword');
+                $res = $this->objDbPansa->searchRecords($term);
+                // var_dump($res); die();
+                $this->setVarByRef('results',$res);
+                return 'results_tpl.php';
                 break;
                 
             case 'adddata':

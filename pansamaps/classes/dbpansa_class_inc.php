@@ -164,5 +164,9 @@ class dbpansa extends dbtable {
     
     }
     
+    public function searchRecords($keyword) {
+        return $this->getAll("WHERE venuename LIKE '%%$keyword%%'");
+    }
+    
 }
 ?>

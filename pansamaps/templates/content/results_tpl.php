@@ -14,7 +14,11 @@ $middleColumn = NULL;
 if(isset($message) && !empty($message) && $message != '' && is_object($message)) {
     $middleColumn .= $message->show();
 }
-$middleColumn .= $this->objOps->viewLocMap("-33", "19", $zoom = 15); 
+foreach($results as $res) {
+    var_dump($res);
+}
+
+$middleColumn .= '';
 $middleColumn .= $this->objOps->searchBox(); 
 
 $leftColumn = NULL;
