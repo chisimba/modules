@@ -12,8 +12,8 @@
 	)));
 	$htmlarea = $this->getObject("htmlarea","htmlelements");
 	$htmlarea->init("contents", $contents, 500, 100);
-	$htmlarea->width = '500px';	
-	$form->addToForm($htmlarea->showFCKEditor());
+	$htmlarea->width = '100%';	
+	$form->addToForm($htmlarea->show());
 	$button = new button("submitform", $objLanguage->languageText("word_save"));
 	$button->setToSubmit();
 	$form->addToForm($button->show());
