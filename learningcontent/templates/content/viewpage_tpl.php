@@ -257,9 +257,9 @@ if(!empty($pageformula)){
 
    //$hformula .= "<li>".$fmlaViewLink->show()."</li>";
    $hformula .= "<li>".$objPop->show()."</li>";
-  }
-  $hformula .= "</ol></div>";
+  }  
  }
+ $hformula .= "</ol></div>";
  if(!empty($hformula)){
   $objFHead = $this->newObject('htmlheading', 'htmlelements');
 	 $wordFormula = $this->objLanguage->languageText('mod_learningcontent_formula','learningcontent');
