@@ -48,10 +48,27 @@ class textblockbase extends object
             } else {
                 $this->title = FALSE;
             }
+            $cssId="";
+            $cssClass="";
+            $divEnd ="";
+            $divStart = "";
+            $useDiv = FALSE;
             $this->cssId = $ar['css_id'];
+            if ($this->cssId !== "" && $this->cssId !== NULL) {
+                $cssId = " id='$this->cssId' ";
+                $useDiv = TRUE;
+            }
             $this->cssClass = $ar['css_class'];
+            if ($this->cssClass !==""  && $this->cssClass !== NULL) {
+                $cssClass=" class='$this->cssClass'";
+                $useDiv = TRUE;
+            }
             $objWashout = $this->getObject("washout", "utilities");
-            $this->blockContents = $objWashout->parseText($ar['blocktext']);
+            $ret = $objWashout->parseText($ar['blocktext']);
+            if ($useDiv) {
+                $ret = "<div $cssId $cssClass>$ret</div>";
+            }
+            $this->blockContents = $ret;
         } else {
             $this->title = $textItem;
             $this->blockContents = $this->objLanguage->languageText("mod_textblock_nocontent", "textblock");
