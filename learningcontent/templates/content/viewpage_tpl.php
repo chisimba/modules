@@ -1,5 +1,28 @@
 <?php
+$style = '
+<style type="text/css">
 
+#learningcontentmenu ul  {list-style-type:none; margin-left: -21px;}
+
+#learningcontentmenu li a {
+   color: #4a4949;
+   background-color: #e1e1e1;
+   width: 250px;
+   display: block;
+   padding: 3px 8px;
+   margin-bottom: 3px;
+   }
+   
+#learningcontentmenu li a:hover {
+   color: #fff;
+   background-color: #4d4d4d;
+   width: 250px;
+   display: block;
+   }
+
+</style>
+';
+$this->appendArrayVar('headerParams',$style);
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -149,7 +172,7 @@ $objTable->addCell($content, '50%', 'top', 'left');
 $pagepicture = $page['pagepicture'];
 if(!empty($pagepicture)){
  $hpictures = explode(',',$page['pagepicture']);
- $hpics = "<ul>";
+ $hpics = "<div id='learningcontentmenu'><ul>";
  foreach($hpictures as $hpicture){
   if(!empty($hpicture)){
    $picname = $this->objFiles->getFileName($hpicture);
@@ -185,8 +208,8 @@ if(!empty($pagepicture)){
 //   $hpics .= "<li>".$picViewLink->show()."</li>";
    $hpics .= "<li>".$objPop->show()."</li>";
   }
-  $hpics .= "</ul>";
  }
+  $hpics .= "</ul></div>";
   if(!empty($hpics)){
    $objPHead = $this->newObject('htmlheading', 'htmlelements');
 	  $wordPicture = $this->objLanguage->languageText('mod_learningcontent_picture','learningcontent');
@@ -201,7 +224,7 @@ $pageformula = $page['pageformula'];
 //Get the name of each headerscripts
 if(!empty($pageformula)){
  $hformulas = explode(',',$page['pageformula']);
- $hformula = "<ul>";
+ $hformula = "<div id='learningcontentmenu'><ul>";
  foreach($hformulas as $fmla){
   if(!empty($fmla)){
    $fmlaname = $this->objFiles->getFileName($fmla);
@@ -235,7 +258,7 @@ if(!empty($pageformula)){
    //$hformula .= "<li>".$fmlaViewLink->show()."</li>";
    $hformula .= "<li>".$objPop->show()."</li>";
   }
-  $hformula .= "</ol>";
+  $hformula .= "</ol></div>";
  }
  if(!empty($hformula)){
   $objFHead = $this->newObject('htmlheading', 'htmlelements');
