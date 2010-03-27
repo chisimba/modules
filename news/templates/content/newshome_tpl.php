@@ -116,7 +116,9 @@ if ($this->objUser->isAdmin()) {
 $button = new button ('addmiddleblock', $objLanguage->languageText('mod_prelogin_addblock', 'prelogin', 'Add Block'));
 $button->cssId = 'middlebutton';
 
-$objCssLayout->middleColumnContent = '<div id="middleblocks">'.$middleBlocksStr.'</div>';
+if (isset($middleBlocksStr)) {
+    $objCssLayout->middleColumnContent = '<div id="middleblocks">'.$middleBlocksStr.'</div>';
+}
 $newsheader = new htmlheading();
 $newsheader->type = 1;
 $newsheader->str = $this->objLanguage->languageText('mod_news_latestnews', 'news', 'Latest News');
