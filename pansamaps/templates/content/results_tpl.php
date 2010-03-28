@@ -14,11 +14,25 @@ $middleColumn = NULL;
 if(isset($message) && !empty($message) && $message != '' && is_object($message)) {
     $middleColumn .= $message->show();
 }
-foreach($results as $res) {
-    var_dump($res);
+
+$table = $this->newObject('htmltable', 'htmlelements');
+if(!empty($results)) {
+    foreach($results as $res) {
+        $table->startRow();
+        $table->addCell($res['venuename']);
+        $table->addCell($res['city']);
+        $table->addCell($res['phonecode']." ".$res['phone']);
+        $table->addCell($res['contactperson']);
+        $table->addCell($res['venuedescription']);
+        $table->endRow();    
+    }
+    $middleColumn .= $table->show();
+}
+else {
+    $middlecolumn = "<h1>".$this->objLanguage->languageText("mod_pansamaps_noresults", "pansamaps")."</h1>";
 }
 
-$middleColumn .= '';
+
 $middleColumn .= $this->objOps->searchBox(); 
 
 $leftColumn = NULL;
