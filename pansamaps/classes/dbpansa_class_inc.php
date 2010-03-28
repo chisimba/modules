@@ -160,16 +160,17 @@ class dbpansa extends dbtable {
         return $this->update('id', $id, $data, 'tbl_pansa_venues');
     }
     
-    public function editRecord() {
-    
-    }
-    
     public function deleteRecord($recid) {
         return $this->delete('id', $recid, 'tbl_pansa_venues');
     }
     
     public function searchRecords($keyword) {
-        return $this->getAll("WHERE venuename LIKE '%%$keyword%%'");
+        if($keyword == '*') {
+            return $this->getAll();
+        }
+        else {
+            return $this->getAll("WHERE venuename LIKE '%%$keyword%%'");
+        }
     }
     
     public function getSingle($id) {
