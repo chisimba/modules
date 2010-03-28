@@ -19,6 +19,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 if(!empty($results)) {
     foreach($results as $res) {
         $table->startRow();
+        $table->addCell($res['id']);
         $table->addCell($res['venuename']);
         $table->addCell($res['city']);
         $table->addCell($res['phonecode']." ".$res['phone']);
