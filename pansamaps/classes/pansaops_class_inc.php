@@ -187,6 +187,9 @@ class pansaops extends object {
         $table->startRow();
         $venuename = new textinput('venuename');
         $venuename->size = 15;
+        if (isset($editparams['venuename'])) {
+            $venuename->setValue($editparams['venuename']);
+        }
         $venuenameLabel = new label($this->objLanguage->languageText('venuename', 'pansamaps').'&nbsp;', 'input_venuename');
         $table->addCell($venuenameLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);

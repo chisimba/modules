@@ -129,7 +129,7 @@ class pansamaps extends controller
                 $this->setVar('pageSuppressBanner', TRUE);
                 $recid = $this->getParam('recid');
                 $editparams = $this->objDbPansa->getSingle($recid);
-                $this->setVarByRef('editparams', $editparams);
+                $this->setVarByRef('editparams', $editparams[0]);
                 return 'input_tpl.php';
                 break;
                 
