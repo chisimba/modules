@@ -26,7 +26,8 @@ $this->objH =& $this->getObject('htmlheading', 'htmlelements');
 $this->objH->type=1; //Heading <h1>
 if ($allowAdmin) {
     $paramArray = array('action' => 'add');
-    $this->objH->str=$objLanguage->languageText("mod_userparamsadmin_title",'userparamsadmin')."&nbsp;".$objButtons->linkedButton("add", $this->uri($paramArray));
+    $this->objH->str=$objLanguage->languageText("mod_userparamsadmin_title",'userparamsadmin')
+      ."&nbsp;".$objButtons->linkedButton("add", $this->uri($paramArray));
   } else {  
         $this->objH->str=$objLanguage->languageText("mod_userparamsadmin_title",'userparamsadmin');
        }

@@ -111,7 +111,7 @@ $objElement->setToSubmit();
 $objElement->setValue(' '.$this->objLanguage->languageText("word_save").' ');
 //Create cancel button
 $objCancel = new button('cancel');
-$objCancel->setOnClick("window.location='".$this->uri(NULL)."';");
+$objCancel->setOnClick("window.location='".$this->uri(array())."';");
 $objCancel->setValue(' ' . $this->objLanguage->languageText("mod_userparamsadmin_cancel",'userparamsadmin') . ' ');
 // Add the buttons to the form
 $objForm->addToForm('<br/>&nbsp;'.$objElement->show()."&nbsp;".$objCancel->show().'<br />&nbsp;');
