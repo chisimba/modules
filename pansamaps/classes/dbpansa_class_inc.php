@@ -161,7 +161,7 @@ class dbpansa extends dbtable {
     }
     
     public function deleteRecord($recid) {
-        $this->delete('id', $id, 'tbl_pansa_venues');
+        return $this->delete('id', $recid, 'tbl_pansa_venues');
     }
     
     public function searchRecords($keyword) {
