@@ -18,13 +18,19 @@ if(isset($message) && !empty($message) && $message != '' && is_object($message))
 $table = $this->newObject('htmltable', 'htmlelements');
 if(!empty($results)) {
     foreach($results as $res) {
+        $this->objIcon = $this->getObject('geticon', 'htmlelements');
+		$delIcon = $this->objIcon->getDeleteIconWithConfirm($res['id'], array(
+                 'module' => 'pansamaps',
+                 'action' => 'deleterecord',
+                 'recid' => $res['id']
+               ) , 'pansamaps');
         $table->startRow();
-        $table->addCell($res['id']);
         $table->addCell($res['venuename']);
         $table->addCell($res['city']);
         $table->addCell($res['phonecode']." ".$res['phone']);
         $table->addCell($res['contactperson']);
         $table->addCell($res['venuedescription']);
+        $table->addCell($delIcon);
         $table->endRow();    
     }
     $middleColumn .= $table->show();

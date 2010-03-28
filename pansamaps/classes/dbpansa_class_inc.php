@@ -160,7 +160,7 @@ class dbpansa extends dbtable {
     
     }
     
-    public function deleteRecord() {
+    public function deleteRecord($recid) {
     
     }
     

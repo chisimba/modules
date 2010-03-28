@@ -167,6 +167,11 @@ class pansamaps extends controller
                 $this->objDbPansa->addRecord($dataArray);
                 $this->nextAction('');
                 break;
+                
+            case 'deleterecord':
+                $recid = $this->getParam('recid');
+                $this->objDbPansa->deleteRecord($recid);
+                $this->nextAction('');
                           
             default:
                 $this->nextAction('');
