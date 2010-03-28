@@ -87,7 +87,7 @@ if ($mode=="edit") {
 }
 
 //Add the $pname element to the form
-$objForm->addToForm($pnameLabel->show().": ". $txtToShow ."<br /><br />");
+$objForm->addToForm($pnameLabel->show().": ". $txtToShow ."<br />");
 
 //Create label for the input of ptag
 $ptagLabel = new label($this->objLanguage->languageText("mod_userparamsadmin_pvalue",'userparamsadmin'), "input_ptag");
@@ -97,24 +97,30 @@ $objElement = new textinput ("ptag");
 if (isset($ptag)) {
     $objElement->setValue($ptag);
 }
-$objElement->size="100";
 //Add the $ptag element to the form
 $objForm->addToForm($ptagLabel->show().": ".$objElement->show()."<br />");
+
+$commaWarn = "<div class='warning'>"
+  . $this->objLanguage->languageText("mod_userparams_nocommas",'userparamsadmin')
+  . "</div>";
+$objForm->addToForm($commaWarn);
 
 // Create an instance of the button object
 $this->loadClass('button', 'htmlelements');
 // Create a submit button
-$objElement = new button('submit');	
+$objElement = new button('submit');
+$objElement->setIconClass("save");
 // Set the button type to submit
 $objElement->setToSubmit();	
 // Use the language object to add the word save
 $objElement->setValue(' '.$this->objLanguage->languageText("word_save").' ');
 //Create cancel button
 $objCancel = new button('cancel');
+$objCancel->setIconClass("cancel");
 $objCancel->setOnClick("window.location='".$this->uri(array())."';");
 $objCancel->setValue(' ' . $this->objLanguage->languageText("mod_userparamsadmin_cancel",'userparamsadmin') . ' ');
 // Add the buttons to the form
-$objForm->addToForm('<br/>&nbsp;'.$objElement->show()."&nbsp;".$objCancel->show().'<br />&nbsp;');
-echo $objForm->show();
+$objForm->addToForm('<br/>&nbsp;'.$objElement->show()."&nbsp;".$objCancel->show());
+echo "<div class='standard_form'>" . $objForm->show() . "</div>";
 
 ?>

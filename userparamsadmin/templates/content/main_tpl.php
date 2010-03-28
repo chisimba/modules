@@ -72,7 +72,7 @@ if (isset($ar)) {
             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
             if($key=='creatorId'||$key=='dateCreated'){
             	continue;
-            }else{
+            } else {
 	        $tableRow[] = $key;
                 $tableRow[]= $value;
                 $tableRow[]=$this->objUser->fullName();
@@ -109,13 +109,16 @@ if (isset($ar)) {
 
                     //Add the row to the table for output
                    $this->Table->addRow($tableRow, $oddOrEven);
-                   $tableRow=array(); // clear it out               // Set rowcount for bitwise determination of odd or even
+                   $tableRow=array(); // clear it out
+                   // Set rowcount for bitwise determination of odd or even
                    $rowcount = ($rowcount == 0) ? 1 : 0;
+                   //$tmp++;
                 }
             }
         }
     }
 }
+
 //Add the table to the centered layer
 $this->center->addToStr($this->Table->show());
 // Create link to add template
