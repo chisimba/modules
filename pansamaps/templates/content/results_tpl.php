@@ -18,12 +18,18 @@ if(isset($message) && !empty($message) && $message != '' && is_object($message))
 $table = $this->newObject('htmltable', 'htmlelements');
 if(!empty($results)) {
     foreach($results as $res) {
-        $this->objIcon = $this->getObject('geticon', 'htmlelements');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
 		$delIcon = $this->objIcon->getDeleteIconWithConfirm($res['id'], array(
                  'module' => 'pansamaps',
                  'action' => 'deleterecord',
                  'recid' => $res['id']
                ) , 'pansamaps');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+            'action' => 'editrecords',
+            'id' => $res['id'],
+            'module' => 'pansamaps'
+            )));
         $table->startRow();
         $table->addCell($res['venuename']);
         $table->addCell($res['city']);

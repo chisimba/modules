@@ -165,6 +165,10 @@ class pansaops extends object {
         $iform->addRule('city', $this->objLanguage->languageText("mod_pansamaps_phrase_vcityreq", "pansamaps") , 'required');
         $iform->addRule('geotag', $this->objLanguage->languageText("mod_pansamaps_phrase_georeq", "pansamaps") , 'required');
         $iform->addRule('venueaddress1', $this->objLanguage->languageText("mod_pansamaps_phrase_vaddreq", "pansamaps") , 'required');
+        $iform->addRule('phonecode', $this->objLanguage->languageText("mod_pansamaps_phrase_numeric", "pansamaps") , 'numeric');
+        $iform->addRule('faxcode', $this->objLanguage->languageText("mod_pansamaps_phrase_numeric", "pansamaps") , 'numeric');
+        $iform->addRule('phone', $this->objLanguage->languageText("mod_pansamaps_phrase_numeric", "pansamaps") , 'numeric');
+        $iform->addRule('fax', $this->objLanguage->languageText("mod_pansamaps_phrase_numeric", "pansamaps") , 'numeric');
         $table = $this->newObject('htmltable', 'htmlelements');
         $mtable = $this->newObject('htmltable', 'htmlelements');
         
