@@ -130,6 +130,7 @@ class pansamaps extends controller
                 $recid = $this->getParam('recid');
                 $editparams = $this->objDbPansa->getSingle($recid);
                 $this->setVarByRef('editparams', $editparams);
+                return 'input_tpl.php';
                 break;
                 
             case 'getmapdata':
