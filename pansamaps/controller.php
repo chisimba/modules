@@ -128,7 +128,8 @@ class pansamaps extends controller
                 $this->setVar('pageSuppressSkin', TRUE);
                 $this->setVar('pageSuppressBanner', TRUE);
                 $recid = $this->getParam('recid');
-                
+                $editparams = $this->objDbPansa->getSingle($recid);
+                $this->setVarByRef('editparams', $editparams);
                 break;
                 
             case 'getmapdata':

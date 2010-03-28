@@ -1,28 +1,28 @@
 <?php
 header ( "Content-Type: text/html;charset=utf-8" );
-//$cssLayout = $this->newObject ( 'csslayout', 'htmlelements' );
-//$cssLayout->setNumColumns ( 1 );
+$cssLayout = $this->newObject ( 'csslayout', 'htmlelements' );
+$cssLayout->setNumColumns ( 1 );
 
 // get the sidebar object
-//$this->leftMenu     = $this->newObject ( 'usermenu', 'toolbar' );
-//$this->objDbEvents  = $this->getObject('dbevents');
-//$this->objOps       = $this->getObject('pansaops');
-//$this->objDia       = $this->getObject('jqdialogue', 'htmlelements');
+$this->objOps       = $this->getObject('pansaops');
 
-//$middleColumn = NULL;
+$middleColumn = NULL;
 
-//if(isset($message) && !empty($message) && $message != '' && is_object($message)) {
-//    $middleColumn .= $message->show();
-//}
+if(isset($message) && !empty($message) && $message != '' && is_object($message)) {
+    $middleColumn .= $message->show();
+}
 //$middleColumn .= $this->objOps->viewLocMap("-33", "19", $zoom = 15); 
-//$middleColumn .= $this->objOps->inputForm(); 
-echo $this->objOps->inputForm();
+//$middleColumn .= $this->objOps->inputForm();
+if(!isset($editparams) || empty($editparams)) { 
+    $editparams = NULL;
+}
+echo $this->objOps->inputForm($editparams);
 
-//$leftColumn = NULL;
-//$rightColumn = NULL;
+$leftColumn = NULL;
+$rightColumn = NULL;
 
-//$cssLayout->setMiddleColumnContent ( $middleColumn );
-//$cssLayout->setLeftColumnContent ( $leftColumn );
-//$cssLayout->setRightColumnContent ( $rightColumn );
+$cssLayout->setMiddleColumnContent ( $middleColumn );
+$cssLayout->setLeftColumnContent ( $leftColumn );
+$cssLayout->setRightColumnContent ( $rightColumn );
 
-//echo $cssLayout->show ();
+echo $cssLayout->show ();
