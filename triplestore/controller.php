@@ -63,6 +63,14 @@ class triplestore extends controller
      * @var    object
      */
     protected $objTriplestore;
+    /**
+    *
+    * @var string $objLanguage String object property for holding the
+    * language object
+    * @access public
+    *
+    */
+    public $objLanguage;
 
     /**
      * Standard constructor to load the necessary resources
@@ -73,6 +81,7 @@ class triplestore extends controller
     public function init()
     {
         $this->objTriplestore = $this->getObject('dbtriplestore', 'triplestore');
+        $this->objLanguage = $this->getObject('language', 'language');
     }
 
     /**
@@ -80,7 +89,41 @@ class triplestore extends controller
      *
      * @access public
      */
+    public function olddispatch()
+    {
+        $filters     = array();
+        $filterTypes = array('subject', 'predicate', 'object');
+
+        foreach ($filterTypes as $filterType) {
+            $filter = $this->getParam($filterType);
+            if ($filter) {
+                $filters[$filterType] = $filter;
+            }
+        }
+
+        $nestedTriples = $this->objTriplestore->getNestedTriples($filters);
+
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($nestedTriples);
+    }
+
     public function dispatch()
+    {
+        // Get action from query string and set default to view.
+        $action=$this->getParam('action', 'view');
+        // Convert the action into a method.
+        $method = $this->__getMethod($action);
+        // Return the template determined by the action.
+        return $this->$method();
+    }
+
+    /**
+    *
+    * Method corresponding to the view action.
+    * @access private
+    *
+    */
+    private function __view()
     {
         $filters     = array();
         $filterTypes = array('subject', 'predicate', 'object');
@@ -99,15 +142,131 @@ class triplestore extends controller
     }
 
     /**
+    *
+    * Method corresponding to the edit action. It sets the mode to
+    * edit and returns the edit template.
+    * @access private
+    *
+    */
+    private function __edit()
+    {
+        $this->setvar('mode', "edit");
+        return 'editform_tpl.php';
+    }
+
+    /**
+    *
+    * Method corresponding to the add action. It sets the mode to
+    * add and returns the edit content template.
+    * @access private
+    *
+    */
+    private function __add()
+    {
+        $this->setvar('mode', 'add');
+        return 'editform_tpl.php';
+    }
+
+    /**
+    *
+    * Method corresponding to the save action. 
+    *
+    * @access private
+    *
+    */
+    private function __save()
+    {
+        $mode = $this->getParam("mode", NULL);
+        $subject = $this->getParam('subject', NULL);
+        $predicate = $this->getParam('predicate', NULL);
+        $tripobject = $this->getParam('tripobject', NULL);
+        if ($mode=="edit") {
+            $id = $this->getParam('id', NULL);
+            die("EDIT");
+            // Update the existing record
+            //@todo
+        } else {
+            die($this->objTriplestore->insert($subject, $predicate, $tripobject));
+        }
+        return $this->nextAction(NULL);
+    }
+
+    /**
+    *
+    * Method to return an error when the action is not a valid
+    * action method
+    *
+    * @access private
+    * @return string The dump template populated with the error message
+    *
+    */
+    private function __actionError()
+    {
+        $this->setVar('str', "<h3>"
+          . $this->objLanguage->languageText("phrase_unrecognizedaction")
+          .": " . $this->getParam('action', NULL) . "</h3>");
+        return 'dump_tpl.php';
+    }
+
+    /**
+    *
+    * Method to check if a given action is a valid method
+    * of this class preceded by double underscore (__). If it __action
+    * is not a valid method it returns FALSE, if it is a valid method
+    * of this class it returns TRUE.
+    *
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return boolean TRUE|FALSE
+    *
+    */
+    function __validAction(& $action)
+    {
+        if (method_exists($this, "__".$action)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+    *
+    * Method to convert the action parameter into the name of
+    * a method of this class.
+    *
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return stromg the name of the method
+    *
+    */
+    function __getMethod(& $action)
+    {
+        if ($this->__validAction($action)) {
+            return "__" . $action;
+        } else {
+            return "__actionError";
+        }
+    }
+
+    /**
      * Overide the login object in the parent class.
      *
      * @access public
      * @param  string $action The name of the action
      * @return bool
      */
-    public function requiresLogin($action)
+    public function requiresLogin()
     {
-        return FALSE;
+        $action=$this->getParam('action','NULL');
+        switch ($action)
+        {
+            case 'view':
+                return FALSE;
+                break;
+            default:
+                return TRUE;
+                break;
+        }
     }
 }
 
