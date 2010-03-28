@@ -228,6 +228,7 @@ class pansaops extends object {
         $table->startRow();
         $phonecode = new textinput('phonecode');
         $phonecode->size = 3;
+        $phonecode->extra = 'maxlength = "3"';
         $phone = new textinput('phone');
         $phone->size = 15;
         $phonecodeLabel = new label($this->objLanguage->languageText('phone', 'pansamaps').'&nbsp;', 'input_phonecode');
@@ -239,6 +240,7 @@ class pansaops extends object {
         $table->startRow();
         $faxcode = new textinput('faxcode');
         $faxcode->size = 3;
+        $faxcode->extra = 'maxlength = "3"';
         $fax = new textinput('fax');
         $fax->size = 15;
         $faxcodeLabel = new label($this->objLanguage->languageText('fax', 'pansamaps').'&nbsp;', 'input_faxcode');
@@ -262,7 +264,7 @@ class pansaops extends object {
         $urlLabel = new label($this->objLanguage->languageText('url', 'pansamaps').'&nbsp;', 'input_url');
         $table->addCell($urlLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($url->show());
+        $table->addCell("http://".$url->show());
         $table->endRow();
         
         $table->startRow();
