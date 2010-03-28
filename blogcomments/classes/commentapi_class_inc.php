@@ -139,7 +139,7 @@ class commentapi extends object
 			$comm->height = 400;
 			$comm->width = "100%";
 			$comm->setBasicToolBar();
-			$ctbl->addCell($comm->showFCKEditor());
+			$ctbl->addCell($comm->show());
 		}
 		else {
 			$comm = new textarea;
