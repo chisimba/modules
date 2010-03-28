@@ -148,6 +148,37 @@ class pansamaps extends controller
                 return 'results_tpl.php';
                 break;
                 
+            case 'updatedata':
+                $id = $this->getParam('id');
+                $geotag = $this->getParam('geotag');
+                $geo = explode(",  ", $geotag);
+                $geolat = $geo[0];
+                $geolon = $geo[1];
+                $venuename = $this->getParam('venuename');
+                $venueaddress1 = $this->getParam('venueaddress1');
+                $venueaddress2 = $this->getParam('venueaddress2');
+                $city = $this->getParam('city');
+                $zip = $this->getParam('zip');
+                $phonecode = $this->getParam('phonecode');
+                $phone = $this->getParam('phone');
+                $faxcode = $this->getParam('faxcode');
+                $fax = $this->getParam('fax');
+                $email = $this->getParam('email');
+                $url = $this->getParam('url');
+                $contactperson = $this->getParam('contactperson');
+                $otherinfo = $this->getParam('otherinfo');
+                $venuedescription = $this->getParam('venuedescription');
+                $venuelocation = $this->getParam('venuelocation');
+                
+                $dataArray = array('venuename' => $venuename, 'venueaddress1' => $venueaddress1, 'venueaddress2' => $venueaddress2, 'city' => $city,
+                                   'zip' => $zip, 'phonecode' => $phonecode, 'phone' => $phone, 'faxcode' => $faxcode, 'fax' => $fax,'email' => $email,
+                                   'url' => $url, 'contactperson' => $contactperson, 'otherinfo' => $otherinfo, 'venuedescription' => $venuedescription,
+                                   'geolat' => $geolat, 'geolon' => $geolon, 'venuelocation' => $venuelocation, );
+                $this->objDbPansa->updateRecord($id, $dataArray);
+                $this->nextAction('');
+                break;
+                
+                
             case 'adddata':
                 $geotag = $this->getParam('geotag');
                 $geo = explode(",  ", $geotag);

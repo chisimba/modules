@@ -161,6 +161,12 @@ class pansaops extends object {
         $iform = new form('iform', $this->uri(array(
             'action' => 'adddata',
         )));
+        if (isset($editparams)) {
+            $iform = new form('iform', $this->uri(array(
+                'action' => 'updatedata', 'id' => $editparams['id'],
+            )));
+        }
+        
         $iform->addRule('venuename', $this->objLanguage->languageText("mod_pansamaps_phrase_vnamereq", "pansamaps") , 'required');
         $iform->addRule('city', $this->objLanguage->languageText("mod_pansamaps_phrase_vcityreq", "pansamaps") , 'required');
         $iform->addRule('geotag', $this->objLanguage->languageText("mod_pansamaps_phrase_georeq", "pansamaps") , 'required');

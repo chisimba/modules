@@ -156,6 +156,10 @@ class dbpansa extends dbtable {
         $this->insert($data, 'tbl_pansa_venues');
     }
     
+    public function updateRecord($id, $data) {
+        return $this->update('id', $id, $data, 'tbl_pansa_venues');
+    }
+    
     public function editRecord() {
     
     }
