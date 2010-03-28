@@ -199,6 +199,9 @@ class pansaops extends object {
         $table->startRow();
         $venueaddress1 = new textinput('venueaddress1');
         $venueaddress1->size = 15;
+        if (isset($editparams['venueaddress1'])) {
+            $venueaddress1->setValue($editparams['venueaddress1']);
+        }
         $venueaddress1Label = new label($this->objLanguage->languageText('venueaddress1', 'pansamaps').'&nbsp;', 'input_venueaddress1');
         $table->addCell($venueaddress1Label->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -208,6 +211,9 @@ class pansaops extends object {
         $table->startRow();
         $venueaddress2 = new textinput('venueaddress2');
         $venueaddress2->size = 15;
+        if (isset($editparams['venueaddress2'])) {
+            $venueaddress2->setValue($editparams['venueaddress2']);
+        }
         $venueaddress2Label = new label($this->objLanguage->languageText('venueaddress2', 'pansamaps').'&nbsp;', 'input_venueaddress2');
         $table->addCell($venueaddress2Label->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -217,6 +223,9 @@ class pansaops extends object {
         $table->startRow();
         $city = new textinput('city');
         $city->size = 15;
+        if (isset($editparams['city'])) {
+            $city->setValue($editparams['city']);
+        }
         $cityLabel = new label($this->objLanguage->languageText('city', 'pansamaps').'&nbsp;', 'input_city');
         $table->addCell($cityLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -226,6 +235,9 @@ class pansaops extends object {
         $table->startRow();
         $zip = new textinput('zip');
         $zip->size = 15;
+        if (isset($editparams['zip'])) {
+            $zip->setValue($editparams['zip']);
+        }
         $zipLabel = new label($this->objLanguage->languageText('zip', 'pansamaps').'&nbsp;', 'input_zip');
         $table->addCell($zipLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -238,6 +250,12 @@ class pansaops extends object {
         $phonecode->extra = 'maxlength = "3"';
         $phone = new textinput('phone');
         $phone->size = 15;
+        if (isset($editparams['phonecode'])) {
+            $phonecode->setValue($editparams['phonecode']);
+        }
+        if (isset($editparams['phone'])) {
+            $phone->setValue($editparams['phone']);
+        }
         $phonecodeLabel = new label($this->objLanguage->languageText('phone', 'pansamaps').'&nbsp;', 'input_phonecode');
         $table->addCell($phonecodeLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -250,6 +268,12 @@ class pansaops extends object {
         $faxcode->extra = 'maxlength = "3"';
         $fax = new textinput('fax');
         $fax->size = 15;
+        if (isset($editparams['faxcode'])) {
+            $faxcode->setValue($editparams['faxcode']);
+        }
+        if (isset($editparams['fax'])) {
+            $fax->setValue($editparams['fax']);
+        }
         $faxcodeLabel = new label($this->objLanguage->languageText('fax', 'pansamaps').'&nbsp;', 'input_faxcode');
         $table->addCell($faxcodeLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -259,6 +283,9 @@ class pansaops extends object {
         $table->startRow();
         $email = new textinput('email');
         $email->size = 15;
+        if (isset($editparams['email'])) {
+            $email->setValue($editparams['email']);
+        }
         $emailLabel = new label($this->objLanguage->languageText('emailaddr', 'pansamaps').'&nbsp;', 'input_email');
         $table->addCell($emailLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -268,6 +295,9 @@ class pansaops extends object {
         $table->startRow();
         $url = new textinput('url');
         $url->size = 15;
+        if (isset($editparams['url'])) {
+            $url->setValue($editparams['url']);
+        }
         $urlLabel = new label($this->objLanguage->languageText('url', 'pansamaps').'&nbsp;', 'input_url');
         $table->addCell($urlLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -277,6 +307,9 @@ class pansaops extends object {
         $table->startRow();
         $contactperson = new textinput('contactperson');
         $contactperson->size = 15;
+        if (isset($editparams['contactperson'])) {
+            $contactperson->setValue($editparams['contactperson']);
+        }
         $contactpersonLabel = new label($this->objLanguage->languageText('contactperson', 'pansamaps').'&nbsp;', 'input_contactperson');
         $table->addCell($contactpersonLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -286,6 +319,9 @@ class pansaops extends object {
         $table->startRow();
         $otherinfo = new textinput('otherinfo');
         $otherinfo->size = 15;
+        if (isset($editparams['otherinfo'])) {
+            $otherinfo->setValue($editparams['otherinfo']);
+        }
         $otherinfoLabel = new label($this->objLanguage->languageText('otherinfo', 'pansamaps').'&nbsp;', 'input_otherinfo');
         $table->addCell($otherinfoLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -295,6 +331,9 @@ class pansaops extends object {
         $table->startRow();
         $venuedescription = new textinput('venuedescription');
         $venuedescription->size = 15;
+        if (isset($editparams['venuedescription'])) {
+            $venuedescription->setValue($editparams['venuedescription']);
+        }
         $venuedescriptionLabel = new label($this->objLanguage->languageText('venuedescription', 'pansamaps').'&nbsp;', 'input_venuedescription');
         $table->addCell($venuedescriptionLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -321,8 +360,14 @@ class pansaops extends object {
         
         $t = $mtable->show().$table->show();
         $iform->addToForm($t);
-        $this->objsTButton = new button($this->objLanguage->languageText('word_add', 'system'));
-        $this->objsTButton->setValue($this->objLanguage->languageText('word_add', 'system'));
+        if (isset($editparams)) {
+            $this->objsTButton = new button($this->objLanguage->languageText('word_update', 'system'));
+            $this->objsTButton->setValue($this->objLanguage->languageText('word_update', 'system'));
+        }
+        else {
+            $this->objsTButton = new button($this->objLanguage->languageText('word_add', 'system'));
+            $this->objsTButton->setValue($this->objLanguage->languageText('word_add', 'system'));
+        }
         $this->objsTButton->setToSubmit();
         $iform->addToForm($this->objsTButton->show());
         $iform = $iform->show();
