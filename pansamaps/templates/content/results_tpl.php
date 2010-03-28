@@ -27,7 +27,7 @@ if(!empty($results)) {
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $edIcon = $this->objIcon->getEditIcon($this->uri(array(
             'action' => 'editrecords',
-            'id' => $res['id'],
+            'recid' => $res['id'],
             'module' => 'pansamaps'
             )));
         $table->startRow();
@@ -36,7 +36,7 @@ if(!empty($results)) {
         $table->addCell($res['phonecode']." ".$res['phone']);
         $table->addCell($res['contactperson']);
         $table->addCell($res['venuedescription']);
-        $table->addCell($delIcon);
+        $table->addCell($edIcon." ".$delIcon);
         $table->endRow();    
     }
     $middleColumn .= $table->show();

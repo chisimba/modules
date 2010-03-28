@@ -124,6 +124,13 @@ class pansamaps extends controller
                 return 'input_tpl.php';
                 break;
                 
+            case 'editrecords':
+                $this->setVar('pageSuppressSkin', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $recid = $this->getParam('recid');
+                
+                break;
+                
             case 'getmapdata':
                 header('Content-type: text/xml');
                 echo $this->objDbPansa->getData();
