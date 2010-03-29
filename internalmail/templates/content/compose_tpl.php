@@ -147,7 +147,10 @@ $objIcon->extra=' onclick="javascript:
     $(\'form_composeform\').action=\''.$action.'\';
     $(\'form_composeform\').submit();"';
 $addressIcon='<a href="#">'.$objIcon->show().'</a>';
-
+$str = ' onclick="javascript:
+    $(\'form_composeform\').action=\''.$action.'\';
+    $(\'form_composeform\').submit();"';
+error_log(var_export($str, true));
 // set up search fieldset
 $objTable = new htmltable();
 $objTable->cellpadding = '4';
