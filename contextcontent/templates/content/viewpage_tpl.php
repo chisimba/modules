@@ -224,7 +224,10 @@ else {
   echo $topTable->show().$content.'<hr />'.$table->show().$form;
 }
 
-if(strtolower($this->objSysConfig->getValue('CONTEXTCONTENT_ENABLECOMMENTS', 'contextcontent')) == 'true')
+//Check if comments are allowed for this course
+$showcomment = $this->objContext->getField('showcomment', $contextCode = NULL);
+
+if($showcomment==1)
 {
 	$head = $this->objLanguage->languageText('mod_contextcontent_word_comment','contextcontent');
 	$objHead->type = 1;
