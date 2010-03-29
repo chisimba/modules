@@ -10,6 +10,7 @@ package org.wits.client;
  * @author davidwaf
  */
 public class Constants {
-public static final String MAIN_URL_PATTERN="";//  "wicid/chisimba";
+public static final String MAIN_URL_PATTERN="wicid/chisimba";
+public static Main main;
 
 }

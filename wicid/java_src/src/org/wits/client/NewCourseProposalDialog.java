@@ -37,6 +37,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 import java.util.Date;
+import org.wits.client.ads.OverView;
 
 /**
  *
@@ -53,17 +54,22 @@ public class NewCourseProposalDialog {
     private final TextField<String> deptField = new TextField<String>();
     private final TextField<String> telField = new TextField<String>();
     private final TextField<String> numberField = new TextField<String>();
-    private Button saveButton = new Button("Save");
+    private Button saveButton = new Button("Next");
     private Button browseTopicsButton = new Button("Browse Faculties");
     private FormPanel uploadpanel = new FormPanel();
     private Button uploadButton = new Button("Upload Proposal");
     private TextArea topicField = new TextArea();
     private TopicListingFrame topicListingFrame;
     private ModelData selectedFolder;
-    private Main main;
+    private OverView oldOverView;
     
-    public NewCourseProposalDialog(Main main) {
-        this.main=main;
+    public NewCourseProposalDialog() {
+        
+        createUI();
+    }
+
+    public NewCourseProposalDialog(OverView oldOverView) {
+        this.oldOverView = oldOverView;
         createUI();
     }
 
@@ -136,7 +142,7 @@ public class NewCourseProposalDialog {
                 if (topicListingFrame == null) {
                     topicListingFrame = new TopicListingFrame(NewCourseProposalDialog.this);
                     topicListingDialog.setBodyBorder(false);
-                    topicListingDialog.setHeading("Topic Listing");
+                    topicListingDialog.setHeading("Faculty Listing");
                     topicListingDialog.setWidth(700);
                     topicListingDialog.setHeight(350);
                     topicListingDialog.setHideOnButtonClick(true);
@@ -172,7 +178,7 @@ public class NewCourseProposalDialog {
         uploadpanel.setHeading("File Upload");
         uploadpanel.setFrame(true);
         uploadpanel.setAction(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=doupload&docname=");
+                + "?module=dms&action=doupload&docname=");
         uploadpanel.setEncoding(Encoding.MULTIPART);
         uploadpanel.setMethod(Method.POST);
         uploadpanel.setButtonAlign(HorizontalAlignment.CENTER);
@@ -192,7 +198,7 @@ public class NewCourseProposalDialog {
                 w.setMaximizable(true);
                 w.setToolTip("Upload file");
                 w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=uploadfile&docname=");
+                        + "?module=dms&action=uploadfile&docname=");
                 w.show();
 
             }
@@ -243,11 +249,11 @@ public class NewCourseProposalDialog {
                 String topic = (String) selectedFolder.get("id");
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=createproposal&date=" + fmt.format(date)
+                        + "?module=dms&action=createproposal&date=" + fmt.format(date)
                         + "&department=" + dept + "&telephone=" + telephone
-                        + "&topic=" + topic + "&title=" + title+"&mode="+main.getMode();
-                updateDocument(url);
-
+                        + "&topic=" + topic + "&title=" + title+"&mode="+Constants.main.getMode();
+             //   updateDocument(url);
+              createProposal();
 
             }
         });
@@ -273,8 +279,29 @@ public class NewCourseProposalDialog {
         newDocumentDialog.show();
     }
 
+    public void setOldOverView(OverView oldOverView) {
+        this.oldOverView = oldOverView;
+    }
+
+    public TextField<String> getTitleField() {
+        return titleField;
+    }
+
+    private void createProposal(){
+
+        if (oldOverView == null){
+            OverView overView = new OverView(this);
+            overView.show();
+            newDocumentDialog.hide();
+        }
+        else{
+            oldOverView.show();
+            newDocumentDialog.hide();
+
+        }
+    }
     private void setDepartment() {
-        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=getdepartment";
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=dms&action=getdepartment";
 
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, url);

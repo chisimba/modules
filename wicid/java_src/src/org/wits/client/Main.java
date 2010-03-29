@@ -56,6 +56,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 
 import java.util.List;
+import org.wits.client.ads.*;
 
 /**
  * Main entry point.
@@ -91,15 +92,23 @@ public class Main {
     private MenuItem downloadFileMenuItem = new MenuItem();
     private MenuItem editMenuItem = new MenuItem();
     private NewDocumentDialog newDocumentDialog;
+    private OverView overView;
+    private RulesAndSyllabusOne rulesAndSyllabusOne;
+    private RulesAndSyllabusTwo rulesAndSyllabusTwo;
+    private Resources newResourcesForm;
+    private CollaborationAndContracts newContractsForm;
+    private Review newReviewForm;
+    private ContactDetails newContactDetailsForm;
     private DocumentListPanel documentListPanel;
     private TabPanel tab = new TabPanel();
-    private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
+    private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=dms&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
     private NewCourseProposalDialog newCourseProposalDialog;
     private String mode = "default";
     private boolean admin = false;
     private TextField<String> searchField = new TextField<String>();
     private Button searchButton = new Button("Search");
+    private Main thisInstance;
 
     /**
      * Creates a new instance of Main
@@ -114,8 +123,8 @@ public class Main {
         container.setHeight(Window.getClientHeight());
         container.setBorders(false);
         container.setLayout(new BorderLayout());
-
-
+        this.thisInstance = this;
+        Constants.main=thisInstance;
         treeFieldtype.setRecordName("item");
         treeFieldtype.setRoot("items");
         treeFieldtype.addField("id", "@id");
@@ -130,7 +139,7 @@ public class Main {
         ToolBar toolBar = new ToolBar();
 
         newFolderButton.setIconStyle("folderadd");
-        newFolderButton.setEnabled(false);
+        //newFolderButton.setEnabled(false);
         newFolderButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
@@ -151,10 +160,6 @@ public class Main {
             }
         });
         toolBar.add(newFolderButton);
-        toolBar.add(refreshFolders);
-        west.setTopComponent(toolBar);
-        west.setHeading("Topic Index");
-
 
         BorderLayoutData westData = new BorderLayoutData(LayoutRegion.WEST, Window.getClientWidth() / 4, 100, 600);
         westData.setMargins(new Margins(5, 0, 5, 5));
@@ -169,7 +174,7 @@ public class Main {
         type2.addField("text", "text");
         type2.addField("thumbnailpath", "thumbnailpath");
 
-        RequestBuilder builder2 = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + "?module=wicid&action=getFiles");
+        RequestBuilder builder2 = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + "?module=dms&action=getFiles");
         HttpProxy<String> proxy2 = new HttpProxy<String>(builder2);
 
         // need a loader, proxy, and reader
@@ -205,18 +210,20 @@ public class Main {
                 newDocumentDialog.show();
             }
         });
+
         newCourseProposalButton.setIconStyle("addform");
         newCourseProposalButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
                 if (newCourseProposalDialog == null) {
-                    newCourseProposalDialog = new NewCourseProposalDialog(Main.this);
+                    newCourseProposalDialog = new NewCourseProposalDialog();
                 }
                 newCourseProposalDialog.show();
             }
         });
         newDocumentButton.setIconStyle("upload");
+
         folderUserButton.setEnabled(false);
         folderUserButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
@@ -258,6 +265,11 @@ public class Main {
         unapprovedDocsButton.setEnabled(false);
         unapprovedDocsButton.setIconStyle("docs");
 
+        toolBar.add(refreshFolders);
+        west.setTopComponent(toolBar);
+        west.setHeading("Topic Index");
+
+
         searchButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
@@ -272,17 +284,14 @@ public class Main {
                 }
             }
         });
+
         searchButton.setIconStyle("search");
         toolBar2.add(newDocumentButton);
         toolBar2.add(newCourseProposalButton);
-        // toolBar2.add(folderUserButton);
-        // toolBar2.add(fileExtButton);
         toolBar2.add(new SeparatorToolItem());
         toolBar2.add(new Label("Search"));
         toolBar2.add(searchField);
         toolBar2.add(searchButton);
-
-
         center.setTopComponent(toolBar2);
 
         loader2.load();
@@ -462,7 +471,7 @@ public class Main {
         type2.addField("filesize", "filesize");
         type2.addField("refno", "refno");
         type2.addField("group", "group");
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=getFiles&node=" + currentPath);
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=dms&action=getFiles&node=" + currentPath);
         HttpProxy<String> proxy = new HttpProxy<String>(builder);
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type2);
         final BaseListLoader<ListLoadResult<ModelData>> loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
@@ -489,7 +498,7 @@ public class Main {
         type2.addField("filesize", "filesize");
         type2.addField("refno", "refno");
         type2.addField("group", "group");
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=searchfiles&filter=" + filter);
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=dms&action=searchfiles&filter=" + filter);
         HttpProxy<String> proxy = new HttpProxy<String>(builder);
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type2);
         final BaseListLoader<ListLoadResult<ModelData>> loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
@@ -522,7 +531,7 @@ public class Main {
     private void createNewFolder(String folderName) {
         String url =
                 GWT.getHostPageBaseURL()
-                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=createfolder&foldername=" + folderName + "&folderpath=" + currentPath;
+                + Constants.MAIN_URL_PATTERN + "?module=dms&action=createfolder&foldername=" + folderName + "&folderpath=" + currentPath;
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, url);
 
@@ -551,7 +560,7 @@ public class Main {
     private void doActualFolderDelete() {
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
-                + "?module=wicid&action=deletefolder&folderpath=" + currentPath);
+                + "?module=dms&action=deletefolder&folderpath=" + currentPath);
 
         try {
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -598,7 +607,7 @@ public class Main {
 
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
-                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=determinepermissions");
+                + Constants.MAIN_URL_PATTERN + "?module=dms&action=determinepermissions");
 
         try {
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -629,12 +638,12 @@ public class Main {
                             newFolderButton.setEnabled(true);
                             unapprovedDocsButton.setEnabled(true);
                         }
-                        if (mode.equalsIgnoreCase("apo")) {
-                            newDocumentButton.setEnabled(false);
-                            docsTab.setEnabled(false);
+                        /*if (mode.equalsIgnoreCase("apo")) {
+                        newDocumentButton.setEnabled(false);
+                        docsTab.setEnabled(false);
                         } else {
-                            newCourseProposalButton.setEnabled(false);
-                        }
+                        newCourseProposalButton.setEnabled(false);
+                        }*/
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot determine your permissions", null);
                     }
@@ -648,7 +657,7 @@ public class Main {
     private void downloadFile() {
 
         String url = GWT.getHostPageBaseURL()
-                + "?module=wicid&action=downloadfile&filename=" + currentPath + "/" + selectedFile.get("text");
+                + "?module=dms&action=downloadfile&filename=" + currentPath + "/" + selectedFile.get("text");
 
         Window.Location.assign(url);
     }
@@ -709,7 +718,7 @@ public class Main {
 
         newFolderMenuItem.setText("New Topic");
         newFolderMenuItem.setIconStyle("folderadd");
-        newFolderButton.setEnabled(false);
+        //newFolderButton.setEnabled(false);
         newFolderMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
             public void componentSelected(MenuEvent ce) {
