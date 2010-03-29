@@ -314,7 +314,12 @@ else {
   echo $topTable->show().$content.'<hr />'.$table->show().$form;
 }
 
-if(strtolower($this->objSysConfig->getValue('learningcontent_ENABLECOMMENTS', 'learningcontent')) == 'true')
+//Check if comments are allowed for this course
+$showcomment = $this->objContext->getField('showcomment', $contextCode = NULL);
+var_dump($showcomment);
+
+//if(strtolower($this->objSysConfig->getValue('learningcontent_ENABLECOMMENTS', 'learningcontent')) == 'true')
+if($showcomment==1)
 {
 	$head = $this->objLanguage->languageText('mod_learningcontent_word_comment','learningcontent');
 	$objHead->type = 1;
