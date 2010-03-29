@@ -168,6 +168,23 @@ $objTable->attributes = " align='center' border='0'";
 $objTable->cellspacing = '12';
 $objTable->startRow();
 $objTable->addCell($content, '50%', 'top', 'left');
+
+//Get the browser in use
+$browsers = array("firefox", "msie", "opera", "chrome", "safari",
+                    "mozilla", "seamonkey",    "konqueror", "netscape",
+                    "gecko", "navigator", "mosaic", "lynx", "amaya",
+                    "omniweb", "avant", "camino", "flock", "aol");
+
+$this->Agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+foreach($browsers as $browser)
+{
+    if (preg_match("#($browser)[/ ]?([0-9.]*)#", $this->Agent, $match))
+    {
+        $Name = $match[1] ;
+        $Version = $match[2] ;
+        break ;
+    }
+} 
 //Get the name of each pagepicture
 $pagepicture = $page['pagepicture'];
 if(!empty($pagepicture)){
@@ -191,22 +208,25 @@ if(!empty($pagepicture)){
    $objIcon->alt = $picdesc;
    $objIcon->title = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
    $picdesc = $objIcon->show()." ".$picdesc;
-   $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
-   $picViewLink->link = $picdesc;
-   $link = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $picid));
- 		// Load the window popup class
-  	$objPop = $this->newObject('windowpop', 'htmlelements');
-   $objPop->set('location', $link);
-   $objPop->set('linktext', $picdesc);
-   $objPop->set('window_name','forum_attachments');
-   $objPop->set('width','600');
-   $objPop->set('height','400');
-   $objPop->set('left','100');
-   $objPop->set('top','100');
-   $objPop->set('resizable','yes');
-   $objPop->set('scrollbars','yes');
-//   $hpics .= "<li>".$picViewLink->show()."</li>";
-   $hpics .= "<li>".$objPop->show()."</li>";
+   if($Name=='firefox'){
+    $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
+    $picViewLink->link = $picdesc;
+    $hpics .= "<li>".$picViewLink->show()."</li>";
+   }else{
+    $link = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $picid));
+  		// Load the window popup class
+   	$objPop = $this->newObject('windowpop', 'htmlelements');
+    $objPop->set('location', $link);
+    $objPop->set('linktext', $picdesc);
+    $objPop->set('window_name','forum_attachments');
+    $objPop->set('width','600');
+    $objPop->set('height','400');
+    $objPop->set('left','100');
+    $objPop->set('top','100');
+    $objPop->set('resizable','yes');
+    $objPop->set('scrollbars','yes');   
+    $hpics .= "<li>".$objPop->show()."</li>";
+   }
   }
  }
   $hpics .= "</ul></div>";
@@ -240,23 +260,26 @@ if(!empty($pageformula)){
    $objIcon->alt = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
    $objIcon->title = $fmladesc;
    $fmladesc = $objIcon->show()." ".$fmladesc;
-   $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
-   $fmlaViewLink->link = $fmladesc;
-   $fmlalink = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $fmlaid));
- 		// Load the window popup class
-  	$objPop = $this->newObject('windowpop', 'htmlelements');
-   $objPop->set('location', $fmlalink);
-   $objPop->set('linktext', $fmladesc);
-   $objPop->set('window_name','forum_attachments');
-   $objPop->set('width','600');
-   $objPop->set('height','400');
-   $objPop->set('left','100');
-   $objPop->set('top','100');
-   $objPop->set('resizable','yes');
-   $objPop->set('scrollbars','yes');
-
-   //$hformula .= "<li>".$fmlaViewLink->show()."</li>";
-   $hformula .= "<li>".$objPop->show()."</li>";
+   
+   if($Name=='firefox'){
+    $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
+    $fmlaViewLink->link = $fmladesc;
+    $hformula .= "<li>".$fmlaViewLink->show()."</li>";
+   }else{
+    $fmlalink = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $fmlaid));
+  		// Load the window popup class
+   	$objPop = $this->newObject('windowpop', 'htmlelements');
+    $objPop->set('location', $fmlalink);
+    $objPop->set('linktext', $fmladesc);
+    $objPop->set('window_name','forum_attachments');
+    $objPop->set('width','600');
+    $objPop->set('height','400');
+    $objPop->set('left','100');
+    $objPop->set('top','100');
+    $objPop->set('resizable','yes');
+    $objPop->set('scrollbars','yes');
+    $hformula .= "<li>".$objPop->show()."</li>";
+   }
   }  
  }
  $hformula .= "</ol></div>";
@@ -316,9 +339,6 @@ else {
 
 //Check if comments are allowed for this course
 $showcomment = $this->objContext->getField('showcomment', $contextCode = NULL);
-var_dump($showcomment);
-
-//if(strtolower($this->objSysConfig->getValue('learningcontent_ENABLECOMMENTS', 'learningcontent')) == 'true')
 if($showcomment==1)
 {
 	$head = $this->objLanguage->languageText('mod_learningcontent_word_comment','learningcontent');
@@ -408,8 +428,7 @@ if (!empty($imageId)) {
     echo "<script type='text/javascript'>
  var browser=navigator.appName;
  var b_version=parseFloat(b_version);
- if(browser!=='Microsoft Internet Explorer'){
-	alert('Kindly use Mozilla');
+ if(browser=='Microsoft Internet Explorer'){
  }else{
 	 jQuery.facebox(function() {
 	  jQuery.get('" . str_replace('&amp;', '&', $this->uri(array(
