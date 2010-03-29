@@ -55,7 +55,6 @@ public class RulesAndSyllabusOne {
     private String courseTitle;
     private OverView overView;
     private RulesAndSyllabusOne oldRulesAndSyllabusOne;
-    private RulesAndSyllabusTwo oldRulesAndSyllabusTwo;
     //private NewCourseProposalDialog newCourseProposalDialog;
 
     public RulesAndSyllabusOne(OverView overViewDialog) {
@@ -63,8 +62,8 @@ public class RulesAndSyllabusOne {
         createUI();
     }
 
-    public RulesAndSyllabusOne(RulesAndSyllabusTwo oldRulesAndSyllabusTwo) {
-        this.oldRulesAndSyllabusTwo = oldRulesAndSyllabusTwo;
+    public RulesAndSyllabusOne(RulesAndSyllabusOne oldRulesAndSyllabusOne) {
+        this.oldRulesAndSyllabusOne = oldRulesAndSyllabusOne;
         createUI();
     }
 
@@ -267,8 +266,8 @@ public class RulesAndSyllabusOne {
         rulesAndSyllabusOneDialog.show();
     }
 
-    public void setOldRulesAndSyllabusOne(RulesAndSyllabusTwo oldRulesAndSyllabusTwo) {
-        this.oldRulesAndSyllabusTwo = oldRulesAndSyllabusTwo;
+    public void setOldRulesAndSyllabusOne(RulesAndSyllabusOne oldRulesAndSyllabusOne) {
+        this.oldRulesAndSyllabusOne = oldRulesAndSyllabusOne;
     }
 
     public void setSelectedFolder(ModelData selectedFolder) {
