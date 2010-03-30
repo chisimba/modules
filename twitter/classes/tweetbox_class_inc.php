@@ -214,7 +214,7 @@ class tweetbox extends object
               . $this->url . "\" method=\"post\">"
               . "<table cellpadding=\"4\" width=\"98%\"><tr><td><span class=\"minute\">"
               . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
-              . "</span></td><td><span class=\"error\"><div name=\"charlimitinfo\" id=\"charlimitinfo\">140</div></span></td></tr></table>"
+              . "</span></td><td><span class=\"charlimit\"><div name=\"charlimitinfo\" id=\"charlimitinfo\">140</div></span></td></tr></table>"
               . "<textarea name=\"tweet\" id=\"chisimba_tweet\" cols=\"19\" rows=\"4\">"
               . "</textarea><br />"
               . $objButton->show() . "</form>";
