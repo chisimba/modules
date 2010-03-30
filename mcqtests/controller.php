@@ -142,8 +142,9 @@ class mcqtests extends controller {
             case 'choosequestiontype':
                 $this->viewtest();
                 $id = $this->getParam('id');
+                $count = $this->getParam('count');
                 $this->setVarByRef('testid',$id);
-                $this->setVarByRef('count',$this->getParam('count'));
+                $this->setVarByRef('count',$count);
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
 
                 // Get the total number of questions if this isn't the first
