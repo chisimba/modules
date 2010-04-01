@@ -671,7 +671,9 @@ class liftclub extends controller
                     'description' => $message
                 ));
             }
-            return $this->nextAction('detailssent');
+            //Authenticate (login) user
+            $this->objUser->authenticateUser($username,$password,Null); 
+            return $this->nextAction('startregister');
         }
     }
     /**
