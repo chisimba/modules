@@ -69,6 +69,8 @@ class liftclub extends controller
             'findlift',
             'viewlift',
             'jsongetlifts',
+            'register',
+            'detailssent',
             ''
         );
         if (!in_array($action, $requiresLogin)) {
@@ -894,7 +896,7 @@ class liftclub extends controller
                 $destiny = $this->objDBDestiny->updateSingle($destinyid, $institution, $streetname2, $suburb2, $citytown2, $province2, $neighbour2);
             }
             if (empty($detailsid)) {
-                $details = $this->objDBDetails->insertSingle($userId, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+                $details = $this->objDBDetails->insertSingle($userId, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms);
             } else {
                 $details = $this->objDBDetails->updateSingle($detailsid, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
             }
