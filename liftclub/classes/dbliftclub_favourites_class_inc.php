@@ -68,7 +68,6 @@ class dbLiftclub_favourites extends dbTable
             return FALSE;
         }
     }
-
     /**
      * Return records
      * @param string $favoureduserid Favoured User ID
@@ -95,7 +94,7 @@ class dbLiftclub_favourites extends dbTable
             'userid' => $userid,
             'favoureduserid' => $favoureduserid,
             'datefavoured' => date('Y-m-d, h:i:s')
-         ));
+        ));
         return $id;
     }
     /**

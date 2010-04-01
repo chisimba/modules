@@ -80,12 +80,12 @@ class dbLiftclub_messages extends dbTable
         $id = $this->insert(array(
             'userid' => $userid,
             'recipentuserid' => $recipentuserid,
-            'timesent' => date('Y-m-d, h:i:s'),
+            'timesent' => date('Y-m-d, h:i:s') ,
             'markasdeleted' => 0,
             '	markasread ' => 0,
             '	messagetitle' => $messagetitle,
             'messagebody' => $messagebody
-         ));
+        ));
         return $id;
     }
     /**
@@ -94,7 +94,7 @@ class dbLiftclub_messages extends dbTable
      * @param string $userid The senders userid
      * @param string $markasread mark as read or unread
      */
-    function markRead($id,$userid, $markasread) 
+    function markRead($id, $userid, $markasread) 
     {
         $this->update("id", $id, array(
             'userid' => $userid,
@@ -106,7 +106,7 @@ class dbLiftclub_messages extends dbTable
      * @param string $id ID
      * @param string $bol mark as trashed
      */
-    function markTrashed($id,$bol=1) 
+    function markTrashed($id, $bol = 1) 
     {
         $this->update("id", $id, array(
             'markasdeleted' => $bol

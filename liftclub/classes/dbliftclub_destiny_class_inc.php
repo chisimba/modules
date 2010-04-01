@@ -67,7 +67,7 @@ class dbLiftclub_destiny extends dbTable
             'city' => $city,
             'province' => $province,
             'neighbour' => $neighbour
-         ));
+        ));
         return $id;
     }
     /**

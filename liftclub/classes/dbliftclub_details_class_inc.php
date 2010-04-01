@@ -65,7 +65,7 @@ class dbLiftclub_details extends dbTable
      * @param string $sunday sunday
      * @param string $safetyterms the safety and privacy terms field
      */
-    function insertSingle($userid, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms)
+    function insertSingle($userid, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms) 
     {
         $id = $this->insert(array(
             'times' => $times,
@@ -78,7 +78,7 @@ class dbLiftclub_details extends dbTable
             'userneed' => $userneed,
             'needtype' => $needtype,
             'daterequired' => $daterequired,
-            'createdormodified' => date('Y-m-d, h:i:s'),
+            'createdormodified' => date('Y-m-d, h:i:s') ,
             'monday' => $monday,
             'tuesday' => $tuesday,
             'wednesday' => $wednesday,
@@ -87,8 +87,7 @@ class dbLiftclub_details extends dbTable
             'saturday' => $saturday,
             'sunday' => $sunday,
             'safetyterms' => $safetyterms
-            
-         ));
+        ));
         return $id;
     }
     /**
@@ -108,7 +107,7 @@ class dbLiftclub_details extends dbTable
      * @param string $sunday sunday
      * @param string $safetyterms the safety and privacy terms field
      */
-    function updateSingle($id, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms)
+    function updateSingle($id, $times, $additionalinfo, $specialoffer, $emailnotifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms) 
     {
         $this->update("id", $id, array(
             'times' => $times,
@@ -120,7 +119,7 @@ class dbLiftclub_details extends dbTable
             'userneed' => $userneed,
             'needtype' => $needtype,
             'daterequired' => $daterequired,
-            'createdormodified' => date('Y-m-d, h:i:s'),
+            'createdormodified' => date('Y-m-d, h:i:s') ,
             'monday' => $monday,
             'tuesday' => $tuesday,
             'wednesday' => $wednesday,
