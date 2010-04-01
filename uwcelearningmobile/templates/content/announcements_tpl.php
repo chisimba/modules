@@ -17,7 +17,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 		$link->link = $ann['title'];
 		$objFields->addContent($link->show().'<br/>');
 	}
-	echo $objFields->show();
+	echo '<br>'.$objFields->show().'<br>';
 
 	//All my courses announcement
 	$objFields = new fieldset();
@@ -28,7 +28,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 		$link->link = $ann['title'];
 		$objFields->addContent($link->show().'<br/>');
 	}
-	echo $objFields->show();
+	echo $objFields->show().'<br>';
 
 	$homeLink = new link($this->URI(array()));
 	$homeLink->link = 'Home';

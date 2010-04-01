@@ -7,11 +7,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 	$this->loadClass('fieldset','htmlelements');
 	$this->loadClass('link','htmlelements');
-	echo '<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile').': </b>'.$conexttitle;
+	echo '<br><b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile').': </b>'.$conexttitle;
 
 	$objFields = new fieldset();
 	$objFields->setLegend('<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcoursetools', 'uwcelearningmobile').'</b>');
-
 
 	 	foreach($tools as $tool)
 		{

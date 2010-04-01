@@ -38,7 +38,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 		$objTable->endRow();
 	}
 	$objFields->addContent($objTable->show());
-	echo $objFields->show();
+	echo '<br>'.$objFields->show();
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	$objFields = new fieldset();
 	$objFields->setLegend('<b>'.$arrFolderData['folder_name'].'</b>');

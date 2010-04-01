@@ -53,7 +53,15 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class uwcelearningmobile extends controller
 {
-
+	/**
+    *
+    * @var string $objSysConfig String object property for holding the
+    * configuration object
+    * @access public;
+    *
+    */
+    public $objSysConfig;
+	
     /**
     *
     * @var string $objConfig String object property for holding the
@@ -88,6 +96,7 @@ class uwcelearningmobile extends controller
     */
     public function init()
     {
+		$this->objSysConfig  = $this->getObject('altconfig','config');
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
@@ -97,6 +106,7 @@ class uwcelearningmobile extends controller
 		$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 		$this->objDate = $this->newObject('dateandtime', 'utilities');
 		$this->objMobileSecurity = $this->getObject('mobilesecurity', 'uwcelearningmobile');
+		$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 
 		// Store Context Code
 		$this->userId = $this->objUser->userId();
@@ -135,7 +145,7 @@ class uwcelearningmobile extends controller
     
 
     public function dispatch($action='home')
-    {
+    {	
 		$actions = array('', 'home', 'login', 'context', 'readmail', 'internalmail', 'filemanager');
 		
 		if ($this->contextCode == NULL && !in_array($action, $actions)) {
@@ -204,6 +214,16 @@ class uwcelearningmobile extends controller
 			$this->dbContext->leaveContext();
 			$usercontexts = $this->objContext->getUserContext($this->objUser->userId());
 			$this->setVarByRef('usercontexts', $usercontexts);
+			
+			$modules = array('filemanager', 'internalmail');
+			$tools = array();
+			foreach($modules as $mod)
+			{	
+				if($this->objModuleCatalogue->checkifRegistered($mod)){
+					$tools[] = $mod;
+				}
+			}
+			$this->setVarByRef('tools', $tools);
 			return 'postlogin_tpl.php';
 		}
 		else{
@@ -500,6 +520,7 @@ class uwcelearningmobile extends controller
 		$this->objFiles = $this->getObject('dbfile', 'filemanager');
         $this->objFolders = $this->getObject('dbfolder', 'filemanager');
 		$this->objFileIcons = $this->getObject('fileicons', 'files');
+		$this->objCleanUrl = $this->getObject('cleanurl', 'filemanager');
 		// Get Folder Details
         $folderpath = 'users/'.$this->objUser->userId();
         $folderId = $this->objFolders->getFolderId($folderpath);
@@ -552,5 +573,14 @@ class uwcelearningmobile extends controller
 		$path = explode($del, $folder['folderpath']);
 		return $this->objFolders->getFolderId($path[0]);
 	}
+
+	private function __viewcontextcontent(){
+		$id = $this->getParam('id');
+		$this->objContentOrder = $this->getObject('db_contextcontent_order', 'contextcontent');
+		$firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
+		//var_dump($firstPage);
+		$this->setVarByRef('chapter', $firstPage);
+		return 'viewcontextcontent_tpl.php';
+	}	
 }
 ?>

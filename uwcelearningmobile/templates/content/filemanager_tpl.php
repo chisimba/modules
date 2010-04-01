@@ -9,8 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('link','htmlelements');
 	$objTable = $this->newObject('htmltable', 'htmlelements');
 	
-	echo '<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordfilemanager', 'uwcelearningmobile').'</b>';
-	
+	echo '<br><b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordfilemanager', 'uwcelearningmobile').'</b>';
 	$fileSize = new formatfilesize();
 	$objFields = new fieldset();
 	$oicon = '<img src="skins/_common/icons/folder.gif" border="0" alt="folder" title="folder">';
@@ -47,10 +46,13 @@ if (!$GLOBALS['kewl_entry_point_run'])
 			$objTable->endRow();
 		}
 		foreach($files as $file)
-		{	
+		{	$fileDownloadPath = $this->objSysConfig->getcontentPath().$file['path'];
+			$fileDownloadPath = $this->objCleanUrl->cleanUpUrl($fileDownloadPath);
+			$link = new link($fileDownloadPath);
+			$link->link = substr($file['filename'], 0, 60) . '...';
 			$icon = $this->objFileIcons->getFileIcon($file['filename']);
 			$objTable->startRow();
-			$objTable->addCell($icon.' '.$file['filename'], '', '', '', '', '');
+			$objTable->addCell($icon.' '.$link->show(), '', '', '', '', '');
 			$objTable->addCell($fileSize->formatsize($file['filesize']), '', '', '', '', '');
 			$objTable->endRow();
 		}
@@ -101,9 +103,13 @@ $objTable = $this->newObject('htmltable', 'htmlelements');
 			}
 			foreach($coursefiles as $file)
 			{	
+				$fileDownloadPath = $this->objSysConfig->getcontentPath().$file['path'];
+				$fileDownloadPath = $this->objCleanUrl->cleanUpUrl($fileDownloadPath);
+				$link = new link($fileDownloadPath);
+				$link->link = substr($file['filename'], 0, 9) . '...';
 				$icon = $this->objFileIcons->getFileIcon($file['filename']);
 				$objTable->startRow();
-				$objTable->addCell($icon.' '.$file['filename'], '', '', '', '', '');
+				$objTable->addCell($icon.' '.$link->show(), '', '', '', '', '');
 				$objTable->addCell($fileSize->formatsize($file['filesize']), '', '', '', '', '');
 				$objTable->endRow();
 			}

@@ -8,22 +8,22 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('link','htmlelements');
 	$objTableClass = $this->newObject('htmltable', 'htmlelements');
 	$objTableClass->startHeaderRow();
-	$objTableClass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordreplies', 'uwcelearningmobile').'</strong>', '40%');
-	$objTableClass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordviews', 'uwcelearningmobile').'</strong>', '40%');
+	
 	$objTableClass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordtopic', 'uwcelearningmobile').'</strong>', '40%');
+	$objTableClass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordreplies', 'uwcelearningmobile').'</strong>', '30%');
+	$objTableClass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordviews', 'uwcelearningmobile').'</strong>', '30%');
 	$objTableClass->endHeaderRow();
 
-	echo '<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordforum', 'uwcelearningmobile').': </b>'.$forum['forum_name'].'<br>';
+	echo '<br><b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordforum', 'uwcelearningmobile').': </b>'.$forum['forum_name'].'<br>';
 	if(!empty($allTopics)){
 
 		foreach($allTopics as $topic){
 			$objTableClass->startRow();
-
 			$link = new link($this->URI(array('action' => 'topic', 'id' => $topic['topic_id'])));
 			$link->link = $topic['post_title'];
+			$objTableClass->addCell($link->show(), '', 'center', 'left', $class);
 			$objTableClass->addCell($topic['replies'], '', 'center', 'left', $class);
 			$objTableClass->addCell($topic['views'], '', 'center', 'left', $class);
-			$objTableClass->addCell($link->show(), '', 'center', 'left', $class);
 		}
 	}
 	else{

@@ -23,7 +23,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 		$norecords = 'No Posts for this Topic';
 		$objTableClass->addCell($norecords, NULL, NULL, 'center', 'noRecordsMessage', 'colspan="7"');
 	}
-	echo $objFields->show().'<br>';
+	echo '<br>'.$objFields->show().'<br>';
 
 	$homeLink = new link($this->URI(array()));
 	$homeLink->link = 'Home';

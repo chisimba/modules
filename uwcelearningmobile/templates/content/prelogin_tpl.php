@@ -5,8 +5,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 {
 	    die("You cannot view this page directly");
 }
-	if(isset($error)){
-		echo '<div id="error" class="error"><b>'.$error.'</b></div><br/>';
+	if(isset($error) && $error != 1){
+		echo '<br><div id="error" class="error"><b>'.$error.'</b></div><br/>';
 	}
 	
 	//Load up the various HTML classes

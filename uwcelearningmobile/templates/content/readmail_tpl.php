@@ -47,7 +47,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 	$objFields->addContent($objTable->show());
 
-	echo $objFields->show();
+	echo '<br>'.$objFields->show();
 
 	$backLink = new link($this->URI(array('action' => 'internalmail')));
 	$backLink->link = 'Back to Internalmail';
