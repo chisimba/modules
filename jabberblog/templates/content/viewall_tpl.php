@@ -20,7 +20,7 @@ $header = new htmlHeading ( );
 $header->str = $this->objLanguage->languageText ( 'mod_jabberblog_jabberblogof', 'jabberblog' ) . " " . $this->objUser->fullName ( $this->jposteruid );
 $header->type = 1;
 
-$script = '<script type="text/JavaScript" src="resources/rounded_corners.inc.js"></script>
+/* $script = '<script type="text/JavaScript" src="resources/rounded_corners.inc.js"></script>
     <script type="text/JavaScript">
       window.onload = function() {
           settings = {
@@ -36,7 +36,7 @@ $script = '<script type="text/JavaScript" src="resources/rounded_corners.inc.js"
       }
     </script>';
 $this->appendArrayVar ( 'headerParams', $script );
-
+*/
 $objPagination = $this->newObject ( 'pagination', 'navigation' );
 $objPagination->module = 'jabberblog';
 $objPagination->action = 'viewallajax';

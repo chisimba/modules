@@ -231,11 +231,11 @@ class jabberblog extends controller {
                                                 // check for 140 char length restriction.
                                                 if(strlen($pl['body']) < 100 ) {
                                                     // $this->objTwitterLib->updateStatus ( $pl ['body'].": ".$this->uri('') );
-                                                    $returnobj = json_decode($this->objTwtOps->userUpdate( $pl ['body'].": ".$this->uri('') ) );
-                                                    $thread = $returnobj->thread;
-                                                    $threadid = $thread->id;
+                                                    //$returnobj = json_decode($this->objTwtOps->userUpdate( $pl ['body'].": ".$this->uri('') ) );
+                                                    //$thread = $returnobj->thread;
+                                                    //$threadid = $thread->id;
                                                     // store the threadid somewhere
-                                                    $pl['twitthreadid'] = $threadid;
+                                                    //$pl['twitthreadid'] = $threadid;
 
                                                 }
                                                 else {
