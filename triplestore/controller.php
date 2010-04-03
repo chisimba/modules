@@ -125,18 +125,21 @@ class triplestore extends controller
     */
     private function __view()
     {
-        $filters     = array();
+        $selector = $this->getParam('selector', FALSE);
+        $value = $this->getParam('value', FALSE);
+        if ($selector && $value) {
+            $filters     = array($selector => $value);
+        } else {
+            $filters     = array();
+        }
         $filterTypes = array('subject', 'predicate', 'object');
-
         foreach ($filterTypes as $filterType) {
             $filter = $this->getParam($filterType);
             if ($filter) {
                 $filters[$filterType] = $filter;
             }
         }
-
         $nestedTriples = $this->objTriplestore->getNestedTriples($filters);
-
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($nestedTriples);
     }
@@ -152,6 +155,20 @@ class triplestore extends controller
     {
         $this->setvar('mode', "edit");
         return 'editform_tpl.php';
+    }
+
+    /**
+    *
+    * Method corresponding to the asjson action.  It gets a specific
+    * set of triples as json
+    *
+    * @access private
+    *
+    */
+    private function __asjson()
+    {
+        $this->setvar('str', "JSON output will be here");
+        return 'dump_tpl.php';
     }
 
     /**
