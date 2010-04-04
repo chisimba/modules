@@ -20,16 +20,50 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class forum extends controller
 {
 
-    protected $forumtype; // A variable to determine whether the forum is for context or workgroup
+    /**
+    *
+    * @var string Used to determine whether the forum is for context
+    * or workgroup
+    *
+    * @access protected
+    *
+    */
+    protected $forumtype; 
 
-    protected $contextCode; // ContextCode
+    /**
+    *
+    * @var string the alue of the context (e.g. the coursecode)
+    *
+    * @access protected
+    *
+    */
+    protected $contextCode;
+    
+    /**
+    *
+    * @var string the value of the workgroup if in a workgroup
+    * or workgroup
+    *
+    * @access protected
+    *
+    */
+    protected $workgroupId;
 
-    protected $workgroupId; // Workgroup
-
-    protected $workgroupDescription; // Workgroup Title
+    /**
+    *
+    * @var string The workgroup description if in a workgroup
+    * or workgroup
+    *
+    * @access protected
+    *
+    */
+    protected $workgroupDescription;
 
     /**
     * Constructor method to instantiate objects and get variables
+    *
+    * @access public
+    *
     */
     public function init()
     {
@@ -42,7 +76,6 @@ class forum extends controller
         $this->objUser =& $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->isLoggedIn = $this->objUser->isLoggedIn();
-
         $this->objLanguage =& $this->getObject('language', 'language');
 
         // Forum Classes
@@ -86,10 +119,8 @@ class forum extends controller
         $this->setVarByRef('contextCode', $this->contextCode);
         $this->setVarByRef('contextTitle', $this->contextTitle);
 
-
         // Set Current Context
         $this->objForumEmail->setContextCode($this->contextCode);
-
 
         // Trim String Functions
         $this->trimstrObj =& $this->getObject('trimstr', 'strings');
@@ -104,54 +135,48 @@ class forum extends controller
         } else {
             $this->forumtype = 'context';
         }
-
         $this->setVarByRef('forumtype', $this->forumtype);
 
         // Set to post since some links are generated within the post
         $this->objPost->forumtype = $this->forumtype;
 
-
-
         // Load Menu Tools Class
         $this->objMenuTools =& $this->getObject('tools', 'toolbar');
         $this->objDateTime =& $this->getObject('dateandtime', 'utilities');
         $this->objFiles =& $this->getObject('dbfile', 'filemanager');
-
         $this->loadClass('link', 'htmlelements');
-
-
-
 
         if (strtolower($this->getParam('passthroughlogin')) == 'true') {
             $this->updatePassThroughLogin();
         }
-
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-
         $this->showFullName = $this->objSysConfig->getValue('SHOWFULLNAME', 'forum');
-
         if ($this->showFullName == '') {
             $this->showFullName = TRUE;
         }
-
         if ($this->showFullName != FALSE) {
             $this->showFullName = TRUE;
         }
-								//Load Module Catalogue Class
-								$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
-
-								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
-
-								if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
-								{
-									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
-									$this->eventsEnabled = TRUE;
-								} else {
-									$this->eventsEnabled = FALSE;
-								}
+        //Load Module Catalogue Class
+        $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+        $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+        if($this->objModuleCatalogue->checkIfRegistered('activitystreamer')) {
+                $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+                $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+                $this->eventsEnabled = TRUE;
+        } else {
+                $this->eventsEnabled = FALSE;
+        }
     }
 
+    /**
+    *
+    * Determine if a given action requires login
+    *
+    * @return boolean TRUE|FALSE
+    * @access public
+    *
+    */
     public function requiresLogin()
     {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -191,7 +216,12 @@ class forum extends controller
 
 
     /**
-    * Method to process actions to be taken
+    *
+    * Method to process actions to be taken from the action querystring parameter
+    *
+    * @access public
+    * @return mixed Various templates depending on the action
+    *
     */
     public function dispatch($action=Null)
     {
@@ -360,8 +390,12 @@ class forum extends controller
     }
 
     /**
-    * Method to show the 'Home Page' of the Discussion Forum - listing all forums in a context and the last post
+    * Method to show the 'Home Page' of the Discussion Forum - listing all
+    * forums in a context and the last post
+    *
+    * @access public
     * @return string Template - forum_list.php
+    *
     */
     public function forumHome()
     {
@@ -370,20 +404,14 @@ class forum extends controller
         if (isset($_SERVER['HTTP_REFERER'])  && substr_count($_SERVER['HTTP_REFERER'], 'type=workgroup') > 0 && $this->getParam('type') != 'context') {
             return $this->nextAction('workgroup');
         }
-
         $forumNum = $this->objForum->getNumForums($this->contextCode);
-
-
         if ($forumNum == 0)
         {
             $newforum = $this->objForum->autoCreateForum($this->contextCode, $this->contextTitle);
-
             return $this->nextAction('forum', array('id'=>$newforum));
-
         } else {
             $allForums = $this->objForum->showAllForums($this->contextCode);
             $this->setVarByRef('forums', $allForums);
-
             return 'forum_list.php';
         }
     }
@@ -462,15 +490,13 @@ class forum extends controller
        	{
        		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_forum_hasentered', 'forum')." ".$forum['forum_name'];
        	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-																			'link'=> $this->uri(array()),
-																			'contextcode' => $this->contextCode,
-																			'author' => $this->objUser->fullname(),
-																			'description'=>$message));
+                    'link'=> $this->uri(array()),
+                    'contextcode' => $this->contextCode,
+                    'author' => $this->objUser->fullname(),
+                    'description'=>$message));
        	}
-
         $this->setVarByRef('topicsNum', $topicsNum);
         $this->setVarByRef('topics', $allTopics);
-
         return 'forum_view.php';
     }
 
@@ -2438,7 +2464,7 @@ class forum extends controller
     * @param string $id Record Id of the Topic
     * @param string $post Record Id of the Post
     */
-    function rebuildTopic($id, $post=NULL)
+    public function rebuildTopic($id, $post=NULL)
     {
         // Check if Topic is Broken
         $this->objPost->detectBrokenTopic($id);
@@ -2502,7 +2528,7 @@ class forum extends controller
     *
     *
     */
-    function deletePostConfirm()
+    public function deletePostConfirm()
     {
         $post = $this->objPost->getPostWithText($_POST['id']);
 
@@ -2526,9 +2552,5 @@ class forum extends controller
     }
 
 
-
-
-
-
-} // End of Class
+} 
 ?>

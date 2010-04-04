@@ -55,20 +55,16 @@ $tblclass->endHeaderRow();
 
 $dropdown = new dropdown('forum');
 $dropdown->addOption('all', 'All Forums');
-
-foreach ($forums as $forum)
-{
+$rowcount = 0;
+foreach ($forums as $forum) {
+    $oddOrEven = ($rowcount == 0) ? "odd" : "even";
     $dropdown->addOption($forum['forum_id'], $forum['forum_name']);
-
     $forumLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'forum', 'id' => $forum['forum_id'])));
-
     $forumLink->link = $forum['forum_name'];
     $forumName = $forumLink->show();
-
     if ($forum['defaultforum'] == 'Y') {
         $forumName .= '<em> - '.$this->objLanguage->languageText('mod_forum_defaultForum', 'forum').'</em>';
     }
-
     $objIcon = $this->getObject('geticon', 'htmlelements');
     if ($forum['forumlocked'] == 'Y') {
         $objIcon->setIcon('lock', NULL, 'icons/forum/');
@@ -77,15 +73,12 @@ foreach ($forums as $forum)
         $objIcon->setIcon('unlock', NULL, 'icons/forum/');
         $objIcon->title = $this->objLanguage->languageText('mod_forum_forumisopen', 'forum');
     }
-
-    $tblclass->startRow();
+    $tblclass->startRow($oddOrEven);
     $tblclass->addCell($objIcon->show(), 10, NULL, 'center');
     $tblclass->addCell($forumName.'<br />'.$this->objLanguage->abstractText($forum['forum_description']), '40%', 'center');
     $tblclass->addCell($forum['topics'], NULL, NULL, 'center');
     $tblclass->addCell($forum['posts'], 100, NULL, 'center');
-
     $post = $this->objPost->getLastPost($forum['forum_id']);
-
     if ($post == FALSE) {
         $postDetails = '<em>'.$this->objLanguage->languageText('mod_forum_nopostsyet', 'forum').'</em>';
         $cssClass= NULL;
@@ -105,7 +98,6 @@ foreach ($forums as $forum)
         } else {
             $user = '';
         }
-
         if ($this->objDateTime->formatDateOnly($post['datelastupdated']) == date('j F Y')) {
             $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.$this->objDateTime->formatTime($post['datelastupdated']);
         } else {
@@ -114,12 +106,13 @@ foreach ($forums as $forum)
 
         $postDetails .= '<br /><strong>'.$user.$datefield.'</strong>';
     }
-
     $tblclass->addCell($postDetails, '40%', 'center', NULL, $cssClass);
     $tblclass->endRow();
+    // Set rowcount for bitwise determination of odd or even
+    $rowcount = ($rowcount == 0) ? 1 : 0;
 }
 
-echo $tblclass->show();
+echo "<div class='allforums'>" . $tblclass->show() . "</div>";
 
 $objSearch = $this->getObject('forumsearch');
 echo $objSearch->show();
@@ -127,12 +120,9 @@ echo $objSearch->show();
 if ($this->objUser->isCourseAdmin(NULL, $this->contextCode) && $this->isLoggedIn) {
     $administrationLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'administration')));
     $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumadministration', 'forum');
-    echo '<p><strong>'.$administrationLink->show().'</strong></p>';
+    echo "<div class='forum_administration'>" . $administrationLink->show().'</div>';
 }
-
 $display = ob_get_contents();
 ob_end_clean();
-
 $this->setVar('middleColumn', $display);
-
 ?>
