@@ -11,6 +11,13 @@ $fields = array(
         'type' => 'text',
         'length' => 32
         ),
+    'userid' => array(
+        'type' => 'text',
+        'length' => 50,
+        ),
+    'date' => array(
+        'type' => 'timestamp',
+        ),
     'subject' => array(
         'type' => 'text',
         'length' => 32
