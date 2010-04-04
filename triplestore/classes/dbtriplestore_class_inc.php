@@ -58,12 +58,23 @@ $GLOBALS['kewl_entry_point_run']) {
 class dbtriplestore extends dbTable
 {
     /**
+     * Instance of the user object of the security class.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objUser;
+
+    /**
      * Initialises the instance of the triplestore data access class.
      */
     public function init()
     {
         // Set the associated database table name.
         parent::init('tbl_triplestore');
+
+        // Instance of the user object of the security class.
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -190,6 +201,7 @@ class dbtriplestore extends dbTable
         $triple['subject']   = $subject;
         $triple['predicate'] = $predicate;
         $triple['object']    = $object;
+        $triple['userid']    = $this->objUser->userId();
 
         // Insert the triple into the triplestore.
         $id = parent::insert($triple);
