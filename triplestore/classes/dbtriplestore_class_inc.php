@@ -198,10 +198,11 @@ class dbtriplestore extends dbTable
     {
         // Compile the associative array representing the new triple.
         $triple              = array();
+        $triple['userid']    = $this->objUser->userId();
+        $triple['date']      = date('Y-m-d H:i:s');
         $triple['subject']   = $subject;
         $triple['predicate'] = $predicate;
         $triple['object']    = $object;
-        $triple['userid']    = $this->objUser->userId();
 
         // Insert the triple into the triplestore.
         $id = parent::insert($triple);
