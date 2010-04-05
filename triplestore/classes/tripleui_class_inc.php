@@ -104,6 +104,7 @@ class tripleui extends object
         $this->loadClass('button', 'htmlelements');
         // Load the language object
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     public function buildEditForm($mode, $id="", $subject="", $predicate="", $tripobject="")
@@ -277,12 +278,12 @@ class tripleui extends object
     }
 
     /**
-     * Get the form action
-     *
-     * @return string The rendered form action
-     * @access public
-     *
-     */
+    * Get the form action
+    *
+    * @return string The rendered form action
+    * @access public
+    *
+    */
     public function getFormAction($mode=FALSE)
     {
         if (!$mode) {
@@ -292,6 +293,34 @@ class tripleui extends object
           'action'=>'save',
           'mode'=>$mode);
         return $this->uri($paramArray);
+    }
+
+    /**
+    * Get the triples that reference my username
+    *
+    * @return string The rendered form action
+    * @access public
+    *
+    */
+    public function getMyTriples()
+    {
+        $myUserId = $this->objUser->userId();
+        $myUserName = $this->objUser->userName($myUserId);
+        $page = $this->getParam('page', 1);
+        // Retrieve all the triples out of the triplestore.
+        $triples = $this->objTriplestore->getAll("WHERE subject='$userName'");
+        $sub = "subject";
+        $pred = "predicate";
+        $obj = "object";
+        $ret = "<table>\n<thead>\n\n<tr><th>$sub</th><th>$pred</th><th>$obj</th>\n\n</tr>\n</thead>\n<tbody>\n";
+        foreach ($triples as $triple) {
+            $ret .= "<tr><td>" . $triple['subject']
+              ."</td><td>" . $triple['predicate']
+              . "</td><td>" . $triple['object']
+              . "</td></tr>";
+        }
+        $ret .= "</tbody></table>";
+        return $ret;
     }
 }
 ?>

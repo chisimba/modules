@@ -144,6 +144,14 @@ class triplestore extends controller
         echo json_encode($nestedTriples);
     }
 
+    private function __getmytripples()
+    {
+        //just testing here
+        $objTripleUi = $this->getObject('tripleui', 'triplestore');
+        echo $objTripleUi->getMyTriples();
+        die();
+    }
+
     /**
     *
     * Method corresponding to the edit action. It sets the mode to
