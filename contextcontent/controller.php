@@ -155,7 +155,7 @@ class contextcontent extends controller {
         }
 
         $this->setLayoutTemplate('layout_chapter_tpl.php');
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery.livequery.js', 'jquery'));
 
         switch ($action) {
 
