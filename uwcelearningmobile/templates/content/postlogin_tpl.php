@@ -9,15 +9,21 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('link','htmlelements');
 	$objFields = new fieldset();
 	$objFields->setLegend('<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordmycourse', 'uwcelearningmobile').'</b>');
-		
-	foreach($usercontexts as $context)
-	{
-		$con = $this->dbContext->getContext($context);
-		$link = new link($this->URI(array('action' => 'context', 'contextcode'=> $con['contextcode'])));
-		$link->link = $con['title'];
-		$objFields->addContent($link->show().'<br>');
-	}
 	
+	if(!empty($usercontexts))
+    {	
+        foreach($usercontexts as $context)
+	    {
+		    $con = $this->dbContext->getContext($context);
+		    $link = new link($this->URI(array('action' => 'context', 'contextcode'=> $con['contextcode'])));
+		    $link->link = $con['title'];
+		    $objFields->addContent($link->show().'<br>');
+	    }
+	}
+	else 
+    {
+         $objFields->addContent($this->objLanguage->languageText('mod_uwcelearningmobile_wordnocourse', 'uwcelearningmobile'));
+    }
 	echo '<br>'.$objFields->show();
 	
 
