@@ -386,8 +386,8 @@ class db_learningcontent_order extends dbtable
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
                     $nodeArray[$treeItem['parentid']]->addItem($node);
                 }
-}
-            }
+           }           
+         }
         //}
         
         $tree = &new htmllist($treeMenu, array('inputName'=>'parentnode', 'id'=>'input_parentnode'));
@@ -666,6 +666,53 @@ class db_learningcontent_order extends dbtable
         ORDER BY lft DESC LIMIT 1';
         
         $results = $this->getArray($sql);
+        if (count($results) == 0) {
+            $page = $this->getArray("SELECT chaptertitle FROM tbl_learningcontent_chaptercontent WHERE chapterid = '$chapter'");
+            //If user is logged in specify action, otherwise for public courses, just go to learningcontent home
+            $userId = $this->objUser->userId();
+            if(!empty($userId)){
+             $prevLeftValue = $leftValue-2;
+             $nextpage = $this->getNextPageId($context, $chapter, $prevLeftValue);
+             $link = new link ($this->uri(array("action"=>"showcontextchapters","chapterid"=>$chapter, 'prevpageid'=>$nextpage), $module));
+            }else{
+             $link = new link ($this->uri(Null, $module));
+            }
+            $link->link = '&#171; '.'Back to Chapter: '.htmlentities($page[0]['chaptertitle']);
+        } else {
+            if($leftvalue==1){
+             $nextpage=Null;
+            } else {
+             $prevLeftValue = $leftValue-2;
+             $nextpage = $this->getNextPageId($context, $chapter, $prevLeftValue);
+            }
+            if(!empty($nextpage)){
+             $page = $results[0];
+             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'], 'prevpageid'=>$nextpage), $module));
+             $link->link = '&#171; '.'Previous Page: '.htmlentities($page['menutitle']);            
+            } else {
+             $page = $results[0];
+             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
+             $link->link = '&#171; '.'Previous Page: '.htmlentities($page['menutitle']);
+            }
+        }
+        return $link->show();
+    }
+    /**
+    *
+    *
+    *
+    */
+    
+    public function getPrevPageId($context, $chapter, $leftValue='', $module='learningcontent')
+    {
+        $sql = 'SELECT tbl_learningcontent_order.id, tbl_learningcontent_pages.menutitle
+        FROM tbl_learningcontent_order 
+        INNER JOIN tbl_learningcontent_titles ON (tbl_learningcontent_order.titleid = tbl_learningcontent_titles.id) 
+        INNER JOIN tbl_learningcontent_pages ON (tbl_learningcontent_pages.titleid = tbl_learningcontent_titles.id AND original=\'Y\') 
+        WHERE contextcode =\''.$context.'\' AND lft < '.$leftValue.' AND chapterid=\''.$chapter.'\'
+        ORDER BY lft DESC LIMIT 1';
+        
+        $results = $this->getArray($sql);
         
         if (count($results) == 0) {
             $page = $this->getArray("SELECT chaptertitle FROM tbl_learningcontent_chaptercontent WHERE chapterid = '$chapter'");
@@ -677,14 +724,15 @@ class db_learningcontent_order extends dbtable
              $link = new link ($this->uri(Null, $module));
             }
             $link->link = '&#171; '.'Back to Chapter: '.htmlentities($page[0]['chaptertitle']);
+            $pageId = Null;
         } else {
             $page = $results[0];
+            $pageId = $page['id'];
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
             $link->link = '&#171; '.'Previous Page: '.htmlentities($page['menutitle']);
         }
-        return $link->show();
+        return $pageId;
     }
-    
     /**
     *
     *
@@ -762,7 +810,7 @@ class db_learningcontent_order extends dbtable
             return $results[0];
         }
     }
-    
+
     /**
     *
     *
@@ -771,13 +819,40 @@ class db_learningcontent_order extends dbtable
     public function getNextPage($context, $chapter, $leftValue='', $module='learningcontent')
     {
         $page = $this->getNextPageSQL($context, $chapter, $leftValue);
-        
         if ($page == '') {
             return '';
-        } else {
-            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
+        } else {    
+         if ($prevLeftValue==1) {
+          $prevLeftValue = $leftValue;
+         }
+         $prevLeftValue = $leftValue+2;
+         if($prevLeftValue>1){
+            $prevpage = $this->getPrevPageId($context, $chapter, $prevLeftValue);
+            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'], 'prevpageid'=>$prevpage), $module));
             $link->link = 'Next Page: '.htmlentities($page['menutitle']).' &#187;';
             return $link->show();
+         } else {
+            $prevpage = $this->getPrevPageId($context, $chapter, $prevLeftValue);
+            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'], 'prevpageid'=>$prevpage), $module));
+//            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
+            $link->link = 'Next Page: '.htmlentities($page['menutitle']).' &#187;';
+            return $link->show();
+         }
+        }
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function getNextPageId($context, $chapter, $leftValue='')
+    {
+        $page = $this->getNextPageSQL($context, $chapter, $leftValue);
+        if ($page == '') {
+            return Null;
+        } else {
+            $pageId = $page['id'];
+            return $pageId;
         }
     }
     

@@ -1048,7 +1048,7 @@ class learningcontent extends controller {
             }
 
         } else {
-            return $this->nextAction('viewpage', array('id'=>$firstPage['id'], 'message'=>$this->getParam('message')));
+            return $this->nextAction('viewpage', array('id'=>$firstPage['id'], 'prevchapterid'=>$id, 'message'=>$this->getParam('message')));
         }
     }
 

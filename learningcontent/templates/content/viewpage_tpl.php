@@ -402,6 +402,8 @@ if($showcomment==1)
 	$cform->addToForm($this->objconvButton->show());
 	echo '<br/>'.$cform->show();
 }
+$sessId = "Session Id = ".session_id();
+var_dump($sessId);
 if (!empty($imageId)) {
    $imageName = $this->objFiles->getFileName($imageId);
    $imageDesc = $this->objFiles->getFileInfo($imageId);

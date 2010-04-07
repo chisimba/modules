@@ -16,7 +16,17 @@ $fields = array(
         'length' => 25,
         'notnull' => TRUE
         ),
+    'sessionid' => array(
+        'type' => 'text',
+        'length' => 60,
+        'notnull' => TRUE
+        ),
     'contextcode' => array(
+        'type' => 'text',
+        'length' => 25,
+        'notnull' => TRUE
+        ),
+    'modulecode' => array(
         'type' => 'text',
         'length' => 25,
         'notnull' => TRUE
@@ -29,7 +39,18 @@ $fields = array(
     'datecreated' => array(
         'type' => 'timestamp',
         'notnull' => TRUE
+        ),
+    'description' => array(
+        'type' => 'text'
+        'notnull' => FALSE
+        ),
+    'sessionstarttime' => array(
+        'type' => 'timestamp',
+        'notnull' => TRUE
+        ),
+    'sessionendtime' => array(
+        'type' => 'timestamp',
+        'notnull' => TRUE
         )
-    );
-   
+    );   
 ?>
