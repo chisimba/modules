@@ -28,8 +28,9 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 class fossilstream extends controller {
-  public function init() {
-      
+    public function init() {
+        $this->objNewsMenu = $this->getObject('dbnewsmenu','news');
+         $this->objNewsStories = $this->getObject('dbnewsstories','news');
     }
 
     /**
@@ -46,7 +47,7 @@ class fossilstream extends controller {
         /*
          * Return the template determined by the method resulting
          * from action
-         */
+        */
         return $this->$method();
     }
 
