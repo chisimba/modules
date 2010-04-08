@@ -98,4 +98,8 @@ class fossilstream extends controller {
         return "home_tpl.php";
     }
 
+    function requiresLogin(){
+        return false;
+    }
+
 }
