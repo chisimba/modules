@@ -22,33 +22,33 @@
  * @copyright 2010
 =
  */
-class dbgroup extends dbtable {
-    private $tablename = "tbl_resdev_group";
+class dbattendance extends dbtable {
+    private $tablename = "tbl_resdev_attendance";
 
     public function init() {
         parent::init($this->tablename);
     }
 
-    public function saveGroupInfo($groupname) {
-        $data = array("groupname"=>$groupname,  "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
+    public function saveAttendanceInfo($attendance) {
+        $data = array("attendance"=>$attendance,  "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
         $this->insert($data);
     }
 
-        public function editGroupInfo($groupname, $id) {
-        $data = array("groupname"=>$groupname, "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
+    public function editAttendanceInfo($captureattendance, $id) {
+        $data = array("saveattendance"=>$saveattendance, "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
         $this->update('id', $id, $data);
     }
 
-    public function getGroupData() {
+    public function getAttendanceData() {
         return $this->getAll();
     }
 
-    public function deleteGroup($groupID) {
-        $this->delete("id", $groupID);
+    public function deleteAttendance($attendanceID) {
+        $this->delete("id", $attendanceID);
     }
 
-    public function editGroup($groupID){
-        $sql="update tbl_resdev_group set groupname=jkshgfjhkgj where id=$groupId";
+    public function editAttendance($attendanceID){
+        $sql="update tbl_resdev_attandace set attendance=jkshgfjhkgj where id=$attendanceId";
         return $this->getAll();
     }
 }

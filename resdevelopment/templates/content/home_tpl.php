@@ -12,6 +12,14 @@ echo $studentImportUrl->show()."<br>";
 $groupImportUrl = new link();
 $groupImportUrl->link($this->uri(array('action'=>'addgroup')));
 $groupImportUrl->link = "Add Group";
-echo $groupImportUrl->show();
+echo $groupImportUrl->show()."<br>";
+
+// to create a link for Capturing attendance
+$captureAttendanceImportUrl = new link();
+$captureAttendanceImportUrl->link($this->uri(array('action'=>'captureAttendance')));
+$captureAttendanceImportUrl->link = "Add Attendance";
+echo $captureAttendanceImportUrl->show();
+
+
 
 ?>

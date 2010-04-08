@@ -32,6 +32,7 @@ class resdevelopment extends controller {
   public function init() {
         $this->objStudents = $this->getObject('dbstudents');
         $this->objGroup = $this->getObject('dbgroup');
+        $this->objAttendance = $this->getObject('dbattendance');
     }
 
     /**
@@ -107,6 +108,7 @@ class resdevelopment extends controller {
         return "student_tpl.php";
     }
 
+
      /*
      * Method to show the page for adding group
      *
@@ -114,11 +116,23 @@ class resdevelopment extends controller {
     public function __addgroup() {
         return "groupmanagement_tpl.php";
     }
-
-    public function __savestudent() {
+     /*
+     * Method to show the page for caputing attendance
+     *
+     */
+    public function __captureattendance() {
+        return "captureattendance_tpl.php";
+    }
+        public function __savestudent() {
         // save the student info
         $this->objStudents->saveStudentInfo($this->getParam('firstname'), $this->getParam('lastname'));
         $this->nextAction("addstudent");
+    }
+
+    public function __savegroup() {
+        // save the student info
+        $this->objGroup->saveGroupInfo($this->getParam('groupname'));
+        $this->nextAction("addgroup");
     }
 
     public function __editstudent() {
@@ -132,13 +146,23 @@ class resdevelopment extends controller {
         $this->objGroup->editGroupInfo($this->getParam('groupname'), $this->getParam('id'));
         $this->nextAction("addgroup");
     }
-
-    public function __savegroup() {
-        // save the group info
-        $this->objGroup->saveGroupInfo($this->getParam('groupname'));
-        $this->nextAction("addgroup");
+    
+    public function __saveattendance() {
+        // save the attandance info
+        $this->objAttendance->saveAttendanceInfo($this->getParam('attendance'));
+        $this->nextAction("saveattendance");
     }
-
+  public function __editattendance() {
+        // edit the attendance info
+        $this->objAttendance->editAttendanceInfo($this->getParam('attendance'), $this->getParam('id'));
+        $this->nextAction("editattendance");
+    }
+      public function __deleteattendance() {
+        // delete attendance from database
+        $attendanceID = $this->getParam('id');
+        $this->objAttendance->deleteAttendance($attendanceID);
+        $this->nextAction("deleteattendance");
+    }
     public function __deletenames() {
         // delete student from database
         $studentID = $this->getParam('id');
