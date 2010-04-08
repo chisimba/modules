@@ -144,6 +144,10 @@ class cms extends controller
                 $this->objConfig = $this->getObject('altconfig', 'config');
                 //Create an instance of the language object for text rendering
                 $this->objLanguage = $this->getObject('language', 'language');
+                //Create an instance of the sysconfig object to get module configurations
+                $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+                //Get configuration on show menu
+                $this->disablemenu = $this->objSysConfig->getValue('disablemenu', 'cms');
                 //Create an instance of the modules object from modulecatalogue
                 $objModule = $this->getObject('modules', 'modulecatalogue');
                 //Use the modules object instantiated above to see if context is registered
@@ -270,6 +274,8 @@ class cms extends controller
          */
         private function _previewcontent()
         {
+                if($this->disablemenu=='true')
+                 $this->setVar('pageSuppressToolbar', TRUE);
                 $this->setLayoutTemplate('cms_layout_tpl.php');
                 $fromadmin = $this->getParam('fromadmin', FALSE);
                 $sectionId = $this->getParam('sectionid', NULL);
@@ -325,8 +331,10 @@ class cms extends controller
          */
         private function _showsection()
         {
+                if($this->disablemenu=='true')
+                 $this->setVar('pageSuppressToolbar', TRUE);
         	$this->setLayoutTemplate('cms_layout_tpl.php');
-            //Retrieve the section id from the querystring
+                //Retrieve the section id from the querystring
 			$sectionId = $this->getParam('id');
 			//If the section id is not null, get the section and set the
 			//  site title, otherwise set the site title to empty.
@@ -429,13 +437,15 @@ class cms extends controller
          */
         private function _showfulltext()
         {
-			$page['id'] = $this->getParam('id');
-			//Security Check for Public Access
-            if (!$this->_objSecurity->isContentPublic($page['id'])) {
-				$this->setVar('errMessage','You have to log in to access this item');
-				$this->setVar('mustlogin',TRUE);
-				return 'cms_nopermissions_tpl.php';
-            }
+          if($this->disablemenu=='true')
+           $this->setVar('pageSuppressToolbar', TRUE);
+	  $page['id'] = $this->getParam('id');
+	  //Security Check for Public Access
+          if (!$this->_objSecurity->isContentPublic($page['id'])) {
+		$this->setVar('errMessage','You have to log in to access this item');
+		$this->setVar('mustlogin',TRUE);
+		return 'cms_nopermissions_tpl.php';
+          }
 
             $this->setLayoutTemplate('cms_layout_tpl.php');
             $fromadmin = $this->getParam('fromadmin', FALSE);
@@ -468,6 +478,8 @@ class cms extends controller
          */
         private function _showcontent()
         {
+                if($this->disablemenu=='true')
+                 $this->setVar('pageSuppressToolbar', TRUE);
         	$this->setLayoutTemplate('cms_layout_tpl.php');
         	return $this->_showfulltext();
         }
@@ -485,18 +497,20 @@ class cms extends controller
          */
         private function _home()
         {
+                if($this->disablemenu=='true')
+                 $this->setVar('pageSuppressToolbar', TRUE);
         	$this->setLayoutTemplate('cms_layout_tpl.php');
         	$displayId = $this->getParam('displayId');
-            $content = $this->objLayout->getFrontPageContent($displayId);
-            if(!empty($content)) {
-             	$this->bbcode = $this->getObject('washout', 'utilities');
-               	$content = $this->bbcode->parseText($content);
-                $this->setVarByRef('content', $content);
-                return 'cms_section_tpl.php';
-            } else {
-                $firstSectionId = $this->_objSections->getFirstSectionId(TRUE);
-                return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
-            }
+                $content = $this->objLayout->getFrontPageContent($displayId);
+                if(!empty($content)) {
+               	 $this->bbcode = $this->getObject('washout', 'utilities');
+               	 $content = $this->bbcode->parseText($content);
+                 $this->setVarByRef('content', $content);
+                 return 'cms_section_tpl.php';
+                } else {
+                 $firstSectionId = $this->_objSections->getFirstSectionId(TRUE);
+                 return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
+                }
         }
 
 	    /**
@@ -708,5 +722,4 @@ class cms extends controller
 
 
 }
-
 ?>
