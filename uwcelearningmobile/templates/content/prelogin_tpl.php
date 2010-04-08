@@ -25,7 +25,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
     $objFields->setLegend('');
 
     //--Create an element for the username
-    $objInput = new textinput('username', '', 'text','15');
+    $objInput = new textinput('username', '', 'text','');
     $objInput->extra = 'maxlength="255"';
     $objLabel = new label($this->objLanguage->languageText('word_username').': ', 'input_username');
     
@@ -34,7 +34,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
     $objFields->addContent($objInput->show().'<br />');
    
     //--- Create an element for the password
-    $objInput = new textinput('password', '', 'password', '15');
+    $objInput = new textinput('password', '', 'password', '');
     $objInput->extra = 'maxlength="255"';
     $objLabel = new label($this->objLanguage->languageText('word_password'). ': ', 'input_password');
     //Add the password box to the form

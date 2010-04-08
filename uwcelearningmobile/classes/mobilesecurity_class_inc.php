@@ -83,7 +83,15 @@ class mobilesecurity extends object {
             $remember = false;
         }
 
+		$isactive = $this->objUser->lookupData($username);
+		if(($isactive['isactive']) != 1)
+        {
+             $error = 'User is inactive, please contact site admin';
+             return $error;
+		}
+		
         if($this->objUser->authenticateUser ( $username, $password, $remember )) {
+			
 			return true;
         }
 		else{

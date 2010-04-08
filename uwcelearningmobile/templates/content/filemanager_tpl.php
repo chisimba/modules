@@ -45,11 +45,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 			$objTable->addCell($this->objLanguage->languageText('mod_uwcelearningmobile_wordfolder', 'uwcelearningmobile'), '', '', '', '', '');
 			$objTable->endRow();
 		}
+		
 		foreach($files as $file)
 		{	$fileDownloadPath = $this->objSysConfig->getcontentPath().$file['path'];
 			$fileDownloadPath = $this->objCleanUrl->cleanUpUrl($fileDownloadPath);
 			$link = new link($fileDownloadPath);
-			$link->link = substr($file['filename'], 0, 60) . '...';
+			$link->link = substr($file['filename'], 0, 9) . '...';
 			$icon = $this->objFileIcons->getFileIcon($file['filename']);
 			$objTable->startRow();
 			$objTable->addCell($icon.' '.$link->show(), '', '', '', '', '');
