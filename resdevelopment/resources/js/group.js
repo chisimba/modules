@@ -54,18 +54,20 @@ function showGrid(typeURL, myData) {
     grid.render('grid-example');
 }
 
-function addGroup() {
+function editGroup() {
     typeURL = arguments[0];
     myID = arguments[1];
+    var groupName=arguments[2];
     btnText = 'Add';
     if(typeof(myID) != "undefined") {
         typeURL = typeURL + "&id=" + myID;
         btnText = 'Edit';
     }
 
-    var fileTypeAddForm = [{
+    var fileTypeEditForm = [{
         fieldLabel: 'Group Name',
         name: 'groupname',
+       value:groupName,
         id: 'groupname_title',
         allowBlank: false,
         width: 250
@@ -80,7 +82,7 @@ function addGroup() {
         width: 350,
         defaults: {width: 230},
         defaultType: 'textfield',
-        items: fileTypeAddForm
+        items: fileTypeEditForm
     });
 
     if(!win){
@@ -110,12 +112,14 @@ function addGroup() {
                 }
             }]
         });
-        win.show(this);
+        
     }
+    win.show(this);
 }
 
-function goEdit(typeURL, myID) {
-    addGroup(typeURL, myID);
+function goEdit(typeURL, myID,groupName) {
+
+    editGroup(typeURL, myID,groupName);
 }
 
 function goDelete(myURL) {

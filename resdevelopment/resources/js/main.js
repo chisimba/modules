@@ -5,7 +5,7 @@ function showGrid(typeURL, myData) {
     var p = new Ext.Panel({
         layout: 'table',
         autoWidth: true,
-        style: 'marginRight: 10px',
+        style: 'marginRight: 10px;',
         baseCls: 'x-plain',
         cls: 'btn-panel',
         border: false,
@@ -82,7 +82,8 @@ function addStudent() {
         labelWidth: 125,
         url: typeURL,
         frame:true,
-        bodyStyle:'padding:5px 5px 0',
+        
+        bodyStyle:'margin-left: 10px;padding:5px 5px 0',
         width: 350,
         defaults: {width: 230},
         defaultType: 'textfield',

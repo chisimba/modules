@@ -30,7 +30,7 @@ $deleteGroup = new link();
 // save the Group information in a format that extjs grid will understand.
 foreach($getGroupData as $row) {
     // this is the edit icon
-    $editGroup->link("javascript: goEdit(\'".$editGroupUrl."\',\'".$row['id']."\')");
+    $editGroup->link("javascript: goEdit(\'".$editGroupUrl."\',\'".$row['id']."\',\'".$row['groupname']."\')");
     $objIcon->setIcon('edit');
     $editGroup->link=$objIcon->show();
 
