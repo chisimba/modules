@@ -83,7 +83,7 @@ $form->addRule('name',$this->objLanguage->languagetext('mod_photogallery_neednam
 $table = new htmltable();
 $table->width = '200';
 $table->startRow();
-$table->addCell('<label for="name">'.$this->objLanguage->languagetext('mod_photogallery_name','photogallery').':</label>');
+$table->addCell('<label for="name">'.$this->objLanguage->languagetext('mod_photogallery_givename','photogallery').':</label>');
 $table->addCell($name->show());
 $table->endRow();
 
@@ -127,7 +127,7 @@ if (!$loggedIn){
     //$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_request_captcha');
     $fieldset = $this->newObject('fieldset', 'htmlelements');
     $fieldset->legend = 'Verify Image';
-    $fieldset->contents = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="captchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
+    $fieldset->contents = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="captchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
     $form->addToForm($fieldset->show());
 }
 
