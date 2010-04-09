@@ -114,23 +114,16 @@ class dbtriplestore extends dbTable
     }
 
     /**
-     * Returns a nested associative array of all the triples in the triplestore.
+     * Returns a nested associative array of the triples in the triplestore according to the filters provided.
      *
      * @access public
-     * @param  array $filters Associative array of the filters to use.
+     * @param  array $filters Associative array of the filters to use. Empty array to return everything.
      * @return array The nested array of triples.
      */
     public function getNestedTriples($filters)
     {
-        // Build the where clause from the filters array.
-        $where = array();
-        foreach ($filters as $filterType => $filter) {
-            $where[] = "$filterType = '$filter'";
-        }
-        $where = empty($where) ? NULL : ('WHERE ' . implode(' AND ', $where));
-
         // Retrieve all the triples out of the triplestore.
-        $triples = $this->getAll($where);
+        $triples = $this->getTriples($filters);
 
         // Initialise the data array to be returned.
         $subjects = array();
@@ -197,6 +190,28 @@ class dbtriplestore extends dbTable
         $triple = $this->getRow('id', $id);
 
         return $triple;
+    }
+
+    /**
+     * Fetches an array of triples from the triplestore according to the filters provided.
+     *
+     * @access public
+     * @param  array $filters Associative array of the filters to use. Empty array to return everything.
+     * @return array The array of triples.
+     */
+    public function getTriples($filters=array())
+    {
+        // Build the where clause from the filters array.
+        $where = array();
+        foreach ($filters as $filterType => $filter) {
+            $where[] = "$filterType = '$filter'";
+        }
+        $where = empty($where) ? NULL : ('WHERE ' . implode(' AND ', $where));
+
+        // Retrieve all the triples out of the triplestore.
+        $triples = $this->getAll($where);
+
+        return $triples;
     }
 
     /**
