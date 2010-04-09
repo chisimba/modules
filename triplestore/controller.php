@@ -132,7 +132,7 @@ class triplestore extends controller
         } else {
             $filters     = array();
         }
-        $filterTypes = array('subject', 'predicate', 'object');
+        $filterTypes = array('id', 'subject', 'predicate', 'object');
         foreach ($filterTypes as $filterType) {
             $filter = $this->getParam($filterType);
             if ($filter) {
