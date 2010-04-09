@@ -118,11 +118,10 @@ class triplestore extends controller
     }
 
     /**
-    *
-    * Method corresponding to the view action.
-    * @access private
-    *
-    */
+     * Action to retrieve data from the triplestore in JSON format.
+     *
+     * @access private
+     */
     private function __view()
     {
         $filters = array();
