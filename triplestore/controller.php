@@ -139,9 +139,23 @@ class triplestore extends controller
                 $filters[$filterType] = $filter;
             }
         }
-        $nestedTriples = $this->objTriplestore->getNestedTriples($filters);
-        header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode($nestedTriples);
+        $format = $this->getParam('format', 'nested');
+        switch ($format) {
+            case 'nested':
+                $triples = $this->objTriplestore->getNestedTriples($filters);
+                break;
+            case 'flat':
+                $triples = $this->objTriplestore->getTriples($filters);
+                break;
+            default:
+                $triples = FALSE;
+        }
+        if (is_array($triples)) {
+            header('Content-Type: application/json; charset=UTF-8');
+            echo json_encode($triples);
+        } else {
+            header('HTTP/1.1 400 Bad Request');
+        }
     }
 
     private function __getmytripples()
