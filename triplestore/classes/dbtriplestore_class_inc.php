@@ -149,36 +149,6 @@ class dbtriplestore extends dbTable
     }
 
     /**
-     * Fetches all of the triples associated with a particular subject out of the triplestore.
-     *
-     * @access public
-     * @param  string $subject The id of the subject.
-     * @return array  Multidimensional associative array of predicates and their respective objects.
-     */
-    public function getSubjectAsArray($subject)
-    {
-        // Retrieve the triples associated with the subject.
-        $triples = $this->getAll("WHERE subject = '$subject'");
-
-        // Initialise the array of predicates and objects to be returned.
-        $predicates = array();
-
-        // Loop through the triples and populate the predicate array.
-        foreach ($triples as $triple) {
-            // If necessary, initialise the array for the current predicate.
-            if (!array_key_exists($triple['predicate'], $predicates)) {
-                $predicates[$triple['predicate']] = array();
-            }
-
-            // Add the current object under its internal triplestore id to the predicate.
-            $predicates[$triple['predicate']][$triple['id']] = $triple['object'];
-        }
-
-        // Return the array of predicates and objects.
-        return $predicates;
-    }
-
-    /**
      * Fetches an array of triples from the triplestore according to the filters provided.
      *
      * @access public
