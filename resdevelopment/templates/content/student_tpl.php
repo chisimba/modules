@@ -30,7 +30,7 @@ $deleteName = new link();
 // save the student information in a format that extjs grid will understand.
 foreach($getStudentData as $row) {
     // this is the edit icon
-    $editName->link("javascript: goEdit(\'".$editStudentUrl."\',\'".$row['id']."\')");
+    $editGroup->link("javascript: goEdit(\'".$editGroupUrl."\',\'".$row['id']."\',\'".$row['firstname']."\')".$row['lastname']."\')");
     $objIcon->setIcon('edit');
     $editName->link=$objIcon->show();
 
