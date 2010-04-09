@@ -120,7 +120,7 @@ class dbtriplestore extends dbTable
      * @param  array $filters Associative array of the filters to use. Empty array to return everything.
      * @return array The nested array of triples.
      */
-    public function getNestedTriples($filters)
+    public function getNestedTriples($filters=array())
     {
         // Retrieve all the triples out of the triplestore.
         $triples = $this->getTriples($filters);
