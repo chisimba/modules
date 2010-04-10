@@ -7,7 +7,7 @@ $cssLayout->setNumColumns ( 3 );
 $this->leftMenu     = $this->newObject ( 'usermenu', 'toolbar' );
 $this->objDbEvents  = $this->getObject('dbevents');
 $this->objOps       = $this->getObject('eventsops');
-$this->objDia       = $this->getObject('jqdialogue', 'htmlelements');
+$this->objDia       = $this->getObject('jqdialogue', 'jquery');
 
 $middleColumn = NULL;
 
