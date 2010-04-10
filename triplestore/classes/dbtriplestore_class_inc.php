@@ -137,6 +137,8 @@ class dbtriplestore extends dbTable
         }
         sort($predicates);
         $handle = fopen($file, 'w');
+        $fields = array_merge(array($subject), $predicates);
+        fputcsv($handle, $fields, $delimiter);
         foreach ($triples as $subject => $objects) {
             $fields = array($subject);
             foreach ($predicates as $predicate) {
