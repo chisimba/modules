@@ -114,6 +114,44 @@ class dbtriplestore extends dbTable
     }
 
     /**
+     * Exports triples in CSV format.
+     *
+     * @access public
+     * @param  string $file            The name and path to the CSV file.
+     * @param  string $subject         The name of the column containig the subject names.
+     * @param  array  $filters         Associative array of the filters to use. Empty array to return everything.
+     * @param  string $delimiter       The CSV delimiter to use.
+     * @param  string $objectDelimiter The delimiter to use for multiple object values.
+     */
+    public function exportCSV($file, $subject, $filters=array(), $delimiter=',', $objectDelimiter='|')
+    {
+        $triples = $this->getNestedTriples($filters);
+        $predicates = array();
+        foreach ($triples as $objects) {
+            $predicates = array_keys($objects);
+            foreach ($predicates as $predicate) {
+                if (!in_array($predicate, $predicates)) {
+                    $predicates[] = $predicate;
+                }
+            }
+        }
+        sort($predicates);
+        $handle = fopen($file, 'w');
+        foreach ($triples as $subject => $objects) {
+            $fields = array($subject);
+            foreach ($predicates as $predicate) {
+                if (array_key_exists($predicate, $objects)) {
+                    $fields[] = implode($objectDelimiter, $objects[$predicate]);
+                } else {
+                    $fields[] = '';
+                }
+            }
+            fputcsv($file, $fields, $delimiter);
+        }
+        fclose($file);
+    }
+
+    /**
      * Returns the subject of the current user.
      *
      * @access public
