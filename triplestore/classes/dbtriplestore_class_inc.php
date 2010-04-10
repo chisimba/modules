@@ -162,8 +162,27 @@ class dbtriplestore extends dbTable
         return $subjects;
     }
 
+    /**
+     * Returns a list of subjects according to the filters provided.
+     *
+     * @access public
+     * @param  array $filters Associative array of the filters to use. Empty array to return everything.
+     * @return array The array of subjects.
+     */
     public function getSubjects($filters=array())
     {
+        // Initialise the subjects array.
+        $subjects = array();
+
+        // Retrieve the subjects from the triplestore according to the filters provided.
+        $triples = $this->getTriples($filters, array('subject'), 'subject');
+
+        // Loop through the triples and populate the subjects array.
+        foreach ($triples as $triple) {
+            $subjects[] = $this->__get($triple['subject']);
+        }
+
+        return $subjects;
     }
 
     /**
