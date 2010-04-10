@@ -146,9 +146,9 @@ class dbtriplestore extends dbTable
                     $fields[] = '';
                 }
             }
-            fputcsv($file, $fields, $delimiter);
+            fputcsv($handle, $fields, $delimiter);
         }
-        fclose($file);
+        fclose($handle);
     }
 
     /**
