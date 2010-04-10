@@ -126,22 +126,22 @@ class dbtriplestore extends dbTable
     public function exportCSV($file, $subject, $filters=array(), $delimiter=',', $objectDelimiter='|')
     {
         $triples = $this->getNestedTriples($filters);
-        $predicates = array();
+        $allPredicates = array();
         foreach ($triples as $objects) {
             $predicates = array_keys($objects);
             foreach ($predicates as $predicate) {
-                if (!in_array($predicate, $predicates)) {
-                    $predicates[] = $predicate;
+                if (!in_array($predicate, $allPredicates)) {
+                    $allPredicates[] = $predicate;
                 }
             }
         }
-        sort($predicates);
+        sort($allPredicates);
         $handle = fopen($file, 'w');
-        $fields = array_merge(array($subject), $predicates);
+        $fields = array_merge(array($subject), $allPredicates);
         fputcsv($handle, $fields, $delimiter);
         foreach ($triples as $subject => $objects) {
             $fields = array($subject);
-            foreach ($predicates as $predicate) {
+            foreach ($allPredicates as $predicate) {
                 if (array_key_exists($predicate, $objects)) {
                     $fields[] = implode($objectDelimiter, $objects[$predicate]);
                 } else {
