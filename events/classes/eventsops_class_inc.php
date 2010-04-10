@@ -298,7 +298,7 @@ class eventsops extends object {
             else {
                 $signuplink = NULL;
             }
-            $signinlink = $signinlink->show($this->objLanguage->languageText("mod_events_signin", "events"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_events_toseeevents", "events")."<br /> (".$this->objLanguage->languageText("mod_events_youcanusetwitter", "events").")<br /><hr />";
+            $signinlink = $signinlink->show($this->objLanguage->languageText("mod_events_signin", "events"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_events_toseeevents", "events").", ";
             $linklist .= $signinlink;
             $linklist .= $this->objLanguage->languageText("mod_events_orifyoudonthaveacc", "events").", ".$signuplink;
         }
