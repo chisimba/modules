@@ -125,7 +125,7 @@ class triplestore extends controller
     private function __view()
     {
         $filters = array();
-        $filterTypes = array('id', 'subject', 'predicate', 'object');
+        $filterTypes = array('id', 'userid', 'subject', 'predicate', 'object');
         foreach ($filterTypes as $filterType) {
             $filter = $this->getParam($filterType);
             if ($filter) {
