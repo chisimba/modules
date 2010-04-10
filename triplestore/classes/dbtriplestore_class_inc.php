@@ -225,6 +225,33 @@ class dbtriplestore extends dbTable
     }
 
     /**
+     * Imports a CSV file into the triplestore.
+     *
+     * @access public
+     * @param  string $file      The name and path to the CSV file.
+     * @param  string $subject   The name of the column containing the subjects.
+     * @param  string $delimiter The CSV delimiter.
+     */
+    public function importCSV($file, $subject, $delimiter=',')
+    {
+        if (($handle = fopen($file, 'r')) !== FALSE) {
+            $predicates = null;
+            while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE) {
+                if (is_array($predicates)) {
+                    foreach ($predicates as $count => $predicate) {
+                        $this->insert($row[$subject], $predicate, $row[$count]);
+                    }
+                } else {
+                    $subject = array_search($subject, $row);
+                    $predicates = $row;
+                    unset($predicates[$subject]);
+                }
+            }
+            fclose($handle);
+        }
+    }
+
+    /**
      * Adds a new triple to the triplestore.
      *
      * @access public
