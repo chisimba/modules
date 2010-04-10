@@ -114,6 +114,20 @@ class dbtriplestore extends dbTable
     }
 
     /**
+     * Returns the subject of the current user.
+     *
+     * @access public
+     * @return object The subject.
+     */
+    public function getCurrentUser()
+    {
+        $userId  = $this->objUser->userId();
+        $subject = $this->__get($userId);
+
+        return $subject;
+    }
+
+    /**
      * Returns a nested associative array of the triples in the triplestore according to the filters provided.
      *
      * @access public
