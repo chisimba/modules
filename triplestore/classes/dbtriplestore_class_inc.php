@@ -279,7 +279,9 @@ class dbtriplestore extends dbTable
             while (($row = fgetcsv($handle, 0, $delimiter)) !== FALSE) {
                 if (is_array($predicates)) {
                     foreach ($predicates as $count => $predicate) {
-                        $this->insert($row[$subject], $predicate, $row[$count]);
+                        if ($row[$count] !== '') {
+                            $this->insert($row[$subject], $predicate, $row[$count]);
+                        }
                     }
                 } else {
                     $subject = array_search($subject, $row);
