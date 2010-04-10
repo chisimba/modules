@@ -166,7 +166,7 @@ class dbtriplestore extends dbTable
      * Returns a list of subjects according to the filters provided.
      *
      * @access public
-     * @param  array $filters Associative array of the filters to use. Empty array to return everything.
+     * @param  array $filters Associative array of the filters to use. Empty array to return all available subjects.
      * @return array The array of subjects.
      */
     public function getSubjects($filters=array())
