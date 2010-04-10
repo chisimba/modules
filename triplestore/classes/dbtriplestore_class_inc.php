@@ -162,14 +162,20 @@ class dbtriplestore extends dbTable
         return $subjects;
     }
 
+    public function getSubjects($filters=array())
+    {
+    }
+
     /**
      * Fetches an array of triples from the triplestore according to the filters provided.
      *
      * @access public
-     * @param  array $filters Associative array of the filters to use. Empty array to return everything.
-     * @return array The array of triples.
+     * @param  array  $filters Associative array of the filters to use. Empty array to return everything.
+     * @param  array  $columns The columns to retrieve. Empty array to return all available columns.
+     * @param  string $groupBy The column to group by. NULL to not group by anything.
+     * @return array  The array of triples.
      */
-    public function getTriples($filters=array())
+    public function getTriples($filters=array(), $columns=array(), $groupBy=NULL)
     {
         // Build the where clause from the filters array.
         $where = array();
@@ -178,8 +184,23 @@ class dbtriplestore extends dbTable
         }
         $where = empty($where) ? NULL : ('WHERE ' . implode(' AND ', $where));
 
+        // Build the select clause.
+        if (empty($columns)) {
+            $select = '*';
+        } else {
+            $select = implode(', ', $columns);
+        }
+
+        // Build the SQL statement.
+        $stmt = "SELECT $select FROM {$this->_tableName} $where";
+
+        // If a group by has been set, add that to the statement.
+        if ($groupBy !== NULL) {
+            $stmt .= " GROUP BY $groupBy";
+        }
+
         // Retrieve all the triples out of the triplestore.
-        $triples = $this->getAll($where);
+        $triples = $this->getArray($stmt);
 
         return $triples;
     }
