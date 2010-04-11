@@ -356,15 +356,24 @@ class dbtriplestore extends dbTable
         return $result;
     }
 
-    public function getTriplesPaginated($subject, $start=0, $limit=25)
+    public function getTriplesPaginated($subject, $page, $pageSize)
     {
-    	$start = (empty($start)) ? 0 : $start;
-    	$limit = (empty($limit)) ? 25 : $limit;
-    	// Retrieve the triples associated with the subject.
+        $order = $this->getParam('order', 'predicate');
+        // Stop it at the first page
+        if ($page <1) $page=1;
+        // It starts at 0
+        $page = $page-1;
+        $start = $page * $pagesize + 1;
+        $limit = $pageSize;
         $filter = "WHERE subject = '$subject'";
         $records =  $this->getRecordCount('$filter');
+        // Make sure we don't go beyond total records
+        if ($page > $records) {
+            $page = $records;
+        }
+        // Retrieve the triples associated with the subject.
         $numOfPages = ceil($records / $limit);
-        $triples = $this->getAll("WHERE subject = '$subject'  limit $start, $limit");
+        $triples = $this->getAll("WHERE subject = '$subject' ORDER BY $order LIMIT $start, $limit");
         return $triples;
     	//example $contexts = $this->objDBContext->getAll("ORDER BY updated DESC limit ".$start.", ".$limit);
     }

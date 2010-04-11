@@ -153,11 +153,9 @@ class triplestore extends controller
 
     private function __getmytripples()
     {
-        $pageSize = $this->getParam('pagesize', 5);
+        $pageSize = $this->getParam('pagesize', 15);
         $page = $this->getParam('page', 1);
-        $nextPage = $page+1;
         $targetUrl = $this->uri(array('action' => 'getpage',
-           'page' => $nextPage,
             'pagesize' => $pageSize), 'triplestore');
         // Create an instance of the ingrid grid class
         $objIh = & $this->getObject('ingridhelper', 'jqingrid');
@@ -240,9 +238,9 @@ class triplestore extends controller
             // Update the existing record
             //@todo
         } else {
-            die($this->objTriplestore->insert($subject, $predicate, $tripobject));
+            $this->objTriplestore->insert($subject, $predicate, $tripobject);
         }
-        return $this->nextAction(NULL);
+        return $this->nextAction('add');
     }
 
     /**
