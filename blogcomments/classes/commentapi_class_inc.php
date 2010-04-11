@@ -93,6 +93,16 @@ class commentapi extends object
 		$ctbl->cellpadding = 5;
 
 		//start the inputs
+		//textinput for author name
+		$author = new textinput('commentauthor');
+		$authorlabel = new label($this->objLanguage->languageText("mod_blogcomments_yourname", "blogcomments") . ':', 'comm_input_name');
+		$ctbl->startRow();
+		$ctbl->addCell($authorlabel->show());
+		$ctbl->endRow();
+		$ctbl->startRow();
+		$ctbl->addCell($author->show());
+		$ctbl->endRow();
+		
 		//textinput for author url
 		$url = new textinput('url');
 		$urllabel = new label($this->objLanguage->languageText("mod_blogcomments_url", "blogcomments") . ':', 'comm_input_url');

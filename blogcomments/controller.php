@@ -115,6 +115,7 @@ class blogcomments extends controller
             	$addinfo['table'] = $this->getParam('table');
             	$addinfo['mod'] = $this->getParam('mod');
             	$addinfo['aurl'] = $this->getParam('url');
+            	$addinfo['commentauthor'] = $this->getParam('commentauthor');
             	$addinfo['ctype'] = $this->getParam('type');
             	$addinfo['comment'] = $this->getParam('comment');
             	$addinfo = $this->objComm->addToDb($addinfo);
