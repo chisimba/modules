@@ -73,3 +73,20 @@ string
 Default: =
 A character placed between a key and a value in the url. Compass Grid defaults to ?foo=bar&this=that
 
+
+
+Server-Side Code
+
+Your server side code should check for various data being sent by the plugin. A sample request might look like this:
+
+pageData.php/?page=3&sortField=title&sortOrder=asc&show10;
+
+Here's what this means:
+
+Page: The page the user is requesting
+
+sortField: The table column that the user is sorting by. The value here will be the id for the column that you specified in your server-side code.
+
+sortOrder: The order the user wants to sort. Either asc or desc.
+
+show: The number of results to return to the user (i.e 10 at a time)

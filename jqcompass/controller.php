@@ -156,7 +156,7 @@ class jqcompass extends controller
         $this->objCompass->loadCss();
         $this->objCompass->loadJs();
         $arrayParams = array(
-            'images' => 'images/',
+            'images' => 'packages/jqcompass/resources/images/',
             'url' => 'index.php?module=jqcompass&action=getdata'
         );
         $this->objCompass->buildReadyFunction($arrayParams);
@@ -266,6 +266,7 @@ class jqcompass extends controller
         // Set json content-type header
         header("Content-Type: text/x-json");
         echo json_encode($json);
+        exit;
     }
 
     
