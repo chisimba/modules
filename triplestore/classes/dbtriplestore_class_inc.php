@@ -351,6 +351,7 @@ class dbtriplestore extends dbTable
 
         // Attempt to apply the changes to the triplestore.
         $result = parent::update('id', $id, $update);
+
         // Return the result of the update.
         return $result;
     }
