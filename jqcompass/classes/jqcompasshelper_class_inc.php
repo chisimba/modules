@@ -125,6 +125,7 @@ class jqcompasshelper extends object
     *
     * @access public
     * @return TRUE
+     * @access public
     *
     */
     public function loadReadyFunction()
@@ -142,6 +143,7 @@ class jqcompasshelper extends object
     *
     * @param string array $arrayParams An array of param => value pairs
     * @param string $browseTable The css class of the table for the grid
+    * @access public
     *
     */
     public function buildReadyFunction($arrayParams, $browseTable='browseTable')
@@ -164,11 +166,22 @@ class jqcompasshelper extends object
         $this->readyFunction = $ret;
     }
 
-    public function buildBaseTable($tableRows=4, $browseTable='browseTable')
+    /**
+     * Method to build the base table that will be replaced in the
+     * output with the data. The columns should correspond between the
+     * base table and the actual data.
+     *
+     * @param integer $tableCols The number of colums to
+     * @param string $browseTable The class for the table
+     * @return string The table HTML
+     * @access public
+     *
+     */
+    public function buildBaseTable($tableCols=4, $browseTable='browseTable')
     {
         $ret = "<table class=\"$browseTable\">\n    <tbody>\n\n";
         $count = 1;
-        while ($count <= $tableRows) {
+        while ($count <= $tableCols) {
             $ret .= "        <td></td>\n";
             $count++;
         }
@@ -176,6 +189,13 @@ class jqcompasshelper extends object
         return $ret;
     }
 
+    /**
+    * Add a div to activate the resizer
+    *
+    * @return string The rendered div
+    * @access public
+    * 
+    */
     public function addResizer()
     {
         return '<div id="ctResizer"></div>';
