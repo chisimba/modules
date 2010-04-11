@@ -167,6 +167,7 @@ class blogposts extends object
         );
         $ret = NULL;
         // Middle column (posts)!
+        $this->objJqTwitter = $this->getObject('jqtwitter', 'twitter');
         // break out the ol featurebox...
         if (!empty($posts)) {
             // get the washout class and parse for all the bits and pieces
@@ -175,7 +176,22 @@ class blogposts extends object
             $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
             // Loop over the posts
             foreach($posts as $post) {
-                $post['post_content'] = $washer->parseText($post['post_content']);
+                $cleanpost = $washer->parseText($post['post_content']);
+                $url = $this->uri(array(
+                        'action' => 'viewsingle',
+                        'postid' => $post['id'],
+                        'userid' => $post['userid']
+                    	));
+                $status = $this->sysConfig->getValue('retweet_status', 'blog');
+                $style = $this->sysConfig->getValue('retweet_style', 'blog'); 
+                if($status == NULL){
+                    $status = "Interesting read ";
+                }
+                if($style == NULL) {
+                    $style = 'retweet vert';
+                }
+                $rt = $this->objJqTwitter->retweetCounter($url, $status, $style);
+                $post['post_content'] = "<br />".$rt."<br />".$cleanpost; 
                 if($cleanPost  == 'true'){
                     $post['post_content'] = $this->cleanPost($post['post_content']);
                 }
