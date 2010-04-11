@@ -355,6 +355,16 @@ class dbtriplestore extends dbTable
         // Return the result of the update.
         return $result;
     }
+
+    public function getTriplesPaginated($subject, $start=0, $limit=25)
+    {
+    	$start = (empty($start)) ? 0 : $start;
+    	$limit = (empty($limit)) ? 25 : $limit;
+    	// Retrieve the triples associated with the subject.
+        $triples = $this->getAll("WHERE subject = '$subject'  limit $start, $limit");
+        return $triples;
+    	//example $contexts = $this->objDBContext->getAll("ORDER BY updated DESC limit ".$start.", ".$limit);
+    }
 }
 
 ?>

@@ -302,24 +302,27 @@ class tripleui extends object
     * @access public
     *
     */
-    public function getMyTriples()
+    public function getMyTriples($page, $pageSize)
     {
         $myUserId = $this->objUser->userId();
         $myUserName = $this->objUser->userName($myUserId);
-        $page = $this->getParam('page', 1);
         // Retrieve all the triples out of the triplestore.
-        $triples = $this->objTriplestore->getAll("WHERE subject='$userName'");
+        $triples = $this->objTriplestore->getTriplesPaginated($myUserName, $page, $pageSize);
         $sub = "subject";
         $pred = "predicate";
         $obj = "object";
-        $ret = "<table>\n<thead>\n\n<tr><th>$sub</th><th>$pred</th><th>$obj</th>\n\n</tr>\n</thead>\n<tbody>\n";
+        $ret = "<br /><div class='ingrid'>\n\n<table  id=\"table1\">\n";
+        if ($page == 1) {
+            $ret .= "<thead>\n\n<tr><th>$sub</th><th>$pred</th><th>$obj</th><th></th>\n\n</tr>\n</thead>\n";
+        }
+        $ret .= "<tbody>\n";
         foreach ($triples as $triple) {
             $ret .= "<tr><td>" . $triple['subject']
               ."</td><td>" . $triple['predicate']
               . "</td><td>" . $triple['object']
-              . "</td></tr>";
+              . "</td><td>edit stuff here</td></tr>\n";
         }
-        $ret .= "</tbody></table>";
+        $ret .= "</tbody>\n</table>\n\n</div>";
         return $ret;
     }
 }

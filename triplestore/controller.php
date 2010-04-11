@@ -153,10 +153,32 @@ class triplestore extends controller
 
     private function __getmytripples()
     {
-        //just testing here
+        $pageSize = $this->getParam('pagesize', 15);
+        $page = $this->getParam('page', 1);
+        $nextPage = $page+1;
+        $targetUrl = $this->uri(array('action' => 'getpage',
+           'page' => $nextPage,
+            'pagesize' => $pageSize), 'triplestore');
+        // Create an instance of the ingrid grid class
+        $objIh = & $this->getObject('ingridhelper', 'jqingrid');
+        $objIh->loadIngrid();
+        $objIh->loadCss();
+        $objIh->loadReadyFunction($targetUrl);
         $objTripleUi = $this->getObject('tripleui', 'triplestore');
-        echo $objTripleUi->getMyTriples();
-        die();
+        $str = $objTripleUi->getMyTriples($page, $pageSize);
+        $this->setvarByRef('str', $str);
+        return 'dump_tpl.php';
+    }
+
+    private function __getpage()
+    {
+        $page = $this->getParam('page', 1);
+        $pageSize = $this->getParam('pagesize', 15);
+        $objTripleUi = $this->getObject('tripleui', 'triplestore');
+        $str = $objTripleUi->getMyTriples($page, $pageSize);
+        $this->setvarByRef('str', $str);
+        $this->setPageTemplate('plain_tpl.php');
+        return 'dump_tpl.php';
     }
 
     /**
