@@ -268,5 +268,29 @@ class jqtwitter extends object
         ';
         return $script;
     }
+    
+    /**
+     * Method to create a CSS based retweet block for module content
+     * 
+     * This is a simple CSS and jQuery based method to create a retweet and count retweets block
+     * 
+     * @access public
+     * @param $url string URL to retweet
+     * @param $status string Status text to tweet
+     * @param $style string Style (either retweet vert or NULL for horizontal alignment)
+     */
+     public function retweetCounter($url, $status, $style = NULL)
+     {
+         $headjs = $this->getJavascriptFile('retweet.js', 'twitter'); 
+         $this->appendArrayVar('headerParams', $headjs);
+         if($style == "retweet vert") {
+             $retweet = '<a class="retweet vert" href="'.$url.'">'.$status.'</a>';
+         }
+         else {
+             $retweet = '<a class="retweet" href="'.$url.'">'.$status.'</a>';
+         }
+         
+         return $retweet;
+     }
 }
 ?>
