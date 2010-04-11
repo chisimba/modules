@@ -86,33 +86,6 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class jqeditable extends controller
 {
-
-    /**
-    *
-    * @var string $objConfig String object property for holding the
-    * configuration object
-    * @access public;
-    *
-    */
-    public $objConfig;
-
-    /**
-    *
-    * @var string $objLanguage String object property for holding the
-    * language object
-    * @access public
-    *
-    */
-    public $objLanguage;
-    /**
-    *
-    * @var string $objLog String object property for holding the
-    * logger object for logging user activity
-    * @access public
-    *
-    */
-    public $objLog;
-
     /**
     *
     * Intialiser for the jqingrid controller
@@ -186,39 +159,6 @@ class jqeditable extends controller
         return "dump_tpl.php";
     }
 
-    public function __test()
-    {
-        $this->setPageTemplate('plain_tpl.php');
-        return "test_tpl.php";
-    }
-
-    /**
-    *
-    * Method corresponding to the edit action. It sets the mode to
-    * edit and returns the edit template.
-    * @access private
-    *
-    */
-    private function __edit()
-    {
-        $this->setvar('mode', "edit");
-        return 'editform_tpl.php';
-    }
-
-    /**
-    *
-    * Method corresponding to the add action. It sets the mode to
-    * add and returns the edit content template.
-    * @access private
-    *
-    */
-    private function __add()
-    {
-        $this->setvar('mode', 'add');
-        return 'editform_tpl.php';
-    }
-
-
     /**
     *
     * Method corresponding to the save action. It gets the mode from
@@ -235,27 +175,6 @@ class jqeditable extends controller
         $this->setVarByRef('str', $str);
         return "postsave_tpl.php";
     }
-
-    /**
-    *
-    * Method corresponding to the delete action. It requires a
-    * confirmation, and then delets the item, and then sets
-    * nextAction to be null, which returns the {yourmodulename} module
-    * in view mode.
-    *
-    * @access private
-    *
-    */
-    private function __delete()
-    {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
-        }
-    }
-
 
     /**
     *

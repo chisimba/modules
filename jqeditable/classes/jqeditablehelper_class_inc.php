@@ -81,7 +81,7 @@ class jqeditablehelper extends object
 {
     /**
     *
-    * Intialiser for the jqingrid database connector
+    * Intialiser for the jqeditablehelper class
     * @access public
     *
     */
@@ -91,7 +91,7 @@ class jqeditablehelper extends object
     }
     /**
     *
-    * Load the ingrid jQuery plugin
+    * Load the editable jQuery plugin javascript file
     *
     * @access public
     * @return TRUE
@@ -108,7 +108,7 @@ class jqeditablehelper extends object
 
     /**
     *
-    * Load the ingrid jQuery plugin ready function that is the business end
+    * Load the editable jQuery plugin ready function that is the business end
     *
     * @access public
     * @return TRUE
@@ -137,9 +137,9 @@ class jqeditablehelper extends object
     *             'style' => 'display: inline'
     *           )
     *
-    * @param <type> $arrayParams
-    * @param <type> $targetUrl
-    * @param <type> $areaType
+    * @param string array $arrayParams An array of param => value pairs
+    * @param string $targetUrl The URL that will save the changes
+    * @param string $areaClass The CSS class of the editable item
     *
     */
     public function buildReadyFunction($arrayParams, $targetUrl, $areaClass='edit')
