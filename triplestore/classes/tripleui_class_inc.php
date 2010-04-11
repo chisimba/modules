@@ -308,21 +308,33 @@ class tripleui extends object
         $myUserName = $this->objUser->userName($myUserId);
         // Retrieve all the triples out of the triplestore.
         $triples = $this->objTriplestore->getTriplesPaginated($myUserName, $page, $pageSize);
+        // Multiling this .........................................................................................
         $sub = "subject";
         $pred = "predicate";
         $obj = "object";
+        $dt = "date";
         $ret = "<br /><div class='ingrid'>\n\n<table  id=\"table1\">\n";
         if ($page == 1) {
-            $ret .= "<thead>\n\n<tr><th>$sub</th><th>$pred</th><th>$obj</th><th></th>\n\n</tr>\n</thead>\n";
+            $ret .= "<thead>\n\n<tr><th>$sub</th><th>$pred</th><th>$obj</th><th>$dt</th>\n\n</tr>\n</thead>\n";
         }
         $ret .= "<tbody>\n";
         foreach ($triples as $triple) {
+            $id = $triple['id'];
             $ret .= "<tr><td>" . $triple['subject']
-              ."</td><td>" . $triple['predicate']
-              . "</td><td>" . $triple['object']
-              . "</td><td>edit stuff here</td></tr>\n";
+              ."</td><td><span class='edit' id='predicate|$id'>" . $triple['predicate']
+              . "</span></td><td><span class='edit' id='subject|$id'>" . $triple['object']
+              . "</span></td><td>" . $triple['date'] . "</td></tr>\n";
         }
         $ret .= "</tbody>\n</table>\n\n</div>";
+        // Now make it all editable
+        $objTh = & $this->getObject('jqeditablehelper', 'jqeditable');
+        $objTh->loadJs();
+        $arrayParams =  array('indicator' => 'Saving...',
+            'tooltip' => 'Click to edit...');
+        $targetUrl = $this->uri(array('action' => 'saveinline'), 'triplestore');
+        $targetUrl = str_replace('&amp;', '&', $targetUrl);
+        $objTh->buildReadyFunction($arrayParams, $targetUrl);
+        $objTh->loadReadyFunction();
         return $ret;
     }
 }

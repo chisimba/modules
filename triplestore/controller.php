@@ -153,7 +153,7 @@ class triplestore extends controller
 
     private function __getmytripples()
     {
-        $pageSize = $this->getParam('pagesize', 15);
+        $pageSize = $this->getParam('pagesize', 5);
         $page = $this->getParam('page', 1);
         $nextPage = $page+1;
         $targetUrl = $this->uri(array('action' => 'getpage',
@@ -243,6 +243,36 @@ class triplestore extends controller
             die($this->objTriplestore->insert($subject, $predicate, $tripobject));
         }
         return $this->nextAction(NULL);
+    }
+
+    /**
+    *
+    * Method corresponding to the save action.
+    *
+    * @access private
+    *
+    */
+    private function __saveinline()
+    {
+        $id = $this->getParam('id', FALSE);
+        if ($id) {
+            $arId = explode('|', $id);
+            $parameter = $arId[0];
+            $key = $arId[1];
+        }
+        $value = $this->getParam('value', NULL);
+        $subject = FALSE;
+        if ($parameter == 'predicate') {
+            $predicate = $value;
+            $object = FALSE;
+        }
+        if ($parameter == 'object') {
+            $predicate = FALSE;
+            $object = $value;
+        }
+        $this->objTriplestore->update($key, $subject, $predicate, $object);
+        echo $value;
+        exit;
     }
 
     /**

@@ -351,7 +351,6 @@ class dbtriplestore extends dbTable
 
         // Attempt to apply the changes to the triplestore.
         $result = parent::update('id', $id, $update);
-
         // Return the result of the update.
         return $result;
     }
@@ -361,6 +360,9 @@ class dbtriplestore extends dbTable
     	$start = (empty($start)) ? 0 : $start;
     	$limit = (empty($limit)) ? 25 : $limit;
     	// Retrieve the triples associated with the subject.
+        $filter = "WHERE subject = '$subject'";
+        $records =  $this->getRecordCount('$filter');
+        $numOfPages = ceil($records / $limit);
         $triples = $this->getAll("WHERE subject = '$subject'  limit $start, $limit");
         return $triples;
     	//example $contexts = $this->objDBContext->getAll("ORDER BY updated DESC limit ".$start.", ".$limit);
