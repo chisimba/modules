@@ -1,7 +1,1 @@
-<HTML>
-    <HEAD>
-    </HEAD>
-    <BODY>
-        <?php echo $this->getLayoutContent(); ?>
-    </BODY>
-</HTML>
+<?php echo $this->getLayoutContent(); ?>
