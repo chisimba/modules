@@ -105,6 +105,7 @@ class commentapi extends object
 		
 		//textinput for author url
 		$url = new textinput('url');
+		$url->setValue("http://");
 		$urllabel = new label($this->objLanguage->languageText("mod_blogcomments_url", "blogcomments") . ':', 'comm_input_url');
 		$ctbl->startRow();
 		$ctbl->addCell($urllabel->show());
@@ -387,7 +388,13 @@ class commentapi extends object
 				$fboxcontent = stripslashes($comm['comment_content']);
 			}
 			$authemail = "[".$authemail."]";
-			$authhead = $auth; // . " " . $authemail; // . " (".htmlentities($authurl).")";
+			$this->loadClass('href', 'htmlelements');
+            $aulink = new href("http://".$authurl, $auth, 'target="_blank"');
+            
+            //$aulink->link = $auth;
+            $aulink = $aulink->show();
+			//var_dump($aulink); die();
+			$authhead = $aulink; // . " " . $authemail; // . " (".htmlentities($authurl).")";
 			if(isset($delIcon))
 			{
 				$fboxhead = $authhead; // . " " . $authemail;
