@@ -6,4 +6,3 @@
                     'date_created' => array('type' => 'date', 'notnull'=>TRUE)
           );
 ?>
-

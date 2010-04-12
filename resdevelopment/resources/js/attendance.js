@@ -57,15 +57,17 @@ function showGrid(typeURL, myData) {
 function addAttendance() {
     typeURL = arguments[0];
     myID = arguments[1];
+    var attendance = arguments[2];
     btnText = 'Add';
     if(typeof(myID) != "undefined") {
-        typeURL = typeURL + "&id=" + myID;
+        typeURL = typeURL + "&id=" + myID + "&attendance="+ attendance;
         btnText = 'Edit';
     }
 
     var fileTypeAddForm = [{
         fieldLabel: 'Attendance',
         name: 'attendance',
+        vlaue: attendance,
         id: 'attendance_title',
         allowBlank: false,
         width: 250
@@ -114,8 +116,8 @@ function addAttendance() {
     }
 }
 
-function goEdit(typeURL, myID) {
-    captureattendance(typeURL, myID);
+function goEdit(typeURL, myID, attendance) {
+    addAttendance(typeURL, myID, attendance);
 }
 
 function goDelete(myURL) {

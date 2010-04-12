@@ -24,23 +24,23 @@ $data = "[";
 $numRows = count($getStudentData);
 $count = 1;
 
-$editName = new link();
-$deleteName = new link();
+$editStudent = new link();
+$deleteStudent = new link();
 
 // save the student information in a format that extjs grid will understand.
 foreach($getStudentData as $row) {
     // this is the edit icon
-    $editGroup->link("javascript: goEdit(\'".$editGroupUrl."\',\'".$row['id']."\',\'".$row['firstname']."\')".$row['lastname']."\')");
+    $editStudent->link("javascript: goEdit(\'".$editStudentUrl."\',\'".$row['id']."\',\'".$row['firstname']."\',\'".$row['lastname']."\')");
     $objIcon->setIcon('edit');
-    $editName->link=$objIcon->show();
+    $editStudent->link=$objIcon->show();
 
     // this is the delete icon
-    $deleteName->link("javascript: goDelete(\'".$this->uri(array('action'=>'deletestudent','id'=>$row['id']))."\')");
+    $deleteStudent->link("javascript: goDelete(\'".$this->uri(array('action'=>'deletestudent','id'=>$row['id']))."\')");
     $objIcon->setIcon('delete');
-    $deleteName->link=$objIcon->show();
+    $deleteStudent->link=$objIcon->show();
     
     $data .= "[";
-    $data .= "'".$row['firstname']." ".$row['lastname']."', '".$editName->show()."', '".$deleteName->show()."'";
+    $data .= "'".$row['firstname']."','".$row['lastname']."','".$editStudent->show()."','".$deleteStudent->show()."'";
     $data .= "]";
 
     if($count != $numRows) {

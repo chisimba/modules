@@ -17,7 +17,7 @@ function showGrid(typeURL, myData) {
             baseCls: 'x-plain',
             cls: 'btn-panel',
             handler: function() {
-                addGroup(typeURL);
+                editGroup(typeURL);
             }
         }]
     });
@@ -29,6 +29,8 @@ function showGrid(typeURL, myData) {
            {name: 'name'},
            {name: 'edit'},
            {name: 'delete'},
+           {name: 'date'},
+
         ]
     });
 
@@ -41,7 +43,8 @@ function showGrid(typeURL, myData) {
         columns: [
             {id:'name',header: 'Name', width: 160, sortable: true},
             {header: 'Edit', width: 75, sortable: true},
-            {header: 'Delete', width: 75, sortable: true}
+            {header: 'Delete', width: 75, sortable: true},
+            {header: 'Date', width:75, sortable: true}
         ],
         stripeRows: true,
         autoExpandColumn: 'name',
@@ -67,7 +70,7 @@ function editGroup() {
     var fileTypeEditForm = [{
         fieldLabel: 'Group Name',
         name: 'groupname',
-       value:groupName,
+        value:groupName,
         id: 'groupname_title',
         allowBlank: false,
         width: 250
@@ -118,7 +121,6 @@ function editGroup() {
 }
 
 function goEdit(typeURL, myID,groupName) {
-
     editGroup(typeURL, myID,groupName);
 }
 

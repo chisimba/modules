@@ -34,9 +34,12 @@ class dbstudents extends dbtable {
         $this->insert($data);
     }
 
-    public function editStudentInfo($firstname, $lastname, $id) {
-        $data = array("firstname"=>$firstname, "lastname"=>$lastname, "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
-        $this->update('id', $id, $data);
+    public function editStudentInfo($id,$firstname, $lastname) {
+        //$data = array("firstname"=>$firstname, "lastname"=>$lastname, "date_created"=>strftime('%Y-%m-%d %H:%M:%S',mktime()));
+        //$this->update('id', $id, $data);
+
+        $sql="update tbl_resdev_student set firstname=ghghghgh, lastname=ghghghgh where id=$id";
+        return $this->getAll();
     }
 
     public function getStudentData() {

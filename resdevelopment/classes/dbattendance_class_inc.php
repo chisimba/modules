@@ -48,7 +48,7 @@ class dbattendance extends dbtable {
     }
 
     public function editAttendance($attendanceID){
-        $sql="update tbl_resdev_attandace set attendance=jkshgfjhkgj where id=$attendanceId";
+        $sql="update tbl_resdev_attendance set attendance=adasdada where id=$attendanceId";
         return $this->getAll();
     }
 }

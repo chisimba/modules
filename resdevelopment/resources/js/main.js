@@ -26,7 +26,8 @@ function showGrid(typeURL, myData) {
     // create the data store
     var store = new Ext.data.ArrayStore({
         fields: [
-           {name: 'name'},
+           {name: 'firstname'},
+           {name: 'lastname'},
            {name: 'edit'},
            {name: 'delete'},
         ]
@@ -39,7 +40,8 @@ function showGrid(typeURL, myData) {
     var grid = new Ext.grid.GridPanel({
         store: store,
         columns: [
-            {id:'name',header: 'Name', width: 160, sortable: true},
+            {id:'name',header: 'First Name', width: 80, sortable: true},
+            {header: 'Last Name', width: 75, sortable: true},
             {header: 'Edit', width: 75, sortable: true},
             {header: 'Delete', width: 75, sortable: true}
         ],
@@ -57,21 +59,26 @@ function showGrid(typeURL, myData) {
 function addStudent() {
     typeURL = arguments[0];
     myID = arguments[1];
+    var firstname=arguments[2];
+    var lastname=arguments[3];
     btnText = 'Add';
     if(typeof(myID) != "undefined") {
-        typeURL = typeURL + "&id=" + myID;
+        typeURL = typeURL + "&id=" + myID ;
         btnText = 'Edit';
     }
+
     
     var fileTypeAddForm = [{
         fieldLabel: 'First Name',
         name: 'firstname',
+        value:firstname,
         id: 'firstname_title',
         allowBlank: false,
         width: 250
     },{
         fieldLabel: 'Last Name',
         name: 'lastname',
+        value: lastname,
         id: 'lastname_title',
         allowBlank: false,
         width: 250
@@ -121,8 +128,8 @@ function addStudent() {
     }
 }
 
-function goEdit(typeURL, myID) {
-    addStudent(typeURL, myID);
+function goEdit(typeURL, myID, firstname, lastname) {
+    addStudent(typeURL, myID, firstname, lastname);
 }
 
 function goDelete(myURL) {

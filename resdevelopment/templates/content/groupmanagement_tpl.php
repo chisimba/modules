@@ -40,7 +40,7 @@ foreach($getGroupData as $row) {
     $deleteGroup->link=$objIcon->show();
 
     $data .= "[";
-    $data .= "'".$row['groupname']."', '".$editGroup->show()."', '".$deleteGroup->show()."'";
+    $data .= "'".$row['groupname']."', '".$editGroup->show()."', '".$deleteGroup->show()."','".$row['date_created']."'";
     $data .= "]";
 
     if($count != $numRows) {
