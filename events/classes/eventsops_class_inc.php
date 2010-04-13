@@ -2264,7 +2264,7 @@ geo.getCurrentPosition(updatePosition, handleError);
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_tweets", "events"), 'content' => $this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
         $comm = $this->getObject('commentapi', 'blogcomments');
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_comment", "events"), 'content' => $comm->asyncComments(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_comment", "events"), 'content' => $comm->asyncComments($eventdata->id), 'onclick' => ''));
 
         return $tabs->show();
     }

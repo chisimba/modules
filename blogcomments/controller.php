@@ -169,6 +169,21 @@ class blogcomments extends controller
             	// Interface to handle the moderation.
             	return 'moderation_tpl.php';
             	break;
+            	
+            case 'getcomments':
+                $itemid = $this->getParam('itemid');
+                $data = $this->objDbcomm->grabComments($itemid);
+                $response = $this->getParam("jsoncallback") . "(" . json_encode($data) . ")";
+	        echo $response;
+                break;
+                
+            case 'savecomment':
+                $name = $this->getParam('author');
+                $comment = $this->getParam('comment');
+                $itemid = $this->getParam('itemid');
+                $ins = array('userid' => $this->objUser->userId(), 'comment_author' => $name, 'comment_content' => $comment, 'comment_parentid' => $itemid); 
+                $this->objDbcomm->insert($ins);
+                break;
             		
             default:
             	die("unknown action");

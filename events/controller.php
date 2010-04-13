@@ -626,14 +626,6 @@ class events extends controller
                 $this->nextAction('');
                 break;
                 
-            case 'savecomment':
-                $name = mysql_real_escape_string($_POST["author"]);
-  $comment = mysql_real_escape_string($_POST["comment"]);
-  
-  var_dump($name); var_dump($comment); die();
-                
-                break;
-
             default:
                 $this->nextAction('');
                 break;

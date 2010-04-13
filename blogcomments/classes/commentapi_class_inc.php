@@ -480,7 +480,7 @@ class commentapi extends object
 		return $this->objDbBlog->getPostById($pid);
 	}
 	
-	public function asyncComments()
+	public function asyncComments($itemid = 'test')
 	{
 	    $this->loadClass('htmlheading', 'htmlelements');
 	    $this->loadClass('textinput', 'htmlelements');
@@ -508,43 +508,72 @@ class commentapi extends object
         $button = $button->show();
         
         // textarea
-        $commBox = new textarea('comm', '', 5, 50);
-        //$commBox = $this->newObject('htmlarea', 'htmlelements');
-        //$commBox->setName('comm');
-        //$commBox->setRows = 5;
-        //$commBox->setBasicToolBar();
+        $commBox = new textarea('comment', '', 5, 50);
         
         // text input
         $tin = new textinput('input', NULL, NULL);
-        $tin->setValue($this->objUser->userName());
-        
+        $tin->setValue($this->objUser->fullName());
+
+        // layout
+        $ctbl = $this->newObject('htmltable', 'htmlelements');
+		$ctbl->cellpadding = 5;
+
+		//start the inputs
+		$ctbl->startRow();
+		$ctbl->addCell($nameLabel->show());
+		$ctbl->endRow();
+		$ctbl->startRow();
+		$ctbl->addCell($tin->show());
+		$ctbl->endRow();
+		$ctbl->startRow();
+		$ctbl->addCell($commentLabel->show());
+		$ctbl->endRow();
+        $ctbl->startRow();
+		$ctbl->addCell($commBox->show());
+		$ctbl->endRow();
+		$ctbl->startRow();
+		$ctbl->addCell($button);
+		$ctbl->endRow();
+		$ctbl = $ctbl->show();
+		if(!$this->objUser->isLoggedIn())
+        {
+            $nheader = new htmlheading();
+            $nheader->type = 2;
+            $nheader->str = "<em>".$this->objLanguage->languageText("mod_blogcomments_logintocomment", "blogcomments")."</em>";
+            $nheader = $nheader->show();
+            $ctbl = NULL;
+            $leave = $nheader;
+        }
+        else 
+        {
+            $leave = $header."<br />".$ctbl;
+        }
+                
         $js = NULL;
 	    $js .= $this->getJavascriptFile('1.3.2/jquery-1.3.2.min.js', 'jquery');
-	    $input = '<div id="leaveComment">'.$header.
-	             '<div class="row">'.$nameLabel->show().$tin->show().'</div>
-			      <div class="row">'.$commentLabel->show().$commBox->show().'</div>'.$button.'</div>
+	    $input = '<div id="leaveComment">'.$leave.'</div>
 		          <div id="comments">'.$rheader.'</div>';
 		          
 		$js .= '<script type="text/javascript">
 		    $(function() {
 				//retrieve comments to display on page
-				$.getJSON("index.php?module=events&action=getcomments&jsoncallback=?", function(data) {
-				//loop through all items in the JSON array
-				for (var x = 0; x < data.length; x++) {
-				//create a container for each comment
-				var div = $("<div>").addClass("row").appendTo("#comments");
-				//add author name and comment to container
-				$("<label>").text(data[x].name).appendTo(div);
-				$("<div>").addClass("comment").text(data[x].comment).appendTo(div);
-				}
+				$.getJSON("index.php?module=blogcomments&action=getcomments&itemid='.$itemid.'&jsoncallback=?", function(data) {
+				    //loop through all items in the JSON array
+				    for (var x = 0; x < data.length; x++) {
+				        //create a container for each comment
+				        var div = $("<div>").addClass("row").appendTo("#comments");
+				        //add author name and comment to container
+				        $("<label>").text(data[x].comment_author).appendTo(div);
+				        $("<div>").addClass("comment").text(data[x].comment_content).appendTo(div);
+				    }
 				});
 				//add click handler for button
 				$("#add").click(function() {
 				    //define ajax config object
 				    var ajaxOpts = {
-				        type: "post",
-				        url: "index.php?module=events&action=savecomment",
-				        data: "&author=" + $("#leaveComment").find("input").val() + "&comment=" + $("#leaveComment").find("textarea").val(),
+				        type: "get",
+				        url: "index.php?module=blogcomments&action=savecomment&itemid='.$itemid.'",
+				        data: "author=" + $("#leaveComment").find("input").val() + "&comment=" + $("#leaveComment").find("textarea").val(),
 				        success: function(data) {
 				            //create a container for the new comment
 				            var div = $("<div>").addClass("row").appendTo("#comments");
