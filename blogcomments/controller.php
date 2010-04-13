@@ -181,7 +181,7 @@ class blogcomments extends controller
                 $name = $this->getParam('author');
                 $comment = $this->getParam('comment');
                 $itemid = $this->getParam('itemid');
-                $ins = array('userid' => $this->objUser->userId(), 'comment_author' => $name, 'comment_content' => $comment, 'comment_parentid' => $itemid); 
+                $ins = array('userid' => $this->objUser->userId(), 'comment_author' => $name, 'comment_content' => $comment, 'comment_parentid' => $itemid, 'comment_date' => time()); 
                 $this->objDbcomm->insert($ins);
                 break;
             		

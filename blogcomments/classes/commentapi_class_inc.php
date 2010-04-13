@@ -571,7 +571,7 @@ class commentapi extends object
 				$("#add").click(function() {
 				    //define ajax config object
 				    var ajaxOpts = {
-				        type: "get",
+				        type: "post",
 				        url: "index.php?module=blogcomments&action=savecomment&itemid='.$itemid.'",
 				        data: "author=" + $("#leaveComment").find("input").val() + "&comment=" + $("#leaveComment").find("textarea").val(),
 				        success: function(data) {
