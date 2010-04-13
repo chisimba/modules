@@ -889,8 +889,8 @@ class eventsops extends object {
             $tweets = array();
         }
         // twitoaster conversation
-        $twits = $allevent->tweets->twitoaster; 
-        $twitoaster = $this->objSocial->renderTwitoaster($twits);
+        // $twits = $allevent->tweets->twitoaster; 
+        // $twitoaster = $this->objSocial->renderTwitoaster($twits);
         
         // an alertbox to hold *very* long text i.e. more than 500 chars long
         $morelink = '';
@@ -904,10 +904,10 @@ class eventsops extends object {
         $etbl->addCell($datedisplay.$this->markasfavourite($event['id']).$this->goYesNo($event['id'])."<br />".$catinfo[0]['cat_name']."<br /> (".$catinfo[0]['cat_desc'].") <br /><br />".$descrip, '50%', "top");
         $etbl->addCell($this->viewLocMap($venue['geolat'], $venue['geolon'], 10), '50%', "top");
         $etbl->endRow();
-        $etbl->startRow();
-        $etbl->addCell($this->showPlaceWeatherBox($venue['geolat'], $venue['geolon'])."<br />".$this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag));
-        $etbl->addCell($this->getWikipediaContentByLatLon($venue['geolat'], $venue['geolon'])."<br />".$twitoaster);
-        $etbl->endRow();
+        //$etbl->startRow();
+        //$etbl->addCell($this->showPlaceWeatherBox($venue['geolat'], $venue['geolon'])."<br />".$this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag));
+        //$etbl->addCell($this->getWikipediaContentByLatLon($venue['geolat'], $venue['geolon']));
+        //$etbl->endRow();
         // check if the user is the logged in user and set up the edit/delete stuff
         if($this->objUser->userId() == $event['userid']) {
             $this->objIcon = $this->getObject('geticon', 'htmlelements');
@@ -2234,5 +2234,40 @@ geo.getCurrentPosition(updatePosition, handleError);
     return $gears;
     
     }
+    
+    /**
+     * Viewsingle container function (tabber) box to do the layout for the viewsingle template
+     *
+     * Chisimba tabber interface is used to create tabs that are dynamically switchable.
+     *
+     * @return string
+     */
+    public function viewsingleContainer($eventdata) {
+        // get the tabbed box class
+        $tabs = $this->getObject('tabber', 'htmlelements');
+
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_eventinfo", "events"), 'content' => $this->formatEventFull($eventdata), 'onclick' => ''));
+        // get the venue information and wikipedia content
+        $venue = $this->objUtils->object2array($eventdata->venue);
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_wikipedia", "events"), 'content' => $this->getWikipediaContentByLatLon($venue['geolat'], $venue['geolon']), 'onclick' => ''));
+        // $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_weather", "events"), 'content' => $this->showPlaceWeatherBox($venue['geolat'], $venue['geolon']), 'onclick' => ''));
+        $hashtag = $eventdata->hashtag;
+        if(!empty($hashtag)) {
+            $eventhashtag = $hashtag->mediatag;
+            $tweets = $eventdata->tweets->twittersearch;
+        }
+        else {
+            $eventhashtag = NULL;
+            $tweets = array();
+        }
+        
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_tweets", "events"), 'content' => $this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
+        $comm = $this->getObject('commentapi', 'blogcomments');
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_comment", "events"), 'content' => $comm->asyncComments(), 'onclick' => ''));
+
+        return $tabs->show();
+    }
+
 }
 ?>

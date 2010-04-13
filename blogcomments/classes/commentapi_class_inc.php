@@ -319,6 +319,7 @@ class commentapi extends object
 			$hrcdate = date('r', $commentdate);
 			//do a check to see if the comment author is the viewer so that they can edit the comment inline
 			//get the userid
+			/*
 			$viewerid = $this->objUser->userId();
 			$vemail = $this->objUser->email($viewerid);
 			//var_dump($comm); var_dump($this->objUser->userId());
@@ -372,8 +373,8 @@ class commentapi extends object
                 //$delic = $delIcon->show();
 
 				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
-			}
-			elseif ($this->objUser->inAdminGroup($this->objUser->userId())) {
+			} */
+			/*else*/ if ($this->objUser->inAdminGroup($this->objUser->userId())) {
 			    $this->objIcon = $this->getObject('geticon', 'htmlelements');
 			    $delIcon = $this->objIcon->getDeleteIconWithConfirm($comm['id'], array(
                     'module' => 'blogcomments',
@@ -389,7 +390,7 @@ class commentapi extends object
 			}
 			$authemail = "[".$authemail."]";
 			$this->loadClass('href', 'htmlelements');
-            $aulink = new href("http://".$authurl, $auth, 'target="_blank"');
+            $aulink = new href($authurl, $auth, 'target="_blank"');
             
             //$aulink->link = $auth;
             $aulink = $aulink->show();
@@ -477,6 +478,89 @@ class commentapi extends object
 	{
 	    $this->objDbBlog = $this->getObject("dbblog", "blog");
 		return $this->objDbBlog->getPostById($pid);
+	}
+	
+	public function asyncComments()
+	{
+	    $this->loadClass('htmlheading', 'htmlelements');
+	    $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
+	    // heading
+	    $header = new htmlheading();
+        $header->type = 2;
+        $header->str = $this->objLanguage->languageText("mod_blogcomments_formhead", "blogcomments");
+        $header = $header->show();
+        
+        $rheader = new htmlheading();
+        $rheader->type = 2;
+        $rheader->str = $this->objLanguage->languageText("mod_blogcomments_comments", "blogcomments");
+        $rheader = $rheader->show();
+        
+        // labels
+        $nameLabel = new label($this->objLanguage->languageText('mod_blogcomments_yourname', 'blogcomments').'&nbsp;', 'input_name');
+        $commentLabel = new label($this->objLanguage->languageText('mod_blogcomments_comment', 'blogcomments').'&nbsp;', 'input_comment');
+        
+        // button
+        $button = new button ('add', $this->objLanguage->languageText("mod_blogcomments_add", "blogcomments"));
+        $button->setId("add");
+        $button = $button->show();
+        
+        // textarea
+        $commBox = new textarea('comm', '', 5, 50);
+        //$commBox = $this->newObject('htmlarea', 'htmlelements');
+        //$commBox->setName('comm');
+        //$commBox->setRows = 5;
+        //$commBox->setBasicToolBar();
+        
+        // text input
+        $tin = new textinput('input', NULL, NULL);
+        $tin->setValue($this->objUser->userName());
+        
+        $js = NULL;
+	    $js .= $this->getJavascriptFile('1.3.2/jquery-1.3.2.min.js', 'jquery');
+	    $input = '<div id="leaveComment">'.$header.
+	             '<div class="row">'.$nameLabel->show().$tin->show().'</div>
+			      <div class="row">'.$commentLabel->show().$commBox->show().'</div>'.$button.'</div>
+		          <div id="comments">'.$rheader.'</div>';
+		          
+		$js .= '<script type="text/javascript">
+		    $(function() {
+				//retrieve comments to display on page
+				$.getJSON("index.php?module=events&action=getcomments&jsoncallback=?", function(data) {
+				//loop through all items in the JSON array
+				for (var x = 0; x < data.length; x++) {
+				//create a container for each comment
+				var div = $("<div>").addClass("row").appendTo("#comments");
+				//add author name and comment to container
+				$("<label>").text(data[x].name).appendTo(div);
+				$("<div>").addClass("comment").text(data[x].comment).appendTo(div);
+				}
+				});
+				//add click handler for button
+				$("#add").click(function() {
+				    //define ajax config object
+				    var ajaxOpts = {
+				        type: "post",
+				        url: "index.php?module=events&action=savecomment",
+				        data: "&author=" + $("#leaveComment").find("input").val() + "&comment=" + $("#leaveComment").find("textarea").val(),
+				        success: function(data) {
+				            //create a container for the new comment
+				            var div = $("<div>").addClass("row").appendTo("#comments");
+				            //add author name and comment to container
+				            $("<label>").text($("#leaveComment").find("input").val()).appendTo(div);
+				            $("<div>").addClass("comment").text($("#leaveComment").find("textarea").val()).appendTo(div);
+				            //empty inputs
+				            //$("#leaveComment").find("input").val("");
+				            $("#leaveComment").find("textarea").val("");
+				        }
+				    };
+				    $.ajax(ajaxOpts);
+				});
+        });
+        </script>';
+		return $input.$js;
 	}
 
 }//end class

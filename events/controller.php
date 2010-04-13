@@ -473,9 +473,9 @@ class events extends controller
                     // a message
                     $tweet = $this->objLanguage->languageText ( "mod_events_newevent", "events" ).": ".ucwords($eventname)." ".$eventuri." #".$tag;
                     // log_debug($tweet);
-                    $returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
-                    $thread = $returnobj->thread;
-                    $threadid = $thread->id;
+                    //$returnobj = json_decode($this->objTwtOps->userUpdate( $tweet ));
+                    //$thread = $returnobj->thread;
+                    //$threadid = $thread->id;
                     //$threadid = rand(0, 99999);
                     // now update the event with the tweetid to track twitter conversations on this tweet.
                     $this->objDbEvents->addTwtId($threadid, $eventid);
@@ -624,6 +624,14 @@ class events extends controller
                 $message = $author." ".$this->objLanguage->languageText("mod_events_madefavourite", "events");
                 $this->eventDispatcher->post($this->objActStream, 'events', array('title' => $title, 'link' => $link, 'contextcode' => $contextCode, 'author' => $author, 'description' => $message));
                 $this->nextAction('');
+                break;
+                
+            case 'savecomment':
+                $name = mysql_real_escape_string($_POST["author"]);
+  $comment = mysql_real_escape_string($_POST["comment"]);
+  
+  var_dump($name); var_dump($comment); die();
+                
                 break;
 
             default:

@@ -2,6 +2,7 @@
 //no action! eek!
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('sidebar', 'navigation');
+$this->objCommentApi = $this->getObject('commentapi');
 // Set columns to 3
 $cssLayout->setNumColumns(3);
 $leftMenu = NULL;
@@ -23,6 +24,7 @@ else {
 
 $middleColumn .= "<h1><em><center>" . $errmsg . "</center></em></h1>";
 $middleColumn .= "<br />";
+$middleColumn .= $this->objCommentApi->asyncComments();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());

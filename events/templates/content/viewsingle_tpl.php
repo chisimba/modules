@@ -23,7 +23,7 @@ $headerev->str = $this->objLanguage->languageText("mod_events_eventdetails", "ev
 $middleColumn .= $headerev->show();
 $middleColumn .= $objShare->show()."<br />";
 
-$middleColumn .= $this->objOps->formatEventFull($eventdata);
+$middleColumn .= $this->objOps->viewsingleContainer($eventdata);
 
 $leftColumn .= $this->objOps->browseEventsBox();
 $leftColumn .= $this->objOps->showAttendeesBox($eventdata);
