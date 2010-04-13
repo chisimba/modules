@@ -478,13 +478,13 @@ class eventsops extends object {
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_recent", "events"), 'content' => $this->getRecentContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_information", "events"), 'content' => $this->getWikipediaContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_today", "events"), 'content' => $this->getTodayContent(), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
+        //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_popular", "events"), 'content' => $this->getPopularContent(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_addevent", "events"), 'content' => $this->addEventContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_nearby", "events"), 'content' => $this->getNearbyContent($this->getParam('radius', 5)), 'onclick' => ''));
-        if($this->objUser->isLoggedIn()) {
-            $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$this->friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
-        }
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
+        //if($this->objUser->isLoggedIn()) {
+        //    $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_friends", "events")." (".$this->friendcount.") ", 'content' => $this->getFriendContent(), 'onclick' => ''));
+        //}
+        //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_fb", "events"), 'content' => $this->fbComment(), 'onclick' => ''));
 
         return $tabs->show();
@@ -2262,9 +2262,9 @@ geo.getCurrentPosition(updatePosition, handleError);
         }
         
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_tweets", "events"), 'content' => $this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
+        // $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
         $comm = $this->getObject('commentapi', 'blogcomments');
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_comment", "events"), 'content' => $comm->asyncComments($eventdata->id), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_videoandcomment", "events"), 'content' => $comm->asyncComments($eventdata->id), 'onclick' => ''));
 
         return $tabs->show();
     }
