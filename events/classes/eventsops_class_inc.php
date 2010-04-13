@@ -2245,12 +2245,26 @@ geo.getCurrentPosition(updatePosition, handleError);
     public function viewsingleContainer($eventdata) {
         // get the tabbed box class
         $tabs = $this->getObject('tabber', 'htmlelements');
-
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_eventinfo", "events"), 'content' => $this->formatEventFull($eventdata), 'onclick' => ''));
-        // get the venue information and wikipedia content
-        $venue = $this->objUtils->object2array($eventdata->venue);
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_wikipedia", "events"), 'content' => $this->getWikipediaContentByLatLon($venue['geolat'], $venue['geolon']), 'onclick' => ''));
-        // $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_weather", "events"), 'content' => $this->showPlaceWeatherBox($venue['geolat'], $venue['geolon']), 'onclick' => ''));
+        $comm = $this->getObject('commentapi', 'blogcomments');
+        $washout = $this->getObject("washout", "utilities");
+        $linklist = NULL;
+        $linklist .= "<br />";
+        if($this->objUser->isLoggedIn() == FALSE) {
+            $signinlink = $this->newObject('alertbox', 'htmlelements');
+            $signuplink = $this->newObject('alertbox', 'htmlelements');
+            $registerlink = $this->newObject('alertbox', 'htmlelements');
+            // Make sure to show the sign up link only if registrations are allowed!
+            if(strtolower($this->objConfig->getallowSelfRegister()) == 'true') {
+                $signuplink = $signuplink->show($this->objLanguage->languageText("mod_events_signup", "events"), $this->uri(array('action' => 'showregister'), 'userregistration'));
+            }
+            else {
+                $signuplink = NULL;
+            }
+            $signinlink = $signinlink->show($this->objLanguage->languageText("mod_events_signin", "events"), $this->uri(array('action' => 'showsignin'))).", ";
+            $linklist .= $signinlink;
+            $linklist .= $this->objLanguage->languageText("mod_events_orifyoudonthaveacc", "events").", ".$signuplink;
+        }
+        
         $hashtag = $eventdata->hashtag;
         if(!empty($hashtag)) {
             $eventhashtag = $hashtag->mediatag;
@@ -2260,11 +2274,20 @@ geo.getCurrentPosition(updatePosition, handleError);
             $eventhashtag = NULL;
             $tweets = array();
         }
+
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_eventinfo", "events"), 'content' => $this->formatEventFull($eventdata), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_videoandcomment", "events"), 'content' => $washout->parseText("[OGG]http://173.203.201.87:8000/theora.ogg[/OGG]").$linklist."<br />".$comm->asyncComments($eventdata->event->id), 'onclick' => ''));
+        // get the venue information and wikipedia content
+        $venue = $this->objUtils->object2array($eventdata->venue);
         
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_tweets", "events"), 'content' => $this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag), 'onclick' => ''));
+        // $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_weather", "events"), 'content' => 
+                                                        // $this->showPlaceWeatherBox($venue['geolat'], $venue['geolon']), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_tweets", "events"), 'content' => 
+                                                        $this->objSocial->renderTweets($this->objUtils->object2array($tweets), $eventhashtag), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_wikipedia", "events"), 'content' => 
+                                                        $this->getWikipediaContentByLatLon($venue['geolat'], $venue['geolon']), 'onclick' => ''));
+                                                        
         // $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
-        $comm = $this->getObject('commentapi', 'blogcomments');
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_videoandcomment", "events"), 'content' => $comm->asyncComments($eventdata->id), 'onclick' => ''));
 
         return $tabs->show();
     }
