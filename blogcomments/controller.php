@@ -171,10 +171,11 @@ class blogcomments extends controller
             	break;
             	
             case 'getcomments':
-                $itemid = $this->getParam('itemid');
+                $itemid = $this->getParam('itemid', 'test');
                 $data = $this->objDbcomm->grabComments($itemid);
+                $data = array_reverse($data);
                 $response = $this->getParam("jsoncallback") . "(" . json_encode($data) . ")";
-	        echo $response;
+	            echo $response;
                 break;
                 
             case 'savecomment':

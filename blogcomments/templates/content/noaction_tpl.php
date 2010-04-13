@@ -24,7 +24,7 @@ else {
 
 $middleColumn .= "<h1><em><center>" . $errmsg . "</center></em></h1>";
 $middleColumn .= "<br />";
-$middleColumn .= $this->objCommentApi->asyncComments();
+$middleColumn .= $this->objCommentApi->asyncComments('test');
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());

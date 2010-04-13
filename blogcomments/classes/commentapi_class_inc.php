@@ -550,7 +550,7 @@ class commentapi extends object
         }
                 
         $js = NULL;
-	    $js .= $this->getJavascriptFile('1.3.2/jquery-1.3.2.min.js', 'jquery');
+	    $js .= $this->getJavascriptFile('1.4.2/jquery-1.4.2.min.js', 'jquery');
 	    $input = '<div id="leaveComment">'.$leave.'</div>
 		          <div id="comments">'.$rheader.'</div>';
 		          
