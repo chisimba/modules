@@ -3,7 +3,7 @@ $this->loadclass('link', 'htmlelements');
 $objSysConfig = $this->getObject('altconfig', 'config');
 $this->appendArrayVar('headerParams', '
 <script type="text/javascript">
-var pageSize = 25;
+var pageSize = 15;
 var uri = "' . str_replace('&amp;', '&', $this->uri(array(
     'module' => 'liftclub',
     'action' => 'jsongetlifts',

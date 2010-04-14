@@ -19,12 +19,11 @@ var liftdata = new Ext.data.JsonStore({
             	url: uri
         }),
         listeners:{ 
-    		'loadexception': function(theO, theN, response){
-    			//alert(response.responseText);
-    		},
-    		'load': function(){
-    				//alert('load');	
-    			}
+    	 'loadexception': function(theO, theN, response){
+    	 },
+    	 'load': function(){
+    	  //alert('load');	
+    	 }
     	}
 	});
 	liftdata.setDefaultSort('createdormodified','asc');
@@ -96,44 +95,23 @@ var liftdata = new Ext.data.JsonStore({
                 return 'x-grid3-row-collapsed';
             }
         },
-								plugins:[new Ext.ux.grid.Search({
-											iconCls:'zoom'
-											,disableIndexes:['detuserid','createdormodified','selectedays','userneed']
-											,minChars:1
-											,autoFocus:true
-									})],
+	plugins:[new Ext.ux.grid.Search({
+	 iconCls:'zoom'
+	 ,disableIndexes:['detuserid','createdormodified','selectedays','userneed']
+	 ,minChars:1
+	 ,autoFocus:true
+	})],
         bbar: new Ext.PagingToolbar({
-            pageSize: 5,
+            pageSize: 15,
             store: liftdata,
             displayInfo: true,
-            displayMsg: lang["displayingpage"]+' {0} - {1} '+lang["wordof"]+' {2}',
-            emptyMsg: lang["noliftstodisplay"],
-            items:[
-                /*'-', {
-                pressed: false,
-                enableToggle:true,
-                text: 'Show/Hide Details',
-                cls: 'x-btn-text-icon details',
-                toggleHandler: function(btn, pressed){
-                    var view = grid.getView();
-                    view.showPreview = pressed;
-                    view.refresh();
-                }
-            }, {
-              xtype:'checkbox'
-              ,boxLabel:'Lifts Offered '
-              ,checked:true
-            }, {
-              xtype:'checkbox'
-              ,boxLabel:'Lifts Wanted'
-              ,checked:false
-            }*/]
+            displayMsg: lang["displayingpage"]+' {0} '+lang["wordof"]+' {1}',
+            emptyMsg: lang["noliftstodisplay"]
         })
     });
     // render it
     grid.render();
 
     // trigger the data store load
-    liftdata.load({params:{start:0, limit:5, usrneed:usrneed}});
-	
+    liftdata.load({params:{start:0, limit:15, usrneed:usrneed}});
 });
