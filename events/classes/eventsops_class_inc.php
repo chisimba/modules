@@ -2276,7 +2276,7 @@ geo.getCurrentPosition(updatePosition, handleError);
         }
 
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_eventinfo", "events"), 'content' => $this->formatEventFull($eventdata), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_videoandcomment", "events"), 'content' => $washout->parseText("[OGG]http://173.203.201.87:8000/theora.ogg[/OGG]").$linklist."<br />".$comm->asyncComments($eventdata->event->id), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_videoandcomment", "events"), 'content' => $washout->parseText("[OGG:http://173.203.201.87:8000/theora.ogg]http://173.203.201.87:8000/theora.ogg[/OGG]").$linklist."<br />".$comm->asyncComments($eventdata->event->id), 'onclick' => ''));
         // get the venue information and wikipedia content
         $venue = $this->objUtils->object2array($eventdata->venue);
         
