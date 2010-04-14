@@ -102,7 +102,7 @@ var liftdata = new Ext.data.JsonStore({
 	 ,autoFocus:true
 	})],
         bbar: new Ext.PagingToolbar({
-            pageSize: 15,
+            pageSize: pageSize,
             store: liftdata,
             displayInfo: true,
             displayMsg: lang["displayingpage"]+' {0} '+lang["wordof"]+' {1}',
