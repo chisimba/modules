@@ -275,7 +275,7 @@ class liftclub extends controller
                 case 'jsongetlifts':
                     $userneed = $this->getParam('userneed');
                     $start = $this->getParam('start');
-                    $limit = 10;//$this->getParam('limit');
+                    $limit = $this->getParam('limit');
                     $this->setLayoutTemplate(NULL);
                     $this->setVar('pageSuppressToolbar', TRUE);
                     $this->setVar('pageSuppressBanner', TRUE);
