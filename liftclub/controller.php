@@ -763,9 +763,14 @@ class liftclub extends controller
         if (!$_POST) { // Check that user has submitted a page
             return $this->nextAction(NULL);
         }
+        //Get UserId
+        $userId = $this->objUser->userId();
         // Capture all Submitted Fields
         $id = $this->getParam('id');
         $originid = $this->getParam('originid');
+        if(empty($originid)){
+         $origin = $this->objDBOrigin->getId($userId);         
+        }
         $destinyid = $this->getParam('destinyid');
         $detailsid = $this->getParam('detailsid');
         $captcha = $this->getParam('request_captcha');
@@ -886,7 +891,6 @@ class liftclub extends controller
             return 'modifyregistration_tpl.php';
         } else {
             // Else add to database
-            $userId = $this->objUser->userId();
             if (empty($originid)) {
                 $origin = $this->objDBOrigin->insertSingle($userId, $streetname, $suburb, $citytown, $province, $neighbour);
             } else {

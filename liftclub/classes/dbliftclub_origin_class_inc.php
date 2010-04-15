@@ -29,8 +29,23 @@ class dbLiftclub_origin extends dbTable
         return $this->getAll("WHERE id='" . $id . "'");
     }
     /**
+     * Return Id
+     * @param string $userId The User ID
+     * @return the Origin Id or False
+     */
+    function getId($userId) 
+    {
+        $sql = "SELECT id FROM tbl_liftclub_origin WHERE userid = '" . $userId . "'";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $data[0]['id'];
+        } else {
+            return FALSE;
+        }
+    }
+    /**
      * Return a single record
-     * @param string $id user ID
+     * @param string $userId user ID
      * @return array The values
      */
     function userOrigin($userId) 

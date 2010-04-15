@@ -29,6 +29,21 @@ class dbLiftclub_destiny extends dbTable
         return $this->getAll("WHERE id='" . $id . "'");
     }
     /**
+     * Return Id
+     * @param string $userId The User ID
+     * @return the destiny Id or False
+     */
+    function getId($userId) 
+    {
+        $sql = "SELECT id FROM tbl_liftclub_destiny WHERE userid = '" . $userId . "'";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $data[0]['id'];
+        } else {
+            return FALSE;
+        }
+    }
+    /**
      * Return a single record
      * @param string $id user ID
      * @return array The values

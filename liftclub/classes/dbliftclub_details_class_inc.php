@@ -37,6 +37,21 @@ class dbLiftclub_details extends dbTable
     {
         return $this->getAll("WHERE userid='" . $userId . "'");
     }
+    /**
+     * Return Id
+     * @param string $userId The User ID
+     * @return the details Id or False
+     */
+    function getId($userId) 
+    {
+        $sql = "SELECT id FROM tbl_liftclub_details WHERE userid = '" . $userId . "'";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $data[0]['id'];
+        } else {
+            return FALSE;
+        }
+    }
     function getByItem($Id) 
     {
         $sql = "SELECT * FROM tbl_liftclub_details WHERE id = '" . $Id . "'";
