@@ -2247,6 +2247,8 @@ geo.getCurrentPosition(updatePosition, handleError);
         $tabs = $this->getObject('tabber', 'htmlelements');
         $comm = $this->getObject('commentapi', 'blogcomments');
         $washout = $this->getObject("washout", "utilities");
+        $this->objApplet = $this->getObject('streamapplet', 'stream');
+        
         $linklist = NULL;
         $linklist .= "<br />";
         if($this->objUser->isLoggedIn() == FALSE) {
@@ -2276,7 +2278,7 @@ geo.getCurrentPosition(updatePosition, handleError);
         }
 
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_eventinfo", "events"), 'content' => $this->formatEventFull($eventdata), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_videoandcomment", "events"), 'content' => $washout->parseText("[OGG:http://173.203.201.87:8000/theora.ogg]http://173.203.201.87:8000/theora.ogg[/OGG]").$linklist."<br />".$comm->asyncComments($eventdata->event->id), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_videoandcomment", "events"), 'content' => $this->objApplet->show()."<br />".$linklist."<br />".$comm->asyncComments($eventdata->event->id), 'onclick' => ''));
         // get the venue information and wikipedia content
         $venue = $this->objUtils->object2array($eventdata->venue);
         
