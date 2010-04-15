@@ -769,10 +769,16 @@ class liftclub extends controller
         $id = $this->getParam('id');
         $originid = $this->getParam('originid');
         if(empty($originid)){
-         $origin = $this->objDBOrigin->getId($userId);         
+         $originid = $this->objDBOrigin->getId($userId);         
         }
         $destinyid = $this->getParam('destinyid');
+        if(empty($destinyid)){
+         $destinyid = $this->objDBDestiny->getId($userId);         
+        }
         $detailsid = $this->getParam('detailsid');
+        if(empty($detailsid)){
+         $detailsid = $this->objDBDetails->getId($userId);         
+        }
         $captcha = $this->getParam('request_captcha');
         //From (Home or Trip Origin)
         $streetname = $this->getParam('street_name');
