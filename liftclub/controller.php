@@ -910,7 +910,7 @@ class liftclub extends controller
             if (empty($detailsid)) {
                 $details = $this->objDBDetails->insertSingle($userId, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms);
             } else {
-                $details = $this->objDBDetails->updateSingle($detailsid, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday);
+                $details = $this->objDBDetails->updateSingle($detailsid, $traveltimes, $additionalinfo, $acceptoffers, $notifications, $daysvary, $smoke, $userneed, $needtype, $daterequired, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $safetyterms);
             }
             $this->setSession('id', $this->objUser->PKId($this->objUser->userId()));
             //$this->setSession('password', $password);
