@@ -550,7 +550,7 @@ if ($mode == 'addfixup') {
     }
 }
 $table->startRow();
-$table->addCell('&nbsp;&nbsp;&nbsp;' . $this->objLanguage->languageText('mod_liftclub_iread', 'liftclub', 'I have read and agree with your') . '&nbsp;' . $this->objLanguage->languageText('mod_liftclub_safeprivterms', 'liftclub', 'Safety and Privacy Terms') . '&nbsp;' . $this->objLanguage->languageText('mod_liftclub_ofuse', 'liftclub', 'of use agreement') . '&nbsp;' . $safetyprivterms->show() . $required, 150, Null, 'left', Null, 'colspan=2');
+$table->addCell('&nbsp;&nbsp;&nbsp;'. $safetyprivterms->show() . '&nbsp;&nbsp;&nbsp;' . $this->objLanguage->languageText('mod_liftclub_iread', 'liftclub', 'I have read and agree with your') . '&nbsp;' . $this->objLanguage->languageText('mod_liftclub_safeprivterms', 'liftclub', 'Safety and Privacy Terms') . '&nbsp;' . $this->objLanguage->languageText('mod_liftclub_ofuse', 'liftclub', 'of use agreement') . '&nbsp;' .  $required, 150, Null, 'left', Null, 'colspan=2');
 //$table->addCell('&nbsp;', 5);
 //$table->addCell($safetyprivterms->show().$required,"","bottom");
 $table->endRow();
