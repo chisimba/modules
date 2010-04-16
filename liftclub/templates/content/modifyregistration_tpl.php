@@ -260,7 +260,6 @@ $table->addCell($citytown2b->show() . $citytown2a->show() . $citytown2->show() .
 $table->endRow();
 $provinceDropdown2 = new dropdown('province2');
 $provinceLabel2 = new label($this->objLanguage->languageText('mod_liftclub_province', 'liftclub', "Province") . '&nbsp;', 'input_province2');
-//$provinces=array("province_easterncape", "province_freestate", "province_guateng", "province_kwazulunatal", "province_mpumalanga", "province_limpopoprovince", "province_northwestprovince", "province_notherncape", "province_westerncape");
 foreach($provinces as $myprovince) {
     $_province = trim($this->objLanguage->languageText($myprovince, 'liftclub'));
     $provinceDropdown2->addOption($_province, $_province);
