@@ -307,7 +307,7 @@ foreach ($chapters as $chapter)
 	            
 	        }
 	}       
-        $chapterList .= '<div>'.$content.'</div><hr />';
+        $chapterList .= '<div class="chapterlisting">'.$content.'</div><hr />';
     }
     
     $counter++;
