@@ -30,29 +30,16 @@ class georssops extends object
         var zoom = 17;
         var map, layer, drawControl, g;
 
-        function serialize(feature) {
-            feature.attributes = {};
-            var name = prompt(\"Title for feature?\");
-            feature.attributes['title'] = name;
-            var desc = prompt(\"Description for feature?\");
-            feature.attributes['description'] = desc;
-            var data = g.write(feature.layer.features);
-            OpenLayers.Util.getElement(\"gml\").value = data;
-        }
-
         OpenLayers.ProxyHost = \"/proxy/?url=\";
         function init(){
             g = new OpenLayers.Format.GeoRSS();
             map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20 });
-            //var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
+            var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
             var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\", 
                 \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'}); 
-            var pointLayer = new OpenLayers.Layer.Vector(\"Point Layer\");
-            pointLayer.onFeatureInsert = serialize;
             
-            map.addLayers([wmsLayer, pointLayer]);
+            map.addLayers([wmsLayer, hybrid]);
       
-            //map.addControl(new OpenLayers.Control.EditingToolbar(pointLayer));
             map.addControl(new OpenLayers.Control.MousePosition());
             map.addControl( new OpenLayers.Control.MouseDefaults() );
             map.addControl( new OpenLayers.Control.LayerSwitcher() );
@@ -61,8 +48,6 @@ class georssops extends object
             
             var newl = new OpenLayers.Layer.GeoRSS( 'GeoRSS', '".$this->getResourceUri('georss.xml', 'georss')."' );
             map.addLayer(newl);
-            //var newl2 = new OpenLayers.Layer.GeoRSS( 'My Flickr GeoRSS', '".$this->getResourceUri('flickr.xml', 'georss')."' );
-            //map.addLayer(newl2);
             
             map.setCenter(new OpenLayers.LonLat(0,0), 2);
             
