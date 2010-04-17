@@ -9,9 +9,9 @@ $this->loadClass('button', 'htmlelements');
 
 if ($mode == 'edit') {
     $formaction = 'updatechapter';
-    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_editchapter','contextcontent').': '.$chapter['chaptertitle'].'</h1>';
+    $areaTitle = '<h1>'.$this->objLanguage->languageText('mod_contextcontent_editchapter','contextcontent').': <span class="chaptertitle">'.$chapter['chaptertitle'].'</span></h1>';
 } else {
-    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_addnewchapterin','contextcontent').' '.$this->objContext->getTitle().'</h1>';
+    $areaTitle = '<h1>'.$this->objLanguage->languageText('mod_contextcontent_addnewchapterin','contextcontent').' <span class="chaptertitle">'.$this->objContext->getTitle().'<span></h1>';
     $formaction = 'savechapter';
 }
     //echo '<p>Todo: Allow User to place order of chapter</p>';
@@ -70,6 +70,7 @@ $form->addToForm($table->show());
 
 $button = new button('submitbutton', $this->objLanguage->languageText('mod_contextcontent_chapter','contextcontent'));
 $button->setToSubmit();
+$button->setIconClass("save");
 $form->addToForm($button->show());
 
 if ($mode == 'edit') {
@@ -84,7 +85,7 @@ if ($mode == 'edit') {
     
 }
 
-echo $form->show();
+echo '<div class="addchapterform">' . $areaTitle . $form->show() . "</div>";
 $chapterlisturl = $this->uri(array('action'=>'chapterlistastree','contextcode'=>$this->contextCode));
 $viewchapterurl = $this->uri(array('action'=>'viewchapter'));
 /*

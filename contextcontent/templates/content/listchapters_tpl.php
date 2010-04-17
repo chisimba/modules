@@ -32,10 +32,12 @@ $objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_addapagetot
 $objIcon->title = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
 $addPageIcon = $objIcon->show();
 
-$objIcon->setIcon('scm');
-$objIcon->alt = $this->objLanguage->languageText('mod_scorm_addscormchapter','scorm');
-$objIcon->title = $this->objLanguage->languageText('mod_scorm_addscormchapter','scorm');
-$addScormIcon = $objIcon->show();
+if($this->objModuleCatalogue->checkIfRegistered('scorm')) {
+    $objIcon->setIcon('scm');
+    $objIcon->alt = $this->objLanguage->languageText('mod_scorm_addscormchapter','scorm');
+    $objIcon->title = $this->objLanguage->languageText('mod_scorm_addscormchapter','scorm');
+    $addScormIcon = $objIcon->show();
+}
 
 $objIcon->setIcon('pdf');
 $objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_downloadchapterinpdfformat','contextcontent');
