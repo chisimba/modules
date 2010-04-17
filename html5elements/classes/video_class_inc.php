@@ -55,24 +55,116 @@
  */
 class video extends object
 {
+    /**
+     * @var integer $width integer object property for defining the height of the video
+     *
+     * @access public
+     */
     public $width;
+    
+    /**
+     * @var integer $height integer object property for defining the height of the video
+     *
+     * @access public
+     */
     public $height;
+    
+    /**
+     * @var Boolean $controls Turn on controls or not
+     *
+     * @access public
+     */
     public $controls;
+    
+    /**
+     * @var string $preload String preload the video on page load or not
+     *
+     * @access public
+     */
     public $preload = "none";
+    
+    /**
+     * @var string $autoplay Start playing the video immediately or not
+     *
+     * @access public
+     */
     public $autoplay = "none";
+    
+    /**
+     * @var string $src String the video source (file or URL)
+     *
+     * @access public
+     */
     public $src;
+    
+    /**
+     * @var string $videoId ID of the video object
+     *
+     * @access public
+     */
     public $videoId = "movie";
     
+    /**
+     * @var string $oggtype Codec and type definition for OGG Theora
+     *
+     * @access private
+     */
     private $oggType = 'video/ogg; codecs="theora, vorbis"';
+    
+    /**
+     * @var string $mp4type Codec and type definition for MP4
+     *
+     * @access private
+     */
     private $mp4Type = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+    
+    /**
+     * @var string $h264Type Codec and type definition for h.264 video
+     *
+     * @access private
+     */
     private $h264Type = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+    
+    /**
+     * @var string $ieCSS String Property to hold IE CSS fixes via JS
+     *
+     * @access private
+     */
     private $ieCss;
+    
+    /**
+     * @var string $type Property to define final type of video object
+     *
+     * @access private
+     */
     private $type;
     
+    /**
+     * Standard Constructor
+     *
+     * @access public
+     * @return void
+     * @params void
+     */
     public function init() {
     
     }
     
+    /**
+     * setVideo method
+     *
+     * Method to all in one set up a video object to be played in the browser
+     *
+     * @access public
+     * @return void
+     * @params integer $height Height of the video
+     * @params integer $width Width of the video
+     * @params string $src Source URL or file path of video
+     * @params string $format The format of the video (ogg, mp4 or h264)
+     * @params boolean $controls whether to show video controls like play, pause etc
+     * @params boolean $preload Start preloading video on page load or not
+     * @params boolean $autoplay Start playing the video as soon as possible 
+     */
     public function setVideo($height, $width, $src, $format = 'ogg', $controls = TRUE, $preload = TRUE, $autoplay = FALSE ) {
         $this->_addCSS();
         $this->_addFlowplayer();
@@ -85,28 +177,82 @@ class video extends object
         $this->setAutoplay($autoplay);
     }
     
+    /**
+     * Method to set the height of the video
+     *
+     * This method can be used to override the default, or to set the video height statically
+     *
+     * @params integer height Video height in px
+     * @return void
+     * @access public
+     */
     public function setHeight($height) {
         $this->height = $height;
     }
     
+    /**
+     * Method to set the width of the video
+     *
+     * This method can be used to override the default, or to set the video width statically
+     *
+     * @params integer width Video width in px
+     * @return void
+     * @access public
+     */
     public function setWidth($width) {
         $this->width = $width;
     }
     
+    /**
+     * Method to set the source of the video
+     *
+     * This method can be used to override the default, or to set the video source statically
+     *
+     * @params string src Video source (either URL or file path)
+     * @return void
+     * @access public
+     */
     public function setSrc($src) {
         $this->src = $src;
     }
     
+    /**
+     * Method to set the controls of the video
+     *
+     * This method can be used to override the default, or to set the video controls statically
+     *
+     * @params string controls Video controls control. Show them or not
+     * @return void
+     * @access public
+     */
     public function setControls($controls) {
         if($controls == TRUE) {
             $this->controls = "controls";
         }
     }
     
+    /**
+     * Method to set the id of the video
+     *
+     * This method can be used to override the default, or to set the video id statically
+     *
+     * @params string id Video id
+     * @return void
+     * @access public
+     */
     public function setId($id) {
         $this->videoId = $id;
     }
     
+    /**
+     * Method to preload the video
+     *
+     * This method can be used to override the default, or to set the video preload status statically
+     *
+     * @params boolean preload Video preload true or false
+     * @return void
+     * @access public
+     */
     public function setPreload($preload) {
         if($preload == TRUE) {
             $this->preload = "preload";
@@ -116,6 +262,15 @@ class video extends object
         }
     }
     
+    /**
+     * Method to autoplay the video
+     *
+     * This method can be used to override the default, or to set the video autoplay status statically
+     *
+     * @params boolean autoplay Video autoplay true or false
+     * @return void
+     * @access public
+     */
     public function setAutoplay($autoplay) {
         if($autoplay == TRUE) {
             $this->autoplay = "autoplay";
@@ -125,6 +280,16 @@ class video extends object
         }
     }
     
+    /**
+     * Method to set the type the video
+     *
+     * This method can be used to override the default, or to set the video type status statically
+     * The type is the format of the video and the class will set up a specific type with its associated codecs
+     *
+     * @params string $format the video format of either ogg, mp4 or h264
+     * @return void
+     * @access public
+     */
     public function setType($format) {
         switch($format) {
             case 'ogg':
@@ -139,6 +304,15 @@ class video extends object
         }
     }
     
+    /**
+     * Show the video on screen
+     *
+     * Method to finally output to browser via the output buffer
+     *
+     * @params void
+     * @return string $vid Video markup
+     * @access public
+     */
     public function show() {
         $vid = NULL;
         $vid .= '<video id="'.$this->videoId.'" width="'.$this->width.'" height="'.$this->height.'" '.$this->preload.' '.$this->controls.'>';
@@ -148,11 +322,25 @@ class video extends object
         return $vid;
     }
     
+    /**
+     * Method to add extra CSS and javascript to fix IE based browsers
+     *
+     * @params void
+     * @return void
+     * @access private
+     */
     private function _addCSS() {
         $this->css = '<!--[if IE]>'.$this->getJavascriptfile('html5.js', 'html5elements').'<![endif]-->';
         $this->appendArrayVar('headerParams', $this->css);
     }
     
+    /**
+     * Method to add flowplayer as an alternative to browsers that do not support html5 video
+     *
+     * @params void
+     * @return void
+     * @access private
+     */
     private function _addFlowplayer() {
         $this->getJavascriptfile('flowplayer-3.1.4.min.js', 'html5elements');
         $this->getJavascriptfile('html5-video.js', 'html5elements');
