@@ -14,7 +14,7 @@ $middleColumn = NULL;
 
 $middleColumn .= $this->objGeoRssOps->setupMap();
 $middleColumn .= '<div id="map"></div>
-    <textarea id="gml" style="width:100%" rows="30"></textarea>';
+    <textarea id="gml" style="width:100%" rows="1"></textarea>';
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
