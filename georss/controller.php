@@ -46,7 +46,7 @@ class georss extends controller
             	{
             		// go and update the feed...
             		$objCurl = $this->getObject('curl', 'utilities');
-					$data = $objCurl->exec('http://ws.geonames.org/rssToGeoRSS?feedUrl=http://today.reuters.com/rss/worldNews');
+					$data = $objCurl->exec('http://ws.geonames.org/rssToGeoRSS?feedUrl=http://www.timeslive.co.za/?service=rss');
 					
 					file_put_contents($this->getResourcePath('georss.xml'), $data);
             	}

@@ -52,7 +52,7 @@ class georssops extends object
             
             map.addLayers([wmsLayer, pointLayer]);
       
-            map.addControl(new OpenLayers.Control.EditingToolbar(pointLayer));
+            //map.addControl(new OpenLayers.Control.EditingToolbar(pointLayer));
             map.addControl(new OpenLayers.Control.MousePosition());
             map.addControl( new OpenLayers.Control.MouseDefaults() );
             map.addControl( new OpenLayers.Control.LayerSwitcher() );
