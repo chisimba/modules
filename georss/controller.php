@@ -40,6 +40,7 @@ class georss extends controller
     
         switch ($action) {
             default:
+                $this->requiresLogin();
             	$file = $this->getResourcePath('georss.xml');
             	@chmod($file, 0777);
             	if(filemtime($file) > 43200)
@@ -54,6 +55,10 @@ class georss extends controller
             	return 'main_tpl.php';
             	break; 
         }
+    }
+    
+    public function requiresLogin() {
+        return FALSE;
     }
 }
 ?>
