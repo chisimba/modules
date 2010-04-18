@@ -188,7 +188,7 @@ function allCanAddAnswers($contextCode,$id)
 
 		
         if (!(file_exists($dir))){		
-		
+		//die($dir);
             $oldumask = umask(0);
             $ret_2 = mkdir($dir, 0777);  //STILL NEED A DECISION ON BLOBS OR FILE SYSTEM
             umask($oldumask);
