@@ -7,6 +7,7 @@ $objDateTime = $this->getObject('dateandtime', 'utilities');
 $header = new htmlHeading();
 $header->type = 1;
 $header->str = $announcement['title'];
+$outStr="";
 
 //var_dump($this->objContext->isInContext());
 
@@ -40,14 +41,14 @@ if ($this->checkPermission($announcement['id'])) {
 }
 
 
-echo $header->show();
+$outStr = $header->show();
 
-echo '<p><strong>By:</strong> '.$this->objUser->fullName($announcement['createdby']).' - '.$objDateTime->formatDate($announcement['createdon']);
+$outStr .=  '<p><strong>By:</strong> '.$this->objUser->fullName($announcement['createdby']).' - '.$objDateTime->formatDate($announcement['createdon']);
 
 if ($announcement['contextid'] == 'site') {
-    echo ' - <strong>'.$this->objLanguage->languageText('word_type', 'system', 'Type').':</strong> '.$this->objLanguage->languageText('mod_announcements_siteannouncement', 'announcements', 'Site Announcement').'</p>';
+    $outStr .= ' - <strong>'.$this->objLanguage->languageText('word_type', 'system', 'Type').':</strong> '.$this->objLanguage->languageText('mod_announcements_siteannouncement', 'announcements', 'Site Announcement').'</p>';
 } else {
-    echo '<br /><strong>'.$this->objLanguage->languageText('mod_announcements_announcementtype', 'announcements', 'Announcement Type').':</strong> '.ucwords($this->objLanguage->code2Txt('mod_announcements_contextannouncement', 'announcements', NULL, '[-context-] Announcement')).' - ';
+    $outStr .= '<br /><strong>'.$this->objLanguage->languageText('mod_announcements_announcementtype', 'announcements', 'Announcement Type').':</strong> '.ucwords($this->objLanguage->code2Txt('mod_announcements_contextannouncement', 'announcements', NULL, '[-context-] Announcement')).' - ';
     
     $contexts = $this->objAnnouncements->getMessageContexts($announcement['id']);
     
@@ -55,17 +56,18 @@ if ($announcement['contextid'] == 'site') {
         $divider = '';
         foreach ($contexts as $context)
         {
-            echo $divider.$this->objContext->getTitle($context);
+            $outStr .=  $divider . $this->objContext->getTitle($context);
             $divider = ', ';
         }
         
-        echo '</p>';
+        $outStr .= '</p>';
     }
 }
 
-
-
-echo '<br />'.$announcement['message'];
+$outStr .=  '<br />'.$announcement['message'];
+// Render the outer wrapped layer
+$outStr = '<div class="outerwrapper">' . $outStr . '</div>';
+echo $outStr;
 
 $backLink = new link ($this->uri(NULL));
 $backLink->link = $this->objLanguage->languageText('mod_announcements_back', 'announcements', 'Back to Announcements');
@@ -73,12 +75,9 @@ $backLink->link = $this->objLanguage->languageText('mod_announcements_back', 'an
 $addLink = new link ($this->uri(array('action'=>'add')));
 $addLink->link = $this->objLanguage->languageText('mod_announcements_postnewannouncement', 'announcements', 'Post New Announcement');
 
-echo '<p>'.$backLink->show();
+$outStr = "<div class='modulehome'></div><div class='modulehomelink'>" . $backLink->show() . "</div>";
 if ($isAdmin || count($lecturerContext) > 0) {
-    echo ' / '.$addLink->show();
+    $outStr .=  "<div class='adminadd'></div><div class='adminaddlink'>" . $addLink->show() . "</div>";
 }
-echo '</p>';
-
-
-
+echo $outStr;
 ?>

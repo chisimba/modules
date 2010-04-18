@@ -17,7 +17,7 @@
     
 </script>
 <?php
-
+$outerLayer = "";
 $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
 
 $this->loadClass('htmlheading', 'htmlelements');
@@ -41,7 +41,7 @@ if ($mode == 'edit') {
     $formAction = 'save';
 }
 
-echo $header->show();
+$outerLayer = $header->show();
 
 $form = new form ('announcement', $this->uri(array('action'=>$formAction)));
 
@@ -226,12 +226,17 @@ $form->addToForm($table->show());
 $modeInput = new hiddeninput('mode', $mode);
 $form->addToForm($modeInput->show());
 
-echo $form->show();
+$outerLayer .= $form->show();
+
+$outerLayer = '<div class="outerwrapper">' . $outerLayer . '</div>';
+echo $outerLayer;
 
 
 
 $backLink = new link ($this->uri(NULL));
 $backLink->link = $this->objLanguage->languageText('mod_announcements_back', 'announcements', 'Back to Announcements');
 
-echo '<p>'.$backLink->show().'</p>';
+echo "<div class='modulehome'></div><div class='modulehomelink'>"
+  . $backLink->show() . '</div>';
+
 ?>
