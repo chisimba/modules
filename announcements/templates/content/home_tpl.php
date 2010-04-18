@@ -19,8 +19,8 @@ if ($this->objContext->getContextCode() != '') {
     $header->type = 1;
     $header->str = ucwords($this->objLanguage->code2Txt('mod_announcements_contextannouncements',
       'announcements', NULL, '[-context-] Announcements'))
-      . ' - ' . $this->objContext->getTitle($this->objContext->getContextCode())
-      . ' ('.$numContextAnnouncements.')';
+      . ' - <span class="coursetitle">' . $this->objContext->getTitle($this->objContext->getContextCode())
+      . '</span> ('.$numContextAnnouncements.')';
     
     if ($isAdmin || count($lecturerContext) > 0) {
         $header->str .= ' '.$addLink->show();
