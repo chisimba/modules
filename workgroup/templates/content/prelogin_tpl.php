@@ -2,14 +2,11 @@
 
 // Load Classes needed
 $this->loadClass('link', 'htmlelements');
-
 $objIcon = $this->newObject('geticon', 'htmlelements');
-
 $objIcon->setIcon('add');
 $objIcon->align = 'top';
 $objIcon->alt = 'Add User';
 $objIcon->title = 'Add User';
-
 $link = new link($this->uri(array('action'=>'create'),'workgroupadmin'));
 $link->link = $objIcon->show();
 
@@ -20,16 +17,16 @@ $pageTitle->align='left';
 
 $titleContent=ucwords($objLanguage->code2Txt("mod_workgroup_heading",'workgroup'));
 
-	if ($this->objUser->isAdmin())
-	{
-   	$titleContent.=	' '.$link->show();		
-	
-	}
-	elseif ($this->objUser->isLecturer()){
-	$titleContent=	' '.$link->show();		
-	}
+if ($this->objUser->isAdmin())
+{
+    $titleContent.=	' '.$link->show();
+}
+elseif ($this->objUser->isLecturer()){
+    $titleContent=	' '.$link->show();
+}
+       
 $pageTitle->str=$titleContent;
-echo $pageTitle->show();
+//echo $pageTitle->show();
 
 $tblclass=$this->newObject('htmltable','htmlelements');
 $tblclass->width='40%';
@@ -46,11 +43,9 @@ $tblclass->endRow();
 $oddOrEven = "odd";
 foreach ($workgroups as $workgroup) {
     $tblclass->startRow();
-    $oddOrEven = ($oddOrEven=="even")? "odd":"even";	
-    
+    $oddOrEven = ($oddOrEven=="even")? "odd":"even";	    
     $tblclass->addCell($workgroup['description'], "null", "top", "left", $oddOrEven, null);        
-    // Rename workgroup.        
-    
+    // Rename workgroup.            
     $options = "<a href=\"".
         $this->uri(array(
             'module'=>'workgroups',
@@ -78,11 +73,11 @@ if (empty($workgroups)) {
         $tblclass->endRow();
     }        
 }    
-echo $tblclass->show();
+echo "<div class=outerwrapper>".$pageTitle->show()."<div class=innerwrapper>" .$tblclass->show()."</div></div>";
 
 if ($isContextLecturer) {
     $manageLink = new link($this->uri(NULL, 'workgroupadmin'));
     $manageLink->link = $objLanguage->code2Txt('mod_workgroup_manageworkgroups','workgroup');
-    echo '<p>'.$manageLink->show().'</p>';
+    echo "<div class='adminicon'></div>"."<div class='adminiconlink'>".$manageLink->show()."</div>";
 }
 ?>
