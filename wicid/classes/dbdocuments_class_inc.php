@@ -28,7 +28,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 class dbdocuments extends dbtable {
-    var $tablename = "tbl_dms_documents";
+    var $tablename = "tbl_wicid_documents";
     var $userid;
 
     public function init() {
@@ -39,7 +39,7 @@ class dbdocuments extends dbtable {
         $this->userutils=$this->getObject('userutils');
     }
     public function getdocuments($mode="default") {
-        $sql="select * from tbl_dms_documents where active = 'N' and mode ='$mode'";
+        $sql="select * from tbl_wicid_documents where active = 'N'";// and mode ='$mode'";
         if(!$this->objUser->isadmin()) {
             //$sql.=" and userid = '".$this->objUser->userid()."'";
         }
@@ -105,7 +105,8 @@ class dbdocuments extends dbtable {
                 'active'=>$approved
         );
         $id=$this->insert($data);
-        echo $refno.','.$id;
+        //echo $refno.','.$id;
+        echo "success|$id";
         return $id;
     }
 
@@ -130,7 +131,7 @@ class dbdocuments extends dbtable {
             $newname=$dir.'/'.$doc['topic'].'/'. $doc['docname'].'.'.$doc['ext'];
             $newname= str_replace("//", "/", $newname);
 
-            /*  $fh = fopen("/dwaf/dmstest/log.txt", 'w') or die("can't open file ".$doc['docname']);
+            /*  $fh = fopen("/dwaf/wicidtest/log.txt", 'w') or die("can't open file ".$doc['docname']);
             $stringData = "renaming on approve $filename\n$newname\n===================";
             fwrite($fh, $stringData);
             fclose($fh);

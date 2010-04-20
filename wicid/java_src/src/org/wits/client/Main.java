@@ -95,13 +95,14 @@ public class Main {
     private OverView overView;
     private RulesAndSyllabusOne rulesAndSyllabusOne;
     private RulesAndSyllabusTwo rulesAndSyllabusTwo;
+    //private SavedFormData savedFormData;
     private Resources newResourcesForm;
     private CollaborationAndContracts newContractsForm;
     private Review newReviewForm;
     private ContactDetails newContactDetailsForm;
     private DocumentListPanel documentListPanel;
     private TabPanel tab = new TabPanel();
-    private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=dms&action=getfolders";
+    private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
     private NewCourseProposalDialog newCourseProposalDialog;
     private String mode = "default";
@@ -124,7 +125,7 @@ public class Main {
         container.setBorders(false);
         container.setLayout(new BorderLayout());
         this.thisInstance = this;
-        Constants.main=thisInstance;
+        Constants.main = thisInstance;
         treeFieldtype.setRecordName("item");
         treeFieldtype.setRoot("items");
         treeFieldtype.addField("id", "@id");
@@ -174,7 +175,7 @@ public class Main {
         type2.addField("text", "text");
         type2.addField("thumbnailpath", "thumbnailpath");
 
-        RequestBuilder builder2 = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + "?module=dms&action=getFiles");
+        RequestBuilder builder2 = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + "?module=wicid&action=getFiles");
         HttpProxy<String> proxy2 = new HttpProxy<String>(builder2);
 
         // need a loader, proxy, and reader
@@ -471,7 +472,7 @@ public class Main {
         type2.addField("filesize", "filesize");
         type2.addField("refno", "refno");
         type2.addField("group", "group");
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=dms&action=getFiles&node=" + currentPath);
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=getFiles&node=" + currentPath);
         HttpProxy<String> proxy = new HttpProxy<String>(builder);
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type2);
         final BaseListLoader<ListLoadResult<ModelData>> loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
@@ -498,7 +499,7 @@ public class Main {
         type2.addField("filesize", "filesize");
         type2.addField("refno", "refno");
         type2.addField("group", "group");
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=dms&action=searchfiles&filter=" + filter);
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=searchfiles&filter=" + filter);
         HttpProxy<String> proxy = new HttpProxy<String>(builder);
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type2);
         final BaseListLoader<ListLoadResult<ModelData>> loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
@@ -531,7 +532,7 @@ public class Main {
     private void createNewFolder(String folderName) {
         String url =
                 GWT.getHostPageBaseURL()
-                + Constants.MAIN_URL_PATTERN + "?module=dms&action=createfolder&foldername=" + folderName + "&folderpath=" + currentPath;
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=createfolder&foldername=" + folderName + "&folderpath=" + currentPath;
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, url);
 
@@ -560,7 +561,7 @@ public class Main {
     private void doActualFolderDelete() {
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
-                + "?module=dms&action=deletefolder&folderpath=" + currentPath);
+                + "?module=wicid&action=deletefolder&folderpath=" + currentPath);
 
         try {
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -607,12 +608,13 @@ public class Main {
 
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
-                + Constants.MAIN_URL_PATTERN + "?module=dms&action=determinepermissions");
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=determinepermissions");
 
         try {
             Request request = builder.sendRequest(null, new RequestCallback() {
 
                 public void onError(Request request, Throwable exception) {
+
                     MessageBox.info("Error", "Error, cannot determine your permissions", null);
                 }
 
@@ -657,7 +659,7 @@ public class Main {
     private void downloadFile() {
 
         String url = GWT.getHostPageBaseURL()
-                + "?module=dms&action=downloadfile&filename=" + currentPath + "/" + selectedFile.get("text");
+                + "?module=wicid&action=downloadfile&filename=" + currentPath + "/" + selectedFile.get("text");
 
         Window.Location.assign(url);
     }

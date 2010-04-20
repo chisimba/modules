@@ -95,4 +95,8 @@ public class Document extends BaseModel {
     public String toString() {
         return get("title");
     }
+
+    public String setQuestion(String question){
+        return get("question");
+    }
 }

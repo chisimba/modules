@@ -244,7 +244,7 @@ public class NewDocumentDialog {
                 topic = (String) selectedFolder.get("id");
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=dms&action=registerdocument&date=" + fmt.format(date)
+                        + "?module=wicid&action=registerdocument&date=" + fmt.format(date)
                         + "&number=" + number + "&department=" + dept + "&telephone=" + telephone
                         + "&topic=" + topic + "&title=" + title+"&group="+group;
                 createNewDocument(url);
@@ -275,14 +275,14 @@ public class NewDocumentDialog {
 
     private void setDepartment() {
         /*      UrlBuilder urlBuilder = new UrlBuilder();
-        urlBuilder.setParameter("module", "dms");
+        urlBuilder.setParameter("module", "wicid");
         urlBuilder.setParameter("action", "getdepartment");
         urlBuilder.setHost("localhost");
         urlBuilder.setProtocol("http");
         urlBuilder.setPort(8888);
         urlBuilder.setPath(Constants.MAIN_URL_PATTERN);
          */
-        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=dms&action=getdepartment";
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=getdepartment";
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, url);
 

@@ -12,5 +12,5 @@ package org.wits.client;
 public class Constants {
 public static final String MAIN_URL_PATTERN="wicid/chisimba";
 public static Main main;
-
+public static String docid;
 }

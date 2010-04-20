@@ -13,11 +13,8 @@ import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
-
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.DateField;
-import com.extjs.gxt.ui.client.widget.form.FileUploadField;
-
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
 import com.extjs.gxt.ui.client.widget.form.FormPanel.Method;
@@ -35,7 +32,6 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
-
 import java.util.Date;
 import org.wits.client.ads.OverView;
 
@@ -62,9 +58,10 @@ public class NewCourseProposalDialog {
     private TopicListingFrame topicListingFrame;
     private ModelData selectedFolder;
     private OverView oldOverView;
-    
+    private boolean status = false;
+
     public NewCourseProposalDialog() {
-        
+
         createUI();
     }
 
@@ -178,7 +175,7 @@ public class NewCourseProposalDialog {
         uploadpanel.setHeading("File Upload");
         uploadpanel.setFrame(true);
         uploadpanel.setAction(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=dms&action=doupload&docname=");
+                + "?module=wicid&action=doupload&docname=");
         uploadpanel.setEncoding(Encoding.MULTIPART);
         uploadpanel.setMethod(Method.POST);
         uploadpanel.setButtonAlign(HorizontalAlignment.CENTER);
@@ -198,7 +195,7 @@ public class NewCourseProposalDialog {
                 w.setMaximizable(true);
                 w.setToolTip("Upload file");
                 w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=dms&action=uploadfile&docname=");
+                        + "?module=wicid&action=uploadfile&docname=");
                 w.show();
 
             }
@@ -209,7 +206,7 @@ public class NewCourseProposalDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-               
+
                 Date date = new Date();
                 try {
                     if (dateField.getDatePicker() != null) {
@@ -227,7 +224,7 @@ public class NewCourseProposalDialog {
                     MessageBox.info("Missing department", "Provide department", null);
                     return;
                 }
-                String title = titleField.getValue();
+                String title = titleField.getValue().replaceAll(" ", "--");
                 if (title == null) {
                     MessageBox.info("Missing title", "Provide title", null);
                     return;
@@ -242,18 +239,18 @@ public class NewCourseProposalDialog {
                     MessageBox.info("Missing telephone", "Provide telephone", null);
                     return;
                 }
-                if(selectedFolder == null){
-                    MessageBox.info("Missing faculty","Please select faculty",null);
+                if (selectedFolder == null) {
+                    MessageBox.info("Missing faculty", "Please select faculty", null);
                     return;
                 }
                 String topic = (String) selectedFolder.get("id");
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=dms&action=createproposal&date=" + fmt.format(date)
+                        + "?module=wicid&action=createproposal&date=" + fmt.format(date)
                         + "&department=" + dept + "&telephone=" + telephone
-                        + "&topic=" + topic + "&title=" + title+"&mode="+Constants.main.getMode();
-             //   updateDocument(url);
-              createProposal();
+                        + "&topic=" + topic + "&title=" + title + "&mode=" + Constants.main.getMode();
+                //   updateDocument(url);
+                createDocument(url);
 
             }
         });
@@ -287,21 +284,8 @@ public class NewCourseProposalDialog {
         return titleField;
     }
 
-    private void createProposal(){
-
-        if (oldOverView == null){
-            OverView overView = new OverView(this);
-            overView.show();
-            newDocumentDialog.hide();
-        }
-        else{
-            oldOverView.show();
-            newDocumentDialog.hide();
-
-        }
-    }
     private void setDepartment() {
-        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=dms&action=getdepartment";
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=getdepartment";
 
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, url);
@@ -326,10 +310,9 @@ public class NewCourseProposalDialog {
         }
     }
 
-    private void updateDocument(String url) {
+    private void createDocument(String url) {
 
-        RequestBuilder builder =
-                new RequestBuilder(RequestBuilder.GET, url);
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 
         try {
 
@@ -340,18 +323,31 @@ public class NewCourseProposalDialog {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    if (200 == response.getStatusCode()) {
-                        //main.getDocumentListPanel().
-                        // main.selectDocumentsTab();
-                        newDocumentDialog.setVisible(false);
+                    String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+                        if (oldOverView == null) {
+                            for(int i=0;i<resp.length;i++){
+                            Constants.docid = resp[i++];
+                            }
+                            OverView overView = new OverView(NewCourseProposalDialog.this);
+                            overView.show();
+                            newDocumentDialog.hide();
+                        } else {
+                            oldOverView.show();
+                            newDocumentDialog.hide();
+
+                        }
+
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
                 }
             });
-        } catch (RequestException e) {
+        } catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
+
     }
 
     public void setSelectedFolder(ModelData selectedFolder) {

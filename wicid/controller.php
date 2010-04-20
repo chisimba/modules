@@ -42,12 +42,15 @@ class wicid extends controller {
         $this->objUser = $this->getObject('user', 'security');
         //file type info object
         $this->objPermitted = $this->getObject('dbpermittedtypes');
-        $this->objUploads = $this->getObject('dbfileuploads');
+        //$this->objUploads = $this->getObject('dbfileuploads');
         $this->objFileFolder = $this->getObject('filefolder','filemanager');
         $this->folderPermissions=$this->getObject('dbfolderpermissions');
         $this->documents=$this->getObject('dbdocuments');
         $this->userutils=$this->getObject('userutils');
         $this->objUploadTable = $this->getObject('dbfileuploads');
+        $this->objsavedata = $this->getObject('dbsavedata');
+        $this->forwardto =$this->getObject('dbforwardto');
+    
     }
 
     /**
@@ -270,7 +273,7 @@ class wicid extends controller {
         $result = "";
 
         if($fileRes == 1) {
-            $this->objUploads->deleteFileRecord($id);
+            $this->objUploadsTable->deleteFileRecord($id);
         }
         else {
             $result = $this->objLanguage->languageText("error_DELETE", 'wicid');
@@ -426,12 +429,12 @@ class wicid extends controller {
                 $telephone,
                 $title,
                 $selectedfolder,$mode,"Y");
-        $basedir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        /*$basedir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $template=$this->objSysConfig->getValue('GENERAL_TEMPLATE', 'wicid');
         $source=$basedir.'/resources/'.$template;
-        $dest=$basedir.'/'.$selectedfolder.'/'.$title.'.'.$ext;
+        $dest=$basedir.'/'.$selectedfolder.'/'.$title.'.'.$ext;*/
 
-        copy($source, $dest);
+        //copy($source, $dest);
         // save the file information into the database
         $data = array(
                 'filename'=>$title.'.'.$ext,
@@ -442,7 +445,7 @@ class wicid extends controller {
                 'refno'=>$refno,
                 'docid'=>$docid,
                 'filepath'=>$selectedfolder.'/'.$title.'.'.$ext);
-        $result = $this->objUploadTable->saveFileInfo($data);
+        $this->objUploadTable->saveFileInfo($data);
     }
     function __getdepartment() {
         /*   $username='A0017615';//$this->getParam('username');
@@ -619,6 +622,57 @@ class wicid extends controller {
         $this->setVarByRef('filename', $filename);
 
         return 'ajaxuploadresults_tpl.php';
+    }
+
+    public function __advancedsearch() {
+        $startDate = $this->getParam('date');
+        $endDate = $this->getParam('date2');
+        $fname = $this->getParam('fname');
+        $lname = $this->getParam('lname');
+        $topic = $this->getParam('topic');
+        $docname = $this->getParam('docname');
+        $refno = $this->getParam('refno');
+        $topic = $this->getParam('topic');
+        $dept = $this->getParam('dept');
+        $groupid = $this->getParam('groupid');
+        $ext = $this->getParam('ext');
+        $mode = $this->getParam('mode');
+        //$active = $this->getParam('');
+
+        $data = array(
+                'startDate'=>$startDate,
+                'endDate'=>$endDate,
+                'fname'=>$fname,
+                'lname'=>$lname,
+                'docname'=>$docname,
+                'topic'=>$topic,
+                'docname'=> $docname,
+                'refno'=> $refno,
+                'topic'=> $topic,
+                'dept'=> $dept,
+                'groupid'=>$groupid,
+                'ext'=> $ext,
+                'mode'=> $mode);
+
+        return $this->documents->advancedSearch($data);
+    }
+
+    public function __saveFormData(){
+        $formname = $this->getParam('formname');
+        $formdata = $this->getParam('formdata');
+        $docid = $this->getParam('docid');
+        
+        echo $formname, $formdata, $docid;
+ 
+        $this->objsavedata->saveData($formname, $formdata, $docid);
+    }
+
+    public function __forwardto(){
+        $link=$this->getParam('link');
+        $email = $this->getParam('email');
+        $docid = $this->getParam('docid');
+
+        $this->forwardto->forwardTo($link,$email,$docid);
     }
 
 }

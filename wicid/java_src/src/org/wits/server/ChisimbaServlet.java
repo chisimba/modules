@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+
 public class ChisimbaServlet extends HttpServlet {
 
     @Override
@@ -45,7 +46,7 @@ public class ChisimbaServlet extends HttpServlet {
         String result = "";
         GetMethod get=new GetMethod();
         try {
-        get = new GetMethod("http://localhost/chisimba/?" + params);
+        get = new GetMethod("http://localhost/chisimba/app/?" + params);
         int iGetResultCode = -1;
         
             iGetResultCode = httpClient.executeMethod(get);
