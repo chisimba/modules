@@ -23,7 +23,7 @@
 =
  */
 class dbpermittedtypes extends dbtable {
-    var $tablename = "tbl_dms_permittedtypes";
+    var $tablename = "tbl_wicid_permittedtypes";
     
     public function init(){
         parent::init($this->tablename);

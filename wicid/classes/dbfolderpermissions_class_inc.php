@@ -23,7 +23,7 @@
 =
  */
 class dbfolderpermissions extends dbtable {
-    private $tablename = "tbl_dms_folderpermissions";
+    private $tablename = "tbl_wicid_folderpermissions";
     private $userid;
 
     public function init() {

@@ -137,7 +137,7 @@ class userutils extends object {
         $userid=$this->getUserId();
         $this->objUploadTable->setUserId($userid);
         $destinationDir = $filepath;
-        $objFileUpload = $this->getObject('dmsupload');
+        $objFileUpload = $this->getObject('wicidupload');
         $objFileUpload->overWrite = TRUE;
         $objFileUpload->uploadFolder = $destinationDir.'/';
         $result = $objFileUpload->doUpload($docname,$docid);
@@ -249,10 +249,10 @@ class userutils extends object {
         $permission = $fileData['shared'];
 
         if($permission == 1) {
-            $myFile = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid.'/shared/'.$filename;
+            $myFile = $this->objConfig->getcontentBasePath().'/wicidUploadFiles/'.$userid.'/shared/'.$filename;
         }
         else {
-            $myFile = $this->objConfig->getcontentBasePath().'/dmsUploadFiles/'.$userid.'/'.$filename;
+            $myFile = $this->objConfig->getcontentBasePath().'/wicidUploadFiles/'.$userid.'/'.$filename;
         }
 
         if(file_exists($myFile) && is_file($myFile)) {

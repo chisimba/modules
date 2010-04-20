@@ -23,7 +23,7 @@
 
  */
 class dbfileuploads extends dbtable {
-    var $tablename = "tbl_dms_fileuploads";
+    var $tablename = "tbl_wicid_fileuploads";
     var $userid;
 
     public function init() {
@@ -94,7 +94,7 @@ class dbfileuploads extends dbtable {
      */
     public function getFileInfo($filename, $filepath) {
         $filepath=  str_replace("//", "/", $filepath);
-        $sql="select * from $this->tablename  fls,tbl_dms_documents docs
+        $sql="select * from $this->tablename  fls,tbl_wicid_documents docs
                 where fls.filename = '$filename' and fls.filepath = '$filepath'
                 and fls.docid=docs.id and docs.active='Y'";
 
@@ -104,13 +104,13 @@ class dbfileuploads extends dbtable {
 
     function deleteNAFile($filepath,$filename){
         $sql=
-        "delete from tbl_dms_fileuploads where filename ='$filename' and filepath='$filepath'";
+        "delete from tbl_wicid_fileuploads where filename ='$filename' and filepath='$filepath'";
         $this->getArray($sql);
 
     }
     function searchfiles($filter) {
         $objUserutils=$this->getObject('userutils');
-        $sql="select * from tbl_dms_fileuploads where filename like '%$filter%'";
+        $sql="select * from tbl_wicid_fileuploads where filename like '%$filter%'";
 
         $sql.=' order by date_uploaded DESC';
 

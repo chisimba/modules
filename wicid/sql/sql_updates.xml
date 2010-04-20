@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
     <update>
-        <table>tbl_dms_fileuploads</table>
+        <table>tbl_wicid_fileuploads</table>
         <version>0.016</version>
         <description>Added the document id field</description>
         <data>
@@ -15,7 +15,7 @@
     </update>
 
     <update>
-        <table>tbl_dms_documents</table>
+        <table>tbl_wicid_documents</table>
         <version>0.016</version>
         <description>Added the group id field</description>
         <data>
@@ -29,7 +29,7 @@
     </update>
 
     <update>
-        <table>tbl_dms_documents</table>
+        <table>tbl_wicid_documents</table>
         <version>0.017</version>
         <description>Added the ext field</description>
         <data>
@@ -43,7 +43,7 @@
     </update>
     
     <update>
-        <table>tbl_dms_documents</table>
+        <table>tbl_wicid_documents</table>
         <version>0.018</version>
         <description>Added the ext field</description>
         <data>
@@ -57,7 +57,7 @@
     </update>
 
         <update>
-        <table>tbl_dms_documents</table>
+        <table>tbl_wicid_documents</table>
         <version>0.019</version>
         <description>Added the mode field</description>
         <data>
