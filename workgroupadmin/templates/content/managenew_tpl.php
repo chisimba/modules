@@ -1,24 +1,14 @@
 <?php
-//echo '<pre>';
-//echo "LECTURERS:\n";
-//var_dump($lecturers);
-//echo "STUDENTS:\n";
-//var_dump($students);
-//echo "USERS:\n";
-//var_dump($users);
-//echo '</pre>';
-
-
-// Display heading.
-
     $pageTitle = $this->newObject('htmlheading','htmlelements');
     $pageTitle->type=1;
     $pageTitle->align='left';
     $pageTitle->str=ucwords($objLanguage->code2Txt("mod_workgroupadmin_workgroup",'workgroupadmin'))." : ".$workgroup['description'];
-	echo $pageTitle->show();
 
-$objForm = $this->newObject('form','htmlelements');
-$objForm->name = "form1";
+    echo $pageTitle->show();
+
+    $objForm = $this->newObject('form','htmlelements');
+    $objForm->name = "form1";
+
 $objForm->action = $this->uri (
     array(
         'action' => 'processform',
@@ -51,5 +41,5 @@ $arrFormButtons = $objSelectBox->getFormButtons();
 $objForm->addToForm( implode( ' / ', $arrFormButtons ) );
 
 // Show the form
-echo $objForm->show();
+echo "<div class='innerwrapper'>".$objForm->show()."</div>";
 ?>
