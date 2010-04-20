@@ -17,18 +17,18 @@
 	    $iconAdd->alt = $objLanguage->languageText("word_add");
 	    $iconAdd->align=false;
 	    $objLink->link = $iconAdd->show();
-        $titleString .= $objLink->show();
+        $titleString .= ' '.$objLink->show();
 	}
     
     $pageTitle->str=$titleString;
-	echo $pageTitle->show();	
+	//echo $pageTitle->show();	
 
 	if (isset($confirm)) {
 	    echo "<span class=\"confirm\">$confirm</span><br/>";
 	}
     
     $tblclass=&$this->newObject('htmltable','htmlelements');
-    $tblclass->width='40%';
+    $tblclass->width='100%';
     $tblclass->border='0';
     $tblclass->cellspacing='1';
     $tblclass->cellpadding='5';
@@ -123,7 +123,7 @@
         $tblclass->endRow();
     }
     
-    echo $tblclass->show();    
+    echo "<div class='outerwrapper'>".$pageTitle->show()."<div class='innerwrapper'>".$tblclass->show()."</div>"."</div>";    
 
     // Show the add link
     $objLink =& $this->getObject('link','htmlelements');
@@ -131,10 +131,7 @@
      		'module'=>'workgroupadmin',
     		'action'=>'create',
     )));
+
     $objLink->link = $objLanguage->languageText("mod_workgroupadmin_addworkgroup",'workgroupadmin');
-    echo $objLink->show();
-	   
-    //$url = $this->uri(array(),'workgroup');
-    //echo "<br/><a href=\"$url\">".ucwords($objLanguage->code2Txt('mod_workgroupadmin_joinworkgroup'))."</a>";
-    
+    echo "<div class='adminadd'></div>"."<div class='adminaddlink'>".$objLink->show()."</div>"; 
 ?>
