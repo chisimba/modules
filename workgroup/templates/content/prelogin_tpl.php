@@ -29,7 +29,7 @@ $pageTitle->str=$titleContent;
 //echo $pageTitle->show();
 
 $tblclass=$this->newObject('htmltable','htmlelements');
-$tblclass->width='40%';
+$tblclass->width='100%';
 $tblclass->border='0';
 $tblclass->cellspacing='1';
 $tblclass->cellpadding='5';
