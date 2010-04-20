@@ -23,6 +23,7 @@ import com.google.gwt.http.client.Response;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.google.gwt.core.client.GWT;
 import org.wits.client.Constants;
+import org.wits.client.util.WicidXML;
 
 
 
@@ -46,7 +47,8 @@ public class OutcomesAndAssessmentOne {
     private TextArea questionD3 = new TextArea();
     //private OutcomesAndAssessmentTwo outcomesAndAssessmentTwo;
     private OutcomesAndAssessmentTwo oldOutcomesAndAssessmentTwo;
-    private String outcomesAndAssessmentOneData;
+    private String outcomesAndAssessmentOneData;private String qD1a, qD1b, q2, qD3;
+
 
     public OutcomesAndAssessmentOne(SubsidyRequirements subsidyRequirements) {
         this.subsidyRequirements = subsidyRequirements;
@@ -140,6 +142,7 @@ public class OutcomesAndAssessmentOne {
                     MessageBox.info("Missing answer", "Provide an answer to question D.1.a and question D.1.b", null);
                     return;
                 }
+                qD1a = questionD1a.getValue().toString();
                 if (questionD1a.getValue() == null) {
                     MessageBox.info("Missing answer", "Provide an answer to question D.1.a", null);
                     return;
@@ -148,25 +151,34 @@ public class OutcomesAndAssessmentOne {
                     MessageBox.info("Missing answer", "Provide an answer to question D.1.b", null);
                     return;
                 }
+                
+                qD1b = questionD1b.getRawValue().toString();
 
                 int i = 0;
                 while (i < 3) {
-                    String q2 = questionD2.getText(1, i);
+                    q2 = questionD2.getText(1, i);
                     i++;
                     if (q2 == null) {
                         MessageBox.info("Missing answer", "An answer is missing in question D2", null);
                         return;
                     }
+                    //q2 = questionD2.getText(1, i).toString();
                 }
+                //getRawValue().toString();
 
                 if (questionD3.getValue() == null) {
                     MessageBox.info("Missing answer", "Provide an answer to question D3", null);
                     return;
                 }
+                qD3 = questionD3.getValue().toString();
 
-                String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                outcomesAndAssessmentOneData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
-
+                WicidXML wicidXML = new WicidXML("formdata");
+                wicidXML.addElement("qD1a", qD1a);
+                wicidXML.addElement("aD1b", qD1b);
+                wicidXML.addElement("q2", q2);
+                wicidXML.addElement("qD3", qD3);
+                outcomesAndAssessmentOneData = wicidXML.getXml();
+                
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                         + "?module=wicid&action=saveFormData&formname=" + "outcomesandassessmentone" + "&formdata=" + outcomesAndAssessmentOneData + "&docid=" + Constants.docid;

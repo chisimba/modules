@@ -2,7 +2,10 @@ package org.wits.client.ads;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
+import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
@@ -14,7 +17,6 @@ import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.Radio;
 import com.extjs.gxt.ui.client.widget.form.RadioGroup;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.google.gwt.core.client.GWT;
@@ -23,6 +25,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -35,8 +38,8 @@ public class SubsidyRequirements {
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
     private Button saveButton = new Button("Next");
-    private Button addButton = new Button("Add school/entity");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private TextArea questionC1 = new TextArea();
     private NumberField questionC3 = new NumberField();
     private MultiField questionC4b = new MultiField();
@@ -46,13 +49,12 @@ public class SubsidyRequirements {
     private TextArea questionC2b = new TextArea();
     private TextArea q4b1 = new TextArea();
     private TextArea q4b2 = new TextArea();
-    private final TextField<String> E1a = new TextField<String>();
     private RulesAndSyllabusTwo rulesAndSyllabusTwo;
     private OutcomesAndAssessmentOne outcomesAndAssessmentOne;
     private OutcomesAndAssessmentOne oldOutcomesAndAssessmentOne;
     //private SubsidyRequirements oldSubsidyRequirements;
     private String subsidyRequirementsData;
-    private String qc2a1,qc3,qc4a1;
+    private String qC2a1, qC3, qC4a1;
 
     public SubsidyRequirements(RulesAndSyllabusTwo rulesAndSyllabusTwo) {
         this.rulesAndSyllabusTwo = rulesAndSyllabusTwo;
@@ -87,24 +89,27 @@ public class SubsidyRequirements {
         Radio radioC2a2 = new Radio();
         radioC2a2.setBoxLabel("on-campus");
         radioC2a1.setValue(true);
-
+        questionC2b.disable();
         radioC2a1.enableEvents(true);
 
-        /*
-        if (radioC2a1.getValue() == true){
-        questionC2b.enable();
-        }
-        else if (radioC2a2.getValue() == true){
-        questionC2b.disable();
-
-        }
-         */
 
         RadioGroup questionC2a = new RadioGroup();
         questionC2a.setFieldLabel("C.2.a. The course/unit is taught");
         questionC2a.add(radioC2a1);
         questionC2a.add(radioC2a2);
         mainForm.add(questionC2a, formData);
+
+        questionC2a.addListener(Events.Change, new Listener<BaseEvent>(){
+            public void handleEvent(BaseEvent be) {
+                if (radioC2a1.getValue() == false){
+                    questionC2b.disable();
+                }
+                if (radioC2a1.getValue() == true){
+                    questionC2b.enable();
+                }
+            }
+
+        });
 
 
 
@@ -122,16 +127,26 @@ public class SubsidyRequirements {
 
 
         radioC4a1.setBoxLabel("Yes");
-        radioC4a1.setValue(true);
-
         radioC4a2.setBoxLabel("No");
-
+        radioC4a1.setValue(true);
+        questionC4b.disable();
 
         RadioGroup questionC4a = new RadioGroup();
         questionC4a.setFieldLabel("C.4.a. Is any other School/Entity involved in teaching this unit?");
         questionC4a.add(radioC4a1);
         questionC4a.add(radioC4a2);
 
+        questionC4a.addListener(Events.Change, new Listener<BaseEvent>(){
+            public void handleEvent(BaseEvent e) {
+                if (radioC4a1.getValue() == true){
+                    questionC4b.disable();
+                }
+                if (radioC4a1.getValue() == false){
+                    questionC4b.enable();
+                }
+            }
+
+        });
 
         mainForm.add(questionC4a, formData);
 
@@ -153,147 +168,119 @@ public class SubsidyRequirements {
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
 
-        addButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-
-
-            }
-        });
 
 
         //function to ensure that all the fields are filled and the form is
         //completed before the user moves to the next form
-        // private String qc2a1,qc3,qc4a1,qc3
+        //
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                // = questionC1.getValue();// deptField.getValue().getId();
-                qc2a1 = radioC2a1.getValue().toString().replaceAll(" ", "--");
+                
                 if ((radioC2a1.getValue() == true) && (questionC2b.getValue() == null)) {
                     MessageBox.info("Missing answer", "Provide an answer to C.2.b", null);
                     return;
                 }
+                qC2a1 = radioC2a1.getBoxLabel().toString();
 
-              
                 if (questionC3.getValue() == null) {
                     MessageBox.info("Missing answer", "Provide an answer to C.3.", null);
                     return;
                 }
-                qc3 = questionC3.getValue().toString().replaceAll(" ", "--");
-                
+                qC3 = questionC3.getValue().toString();
 
-                qc4a1=radioC4a1.getValue().toString().replaceAll(" ", "--");
                 if ((radioC4a1.getValue() == true) && (questionC4b.getValue() == null)) {
                     MessageBox.info("Missing answer", "Provide an answer to C.4.b.", null);
                     return;
                 }
+                qC4a1 = radioC4a1.getBoxLabel().toString();
 
-                qc3 = questionC3.getValue().toString().replaceAll(" ", "--");
                 if (questionC3.getRawValue().length() != 6) {
                     MessageBox.info("Error", "The CESM category must be a 6 digit number", null);
                     return;
                 }
 
-                if (radioC4a1 .getBoxLabel().toString() == null){
-                    
+
+                if (radioC4a1.getValue() == true) {
+
+                    String[] q4b1No;
+                    String[] q4b2No;
+
+                    try {
+                        q4b1No = (q4b1.getValue()).split("\r\n|\r|\n");
+                    }
+                    catch (NullPointerException npe) {
+                        MessageBox.info("Missing answer", "Provide an answer to C.4.b (School/Entity)", null);
+                        return;
+                    }
+
+                    try {
+                        q4b2No = q4b2.getValue().split("\r\n|\r|\n");
+                    }
+                    catch (NullPointerException e) {
+                        MessageBox.info("Missing answer", "Provide an answer to C.4.b (percentage)", null);
+                        return;
+                    }
+
+                    if (q4b1No.length > q4b2No.length) {
+                        MessageBox.info("Error", "Missing a percentage of a School or Entity", null);
+                        return;
+                    }
+
+                    else if (q4b2No.length > q4b1No.length) {
+                        MessageBox.info("Error", "Missing a name of a School or Entity", null);
+                        return;
+                    }
+
+
+                    int x = 0;
+                    int total = 0;
+
+                    while (x < (q4b2No.length)) {
+                        try {
+                            int ques4b2 = 0;
+                            try {
+                                ques4b2 = Integer.parseInt(q4b2No[x]);
+
+                            } catch (NumberFormatException nfe) {
+                                MessageBox.info("Error", "Please use a percentage.", null);
+                                return;
+                            }
+                            total = total + ques4b2;
+
+                            if (ques4b2 > 100) {
+                                MessageBox.info("Error", "The maximum percentage is 100", null);
+                                return;
+                            }
+                            if (ques4b2 < 1) {
+                                MessageBox.info("Error", "The minimum percentage is 1", null);
+                                return;
+                            }
+                            x++;
+
+                        } catch (Exception e) {
+                            MessageBox.info("Error: " + e.toString(), "The percentage "
+                                    + "must be a number between 1 and 100", null);
+                            return;
+                        }
+                    }
+
+               /*     if (total != 100) {
+                        MessageBox.info("Error", "The percentages must add up to 100", null);
+                        return;
+                    }*/
                 }
-                
-                if(q4b1.getValue().toString() == null){
-                    MessageBox.info("Error", "please enter a value between 1 and 100", null);
-                    return;
-                }
+                qC4a1 = radioC4a1.getBoxLabel().toString();
 
-                String temp = q4b2.getValue().toString().replaceAll(" ", "--");
+                WicidXML wicidXML = new WicidXML("formdata");
+                wicidXML.addElement("qC2a1", qC2a1);
+                wicidXML.addElement("qC3", qC3);
+                wicidXML.addElement("qC4a1", qC4a1);
+                subsidyRequirementsData = wicidXML.getXml();
 
-                if(temp == null){
-                    MessageBox.info("Error", "The CESM category must be a 6 digit number", null);
-                    return;
-
-                }
-
-                int q4b2Value = Integer.parseInt(temp);
-                if ((q4b2Value > 100) || (q4b2Value < 1)) {
-                    MessageBox.info("Error", "please enter a value between 1 and 100", null);
-                    return;
-
-                }
-                
-
-                /* if (radioC4a1.getValue() == true) {
-
-                String[] q4b1No;
-                String[] q4b2No;
-                int x = 0;
-                int total = 0;
-
-                try {
-                q4b1No = /*new String[(*/ /*(q4b1.getValue()).split("\n")/*"\r\n|\r|\n")/*).length]*/
-                //  int z = 0;
-                // while (z)
-
-                /* } catch (NullPointerException npe) {
-                MessageBox.info("Missing answer", "Provide an answer to C.4.b (School/Entity)", null);
-                return;
-                }
-
-                try {
-                q4b2No = q4b2.getValue().split("\r\n|\r|\n");
-                } catch (NullPointerException e) {
-                MessageBox.info("Missing answer", "Provide an answer to C.4.b (percentage)", null);
-                return;
-                }
-
-                if (q4b1No.length > q4b2No.length) {
-                MessageBox.info("Error", "Missing a percentage of a School or Entity", null);
-                return;
-                }
-                if (q4b2No.length > q4b1No.length) {
-                MessageBox.info("Error", "Missing a name of a School or Entity", null);
-                return;
-                }
-
-
-
-                while (x <= q4b2No.length) {
-                try {
-                int ques4b2 = 0;
-                try {
-                ques4b2 = Integer.parseInt(q4b2No[x]);
-                total = total + ques4b2;
-                } catch (NumberFormatException nfe) {
-                MessageBox.info("Error", "Please use a percentage.", null);
-                }
-
-
-                if (ques4b2 > 100) {
-                MessageBox.info("Error", "The maximum percentage is 100", null);
-                return;
-                }
-                if (ques4b2 < 1) {
-                MessageBox.info("Error", "The minimum percentage is 1", null);
-                return;
-                }
-                x++;
-
-                } catch (Exception e) {
-                MessageBox.info("Error: " + e.toString(), "The percentage "
-                + "must be a number between 1 and 100", null);
-                x++;
-                return;
-                }
-                }
-
-                if (total != 100) {
-                MessageBox.info("Error", "The percentages must add up to 100", null);
-                return;
-                }
-                }*/
-
-                String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                subsidyRequirementsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
+                //subsidyRequirementsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -325,8 +312,18 @@ public class SubsidyRequirements {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+
+            }
+        });
 
         mainForm.addButton(backButton);
+        mainForm.addButton(forwardButton);
         mainForm.addButton(saveButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 

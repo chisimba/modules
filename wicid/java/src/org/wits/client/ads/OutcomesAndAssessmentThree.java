@@ -36,6 +36,7 @@ public class OutcomesAndAssessmentThree {
     private FormData formData = new FormData("-20");
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private OutcomesAndAssessmentTwo outcomesAndAssessmentTwo;
     private OutcomesAndAssessmentThree outcomesAndAssessmentThree;
     private double creSAQA = 0;
@@ -180,8 +181,6 @@ public class OutcomesAndAssessmentThree {
         //function to ensure that all the fields are filled and the form is
         //completed before the user moves to the next form
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-
             @Override
             public void componentSelected(ButtonEvent ce) {
 
@@ -190,8 +189,10 @@ public class OutcomesAndAssessmentThree {
                     return;
                 }
 
-                String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                outcomesAndAssessmentThreeData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+
+
+                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
+                //outcomesAndAssessmentThreeData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -221,8 +222,20 @@ public class OutcomesAndAssessmentThree {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+
+            }
+        });
+
         mainForm.addButton(backButton);
+        mainForm.addButton(forwardButton);
         mainForm.addButton(saveButton);
+
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         outcomesAndAssessmentThreeDialog.setBodyBorder(false);

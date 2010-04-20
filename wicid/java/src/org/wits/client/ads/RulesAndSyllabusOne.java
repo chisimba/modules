@@ -28,7 +28,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import org.wits.client.Constants;
@@ -224,18 +223,19 @@ public class RulesAndSyllabusOne {
                 }else{
                     qB4c.toString().replaceAll(" ", "--");
                 }
-                /*WicidXML wicidXML = new WicidXML("formdata");
+                WicidXML wicidXML = new WicidXML("formdata");
                 wicidXML.addElement("qb1", qB1);
                 wicidXML.addElement("qb2", qB2);
                 wicidXML.addElement("qb3a", qB3a);
                 wicidXML.addElement("qb3b", qB3b);
                 wicidXML.addElement("qb4a", qB4a);
                 wicidXML.addElement("qb4b", qB4b);
-                wicidXML.addElement("qb4c", qB4c);*/
+                wicidXML.addElement("qb4c", qB4c);
+                rulesAndSyllabusOneData = wicidXML.getXml();
 
                 //data saved into a single string with each data varieable seperated by ("_")
 
-                rulesAndSyllabusOneData = qB1+"_"+qB2+"_"+qB3a+"_"+qB3b+"_"+qB4a+"_"+qB4b+"_"+qB4c;//wicidXML.getXml();
+                //rulesAndSyllabusOneData = qB1+"_"+qB2+"_"+qB3a+"_"+qB3b+"_"+qB4a+"_"+qB4b+"_"+qB4c;//wicidXML.getXml();
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN

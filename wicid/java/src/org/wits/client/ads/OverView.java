@@ -229,22 +229,10 @@ public class OverView {
                 wicidXML.addElement("qa5", qA5);
 
                 overViewData=wicidXML.getXml();
-                //encode it
-                //overViewData=Base64.encode(wicidXML.getXml());
-
-                //"qa1"+"qa1"+"qa1"+"qa1"+"qa1"+"qa1"+"qa1";
-
-                //data saved into a single string with each data varieable seperated by ("_")
                 
-               // overViewData = qA1+"_"+qA2+"_"+qA3+"_"+qA4+"_"+qA5;
-                //overViewData = "overviewdata";
-
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                         + "?module=wicid&action=saveFormData&formname="+"overview"+"&formdata=" +overViewData+"&docid="+Constants.docid;
-                        //+ "&department=" + dept + "&telephone=" + telephone
-                        //+ "&topic=" + topic + "&title=" + title + "&mode=" + Constants.main.getMode();
-
                 
                 createDocument(url);
                 

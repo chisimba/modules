@@ -30,6 +30,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import org.wits.client.Constants;
+import org.wits.client.util.WicidXML;
 
 
 /**
@@ -297,17 +298,17 @@ public class RulesAndSyllabusTwo {
 
                 //WicidXml util function might be used at a later stage...
 
-                /*WicidXML wicidXML = new WicidXML("formdata");
+                WicidXML wicidXML = new WicidXML("formdata");
                 wicidXML.addElement("qb5a", qB5a);
                 wicidXML.addElement("qb5b", qB5b);
                 wicidXML.addElement("qb6a", qB6a);
                 wicidXML.addElement("qb6b", qB6b);
                 wicidXML.addElement("qb6c", qB6c);
 
-                rulesAndSyllabusTwoData = wicidXML.getXml();*/
+                rulesAndSyllabusTwoData = wicidXML.getXml();
                 //data saved into a single string with each data varieable seperated by ("_")
                 
-                rulesAndSyllabusTwoData = qB5a+"_"+qB5b+"_"+qB6a+"_"+qB6b+"_"+qB6c;
+                //rulesAndSyllabusTwoData = qB5a+"_"+qB5b+"_"+qB6a+"_"+qB6b+"_"+qB6c;
                
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN

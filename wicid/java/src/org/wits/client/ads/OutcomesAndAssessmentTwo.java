@@ -19,11 +19,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
-import org.wits.client.Document;
-import org.wits.client.EditDocumentDialog;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -37,12 +38,23 @@ public class OutcomesAndAssessmentTwo {
     private FormData formData = new FormData("-20");
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private OutcomesAndAssessmentTwo outcomesAndAssessmentTwo;
     private CheckBoxGroup questionD4 = new CheckBoxGroup();
     private OutcomesAndAssessmentThree oldOutcomesAndAssessmentThree;
     private OutcomesAndAssessmentOne outcomesAndAssessmentOne;
     private OutcomesAndAssessmentOne oldOutcomesAndAssessmentOne;
     private String outcomesAndAssessmentTwoData;
+    private String qD4a,qD4b,qD4c,qD4d,qD4e,qD4f,qD4g,qD4h;
+
+    private CheckBox questionD4_1 = new CheckBox();
+    private CheckBox questionD4_2 = new CheckBox();
+    private CheckBox questionD4_3 = new CheckBox();
+    private CheckBox questionD4_4 = new CheckBox();
+    private CheckBox questionD4_5 = new CheckBox();
+    private CheckBox questionD4_6 = new CheckBox();
+    private CheckBox questionD4_7 = new CheckBox();
+    private CheckBox questionD4_8 = new CheckBox();
 
     public OutcomesAndAssessmentTwo(OutcomesAndAssessmentOne outcomesAndAssessmentOne) {
         this.outcomesAndAssessmentOne = outcomesAndAssessmentOne;
@@ -65,74 +77,42 @@ public class OutcomesAndAssessmentTwo {
         mainForm.setWidth(800);
         mainForm.setLabelWidth(250);
 
-        /*final CheckBox test = new CheckBox();
-        test.setPagePosition(410,200);
-        test.setBoxLabel("Test the text shows");
-        test.setFieldLabel("this is a test button to ensure that it selects the data");
-        mainForm.add(test, formData);
-        */
-
-        CheckBox questionD4_1 = new CheckBox();
-        questionD4_1.setPagePosition(250, 125);
-        //questionD4_1.enable();
         LabelField D41 = new LabelField();
         D41.setText("Identify and solve problems in which responses display "
                 + "that responsible decisions using critical and creative thinking have been made.");
-        D41.setPagePosition(350, 400);
         D41.setWidth(500);
 
-        CheckBox questionD4_2 = new CheckBox();
-        questionD4_2.setPagePosition(250, 163);
         LabelField D42 = new LabelField();
         D42.setText("Work effectively with others as a member of a team, "
                 + "group, organisation, community.");
-        D42.setPagePosition(410, 200);
         D42.setWidth(500);
 
-        CheckBox questionD4_3 = new CheckBox();
-        questionD4_3.setPagePosition(250, 186);
         LabelField D43 = new LabelField();
         D43.setText("Organise and manage oneself and one’s activities "
                 + "responsibly and effectively.");
-        D43.setPagePosition(310, 130);
         D43.setWidth(500);
 
-
-        CheckBox questionD4_4 = new CheckBox();
-        questionD4_4.setPagePosition(250, 208);
         LabelField D44 = new LabelField();
         D44.setText("Collect, analyse, organise and critically evaluate "
                 + "information.");
-        D44.setPagePosition(310, 150);
         D44.setWidth(500);
 
-        CheckBox questionD4_5 = new CheckBox();
-        questionD4_5.setPagePosition(250, 232);
         LabelField D45 = new LabelField();
         D45.setText("Communicate effectively using visual, mathematical and/or"
                 + " language skills in the modes of oral and/ or written presentation.");
-        D45.setPagePosition(310, 170);
         D45.setWidth(500);
 
-        CheckBox questionD4_6 = new CheckBox();
-        questionD4_6.setPagePosition(250, 268);
         LabelField D46 = new LabelField();
         D46.setText("Use science and technology effectively and critically, "
                 + "showing responsibility towards the environment and health of others.");
-        D46.setPagePosition(310, 190);
         D46.setWidth(500);
 
-        CheckBox questionD4_7 = new CheckBox();
-        questionD4_7.setPagePosition(250, 306);
         LabelField D47 = new LabelField();
         D47.setText("Demonstrate an understanding of the world as a set of "
                 + "related systems by recognising that problem-solving contexts do not exist "
                 + "in isolation.");
-        D47.setPagePosition(310, 210);
         D47.setWidth(500);
 
-        CheckBox questionD4_8 = new CheckBox();
-        questionD4_8.setPagePosition(250, 342);
         LabelField D48 = new LabelField();
         D48.setText("In order to contribute to the full personal development "
                 + "of each learner and the social economic development of the society at large, "
@@ -143,37 +123,48 @@ public class OutcomesAndAssessmentTwo {
         LabelField D48_3 = new LabelField("-   Being culturally and aesthetically sensitive across a range of social contexts;");
         LabelField D48_4 = new LabelField("-   Exploring education and career opportunities; and");
         LabelField D48_5 = new LabelField("-   Developing entrepreneurial opportunities.");
-        D48.setPagePosition(310, 230);
         D48.setWidth(500);
 
 
 
         questionD4.setFieldLabel("D.4. Specify the critical cross-field outcomes "
                 + "(CCFOs) integrated into the course/unit using the list provided.");
-        questionD4.add(questionD4_1);
-        questionD4.add(questionD4_2);
-        questionD4.add(questionD4_3);
-        questionD4.add(questionD4_4);
-        questionD4.add(questionD4_5);
-        questionD4.add(questionD4_6);
-        questionD4.add(questionD4_7);
-        questionD4.add(questionD4_8);
-
-
         mainForm.add(questionD4, formData);
-        mainForm.add(D41, formData);
-        mainForm.add(D42, formData);
-        mainForm.add(D43, formData);
-        mainForm.add(D44, formData);
-        mainForm.add(D45, formData);
-        mainForm.add(D46, formData);
-        mainForm.add(D47, formData);
-        mainForm.add(D48, formData);
-        mainForm.add(D48_1, formData);
-        mainForm.add(D48_2, formData);
-        mainForm.add(D48_3, formData);
-        mainForm.add(D48_4, formData);
-        mainForm.add(D48_5, formData);
+
+
+        Grid q4 = new Grid(13, 3);
+        q4.getColumnFormatter().setWidth(0, "250px");
+        q4.getColumnFormatter().setWidth(1, "20px");
+        int r = 0;
+        while (r<13){
+            q4.getCellFormatter().setVerticalAlignment(r, 1, HasVerticalAlignment.ALIGN_TOP);
+            r++;
+        }
+
+        q4.setWidget(0, 1, questionD4_1);
+        q4.setWidget(1, 1, questionD4_2);
+        q4.setWidget(2, 1, questionD4_3);
+        q4.setWidget(3, 1, questionD4_4);
+        q4.setWidget(4, 1, questionD4_5);
+        q4.setWidget(5, 1, questionD4_6);
+        q4.setWidget(6, 1, questionD4_7);
+        q4.setWidget(7, 1, questionD4_8);
+        q4.setWidget(0, 2, D41);
+        q4.setWidget(1, 2, D42);
+        q4.setWidget(2, 2, D43);
+        q4.setWidget(3, 2, D44);
+        q4.setWidget(4, 2, D45);
+        q4.setWidget(5, 2, D46);
+        q4.setWidget(6, 2, D47);
+        q4.setWidget(7, 2, D48);
+        q4.setWidget(8, 2, D48_1);
+        q4.setWidget(9, 2, D48_2);
+        q4.setWidget(10, 2, D48_3);
+        q4.setWidget(11, 2, D48_4);
+        q4.setWidget(12, 2, D48_5);
+
+
+        mainForm.add(q4, formData);
 
 
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
@@ -183,18 +174,42 @@ public class OutcomesAndAssessmentTwo {
         //function to ensure that all the fields are filled and the form is
         //completed before the user moves to the next form
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                /*if (test.getValue() == null) {
-                    MessageBox.info("Missing answer", "Provide at least one selection to question D.4", null);
+                if (questionD4_1.getValue()==false && questionD4_2.getValue()==false &&
+                        questionD4_3.getValue()==false && questionD4_4.getValue()==false &&
+                        questionD4_5.getValue()==false && questionD4_6.getValue()==false &&
+                        questionD4_7.getValue()==false && questionD4_8.getValue()==false){
+                    MessageBox.info("Missing answer", "Please check at " +
+                            "least one Critical Cross-Field Outcome (CCFO)", null);
                     return;
-                }*/
+                }
+                qD4a = questionD4.getValue().toString();
 
-                String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                outcomesAndAssessmentTwoData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                /*qD4a = questionD4_1.getBoxLabel().toString();
+                qD4b = questionD4_2.getBoxLabel().toString();
+                qD4c = questionD4_3.getBoxLabel().toString();
+                qD4d = questionD4_4.getBoxLabel().toString();
+                qD4e = questionD4_5.getBoxLabel().toString();
+                qD4f = questionD4_6.getBoxLabel().toString();
+                qD4g = questionD4_7.getBoxLabel().toString();
+                qD4h = questionD4_8.getBoxLabel().toString();*/
+
+                WicidXML wicidXML = new WicidXML("formdata");
+                wicidXML.addElement("qD4a", qD4a);
+                /*wicidXML.addElement("qD4b", qD4b);
+                wicidXML.addElement("qD4c", qD4c);
+                wicidXML.addElement("qD4d", qD4d);
+                wicidXML.addElement("qD4e", qD4e);
+                wicidXML.addElement("qD4f", qD4f);
+                wicidXML.addElement("qD4g", qD4g);
+                wicidXML.addElement("qD4h", qD4h);*/
+
+                outcomesAndAssessmentTwoData = wicidXML.getXml();
+
+                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
+                //outcomesAndAssessmentTwoData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -224,7 +239,18 @@ public class OutcomesAndAssessmentTwo {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+
+            }
+        });
+
         mainForm.addButton(backButton);
+        mainForm.addButton(forwardButton);
         mainForm.addButton(saveButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
