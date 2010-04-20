@@ -7,12 +7,7 @@ $pageText->align='left';
 
 $loading = $this->getObject('geticon', 'htmlelements');
 $loading->setIcon('loader');
-/*
-// Display the heading. 
-$pageText->type=1;
-$pageText->str=ucwords($objLanguage->code2Txt('word_workgroup')) . ' : ' . $workgroupDescription;    
-$middleContent = $pageText->show();
-*/
+
 
 $middleContent = '';
 
@@ -56,19 +51,6 @@ $middleContent .= '<div id="browsefiles">'.$loading->show().'</div>';
         
         
 		
-
-/*
-$refLink = new link('#');
-		$url = $this->uri(array(
-                'action'=>'comment',
-                'id' => $id
-            ));
-		$refLink->link = $objLanguage->languageText("phrase_addreference");
-		$refLink->extra = "onclick=\"javascript:window.open('{$url}', 'refs', 'width=440, height=200, left=100,top=100,scrollbars = yes');\"";
-		$linkWindow = $refLink->show();
-
-*/
-// -------------------------------------------------------------------------
 
 // Logout
 $middleContent .= "<a href=\"".
@@ -185,11 +167,11 @@ $cssLayout->setNumColumns(2);
 $menuBar=& $this->getObject('workgroupmenu');
 */
 $toolbar = $this->getObject('contextsidebar','context');
-$sideMenu=$toolbar->show();
+$sideMenu="".$toolbar->show();
 $cssLayout->setLeftColumnContent($rightContent.$sideMenu);
-$cssLayout->setMiddleColumnContent($middleContent);
+$cssLayout->setMiddleColumnContent("<div class='outerwrapper'".$middleContent."</div>");
 //$cssLayout->setRightColumnContent($chatBlock);
-echo $cssLayout->show(); 
+echo $cssLayout->show();
 
 
 ?>
