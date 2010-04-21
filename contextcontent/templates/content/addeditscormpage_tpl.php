@@ -129,19 +129,6 @@ if ($mode == 'edit') {
     echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_addnewcontextpages','contextcontent').' - '.$this->objContext->getTitle().'</h1>';
     $formaction = 'savescormpage';
 }
-//echo '<p>Todo: Allow User to place order of page</p>';
-/**
- *         $this->setVar('mode', 'add');
- $this->setVar('formaction', 'savepage');
- $this->setVarByRef('chapter', $chapter);
- $this->setVarByRef('currentChapter', $chapter);
-
- $tree = $this->objContentOrder->getTree($this->contextCode, $chapter, 'dropdown');
- $this->setVarByRef('tree', $tree);
- $this->setVar('mode', 'add');
- *
- */
-
 $form = new form ('savescormpage', $this->uri(array(
     'action'=>$formaction,
     'chapter'=>$chapter,
@@ -177,9 +164,6 @@ $table->addCell("&nbsp;");
 $table->addCell("&nbsp;");
 $table->endRow();
 
-//$htmlArea = $this->newObject('htmlarea', 'htmlelements');
-//$htmlArea->name = 'intro';
-//$htmlArea->context = TRUE;
 
 if ($mode == 'edit') {
 // name of dropdown = 'parentfolder'

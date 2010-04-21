@@ -45,12 +45,11 @@ $objIcon->title = $this->objLanguage->languageText('mod_contextcontent_downloadc
 $pdfIcon = $objIcon->show();
 //The Activity Streamer Icon
 $this->objAltConfig = $this->getObject('altconfig','config');
-$modPath=$this->objAltConfig->getModulePath();
-$replacewith="";
-$docRoot=$_SERVER['DOCUMENT_ROOT'];
-$resourcePath=str_replace($docRoot,$replacewith,$modPath);
-$imgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
-$streamerimg ='<img src="'.$imgPath.'">';
+$siteRoot=$this->objAltConfig->getsiteRoot();
+$moduleUri=$this->objAltConfig->getModuleURI();
+$imgPath=$siteRoot."/".$moduleUri.'/contextcontent/resources/img/new.png';
+$streamerimg ='<img  class="newcontentimg" src="'.$imgPath.'">';
+
 
 if ($this->isValid('addchapter')) {
     $link = new link ($this->uri(array('action'=>'addchapter')));
@@ -140,15 +139,15 @@ foreach ($chapters as $chapter)
 		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
 		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
        		if ($ischapterlogged == FALSE) {
-		         $content = '<h1> '.$streamerimg." ".$chapterLink->show();;
+		         $content = '<h1 class="streamerimg"> '.$streamerimg." ".$chapterLink->show();;
 		        }else{
-		         $content = '<h1>'.$chapterLink->show();
+		         $content = '<h1 class="chapterlink">'.$chapterLink->show();
 		        }
 		} else {
        		if ($ischapterlogged == FALSE) {
-		         $content = '<h1> '.$streamerimg." ".$chapterLink->show();;
+		         $content = '<h1 class="streamerimg">> '.$streamerimg." ".$chapterLink->show();;
 		        }else{
-		         $content = '<h1>'.$chapterLink->show();
+		         $content = '<h1 class="chapterlink">'.$chapterLink->show();
 		        }
 		}
 

@@ -10,9 +10,9 @@ $this->loadClass('button', 'htmlelements');
 $tWidth=150;
 
 
-    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_contextpagesfor','contextcontent')." ".$this->objContext->getTitle().' - '.$this->objLanguage->languageText('mod_contextcontent_createachapter','contextcontent').'</h1>';
+    echo '<h1 class="contextpagesfor">'.$this->objLanguage->languageText('mod_contextcontent_contextpagesfor','contextcontent')." ".$this->objContext->getTitle().' - '.$this->objLanguage->languageText('mod_contextcontent_createachapter','contextcontent').'</h1>';
     
-    echo '<p>'.$this->objLanguage->languageText('mod_contextcontent_createchapterexplanation','contextcontent').'</p>';
+    echo '<p class="createchapterexplanation">'.$this->objLanguage->languageText('mod_contextcontent_createchapterexplanation','contextcontent').'</p>';
     
 $form = new form ('addchapter', $this->uri(array('action'=>'savechapter')));
 $table = $this->newObject('htmltable', 'htmlelements');

@@ -74,6 +74,7 @@ if ($this->isValid('movepageup')) {
 $table = $this->newObject('htmltable', 'htmlelements');
 //$table->border='1';
 $table->startRow();
+$table->cssClass="pagenavigation";
 $table->addCell($prevPage, '33%', 'top');
 $table->addCell($middle, '33%', 'top', 'center');
 $table->addCell($nextPage, '33%', 'top', 'right');
@@ -82,6 +83,7 @@ $table->endRow();
 $table2 = $this->newObject('htmltable', 'htmlelements');
 //$table->border='1';
 $table2->startRow();
+$table2->cssClass="pagenavigation2";
 $table2->addCell($prevPage, '33%', 'top');
 $table2->addCell('&nbsp;', '33%', 'top', 'center');
 $table2->addCell($nextPage, '33%', 'top', 'right');
@@ -90,6 +92,7 @@ $table2->endRow();
 $topTable = $this->newObject('htmltable', 'htmlelements');
 //$topTable->border='1';
 $topTable->startRow();
+$topTable->cssClass="toppagenavigation";
 $topTable->addCell($prevPage, '50%', 'top');
 $topTable->addCell($nextPage, '50%', 'top', 'right');
 $topTable->endRow();
@@ -125,64 +128,11 @@ if (trim($page['headerscripts']) != '') {
             }
         }
     }
-    
-    //$this->appendArrayVar('headerParams', $page['headerscripts']);
-
 
 }
 
-
-//$tab = $this->getObject('tabpane','htmlelements');
-//$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
-//echo $tab->show();
-
-/*
-if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid('changebookmark')) {
-    echo '<div style="float: right; background-color: lightyellow; padding: 5px; border: 1px solid #000; margin-top: 10px;">'; 
-    echo '<h5><a href="javascript:togglePageOptions();">'.$this->objLanguage->languageText('mod_contextcontent_pageoptions', 'contextcontent', 'Page Options').'...</a></h5>';
-    echo '<div id="pageoptions" style="display:none">';
-
-    $options = array();
-    
-    if ($this->isValid('editpage')) {
-        $options[] = $editLink->show();
-    }
-    
-    if ($this->isValid('deletepage')) {
-        $options[] = $deleteLink->show();
-    }
-    
-    if ($this->isValid('changebookmark')) {
-        if ($page['isbookmarked'] == 'Y') {
-            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'off\');">'.$this->objLanguage->languageText('mod_contextcontent_removebookmark', 'contextcontent', 'Remove Bookmark').'</a></div>';
-        } else {
-            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'on\');">'.$this->objLanguage->languageText('mod_contextcontent_bookmarkpage', 'contextcontent', 'Bookmark Page').'</a></div>';
-        }
-    }
-    
-    if (count($options) > 0) {
-        $divider = '';
-        foreach ($options as $option)
-        {
-            echo $divider.$option;
-            $divider = '<br />';
-        }
-    }
-
-    
-    echo '</div>';
-    echo '</div>';
-}
-*/
 $objWashout = $this->getObject('washout', 'utilities');
 $content = $objWashout->parseText($page['pagecontent']);
-
-//echo $content;
-
-//echo '<hr />';
-
-//echo $table->show();
-
 $form = "";
 
 if (count($chapters) > 1 && $this->isValid('movetochapter')) {

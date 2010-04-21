@@ -9,7 +9,7 @@ $header->str = $this->objLanguage->code2Txt('mod_contextcontent_nocontentincours
 
 echo $header->show();
 
-echo '<p>'.$this->objLanguage->code2Txt('mod_contextcontent_lecturershavenotuploadedcontent','contextcontent').'</p>';
+echo '<p class="lecturershavenotuploadedcontent">'.$this->objLanguage->code2Txt('mod_contextcontent_lecturershavenotuploadedcontent','contextcontent').'</p>';
 
 $homelink = new link ($this->uri(NULL, '_default'));
 $homelink->link = $this->objLanguage->code2Txt('mod_contextcontent_returntohomepage','contextcontent');
@@ -17,6 +17,6 @@ $homelink->link = $this->objLanguage->code2Txt('mod_contextcontent_returntohomep
 $courselink = new link ($this->uri(NULL, 'context'));
 $courselink->link = $this->objLanguage->code2Txt('mod_contextcontent_returntocoursehome','contextcontent');
 
-echo '<p>'.$courselink->show().' / '.$homelink->show().'</p>';
+echo '<p class="courseandhomelink">'.$courselink->show().' / '.$homelink->show().'</p>';
 
 ?>

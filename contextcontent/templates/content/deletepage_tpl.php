@@ -14,7 +14,7 @@ $title = $this->objLanguage->languageText('mod_contextcontent_delcontextpages','
 
 $form = new form('deletepage', $this->uri(array('action'=>'deletepageconfirm')));
 
-$form->addToForm('<p><strong>'.$this->objLanguage->languageText('mod_contextcontent_delconf','contextcontent').'</strong></p>');
+$form->addToForm('<p><strong class="deletecontent">'.$this->objLanguage->languageText('mod_contextcontent_delconf','contextcontent').'</strong></p>');
 
 $radio = new radio ('confirmation');
 $radio->addOption('N',$this->objLanguage->languageText('mod_contextcontent_delconfno','contextcontent'));
@@ -22,7 +22,7 @@ $radio->addOption('Y',$this->objLanguage->languageText('mod_contextcontent_delco
 $radio->setSelected('N');
 $radio->setBreakSpace('</p><p>');
 
-$form->addToForm('<p>'.$radio->show().'</p>');
+$form->addToForm('<p >'.$radio->show().'</p>');
 
 $button = new button ('confirm', $this->objLanguage->languageText('mod_contextcontent_confirmdelcontextpages','contextcontent'));
 $button->setToSubmit();

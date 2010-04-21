@@ -6,15 +6,21 @@ $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
+$this->loadClass('htmlHeading','htmlelements');
+
+$header=new htmlheading();
+$header->type=1;
 
 if ($mode == 'edit') {
     $formaction = 'updatechapter';
-    $areaTitle = '<h1>'.$this->objLanguage->languageText('mod_contextcontent_editchapter','contextcontent').': <span class="chaptertitle">'.$chapter['chaptertitle'].'</span></h1>';
+    $areaTitle = $this->objLanguage->languageText('mod_contextcontent_editchapter','contextcontent').': <span class="chaptertitle">'.$chapter['chaptertitle'].'</span>';
 } else {
-    $areaTitle = '<h1>'.$this->objLanguage->languageText('mod_contextcontent_addnewchapterin','contextcontent').' <span class="chaptertitle">'.$this->objContext->getTitle().'<span></h1>';
+    $areaTitle = $this->objLanguage->languageText('mod_contextcontent_addnewchapterin','contextcontent').' <span class="chaptertitle">'.$this->objContext->getTitle().'<span>';
     $formaction = 'savechapter';
 }
-    //echo '<p>Todo: Allow User to place order of chapter</p>';
+
+$header->str=$areaTitle;
+//echo '<p>Todo: Allow User to place order of chapter</p>';
     
 $form = new form ('addchapter', $this->uri(array('action'=>$formaction)));
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -85,15 +91,7 @@ if ($mode == 'edit') {
     
 }
 
-echo '<div class="addchapterform">' . $areaTitle . $form->show() . "</div>";
+echo '<div class="addchapterform">' . $header->show() . $form->show() . "</div>";
 $chapterlisturl = $this->uri(array('action'=>'chapterlistastree','contextcode'=>$this->contextCode));
 $viewchapterurl = $this->uri(array('action'=>'viewchapter'));
-/*
-$mainjs = "
-                Ext.onReady(function(){
-                   initContextTools('".str_replace("amp;", "", $chapterlisturl)."','".str_replace("amp;", "", $viewchapterurl)."');
-                 });
-
-          ";
-echo "<script type=\"text/javascript\">".$mainjs."</script>";*/
 ?>

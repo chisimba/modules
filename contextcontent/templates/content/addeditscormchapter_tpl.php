@@ -6,7 +6,7 @@ $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-
+$this->loadClass('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('loader');
 
@@ -18,7 +18,7 @@ $arrLang['buttondisabled'] = $this->objLanguage->languageText('mod_scorm_buttond
 $arrLang['doesntcontainscorm'] = $this->objLanguage->languageText('mod_scorm_doesntcontainscorm','scorm');
 $arrLang['unknownerror'] = $this->objLanguage->languageText('mod_scorm_unknownerror','scorm');
 //AJAX to check if selected folder contains scorm    
-    $this->appendArrayVar('headerParams', '
+$this->appendArrayVar('headerParams', '
     <script type="text/javascript">
         
         // Flag Variable - Update message or not
@@ -124,15 +124,18 @@ $arrLang['unknownerror'] = $this->objLanguage->languageText('mod_scorm_unknowner
         }
     </script>');
 
+$titleheader=new htmlheading();
+$titleheader->type=1;
 if ($mode == 'edit') {
     $formaction = 'updatescormchapter';
-    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_editchapter','contextcontent').': '.$chapter['chaptertitle'].'</h1>';
+    $titleheader->str=$this->objLanguage->languageText('mod_contextcontent_editchapter','contextcontent').': '.$chapter['chaptertitle'];
 } else {
-    echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_addnewchapterin','contextcontent').' '.$this->objContext->getTitle().'</h1>';
+    $titleheader->str=$this->objLanguage->languageText('mod_contextcontent_addnewchapterin','contextcontent').' '.$this->objContext->getTitle();
     $formaction = 'savescormchapter';
 }
-    //echo '<p>Todo: Allow User to place order of chapter</p>';
-    
+echo $titleheader->show();
+//echo '<p>Todo: Allow User to place order of chapter</p>';
+
 $form = new form ('addscorm', $this->uri(array('action'=>$formaction)));
 $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -157,16 +160,12 @@ $table->addCell("&nbsp;");
 $table->addCell("&nbsp;");
 $table->endRow();
 
-//$htmlArea = $this->newObject('htmlarea', 'htmlelements');
-//$htmlArea->name = 'intro';
-//$htmlArea->context = TRUE;
-
 if ($mode == 'edit') {
-	// name of dropdown = 'parentfolder'
-	$usrFolders = $this->objFolders->getTreedropdown($chapter['introduction']);
+    // name of dropdown = 'parentfolder'
+    $usrFolders = $this->objFolders->getTreedropdown($chapter['introduction']);
 //    $htmlArea->value = $chapter['introduction'];
 } else {
-	$usrFolders = $this->objFolders->getTreedropdown(Null);
+    $usrFolders = $this->objFolders->getTreedropdown(Null);
 }
 $label = new label ($this->objLanguage->languageText('mod_scorm_selectscormfolder','scorm'), 'input_parentfolder');
 $table->startRow();
@@ -205,7 +204,7 @@ $table->endRow();
 
 $form->addToForm($table->show());
 
-    
+
 $hiddeninput = new hiddeninput('scorm', 'Y');
 $form->addToForm($hiddeninput->show());
 
@@ -221,10 +220,10 @@ if ($mode == 'edit') {
 
     $hiddeninput = new hiddeninput('chaptercontentid', $chapter['id']);
     $form->addToForm($hiddeninput->show());
-    
+
     $hiddeninput = new hiddeninput('contextchapterid', $chapter['contextchapterid']);
     $form->addToForm($hiddeninput->show());
-    
+
 }
 
 echo $form->show();

@@ -49,8 +49,11 @@ $formTable->endRow();
 $htmlarea = $this->newObject('htmlarea', 'htmlelements');
 $htmlarea->setName('pagecontent');
 $htmlarea->context = TRUE;
+$contenttitleheader = new htmlheading();
+$contenttitleheader->type=1;
+$contenttitleheader->str=$this->objLanguage->languageText('mod_contextcontent_addtitle','contextcontent');
 if ($mode == 'add') {
-    $htmlarea->setContent('<h1>'.$this->objLanguage->languageText('mod_contextcontent_addtitle','contextcontent').'</h1>'.'<p>'.$this->objLanguage->languageText('mod_contextcontent_startcontent','contextcontent').'</p>');
+    $htmlarea->setContent($contenttitleheader->show().'<p class="startcontent">'.$this->objLanguage->languageText('mod_contextcontent_startcontent','contextcontent').'</p>');
 } else {
     $htmlarea->setContent($page['pagecontent']);
 }
@@ -70,39 +73,17 @@ if ($mode=='edit') {
     $headerScripts->setDefaultFiles($page['headerscripts']);
 }
 
-/*
-$textarea = new textarea('headerscripts');
-$textarea->extra = ' style="width: 100%"';
-$textarea->rows = 10;
-if ($mode=='edit') {
-    $textarea->value = htmlentities($page['headerscripts']);
-}
-*/
 
-
-$label = new label ('<strong>'.$this->objLanguage->languageText('mod_contextcontent_metatags_javascript','contextcontent').'</strong>', 'input_headerscripts');
+$label = new label ('<strong class="metatagstrong">'.$this->objLanguage->languageText('mod_contextcontent_metatags_javascript','contextcontent').'</strong>', 'input_headerscripts');
 
 $jsForHeader = $this->objLanguage->languageText('mod_contextcontent_enterjavascriptmetatags','contextcontent', 'Enter any JavaScript or Meta Tags that you need to be loaded into the [-HEAD-] tags');
 
 $jsForHeader = str_replace('[-HEAD-]', '&lt;head&gt;', $jsForHeader);
 
 $formTable->startRow();
-$formTable->addCell($label->show().'<p>'.$jsForHeader.'</p>', '240');
+$formTable->addCell($label->show().'<p class="jsforheader">'.$jsForHeader.'</p>', '240');
 $formTable->addCell($headerScripts->show());
 $formTable->endRow();
-
-// $languageList = new dropdown('language');
-// $languageCodes = & $this->getObject('languagecode','language');
-// asort($languageCodes->iso_639_2_tags->codes); 
-// foreach ($languageCodes->iso_639_2_tags->codes as $key => $value) {
-    // $languageList->addOption($key, $value);
-// }
-// $languageList->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
-// $label = new label ('Page Language', 'input_language');
-// $formTable->startRow();
-// $formTable->addCell($label->show());
-// $formTable->addCell($languageList->show());
-// $formTable->endRow();
 
 $formTable->startRow();
 $formTable->addCell('&nbsp;');
@@ -134,25 +115,6 @@ if ($mode == 'edit') {
 
 $form->addRule('menutitle', $this->objLanguage->languageText('mod_contextcontent_pleaseenterpagetitle','contextcontent'), 'required');
 
-
-  /*   $menutitle = stripslashes($this->getParam('menutitle'));
-        $headerscripts = stripslashes($this->getParam('headerscripts'));
-        $language = 'en';
-        $pagecontent = stripslashes($this->getParam('pagecontent'));
-        $parent = stripslashes($this->getParam('parentnode'));
-        $chapter = stripslashes($this->getParam('chapter'));
-        $chapterTitle = $this->objContextChapters->getContextChapterTitle($chapter);
-        $titleId = $this->objContentTitles->addTitle('', $menutitle, $pagecontent, $language, $headerscripts);
-   *         $pageId = $this->getParam('id');
-        $contextCode = $this->getParam('context');
-        $menutitle = stripslashes($this->getParam('menutitle'));
-        $headerScripts = stripslashes($this->getParam('headerscripts'));
-        $pagecontent = stripslashes($this->getParam('pagecontent'));
-        $parentnode = stripslashes($this->getParam('parentnode'));
-   *
-   *
-   *
-*/
 echo $form->show();
 $autosave = 'jQuery(document).ready(function() {
 var saved=false;
@@ -180,5 +142,5 @@ var id="";
 });
 ';
 
-//echo "<div id=\"search-xwin\"><script type='text/javascript'>".$autosave."</script></div>";;
+
 ?>

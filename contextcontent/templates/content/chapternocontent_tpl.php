@@ -1,6 +1,7 @@
 <?php
 
 $this->loadClass('link', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->align = 'absmiddle';
 
@@ -32,21 +33,23 @@ $this->setVarByRef('chapters', $chapters);
 
 $this->setLayoutTemplate('layout_firstpage_tpl.php');
 
-echo '<h1>'.$chapter['chaptertitle'];
+$chapterlink=new htmlheading();
+$chapterlink->type=1;
+$con=$chapter['chaptertitle'];
 
 if ($this->isValid('editchapter')) {
-    echo ' '.$editLink->show();
+    $con.= ' '.$editLink->show();
 }
 
 if ($this->isValid('deletechapter')) {
-    echo ' '.$deleteLink->show();
+    $con.= ' '.$deleteLink->show();
 }
 
 if ($this->isValid('addpage')) {
-    echo ' '.$addPageLink->show();
+    $con.= ' '.$addPageLink->show();
 }
-
-echo '</h1>';
+$chapterlink->str=$con;
+echo  $chapterlink->show();
 
 if ($this->getParam('message') == 'chaptercreated') {
     echo '<p class="warning">'.$errorTitle.'</p>';
@@ -54,8 +57,10 @@ if ($this->getParam('message') == 'chaptercreated') {
     echo '<p class="error">'.$errorTitle.'. '.$errorMessage.'</p>';
 }
 
-
-echo '<h3>'.$this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction', 'contextcontent', 'About Chapter (Introduction)').'</h3>';
+$introheader=new htmlheading();
+$introheader->type=3;
+$introheader->str=$this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction', 'contextcontent', 'About Chapter (Introduction)');
+echo $introheader->show();
 
 $objWashout = $this->getObject('washout', 'utilities');
 
