@@ -21,6 +21,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -49,6 +50,7 @@ public class CollaborationAndContracts {
     private Review oldReview;
     private CollaborationAndContracts oldCollaborationAndContracts;
     private String collaborationAndContractsData;
+    private String qF1a, qF2a, qF2b, qF3a, qF3b, qF4;
 
     public CollaborationAndContracts(Resources resources) {
         this.resources = resources;
@@ -129,8 +131,60 @@ public class CollaborationAndContracts {
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                collaborationAndContractsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                if(F1a.getValue() == null){
+                    MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
+                    return;
+                }
+                qF1a = F1a.getValue().getBoxLabel().toString();
+
+                 if(F1a.getValue() == null){
+                    MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
+                    return;
+                }
+                qF1a = F1a.getValue().getBoxLabel().toString();
+
+                if(F2a.getValue() == null){
+                    MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
+                    return;
+                }
+                qF2a = F2a.getValue().getBoxLabel().toString();
+
+                 if(F2b.getValue() == null){
+                    MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
+                    return;
+                }
+                qF2b = F2b.getValue().toString();
+
+                 if(F3a.getValue() == null){
+                    MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
+                    return;
+                }
+                qF3a = F3a.getValue().toString();
+
+                 if(F3b.getValue() == null){
+                    MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
+                    return;
+                }
+                qF3b = F3b.getValue().toString();
+
+                 if(F4.getValue() == null){
+                    MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
+                    return;
+                }
+                qF4 = F4.getValue().toString();
+
+                WicidXML wicidXML = new WicidXML("formdata");
+                wicidXML.addElement("qF1a", qF1a);
+                wicidXML.addElement("qF2a", qF2a);
+                wicidXML.addElement("qF2b", qF2b);
+                wicidXML.addElement("qF3a", qF3a);
+                wicidXML.addElement("qF3b", qF3b);
+                wicidXML.addElement("qF4", qF4);
+                collaborationAndContractsData = wicidXML.getXml();
+
+
+                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
+               // collaborationAndContractsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN

@@ -154,7 +154,7 @@ public class OutcomesAndAssessmentOne {
                 
                 qD1b = questionD1b.getRawValue().toString();
 
-                int i = 0;
+                /*int i = 0;
                 while (i < 3) {
                     q2 = questionD2.getText(1, i);
                     i++;
@@ -163,6 +163,16 @@ public class OutcomesAndAssessmentOne {
                         return;
                     }
                     //q2 = questionD2.getText(1, i).toString();
+                }*/
+
+                int i=0, x=1;
+                for(i=0;i<2;i++){
+                    if(questionD2.getText(x, i) == null){
+                        MessageBox.info("Missing Text", "please provide an answer for question D.2", null);
+                        return;
+                    }
+                    q2 = questionD2.getText(x, i);//getText(x, i);//.toString();
+
                 }
                 //getRawValue().toString();
 

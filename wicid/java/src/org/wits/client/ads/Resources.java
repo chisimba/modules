@@ -12,7 +12,6 @@ import com.extjs.gxt.ui.client.widget.button.Button;
 
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.google.gwt.core.client.GWT;
@@ -21,6 +20,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -144,76 +144,98 @@ public class Resources {
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                title = E1a.getValue();
-                if (title == null) {
+                
+                if (E1a.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E1a", null);
                     return;
-                }else{
-                    E1a.toString().replaceAll(" ", "--");
                 }
-                qE2a = E2a.getValue();
-                if (qE2a == null) {
+                title = E1a.getValue().toString();
+
+                
+                if (E2a.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E2a", null);
                     return;
-                }else{
-                    E1a.toString().replaceAll(" ", "--");
                 }
-                qE2b = E2b.getValue();
-                if (qE2b == null) {
+                qE2a = E2a.getValue();
+
+                
+                if (E2b.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E2b", null);
                     return;
-                }else{
-                    E1a.toString().replaceAll(" ", "--");
                 }
-                qE2c = E2c.getValue();
-                if (qE2c == null) {
+                qE2b = E2b.getValue();
+
+                
+                if (E2c.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E2c", null);
                     return;
                 }
-                qE3a = E3a.getValue();
-                if (qE3a == null) {
+                qE2c = E2c.getValue();
+
+                
+                if (E3a.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E3a", null);
                     return;
-                }else{
-                    E1a.toString().replaceAll(" ", "--");
                 }
-                qE3b = E3b.getValue();
-                if (title == null) {
+                qE3a = E3a.getValue();
+
+                
+                if (E3b.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E3b", null);
                     return;
-                }else{
-                    E1a.toString().replaceAll(" ", "--");
                 }
-                qE3c = E3c.getValue();
-                if (qE3c == null) {
+                qE3b = E3b.getValue();
+
+                
+                if (E3c.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E3c", null);
                     return;
                 }
-                qE4 = E4.getValue();
-                if (qE4 == null) {
+                qE3c = E3c.getValue();
+
+                
+                if (E4.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E4", null);
                     return;
-                }else{
-                    E1a.toString().replaceAll(" ", "--");
                 }
-                qE5a = E5a.getValue();
-                if (qE5a == null) {
+                qE4 = E4.getValue();
+
+                
+                if (E5a.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E5a", null);
                     return;
                 }
-                qE5b = E5b.getValue();
-                if (qE5b == null) {
+                qE5a = E5a.getValue();
+
+                
+                if (E5b.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E5b", null);
                     return;
-                }else{
-                    qE5b.toString().replaceAll(" ", "--");
                 }
+                qE5b = E5b.getValue();
+
                 if (title.trim().equals("")) {
                     MessageBox.info("Missing answer", "Please provide an answer for E1a", null);
                     return;
                 }
-                String qA1="qA1", qA2="qA2", qA3="qA2", qA4="qA2", qA5="qA5";
-                resourcesData = qA1+"_"+qA2+"_"+qA3+"_"+qA4+"_"+qA5;
+                WicidXML wicidXML = new WicidXML("formdata");
+                wicidXML.addElement("title", title);
+                wicidXML.addElement("qE1a", qE1a);
+                wicidXML.addElement("qE1b", qE1b);
+                wicidXML.addElement("qE2a", qE2a);
+                wicidXML.addElement("qE2b", qE2b);
+                wicidXML.addElement("qE2c", qE2c);
+                wicidXML.addElement("qE3a", qE3a);
+                wicidXML.addElement("qE3b", qE3b);
+                wicidXML.addElement("qE3c", qE3c);
+                wicidXML.addElement("qE4", qE4);
+                wicidXML.addElement("qE5a", qE5a);
+                wicidXML.addElement("qE5b", qE5b);
+
+                resourcesData = wicidXML.getXml();
+
+                //String qA1="qA1", qA2="qA2", qA3="qA2", qA4="qA2", qA5="qA5";
+                //resourcesData = qA1+"_"+qA2+"_"+qA3+"_"+qA4+"_"+qA5;
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN

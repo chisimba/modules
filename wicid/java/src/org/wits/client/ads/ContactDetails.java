@@ -10,7 +10,6 @@ import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
@@ -20,12 +19,14 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.WicidXML;
 
 /**
  *
  * @author nguni
  */
 public class ContactDetails {
+
     private Dialog newContactDetailsDialog = new Dialog();
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
@@ -39,7 +40,8 @@ public class ContactDetails {
     private Review review;
     private ContactDetails oldContactDetails;
     private String contactDetailsData;
-    
+    private String qH1, qH2a, qH2b, qH3a, qH3b;
+
     public ContactDetails(Review review) {
         this.review = review;
         createUI();
@@ -93,18 +95,55 @@ public class ContactDetails {
 
         // private String qH1,
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
-                String qH1 = H1.getValue().toString().replaceAll(" ", "--");
 
-                if(qH1 == null){
+                if (qH1 == null) {
                     MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
                     return;
 
                 }
-                
-                String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                contactDetailsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                qH1 = H1.getValue().toString().replaceAll(" ", "--");
+
+                if (qH2a == null) {
+                    MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
+                    return;
+
+                }
+                qH2a = H1.getValue().toString().replaceAll(" ", "--");
+
+                if (qH2b == null) {
+                    MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
+                    return;
+
+                }
+                qH2b = H1.getValue().toString().replaceAll(" ", "--");
+
+                if (qH3a == null) {
+                    MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
+                    return;
+
+                }
+                qH3a = H1.getValue().toString().replaceAll(" ", "--");
+
+                if (qH3b == null) {
+                    MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
+                    return;
+
+                }
+                qH3b = H1.getValue().toString().replaceAll(" ", "--");
+
+                WicidXML wicidXML = new WicidXML("formdata");
+                wicidXML.addElement("qH1", qH1);
+                wicidXML.addElement("qH2a", qH2a);
+                wicidXML.addElement("qH2b", qH2b);
+                wicidXML.addElement("qH3a", qH3a);
+                wicidXML.addElement("qH3b", qH3b);
+                contactDetailsData = wicidXML.getXml();
+
+                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
+                //contactDetailsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -114,10 +153,10 @@ public class ContactDetails {
 
                 newContactDetailsDialog.hide();
                 MessageBox.info("Message", "You have successfully cpmpleted the application, Thank you", null);
-                
+
             }
         });
-        
+
         backButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
@@ -165,16 +204,15 @@ public class ContactDetails {
                     if (resp[0].equals("")) {
                         /*if (oldOverView == null) {
 
-                            Constants.docid = resp[1];
-                            OverView overView = new OverView(NewCourseProposalDialog.this);
-                            overView.show();
-                            newDocumentDialog.hide();
+                        Constants.docid = resp[1];
+                        OverView overView = new OverView(NewCourseProposalDialog.this);
+                        overView.show();
+                        newDocumentDialog.hide();
                         } else {
-                            oldOverView.show();
-                            newDocumentDialog.hide();
+                        oldOverView.show();
+                        newDocumentDialog.hide();
 
                         }*/
-
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
@@ -184,5 +222,4 @@ public class ContactDetails {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
     }
-
 }

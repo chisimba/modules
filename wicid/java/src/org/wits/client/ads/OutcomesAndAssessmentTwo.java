@@ -185,7 +185,7 @@ public class OutcomesAndAssessmentTwo {
                             "least one Critical Cross-Field Outcome (CCFO)", null);
                     return;
                 }
-                qD4a = questionD4.getValue().toString();
+                //qD4a = questionD4.getValue().toString();
 
                 /*qD4a = questionD4_1.getBoxLabel().toString();
                 qD4b = questionD4_2.getBoxLabel().toString();
@@ -196,17 +196,17 @@ public class OutcomesAndAssessmentTwo {
                 qD4g = questionD4_7.getBoxLabel().toString();
                 qD4h = questionD4_8.getBoxLabel().toString();*/
 
-                WicidXML wicidXML = new WicidXML("formdata");
+                /*WicidXML wicidXML = new WicidXML("formdata");
                 wicidXML.addElement("qD4a", qD4a);
-                /*wicidXML.addElement("qD4b", qD4b);
+                wicidXML.addElement("qD4b", qD4b);
                 wicidXML.addElement("qD4c", qD4c);
                 wicidXML.addElement("qD4d", qD4d);
                 wicidXML.addElement("qD4e", qD4e);
                 wicidXML.addElement("qD4f", qD4f);
                 wicidXML.addElement("qD4g", qD4g);
-                wicidXML.addElement("qD4h", qD4h);*/
+                wicidXML.addElement("qD4h", qD4h);
 
-                outcomesAndAssessmentTwoData = wicidXML.getXml();
+                outcomesAndAssessmentTwoData = wicidXML.getXml();*/
 
                 //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
                 //outcomesAndAssessmentTwoData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
