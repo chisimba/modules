@@ -198,13 +198,13 @@ class dbworksheet extends dbTable
     public function setTotal($id, $total, $new=TRUE)
     {
         if($new){
-            $sql="SELECT total_mark from tbl_worksheet WHERE id='$id'";
-            $rows=$this->getArray($sql);
-            $total=$total+$rows[0]['total_mark'];
+            //$sql="SELECT total_mark from tbl_worksheet WHERE id='$id'";
+            //$rows=$this->getArray($sql);
+            //$total=$total+$rows[0]['total_mark'];
+            return $this->updateTotalMark($id);
+        } else {
+            return $this->update("id", $id, array('total_mark' => $total));
         }
-
-        return $this->update("id", $id, array(
-                'total_mark' => $total));
     }
     
     public function updateTotalMark($id)

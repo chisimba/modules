@@ -30,9 +30,9 @@ $answerLabel=$objLanguage->languageText('mod_worksheetadmin_selecttoanswer','wor
 $addLabel=$objLanguage->languageText('mod_worksheetadmin_add','worksheetadmin').' '.$objLanguage->languageText('word_new')
 .' '.$worksheet;
 $editLabel=$objLanguage->languageText('word_edit','worksheetadmin').' '.$worksheet;
-$deleteLabel=$objLanguage->languageText('word_delete','worksheetadmin').' '.$worksheet;
+$deleteLabel=$objLanguage->languageText('word_delete').' '.$worksheet;
 $markLabel=$objLanguage->languageText('mod_worksheetadmin_mark','worksheetadmin').' '.$worksheet;
-$deleteConfirm=$objLanguage->languageText('word_delete','worksheetadmin').' ';
+$deleteConfirm=$objLanguage->languageText('word_delete').' ';
 $assignLabel = $objLanguage->languageText('mod_assignmentadmin_name','worksheetadmin');
 $noRecords = $objLanguage->code2Txt('mod_worksheetadmin_noworksheetsset','worksheetadmin');
 
@@ -40,7 +40,7 @@ $objIcon->title=$addLabel;
 $addIcon=$objIcon->getAddIcon($this->uri(array('action'=>'add')));
 
 $heading=$objLanguage->languageText('mod_worksheetadmin_name','worksheetadmin').' '.$objLanguage->languageText('mod_worksheetadmin_in','worksheetadmin')
-.' '.$contextTitle;
+." <span class='coursetitle'>$contextTitle</span>";
 $heading.='&nbsp;&nbsp;&nbsp;&nbsp;'.$addIcon;
 $this->setVarByRef('heading',$heading);
 
@@ -125,7 +125,7 @@ echo '<p>'.$objLayer->show().'</p>';
 
 $newWorksheetLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'add')));
 $newWorksheetLink->link = $addLabel;
-$links = $newWorksheetLink->show();
+$links = "<div class='adminadd'></div><div class='adminaddlink'>".$newWorksheetLink->show()."</div>";
 
 if($this->assignment){
     $assignmentLink = new link($this->uri(array(''),'assignmentadmin'));

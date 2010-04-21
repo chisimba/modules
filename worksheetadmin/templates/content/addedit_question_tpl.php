@@ -16,10 +16,9 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('textarea','htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
-$objIcon =& $this->newObject('geticon','htmlelements');
-$objRadio =& $this->newObject('radio','htmlelements');
-$objField =& $this->newObject('fieldset', 'htmlelements');
-//$objImage =& $this->newObject('image','htmlelements');
+$objIcon = $this->newObject('geticon','htmlelements');
+$objRadio = $this->newObject('radio','htmlelements');
+$objField = $this->newObject('fieldset', 'htmlelements');
 
 // set up language items
 $question=$objLanguage->languageText('mod_worksheetadmin_question','worksheetadmin');
@@ -61,7 +60,7 @@ if($mode == 'edit'){
     $dataQuestion = $questions['question'];
     $dataAnswer = $questions['model_answer'];
     $dataWorth = $questions['question_worth'];
-    $qNum .= ' / '.$questions['num_questions'];
+    $qNum .= ' / '.$numQuestions;
     $imageName = $questions['imagename'];
     $imageId = $questions['imageid'];
     $action = 'updatequestion';
@@ -83,7 +82,7 @@ $this->setVarByRef('heading',$heading);
 echo '<b>'.$totalLabel.': '.$worksheet['total_mark'].'</b>';
 
 
-$formAction=$this->uri('');
+$formAction=$this->uri(array('action'=>$action));
 $objForm = new form('worksheet');
 //Set the action for the form to the uri with paramArray
 $objForm->setAction($formAction);
@@ -313,16 +312,19 @@ if($mode != 'edit'){
 /* ******** submit buttons ************ */
 $submitButton = new button('save', $save);
 $submitButton->setToSubmit();
+$submitButton->setIconClass("save");
 $btns = $submitButton->show();
 
 if($mode != 'edit'){
     $submitButton = new button('saveadd', $saveadd);
     $submitButton->setToSubmit();
+    $submitButton->setIconClass("add");
     $btns .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$submitButton->show();
 }
 
-$submitButton = new button('save', $exit);
+$submitButton = new button('cancel', $exit);
 $submitButton->setToSubmit();
+$submitButton->setIconClass("cancel");
 $btns .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$submitButton->show();
 
 $table->init();

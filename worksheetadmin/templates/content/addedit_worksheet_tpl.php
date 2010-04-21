@@ -13,11 +13,11 @@
 $this->setLayoutTemplate('worksheetadmin_layout_tpl.php');
 
 // set up html elements
-$objHeading =& $this->getObject('htmlheading', 'htmlelements');
-$objTable=& $this->newObject('htmltable', 'htmlelements');
-$objTable2=$objTable;
-$objIcon=& $this->newObject('geticon', 'htmlelements');
-$objLayer=& $this->newObject('layer','htmlelements');
+$objHeading = $this->getObject('htmlheading', 'htmlelements');
+$objTable = $this->newObject('htmltable', 'htmlelements');
+$objTable2 =$objTable;
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objLayer = $this->newObject('layer','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('textarea','htmlelements');
@@ -25,7 +25,7 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
-$this->popUp =&$this->getObject('datepickajax','popupcalendar');
+$this->popUp = $this->getObject('datepickajax','popupcalendar');
 
 
 
@@ -213,9 +213,11 @@ $objTable->endRow();
 $objTable->startRow();
 
 $submitButton = new button('save', $saveLabel);
+$submitButton->setIconClass("save");
 $submitButton->setToSubmit();
 $btnSave = $submitButton->show();
 $exitBtn = new button('cancel', $exitLabel);
+$exitBtn->setIconClass("cancel");
 $exitBtn->setOnClick('javascript:submitExitForm()');
 $btnCancel = $exitBtn->show();
 

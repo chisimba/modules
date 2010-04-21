@@ -12,11 +12,11 @@ $this->setLayoutTemplate('worksheetadmin_layout_tpl.php');
 
 // Classes used in this module
 $this->loadClass('link', 'htmlelements');
-$objLayer =& $this->newObject('layer','htmlelements');
-$objIcon =& $this->newObject('geticon','htmlelements');
-$objField =& $this->newObject('fieldset','htmlelements');
-$objMsg =& $this->newObject('timeoutmessage','htmlelements');
-$objConfirm =& $this->newObject('confirm','utilities');
+$objLayer = $this->newObject('layer','htmlelements');
+$objIcon = $this->newObject('geticon','htmlelements');
+$objField = $this->newObject('fieldset','htmlelements');
+$objMsg = $this->newObject('timeoutmessage','htmlelements');
+$objConfirm = $this->newObject('confirm','utilities');
 
 // set up language items
 $head=$objLanguage->languageText('mod_worksheetadmin_worksheet','worksheetadmin');
@@ -116,7 +116,7 @@ $addQ=$objIcon->getAddIcon($this->uri(array( 'module'=> 'worksheet', 'action' =>
 'id' => $sheet['id'], 'count' => $numQuestions)));
 
 // Questions Header
-$objHeading =& $this->getObject('htmlheading', 'htmlelements');
+$objHeading = $this->getObject('htmlheading', 'htmlelements');
 $objHeading->type=4;
 $objHeading->str=$questionsLabel.': '.$sheet['name'].' ('.$numQuestions.')
 &nbsp;&nbsp;&nbsp;';
@@ -176,7 +176,7 @@ if(!empty($questions)){
         	if($questionCounter > 1){
             	$questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'questionup'
             	, 'id' => $question['id'], 'worksheet' => $sheet['id'])));
-            	$questionIcon =& $this->newObject('geticon', 'htmlelements');
+            	$questionIcon = $this->newObject('geticon', 'htmlelements');
             	$questionIcon->setIcon('mvup');
             	$questionLink->link = $questionIcon->show();
             	$actions = $questionLink->show().'&nbsp;';
@@ -187,7 +187,7 @@ if(!empty($questions)){
         	if($questionCounter < $numQuestions){
             	$questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'questiondown'
             	, 'id' => $question['id'], 'worksheet' => $sheet['id'])));
-            	$questionIcon =& $this->newObject('geticon', 'htmlelements');
+            	$questionIcon = $this->newObject('geticon', 'htmlelements');
             	$questionIcon->setIcon('mvdown');
             	$questionLink->link = $questionIcon->show();
             	$actions .= $questionLink->show().'&nbsp;';
@@ -197,12 +197,12 @@ if(!empty($questions)){
 
         	$questionLink = new link($this->uri(array( 'module'=> 'worksheet', 'action' => 'editquestion'
         	, 'id' => $question['id'], 'worksheet' => $sheet['id'])));
-        	$questionIcon =& $this->newObject('geticon', 'htmlelements');
+        	$questionIcon = $this->newObject('geticon', 'htmlelements');
         	$questionIcon->setIcon('edit');
         	$questionLink->link = $questionIcon->show();
         	$actions .= $questionLink->show();
 
-        	$questionIcon =& $this->newObject('geticon', 'htmlelements');
+        	$questionIcon = $this->newObject('geticon', 'htmlelements');
         	$questionIcon->setIcon('delete');
         	$objConfirm->setConfirm($questionIcon->show(),$this->uri(array( 'module'=> 'worksheet', 'action' => 'deletequestion'
         	, 'id' => $question['id'], 'worksheet' => $sheet['id'], 'mark' => $question['question_worth'])),
@@ -224,7 +224,7 @@ if($sheet['activity_status']=='inactive')
 	$addQUrl = $this->uri(array( 'module'=> 'worksheet', 'action' => 'addquestion', 'id' => $sheet['id'], 'count' => count($questions)));
 	$objLink = new link($addQUrl);
 	$objLink->link = $addLabel;
-	$homeLink = '<p>'.$objLink->show();
+	$homeLink = "<div class='adminadd'></div><div class='adminaddlink'>".$objLink->show()."</div>";
 }
 else
 {
@@ -232,21 +232,19 @@ else
 }
 $backHomeLink = new link($this->uri(array('')));
 $backHomeLink->link = $backLabel;
-$homeLink .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$backHomeLink->show();
+$homeLink .= "<div class='adminicon'></div><div class='adminiconlink'>".$backHomeLink->show()."</div>";
 
 $backParam = $this->getParam('mod');
 if($backParam == 'back'){
     $assignmentLink = new link($this->uri(array('action'=>'viewbyletter')));
     $assignmentLink->link = $assignLabel;
-    $homeLink .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$assignmentLink->show();
+    $homeLink .= "<div class='modulehome'></div><div class='modulehomelink'>".$assignmentLink->show()."</div>";
 }
-
-$homeLink .= '</p>';
 
 $objLayer->cssClass='';
 $objLayer->align='center';
 $objLayer->str=$homeLink;
-$back=$objLayer->show();
+$back=$homeLink;//$objLayer->show();
 
 $objLayer->cssClass='even';
 $objLayer->align='left';

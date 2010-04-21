@@ -53,25 +53,25 @@ class worksheetadmin extends controller
         }
 
         $this->action = $this->getParam('action', NULL);
-        $this->objLanguage = &$this->getObject('language', 'language');
-        $this->objWorksheet =& $this->getObject('dbworksheet', 'worksheet');
-        $this->objWorksheetQuestions =& $this->getObject('dbworksheetquestions', 'worksheet');
-        $this->objWorksheetAnswers =& $this->getObject('dbworksheetanswers', 'worksheet');
-        $this->objWorksheetResults =& $this->getObject('dbworksheetresults', 'worksheet');
-        $this->objDate =& $this->newObject('dateandtime','utilities');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objWorksheet = $this->getObject('dbworksheet', 'worksheet');
+        $this->objWorksheetQuestions = $this->getObject('dbworksheetquestions', 'worksheet');
+        $this->objWorksheetAnswers = $this->getObject('dbworksheetanswers', 'worksheet');
+        $this->objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
+        $this->objDate = $this->newObject('dateandtime','utilities');
 		  $this->objWorksheetDate = $this->newObject('datepicker','htmlelements');
         // User
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
         $this->user = $this->objUser->fullname();
         $this->userId = $this->objUser->userId();
-        $this->objFile =& $this->getObject('upload','filemanager');
+        $this->objFile = $this->getObject('upload','filemanager');
 
         // Problem* $this->objFile->changeTables('tbl_worksheet_filestore','tbl_worksheet_blob');
-        $this->objFileErase =& $this->getObject('dbfile','filemanager');
+        $this->objFileErase = $this->getObject('dbfile','filemanager');
 
         // Context Code
-        $this->contextObject =& $this->getObject('dbcontext', 'context');
-        $this->objContentNodes =& $this->getObject('dbcontentnodes', 'context');
+        $this->contextObject = $this->getObject('dbcontext', 'context');
+        $this->objContentNodes = $this->getObject('dbcontentnodes', 'context');
         $this->contextCode = $this->contextObject->getContextCode();
         $this->contextTitle = $this->contextObject->getTitle();
 
@@ -164,14 +164,12 @@ class worksheetadmin extends controller
                 if(isset($postCancel) && !empty($postCancel)){
                     return $this->nextAction('view',array('id'=>$this->getParam('worksheet_id')));
                 }
-                 //Retriving values from the form
-                 $question=$this->getParam('question');
-                 $answer=$this->getParam('answer');
-                 $worth=$this->getParam('worth');
-                 $id=$this->getParam('id');
-                 $ValuesArray=array('question'=>$question,'model_answer'=>$answer,'question_worth'=>$worth);
-                 $objDbworksheetquestion=$this->newObject('dbworksheetquestions','worksheet');
-                 $objDbworksheetquestion->updateQn('id',$id,$ValuesArray);
+                //Retriving values from the form
+                $question=$this->getParam('question');
+                $answer=$this->getParam('answer');
+                $worth=$this->getParam('worth');
+                $id=$this->getParam('id');
+                $this->objWorksheetQuestions->updateQuestion($id, $question, $answer, $worth);
 
                 return $this->nextAction('view', array('id'=>$this->getParam('worksheet_id')));
 
@@ -375,7 +373,7 @@ class worksheetadmin extends controller
     */
     public function viewWorksheet($id)
     {
-        $sheet =& $this->objWorksheet->getRow('id', $id);
+        $sheet = $this->objWorksheet->getRow('id', $id);
 
         if ($sheet == '') {
             return $this->nextAction(NULL);
@@ -394,7 +392,7 @@ class worksheetadmin extends controller
 
         $this->setVarByRef('sheet', $sheet);
 
-        $questions =& $this->objWorksheetQuestions->getAll(' WHERE worksheet_id="'.$id.'" ORDER BY question_order');
+        $questions = $this->objWorksheetQuestions->getAll(' WHERE worksheet_id="'.$id.'" ORDER BY question_order');
 
         $this->setVarByRef('questions', $questions);
 
@@ -403,7 +401,7 @@ class worksheetadmin extends controller
         if($confirm == 'yes'){
             $msg = $this->getSession('confirm');
             $this->unsetSession('confirm');
-            $this->setVarByRef('msg', $msg);
+            $this->setVar('msg', $msg);
         }
 
         return 'view_worksheet_tpl.php';
@@ -416,7 +414,7 @@ class worksheetadmin extends controller
     */
     public function editWorksheet($id)
     {
-        $sheet =& $this->objWorksheet->getRow('id', $id);
+        $sheet = $this->objWorksheet->getRow('id', $id);
 
         if ($sheet == '') {
             return $this->nextAction(NULL);
@@ -471,7 +469,7 @@ class worksheetadmin extends controller
     */
     public function addQuestion($id)
     {
-        $worksheet =& $this->objWorksheet->getRow('id', $id);
+        $worksheet = $this->objWorksheet->getRow('id', $id);
         $worksheet['num_questions']=$this->getParam('count');
 
         if ($worksheet == '') {
@@ -576,16 +574,14 @@ class worksheetadmin extends controller
         }
 
         $userId = $this->objUser->userId();
-	$this->objworksheetquestions = $this->newObject('dbworksheetquestions','worksheet');
+		$this->objworksheetquestions = $this->newObject('dbworksheetquestions','worksheet');
         //$this->objWorksheetQuestions->saveRecord('edit', $userId, $imageFile);
 
         $markOld = $this->getParam('old_worth', 0);
         $markNew = $this->getParam('worth', 0);
 
-        if($markOld != $markNew){
-            $mark=$markNew-$markOld;
-            $this->objWorksheet->setTotal($wid,$mark,TRUE);
-        }
+        $this->objWorksheet->setTotal($wid,$mark,TRUE);
+        
         return $wid;
     }
 
@@ -596,15 +592,16 @@ class worksheetadmin extends controller
     public function editQuestion()
     {
         $wid = $this->getParam('worksheet');
-        $worksheet=& $this->objWorksheet->getRow('id', $wid);
+        $worksheet= $this->objWorksheet->getRow('id', $wid);
 
-        $this->setVarByRef('worksheet', $worksheet);
-
+        $this->setVar('worksheet', $worksheet);
+		$numQuestions = $this->objWorksheetQuestions->getNumQuestions($wid);
         $questions=$this->objWorksheetQuestions->getQuestion($this->getParam('id'));
-        $this->setVarByRef('questions',$questions);
+        $this->setVar('questions',$questions);
 
         $mode='edit';
-        $this->setVarByRef('mode',$mode);
+        $this->setVar('mode',$mode);
+		$this->setVar('numQuestions',$numQuestions);
 
         return 'addedit_question_tpl.php';
     }
