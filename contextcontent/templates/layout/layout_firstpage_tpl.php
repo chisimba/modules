@@ -9,13 +9,11 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->objAltConfig = $this->getObject('altconfig','config');
-$modPath=$this->objAltConfig->getModulePath();
-$replacewith="";
-$docRoot=$_SERVER['DOCUMENT_ROOT'];
-$resourcePath=str_replace($docRoot,$replacewith,$modPath);
-$contentImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/add.png';
-$newImgPath="http://" . $_SERVER['HTTP_HOST']."/".$resourcePath.'/contextcontent/resources/img/new.png';
-
+$this->objAltConfig = $this->getObject('altconfig','config');
+$siteRoot=$this->objAltConfig->getsiteRoot();
+$moduleUri=$this->objAltConfig->getModuleURI();
+$imgPath=$siteRoot."/".$moduleUri.'/contextcontent/resources/img/new.png';
+$streamerimg ='<img  class="newcontentimg" src="'.$imgPath.'">';
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 
