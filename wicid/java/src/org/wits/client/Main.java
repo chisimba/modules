@@ -57,6 +57,7 @@ import com.google.gwt.user.client.Window;
 
 import java.util.List;
 import org.wits.client.ads.*;
+import org.wits.client.search.*;
 
 /**
  * Main entry point.
@@ -105,12 +106,13 @@ public class Main {
     private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
     private NewCourseProposalDialog newCourseProposalDialog;
+    private AdvancedSearchDialog advancedSearchDialog;
     private String mode = "default";
     private boolean admin = false;
     private TextField<String> searchField = new TextField<String>();
     private Button searchButton = new Button("Search");
     private Main thisInstance;
-
+    private Button advancedSearch = new Button("Advanced Search");
     /**
      * Creates a new instance of Main
      */
@@ -287,13 +289,27 @@ public class Main {
         });
 
         searchButton.setIconStyle("search");
-       // toolBar2.add(newDocumentButton);
+        advancedSearch.setIconStyle("search");
+
+        toolBar2.add(newDocumentButton);
         toolBar2.add(newCourseProposalButton);
         toolBar2.add(new SeparatorToolItem());
         toolBar2.add(new Label("Search"));
         toolBar2.add(searchField);
         toolBar2.add(searchButton);
+        toolBar2.add(advancedSearch);
         center.setTopComponent(toolBar2);
+
+        advancedSearch.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                if (advancedSearchDialog == null) {
+                    advancedSearchDialog = new AdvancedSearchDialog();
+                }
+                advancedSearchDialog.show();
+            }
+        });
 
         loader2.load();
         view = new ListView<ModelData>() {
@@ -431,6 +447,7 @@ public class Main {
 
         loadFolderList(getFoldersParams + "&mode=default");
         determinePermissions();
+       
         return container;
     }
 
@@ -512,6 +529,11 @@ public class Main {
         removeFolderMenuItem.setEnabled(selectedFolder == null ? true : false);
         loader.load();
         view.refresh();
+    }
+
+    private void setMode() {
+        newDocumentButton.setEnabled(mode.equals("default"));
+        newCourseProposalButton.setEnabled(mode.equals("apo"));
     }
 
     private void promptFolderName() {
@@ -626,20 +648,23 @@ public class Main {
                         for (String tok : toks) {
                             String[] props = tok.split("=");
 
-                            if (props[0].equals("admin") && props[1].equals("true")) {
+                            if (props[0].trim().equals("admin") && props[1].equals("true")) {
                                 admin = true;
                             }
-                            if (props[0].equals("mode")) {
+                            if (props[0].trim().equals("mode")) {
                                 mode = props[1];
                             }
+                           
                         }
 
+                        
                         if (admin) {
                             folderUserButton.setEnabled(true);
                             fileExtButton.setEnabled(true);
                             newFolderButton.setEnabled(true);
                             unapprovedDocsButton.setEnabled(true);
                         }
+                         setMode();
                         /*if (mode.equalsIgnoreCase("apo")) {
                         newDocumentButton.setEnabled(false);
                         docsTab.setEnabled(false);
