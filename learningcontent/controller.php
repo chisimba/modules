@@ -258,7 +258,6 @@ class learningcontent extends controller {
 			case 'addcomment':
 				return $this->addComment();
             default:
-            //return $this->home_debug();
                 return $this->showContextChapters();
         }
     }
