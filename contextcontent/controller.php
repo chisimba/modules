@@ -57,9 +57,9 @@ $GLOBALS['kewl_entry_point_run']) {
 class contextcontent extends controller {
 
 
-/**
- * @var string $contextCode Context Code of Current Context
- */
+    /**
+     * @var string $contextCode Context Code of Current Context
+     */
 
     protected $contextCode;
 
@@ -69,7 +69,7 @@ class contextcontent extends controller {
      */
     public function init() {
         try {
-        // Load Chapter Classes
+            // Load Chapter Classes
             $this->objChapters = $this->getObject('db_contextcontent_chapters');
             $this->objContextChapters = $this->getObject('db_contextcontent_contextchapter');
             $this->objContentOrder = $this->getObject('db_contextcontent_order');
@@ -86,7 +86,7 @@ class contextcontent extends controller {
             $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 
             // Load Context Object
-            $this->objContext = $this->getObject('dbcontext', 'context');            
+            $this->objContext = $this->getObject('dbcontext', 'context');
 
             // Store Context Code
             $this->contextCode = $this->objContext->getContextCode();
@@ -99,23 +99,23 @@ class contextcontent extends controller {
             //Load Activity Streamer
 
             if($this->objModuleCatalogue->checkIfRegistered('activitystreamer') && $this->objUser->isLoggedIn()) {
-               // $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-               // $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+                // $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+                // $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
                 $this->eventsEnabled = TRUE;
             } else {
                 $this->eventsEnabled = FALSE;
             }
-		
+
 
 
             $this->objMenuTools = $this->getObject('tools', 'toolbar');
             $this->objConfig = $this->getObject('altconfig', 'config');
-			$this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig');
-			$this->objContextComments = $this->getObject('db_contextcontent_comment', 'contextcontent');
+            $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig');
+            $this->objContextComments = $this->getObject('db_contextcontent_comment', 'contextcontent');
             $this->setVar('pageSuppressXML',TRUE);
         }
         catch(customException $e) {
-        //oops, something not there - bail out
+            //oops, something not there - bail out
             echo customException::cleanUp();
             //we don't want to even attempt anything else right now.
             die();
@@ -132,13 +132,13 @@ class contextcontent extends controller {
      * @return boolean
      */
     function requiresLogin($action) {
-	$actions = array('viewchapter','viewpage', 'rss', 'rsscall','notincontext', '');
-	if(in_array($action, $actions)){
-		return FALSE;
-		//var_dump($action);
-	}else{
-		return TRUE;
-	}
+        $actions = array('viewchapter','viewpage', 'rss', 'rsscall','notincontext', '');
+        if(in_array($action, $actions)) {
+            return FALSE;
+            //var_dump($action);
+        }else {
+            return TRUE;
+        }
     }
 
 
@@ -149,8 +149,8 @@ class contextcontent extends controller {
      */
     public function dispatch($action) {
 
-	$this->contextCode = ($this->getParam('rss_contextcode') != "") ? $this->getParam('rss_contextcode') : $this->contextCode ;
-	   if ($this->contextCode == '' && $action != 'notincontext') {
+        $this->contextCode = ($this->getParam('rss_contextcode') != "") ? $this->getParam('rss_contextcode') : $this->contextCode ;
+        if ($this->contextCode == '' && $action != 'notincontext') {
             $action = 'notincontext';
         }
 
@@ -167,8 +167,8 @@ class contextcontent extends controller {
                 return $this->addPage($this->getParam('chapter'), $this->getParam('id', ''), $this->getParam('context', ''));
             case 'savepage':
                 return $this->savePage();
-            case 'autosavepage':
-                return $this->autoSavePage();
+            // case 'autosavepage':
+            //     return $this->autoSavePage();
             case 'addscorm':
                 return $this->addScormChapter();
             case 'addscormpage':
@@ -232,12 +232,12 @@ class contextcontent extends controller {
                 return $this->getChapterListAsTree();
             case 'showcontextchapters':
                 return $this->showContextChapters();
-	    	case 'rss':
-				return $this->viewRss();
-			case 'addcomment':
-				return $this->addComment();
-			case 'rsscall':
-				return $this->rssCall();
+            case 'rss':
+                return $this->viewRss();
+            case 'addcomment':
+                return $this->addComment();
+            case 'rsscall':
+                return $this->rssCall();
             default:
             //return $this->home_debug();
                 return $this->showContextChapters();
@@ -250,8 +250,8 @@ class contextcontent extends controller {
      * @param $action Action to be taken
      * @return boolean
      */
-    public function isValid($action) {        
-        $courseDetails = $this->objContext->getField('access',$this->contextCode);        
+    public function isValid($action) {
+        $courseDetails = $this->objContext->getField('access',$this->contextCode);
         if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
             return TRUE;
         } else {
@@ -259,25 +259,22 @@ class contextcontent extends controller {
         }
     }
 
-	/**
-     * Method that is used by the rss feeds and bookmark to go direct to contextcontent and/or chapter 
+    /**
+     * Method that is used by the rss feeds and bookmark to go direct to contextcontent and/or chapter
      *
      **/
-	public function rssCall()
-	{
-		$contextcode = $this->getParam('rss_contextcode');
-		$chapterid = $this->getParam('id');
-		$status = $this->objContext->joinContext ( $contextcode );
-		if($chapterid && $status)
-		{
-			return $this->nextAction('viewchapter', array('id' => $chapterid));
-		}else if($status)
-		{
-			return $this->showContextChapters();
-		}
-		return $this->nextAction('notincontext');
-		
-	}
+    public function rssCall() {
+        $contextcode = $this->getParam('rss_contextcode');
+        $chapterid = $this->getParam('id');
+        $status = $this->objContext->joinContext ( $contextcode );
+        if($chapterid && $status) {
+            return $this->nextAction('viewchapter', array('id' => $chapterid));
+        }else if($status) {
+            return $this->showContextChapters();
+        }
+        return $this->nextAction('notincontext');
+
+    }
 
     /**
      * Method to display the list of chapters in a context
@@ -289,7 +286,7 @@ class contextcontent extends controller {
         $numContextChapters = $this->objContextChapters->getNumContextChapters($this->contextCode);
 
         $this->setVarByRef('numContextChapters', $numContextChapters);
-		$this->setVar('userId', $this->userId);
+        $this->setVar('userId', $this->userId);
 
         if ($numContextChapters == 0) {
 
@@ -349,14 +346,14 @@ class contextcontent extends controller {
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'couldnotcreatechapter'));
         } else {
-        //add to activity log
+            //add to activity log
             if($this->eventsEnabled) {
                 $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_contextcontent_addednewchapter', 'contextcontent')." ".$this->contextCode;
                 $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-                    'link'=> $this->uri(array()),
-                    'contextcode' => $this->contextCode,
-                    'author' => $this->objUser->fullname(),
-                    'description'=>$message));
+                        'link'=> $this->uri(array()),
+                        'contextcode' => $this->contextCode,
+                        'author' => $this->objUser->fullname(),
+                        'description'=>$message));
             }
 
             return $this->nextAction('viewchapter', array('message'=>'chaptercreated', 'id'=>$chapterId));
@@ -379,14 +376,14 @@ class contextcontent extends controller {
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'couldnotcreatechapter'));
         } else {
-        //add to activity log
+            //add to activity log
             if($this->eventsEnabled) {
                 $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_contextcontent_addednewchapter', 'contextcontent')." ".$this->contextCode;
                 $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-                    'link'=> $this->uri(array()),
-                    'contextcode' => $this->contextCode,
-                    'author' => $this->objUser->fullname(),
-                    'description'=>$message));
+                        'link'=> $this->uri(array()),
+                        'contextcode' => $this->contextCode,
+                        'author' => $this->objUser->fullname(),
+                        'description'=>$message));
             }
             return $this->nextAction(NULL, array('message'=>'chaptercreated', 'id'=>$result));
         }
@@ -412,9 +409,7 @@ class contextcontent extends controller {
             $this->setVar('hideNavSwitch', TRUE);
             $this->setVar('currentPage', NULL);
 
-
-            //$this->setLayoutTemplate('layout_firstpage_tpl.php');
-
+            $this->setLayoutTemplate(NULL);
             return 'addeditchapter_tpl.php';
         }
     }
@@ -455,7 +450,7 @@ class contextcontent extends controller {
         if ($id == '' || $chaptercontentid == '' || $contextchapterid == '') {
             return $this->nextAction(NULL, array('error'=>'noidprovided'));
         } else {
-        //Remove previous records on activity streamer
+            //Remove previous records on activity streamer
             $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($id);
 
             $objChapterContent = $this->getObject('db_contextcontent_chaptercontent');
@@ -465,13 +460,13 @@ class contextcontent extends controller {
             if ($chapter == FALSE) {
                 return $this->nextAction(NULL, array('error'=>'invalididprovided'));
             } else if ($chapter['chapterid'] != $id) {
-                    return $this->nextAction(NULL, array('error'=>'invalididprovided'));
-                } else {
-                    $objChapterContent->updateChapter($chaptercontentid, $title, $intro);
-                    $this->objContextChapters->updateChapterVisibility($contextchapterid, $visibility);
+                return $this->nextAction(NULL, array('error'=>'invalididprovided'));
+            } else {
+                $objChapterContent->updateChapter($chaptercontentid, $title, $intro);
+                $this->objContextChapters->updateChapterVisibility($contextchapterid, $visibility);
 
-                    return $this->nextAction(NULL, array('message'=>'chapterupdated', 'id'=>$id));
-                }
+                return $this->nextAction(NULL, array('message'=>'chapterupdated', 'id'=>$id));
+            }
         }
 
     }
@@ -497,13 +492,13 @@ class contextcontent extends controller {
             if ($chapter == FALSE) {
                 return $this->nextAction(NULL, array('error'=>'invalididprovided'));
             } else if ($chapter['chapterid'] != $id) {
-                    return $this->nextAction(NULL, array('error'=>'invalididprovided'));
-                } else {
-                    $objChapterContent->updateChapter($chaptercontentid, $title, $intro);
-                    $this->objContextChapters->updateChapterVisibility($contextchapterid, $visibility);
+                return $this->nextAction(NULL, array('error'=>'invalididprovided'));
+            } else {
+                $objChapterContent->updateChapter($chaptercontentid, $title, $intro);
+                $this->objContextChapters->updateChapterVisibility($contextchapterid, $visibility);
 
-                    return $this->nextAction(NULL, array('message'=>'chapterupdated', 'id'=>$id));
-                }
+                return $this->nextAction(NULL, array('message'=>'chapterupdated', 'id'=>$id));
+            }
         }
 
     }
@@ -555,7 +550,7 @@ class contextcontent extends controller {
 
         // Check that confirmation has been received
         if ($confirmation == 'Y') {
-        // Check that Context Matches
+            // Check that Context Matches
             if ($context != $this->contextCode) {
                 return $this->nextAction(NULL, array('message'=>'attempttodeletechapteroutofcontext', 'id'=>$id));
             }
@@ -563,14 +558,14 @@ class contextcontent extends controller {
             // Check That Chapter is In Context
             if ($this->objContextChapters->isContextChapter($this->contextCode, $id)) {
 
-            // Check how many other chapters also have this context
+                // Check how many other chapters also have this context
                 $numContextWithChapter = $this->objContextChapters->getNumContextWithChapter($id);
 
                 $chapter = $this->objContextChapters->getContextChapterTitle($id);
 
                 // If only one, do full delete
                 if ($numContextWithChapter == 1) {
-                // Delete Chapter
+                    // Delete Chapter
                     $this->objContextChapters->removeChapterFromContext($id, $this->contextCode);
                     $this->objChapters->deleteChapter($id);
 
@@ -580,7 +575,7 @@ class contextcontent extends controller {
                     if (count($pages) > 0) {
                         foreach ($pages as $page) {
                             $this->objContentTitles->deleteTitle($page['titleid']);
-                        //$this->objContentOrder->deletePage($page['id']);
+                            //$this->objContentOrder->deletePage($page['id']);
                         }
                     }
                 } else { // Else simply remove the chapter from this context.
@@ -670,10 +665,10 @@ class contextcontent extends controller {
         if($this->eventsEnabled) {
             $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent')." ".$this->contextCode." ".$this->objLanguage->languageText('word_chapter', 'contextcontent').": ".$chapterTitle;
             $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-                'link'=> $this->uri(array()),
-                'contextcode' => $this->contextCode,
-                'author' => $this->objUser->fullname(),
-                'description'=>$message));
+                    'link'=> $this->uri(array()),
+                    'contextcode' => $this->contextCode,
+                    'author' => $this->objUser->fullname(),
+                    'description'=>$message));
         }
         return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'pagesaved'));
     }
@@ -724,10 +719,10 @@ class contextcontent extends controller {
         if($this->eventsEnabled) {
             $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent')." ".$this->contextCode." ".$this->objLanguage->languageText('word_chapter', 'contextcontent').": ".$chapterTitle;
             $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-                'link'=> $this->uri(array()),
-                'contextcode' => $this->contextCode,
-                'author' => $this->objUser->fullname(),
-                'description'=>$message));
+                    'link'=> $this->uri(array()),
+                    'contextcode' => $this->contextCode,
+                    'author' => $this->objUser->fullname(),
+                    'description'=>$message));
         }
         return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'pagesaved'));
     }
@@ -742,31 +737,31 @@ class contextcontent extends controller {
         if ($pageId == '') {
             return $this->nextAction(NULL);
         }
-		
+
         $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
         if($page['scorm'] == 'Y') {
             return $this->nextAction('viewscorm',
-            array(
-            'folderId'=>$page['pagecontent'],
-            'chapterid'=>$page['chapterid'],
-            'id'=>$page['id'],
-            'rght'=>$page['rght'],
-            'lft'=>$page['lft'],
-            'mode'=>'page'
-            ),
-            'scorm');
-        }
-		
-        //Log in activity streamer only if logged in (Public courses dont need login)
-        if(!empty($this->userId)){
-	         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
-        if ($ischapterlogged==FALSE) {
-            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);
-         }
+                    array(
+                    'folderId'=>$page['pagecontent'],
+                    'chapterid'=>$page['chapterid'],
+                    'id'=>$page['id'],
+                    'rght'=>$page['rght'],
+                    'lft'=>$page['lft'],
+                    'mode'=>'page'
+                    ),
+                    'scorm');
         }
 
-		if ($page == FALSE) {
-        //echo 'page does not exist';
+        //Log in activity streamer only if logged in (Public courses dont need login)
+        if(!empty($this->userId)) {
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
+            if ($ischapterlogged==FALSE) {
+                $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);
+            }
+        }
+
+        if ($page == FALSE) {
+            //echo 'page does not exist';
             return $this->nextAction(NULL, array('error'=>'pagedoesnotexist'));
         }
 
@@ -790,7 +785,7 @@ class contextcontent extends controller {
             $chapterLink->link = $this->objLanguage->languageText('word_chapter', 'word', 'Chapter').': '.$chapterTitle;
 
             array_unshift($breadcrumbs, $chapterLink->show());
-        //array_unshift($breadcrumbs, 'Chapter: '.$chapterTitle);
+            //array_unshift($breadcrumbs, 'Chapter: '.$chapterTitle);
         }
 
         $this->objMenuTools->addToBreadCrumbs($breadcrumbs);
@@ -844,7 +839,7 @@ class contextcontent extends controller {
         if ($contextCode != '' && $contextCode != $this->contextCode) {
             return $this->nextAction('switchcontext');
         } else {
-        //Remove previous records on activity streamer
+            //Remove previous records on activity streamer
             $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($pageId);
             $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
             $parentPage = $this->objContentOrder->getPage($parentnode, $this->contextCode);
@@ -855,7 +850,7 @@ class contextcontent extends controller {
                 $this->objContentPages->updatePage($page['pageid'], $menutitle, $pagecontent, $headerScripts);
 
                 if ($parentnode != $page['parentid']) {
-                //if ($parentnode != $page['parentid'] && ($page['lft'] > $parentPage['lft']) && ($page['rght'] < $parentPage['rght'])) {
+                    //if ($parentnode != $page['parentid'] && ($page['lft'] > $parentPage['lft']) && ($page['rght'] < $parentPage['rght'])) {
 
 
                     $this->objContentOrder->changeParent($this->contextCode, $page['chapterid'], $pageId, $parentnode);
@@ -957,7 +952,7 @@ class contextcontent extends controller {
      * @param string $id Record Id of the Page
      */
     protected function movePageDown($id) {
-    //$result = $this->objContextChapters->moveChapterDown($id);
+        //$result = $this->objContextChapters->moveChapterDown($id);
         $result = $this->objContentOrder->movePageDown($id);
 
         return $this->nextAction('viewpage', array('id'=>$id, 'message'=>'movepageup', 'result'=>$result));
@@ -1026,7 +1021,7 @@ class contextcontent extends controller {
      * @return PDF File
      */
     private function viewPrintChapter($id) {
-    // Load Class to clean up paths
+        // Load Class to clean up paths
         $objCleanUrl = $this->getObject('cleanurl', 'filemanager');
 
         // Get all the pages of the chapter
@@ -1051,29 +1046,29 @@ class contextcontent extends controller {
 
         // If Chapter has no pages
         if (count($pages) == 0) {
-        // Send Error Message. Chapter has no Pages / Content
+            // Send Error Message. Chapter has no Pages / Content
             $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
             $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted. Please choose another chapter'));
 
             return 'errormessage_tpl.php';
         } else {
-        // Create Absolute Path to where PDF is stored
+            // Create Absolute Path to where PDF is stored
             $destination = $this->objConfig->getcontentBasePath().'/contextcontent/'.$contextCode.'/chapter_'.$id.'.pdf';
             // Clean Up slashes
             $objCleanUrl->cleanUpUrl($destination);
 
             // If PDF file exists
             if (file_exists($destination)) {
-            // Redirect to PDF
+                // Redirect to PDF
 
-            // Create Local Path to PDF
+                // Create Local Path to PDF
                 $redirect = $this->objConfig->getcontentPath().'/contextcontent/'.$contextCode.'/chapter_'.$id.'.pdf';
 
                 // Redirect
                 header('location: '.$redirect);
 
             } else {
-            // Else, Create PDF file
+                // Else, Create PDF file
 
                 /* Creating the PDF Process:
                 Get All Pages
@@ -1081,12 +1076,12 @@ class contextcontent extends controller {
                 Use HTML Doc to convert HTML into PDF
                 */
 
-            // Array consisting of list of paths to HTML files
+                // Array consisting of list of paths to HTML files
                 $pagePath = array();
 
                 // Loop through Chapter Pages
                 foreach ($pages as $page) {
-                // Get Page Content
+                    // Get Page Content
                     $pageContent = $this->objContentOrder->getPage($page['id'], $this->contextCode);
 
                     // Create HTML filename
@@ -1165,7 +1160,7 @@ class contextcontent extends controller {
                     $redirect = $this->objConfig->getcontentPath().'/contextcontent/'.$contextCode.'/chapter_'.$id.'.pdf';
                     header('location: '.$redirect);
                 } else {
-                // Else Show Error Message
+                    // Else Show Error Message
                     $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_couldnotcreatepdf', 'contextcontent', 'Could not create PDF Document'));
                     $this->setVar('errorMessage', ' ');
                     return 'errormessage_tpl.php';
@@ -1196,22 +1191,22 @@ class contextcontent extends controller {
 
 
             } else if ($type == 'tree') {
-                    $this->setSession('navigationType', 'tree');
-                    echo $this->objContentOrder->getTree($this->contextCode, $page['chapterid'], 'htmllist', $pageId, 'contextcontent');
-                    echo '<p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
+                $this->setSession('navigationType', 'tree');
+                echo $this->objContentOrder->getTree($this->contextCode, $page['chapterid'], 'htmllist', $pageId, 'contextcontent');
+                echo '<p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
 
 
-                } else if ($type == 'bookmarks') {
-                        $this->setSession('navigationType', 'bookmarks');
+            } else if ($type == 'bookmarks') {
+                $this->setSession('navigationType', 'bookmarks');
 
-                        echo $this->objContentOrder->getBookmarkedPages($this->contextCode, $page['chapterid'], $pageId, 'contextcontent');
+                echo $this->objContentOrder->getBookmarkedPages($this->contextCode, $page['chapterid'], $pageId, 'contextcontent');
 
-                        echo '<p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
+                echo '<p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
 
 
-                    } else {
-                        echo ''; // Unknown Type - Return Nothing - AJAX won't do anything
-                    }
+            } else {
+                echo ''; // Unknown Type - Return Nothing - AJAX won't do anything
+            }
         }
     }
 
@@ -1297,34 +1292,31 @@ class contextcontent extends controller {
     protected function fixLeftRightValues() {
         $this->objContentOrder->rebuildContext($this->contextCode);
     }
-	
-	/**
+
+    /**
      * Used to add the comment on the page
      *
      */
-	public function addComment()
-	{	
-		$comment = htmlentities($this->getParam('comment') , ENT_QUOTES);
-		$userid = $this->objUser->userId();
-		$pageid = $this->getParam('pageid');
-		if(!empty($comment) && !empty($userid) && !empty($pageid))
-		{
-			$id = $this->objContextComments->addPageComment($userid, $pageid, $comment);
-		}
+    public function addComment() {
+        $comment = htmlentities($this->getParam('comment') , ENT_QUOTES);
+        $userid = $this->objUser->userId();
+        $pageid = $this->getParam('pageid');
+        if(!empty($comment) && !empty($userid) && !empty($pageid)) {
+            $id = $this->objContextComments->addPageComment($userid, $pageid, $comment);
+        }
         return $this->nextAction('viewpage', array('id'=>$pageid));
-	}
+    }
 
     /**
      * Used to display the latest presentations of a user RSS Feed
      *
      */
-    public function viewRss()
-    {
+    public function viewRss() {
         $this->objFeedCreator = $this->getObject('feeder', 'feed');
         $format = 'RSS2.0'; // $this->getParam('feedselector');
         //grab the feed items
         $posts = $this->objContextChapters->getContextChapters($this->getParam('rss_contextcode'));
-    	error_log(var_export($posts, true));
+        error_log(var_export($posts, true));
         //set up the feed...
         $fullname = $this->getParam('title');
         //title of the feed
@@ -1343,19 +1335,19 @@ class contextcontent extends controller {
         $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
         //loop through the posts and create feed items from them
         foreach($posts as $feeditems) {
-            	//use the post title as the feed item title
-				$itemTitle = $fullname.': '.$feeditems['chaptertitle'];
-				$itemLink = str_replace('&amp;', '&', $this->uri(array('action' => 'rsscall', 'id' => $feeditems['chapterid'], 'rss_contextcode' => $this->getParam('rss_contextcode'))));
-                //description
-				$itemDescription = substr(strip_tags($feeditems['introduction']), 0, 200).'...';
-                //where are we getting this from
-                $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&action=rsscall&rss_contextcode=".$this->getParam('rss_contextcode');
-                //feed author
-                //$auth = $feeditem['from_user'];
-                //$itemAuthor = htmlentities($auth."<$auth@capetown.peeps.co.za>");
-                //add this item to the feed
-                $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
-          }
+            //use the post title as the feed item title
+            $itemTitle = $fullname.': '.$feeditems['chaptertitle'];
+            $itemLink = str_replace('&amp;', '&', $this->uri(array('action' => 'rsscall', 'id' => $feeditems['chapterid'], 'rss_contextcode' => $this->getParam('rss_contextcode'))));
+            //description
+            $itemDescription = substr(strip_tags($feeditems['introduction']), 0, 200).'...';
+            //where are we getting this from
+            $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=contextcontent&action=rsscall&rss_contextcode=".$this->getParam('rss_contextcode');
+            //feed author
+            //$auth = $feeditem['from_user'];
+            //$itemAuthor = htmlentities($auth."<$auth@capetown.peeps.co.za>");
+            //add this item to the feed
+            $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
+        }
         //check which format was chosen and output according to that
         $feed = $this->objFeedCreator->output(); //defaults to RSS2.0
         echo htmlentities($feed);
