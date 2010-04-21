@@ -31,6 +31,7 @@ class dbfileuploads extends dbtable {
         $this->objUser=$this->getObject('user','security');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objAltConfig = $this->getObject('altconfig','config');
+        $this->objUserutils=$this->getObject('userutils');
         $this->resourcePath=$this->objAltConfig->getModulePath();
         $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
@@ -184,6 +185,95 @@ class dbfileuploads extends dbtable {
         }else {
             return "unknown";
         }
+    }
+
+    public function advancedSearch($data) {
+        $first = true;
+        print_r($data);
+        /*if(strlen($data['startDate']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "date_created >= '" . strftime('%Y-%m-%d', strtotime($data['startDate']))."'";
+        }
+        if(strlen($data['endDate']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "date_created <= '".strftime('%Y-%m-%d', strtotime($data['endDate']))."'";
+        }
+        /*if(strlen($data['fname']) > 0) {
+            $this->users->getsurname();
+            $filter .=
+        }
+        if(strlen($data['lname']) > 0) {
+
+        }*
+        if(strlen($data['docname']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "docname like '%".$data['docname']."%'";
+        }
+        if(strlen($data['refno']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "refno like '%".$data['refno']."%'";
+        }
+        if(strlen($data['topic']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "topic like '%".$data['topic']."%'";
+        }
+        if(strlen($data['dept']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "topic like '%".$data['dept']."%'";
+        }
+        if(strlen($data['groupid']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "topic like '%".$data['groupid']."%'";
+        }
+        if(strlen($data['ext']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "ext like '%".$data['ext']."%'";
+        }
+        if(strlen($data['mode']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "mode like '%".$data['mode']."%'";
+        }
+        if(strlen($data['active']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "active = '".$data['active']."'";
+        }*/
+
+        $sql = "select * from tbl_wicid_documents ".$filter;
+        // get data from database
+        $rows = $this->getArray($sql);
+        $files=array();
+
+        $owner=$this->objUserutils->getUserId();
+        /*foreach ($rows as $eachrow) {
+            $fileData = $this->getArray($this->searchfiles($eachrow['filename']));
+            /*foreach($fileData as $row) {
+                $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
+                //$isowner=$this->objUser->userid() == $fileData['userid']?"true":"false";
+                $files[] = array(
+                        'text'=>$row['filename'],
+                        'id'=>$row['filepath'],
+                        'docid'=>$row['docid'],
+                        'refno'=>$row['id'],
+                        'owner'=>$this->objUser->fullname($row['userid']),
+                        'lastmod'=>$lastmod,
+                        'filesize'=>$size,
+                        'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
+                );
+
+            }*
+        }*/
+
+        echo "Hi";
     }
 }
 ?>

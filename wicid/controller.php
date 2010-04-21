@@ -504,7 +504,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return true;
+        return false; //true;
     }
 
     function __registeracademicpresenters() {
@@ -623,9 +623,28 @@ class wicid extends controller {
 
         return 'ajaxuploadresults_tpl.php';
     }
+ 
+
+    public function __saveFormData(){
+        $formname = $this->getParam('formname');
+        $formdata = $this->getParam('formdata');
+        $docid = $this->getParam('docid');
+        
+        echo $formname, $formdata, $docid;
+ 
+        $this->objsavedata->saveData($formname, $formdata, $docid);
+    }
+
+    public function __forwardto(){
+        $link=$this->getParam('link');
+        $email = $this->getParam('email');
+        $docid = $this->getParam('docid');
+
+        $this->forwardto->forwardTo($link,$email,$docid);
+    }
 
     public function __advancedsearch() {
-        $startDate = $this->getParam('date');
+        /*$startDate = $this->getParam('date');
         $endDate = $this->getParam('date2');
         $fname = $this->getParam('fname');
         $lname = $this->getParam('lname');
@@ -652,27 +671,10 @@ class wicid extends controller {
                 'dept'=> $dept,
                 'groupid'=>$groupid,
                 'ext'=> $ext,
-                'mode'=> $mode);
+                'mode'=> $mode);*/
 
-        return $this->documents->advancedSearch($data);
+
+        //echo "Hello World";
+        return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
     }
-
-    public function __saveFormData(){
-        $formname = $this->getParam('formname');
-        $formdata = $this->getParam('formdata');
-        $docid = $this->getParam('docid');
-        
-        echo $formname, $formdata, $docid;
- 
-        $this->objsavedata->saveData($formname, $formdata, $docid);
-    }
-
-    public function __forwardto(){
-        $link=$this->getParam('link');
-        $email = $this->getParam('email');
-        $docid = $this->getParam('docid');
-
-        $this->forwardto->forwardTo($link,$email,$docid);
-    }
-
 }
