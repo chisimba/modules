@@ -6,7 +6,7 @@ class block_contexttools extends object{
     }
 
     function show(){
-      return "test";
+      return "Context tools -DO NOT USE";
     }
 }
 ?>
