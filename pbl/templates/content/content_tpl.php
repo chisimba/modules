@@ -20,8 +20,8 @@ $this->setVarByRef('bodyParams',$bodyParams);
 
 // set up html elements objects
 //$this->loadClass('multitabbedbox', 'htmlelements');
-$objTab =& $this->newObject('tabcontent', 'htmlelements');
-$objMessage =& $this->newObject('timeoutmessage','htmlelements');
+$objTab = $this->newObject('tabcontent', 'htmlelements');
+$objMessage = $this->newObject('timeoutmessage','htmlelements');
 $objMessage->setTimeout(5000);
 
 // set up language items

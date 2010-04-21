@@ -21,9 +21,9 @@ $objForm = array();
 $this->loadClass('button','htmlelements');
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('link','htmlelements');
-$objMessage=& $this->newObject('timeoutmessage','htmlelements');
-$objIcon =& $this->newObject('geticon','htmlelements');
-$objLayer =& $this->newObject('layer','htmlelements');
+$objMessage= $this->newObject('timeoutmessage','htmlelements');
+$objIcon = $this->newObject('geticon','htmlelements');
+$objLayer = $this->newObject('layer','htmlelements');
 
 // set add new case icon
 $uploadLabel = $this->objLanguage->languageText('mod_pbladmin_uploadpblfile', 'pbladmin');

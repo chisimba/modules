@@ -10,7 +10,7 @@
 $this->setLayoutTemplate('admin_layout_tpl.php');
 
 // set up html elements
-$objLayer =& $this->newObject('layer','htmlelements');
+$objLayer = $this->newObject('layer','htmlelements');
 $this->loadClass('label','htmlelements');
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('textarea','htmlelements');
@@ -97,14 +97,17 @@ if(!empty($data['minfo'])){
 // Buttons
 $objButton = new button('continue', $continueLabel);
 $objButton->setToSubmit();
+$objButton->setIconClass("forward");
 $btns = $objButton->show();
 
 $objButton = new button('finish', $finishLabel);
 $objButton->setToSubmit();
+$objButton->setIconClass("save");
 $btns .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objButton->show();
 
 $objButton = new button('cancel', $exitLabel);
 $objButton->setToSubmit();
+$objButton->setIconClass("cancel");
 $btns .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objButton->show();
 
 $objLayer->str = $btns;

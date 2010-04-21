@@ -21,21 +21,21 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
-$objHead =& $this->newObject('htmlheading', 'htmlelements');
-$objLayer =& $this->newObject('layer', 'htmlelements');
+$objHead = $this->newObject('htmlheading', 'htmlelements');
+$objLayer = $this->newObject('layer', 'htmlelements');
 
 if(!isset($task)){
     $task = 'mcq';
 }
 
 // Set up language items
-$head =& $this->objLanguage->languageText('mod_pbladmin_add'.$task, 'pbladmin');
-$questionLabel =& $this->objLanguage->languageText('word_question');
-$answersLabel =& $this->objLanguage->languageText('word_answers');
-$correctLabel =& $this->objLanguage->languageText('mod_pbladmin_selectcorrect', 'pbladmin');
-$saveLabel =& $this->objLanguage->languageText('word_save');
-$exitLabel =& $this->objLanguage->languageText('word_close');
-$correctAnsLabel =& $this->objLanguage->languageText('phrase_correctanswer');
+$head = $this->objLanguage->languageText('mod_pbladmin_add'.$task, 'pbladmin');
+$questionLabel = $this->objLanguage->languageText('word_question');
+$answersLabel = $this->objLanguage->languageText('word_answers');
+$correctLabel = $this->objLanguage->languageText('mod_pbladmin_selectcorrect', 'pbladmin');
+$saveLabel = $this->objLanguage->languageText('word_save');
+$exitLabel = $this->objLanguage->languageText('word_close');
+$correctAnsLabel = $this->objLanguage->languageText('phrase_correctanswer');
 
 if(isset($data) && !empty($data)){
     $questionData = $_POST['question'];
@@ -166,10 +166,12 @@ if($task == 'mcq'){
 // Submit/exit buttons
 $objButton = new button('save', $saveLabel);
 $objButton->setOnClick("javascript:build".strtoupper($task)."(); window.close();");
+$objButton->setIconClass("save");
 $buttons = $objButton->show().'&nbsp;&nbsp;&nbsp;&nbsp;';
 
 $objButton = new button('save', $exitLabel);
 $objButton->setOnClick('window.close()');
+$objButton->setIconClass("cancel");
 $buttons .= $objButton->show();
 
 // Add elements to form

@@ -22,8 +22,8 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
-$objIcon =& $this->newObject('geticon', 'htmlelements');
-$objLayer =& $this->newObject('layer', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objLayer = $this->newObject('layer', 'htmlelements');
 
 // Set up language items
 $heading = $this->objLanguage->languageText('mod_pbladmin_pbladmin', 'pbladmin');
@@ -82,19 +82,18 @@ if(!empty($data)){
         $objLink = new link($this->uri(array('action' => 'editclass', 'id' => $id)));
         $objLink->link = $line['name'];
         $name = $objLink->show();
-        
         // Display the name of the facilitator and chair
         if($line['facilitator'] == 'virtual'){
             $facilitator = $virtualLabel;
         }else if($line['facilitator']){
             $filter = " WHERE id='".$line['facilitator']."'";
             $users = $this->objGroupUser->getUsers(NULL, $filter);
-            $facilitator = $users[0]['fullname'];
+            $facilitator = $users[0]['fullName'];
         }
         if($line['chair']){
             $filter = " WHERE id='".$line['chair']."'";
             $users = $this->objGroupUser->getUsers(NULL, $filter);
-            $chair = $users[0]['fullname'];
+            $chair = $users[0]['fullName'];
         }
         
         // Add a checkbox for changing the date or case of a group of classes
@@ -131,12 +130,13 @@ $dateIcon = $objIcon->getLinkedIcon($url, 'select_date');
 $str .= '&nbsp;&nbsp;&nbsp;'.$objInput->show().$dateIcon;
 */
 
-$this->objPopupcal = &$this->getObject('datepickajax', 'popupcalendar');
+$this->objPopupcal = $this->getObject('datepickajax', 'popupcalendar');
 $dateField = $this->objPopupcal->show('date', 'yes', 'no', '');
 $str .= '&nbsp;&nbsp;&nbsp;'.$dateField;
 
 $objButton = new button('saveDate', $goLabel);
 $objButton->setToSubmit();
+$objButton->setIconClass("next");
 $str .= $objButton->show();
 
 // Change the case
@@ -156,6 +156,7 @@ $str .= '&nbsp;&nbsp;&nbsp;'.$objDrop->show();
 
 $objButton = new button('save', $goLabel);
 $objButton->setToSubmit();
+$objButton->setIconClass("next");
 $str .= $objButton->show();
 
 $objLayer->str = '&nbsp;'.$str.'</p>';

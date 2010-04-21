@@ -149,6 +149,7 @@ class pblClassroom extends object
             }
             //$html .= "<br /><input type='submit' value='Ok'></form><br /><br />";
             $objButton = new button('ok', $lbOk);
+            $objButton->setIconClass("next");
             $objButton->setToSubmit();
             $formStr .= '<p>'.$objButton->show().'</p>';
             
@@ -252,9 +253,11 @@ class pblClassroom extends object
         
         if ($true) {
             $objButton = new button('save', $this->objLanguage->languageText('word_save'));
+            $objButton->setIconClass("save");
             $objButton->setToSubmit();
             $save = '<br />'.$objButton->show().'&nbsp;&nbsp;';
             $objButton = new button('erase', $this->objLanguage->languageText('word_erase'));
+            $objButton->setIconClass("erase");
             $objButton->setToSubmit();
             $save .= $objButton->show().'<br />';
             $objForm->addToForm($save);

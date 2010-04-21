@@ -163,6 +163,7 @@ class pblMain extends object
         $helpShow = $this->objHelp->show('classroom', 'pbl');
         $objForm = new form('menuf', $this->uri(array('action' => 'exit')));
         $objButton = new button("Exit", $this->objLanguage->languageText('word_exit'));
+        $objButton->setIconClass("cancel");
         $objButton->setToSubmit();
         $exit = $objButton->show();
         $menu = $exit;

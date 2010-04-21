@@ -27,20 +27,10 @@
     $this->loadClass('textinput', 'htmlelements');
     $this->loadClass('textarea', 'htmlelements');
 //    $this->loadClass('multitabbedbox', 'htmlelements');
-    $objTab =& $this->newObject('tabcontent', 'htmlelements');
-    $objHead =& $this->newObject('htmlheading','htmlelements');
-    $objIcon =& $this->newObject('getIcon','htmlelements');
-    $objMessage =& $this->newObject('timeoutmessage','htmlelements');
-
-// Change the content style to remove margins
-echo '<style>
-#content{
-    margin-left: 0px;
-    margin-right: 0px;
-    padding: 0em;
-    border: 0px;
-}
-</style>';
+    $objTab = $this->newObject('tabcontent', 'htmlelements');
+    $objHead = $this->newObject('htmlheading','htmlelements');
+    $objIcon = $this->newObject('getIcon','htmlelements');
+    $objMessage = $this->newObject('timeoutmessage','htmlelements');
 
 // if there's no user id or classroom id then redirect to index page
     $sesClass = $this->getSession('classroom', '');
@@ -73,7 +63,7 @@ echo '<style>
     $objHead->str = $menu;
 
 // initialise pbl menu - exit & help
-    $menu2=& $this->pbl->getMenuBar2();
+    $menu2= $this->pbl->getMenuBar2();
 
 // header: display menu and header
     $objTable->trClass='header';
@@ -218,7 +208,7 @@ $objTab->addTab($lbNoteBook, $notes);
             foreach($userid as $val){
                 if(!empty($val['studentid'])){
                     $user=$this->objGroupUser->getUsers(NULL," where id='".$val['studentid']."' ");
-                    $listId = $user[0]['fullname'];
+                    $listId = $user[0]['fullName'];
                     if($val['position'] == 'c' || $val['position'] == 's' || $val['position'] == 'f')
                         $listId .= ' ('.$val['position'].')';
                     $users[$i] = $listId;
@@ -257,6 +247,7 @@ $objTab->addTab($lbNoteBook, $notes);
         
     $objButton = new button('chat', $lbSend);
     $objButton->setToSubmit();
+    $objButton->setIconClass("sync");
     $send = '&nbsp;&nbsp;' .$objButton->show();
     $objForm->addToForm($send);
         

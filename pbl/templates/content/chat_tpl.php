@@ -40,7 +40,7 @@ $this->setVarByRef('bodyParams',$bodyParams);
     // get chat and output to screen
     $chatText = $this->dbchat->broadCast();
     
-    $objLayer =& $this->newObject('layer', 'htmlelements');
+    $objLayer = $this->newObject('layer', 'htmlelements');
     $objLayer->str = $chatText;
     $objLayer->align = 'left';
     echo $objLayer->show();

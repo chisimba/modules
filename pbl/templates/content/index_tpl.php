@@ -13,9 +13,9 @@ $this->setLayoutTemplate('pbl_layout_tpl.php');
 // set up html objects
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('link','htmlelements');
-$objHead =& $this->newObject('htmlheading','htmlelements');
-$objLayer =& $this->newObject('layer','htmlelements');
-$objIcon =& $this->getObject('geticon','htmlelements');
+$objHead = $this->newObject('htmlheading','htmlelements');
+$objLayer = $this->newObject('layer','htmlelements');
+$objIcon = $this->getObject('geticon','htmlelements');
 
 // get groups object from groupadmin
 $objGroups=$this->getObject('groupAdminModel','groupadmin');
@@ -180,7 +180,7 @@ $lbLobby = $this->objLanguage->languageText('word_lobby');
     $objLink = new link($this->uri(array(''),'pbladmin'));
     $objLink->link = $objIcon->show().'&nbsp;' .$lbPblAdmin;
     $objLink->title = $lbPblAdmin;
-    $admin = $objLink->show();
+    $admin = "<div class='adminiconlink'>".$objLink->show()."</div>";
 
     $rightMenu.='<p>&nbsp;</p>'.$admin;
     }    
@@ -204,7 +204,7 @@ $lbLobby = $this->objLanguage->languageText('word_lobby');
 
     $mainBody = $header2.$intro.$moreinfo;
 
-    $this->setVarByRef('rightContent', $mainBody);
+    $this->setVar('rightContent', $mainBody);
     
     echo $rightMenu;
 ?>

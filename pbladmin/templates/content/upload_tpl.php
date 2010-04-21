@@ -51,10 +51,12 @@ $objTable->endRow();
 // create, upload & exit buttons
 $objButton = new button('save',$this->objLanguage->languageText('word_upload'));
 $objButton->setToSubmit();
+$objButton->setIconClass("upload");
 $loadBtn = $objButton->show();
 
 $objButton = new button('back',$this->objLanguage->languageText('word_back'));
 $objButton->setToSubmit();
+$objButton->setIconClass("cancel");
 $loadBtn1 = $objButton->show();
 
 $objTable->row_attributes='';

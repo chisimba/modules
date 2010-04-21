@@ -29,9 +29,9 @@ $this->loadClass('label','htmlelements');
 $this->loadClass('radio','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
-$objIcon =& $this->newObject('geticon','htmlelements');
-$objHead =& $this->newObject('htmlheading','htmlelements');
-$objLayer =& $this->newObject('layer','htmlelements');
+$objIcon = $this->newObject('geticon','htmlelements');
+$objHead = $this->newObject('htmlheading','htmlelements');
+$objLayer = $this->newObject('layer','htmlelements');
 
 // set up language items
 $classname = $this->objLanguage->languageText('word_new');
@@ -203,14 +203,18 @@ $hidden .= $objInput->show();
 // Submit Buttons
 $objButton = new button('save', $saveLabel);
 $objButton->setToSubmit();
+$objButton->setIconClass("save");
 $btns = $objButton->show();
 
 $objButton = new button('exit', $exitLabel);
+$objButton->setIconClass("cancel");
 $objButton->setToSubmit();
 $btns .= '&nbsp;&nbsp;'.$objButton->show();
 
 $objButton = new button('edit', $editStudentsLabel);
-$objButton->setToSubmit();
+$objButton->setToSubmit('');
+$objButton->setIconClass("edit");
+
 $btns .= '&nbsp;&nbsp;'.$objButton->show();
 
 $objTable->startRow();
@@ -249,7 +253,7 @@ $objTable2 = new htmltable();
 $objTable2->startRow();
 $objTable2->addCell($classLayer, '55%');
 $objTable2->addCell('','5%');
-$objTable2->addCell($studentLayer, '40%');
+$objTable2->addCell("<div class='outerwrapper'>$studentLayer</div>", '40%');
 $objTable2->endRow();
 
 echo $objTable2->show();

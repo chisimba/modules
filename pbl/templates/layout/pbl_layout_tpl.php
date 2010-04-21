@@ -7,9 +7,9 @@
 * Layout template for the pbl module
 */
 
-$leftMenu =& $this->getObject('contextsidebar', 'context');
-$objHead =& $this->newObject('htmlheading','htmlelements');
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
+$leftMenu = $this->getObject('contextsidebar', 'context');
+$objHead = $this->newObject('htmlheading','htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 
 $heading=$objLanguage->languageText('mod_pbl_pbl', 'pbl');
