@@ -205,6 +205,7 @@ class pansamaps extends controller
                                    'url' => $url, 'contactperson' => $contactperson, 'otherinfo' => $otherinfo, 'venuedescription' => $venuedescription,
                                    'geolat' => $geolat, 'geolon' => $geolon, 'venuelocation' => $venuelocation, );
                 $this->objDbPansa->addRecord($dataArray);
+                $this->objOps->emailNotify($dataArray);
                 $this->nextAction('');
                 break;
                 

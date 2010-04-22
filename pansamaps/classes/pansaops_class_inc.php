@@ -81,6 +81,12 @@ class pansaops extends object {
 	 * Method to render a search form
 	 */
 	public function searchBox() {
+	    $css = '<style type="text/css">  
+            html, body {
+                font: 100%/1.5 Arial; 
+            }
+        </style>';
+        $this->appendArrayVar('headerParams', $css);
         $this->loadClass('textinput', 'htmlelements');
         $qseekform = new form('qseek', $this->uri(array(
             'action' => 'searchvenues',
@@ -105,6 +111,7 @@ class pansaops extends object {
 	 */
 	public function inputForm($editparams = NULL) {
 	    $this->loadClass('label', 'htmlelements');
+	    $this->loadClass('textarea','htmlelements');
 	    $ret = NULL;
         $lat = 0;
         $lon = 0;
@@ -116,6 +123,10 @@ class pansaops extends object {
             height: 350px;
             border: 1px solid black;
             background-color: white;
+        }
+        html, body {
+            font: 100%/1.5 Arial;
+        
         }
     </style>';
 
@@ -335,7 +346,7 @@ class pansaops extends object {
         $table->endRow();
         
         $table->startRow();
-        $venuedescription = new textinput('venuedescription');
+        $venuedescription = new textarea('venuedescription');
         $venuedescription->size = 15;
         if (isset($editparams['venuedescription'])) {
             $venuedescription->setValue($editparams['venuedescription']);
@@ -387,7 +398,12 @@ class pansaops extends object {
     public function viewLocMap($lat, $lon, $zoom = 15) {
         $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
         $css = '<link href="http://www.google.com/apis/maps/base.css" rel="stylesheet" type="text/css"></link>';
-        
+        $css .= '<style type="text/css">  
+            html, body {
+                font: 100%/1.5 Arial; 
+            }
+        </style>';
+        $this->appendArrayVar('headerParams', $css);
         $google = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAAq_-zASCRreQq9Xuux802xBQOEwn5THWt0LuAnKl53rjfhOEbRhSuanS9aUAhrI-U6n6HA233Aqj3bA\"
             type=\"text/javascript\"></script>
     <script type=\"text/javascript\">
@@ -470,6 +486,48 @@ class pansaops extends object {
         
         $gtags = '<div id="map" style="width: 768px; height: 768px"></div>';
         return $gtags;
+    }
+    
+    public function emailNotify($dataArray) {
+        $res = $dataArray;
+        $bodyText = NULL;
+        $bodyText .= $this->objLanguage->languageText("mod_pansamaps_newnotification", "pansamaps");
+        $bodyText .= "<br /><br />";
+        // create a table to show the details nicely
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->startRow();
+        $table->addCell($res['venuename']);
+        $table->addCell($res['city']);
+        $table->addCell($res['phonecode']." ".$res['phone']);
+        $table->addCell($res['contactperson']);
+        $table->addCell($res['venuedescription']);
+        $table->endRow();
+        $bodyText .= $table->show();
+    
+    
+        $addys = $this->objSysConfig->getValue('emailnotify', 'pansamaps');
+        $addys = explode(',', $addys);
+        foreach($addys as $emailadd) {
+            $objMailer = $this->newObject('email', 'mail');
+            $objMailer->clearAddresses();
+            
+            $objMailer->setValue('IsHTML', TRUE);
+            $objMailer->setValue('to', $emailadd);
+            $objMailer->setValue('from', 'noreply@pansa.org');
+            $objMailer->setValue('fromName', $this->objLanguage->languageText("mod_pansamaps_fromname", "pansamaps"));
+            $objMailer->setValue('subject', $this->objLanguage->languageText("mod_blog_emailsub", "pansamaps"));
+            $objMailer->setValue('body', $bodyText);
+            $objMailer->send(TRUE);
+            
+        }
+    }
+    
+    private function widgetize($action, $width, $height, $scroll){
+        $widget = '<iframe style="border: medium none ; overflow: hidden; width: '.$width.'px; height: '.$height.'px; font: 100%/1.5 Arial;" 
+                  src="'.$this->uri()."index.php?module=pansamaps&action=".$action.'" id="widgetframe" frameborder="0" scrolling="'.$scroll.'">
+                  </iframe>';
+        
+        return $widget;
     }
     
 }
