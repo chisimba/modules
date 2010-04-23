@@ -102,8 +102,7 @@ class db_learningcontent_activitystreamer extends dbtable
         return $this->update('id', $id, $row);
     }
 
-}
-    /**
+   /**
      * Checks if record exists.
      *
      * @access public
