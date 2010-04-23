@@ -213,6 +213,9 @@ class pansamaps extends controller
                 $recid = $this->getParam('recid');
                 $this->objDbPansa->deleteRecord($recid);
                 $this->nextAction('');
+                
+            case 'exportdata':
+                $this->objDbPansa->exportData();
                           
             default:
                 $this->nextAction('');

@@ -177,5 +177,67 @@ class dbpansa extends dbtable {
         return $this->getAll("WHERE id = '$id'");
     }
     
+    public function exportData() {
+        $data = $this->getAll();
+        $counter = 0;
+        $csv = NULL;
+        foreach($data as $rec) {
+            //var_dump($rec);
+            if($counter == 0) {
+                $keys = array_keys($rec);
+                $keys = $this->array_trim($keys, 0);
+                $keys = $this->array_trim($keys, 0);
+                array_pop($keys);
+                array_pop($keys);
+                $csv[] = $keys;
+            }
+            $csv[] = array($rec['venuename'], $rec['venueaddress1'], $rec['venueaddress2'], $rec['city'], $rec['zip'], $rec['phonecode'], $rec['phone'], $rec['faxcode'], $rec['fax'], $rec['email'], $rec['url'], $rec['contactperson'], $rec['otherinfo'], $rec['venuedescription'], $rec['geolat'], $rec['geolon']);
+            $counter++;   
+        }
+        $fp = fopen('file.csv', 'w');
+        foreach($csv as $item) {
+            fputcsv($fp, $item);
+        }
+        fclose($fp);
+        $this->downloadCSV('file.csv');
+        die();
+        //unlink('file.csv');
+    }
+    
+    private function array_trim ( $array, $index ) {
+        if ( is_array ( $array ) ) {
+            unset ( $array[$index] );
+            array_unshift ( $array, array_shift ( $array ) );
+            return $array;
+        }
+        else {
+            return false;
+        }
+   }
+   
+   private function downloadCSV($yourfile) {
+       $fp = @fopen($yourfile, 'rb');
+       if (strstr($_SERVER['HTTP_USER_AGENT'], "MSIE"))
+       {
+           header('Content-Type: "application/octet-stream"');
+           header('Content-Disposition: attachment; filename="pansadata.csv"');
+           header('Expires: 0');
+           header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+           header("Content-Transfer-Encoding: binary");
+           header('Pragma: public');
+           header("Content-Length: ".filesize($yourfile));
+       }
+       else
+       {
+           header('Content-Type: "application/octet-stream"');
+           header('Content-Disposition: attachment; filename="pansadata.csv"');
+           header("Content-Transfer-Encoding: binary");
+           header('Expires: 0');
+           header('Pragma: no-cache');
+           header("Content-Length: ".filesize($yourfile));
+        }
+        fpassthru($fp);
+        fclose($fp);
+    }
 }
 ?>
