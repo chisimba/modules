@@ -113,7 +113,7 @@ class db_learningcontent_activitystreamer extends dbtable
         return $this->valueExists('id', $id);
     }
     /**
-     * Method to check if record exists according to userId, contextItemId and contextCode.
+     * Method to check if record exists according to userId, contextItemId and sessionid.
      *
      * @access public
      * @param string $userId User ID
@@ -121,9 +121,9 @@ class db_learningcontent_activitystreamer extends dbtable
      * @param string $contextCode Context Code
      * @return TRUE
      */
-    public function getRecord($userId, $contextItemId, $contextCode)
+    public function getRecord($userId, $contextItemId, $sessionid)
     {
-        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND contextcode = '$contextCode'";
+        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid'";
         $results = $this->getAll($where);
         if (isset($results[0]['id'])) {
             return TRUE;
@@ -132,7 +132,7 @@ class db_learningcontent_activitystreamer extends dbtable
         }
     }    
     /**
-     * Method to retrieve a record id according to userId, contextItemId and contextCode.
+     * Method to retrieve a record id according to userId, contextItemId and sessionid.
      *
      * @access public
      * @param string $userId User ID
@@ -140,9 +140,9 @@ class db_learningcontent_activitystreamer extends dbtable
      * @param string $contextCode Context Code
      * @return string Record ID
      */
-    public function getRecordId($userId, $contextItemId, $contextCode)
+    public function getRecordId($userId, $contextItemId, $sessionid)
     {
-        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND contextcode = '$contextCode'";
+        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid'";
         $results = $this->getAll($where);
         if (isset($results[0]['id'])) {
             return $results[0]['id'];
