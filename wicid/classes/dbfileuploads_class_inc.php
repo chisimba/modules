@@ -206,7 +206,7 @@ class dbfileuploads extends dbtable {
         }
         if(strlen($data['lname']) > 0) {
 
-        }*
+        }*/
         if(strlen($data['docname']) > 0) {
             $filter .= $first?" where ":" and ";
             $first = false;
@@ -246,7 +246,7 @@ class dbfileuploads extends dbtable {
             $filter .= $first?" where ":" and ";
             $first = false;
             $filter .= "active = '".$data['active']."'";
-        }*/
+        }
 
         $sql = "select * from tbl_wicid_documents ".$filter;
         // get data from database
@@ -254,9 +254,9 @@ class dbfileuploads extends dbtable {
         $files=array();
 
         $owner=$this->objUserutils->getUserId();
-        /*foreach ($rows as $eachrow) {
+        foreach ($rows as $eachrow) {
             $fileData = $this->getArray($this->searchfiles($eachrow['filename']));
-            /*foreach($fileData as $row) {
+            foreach($fileData as $row) {
                 $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
                 //$isowner=$this->objUser->userid() == $fileData['userid']?"true":"false";
                 $files[] = array(
@@ -270,10 +270,10 @@ class dbfileuploads extends dbtable {
                         'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
                 );
 
-            }*
-        }*/
+            }
+        }
 
-        echo "Hi";
+        echo json_encode($files);
     }
 }
 ?>

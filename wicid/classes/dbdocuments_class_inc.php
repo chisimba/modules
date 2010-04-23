@@ -105,8 +105,8 @@ class dbdocuments extends dbtable {
                 'active'=>$approved
         );
         $id=$this->insert($data);
-        //echo $refno.','.$id;
-        echo "success|$id";
+        echo $refno.','.$id;
+        //echo "success|$id";
         return $id;
     }
 

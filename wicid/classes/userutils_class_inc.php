@@ -40,7 +40,6 @@ class userutils extends object {
         //instantiate the language object
         $this->loadClass('link', 'htmlelements');
         $this->objConfig = $this->getObject('altconfig', 'config');
-      //  $this->objUploadTable = $this->getObject('dbfileuploads');
         $this->objPermittedTypes = $this->getObject('dbpermittedtypes');
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
         $this->objAltConfig = $this->getObject('altconfig','config');
@@ -268,6 +267,7 @@ class userutils extends object {
     function getFiles() {
         $objUser = $this->getObject("user", "security");
         $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $this->objUploadTable = $this->getObject('dbfileuploads');
 
         $node = isset($_REQUEST['node'])?$_REQUEST['node']:"";
 
@@ -313,6 +313,8 @@ class userutils extends object {
         $objUser = $this->getObject("user", "security");
         $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $apodir=$this->objSysConfig->getValue('APO_DIR', 'wicid');
+        $this->objUser=$this->getObject('user','security');
+        
         $node = isset($_REQUEST['id'])?$_REQUEST['id']:"";
         $isadmin=$this->objUser->isAdmin()?"true":"false";
         $isadmin="true";
