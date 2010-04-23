@@ -88,7 +88,7 @@ if ($this->isValid('movepageup')) {
     $middle .= ' / ';
     
     if ($isLastPageOnLevel) {
-        $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_learningcontent_islastpageonlevel','learningcontent').'">'.$this->objLanguage->languageText('mod_learningcontent_movepagedown','learningcontent').'</span>';
+        $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_learningcontent_islastpageonlevel', 'learningcontent').'">'.$this->objLanguage->languageText('mod_learningcontent_movepagedown','learningcontent').'</span>';
     } else {
         $link = new link($this->uri(array('action'=>'movepagedown', 'id'=>$page['id'])));
         $link->link = $this->objLanguage->languageText('mod_learningcontent_movepagedown','learningcontent');

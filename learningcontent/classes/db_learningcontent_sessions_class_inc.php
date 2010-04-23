@@ -24,9 +24,7 @@
  * @author    Paul Mungai <paulwando@gmail.com>
  * @copyright @2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: db_contextcontent_titles_class_inc.php 11385 2008-11-07 00:52:41Z charlvn $
  * @link      http://avoir.uwc.ac.za
- * @see       core
  */
 
 // security check - must be included in all scripts
@@ -42,10 +40,10 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * Class the records the pages a user has visited.
+ * Class the records the user sessions.
  *
- * It doesn't contain the content of pages, just the index to track which pages
- * are translations of each other.
+ * Records the start and end time of a context session. Simply the time a user 
+ * joins or leaves a context.
  *
  * @category  Chisimba
  * @package   contextcontent
@@ -54,7 +52,6 @@ $GLOBALS['kewl_entry_point_run']) {
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   Release: @package_version@
  * @link      http://avoir.uwc.ac.za
- * @see       core
  */
 
 class db_learningcontent_activitystreamer extends dbtable
@@ -65,7 +62,7 @@ class db_learningcontent_activitystreamer extends dbtable
      */
     public function init()
     {
-        parent::init('tbl_learningcontent_activitystreamer');
+        parent::init('tbl_learningcontent_sessions');
         $this->objUser =& $this->getObject('user', 'security');
     }
     
@@ -75,32 +72,37 @@ class db_learningcontent_activitystreamer extends dbtable
      * @access public
      * @param string $userId User ID
      * @param string $sessionid session ID
-     * @param string $contextItemId context Item ID
      * @param string $contextCode context Code
-     * @param string $moduleCode module Code
-     * @param string $datecreated date created
-     * @param string $pageorchapter record whether its a context page or chapter
-     * @param string $description description of activity
      * @param string $sessionstarttime session start time
      * @param string $sessionendtime session end time
      */
-   public function addRecord($userId, $sessionid, $contextItemId, $contextCode, $modulecode, $datecreated,$pageorchapter=NULL, $description=NULL, $sessionstarttime=NULL, $sessionendtime=NULL)
+   public function addRecord($userId, $sessionid, $contextCode, $sessionstarttime=NULL, $sessionendtime=NULL)
     {
         $row = array();
         $row['userid'] = $userId;
         $row['contextcode'] = $contextCode;
-        $row['contextitemid'] = $contextItemId;
-        $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
         $row['sessionid'] = $sessionid;
-        $row['modulecode'] = $modulecode;
-        $row['pageorchapter'] = $pageorchapter;
-        $row['description'] = $description;
         $row['starttime'] = $sessionstarttime;
         $row['endtime'] = $sessionendtime;
 
         return $this->insert($row);
     }
+    /**
+     * Method to Record the Session end time
+     *
+     * @param string id Record Id of the Page
+     * @param string $sessionendtime session end time
+     * @return boolean
+     */
+    public function updatePage($id, $sessionendtime)
+    {
+        $row = array();
+        $row['endtime'] = $sessionendtime;
 
+        return $this->update('id', $id, $row);
+    }
+
+}
     /**
      * Checks if record exists.
      *
@@ -117,13 +119,13 @@ class db_learningcontent_activitystreamer extends dbtable
      *
      * @access public
      * @param string $userId User ID
-     * @param string $contextItemId Context Item Id
+     * @param string $sessionId session Id
      * @param string $contextCode Context Code
      * @return TRUE
      */
-    public function getRecord($userId, $contextItemId, $contextCode)
+    public function getRecord($userId, $sessionId, $contextCode)
     {
-        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND contextcode = '$contextCode'";
+        $where = "WHERE userid = '$userId' AND sessionid = '$sessionId' AND contextcode = '$contextCode'";
         $results = $this->getAll($where);
         if (isset($results[0]['id'])) {
             return TRUE;
@@ -140,9 +142,9 @@ class db_learningcontent_activitystreamer extends dbtable
      * @param string $contextCode Context Code
      * @return string Record ID
      */
-    public function getRecordId($userId, $contextItemId, $contextCode)
+    public function getRecordId($userId, $sessionId, $contextCode)
     {
-        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND contextcode = '$contextCode'";
+        $where = "WHERE userid = '$userId' AND sessionid = '$sessionId' AND contextcode = '$contextCode'";
         $results = $this->getAll($where);
         if (isset($results[0]['id'])) {
             return $results[0]['id'];
@@ -154,10 +156,10 @@ class db_learningcontent_activitystreamer extends dbtable
      * Method to delete a record
      * @param string $contextItemId Context Item Id
      */
-    function deleteRecord($contextItemId)
+    function deleteRecord($sessionId)
     {
         // Delete the Record
-        $this->delete('contextitemid', $contextItemId);
+        $this->delete('sessionid', $sessionId);
     }
 }
 ?>
