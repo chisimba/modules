@@ -13,10 +13,10 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @version $Id$
  */
 class realtime extends controller {
-/**
- * @var object $objUser: The user class in the security module
- * @access public
- */
+    /**
+     * @var object $objUser: The user class in the security module
+     * @access public
+     */
     public $objUser;
 
     /**
@@ -165,9 +165,12 @@ class realtime extends controller {
      * @var <type>
      */
     public $objDbScheduleMembers;
+
+    /**
+     * the context obj
+     */
+    public $objContext;
     function init() {
-        $this->objDbSchedules=$this->getObject('dbschedules');
-        $this->objDbScheduleMembers=$this->getObject('dbschedulemembers');
         $this->objLink= $this->getObject('link', 'htmlelements');
         //Get configuration class
         $this->objConfig =$this->getObject('config','config');
@@ -177,13 +180,7 @@ class realtime extends controller {
         //Get language class
         $this->objLanguage = $this->getObject('language', 'language');
 
-        //Get the activity logger class
         $this->config = $this->getObject('config','config');
-        $this->objLog = $this->getObject('logactivity', 'logger');
-
-        //Log this module call
-        $this->objLog->log();
-
         $this->objStarter= $this->getObject('realtimestarter');
         $this->realtimeManager = $this->getObject('realtimemanager','webpresent');
         // classes we need
@@ -213,16 +210,19 @@ class realtime extends controller {
 
 
     public function dispatch($action) {
+        if(!$this->objContext->isInContext()) {
+            return "needtojoin_tpl.php";
+        }
 
-    /*
+        /*
     * Convert the action into a method (alternative to
     * using case selections)
-    */
+        */
         $method = $this->getMethod($action);
-    /*
+        /*
     * Return the template determined by the method resulting
     * from action
-    */
+        */
         return $this->$method();
     }
 
@@ -312,11 +312,11 @@ class realtime extends controller {
         $endtime=$this->getParam('endtime');
         $type=$this->getParam('typefield');
         $this->objDbSchedules->addSchedule(
-            $sessionTitle,
-            $date,
-            $starttime,
-            $endtime,
-            $type
+                $sessionTitle,
+                $date,
+                $starttime,
+                $endtime,
+                $type
         );
         $this->nextAction(NULL);
     }
@@ -329,11 +329,11 @@ class realtime extends controller {
         $type=$this->getParam('typefield');
 
         $this->objDbSchedules->updateSchedule(
-            $sessionTitle,
-            $date,
-            $starttime,
-            $endtime,
-            $id,$type
+                $sessionTitle,
+                $date,
+                $starttime,
+                $endtime,
+                $id,$type
         );
         $this->nextAction(NULL);
     }
@@ -360,13 +360,14 @@ class realtime extends controller {
     }
     public function requiresLogin($action) {
 
-        $required = array('registerexisting','deleteroommember', 'deletesession', 'home', 'saveschedule', 'showdetails',  'updatesesion');
+        /* $required = array('registerexisting','deleteroommember', 'deletesession', 'home', 'saveschedule', 'showdetails',  'updatesesion');
 
         if (in_array($action, $required)) {
             return TRUE;
         } else {
             return FALSE;
-        }
+        }*/
+        return TRUE;
     }
 
     function __showregister() {
@@ -401,14 +402,14 @@ class realtime extends controller {
         $accountstatus = 1; // Default Status Active
         // Create an array of fields that cannot be empty
         $checkFields = array(
-            $captcha,
-            $username,
-            $firstname,
-            $surname,
-            $email,
-            $repeatemail,
-            $password,
-            $repeatpassword
+                $captcha,
+                $username,
+                $firstname,
+                $surname,
+                $email,
+                $repeatemail,
+                $password,
+                $repeatpassword
         );
         // Create an Array to store problems
         $problems = array();
@@ -424,10 +425,10 @@ class realtime extends controller {
         if ($password == '') {
             $problems[] = 'nopasswordentered';
         } else if ($repeatpassword == '') {
-                $problems[] = 'norepeatpasswordentered';
-            } else if ($password != $repeatpassword) {
-                    $problems[] = 'passwordsdontmatch';
-                }
+            $problems[] = 'norepeatpasswordentered';
+        } else if ($password != $repeatpassword) {
+            $problems[] = 'passwordsdontmatch';
+        }
         // Check that all required field are not empty
         if (!$this->checkFields($checkFields)) {
             $problems[] = 'missingfields';
@@ -448,7 +449,7 @@ class realtime extends controller {
 
             return 'registrationhome_tpl.php';
         } else {
-        // Else add to database
+            // Else add to database
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber, 'useradmin', $accountstatus);
             // Email Details to User
             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
