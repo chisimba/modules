@@ -30,6 +30,17 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import java.util.Date;
 import org.wits.client.Constants;
 
+import com.extjs.gxt.ui.client.data.BaseListLoader;
+import com.extjs.gxt.ui.client.data.HttpProxy;
+import com.extjs.gxt.ui.client.data.JsonLoadResultReader;
+import com.extjs.gxt.ui.client.data.ListLoadResult;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.data.ModelType;
+import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.Style.SortDir;
+import com.extjs.gxt.ui.client.widget.ListView;
+import com.extjs.gxt.ui.client.widget.menu.MenuItem;
+
 /**
  *
  * @author davidwaf
@@ -68,7 +79,10 @@ public class AdvancedSearchDialog {
     private String myMode = "";
     private String myActive = "";
     private String url = "";
-
+    private ListView<ModelData> view = Constants.main.getView();
+    private MenuItem removeFolderMenuItem = Constants.main.getRemoveFolderMenuItem();
+    private ModelData selectedFolder = Constants.main.getSelectedFolder();
+    
     public AdvancedSearchDialog() {
         createUI();
     }
@@ -273,11 +287,37 @@ public class AdvancedSearchDialog {
     }
 
     private void searchDocuments() {
+        final ModelType type2 = new ModelType();
+        type2.setRoot("files");
+        type2.addField("id", "id");
+        type2.addField("docid", "docid");
+        type2.addField("text", "text");
+        type2.addField("thumbnailpath", "thumbnailpath");
+        type2.addField("lastmod", "lastmod");
+        type2.addField("owner", "owner");
+        type2.addField("filesize", "filesize");
+        type2.addField("refno", "refno");
+        type2.addField("group", "group");
+
         final MessageBox wait = MessageBox.wait("Wait",
                 "Searching, please wait...", "Searching...");
-        RequestBuilder builder =
+        final RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, url);
 
+        HttpProxy<String> proxy = new HttpProxy<String>(builder);
+        JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type2);
+        final BaseListLoader<ListLoadResult<ModelData>> loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
+                reader);
+        ListStore<ModelData> store = new ListStore<ModelData>(loader);
+        view.setStore(store);
+        loader.setSortDir(SortDir.ASC);
+        loader.setSortField("text");
+        store.sort("text", SortDir.ASC);
+        removeFolderMenuItem.setEnabled(selectedFolder == null ? true : false);
+        loader.load();
+        view.refresh();
+
+        
         try {
             Request request = builder.sendRequest(null, new RequestCallback() {
 
@@ -288,6 +328,8 @@ public class AdvancedSearchDialog {
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
                         wait.close();
+
+                        
                         //Constants.main.selectFileListTab();
                         //Constants.main.refreshFileList();
                     } else {
