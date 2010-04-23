@@ -40,18 +40,18 @@ class userutils extends object {
         //instantiate the language object
         $this->loadClass('link', 'htmlelements');
         $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->objUploadTable = $this->getObject('dbfileuploads');
+      //  $this->objUploadTable = $this->getObject('dbfileuploads');
         $this->objPermittedTypes = $this->getObject('dbpermittedtypes');
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
         $this->objAltConfig = $this->getObject('altconfig','config');
         $this->resourcePath=$this->objAltConfig->getModulePath();
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $this->xmlutil=$this->getObject('xmlutil');
+       // $this->xmlutil=$this->getObject('xmlutil');
         $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $location = "http://" . $_SERVER['HTTP_HOST'];
         $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
-        $this->folderPermissions=$this->getObject('dbfolderpermissions');
+       $this->folderPermissions=$this->getObject('dbfolderpermissions');
         
     }
 

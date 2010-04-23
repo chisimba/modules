@@ -12,8 +12,6 @@ class dbsavedata extends dbtable {
 
     }
 
-
-
     public function saveData( $formname, $formdata, $docid) {
         $this->objUser=$this->getObject('user','security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');

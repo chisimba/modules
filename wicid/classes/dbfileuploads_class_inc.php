@@ -189,8 +189,8 @@ class dbfileuploads extends dbtable {
 
     public function advancedSearch($data) {
         $first = true;
-        print_r($data);
-        /*if(strlen($data['startDate']) > 0) {
+       // print_r($data);
+        if(strlen($data['startDate']) > 0) {
             $filter .= $first?" where ":" and ";
             $first = false;
             $filter .= "date_created >= '" . strftime('%Y-%m-%d', strtotime($data['startDate']))."'";

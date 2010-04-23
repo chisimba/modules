@@ -37,20 +37,19 @@ class wicid extends controller {
         $this->objLog->log();
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         //get the util object
-        $this->objUtils = $this->getObject('userutils');
         // user object
         $this->objUser = $this->getObject('user', 'security');
         //file type info object
-        $this->objPermitted = $this->getObject('dbpermittedtypes');
+        //$this->objPermitted = $this->getObject('dbpermittedtypes');
         //$this->objUploads = $this->getObject('dbfileuploads');
-        $this->objFileFolder = $this->getObject('filefolder','filemanager');
-        $this->folderPermissions=$this->getObject('dbfolderpermissions');
+        //$this->objFileFolder = $this->getObject('filefolder','filemanager');
+        // $this->folderPermissions=$this->getObject('dbfolderpermissions');
         $this->documents=$this->getObject('dbdocuments');
-        $this->userutils=$this->getObject('userutils');
+        $this->objUtils=$this->getObject('userutils');
         $this->objUploadTable = $this->getObject('dbfileuploads');
-        $this->objsavedata = $this->getObject('dbsavedata');
-        $this->forwardto =$this->getObject('dbforwardto');
-    
+        // $this->objsavedata = $this->getObject('dbsavedata');
+        //$this->forwardto =$this->getObject('dbforwardto');
+
     }
 
     /**
@@ -623,19 +622,19 @@ class wicid extends controller {
 
         return 'ajaxuploadresults_tpl.php';
     }
- 
 
-    public function __saveFormData(){
+
+    public function __saveFormData() {
         $formname = $this->getParam('formname');
         $formdata = $this->getParam('formdata');
         $docid = $this->getParam('docid');
-        
+
         echo $formname, $formdata, $docid;
- 
+
         $this->objsavedata->saveData($formname, $formdata, $docid);
     }
 
-    public function __forwardto(){
+    public function __forwardto() {
         $link=$this->getParam('link');
         $email = $this->getParam('email');
         $docid = $this->getParam('docid');
@@ -674,7 +673,7 @@ class wicid extends controller {
                 'mode'=> $mode);*/
 
 
-        echo "Hello World";
-        //return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
+        //echo "Hello World";
+        return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
     }
 }
