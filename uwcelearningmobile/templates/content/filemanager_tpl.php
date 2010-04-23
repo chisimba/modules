@@ -9,13 +9,13 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('link','htmlelements');
 	$objTable = $this->newObject('htmltable', 'htmlelements');
 	
-	echo '<br><b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordfilemanager', 'uwcelearningmobile').'</b>';
+	echo '<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordfilemanager', 'uwcelearningmobile').'</b>';
 	$fileSize = new formatfilesize();
 	$objFields = new fieldset();
 	$oicon = '<img src="skins/_common/icons/folder.gif" border="0" alt="folder" title="folder">';
 	$uicon = '<img src="skins/_common2/css/images/sexybuttons/icons/silk/arrow_up.png" border="0" alt="up" title="up">';
 	$ficon = '<img src="skins/_common/icons/filetypes/folder.gif" border="0" alt="folder" title="folder">';
-	$objFields->setLegend('<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordmyfiles', 'uwcelearningmobile').'</b>');
+	$objFields->setLegend($this->objLanguage->languageText('mod_uwcelearningmobile_wordmyfiles', 'uwcelearningmobile'));
 	
 	$objFields->addContent($currname.$oicon);
 	if($currfolder != null)
@@ -119,7 +119,5 @@ $objTable = $this->newObject('htmltable', 'htmlelements');
 		echo $objFields->show();
 	}
 	
-	$homeLink = new link($this->URI(array()));
-	$homeLink->link = 'Home';
-	echo $homeLink->show().'</br>';
+	echo $this->homeAndBackLink
 ?>

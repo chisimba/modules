@@ -7,7 +7,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 	$this->loadClass('fieldset','htmlelements');
 	$this->loadClass('link','htmlelements');
-	echo '<br><b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile').': </b>'.$conexttitle;
+	echo '<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile').': </b>'.$conexttitle;
 
 	$objFields = new fieldset();
 	$objFields->setLegend('<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcoursetools', 'uwcelearningmobile').'</b>');
@@ -23,5 +23,5 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 	$homeLink = new link($this->URI(array()));
 	$homeLink->link = 'Home';
-	echo $homeLink->show().'</br>';
+	echo $homeLink->show();
 ?>

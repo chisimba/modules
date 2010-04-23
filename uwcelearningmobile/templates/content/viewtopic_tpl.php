@@ -9,7 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('link','htmlelements');
 
 	$objFields = new fieldset();
-	$objFields->setLegend('<b></b>');
+	$objFields->setLegend('<b>');
 	if(!empty($posts)){
 
 		foreach($posts as $post){
@@ -23,12 +23,9 @@ if (!$GLOBALS['kewl_entry_point_run'])
 		$norecords = 'No Posts for this Topic';
 		$objTableClass->addCell($norecords, NULL, NULL, 'center', 'noRecordsMessage', 'colspan="7"');
 	}
-	echo '<br>'.$objFields->show().'<br>';
+	echo $objFields->show().'<br>';
 
-	$homeLink = new link($this->URI(array()));
-	$homeLink->link = 'Home';
-
-	$backLink = new link($this->URI(array('action' => 'context', 'contextcode' => $this->contextCode)));
-	$backLink->link = 'Back to Course';
-	echo $homeLink->show().'/'.$backLink->show().'</br>';
+	$backLink = new link($this->URI(array('action' => 'forum')));
+	$backLink->link = 'Back to Forum';
+	echo $this->homeAndBackLink.' - '.$backLink->show();
 ?>

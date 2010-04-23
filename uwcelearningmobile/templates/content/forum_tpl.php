@@ -8,7 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('link', 'htmlelements');
 	$objTableClass = $this->newObject('htmltable', 'htmlelements');
 
-	echo '<br><b>'.ucwords($this->objLanguage->code2Txt('mod_forum'.'_name', 'forum')).'</b>';
+	echo '<b>'.ucwords($this->objLanguage->code2Txt('mod_forum'.'_name', 'forum')).'</b>';
 
 	$objTableClass->startHeaderRow();
 	$objTableClass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordforum', 'uwcelearningmobile').'</strong>', '70%');
@@ -29,12 +29,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 		$norecords = $this->objLanguage->languageText('mod_uwcelearningmobile_wordnoforum', 'uwcelearningmobile');
 		$objTableClass->addCell($norecords, NULL, NULL, 'center', 'noRecordsMessage', 'colspan="7"');	
 	}
-	echo '<br>'.$objTableClass->show().'</br>';
+	echo $objTableClass->show().'<br>';
 	
-	$homeLink = new link($this->URI(array()));
-	$homeLink->link = 'Home';
-
-	$backLink = new link($this->URI(array('action' => 'context', 'contextcode' => $this->contextCode)));
-	$backLink->link = 'Back to Course';
-	echo $homeLink->show().'/'.$backLink->show().'</br>';
+	echo $this->homeAndBackLink;
 ?>

@@ -12,13 +12,6 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$objWashout = $this->getObject('washout', 'utilities');
 	$objFields->setLegend('<b>'.$assignment['name'].'</b>');
 	$table->startRow();
-	$table->addCell('<strong>'.$this->objLanguage->languageText('word_description', 'system', 'Description').'</strong>', 130);
-	$table->endRow();
-	$table->startRow();
-	$table->addCell($objWashout->parseText($assignment['description']), NULL, NULL, NULL, NULL, ' colspan="3"');
-	$table->endRow();
-
-	$table->startRow();
 	$table->addCell('<strong>'.$this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]').':</strong>', 130);
 	$table->addCell($this->objUser->fullName($assignment['userid']));
 	$table->endRow();
@@ -50,15 +43,17 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	} else {
 		$table->addCell($this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
 	}
+	$table->startRow();
+	$table->addCell('<strong>'.$this->objLanguage->languageText('word_description', 'system', 'Description').': </strong>', 130);
 	$table->endRow();
-
+	$table->startRow();
+	$table->addCell($objWashout->parseText($assignment['description']), NULL, NULL, NULL, NULL, ' colspan="3"');
+	$table->endRow();
+	$table->endRow();
 	$objFields->addContent($table->show());
-	echo '<br>'.$objFields->show();
+	echo $objFields->show();
 	
-	$homeLink = new link($this->URI(array()));
-	$homeLink->link = 'Home';
-
-	$backLink = new link($this->URI(array('action' => 'context', 'contextcode' => $this->contextCode)));
-	$backLink->link = 'Back to Course';
-	echo $homeLink->show().'/'.$backLink->show().'</br>';
+	$backLink = new link($this->URI(array('action' => 'assignment')));
+	$backLink->link = 'Back to Assignments';
+	echo '<br>'.$this->homeAndBackLink.' - '.$backLink->show();
 ?>

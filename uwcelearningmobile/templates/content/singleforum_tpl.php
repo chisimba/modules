@@ -14,7 +14,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$objTableClass->addHeaderCell('<strong>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordviews', 'uwcelearningmobile').'</strong>', '30%');
 	$objTableClass->endHeaderRow();
 
-	echo '<br><b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordforum', 'uwcelearningmobile').': </b>'.$forum['forum_name'].'<br>';
+	echo '<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordforum', 'uwcelearningmobile').': </b>'.$forum['forum_name'].'<br>';
 	if(!empty($allTopics)){
 
 		foreach($allTopics as $topic){
@@ -31,12 +31,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 		$objTableClass->addCell($norecords, NULL, NULL, 'center', 'noRecordsMessage', 'colspan="7"');
 	}
 	echo $objTableClass->show().'</br>';
-	
-	$homeLink = new link($this->URI(array()));
-	$homeLink->link = 'Home';
 
-	$backLink = new link($this->URI(array('action' => 'context', 'contextcode' => $this->contextCode)));
-	$backLink->link = 'Back to Course';
-	echo $homeLink->show().'/'.$backLink->show().'</br>';
-
+	$backLink = new link($this->URI(array('action' => 'forum')));
+	$backLink->link = 'Back to Forum';
+	echo '<br>'.$this->homeAndBackLink.' - '.$backLink->show();
 ?>

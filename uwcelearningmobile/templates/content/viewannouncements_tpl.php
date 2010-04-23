@@ -15,9 +15,9 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 	$str .= '<br />'.$announcement['message'];
 	$objFields->addContent($str.'<br/>');
-	echo $objFields->show();
+	echo $objFields->show().'</br>';
 
 	$backLink = new link($this->URI(array('action' => 'announcements')));
 	$backLink->link = 'Back to Announcements';
-	echo $backLink->show().'</br>';
+	echo $this->homeAndBackLink.' - '.$backLink->show();
 ?>

@@ -1,5 +1,4 @@
 <?php
-// set up html elements
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -38,7 +37,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 		$objTable->endRow();
 	}
 	$objFields->addContent($objTable->show());
-	echo '<br>'.$objFields->show();
+	echo $objFields->show();
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	$objFields = new fieldset();
 	$objFields->setLegend('<b>'.$arrFolderData['folder_name'].'</b>');
@@ -67,9 +66,9 @@ if (!$GLOBALS['kewl_entry_point_run'])
 			)));
 			$class = ($i++%2 == 0) ? 'odd' : 'even';
 			if(!$message['read_email']){
-				$from = '<b>'.$message['fullName'].'<b>';
-				$date = "<b>".$this->objDate->formatDate($message['date_sent']).'<b>';
-				$objLink->link = '<b>'.$message['subject'].'<b>';
+				$from = '<b>'.$message['fullName'].'</b>';
+				$date = "<b>".$this->objDate->formatDate($message['date_sent']).'</b>';
+				$objLink->link = '<b>'.$message['subject'].'</b>';
 			}
 			else{
 				$from = $message['fullName'];
@@ -89,10 +88,5 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	}
 	$objFields->addContent($objTable->show());
 	echo $objFields->show();
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$homeLink = new link($this->URI(array()));
-		$homeLink->link = 'Home';
-
-		echo $homeLink->show();
+	echo '<br>'.$this->homeAndBackLink;
 ?>

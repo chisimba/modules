@@ -25,7 +25,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
          $objFields->addContent($this->objLanguage->languageText('mod_uwcelearningmobile_wordmynoann', 'uwcelearningmobile'));
     }
 
-	echo '<br>'.$objFields->show().'<br>';
+	echo $objFields->show().'<br>';
 
 	//All my courses announcement
 	$objFields = new fieldset();
@@ -44,12 +44,5 @@ if (!$GLOBALS['kewl_entry_point_run'])
          $objFields->addContent($this->objLanguage->languageText('mod_uwcelearningmobile_wordmynoann', 'uwcelearningmobile'));
     }
 
-	echo $objFields->show().'<br>';
-
-	$homeLink = new link($this->URI(array()));
-	$homeLink->link = 'Home';
-
-	$backLink = new link($this->URI(array('action' => 'context', 'contextcode' => $this->contextCode)));
-	$backLink->link = 'Back to Course';
-	echo $homeLink->show().'/'.$backLink->show().'</br>';
+	echo $objFields->show().'<br>'.$this->homeAndBackLink.'</br>';
 ?>

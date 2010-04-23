@@ -24,20 +24,19 @@ if (!$GLOBALS['kewl_entry_point_run'])
     {
          $objFields->addContent($this->objLanguage->languageText('mod_uwcelearningmobile_wordnocourse', 'uwcelearningmobile'));
     }
-	echo '<br>'.$objFields->show();
+	echo $objFields->show();
 	
-
 	//Tools that can be access before you enter the course
-	$objFields = new fieldset();
+	$objFieldsTools = new fieldset();
 			
-	foreach($tools as $mod)
-	{
-		$link = new link($this->URI(array('action' => $mod)));
-		$link->link = ucwords($this->objLanguage->code2Txt('mod_'.$mod.'_name', $mod));
-		$objFields->addContent($link->show().'<br>');
-	}
 	if(!empty($tools))
 	{
-		echo '<br>'.$objFields->show().'<br>';
+		foreach($tools as $mod)
+		{
+		$link = new link($this->URI(array('action' => $mod)));
+		$link->link = ucwords($this->objLanguage->code2Txt('mod_'.$mod.'_name', $mod));
+		$objFieldsTools->addContent($link->show().'<br>');
+		}
+		echo '<br>'.$objFieldsTools->show();
 	}
 ?>

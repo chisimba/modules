@@ -51,5 +51,5 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 	$backLink = new link($this->URI(array('action' => 'internalmail')));
 	$backLink->link = 'Back to Internalmail';
-	echo $backLink->show().'</br>';
+	echo $this->homeAndBackLink.' - '.$backLink->show().'</br>';
 ?>

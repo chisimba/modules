@@ -47,11 +47,5 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$addEventLink->link = 'Add event';
 
 	//echo '<p>'.$addEventLink->show().'</p>';
-
-	$homeLink = new link($this->URI(array()));
-	$homeLink->link = 'Home';
-
-	$backLink = new link($this->URI(array('action' => 'context', 'contextcode' => $this->contextCode)));
-	$backLink->link = 'Back to Course';
-	echo $homeLink->show().'/'.$backLink->show().'</br>';
+	echo $this->homeAndBackLink.'</br>';
 ?>

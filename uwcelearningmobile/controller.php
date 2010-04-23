@@ -107,12 +107,26 @@ class uwcelearningmobile extends controller
 		$this->objDate = $this->newObject('dateandtime', 'utilities');
 		$this->objMobileSecurity = $this->getObject('mobilesecurity', 'uwcelearningmobile');
 		$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+		$this->link = $this->getObject('link','htmlelements');
 
 		// Store Context Code
 		$this->userId = $this->objUser->userId();
 		$this->userContext = $this->objContext->getUserContext($this->userId);
         $this->contextCode = $this->dbContext->getContextCode();
 		$this->contextTitle = $this->dbContext->getField('title', $this->contextCode);
+
+		$homelink = new link($this->URI(null));
+		$homelink->link = "Home";
+		$this->homeAndBackLink = $homelink->show();
+
+		if($this->contextCode != null)
+		{
+			$backlink = new link($this->URI(array('action' => 'context',
+											  'contextcode' => $this->contextCode)));
+			$backlink->link = "Back to Course";
+		
+			$this->homeAndBackLink .= ' - '.$backlink->show();
+		}
 		
 	}
 
@@ -146,7 +160,7 @@ class uwcelearningmobile extends controller
 
     public function dispatch($action='home')
     {	
-		$actions = array('', 'home', 'login', 'context', 'readmail', 'internalmail', 'filemanager');
+		$actions = array('', 'home', 'login', 'context', 'readmail', 'internalmail', 'filemanager', 'forum', 'viewforum', 'topic');
 		
 		if ($this->contextCode == NULL && !in_array($action, $actions)) {
 			 $action = 'home';
@@ -215,7 +229,7 @@ class uwcelearningmobile extends controller
 			$usercontexts = $this->objContext->getUserContext($this->objUser->userId());
 			$this->setVarByRef('usercontexts', $usercontexts);
 			
-			$modules = array('filemanager', 'internalmail');
+			$modules = array('filemanager', 'internalmail', 'forum');
 			$tools = array();
 			foreach($modules as $mod)
 			{	
@@ -343,11 +357,16 @@ class uwcelearningmobile extends controller
 	*/
 	private function __forum()
 	{
+		if ($this->contextCode == null){
+            $this->contextCode = 'root';
+            $this->contextTitle = 'Lobby';
+        }
 		$this->objForum = $this->getObject('dbforum', 'forum');
-		$forumNum = $this->objForum->getNumForums($this->contextCode);
-        $allForums = $this->objForum->showAllForums($this->contextCode);
-        
+			
+	    $allForums = $this->objForum->showAllForums($this->contextCode);
+		       
 		$this->setVarByRef('forums', $allForums);
+
 		return 'forum_tpl.php';		
 	}
 
@@ -366,7 +385,6 @@ class uwcelearningmobile extends controller
         $direction = 'asc';
 		$limit = ' LIMIT 0, '.$limit;
 		$allTopics = $this->objTopic->showTopicsInForum($id, $this->userId, $forum['archivedate'], $order, $direction, NULL, $limit);
-
 		$this->setVarByRef('allTopics', $allTopics);
         $this->setVarByRef('forum', $forum);
 		return 'singleforum_tpl.php';		
@@ -582,5 +600,9 @@ class uwcelearningmobile extends controller
 		$this->setVarByRef('chapter', $firstPage);
 		return 'viewcontextcontent_tpl.php';
 	}	
+
+	private function __homeAndBackLink(){
+		
+	}
 }
 ?>

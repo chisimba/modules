@@ -9,7 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('link','htmlelements');
 	$newImgPath = $this->getResourceUri('img/new.png', 'uwcelearningmobile');
 	
-	echo '<br><b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile').': </b>'.$this->contextTitle;
+	echo '<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile').': </b>'.$this->contextTitle;
 
 	$objFields = new fieldset();
 	$objFields->setLegend('<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordnewewcontent', 'uwcelearningmobile').'</b>');
@@ -31,5 +31,5 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 	$backLink = new link($this->URI(array('action' => 'context', 'contextcode' => $this->contextCode)));
 	$backLink->link = 'Back to Course';
-	echo $homeLink->show().'/'.$backLink->show().'</br>';
+	echo '<br>'.$homeLink->show().'/'.$backLink->show().'</br>';
 ?>
