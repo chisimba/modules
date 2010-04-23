@@ -40,15 +40,15 @@ class wicid extends controller {
         // user object
         $this->objUser = $this->getObject('user', 'security');
         //file type info object
-        //$this->objPermitted = $this->getObject('dbpermittedtypes');
-        //$this->objUploads = $this->getObject('dbfileuploads');
-        //$this->objFileFolder = $this->getObject('filefolder','filemanager');
-        // $this->folderPermissions=$this->getObject('dbfolderpermissions');
+        $this->objPermitted = $this->getObject('dbpermittedtypes');
+        $this->objUploads = $this->getObject('dbfileuploads');
+        $this->objFileFolder = $this->getObject('filefolder','filemanager');
+         $this->folderPermissions=$this->getObject('dbfolderpermissions');
         $this->documents=$this->getObject('dbdocuments');
         $this->objUtils=$this->getObject('userutils');
         $this->objUploadTable = $this->getObject('dbfileuploads');
-        // $this->objsavedata = $this->getObject('dbsavedata');
-        //$this->forwardto =$this->getObject('dbforwardto');
+        $this->objsavedata = $this->getObject('dbsavedata');
+        $this->forwardto =$this->getObject('dbforwardto');
 
     }
 
@@ -643,7 +643,7 @@ class wicid extends controller {
     }
 
     public function __advancedsearch() {
-        /*$startDate = $this->getParam('date');
+        $startDate = $this->getParam('date');
         $endDate = $this->getParam('date2');
         $fname = $this->getParam('fname');
         $lname = $this->getParam('lname');
@@ -670,10 +670,8 @@ class wicid extends controller {
                 'dept'=> $dept,
                 'groupid'=>$groupid,
                 'ext'=> $ext,
-                'mode'=> $mode);*/
+                'mode'=> $mode);
 
-
-        //echo "Hello World";
-        return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
+       return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
     }
 }
