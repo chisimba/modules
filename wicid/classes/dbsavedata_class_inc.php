@@ -9,14 +9,16 @@ class dbsavedata extends dbtable {
 
     public function init() {
         parent::init($this->tablename);
+
+    }
+
+
+
+    public function saveData( $formname, $formdata, $docid) {
         $this->objUser=$this->getObject('user','security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUploadTable = $this->getObject('dbfileuploads');
         $this->userutils=$this->getObject('userutils');
-    }
-
-    public function saveData( $formname, $formdata, $docid) {
-
         $data=array(
 
                 'formname'=>$formname,

@@ -674,7 +674,7 @@ class wicid extends controller {
                 'mode'=> $mode);*/
 
 
-        //echo "Hello World";
-        return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
+        echo "Hello World";
+        //return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
     }
 }

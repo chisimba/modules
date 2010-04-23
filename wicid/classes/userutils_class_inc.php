@@ -52,10 +52,11 @@ class userutils extends object {
         $location = "http://" . $_SERVER['HTTP_HOST'];
         $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
         $this->folderPermissions=$this->getObject('dbfolderpermissions');
-        $this->objUser=$this->getObject('user','security');
+        
     }
 
     public function getUserId() {
+        $this->objUser=$this->getObject('user','security');
         $userid=$this->objUser->userid();
         $userid=1;
         return $userid;
