@@ -808,6 +808,9 @@ public class Main {
         return currentPath;
     }
 
+    public ModelData getSelectedFolder() {
+        return selectedFolder;
+    }
     public DocumentListPanel getDocumentListPanel() {
         return documentListPanel;
     }
@@ -822,5 +825,13 @@ public class Main {
 
     public boolean isAdmin() {
         return admin;
+    }
+
+    public ListView<ModelData> getView() {
+        return view;
+    }
+
+    public MenuItem getRemoveFolderMenuItem() {
+        return removeFolderMenuItem;
     }
 }
