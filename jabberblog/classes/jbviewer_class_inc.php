@@ -140,14 +140,14 @@ class jbviewer extends object {
                 $ctable->endRow();
                 $fbody = $ctable->show();
             
-                $commenttxt .= $objFeatureBox->showComment($header, $this->objWashout->parseText($fbody));
+                $commenttxt .= $objFeatureBox->showComment($header, "<div class='blog-item-base'>".$this->objWashout->parseText($fbody)."</div>");
             }
         }
         // Show regular website comments
         $commenttxt .= $this->objComment->showJblogComments ( $msgid );
         $comment = $this->objComment->commentAddForm ( $msgid, 'jabberblog', 'tbl_jabberblog', $postuserid = NULL, $editor = TRUE, $featurebox = FALSE, $showtypes = FALSE, $captcha = FALSE, $comment = NULL, $useremail = NULL );
         $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment );
+        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], "<div class='blog-item-base'>".nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment."</div>" );
         $ret .= "<hr />";
 
         return $ret;
@@ -187,7 +187,7 @@ class jbviewer extends object {
             $totalreplies = 0;
             // alt featurebox
             $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")"." ".$tlink->show(), nl2br ( $msgbody ) . "<br />" );
+            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")"." ".$tlink->show(), "<div class='blog-item-base'>".nl2br ( $msgbody ) . "<br /></div>" );
             $ret .= "<hr />";
         }
         header ( "Content-Type: text/html;charset=utf-8" );
