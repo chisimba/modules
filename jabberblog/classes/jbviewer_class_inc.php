@@ -140,14 +140,14 @@ class jbviewer extends object {
                 $ctable->endRow();
                 $fbody = $ctable->show();
             
-                $commenttxt .= $objFeatureBox->showComment($header, "<div class='blog-item-base'>".$this->objWashout->parseText($fbody)."<br /></div>");
+                $commenttxt .= $objFeatureBox->showComment("<span class='blog-head-date'>".$header."</span>", "<div class='blog-item-base'>".$this->objWashout->parseText($fbody)."<br /></div>");
             }
         }
         // Show regular website comments
         $commenttxt .= $this->objComment->showJblogComments ( $msgid );
         $comment = $this->objComment->commentAddForm ( $msgid, 'jabberblog', 'tbl_jabberblog', $postuserid = NULL, $editor = TRUE, $featurebox = FALSE, $showtypes = FALSE, $captcha = FALSE, $comment = NULL, $useremail = NULL );
         $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], "<div class='blog-item-base'>".nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment."<br /></div>" );
+        $ret = $objFeaturebox->showContent ( "<span class='blog-head-date'>".'<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent']."</span>", nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment."<br />" );
         $ret .= "<hr />";
 
         return $ret;
@@ -187,7 +187,7 @@ class jbviewer extends object {
             $totalreplies = 0;
             // alt featurebox
             $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")"." ".$tlink->show(), "<div class='blog-item-base'>".nl2br ( $msgbody ) . "<br /><br /></div>" );
+            $ret .= $objFeaturebox->showContent ( "<span class='blog-head-date'>".'<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")"." ".$tlink->show()."</span>", nl2br ( $msgbody ) . "<br /><br />" );
             $ret .= "<hr />";
         }
         header ( "Content-Type: text/html;charset=utf-8" );
