@@ -118,11 +118,12 @@ $button->cssId = 'middlebutton';
 $objCssLayout->middleColumnContent = '<div id="middleblocks">'.$middleBlocksStr.'</div>';
 $newsheader = new htmlheading();
 $newsheader->type = 1;
+
 $newsheader->str = $this->objLanguage->languageText('mod_news_latestnews', 'news', 'Latest News');
 
 
 // Set Story as Middle Content
-$middleContent = $content;
+$middleContent = '<div id="newsstorycontent">'.$content.'</div>';
 
 // Generate Right Content
 $rightContent = $this->objNewsStories->getRelatedStoriesFormatted($story['id'], $story['storydate'], $story['datecreated']);
@@ -154,7 +155,7 @@ if ( $this->objUser->inAdminGroup($this->objUser->userId()) ) {
 if ( $this->isValid('liststories') ) {
     $listStoriesLink = new link ($this->uri(array('action'=>'liststories', 'id'=>$category['id'])));
     $listStoriesLink->link = $this->objLanguage->languageText('mod_news_liststoriesincategory', 'news', 'List Stories in this Category');
-    $editOptions[] = $listStoriesLink->show();
+    $editOptions[] ='<div id="newsliststory">'. $listStoriesLink->show().'</div>';
 }
 
 if ( $this->isValid('editmenuitem') && $menuId != FALSE && $this->objUser->inAdminGroup($this->objUser->userId()) ) {
