@@ -265,7 +265,7 @@ class userutils extends object {
     }
 
     function getFiles() {
-        $objUser = $this->getObject("user", "security");
+        $this->objUser = $this->getObject("user", "security");
         $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $this->objUploadTable = $this->getObject('dbfileuploads');
 

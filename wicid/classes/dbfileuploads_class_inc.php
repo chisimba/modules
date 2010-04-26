@@ -109,34 +109,41 @@ class dbfileuploads extends dbtable {
         $this->getArray($sql);
 
     }
-    function searchfiles($filter) {
+    function searchfiles($filter, $advanced=false) {
         $objUserutils=$this->getObject('userutils');
-        $sql="select * from tbl_wicid_fileuploads where filename like '%$filter%'";
+        if(!$advanced) {
+            $sql="select * from tbl_wicid_fileuploads where filename like '%$filter%'";
 
-        $sql.=' order by date_uploaded DESC';
+            $sql.=' order by date_uploaded DESC';
 
-        $owner=$objUserutils->getUserId();
-        $rows=$this->getArray($sql);
-        $files=array();
+            $owner=$objUserutils->getUserId();
+            $rows=$this->getArray($sql);
+            $files=array();
 
-        foreach ($rows as $row) {
-            $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
-            $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
-            $files[] = array(
-                    'text'=>$row['filename'],
-                    'id'=>$row['filepath'],
-                    'docid'=>$row['docid'],
-                    'refno'=>$row['id'],
-                    'owner'=>$this->objUser->fullname($row['userid']),
-                    'lastmod'=>$lastmod,
-                    'filesize'=>$size,
-                    'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
-            );
+            foreach ($rows as $row) {
+                $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
+                $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
+                $files[] = array(
+                        'text'=>$row['filename'],
+                        'id'=>$row['filepath'],
+                        'docid'=>$row['docid'],
+                        'refno'=>$row['id'],
+                        'owner'=>$this->objUser->fullname($row['userid']),
+                        'lastmod'=>$lastmod,
+                        'filesize'=>$size,
+                        'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
+                );
 
+            }
+
+            echo json_encode(array("files"=>$files));
+
+            die();
         }
-        echo json_encode(array("files"=>$files));
-
-        die();
+        else {
+            $sql = "select * from $this->tablename where docid = '$filter'";
+            return $this->getArray($sql);
+        }
     }
     // from php manual page
     function formatBytes($val, $digits = 3, $mode = "SI", $bB = "B") { //$mode == "SI"|"IEC", $bB == "b"|"B"
@@ -189,7 +196,7 @@ class dbfileuploads extends dbtable {
 
     public function advancedSearch($data) {
         $first = true;
-       // print_r($data);
+        
         if(strlen($data['startDate']) > 0) {
             $filter .= $first?" where ":" and ";
             $first = false;
@@ -225,12 +232,12 @@ class dbfileuploads extends dbtable {
         if(strlen($data['dept']) > 0) {
             $filter .= $first?" where ":" and ";
             $first = false;
-            $filter .= "topic like '%".$data['dept']."%'";
+            $filter .= "department like '%".$data['dept']."%'";
         }
         if(strlen($data['groupid']) > 0) {
             $filter .= $first?" where ":" and ";
             $first = false;
-            $filter .= "topic like '%".$data['groupid']."%'";
+            $filter .= "groupid like '%".$data['groupid']."%'";
         }
         if(strlen($data['ext']) > 0) {
             $filter .= $first?" where ":" and ";
@@ -249,16 +256,14 @@ class dbfileuploads extends dbtable {
         }
 
         $sql = "select * from tbl_wicid_documents ".$filter;
-        // get data from database
         $rows = $this->getArray($sql);
+        
         $files=array();
 
-        $owner=$this->objUserutils->getUserId();
-        foreach ($rows as $eachrow) {
-            $fileData = $this->getArray($this->searchfiles($eachrow['filename']));
+        foreach($rows as $docrow) {
+            $fileData = $this->searchfiles($docrow['id'], true);
             foreach($fileData as $row) {
                 $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
-                //$isowner=$this->objUser->userid() == $fileData['userid']?"true":"false";
                 $files[] = array(
                         'text'=>$row['filename'],
                         'id'=>$row['filepath'],
@@ -269,11 +274,10 @@ class dbfileuploads extends dbtable {
                         'filesize'=>$size,
                         'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
                 );
-
             }
         }
 
-        echo json_encode($files);
+        echo json_encode(array("files"=>$files));
     }
 }
 ?>
