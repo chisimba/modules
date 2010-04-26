@@ -337,7 +337,7 @@ WHERE tbl_news_stories.id = \''.$id.'\'';
                 $output .='<div id="newsstorytext">'. $objWashout->parseText($objTrimString->strTrim(strip_tags($story['storytext']), $trimsize, TRUE)).'</div>';
 
                 $storyLink->link = 'Read Story';
-                $output .= ' ('.$storyLink->show().')';
+                $output .= '<div id="newsstorytext"> ('.$storyLink->show().')</div>';
 
                 $output .= '</div><br clear="both" />';
             }
