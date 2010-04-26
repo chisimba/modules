@@ -223,15 +223,7 @@ public class RulesAndSyllabusOne {
                 }else{
                     qB4c.toString().replaceAll(" ", "--");
                 }
-                WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("qb1", qB1);
-                wicidXML.addElement("qb2", qB2);
-                wicidXML.addElement("qb3a", qB3a);
-                wicidXML.addElement("qb3b", qB3b);
-                wicidXML.addElement("qb4a", qB4a);
-                wicidXML.addElement("qb4b", qB4b);
-                wicidXML.addElement("qb4c", qB4c);
-                rulesAndSyllabusOneData = wicidXML.getXml();
+                storeDocumentInfo();
 
                 //data saved into a single string with each data varieable seperated by ("_")
 
@@ -261,6 +253,7 @@ public class RulesAndSyllabusOne {
                 overView.setOldRulesAndSyllabusOne(RulesAndSyllabusOne.this);
                 overView.show();
                 rulesAndSyllabusOneDialog.hide();
+                storeDocumentInfo();
             }
         });
 
@@ -289,9 +282,34 @@ public class RulesAndSyllabusOne {
         //newDocumentDialog.setButtons(Dialog.);
         //newDocumentDialog.setButtonAlign(HorizontalAlignment.RIGHT);
         rulesAndSyllabusOneDialog.setButtonAlign(HorizontalAlignment.LEFT);
+
+        rulesAndSyllabusOneDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
         rulesAndSyllabusOneDialog.add(mainForm);
 
         //setDepartment();
+    }
+
+    public void storeDocumentInfo(){
+        WicidXML wicidxml = new WicidXML("rulesandsyllabus1");
+        wicidxml.addElement("qB1", qB1);
+        wicidxml.addElement("qb2", qB2);
+        wicidxml.addElement("qb3a", qB3a);
+        wicidxml.addElement("qb3b", qB3b);
+        wicidxml.addElement("qb4a", qB4a);
+        wicidxml.addElement("qb4b", qB4b);
+        wicidxml.addElement("qb4c", qB4c);
+        rulesAndSyllabusOneData = wicidxml.getXml();
+
+    }
+
+    public void getDocumentInfo(){
+
     }
 
     public void show() {

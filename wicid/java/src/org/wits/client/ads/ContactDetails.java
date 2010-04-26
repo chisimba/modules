@@ -134,16 +134,7 @@ public class ContactDetails {
                 }
                 qH3b = H1.getValue().toString().replaceAll(" ", "--");
 
-                WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("qH1", qH1);
-                wicidXML.addElement("qH2a", qH2a);
-                wicidXML.addElement("qH2b", qH2b);
-                wicidXML.addElement("qH3a", qH3a);
-                wicidXML.addElement("qH3b", qH3b);
-                contactDetailsData = wicidXML.getXml();
-
-                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                //contactDetailsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                storeDocumentInfo();
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -164,6 +155,7 @@ public class ContactDetails {
                 review.setOldReview(ContactDetails.this);
                 review.show();
                 newContactDetailsDialog.hide();
+                storeDocumentInfo();
             }
         });
 
@@ -179,7 +171,29 @@ public class ContactDetails {
         newContactDetailsDialog.setButtons(Dialog.CLOSE);
         newContactDetailsDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
+        newContactDetailsDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
+        getDocumentInfo();
         newContactDetailsDialog.add(mainForm);
+    }
+
+    public void storeDocumentInfo() {
+        WicidXML wicidxml = new WicidXML("ContactDetails");
+        wicidxml.addElement("H1", H1.getValue());
+        wicidxml.addElement("H2a", H2a.getValue());
+        wicidxml.addElement("H2b", H2b.getValue());
+        wicidxml.addElement("H3a", H3a.getValue());
+        wicidxml.addElement("H3b", H3b.getValue());
+        contactDetailsData = wicidxml.getXml();
+    }
+
+    public void getDocumentInfo(){
+
     }
 
     public void show() {

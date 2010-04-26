@@ -298,14 +298,7 @@ public class RulesAndSyllabusTwo {
 
                 //WicidXml util function might be used at a later stage...
 
-                WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("qb5a", qB5a);
-                wicidXML.addElement("qb5b", qB5b);
-                wicidXML.addElement("qb6a", qB6a);
-                wicidXML.addElement("qb6b", qB6b);
-                wicidXML.addElement("qb6c", qB6c);
-
-                rulesAndSyllabusTwoData = wicidXML.getXml();
+                storeDocumentInfo();
                 //data saved into a single string with each data varieable seperated by ("_")
                 
                 //rulesAndSyllabusTwoData = qB5a+"_"+qB5b+"_"+qB6a+"_"+qB6b+"_"+qB6c;
@@ -335,6 +328,7 @@ public class RulesAndSyllabusTwo {
                     rulesAndSyllabusOne.setOldRulesAndSyllabusOne(RulesAndSyllabusTwo.this);
                     rulesAndSyllabusOne.show();
                     rulesAndSyllabusTwoDialog.hide();
+                    storeDocumentInfo();
                 }
             });
 
@@ -355,9 +349,31 @@ public class RulesAndSyllabusTwo {
         rulesAndSyllabusTwoDialog.setHideOnButtonClick(true);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         rulesAndSyllabusTwoDialog.setButtonAlign(HorizontalAlignment.LEFT);
+
+        rulesAndSyllabusTwoDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
         rulesAndSyllabusTwoDialog.add(mainForm);
 
         //setDepartment();
+    }
+
+    public void storeDocumentInfo() {
+        WicidXML wicidxml = new WicidXML("rulesandsyllabus2");
+        wicidxml.addElement("qb5a", qB5a);
+        wicidxml.addElement("qb5b", qB5b);
+        wicidxml.addElement("qb6a", qB6a);
+        wicidxml.addElement("qb6b", qB6b);
+        wicidxml.addElement("qb6c", qB6c);
+        rulesAndSyllabusTwoData = wicidxml.getXml();
+    }
+
+    public void getDocumentInfo(){
+
     }
 
     public void show() {

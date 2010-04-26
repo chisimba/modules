@@ -171,20 +171,9 @@ public class CollaborationAndContracts {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
-                qF4 = F4.getValue().toString();
+               
 
-                WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("qF1a", qF1a);
-                wicidXML.addElement("qF2a", qF2a);
-                wicidXML.addElement("qF2b", qF2b);
-                wicidXML.addElement("qF3a", qF3a);
-                wicidXML.addElement("qF3b", qF3b);
-                wicidXML.addElement("qF4", qF4);
-                collaborationAndContractsData = wicidXML.getXml();
-
-
-                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-               // collaborationAndContractsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                storeDocumentInfo();
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -212,6 +201,7 @@ public class CollaborationAndContracts {
                 resources.setOldResources(CollaborationAndContracts.this);
                 resources.show();
                 newCollaborationAndContractsDialog.hide();
+                storeDocumentInfo();
             }
         });
 
@@ -226,7 +216,33 @@ public class CollaborationAndContracts {
         newCollaborationAndContractsDialog.setHideOnButtonClick(true);
         newCollaborationAndContractsDialog.setButtons(Dialog.CLOSE);
         newCollaborationAndContractsDialog.setButtonAlign(HorizontalAlignment.LEFT);
+
+        newCollaborationAndContractsDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
+        getDocumentInfo();
         newCollaborationAndContractsDialog.add(mainForm);
+    }
+
+    public void storeDocumentInfo() {
+          
+        WicidXML wicidxml = new WicidXML("CollaborationAndContracts");
+        wicidxml.addElement("F1a", F1a.getValue().toString());
+        wicidxml.addElement("F1b", F1b.getValue());
+        wicidxml.addElement("F2a", F2a.getValue().toString());
+        wicidxml.addElement("F2b", F2b.getValue());
+        wicidxml.addElement("F3a", F3a.getValue());
+        wicidxml.addElement("F3b", F3b.getValue());
+        wicidxml.addElement("F4", F4.getValue());
+        collaborationAndContractsData = wicidxml.getXml();
+    }
+
+    public void getDocumentInfo(){
+
     }
 
     public void show() {

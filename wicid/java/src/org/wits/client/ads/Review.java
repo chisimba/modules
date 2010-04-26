@@ -19,6 +19,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -128,9 +129,7 @@ public class Review {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                String qA1="qA1", qA2="qA2", qA3="qA2", qA4="qA2", qA5="qA5";
-                reviewData = qA1+"_"+qA2+"_"+qA3+"_"+qA4+"_"+qA5;
-
+                storeDocumentInfo();
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                         + "?module=wicid&action=saveFormData&formname="+"review"+"&formdata=" +reviewData+"&docid="+Constants.docid;
@@ -149,6 +148,7 @@ public class Review {
                     newReviewDialog.hide();;
                 }
             }
+
         });
 
         backButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
@@ -158,7 +158,7 @@ public class Review {
                 collaborationAndContracts.setOldCollaborationAndContracts(Review.this);
                 collaborationAndContracts.show();
                 newReviewDialog.hide();
-
+                storeDocumentInfo();
 
             }
         });
@@ -175,7 +175,33 @@ public class Review {
         newReviewDialog.setButtons(Dialog.CLOSE);
         newReviewDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
+        newReviewDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+
+            }
+        });
+
+        getDocumentInfo();
         newReviewDialog.add(mainForm);
+    }
+
+    public void storeDocumentInfo() {
+        WicidXML wicidxml = new WicidXML("Review");
+        wicidxml.addElement("G1a", G1a.getValue());
+        wicidxml.addElement("G1b", G1b.getValue());
+        wicidxml.addElement("G2a", G2a.getValue());
+        wicidxml.addElement("G2b", G2b.getValue());
+        wicidxml.addElement("G3a", G3a.getValue());
+        wicidxml.addElement("G3b", G3b.getValue());
+        wicidxml.addElement("G4a", G4a.getValue());
+        wicidxml.addElement("G4b", G4b.getValue());
+        reviewData = wicidxml.getXml();
+    }
+
+    public void getDocumentInfo(){
+
     }
 
     public void show() {

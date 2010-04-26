@@ -51,6 +51,18 @@ public class Resources {
     private CollaborationAndContracts collaborationAndContracts ;
     private CollaborationAndContracts oldCollaborationAndContracts;
     private String resourcesData, qE1a,qE1b,qE2a,qE2b,qE2c,qE3a,qE3b,qE3c,qE4,qE5a,qE5b;
+    private final TextArea E1a = new TextArea();
+    private final TextArea E1b = new TextArea();
+    private final TextArea E2a = new TextArea();
+    private final TextArea E2b = new TextArea();
+    private final TextArea E2c = new TextArea();
+    private final TextArea E3a = new TextArea();
+    private final TextArea E3b = new TextArea();
+    private final TextArea E3c = new TextArea();
+    private final TextArea E4 = new TextArea();
+    private final TextArea E5a = new TextArea();
+    private final TextArea E5b = new TextArea();
+
 
     public Resources(OutcomesAndAssessmentThree outcomesAndAssessmentThree) {
         this.outcomesAndAssessmentThree = outcomesAndAssessmentThree;
@@ -68,57 +80,56 @@ public class Resources {
         mainForm.setWidth(700);
         mainForm.setLabelWidth(400);
 
-        final TextArea E1a = new TextArea();
         E1a.setFieldLabel("E.1.a Is there currently adequate teaching capacity with regard to the introduction of the course/unit?");
         E1a.setAllowBlank(false);
         E1a.setName("E1a");
 
-        final TextArea E1b = new TextArea();
+        
         E1b.setFieldLabel("E.1.b Who will teach the course/unit?");
         E1b.setAllowBlank(false);
         E1b.setName("E1b");
 
-        final TextArea E2a = new TextArea();
+        
         E2a.setFieldLabel("E.2.a How many students will the course/unit attract?");
         E2a.setAllowBlank(false);
         E2a.setName("E2a");
 
-        final TextArea E2b = new TextArea();
+        
         E2b.setFieldLabel("E.2.a How has this been factored into the enrolment planning in your Faculty?");
         E2b.setAllowBlank(false);
         E2b.setName("E2b");
 
-        final TextArea E2c = new TextArea();
+        
         E2c.setFieldLabel("E.2.c How has it been determined if the course/unit is sustainable in the long term, or short term if of topical interest?");
         E2c.setAllowBlank(false);
         E2c.setName("E2c");
 
-        final TextArea E3a = new TextArea();
+        
         E3a.setFieldLabel("E.3.a Specify the space requirements for the course/unit.");
         E3a.setAllowBlank(false);
         E3a.setName("E3a");
 
-        final TextArea E3b = new TextArea();
+        
         E3b.setFieldLabel("E.3.b Specify the IT teaching resources required for the course/unit.");
         E3b.setAllowBlank(false);
         E3b.setName("E3b");
 
-        final TextArea E3c = new TextArea();
+        
         E3c.setFieldLabel("E.3.c Specify the library resources required to teach the course/unit.");
         E3c.setAllowBlank(false);
         E3c.setName("E3c");
 
-        final TextArea E4 = new TextArea();
+        
         E4.setFieldLabel("E.4 Does the School intend to offer the course/unit in addition to its current course/unit offering, or is the intention to eliminate an existing course/unit?");
         E4.setAllowBlank(false);
         E4.setName("E4");
 
-        final TextArea E5a = new TextArea();
+        
         E5a.setFieldLabel("E.5.a Specify the name of the course/unit co-ordinator.");
         E5a.setAllowBlank(false);
         E5a.setName("E5a");
 
-        final TextArea E5b = new TextArea();
+        
         E5b.setFieldLabel("E.5.b State the Staff number of the course/unit coordinator (consult your Faculty Registrar)");
         E5b.setAllowBlank(false);
         E5b.setName("E5b");
@@ -218,24 +229,7 @@ public class Resources {
                     MessageBox.info("Missing answer", "Please provide an answer for E1a", null);
                     return;
                 }
-                WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("title", title);
-                wicidXML.addElement("qE1a", qE1a);
-                wicidXML.addElement("qE1b", qE1b);
-                wicidXML.addElement("qE2a", qE2a);
-                wicidXML.addElement("qE2b", qE2b);
-                wicidXML.addElement("qE2c", qE2c);
-                wicidXML.addElement("qE3a", qE3a);
-                wicidXML.addElement("qE3b", qE3b);
-                wicidXML.addElement("qE3c", qE3c);
-                wicidXML.addElement("qE4", qE4);
-                wicidXML.addElement("qE5a", qE5a);
-                wicidXML.addElement("qE5b", qE5b);
-
-                resourcesData = wicidXML.getXml();
-
-                //String qA1="qA1", qA2="qA2", qA3="qA2", qA4="qA2", qA5="qA5";
-                //resourcesData = qA1+"_"+qA2+"_"+qA3+"_"+qA4+"_"+qA5;
+                storeDocumentInfo();
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -260,7 +254,7 @@ public class Resources {
                 outcomesAndAssessmentThree.setOldOutcomesAndAssessmentThree(Resources.this);
                 outcomesAndAssessmentThree.show();
                 newResourcesDialog.hide();
-                
+                storeDocumentInfo();
             }
         });
 
@@ -277,7 +271,37 @@ public class Resources {
         newResourcesDialog.setButtons(Dialog.CLOSE);
         newResourcesDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
+        newResourcesDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
+        getDocumentInfo();
         newResourcesDialog.add(mainForm);
+    }
+
+    public void storeDocumentInfo() {
+        
+        WicidXML wicidxml = new WicidXML("Resources");
+        wicidxml.addElement("qE1a", E1a.getValue());
+        wicidxml.addElement("qE1b", E1b.getValue());
+        wicidxml.addElement("qE2a", E2a.getValue());
+        wicidxml.addElement("qE2b", E2b.getValue());
+        wicidxml.addElement("qE2c", E2c.getValue());
+        wicidxml.addElement("qE3a", E3a.getValue());
+        wicidxml.addElement("qE3b", E3b.getValue());
+        wicidxml.addElement("qE3c", E3c.getValue());
+        wicidxml.addElement("qE4", E4.getValue());
+        wicidxml.addElement("qE5a", E5a.getValue());
+        wicidxml.addElement("qE5b", E5b.getValue());
+        resourcesData = wicidxml.getXml();
+        
+    }
+
+    public void getDocumentInfo(){
+
     }
 
     public void show() {

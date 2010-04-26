@@ -21,7 +21,9 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.extjs.gxt.ui.client.widget.form.LabelField;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import org.wits.client.Constants;
 import org.wits.client.util.WicidXML;
 
@@ -102,9 +104,12 @@ public class OutcomesAndAssessmentOne {
                 
         questionD2.setPixelSize(500, 80);
         questionD2.setBorderWidth(1);
-        questionD2.setText(0, 0, "Learning Outcomes of the Course/Unit");
-        questionD2.setText(0, 1, "Assessment Criteria for the Learning Outcomes");
-        questionD2.setText(0, 2, "Assessment Methods to be Used");
+        questionD2.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_CENTER);
+        questionD2.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_CENTER);
+        questionD2.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_CENTER);
+        questionD2.setWidget(0, 0, new LabelField("Learning Outcomes of the Course/Unit"));
+        questionD2.setWidget(0, 1, new LabelField("Assessment Criteria for the Learning Outcomes"));
+        questionD2.setWidget(0, 2, new LabelField("Assessment Methods to be Used"));
 
         TextArea qD21 = new TextArea();
         qD21.setWidth(215);
@@ -116,7 +121,6 @@ public class OutcomesAndAssessmentOne {
         questionD2.setWidget(1, 0, qD21);
         questionD2.setWidget(1, 1, qD22);
         questionD2.setWidget(1, 2, qD23);
-        //questionD2.setWidget(row, column, mainForm)
         mainForm.add(questionD2, formData);
         mainForm.add(new Label(), formData);
 
@@ -182,12 +186,7 @@ public class OutcomesAndAssessmentOne {
                 }
                 qD3 = questionD3.getValue().toString();
 
-                WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("qD1a", qD1a);
-                wicidXML.addElement("aD1b", qD1b);
-                wicidXML.addElement("q2", q2);
-                wicidXML.addElement("qD3", qD3);
-                outcomesAndAssessmentOneData = wicidXML.getXml();
+                storeDocumentInfo();
                 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -216,6 +215,7 @@ public class OutcomesAndAssessmentOne {
                 subsidyRequirements.setOldSubsdyRequirements(OutcomesAndAssessmentOne.this);
                 subsidyRequirements.show();
                 outcomesAndAssessmentDialog.hide();
+                storeDocumentInfo();
             }
         });
 
@@ -232,9 +232,29 @@ public class OutcomesAndAssessmentOne {
         outcomesAndAssessmentDialog.setButtonAlign(HorizontalAlignment.LEFT);
         outcomesAndAssessmentDialog.setHideOnButtonClick(true);
 
+        outcomesAndAssessmentDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
         outcomesAndAssessmentDialog.add(mainForm);
 
         //setDepartment();
+    }
+
+    public void storeDocumentInfo() {
+        WicidXML wicidxml = new WicidXML("outcomesandassessment1");
+        wicidxml.addElement("qD1a", qD1a);
+        wicidxml.addElement("aD1b", qD1b);
+        wicidxml.addElement("q2", q2);
+        wicidxml.addElement("qD3", qD3);
+        outcomesAndAssessmentOneData = wicidxml.getXml();
+    }
+
+    public void getDocumentInfo(){
+
     }
 
     public void show() {

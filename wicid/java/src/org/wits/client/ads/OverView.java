@@ -221,14 +221,7 @@ public class OverView {
                     qA5.replaceAll(" ", "--");
                 }
                 
-                WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("qa1", qA1);
-                wicidXML.addElement("qa2", qA2);
-                wicidXML.addElement("qa3", qA3);
-                wicidXML.addElement("qa4", qA4);
-                wicidXML.addElement("qa5", qA5);
-
-                overViewData=wicidXML.getXml();
+                storeDocumentInfo();
                 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -258,6 +251,7 @@ public class OverView {
                 newCourseProposalDialog.setOldOverView(OverView.this);
                 newCourseProposalDialog.show();
                 overViewDialog.hide();
+                storeDocumentInfo();
             }
         });
 
@@ -290,9 +284,30 @@ public class OverView {
         overViewDialog.setButtonAlign(HorizontalAlignment.LEFT);
         overViewDialog.setHideOnButtonClick(true);
 
+        overViewDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
         overViewDialog.add(mainForm);
 
         //setDepartment();
+    }
+
+    public void storeDocumentInfo(){
+        WicidXML wicidxml = new WicidXML("overview");
+        wicidxml.addElement("qA1", qA1);
+        wicidxml.addElement("qA2", qA2);
+        wicidxml.addElement("qA3", qA3);
+        wicidxml.addElement("qA4", qA4);
+        wicidxml.addElement("qA5", qA5);
+        overViewData = wicidxml.getXml();
+    }
+
+    public void getDocumentInfo(){
+
     }
 
     public void setOldRulesAndSyllabusOne(RulesAndSyllabusOne oldRulesAndSyllabusOne) {
