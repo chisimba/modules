@@ -80,7 +80,7 @@ public class AdvancedSearchDialog {
     private String myActive = "";
     private String url = "";
     private ListView<ModelData> view = Constants.main.getView();
-    private MenuItem removeFolderMenuItem = Constants.main.getRemoveFolderMenuItem();
+    //private MenuItem removeFolderMenuItem = Constants.main.getRemoveFolderMenuItem();
     private ModelData selectedFolder = Constants.main.getSelectedFolder();
     
     public AdvancedSearchDialog() {
@@ -313,11 +313,10 @@ public class AdvancedSearchDialog {
         loader.setSortDir(SortDir.ASC);
         loader.setSortField("text");
         store.sort("text", SortDir.ASC);
-        removeFolderMenuItem.setEnabled(selectedFolder == null ? true : false);
+        //removeFolderMenuItem.setEnabled(selectedFolder == null ? true : false);
         loader.load();
         view.refresh();
 
-        
         try {
             Request request = builder.sendRequest(null, new RequestCallback() {
 
@@ -328,9 +327,8 @@ public class AdvancedSearchDialog {
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
                         wait.close();
-
-                        
-                        //Constants.main.selectFileListTab();
+                        Constants.main.selectFileListTab();
+                        view.refresh();
                         //Constants.main.refreshFileList();
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot post advanced search", null);
