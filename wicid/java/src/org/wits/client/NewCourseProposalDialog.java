@@ -34,6 +34,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import java.util.Date;
 import org.wits.client.ads.OverView;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -268,12 +269,36 @@ public class NewCourseProposalDialog {
         newDocumentDialog.setButtons(Dialog.CLOSE);
         newDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
+        newDocumentDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();         
+            }
+        });
+
         newDocumentDialog.add(mainForm);
         setDepartment();
+
+
     }
 
     public void show() {
         newDocumentDialog.show();
+    }
+
+    public void storeDocumentInfo() {
+        String originatingDepartment = deptField.getValue();
+        String telNumber = telField.getValue();
+        String docTitle = titleField.getValue();
+        String faculty = topicField.getValue();
+
+        WicidXML wicidxml = new WicidXML("data");
+        wicidxml.addElement("originatingdepartment", originatingDepartment);
+        wicidxml.addElement("telnumber", telNumber);
+        wicidxml.addElement("doctitle", docTitle);
+        wicidxml.addElement("faculty", faculty);
+        String data = wicidxml.getXml();
+        
     }
 
     public void setOldOverView(OverView oldOverView) {
