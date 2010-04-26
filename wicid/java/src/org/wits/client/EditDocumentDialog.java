@@ -25,10 +25,12 @@ import com.extjs.gxt.ui.client.widget.form.FileUploadField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
 import com.extjs.gxt.ui.client.widget.form.FormPanel.Method;
+import com.extjs.gxt.ui.client.widget.form.LabelField;
 import com.extjs.gxt.ui.client.widget.form.Radio;
 import com.extjs.gxt.ui.client.widget.form.RadioGroup;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.form.TextField;
+
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
@@ -39,10 +41,13 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.Grid;
 import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
+import org.wits.client.ads.OverView;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -59,8 +64,8 @@ public class EditDocumentDialog {
     private final TextField<String> deptField = new TextField<String>();
     private final TextField<String> telField = new TextField<String>();
     private final TextField<String> numberField = new TextField<String>();
-    private Button saveButton = new Button("Save");
-    private Button browseTopicsButton = new Button("Browse Topics");
+    private Button saveButton = new Button("Next");
+    private Button browseTopicsButton = new Button("Browse Facuties");
     private TopicListingFrame topicListingFrame;
     private TextArea topicField = new TextArea();
     private Dialog topicListingDialog = new Dialog();
@@ -71,6 +76,9 @@ public class EditDocumentDialog {
     private Label namesField = new Label();
     private String mode;
     private Main main;
+    private LabelField uploadFile = new LabelField();
+    private Grid upload = new Grid(2, 1);
+    private OverView overview;
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
@@ -84,6 +92,7 @@ public class EditDocumentDialog {
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
         mainForm.setWidth(480);
+        
 
         final DateField dateField = new DateField();
         dateField.setFieldLabel("Entry date");
@@ -162,13 +171,13 @@ public class EditDocumentDialog {
         BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 150);
         eastData.setSplit(true);
         eastData.setMargins(new Margins(0, 0, 0, 5));
-        topicField.setName("topic");
+        topicField.setName("Faculty");
         topicField.setValue(document.getTopic());
         topicField.setFieldLabel("Topic");
 
         FormPanel panel = new FormPanel();
         panel.setSize(400, 70);
-        panel.setHeading("Topic");
+        panel.setHeading("Faculty");
         panel.setLayout(new BorderLayout());
         panel.add(topicField, centerData);
         panel.add(browseTopicsButton, eastData);
@@ -220,17 +229,21 @@ public class EditDocumentDialog {
                 + document.getTopic() + "&docid=" + document.getId());
         uploadpanel.setEncoding(Encoding.MULTIPART);
         uploadpanel.setMethod(Method.POST);
-        uploadpanel.setButtonAlign(HorizontalAlignment.CENTER);
         uploadpanel.setWidth(350);
 
         FileUploadField fileUploadField = new FileUploadField();
         fileUploadField.setName("filenamefield");
         fileUploadField.setFieldLabel("Upload file");
         //uploadpanel.add(fileUploadField);
-        uploadpanel.add(uploadButton);
+  /*      upload.setWidget(0, 0, uploadFile);
+        upload.setWidget(0, 1, uploadButton);
+        uploadpanel.add(upload);
+*/        uploadpanel.add(uploadButton);
+//        uploadpanel.add(uploadFile);
         mainForm.add(uploadpanel, formData);
-        uploadButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+        uploadpanel.setButtonAlign(HorizontalAlignment.RIGHT);
 
+        uploadButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 Window w = new Window();
@@ -307,7 +320,11 @@ public class EditDocumentDialog {
                         + "&title=" + title + "&group=" + group;
 
                 updateDocument(url);
+                storeDocumentInfo();
 
+                //OverView overview = new OverView(EditDocumentDialog.this);
+                overview.show();
+                newDocumentDialog.hide();
 
             }
         });
@@ -322,12 +339,11 @@ public class EditDocumentDialog {
         newDocumentDialog.setBodyBorder(false);
         newDocumentDialog.setHeading("Document Details");
         newDocumentDialog.setWidth(500);
-        newDocumentDialog.setHeight(450);
+        newDocumentDialog.setHeight(500);
         newDocumentDialog.setHideOnButtonClick(true);
 
         newDocumentDialog.setButtons(Dialog.CLOSE);
         newDocumentDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
-
             @Override
             public void componentSelected(ButtonEvent ce) {
                 if (main != null) {
@@ -339,6 +355,32 @@ public class EditDocumentDialog {
 
         newDocumentDialog.add(mainForm);
         setDepartment();
+        setDocumentInfo();
+    }
+
+    public void storeDocumentInfo() {
+        String originatingDepartment = deptField.getValue();
+        String telNumber = telField.getValue();
+        String docTitle = titleField.getValue();
+        String group = groupField.getValue().toString();
+        String faculty = topicField.getValue();
+        String fileUpload = uploadFile.getValue().toString();
+
+        WicidXML wicidxml = new WicidXML("data");
+        wicidxml.addElement("originatingdepartment", originatingDepartment);
+        wicidxml.addElement("telnumber", telNumber);
+        wicidxml.addElement("doctitle", docTitle);
+        wicidxml.addElement("group", group);
+        wicidxml.addElement("faculty", faculty);
+        wicidxml.addElement("fileupload", fileUpload);
+        String data = wicidxml.getXml();
+    }
+    
+    public void setDocumentInfo(){
+        WicidXML wicidxml = new WicidXML("data");
+        String data = wicidxml.getXml();
+        topicField.setValue(data);
+
     }
 
     public void show() {
