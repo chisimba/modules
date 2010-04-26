@@ -105,6 +105,7 @@ public class Main {
     private TabPanel tab = new TabPanel();
     private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
+    private TabItem viewTab = new TabItem("File List");
     private NewCourseProposalDialog newCourseProposalDialog;
     private AdvancedSearchDialog advancedSearchDialog;
     private String mode = "default";
@@ -137,7 +138,7 @@ public class Main {
         treeFieldtype.addField("uploadfiles", "@uploadfiles");
         treeFieldtype.addField("createfolder", "@createfolder");
 
-
+        Constants myConstants = new Constants();
 
         ToolBar toolBar = new ToolBar();
 
@@ -417,7 +418,6 @@ public class Main {
         });
         refreshViewFilesButton.setIconStyle("refresh");
         viewFilesToolbar.add(refreshViewFilesButton);
-        TabItem viewTab = new TabItem("File List");
         viewTab.setHeight("800");
         view.setHeight("800");
         ContentPanel viewFilesPanel = new ContentPanel();
@@ -833,5 +833,9 @@ public class Main {
 
     public MenuItem getRemoveFolderMenuItem() {
         return removeFolderMenuItem;
+    }
+
+    public void selectFileListTab() {
+        tab.setSelection(viewTab);
     }
 }
