@@ -42,7 +42,10 @@ if (trim($query) != '')
     $this->setVar('pageTitle', $this->objConfig->getSiteName().' - Search Results for '.$query);
 
     $objSearchResults = $this->getObject('searchresults', 'search');
-    
+
+    if($query == '*'){
+        $query='';
+    }
     $results = $objSearchResults->getSearchResults($query, 'webpresent');
     
     $numHits = count($results);
