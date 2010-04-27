@@ -796,9 +796,8 @@ class learningcontent extends controller {
             ),
             'scorm');
         }
-		
         //Log in activity streamer only if logged in (Public courses dont need login)
-        if(!empty($this->userId)){
+        if(!empty($this->userId) && !empty($trackPage)){
 	         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->sessionId);
 
         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevpageid'], $this->sessionId);
@@ -807,12 +806,8 @@ class learningcontent extends controller {
             $ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
 
         if ($ischapterlogged==FALSE) {
-//addRecord($userId, $sessionid, $contextItemId, $contextCode, $modulecode, $datecreated,$pageorchapter=NULL, $description=NULL, $sessionstarttime=NULL, $sessionendtime=NULL)
             $datetimenow = date('Y-m-d H:i:s');//$this->now();
             $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $pageId, $this->contextCode,$trackPage['module'],$trackPage['datecreated'],$trackPage['pageorchapter'],$trackPage['description'], $datetimenow, Null);
-         } else {
-            //$recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $pageId, $this->sessionId);
-            //$ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
          }
         }
 
