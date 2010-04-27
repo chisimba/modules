@@ -245,6 +245,14 @@ class learningcontent extends controller {
             case 'movechapterdown':
                 return $this->moveChapterDown($this->getParam('id'));
             case 'viewchapter':
+                $trackPage = array();
+                $trackPage['contextItemId'] = $this->getParam('id');
+                $trackPage['prevpageid'] = $this->getParam('prevpageid');
+                $trackPage['contextCode'] = $this->contextCode;
+                $trackPage['module'] = $this->getParam('module');
+                $trackPage['datecreated'] = date('Y-m-d H:i:s');
+                $trackPage['pageorchapter'] = 'chapter';
+                $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewchapter', 'learningcontent');
                 return $this->viewChapter($this->getParam('id'));
             case 'viewprintchapter':
                 return $this->viewPrintChapter($this->getParam('id'));
@@ -1041,12 +1049,19 @@ class learningcontent extends controller {
      *
      * @param string $id Record Id of the Chapter
      */
-    protected function viewChapter($id) {
+    protected function viewChapter($id, $trackPage='') {
 
         $firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
-        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id, $this->contextCode);
-        if ($ischapterlogged==FALSE && $this->eventsEnabled) {
-            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $id, $this->contextCode);
+        if ($trackPage!='' && $this->eventsEnabled) {
+         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id, $this->sessionId);
+         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevpageid'], $this->sessionId);
+         //Log when user leaves a page
+         if(!empty($recordId))
+            $ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
+         if ($ischapterlogged==FALSE) {
+            $datetimenow = date('Y-m-d H:i:s');
+            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $id, $this->contextCode,$trackPage['module'],$trackPage['datecreated'],$trackPage['pageorchapter'],$trackPage['description'], $datetimenow, Null);
+         }
         }
         if ($firstPage == FALSE) {
 
