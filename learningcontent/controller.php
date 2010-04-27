@@ -94,6 +94,7 @@ class learningcontent extends controller {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
             $this->userId = $this->objUser->userId();
+            $this->sessionId = session_id();
             $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
             //Load Activity Streamer
 
@@ -182,7 +183,15 @@ class learningcontent extends controller {
             case 'updatepage':
                 return $this->updatePage();
             case 'viewpage':
-                return $this->viewPage($this->getParam('id'));
+                $trackPage = array();
+                $trackPage['contextItemId'] = $this->getParam('id');
+                $trackPage['prevpageid'] = $this->getParam('prevpageid');
+                $trackPage['contextCode'] = $this->contextCode;
+                $trackPage['module'] = $this->getParam('module');
+                $trackPage['datecreated'] = date('Y-m-d H:i:s');//$this->now();
+                $trackPage['pageorchapter'] = 'page';
+                $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewpage', 'learningcontent');
+                return $this->viewPage($this->getParam('id'),Null, $trackPage);
             case 'viewpageimage':
                 return $this->viewPage($this->getParam('id'),$this->getParam('imageId'));
             case 'viewpicorformula':
@@ -765,8 +774,9 @@ class learningcontent extends controller {
      * Method to view a page
      * @param string $pageId Record Id of the Page
      * @param string $imageId Selected Image Id
+     * @param array string $trackPage Contains data to help track user transactions
      */
-    protected  function viewPage($pageId='', $imageId='') {
+    protected  function viewPage($pageId='', $imageId='', $trackPage='') {
         if ($pageId == '') {
             return $this->nextAction(NULL);
         }
@@ -789,9 +799,20 @@ class learningcontent extends controller {
 		
         //Log in activity streamer only if logged in (Public courses dont need login)
         if(!empty($this->userId)){
-	         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
+	         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->sessionId);
+
+        $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevpageid'], $this->sessionId);
+        //Log when user leaves a page
+        if(!empty($recordId))
+            $ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
+
         if ($ischapterlogged==FALSE) {
-            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);
+//addRecord($userId, $sessionid, $contextItemId, $contextCode, $modulecode, $datecreated,$pageorchapter=NULL, $description=NULL, $sessionstarttime=NULL, $sessionendtime=NULL)
+            $datetimenow = date('Y-m-d H:i:s');//$this->now();
+            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $pageId, $this->contextCode,$trackPage['module'],$trackPage['datecreated'],$trackPage['pageorchapter'],$trackPage['description'], $datetimenow, Null);
+         } else {
+            //$recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $pageId, $this->sessionId);
+            //$ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
          }
         }
 

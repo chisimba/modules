@@ -123,14 +123,29 @@ class db_learningcontent_activitystreamer extends dbtable
      */
     public function getRecord($userId, $contextItemId, $sessionid)
     {
-        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid'";
+        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid' AND endtime = NULL";
         $results = $this->getAll($where);
         if (isset($results[0]['id'])) {
             return TRUE;
         } else {
             return FALSE;
         }
-    }    
+    }
+    /**
+     * Update a record
+     * @param string $id ID
+     * @param string $start The start date
+     * @param string $longdescription The long description
+     * -- @param string $userId The user ID
+     */
+    function updateSingle($id) 
+    {
+        $userid = $this->objUser->userId();
+        $this->update("id", $id, array(
+            'endtime' => date('Y-m-d H:i:s')
+        ));
+    }
+
     /**
      * Method to retrieve a record id according to userId, contextItemId and sessionid.
      *
@@ -143,9 +158,12 @@ class db_learningcontent_activitystreamer extends dbtable
     public function getRecordId($userId, $contextItemId, $sessionid)
     {
         $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid'";
-        $results = $this->getAll($where);
+        $results = $this->getAll($where);        
         if (isset($results[0]['id'])) {
+          if(empty($results[0]['endtime']))
             return $results[0]['id'];
+          else 
+            return FALSE;
         } else {
             return FALSE;
         }

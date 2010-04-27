@@ -41,7 +41,7 @@ $fields = array(
         'notnull' => TRUE
         ),
     'description' => array(
-        'type' => 'text'
+        'type' => 'text',
         'notnull' => FALSE
         ),
     'starttime' => array(
