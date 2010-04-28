@@ -76,7 +76,7 @@ class renderstory extends object
 
         $objWashOut = $this->getObject('washout', 'utilities');
 
-        $str .='<div id="newsstorybody">'. $objWashOut->parseText($story['storytext']);
+        $str .='<div id="newsstorybody">'. $objWashOut->parseText($story['storytext']).'</div>';
 
         if ($story['storysource'] != '') {
             $objUrl = &$this->getObject('url', 'strings');
@@ -101,7 +101,7 @@ class renderstory extends object
 
             $str .= $table->show();
         }
-$str.='</div>';
+
         /*
         if ($story['allowcomments'] == 'Y') {
             $objComments = $this->getObject('dbnewscomments');
