@@ -37,6 +37,7 @@ class renderstory extends object
 
         $header = new htmlheading();
         $header->type = 1;
+        $header->cssClass="newsstorytitleh1";
         $header->str = $story['storytitle'];
         $this->setVar('pageTitle', $story['storytitle']);
 
