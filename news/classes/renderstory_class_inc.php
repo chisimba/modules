@@ -63,9 +63,9 @@ class renderstory extends object
             //}
         }
 
-        $str = $header->show();
+        $str ='<div id="newsstoryheader">'. $header->show();
 
-        $str .= '<div id="newsstoryheader"><p>'.$objDateTime->formatDateOnly($story['storydate']).'</p></div>';
+        $str .= '<p>'.$objDateTime->formatDateOnly($story['storydate']).'</p></div>';
 
         /*
         if ($story['storyimage'] != '') {
