@@ -67,7 +67,8 @@ if ($announcement['contextid'] == 'site') {
 $outStr .=  '<br />'.$announcement['message'];
 // Render the outer wrapped layer
 $outStr = '<div class="outerwrapper">' . $outStr . '</div>';
-echo $outStr;
+$objWashOut = $this->getObject('washout', 'utilities');
+echo  $objWashOut->parseText($outStr);
 
 $backLink = new link ($this->uri(NULL));
 $backLink->link = $this->objLanguage->languageText('mod_announcements_back', 'announcements', 'Back to Announcements');
@@ -79,5 +80,5 @@ $outStr = "<div class='modulehome'></div><div class='modulehomelink'>" . $backLi
 if ($isAdmin || count($lecturerContext) > 0) {
     $outStr .=  "<div class='adminadd'></div><div class='adminaddlink'>" . $addLink->show() . "</div>";
 }
-echo $outStr;
+echo  $objWashOut->parseText($outStr);
 ?>
