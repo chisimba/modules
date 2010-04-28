@@ -76,7 +76,7 @@ class renderstory extends object
 
         $objWashOut = $this->getObject('washout', 'utilities');
 
-        $str .= $objWashOut->parseText($story['storytext']);
+        $str .='<div id="newsstoryheader">'. $objWashOut->parseText($story['storytext']).'</div>';
 
         if ($story['storysource'] != '') {
             $objUrl = &$this->getObject('url', 'strings');
