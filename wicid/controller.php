@@ -136,6 +136,7 @@ class wicid extends controller {
         $this->setVarByRef('topic',$topic);
         $this->setVarByRef('docname',$docname);
         $this->setVarByRef('docid',$docid);
+        
         return "upload_tpl.php";
     }
 
@@ -503,7 +504,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return true;
+        return false;
     }
 
     function __registeracademicpresenters() {
@@ -520,7 +521,7 @@ class wicid extends controller {
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
 
-        $objMkDir = $this->getObject('mkdir', 'files');
+       $objMkDir = $this->getObject('mkdir', 'files');
         $topic=$this->getParam('topic');
         $docname=$this->getParam('docname');
         $docid=$this->getParam('docid');
@@ -586,16 +587,18 @@ class wicid extends controller {
             $uploadedFiles[] = $id;
             $this->setSession('uploadedfiles', $uploadedFiles);
             $path=$topic.'/'.$docname.'.'.$ext;
+
             // save the file information into the database
             $data = array(
                     'filename'=>$docname.'.'.$ext,
                     'filetype'=>$ext,
                     'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),
-                    'userid'=>$this->userutils->getUserId(),
+                    'userid'=>$this->objUtils->getUserId(),
                     'parent'=>"/",
-                    'refno'=>$this->userutils->getRefNo(),
+                    'refno'=>$this->objUtils->getRefNo(),
                     'docid'=>$docid,
                     'filepath'=>$path);
+
             $result = $this->objUploadTable->saveFileInfo($data);
             //update the latest ext
             $this->documents->updateDocument($docid,array('ext'=>$ext,'upload'=>'Y'));
