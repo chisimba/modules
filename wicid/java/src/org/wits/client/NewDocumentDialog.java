@@ -62,14 +62,15 @@ public class NewDocumentDialog {
     private String title = "";
     private String telephone = "";
     private String topic = "";
-    private String group="";
+    private String group = "";
     private ComboBox<Group> groupField = new ComboBox<Group>();
+
     public NewDocumentDialog() {
         createUI();
     }
 
     private void createUI() {
-
+        newDocumentDialog.setModal(true);
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
         mainForm.setWidth(480);
@@ -111,12 +112,12 @@ public class NewDocumentDialog {
         telField.setName("telephone");
         mainForm.add(telField, formData);
 
-        titleField.setFieldLabel("Course Title");
+        titleField.setFieldLabel("Document Title");
         titleField.setAllowBlank(false);
         titleField.setName("titlefield");
         mainForm.add(titleField, formData);
 
-                ListStore<Group> groupStore = new ListStore<Group>();
+        ListStore<Group> groupStore = new ListStore<Group>();
         List<Group> groups = new ArrayList<Group>();
         groups.add(new Group("Public"));
         groups.add(new Group("Council"));
@@ -140,6 +141,7 @@ public class NewDocumentDialog {
         eastData.setSplit(true);
         eastData.setMargins(new Margins(0, 0, 0, 5));
         topicField.setName("topic");
+        topicField.setEnabled(false);
         topicField.setFieldLabel("Topic");
 
         FormPanel panel = new FormPanel();
@@ -246,7 +248,7 @@ public class NewDocumentDialog {
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                         + "?module=wicid&action=registerdocument&date=" + fmt.format(date)
                         + "&number=" + number + "&department=" + dept + "&telephone=" + telephone
-                        + "&topic=" + topic + "&title=" + title+"&group="+group;
+                        + "&topic=" + topic + "&title=" + title + "&group=" + group;
                 createNewDocument(url);
 
 
@@ -328,21 +330,14 @@ public class NewDocumentDialog {
 
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
-                        String responseTxt[] = response.getText().split(",");
-                       
-                        Document doc = new Document();
-                        doc.setDate(fmt.format(date));
-                        doc.setRefNo(responseTxt[0]);
-                        doc.setId(responseTxt[1]);
-                        doc.setDepartment(dept);
-                        doc.setTelephone(telephone);
-                        doc.setGroup(group);
-                        doc.setTitle(title);
-                        doc.setTopic(topic);
-                        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(doc,"all",null);
-                        editDocumentDialog.show();
-                        newDocumentDialog.setVisible(false);
                         wait.close();
+                        String responseTxt[] = response.getText().split("|");
+                        newDocumentDialog.setVisible(false);
+                       MessageBox.info("Save", "Your document is saved. You can access it from the 'Documents' tab to make any changes", null);
+                       // showEditDialog(responseTxt[0], responseTxt[1]);
+
+
+
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
@@ -351,5 +346,19 @@ public class NewDocumentDialog {
         } catch (RequestException e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
+    }
+
+    private void showEditDialog(String refNo, String id) {
+        Document doc = new Document();
+        doc.setDate(fmt.format(date));
+        doc.setRefNo(refNo);
+        doc.setId(id);
+        doc.setDepartment(dept);
+        doc.setTelephone(telephone);
+        doc.setGroup(group);
+        doc.setTitle(title);
+        doc.setTopic(topic);
+        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(doc, "all", null);
+        editDocumentDialog.show();
     }
 }

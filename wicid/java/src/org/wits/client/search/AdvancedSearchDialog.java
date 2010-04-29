@@ -143,7 +143,7 @@ public class AdvancedSearchDialog {
         newDocumentDialog.setBodyBorder(false);
         newDocumentDialog.setHeading("Advanced Search");
         newDocumentDialog.setWidth(500);
-        newDocumentDialog.setHeight(500);
+        newDocumentDialog.setHeight(550);
         newDocumentDialog.setHideOnButtonClick(true);
         newDocumentDialog.setButtons(Dialog.CLOSE);
         newDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);

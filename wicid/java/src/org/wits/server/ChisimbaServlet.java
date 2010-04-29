@@ -5,7 +5,6 @@
 package org.wits.server;
 
 import java.io.*;
-import java.net.URLEncoder;
 import java.util.Enumeration;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -46,7 +45,7 @@ public class ChisimbaServlet extends HttpServlet {
         String result = "";
         GetMethod get=new GetMethod();
         try {
-        get = new GetMethod("http://localhost/chisimba/app/?" + params);
+        get = new GetMethod("http://localhost/chisimba/?" + params);
         int iGetResultCode = -1;
         
             iGetResultCode = httpClient.executeMethod(get);

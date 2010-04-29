@@ -46,7 +46,6 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
-import org.wits.client.ads.OverView;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -55,7 +54,7 @@ import org.wits.client.util.WicidXML;
  */
 public class EditDocumentDialog {
 
-    private Dialog newDocumentDialog = new Dialog();
+    private Dialog editDocumentDialog = new Dialog();
     private ModelData selectedFolder;
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
@@ -64,7 +63,7 @@ public class EditDocumentDialog {
     private final TextField<String> deptField = new TextField<String>();
     private final TextField<String> telField = new TextField<String>();
     private final TextField<String> numberField = new TextField<String>();
-    private Button saveButton = new Button("Next");
+    private Button saveButton = new Button("Save");
     private Button browseTopicsButton = new Button("Browse Facuties");
     private TopicListingFrame topicListingFrame;
     private TextArea topicField = new TextArea();
@@ -78,7 +77,6 @@ public class EditDocumentDialog {
     private Main main;
     private LabelField uploadFile = new LabelField();
     private Grid upload = new Grid(2, 1);
-    private OverView overview;
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
@@ -92,7 +90,7 @@ public class EditDocumentDialog {
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
         mainForm.setWidth(480);
-        
+
 
         final DateField dateField = new DateField();
         dateField.setFieldLabel("Entry date");
@@ -136,7 +134,7 @@ public class EditDocumentDialog {
         numberField.setValue(document.getRefNo());
         numberField.setName("numberfield");
         mainForm.add(numberField, formData);
-
+        topicField.setEnabled(false);
 
         deptField.setFieldLabel("Originating department");
         deptField.setAllowBlank(false);
@@ -172,6 +170,7 @@ public class EditDocumentDialog {
         eastData.setSplit(true);
         eastData.setMargins(new Margins(0, 0, 0, 5));
         topicField.setName("Faculty");
+
         topicField.setValue(document.getTopic());
         topicField.setFieldLabel("Topic");
 
@@ -194,7 +193,7 @@ public class EditDocumentDialog {
                     topicListingDialog.setBodyBorder(false);
                     topicListingDialog.setHeading("Topic Listing");
                     topicListingDialog.setWidth(500);
-                    topicListingDialog.setHeight(350);
+                    topicListingDialog.setHeight(400);
                     topicListingDialog.setHideOnButtonClick(true);
                     topicListingDialog.setButtons(Dialog.CLOSE);
                     topicListingDialog.setButtonAlign(HorizontalAlignment.LEFT);
@@ -238,12 +237,13 @@ public class EditDocumentDialog {
   /*      upload.setWidget(0, 0, uploadFile);
         upload.setWidget(0, 1, uploadButton);
         uploadpanel.add(upload);
-*/        uploadpanel.add(uploadButton);
+         */ uploadpanel.add(uploadButton);
 //        uploadpanel.add(uploadFile);
         mainForm.add(uploadpanel, formData);
         uploadpanel.setButtonAlign(HorizontalAlignment.RIGHT);
 
         uploadButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 Window w = new Window();
@@ -319,12 +319,12 @@ public class EditDocumentDialog {
                         + "module=wicid&action=updatedocument&dept=" + dept + "&topic=" + topic
                         + "&title=" + title + "&group=" + group;
 
+
                 updateDocument(url);
                 storeDocumentInfo();
 
-                //OverView overview = new OverView(EditDocumentDialog.this);
-                overview.show();
-                newDocumentDialog.hide();
+
+                editDocumentDialog.hide();
 
             }
         });
@@ -336,26 +336,27 @@ public class EditDocumentDialog {
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         //FormButtonBinding binding = new FormButtonBinding(mainForm);
         //binding.addButton(saveButton);
-        newDocumentDialog.setBodyBorder(false);
-        newDocumentDialog.setHeading("Document Details");
-        newDocumentDialog.setWidth(500);
-        newDocumentDialog.setHeight(500);
-        newDocumentDialog.setHideOnButtonClick(true);
+        editDocumentDialog.setBodyBorder(false);
+        editDocumentDialog.setHeading("Document Details");
+        editDocumentDialog.setWidth(500);
+        editDocumentDialog.setHeight(500);
+        editDocumentDialog.setHideOnButtonClick(true);
 
-        newDocumentDialog.setButtons(Dialog.CLOSE);
-        newDocumentDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+        editDocumentDialog.setButtons(Dialog.CLOSE);
+        editDocumentDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 if (main != null) {
-                      main.refreshFileList();
+                    main.refreshFileList();
                 }
             }
         });
-        newDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
+        editDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
-        newDocumentDialog.add(mainForm);
+        editDocumentDialog.add(mainForm);
         setDepartment();
-        setDocumentInfo();
+
     }
 
     public void storeDocumentInfo() {
@@ -375,16 +376,9 @@ public class EditDocumentDialog {
         wicidxml.addElement("fileupload", fileUpload);
         String data = wicidxml.getXml();
     }
-    
-    public void setDocumentInfo(){
-        WicidXML wicidxml = new WicidXML("data");
-        String data = wicidxml.getXml();
-        topicField.setValue(data);
-
-    }
 
     public void show() {
-        newDocumentDialog.show();
+        editDocumentDialog.show();
     }
 
     private void setDepartment() {
@@ -433,7 +427,7 @@ public class EditDocumentDialog {
                         if (main != null) {
                             main.refreshFileList();
                         }
-                        newDocumentDialog.setVisible(false);
+                        editDocumentDialog.setVisible(false);
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
