@@ -593,6 +593,8 @@ public function getFrontPageContent($displayId=NULL)
 
 		if ($this->objHead->str != '') {
 			$pageStr = $this->objHead->show();
+		} else {
+			$pageStr = '';
 		}
 
 		// Adding Author

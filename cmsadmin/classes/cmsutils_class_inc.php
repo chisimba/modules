@@ -1906,22 +1906,15 @@
         * @access public
         * @return string The html for the side bar link / navigation
         */
-        public function getNav($hideCmsMenu = false)
+        public function getNav($hideCmsMenu = TRUE)
         {
-            $cmsAdminMenu = '';
-
             $lbSection = $this->objLanguage->languageText('mod_cmsadmin_sectionnotvisible', 'cmsadmin');
             $lbOrange = $this->objLanguage->languageText('mod_cmsadmin_sectionsetnotvisible', 'cmsadmin');
             $lbWhite = $this->objLanguage->languageText('mod_cmsadmin_sectionnocontent', 'cmsadmin');
             $lbGreen = $this->objLanguage->languageText('mod_cmsadmin_sectionparentnotvisible', 'cmsadmin');
 
-            $objConfig =$this->newObject('altconfig', 'config');
-            $objFeatureBox = $this->newObject('featurebox', 'navigation');
-            //Instantiate link object
-            $link =$this->newObject('link', 'htmlelements');
-            $objIcon = $this->newObject('geticon', 'htmlelements');
-
-            //Create heading
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $objIcon = $this->getObject('geticon', 'htmlelements');
 
             //Create cms admin link
             $link = $this->objLanguage->languageText('phrase_controlpanel');
@@ -1943,46 +1936,18 @@
             $link = $this->objLanguage->languageText('phrase_uploadfiles');
             $url = $this->uri(array('action' => ''), 'filemanager');
             $filemanager = $objIcon->getTextIcon($url, 'media', $link, 'png', 'icons/cms/');
-
-            $nav = '';
-
-            //Add links to the output layer
-            $currentNode = $this->getParam('sectionid');
-
-            //Sections Explorer Tree Menu
-            //jQuery Tree Menu
-            /*
-            $action = $this->getParam('action');
-            if ($action == 'sections'){
-                $objCmsTree =$this->newObject('sectionstreemenu', 'cmsadmin');
-            } else {
-                //TODO: Must fork for different menu types
-                //jQuery SuperFish Tree
-                $objCmsTree =$this->newObject('superfishtree', 'cmsadmin');
-            }
-            */
-
-            $objCmsTree =$this->newObject('superfishtree', 'cmsadmin');
-
-            if (!$hideCmsMenu) {
-			    $nav  = '<div id="cmsnavcontainer">'."\n";
-            } else {
-                $nav = '';
-            }
-            $objAdminCmsTree =$this->newObject('simpletreemenu', 'cmsadmin');
-            $cmsAdminMenu .= $objAdminCmsTree->getCMSAdminTree($currentNode);
-
-            if (!$hideCmsMenu) {
+            
+            $nav  = '<div id="cmsnavcontainer">';
+            if (!$hideCmsMenu) { // Is this really needed?
+                $currentNode = $this->getParam('sectionid');
+                $objAdminCmsTree = $this->getObject('simpletreemenu', 'cmsadmin');
+                $cmsAdminMenu = $objAdminCmsTree->getCMSAdminTree($currentNode);
                 $nav .="<div id='cmsnavigation'>".$cmsAdminMenu."</div>\n"; 
-                $nav .= '<br/>'.'&nbsp;'.'<br /><br/><br/>';
             }
 
-            $objFeatureBox = $this->getObject('featurebox', 'navigation');
-			
-			ob_start();
-			?>
-			<script type="text/javascript">
-			jQuery(function(){
+			$script = "
+            <script type='text/javascript'>
+                jQuery(function(){
 					jQuery('#cmscontrolpanelmenu').menu({
 						content: jQuery('#cmscontrolpanelmenu').next().html(),
                         flyOut: true,
@@ -1991,18 +1956,15 @@
 					});
 				});
 				
-			jQuery(document).ready(function(){
-				jQuery('#btnaddcontent').livequery('click',function(){
-					alert(jQuery('#menuSelection').html());
-					//document.href.location = '?module=cmsadmin&amp;action=addcontent';
-				});
-			});
-			</script>
-			<?php
-			$script = ob_get_contents();
-			ob_end_clean();
-
-			$this->appendArrayVar('headerParams', $script);			
+                jQuery(document).ready(function(){
+                    jQuery('#btnaddcontent').livequery('click',function(){
+                        alert(jQuery('#menuSelection').html());
+                        //document.href.location = '?module=cmsadmin&amp;action=addcontent';
+                    });
+                });
+			</script>";
+			
+			$this->appendArrayVar('headerParams', $script);
 
             $lblQuickMenu = $this->objLanguage->languageText('mod_cmsadmin_quick_heading', 'cmsadmin');
             $lblFrontpage = $this->objLanguage->languageText('mod_cmsadmin_quick_frontpage', 'cmsadmin');
@@ -2108,7 +2070,7 @@
 
 
 			$cmsControlPanel = '
-			<a tabindex="0" href="#cmscontrolpenel" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">'.$lblQuickMenu.'</a>
+			<a tabindex="0" href="#cmscontrolpanel" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">'.$lblQuickMenu.'</a>
 			<div id="cmscontrolpanelitems" class="hidden">
 			<ul>';
 
@@ -2166,22 +2128,7 @@
             $table->addCell($filemanager);
             $table->endRow();
             
-            $nav .= $objFeatureBox->showContent($table->show());
-            
-            //$nav .= $viewCmsLink.'<br /><br />';
-            /*
-            $nav .= $objFeatureBox->showContent('Navigation Links',
-                                        '<br />
-                                        <div id="cmsleftcontrolpanel">
-                                        '.$cmsAdminLink.'
-                                        '.$createRss.'
-                                        '.$menuMangement.'
-                                        '.$filemanager.'
-                                        </div>
-                                        ');
-            */
-            $nav .= '<br />';
-			$nav .= "</div>";
+            $nav .= $objFeatureBox->showContent(NULL, $table->show())."</div>";
 
             return $nav;
         }

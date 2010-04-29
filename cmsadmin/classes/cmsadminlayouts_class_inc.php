@@ -38,7 +38,7 @@ class cmsadminlayouts extends object
             $this->_objMenuStyles =$this->newObject('dbmenustyles', 'cmsadmin');
             $this->_objHtmlBlock =$this->newObject('dbhtmlblock', 'cmsadmin');
             $this->_objCmsUtils =$this->newObject('cmsutils', 'cmsadmin');
-            $this->objModule=&$this->getObject('modules','modulecatalogue');
+            $this->objModule=$this->getObject('modules','modulecatalogue');
             
             $this->objUser = $this->newObject('user', 'security');
             $this->objDate = $this->getObject('dateandtime', 'utilities');

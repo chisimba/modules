@@ -241,7 +241,7 @@
                 $this->_objJQuery->loadFgMenuPlugin();
 
 				//jQuery 1.2.6 SuperFish Menu
-				$this->_objJQuery->loadSuperFishMenuPlugin();
+/*				$this->_objJQuery->loadSuperFishMenuPlugin();
 
 				ob_start();
 ?>
@@ -299,7 +299,7 @@ ob_end_clean();
 $this->appendArrayVar('headerParams', $script);
 
 $this->_objJQuery->loadSimpleTreePlugin();
-
+*/
             } catch (customException $e){
                 throw customException($e->getMessage());
                 exit();
