@@ -38,6 +38,8 @@ class dbnewsstories extends dbtable
     public function addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate = NULL, $sticky='N')
     {
 
+     
+
         if ($publishDate == NULL) {
             $publishDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
         }
@@ -325,7 +327,7 @@ WHERE tbl_news_stories.id = \''.$id.'\'';
 
                 $storyLink->link = $story['storytitle'];
 
-                $output .= '<h3>'.$storyLink->show().'</h3>';
+                $output .= '<div id="newsstorytext-header"><h3>'.$storyLink->show().'</h3></div>';
 
                 if ($story['location'] != '') {
                     $locationLink = new link ($this->uri(array('action'=>'viewbylocation', 'id'=>$story['storylocation'])));
