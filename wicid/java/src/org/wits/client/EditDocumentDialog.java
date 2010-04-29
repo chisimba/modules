@@ -339,7 +339,7 @@ public class EditDocumentDialog {
         editDocumentDialog.setBodyBorder(false);
         editDocumentDialog.setHeading("Document Details");
         editDocumentDialog.setWidth(500);
-        editDocumentDialog.setHeight(500);
+        editDocumentDialog.setHeight(520);
         editDocumentDialog.setHideOnButtonClick(true);
 
         editDocumentDialog.setButtons(Dialog.CLOSE);
