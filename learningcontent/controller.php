@@ -195,6 +195,8 @@ class learningcontent extends controller {
                 $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewpage', 'learningcontent');
                 return $this->viewPage($this->getParam('id'),Null, $trackPage);
             case 'viewpageimage':
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
                 return $this->viewPage($this->getParam('id'),$this->getParam('imageId'));
             case 'viewpicorformula':
                 $this->setPageTemplate(NULL);
