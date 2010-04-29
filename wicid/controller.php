@@ -503,7 +503,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return false; //true;
+        return true;
     }
 
     function __registeracademicpresenters() {
