@@ -69,7 +69,7 @@ class section_summaries extends object
 
                 $storyLink->link = $story['storytitle'];
 
-                $output .= '<h3>'.$objDateTime->formatDateOnly($story['storydate']).' - '.$storyLink->show().'</h3>';
+                $output .= '<div id="newsstorytext-header"><h3>'.$objDateTime->formatDateOnly($story['storydate']).' - '.$storyLink->show().'</h3></div>';
 
                 if ($story['location'] != '') {
                     $locationLink = new link ($this->uri(array('action'=>'viewbylocation', 'id'=>$story['storylocation'])));
@@ -78,10 +78,10 @@ class section_summaries extends object
                     $output .= '[ '.$story['location'].' ] ';
                 }
 
-                $output .= $objTrimString->strTrim(strip_tags($story['storytext']), 150, TRUE);
+                $output .='<div id="newsstorytext">'. $objTrimString->strTrim(strip_tags($story['storytext']), 150, TRUE).'</div>';
 
                 $storyLink->link = 'Read Story';
-                $output .= ' ('.$storyLink->show().')';
+                $output .= '<div id="newsstorytext-footer"> ('.$storyLink->show().')</div>';
 
                 $output .= '</div><br clear="both" />';
             }
