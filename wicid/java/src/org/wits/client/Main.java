@@ -4,6 +4,7 @@
  */
 package org.wits.client;
 
+import org.wits.client.ads.NewCourseProposalDialog;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.Style.SortDir;
