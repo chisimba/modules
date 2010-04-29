@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Element;
 import java.util.List;
+import org.wits.client.ads.NewCourseProposalDialog;
 
 public class TopicListingFrame extends LayoutContainer {
 

@@ -29,10 +29,9 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import org.wits.client.NewCourseProposalDialog;
+
 import com.extjs.gxt.ui.client.data.*;
 import com.google.gwt.core.client.GWT;
-import org.wits.client.Base64;
 import org.wits.client.Constants;
 import org.wits.client.util.WicidXML;
 
