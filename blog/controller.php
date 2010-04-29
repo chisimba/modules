@@ -348,6 +348,7 @@ class blog extends controller {
             //we don't require login - preloin action
                 $this->requiresLogin(FALSE);
                 $blog_action = $this->objSysConfig->getValue('blog_action', 'blog');
+                $blog_postcount = $this->objSysConfig->getValue('blog_postcount', 'blog');
                 //var_dump($blog_action); die();
                 /*if (!empty($blog_action) && $blog_action != 'default') {
                 return $this->nextAction($blog_action);
@@ -362,11 +363,16 @@ class blog extends controller {
                     //get the link categories
                     $linkcats = $this->objDbBlog->getAllLinkCats($suuserid);
                     //get all the posts by this user
-                    $postcount = $this->objDbBlog->getMonthPostCount(time() , $suuserid);
-                    if ($postcount <= 2 || $postcount >= 20) {
-                        $posts = $this->objDbBlog->getLastPosts(10, $suuserid);
-                    } else {
-                        $posts = $this->objDbBlog->getPostsMonthly(time() , $suuserid);
+                    if($blog_postcount != NULL && $blog_postcount != 'NA') {
+                        $posts = $this->objDbBlog->getLastPosts($blog_postcount, $suuserid);
+                    }
+                    else {
+                        $postcount = $this->objDbBlog->getMonthPostCount(time() , $suuserid);
+                        if ($postcount <= 2 || $postcount >= 20) {
+                            $posts = $this->objDbBlog->getLastPosts(10, $suuserid);
+                        } else {
+                            $posts = $this->objDbBlog->getPostsMonthly(time() , $suuserid);
+                        }
                     }
                     //get the sticky posts too
                     $latestpost[0] = $this->objDbBlog->getLatestPost($suuserid);
@@ -978,11 +984,17 @@ class blog extends controller {
                     $posts = $this->objDbBlog->getAllPosts($userid, $catid);
                 } else {
                     //otherwise grab all the Published posts
-                    $posts = $this->objDbBlog->getLastPosts(10, $userid); // getAllPosts($userid, $catid); // getPostsMonthly(time() , $userid);
-                    if (count($posts) < 2) {
-                        $posts = $this->objDbBlog->getLastPosts(10, $userid);
+                    $blog_postcount = $this->objSysConfig->getValue('blog_postcount', 'blog');
+                    if($blog_postcount != NULL && $blog_postcount != 'NA') {
+                        $posts = $this->objDbBlog->getLastPosts($blog_postcount, $userid);
                     }
-                    //$posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
+                    else {
+                        $posts = $this->objDbBlog->getLastPosts(10, $userid); // getAllPosts($userid, $catid); // getPostsMonthly(time() , $userid);
+                        if (count($posts) < 2) {
+                            $posts = $this->objDbBlog->getLastPosts(10, $userid);
+                        }
+                        //$posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
+                    }
 
                 }
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
