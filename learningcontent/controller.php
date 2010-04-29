@@ -183,12 +183,14 @@ class learningcontent extends controller {
             case 'updatepage':
                 return $this->updatePage();
             case 'viewpage':
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
                 $trackPage = array();
                 $trackPage['contextItemId'] = $this->getParam('id');
                 $trackPage['prevpageid'] = $this->getParam('prevpageid');
                 $trackPage['contextCode'] = $this->contextCode;
                 $trackPage['module'] = $this->getParam('module');
-                $trackPage['datecreated'] = date('Y-m-d H:i:s');//$this->now();
+                $trackPage['datecreated'] = date('Y-m-d H:i:s');
                 $trackPage['pageorchapter'] = 'page';
                 $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewpage', 'learningcontent');
                 return $this->viewPage($this->getParam('id'),Null, $trackPage);
