@@ -15,7 +15,6 @@ Options line for comments, encoding and character set
 */
 $options = array (
  'comment' => 'table for hosportal_original_messages',
- 'collate' => 'utfs_general_ci',
  'character_set' => 'utfs');
 
 
