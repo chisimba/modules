@@ -54,7 +54,9 @@ public class SubsidyRequirements {
     private OutcomesAndAssessmentOne oldOutcomesAndAssessmentOne;
     //private SubsidyRequirements oldSubsidyRequirements;
     private String subsidyRequirementsData;
-    private String qC2a1, qC3, qC4a1;
+    private String qC1, qC2a, qC2b, qC3, qC4a, qC4b1, qC4b2;
+    private RadioGroup questionC2a = new RadioGroup();
+    private RadioGroup questionC4a = new RadioGroup();
 
     public SubsidyRequirements(RulesAndSyllabusTwo rulesAndSyllabusTwo) {
         this.rulesAndSyllabusTwo = rulesAndSyllabusTwo;
@@ -93,7 +95,6 @@ public class SubsidyRequirements {
         radioC2a1.enableEvents(true);
 
 
-        RadioGroup questionC2a = new RadioGroup();
         questionC2a.setFieldLabel("C.2.a. The course/unit is taught");
         questionC2a.add(radioC2a1);
         questionC2a.add(radioC2a2);
@@ -129,9 +130,8 @@ public class SubsidyRequirements {
         radioC4a1.setBoxLabel("Yes");
         radioC4a2.setBoxLabel("No");
         radioC4a1.setValue(true);
-        questionC4b.disable();
-
-        RadioGroup questionC4a = new RadioGroup();
+        
+        
         questionC4a.setFieldLabel("C.4.a. Is any other School/Entity involved in teaching this unit?");
         questionC4a.add(radioC4a1);
         questionC4a.add(radioC4a2);
@@ -182,19 +182,17 @@ public class SubsidyRequirements {
                     MessageBox.info("Missing answer", "Provide an answer to C.2.b", null);
                     return;
                 }
-                qC2a1 = radioC2a1.getBoxLabel().toString();
-
+                
                 if (questionC3.getValue() == null) {
                     MessageBox.info("Missing answer", "Provide an answer to C.3.", null);
                     return;
                 }
-                qC3 = questionC3.getValue().toString();
-
+                
                 if ((radioC4a1.getValue() == true) && (questionC4b.getValue() == null)) {
                     MessageBox.info("Missing answer", "Provide an answer to C.4.b.", null);
                     return;
                 }
-                qC4a1 = radioC4a1.getBoxLabel().toString();
+                
 
                 if (questionC3.getRawValue().length() != 6) {
                     MessageBox.info("Error", "The CESM category must be a 6 digit number", null);
@@ -271,16 +269,10 @@ public class SubsidyRequirements {
                         return;
                     }*/
                 }
-                qC4a1 = radioC4a1.getBoxLabel().toString();
+                
 
-                WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("qC2a1", qC2a1);
-                wicidXML.addElement("qC3", qC3);
-                wicidXML.addElement("qC4a1", qC4a1);
-                subsidyRequirementsData = wicidXML.getXml();
-
-                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                //subsidyRequirementsData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                storeDocumentInfo();
+                
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -309,6 +301,7 @@ public class SubsidyRequirements {
                 rulesAndSyllabusTwo.setOldRulesAndSyllabusTwo(SubsidyRequirements.this);
                 rulesAndSyllabusTwo.show();
                 subsidyRequirementsDialog.hide();
+                storeDocumentInfo();
             }
         });
 
@@ -318,7 +311,7 @@ public class SubsidyRequirements {
             public void componentSelected(ButtonEvent ce) {
                 ForwardTo forwardToDialog = new ForwardTo();
                 forwardToDialog.show();
-
+                storeDocumentInfo();
             }
         });
 
@@ -336,8 +329,39 @@ public class SubsidyRequirements {
         subsidyRequirementsDialog.setButtons(Dialog.CLOSE);
         subsidyRequirementsDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
+        subsidyRequirementsDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
         subsidyRequirementsDialog.add(mainForm);
 
+
+    }
+
+    public void storeDocumentInfo() {
+
+        qC1 = questionC1.getValue();
+        qC2a = questionC2a.getValue().getFieldLabel();
+        qC2b = questionC2b.getValue();
+        qC3 = questionC3.getValue().toString();
+        qC4a = questionC4a.getValue().getFieldLabel();
+        qC4b1 = q4b1.getValue();
+        qC4b2 = q4b2.getValue();
+
+        WicidXML wicidxml = new WicidXML("subsidyRequirements");
+        wicidxml.addElement("qC2a", qC2a);
+        wicidxml.addElement("qC2b", qC2b);
+        wicidxml.addElement("qC3", qC3);
+        wicidxml.addElement("qC4a", qC4a);
+        wicidxml.addElement("qC4b1", qC4b1);
+        wicidxml.addElement("qC4b2", qC4b2);
+        subsidyRequirementsData = wicidxml.getXml();
+    }
+
+    public void setDocumentInfo(){
 
     }
 

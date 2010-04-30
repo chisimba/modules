@@ -160,71 +160,64 @@ public class Resources {
                     MessageBox.info("Missing answer", "Please provide an answer for E1a", null);
                     return;
                 }
-                title = E1a.getValue().toString();
-
+                
                 
                 if (E2a.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E2a", null);
                     return;
                 }
-                qE2a = E2a.getValue();
-
+                
                 
                 if (E2b.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E2b", null);
                     return;
                 }
-                qE2b = E2b.getValue();
-
+                
                 
                 if (E2c.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E2c", null);
                     return;
                 }
-                qE2c = E2c.getValue();
-
+                
                 
                 if (E3a.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E3a", null);
                     return;
                 }
-                qE3a = E3a.getValue();
-
+                
                 
                 if (E3b.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E3b", null);
                     return;
                 }
-                qE3b = E3b.getValue();
+
 
                 
                 if (E3c.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E3c", null);
                     return;
                 }
-                qE3c = E3c.getValue();
+
+
 
                 
                 if (E4.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E4", null);
                     return;
                 }
-                qE4 = E4.getValue();
-
-                
+                                
                 if (E5a.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E5a", null);
                     return;
                 }
-                qE5a = E5a.getValue();
 
                 
                 if (E5b.getValue() == null) {
                     MessageBox.info("Missing answer", "Please provide an answer for E5b", null);
                     return;
                 }
-                qE5b = E5b.getValue();
-
+                
+                title = E1a.getValue().toString();
                 if (title.trim().equals("")) {
                     MessageBox.info("Missing answer", "Please provide an answer for E1a", null);
                     return;
@@ -278,29 +271,39 @@ public class Resources {
             }
         });
 
-        getDocumentInfo();
+        setDocumentInfo();
         newResourcesDialog.add(mainForm);
     }
 
     public void storeDocumentInfo() {
-        
-        WicidXML wicidxml = new WicidXML("Resources");
-        wicidxml.addElement("qE1a", E1a.getValue());
-        wicidxml.addElement("qE1b", E1b.getValue());
-        wicidxml.addElement("qE2a", E2a.getValue());
-        wicidxml.addElement("qE2b", E2b.getValue());
-        wicidxml.addElement("qE2c", E2c.getValue());
-        wicidxml.addElement("qE3a", E3a.getValue());
-        wicidxml.addElement("qE3b", E3b.getValue());
-        wicidxml.addElement("qE3c", E3c.getValue());
-        wicidxml.addElement("qE4", E4.getValue());
-        wicidxml.addElement("qE5a", E5a.getValue());
-        wicidxml.addElement("qE5b", E5b.getValue());
+
+        qE2a = E2a.getValue();
+        qE2b = E2b.getValue();
+        qE2c = E2c.getValue();
+        qE3a = E3a.getValue();
+        qE3b = E3b.getValue();
+        qE3c = E3c.getValue();
+        qE4 = E4.getValue();
+        qE5a = E5a.getValue();
+        qE5b = E5b.getValue();
+
+        WicidXML wicidxml = new WicidXML("resources");
+        wicidxml.addElement("qE1a", title);
+        wicidxml.addElement("qE1b", qE1b);
+        wicidxml.addElement("qE2a", qE2a);
+        wicidxml.addElement("qE2b", qE2b);
+        wicidxml.addElement("qE2c", qE2c);
+        wicidxml.addElement("qE3a", qE3a);
+        wicidxml.addElement("qE3b", qE3b);
+        wicidxml.addElement("qE3c", qE3c);
+        wicidxml.addElement("qE4", qE4);
+        wicidxml.addElement("qE5a", qE5a);
+        wicidxml.addElement("qE5b", qE5b);
         resourcesData = wicidxml.getXml();
-        
+
     }
 
-    public void getDocumentInfo(){
+    public void setDocumentInfo(){
 
     }
 

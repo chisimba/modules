@@ -131,47 +131,40 @@ public class CollaborationAndContracts {
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                if(F1a.getValue() == null){
+                if (F1a.getValue() == null) {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
-                qF1a = F1a.getValue().getBoxLabel().toString();
 
-                 if(F1a.getValue() == null){
+                if (F1a.getValue() == null) {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
-                qF1a = F1a.getValue().getBoxLabel().toString();
 
-                if(F2a.getValue() == null){
+                if (F2a.getValue() == null) {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
-                qF2a = F2a.getValue().getBoxLabel().toString();
 
-                 if(F2b.getValue() == null){
+                if (F2b.getValue() == null) {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
-                qF2b = F2b.getValue().toString();
 
-                 if(F3a.getValue() == null){
+                if (F3a.getValue() == null) {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
-                qF3a = F3a.getValue().toString();
 
-                 if(F3b.getValue() == null){
+                if (F3b.getValue() == null) {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
-                qF3b = F3b.getValue().toString();
 
-                 if(F4.getValue() == null){
+                if (F4.getValue() == null) {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
-               
 
                 storeDocumentInfo();
 
@@ -224,12 +217,17 @@ public class CollaborationAndContracts {
             }
         });
 
-        getDocumentInfo();
+        setDocumentInfo();
         newCollaborationAndContractsDialog.add(mainForm);
     }
 
     public void storeDocumentInfo() {
-          
+        qF1a = F1a.getValue().getBoxLabel().toString();
+        qF2a = F2a.getValue().getBoxLabel().toString();
+        qF2b = F2b.getValue().toString();
+        qF3a = F3a.getValue().toString();
+        qF3b = F3b.getValue().toString();
+
         WicidXML wicidxml = new WicidXML("CollaborationAndContracts");
         wicidxml.addElement("F1a", F1a.getValue().toString());
         wicidxml.addElement("F1b", F1b.getValue());
@@ -241,7 +239,7 @@ public class CollaborationAndContracts {
         collaborationAndContractsData = wicidxml.getXml();
     }
 
-    public void getDocumentInfo(){
+    public void setDocumentInfo(){
 
     }
 

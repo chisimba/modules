@@ -18,6 +18,7 @@ import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
 import com.extjs.gxt.ui.client.widget.form.FormPanel.Method;
+import com.extjs.gxt.ui.client.widget.form.NumberField;
 import com.extjs.gxt.ui.client.widget.form.Radio;
 import com.extjs.gxt.ui.client.widget.form.RadioGroup;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
@@ -45,23 +46,23 @@ import org.wits.client.util.WicidXML;
 public class NewCourseProposalDialog {
 
     private Dialog newDocumentDialog = new Dialog();
-    private Dialog topicListingDialog = new Dialog();
+    private Dialog facultyListingDialog = new Dialog();
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
     private DateTimeFormat fmt = DateTimeFormat.getFormat("y/M/d");
     private final TextField<String> titleField = new TextField<String>();
     private final TextField<String> deptField = new TextField<String>();
-    private final TextField<String> telField = new TextField<String>();
+    private final NumberField telField = new NumberField();
     private final TextField<String> numberField = new TextField<String>();
     private Button saveButton = new Button("Next");
-    private Button browseTopicsButton = new Button("Browse Faculties");
-    private FormPanel uploadpanel = new FormPanel();
-    private Button uploadButton = new Button("Upload Proposal");
-    private TextArea topicField = new TextArea();
-    private TopicListingFrame topicListingFrame;
+    private Button browseFacultiesButton = new Button("Browse Faculties");
+    private TextArea facultyField = new TextArea();
+    private String newCourseProposalDialogData,dept,title,telephone;
+    private TopicListingFrame facultyListingFrame;
     private ModelData selectedFolder;
     private OverView oldOverView;
     private boolean status = false;
+    private Date date = new Date();
 
     public NewCourseProposalDialog() {
 
@@ -111,51 +112,54 @@ public class NewCourseProposalDialog {
         mainForm.add(deptField, formData);
 
         telField.setFieldLabel("Tel. Number");
-
         telField.setAllowBlank(false);
         telField.setName("telfield");
+        telField.setAllowDecimals(false);
+        telField.setAllowNegative(false);
         mainForm.add(telField, formData);
 
         titleField.setFieldLabel("Document title");
         titleField.setAllowBlank(false);
-
         titleField.setName("titlefield");
         mainForm.add(titleField, formData);
+        
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
 
         BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 150);
         eastData.setSplit(true);
         eastData.setMargins(new Margins(0, 0, 0, 5));
-        topicField.setName("topic");
-        topicField.setFieldLabel("Faculty");
+        facultyField.setName("topic");
+        facultyField.setFieldLabel("Faculty");
+        facultyField.setReadOnly(true);
+
         FormPanel panel = new FormPanel();
         panel.setSize(400, 70);
         panel.setHeading("Faculty");
         panel.setLayout(new BorderLayout());
-        panel.add(topicField, centerData);
+        panel.add(facultyField, centerData);
 
-        browseTopicsButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+        browseFacultiesButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                if (topicListingFrame == null) {
-                    topicListingFrame = new TopicListingFrame(NewCourseProposalDialog.this);
-                    topicListingDialog.setBodyBorder(false);
-                    topicListingDialog.setHeading("Faculty Listing");
-                    topicListingDialog.setWidth(700);
-                    topicListingDialog.setHeight(350);
-                    topicListingDialog.setHideOnButtonClick(true);
-                    topicListingDialog.setButtons(Dialog.OK);
-                    topicListingDialog.setButtonAlign(HorizontalAlignment.CENTER);
+                if (facultyListingFrame == null) {
+                    facultyListingFrame = new TopicListingFrame(NewCourseProposalDialog.this);
+                    facultyListingDialog.setBodyBorder(false);
+                    facultyListingDialog.setHeading("Faculty Listing");
+                    facultyListingDialog.setWidth(700);
+                    facultyListingDialog.setHeight(350);
+                    facultyListingDialog.setHideOnButtonClick(true);
+                    facultyListingDialog.setButtons(Dialog.OK);
+                    facultyListingDialog.setButtonAlign(HorizontalAlignment.CENTER);
 
-                    topicListingDialog.add(topicListingFrame);
+                    facultyListingDialog.add(facultyListingFrame);
                 }
-                topicListingDialog.show();
+                facultyListingDialog.show();
             }
         });
 
-        panel.add(browseTopicsButton, eastData);
+        panel.add(browseFacultiesButton, eastData);
         mainForm.add(panel, formData);
 
         Radio publicOpt = new Radio();
@@ -175,42 +179,15 @@ public class NewCourseProposalDialog {
         radioGroup.add(draftOpt);
 
 
-        uploadpanel.setHeading("File Upload");
-        uploadpanel.setFrame(true);
-        uploadpanel.setAction(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=doupload&docname=");
-        uploadpanel.setEncoding(Encoding.MULTIPART);
-        uploadpanel.setMethod(Method.POST);
-        uploadpanel.setButtonAlign(HorizontalAlignment.CENTER);
-        uploadpanel.setWidth(350);
-
-
-        uploadpanel.add(uploadButton);
-        // mainForm.add(uploadpanel, formData);
-        uploadButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                Window w = new Window();
-                w.setHeading("Upload file");
-                w.setModal(true);
-                w.setSize(800, 300);
-                w.setMaximizable(true);
-                w.setToolTip("Upload file");
-                w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=uploadfile&docname=");
-                w.show();
-
-            }
-        });
-        // mainForm.add(uploadButton, formData);
-
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                Date date = new Date();
+                
+                dept = deptField.getValue();// deptField.getValue().getId();
+                title = titleField.getValue();
+                telephone = telField.getValue().toString();
                 try {
                     if (dateField.getDatePicker() != null) {
                         date = dateField.getDatePicker().getValue();
@@ -218,7 +195,7 @@ public class NewCourseProposalDialog {
                 } catch (Exception ex) {
                 }
 
-                String dept = deptField.getValue();// deptField.getValue().getId();
+                
                 if (dept == null) {
                     MessageBox.info("Missing department", "Provide originating department", null);
                     return;
@@ -227,7 +204,7 @@ public class NewCourseProposalDialog {
                     MessageBox.info("Missing department", "Provide department", null);
                     return;
                 }
-                String title = titleField.getValue().replaceAll(" ", "--");
+                
                 if (title == null) {
                     MessageBox.info("Missing title", "Provide title", null);
                     return;
@@ -237,22 +214,32 @@ public class NewCourseProposalDialog {
                     return;
                 }
 
-                String telephone = telField.getValue();
+                
                 if (telephone == null) {
                     MessageBox.info("Missing telephone", "Provide telephone", null);
                     return;
                 }
+
+                if (telephone.length()>10){
+                    MessageBox.info("Wrong telephone number", "The telephone number you provided is too long", null);
+                    return;
+                }
+
+                if (telephone.length()<5){
+                    MessageBox.info("Wrong telephone number", "The telephone number you provided is too short", null);
+                    return;
+                }
+                
                 if (selectedFolder == null) {
                     MessageBox.info("Missing faculty", "Please select faculty", null);
                     return;
                 }
-                String topic = (String) selectedFolder.get("id");
+                storeDocumentInfo();
+                
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=createproposal&date=" + fmt.format(date)
-                        + "&department=" + dept + "&telephone=" + telephone
-                        + "&topic=" + topic + "&title=" + title + "&mode=" + Constants.main.getMode();
-                //   updateDocument(url);
+                        + "?module=wicid&action=saveFormData&formname=" + "contactdetails" + "&formdata=" + newCourseProposalDialogData + "&docid=" + Constants.docid;
+
                 createDocument(url);
 
             }
@@ -288,19 +275,20 @@ public class NewCourseProposalDialog {
         newDocumentDialog.show();
     }
 
-    public void storeDocumentInfo() {
-        String originatingDepartment = deptField.getValue();
-        String telNumber = telField.getValue();
-        String docTitle = titleField.getValue();
-        String faculty = topicField.getValue();
-
+    public void storeDocumentInfo() {  
+        String faculty = facultyField.getValue();
+       
         WicidXML wicidxml = new WicidXML("data");
-        wicidxml.addElement("originatingdepartment", originatingDepartment);
-        wicidxml.addElement("telnumber", telNumber);
-        wicidxml.addElement("doctitle", docTitle);
+        wicidxml.addElement("dept", dept);
+        wicidxml.addElement("telnumber", telephone);
+        wicidxml.addElement("title", title);
         wicidxml.addElement("faculty", faculty);
-        String data = wicidxml.getXml();
+        newCourseProposalDialogData = wicidxml.getXml();
         
+    }
+    
+    public void setDocumentInfo(){
+
     }
 
     public void setOldOverView(OverView oldOverView) {
@@ -379,7 +367,7 @@ public class NewCourseProposalDialog {
 
     public void setSelectedFolder(ModelData selectedFolder) {
         this.selectedFolder = selectedFolder;
-        topicField.setValue((String) this.selectedFolder.get("id"));
-        topicField.setToolTip((String) this.selectedFolder.get("id"));
+        facultyField.setValue((String) this.selectedFolder.get("id"));
+        facultyField.setToolTip((String) this.selectedFolder.get("id"));
     }
 }

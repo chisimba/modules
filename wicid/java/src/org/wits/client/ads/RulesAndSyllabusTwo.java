@@ -363,7 +363,7 @@ public class RulesAndSyllabusTwo {
     }
 
     public void storeDocumentInfo() {
-        WicidXML wicidxml = new WicidXML("rulesandsyllabus2");
+        WicidXML wicidxml = new WicidXML("rulesAndSyllabusTwo");
         wicidxml.addElement("qb5a", qB5a);
         wicidxml.addElement("qb5b", qB5b);
         wicidxml.addElement("qb6a", qB6a);
@@ -372,7 +372,7 @@ public class RulesAndSyllabusTwo {
         rulesAndSyllabusTwoData = wicidxml.getXml();
     }
 
-    public void getDocumentInfo(){
+    public void setDocumentInfo(){
 
     }
 

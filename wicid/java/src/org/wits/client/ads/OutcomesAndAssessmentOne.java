@@ -49,7 +49,10 @@ public class OutcomesAndAssessmentOne {
     private TextArea questionD3 = new TextArea();
     //private OutcomesAndAssessmentTwo outcomesAndAssessmentTwo;
     private OutcomesAndAssessmentTwo oldOutcomesAndAssessmentTwo;
-    private String outcomesAndAssessmentOneData;private String qD1a, qD1b, q2, qD3;
+    private String outcomesAndAssessmentOneData, qD1a, qD1b, qD2a,qD2b,qD2c, qD3;
+    private TextArea D2a = new TextArea();
+    private TextArea D2b = new TextArea();
+    private TextArea D2c = new TextArea();
 
 
     public OutcomesAndAssessmentOne(SubsidyRequirements subsidyRequirements) {
@@ -111,16 +114,13 @@ public class OutcomesAndAssessmentOne {
         questionD2.setWidget(0, 1, new LabelField("Assessment Criteria for the Learning Outcomes"));
         questionD2.setWidget(0, 2, new LabelField("Assessment Methods to be Used"));
 
-        TextArea qD21 = new TextArea();
-        qD21.setWidth(215);
-        TextArea qD22 = new TextArea();
-        qD22.setWidth(215);
-        TextArea qD23 = new TextArea();
-        qD23.setWidth(215);
+        D2a.setWidth(215);
+        D2b.setWidth(215);
+        D2c.setWidth(215);
 
-        questionD2.setWidget(1, 0, qD21);
-        questionD2.setWidget(1, 1, qD22);
-        questionD2.setWidget(1, 2, qD23);
+        questionD2.setWidget(1, 0, D2a);
+        questionD2.setWidget(1, 1, D2b);
+        questionD2.setWidget(1, 2, D2c);
         mainForm.add(questionD2, formData);
         mainForm.add(new Label(), formData);
 
@@ -146,17 +146,16 @@ public class OutcomesAndAssessmentOne {
                     MessageBox.info("Missing answer", "Provide an answer to question D.1.a and question D.1.b", null);
                     return;
                 }
-                qD1a = questionD1a.getValue().toString();
+
                 if (questionD1a.getValue() == null) {
                     MessageBox.info("Missing answer", "Provide an answer to question D.1.a", null);
                     return;
                 }
+
                 if (questionD1b.getValue() == null) {
                     MessageBox.info("Missing answer", "Provide an answer to question D.1.b", null);
                     return;
                 }
-                
-                qD1b = questionD1b.getRawValue().toString();
 
                 /*int i = 0;
                 while (i < 3) {
@@ -175,7 +174,6 @@ public class OutcomesAndAssessmentOne {
                         MessageBox.info("Missing Text", "please provide an answer for question D.2", null);
                         return;
                     }
-                    q2 = questionD2.getText(x, i);//getText(x, i);//.toString();
 
                 }
                 //getRawValue().toString();
@@ -184,7 +182,7 @@ public class OutcomesAndAssessmentOne {
                     MessageBox.info("Missing answer", "Provide an answer to question D3", null);
                     return;
                 }
-                qD3 = questionD3.getValue().toString();
+                
 
                 storeDocumentInfo();
                 
@@ -245,15 +243,25 @@ public class OutcomesAndAssessmentOne {
     }
 
     public void storeDocumentInfo() {
+        //outcomesAndAssessmentOneData, qD1a, qD1b, q2, qD3
+        qD1a = questionD1a.getValue().toString();
+        qD1b = questionD1b.getValue().toString();
+        qD2a = D2a.getValue();
+        qD2b = D2b.getValue();
+        qD2c = D2c.getValue();
+        qD3 = questionD3.getValue().toString();
+
         WicidXML wicidxml = new WicidXML("outcomesandassessment1");
         wicidxml.addElement("qD1a", qD1a);
         wicidxml.addElement("aD1b", qD1b);
-        wicidxml.addElement("q2", q2);
+        wicidxml.addElement("q2a", qD2a);
+        wicidxml.addElement("q2b", qD2b);
+        wicidxml.addElement("q2c", qD2c);
         wicidxml.addElement("qD3", qD3);
         outcomesAndAssessmentOneData = wicidxml.getXml();
     }
 
-    public void getDocumentInfo(){
+    public void setDocumentInfo(){
 
     }
 

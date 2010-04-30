@@ -183,12 +183,12 @@ public class Review {
             }
         });
 
-        getDocumentInfo();
+        setDocumentInfo();
         newReviewDialog.add(mainForm);
     }
 
     public void storeDocumentInfo() {
-        WicidXML wicidxml = new WicidXML("Review");
+        WicidXML wicidxml = new WicidXML("review");
         wicidxml.addElement("G1a", G1a.getValue());
         wicidxml.addElement("G1b", G1b.getValue());
         wicidxml.addElement("G2a", G2a.getValue());
@@ -200,7 +200,7 @@ public class Review {
         reviewData = wicidxml.getXml();
     }
 
-    public void getDocumentInfo(){
+    public void setDocumentInfo(){
 
     }
 

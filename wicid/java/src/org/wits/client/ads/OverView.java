@@ -260,7 +260,7 @@ public class OverView {
             public void componentSelected(ButtonEvent ce) {
                 ForwardTo forwardToDialog = new ForwardTo();
                 forwardToDialog.show();
-                
+                storeDocumentInfo();
             }
         });
 
@@ -305,7 +305,7 @@ public class OverView {
         overViewData = wicidxml.getXml();
     }
 
-    public void getDocumentInfo(){
+    public void setDocumentInfo(){
 
     }
 

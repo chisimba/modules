@@ -23,6 +23,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import org.wits.client.Constants;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -50,6 +51,7 @@ public class OutcomesAndAssessmentThree {
     private NumberField examsPerYr = new NumberField();
     private NumberField examsLength = new NumberField();
     private NumberField hrsExamPrep = new NumberField();
+    private String contactTime, studyHours, examTime, notionalStudyHours, creditsSAQA;
     private Resources oldResources;
     private OutcomesAndAssessmentTwo oldOutComesAndAssessmentTwo;
     private OutcomesAndAssessmentThree oldOutcomesAndAssessmentThree;
@@ -147,20 +149,20 @@ public class OutcomesAndAssessmentThree {
             @Override
             public void onClick(ClickEvent event) {
                 int conTime = (hrsTeaching.getValue().intValue() + hrsTuts.getValue().intValue() + hrsLabs.getValue().intValue() + hrsOther.getValue().intValue()) * numWeeks.getValue().intValue();
-                String contactTime = Integer.toString(conTime);
+                contactTime = Integer.toString(conTime);
 
                 int stdyHours = conTime + (conTime * hrsStudy.getValue().intValue());
-                String studyHours = Integer.toString(stdyHours);
+                studyHours = Integer.toString(stdyHours);
 
                 int exTime = examsLength.getValue().intValue() * examsPerYr.getValue().intValue();
-                String examTime = Integer.toString(exTime);
+                examTime = Integer.toString(exTime);
 
                 int notStudyHrs = stdyHours + exTime + hrsExamPrep.getValue().intValue();
-                String notionalStudyHours = Integer.toString(notStudyHrs);
+                notionalStudyHours = Integer.toString(notStudyHrs);
 
 
                 creSAQA = notStudyHrs / 10;
-                String creditsSAQA = Double.toString(creSAQA);
+                creditsSAQA = Double.toString(creSAQA);
 
 
                 questionD5.setText(5, 1, contactTime);
@@ -189,10 +191,7 @@ public class OutcomesAndAssessmentThree {
                     return;
                 }
 
-
-
-                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                //outcomesAndAssessmentThreeData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                storeDocumentInfo();
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -219,6 +218,7 @@ public class OutcomesAndAssessmentThree {
                 outcomesAndAssessmentTwo.setOldOutcomesAndAssessmentTwo(OutcomesAndAssessmentThree.this);
                 outcomesAndAssessmentTwo.show();
                 outcomesAndAssessmentThreeDialog.hide();
+                storeDocumentInfo();
             }
         });
 
@@ -228,7 +228,7 @@ public class OutcomesAndAssessmentThree {
             public void componentSelected(ButtonEvent ce) {
                 ForwardTo forwardToDialog = new ForwardTo();
                 forwardToDialog.show();
-
+                storeDocumentInfo();
             }
         });
 
@@ -247,9 +247,41 @@ public class OutcomesAndAssessmentThree {
         outcomesAndAssessmentThreeDialog.setButtonAlign(HorizontalAlignment.LEFT);
         outcomesAndAssessmentThreeDialog.setHideOnButtonClick(true);
 
+        outcomesAndAssessmentThreeDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
         outcomesAndAssessmentThreeDialog.add(mainForm);
 
         //setDepartment();
+    }
+
+    public void storeDocumentInfo(){
+        WicidXML wicidxml = new WicidXML("outcomesAndAssessmentThree");
+
+        wicidxml.addElement("numWeeks", numWeeks.getValue().toString());
+        wicidxml.addElement("hrsTeaching", hrsTeaching.getValue().toString());
+        wicidxml.addElement("hrsTuts", hrsTuts.getValue().toString());
+        wicidxml.addElement("hrsLabs", hrsLabs.getValue().toString());
+        wicidxml.addElement("hrsOther", hrsOther.getValue().toString());
+        wicidxml.addElement("contactTime", contactTime);
+        wicidxml.addElement("hrsStudy", hrsStudy.getValue().toString());
+        wicidxml.addElement("studyHours", studyHours);
+        wicidxml.addElement("examsPerYr", examsPerYr.getValue().toString());
+        wicidxml.addElement("examsLength", examsLength.getValue().toString());
+        wicidxml.addElement("examTime", examTime);
+        wicidxml.addElement("hrsExamPrep", hrsExamPrep.getValue().toString());
+        wicidxml.addElement("notionalStudyHours", notionalStudyHours);
+        wicidxml.addElement("creditsSAQA", creditsSAQA);
+
+        outcomesAndAssessmentThreeData = wicidxml.getXml();
+    }
+
+    public void setDocumentInfo(){
+
     }
 
     public void show() {

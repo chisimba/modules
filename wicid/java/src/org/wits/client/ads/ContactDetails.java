@@ -104,35 +104,30 @@ public class ContactDetails {
                     return;
 
                 }
-                qH1 = H1.getValue().toString().replaceAll(" ", "--");
-
+                
                 if (qH2a == null) {
                     MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
                     return;
 
                 }
-                qH2a = H1.getValue().toString().replaceAll(" ", "--");
 
                 if (qH2b == null) {
                     MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
                     return;
 
                 }
-                qH2b = H1.getValue().toString().replaceAll(" ", "--");
 
                 if (qH3a == null) {
                     MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
                     return;
 
                 }
-                qH3a = H1.getValue().toString().replaceAll(" ", "--");
 
                 if (qH3b == null) {
                     MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
                     return;
 
                 }
-                qH3b = H1.getValue().toString().replaceAll(" ", "--");
 
                 storeDocumentInfo();
 
@@ -178,21 +173,28 @@ public class ContactDetails {
             }
         });
 
-        getDocumentInfo();
+        setDocumentInfo();
         newContactDetailsDialog.add(mainForm);
     }
 
     public void storeDocumentInfo() {
+        qH1 = H1.getValue().toString();
+        qH2a = H2a.getValue().toString();
+        qH2b = H2b.getValue().toString();
+        qH3a = H3a.getValue().toString();
+        qH3b = H3b.getValue().toString();
+
+
         WicidXML wicidxml = new WicidXML("ContactDetails");
-        wicidxml.addElement("H1", H1.getValue());
-        wicidxml.addElement("H2a", H2a.getValue());
-        wicidxml.addElement("H2b", H2b.getValue());
-        wicidxml.addElement("H3a", H3a.getValue());
-        wicidxml.addElement("H3b", H3b.getValue());
+        wicidxml.addElement("H1", qH1);
+        wicidxml.addElement("H2a", qH2a);
+        wicidxml.addElement("H2b", qH2b);
+        wicidxml.addElement("H3a", qH3a);
+        wicidxml.addElement("H3b", qH3b);
         contactDetailsData = wicidxml.getXml();
     }
 
-    public void getDocumentInfo(){
+    public void setDocumentInfo(){
 
     }
 

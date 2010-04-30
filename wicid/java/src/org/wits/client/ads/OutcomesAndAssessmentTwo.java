@@ -187,29 +187,7 @@ public class OutcomesAndAssessmentTwo {
                 }
                 //qD4a = questionD4.getValue().toString();
 
-                /*qD4a = questionD4_1.getBoxLabel().toString();
-                qD4b = questionD4_2.getBoxLabel().toString();
-                qD4c = questionD4_3.getBoxLabel().toString();
-                qD4d = questionD4_4.getBoxLabel().toString();
-                qD4e = questionD4_5.getBoxLabel().toString();
-                qD4f = questionD4_6.getBoxLabel().toString();
-                qD4g = questionD4_7.getBoxLabel().toString();
-                qD4h = questionD4_8.getBoxLabel().toString();*/
-
-                /*WicidXML wicidXML = new WicidXML("formdata");
-                wicidXML.addElement("qD4a", qD4a);
-                wicidXML.addElement("qD4b", qD4b);
-                wicidXML.addElement("qD4c", qD4c);
-                wicidXML.addElement("qD4d", qD4d);
-                wicidXML.addElement("qD4e", qD4e);
-                wicidXML.addElement("qD4f", qD4f);
-                wicidXML.addElement("qD4g", qD4g);
-                wicidXML.addElement("qD4h", qD4h);
-
-                outcomesAndAssessmentTwoData = wicidXML.getXml();*/
-
-                //String qA1 = "qA1", qA2 = "qA2", qA3 = "qA2", qA4 = "qA2", qA5 = "qA5";
-                //outcomesAndAssessmentTwoData = qA1 + "_" + qA2 + "_" + qA3 + "_" + qA4 + "_" + qA5;
+                storeDocumentInfo();
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -236,6 +214,7 @@ public class OutcomesAndAssessmentTwo {
                 outcomesAndAssessmentOne.setOldOutComesAndAssessmentOne(OutcomesAndAssessmentTwo.this);
                 outcomesAndAssessmentOne.show();
                 outcomesAndAssessmentTwoDialog.hide();
+                storeDocumentInfo();
             }
         });
 
@@ -245,7 +224,7 @@ public class OutcomesAndAssessmentTwo {
             public void componentSelected(ButtonEvent ce) {
                 ForwardTo forwardToDialog = new ForwardTo();
                 forwardToDialog.show();
-
+                storeDocumentInfo();
             }
         });
 
@@ -263,9 +242,44 @@ public class OutcomesAndAssessmentTwo {
         outcomesAndAssessmentTwoDialog.setButtonAlign(HorizontalAlignment.LEFT);
         outcomesAndAssessmentTwoDialog.setHideOnButtonClick(true);
 
+        outcomesAndAssessmentTwoDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
+            }
+        });
+
         outcomesAndAssessmentTwoDialog.add(mainForm);
 
         //setDepartment();
+    }
+
+    public void storeDocumentInfo() {
+        qD4a = questionD4_1.getValue().toString();
+        qD4b = questionD4_2.getValue().toString();
+        qD4c = questionD4_3.getValue().toString();
+        qD4d = questionD4_4.getValue().toString();
+        qD4e = questionD4_5.getValue().toString();
+        qD4f = questionD4_6.getValue().toString();
+        qD4g = questionD4_7.getValue().toString();
+        qD4h = questionD4_8.getValue().toString();
+
+        WicidXML wicidxml = new WicidXML("outcomesAndAssessmentThree");
+
+        wicidxml.addElement("qD4a", qD4a);
+        wicidxml.addElement("qD4b", qD4b);
+        wicidxml.addElement("qD4c", qD4c);
+        wicidxml.addElement("qD4d", qD4d);
+        wicidxml.addElement("qD4e", qD4e);
+        wicidxml.addElement("qD4f", qD4f);
+        wicidxml.addElement("qD4g", qD4g);
+        wicidxml.addElement("qD4h", qD4h);
+
+        outcomesAndAssessmentTwoData = wicidxml.getXml();
+    }
+
+    public void setDocumentInfo(){
+
     }
 
     public void show() {
