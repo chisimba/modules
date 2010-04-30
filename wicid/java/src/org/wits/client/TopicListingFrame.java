@@ -4,6 +4,7 @@
  */
 package org.wits.client;
 
+import org.wits.client.ads.NewCourseProposalDialog;
 import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
 import java.util.Arrays;
 
