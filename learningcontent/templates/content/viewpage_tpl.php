@@ -21,6 +21,17 @@ $style = '
    }
 
 </style>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery(document).ready(function() {
+	    jQuery.facebox.settings.opacity = 0.9;
+	    jQuery.facebox.overlay = true; 
+	});
+});
+jQuery(document).bind("close.facebox", function() {
+    alert("Facebox Closed");
+  }) 
+</script>
 ';
 $this->appendArrayVar('headerParams',$style);
 $objFile = $this->getObject('dbfile', 'filemanager');
@@ -402,7 +413,7 @@ if($showcomment==1)
 	$cform->addToForm($this->objconvButton->show());
 	echo '<br/>'.$cform->show();
 }
-$sessId = "Session Id = ".session_id();
+
 
 if (!empty($imageId)) {
    $imageName = $this->objFiles->getFileName($imageId);
