@@ -303,7 +303,7 @@ class db_learningcontent_order extends dbtable
 
         foreach ($results as $treeItem)
         {
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
+            $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
 
 
             if($ischapterlogged == FALSE) {
@@ -362,7 +362,7 @@ class db_learningcontent_order extends dbtable
 
         $newimg='<img src="'.$newImgPath.'">';
 
-        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
+        $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);    
         if($ischapterlogged == FALSE) {
           $showImg=$newimg;
         }else{
@@ -425,7 +425,7 @@ class db_learningcontent_order extends dbtable
         
         foreach ($results as $treeItem)
         {
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
+            $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
             if($ischapterlogged == FALSE) {
              $showImg=$newimg;
             }else{
@@ -1170,7 +1170,7 @@ class db_learningcontent_order extends dbtable
             // Loop through siblings
             foreach ($firstLevelNodes as $treeItem)
             {
-               $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
+               $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);    
                if($ischapterlogged == FALSE) {
                  $showImg=$newimg;
                }else{
@@ -1197,7 +1197,7 @@ class db_learningcontent_order extends dbtable
                     // Add Childen
                     foreach ($childrenNodes as $childNode)
                     {
-                        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $childNode['id'], $this->contextCode);
+                        $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $childNode['id'], $this->contextCode);
                         if($ischapterlogged == FALSE) {
                          $showImg=$newimg;
                         }else{
@@ -1235,7 +1235,7 @@ class db_learningcontent_order extends dbtable
             // Loop through siblings
             foreach ($siblings as $treeItem)
             {
-                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);
+                $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);
                 if($ischapterlogged == FALSE) {
                  $showImg=$newimg;
                 }else{
@@ -1281,7 +1281,7 @@ class db_learningcontent_order extends dbtable
             // Loop through siblings
             foreach ($siblings as $treeItem)
             {
-               $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);
+               $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $treeItem['id'], $this->contextCode);
                if($ischapterlogged == FALSE) {
                 $showImg=$newimg;
                }else{
@@ -1312,7 +1312,7 @@ class db_learningcontent_order extends dbtable
             // Add Childen
             foreach ($childrenNodes as $childNode)
             {
-                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $childNode['id'], $this->contextCode);
+                $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $childNode['id'], $this->contextCode);
                 if($ischapterlogged == FALSE) {
                  $showImg=$newimg;
                 }else{

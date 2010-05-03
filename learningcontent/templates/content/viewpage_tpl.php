@@ -22,13 +22,7 @@ $style = '
 
 </style>
 <script type="text/javascript">
-jQuery(document).ready(function() {
-	jQuery(document).ready(function() {
-	    jQuery.facebox.settings.opacity = 0.9;
-	    jQuery.facebox.overlay = true; 
-	});
-});
-jQuery(document).bind("close.facebox", function() {
+    jQuery(document).bind("close.facebox", function() {
     alert("Facebox Closed");
   }) 
 </script>

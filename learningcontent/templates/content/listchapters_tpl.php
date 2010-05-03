@@ -175,7 +175,7 @@ foreach ($chapters as $chapter)
 
 		$chapterLink = new link($this->uri(array('action'=>'viewscorm', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
 		$chapterLink->link = $chapter['chaptertitle'];
-		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
+		$ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->userId, $chapter['chapterid'], $this->contextCode);
 		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
        		if ($ischapterlogged == FALSE) {
 		         $content = '<h1> '.$streamerimg." ".$chapterLink->show();;
@@ -232,7 +232,7 @@ foreach ($chapters as $chapter)
 		$chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
 		$chapterLink->link = $chapter['chaptertitle'];
 
-		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
+		$ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->userId, $chapter['chapterid'], $this->contextCode);
 		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
        		if ($ischapterlogged == FALSE) {
 		         $content = '<h1> '.$streamerimg." ".$chapter['chaptertitle'];

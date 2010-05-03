@@ -132,6 +132,25 @@ class db_learningcontent_activitystreamer extends dbtable
         }
     }
     /**
+     * Method to check if record exists according to userId, contextItemId and sessionid.
+     *
+     * @access public
+     * @param string $userId User ID
+     * @param string $contextItemId Context Item Id
+     * @param string $contextCode Context Code
+     * @return TRUE
+     */
+    public function checkRecord($userId, $contextItemId, $contextCode)
+    {
+        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND contextcode = '$contextCode'";
+        $results = $this->getAll($where);
+        if (isset($results[0]['id'])) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    /**
      * Update a record
      * @param string $id ID
      * @param string $start The start date
