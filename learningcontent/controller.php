@@ -257,7 +257,7 @@ class learningcontent extends controller {
                 $trackPage['datecreated'] = date('Y-m-d H:i:s');
                 $trackPage['pageorchapter'] = 'chapter';
                 $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewchapter', 'learningcontent');
-                return $this->viewChapter($this->getParam('id'));
+                return $this->viewChapter($this->getParam('id'), $trackPage);
             case 'viewprintchapter':
                 return $this->viewPrintChapter($this->getParam('id'));
             case 'changenavigation':
