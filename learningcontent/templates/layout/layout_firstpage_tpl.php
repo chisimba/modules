@@ -78,7 +78,7 @@ if (count($chapters) > 0) {
             $newimg='<img src="'.$newImgPath.'">';
       	     // Get List of Pages in the Chapter
 								    //$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');     
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode); 
+            $ischapterlogged = $this->objContextActivityStreamer->checkRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode); 
             if($ischapterlogged == FALSE) {
              $showImg=$newimg;
             }else{
