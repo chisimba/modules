@@ -191,7 +191,7 @@ class blogposts extends object
                     $style = 'retweet vert';
                 }
                 $rt = $this->objJqTwitter->retweetCounter($url, $status, $style);
-                $post['post_content'] = "<br />".$rt."<br />".$cleanpost; 
+                $post['post_content'] = $cleanpost; 
                 if($cleanPost  == 'true'){
                     $post['post_content'] = $this->cleanPost($post['post_content']);
                 }
@@ -240,7 +240,7 @@ class blogposts extends object
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
                     $head = $objStickyIcon->show() . $headLink->show() 
-                      . " $icons<br /><span class='blog-head-date'>$dt</span>";
+                      . " $rt $icons<br /><span class='blog-head-date'>$dt</span>";
                 } else {
                 	if($post['post_status'] == 1)
                     {
@@ -258,7 +258,7 @@ class blogposts extends object
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
                     $head = $headLink->show() 
-                      . " $icons<br /><span class='blog-head-date'>$dt</span><br />";
+                      . " $rt $icons<br /><span class='blog-head-date'>$dt</span><br />";
                 }
                 // dump in the post content and voila! you have it...
                 // build the post content plus comment count and stats???
