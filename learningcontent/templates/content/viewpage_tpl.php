@@ -228,7 +228,7 @@ if(!empty($pagepicture)){
    $objIcon->alt = $picdesc;
    $objIcon->title = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
    $picdesc = $objIcon->show()." ".$picdesc;
-   if($Name=='firefox'){
+   if($Name=='anyother'){
     $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
     $picViewLink->link = $picdesc;
     $hpics .= "<li>".$picViewLink->show()."</li>";
@@ -281,7 +281,7 @@ if(!empty($pageformula)){
    $objIcon->title = $fmladesc;
    $fmladesc = $objIcon->show()." ".$fmladesc;
    
-   if($Name=='firefox'){
+   if($Name=='anyother'){
     $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
     $fmlaViewLink->link = $fmladesc;
     $hformula .= "<li>".$fmlaViewLink->show()."</li>";
@@ -292,8 +292,8 @@ if(!empty($pageformula)){
     $objPop->set('location', $fmlalink);
     $objPop->set('linktext', $fmladesc);
     $objPop->set('window_name','forum_attachments');
-    $objPop->set('width','600');
-    $objPop->set('height','400');
+    $objPop->set('width','100%');
+    $objPop->set('height','100%');
     $objPop->set('left','100');
     $objPop->set('top','100');
     $objPop->set('resizable','yes');
