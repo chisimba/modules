@@ -4,7 +4,6 @@
  */
 package org.wits.client;
 
-import org.wits.client.ads.NewCourseProposalDialog;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.Style.SortDir;
@@ -115,6 +114,7 @@ public class Main {
     private Button searchButton = new Button("Search");
     private Main thisInstance;
     private Button advancedSearch = new Button("Advanced Search");
+
     /**
      * Creates a new instance of Main
      */
@@ -448,7 +448,7 @@ public class Main {
 
         loadFolderList(getFoldersParams + "&mode=default");
         determinePermissions();
-       
+
         return container;
     }
 
@@ -535,6 +535,7 @@ public class Main {
     private void setMode() {
         newDocumentButton.setEnabled(mode.equals("default"));
         newCourseProposalButton.setEnabled(mode.equals("apo"));
+
     }
 
     private void promptFolderName() {
@@ -655,17 +656,17 @@ public class Main {
                             if (props[0].trim().equals("mode")) {
                                 mode = props[1];
                             }
-                           
+
                         }
 
-                        
+
                         if (admin) {
                             folderUserButton.setEnabled(true);
                             fileExtButton.setEnabled(true);
                             newFolderButton.setEnabled(true);
                             unapprovedDocsButton.setEnabled(true);
                         }
-                         setMode();
+                        setMode();
                         /*if (mode.equalsIgnoreCase("apo")) {
                         newDocumentButton.setEnabled(false);
                         docsTab.setEnabled(false);
@@ -812,6 +813,7 @@ public class Main {
     public ModelData getSelectedFolder() {
         return selectedFolder;
     }
+
     public DocumentListPanel getDocumentListPanel() {
         return documentListPanel;
     }

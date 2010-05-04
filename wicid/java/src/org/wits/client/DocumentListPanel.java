@@ -367,7 +367,9 @@ public class DocumentListPanel extends LayoutContainer {
         document.setId((String) selectedRows.get(0).get("docid"));
         document.setGroup((String) selectedRows.get(0).get("group"));
         document.setTopic((String) selectedRows.get(0).get("Topic"));
-        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, "all",null);
+        String mode=Constants.main.getMode();
+
+        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, mode,null);
         editDocumentDialog.show();
     }
 

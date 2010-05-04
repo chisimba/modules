@@ -46,6 +46,7 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
+import org.wits.client.ads.OverView;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -77,12 +78,16 @@ public class EditDocumentDialog {
     private Main main;
     private LabelField uploadFile = new LabelField();
     private Grid upload = new Grid(2, 1);
+    private OverView overView;
+    private Button nextButton=new Button("Next");
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
         this.mode = mode;
         this.main = main;
+
         createUI();
+        overView=new OverView(this);
     }
 
     private void createUI() {
@@ -140,29 +145,29 @@ public class EditDocumentDialog {
         deptField.setAllowBlank(false);
         deptField.setValue(document.getDepartment());
         deptField.setName("deptfield");
-        if (mode.equals("all")) {
+        //if (mode.equals("all")) {
             mainForm.add(deptField, formData);
-        }
+       // }
 
         telField.setFieldLabel("Tel. Number");
         telField.setValue("edit mode");
         telField.setValue(document.getTelephone());
         telField.setAllowBlank(false);
         telField.setName("telfield");
-        if (mode.equals("all")) {
+        //if (mode.equals("all")) {
             mainForm.add(telField, formData);
-        }
+        //}
 
         titleField.setFieldLabel("Document title");
         titleField.setAllowBlank(false);
         titleField.setValue(document.getTitle());
         titleField.setName("titlefield");
-        if (mode.equals("all")) {
+       // if (mode.equals("all")) {
             mainForm.add(titleField, formData);
-        }
-        if (mode.equals("all")) {
+      //  }
+     //   if (mode.equals("all")) {
             mainForm.add(groupField, formData);
-        }
+      //  }
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
 
@@ -180,9 +185,9 @@ public class EditDocumentDialog {
         panel.setLayout(new BorderLayout());
         panel.add(topicField, centerData);
         panel.add(browseTopicsButton, eastData);
-        if (mode.equals("all")) {
+     //   if (mode.equals("all")) {
             mainForm.add(panel, formData);
-        }
+      //  }
 
         browseTopicsButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
@@ -204,6 +209,13 @@ public class EditDocumentDialog {
             }
         });
 
+        nextButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                overView.show();
+            }
+        });
         Radio publicOpt = new Radio();
         publicOpt.setBoxLabel("Public");
         publicOpt.setValue(true);
@@ -239,7 +251,9 @@ public class EditDocumentDialog {
         uploadpanel.add(upload);
          */ uploadpanel.add(uploadButton);
 //        uploadpanel.add(uploadFile);
-        mainForm.add(uploadpanel, formData);
+        if (mode.equals("default")) {
+            mainForm.add(uploadpanel, formData);
+        }
         uploadpanel.setButtonAlign(HorizontalAlignment.RIGHT);
 
         uploadButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
@@ -328,8 +342,9 @@ public class EditDocumentDialog {
 
             }
         });
-        if (mode.equals("all")) {
-
+        if (mode.equals("apo")) {
+            mainForm.addButton(nextButton);
+        }else{
             mainForm.addButton(saveButton);
         }
 
@@ -337,9 +352,17 @@ public class EditDocumentDialog {
         //FormButtonBinding binding = new FormButtonBinding(mainForm);
         //binding.addButton(saveButton);
         editDocumentDialog.setBodyBorder(false);
-        editDocumentDialog.setHeading("Document Details");
+        if (mode.equals("apo")) {
+            editDocumentDialog.setHeading("Edit Course Proposal");
+        } else {
+            editDocumentDialog.setHeading("Edit document");
+        }
         editDocumentDialog.setWidth(500);
-        editDocumentDialog.setHeight(520);
+        if (mode.equals("apo")) {
+            editDocumentDialog.setHeight(420);
+        } else {
+            editDocumentDialog.setHeight(520);
+        }
         editDocumentDialog.setHideOnButtonClick(true);
 
         editDocumentDialog.setButtons(Dialog.CLOSE);
