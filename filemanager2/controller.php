@@ -1,23 +1,23 @@
 <?php
 /**
- * 
+ *
  * File Manager2
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  Chisimba
  * @package   helloforms
  * @author    Qhamani Fenama qfenama@uwc.ac.za/qfenama@gmail.com
@@ -26,59 +26,67 @@
  * @version   $Id: controller.php 15834 2009-12-08 11:40:36Z paulscott $
  * @link      http://avoir.uwc.ac.za
  */
- 
+
 // security check - must be included in all scripts
 if (!
 /**
  * The $GLOBALS is an array used to control access to certain constants.
  * Here it is used to check if the file is opening in engine, if not it
  * stops the file from running.
- * 
+ *
  * @global entry point $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
- *         
+ *
  */
-$GLOBALS['kewl_entry_point_run'])
-{
-        die("You cannot view this page directly");
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
 // end security check
 
 /**
-* 
-* Controller class for Chisimba for the module filemanager2
-*
-* @author Qhamani Fenama
-* @package filemanager2
-*
-*/
-class filemanager2 extends controller
-{
-    
-    /**
-    * 
-    * @var string $objConfig String object property for holding the 
-    * configuration object
-    * @access public;
-    * 
-    */
+ *
+ * Controller class for Chisimba for the module filemanager2
+ *
+ * @author Qhamani Fenama
+ * @package filemanager2
+ *
+ */
+class filemanager2 extends controller {
+
+/**
+ *
+ * @var string $objConfig String object property for holding the
+ * configuration object
+ * @access public;
+ *
+ */
     public $objConfig;
-    
+
     /**
-    * 
-    * @var string $objLanguage String object property for holding the 
-    * language object
-    * @access public
-    * 
-    */
+     *
+     * @var string $objLanguage String object property for holding the
+     * language object
+     * @access public
+     *
+     */
+
+	public $fileSize;
+
+	/**
+     *
+     * @var string $objLanguage String object property for holding the
+     * language object
+     * @access public
+     *
+     */
     public $objLanguage;
     /**
-    *
-    * @var string $objLog String object property for holding the 
-    * logger object for logging user activity
-    * @access public
-    * 
-    */
+     *
+     * @var string $objLog String object property for holding the
+     * logger object for logging user activity
+     * @access public
+     *
+     */
     public $objLog;
 
     /**
@@ -96,18 +104,17 @@ class filemanager2 extends controller
      * @var object
      */
     protected $objSysConfig;
-    
+
     public $debug = FALSE;
 
     /**
-    * 
-    * Intialiser for the filemanager2 controller
-    * @access public
-    * 
-    */
-    public function init()
-    {
-        // File Manager Classes
+     *
+     * Intialiser for the filemanager2 controller
+     * @access public
+     *
+     */
+    public function init() {
+    // File Manager Classes
         $this->objFiles = $this->getObject('dbfile', 'filemanager');
         $this->objFolders = $this->getObject('dbfolder', 'filemanager');
         $this->objFileTags = $this->getObject('dbfiletags', 'filemanager');
@@ -116,43 +123,43 @@ class filemanager2 extends controller
         $this->objFilePreview = $this->getObject('filepreview', 'filemanager');
         $this->objQuotas = $this->getObject('dbquotas', 'filemanager');
         $this->objSymlinks = $this->getObject('dbsymlinks', 'filemanager');
-        
+
         $this->objUploadMessages = $this->getObject('uploadmessages', 'filemanager');
-        
+
         // Other Classes
-	$this->loadClass('formatfilesize', 'files');
-	$this->objFileIcons = $this->getObject('fileicons', 'files');
+        $this->loadClass('formatfilesize', 'files');
+        $this->objFileIcons = $this->getObject('fileicons', 'files');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject('user', 'security');
         $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        
+
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objMenuTools = $this->getObject('tools', 'toolbar');
         $this->loadClass('link', 'htmlelements');
-        
-        
+
+		
         $this->userId = $this->objUser->userId();
-        
+
         if ($this->userId != '') {
-            // Setup User Folder
+        // Setup User Folder
             $folderpath = 'users/'.$this->userId;
-            
+
             $folderId = $this->objFolders->getFolderId($folderpath);
-            
-            
-            
+
+
+
             if ($folderId == FALSE) {
                 $objIndexFileProcessor = $this->getObject('indexfileprocessor', 'filemanager');
                 $list = $objIndexFileProcessor->indexUserFiles($this->objUser->userId());
             }
         }
-        
+
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->objContext->getContextCode();
         if ($this->contextCode != '') {
             $folderpath = 'context/'.$this->contextCode;
-            
+
             $folderId = $this->objFolders->getFolderId($folderpath);
             if ($folderId == FALSE) {
                 $objIndexFileProcessor = $this->getObject('indexfileprocessor');
@@ -160,7 +167,7 @@ class filemanager2 extends controller
             }
         }
     }
-    
+
     /**
      * Override the login object in the parent class
      *
@@ -168,50 +175,47 @@ class filemanager2 extends controller
      * @return bool
      * @access public
      */
-    public function requiresLogin($action)
-    {
+    public function requiresLogin($action) {
         if ($action == 'file') {
             return FALSE;
         } else {
             return TRUE;
         }
     }
-    
 
-    public function dispatch($action='home')
-    {
 
-	
-        // Check to ensure the user has access to the file manager.
+    public function dispatch($action='home') {
+
+
+    // Check to ensure the user has access to the file manager.
         if (!$this->userHasAccess()) {
             return 'access_denied_tpl.php';
         }
 
 
-        /*
-        * Convert the action into a method (alternative to 
-        * using case selections)
-        */
+/*
+* Convert the action into a method (alternative to 
+* using case selections)
+*/
         $method = $this->__getMethod($action);
-        /*
-        * Return the template determined by the method resulting 
-        * from action
-        */
+/*
+* Return the template determined by the method resulting 
+* from action
+*/
         return $this->$method();
     }
 
-        /**
-    * 
-    * Method to convert the action parameter into the name of 
-    * a method of this class.
-    * 
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return stromg the name of the method
-    * 
-    */
-    function __getMethod(& $action)
-    {
+    /**
+     *
+     * Method to convert the action parameter into the name of
+     * a method of this class.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return stromg the name of the method
+     *
+     */
+    function __getMethod(& $action) {
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {
@@ -219,33 +223,38 @@ class filemanager2 extends controller
         }
     }
 
-     /**
-    * Default Action for File manager module
-    * It shows the list of folders of a user
-    * @access private
-    */
-    private function __home()
-    {
-	// Get Folder Details
+    /**
+     * Default Action for File manager module
+     * It shows the list of folders of a user
+     * @access private
+     */
+    private function __home() {
+    // Get Folder Details
         $folderpath = 'users/'.$this->objUser->userId();
 
         $folderId = $this->objFolders->getFolderId($folderpath);
+		 
+		if ($this->contextCode != '') {
+        $folderpath = 'context/'.$this->contextCode;
 
-	$this->setVar('folderId', $folderId);
+          $contextfolderId = $this->objFolders->getFolderId($folderpath);
+        }
+
+        $this->setVar('folderId', $folderId);
+		$this->setVar('contextfolderId', $contextfolderId);
+		$this->setVar('contextId', $this->contextCode);
 
         return 'admin_tpl.php';
     }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-    public function __json_uploadFile()
-    {	
-	//error_log(var_export($_FILES, true));
-	
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function __json_uploadFile() {
+
         $folder = $this->objFolders->getFolder($this->getParam('selectedfolder'));
 
         if ($folder != FALSE) {
@@ -263,29 +272,26 @@ class filemanager2 extends controller
         // Check if no files were provided
         if (count($results) == 1 && array_key_exists('nofileprovided', $results)) {
             $extjs['success'] = true;
-	    $extjs['error'] = 'No files were provided';
-	    echo json_encode($extjs);
-	    exit(0);
+            $extjs['error'] = 'No files were provided';
+            echo json_encode($extjs);
+            exit(0);
         }
 
         $extjs['success'] = true;
-	echo json_encode($extjs);
-	exit(0);
-        //return $this->nextAction('uploadresults', $messages);
-    }
-
-
-    public function __getDirectory()
-    {
-	echo $this->getJsonTree('users', $this->objUser->userId(), $this->getParam('node'));
+        echo json_encode($extjs);
         exit(0);
     }
 
-    public function __getFolderContent()
-    {
-	$id = $this->getParam('id');
 
-	// Get Folder Details
+    public function __getDirectory() {
+        echo $this->getJsonTree('users', $this->objUser->userId(), $this->getParam('node'));
+        exit(0);
+    }
+
+    public function __getFolderContent() {
+        $id = $this->getParam('id');
+
+        // Get Folder Details
         $folder = $this->objFolders->getFolder($id);
 
         if ($folder == FALSE) {
@@ -293,116 +299,100 @@ class filemanager2 extends controller
         }
 
 
-	$folderParts = explode('/', $folder['folderpath']);
-        
+        $folderParts = explode('/', $folder['folderpath']);
+
         $quota = $this->objQuotas->getQuota($folder['folderpath']);
-                
+
         if ($folderParts[0] == 'context' && $folderParts[1] != $this->contextCode) {
             return $this->nextAction(NULL);
         }
-                      
-        $files = $this->objFiles->getFolderFiles($folder['folderpath']);
-	
-	$allarr = array();
-	
-	if (count($files) > 0) {
-	$fileSize = new formatfilesize();
-	$totalCount = count($files);
-            foreach ($files as $file)
-            {
-		
-		$arr = array();
-                $arr['id'] = $file['id'];
-		$arr['filename'] = $file['filename'];
-		$arr['filesize'] = $fileSize->formatsize($file['filesize']);
-		$arr['fileicon'] = $this->objFileIcons->getFileIcon($file['filename']);
-		$arr['filepath'] = $file['filefolder'].'/'.$file['filename'];
 
-		$allarr[] = $arr;
-		$arr = null;
-	    }
-		$arr['totalCount'] = strval($totalCount);
-		$arr['files'] = $allarr;
-    		echo json_encode($arr);
-    	}else {
-    		$arr['totalCount'] = "0";
-		$arr['files'] = array();
-    		echo json_encode($arr);
-    	}
+        $files = $this->objFiles->getFolderFiles($folder['folderpath']);
+
+        $allarr = array();
+		$fileSize = new formatfilesize();
+        if (count($files) > 0) {
+            $totalCount = count($files);
+            foreach ($files as $file) {
+
+                $arr = array();
+                $arr['id'] = $file['id'];
+                $arr['filename'] = $file['filename'];
+                $arr['filesize'] = $fileSize->formatsize($file['filesize']);
+                $arr['fileicon'] = $this->objFileIcons->getFileIcon($file['filename']);
+                $arr['filepath'] = $file['filefolder'].'/'.$file['filename'];
+
+                $allarr[] = $arr;
+                $arr = null;
+            }
+            $arr['totalCount'] = strval($totalCount);
+            $arr['files'] = $allarr;
+            echo json_encode($arr);
+        }else {
+            $arr['totalCount'] = "0";
+            $arr['files'] = array();
+            echo json_encode($arr);
+        }
 
         exit(0);
     }
 
-    public function __json_removefiles(){
+    public function __json_removefiles() {
 
-	$ids = $this->getParam('ids');
+        $ids = $this->getParam('ids');
 
-    	if ($ids) {
-    		$fileIds = substr_replace($ids, "",strlen($ids) - 1);
-    		
-		$files = explode(',', $fileIds);
-    		//error_log('Success '.count($files));
-    		foreach ($files as $id)
-    		{
-    			//echo 'here';
-    			//error_log('here');
+        if ($ids) {
+            $fileIds = substr_replace($ids, "",strlen($ids) - 1);
 
-    			if($id){
-    				var_dump($id);
-    				$res = $this->objFiles->deleteFile($id, False);
-    				var_dump($res);
-    			error_log('Result'.$res);
-    			}
-    		}
+            $files = explode(',', $fileIds);
+            foreach ($files as $id) {
+                if($id) {
+                    $res = $this->objFiles->deleteFile($id, False);
+                }
+            }
 
-     		$extjs['success'] = true;
-		}
-		else {
-		     $extjs['success'] = false;
-		     $extjs['errors']['message'] = 'Unable to connect to DB';
-		}
-
-		return json_encode($extjs);
-}
-
-    function getJsonTree($folderType='users', $id, $node)
-    {
-	
-        //$folders = $this->getFolders($folderType, $id);
-	$folders = $this->objFolders->getSubFolders($node);
-	
-        $allarr = array();
-	//$folderText = "";
-        if (count($folders) > 0) {
-            foreach ($folders as $folder)
-            {
-		$arr = array();
-                $folderText = basename($folder['folderpath']);
-		$folderShortText = substr(basename($folder['folderpath']), 0, 60) . '...';
-		$arr['text'] = $folderText;
-		//$arr['leaf'] = true;
-		$arr['id'] = $folder['id'];
-		$arr['cls'] = 'folder';
-
-		$allarr[] = $arr;
-		}
+            $extjs['success'] = true;
         }
-                
-	return json_encode($allarr);
+        else {
+            $extjs['success'] = false;
+            $extjs['errors']['message'] = 'Unable to connect to DB';
+        }
+
+        return json_encode($extjs);
     }
 
-   public function __jsoncreatefolder()
-    {
-	$parentId = $this->getParam('parentfolder', 'ROOT');
+    function getJsonTree($folderType='users', $id, $node) {
+        $folders = $this->objFolders->getSubFolders($node);
+
+        $allarr = array();
+
+        if (count($folders) > 0) {
+            foreach ($folders as $folder) {
+                $arr = array();
+                $folderText = basename($folder['folderpath']);
+                $folderShortText = substr(basename($folder['folderpath']), 0, 60) . '...';
+                $arr['text'] = $folderText;
+                $arr['id'] = $folder['id'];
+                $arr['cls'] = 'folder';
+
+                $allarr[] = $arr;
+            }
+        }
+
+        return json_encode($allarr);
+    }
+
+    public function __jsoncreatefolder() {
+        $parentId = $this->getParam('parentfolder', 'ROOT');
         $foldername = $this->getParam('foldername');
-	
+
         if (preg_match('/\\\|\/|\\||:|\\*|\\?|"|<|>/', $foldername)) {
-	    $extjs['success'] = true;
+            $extjs['success'] = true;
             $extjs['error'] = "Illigal charectors in a folder name";
             echo json_encode($extjs);
-	    exit(0);
+            exit(0);
         }
-        
+
         // Replace spaces with underscores
         $foldername = str_replace(' ', '_', $foldername);
 
@@ -419,55 +409,75 @@ class filemanager2 extends controller
 
         $this->objMkdir = $this->getObject('mkdir', 'files');
 
-	$path = $this->objConfig->getcontentBasePath().'/'.$folderpath.'/'.$foldername;
+        $path = $this->objConfig->getcontentBasePath().'/'.$folderpath.'/'.$foldername;
 
-	$result = $this->objMkdir->mkdirs($path);
+        $result = $this->objMkdir->mkdirs($path);
 
-	if ($result) {
+        if ($result) {
             $folderId = $this->objFolders->indexFolder($path);
         }
 
-	$extjs['success'] = true;
-	$extjs['data'] = $folderId;
-	echo json_encode($extjs);
-	exit(0);
-       
+        $extjs['success'] = true;
+        $extjs['data'] = $folderId;
+        echo json_encode($extjs);
+        exit(0);
+
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
+    function __deleteFolder() {
+
+        $id = $this->getParam('id');
+        $res = $this->objFolders->deleteFolder($id);
+        $extjs['success'] = true;
+        $extjs['data'] = $res;
+        echo json_encode($extjs);
+        exit(0);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
-    * 
-    * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (__). If it __action 
-    * is not a valid method it returns FALSE, if it is a valid method
-    * of this class it returns TRUE.
-    * 
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return boolean TRUE|FALSE
-    * 
-    */
-    function __validAction(& $action)
-    {
+     *
+     * Method to check if a given action is a valid method
+     * of this class preceded by double underscore (__). If it __action
+     * is not a valid method it returns FALSE, if it is a valid method
+     * of this class it returns TRUE.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return boolean TRUE|FALSE
+     *
+     */
+    function __validAction(& $action) {
         if (method_exists($this, "__".$action)) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
-    
+
+	function getFreeSpace($path){
+		$fileSize = new formatfilesize();
+		$quota = $this->objQuotas->getQuota($path);
+
+        if ($quota['quotausage'] > $quota['quota']) {
+            $freeSpace = 0;
+        } else {
+            $freeSpace = $quota['quota'] - $quota['quotausage'];
+        }
+		return $fileSize->formatsize($freeSpace);		
+	}
+
     /**
      * Checks if the user should have access to the file manager.
      *
      * @return boolean True if the user has access, false otherwise.
      */
-    protected function userHasAccess()
-    {
+    protected function userHasAccess() {
         $limitedUsers = $this->objSysConfig->getValue('LIMITEDUSERS', 'filemanager');
         if ($limitedUsers) {
             $userId = $this->objUser->userId();
@@ -485,6 +495,6 @@ class filemanager2 extends controller
             return TRUE;
         }
     }
-     
+
 }
 ?>
