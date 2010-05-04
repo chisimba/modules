@@ -239,8 +239,8 @@ if(!empty($pagepicture)){
     $objPop->set('location', $link);
     $objPop->set('linktext', $picdesc);
     $objPop->set('window_name','picture');
-    $objPop->set('width','600');
-    $objPop->set('height','400');
+    $objPop->set('width','1024');
+    $objPop->set('height','768');
     $objPop->set('left','100');
     $objPop->set('top','100');
     $objPop->set('resizable','yes');
@@ -292,8 +292,8 @@ if(!empty($pageformula)){
     $objPop->set('location', $fmlalink);
     $objPop->set('linktext', $fmladesc);
     $objPop->set('window_name','formula');
-    $objPop->set('width','600');
-    $objPop->set('height','400');
+    $objPop->set('width','1024');
+    $objPop->set('height','768');
     $objPop->set('left','100');
     $objPop->set('top','100');
     $objPop->set('resizable','yes');
