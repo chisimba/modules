@@ -228,7 +228,7 @@ if(!empty($pagepicture)){
    $objIcon->alt = $picdesc;
    $objIcon->title = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
    $picdesc = $objIcon->show()." ".$picdesc;
-   if($Name=='anyother'){
+   if($Name=='firefox'){
     $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
     $picViewLink->link = $picdesc;
     $hpics .= "<li>".$picViewLink->show()."</li>";
@@ -281,7 +281,7 @@ if(!empty($pageformula)){
    $objIcon->title = $fmladesc;
    $fmladesc = $objIcon->show()." ".$fmladesc;
    
-   if($Name=='anyother'){
+   if($Name=='firefox'){
     $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
     $fmlaViewLink->link = $fmladesc;
     $hformula .= "<li>".$fmlaViewLink->show()."</li>";
