@@ -12,12 +12,9 @@ import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
-import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.Method;
 import com.extjs.gxt.ui.client.widget.form.NumberField;
 import com.extjs.gxt.ui.client.widget.form.Radio;
 import com.extjs.gxt.ui.client.widget.form.RadioGroup;
@@ -36,7 +33,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import java.util.Date;
 import org.wits.client.Constants;
 import org.wits.client.TopicListingFrame;
-import org.wits.client.ads.OverView;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -45,7 +41,7 @@ import org.wits.client.util.WicidXML;
  */
 public class NewCourseProposalDialog {
 
-    private Dialog newDocumentDialog = new Dialog();
+    private Dialog newCourseProposalDialog = new Dialog();
     private Dialog facultyListingDialog = new Dialog();
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
@@ -103,7 +99,7 @@ public class NewCourseProposalDialog {
 
         numberField.setName("numberfield");
         //mainForm.add(numberField, formData);
-
+        facultyField.setEnabled(false);
 
         deptField.setFieldLabel("Originating department");
         deptField.setAllowBlank(false);
@@ -118,7 +114,7 @@ public class NewCourseProposalDialog {
         telField.setAllowNegative(false);
         mainForm.add(telField, formData);
 
-        titleField.setFieldLabel("Document title");
+        titleField.setFieldLabel("Course title");
         titleField.setAllowBlank(false);
         titleField.setName("titlefield");
         mainForm.add(titleField, formData);
@@ -250,29 +246,30 @@ public class NewCourseProposalDialog {
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         //FormButtonBinding binding = new FormButtonBinding(mainForm);
         //binding.addButton(saveButton);
-        newDocumentDialog.setBodyBorder(false);
-        newDocumentDialog.setHeading("Document Details");
-        newDocumentDialog.setWidth(500);
-        newDocumentDialog.setHeight(400);
-        newDocumentDialog.setHideOnButtonClick(true);
-        newDocumentDialog.setButtons(Dialog.CLOSE);
-        newDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
+        newCourseProposalDialog.setBodyBorder(false);
+        newCourseProposalDialog.setHeading("New Course Proposal");
+        newCourseProposalDialog.setWidth(500);
+        newCourseProposalDialog.setHeight(400);
+        newCourseProposalDialog.setHideOnButtonClick(true);
+        newCourseProposalDialog.setButtons(Dialog.CLOSE);
+        newCourseProposalDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
-        newDocumentDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+        newCourseProposalDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
-                storeDocumentInfo();         
+                storeDocumentInfo();
             }
         });
 
-        newDocumentDialog.add(mainForm);
+        newCourseProposalDialog.add(mainForm);
         setDepartment();
 
 
     }
 
     public void show() {
-        newDocumentDialog.show();
+        newCourseProposalDialog.show();
     }
 
     public void storeDocumentInfo() {  
@@ -284,7 +281,7 @@ public class NewCourseProposalDialog {
         wicidxml.addElement("title", title);
         wicidxml.addElement("faculty", faculty);
         newCourseProposalDialogData = wicidxml.getXml();
-        
+
     }
     
     public void setDocumentInfo(){
@@ -342,15 +339,15 @@ public class NewCourseProposalDialog {
 
                     if (resp[0].equals("")) {
                         if (oldOverView == null) {
-                            for(int i=0;i<resp.length;i++){
-                            Constants.docid = resp[i++];
+                            for (int i = 0; i < resp.length; i++) {
+                                Constants.docid = resp[i++];
                             }
-                            OverView overView =new OverView(NewCourseProposalDialog.this);
+                            OverView overView = new OverView(NewCourseProposalDialog.this);
                             overView.show();
-                            newDocumentDialog.hide();
+                            newCourseProposalDialog.hide();
                         } else {
                             oldOverView.show();
-                            newDocumentDialog.hide();
+                            newCourseProposalDialog.hide();
 
                         }
 

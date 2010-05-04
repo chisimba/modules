@@ -33,6 +33,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.extjs.gxt.ui.client.data.*;
 import com.google.gwt.core.client.GWT;
 import org.wits.client.Constants;
+import org.wits.client.EditDocumentDialog;
 import org.wits.client.util.WicidXML;
 
 //import com.extjs.gxt.ui.client.data.DataReader;
@@ -59,7 +60,12 @@ public class OverView {
     private RulesAndSyllabusOne oldRulesAndSyllabusOne;
     public String overViewData;
     private ForwardTo forwardTo;
+    private EditDocumentDialog editDocumentDialog;
 
+    public OverView(EditDocumentDialog editDocumentDialog) {
+        this.editDocumentDialog = editDocumentDialog;
+        createUI();
+    }
 
     public OverView(NewCourseProposalDialog newCourseProposalDialog) {
         this.newCourseProposalDialog = newCourseProposalDialog;
@@ -82,8 +88,8 @@ public class OverView {
         mainForm.setLabelWidth(200);
 
         //test database entry using the first input field on overview...
-        
-        
+
+
         overViewDialog.setButtonAlign(HorizontalAlignment.LEFT);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         // set radio buttons, their labels and thrir positon relative
@@ -119,7 +125,9 @@ public class OverView {
 
         questionA1.setFieldLabel("A.1. Name of course/ unit.");
         questionA1.setEmptyText("Enter the course/unit name");
-        questionA1.setValue(newCourseProposalDialog.getTitleField().getValue());
+        if (newCourseProposalDialog != null) {
+            questionA1.setValue(newCourseProposalDialog.getTitleField().getValue());
+        }
         questionA1.setAllowBlank(false);
         questionA1.setMinLength(100);
         questionA1.getValue();
@@ -182,24 +190,24 @@ public class OverView {
                 if (qA1 == null) {
                     MessageBox.info("Missing answer", "Provide an answer to question A.1.", null);
                     return;
-                }else{
+                } else {
                     qA1.replaceAll(" ", "--");
                 }
 
-                qA2=questionA2.getValue().getBoxLabel().replaceAll(" ", "--");
-                if (qA2 == null){
+                qA2 = questionA2.getValue().getBoxLabel().replaceAll(" ", "--");
+                if (qA2 == null) {
                     MessageBox.info("Missing selection", "Please make a selection for question A.2.", null);
                     return;
-                }else{
+                } else {
                     qA2.replaceAll(" ", "--");
 
                 }
-                
+
                 qA3 = questionA3.getValue();//.toString().replaceAll(" ", "--");// deptField.getValue().getId();
                 if (qA3 == null) {
                     MessageBox.info("Missing answer", "Provide an answer to question A.3.", null);
                     return;
-                }else{
+                } else {
                     qA3.toString().replaceAll(" ", "--");
                 }
                 //MessageBox.info("test", "missing", null);
@@ -208,38 +216,37 @@ public class OverView {
                 if (qA4 == null) {
                     MessageBox.info("Missing department", "Provide your answer to question A.4.", null);
                     return;
-                }else{
-                    qA4.toString().replaceAll(" ","--");
+                } else {
+                    qA4.toString().replaceAll(" ", "--");
                 }
 
                 qA5 = questionA5.getValue().getBoxLabel().replaceAll(" ", "--");// deptField.getValue().getId();
                 if (qA5 == null) {
                     MessageBox.info("Missing department", "Please make a selection for question A.5.", null);
                     return;
-                }else{
+                } else {
                     qA5.replaceAll(" ", "--");
                 }
-                
+
                 storeDocumentInfo();
-                
+
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname="+"overview"+"&formdata=" +overViewData+"&docid="+Constants.docid;
-                
+                        + "?module=wicid&action=saveFormData&formname=" + "overview" + "&formdata=" + overViewData + "&docid=" + Constants.docid;
+
                 createDocument(url);
-                
-                if (oldRulesAndSyllabusOne == null){
+
+                if (oldRulesAndSyllabusOne == null) {
                     RulesAndSyllabusOne rulesAndSyllabusOne = new RulesAndSyllabusOne(OverView.this);
                     rulesAndSyllabusOne.show();
                     overViewDialog.hide();
-                }
-                else{
+                } else {
 
                     oldRulesAndSyllabusOne.show();
                     overViewDialog.hide();
 
                 }
-                
+
             }
         });
 
@@ -254,17 +261,17 @@ public class OverView {
             }
         });
 
-         forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
                 ForwardTo forwardToDialog = new ForwardTo();
                 forwardToDialog.show();
-                storeDocumentInfo();
+
             }
         });
 
-        
+
         mainForm.addButton(backButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
@@ -284,6 +291,7 @@ public class OverView {
         overViewDialog.setHideOnButtonClick(true);
 
         overViewDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -295,7 +303,7 @@ public class OverView {
         //setDepartment();
     }
 
-    public void storeDocumentInfo(){
+    public void storeDocumentInfo() {
         WicidXML wicidxml = new WicidXML("overview");
         wicidxml.addElement("qA1", qA1);
         wicidxml.addElement("qA2", qA2);
@@ -305,8 +313,7 @@ public class OverView {
         overViewData = wicidxml.getXml();
     }
 
-    public void setDocumentInfo(){
-
+    public void getDocumentInfo() {
     }
 
     public void setOldRulesAndSyllabusOne(RulesAndSyllabusOne oldRulesAndSyllabusOne) {
@@ -316,7 +323,7 @@ public class OverView {
     public void show() {
         overViewDialog.show();
     }
-    
+
     public void setSelectedFolder(ModelData selectedFolder) {
         this.selectedFolder = selectedFolder;
         topicField.setValue((String) this.selectedFolder.get("id"));
@@ -341,16 +348,15 @@ public class OverView {
                     if (resp[0].equals("")) {
                         /*if (oldOverView == null) {
 
-                            Constants.docid = resp[1];
-                            OverView overView = new OverView(NewCourseProposalDialog.this);
-                            overView.show();
-                            newDocumentDialog.hide();
+                        Constants.docid = resp[1];
+                        OverView overView = new OverView(NewCourseProposalDialog.this);
+                        overView.show();
+                        newDocumentDialog.hide();
                         } else {
-                            oldOverView.show();
-                            newDocumentDialog.hide();
+                        oldOverView.show();
+                        newDocumentDialog.hide();
 
                         }*/
-
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
