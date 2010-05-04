@@ -226,7 +226,7 @@ flickrshow.prototype = {
 		this.es.slider = $("fs" + this.fs.id + "Slider");
 		this.es.sliderT = $("fs" + this.fs.id + "SliderT");
 		this.es.sliderH = $("fs" + this.fs.id + "SliderH");
-		new Insertion.Top(this.es.wrapper, "<ol class=\"fsImages\" id=\"fs" + this.fs.id + "Images\" style=\"height:" + ($(this.os.target).getHeight() - 40) + "px;left:0;list-style:none;margin:0;padding:0;position:absolute;text-indent:0;top:0;width:100%;\"></ol>");
+		new Insertion.Top(this.es.wrapper, "<ol class=\"fsImages\" id=\"fs" + this.fs.id + "Images\" style=\"height:" + ($(this.os.target).getHeight() ) + "px;left:0;list-style:none;margin:0;padding:0;position:absolute;text-indent:0;top:0;width:100%;\"></ol>");
 		this.es.imgs = $("fs" + this.fs.id + "Images");
 		new Insertion.Bottom(this.es.wrapper, "<div class=\"fsLoading\" id=\"fs" + this.fs.id + "Loading\" style=\"height:" + $(this.os.target).getHeight() + "px;left:0;overflow:hidden;position:absolute;top:0;width:100%;\"></div>");
 		this.es.loading = $("fs" + this.fs.id + "Loading");
