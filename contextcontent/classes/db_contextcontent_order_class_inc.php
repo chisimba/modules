@@ -637,11 +637,11 @@ class db_contextcontent_order extends dbtable {
             }else {
                 $link = new link ($this->uri(Null, $module));
             }
-            $link->link = '&#171; '.'Back to Chapter: '.htmlentities($page[0]['chaptertitle']);
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_backchapter','learningcontent').': '.htmlentities($page[0]['chaptertitle']);
         } else {
             $page = $results[0];
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = '&#171; '.'Previous Page: '.htmlentities($page['menutitle']);
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_prevpage','learningcontent').': '.htmlentities($page['menutitle']);
         }
         return $link->show();
     }
