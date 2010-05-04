@@ -70,6 +70,8 @@ class db_learningcontent_order extends dbtable
         $this->objContext = $this->getObject('dbcontext', 'context');
         // Store Context Code
         $this->contextCode = $this->objContext->getContextCode();
+        //Load Language Object
+        $this->objLanguage = $this->getObject('language', 'language');
     }
     
     /**
@@ -677,7 +679,7 @@ class db_learningcontent_order extends dbtable
             }else{
              $link = new link ($this->uri(Null, $module));
             }
-            $link->link = '&#171; '.'Back to Chapter: '.htmlentities($page[0]['chaptertitle']);
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_learningcontent_backchapter','learningcontent').': '.htmlentities($page[0]['chaptertitle']);
         } else {
             if($leftvalue==1){
              $nextpage=Null;
@@ -688,11 +690,11 @@ class db_learningcontent_order extends dbtable
             if(!empty($nextpage)){
              $page = $results[0];
              $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'], 'prevpageid'=>$nextpage), $module));
-             $link->link = '&#171; '.'Previous Page: '.htmlentities($page['menutitle']);            
+             $link->link = '&#171; '.$this->objLanguage->languageText('mod_learningcontent_prevpage','learningcontent').': '.htmlentities($page['menutitle']);            
             } else {
              $page = $results[0];
              $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-             $link->link = '&#171; '.'Previous Page: '.htmlentities($page['menutitle']);
+             $link->link = '&#171; '.$this->objLanguage->languageText('mod_learningcontent_prevpage','learningcontent').': '.htmlentities($page['menutitle']);
             }
         }
         return $link->show();
@@ -723,13 +725,13 @@ class db_learningcontent_order extends dbtable
             }else{
              $link = new link ($this->uri(Null, $module));
             }
-            $link->link = '&#171; '.'Back to Chapter: '.htmlentities($page[0]['chaptertitle']);
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_learningcontent_backchapter','learningcontent').': '.htmlentities($page[0]['chaptertitle']);
             $pageId = Null;
         } else {
             $page = $results[0];
             $pageId = $page['id'];
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = '&#171; '.'Previous Page: '.htmlentities($page['menutitle']);
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_learningcontent_prevpage','learningcontent').': '.htmlentities($page['menutitle']);
         }
         return $pageId;
     }

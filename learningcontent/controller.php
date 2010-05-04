@@ -274,14 +274,14 @@ class learningcontent extends controller {
                 return $this->getChapterListAsTree();
             case 'showcontextchapters':
                 $trackPage = array();
-                $trackPage['contextItemId'] = $this->getParam('id');
+                $trackPage['contextItemId'] = $this->getParam('chapterid');
                 $trackPage['prevpageid'] = $this->getParam('prevpageid');
                 $trackPage['contextCode'] = $this->contextCode;
                 $trackPage['module'] = $this->getParam('module');
                 $trackPage['datecreated'] = date('Y-m-d H:i:s');
                 $trackPage['pageorchapter'] = 'chapter';
                 $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewchapter', 'learningcontent');
-                return $this->showContextChapters();
+                return $this->showContextChapters($trackPage);
 	    	case 'rss':
 				return $this->viewRss();
 			case 'addcomment':
@@ -314,14 +314,14 @@ class learningcontent extends controller {
     protected function showContextChapters($trackPage='') {
 
         if ($trackPage!='' && $this->eventsEnabled) {
-         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id, $this->sessionId);
+         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $trackPage['contextItemId'], $this->sessionId);
          $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevpageid'], $this->sessionId);
          //Log when user leaves a page
          if(!empty($recordId))
             $ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
          if ($ischapterlogged==FALSE) {
             $datetimenow = date('Y-m-d H:i:s');
-            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $id, $this->contextCode,$trackPage['module'],$trackPage['datecreated'],$trackPage['pageorchapter'],$trackPage['description'], $datetimenow, Null);
+            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $trackPage['contextItemId'], $this->contextCode,$trackPage['module'],$trackPage['datecreated'],$trackPage['pageorchapter'],$trackPage['description'], $datetimenow, Null);
          }
         }
 
@@ -851,6 +851,7 @@ class learningcontent extends controller {
         $this->setVarByRef('page', $page);
         $this->setVarByRef('currentPage', $pageId);
         $this->setVarByRef('currentChapter', $page['chapterid']);
+        $this->setVarByRef('pagelft', $page['lft']);
 
         $this->setVarByRef('nextPage', $this->objContentOrder->getNextPage($this->contextCode, $page['chapterid'], $page['lft']));
         $this->setVarByRef('prevPage', $this->objContentOrder->getPreviousPage($this->contextCode, $page['chapterid'], $page['lft']));

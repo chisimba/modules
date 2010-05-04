@@ -32,14 +32,30 @@ $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $this->loadClass("htmltable", 'htmlelements');
-    
+
+//Add link back to the chapter list on the middle links
+
+$middle = '';
+$prvpage = $this->objContentOrder->getPrevPageId($this->contextCode, $currentChapter, $pagelft);
+//Check if first page in the chapter
+if($prvpage!=Null){
+$prevLeftValue = $pagelft-2;
+$nextpage = $this->objContentOrder->getNextPageId($this->contextCode, $currentChapter, $prevLeftValue);
+
+$link = new link ($this->uri(array("action"=>"showcontextchapters","chapterid"=>$currentChapter, 'prevpageid'=>$nextpage), $module));
+$link->link = '&#171; '.$this->objLanguage->languageText('mod_learningcontent_backchapter','learningcontent');
+$middle .= $link->show();
+
+$middle .= ' <br /> ';
+}
+//A link to adding a page    
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_learningcontent_addcontextpages','learningcontent');
 
 $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addScormLink->link = $this->objLanguage->languageText('mod_learningcontent_addcontextscormpages','learningcontent');
 
-
+//A link to editing a page
 $editLink = new link ($this->uri(array('action'=>'editpage', 'id'=>$page['id'], 'context'=>$this->contextCode)));
 $editLink->link = $this->objLanguage->languageText('mod_learningcontent_editcontextpages','learningcontent');
 
@@ -66,9 +82,9 @@ if ($this->isValid('deletepage')) {
 }
 
 if (count($list) == 0) {
-    $middle = '&nbsp;';
+    $middle .= '&nbsp;';
 } else {
-    $middle = '';
+    $middle .= '';
     $divider = '';
     
     foreach ($list as $item)
@@ -100,7 +116,6 @@ if ($this->isValid('movepageup')) {
         $middle .= $link->show();
     }
 }
-
 
 $table = $this->newObject('htmltable', 'htmlelements');
 //$table->border='1';
