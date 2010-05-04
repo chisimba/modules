@@ -238,7 +238,7 @@ if(!empty($pagepicture)){
    	$objPop = $this->newObject('windowpop', 'htmlelements');
     $objPop->set('location', $link);
     $objPop->set('linktext', $picdesc);
-    $objPop->set('window_name','forum_attachments');
+    $objPop->set('window_name','picture');
     $objPop->set('width','600');
     $objPop->set('height','400');
     $objPop->set('left','100');
@@ -291,9 +291,9 @@ if(!empty($pageformula)){
    	$objPop = $this->newObject('windowpop', 'htmlelements');
     $objPop->set('location', $fmlalink);
     $objPop->set('linktext', $fmladesc);
-    $objPop->set('window_name','forum_attachments');
-    $objPop->set('width','100%');
-    $objPop->set('height','100%');
+    $objPop->set('window_name','formula');
+    $objPop->set('width','600');
+    $objPop->set('height','400');
     $objPop->set('left','100');
     $objPop->set('top','100');
     $objPop->set('resizable','yes');
