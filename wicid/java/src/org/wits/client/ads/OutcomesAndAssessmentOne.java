@@ -254,9 +254,15 @@ public class OutcomesAndAssessmentOne {
         WicidXML wicidxml = new WicidXML("outcomesandassessment1");
         wicidxml.addElement("qD1a", qD1a);
         wicidxml.addElement("aD1b", qD1b);
-        wicidxml.addElement("q2a", qD2a);
-        wicidxml.addElement("q2b", qD2b);
-        wicidxml.addElement("q2c", qD2c);
+        try{
+            wicidxml.addElement("q2a", qD2a);
+            wicidxml.addElement("q2b", qD2b);
+            wicidxml.addElement("q2c", qD2c);
+        }
+        catch (NullPointerException npe){
+            
+        }
+
         wicidxml.addElement("qD3", qD3);
         outcomesAndAssessmentOneData = wicidxml.getXml();
     }

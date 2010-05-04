@@ -90,7 +90,7 @@ public class SubsidyRequirements {
         radioC2a1.setBoxLabel("off-campus");
         Radio radioC2a2 = new Radio();
         radioC2a2.setBoxLabel("on-campus");
-        radioC2a1.setValue(true);
+        radioC2a2.setValue(true);
         questionC2b.disable();
         radioC2a1.enableEvents(true);
 
@@ -139,10 +139,10 @@ public class SubsidyRequirements {
         questionC4a.addListener(Events.Change, new Listener<BaseEvent>(){
             public void handleEvent(BaseEvent e) {
                 if (radioC4a1.getValue() == true){
-                    questionC4b.disable();
+                    questionC4b.enable();
                 }
                 if (radioC4a1.getValue() == false){
-                    questionC4b.enable();
+                    questionC4b.disable();
                 }
             }
 
@@ -346,18 +346,31 @@ public class SubsidyRequirements {
         qC1 = questionC1.getValue();
         qC2a = questionC2a.getValue().getFieldLabel();
         qC2b = questionC2b.getValue();
-        qC3 = questionC3.getValue().toString();
+       Number xqC3 = questionC3.getValue();
+
+        qC3=xqC3+"";
         qC4a = questionC4a.getValue().getFieldLabel();
         qC4b1 = q4b1.getValue();
         qC4b2 = q4b2.getValue();
 
         WicidXML wicidxml = new WicidXML("subsidyRequirements");
         wicidxml.addElement("qC2a", qC2a);
-        wicidxml.addElement("qC2b", qC2b);
+        try {
+            wicidxml.addElement("qC2b", qC2b);
+        }
+        catch (NullPointerException npe) {
+            wicidxml.addElement("qC2b", "null");
+        }
         wicidxml.addElement("qC3", qC3);
         wicidxml.addElement("qC4a", qC4a);
-        wicidxml.addElement("qC4b1", qC4b1);
-        wicidxml.addElement("qC4b2", qC4b2);
+        if (qC4a == "Yes"){
+            wicidxml.addElement("qC4b1", qC4b1);
+            wicidxml.addElement("qC4b2", qC4b2);
+        }
+        else{
+            wicidxml.addElement("qC4b1", "null");
+            wicidxml.addElement("qC4b2", "null");
+        }
         subsidyRequirementsData = wicidxml.getXml();
     }
 
