@@ -733,7 +733,7 @@ class db_contextcontent_order extends dbtable {
             return '';
         } else {
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = 'Next Page: '.htmlentities($page['menutitle']).' &#187;';
+            $link->link = $this->objLanguage->languageText('mod_contextcontent_nextpage','learningcontent').': '.htmlentities($page['menutitle']).' &#187;';
             return $link->show();
         }
     }
