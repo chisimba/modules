@@ -91,7 +91,7 @@ public class Main {
     private MenuItem deleteFileMenuItem = new MenuItem();
     private MenuItem renameFileMenuItem = new MenuItem();
     private MenuItem downloadFileMenuItem = new MenuItem();
-    private MenuItem editMenuItem = new MenuItem();
+    //private MenuItem editMenuItem = new MenuItem();
     private NewDocumentDialog newDocumentDialog;
     private OverView overView;
     private RulesAndSyllabusOne rulesAndSyllabusOne;
@@ -114,6 +114,8 @@ public class Main {
     private Button searchButton = new Button("Search");
     private Main thisInstance;
     private Button advancedSearch = new Button("Advanced Search");
+    /*private Button test = new Button("Test");
+    private test testDialog;*/
 
     /**
      * Creates a new instance of Main
@@ -300,6 +302,7 @@ public class Main {
         toolBar2.add(searchField);
         toolBar2.add(searchButton);
         toolBar2.add(advancedSearch);
+        //toolBar2.add(test);
         center.setTopComponent(toolBar2);
 
         advancedSearch.addSelectionListener(new SelectionListener<ButtonEvent>() {
@@ -312,6 +315,16 @@ public class Main {
                 advancedSearchDialog.show();
             }
         });
+
+        /*test.addSelectionListener(new SelectionListener<ButtonEvent>(){
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                if(testDialog == null) {
+                    testDialog = new test();
+                }
+                testDialog.show();
+            }
+        });*/
 
         loader2.load();
         view = new ListView<ModelData>() {
@@ -334,7 +347,7 @@ public class Main {
 
                     public void handleEvent(SelectionChangedEvent<ModelData> md) {
                         selectedFile = md.getSelectedItem();
-                        editMenuItem.setEnabled(true);
+                        //editMenuItem.setEnabled(true);
 
                     }
                 });
@@ -388,7 +401,7 @@ public class Main {
             }
         });
 
-        editMenuItem.setText("Edit");
+        /*editMenuItem.setText("Edit");
         editMenuItem.setIconStyle("edit");
         editMenuItem.setEnabled(false);
         editMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
@@ -397,10 +410,10 @@ public class Main {
                 String docId = (String) selectedFile.get("docid");
                 documentListPanel.showEditDialog(docId);
             }
-        });
+        });*/
         viewContextMenu.add(downloadFileMenuItem);
         viewContextMenu.add(viewMenuItem);
-        viewContextMenu.add(editMenuItem);
+        //viewContextMenu.add(editMenuItem);
 
         viewContextMenu.add(new SeparatorMenuItem());
         viewContextMenu.add(renameFileMenuItem);

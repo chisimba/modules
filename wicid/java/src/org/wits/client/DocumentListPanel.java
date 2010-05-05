@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package org.wits.client;
+import java.util.Arrays;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.data.BaseListLoader;
@@ -90,6 +91,7 @@ public class DocumentListPanel extends LayoutContainer {
         columns.add(new ColumnConfig("Title", "Title", 100));
         columns.add(new ColumnConfig("Topic", "Topic", 100));
         columns.add(new ColumnConfig("Date", "Date", 100));
+        columns.add(new ColumnConfig("Attachment", "Attachment", 100));
         CellEditor checkBoxEditor = new CellEditor(new CheckBox());
 
         // create the column model
@@ -105,7 +107,8 @@ public class DocumentListPanel extends LayoutContainer {
         type.addField("Title", "title");
         type.addField("Topic", "topic");
         type.addField("Date", "date");
-
+        type.addField("Attachment", "attachmentstatus");
+        
 
         // use a http proxy to get the data
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + "?module=wicid&action=getdocuments");
@@ -113,7 +116,6 @@ public class DocumentListPanel extends LayoutContainer {
 
         // need a loader, proxy, and reader
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type);
-
         loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
                 reader);
 
@@ -189,7 +191,7 @@ public class DocumentListPanel extends LayoutContainer {
     }
 
     private void approveDocs() {
-        String ids = "";
+        /*String ids = "";
         for (ModelData row : selectedRows) {
             ids += row.get("docid") + ",";
         }
@@ -216,7 +218,7 @@ public class DocumentListPanel extends LayoutContainer {
             });
         } catch (RequestException e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot approve files", null);
-        }
+        }*/
     }
 
     private void deleteDocs() {
@@ -262,9 +264,9 @@ public class DocumentListPanel extends LayoutContainer {
         type.addField("Title", "title");
         type.addField("Topic", "topic");
         type.addField("Department", "department");
-
         type.addField("Telephone", "telephone");
         type.addField("Date", "date");
+        type.addField("Attachment", "attachmentstatus");
 
         // use a http proxy to get the data
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + params);
@@ -289,7 +291,20 @@ public class DocumentListPanel extends LayoutContainer {
             public void handleEvent(MessageBoxEvent ce) {
                 Button btn = ce.getButtonClicked();
                 if (btn.getText().equalsIgnoreCase("Yes")) {
-                    approveDocs();
+                    // check if the document has an attachment
+                    String attachments = "";
+                    for (ModelData row : selectedRows) {
+                        attachments += row.get("Attachment") + ",";
+                    }
+
+                    boolean status = false;
+                    status = checkAttachments(attachments);
+                    if(status) {
+                        approveDocs();
+                    }
+                    else {
+                        MessageBox.info("Approve Documents", "Only documents that have attachemnts can be approved. Please try again!", null);
+                    }
                 }
             }
         };
@@ -436,4 +451,16 @@ public class DocumentListPanel extends LayoutContainer {
     private final native JsArray<JSonDocument> asArrayOfDocument(String json) /*-{
     return eval(json);
     }-*/;
+
+    private boolean checkAttachments(String attachments) {
+        String[] attach = attachments.split(",");
+
+        for(String a : attach) {
+            if(a.equals("No")) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
