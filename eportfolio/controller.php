@@ -2148,7 +2148,7 @@ function createGroups($userid, $title)
         $newGroupId = $this->_objGroupAdmin->addGroupUser($newGroupId, $this->objUser->userId());
     } // End foreach subgroup
     // Add groupMembers
-    //$this->addGroupMembers();
+    $this->addGroupMembers();
     // Now create the ACLS
     $this->_objManageGroups->createAcls($userid, $title);
 }
