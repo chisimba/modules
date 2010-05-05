@@ -279,5 +279,26 @@ class dbfileuploads extends dbtable {
 
         echo json_encode(array("files"=>$files));
     }
+
+    /**
+     * check if the documents have attachments
+     * @param <type> $ids
+     * @return <type>
+     */
+    function checkAttachment($ids) {
+        $docids=explode(",", $ids);
+        $count = count($docids);
+        for($i=0;$i<$count;$i++) {
+            if(strlen(trim($docids[$i])) > 0) {
+                $filter = "where docid = '".$docids[$i]."'";
+                $res = $this->getAll($filter);
+                if(count($res) == 0) {
+                    return "false";
+                }
+            }
+        }
+
+        return "true";
+    }
 }
 ?>

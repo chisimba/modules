@@ -39,7 +39,9 @@ class dbdocuments extends dbtable {
         $this->userutils=$this->getObject('userutils');
     }
     public function getdocuments($mode="default") {
-        $sql="select * from tbl_wicid_documents where active = 'N'";// and mode ='$mode'";
+        $sql="select A.*, B.docid from tbl_wicid_documents as A
+                  left outer join tbl_wicid_fileuploads as B on A.id = B.docid
+              where A.active = 'N'";// and mode ='$mode'";
         if(!$this->objUser->isadmin()) {
             //$sql.=" and userid = '".$this->objUser->userid()."'";
         }
@@ -51,6 +53,12 @@ class dbdocuments extends dbtable {
         foreach ($rows as $row) {
             //$owner=$this->userutils->getUserId();
             $owner=$this->objUser->fullname($row['userid']);
+            if(trim(strlen($row['docid'])) == 0) {
+                $attachmentStatus = "No";
+            }
+            else {
+                $attachmentStatus = "Yes";
+            }
             $docs[]=array(
                     'userid'=> $row['userid'],
                     'owner'=>$owner,
@@ -62,7 +70,7 @@ class dbdocuments extends dbtable {
                     'department'=> $row['department'],
                     'telephone'=> $row['telephone'],
                     'date'=> $row['date_created'],
-                    'attachmentstatus'=> $row['upload']
+                    'attachmentstatus'=> $attachmentStatus
             );
         }
         echo json_encode(array("documents"=>$docs));

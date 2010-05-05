@@ -677,4 +677,8 @@ class wicid extends controller {
 
        return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
     }
+
+    public function __checkdocattach() {
+        echo $this->objUploadTable->checkAttachment($this->getParam('docids'));
+    }
 }
