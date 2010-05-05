@@ -349,7 +349,16 @@ class learningcontent extends controller {
         }else{
          $imageDesc = $imageDesc['filedescription'];
         }
-        echo '<div align="center"><h3>'.$imageDesc.'</h3>'.$this->objFilePreviewFilter->parse('[FILEPREVIEW id="'.$imageId.'" comment="'.$imageName.'" /]')."<br /></div>";
+        $hformulatbl = $this->newObject('htmltable', 'htmlelements');
+        $hformulatbl->cellpadding = 5;
+        $hformulatbl->width = 1024;
+        $hformulatbl->valign = 'center';
+        //Text
+        $hformulatbl->startRow();
+        $hformulatbl->addCell('<div align="center"><h3>'.$imageDesc.'</h3><br /><br /><br /><br /><br /><br /><br />'.$this->objFilePreviewFilter->parse('[FILEPREVIEW id="'.$imageId.'" comment="'.$imageName.'" /]')."<br /><br /><br /><br /><br /><br /><br /></div>");
+        $hformulatbl->endRow();
+
+        echo $hformulatbl->show();
     }
     /**
     *Method to return an image
