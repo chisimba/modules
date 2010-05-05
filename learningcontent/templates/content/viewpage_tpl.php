@@ -425,26 +425,6 @@ if($showcomment==1)
 
 
 if (!empty($imageId)) {
-   $imageName = $this->objFiles->getFileName($imageId);
-   $imageDesc = $this->objFiles->getFileInfo($imageId);
-   if(empty($imageDesc['filedescription'])){
-    $imageDesc = $imageName;
-   }else{
-    $imageDesc = $imageDesc['filedescription'];
-   }
-   $link = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $imageId));
- 		// Load the window popup class
-  	$objPop = $this->newObject('windowpop', 'htmlelements');
-   $objPop->set('location', $link);
-   $objPop->set('linktext', $imageDesc);
-   $objPop->set('window_name','forum_attachments');
-   $objPop->set('width','600');
-   $objPop->set('height','400');
-   $objPop->set('left','100');
-   $objPop->set('top','100');
-   echo $objPop->show(); 
-
-    //$uploadstatus = $this->getParam('status');
     $alertBox = $this->getObject('alertbox', 'htmlelements');
     $alertBox->putJs();
     echo "<script type='text/javascript'>
