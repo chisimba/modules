@@ -188,6 +188,7 @@ class learningcontent extends controller {
                 $trackPage = array();
                 $trackPage['contextItemId'] = $this->getParam('id');
                 $trackPage['prevpageid'] = $this->getParam('prevpageid');
+                $trackPage['prevchapterid'] = $this->getParam('prevchapterid');
                 $trackPage['contextCode'] = $this->contextCode;
                 $trackPage['module'] = $this->getParam('module');
                 $trackPage['datecreated'] = date('Y-m-d H:i:s');
@@ -840,8 +841,10 @@ class learningcontent extends controller {
         //Log in activity streamer only if logged in (Public courses dont need login)
         if(!empty($this->userId) && !empty($trackPage)){
 	         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->sessionId);
-
-        $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevpageid'], $this->sessionId);
+        if(!empty($trackPage['prevchapterid']))
+         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevchapterid'], $this->sessionId);
+        else
+         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevpageid'], $this->sessionId);
         //Log when user leaves a page
         if(!empty($recordId))
             $ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
@@ -863,10 +866,7 @@ class learningcontent extends controller {
         $this->setVarByRef('pagelft', $page['lft']);
 
         $this->setVarByRef('nextPage', $this->objContentOrder->getNextPage($this->contextCode, $page['chapterid'], $page['lft']));
-        if(!empty($trackPage['contextItemId']))
-         $this->setVarByRef('prevPage', $trackPage['contextItemId']);
-        else
-         $this->setVarByRef('prevPage', $this->objContentOrder->getPreviousPage($this->contextCode, $page['chapterid'], $page['lft']));        
+        $this->setVarByRef('prevPage', $this->objContentOrder->getPreviousPage($this->contextCode, $page['chapterid'], $page['lft']));        
         $this->setVarByRef('isFirstPageOnLevel', $this->objContentOrder->isFirstPageOnLevel($page['id']));
         $this->setVarByRef('isLastPageOnLevel', $this->objContentOrder->isLastPageOnLevel($page['id']));
 
