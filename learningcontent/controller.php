@@ -863,7 +863,10 @@ class learningcontent extends controller {
         $this->setVarByRef('pagelft', $page['lft']);
 
         $this->setVarByRef('nextPage', $this->objContentOrder->getNextPage($this->contextCode, $page['chapterid'], $page['lft']));
-        $this->setVarByRef('prevPage', $this->objContentOrder->getPreviousPage($this->contextCode, $page['chapterid'], $page['lft']));
+        if(!empty($trackPage['contextItemId']))
+         $this->setVarByRef('prevPage', $trackPage['contextItemId']);
+        else
+         $this->setVarByRef('prevPage', $this->objContentOrder->getPreviousPage($this->contextCode, $page['chapterid'], $page['lft']));        
         $this->setVarByRef('isFirstPageOnLevel', $this->objContentOrder->isFirstPageOnLevel($page['id']));
         $this->setVarByRef('isLastPageOnLevel', $this->objContentOrder->isLastPageOnLevel($page['id']));
 

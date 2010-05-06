@@ -270,10 +270,10 @@ class db_learningcontent_order extends dbtable
                 return $this->generateDHTMLTree($results, $defaultSelected, $module);
                 break;
              case 'htmllist': 
-                return $this->generateHtmllistTree($results, $defaultSelected, $module);
+                return $this->generateHtmllistTree($results, $defaultSelected, $module, $chapter);
                 break;
             default:
-                return $this->generateHtmllistTree($results, $defaultSelected, $module);
+                return $this->generateHtmllistTree($results, $defaultSelected, $module, $chapter);
                 break;
         }
         
@@ -287,12 +287,11 @@ class db_learningcontent_order extends dbtable
     * @return array Details of the Page, FALSE if does not exist
     * @access private
     */
-    private function generateHtmllistTree($results, $defaultSelected='', $module)
+    private function generateHtmllistTree($results, $defaultSelected='', $module, $chapterId='')
     {
         $treeMenu = new treemenu();
-        
         $nodeArray = array();
-								//Icon for activity streamer
+	//Icon for activity streamer
         $this->objAltConfig = $this->getObject('altconfig','config');
         $modPath=$this->objAltConfig->getModulePath();
         $replacewith="";
@@ -314,7 +313,7 @@ class db_learningcontent_order extends dbtable
              $showImg="";
             }        
 
-            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id']), $module),'icon'=>$showImg);
+            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'], 'prevpageid'=>$chapterId), $module),'icon'=>$showImg);
             
             if ($treeItem['id'] == $defaultSelected) {
                 $nodeDetails['cssClass'] = 'confirm';
