@@ -66,7 +66,7 @@ class textblockbase extends object
             $objWashout = $this->getObject("washout", "utilities");
             $ret = $objWashout->parseText($ar['blocktext']);
             if ($useDiv) {
-                $ret = "<div $cssId $cssClass>$ret</div>";
+                $ret = "<div $cssClass>$ret</div>";
             }
             $this->blockContents = $ret;
         } else {
