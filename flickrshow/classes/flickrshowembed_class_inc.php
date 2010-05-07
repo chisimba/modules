@@ -55,10 +55,10 @@ class flickrshowembed extends object {
         $script = $this->getResourceURI('flickrshow.unpacked.js', 'flickrshow');
         
         $css    = '<!--[if IE 6]>
-                   <link rel="stylesheet" type="text/css" media="screen" href="ie-6-win.css">
+                   <link rel="stylesheet" type="text/css" media="screen" href="'.$flickrshow->skindir.'ie-6-win.css">
                    <![endif]-->
                    <!--[if IE 7]>
-                   <link rel="stylesheet" type="text/css" media="screen" href="ie-7-win.css">
+                   <link rel="stylesheet" type="text/css" media="screen" href="'.$flickrshow->skindir.'ie-7-win.css">
                    <![endif]-->';
         $file   = "<script type='text/javascript' src='$script'></script>";
         
