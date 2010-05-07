@@ -49,17 +49,14 @@ $this->objDropDownMenu = $this->getObject('dropdown_module', 'hosportal');
     }
 
 abstract protected  function buildSwitchMenu();
+abstract protected  function buildSwitchMenuDropDownOption();
+abstract protected function buildSearchField();
 abstract public function showBuiltSwitchMenu();
-//public function setNoOfDesiredMessagesPerPage($no_of_desired_messages_per_page)
-//{
-//    $this->noOfDesiredMessagesPerPage = $no_of_desired_messages_per_page;
-//
-//}
-//public function getNoOfDesiredMessagesPerPage($no_of_desired_messages_per_page)
-//{
-//    return $this->noOfDesiredMessagesPerPage;
-//
-//}
+abstract protected function getSearchFormAction();
+abstract protected function getSortandPaginationFormAction();
+
+
+
 protected function setUpNoOfMessagesDropDownOption()
 {
 
@@ -67,22 +64,19 @@ protected function setUpNoOfMessagesDropDownOption()
    $this->objDropDownMenu->createNewObjectFromModule('noOfMessagesDropDown');
    //=&new dropdown('noOfMessagesDropDown');
   // $dd->addOption()    will add a blank option
-for ($x=1;$x<10;$x++)
+for ($x=2;$x<11;$x++)
 {
      $this->objDropDownMenu->insertOptionIntoDropDown($x,$x);
 }
 //$this->objDropDownMenu->setBreakSpace('&nbsp;&nbsp;&nbsp;');
 //$this->objDropDownMenu->addOption('1','2');
 //   $this->objDropDownMenu->addOption('2','5');
-   $this->objDropDownMenu->setDefaultOptionForDropDown(2);
+   $this->objDropDownMenu->setDefaultOptionForDropDown(4);
   return $this->objDropDownMenu->showBuildDropDownMenu();
 
 //$this->objDropDownMenu->setSelected($this->getSession('mydropdown'));
 }
-protected function setUpSearchField()
-{
 
-}
 protected function setSortAuthorAscLink($action = 'sortnview', $idSubjectMatter=NULL, $noOfMessages = 1)
 {
     $lnkSortAuthorAsc = $this->objouputtext->insertTextFromConfigFile("mod_hosportal_sortauthoracs");

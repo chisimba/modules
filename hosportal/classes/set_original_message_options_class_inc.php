@@ -23,7 +23,7 @@ public function setNoOfDesiredMessagesPerPage($no_of_desired_messages_per_page)
 protected  function buildSwitchMenu()
 {
 
-  $this->objForm=$this->objbuildform->createNewObjectFromModule('messageOptions',$this->getFormAction());
+  $this->objForm=$this->objbuildform->createNewObjectFromModule('messageOptions',$this->getSortandPaginationFormAction());
 
 //  $this->objform= $this->objbuildform->addObjectToForm($dd);
      $switchMenuTopHeading = $this->objouputtext->insertTextFromConfigFile("mod_hosportal_sortheading");
@@ -133,12 +133,12 @@ public function showBuiltSwitchMenu()
 }
 
 
-private function getSearchFormAction()
+protected  function getSearchFormAction()
  {
     return  $formAction = $this->uri(array("action" => "searchForComment", 'noOfMessages'=>$this->noOfDesiredMessagesPerPage,'searchBoolean'=> TRUE), "hosportal" );
  }
 
- private function getFormAction()
+protected function getSortandPaginationFormAction()
  {
 
 

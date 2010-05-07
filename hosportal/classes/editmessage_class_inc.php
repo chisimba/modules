@@ -1,13 +1,51 @@
 <?php
-// include_once 'chisimba_modules_handler_class_inc.php';
- // include_once 'language_module_class_inc.php';
-  // include_once 'object_core_module_class_inc.php';
-include_once 'core_object_module_class_inc.php';
+
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+
+/*!  \class editmessage
+ *
+ *  \brief Class that models a button from the chisimba core modules
+ *  \brief It basically an interface class between the hosportal module and the chisimba core modules.
+ *  \brief This creates less dependancy on chisimba and increases flexibility and maintainability
+ *  \author Salman Noor
+ *  \author MIU Intern
+ *          School of Electrical Engineering, WITS Unversity
+ *  \version 0.68
+ *  \date    May 3, 2010
+ * \warning Do NOT pass variable types as parameters that are not specified in this class
+*/
+
 class editmessage extends object
 {
- //public $objLanguage;
+
+     /*!
+    * \brief private data member of class editmessage
+    * \brief This class is composed of one object from the language_module class beloninging to
+      * the chisimba_modules_handler hierarchy.
+     * \brief This object lets you output text from text elements from the register.conf file.
+    */
  private $objouputtext;
+
+      /*!
+    * \brief private data member of class editmessage
+    * \brief This class is composed of one object from the dbhosportal_messages class beloninging to
+      * the chisimba_modules_handler hierarchy.
+     * \brief This object provides functions to insert, sort, edit and delete entries in the database.
+    */
  private $objDBComment;
+
+       /*!
+    * \brief private data member of class editmessage
+    * \brief This class is composed of one object from the form_module class beloninging to
+      * the chisimba_modules_handler hierarchy.
+     * \brief This form object lets you add numerous different types of objects and fields. Once you have
+ * inputted all the data required in those objects. You can set this form to be submitted. Once submitted,
+ * all the inputted data is converted into parameters in which you can use the string query function
+ * getParam(variable to be stored,parameter) to do what you like with them in other entities.
+    */
 private $objbuildform;
 private $objform;
 private $objTitle;
@@ -15,23 +53,16 @@ private $objLabel;
 private $objTextArea;
 private $objBuildButton;
 private $SaveButton;
-private $objObject;
-private $objGoBackButon;
-private $messagesTable;
+
 private $messagesHandler;
 private $GoBackButton;
 private $objLink;
-//private $objObject;
-//private $objbuildform;
-//private $obj;
+
  public function init()
  {
-     $this->objObject = new core_object_module('core_object_module','hosportal');
-//    $this->objObject = new object_core_module('object_core_module','hosportal');
-//     $n = new A();
-  //Instantiate the language object
- // $this->objLanguage = $this->getObject('language','language');
+
   $this->objouputtext =$this->getObject('language_module','hosportal');
+  //
   //$this->objObject->instantiateObjectFromClass('language_module','hosportal');
 // $this->objObject->instantiateObjectFromClass($this->objouputtext,'language_module','hosportal');
   //Load the DB object
@@ -49,25 +80,25 @@ private $objLink;
 
     $this->objbuildform = $this->getObject('form_module','hosportal');
          //instatiate HTML table module object
-  $this->objHTMLTable = $this->getObject('htmltable_module','hosportal');
- $this->messagesHandler= $this->getObject('messages_handler','hosportal');
+ // $this->objHTMLTable = $this->getObject('htmltable_module','hosportal');
+// $this->messagesHandler= $this->getObject('messages_handler','hosportal');
    //instatiate link object
   $this->objLink = $this->getObject('link_module','hosportal');
  }
 
- private function loadElements()
- {
-  //Load the form class
-  //$this->loadClass('form','htmlelements');
-  //Load the textinput class
-  //$this->loadClass('textinput','htmlelements');
-  //Load the label class
- // $this->loadClass('label','htmlelements');
-  //Load the textarea class
-  //$this->loadClass('textarea','htmlelements');
-  //Load the button object
-//  $this->loadClass('button','htmlelements');
- }
+// private function loadElements()
+// {
+//  //Load the form class
+//  //$this->loadClass('form','htmlelements');
+//  //Load the textinput class
+//  //$this->loadClass('textinput','htmlelements');
+//  //Load the label class
+// // $this->loadClass('label','htmlelements');
+//  //Load the textarea class
+//  //$this->loadClass('textarea','htmlelements');
+//  //Load the button object
+////  $this->loadClass('button','htmlelements');
+// }
  private function buildForm()
  {
        //$this->loadElements();

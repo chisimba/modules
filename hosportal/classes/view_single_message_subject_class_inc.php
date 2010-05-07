@@ -228,7 +228,7 @@ $this->objTopForm= $this->objbuildform->addObjectToForm( $this->messagesAuthorTa
 
     $mngBacklink = $this->objLink->createNewObjectFromModule($this->uri(array(
     'module'=>'hosportal',
-    'action'=>'view'
+    'action'=>'viewForum'
    )));
 
    $mngBacklink = $this->objLink->embedLinkToObject($iconBackSelect = $this->objIcon->showIcon()) ;
@@ -310,9 +310,9 @@ $this->no_of_elements++;
   }
   return $this->no_of_elements;
 }
- public function buildReplyForm()
- {
-        $this->AllReplies = $this->objAllReplies->listAll();
+private function getPaginationParameters()
+{
+  $this->AllReplies = $this->objAllReplies->listAll();
         $searchBoolean = $this->getParam('searchBoolean');
         if ($searchBoolean==TRUE)
       {
@@ -349,6 +349,47 @@ if ($x == $this->number_of_pages || ($x==0 & $this->number_of_pages== 0))
         }
      }
 
+}
+ private function buildReplyForm()
+ {
+   //     $this->AllReplies = $this->objAllReplies->listAll();
+   $this->getPaginationParameters();
+//        $searchBoolean = $this->getParam('searchBoolean');
+//        if ($searchBoolean==TRUE)
+//      {
+//$searchValue = $this->getParam('searchValue');
+//$this->no_of_elements = $this->getNumberofSearchedReplies($searchValue);
+//  }
+//  else
+//  {
+//
+//
+//    $this->no_of_elements = $this->getNumberofReplies();
+//  }
+////  $this->no_of_elements = $this->getNumberofReplies();
+//$this->last_page_boolean_value = $this->no_of_elements%$this->no_of_desired_messages_per_page;
+//$this->number_of_pages = $this->no_of_elements/$this->no_of_desired_messages_per_page;
+////$this->number_of_pages = ceil($this->number_of_pages);
+//     $this->page_number_array = array();
+//// $this->page_number_array[]= $this->number_of_pages;
+//     for ($x=0;$x<=$this->number_of_pages;$x++)
+//     {
+//if ($x == $this->number_of_pages || ($x==0 & $this->number_of_pages== 0))
+//    {
+//    if ($this->last_page_boolean_value > 0)
+//        {
+//    $this->page_number_array[]= $x;
+//    break;
+//        }
+//    break;
+//    }
+//
+//    else
+//        {
+//     $this->page_number_array[]=$x;
+//        }
+//     }
+
 
 
      $this->objForm=$this->objbuildform->createNewObjectFromModule('comments',$this->getFormAction());
@@ -372,14 +413,14 @@ else
  $final = (($this->page_number_array[$this->page_number]*$this->no_of_desired_messages_per_page)) +($this->no_of_desired_messages_per_page);
 //$fiinal = ($initial+($this->no_of_desired_messages_per_page-1))-10;
 
-if ($this->page_number+1 < ceil($this->number_of_pages))
+if ($this->page_number == floor($this->number_of_pages))
         {
- $view_messages_limit = "messages $initial to $final of $this->no_of_elements";
+ $view_messages_limit = "Messages $initial to $this->no_of_elements of $this->no_of_elements";
      //  $view_messages_limit = "messages .$initial. - . $this->no_of_elements.   ";
         }
- if($this->page_number > 0)
+else
         {
-       $view_messages_limit = "messages $initial - $this->no_of_elements of $this->no_of_elements";
+       $view_messages_limit = "Messages $initial - $final of $this->no_of_elements";
    // $view_messages_limit = "messages .$initial. - . $fiinal.   ";
         }
 

@@ -29,7 +29,7 @@ public function setNoOfDesiredMessagesPerPage($no_of_desired_messages_per_page)
 protected  function buildSwitchMenu()
 {
     //Create the form
-  $this->objForm=$this->objbuildform->createNewObjectFromModule('messageOptions',$this->getFormAction());
+  $this->objForm=$this->objbuildform->createNewObjectFromModule('messageOptions',$this->getSortandPaginationFormAction());
 
      $switchMenuTopHeading = $this->objouputtext->insertTextFromConfigFile("mod_hosportal_sortheading");
 
@@ -136,7 +136,7 @@ public function showBuiltSwitchMenu()
 
 
 
- private function getFormAction()
+protected function getSortandPaginationFormAction()
  {
 // 'sortOptions' => "sortByLatestModifiedMessages",
 //     'idSubjectMatter'=> $idSubjectMatter,
@@ -148,7 +148,7 @@ return  $formAction = $this->uri(array("action" => "setNoOfRepliesPerPage", "idS
  // return $formAction;
 
  }
- private function getSearchFormAction()
+ protected function getSearchFormAction()
  {
     return  $formAction = $this->uri(array("action" => "searchForReplies","idSubjectMatter"=>$this->idSubjectMatter, 'noOfMessages'=>$this->noOfDesiredMessagesPerPage,'searchBoolean'=> TRUE), "hosportal" );
  }

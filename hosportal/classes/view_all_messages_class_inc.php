@@ -12,7 +12,7 @@ private $objbuildform;
  private $objConfirm;
  private $objLink;
  private $objUser;
- private $objComments;
+// private $objComments;
  private $allComments;
  private $objOriginalComments;
 private  $objDBOriginalComments;
@@ -51,6 +51,7 @@ public function init()
  $this->last_page_boolean_value = 0;
  $this->page_number = 0;
 }
+
 public function setNoOfDesiredMessagesPerPage($no_of_desired_messages_per_page)
 {
     if ($no_of_desired_messages_per_page >=1 && $no_of_desired_messages_per_page <=50)
@@ -103,7 +104,7 @@ public function setPageNumber($page_number)
     $this->page_number = $page_number;
 
 }
-public function searchMessages($search_value)
+private function searchMessages($search_value)
 {
   return $this->objOriginalComments =  $this->objDBOriginalComments->searchOriginalMessages($search_value,$this->no_of_desired_messages_per_page,$this->page_number_array[$this->page_number]*$this->no_of_desired_messages_per_page);
 }
@@ -138,15 +139,9 @@ switch ($type_of_sort)
                 //return "home_tpl.php";
         }
 }
-private function buildForm()
+private function getPaginationParameters()
 {
-  $this->loadElements();
-
-
-  
-
-
-  $searchBoolean = $this->getParam('searchBoolean');
+    $searchBoolean = $this->getParam('searchBoolean');
 
   if ($searchBoolean==TRUE)
       {
@@ -182,12 +177,57 @@ if ($x == $this->number_of_pages || ($x==0 & $this->number_of_pages== 0))
      $this->page_number_array[]=$x;
         }
      }
+}
+private function buildForm()
+{
+  $this->loadElements();
+
+$this->getPaginationParameters();
+  
+
+
+//  $searchBoolean = $this->getParam('searchBoolean');
+//
+//  if ($searchBoolean==TRUE)
+//      {
+//$searchValue = $this->getParam('searchValue');
+//$this->getNumberofSearchedComments($searchValue);
+//  }
+//  else
+//  {
+//
+//
+//  $this->getNumberofOriginalComments();
+//  }
+//
+//$this->last_page_boolean_value = $this->no_of_elements%$this->no_of_desired_messages_per_page;
+//$this->number_of_pages = $this->no_of_elements/$this->no_of_desired_messages_per_page;
+////$this->number_of_pages = ceil($this->number_of_pages);
+//     $this->page_number_array = array();
+//// $this->page_number_array[]= $this->number_of_pages;
+//     for ($x=0;$x<=$this->number_of_pages;$x++)
+//     {
+//if ($x == $this->number_of_pages || ($x==0 & $this->number_of_pages== 0))
+//    {
+//    if ($this->last_page_boolean_value > 0)
+//        {
+//    $this->page_number_array[]= $x;
+//    break;
+//        }
+//    break;
+//    }
+//
+//    else
+//        {
+//     $this->page_number_array[]=$x;
+//        }
+//     }
 
   //Create the form
   $this->objForm=$this->objbuildform->createNewObjectFromModule('comments',$this->getFormAction());
    $this->messagesTable = $this->objHTMLTable->createNewObjectFromModule("htmltable", "htmlelements");
-$yahoolink ="sdfdfdfsdfsdfdsfsdfdsfsdfsdfsdfsdfsd  ".'<a href="http://www.yahoo.com" target="_blank">Go to Yahoo</a>';
- $this->objForm= $this->objbuildform->addObjectToForm($yahoolink);
+//$yahoolink ="sdfdfdfsdfsdfdsfsdfdsfsdfsdfsdfsdfsd  ".'<a href="http://www.yahoo.com" target="_blank">Go to Yahoo</a>';
+// $this->objForm= $this->objbuildform->addObjectToForm($yahoolink);
   //Define the table border
    $this->messagesTable = $this->objHTMLTable->setBorderThickness(0);
 
@@ -196,7 +236,7 @@ $yahoolink ="sdfdfdfsdfsdfdsfsdfdsfsdfsdfsdfsdfsd  ".'<a href="http://www.yahoo.
 
        $this->messagesTable = $this->objHTMLTable->setCellWidth("100%");
        
-//$searchBoolean = $this->getParam('searchBoolean');
+$searchBoolean = $this->getParam('searchBoolean');
 //searchMessages($search_value)
 if ($searchBoolean==TRUE)
     {
@@ -212,17 +252,17 @@ $this->objOriginalComments=$this->sortMessages($type_of_sort);
  $final = (($this->page_number_array[$this->page_number]*$this->no_of_desired_messages_per_page)) +($this->no_of_desired_messages_per_page);
 //$fiinal = ($initial+($this->no_of_desired_messages_per_page-1))-10;
 
-if ($this->page_number+1 < ceil($this->number_of_pages))
+if ($this->page_number == floor($this->number_of_pages))
         {
- $view_messages_limit = "messages $initial to $final of $this->no_of_elements";
+ $view_messages_limit = "Messages $initial to $this->no_of_elements of $this->no_of_elements";
      //  $view_messages_limit = "messages .$initial. - . $this->no_of_elements.   ";
         }
- if($this->page_number > 0)
+else 
         {
-       $view_messages_limit = "messages $initial - $this->no_of_elements of $this->no_of_elements";
+       $view_messages_limit = "Messages $initial - $final of $this->no_of_elements";
    // $view_messages_limit = "messages .$initial. - . $fiinal.   ";
         }
-
+//($this->page_number > 0)
 $this->objForm= $this->objbuildform->addObjectToForm('<P ALIGN = "right">'.$view_messages_limit);
 
    $backwardPage = $this->objIcon->setIconType('prev');
@@ -405,10 +445,10 @@ $iconDelete = $this->objIcon->setAltTextForIcon($this->objouputtext->insertTextF
    $this->messagesTable = $this->objHTMLTable->addCellwithObject($no_of_replies);
    
    $this->messagesTable = $this->objHTMLTable->addCellwithObject($linkReplyManage);
-   $this->messagesTable = $this->objHTMLTable->addCellwithObject("no of ele  ".$this->no_of_elements);
-   $this->messagesTable = $this->objHTMLTable->addCellwithObject("no of pages required   ".$this->number_of_pages);
-   $this->messagesTable = $this->objHTMLTable->addCellwithObject("last page  ".$this->last_page_boolean_value);
-    $this->messagesTable = $this->objHTMLTable->addCellwithObject(print_r($this->page_number_array));
+  // $this->messagesTable = $this->objHTMLTable->addCellwithObject("no of ele  ".$this->no_of_elements);
+ //  $this->messagesTable = $this->objHTMLTable->addCellwithObject("no of pages required   ".$this->number_of_pages);
+ //  $this->messagesTable = $this->objHTMLTable->addCellwithObject("last page  ".$this->last_page_boolean_value);
+ //   $this->messagesTable = $this->objHTMLTable->addCellwithObject(print_r($this->page_number_array));
 
    $this->messagesTable = $this->objHTMLTable->endTableRow();
 

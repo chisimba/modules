@@ -1,7 +1,0 @@
-<h1>testingkdfs</h1>
-<P>dfssdf</P>
-'<a href="http://www.yahoo.com" target="_blank">Go to Yahoo</a>'
-dsfdsf
-sdffsd
-fsdfsd
-fsdfsdfsdfsdfsdfsd

@@ -37,7 +37,7 @@ $objListMessageOptions = $this->getObject('set_original_message_options', 'hospo
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 //Add some text to the left column
-$cssLayout->setLeftColumnContent("Place holder text".$objNavigationLinks->showBuiltSwitchMenu());
+$cssLayout->setLeftColumnContent($objNavigationLinks->showBuiltSwitchMenu());
 //get the editform object and instantiate it
 $objEditForm = $this->getObject('editmessage', 'hosportal');
 
@@ -49,11 +49,11 @@ $objListallForm->setNoOfDesiredMessagesPerPage($noOfMessages);
 //$objListallForm->sortMessages($sortOptions);
 $objListallForm->setPageNumber($pageNumber);
 $cssLayout->setMiddleColumnContent($objListallForm->show());
-$switchmenu = $this->newObject('switchmenu', 'htmlelements');
-$option1 = "option ot";
-$option2 = "option otsdfsdf";
-  $switchmenu->addBlock('Title 1', $option1.' <br />' .$option2.'Block Text 1 <br /> Block Text 1');
-  $switchmenu->addBlock('Title 2', 'Block Text 2 <br /> Block Text 2 <br /> Block Text 2', 'confirm'); // Adds
+//$switchmenu = $this->newObject('switchmenu', 'htmlelements');
+//$option1 = "option ot";
+//$option2 = "option otsdfsdf";
+//  $switchmenu->addBlock('Title 1', $option1.' <br />' .$option2.'Block Text 1 <br /> Block Text 1');
+//  $switchmenu->addBlock('Title 2', 'Block Text 2 <br /> Block Text 2 <br /> Block Text 2', 'confirm'); // Adds
  // $cssLayout->setLeftColumnContent("Place holder text");
   $cssLayout->setRightColumnContent($objListMessageOptions->showBuiltSwitchMenu());
 

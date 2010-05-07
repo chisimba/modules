@@ -14,7 +14,7 @@ $objListSortedMessages->sortMessages($sortOptions);
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 //Add some text to the left column
-$cssLayout->setLeftColumnContent("Place holder text");
+//$cssLayout->setLeftColumnContent("Place holder text");
 //get the editform object and instantiate it
 //$objEditForm = $this->getObject('editmessage', 'hosportal');
 

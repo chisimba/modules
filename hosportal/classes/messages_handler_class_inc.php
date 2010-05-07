@@ -3,77 +3,47 @@
 if (!$GLOBALS['kewl_entry_point_run']){
 die("you cannot view this page directly");
 }
-/**
-*
-*Controller class for helloforms module. this class
-*greets the user with a hello message. This is a demonstration
-*of the Chisimba MVC architecture.
-*
-*@author Paul Mungai
-*@copyright(c) 2005 GNU GPL
-*@package hellochisimba
-*@version 1
-*
-*/
+
 class messages_handler extends controller
 {
-/**
-*
-*Standard Chisimba constructor to set the default value of the
-*$greeting properly
-*
-*@access public
-*
-*/
+
 
 
 public $objlanguage;
-
 public $objDBComments;
 public $objDBreplies;
 public $objDBOriginalMessages;
 private $objReplyOptions;
-//private $objViewOriginalMessages;
 private $objViewReplies;
-private $noOfMessagesPerPage;
-private $objMessageOptions;
+//private $noOfMessagesPerPage;
+//private $objMessageOptions;
 private $objOriginalMessageOptions;
 public function init()
 {
- //Instantiate the language object
+
   $this->objLanguage = $this->getObject('language_module','hosportal');
-  //Instantiate the DB Object
+
   $this->objDBComments = $this->getObject('dbhosportal_messages','hosportal');
   
   $this->objDBreplies = $this->getObject('dbhosportal_replies','hosportal');
   $this->objDBOriginalMessages = $this->getObject('dbhosportal_original_messages','hosportal');
   $this->objReplyOptions = $this->getObject('set_reply_options','hosportal');
   $this->objOriginalMessageOptions = $this->getObject('set_original_message_options','hosportal');
- // $this->objMessageOptions = $this->getObject('set_message_options','hosportal');
-  //$this->objViewOriginalMessages = $this->getObject('view_all_messages','hosportal');
+
   $this->objViewReplies = $this->getObject('view_single_message_subject','hosportal');
 
 }
-/**
-*
-*Standard controller dispatch method, the dispatch calls any
-*method involving logic and hands of the results to the template for display.
-*
-*@access public
-*
-*/
- public function messagesCurrentAction($action ='view')
+
+ public function messagesCurrentAction($action ='viewForum')
  {
-   //Get action from query string and set default to view
+
    $action=$action;
-   //$action=$this->getParam('action', 'view');
-   //Convert the action into a method
+
    $method = $this->__getMethod($action);
-   //Return the template determined by the method resulting from action
+
 
    return $this->$method();
- //    return "editadd_tpl.php";
-  //   return "listall_tpl.php";
+
  }
  private function __validAction(& $action)
  {
@@ -104,22 +74,19 @@ public function init()
  {
      return 'editadd_tpl.php';
  }
- private function __view()
+ private function __viewForum()
  {
      $this->objOriginalMessageOptions->setNoOfDesiredMessagesPerPage(4);
     $this->setVar('sortOptions', 'sortByLatestModifiedMessages');
          $this->setVar('noOfMessages', '4');
-   //  $this->objMessageOptions->setNoOfMessagesPerPage(2);
-    // $page_number = 0;
-//$this->setVar('pageNumber', $page_number);
-     /// $this->setVar('noOfMessages', 4);
+
      return 'listall_tpl.php';
  }
- private function __forwardPagination()
- {
-
-   $sortOptions = $this->getParam('sortOptions');
- }
+// private function __forwardPagination()
+// {
+//
+//   $sortOptions = $this->getParam('sortOptions');
+// }
  private function __searchForReplies()
  {
 $id = $this->getParam('idSubjectMatter');
@@ -142,7 +109,7 @@ private function __setNoOfMessagesPerPage()
      $sortOptions = $this->getParam('sortOptions');
       $page_number = $this->getParam('pageNumber');
      $no_of_desired_messages_per_page = $this->getParam('noOfMessagesDropDown');
-    // $this->objReplyOptions->setNoOfDesiredMessagesPerPage( $no_of_desired_messages_per_page);
+
       return   $this->nextAction("viewSortedMessages",array('sortOptions'=> $sortOptions,'pageNumber'=> $page_number,'noOfMessages' => $no_of_desired_messages_per_page,'searchBoolean' => FALSE ));
  }
  private function __setNoOfRepliesPerPage()
@@ -152,12 +119,9 @@ private function __setNoOfMessagesPerPage()
       $page_number = $this->getParam('pageNumber');
      $no_of_desired_messages_per_page = $this->getParam('noOfMessagesDropDown');
      $this->objReplyOptions->setNoOfDesiredMessagesPerPage( $no_of_desired_messages_per_page);
-    // $no_of_desired_messages_per_page = $this->objReplyOptions->getNoOfDesiredMessagesPerPage();
+
      $this->objViewReplies->setIdForSingleOriginalMessage($id);
-   //   $this->objViewReplies->setNoOfDesiredMessagesPerPage($no_of_desired_messages_per_page);
-      //$objEditForm->setIdForSingleOriginalMessage($id);
-      //$objListSortedMessages = $this->getObject('view_all_messages', 'hosportal');
-//$this->setVar('sortOptions', $sortOptions);
+
 $this->objViewReplies->setPageNumber($page_number);
 $this->objReplyOptions->setSubjectMatterId($id);
 //     $this->setVar('sortOptions', $sortOptions);
@@ -359,7 +323,7 @@ $this->objReplyOptions->setNoOfDesiredMessagesPerPage( $no_of_desired_messages_p
 //    $id = $this->objDBComments->insertSingle($title,$comments,$unreplied,$noofreplies);
     
    // return 'listall_tpl.php';
-  return   $this->nextAction("view");
+  return   $this->nextAction("viewForum");
             }
  }
  private function __edit()
@@ -565,20 +529,20 @@ $id = $this->getParam('id');
    // return "editadd_tpl.php";
     //$this->__update($no_of_repliesa);
  }
-private function __errormessage()
- {
-    $id = $this->getParam('id');
-     $this->setErrorMessage("please enter title of your comment");
-     $this->putMessages();
-     //  $id = $this->getParam('id');
-  //  $this->setVar('id', $id);
-     //
-     $id = $this->getParam('id');
-    $this->setVar('id', $id);
-// return "editadderror_tpl.php";
-     //      return   $this->nextAction("view");
-    return "editadd_tpl.php";
- }
+//private function __errormessage()
+// {
+//    $id = $this->getParam('id');
+//     $this->setErrorMessage("please enter title of your comment");
+//     $this->putMessages();
+//     //  $id = $this->getParam('id');
+//  //  $this->setVar('id', $id);
+//     //
+//     $id = $this->getParam('id');
+//    $this->setVar('id', $id);
+//// return "editadderror_tpl.php";
+//     //      return   $this->nextAction("view");
+//    return "editadd_tpl.php";
+// }
 
  private function __update()
  { $id = $this->getParam('id');
@@ -595,6 +559,34 @@ private function __errormessage()
    
     $title = $this->getParam('title');
     $comments = $this->getParam('commenttxt');
+
+
+
+
+//        $allComments = $this->objDBComments->listAll();
+//    foreach($allComments as $thisComment){
+//   //Store the values of the array in variables
+//  // $id = $thisComment["id"];
+//   //$userid = $thisComment["userid"];
+//   $existngTitle = $thisComment["title"];
+//   //$commenttxtshort = $thisComment["commenttxtshort"];
+//  // $modified = $thisComment["modified"];
+//   //$unreplied = $thisComment["unreplied"];
+//   //$no_of_replies = $thisComment["replies"];
+//   if ($existngTitle == $title)
+//       {
+//           $this->setErrorMessage("Subject of Message is already chosen. Please insert a new unique title for your message!");
+// //$this->putMessages();
+////
+//
+//
+//   $id = $this->getParam('id');
+//   $this->setVar('id', $id);
+// return "editadd_tpl.php";
+//       }
+//    }
+
+
 
     if($title == NULL)
         {
@@ -639,7 +631,7 @@ else
  $id=   $this->objDBComments->updateSingleOriginalMessage($id, $title, $comments,$unreplied,$noofreplies);
     // $this->objDBComments->updateSingle($id, $title, $comments,$unreplied,$noofreplies);
    //  $id = $this->objDBOriginalMessages->updateSingle($id, $title, $comments,$unreplied,$noofreplies);
-      return   $this->nextAction("view");
+      return   $this->nextAction("viewForum");
   //  return "listall_tpl.php";
 //return  $this->__getMethod('view');
 //return $a;
@@ -704,7 +696,7 @@ $this->setVar('id', $id);
 $this->objDBComments->deleteSingleOriginalMessage($id);
    // $this->objDBComments->deleteSingle($id);
    // $this->objDBOriginalMessages->deleteSingle($id);
-      return   $this->nextAction("view");
+      return   $this->nextAction("viewForum");
     //return "listall_tpl.php";
  }
  private function __deletereply()
