@@ -13,11 +13,11 @@ import com.extjs.gxt.ui.client.data.BaseModel;
 public class Document extends BaseModel {
 
      public void setAttachmentStatus(String status){
-         set("attachmentstatus",status);
+         set("Attachment",status);
      }
 
      public String getAttachmentStatus(){
-         return get("attachmentstatus");
+         return get("Attachment");
      }
     public void setGroup(String group) {
         set("group", group);

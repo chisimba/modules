@@ -42,6 +42,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Grid;
+import com.extjs.gxt.ui.client.Style.IconAlign;
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -72,6 +73,7 @@ public class EditDocumentDialog {
     private Document document;
     private FormPanel uploadpanel = new FormPanel();
     private Button uploadButton = new Button("Add attachment");
+    private Button uploadIcon = new Button();
     private ComboBox<Group> groupField = new ComboBox<Group>();
     private Label namesField = new Label();
     private String mode;
@@ -79,7 +81,7 @@ public class EditDocumentDialog {
     private LabelField uploadFile = new LabelField();
     private Grid upload = new Grid(2, 1);
     private OverView overView;
-    private Button nextButton=new Button("Next");
+    private Button nextButton = new Button("Next");
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
@@ -87,7 +89,7 @@ public class EditDocumentDialog {
         this.main = main;
 
         createUI();
-        overView=new OverView(this);
+        overView = new OverView(this);
     }
 
     private void createUI() {
@@ -146,8 +148,8 @@ public class EditDocumentDialog {
         deptField.setValue(document.getDepartment());
         deptField.setName("deptfield");
         //if (mode.equals("all")) {
-            mainForm.add(deptField, formData);
-       // }
+        mainForm.add(deptField, formData);
+        // }
 
         telField.setFieldLabel("Tel. Number");
         telField.setValue("edit mode");
@@ -155,19 +157,19 @@ public class EditDocumentDialog {
         telField.setAllowBlank(false);
         telField.setName("telfield");
         //if (mode.equals("all")) {
-            mainForm.add(telField, formData);
+        mainForm.add(telField, formData);
         //}
 
         titleField.setFieldLabel("Document title");
         titleField.setAllowBlank(false);
         titleField.setValue(document.getTitle());
         titleField.setName("titlefield");
-       // if (mode.equals("all")) {
-            mainForm.add(titleField, formData);
-      //  }
-     //   if (mode.equals("all")) {
-            mainForm.add(groupField, formData);
-      //  }
+        // if (mode.equals("all")) {
+        mainForm.add(titleField, formData);
+        //  }
+        //   if (mode.equals("all")) {
+        mainForm.add(groupField, formData);
+        //  }
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
 
@@ -185,9 +187,9 @@ public class EditDocumentDialog {
         panel.setLayout(new BorderLayout());
         panel.add(topicField, centerData);
         panel.add(browseTopicsButton, eastData);
-     //   if (mode.equals("all")) {
-            mainForm.add(panel, formData);
-      //  }
+        //   if (mode.equals("all")) {
+        mainForm.add(panel, formData);
+        //  }
 
         browseTopicsButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
@@ -245,12 +247,18 @@ public class EditDocumentDialog {
         FileUploadField fileUploadField = new FileUploadField();
         fileUploadField.setName("filenamefield");
         fileUploadField.setFieldLabel("Upload file");
-        //uploadpanel.add(fileUploadField);
-  /*      upload.setWidget(0, 0, uploadFile);
+        // uploadpanel.add(fileUploadField);
+        /* upload.setWidget(0, 0, uploadFile);
         upload.setWidget(0, 1, uploadButton);
         uploadpanel.add(upload);
-         */ uploadpanel.add(uploadButton);
-//        uploadpanel.add(uploadFile);
+        */
+        uploadIcon.setIconStyle("download");
+        uploadpanel.add(uploadButton);
+        //uploadIcon.setIconAlign(IconAlign.RIGHT);
+        if(document.getAttachmentStatus().equals("Yes")) {
+            uploadpanel.add(uploadIcon);
+        }
+        // uploadpanel.add(uploadFile);
         if (mode.equals("default")) {
             mainForm.add(uploadpanel, formData);
         }
@@ -344,7 +352,7 @@ public class EditDocumentDialog {
         });
         if (mode.equals("apo")) {
             mainForm.addButton(nextButton);
-        }else{
+        } else {
             mainForm.addButton(saveButton);
         }
 
