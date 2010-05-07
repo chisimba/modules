@@ -31,7 +31,7 @@ class block_helloworld extends object
     * Method to output a block with information on how help works
     */
     function show()
-	{
+    {
        return "Hello world";
     }
 }
