@@ -830,13 +830,13 @@ class db_learningcontent_order extends dbtable
          if($prevLeftValue>1){
             $prevpage = $this->getPrevPageId($context, $chapter, $prevLeftValue);
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'], 'prevpageid'=>$prevpage), $module));
-            $link->link = 'Next Page: '.htmlentities($page['menutitle']).' &#187;';
+            $link->link = $this->objLanguage->languageText('mod_learningcontent_nextpage','learningcontent').': '.htmlentities($page['menutitle']).' &#187;';
             return $link->show();
          } else {
             $prevpage = $this->getPrevPageId($context, $chapter, $prevLeftValue);
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'], 'prevpageid'=>$prevpage), $module));
 //            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = 'Next Page: '.htmlentities($page['menutitle']).' &#187;';
+            $link->link = $this->objLanguage->languageText('mod_learningcontent_nextpage','learningcontent').': '.htmlentities($page['menutitle']).' &#187;';
             return $link->show();
          }
         }
