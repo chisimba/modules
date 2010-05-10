@@ -1,6 +1,6 @@
 <?php
-$hasAccess = $this->objEngine->_objUser->isContextLecturer();
-$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$hasAccess = $this->_objManageGroups->isContextLecturer();
+$hasAccess|= $this->objUser->isAdmin();
 $this->setVar('pageSuppressXML', true);
 if (!$hasAccess) {
     // Redirect
