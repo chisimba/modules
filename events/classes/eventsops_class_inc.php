@@ -412,6 +412,11 @@ class eventsops extends object {
         return $objFeaturebox->show($this->objLanguage->languageText("mod_events_locweatherfor", "events")." ".$currLocation, $wtable);
     }
  
+    public function archiveBox() {
+        $objFeaturebox = $this->getObject('featurebox', 'navigation');
+        return $objFeaturebox->show($this->objLanguage->languageText("mod_events_eventarchive", "events"), $this->getAllRecentContent());
+    }
+    
     /**
      * Block to display local weather from the location set in the user cookie.
      *
@@ -809,6 +814,38 @@ class eventsops extends object {
             // skip events that have already happened. We keep today's events on until tomorrow in case folks are just late
             if($startdate < $today) {
                 continue;
+            }
+            // send the data to a formatting prettifying function
+            $ret .= $this->formatEventSummary($event);
+        }
+        // if ret is still null, there are no events... sigh
+        if($ret == NULL) {
+            $this->loadClass('htmlheading', 'htmlelements');
+            $headerno = new htmlheading();
+            $headerno->type = 1;
+            $headerno->str = $this->objLanguage->languageText("mod_events_nothingtoshow", "events");
+            $ret .= $headerno->show();
+        }
+        return $ret;
+    }
+    
+    /**
+     * Another temporal function, this time on a broader scale
+     *
+     * @return string
+     */
+    public function getAllRecentContent() {
+        $events = $this->objDbEvents->eventGetLatest(10);
+        $userid = $this->objUser->userId();
+        $today = strtotime(date('Y-m-d'));
+        $ret = NULL;
+        foreach($events as $event) {
+            $startdate = strtotime($event['start_date']);
+            // skip personal events, unless you or your friends network are the person
+            if($event['personal'] == 'on') {
+               if($userid != $event['userid']) {
+                   continue;
+               }
             }
             // send the data to a formatting prettifying function
             $ret .= $this->formatEventSummary($event);

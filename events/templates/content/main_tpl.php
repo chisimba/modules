@@ -24,7 +24,7 @@ $leftColumn .= $this->objOps->browseEventsBox();
 $rightColumn .= $this->objOps->showWelcomeBox();
 $objBlocks = $this->getObject('blocks', 'blocks');
 $rightColumn .= $objBlocks->showBlock('lastten', 'activitystreamer');
-//$rightColumn .= $this->objOps->showLocWeatherBox();
+$rightColumn .= $this->objOps->archiveBox();
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );
