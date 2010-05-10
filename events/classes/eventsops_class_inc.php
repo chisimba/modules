@@ -491,6 +491,7 @@ class eventsops extends object {
         //}
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_saerch", "events"), 'content' => $this->getSearchContent(), 'onclick' => ''));
         //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_fb", "events"), 'content' => $this->fbComment(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_eventarchive", "events"), 'content' => $this->archiveBox(), 'onclick' => ''));
 
         return $tabs->show();
     }
