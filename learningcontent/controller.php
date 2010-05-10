@@ -356,7 +356,7 @@ class learningcontent extends controller {
         $hformulatbl->valign = 'center';
         //Text
         $hformulatbl->startRow();
-        $hformulatbl->addCell('<div align="center"><h3>'.$imageDesc.'</h3><br /><br /><br /><br /><br /><br /><br />'.$this->objFilePreviewFilter->parse('[FILEPREVIEW id="'.$imageId.'" comment="'.$imageName.'" /]')."<br /><br /><br /><br /><br /><br /><br /></div>");
+        $hformulatbl->addCell('<div align="center" style="background-color:#A8A8A8;"><h3>'.$imageDesc.'</h3><br /><br /><br /><br /><br /><br /><br />'.$this->objFilePreviewFilter->parse('[FILEPREVIEW id="'.$imageId.'" comment="'.$imageName.'" /]')."<br /><br /><br /><br /><br /><br /><br /></div>");
         $hformulatbl->endRow();
 
         echo $hformulatbl->show();
