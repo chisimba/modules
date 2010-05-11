@@ -11,32 +11,26 @@ $siteUri = $fullUri[0];
 $this->appendArrayVar('headerParams', '
     <script type="text/javascript">
 	var usrQuotas = "'.$this->getFreeSpace('users/'.$this->objUser->userId()).'";
-	var cnxtQuotas = "'.$this->getFreeSpace('context/'.$contextId).'";
-    var baseuri = "'.$siteUri.'";
-    var uri = "'.$objSysConfig->getsiteRoot().'";
-    var defId = "'.$folderId.'";
-	var contextfolderId = "'.$contextfolderId.'";
-	var contextId = "'.$contextId.'";
+	var cnxtQuotas = "'.$this->getFreeSpace('context/'.$contextfolderid).'";
+        var baseuri = "'.$siteUri.'";
+        var uri = "'.$objSysConfig->getsiteRoot().'";
+        var defId = "'.$folderId.'";
+	var myFilesId = "'.$folderId.'";
+        var contextId = "'.$contextfolderid.'";
 	</script>');
 
-    $ext = '<link rel="stylesheet" href="'.$this->getResourceUri('iconcss.css', 'filemanager2').'" type="text/css" />';
-    $ext .= $this->getJavaScriptFile('StatusBar.js', 'filemanager2');
-	$ext .= $this->getJavaScriptFile('BasicDialog.js', 'filemanager2');
-    $ext .= $this->getJavaScriptFile('FileUploadField.js', 'filemanager2');
-    $ext .= $this->getJavaScriptFile('fileadmin.js', 'filemanager2');
-    $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('fileuploadfield.css', 'filemanager2').'" type="text/css" />';
-
-    $ext .= "
-	<style>
-	#mainpanel{
-	margin-left: auto ;
-    margin-right: auto ;
-	border:1px solid #c3daf9;
-	overflow:auto;
-	}
-	</style>";
+$ext = '<link rel="stylesheet" href="'.$this->getResourceUri('iconcss.css', 'filemanager2').'" type="text/css" />';
+$ext .= $this->getJavaScriptFile('StatusBar.js', 'filemanager2');
+$ext .= $this->getJavaScriptFile('BasicDialog.js', 'filemanager2');
+$ext .= $this->getJavaScriptFile('FileUploadField.js', 'filemanager2');
+$ext .= $this->getJavaScriptFile('myfiles.js', 'filemanager2');
+$ext .= $this->getJavaScriptFile('context.js', 'filemanager2');
+$ext .= $this->getJavaScriptFile('fileupload.js', 'filemanager2');
+$ext .= $this->getJavaScriptFile('filebrowser.js', 'filemanager2');
+$ext .= $this->getJavaScriptFile('main.js', 'filemanager2');
+$ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('fileuploadfield.css', 'filemanager2').'" type="text/css" />';
 
 $this->appendArrayVar('headerParams', $ext);
 
-echo '<br/><div id="mainpanel"></div>';
+echo '<br/><div id="filemanager2-mainpanel"></div>';
 ?>
