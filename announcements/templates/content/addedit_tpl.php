@@ -6,7 +6,7 @@
             jQuery('.context_option').removeAttr('disabled');
         }
     });
-    
+
     jQuery('input[name=recipienttarget]:radio').livequery('click', function() {
         if (jQuery('input[name=recipienttarget]:radio:checked').val() == 'site') {
             jQuery('.context_option').attr('disabled', 'disabled');
@@ -14,11 +14,11 @@
             jQuery('.context_option').removeAttr('disabled');
         }
     });
-    
+
 </script>
 <?php
 $outerLayer = "";
-$this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
+$this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery.livequery.js', 'jquery'));
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -51,36 +51,43 @@ if ($mode == 'edit') {
 }
 
 $table = $this->newObject('htmltable', 'htmlelements');
-$table->startRow();
+
 
 $label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
-$title = new textinput('title');
-$title->size = 60;
+$titlefield = new textinput('title');
+$titlefield->size = 60;
 if(!empty($enteredtitle)){
     $title->value = $enteredtitle;
 }elseif ($mode == 'edit') {
-    $title->value = $announcement['title'];
+    $titlefield->value = $announcement['title'];
 }
-//Check if title is empty
-$form->addRule('title', $this->objLanguage->languageText('mod_announcements_titlerequired','announcements'), 'required');
+if ($mode == 'fixup') {
+    $titlefield->value = $title;
+}
+if ($mode == 'fixup') {
+    $table->startRow();
+    $table->addCell('<font color="#ff0000">'. $errorMessage.'</font>');
+    $table->endRow();
+
+}
+$table->startRow();
 $table->addCell($label->show(), 120);
-$table->addCell($title->show());
+$table->addCell($titlefield->show());
 $table->endRow();
 
 $contextsList = '';
 
 if (count($lecturerContext) > 0) {
-    foreach ($lecturerContext as $context)
-    {
+    foreach ($lecturerContext as $context) {
         $checkbox = new checkbox ('contexts[]', $context);
         $checkbox->value = $context;
         $checkbox->cssId = 'context_'.$context;
         $checkbox->cssClass = 'context_option';
-        
+
         if ($mode == 'add' && $context == $this->objContext->getContextCode()) {
             $checkbox->ischecked = TRUE;
         }
-        
+
         if ($mode == 'edit') {
             if (in_array($context, $contextAnnouncementList)) {
                 $checkbox->ischecked = TRUE;
@@ -93,7 +100,7 @@ if (count($lecturerContext) > 0) {
         }
         $contextRow=$this->objContext->getContext($context);
         $label = new label(' '.$contextRow['title'], 'context_'.$context);
-        
+
         $contextsList .= '<br />&nbsp; &nbsp; '.$checkbox->show().$label->show();
     }
 }
@@ -102,20 +109,20 @@ if (count($lecturerContext) > 0) {
 if ($mode == 'add') {
     if ($isAdmin && count($lecturerContext) > 0) {
         $table->startRow();
-        
+
         $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to').':');
-        
+
         $recipientTarget = new radio ('recipienttarget');
         $recipientTarget->setBreakSpace('<br />');
         $recipientTarget->addOption('site', $this->objLanguage->languageText('mod_announcements_allusers', 'announcements', 'Site - All Users'));
         $recipientTarget->addOption('context', $this->objLanguage->code2Txt('mod_announcements_onlytofollowing', 'announcements', NULL, 'Only to the following [-contexts-]'));
-        
+
         $recipientTarget->setSelected('site');
-        
+
         $str = $recipientTarget->show();
-        
+
         $table->addCell($str.$contextsList);
-        
+
         $table->endRow();
     } else if ($isAdmin) {
         $recipientTarget = new hiddeninput('recipienttarget', 'site');
@@ -123,13 +130,13 @@ if ($mode == 'add') {
     } else {
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to'));
-        
+
         $str = $this->objLanguage->code2Txt('mod_announcements_followingcontexts', 'announcements', NULL, 'the following [-contexts-]').':';
-        
+
         $table->addCell($str.$contextsList);
-        
+
         $table->endRow();
-        
+
         $recipientTarget = new hiddeninput('recipienttarget', 'context');
         $form->addToForm($recipientTarget->show());
     }
@@ -137,7 +144,7 @@ if ($mode == 'add') {
 echo "I am the else";
     $recipientTarget = new hiddeninput('recipienttarget', $announcement['contextid']);
     $form->addToForm($recipientTarget->show());
-    
+
     if ($announcement['contextid'] == 'site') {
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('word_type', 'system', 'Type').':');
@@ -145,51 +152,19 @@ echo "I am the else";
         $table->endRow();
     } else {
         $table->startRow();
-        
+
         $label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
         $title = new textinput('title');
-	if(!empty($enteredtitle)){
-	    $title->value = $enteredtitle;
-	}elseif ($mode == 'edit') {
-	    $title->value = $announcement['title'];
-	}
-        $form->addRule('title', $this->objLanguage->languageText('mod_announcements_titlerequired','announcements'), 'required');
-        $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to').':');
-        
-        $str = $this->objLanguage->code2Txt('mod_announcements_followingcontexts', 'announcements', NULL, 'the following [-contexts-]').':';
-        $recipientTarget = new radio ('recipienttarget');
-        $recipientTarget->setBreakSpace('<br />');
-        $recipientTarget->addOption('site', $this->objLanguage->languageText('mod_announcements_allusers', 'announcements', 'Site - All Users'));
-        $recipientTarget->addOption('context', $this->objLanguage->code2Txt('mod_announcements_onlytofollowing', 'announcements', NULL, 'Only to the following [-contexts-]'));
-        if(!empty($enteredrecipienttarget)){
-         $recipientTarget->setSelected($enteredrecipienttarget);
-        }else{
-         $recipientTarget->setSelected('site');
-        }
-        
-        $str2 = $recipientTarget->show();
 
-        //$table->addCell($str.$contextsList);
-        $table->addCell($str2.$contextsList);
+        $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to').':');
+
+        $str = $this->objLanguage->code2Txt('mod_announcements_followingcontexts', 'announcements', NULL, 'the following [-contexts-]').':';
+
+        $table->addCell($str.$contextsList);
+
         $table->endRow();
     }
 }
-
-
-$table->startRow();
-
-$htmlArea = $this->newObject('htmlarea', 'htmlelements');
-$htmlArea->name = 'message';
-if(!empty($enteredmessage)){
-    $title->value = $enteredmessage;
-}elseif ($mode == 'edit') {
-    $htmlArea->value = $announcement['message'];
-}
-
-$table->addCell($this->objLanguage->languageText('word_message', 'system', 'Message'));
-$table->addCell($htmlArea->show());
-$table->endRow();
-
 $table->startRow();
 
 $email2Users = new radio ('email');
@@ -203,6 +178,25 @@ $email2Users->setBreakSpace(' &nbsp; ');
 
 $table->addCell($this->objLanguage->languageText('mod_announcements_emailtousers', 'announcements', 'Email to Users'));
 $table->addCell($email2Users->show());
+$table->endRow();
+
+
+
+$table->startRow();
+
+$htmlArea = $this->newObject('htmlarea', 'htmlelements');
+$htmlArea->name = 'message';
+if(!empty($enteredmessage)){
+    $title->value = $enteredmessage;
+}elseif ($mode == 'edit') {
+    $htmlArea->value = $announcement['message'];
+}
+if ($mode == 'fixup') {
+    $htmlArea->value = $message;
+}
+
+$table->addCell($this->objLanguage->languageText('word_message', 'system', 'Message'));
+$table->addCell($htmlArea->show());
 $table->endRow();
 
 $table->startRow();
