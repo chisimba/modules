@@ -82,19 +82,19 @@ public class EditDocumentDialog {
     private Grid upload = new Grid(2, 1);
     private OverView overView;
     private Button nextButton = new Button("Next");
-    private DocumentListPanel myDocumentListPanel;
+    //private DocumentListPanel myDocumentListPanel;
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
         this.mode = mode;
         this.main = main;
-        myDocumentListPanel = new DocumentListPanel(this.main);
+        //myDocumentListPanel = new DocumentListPanel(this.main);
         createUI();
         overView = new OverView(this);
     }
 
     private void createUI() {
-        String defaultParams;
+        //String defaultParams;
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
