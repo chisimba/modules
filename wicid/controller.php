@@ -374,7 +374,9 @@ class wicid extends controller {
         $title=$this->getParam('title');
 
         $selectedfolder=$this->getParam('topic');
-        $refno=$number.$date;
+        //check wat is the largest count for this year.
+        $res = $this->documents->checkRefNo();
+        $refno=$number.$res;
         $telephone=$this->getParam('telephone');
         $group=$this->getParam('group');
         $this->documents->addDocument(

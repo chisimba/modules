@@ -199,5 +199,15 @@ class dbdocuments extends dbtable {
     function updateDocument($id,$data) {
         $this->update('id',$id,$data);
     }
+
+    function checkRefNo() {
+        $sql = "select max(SUBSTRING(refno, length(refno), 1)) as myrefno from .".$this->tablename;
+        $sql .= " where refno like '%".date("Y")."%'";
+        $res = $this->getArray($sql);
+
+        $refno=date("Y")."-".((int)$res[0]['myrefno']+1);
+
+        return $refno;
+    }
 }
 ?>
