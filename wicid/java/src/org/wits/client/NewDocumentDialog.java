@@ -268,7 +268,7 @@ public class NewDocumentDialog {
         newDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         newDocumentDialog.add(mainForm);
-        setDepartment();
+        //setDepartment();
     }
 
     public void show() {
