@@ -82,17 +82,19 @@ public class EditDocumentDialog {
     private Grid upload = new Grid(2, 1);
     private OverView overView;
     private Button nextButton = new Button("Next");
+    private DocumentListPanel myDocumentListPanel;
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
         this.mode = mode;
         this.main = main;
-
+        myDocumentListPanel = new DocumentListPanel(this.main);
         createUI();
         overView = new OverView(this);
     }
 
     private void createUI() {
+        String defaultParams;
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
@@ -388,6 +390,8 @@ public class EditDocumentDialog {
         editDocumentDialog.add(mainForm);
         setDepartment();
 
+        //defaultParams = "?module=wicid&action=getdocuments&mode=" + main.getMode();
+        //myDocumentListPanel.refreshDocumentList(defaultParams);
     }
 
     public void storeDocumentInfo() {

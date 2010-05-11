@@ -191,7 +191,7 @@ public class DocumentListPanel extends LayoutContainer {
     }
 
     private void approveDocs() {
-        /*String ids = "";
+        String ids = "";
         for (ModelData row : selectedRows) {
             ids += row.get("docid") + ",";
         }
@@ -218,7 +218,7 @@ public class DocumentListPanel extends LayoutContainer {
             });
         } catch (RequestException e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot approve files", null);
-        }*/
+        }
     }
 
     private void deleteDocs() {
