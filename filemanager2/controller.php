@@ -53,13 +53,13 @@ $GLOBALS['kewl_entry_point_run']) {
  */
 class filemanager2 extends controller {
 
-/**
- *
- * @var string $objConfig String object property for holding the
- * configuration object
- * @access public;
- *
- */
+    /**
+     *
+     * @var string $objConfig String object property for holding the
+     * configuration object
+     * @access public;
+     *
+     */
     public $objConfig;
 
     /**
@@ -70,9 +70,9 @@ class filemanager2 extends controller {
      *
      */
 
-	public $fileSize;
+    public $fileSize;
 
-	/**
+    /**
      *
      * @var string $objLanguage String object property for holding the
      * language object
@@ -114,7 +114,7 @@ class filemanager2 extends controller {
      *
      */
     public function init() {
-    // File Manager Classes
+        // File Manager Classes
         $this->objFiles = $this->getObject('dbfile', 'filemanager');
         $this->objFolders = $this->getObject('dbfolder', 'filemanager');
         $this->objFileTags = $this->getObject('dbfiletags', 'filemanager');
@@ -138,11 +138,11 @@ class filemanager2 extends controller {
         $this->objMenuTools = $this->getObject('tools', 'toolbar');
         $this->loadClass('link', 'htmlelements');
 
-		
+
         $this->userId = $this->objUser->userId();
 
         if ($this->userId != '') {
-        // Setup User Folder
+            // Setup User Folder
             $folderpath = 'users/'.$this->userId;
 
             $folderId = $this->objFolders->getFolderId($folderpath);
@@ -162,7 +162,7 @@ class filemanager2 extends controller {
 
             $folderId = $this->objFolders->getFolderId($folderpath);
             if ($folderId == FALSE) {
-                $objIndexFileProcessor = $this->getObject('indexfileprocessor');
+                $objIndexFileProcessor = $this->getObject('indexfileprocessor','filemanager');
                 $list = $objIndexFileProcessor->indexFiles('context', $this->contextCode);
             }
         }
@@ -187,21 +187,21 @@ class filemanager2 extends controller {
     public function dispatch($action='home') {
 
 
-    // Check to ensure the user has access to the file manager.
+        // Check to ensure the user has access to the file manager.
         if (!$this->userHasAccess()) {
             return 'access_denied_tpl.php';
         }
 
 
-/*
+        /*
 * Convert the action into a method (alternative to 
 * using case selections)
-*/
+        */
         $method = $this->__getMethod($action);
-/*
+        /*
 * Return the template determined by the method resulting 
 * from action
-*/
+        */
         return $this->$method();
     }
 
@@ -229,20 +229,20 @@ class filemanager2 extends controller {
      * @access private
      */
     private function __home() {
-    // Get Folder Details
-        $folderpath = 'users/'.$this->objUser->userId();
+        $contextFolderId='';
+        if ($this->contextCode != '') {
+            $contextFolderpath = 'context/'.$this->contextCode;
+            $contextFolderId = $this->objFolders->getFolderId($contextFolderpath);
+            $folderpath = 'users/'.$this->objUser->userId();
+            $folderId = $this->objFolders->getFolderId($folderpath);
+        }else {
+            // Get Folder Details
+            $folderpath = 'users/'.$this->objUser->userId();
+            $folderId = $this->objFolders->getFolderId($folderpath);
 
-        $folderId = $this->objFolders->getFolderId($folderpath);
-		 
-		if ($this->contextCode != '') {
-        $folderpath = 'context/'.$this->contextCode;
-
-          $contextfolderId = $this->objFolders->getFolderId($folderpath);
         }
-
+        $this->setVar('contextfolderid', $contextFolderId);
         $this->setVar('folderId', $folderId);
-		$this->setVar('contextfolderId', $contextfolderId);
-		$this->setVar('contextId', $this->contextCode);
 
         return 'admin_tpl.php';
     }
@@ -253,6 +253,12 @@ class filemanager2 extends controller {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public function __json_viewfile() {
+     $id=$this->getParam("id");
+     $fileInfo = $this->objLanguage->languageText('mod_filemanager_fileinfo', 'filemanager', 'File Information');
+     $fileInfoContent = '<h2>'.$fileInfo.'</h2>'.$this->objFiles->getFileInfoTable($id);
+     echo $fileInfoContent;
+    }
     public function __json_uploadFile() {
 
         $folder = $this->objFolders->getFolder($this->getParam('selectedfolder'));
@@ -288,6 +294,12 @@ class filemanager2 extends controller {
         exit(0);
     }
 
+    public function __getContextDirectory() {
+        echo $this->getJsonTree('context', $this->contextCode, $this->getParam('node'));
+        exit(0);
+    }
+
+
     public function __getFolderContent() {
         $id = $this->getParam('id');
 
@@ -310,7 +322,7 @@ class filemanager2 extends controller {
         $files = $this->objFiles->getFolderFiles($folder['folderpath']);
 
         $allarr = array();
-		$fileSize = new formatfilesize();
+        $fileSize = new formatfilesize();
         if (count($files) > 0) {
             $totalCount = count($files);
             foreach ($files as $file) {
@@ -366,7 +378,7 @@ class filemanager2 extends controller {
 
         $allarr = array();
 
-        if (count($folders) > 0) {
+        if (count($folders) > -1) {
             foreach ($folders as $folder) {
                 $arr = array();
                 $folderText = basename($folder['folderpath']);
@@ -424,6 +436,15 @@ class filemanager2 extends controller {
 
     }
 
+    function __renameFolder() {
+        $id = $this->getParam('id');
+        $newname = $this->getParam('newname');
+        $res = $this->objFolders->renameFolder($id,$newname);
+        $extjs['success'] = true;
+        $extjs['data'] = $res;
+        echo json_encode($extjs);
+        exit(0);
+    }
     function __deleteFolder() {
 
         $id = $this->getParam('id');
@@ -460,17 +481,17 @@ class filemanager2 extends controller {
         }
     }
 
-	function getFreeSpace($path){
-		$fileSize = new formatfilesize();
-		$quota = $this->objQuotas->getQuota($path);
+    function getFreeSpace($path) {
+        $fileSize = new formatfilesize();
+        $quota = $this->objQuotas->getQuota($path);
 
         if ($quota['quotausage'] > $quota['quota']) {
             $freeSpace = 0;
         } else {
             $freeSpace = $quota['quota'] - $quota['quotausage'];
         }
-		return $fileSize->formatsize($freeSpace);		
-	}
+        return $fileSize->formatsize($freeSpace);
+    }
 
     /**
      * Checks if the user should have access to the file manager.
