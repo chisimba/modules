@@ -197,7 +197,7 @@ $userFields = '
                                                                        <ul>';
 //each field is a group of organizations or friends or interests , etc..
 foreach($fields as $key => $field){
-$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chisimba_framework/app/index.php?module=foaf&amp;action=fields&amp;content='.$key.'" title="'.$this->objLanguage->languageText('mod_foaf_manage', 'foaf').' '.$key.'">'.$key.'</a>';
+$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$this->uri(array('action'=>'fields', 'content'=>$key)).'" title="'.$this->objLanguage->languageText('mod_foaf_manage', 'foaf').' '.$key.'">'.$key.'</a>';
     $userFields.= ' <div id="'.$key.'" class="yuimenu">
                            <div class="bd">
                  <ul>';
