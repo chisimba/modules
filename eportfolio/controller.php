@@ -390,7 +390,7 @@ class eportfolio extends controller
         case 'emptypdfmessage':
             $this->setPageTemplate(NULL);
             $this->setLayoutTemplate(NULL);
-            echo '<h3>' . $this->objLanguage->languageText('mod_eportfolio_wordNotice', 'eportfolio') . '!</h3><br></br><p>' . $this->objLanguage->languageText('phrase_eportfolio_emptypdfmessage', 'eportfolio') . "</p>";
+            echo '<div align="center" style="background-color:#A8A8A8;"><h3>' . $this->objLanguage->languageText('mod_eportfolio_wordNotice', 'eportfolio') . '!</h3><br></br><p>' . $this->objLanguage->languageText('phrase_eportfolio_emptypdfmessage', 'eportfolio') . "</p></div>";
             break;
 
         case 'addparts':
