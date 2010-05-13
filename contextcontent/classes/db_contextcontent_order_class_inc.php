@@ -55,7 +55,7 @@ class db_contextcontent_order extends dbtable {
     public function init() {
         parent::init('tbl_contextcontent_order');
         $this->objUser =& $this->getObject('user', 'security');
-        $this->$objLanguage=$this->getObject('language','language');
+        $this->objLanguage=$this->getObject('language','language');
         $this->objConfig =& $this->getObject('altconfig', 'config');
         $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer');
         $this->loadClass('treemenu','tree');
