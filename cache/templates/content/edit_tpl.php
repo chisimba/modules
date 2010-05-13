@@ -68,7 +68,12 @@ $cform->addToForm($this->objCButton->show());
 $cform = $cform->show();
 
 $this->objIcon = $this->getObject('geticon', 'htmlelements');
-$memcache = new Memcache;
+if(class_exists(Memcache)){
+	$memcache = new Memcache;
+} else {
+	echo 'This module requires memcache to be installed.<br/> <a href="http://php.net/memcache">http://php.net/memcache</a><br />Please contact your system administrator.<br/><a href="javascript:javascript:history.go(-1)">Back</a>';
+	exit();
+}	
 
 // now the table of existing servers...
 $tbl = $this->newObject('htmltable', 'htmlelements');
