@@ -76,7 +76,6 @@ public class DocumentListPanel extends LayoutContainer {
         this.main = main;
         editButton.setEnabled(false);
         approveButton.setEnabled(false);
-        defaultParams = "?module=wicid&action=getdocuments&mode=" + main.getMode();
     }
 
     @Override
@@ -187,6 +186,7 @@ public class DocumentListPanel extends LayoutContainer {
         panel.setHeight(Window.getClientHeight());
 
         add(panel);
+        defaultParams = "?module=wicid&action=getdocuments&mode=" + main.getMode();
         refreshDocumentList(defaultParams);
     }
 

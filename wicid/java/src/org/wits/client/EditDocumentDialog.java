@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * @author: Nguni Phakela
+ * 
  */
 package org.wits.client;
 
@@ -9,6 +9,7 @@ import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.event.WindowEvent;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
@@ -21,6 +22,7 @@ import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.extjs.gxt.ui.client.widget.form.ComboBox.TriggerAction;
 import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.FileUploadField;
+
 
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
@@ -43,7 +45,13 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Grid;
 import com.extjs.gxt.ui.client.Style.IconAlign;
+import com.extjs.gxt.ui.client.Style.ButtonScale;
+import com.extjs.gxt.ui.client.event.WindowListener;
 import java.util.ArrayList;
+import com.extjs.gxt.ui.client.util.IconHelper;
+import com.extjs.gxt.ui.client.widget.layout.RowLayout;
+import com.extjs.gxt.ui.client.Style.Orientation;
+import com.extjs.gxt.ui.client.widget.layout.RowData;
 
 import java.util.Date;
 import java.util.List;
@@ -73,7 +81,7 @@ public class EditDocumentDialog {
     private Document document;
     private FormPanel uploadpanel = new FormPanel();
     private Button uploadButton = new Button("Add attachment");
-    private Button uploadIcon = new Button();
+    private Button uploadIcon;
     private ComboBox<Group> groupField = new ComboBox<Group>();
     private Label namesField = new Label();
     private String mode;
@@ -82,6 +90,7 @@ public class EditDocumentDialog {
     private Grid upload = new Grid(2, 1);
     private OverView overView;
     private Button nextButton = new Button("Next");
+    private boolean myResult;
     //private DocumentListPanel myDocumentListPanel;
 
     public EditDocumentDialog(Document document, String mode, Main main) {
@@ -244,24 +253,29 @@ public class EditDocumentDialog {
                 + document.getTopic() + "&docid=" + document.getId());
         uploadpanel.setEncoding(Encoding.MULTIPART);
         uploadpanel.setMethod(Method.POST);
-        uploadpanel.setWidth(350);
+        uploadpanel.setSize(200, 100);
+        uploadpanel.setButtonAlign(HorizontalAlignment.LEFT);
 
         FileUploadField fileUploadField = new FileUploadField();
         fileUploadField.setName("filenamefield");
         fileUploadField.setFieldLabel("Upload file");
-        // uploadpanel.add(fileUploadField);
-        /* upload.setWidget(0, 0, uploadFile);
-        upload.setWidget(0, 1, uploadButton);
-        uploadpanel.add(upload);
-        */
-        uploadIcon.setIconStyle("download");
-        uploadpanel.add(uploadButton);
-        //uploadIcon.setIconAlign(IconAlign.RIGHT);
-        if(document.getAttachmentStatus().equals("Yes")) {
-            uploadpanel.add(uploadIcon);
-        }
+
         // uploadpanel.add(uploadFile);
+        uploadButton.setIconStyle("add16");
         if (mode.equals("default")) {
+            uploadpanel.add(uploadButton);
+
+            if(document.getAttachmentStatus().equals("Yes")) {
+                uploadIcon = new Button();
+                //uploadpanel.setLayout(new RowLayout(Orientation.HORIZONTAL));
+                //uploadIcon.setScale(ButtonScale.SMALL);
+                uploadIcon.setIconStyle("attachment");
+                //uploadIcon.setWidth(50);
+                //uploadpanel.add(uploadButton, new RowData(-1, 1, new Margins(4)));
+                //uploadpanel.add(uploadIcon, new RowData(1, 1, new Margins(4)));
+                uploadpanel.add(uploadIcon);
+            }
+
             mainForm.add(uploadpanel, formData);
         }
         uploadpanel.setButtonAlign(HorizontalAlignment.RIGHT);
@@ -270,7 +284,8 @@ public class EditDocumentDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                Window w = new Window();
+
+                final Window w = new Window();
                 w.setHeading("Upload file");
                 w.setModal(true);
                 w.setSize(800, 300);
@@ -279,7 +294,16 @@ public class EditDocumentDialog {
                 w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
                         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
                 w.show();
+                w.addWindowListener(new WindowListener(){
 
+                    @Override
+                    public void windowHide(WindowEvent we) {
+                        // check if the attachment exists in the database. if it uploaded
+                        // then the file uploaded fine and we can refresh the icon page
+                        // otherwise show error message
+                        checkAttachment(document.getId());
+                    }
+                });
             }
         });
         // mainForm.add(uploadButton, formData);
@@ -477,5 +501,47 @@ public class EditDocumentDialog {
         this.selectedFolder = selectedFolder;
         topicField.setValue((String) this.selectedFolder.get("id"));
         topicField.setToolTip((String) this.selectedFolder.get("id"));
+    }
+
+    public void checkAttachment(String docid) {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=checkdocattach&docids=" + docid;
+        RequestBuilder builder =
+                new RequestBuilder(RequestBuilder.GET, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot check document attachment", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    if (200 == response.getStatusCode()) {
+                        String myResponse = response.getText();
+                        if(myResponse.equals("true")) {
+                            if(uploadIcon == null) {
+                                uploadIcon = new Button();
+                                uploadIcon.setIconStyle("attachment");
+                                uploadpanel.add(uploadIcon);
+                                
+                                //refresh the editing dialog page
+                                mainForm.layout();
+                                //refresh the main document list panel
+                                String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                                Constants.main.getDocumentListPanel().refreshDocumentList(params);
+                            }
+                        }
+                        else {
+                            MessageBox.info("Error Uploading", "There was an error uploading the attachment. Please try again!", null);
+                        }
+                    } else {
+                        MessageBox.info("Error", "Error occured on the server. Cannot heck document attachment", null);
+                    }
+                }
+            });
+        } catch (RequestException e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot check document attachment", null);
+        }
     }
 }

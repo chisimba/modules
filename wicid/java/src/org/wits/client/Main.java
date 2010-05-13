@@ -114,8 +114,8 @@ public class Main {
     private Button searchButton = new Button("Search");
     private Main thisInstance;
     private Button advancedSearch = new Button("Advanced Search");
-    /*private Button test = new Button("Test");
-    private test testDialog;*/
+    private Button test = new Button("Test");
+    //private test testDialog;
 
     /**
      * Creates a new instance of Main
@@ -124,7 +124,7 @@ public class Main {
     }
 
     public LayoutContainer createGUI() {
-        documentListPanel = new DocumentListPanel(this);
+        
         LayoutContainer container = new LayoutContainer();
         container.setWidth(Window.getClientWidth());
         container.setHeight(Window.getClientHeight());
@@ -443,8 +443,8 @@ public class Main {
         viewTab.add(viewFilesPanel);
 
         tab.add(viewTab);
-
-
+        determinePermissions();
+        documentListPanel = new DocumentListPanel(this);
         documentListPanel.setHeight(500);
         docsTab.setIconStyle("docs");
         docsTab.setHeight(Window.getClientHeight());
@@ -459,8 +459,9 @@ public class Main {
         centerData.setMargins(new Margins(5));
         container.add(center, centerData);
 
-        loadFolderList(getFoldersParams + "&mode=default");
-        determinePermissions();
+        
+        loadFolderList(getFoldersParams + "&mode=" + getMode());
+        
 
         return container;
     }
@@ -548,7 +549,6 @@ public class Main {
     private void setMode() {
         newDocumentButton.setEnabled(mode.equals("default"));
         newCourseProposalButton.setEnabled(mode.equals("apo"));
-
     }
 
     private void promptFolderName() {
@@ -828,7 +828,7 @@ public class Main {
     }
 
     public DocumentListPanel getDocumentListPanel() {
-        return documentListPanel;
+        return this.documentListPanel;
     }
 
     public TabPanel getTab() {

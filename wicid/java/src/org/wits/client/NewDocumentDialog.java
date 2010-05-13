@@ -250,8 +250,9 @@ public class NewDocumentDialog {
                         + "&number=" + number + "&department=" + dept + "&telephone=" + telephone
                         + "&topic=" + topic + "&title=" + title + "&group=" + group;
                 createNewDocument(url);
-
-
+                //refresh the document list panel
+                String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                Constants.main.getDocumentListPanel().refreshDocumentList(params);
             }
         });
         mainForm.addButton(saveButton);
