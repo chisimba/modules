@@ -1209,7 +1209,7 @@ class getall_Eportfolio extends object
                 foreach($goalsList as $item) {
                     // Display each field for goals
                     $goalsTable->startRow();
-                    $goalsTable->addCell("<li>" . $item['shortdescription'] . "</ br>" . $item['longdescription'] . "</li>", "", NULL, NULL, $class, '');
+                    $goalsTable->addCell("<li><p><b>"  . $item['shortdescription'] . "</b></p><p>" . $item['longdescription'] .  "</p></li>", "", NULL, NULL, $class, '');
                     $goalsTable->endRow();
                     $goalNo = $goalNo+1;
                 }
