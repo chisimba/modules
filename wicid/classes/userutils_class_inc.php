@@ -314,7 +314,7 @@ class userutils extends object {
         $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $apodir=$this->objSysConfig->getValue('APO_DIR', 'wicid');
         $this->objUser=$this->getObject('user','security');
-        
+        $size="";
         $node = isset($_REQUEST['id'])?$_REQUEST['id']:"";
         $isadmin=$this->objUser->isAdmin()?"true":"false";
         $isadmin="true";
