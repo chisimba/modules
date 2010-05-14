@@ -44,14 +44,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Grid;
-import com.extjs.gxt.ui.client.Style.IconAlign;
-import com.extjs.gxt.ui.client.Style.ButtonScale;
 import com.extjs.gxt.ui.client.event.WindowListener;
 import java.util.ArrayList;
-import com.extjs.gxt.ui.client.util.IconHelper;
-import com.extjs.gxt.ui.client.widget.layout.RowLayout;
-import com.extjs.gxt.ui.client.Style.Orientation;
-import com.extjs.gxt.ui.client.widget.layout.RowData;
 
 import java.util.Date;
 import java.util.List;
@@ -91,19 +85,22 @@ public class EditDocumentDialog {
     private OverView overView;
     private Button nextButton = new Button("Next");
     private boolean myResult;
-    //private DocumentListPanel myDocumentListPanel;
+    private BorderLayoutData uploadWestData = new BorderLayoutData(LayoutRegion.WEST,100);
+    BorderLayoutData uploadEastData = new BorderLayoutData(LayoutRegion.CENTER, 150);
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
         this.mode = mode;
         this.main = main;
-        //myDocumentListPanel = new DocumentListPanel(this.main);
         createUI();
         overView = new OverView(this);
     }
 
     private void createUI() {
         //String defaultParams;
+        uploadWestData.setMargins(new Margins(0));
+        uploadEastData.setSplit(true);
+        uploadEastData.setMargins(new Margins(0, 0, 0, 5));
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
@@ -175,12 +172,8 @@ public class EditDocumentDialog {
         titleField.setAllowBlank(false);
         titleField.setValue(document.getTitle());
         titleField.setName("titlefield");
-        // if (mode.equals("all")) {
         mainForm.add(titleField, formData);
-        //  }
-        //   if (mode.equals("all")) {
         mainForm.add(groupField, formData);
-        //  }
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
 
@@ -198,9 +191,7 @@ public class EditDocumentDialog {
         panel.setLayout(new BorderLayout());
         panel.add(topicField, centerData);
         panel.add(browseTopicsButton, eastData);
-        //   if (mode.equals("all")) {
         mainForm.add(panel, formData);
-        //  }
 
         browseTopicsButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
@@ -245,7 +236,7 @@ public class EditDocumentDialog {
         radioGroup.add(privateOpt);
         radioGroup.add(draftOpt);
 
-
+        uploadpanel.setLayout(new BorderLayout());
         uploadpanel.setHeading("File Upload");
         uploadpanel.setFrame(true);
         uploadpanel.setAction(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -254,7 +245,7 @@ public class EditDocumentDialog {
         uploadpanel.setEncoding(Encoding.MULTIPART);
         uploadpanel.setMethod(Method.POST);
         uploadpanel.setSize(200, 100);
-        uploadpanel.setButtonAlign(HorizontalAlignment.LEFT);
+        uploadpanel.setButtonAlign(HorizontalAlignment.CENTER);
 
         FileUploadField fileUploadField = new FileUploadField();
         fileUploadField.setName("filenamefield");
@@ -263,17 +254,18 @@ public class EditDocumentDialog {
         // uploadpanel.add(uploadFile);
         uploadButton.setIconStyle("add16");
         if (mode.equals("default")) {
-            uploadpanel.add(uploadButton);
+            uploadpanel.add(uploadButton,uploadWestData);
 
-            if(document.getAttachmentStatus().equals("Yes")) {
+            if (document.getAttachmentStatus().equals("Yes")) {
                 uploadIcon = new Button();
+uploadIcon.setBorders(false);
                 //uploadpanel.setLayout(new RowLayout(Orientation.HORIZONTAL));
                 //uploadIcon.setScale(ButtonScale.SMALL);
                 uploadIcon.setIconStyle("attachment");
                 //uploadIcon.setWidth(50);
                 //uploadpanel.add(uploadButton, new RowData(-1, 1, new Margins(4)));
                 //uploadpanel.add(uploadIcon, new RowData(1, 1, new Margins(4)));
-                uploadpanel.add(uploadIcon);
+                uploadpanel.add(uploadIcon,uploadEastData);
             }
 
             mainForm.add(uploadpanel, formData);
@@ -294,7 +286,7 @@ public class EditDocumentDialog {
                 w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
                         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
                 w.show();
-                w.addWindowListener(new WindowListener(){
+                w.addWindowListener(new WindowListener() {
 
                     @Override
                     public void windowHide(WindowEvent we) {
@@ -519,20 +511,20 @@ public class EditDocumentDialog {
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
                         String myResponse = response.getText();
-                        if(myResponse.equals("true")) {
-                            if(uploadIcon == null) {
+                        if (myResponse.equals("true")) {
+                            if (uploadIcon == null) {
                                 uploadIcon = new Button();
                                 uploadIcon.setIconStyle("attachment");
-                                uploadpanel.add(uploadIcon);
-                                
+                                uploadIcon.setBorders(false);
+                                uploadpanel.add(uploadIcon,uploadEastData);
+
                                 //refresh the editing dialog page
                                 mainForm.layout();
                                 //refresh the main document list panel
                                 String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
                                 Constants.main.getDocumentListPanel().refreshDocumentList(params);
                             }
-                        }
-                        else {
+                        } else {
                             MessageBox.info("Error Uploading", "There was an error uploading the attachment. Please try again!", null);
                         }
                     } else {

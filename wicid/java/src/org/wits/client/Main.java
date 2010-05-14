@@ -56,8 +56,15 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 
 import java.util.List;
-import org.wits.client.ads.*;
-import org.wits.client.search.*;
+import org.wits.client.ads.CollaborationAndContracts;
+import org.wits.client.ads.ContactDetails;
+import org.wits.client.ads.NewCourseProposalDialog;
+import org.wits.client.ads.OverView;
+import org.wits.client.ads.Resources;
+import org.wits.client.ads.RulesAndSyllabusOne;
+import org.wits.client.ads.RulesAndSyllabusTwo;
+import org.wits.client.search.AdvancedSearchDialog;
+
 
 /**
  * Main entry point.
