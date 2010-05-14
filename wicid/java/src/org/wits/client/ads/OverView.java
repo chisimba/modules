@@ -34,6 +34,7 @@ import com.extjs.gxt.ui.client.data.*;
 import com.google.gwt.core.client.GWT;
 import org.wits.client.Constants;
 import org.wits.client.EditDocumentDialog;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 
 //import com.extjs.gxt.ui.client.data.DataReader;
@@ -60,10 +61,17 @@ public class OverView {
     private RulesAndSyllabusOne oldRulesAndSyllabusOne;
     public String overViewData;
     private ForwardTo forwardTo;
+    private String data;
     private EditDocumentDialog editDocumentDialog;
 
     public OverView(EditDocumentDialog editDocumentDialog) {
         this.editDocumentDialog = editDocumentDialog;
+        createUI();
+    }
+
+    public OverView(EditDocumentDialog editDocumentDialog, String data) {
+        this.editDocumentDialog = editDocumentDialog;
+        this.data = data;
         createUI();
     }
 
@@ -127,6 +135,9 @@ public class OverView {
         questionA1.setEmptyText("Enter the course/unit name");
         if (newCourseProposalDialog != null) {
             questionA1.setValue(newCourseProposalDialog.getTitleField().getValue());
+        }
+        if (this.data != null) {
+            questionA1.setValue(Util.getTagText(data, ""));
         }
         questionA1.setAllowBlank(false);
         questionA1.setMinLength(100);
@@ -231,21 +242,22 @@ public class OverView {
                 storeDocumentInfo();
 
                 String url =
-                        GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname=" + "overview" + "&formdata=" + overViewData + "&docid=" + Constants.docid;
+                        GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN+
+                        "?module=wicid&action=saveFormData&formname=overview&docid=" + Constants.docid;
 
                 createDocument(url);
-
+                System.out.println(url);
+                /*
                 if (oldRulesAndSyllabusOne == null) {
-                    RulesAndSyllabusOne rulesAndSyllabusOne = new RulesAndSyllabusOne(OverView.this);
-                    rulesAndSyllabusOne.show();
-                    overViewDialog.hide();
+                RulesAndSyllabusOne rulesAndSyllabusOne = new RulesAndSyllabusOne(OverView.this);
+                rulesAndSyllabusOne.show();
+                overViewDialog.hide();
                 } else {
 
-                    oldRulesAndSyllabusOne.show();
-                    overViewDialog.hide();
+                oldRulesAndSyllabusOne.show();
+                overViewDialog.hide();
 
-                }
+                }*/
 
             }
         });
@@ -304,6 +316,7 @@ public class OverView {
     }
 
     public void storeDocumentInfo() {
+
         WicidXML wicidxml = new WicidXML("overview");
         wicidxml.addElement("qA1", qA1);
         wicidxml.addElement("qA2", qA2);
@@ -311,6 +324,7 @@ public class OverView {
         wicidxml.addElement("qA4", qA4);
         wicidxml.addElement("qA5", qA5);
         overViewData = wicidxml.getXml();
+
     }
 
     public void getDocumentInfo() {
@@ -332,14 +346,15 @@ public class OverView {
 
     private void createDocument(String url) {
 
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
-
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+        String xdata = "formdata=" + overViewData ;
+        
         try {
 
-            Request request = builder.sendRequest(null, new RequestCallback() {
+            Request request = builder.sendRequest(xdata, new RequestCallback() {
 
                 public void onError(Request request, Throwable exception) {
-                    MessageBox.info("Error", "Error, cannot create new document", null);
+                    MessageBox.info("Error", "Error, cannot save overview data", null);
                 }
 
                 public void onResponseReceived(Request request, Response response) {

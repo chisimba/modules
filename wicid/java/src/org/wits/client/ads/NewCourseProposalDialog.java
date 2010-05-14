@@ -53,9 +53,9 @@ public class NewCourseProposalDialog {
     private Button saveButton = new Button("Next");
     private Button browseFacultiesButton = new Button("Browse Faculties");
     private TextArea facultyField = new TextArea();
-    private String newCourseProposalDialogData,dept,title,telephone;
+    private String newCourseProposalDialogData, dept, title, telephone;
     private TopicListingFrame facultyListingFrame;
-    private ModelData selectedFolder;
+    private ModelData selectedFaculty;
     private OverView oldOverView;
     private boolean status = false;
     private Date date = new Date();
@@ -118,7 +118,7 @@ public class NewCourseProposalDialog {
         titleField.setAllowBlank(false);
         titleField.setName("titlefield");
         mainForm.add(titleField, formData);
-        
+
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
 
@@ -180,7 +180,7 @@ public class NewCourseProposalDialog {
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                
+
                 dept = deptField.getValue();// deptField.getValue().getId();
                 title = titleField.getValue();
                 telephone = telField.getValue().toString();
@@ -191,7 +191,7 @@ public class NewCourseProposalDialog {
                 } catch (Exception ex) {
                 }
 
-                
+
                 if (dept == null) {
                     MessageBox.info("Missing department", "Provide originating department", null);
                     return;
@@ -200,7 +200,7 @@ public class NewCourseProposalDialog {
                     MessageBox.info("Missing department", "Provide department", null);
                     return;
                 }
-                
+
                 if (title == null) {
                     MessageBox.info("Missing title", "Provide title", null);
                     return;
@@ -210,31 +210,35 @@ public class NewCourseProposalDialog {
                     return;
                 }
 
-                
+
                 if (telephone == null) {
                     MessageBox.info("Missing telephone", "Provide telephone", null);
                     return;
                 }
 
-                if (telephone.length()>10){
+                if (telephone.length() > 10) {
                     MessageBox.info("Wrong telephone number", "The telephone number you provided is too long", null);
                     return;
                 }
 
-                if (telephone.length()<5){
+                if (telephone.length() < 5) {
                     MessageBox.info("Wrong telephone number", "The telephone number you provided is too short", null);
                     return;
                 }
-                
-                if (selectedFolder == null) {
+
+                if (selectedFaculty == null) {
                     MessageBox.info("Missing faculty", "Please select faculty", null);
                     return;
                 }
                 storeDocumentInfo();
-                
+                String number = "C";
+                String group = "Administration";
+
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname=" + "contactdetails" + "&formdata=" + newCourseProposalDialogData + "&docid=" + Constants.docid;
+                        + "?module=wicid&action=registerdocument&date=" + fmt.format(date)
+                        + "&number=" + number + "&department=" + dept + "&telephone=" + telephone
+                        + "&topic=" + facultyField.getValue() + "&title=" + title + "&group=" + group;
 
                 createDocument(url);
 
@@ -272,9 +276,9 @@ public class NewCourseProposalDialog {
         newCourseProposalDialog.show();
     }
 
-    public void storeDocumentInfo() {  
+    public void storeDocumentInfo() {
         String faculty = facultyField.getValue();
-       
+
         WicidXML wicidxml = new WicidXML("data");
         wicidxml.addElement("dept", dept);
         wicidxml.addElement("telnumber", telephone);
@@ -283,9 +287,8 @@ public class NewCourseProposalDialog {
         newCourseProposalDialogData = wicidxml.getXml();
 
     }
-    
-    public void setDocumentInfo(){
 
+    public void setDocumentInfo() {
     }
 
     public void setOldOverView(OverView oldOverView) {
@@ -362,9 +365,9 @@ public class NewCourseProposalDialog {
 
     }
 
-    public void setSelectedFolder(ModelData selectedFolder) {
-        this.selectedFolder = selectedFolder;
-        facultyField.setValue((String) this.selectedFolder.get("id"));
-        facultyField.setToolTip((String) this.selectedFolder.get("id"));
+    public void setSelectedFaculty(ModelData selectedFaculty) {
+        this.selectedFaculty = selectedFaculty;
+        facultyField.setValue((String) this.selectedFaculty.get("id"));
+        facultyField.setToolTip((String) this.selectedFaculty.get("id"));
     }
 }

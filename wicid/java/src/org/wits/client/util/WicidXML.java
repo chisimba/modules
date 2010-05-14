@@ -4,6 +4,8 @@
  */
 package org.wits.client.util;
 
+import com.google.gwt.http.client.URL;
+
 /**
  *
  * @author luigi
@@ -18,7 +20,8 @@ public class WicidXML {
     }
 
     public void addElement(String name, String value) {
-        value = value.replaceAll("<>", "");
+        //value = value.replaceAll("<>", "");
+        value=URL.encode(value);
         xml += "<" + name + ">" + value + "</" + name + ">";
     }
 
@@ -28,6 +31,6 @@ public class WicidXML {
 
     public String getXml() {
         rootTag = "<" + rootTag + ">" + xml + "</" + rootTag + ">";
-        return rootTag = rootTag.replaceAll("<>", "");
+        return rootTag;// = rootTag.replaceAll("<>", "");
     }
 }

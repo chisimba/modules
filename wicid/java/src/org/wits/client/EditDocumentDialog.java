@@ -85,22 +85,22 @@ public class EditDocumentDialog {
     private OverView overView;
     private Button nextButton = new Button("Next");
     private boolean myResult;
-    private BorderLayoutData uploadWestData = new BorderLayoutData(LayoutRegion.WEST,100);
-    BorderLayoutData uploadEastData = new BorderLayoutData(LayoutRegion.CENTER, 150);
+    private BorderLayoutData uploadWestData = new BorderLayoutData(LayoutRegion.WEST, 120);
+    private BorderLayoutData uploadCenterData = new BorderLayoutData(LayoutRegion.CENTER, 150);
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
         this.mode = mode;
         this.main = main;
         createUI();
-        overView = new OverView(this);
+
     }
 
     private void createUI() {
         //String defaultParams;
         uploadWestData.setMargins(new Margins(0));
-        uploadEastData.setSplit(true);
-        uploadEastData.setMargins(new Margins(0, 0, 0, 5));
+        uploadCenterData.setSplit(true);
+        uploadCenterData.setMargins(new Margins(0, 0, 0, 5));
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
@@ -217,6 +217,7 @@ public class EditDocumentDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                overView = new OverView(EditDocumentDialog.this);
                 overView.show();
             }
         });
@@ -254,18 +255,18 @@ public class EditDocumentDialog {
         // uploadpanel.add(uploadFile);
         uploadButton.setIconStyle("add16");
         if (mode.equals("default")) {
-            uploadpanel.add(uploadButton,uploadWestData);
+            uploadpanel.add(uploadButton, uploadWestData);
 
             if (document.getAttachmentStatus().equals("Yes")) {
                 uploadIcon = new Button();
-uploadIcon.setBorders(false);
+                uploadIcon.setBorders(false);
                 //uploadpanel.setLayout(new RowLayout(Orientation.HORIZONTAL));
                 //uploadIcon.setScale(ButtonScale.SMALL);
                 uploadIcon.setIconStyle("attachment");
                 //uploadIcon.setWidth(50);
                 //uploadpanel.add(uploadButton, new RowData(-1, 1, new Margins(4)));
                 //uploadpanel.add(uploadIcon, new RowData(1, 1, new Margins(4)));
-                uploadpanel.add(uploadIcon,uploadEastData);
+                uploadpanel.add(uploadIcon, uploadCenterData);
             }
 
             mainForm.add(uploadpanel, formData);
@@ -516,7 +517,7 @@ uploadIcon.setBorders(false);
                                 uploadIcon = new Button();
                                 uploadIcon.setIconStyle("attachment");
                                 uploadIcon.setBorders(false);
-                                uploadpanel.add(uploadIcon,uploadEastData);
+                                uploadpanel.add(uploadIcon, uploadCenterData);
 
                                 //refresh the editing dialog page
                                 mainForm.layout();
