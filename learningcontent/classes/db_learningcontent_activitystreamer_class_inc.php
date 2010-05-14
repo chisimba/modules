@@ -196,9 +196,9 @@ class db_learningcontent_activitystreamer extends dbtable
      * @param string $contextcode Context Code
      * @return array The values
      */
-    function getContextLogs($contextcode) 
+    function getContextLogs($contextcode, $where ) 
     {
-        return $this->getAll("WHERE contextcode='" . $contextcode . "'");
+        return $this->getAll("WHERE contextcode='" . $contextcode . "'".$where);
     }
     /**
      * Return json for context logs
@@ -207,7 +207,12 @@ class db_learningcontent_activitystreamer extends dbtable
      */
     function jsonContextLogs( $contextcode, $start, $limit ) 
     {
-        $logs = $this->getContextLogs( $contextcode );
+        if ( !empty($start) && !empty($limit) ) 
+         $where = " LIMIT " . $start . " , " . $limit;
+        else
+         $where = "";
+        $logs = $this->getContextLogs( $contextcode, $where );
+
         $logCount = (count($logs));
         $str = '{"logcount":"' . $logCount . '","availableLogs":[';
         $logArray = array();
@@ -216,8 +221,11 @@ class db_learningcontent_activitystreamer extends dbtable
           $infoArray = array();
           $infoArray['id'] = $log['id'];
           $infoArray['userid'] = $log['userid'];
-          $userNames = $this->objUser->fullname( $log['userid'] );
-          $userNames = $this->objUser->getTitle( $log['userid'] ).". ".$userNames;
+          //Function has bug
+          //$userNames = $this->objUser->getTitle( $log['userid'] ).". ";
+          //Return empty till its fixed
+          $userNames = "";
+          $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
           $infoArray['usernames'] = $userNames;
           $infoArray['contextcode'] = $log['contextcode'];
           $infoArray['modulecode'] = $log['modulecode'];
@@ -225,7 +233,7 @@ class db_learningcontent_activitystreamer extends dbtable
           $infoArray['pageorchapter'] = $log['pageorchapter'];
           //Get context item title (page or chapter)
           if ( $log['pageorchapter'] == 'page' ) {
-           $pageInfo = $this->objContentPages->getInfo( $log['contextitemid'], 'en' );
+           $pageInfo = $this->objContentPages->pageInfo( $log['contextitemid'], 'en' );
            $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
           } elseif ( $log['pageorchapter'] == 'chapter' ) {
            $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
