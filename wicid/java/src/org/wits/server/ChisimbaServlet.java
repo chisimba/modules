@@ -10,7 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
-
+import org.apache.commons.httpclient.methods.PostMethod;
 
 public class ChisimbaServlet extends HttpServlet {
 
@@ -24,14 +24,29 @@ public class ChisimbaServlet extends HttpServlet {
 
         Enumeration paramNames = request.getParameterNames();
 
-        String paramStr = "";
 
+        String result = "";
+        PostMethod post = new PostMethod("http://localhost/chisimba/?");
+        HttpClient httpClient = new HttpClient();
+        try {
 
-        while (paramNames.hasMoreElements()) {
-            String paramName = (String) paramNames.nextElement();
-            paramStr += paramName + "=" + request.getParameter(paramName) + "&";
+            while (paramNames.hasMoreElements()) {
+                String paramName = (String) paramNames.nextElement();
+                String paramValue = request.getParameter(paramName);
+                post.addParameter(paramName, paramValue);
+
+            }
+
+            int iGetResultCode = httpClient.executeMethod(post);
+            result = post.getResponseBodyAsString();
+
+        } catch (Exception ex) {
+            result = ex.getMessage();
+        } finally {
+            post.releaseConnection();
+
         }
-        out.print(execChisimba(paramStr));
+        out.print(result);
         out.close();
     }
 
@@ -40,24 +55,4 @@ public class ChisimbaServlet extends HttpServlet {
         doPost(req, resp);
     }
 
-    private String execChisimba(String params) {
-        HttpClient httpClient = new HttpClient();
-        String result = "";
-        GetMethod get=new GetMethod();
-        try {
-        get = new GetMethod("http://localhost/chisimba/?" + params);
-        int iGetResultCode = -1;
-        
-            iGetResultCode = httpClient.executeMethod(get);
-            result = get.getResponseBodyAsString();
-
-
-        } catch (Exception ex) {
-            return ex.getMessage();
-        } finally {
-            get.releaseConnection();
-
-        }
-        return result;
-    }
 }

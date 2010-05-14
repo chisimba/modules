@@ -243,11 +243,10 @@ public class OverView {
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN+
-                        "?module=wicid&action=saveFormData&formname=overview&docid=" + Constants.docid;
+                        "?module=wicid&action=saveFormData&formname=overview" + "&docid=" + Constants.docid+"&formdata="+overViewData;
 
                 createDocument(url);
-                System.out.println(url);
-                /*
+                
                 if (oldRulesAndSyllabusOne == null) {
                 RulesAndSyllabusOne rulesAndSyllabusOne = new RulesAndSyllabusOne(OverView.this);
                 rulesAndSyllabusOne.show();
@@ -257,7 +256,7 @@ public class OverView {
                 oldRulesAndSyllabusOne.show();
                 overViewDialog.hide();
 
-                }*/
+                }
 
             }
         });
@@ -347,11 +346,10 @@ public class OverView {
     private void createDocument(String url) {
 
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-        String xdata = "formdata=" + overViewData ;
-        
+       
         try {
 
-            Request request = builder.sendRequest(xdata, new RequestCallback() {
+            Request request = builder.sendRequest(null, new RequestCallback() {
 
                 public void onError(Request request, Throwable exception) {
                     MessageBox.info("Error", "Error, cannot save overview data", null);
@@ -361,17 +359,7 @@ public class OverView {
                     String resp[] = response.getText().split("|");
 
                     if (resp[0].equals("")) {
-                        /*if (oldOverView == null) {
-
-                        Constants.docid = resp[1];
-                        OverView overView = new OverView(NewCourseProposalDialog.this);
-                        overView.show();
-                        newDocumentDialog.hide();
-                        } else {
-                        oldOverView.show();
-                        newDocumentDialog.hide();
-
-                        }*/
+                      
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
