@@ -35,8 +35,6 @@ class dbEportfolio_Address extends dbTable
      */
     function listSingle($id) 
     {
-        //$sql = "SELECT * FROM tbl_eportfolio_address WHERE id = '" . $id . "'";
-        //return $this->getArray($sql);
         return $this->getAll("WHERE id='" . $id . "'");
     }
     function getByItem($userId) 
@@ -48,8 +46,6 @@ class dbEportfolio_Address extends dbTable
         } else {
             return FALSE;
         }
-        //return $this->getAll("WHERE userid='" . $userid . "'");
-        
     }
     /**
      * Insert a record
@@ -108,36 +104,5 @@ class dbEportfolio_Address extends dbTable
     {
         $this->delete("id", $id);
     }
-    /*
-    public function saveRecord()
-    {
-    $searchTerm = $this->getParam('searchterm', NULL);
-    if ($searchTerm == NULL) {
-    $searchTerm = $this->getParam('q', NULL);
-    }
-    if ($searchTerm == NULL) {
-    $searchTerm = $this->getParam('search', NULL);
-    }
-    $userId = $this->objUser->userId();
-    $params = urldecode($this->getParam('params', NULL));
-    $searchengine = $this->getParam('searchengine', NULL);
-    $callingModule = $this->getParam('callingModule', "_default");
-    // Get the context
-    $this->objDbContext = &$this->getObject('dbcontext','context');
-    $context = $this->objDbContext->getContextCode();
-    // Are we in a context ?
-    if ($context == NULL) {
-    $context = "lobby";
-    }
-    $this->insert(array(
-    'userid' => $userId,
-    'searchterm' => $searchTerm,
-    'module' => $callingModule,
-    'context' => $context,
-    'params' => $params,
-    'searchengine' => $searchengine,
-    'datecreated' => date("Y/m/d H:i:s")));
-    }
-    */
 }
 ?>
