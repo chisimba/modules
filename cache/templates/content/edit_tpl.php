@@ -71,7 +71,8 @@ $this->objIcon = $this->getObject('geticon', 'htmlelements');
 if(class_exists(Memcache)){
 	$memcache = new Memcache;
 } else {
-	echo 'This module requires memcache to be installed.<br/> <a href="http://php.net/memcache">http://php.net/memcache</a><br />Please contact your system administrator.<br/><a href="javascript:javascript:history.go(-1)">Back</a>';
+	$arrRep = array('MCLINK'=>'<br/> <a href="http://php.net/memcache">http://php.net/memcache</a><br />');
+	echo $this->objLanguage->code2Txt('mod_cache_error', 'cache', $arrRep).'<br/><a href="javascript:javascript:history.go(-1)">'.$this->objLanguage->languageText('mod_cache_back', 'cache').'</a>';
 	exit();
 }	
 
