@@ -48,7 +48,7 @@ public class NewCourseProposalDialog {
     private DateTimeFormat fmt = DateTimeFormat.getFormat("y/M/d");
     private final TextField<String> titleField = new TextField<String>();
     private final TextField<String> deptField = new TextField<String>();
-    private final NumberField telField = new NumberField();
+    private final TextField telField = new TextField();
     private final TextField<String> numberField = new TextField<String>();
     private Button saveButton = new Button("Next");
     private Button browseFacultiesButton = new Button("Browse Faculties");
@@ -108,10 +108,10 @@ public class NewCourseProposalDialog {
         mainForm.add(deptField, formData);
 
         telField.setFieldLabel("Tel. Number");
-        telField.setAllowBlank(false);
+        telField.setAllowBlank(true);
         telField.setName("telfield");
-        telField.setAllowDecimals(false);
-        telField.setAllowNegative(false);
+        // telField.setAllowDecimals(false);
+        // telField.setAllowNegative(false);
         mainForm.add(telField, formData);
 
         titleField.setFieldLabel("Course title");
@@ -213,16 +213,6 @@ public class NewCourseProposalDialog {
 
                 if (telephone == null) {
                     MessageBox.info("Missing telephone", "Provide telephone", null);
-                    return;
-                }
-
-                if (telephone.length() > 10) {
-                    MessageBox.info("Wrong telephone number", "The telephone number you provided is too long", null);
-                    return;
-                }
-
-                if (telephone.length() < 5) {
-                    MessageBox.info("Wrong telephone number", "The telephone number you provided is too short", null);
                     return;
                 }
 
