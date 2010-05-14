@@ -642,7 +642,7 @@ class getall_Eportfolio extends object
                     // Display each field for activities
                     $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
                     $activityTable->startRow();
-                    $activityTable->addCell("<li><p>" . $item['shortdescription'] . " : </p><p>" . $item['longdescription'] . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_activitytype", 'eportfolio') . " : </b>" . $cattype[0]['type'] . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . " : </b>" . $this->objDate->formatDate($item['start']) . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . " : </b>" . $this->objDate->formatDate($item['finish']) . "</p>" . $myCourse . "</li>");
+                    $activityTable->addCell("<li><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_activitytype", 'eportfolio') . " : </b>" . $cattype[0]['type'] . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . " : </b>" . $this->objDate->formatDate($item['start']) . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . " : </b>" . $this->objDate->formatDate($item['finish']) . "</p>". $myCourse . "<p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . " : </b>" . $item['shortdescription'] . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . " : </b>" . $item['longdescription'] . "</p></li>");
                     $activityTable->endRow();
                     $actyNo = $actyNo+1;
                 }
