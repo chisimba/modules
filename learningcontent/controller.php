@@ -288,7 +288,6 @@ class learningcontent extends controller {
 			case 'addcomment':
 				return $this->addComment();
             case 'jsongetlogs':
-                $contextlogs = $this->objContextActivityStreamer->jsonContextLogs($this->contextCode);
                 $start = $this->getParam('start');
                 $limit = $this->getParam('limit');
                 $this->setLayoutTemplate(NULL);
@@ -296,8 +295,8 @@ class learningcontent extends controller {
                 $this->setVar('pageSuppressBanner', TRUE);
                 $this->setVar('pageSuppressSearch', TRUE);
                 $this->setVar('suppressFooter', TRUE);
-                $lifts = $this->objLiftSearch->jsonLiftSearch($userneed, $start, $limit);
-                echo $lifts;
+                $contextLogs = $this->objContextActivityStreamer->jsonContextLogs( $this->contextCode, $start, $limit );
+                echo $contextLogs;
                  exit(0);
                 break;
             default:

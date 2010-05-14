@@ -80,7 +80,23 @@ class db_learningcontent_pages extends dbtable
             return FALSE;
         }
     }
-    
+    /**
+     * Method to retrieve a page data according to a title id
+     *
+     * @access public
+     * @param string $titleId Title ID
+     * @return array
+     */
+    public function getPage($titleId)
+    {
+        $where = "WHERE titleid = '".$titleId."'";
+        $results = $this->getAll($where);
+        if (isset($results[0])) {
+            return $results[0];
+        } else {
+            return FALSE;
+        }
+    }    
     /**
      * Method to add a Page
      *

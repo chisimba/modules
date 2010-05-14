@@ -67,6 +67,10 @@ class db_learningcontent_activitystreamer extends dbtable
     {
         parent::init('tbl_learningcontent_activitystreamer');
         $this->objUser =& $this->getObject('user', 'security');
+        //Load content pages
+        $this->objContentTitles = $this->getObject('db_learningcontent_titles');
+        $this->objContentChapter = $this->getObject('db_learningcontent_contextchapter');
+        $this->objContentPages = $this->getObject('db_learningcontent_pages');
     }
     
     /**
@@ -199,11 +203,34 @@ class db_learningcontent_activitystreamer extends dbtable
     /**
      * Return json for context logs
      * @param string $contextcode Context Code
-     * @return json The values
+     * @return json The logs
      */
-    function jsonContextLogs($contextcode) 
+    function jsonContextLogs( $contextcode $start, $limit ) 
     {
-        $logs = $this->getContextLogs($contextcode);
+        $logs = $this->getContextLogs( $contextcode );
+        $logArray = array();
+        foreach ( $logs as $log ) {
+         $infoArray = array();
+         $infoArray['id'] = $log['id'];
+         $infoArray['userid'] = $log['userid'];
+         $userNames = $this->objUser->fullname( $log['userid'] );
+         $userNames = $this->objUser->getTitle( $log['userid'] ).". ".$userNames;
+         $infoArray['usernames'] = $userNames;
+         $infoArray['contextcode'] = $log['contextcode'];
+         $infoArray['modulecode'] = $log['modulecode'];
+         $infoArray['contextitemid'] = $log['contextitemid'];
+         //Get context item title (page or chapter)
+         if ( $log['pageorchapter'] == 'page' ) {
+          $pageInfo = $this->objContentPages->getPage( $log['contextitemid'], 'en' );
+          $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
+         } elseif ( $log['pageorchapter'] == 'chapter' ) {
+          $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
+          $infoArray['contextitemtitle'] = $chapterTitle;
+         } else {
+          $infoArray['contextitemtitle'] = " ";
+         }
+         $infoArray['contextitemtitle'] = $log['contextitemid'];
+        }    
     }
 
     /**
