@@ -632,8 +632,6 @@ class wicid extends controller {
     public function __saveFormData() {
         $formname = $this->getParam('formname');
         $formdata = $this->getParam('formdata');
-        print_r($_POST);
-        die ();
         $docid = $this->getParam('docid');
         $this->objsavedata->saveData($formname, $formdata, $docid);
     }
