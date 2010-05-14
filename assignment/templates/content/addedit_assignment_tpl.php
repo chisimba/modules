@@ -23,6 +23,7 @@ if ($mode == 'edit') {
             '".$assignment['format']."',
             '".$assignment['assesment_type']."',
             '".$assignment['resubmit']."',
+            '".$assignment['email_alert']."',
             ".($canChangeField?'true':'false')."
         );
     });
@@ -35,6 +36,7 @@ else {
             '0',
             '0',
             '0',
+            '1',
             true
         );
         });
@@ -120,7 +122,7 @@ if (!$canChangeField) {
 }
 else {
 */
-    /*
+/*
     $radio = new radio ('assesment_type');
     $radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
     $radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
@@ -130,8 +132,8 @@ else {
     }
     $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
     $table->addCell($radio->show());
-    */
-    $table->addCell('<div id="isReflection"></div>');
+*/
+$table->addCell('<div id="isReflection"></div>');
 /*
 }
 */
@@ -151,6 +153,14 @@ $table->addCell($radio->show());
 */
 $table->addCell('<div id="allowMultiple"></div>');
 $table->endRow();
+
+
+//email alerts
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_assignment_emailalert', 'assignment', 'Email Alert'));
+$table->addCell('<div id="emailAlert"></div>');
+$table->endRow();
+
 // Mark
 $table->startRow();
 $label = new label ($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark'), 'input_mark');
