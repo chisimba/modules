@@ -287,6 +287,19 @@ class learningcontent extends controller {
 				return $this->viewRss();
 			case 'addcomment':
 				return $this->addComment();
+            case 'jsongetlogs':
+                $contextlogs = $this->objContextActivityStreamer->jsonContextLogs($this->contextCode);
+                $start = $this->getParam('start');
+                $limit = $this->getParam('limit');
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $lifts = $this->objLiftSearch->jsonLiftSearch($userneed, $start, $limit);
+                echo $lifts;
+                 exit(0);
+                break;
             default:
                 return $this->showContextChapters();
         }

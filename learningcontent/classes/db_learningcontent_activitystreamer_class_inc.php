@@ -188,6 +188,25 @@ class db_learningcontent_activitystreamer extends dbtable
         }
     }
     /**
+     * Return a single record
+     * @param string $contextcode Context Code
+     * @return array The values
+     */
+    function getContextLogs($contextcode) 
+    {
+        return $this->getAll("WHERE contextcode='" . $contextcode . "'");
+    }
+    /**
+     * Return json for context logs
+     * @param string $contextcode Context Code
+     * @return json The values
+     */
+    function jsonContextLogs($contextcode) 
+    {
+        $logs = $this->getContextLogs($contextcode);
+    }
+
+    /**
      * Method to delete a record
      * @param string $contextItemId Context Item Id
      */
