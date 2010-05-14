@@ -50,7 +50,7 @@ function initRadioButtons(
         border:false,
         width:100,
         items: [
-               
+
         {
             xtype: 'radiogroup',
             items: [
@@ -73,7 +73,7 @@ function initRadioButtons(
         border:false,
         width:100,
         items: [
-        
+
         {
             xtype: 'radiogroup',
             items: [
@@ -100,7 +100,7 @@ function initRadioButtons(
             items: [
                 {boxLabel: 'Yes', name: 'emailalert', inputValue: 1, checked: emailAlert},
                 {boxLabel: 'No', name: 'emailalert', inputValue: 0, checked: !emailAlert}
-                
+
             ]
         }
         ]
