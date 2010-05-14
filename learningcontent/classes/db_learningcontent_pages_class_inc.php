@@ -87,7 +87,7 @@ class db_learningcontent_pages extends dbtable
      * @param string $titleId Title ID
      * @return array
      */
-    public function getPage($titleId)
+    public function pageInfo($titleId)
     {
         $where = "WHERE titleid = '".$titleId."'";
         $results = $this->getAll($where);

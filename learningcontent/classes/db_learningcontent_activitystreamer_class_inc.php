@@ -205,32 +205,45 @@ class db_learningcontent_activitystreamer extends dbtable
      * @param string $contextcode Context Code
      * @return json The logs
      */
-    function jsonContextLogs( $contextcode $start, $limit ) 
+    function jsonContextLogs( $contextcode, $start, $limit ) 
     {
         $logs = $this->getContextLogs( $contextcode );
+        $logCount = (count($logs));
+        $str = '{"logcount":"' . $logCount . '","availableLogs":[';
         $logArray = array();
         foreach ( $logs as $log ) {
-         $infoArray = array();
-         $infoArray['id'] = $log['id'];
-         $infoArray['userid'] = $log['userid'];
-         $userNames = $this->objUser->fullname( $log['userid'] );
-         $userNames = $this->objUser->getTitle( $log['userid'] ).". ".$userNames;
-         $infoArray['usernames'] = $userNames;
-         $infoArray['contextcode'] = $log['contextcode'];
-         $infoArray['modulecode'] = $log['modulecode'];
-         $infoArray['contextitemid'] = $log['contextitemid'];
-         //Get context item title (page or chapter)
-         if ( $log['pageorchapter'] == 'page' ) {
-          $pageInfo = $this->objContentPages->getPage( $log['contextitemid'], 'en' );
-          $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
-         } elseif ( $log['pageorchapter'] == 'chapter' ) {
-          $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
-          $infoArray['contextitemtitle'] = $chapterTitle;
-         } else {
-          $infoArray['contextitemtitle'] = " ";
+         if( !empty ( $log['endtime'] ) || $log['endtime'] != NULL ) {
+          $infoArray = array();
+          $infoArray['id'] = $log['id'];
+          $infoArray['userid'] = $log['userid'];
+          $userNames = $this->objUser->fullname( $log['userid'] );
+          $userNames = $this->objUser->getTitle( $log['userid'] ).". ".$userNames;
+          $infoArray['usernames'] = $userNames;
+          $infoArray['contextcode'] = $log['contextcode'];
+          $infoArray['modulecode'] = $log['modulecode'];
+          $infoArray['contextitemid'] = $log['contextitemid'];
+          $infoArray['pageorchapter'] = $log['pageorchapter'];
+          //Get context item title (page or chapter)
+          if ( $log['pageorchapter'] == 'page' ) {
+           $pageInfo = $this->objContentPages->getInfo( $log['contextitemid'], 'en' );
+           $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
+          } elseif ( $log['pageorchapter'] == 'chapter' ) {
+           $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
+           $infoArray['contextitemtitle'] = $chapterTitle;
+          } else {
+           $infoArray['contextitemtitle'] = " ";
+          }
+          $infoArray['datecreated'] = $log['datecreated'];
+          $infoArray['description'] = $log['description'];
+          $infoArray['starttime'] = $log['starttime'];
+          $infoArray['endtime'] = $log['endtime'];
+          $logArray[] = $infoArray;
          }
-         $infoArray['contextitemtitle'] = $log['contextitemid'];
-        }    
+        }
+        return json_encode(array(
+            'logcount' => $logCount,
+            'contextlogs' => $logArray
+        ));
     }
 
     /**
