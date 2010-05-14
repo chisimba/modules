@@ -83,6 +83,8 @@ class assignment extends controller
     */
     public $objLog;
 
+    public $contextCode;
+
     /**
     *
     * Intialiser for the assignment2 controller
@@ -267,9 +269,9 @@ class assignment extends controller
         $closingDate = $this->getParam('closingdate').' '.$this->getParam('closingtime');
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
-//public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type)
-
-        $result = $this->objAssignment->addAssignment($name, $this->contextCode, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type);
+        $emailAlert=$this->getParam('emailalert');
+        
+        $result = $this->objAssignment->addAssignment($name, $this->contextCode, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type,$emailAlert);
 
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unabletosaveassignment'));
@@ -360,8 +362,8 @@ class assignment extends controller
 
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
-
-        $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type);
+        $emailAlert=$this->getParam('emailalert');
+        $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type,$emailAlert);
 
         $result = $result ? 'Y' : 'N';
 

@@ -2,12 +2,14 @@ function initRadioButtons(
     _type,
     _isReflection,
     _allowMultiple,
+    _emailAlert,
     canChangeField
-)
+    )
 {
     var isOnline = _type=='0';
     var isReflection = _isReflection=="1";
     var allowMultiple = _allowMultiple=="1";
+    var emailAlert=_emailAlert=="1";
     customPanel = Ext.extend(Ext.Panel, {
         id:'customPanel',
         border:false,
@@ -26,22 +28,16 @@ function initRadioButtons(
         {
             defaultType: 'radio',
             border:false,
-            width:100,
+            width:200,
             items: [
             {
-                checked: isOnline,
-                boxLabel: 'Online',
-                name: 'type',
-                inputValue: '0'
-            }, {
-                fieldLabel: '',
-                checked: !isOnline,
-                labelSeparator: '',
-                boxLabel: 'Upload',
-                name: 'type',
-                inputValue: '1'
-            }
+            xtype: 'radiogroup',
+            items: [
+                {boxLabel: 'Online', name: 'type', inputValue: 1, checked: isOnline},
+                {boxLabel: 'Upload', name: 'type', inputValue: 0, checked: !isOnline}
+
             ]
+        } ]
         }
         );
     }
@@ -54,19 +50,17 @@ function initRadioButtons(
         border:false,
         width:100,
         items: [
+               
         {
-            checked: isReflection,
-            boxLabel: 'Yes',
-            name: 'assesment_type',
-            inputValue: '1'
-        }, {
-            fieldLabel: '',
-            checked: !isReflection,
-            labelSeparator: '',
-            boxLabel: 'No',
-            name: 'assesment_type',
-            inputValue: '0'
+            xtype: 'radiogroup',
+            items: [
+                {boxLabel: 'Yes', name: 'assesment_type', inputValue: 1, checked: isReflection},
+                {boxLabel: 'No', name: 'assesment_type', inputValue: 0, checked: !isReflection}
+
+            ]
         }
+
+
         ]
     }
     );
@@ -79,20 +73,38 @@ function initRadioButtons(
         border:false,
         width:100,
         items: [
+        
         {
-            checked: allowMultiple,
-            boxLabel: 'Yes',
-            name: 'resubmit',
-            inputValue: '1'
-        }, {
-            fieldLabel: '',
-            checked: !allowMultiple,
-            labelSeparator: '',
-            boxLabel: 'No',
-            name: 'resubmit',
-            inputValue: '0'
+            xtype: 'radiogroup',
+            items: [
+                {boxLabel: 'Yes', name: 'resubmit', inputValue: 1, checked: allowMultiple},
+                {boxLabel: 'No', name: 'resubmit', inputValue: 0, checked: !allowMultiple}
+
+            ]
         }
         ]
     }
     );
+    customPanel.override({
+        renderTo : 'emailAlert'
+    });
+    var panel4 = new customPanel(
+    {
+        defaultType: 'radio',
+        border:false,
+        layout:'anchor',
+        width:100,
+        items: [
+            {
+            xtype: 'radiogroup',
+            items: [
+                {boxLabel: 'Yes', name: 'emailalert', inputValue: 1, checked: emailAlert},
+                {boxLabel: 'No', name: 'emailalert', inputValue: 0, checked: !emailAlert}
+                
+            ]
+        }
+        ]
+    }
+    );
+
 }

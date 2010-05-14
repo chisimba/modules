@@ -53,4 +53,19 @@
             </change>
         </data>
     </update>
+
+     <update>
+        <table>tbl_assignment</table>
+        <version>0.362</version>
+        <description>Added email alert option </description>
+        <data>
+            <add>
+                <name>email_alert</name>
+                <type>text</type>
+                <length>1</length>
+                <default>1</default>
+            </add>
+        </data>
+    </update>
+
 </updates>
