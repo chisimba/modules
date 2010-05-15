@@ -159,7 +159,6 @@ class learningcontent extends controller {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
 
         switch ($action) {
-
             case 'notincontext':
                 return 'notincontext_tpl.php';
             case 'switchcontext':
