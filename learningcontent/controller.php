@@ -93,6 +93,9 @@ class learningcontent extends controller {
             $this->userId = $this->objUser->userId();
             $this->sessionId = session_id();
             $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+            //Check permissions
+            $this->hasAccess = $this->objContextGroups->isContextLecturer(); 
+            $this->hasAccess|= $this->objUser->isAdmin(); 
             //Load Activity Streamer
 
             if($this->objModuleCatalogue->checkIfRegistered('activitystreamer') && $this->objUser->isLoggedIn()) {

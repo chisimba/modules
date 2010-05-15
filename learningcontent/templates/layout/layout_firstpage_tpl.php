@@ -109,7 +109,12 @@ if ($this->isValid('addchapter')) {
     
     $content .=  '<br /><p>'.$link->show().'</p>';
 }
-
+if ($this->hasAccess) {
+    $link = new link ($this->uri(array('action'=>'viewlogs')));
+    $link->link = $this->objLanguage->languageText('mod_learningcontent_useractivitieslog','learningcontent');
+    
+    $content .=  '<br /><p>'.$link->show().'</p>';
+}
 $objFieldset->contents = $toolbar->show();
 $cssLayout->setLeftColumnContent($content);
 $cssLayout->setMiddleColumnContent($this->getContent());
