@@ -16,6 +16,8 @@ lang["startime"] =   "' . ucWords($this->objLanguage->code2Txt('mod_learningcont
 lang["endtime"] =   "' . ucWords($this->objLanguage->code2Txt('mod_learningcontent_endtime', 'learningcontent')) . '";
 lang["type"] =   "' . ucWords($this->objLanguage->code2Txt('mod_learningcontent_type', 'learningcontent')) . '";
 lang["nologstodisplay"] =   "' . ucWords($this->objLanguage->code2Txt('mod_learningcontent_nologstodisplay', 'learningcontent')) . '";
+lang["displayingpage"] =   "' . $this->objLanguage->code2Txt('mod_learningcontent_displayingpage', 'learningcontent') . '";
+lang["wordof"] =   "' . $this->objLanguage->code2Txt('mod_learningcontent_wordof', 'learningcontent') . '";
 var baseuri = "' . $objSysConfig->getsiteRoot() . 'index.php";
  </script>');
 //Ext stuff
