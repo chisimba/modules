@@ -59,10 +59,7 @@ class learningcontent extends controller {
 /**
  * @var string $contextCode Context Code of Current Context
  */
-
     protected $contextCode;
-
-
     /**
      * Constructor
      */
@@ -105,13 +102,10 @@ class learningcontent extends controller {
             } else {
                 $this->eventsEnabled = FALSE;
             }
-		
-
-
             $this->objMenuTools = $this->getObject('tools', 'toolbar');
             $this->objConfig = $this->getObject('altconfig', 'config');
-			$this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig');
-			$this->objContextComments = $this->getObject('db_learningcontent_comment', 'learningcontent');
+  	    $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig');
+	    $this->objContextComments = $this->getObject('db_learningcontent_comment', 'learningcontent');
             $this->setVar('pageSuppressXML',TRUE);
         }
         catch(customException $e) {
@@ -148,16 +142,13 @@ class learningcontent extends controller {
      * @param string $action
      */
     public function dispatch($action) {
-
 	$this->contextCode = ($this->getParam('rss_contextcode') != "") ? $this->getParam('rss_contextcode') : $this->contextCode ;
 	//$this->getParam('contextcode');
         if ($this->contextCode == '' && $action != 'notincontext') {
             $action = 'notincontext';
         }
-
         $this->setLayoutTemplate('layout_chapter_tpl.php');
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
-
         switch ($action) {
             case 'notincontext':
                 return 'notincontext_tpl.php';
@@ -282,14 +273,13 @@ class learningcontent extends controller {
                 $trackPage['pageorchapter'] = 'chapter';
                 $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewchapter', 'learningcontent');
                 return $this->showContextChapters($trackPage);
-	    	case 'rss':
-				return $this->viewRss();
-			case 'addcomment':
-				return $this->addComment();
+    	    case 'rss':
+		return $this->viewRss();
+	    case 'addcomment':
+		return $this->addComment();
             case 'viewlogs':
                 $this->setLayoutTemplate('layout_firstpage_tpl.php');
                 return 'usersactivitylog_tpl.php';
-                break;
             case 'jsongetlogs':
                 $start = $this->getParam('start');
                 $limit = $this->getParam('limit');

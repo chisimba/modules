@@ -70,8 +70,7 @@ class db_learningcontent_activitystreamer extends dbtable
         //Load content pages
         $this->objContentTitles = $this->getObject('db_learningcontent_titles');
         $this->objContentChapter = $this->getObject('db_learningcontent_contextchapter');
-        $this->objContentPages = $this->getObject('db_learningcontent_pages');
-        $this->objContentOrder = $this->getObject('db_learningcontent_order');   
+        $this->objContentPages = $this->getObject('db_learningcontent_pages');        
     }
     
     /**
@@ -193,6 +192,30 @@ class db_learningcontent_activitystreamer extends dbtable
         }
     }
     /**
+    * Method to get a content page
+    * @param string $pageId Record Id of the Page
+    * @param string $contextCode Context the Page is In
+    * @return array Details of the Page, FALSE if does not exist
+    * @access public
+    */
+    public function getPage($pageId, $contextCode)
+    {
+        $sql = 'SELECT tbl_learningcontent_order.id, tbl_learningcontent_order.chapterid, tbl_learningcontent_order.parentid,tbl_learningcontent_pages.scorm, tbl_learningcontent_pages.menutitle, pagecontent, headerscripts, pagepicture, pageformula, lft, rght, tbl_learningcontent_pages.id as pageid, tbl_learningcontent_order.titleid, isbookmarked
+        FROM tbl_learningcontent_order 
+        INNER JOIN tbl_learningcontent_titles ON (tbl_learningcontent_order.titleid = tbl_learningcontent_titles.id) 
+        INNER JOIN tbl_learningcontent_pages ON (tbl_learningcontent_pages.titleid = tbl_learningcontent_titles.id AND original=\'Y\') 
+        WHERE tbl_learningcontent_order.id=\''.$pageId.'\' AND contextcode=\''.$contextCode.'\'
+        ORDER BY lft LIMIT 1';
+        
+        $results = $this->getArray($sql);
+        
+        if (count($results) == 0) {
+            return FALSE;
+        } else {
+            return $results[0];
+        }
+    }
+    /**
      * Return a single record
      * @param string $contextcode Context Code
      * @return array The values
@@ -234,7 +257,7 @@ class db_learningcontent_activitystreamer extends dbtable
           $infoArray['pageorchapter'] = $log['pageorchapter'];
           //Get context item title (page or chapter)
           if ( $log['pageorchapter'] == 'page' ) {
-           $pageDetails = $this->objContentOrder->getPage( $log['contextitemid'], $contextcode );
+           $pageDetails = $this->getPage( $log['contextitemid'], $contextcode );
            $pageInfo = $this->objContentPages->pageInfo( $pageDetails['titleid'] );
            $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
           } elseif ( $log['pageorchapter'] == 'chapter' ) {
