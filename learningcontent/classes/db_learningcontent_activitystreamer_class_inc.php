@@ -71,6 +71,7 @@ class db_learningcontent_activitystreamer extends dbtable
         $this->objContentTitles = $this->getObject('db_learningcontent_titles');
         $this->objContentChapter = $this->getObject('db_learningcontent_contextchapter');
         $this->objContentPages = $this->getObject('db_learningcontent_pages');
+        $this->objContentOrder = $this->getObject('db_learningcontent_order');   
     }
     
     /**
@@ -233,7 +234,8 @@ class db_learningcontent_activitystreamer extends dbtable
           $infoArray['pageorchapter'] = $log['pageorchapter'];
           //Get context item title (page or chapter)
           if ( $log['pageorchapter'] == 'page' ) {
-           $pageInfo = $this->objContentPages->pageInfo( $log['contextitemid'], 'en' );
+           $pageDetails = $this->objContentOrder->getPage( $log['contextitemid'], $contextcode );
+           $pageInfo = $this->objContentPages->pageInfo( $pageDetails['titleid'] );
            $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
           } elseif ( $log['pageorchapter'] == 'chapter' ) {
            $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );

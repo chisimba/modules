@@ -287,6 +287,10 @@ class learningcontent extends controller {
 				return $this->viewRss();
 			case 'addcomment':
 				return $this->addComment();
+            case 'viewlogs':
+                $this->setLayoutTemplate('layout_firstpage_tpl.php');
+                return 'usersactivitylog_tpl.php';
+                break;
             case 'jsongetlogs':
                 $start = $this->getParam('start');
                 $limit = $this->getParam('limit');
