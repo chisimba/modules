@@ -111,7 +111,7 @@ if ($this->isValid('addchapter')) {
 }
 if ($this->hasAccess) {
     $link = new link ($this->uri(array('action'=>'viewlogs')));
-    $link->link = $this->objLanguage->languageText('mod_learningcontent_useractivitieslog','learningcontent');
+    $link->link = $this->objLanguage->languageText('mod_learningcontent_useractivitylogs','learningcontent');
     
     $content .=  '<br /><p>'.$link->show().'</p>';
 }
