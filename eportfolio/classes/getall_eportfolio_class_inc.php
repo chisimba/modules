@@ -1553,7 +1553,7 @@ class getall_Eportfolio extends object
                 foreach($reflectionList as $item) {
                     // Display each field for reflections
                     $reflectionTable->startRow();
-                    $reflectionTable->addCell("<li>" . $item['shortdescription'] . "<p>" . $item['longdescription'] . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . " : </b>" . $item['rationale'] . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . " : </b>" . $this->objDate->formatDate($item['creation_date']) . "</p></li>");
+                    $reflectionTable->addCell("<li><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . " : </b>" . $item['rationale'] . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . " : </b>" . $this->objDate->formatDate($item['creation_date']) ."<p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . " : </b>" . $item['shortdescription'] . "</p><p>" . "<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . " : </b>" . $item['longdescription'] .  "</p></li>");
                     $reflectionTable->endRow();
                     $refNo = $refNo+1;
                 }
