@@ -6,7 +6,7 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass("button", "htmlelements");
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
-$type = 'Place';
+$type = 'Goal';
 $categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 $mytype = 'Priority';
 $mycategorytypeList = $this->objDbCategorytypeList->listCategorytype($mytype);
