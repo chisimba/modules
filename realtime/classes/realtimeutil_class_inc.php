@@ -92,7 +92,7 @@ class realtimeutil extends object {
 ';
         //this ought to be in useriles
         $myFile = $modPath.'/realtime/resources/'.$this->objUser->userid().'.jnlp';
-        chmod($modPath.'/realtime/resources/', 0777);
+        //chmod($modPath.'/realtime/resources/', 0777);
         $fh = fopen($myFile, 'w') or die("can't open file");
         fwrite($fh, $str);
         fclose($fh);
