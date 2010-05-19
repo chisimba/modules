@@ -35,10 +35,8 @@ $objLayer->str = $header.$headShow;
 $objLayer->id = 'cms_main';
 
 //echo $objRound->show($header.$headShow);//$tbl->show());
-echo "<br>".$objLayer->show();
-echo "<br><br>";
-echo "<br><br><br><br>";
-echo "<br />";
+echo $objLayer->show();
+echo "<br /><br /><br /><br /><br /><br />";
 echo  $cpanel;
 
 ?>

@@ -1574,6 +1574,13 @@ $this->_objJQuery->loadSimpleTreePlugin();
 
                 // Switch menu style - Megan Watson 26/03/2007
                 case 'menustyle':
+                $objSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
+                if ($objSysconfig->getValue('admin_only_menu', 'cmsadmin') == 'TRUE') {
+                    if (!$this->_objUser->inAdminGroup($this->_objUser->userId())) {
+                        $this->setVar('message', $this->objLanguage->languageText('mod_cmsadmin_nomenupermissions', 'cmsadmin'));
+                        return 'cms_nopermissions_tpl.php';
+                    }
+                }
                 $data = $this->dbMenuStyle->getStyles();
                 $topNav = $this->_objUtils->topNav('menu');
                 $this->setVarByRef('topNav', $topNav);
@@ -1582,6 +1589,13 @@ $this->_objJQuery->loadSimpleTreePlugin();
                 break;
 
                 case 'updatemenustyle':
+                $objSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
+                if ($objSysconfig->getValue('admin_only_menu', 'cmsadmin') == 'TRUE') {
+                    if (!$this->_objUser->inAdminGroup($this->_objUser->userId())) {
+                        $this->setVar('message', $this->objLanguage->languageText('mod_cmsadmin_nomenupermissions', 'cmsadmin'));
+                        return 'cms_nopermissions_tpl.php';
+                    }
+                }
                 $styleId = $this->getParam('style');
                 $this->dbMenuStyle->updateActive($styleId);
                 $this->_objCMSLayouts->getMenuStyle(TRUE);

@@ -536,7 +536,17 @@
 
             $tbl->startRow();
             $tbl->addCell($icnRss);
-            $tbl->addCell($icnMenu);
+            
+            //$test = $this->_objSysConfig->getValue('admin_only_menu', 'cmsadmin');
+            //var_dump($test);
+            if ($this->_objSysConfig->getValue('admin_only_menu', 'cmsadmin') == 'TRUE') {
+                if ($this->_objUser->inAdminGroup($this->_objUser->userId())) {
+                    $tbl->addCell($icnMenu);
+                }
+            } else {
+                $tbl->addCell($icnMenu);
+            }
+            
             $tbl->addCell($icnFiles);
             $tbl->addCell($icnPermissions);
             $tbl->addCell($icnShortURL);
@@ -2068,7 +2078,6 @@
             $objIcon->cssClass = 'control_icon_images';
             $qIcon['view'] = $objIcon->show().'&nbsp;';
 
-
 			$cmsControlPanel = '
 			<a tabindex="0" href="#cmscontrolpanel" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">'.$lblQuickMenu.'</a>
 			<div id="cmscontrolpanelitems" class="hidden">
@@ -2095,9 +2104,15 @@
 				</li>
 				<li><a href="?module=cmsadmin&amp;action=createfeed">'.$qIcon['feed'].'RSS Feeds</a>
 				</li>
-				<li><a href="?module=cmsadmin&amp;action=permissions">'.$qIcon['permission'].'Permissions</a></li>
-				<li><a href="?module=cmsadmin&amp;action=menustyle">'.$qIcon['menu'].'Menu</a></li>
-				<li><a href="?module=cmsadmin&amp;action=filemanager">'.$qIcon['filemanager'].'Upload Files</a></li>
+				<li><a href="?module=cmsadmin&amp;action=permissions">'.$qIcon['permission'].'Permissions</a></li>';
+			if ($this->_objSysConfig->getValue('admin_only_menu', 'cmsadmin') == 'TRUE') {
+                if ($this->_objUser->inAdminGroup($this->_objUser->userId())) {
+                    $cmsControlPanel .= '<li><a href="?module=cmsadmin&amp;action=menustyle">'.$qIcon['menu'].'Menu</a></li>';
+                }
+            } else {
+                $cmsControlPanel .= '<li><a href="?module=cmsadmin&amp;action=menustyle">'.$qIcon['menu'].'Menu</a></li>';
+            }
+			$cmsControlPanel .= '<li><a href="?module=cmsadmin&amp;action=filemanager">'.$qIcon['filemanager'].'Upload Files</a></li>
 				<li><a href="?module=shorturl&ref=cmsadmin">'.$qIcon['shorturl'].'Short URLs</a></li>
                 <li><a href="?module=cmsadmin&amp;action=flag">'.$qIcon['flag'].'Flag</a></li>
 				<li><a href="?module=sysconfig&action=step2&pmodule_id=cmsadmin">'.$qIcon['config'].'Configuration</a></li>
@@ -2121,9 +2136,17 @@
             $table->startRow();
             $table->addCell($createRss);
             $table->endRow();
-            $table->startRow();
-            $table->addCell($menuMangement);
-            $table->endRow();
+            if ($this->_objSysConfig->getValue('admin_only_menu', 'cmsadmin') == 'TRUE') {
+                if ($this->_objUser->inAdminGroup($this->_objUser->userId())) {
+                    $table->startRow();
+                    $table->addCell($menuMangement);
+                    $table->endRow();
+                }
+            } else {
+                $table->startRow();
+                $table->addCell($menuMangement);
+                $table->endRow();
+            }
             $table->startRow();
             $table->addCell($filemanager);
             $table->endRow();
@@ -2341,9 +2364,9 @@
                  */
         public function inGroup($group)
         {
-            $userId = $this->objUser->userId();
-            $objGroupModel =& $this->getObject('groupadminmodel','groupadmin');
-            $id = $this->objUser->PKid($userId);
+            $userId = $this->_objUser->userId();
+            $objGroupModel = $this->getObject('groupadminmodel','groupadmin');
+            $id = $this->_objUser->PKid($userId);
             $groupId = $objGroupModel->getId($group);
             return $objGroupModel->isGroupMember($id, $groupId);
         }
@@ -2358,9 +2381,9 @@
                  */
         public function inGroupById($groupId)
         {
-            $userId = $this->objUser->userId();
-            $objGroupModel =& $this->getObject('groupadminmodel','groupadmin');
-            $id = $this->objUser->PKid($userId);
+            $userId = $this->_objUser->userId();
+            $objGroupModel = $this->getObject('groupadminmodel','groupadmin');
+            $id = $this->_objUser->PKid($userId);
             return $objGroupModel->isGroupMember($id, $groupId);
         }
 
@@ -2376,9 +2399,9 @@
                  */
         public function userGroups()
         {
-            $userId = $this->objUser->userId();
-            $objGroupModel =& $this->getObject('groupadminmodel','groupadmin');
-            $id = $this->objUser->PKid($userId);
+            $userId = $this->_objUser->userId();
+            $objGroupModel = $this->getObject('groupadminmodel','groupadmin');
+            $id = $this->_objUser->PKid($userId);
             return $objGroupModel->getUserGroups($id);
         }
 
@@ -3052,7 +3075,6 @@
             $objLayer =$this->newObject('layer', 'htmlelements');
             $this->loadClass('image','htmlelements');
             $objFiles =$this->getObject('dbfile','filemanager');
-            $objUser =$this->getObject('user', 'security');
             $objconfig = $this->getObject('altconfig','config');
 
 
@@ -3335,8 +3357,7 @@
             $h3 =$this->newObject('htmlheading', 'htmlelements');
             $published = new checkbox('published');
             $objFiles =$this->getObject('dbfile','filemanager');
-            $objUser =$this->getObject('user', 'security');
-
+            
             $table = new htmlTable();
             //$table->width = "470px";
             $table->width = "100%";
@@ -3431,7 +3452,7 @@
             $imageThumb = new textinput('imagesrc',$imagesrc,'hidden');
             
             //read for images
-            $listFiles = $objFiles->getUserFiles($objUser->userId(), null);  
+            $listFiles = $objFiles->getUserFiles($this->_objUser->userId(), null);  
 
             $drp_image = new dropdown('image');
             $drp_image->id= 'image';
@@ -5839,7 +5860,7 @@ $this->appendArrayVar('headerParams', $script);
 
                 mkdir($path);
                 chmod($path, 0777);
-                $filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+                $filename = $path . $this->_objUser->userId() . "_" . $rsstime . ".xml";
                 if(!file_exists($filename))
                 {
                     touch($filename);
@@ -5849,7 +5870,7 @@ $this->appendArrayVar('headerParams', $script);
                 fwrite($handle, $rsscache);
             }
             else {
-                $filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
+                $filename = $path . $this->_objUser->userId() . "_" . $rsstime . ".xml";
                 $handle = fopen($filename, 'wb');
                 fwrite($handle, $rsscache);
             }
@@ -5893,7 +5914,6 @@ $this->appendArrayVar('headerParams', $script);
             $this->loadClass('textinput', 'htmlelements');
             $this->loadClass('textarea', 'htmlelements');
 
-            $this->objUser = $this->getObject('user', 'security');
             if($rdata == NULL)
             {
                 $rssform = new form('addrss', $this->uri(array(
@@ -5963,7 +5983,7 @@ $this->appendArrayVar('headerParams', $script);
             $rssform = $rssform->show();
 
             //ok now the table with the edit/delete for each rss feed
-            $efeeds = $this->objRss->getUserRss($this->objUser->userId());
+            $efeeds = $this->objRss->getUserRss($this->_objUser->userId());
             $ftable = $this->newObject('htmltable', 'htmlelements');
             $ftable->cellpadding = 3;
             //$ftable->border = 1;
