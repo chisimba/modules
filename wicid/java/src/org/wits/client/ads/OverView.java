@@ -66,6 +66,8 @@ public class OverView {
 
     public OverView(EditDocumentDialog editDocumentDialog) {
         this.editDocumentDialog = editDocumentDialog;
+        // get the data from database
+        getOverviewData();
         createUI();
     }
 
@@ -137,7 +139,7 @@ public class OverView {
             questionA1.setValue(newCourseProposalDialog.getTitleField().getValue());
         }
         if (this.data != null) {
-            questionA1.setValue(Util.getTagText(data, ""));
+            questionA1.setValue(Util.getTagText(data, "qA1"));
         }
         questionA1.setAllowBlank(false);
         questionA1.setMinLength(100);
@@ -369,5 +371,34 @@ public class OverView {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
 
+    }
+
+    private void getOverviewData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN+
+                        "?module=wicid&action=getOverviewData&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot save overview data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    MessageBox.info("Hello", response.getText(), null);
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                        MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
+                    }*/
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
+        }
     }
 }

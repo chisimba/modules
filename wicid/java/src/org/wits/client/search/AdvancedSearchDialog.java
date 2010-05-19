@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * @author: Nguni Phakela
+ *
  */
 package org.wits.client.search;
 
@@ -40,6 +40,11 @@ import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.Style.SortDir;
 import com.extjs.gxt.ui.client.widget.ListView;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
+import com.extjs.gxt.ui.client.widget.layout.RowData;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Text;
+import com.extjs.gxt.ui.client.widget.layout.RowLayout;
+import com.extjs.gxt.ui.client.Style.Orientation;
 
 /**
  *
@@ -82,6 +87,7 @@ public class AdvancedSearchDialog {
     private ListView<ModelData> view = Constants.main.getView();
     //private MenuItem removeFolderMenuItem = Constants.main.getRemoveFolderMenuItem();
     private ModelData selectedFolder = Constants.main.getSelectedFolder();
+    private ContentPanel panel;
     
     public AdvancedSearchDialog() {
         createUI();
@@ -91,25 +97,41 @@ public class AdvancedSearchDialog {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setWidth(480);
+        mainForm.setWidth(600);
 
-        final DateField dateField = new DateField();
+        panel = new ContentPanel();
+         
+        panel.setHeaderVisible(false);
+        panel.setLayout(new RowLayout(Orientation.HORIZONTAL));
+        panel.setSize(450, 45);
+        panel.setFrame(true);
+        panel.setCollapsible(false);
+        
+
+        /*final DateField dateField = new DateField();
         dateField.setFieldLabel("Date From");
         dateField.setValue(new Date());
         dateField.getPropertyEditor().setFormat(fmt);
         dateField.setName("datefield");
-        mainForm.add(dateField, formData);
         dateField.setEditable(false);
         dateField.setAllowBlank(true);
-
+        dateField.setWidth(200);
+        
         final DateField dateField2 = new DateField();
         dateField2.setFieldLabel("Date To");
         dateField2.setValue(new Date());
         dateField2.getPropertyEditor().setFormat(fmt);
         dateField2.setName("datefield");
-        mainForm.add(dateField2, formData);
         dateField2.setEditable(false);
         dateField2.setAllowBlank(true);
+        dateField2.setWidth(200);
+
+        panel.add(dateField, new RowData(-1, 1, new Margins(4)));
+        panel.add(dateField2, new RowData(1, 1, new Margins(4, 0, 4, 0)));
+        mainForm.add(panel, formData);*/
+
+        /*mainForm.add(dateField, formData);
+        mainForm.add(dateField2, formData);*/
 
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
@@ -125,13 +147,37 @@ public class AdvancedSearchDialog {
         showModeField();
         showActiveField();
 
+        panel.add(firstnameField, formData);
+        //panel.add(lastnameField, new RowData(1, 1, new Margins(4, 0, 4, 0)));
+        mainForm.add(panel, formData);
+
+        /*panel.add(docnameField, new RowData(-1, 1, new Margins(4)));
+        panel.add(refno, new RowData(1, 1, new Margins(4, 0, 4, 0)));
+        mainForm.add(panel, formData);
+
+        panel.add(topic, new RowData(-1, 1, new Margins(4)));
+        panel.add(department, new RowData(1, 1, new Margins(4, 0, 4, 0)));
+        mainForm.add(panel, formData);
+
+        panel.add(groupid, new RowData(-1, 1, new Margins(4)));
+        panel.add(ext, new RowData(1, 1, new Margins(4, 0, 4, 0)));
+        mainForm.add(panel, formData);
+
+        panel.add(firstnameField, new RowData(-1, 1, new Margins(4)));
+        panel.add(lastnameField, new RowData(1, 1, new Margins(4, 0, 4, 0)));
+        mainForm.add(panel, formData);
+
+        panel.add(mode, new RowData(-1, 1, new Margins(4)));
+        panel.add(radioGroup, new RowData(1, 1, new Margins(4, 0, 4, 0)));
+        mainForm.add(panel, formData);*/
+
         searchButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
                 newDocumentDialog.setVisible(false);
-                date = dateField.getValue();
-                date2 = dateField2.getValue();
+                /*date = dateField.getValue();
+                date2 = dateField2.getValue();*/
                 getSearchValues();
                 createSearchUrl();
                 searchDocuments();
@@ -142,8 +188,7 @@ public class AdvancedSearchDialog {
 
         newDocumentDialog.setBodyBorder(false);
         newDocumentDialog.setHeading("Advanced Search");
-        newDocumentDialog.setWidth(500);
-        newDocumentDialog.setHeight(550);
+        newDocumentDialog.setSize(800, 550);
         newDocumentDialog.setHideOnButtonClick(true);
         newDocumentDialog.setButtons(Dialog.CLOSE);
         newDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
@@ -159,63 +204,63 @@ public class AdvancedSearchDialog {
         firstnameField.setFieldLabel("First Name");
         firstnameField.setAllowBlank(false);
         firstnameField.setName("firstname");
-        mainForm.add(firstnameField, formData);
+        //mainForm.add(firstnameField, formData);
     }
 
     private void showLastNameField() {
         lastnameField.setFieldLabel("Last Name");
         lastnameField.setAllowBlank(false);
         lastnameField.setName("lastname");
-        mainForm.add(lastnameField, formData);
+        //mainForm.add(lastnameField, formData);
     }
 
     private void showDocNameField() {
         docnameField.setFieldLabel("Document Name");
         docnameField.setAllowBlank(false);
         docnameField.setName("docname");
-        mainForm.add(docnameField, formData);
+        //mainForm.add(docnameField, formData);
     }
 
     private void showRefnoField() {
         refno.setFieldLabel("Reference No");
         refno.setAllowBlank(false);
         refno.setName("refno");
-        mainForm.add(refno, formData);
+        //mainForm.add(refno, formData);
     }
 
     private void showTopicField() {
         topic.setFieldLabel("Topic");
         topic.setAllowBlank(false);
         topic.setName("topic");
-        mainForm.add(topic, formData);
+        //mainForm.add(topic, formData);
     }
 
     private void showDepartmentField() {
         department.setFieldLabel("Department");
         department.setAllowBlank(false);
         department.setName("department");
-        mainForm.add(department, formData);
+        //mainForm.add(department, formData);
     }
 
     private void showGroupidField() {
         groupid.setFieldLabel("Group ID");
         groupid.setAllowBlank(false);
         groupid.setName("groupid");
-        mainForm.add(groupid, formData);
+        //mainForm.add(groupid, formData);
     }
 
     private void showExtField() {
         ext.setFieldLabel("Ext");
         ext.setAllowBlank(false);
         ext.setName("ext");
-        mainForm.add(ext, formData);
+        //mainForm.add(ext, formData);
     }
 
     private void showModeField() {
         mode.setFieldLabel("Mode");
         mode.setAllowBlank(false);
         mode.setName("mode");
-        mainForm.add(mode, formData);
+        //mainForm.add(mode, formData);
     }
 
     private void showActiveField() {
@@ -227,7 +272,7 @@ public class AdvancedSearchDialog {
         radioGroup.add(activeYes);
         radioGroup.add(activeNo);
 
-        mainForm.add(radioGroup, formData);
+        //mainForm.add(radioGroup, formData);
     }
 
     private void getSearchValues() {
