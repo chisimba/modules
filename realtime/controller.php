@@ -172,6 +172,8 @@ class realtime extends controller {
         $this->objUser = $this->newObject('user', 'security');
         $this->objContext=$this->getObject('dbcontext','context');
         $this->objLanguage=$this->getObject('language','language');
+        $this->objAltConfig=$this->getObject('altconfig','config');
+
 
     }
 
