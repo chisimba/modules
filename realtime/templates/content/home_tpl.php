@@ -1,11 +1,11 @@
 <?php
-$modPath=$this->objAltConfig->getModulePath();
+$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 $moduleUri=$this->objAltConfig->getModuleURI();
 $siteRoot=$this->objAltConfig->getSiteRoot();
 $codebase=$siteRoot."/".$moduleUri.'/realtime/resources/';
-$imgLink='<img src="'.$siteRoot.'/'.$moduleUri.'/realtime/resources/images/realtime.png" width="200" height="80">';
+$imgLink='<img src="'.$siteRoot.'/'.$moduleUri.'/realtime/resources/images/Virtual_Classroom_logo.png" width="200" height="80">';
 
-$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+
 $servletURL=$objSysConfig->getValue('SERVLETURL', 'realtime');
 $openfireHost=$objSysConfig->getValue('OPENFIRE_HOST', 'realtime');
 $openfirePort=$objSysConfig->getValue('OPENFIRE_CLIENT_PORT', 'realtime');
@@ -18,30 +18,7 @@ $email=$this->objUser->email();
 $inviteUrl=$this->objAltConfig->getSiteRoot();
 $roomName=$this->objContext->getTitle();
 
-$roomUrl='';
-$roomUrl.=$servletURL.'?';
-$roomUrl.='port='.$openfirePort.'&';
-$roomUrl.='host='.$openfireHost.'&';
-$roomUrl.='username='.$username.'&';
-$roomUrl.='roomname='.$roomName.'&';
-$roomUrl.='audiovideourl='.$openfireHttpBindUrl.'&';
-$roomUrl.='slidesdir=/&';
-$roomUrl.=$this->objUser->isLecturer()?'ispresenter=yes&':'ispresenter=no&';
-
-$presentationId="0";
-$presentationName="0";
-$roomUrl.='presentationid='.$presentationId.'&';
-$roomUrl.='presentationName='.$presentationName.'&';
-$roomUrl.='names='.$fullnames.'&';
-$roomUrl.='email='.$email.'&';
-$roomUrl.='inviteurl='.$inviteUrl.'&';
-$roomUrl.='useec2=false&';
-$roomUrl.='joinid=none&';
-$roomUrl.='codebase='.$codebase.'&';
-$roomUrl.='skinclass='.$skinclass.'&';
-$roomUrl.='skinjar='.$skinjars.'&';
-$roomUrl.='contextcode='.$this->objContext->getContextCode();
-
+$roomUrl=$siteRoot.'/'.$moduleUri.'/realtime/resources/'.$this->objUser->userid().'.jnlp';
 // Create an instance of the css layout class
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
