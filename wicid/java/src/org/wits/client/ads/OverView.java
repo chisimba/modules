@@ -383,7 +383,7 @@ public class OverView {
             Request request = builder.sendRequest(null, new RequestCallback() {
 
                 public void onError(Request request, Throwable exception) {
-                    MessageBox.info("Error", "Error, cannot save overview data", null);
+                    MessageBox.info("Error", "Error, cannot get overview data", null);
                 }
 
                 public void onResponseReceived(Request request, Response response) {
@@ -393,12 +393,12 @@ public class OverView {
                     if (resp[0].equals("")) {
 
                     } else {
-                        MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
+                        MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
                     }*/
                 }
             });
         } catch (Exception e) {
-            MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get overview data", null);
         }
     }
 }
