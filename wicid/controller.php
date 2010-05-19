@@ -47,7 +47,7 @@ class wicid extends controller {
         $this->documents=$this->getObject('dbdocuments');
         $this->objUtils=$this->getObject('userutils');
         $this->objUploadTable = $this->getObject('dbfileuploads');
-        $this->objsavedata = $this->getObject('dbsavedata');
+        $this->objformdata = $this->getObject('dbformdata');
         $this->forwardto =$this->getObject('dbforwardto');
 
     }
@@ -633,7 +633,7 @@ class wicid extends controller {
         $formname = $this->getParam('formname');
         $formdata = $this->getParam('formdata');
         $docid = $this->getParam('docid');
-        $this->objsavedata->saveData($formname, $formdata, $docid);
+        $this->objformdata->saveData($formname, $formdata, $docid);
     }
 
     public function __forwardto() {

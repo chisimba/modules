@@ -56,7 +56,7 @@ class userutils extends object {
 
     public function getUserId() {
         $this->objUser=$this->getObject('user','security');
-        $userid=$this->objUser->userid();
+        $userid=$this->objUser->userId();
         $userid=1;
         return $userid;
     }
@@ -459,7 +459,6 @@ class userutils extends object {
         $this->folderPermissions->addPermission(
                 $userid,$folderpath.'/'.$foldername,
                 'true','true','true');
-        //}
     }
 
     /**

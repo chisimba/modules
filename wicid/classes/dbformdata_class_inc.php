@@ -3,8 +3,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
 */
-class dbsavedata extends dbtable {
-    var $tablename = "tbl_wicid_savedata";
+class dbformdata extends dbtable {
+    var $tablename = "tbl_wicid_formdata";
     var $userid;
 
     public function init() {
@@ -21,7 +21,8 @@ class dbsavedata extends dbtable {
 
                 'formname'=>$formname,
                 'formdata'=>$formdata,
-                'docid'=>$docid
+                'docid'=>$docid,
+                'userid'=>$this->userutils->getUserId()
         );
 
         $this->insert($data);//$formname, $formdata, $docid

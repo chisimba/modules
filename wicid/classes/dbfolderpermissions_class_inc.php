@@ -41,7 +41,7 @@ class dbfolderpermissions extends dbtable {
      * @param <type> $createfolder
      */
     public function addPermission($userid,$folderpath,$viewfiles,$uploadfiles,$createfolder) {
-
+        
         $data=array(
                 'userid'=>$userid,
                 'folderpath'=>$folderpath,
