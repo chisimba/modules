@@ -35,7 +35,22 @@
         <userid>8893070328</userid>
         <category>Priority</category>
     </tbl_eportfolio_category>
-  <!-- Table tbl_eportfolio_categorytypes -->
+    <tbl_eportfolio_category>
+        <id>gen9Srv59Nme1_74817_1274292500</id>
+        <userid>1</userid>
+        <category>Activity</category>
+    </tbl_eportfolio_category> 
+    <tbl_eportfolio_category>
+        <id>gen9Srv59Nme1_48847_1274296221</id>
+        <userid>1</userid>
+        <category>Goal</category>
+    </tbl_eportfolio_category> 
+    <tbl_eportfolio_category>
+        <id>gen9Srv59Nme1_60922_1274296534</id>
+        <userid>1</userid>
+        <category>Qualification</category>
+    </tbl_eportfolio_category> 
+ <!-- Table tbl_eportfolio_categorytypes -->
    <tbl_eportfolio_categorytypes>
         <id>init_1284_1203621906</id>
         <categoryid>init_7131_1203445554</categoryid>
@@ -149,5 +164,35 @@
         <categoryid>init_4581_1234815437</categoryid>
         <userid>8893070328</userid>
         <type>Low</type>
+    </tbl_eportfolio_categorytypes> 
+    <tbl_eportfolio_categorytypes>
+        <id>gen9Srv59Nme1_32471_1274292606</id>
+        <categoryid>gen9Srv59Nme1_74817_1274292500</categoryid>
+        <userid>1</userid>
+        <type>Recreational</type>
+    </tbl_eportfolio_categorytypes> 
+    <tbl_eportfolio_categorytypes>
+        <id>gen9Srv59Nme1_32471_1274292606</id>
+        <categoryid>gen9Srv59Nme1_74817_1274292500</categoryid>
+        <userid>1</userid>
+        <type>Academic</type>
+    </tbl_eportfolio_categorytypes> 
+    <tbl_eportfolio_categorytypes>
+        <id>gen9Srv59Nme1_24545_1274296566</id>
+        <categoryid>gen9Srv59Nme1_74817_1274292500</categoryid>
+        <userid>1</userid>
+        <type>Academic</type>
+    </tbl_eportfolio_categorytypes> 
+    <tbl_eportfolio_categorytypes>
+        <id>gen9Srv59Nme1_48511_1274296595</id>
+        <categoryid>gen9Srv59Nme1_60922_1274296534</categoryid>
+        <userid>1</userid>
+        <type>Academic</type>
+    </tbl_eportfolio_categorytypes> 
+    <tbl_eportfolio_categorytypes>
+        <id>gen9Srv59Nme1_99791_1274302965</id>
+        <categoryid>gen9Srv59Nme1_48847_1274296221</categoryid>
+        <userid>1</userid>
+        <type>Academic</type>
     </tbl_eportfolio_categorytypes> 
 </defaultdata>
