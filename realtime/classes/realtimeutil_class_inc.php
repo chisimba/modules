@@ -95,6 +95,7 @@ class realtimeutil extends object {
         $fh = fopen($myFile, 'w') or die("can't open file");
         fwrite($fh, $str);
         fclose($fh);
+        chmod($myFile, 0777);
     }
 }
 ?>
