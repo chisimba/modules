@@ -6,7 +6,7 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass("button", "htmlelements");
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
-$type = 'Place';
+$type = 'Activity';
 $categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 $usercontexts = $this->getUserContexts();
 $objWindow = &$this->newObject('windowpop', 'htmlelements');
