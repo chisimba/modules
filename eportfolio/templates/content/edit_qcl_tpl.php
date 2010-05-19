@@ -6,7 +6,7 @@ $this->loadClass("button", "htmlelements");
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
-$type = 'Affiliation';
+$type = 'Qualification';
 $categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 $objWindow = &$this->newObject('windowpop', 'htmlelements');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
