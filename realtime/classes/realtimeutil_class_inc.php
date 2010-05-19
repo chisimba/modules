@@ -2,13 +2,15 @@
 class realtimeutil extends object {
     function  init() {
         $this->objUser=$this->getObject('user','security');
+        $this->objContext=$this->getObject('dbcontext','context');
     }
 
 
-    function generateJNLP() {
+    function generateJNLP($roomname='') {
         
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $servletURL=$objSysConfig->getValue('SERVLETURL', 'realtime');
+        $plugins=$objSysConfig->getValue('PLUGINS', 'realtime');
         $openfireHost=$objSysConfig->getValue('OPENFIRE_HOST', 'realtime');
         $openfirePort=$objSysConfig->getValue('OPENFIRE_CLIENT_PORT', 'realtime');
         $openfireHttpBindUrl=$objSysConfig->getValue('OPENFIRE_HTTP_BIND', 'realtime');
@@ -20,6 +22,9 @@ class realtimeutil extends object {
         $siteRoot=$objAltConfig->getSiteRoot();
         $codebase=$siteRoot."/".$moduleUri.'/realtime/resources/';
         $enableDraw=$this->objUser->isLecturer()?'true':'false';
+        if($roomname == ''){
+            $roomname=$this->objContext->getTitle($this->objContext->getContextCode());
+        }
 
         $str=
                 '<jnlp spec="1.0+" codebase="'.$codebase.'">
@@ -79,10 +84,13 @@ class realtimeutil extends object {
     <argument>-audiovideourl='.$openfireHttpBindUrl.'</argument>
     <argument>-serverport='.$openfirePort.'</argument>
     <argument>-serverhost='.$openfireHost.'</argument>
-    <argument>-mode=0</argument>
-    <argument>-plugins=org.avoir.realtime.user.UserManager#org.avoir.realtime.presentations.PresentationManager#org.avoir.realtime.whiteboard.WhiteboardManager#org.avoir.realtime.roommanager.RoomManager#org.avoir.realtime.chat.ChatManager</argument>
-      
-     </application-desc>
+    <argument>-mode=1</argument>
+    <argument>-plugins='.$plugins.'</argument>
+    <argument>-username='.$this->objUser->username().'</argument>
+    <argument>-names='.$this->objUser->fullname().'</argument>
+    <argument>-email='.$this->objUser->email().'</argument>
+    <argument>-roomname='.$roomname.'</argument>
+    </application-desc>
 
     <security>
         <all-permissions/>
