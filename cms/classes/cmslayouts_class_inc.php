@@ -758,11 +758,12 @@ public function getFrontPageContent($displayId=NULL)
  * @access public
  * @return string The content displayed when a section is selected
  */
-public function showSection($module = "cms")
-{
-	$sectionId = $this->getParam('id');
-	//get the section record
-	$arrSection = $this->_objSections->getSection($sectionId);
+public function showSection($module = "cms", $arrSection = false) {
+	if (!$arrSection) {
+		//get the section record
+		$sectionId = $this->getParam('id');
+		$arrSection = $this->_objSections->getSection($sectionId);
+	}
 
 	switch(strtolower($arrSection['layout'])){
 
@@ -1216,35 +1217,46 @@ function _layoutList($arrSection, $module)
 }
 
 /**
- * Method to show  the body of a pages
+ * Method to show the body of a page
  *
  * @access public
+ * @param boolean $isPreview whether or not to generate a preview or a full view
+ * @param string $content The content of the page
  * @return string The page content to be displayed
  */
-public function showBody($isPreview = false)
-{   
-	$objFeatureBox = $this->newObject('featurebox', 'navigation');
-	$contentId = $this->getParam('id');
-	$lbWritten = $this->objLanguage->languageText('phrase_writtenby');
-	$page = $this->_objContent->getContentPageFiltered($contentId);
-
+public function showBody($isPreview = false, $content = false) {   
+	if (!$content) {
+		$contentId = $this->getParam('id');
+		$page = $this->_objContent->getContentPageFiltered($contentId);
+	} else {
+		$page = $content;
+	}
+	
+	$objLayer = new layer();
+	$objLayer->id = 'cmscontent';
+			
+	if ($page == ''){
+		$objLayer->str = $this->objLanguage->languageText('mod_cms_pagemissing', 'cms');
+		return $objLayer->show();
+	}
+	
+	if ($page['trash'] == '1') {
+		$objLayer->str = $this->objLanguage->languageText('mod_cms_pagearchived', 'cms');
+		return $objLayer->show();
+		//This item has been archived;
+	}
+	
+	//Including Meta Tags Here
+	$this->appendArrayVar('metaKeywords', $page['metakey']);
+	$this->appendArrayVar('metaDescriptions', $page['metadesc']);
+	
 	$tblShowTitle = true;
 	$tblShowAuthor = true;
 	$tblShowDate = true;
 	$tblShowPrint = true;
 	$tblShowPdf = true;
 	$tblShowMail = true;
-
-	//var_dump($page);	
-	if ($page['trash'] == '1') {
-		return 'This item has been archived.';
-	}
-
-	//Including Meta Tags Here
-	$this->appendArrayVar('metaKeywords', $page['metakey']);
-	$this->appendArrayVar('metaDescriptions', $page['metadesc']);
-
-	//Load content from get vars
+	
 	//TODO: Implement Full Page Preview (Currently only previewing FCK Contents)
 	if ($isPreview) {
 		$page['title'] = $this->getParam('title');
@@ -1254,113 +1266,117 @@ public function showBody($isPreview = false)
 		$page['show_title'] = $this->getParam('show_title');
 	}
 
-	if ($page == ''){
-		$objLayer = new layer();
-		$objLayer->str = '';
-		$objLayer->id = 'cmscontent';
-		return $objLayer->show();
+	if ($this->_objSysConfig->getValue('SHOW_BOOKMARKS', 'cmsadmin') != 'n') {
+		//Build Footer Items
+		$bmurl = $this->uri(array(
+					'action' => 'showsection',
+					'module' => 'cms',
+					'sectionid' => $page['sectionid']
+					));
+		$bmurl = urlencode($bmurl);
+		$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes($page['title']));
+		$bmtext = '<img src="core_modules/utilities/resources/socialbookmarking/button1-bm.gif" width="125" height="16" border="0" alt="'.$this->objLanguage->languageText("mod_cms_bookmarkarticle", "cms").'"/>';
+		$bookmark = new href($bmlink, $bmtext, NULL);
+	
+		//do the cc licence part
+		$cclic = $page['post_lic'];
+
+		//get the lic that matches from the db
+		$this->objCC = $this->getObject('displaylicense', 'creativecommons');
+		if ($cclic == '') {
+			$cclic = 'copyright';
+		}
+		$iconList = $this->objCC->show($cclic);
+
+		if(isset($page['show_flag'])) {
+			switch ($page['show_flag']) {
+				case 'g': 
+					//Checking the global sys config
+					$globalShowFlag = $this->_objSysConfig->getValue('SHOW_FLAG', 'cmsadmin');
+					if ($globalShowFlag == 'n') {
+						$flagContent = '';
+					} else {
+						$objIcon = $this->getObject('geticon', 'htmlelements');
+						$objIcon->setIcon('redflag');
+						$objIcon->title = $this->objLanguage->languageText('mod_cms_flag_content', 'cms');
+						$objIcon->extra = 'id="hover_redflag"';
+						$flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'">' . $objIcon->show();
+	
+						$script = "<script type='text/javascript'>
+										jQuery(document).ready(function(){
+											jQuery('#flag_link').cluetip({sticky: true, closePosition: 'title', arrows: true});
+										});
+								   </script>";
+	
+						$this->appendArrayVar('headerParams', $script);
+					}
+					break;
+				
+				case 'n':
+					$flagContent = '';
+					break;
+				
+				default:
+					$objIcon = $this->getObject('geticon', 'htmlelements');
+					$objIcon->setIcon('redflag');
+					$objIcon->title = $this->objLanguage->languageText('mod_cms_flag_content', 'cms');
+					$objIcon->extra = 'id="hover_redflag"';
+					$flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'">' . $objIcon->show();
+	
+					$script = "<script type='text/javascript'>
+									jQuery(document).ready(function(){
+										jQuery('#flag_link').cluetip({sticky: true, closePosition: 'title', arrows: true});
+									});
+							   </script>";
+	
+					$this->appendArrayVar('headerParams', $script);
+					break;
+			}
+		}
+
+		$iconList .= $flagContent;
+
+		//table of non logged in options
+		//Set the table name
+		$tblnl = $this->getObject('htmltable', 'htmlelements');
+		$tblnl->cellpadding = 3;
+		$tblnl->width = "100%";
+		$tblnl->align = "center";
+		$tblnl->startRow();
+		$tblnl->addCell($bookmark->show(),null,null,'left'); //bookmark link(s)
+		$tblnl->addCell('<em class="date">'.$this->objLanguage->languageText("mod_cms_lastupdated", "cms").':' .$this->objDate->formatDate($page['modified']).'</em>',null,null,'left');               
+		$tblnl->addCell($iconList); //cc licence//Build Footer Items
+		$tblnl->endRow();
+		
+		$table_bookmark = "<p /><center>".$tblnl->show() . "</center>";
+	} else {
+		$table_bookmark = '';
 	}
 
-	$sectionId = $page['sectionid'];
-	$section = $this->_objSections->getSection($sectionId);
-
-	//$objMindMap = $this->getObject('parse4mindmap', 'filters');
-	$objMath = $this->getObject('parse4mathml', 'filters');
-
-	//Build Footer Items
-	$bmurl = $this->uri(array(
-				'action' => 'showsection',
-				'module' => 'cms',
-				'sectionid' => $sectionId
-				));
 	//pdf url
 	$pdfurl = $this->uri(array(
 				'action' => 'makepdf',
-				'sectionid' => $sectionId,
+				'sectionid' => $page['sectionid'],
 				'module' => 'cms',
 				'id' => $page['id']
 				));
-	$bmurl = urlencode($bmurl);
-	$bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes($page['title']));
-	$bmtext = '<img src="core_modules/utilities/resources/socialbookmarking/button1-bm.gif" width="125" height="16" border="0" alt="'.$this->objLanguage->languageText("mod_cms_bookmarkarticle", "cms").'"/>';
-	$bookmark = new href($bmlink, $bmtext, NULL);
-	//do the cc licence part
-	$cclic = $page['post_lic'];
-
-	//get the lic that matches from the db
-	$this->objCC = $this->getObject('displaylicense', 'creativecommons');
-	if ($cclic == '') {
-		$cclic = 'copyright';
-	}
-	$iconList = $this->objCC->show($cclic);
-
-	$objIcon = $this->newObject('geticon', 'htmlelements');
-	//Not visible
-	$objIcon->setIcon('redflag');
-	$objIcon->title = $this->objLanguage->languageText('mod_cms_flag_content', 'cms');
-	$objIcon->extra = 'id="hover_redflag"';
-	$flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'">' . $objIcon->show();
-
-	$script = "<script type='text/javascript'>
-		jQuery(document).ready(function(){
-				jQuery('#flag_link').cluetip({sticky: true, closePosition: 'title', arrows: true});
-				});
-
-
-	</script>";
-
-	$this->appendArrayVar('headerParams', $script);
-
-	if(isset($page['show_flag'])) {
-		if ($page['show_flag'] == 'g'){
-			//Checking the global sys config
-			$globalShowFlag = $this->_objSysConfig->getValue('SHOW_FLAG', 'cmsadmin');
-			if ($globalShowFlag == 'n') {
-				$flagContent = '';
-			}
-		}
-		if ($page['show_flag'] == 'n'){
-			$flagContent = '';
-		}
-	}
-
-	$iconList .= $flagContent;
-
-	//table of non logged in options
-	//Set the table name
-	$tblnl = $this->newObject('htmltable', 'htmlelements');
-	$tblnl->cellpadding = 3;
-	$tblnl->width = "100%";
-	$tblnl->align = "center";
-	$tblnl->addCell($bookmark->show(),null,null,'left'); //bookmark link(s)
-	$tblnl->addCell('<em class="date">'.$this->objLanguage->languageText("mod_cms_lastupdated", "cms").':' .$this->objDate->formatDate($page['modified']).'</em>',null,null,'left');               
-	$tblnl->addCell($iconList); //cc licence
-
-	// Print & pdf icons
-	$this->objIcon->setIcon('pdf', 'png', 'icons/cms/');
-	$objLink = new link($this->uri(''));
-	$objLink->link = $this->objIcon->show();
-	$icons = $objLink->show();
+	//PDF Icon
+	$pdficon = $this->newObject('geticon', 'htmlelements');
+	$pdficon->setIcon('filetypes/pdf');
+	$pdficon->alt = $this->objLanguage->languageText("mod_cms_saveaspdf", "cms");
+	$pdficon->align = false;
+	$pdfimg = $pdficon->show();
+	$pdflink = new href($pdfurl, $pdfimg, NULL);
+	
 	//and the mail to a friend icon
 	$mtficon = $this->newObject('geticon', 'htmlelements');
 	$mtficon->setIcon('filetypes/eml');
-	$lblmtf = $this->objLanguage->languageText("mod_cms_mailtofriend", "cms");
-	$mtficon->alt = $lblmtf;
+	$mtficon->alt = $this->objLanguage->languageText("mod_cms_mailtofriend", "cms");
 	$mtficon->align = false;
 	$mtfimg = $mtficon->show();
 
 	$mtflink = new href($this->uri(array('action' => 'mail2friend', 'sectionid' => $page['sectionid'], 'id' => $page['id'])), $mtfimg, NULL);
-
-	//PDF Icon
-	$pdficon = $this->newObject('geticon', 'htmlelements');
-	$pdficon->setIcon('filetypes/pdf');
-	$lblView = $this->objLanguage->languageText("mod_cms_saveaspdf", "cms");
-	$pdficon->alt = $lblView;
-	$pdficon->align = false;
-	$pdfimg = $pdficon->show();
-	$pdflink = null;
-	$pdflink = new href($pdfurl, $pdfimg, NULL);
-
+	
 	//Print Icon
 	$printicon = $this->newObject('geticon', 'htmlelements');
 	$printicon->setIcon('print', 'gif', 'icons/cms');
@@ -1415,17 +1431,18 @@ public function showBody($isPreview = false)
 	}
 
 	// Adding Title
-	$btnEditLink = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+	$btnEditLink = $this->getEditLink($page['id'],array('sectionid'=>$page['sectionid'],'id'=>$page['id']));
 	$lblPageTitle = $page['title'];
 	
 	if(isset($page['show_title'])) {
-		if ($page['show_title'] == 'g'){
-			//Checking the global sys config
-			$globalShowTitle = $this->_objSysConfig->getValue('SHOW_TITLE', 'cmsadmin');
-			if ($globalShowTitle == 'n') {
-				//Only showing edit button
-				$lblPageTitle = '';
-				$tblShowTitle = false;
+		switch ($page['show_title']) {
+			case 'g':
+				//Checking the global sys config
+				$globalShowTitle = $this->_objSysConfig->getValue('SHOW_TITLE', 'cmsadmin');
+				if ($globalShowTitle == 'n') {
+					//Only showing edit button
+					$lblPageTitle = '';
+					$tblShowTitle = false;
 			}
 		}
 		if ($page['show_title'] == 'n'){
@@ -1444,40 +1461,43 @@ public function showBody($isPreview = false)
 
 	//Title and Edit Button
 	$this->objHead->type = 2;
-        $this->objHead->str = $lblPageTitle.$btnEditLink;
+    $this->objHead->str = $lblPageTitle.$btnEditLink;
 	
 	$tblh->startRow();
 
 	if ($lblPageTitle != '') {
 	    $tblh->addCell($this->objHead->show());
-        }
+    }
 
 	$tblh->addCell($pdflink->show() . $mtflink->show() . $printlink->show(),null,null,'right', 'printpdfmailicons'); //pdf icon
 	$tblh->endRow();
 
-	$strBody = null;
+	$strBody = '';
 
 	// Adding Author
-	$showAuthorText = '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
-	$showAuthorText .= '</p>';
-
 	if(isset($page['show_author'])) {
-		if ($page['show_author'] == 'g'){
-			//Checking the global sys config
-			$globalShowAuthor = $this->_objSysConfig->getValue('SHOW_AUTHOR', 'cmsadmin');
-			if ($globalShowAuthor == 'n') {
-				$showAuthorText = '';
+		switch ($page['show_author']) {
+			case 'n':
 				$tblShowAuthor = false;
-			}
+				break;
+			
+			case 'g':
+				//Checking the global sys config
+				$globalShowAuthor = $this->_objSysConfig->getValue('SHOW_AUTHOR', 'cmsadmin');
+				if ($globalShowAuthor == 'n') {
+					$tblShowAuthor = false;
+				} else {
+					$strBody = "<p><span class='date'>$lbWritten ".$this->objUser->fullname($page['created_by']).'</span></p>';
+				}
+				break;
+			
+			default:
+				$strBody = "<p><span class='date'>$lbWritten ".$this->objUser->fullname($page['created_by']).'</span></p>';
+				break;
 		}
-		if ($page['show_author'] == 'n'){
-			$showAuthorText = '';
-			$tblShowAuthor = false;
-		}
+	} else {
+		$strBody = "<p><span class='date'>$lbWritten ".$this->objUser->fullname($page['created_by']).'</span></p>';
 	}
-
-	$strBody .= $showAuthorText;
-
 
 	// Adding Date
 	$showDateText = '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
@@ -1497,7 +1517,9 @@ public function showBody($isPreview = false)
 			$tblShowDate = false;
 		}
 	}
+	$strBody .= $showDateText;
 
+	$strHeader = '';
 	if ($tblShowTitle == false &&
 	    $tblShowAuthor == false &&
 	    $tblShowDate == false &&
@@ -1508,29 +1530,15 @@ public function showBody($isPreview = false)
 	    if ($this->objUser->isLoggedIn()) {
 	        $strHeader = $this->objHead->show();
 	    }
-        } else {
-	    $strHeader = '<hr /><p />';
+    } else {
+	    $strHeader = '<hr />';
 	    $strHeader .= $tblh->show();
 	}
 	
-	$strBody .= $showDateText;
-
-	//parse for mindmaps
-	//$page['body'] = $objMindMap->parse($page['body']);
-	//parse for mathml as well
-	$table_bookmark = '';
-	if ($this->_objSysConfig->getValue('SHOW_BOOKMARKS', 'cmsadmin') != 'n') {
-		$table_bookmark = "<p /><center>".$tblnl->show() . "</center>";
-	}
-	$page['body'] = $objMath->parseAll($page['body']);
 	$strBody .= stripslashes($page['body']);
-	$objLayer = new layer();
-	$objLayer->str = $strHeader.$strBody ."$table_bookmark<hr /><p />";
-	$objLayer->id = 'cmscontent';
-
+	
+	$objLayer->str = $strHeader . $strBody . $table_bookmark . "<hr />";
 	return $objLayer->show();
-
-
 
 }
 

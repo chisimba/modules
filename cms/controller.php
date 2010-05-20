@@ -329,19 +329,18 @@ class cms extends controller
          * @return string The populated cms_section_tpl.php template
          *
          */
-        private function _showsection()
-        {
-                if($this->disablemenu=='true')
+        private function _showsection() {
+            if($this->disablemenu=='true') {
                  $this->setVar('pageSuppressToolbar', TRUE);
+            }
         	$this->setLayoutTemplate('cms_layout_tpl.php');
-                //Retrieve the section id from the querystring
+            //Retrieve the section id from the querystring
 			$sectionId = $this->getParam('id');
 			//If the section id is not null, get the section and set the
-			//  site title, otherwise set the site title to empty.
+			// site title, otherwise set the site title to empty.
 			if($sectionId != '') {
 			    $section = $this->_objSections->getSection($sectionId);
 			    $siteTitle = $section['title'];
-
 			} else {
 			    $siteTitle = '';
 			}
@@ -350,7 +349,7 @@ class cms extends controller
 			//We need the two if statements because pageTitle needs to be set first
 			if($sectionId != '') {
 				$this->bbcode = $this->getObject('washout', 'utilities');
-				$content = $this->objLayout->showSection();
+				$content = $this->objLayout->showSection('cms', $section);
 				$content = $this->bbcode->parseText($content);
 			    $this->setVar('content', $content);
 			} else {
@@ -435,17 +434,17 @@ class cms extends controller
          * @return string The populated cms_content_tpl.php template
          *
          */
-        private function _showfulltext()
-        {
-          if($this->disablemenu=='true')
-           $this->setVar('pageSuppressToolbar', TRUE);
-	  $page['id'] = $this->getParam('id');
-	  //Security Check for Public Access
-          if (!$this->_objSecurity->isContentPublic($page['id'])) {
-		$this->setVar('errMessage','You have to log in to access this item');
-		$this->setVar('mustlogin',TRUE);
-		return 'cms_nopermissions_tpl.php';
-          }
+        private function _showfulltext() {
+			if ($this->disablemenu == 'true') {
+				$this->setVar('pageSuppressToolbar', TRUE);
+			}
+			$page['id'] = $this->getParam('id');
+			//Security Check for Public Access
+			if (!$this->_objSecurity->isContentPublic($page['id'])) {
+				$this->setVar('errMessage', $this->objLanguage->languageText('mod_cms_mustlogin', 'cms'));
+				$this->setVar('mustlogin',TRUE);
+				return 'cms_nopermissions_tpl.php';
+			}
 
             $this->setLayoutTemplate('cms_layout_tpl.php');
             $fromadmin = $this->getParam('fromadmin', FALSE);
@@ -455,10 +454,9 @@ class cms extends controller
             $this->setVarByRef('sectionId', $sectionId);
             $this->setVarByRef('fromadmin', $fromadmin);
             $page = $this->_objContent->getContentPageFiltered($this->getParam('id'));
-            $siteTitle = $page['title'];
-            $this->setVarByRef('pageTitle', $siteTitle);
+            $this->setVarByRef('pageTitle', $page['title']);
             $this->bbcode = $this->getObject('washout', 'utilities');
-            $content = $this->objLayout->showBody();
+            $content = $this->objLayout->showBody(false, $page);
             $content = $this->bbcode->parseText($content);
             $this->setVarByRef('content',$content);
             return 'cms_content_tpl.php';
@@ -476,12 +474,8 @@ class cms extends controller
          * @todo The author needs to check if this method is necessary
          *
          */
-        private function _showcontent()
-        {
-                if($this->disablemenu=='true')
-                 $this->setVar('pageSuppressToolbar', TRUE);
-        	$this->setLayoutTemplate('cms_layout_tpl.php');
-        	return $this->_showfulltext();
+        private function _showcontent() {
+            return $this->_showfulltext();
         }
 
         /**
@@ -495,22 +489,22 @@ class cms extends controller
          * @todo The author needs to explain the logic here
          *
          */
-        private function _home()
-        {
-                if($this->disablemenu=='true')
+        private function _home() {
+            if ($this->disablemenu=='true') {
                  $this->setVar('pageSuppressToolbar', TRUE);
-        	$this->setLayoutTemplate('cms_layout_tpl.php');
+            }
+			$this->setLayoutTemplate('cms_layout_tpl.php');
         	$displayId = $this->getParam('displayId');
-                $content = $this->objLayout->getFrontPageContent($displayId);
-                if(!empty($content)) {
-               	 $this->bbcode = $this->getObject('washout', 'utilities');
-               	 $content = $this->bbcode->parseText($content);
-                 $this->setVarByRef('content', $content);
-                 return 'cms_section_tpl.php';
-                } else {
-                 $firstSectionId = $this->_objSections->getFirstSectionId(TRUE);
-                 return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
-                }
+            $content = $this->objLayout->getFrontPageContent($displayId);
+            if(!empty($content)) {
+				$this->bbcode = $this->getObject('washout', 'utilities');
+				$content = $this->bbcode->parseText($content);
+                $this->setVarByRef('content', $content);
+                return 'cms_section_tpl.php';
+            } else {
+				$firstSectionId = $this->_objSections->getFirstSectionId(TRUE);
+                return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
+            }
         }
 
 	    /**
@@ -523,10 +517,7 @@ class cms extends controller
 	    * @return stromg the name of the method
 	    *
 	    */
-	    private function _getMethod()
-	    {
-
-
+	    private function _getMethod() {
 	        if ($this->_validAction()) {
 	            return "_" . $this->action;
 	        } else {
@@ -534,9 +525,8 @@ class cms extends controller
 	        }
 	    }
 
-	    private function _releaselock()
-	    {
-	    	$this->nextAction('',array('action' => 'viewsection'), 'cmsadmin');
+	    private function _releaselock() {
+	    	$this->nextAction('', array('action' => 'viewsection'), 'cmsadmin');
 	    }
 
 	    /**
@@ -551,8 +541,7 @@ class cms extends controller
 	    * @return boolean TRUE|FALSE
 	    *
 	    */
-	    private function _validAction()
-	    {
+	    private function _validAction() {
 	        if (method_exists($this, "_".$this->action)) {
 	            return TRUE;
 	        } else {
@@ -569,16 +558,14 @@ class cms extends controller
 	    * @return string The dump template populated with the error message
 	    *
 	    */
-	    private function _actionError()
-	    {
+	    private function _actionError() {
 
 	        $this->setVar('str', $this->objLanguage->languageText("mod_cms_errorbadaction", 'cms') . ": <em>". $this->action . "</em>");
 	        return 'dump_tpl.php';
 	    }
 
 
-	    private function _serverpc()
-	    {
+	    private function _serverpc() {
 	    	// cannot require any login, as remote clients use this. Auth is done internally
             $this->requiresLogin();
 
@@ -587,18 +574,18 @@ class cms extends controller
             // break to be pedantic, although not strictly needed.
             // break;
 	    }
+		
         /**
         * Method to check if the user is in the CMS Authors group
         *
         * @access public
         */
-        public function checkPermission()
-        {
+        public function checkPermission() {
             $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $groupId = $objGroups->getLeafId(array('CMSAuthors'));
-            if($objGroups->isGroupMember($this->_objUser->pkId(), $groupId)){
+            if ($objGroups->isGroupMember($this->_objUser->pkId(), $groupId)){
                 return TRUE;
-            }else{
+            } else {
                 return FALSE;
             }
         }
