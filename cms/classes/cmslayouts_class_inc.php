@@ -108,11 +108,10 @@ class cmslayouts extends object
 			$style = 'page';
 		}
 
-
 		$adminLn = $this->objLanguage->languageText('mod_cms_cmsadmin', 'cms');
 		/*
 		   if ($this->objModule->checkIfRegistered('context', 'context')){
-		   $objContextUtils = & $this->getObject('utilities','context');
+		   $objContextUtils =  $this->getObject('utilities','context');
 		   $leftSide = $objContextUtils->getHiddenContextMenu('cms','none','show');
 		   } else {
 		 */
@@ -128,11 +127,8 @@ class cmslayouts extends object
 			$leftSide .= $objAdminLink->show();
 		}
 
-
 		// Additional items for the left side menu
-		$leftSide .= '<p/>';
-		// $leftSide .= $this->additionalMenuItems($rss);
-		//$leftSide .=  '<br />';
+		//$leftSide .= $this->additionalMenuItems($rss);
 
 		return $leftSide;
 	}
@@ -618,8 +614,7 @@ public function getFrontPageContent($displayId=NULL)
 
 
 		// Adding Date
-		$showDateText = '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-		$showDateText .= '<br /></em>';
+		$showDateText = '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span></em><br />';
 
 		if(isset($page['show_date'])) {
 			if ($page['show_date'] == 'g'){
@@ -637,9 +632,8 @@ public function getFrontPageContent($displayId=NULL)
 		$pageStr .= $showDateText;
 
 		if (trim($page['introtext']) != ''){
-			$pageStr .= '</p>';
 			$pageStr .= stripslashes($page['introtext']);
-			$pageStr .= '<p />';
+			$pageStr .= '<br />';
 		}
 
 		$pageStr .= $page['body'];
@@ -688,7 +682,7 @@ public function getFrontPageContent($displayId=NULL)
 				if($show_content){
 					// Adding Written By
 					if(isset($page['show_author']) && $page['show_author'] != 1){
-						$pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+						$pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span></p>';
 
 					}
 
@@ -699,9 +693,9 @@ public function getFrontPageContent($displayId=NULL)
 						}
 					}
 
-					$pageStr .= '</p>';
+					$pageStr .= '<br />';
 					$pageStr .= stripslashes($page['introtext']);
-					$pageStr .= '<p />';
+					$pageStr .= '<br />';
 				}
 
 				if($show_content){
@@ -719,7 +713,7 @@ public function getFrontPageContent($displayId=NULL)
 					// Display the page title and introduction
 					// Adding Written By
 					if(isset($page['show_author']) && $page['show_author'] != 1){
-						$pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+						$pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span></p>';
 					}
 
 					// Adding Date
@@ -729,9 +723,9 @@ public function getFrontPageContent($displayId=NULL)
 						}
 					}
 
-					$pageStr .= '</p>';
+					$pageStr .= '<br />';
 					$pageStr .= stripslashes($page['introtext']).'<br />'.$readMoreLink->show();
-					$pageStr .= '<p />';
+					$pageStr .= '<br />';
 
 					if(isset($page['modified']) && !empty($page['modified'])){
 						$pageStr .= '<p> <span class="date">Last updated : '.$this->objDate->formatDate($page['modified']).'</span></p>';
@@ -1062,10 +1056,8 @@ function _layoutPage($arrSection, $module)
 
 	if(!empty($description)) {
 		$introStr = null;
-		$introStr .= '<p><hr /><span>'.$intTitle.'&nbsp;'.'</span>';
-		$introStr .= '</p>';
-		$introStr .=  '<em><span>'.$description.'</span>';
-		$introStr .= '<br /></em><hr />';
+		$introStr .= '<p><hr /><span>'.$intTitle.'</span></p>';
+		$introStr .=  '<em><span>'.$description.'</span></em><br /><hr />';
 	}
 
 	// Display the selected page
@@ -1101,7 +1093,7 @@ function _layoutPage($arrSection, $module)
 	}
 
 	$objLayer = new layer();
-	$objLayer->str = $introStr.'<p />'.$topStr.'<p>'.$str.'</p>';
+	$objLayer->str = $introStr.'<br />'.$topStr.'<p>'.$str.'</p>';
 	$objLayer->id = 'cmscontent';
 
 	return $objLayer->show();
@@ -1204,8 +1196,7 @@ function _layoutList($arrSection, $module)
 	$objMath->parseAll($description);
 
 	if($showIntro && !empty($description)){
-		$introStr .= '<p><span>'.$description.'</span>';
-		$introStr .= '<br /></p>';
+		$introStr .= '<p><span>'.$description.'</span></p>';
 	}
 
 	$objLayer = new layer();
@@ -1348,7 +1339,7 @@ public function showBody($isPreview = false, $content = false) {
 		$tblnl->addCell($iconList); //cc licence//Build Footer Items
 		$tblnl->endRow();
 		
-		$table_bookmark = "<p /><center>".$tblnl->show() . "</center>";
+		$table_bookmark = "<center>".$tblnl->show() . "</center>";
 	} else {
 		$table_bookmark = '';
 	}
