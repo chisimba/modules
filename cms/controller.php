@@ -274,24 +274,24 @@ class cms extends controller
          */
         private function _previewcontent()
         {
-                if($this->disablemenu=='true')
-                 $this->setVar('pageSuppressToolbar', TRUE);
+                if($this->disablemenu=='true') {
+					$this->setVar('pageSuppressToolbar', TRUE);
+                }
                 $this->setLayoutTemplate('cms_layout_tpl.php');
-                $fromadmin = $this->getParam('fromadmin', FALSE);
-                $sectionId = $this->getParam('sectionid', NULL);
-                $rss = $this->rss->getUserRss($sectionId);
-                $this->setVarByRef('rss', $rss);
-                $this->setVarByRef('sectionId', $sectionId);
-                $this->setVarByRef('fromadmin', $fromadmin);
-                //$page = $this->_objPreview->getContentPageFiltered($this->getParam('id'));
-                //$siteTitle = $page['title'];
-                $siteTitle = $this->getParam('title');
-                $this->setVarByRef('pageTitle', $siteTitle);
                 $this->bbcode = $this->getObject('washout', 'utilities');
+                
+				$fromadmin = $this->getParam('fromadmin', FALSE);
+                $sectionId = $this->getParam('sectionid', NULL);
+                $siteTitle = $this->getParam('title');
+                //$rss = $this->rss->getUserRss($sectionId);
+                //$this->setVar('rss', $rss);
                 $content = $this->objLayout->showBody(true);
                 $content = $this->bbcode->parseText($content);
-                var_dump($content); exit;
-                $this->setVarByRef('content',$content);
+                //var_dump($content); exit;
+                $this->setVar('pageTitle', $siteTitle);
+                $this->setVar('content',$content);
+                $this->setVar('sectionId', $sectionId);
+                $this->setVar('fromadmin', $fromadmin);
                 return 'cms_content_tpl.php';
         }
 
@@ -449,16 +449,16 @@ class cms extends controller
             $this->setLayoutTemplate('cms_layout_tpl.php');
             $fromadmin = $this->getParam('fromadmin', FALSE);
             $sectionId = $this->getParam('sectionid', NULL);
-            $rss = $this->rss->getUserRss($sectionId);
-            $this->setVarByRef('rss', $rss);
-            $this->setVarByRef('sectionId', $sectionId);
-            $this->setVarByRef('fromadmin', $fromadmin);
+            //$rss = $this->rss->getUserRss($sectionId);
+            //$this->setVar('rss', $rss);
             $page = $this->_objContent->getContentPageFiltered($this->getParam('id'));
-            $this->setVarByRef('pageTitle', $page['title']);
             $this->bbcode = $this->getObject('washout', 'utilities');
             $content = $this->objLayout->showBody(false, $page);
             $content = $this->bbcode->parseText($content);
-            $this->setVarByRef('content',$content);
+            $this->setVar('sectionId', $sectionId);
+            $this->setVar('fromadmin', $fromadmin);
+            $this->setVar('content',$content);
+            $this->setVar('pageTitle', $page['title']);
             return 'cms_content_tpl.php';
         }
 
