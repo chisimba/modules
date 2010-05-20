@@ -9,7 +9,7 @@ $this->loadClass ( 'htmlheading', 'htmlelements' );
 $objImView = $this->getObject ( 'viewer' );
 $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
 $objWashout = $this->getObject ( 'washout', 'utilities' );
-$this->objDia = $this->getObject('jqdialogue', 'htmlelements');
+$this->objDia = $this->getObject('jqdialogue', 'jquery');
 //var_dump($message);
 //var_dump($groupfail);
 

@@ -10,7 +10,7 @@ $objImView = $this->getObject ( 'viewer' );
 $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
 $objWashout = $this->getObject ( 'washout', 'utilities' );
 
-$this->objDia = $this->getObject('jqdialogue', 'htmlelements');
+$this->objDia = $this->getObject('jqdialogue', 'jquery');
 if(!isset($groupfail) || empty($groupfail)) {
     $groupfail = NULL;
     $message = NULL;
