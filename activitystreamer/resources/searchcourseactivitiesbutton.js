@@ -13,15 +13,15 @@ var mycontextdata = new Ext.data.JsonStore({
         remoteSort: false,        
         fields: ['id','contextcode', 'title', 'contextpath', 'datecreated', 'createdby'],
         proxy: new Ext.data.HttpProxy({ 
-            	url: uri
+            url: uri
         }),
         listeners:{ 
     		'loadexception': function(theO, theN, response){
-    			//alert(response.responseText);
+    		//alert(response.responseText);
     		},
-    		'load': function(){
-    				//alert('load');	
-    			}
+    		 'load': function(){
+    		 //alert('load');	
+    		}
     	},
 	});
 	 mycontextdata.setDefaultSort('datecreated', 'desc');
@@ -127,24 +127,13 @@ Ext.onReady(function(){
                 autoHeight:true,
                 closeAction:'hide',
                 plain: true,
-
-                /*items: new Ext.TabPanel({
-                    applyTo: 'hello-tabs',
-                    autoTabs:true,
-                    activeTab:0,
-                    deferredRender:false,
-                    border:false
-                }),*/
-                
-																items:[grid],
-                buttons: [/*{
-                    text:'Submit',
-                    disabled:true
-                },*/{
-                    text: 'Close',
-                    handler: function(){
-                        win.hide();
-                    }
+		items:[grid],
+                buttons: [
+                 {
+                  text: 'Close',
+                  handler: function(){
+                  win.hide();
+                 }
                 }]
             });
             mycontextdata.load({params:{start:0, limit:5}})
