@@ -110,20 +110,20 @@ class block_browsecourseactivitiesbutton extends object
         $ext .= '<link rel="stylesheet" href="'.$this->getResourceUri('ext-3.0-rc2/examples/shared/examples.css', 'ext').'" type="text/css" />';
         $this->appendArrayVar('headerParams', $ext);
         
-								//Div to render content
+	//Div to render content
         $str = '<input type="button" id="course-activities-btn" value="Latest Course Updates" /><br /><br />
         <div id="course-activities-view" class="x-hidden">
-    <div class="x-window-header">'.$this->title.'</div>
-    <div id="course-tabs">
-        <!-- Auto create tab 1 -->
-        <div class="course-tab_1" title="'.$this->title.'" id="course-activity-topic-grid">
-        </div>
-        <!-- Auto create tab 2 -->
-        <!--<div class="x-tab" title="Tab 2">
+         <div class="x-window-header">'.$this->title.'</div>
+          <div id="course-tabs">
+          <!-- Auto create tab 1 -->
+           <div class="course-tab_1" title="'.$this->title.'" id="course-activity-topic-grid">
+           </div>
+          <!-- Auto create tab 2 -->
+          <!--<div class="x-tab" title="Tab 2">
             <p>... Tab 2!</p>
-        </div>-->
-    </div>
-</div>';
+          </div>-->
+         </div>
+       </div>';
 
         return $str;
 
