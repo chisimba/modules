@@ -43,7 +43,7 @@ class wicid extends controller {
         $this->objPermitted = $this->getObject('dbpermittedtypes');
         $this->objUploads = $this->getObject('dbfileuploads');
         $this->objFileFolder = $this->getObject('filefolder','filemanager');
-         $this->folderPermissions=$this->getObject('dbfolderpermissions');
+        $this->folderPermissions=$this->getObject('dbfolderpermissions');
         $this->documents=$this->getObject('dbdocuments');
         $this->objUtils=$this->getObject('userutils');
         $this->objUploadTable = $this->getObject('dbfileuploads');
@@ -136,7 +136,7 @@ class wicid extends controller {
         $this->setVarByRef('topic',$topic);
         $this->setVarByRef('docname',$docname);
         $this->setVarByRef('docid',$docid);
-        
+
         return "upload_tpl.php";
     }
 
@@ -523,7 +523,7 @@ class wicid extends controller {
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
 
-       $objMkDir = $this->getObject('mkdir', 'files');
+        $objMkDir = $this->getObject('mkdir', 'files');
         $topic=$this->getParam('topic');
         $docname=$this->getParam('docname');
         $docid=$this->getParam('docid');
@@ -674,9 +674,20 @@ class wicid extends controller {
                 'ext'=> $ext,
                 'mode'=> $mode);
 
-       return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
+        return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
     }
 
+
+    /**
+     * retrives for
+     */
+    function  __getFormData() {
+        $formname=$this->getParam("formname");
+        $docid=$this->getParam("docid");
+   
+        echo $this->objformdata->getFormData($formname,$docid);
+
+    }
     public function __checkdocattach() {
         echo $this->objUploadTable->checkAttachment($this->getParam('docids'));
     }
