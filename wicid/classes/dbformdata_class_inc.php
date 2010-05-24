@@ -31,5 +31,19 @@ class dbformdata extends dbtable {
         //return $id;
 
     }
+
+
+    public function  getFormData($formname, $docid){
+
+        $sql="select * from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
+        $xmStr="";
+        $rows=$this->getArray($sql);
+        print_r($rows);
+        foreach($rows as $row){
+            $xmlStr=$row['formname'];
+        }
+
+        return $xmlStr;
+    }
 }
 ?>
