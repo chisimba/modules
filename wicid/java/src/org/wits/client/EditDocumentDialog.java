@@ -92,6 +92,7 @@ public class EditDocumentDialog {
         this.document = document;
         this.mode = mode;
         this.main = main;
+        Constants.docid=document.getId();
         createUI();
 
     }
@@ -219,6 +220,7 @@ public class EditDocumentDialog {
             public void componentSelected(ButtonEvent ce) {
                 overView = new OverView(EditDocumentDialog.this);
                 overView.show();
+                editDocumentDialog.setVisible(false);
             }
         });
         Radio publicOpt = new Radio();
@@ -431,6 +433,10 @@ public class EditDocumentDialog {
 
     public void show() {
         editDocumentDialog.show();
+    }
+
+    public TextField<String> getTitleField() {
+        return titleField;
     }
 
     private void setDepartment() {
