@@ -15,7 +15,6 @@ import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.NumberField;
 import com.extjs.gxt.ui.client.widget.form.Radio;
 import com.extjs.gxt.ui.client.widget.form.RadioGroup;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
@@ -48,7 +47,7 @@ public class NewCourseProposalDialog {
     private DateTimeFormat fmt = DateTimeFormat.getFormat("y/M/d");
     private final TextField<String> titleField = new TextField<String>();
     private final TextField<String> deptField = new TextField<String>();
-    private final TextField telField = new TextField();
+    private final TextField<String> telField = new TextField<String>();
     private final TextField<String> numberField = new TextField<String>();
     private Button saveButton = new Button("Next");
     private Button browseFacultiesButton = new Button("Browse Faculties");
@@ -110,8 +109,8 @@ public class NewCourseProposalDialog {
         telField.setFieldLabel("Tel. Number");
         telField.setAllowBlank(true);
         telField.setName("telfield");
-        // telField.setAllowDecimals(false);
-        // telField.setAllowNegative(false);
+    //    telField.setAllowDecimals(false);
+      //  telField.setAllowNegative(false);
         mainForm.add(telField, formData);
 
         titleField.setFieldLabel("Course title");
@@ -180,10 +179,10 @@ public class NewCourseProposalDialog {
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-
                 dept = deptField.getValue();// deptField.getValue().getId();
                 title = titleField.getValue();
                 telephone = telField.getValue().toString();
+
                 try {
                     if (dateField.getDatePicker() != null) {
                         date = dateField.getDatePicker().getValue();
@@ -328,25 +327,10 @@ public class NewCourseProposalDialog {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    String resp[] = response.getText().split("|");
 
-                    if (resp[0].equals("")) {
-                        if (oldOverView == null) {
-                            for (int i = 0; i < resp.length; i++) {
-                                Constants.docid = resp[i++];
-                            }
-                            OverView overView = new OverView(NewCourseProposalDialog.this);
-                            overView.show();
-                            newCourseProposalDialog.hide();
-                        } else {
-                            oldOverView.show();
-                            newCourseProposalDialog.hide();
+                      newCourseProposalDialog.setVisible(false);
+                       MessageBox.info("Save", "Your course proposal information is saved.\nYou can continue filling the rest of the forms by accessing it from the 'Documents' tab to make any changes", null);
 
-                        }
-
-                    } else {
-                        MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
-                    }
                 }
             });
         } catch (Exception e) {

@@ -11,7 +11,10 @@ package org.wits.client.ads;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
@@ -51,6 +54,16 @@ public class RulesAndSyllabusTwo {
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
     private TextArea topicField = new TextArea();
+    private Radio radio24 = new Radio();
+    private Radio radio14 = new Radio();
+    private Radio radio15 = new Radio();
+    private Radio radio16 = new Radio();
+    private Radio radio17 = new Radio();
+    private Radio radio18 = new Radio();
+    private Radio radio19 = new Radio();
+    private Radio radio20 = new Radio();
+    private Radio radio21 = new Radio();
+    private Radio radio22 = new Radio();
     private String courseTitle;
     private OverView overView;
     private RulesAndSyllabusOne rulesAndSyllabusOne;
@@ -75,7 +88,7 @@ public class RulesAndSyllabusTwo {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setHeight(600);
+        mainForm.setHeight(650);
         mainForm.setWidth(810);
         mainForm.setLabelWidth(300);
 
@@ -121,48 +134,39 @@ public class RulesAndSyllabusTwo {
         radio13.setBoxLabel("full year unit offered in semester 1 and 2 ");
         radio13.setValue(true);
 
-        Radio radio14 = new Radio();
         radio14.setPagePosition(331,410);
         radio14.setBoxLabel("half year unit offered in  ");
 
-        Radio radio15 = new Radio();
         radio15.setPagePosition(477,410);
         radio15.setBoxLabel("semester1 ");
 
-        Radio radio16 = new Radio();
-        radio16.setPagePosition(560,410);
+        radio16.setPagePosition(477,426);
         radio16.setBoxLabel("semester 2 ");
 
-        Radio radio17 = new Radio();
-        radio17.setPagePosition(641,410);
+        radio17.setPagePosition(477,442);
         radio17.setBoxLabel("or semester 1 and 2  ");
 
-        Radio radio18 = new Radio();
-        radio18.setPagePosition(331,426);
+        radio18.setPagePosition(331,458);
         radio18.setBoxLabel("block unit offered in ");
 
-        Radio radio19 = new Radio();
-        radio19.setPagePosition(459,426);
+        radio19.setPagePosition(460,458);
         radio19.setBoxLabel("block 1 ");
 
-        Radio radio20 = new Radio();
-        radio20.setPagePosition(526,426);
+        radio20.setPagePosition(460,474);
         radio20.setBoxLabel("block 2 ");
 
-        Radio radio21 = new Radio();
-        radio21.setPagePosition(584,426);
+        radio21.setPagePosition(460,490);
         radio21.setBoxLabel("block 3 ");
 
-        Radio radio22 = new Radio();
-        radio22.setPagePosition(644,426);
+        radio22.setPagePosition(460,506);
         radio22.setBoxLabel("block 4");
 
         Radio radio23 = new Radio();
-        radio23.setPagePosition(331,442);
+        radio23.setPagePosition(331,522);
         radio23.setBoxLabel("attendance course/unit");
 
-        Radio radio24 = new Radio();
-        radio24.setPagePosition(331, 458);
+        
+        radio24.setPagePosition(331,538);
         radio24.setBoxLabel("other ");
 
         Radio radio25 = new Radio();
@@ -206,31 +210,53 @@ public class RulesAndSyllabusTwo {
         mainForm.add(questionB5b, formData);
 
         // for B6a use checkboxes instead of radio buttons
-        final RadioGroup questionB6a = new RadioGroup();
-        questionB6a.setFieldLabel("B.6.a. This is a ");
-        questionB6a.add(radio13);
-        questionB6a.add(radio14);
-        questionB6a.add(radio15);
-        questionB6a.add(radio16);
-        questionB6a.add(radio17);
-        questionB6a.add(radio18);
-        questionB6a.add(radio19);
-        questionB6a.add(radio20);
-        questionB6a.add(radio21);
-        questionB6a.add(radio22);
-        questionB6a.add(radio23);
-        questionB6a.add(radio24);
+        final RadioGroup questionB6a1 = new RadioGroup();
+        questionB6a1.setFieldLabel("B.6.a. This is a ");
+        questionB6a1.setSelectionRequired(true);
+        questionB6a1.add(radio13);
+        questionB6a1.add(radio14);
+        questionB6a1.add(radio18);
+        questionB6a1.add(radio23);
+        questionB6a1.add(radio24);
+
+        final RadioGroup questionB6a2 = new RadioGroup();
+        questionB6a2.setSelectionRequired(true);
+        questionB6a1.add(radio15);
+        questionB6a1.add(radio16);
+        questionB6a1.add(radio17);
+
+        final RadioGroup questionB6a3 = new RadioGroup();
+        questionB6a3.setSelectionRequired(true);
+        questionB6a1.add(radio19);
+        questionB6a1.add(radio20);
+        questionB6a1.add(radio21);
+        questionB6a1.add(radio22);
 
         qB6aPanel.setFrame(false);
         qB6aPanel.setBodyBorder(false);
         //q5Panel.setPosition(200, 600);
         qB6aPanel.isHeaderVisible();
-        qB6aPanel.setHeight(150);
+        qB6aPanel.setHeight(200);
         qB6aPanel.setWidth(830);
         qB6aPanel.setLabelWidth(300);
+                
+        qB6aPanel.add(questionB6a1, formData);
+        qB6aPanel.add(questionB6a2, formData);
+        qB6aPanel.add(questionB6a3, formData);
+
         mainForm.add(qB6aPanel, formData);
-        
-        qB6aPanel.add(questionB6a, formData);
+
+        if (radio14.getValue() == false) {
+            radio15.disable();
+            radio16.disable();
+            radio17.disable();
+        }
+        if (radio18.getValue() == false) {
+            radio19.disable();
+            radio20.disable();
+            radio21.disable();
+            radio22.disable();
+        }
 
         final TextArea questionB6b = new TextArea();
         questionB6b.setPreventScrollbars(false);
@@ -238,6 +264,43 @@ public class RulesAndSyllabusTwo {
         questionB6b.setWidth(50);
         questionB6b.setFieldLabel("B.6.b. If ‘other’, provide details of the course/unit duration and/or the number of lectures which comprise the course/unit ");
         mainForm.add(questionB6b, formData);
+
+        if (radio24.getValue() == false) {
+            questionB6b.disable();
+        }
+
+        questionB6a1.addListener(Events.Change, new Listener<BaseEvent>(){
+            public void handleEvent(BaseEvent be) {
+                if (radio24.getValue() == false){
+                    questionB6b.disable();
+                }
+                if (radio24.getValue() == true){
+                    questionB6b.enable();
+                }
+                if (radio14.getValue() == false){
+                    radio15.disable();
+                    radio16.disable();
+                    radio17.disable();
+                }
+                if (radio14.getValue() == true){
+                    radio15.enable();
+                    radio16.enable();
+                    radio17.enable();
+                }
+                if (radio18.getValue() == false){
+                    radio19.disable();
+                    radio20.disable();
+                    radio21.disable();
+                    radio22.disable();
+                }
+                if (radio18.getValue() == true){
+                    radio19.enable();
+                    radio20.enable();
+                    radio21.enable();
+                    radio22.enable();
+                }
+            }
+        });
        
         final RadioGroup questionB6c = new RadioGroup();
         questionB6c.setFieldLabel("B.6.c.Is the unit assessed ");
@@ -276,7 +339,7 @@ public class RulesAndSyllabusTwo {
 
                 }
 
-                qB6a = questionB6a.getValue().getBoxLabel().replaceAll(" ", "--");// deptField.getValue().getId();
+                qB6a = questionB6a1.getValue().getBoxLabel().replaceAll(" ", "--");// deptField.getValue().getId();
                 if (qB6a == null) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.6.a", null);
                     return;
@@ -339,7 +402,7 @@ public class RulesAndSyllabusTwo {
         rulesAndSyllabusTwoDialog.setBodyBorder(false);
         rulesAndSyllabusTwoDialog.setHeading("Section B: Rules and Syllabus Book- Page Two");
         rulesAndSyllabusTwoDialog.setWidth(830);
-        rulesAndSyllabusTwoDialog.setHeight(670);
+        rulesAndSyllabusTwoDialog.setHeight(720);
         rulesAndSyllabusTwoDialog.setHideOnButtonClick(true);
         rulesAndSyllabusTwoDialog.setButtons(Dialog.CLOSE);
         rulesAndSyllabusTwoDialog.setButtonAlign(HorizontalAlignment.LEFT);

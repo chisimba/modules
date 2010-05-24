@@ -62,13 +62,28 @@ public class OverView {
     public String overViewData;
     private ForwardTo forwardTo;
     private String data;
+    private final RadioGroup questionA2 = new RadioGroup();
+    private final TextArea questionA3 = new TextArea();
+    private final TextArea questionA4 = new TextArea();
+    private final RadioGroup questionA5 = new RadioGroup();
+    private Radio radio = new Radio();
+    private int radioA2, radioA5;
+    private Radio radio2 = new Radio();
+    private Radio radio3 = new Radio();
+    private Radio radio4 = new Radio();
+    private Radio radio5 = new Radio();
+    private Radio radio6 = new Radio();
+    private Radio radio7 = new Radio();
     private EditDocumentDialog editDocumentDialog;
+    private boolean[] quesA2 = {true,false};//new boolean[2];//{radio.getValue(), radio2.getValue()};
+    private boolean[] quesA5 = {true,false,false,false,false};//{radio3.getValue(), radio4.getValue(), radio5.getValue(), radio6.getValue(), radio7.getValue()};
 
     public OverView(EditDocumentDialog editDocumentDialog) {
         this.editDocumentDialog = editDocumentDialog;
         // get the data from database
-        getOverviewData();
+
         createUI();
+        getFormData();
     }
 
     public OverView(EditDocumentDialog editDocumentDialog, String data) {
@@ -104,37 +119,81 @@ public class OverView {
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         // set radio buttons, their labels and thrir positon relative
         // to the mainForm...
-        Radio radio = new Radio();
+
         radio.setBoxLabel("proposal for a new course/unit ");
-        radio.setValue(true);
         radio.getValueAttribute();
 
-        Radio radio2 = new Radio();
         radio2.setBoxLabel("change to the outcomes or credit value of a course/unit");
 
-        Radio radio3 = new Radio();
+        switch (radioA2) {
+            case 0:
+                radio.setValue(true);
+                radio2.setValue(false);
+                break;
+            case 1:
+                radio.setValue(false);
+                radio2.setValue(true);
+                break;
+        }
+
         //radio3.setPosition(5, 10);
         radio3.setBoxLabel("linked to other recent course/unit proposal/s, or proposal/s currently in development ");
-        radio3.setValue(true);
 
-        Radio radio4 = new Radio();
         radio4.setPagePosition(231, 430);
         radio4.setBoxLabel("linked to other recent course/unit amendment/s, or amendment/s currently in development");
 
-        Radio radio5 = new Radio();
         radio5.setPagePosition(231, 450);
         radio5.setBoxLabel("linked to a new qualification/ programme proposal, or one currently in development");
 
-        Radio radio6 = new Radio();
         radio6.setPagePosition(231, 470);
         radio6.setBoxLabel("linked to a recent qualification/ programme amendment, or one currently in development");
 
-        Radio radio7 = new Radio();
         radio7.setPagePosition(231, 490);
         radio7.setBoxLabel("not linked to any other recent academic developments, nor those currently in development ");
 
+        switch (radioA5) {
+            case 0:
+                radio3.setValue(true);
+                radio4.setValue(false);
+                radio5.setValue(false);
+                radio6.setValue(false);
+                radio7.setValue(false);
+                break;
+            case 1:
+                radio3.setValue(false);
+                radio4.setValue(true);
+                radio5.setValue(false);
+                radio6.setValue(false);
+                radio7.setValue(false);
+                break;
+            case 2:
+                radio3.setValue(false);
+                radio4.setValue(false);
+                radio5.setValue(true);
+                radio6.setValue(false);
+                radio7.setValue(false);
+                break;
+            case 3:
+                radio3.setValue(false);
+                radio4.setValue(false);
+                radio5.setValue(false);
+                radio6.setValue(true);
+                radio7.setValue(false);
+                break;
+            case 4:
+                radio3.setValue(false);
+                radio4.setValue(false);
+                radio5.setValue(false);
+                radio6.setValue(false);
+                radio7.setValue(true);
+                break;
+        }
+
         questionA1.setFieldLabel("A.1. Name of course/ unit.");
         questionA1.setEmptyText("Enter the course/unit name");
+        if (editDocumentDialog != null) {
+            questionA1.setValue(editDocumentDialog.getTitleField().getValue());
+        }
         if (newCourseProposalDialog != null) {
             questionA1.setValue(newCourseProposalDialog.getTitleField().getValue());
         }
@@ -147,26 +206,21 @@ public class OverView {
 
         mainForm.add(questionA1, formData);
 
-
-        final RadioGroup questionA2 = new RadioGroup();
         questionA2.setFieldLabel("A.2. This is a");
         questionA2.add(radio);
         questionA2.add(radio2);
         mainForm.add(questionA2, formData);
 
-        final TextArea questionA3 = new TextArea();
         questionA3.setPreventScrollbars(false);
         questionA3.setHeight(120);
         questionA3.setFieldLabel("A.3. Provide a brief motivation for the introduction/ amendment of the course/unit ");
         mainForm.add(questionA3, formData);
 
-        final TextArea questionA4 = new TextArea();
         questionA4.setPreventScrollbars(false);
         questionA4.setHeight(120);
         questionA4.setFieldLabel("A.4. Towards which qualification(s) can the course/unit be taken? ");
         mainForm.add(questionA4, formData);
 
-        final RadioGroup questionA5 = new RadioGroup();
         questionA5.setSelectionRequired(true);
         questionA5.setFieldLabel("A.5. This new or amended course proposal is");
         questionA5.add(radio3);
@@ -174,7 +228,6 @@ public class OverView {
         questionA5.add(radio5);
         questionA5.add(radio6);
         questionA5.add(radio7);
-
 
         q5Panel.setFrame(false);
         q5Panel.setBodyBorder(false);
@@ -207,7 +260,18 @@ public class OverView {
                     qA1.replaceAll(" ", "--");
                 }
 
-                qA2 = questionA2.getValue().getBoxLabel().replaceAll(" ", "--");
+                qA2 = "";
+                for (int i = 0; i < 2; i++) {
+                    switch (new Boolean(quesA2[i]).toString().charAt(0)) {
+                        case 't':
+                            qA2 = qA2 + "1";
+                            break;
+                        case 'f':
+                            qA2 = qA2 + "0";
+                            break;
+                    }
+                }
+
                 if (qA2 == null) {
                     MessageBox.info("Missing selection", "Please make a selection for question A.2.", null);
                     return;
@@ -233,7 +297,18 @@ public class OverView {
                     qA4.toString().replaceAll(" ", "--");
                 }
 
-                qA5 = questionA5.getValue().getBoxLabel().replaceAll(" ", "--");// deptField.getValue().getId();
+                qA5 = "";
+                for (int i = 0; i < 5; i++) {
+                    switch (new Boolean(quesA5[i]).toString().charAt(0)) {
+                        case 't':
+                            qA5 = qA5 + "1";
+                            break;
+                        case 'f':
+                            qA5 = qA5 + "0";
+                            break;
+                    }
+                }
+
                 if (qA5 == null) {
                     MessageBox.info("Missing department", "Please make a selection for question A.5.", null);
                     return;
@@ -244,19 +319,19 @@ public class OverView {
                 storeDocumentInfo();
 
                 String url =
-                        GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN+
-                        "?module=wicid&action=saveFormData&formname=overview" + "&docid=" + Constants.docid+"&formdata="+overViewData;
+                        GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                        + "?module=wicid&action=saveFormData&formname=overview" + "&docid=" + Constants.docid + "&formdata=" + overViewData;
 
                 createDocument(url);
-                
+
                 if (oldRulesAndSyllabusOne == null) {
-                RulesAndSyllabusOne rulesAndSyllabusOne = new RulesAndSyllabusOne(OverView.this);
-                rulesAndSyllabusOne.show();
-                overViewDialog.hide();
+                    RulesAndSyllabusOne rulesAndSyllabusOne = new RulesAndSyllabusOne(OverView.this);
+                    rulesAndSyllabusOne.show();
+                    overViewDialog.hide();
                 } else {
 
-                oldRulesAndSyllabusOne.show();
-                overViewDialog.hide();
+                    oldRulesAndSyllabusOne.show();
+                    overViewDialog.hide();
 
                 }
 
@@ -328,9 +403,6 @@ public class OverView {
 
     }
 
-    public void getDocumentInfo() {
-    }
-
     public void setOldRulesAndSyllabusOne(RulesAndSyllabusOne oldRulesAndSyllabusOne) {
         this.oldRulesAndSyllabusOne = oldRulesAndSyllabusOne;
     }
@@ -348,7 +420,7 @@ public class OverView {
     private void createDocument(String url) {
 
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
-       
+
         try {
 
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -361,7 +433,6 @@ public class OverView {
                     String resp[] = response.getText().split("|");
 
                     if (resp[0].equals("")) {
-                      
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
@@ -373,9 +444,9 @@ public class OverView {
 
     }
 
-    private void getOverviewData() {
-        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN+
-                        "?module=wicid&action=getOverviewData&docid=" + Constants.docid;
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=overview&docid=" + Constants.docid;
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 
         try {
@@ -387,14 +458,54 @@ public class OverView {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    MessageBox.info("Hello", response.getText(), null);
+
+
+                    String data = response.getText();
+
+                    String qA1 = Util.getTagText(data, "qA1");
+                    questionA1.setValue(qA1);
+
+                    String qA2 = Util.getTagText(data, "qA2");
+                    for (int i = 0; i<2; i++){
+                        if (qA2.charAt(i) == '0'){
+                            quesA2[i] = false;
+                        }
+                        else if (qA2.charAt(i) == '1'){
+                            quesA2[i] = true;
+                        }
+                    }
+                    radio.setValue(quesA2[0]);
+                    radio2.setValue(quesA2[1]);
+
+                    String qA3 = Util.getTagText(data, "qA3");
+                    questionA3.setValue(qA3);
+
+                    String qA4 = Util.getTagText(data, "qA4");
+                    questionA4.setValue(qA4);
+
+                    String qA5 = Util.getTagText(data, "qA5");
+                    for (int i = 0; i<5; i++){
+                        if (qA5.charAt(i) == '0'){
+                            quesA5[i] = false;
+                        }
+                        else if (qA5.charAt(i) == '1'){
+                            quesA5[i] = true;
+                        }
+                    }
+                    radio3.setValue(quesA5[0]);
+                    radio4.setValue(quesA5[1]);
+                    radio5.setValue(quesA5[2]);
+                    radio6.setValue(quesA5[3]);
+                    radio7.setValue(quesA5[4]);
+
                     /*String resp[] = response.getText().split("|");
 
                     if (resp[0].equals("")) {
 
                     } else {
-                        MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
                     }*/
+
                 }
             });
         } catch (Exception e) {

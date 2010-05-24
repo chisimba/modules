@@ -157,29 +157,18 @@ public class OutcomesAndAssessmentOne {
                     return;
                 }
 
-                /*int i = 0;
-                while (i < 3) {
-                    q2 = questionD2.getText(1, i);
-                    i++;
-                    if (q2 == null) {
-                        MessageBox.info("Missing answer", "An answer is missing in question D2", null);
-                        return;
-                    }
-                    //q2 = questionD2.getText(1, i).toString();
-                }*/
-
-                int i=0, x=1;
-                for(i=0;i<2;i++){
-                    if(questionD2.getText(x, i) == null){
-                        MessageBox.info("Missing Text", "please provide an answer for question D.2", null);
-                        return;
-                    }
-
+                if ((D2a.getValue() == null)&&(D2b.getValue() == null)&&(D2c.getValue() == null)){
+                    MessageBox.info("Missing answer", "Fill in the table for question D.2", null);
+                    return;
                 }
-                //getRawValue().toString();
 
+                if ((D2a.getValue() == null)||(D2b.getValue() == null)||(D2c.getValue() == null)){
+                    MessageBox.info("Missing answer", "Missing an answer for question D.2", null);
+                    return;
+                }
+                
                 if (questionD3.getValue() == null) {
-                    MessageBox.info("Missing answer", "Provide an answer to question D3", null);
+                    MessageBox.info("Missing answer", "Provide an answer to question D.3", null);
                     return;
                 }
                 
