@@ -75,8 +75,8 @@ public class OverView {
     private Radio radio6 = new Radio();
     private Radio radio7 = new Radio();
     private EditDocumentDialog editDocumentDialog;
-    private boolean[] quesA2 = {true,false};//new boolean[2];//{radio.getValue(), radio2.getValue()};
-    private boolean[] quesA5 = {true,false,false,false,false};//{radio3.getValue(), radio4.getValue(), radio5.getValue(), radio6.getValue(), radio7.getValue()};
+    private boolean[] quesA2 = new boolean[2];//{radio.getValue(), radio2.getValue()};
+    private boolean[] quesA5 = new boolean[5];//{radio3.getValue(), radio4.getValue(), radio5.getValue(), radio6.getValue(), radio7.getValue()};
 
     public OverView(EditDocumentDialog editDocumentDialog) {
         this.editDocumentDialog = editDocumentDialog;
@@ -125,17 +125,6 @@ public class OverView {
 
         radio2.setBoxLabel("change to the outcomes or credit value of a course/unit");
 
-        switch (radioA2) {
-            case 0:
-                radio.setValue(true);
-                radio2.setValue(false);
-                break;
-            case 1:
-                radio.setValue(false);
-                radio2.setValue(true);
-                break;
-        }
-
         //radio3.setPosition(5, 10);
         radio3.setBoxLabel("linked to other recent course/unit proposal/s, or proposal/s currently in development ");
 
@@ -151,42 +140,14 @@ public class OverView {
         radio7.setPagePosition(231, 490);
         radio7.setBoxLabel("not linked to any other recent academic developments, nor those currently in development ");
 
-        switch (radioA5) {
-            case 0:
-                radio3.setValue(true);
-                radio4.setValue(false);
-                radio5.setValue(false);
-                radio6.setValue(false);
-                radio7.setValue(false);
-                break;
-            case 1:
-                radio3.setValue(false);
-                radio4.setValue(true);
-                radio5.setValue(false);
-                radio6.setValue(false);
-                radio7.setValue(false);
-                break;
-            case 2:
-                radio3.setValue(false);
-                radio4.setValue(false);
-                radio5.setValue(true);
-                radio6.setValue(false);
-                radio7.setValue(false);
-                break;
-            case 3:
-                radio3.setValue(false);
-                radio4.setValue(false);
-                radio5.setValue(false);
-                radio6.setValue(true);
-                radio7.setValue(false);
-                break;
-            case 4:
-                radio3.setValue(false);
-                radio4.setValue(false);
-                radio5.setValue(false);
-                radio6.setValue(false);
-                radio7.setValue(true);
-                break;
+        if ((quesA2 == null) || (quesA5 == null)) {
+            radio.setValue(true);
+            radio2.setValue(false);
+            radio3.setValue(true);
+            radio4.setValue(false);
+            radio5.setValue(false);
+            radio6.setValue(false);
+            radio7.setValue(false);
         }
 
         questionA1.setFieldLabel("A.1. Name of course/ unit.");
@@ -199,6 +160,7 @@ public class OverView {
         }
         if (this.data != null) {
             questionA1.setValue(Util.getTagText(data, "qA1"));
+
         }
         questionA1.setAllowBlank(false);
         questionA1.setMinLength(100);
@@ -250,9 +212,8 @@ public class OverView {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                //replaceAll is used to replace spaces which give problems when trying to save to the database. spaces(" ")
-                //are replaced by ("--")
-                qA1 = questionA1.getValue();//.replaceAll(" ", "--");// deptField.getValue().getId();
+
+                qA1 = questionA1.getValue();
                 if (qA1 == null) {
                     MessageBox.info("Missing answer", "Provide an answer to question A.1.", null);
                     return;
@@ -260,6 +221,8 @@ public class OverView {
                     qA1.replaceAll(" ", "--");
                 }
 
+                quesA2[0] = radio.getValue();
+                quesA2[1] = radio2.getValue();
                 qA2 = "";
                 for (int i = 0; i < 2; i++) {
                     switch (new Boolean(quesA2[i]).toString().charAt(0)) {
@@ -297,6 +260,11 @@ public class OverView {
                     qA4.toString().replaceAll(" ", "--");
                 }
 
+                quesA5[0] = radio3.getValue();
+                quesA5[1] = radio4.getValue();
+                quesA5[2] = radio5.getValue();
+                quesA5[3] = radio6.getValue();
+                quesA5[4] = radio7.getValue();
                 qA5 = "";
                 for (int i = 0; i < 5; i++) {
                     switch (new Boolean(quesA5[i]).toString().charAt(0)) {
@@ -458,24 +426,38 @@ public class OverView {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-
+                    /*
+                    <overview><qA1>asd</qA1><qA2>01</qA2><qA3>asd</qA3><qA4>asd</qA4><qA5>00100</qA5></overview>
+                     */
 
                     String data = response.getText();
 
                     String qA1 = Util.getTagText(data, "qA1");
-                    questionA1.setValue(qA1);
+                    if (qA1 == null) {
+                        questionA1.setValue(editDocumentDialog.getTitleField().getValue());
+                    } else {
+                        questionA1.setValue(qA1);
+                    }
+
 
                     String qA2 = Util.getTagText(data, "qA2");
-                    for (int i = 0; i<2; i++){
-                        if (qA2.charAt(i) == '0'){
-                            quesA2[i] = false;
+                    System.out.println(qA2);
+                    if (qA2 != null) {
+                        for (int i = 0; i < 2; i++) {
+                            if (qA2.charAt(i) == '0') {
+                                quesA2[i] = false;
+                            }
+                            if (qA2.charAt(i) == '1') {
+                                quesA2[i] = true;
+                            }
+                            System.out.println(quesA2[i]);
                         }
-                        else if (qA2.charAt(i) == '1'){
-                            quesA2[i] = true;
-                        }
+                        radio.setValue(quesA2[0]);
+                        radio2.setValue(quesA2[1]);
+                    } else {
+                        radio.setValue(true);
+                        radio2.setValue(false);
                     }
-                    radio.setValue(quesA2[0]);
-                    radio2.setValue(quesA2[1]);
 
                     String qA3 = Util.getTagText(data, "qA3");
                     questionA3.setValue(qA3);
@@ -484,31 +466,41 @@ public class OverView {
                     questionA4.setValue(qA4);
 
                     String qA5 = Util.getTagText(data, "qA5");
-                    for (int i = 0; i<5; i++){
-                        if (qA5.charAt(i) == '0'){
-                            quesA5[i] = false;
+                    System.out.println(qA5);
+                    if (qA5 != null) {
+                        for (int i = 0; i < 5; i++) {
+                            if (qA5.charAt(i) == '0') {
+                                quesA5[i] = false;
+                            }
+                            if (qA5.charAt(i) == '1') {
+                                quesA5[i] = true;
+                            }
+                            System.out.println(quesA5[i]);
                         }
-                        else if (qA5.charAt(i) == '1'){
-                            quesA5[i] = true;
-                        }
-                    }
-                    radio3.setValue(quesA5[0]);
-                    radio4.setValue(quesA5[1]);
-                    radio5.setValue(quesA5[2]);
-                    radio6.setValue(quesA5[3]);
-                    radio7.setValue(quesA5[4]);
-
-                    /*String resp[] = response.getText().split("|");
-
-                    if (resp[0].equals("")) {
-
+                        radio3.setValue(quesA5[0]);
+                        radio4.setValue(quesA5[1]);
+                        radio5.setValue(quesA5[2]);
+                        radio6.setValue(quesA5[3]);
+                        radio7.setValue(quesA5[4]);
                     } else {
-                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
-                    }*/
+                        radio3.setValue(true);
+                        radio4.setValue(false);
+                        radio5.setValue(false);
+                        radio6.setValue(false);
+                        radio7.setValue(false);
+                    }
+                        /*String resp[] = response.getText().split("|");
 
+                        if (resp[0].equals("")) {
+
+                        } else {
+                        MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                        }*/
+                    }
                 }
-            });
-        } catch (Exception e) {
+                )
+            ;
+            }  catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot get overview data", null);
         }
     }

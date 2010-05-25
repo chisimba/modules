@@ -24,6 +24,7 @@ import org.wits.client.Constants;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -45,8 +46,7 @@ public class OutcomesAndAssessmentTwo {
     private OutcomesAndAssessmentOne outcomesAndAssessmentOne;
     private OutcomesAndAssessmentOne oldOutcomesAndAssessmentOne;
     private String outcomesAndAssessmentTwoData;
-    private String qD4a,qD4b,qD4c,qD4d,qD4e,qD4f,qD4g,qD4h;
-
+    private String qD4a, qD4b, qD4c, qD4d, qD4e, qD4f, qD4g, qD4h;
     private CheckBox questionD4_1 = new CheckBox();
     private CheckBox questionD4_2 = new CheckBox();
     private CheckBox questionD4_3 = new CheckBox();
@@ -59,13 +59,15 @@ public class OutcomesAndAssessmentTwo {
     public OutcomesAndAssessmentTwo(OutcomesAndAssessmentOne outcomesAndAssessmentOne) {
         this.outcomesAndAssessmentOne = outcomesAndAssessmentOne;
         createUI();
+        getFormData();
     }
 
     public OutcomesAndAssessmentTwo(OutcomesAndAssessmentThree oldOutcomesAndAssessmentThree) {
         this.oldOutcomesAndAssessmentThree = oldOutcomesAndAssessmentThree;
+        createUI();
     }
 
-    public OutcomesAndAssessmentTwo(){
+    public OutcomesAndAssessmentTwo() {
         createUI();
     }
 
@@ -136,7 +138,7 @@ public class OutcomesAndAssessmentTwo {
         q4.getColumnFormatter().setWidth(0, "250px");
         q4.getColumnFormatter().setWidth(1, "20px");
         int r = 0;
-        while (r<13){
+        while (r < 13) {
             q4.getCellFormatter().setVerticalAlignment(r, 1, HasVerticalAlignment.ALIGN_TOP);
             r++;
         }
@@ -174,15 +176,16 @@ public class OutcomesAndAssessmentTwo {
         //function to ensure that all the fields are filled and the form is
         //completed before the user moves to the next form
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                if (questionD4_1.getValue()==false && questionD4_2.getValue()==false &&
-                        questionD4_3.getValue()==false && questionD4_4.getValue()==false &&
-                        questionD4_5.getValue()==false && questionD4_6.getValue()==false &&
-                        questionD4_7.getValue()==false && questionD4_8.getValue()==false){
-                    MessageBox.info("Missing answer", "Please check at " +
-                            "least one Critical Cross-Field Outcome (CCFO)", null);
+                if (questionD4_1.getValue() == false && questionD4_2.getValue() == false
+                        && questionD4_3.getValue() == false && questionD4_4.getValue() == false
+                        && questionD4_5.getValue() == false && questionD4_6.getValue() == false
+                        && questionD4_7.getValue() == false && questionD4_8.getValue() == false) {
+                    MessageBox.info("Missing answer", "Please check at "
+                            + "least one Critical Cross-Field Outcome (CCFO)", null);
                     return;
                 }
                 //qD4a = questionD4.getValue().toString();
@@ -195,12 +198,12 @@ public class OutcomesAndAssessmentTwo {
 
                 createDocument(url);
 
-                if(oldOutcomesAndAssessmentThree == null){
+                if (oldOutcomesAndAssessmentThree == null) {
 
                     OutcomesAndAssessmentThree outcomesAndAssessment2 = new OutcomesAndAssessmentThree(OutcomesAndAssessmentTwo.this);
                     outcomesAndAssessment2.show();
                     outcomesAndAssessmentTwoDialog.hide();
-                }else{
+                } else {
                     oldOutcomesAndAssessmentThree.show();
                     outcomesAndAssessmentTwoDialog.hide();
                 }
@@ -243,6 +246,7 @@ public class OutcomesAndAssessmentTwo {
         outcomesAndAssessmentTwoDialog.setHideOnButtonClick(true);
 
         outcomesAndAssessmentTwoDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -264,7 +268,7 @@ public class OutcomesAndAssessmentTwo {
         qD4g = questionD4_7.getValue().toString();
         qD4h = questionD4_8.getValue().toString();
 
-        WicidXML wicidxml = new WicidXML("outcomesAndAssessmentThree");
+        WicidXML wicidxml = new WicidXML("outcomesAndAssessmentTwo");
 
         wicidxml.addElement("qD4a", qD4a);
         wicidxml.addElement("qD4b", qD4b);
@@ -278,8 +282,7 @@ public class OutcomesAndAssessmentTwo {
         outcomesAndAssessmentTwoData = wicidxml.getXml();
     }
 
-    public void setDocumentInfo(){
-
+    public void setDocumentInfo() {
     }
 
     public void show() {
@@ -315,16 +318,15 @@ public class OutcomesAndAssessmentTwo {
                     if (resp[0].equals("")) {
                         /*if (oldOverView == null) {
 
-                            Constants.docid = resp[1];
-                            OverView overView = new OverView(NewCourseProposalDialog.this);
-                            overView.show();
-                            newDocumentDialog.hide();
+                        Constants.docid = resp[1];
+                        OverView overView = new OverView(NewCourseProposalDialog.this);
+                        overView.show();
+                        newDocumentDialog.hide();
                         } else {
-                            oldOverView.show();
-                            newDocumentDialog.hide();
+                        oldOverView.show();
+                        newDocumentDialog.hide();
 
                         }*/
-
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
@@ -332,6 +334,63 @@ public class OutcomesAndAssessmentTwo {
             });
         } catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
+        }
+    }
+
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=outcomesAndAssessmentTwo&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get outcomesAndAssessmentTwo data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+
+                    String data = response.getText();
+
+                    String qD4a = Util.getTagText(data, "qD4a");
+                    questionD4_1.setValue(Boolean.parseBoolean(qD4a));
+
+                    String qD4b = Util.getTagText(data, "qD4b");
+                    questionD4_2.setValue(Boolean.parseBoolean(qD4b));
+
+                    String qD4c = Util.getTagText(data, "qD4c");
+                    questionD4_3.setValue(Boolean.parseBoolean(qD4c));
+
+                    String qD4d = Util.getTagText(data, "qD4d");
+                    questionD4_4.setValue(Boolean.parseBoolean(qD4d));
+
+                    String qD4e = Util.getTagText(data, "qD4e");
+                    questionD4_5.setValue(Boolean.parseBoolean(qD4e));
+
+                    String qD4f = Util.getTagText(data, "qD4f");
+                    questionD4_6.setValue(Boolean.parseBoolean(qD4f));
+                    
+                    String qD4g = Util.getTagText(data, "qD4g");
+                    questionD4_7.setValue(Boolean.parseBoolean(qD4g));
+
+                    String qD4h = Util.getTagText(data, "qD4h");
+                    questionD4_8.setValue(Boolean.parseBoolean(qD4h));
+
+
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get outcomesAndAssessmentTwo data", null);
         }
     }
 }

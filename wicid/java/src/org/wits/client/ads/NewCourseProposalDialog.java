@@ -49,7 +49,7 @@ public class NewCourseProposalDialog {
     private final TextField<String> deptField = new TextField<String>();
     private final TextField<String> telField = new TextField<String>();
     private final TextField<String> numberField = new TextField<String>();
-    private Button saveButton = new Button("Next");
+    private Button saveButton = new Button("Save");
     private Button browseFacultiesButton = new Button("Browse Faculties");
     private TextArea facultyField = new TextArea();
     private String newCourseProposalDialogData, dept, title, telephone;
@@ -241,8 +241,8 @@ public class NewCourseProposalDialog {
         //binding.addButton(saveButton);
         newCourseProposalDialog.setBodyBorder(false);
         newCourseProposalDialog.setHeading("New Course Proposal");
-        newCourseProposalDialog.setWidth(500);
-        newCourseProposalDialog.setHeight(400);
+        newCourseProposalDialog.setWidth(470);
+        newCourseProposalDialog.setHeight(340);
         newCourseProposalDialog.setHideOnButtonClick(true);
         newCourseProposalDialog.setButtons(Dialog.CLOSE);
         newCourseProposalDialog.setButtonAlign(HorizontalAlignment.LEFT);

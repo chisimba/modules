@@ -25,6 +25,7 @@ import com.extjs.gxt.ui.client.widget.form.LabelField;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 
 
@@ -58,10 +59,12 @@ public class OutcomesAndAssessmentOne {
     public OutcomesAndAssessmentOne(SubsidyRequirements subsidyRequirements) {
         this.subsidyRequirements = subsidyRequirements;
         createUI();
+        getFormData();
     }
 
     public OutcomesAndAssessmentOne(OutcomesAndAssessmentTwo oldOutcomesAndAssessmentTwo) {
         this.oldOutcomesAndAssessmentTwo = oldOutcomesAndAssessmentTwo;
+        createUI();
     }
 
     private void createUI() {
@@ -312,6 +315,56 @@ public class OutcomesAndAssessmentOne {
         } catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
+    }
 
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=subsidyRequirements&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get subsidyRequirements data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+
+                    String data = response.getText();
+
+                    String qD1a = Util.getTagText(data, "qD1a");
+                    questionD1a.setSimpleValue(qD1a);
+
+                    String qD1b = Util.getTagText(data, "qD1b");
+                    questionD1b.setSimpleValue(qD1b);
+
+                    String qD2a = Util.getTagText(data, "qD2a");
+                    D2a.setValue(qD2a);
+
+                    String qD2b = Util.getTagText(data, "qD2b");
+                    D2b.setValue(qD2b);
+
+                    String qD2c = Util.getTagText(data, "qD2c");
+                    D2c.setValue(qD2c);
+
+                    String qD3 = Util.getTagText(data, "qD3");
+                    questionD3.setValue(qD3);
+
+
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get subsidyRequirements data", null);
+        }
     }
 }

@@ -33,8 +33,8 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
-
 
 /**
  *
@@ -54,7 +54,16 @@ public class RulesAndSyllabusTwo {
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
     private TextArea topicField = new TextArea();
-    private Radio radio24 = new Radio();
+    private Radio radio4 = new Radio();
+    private Radio radio5 = new Radio();
+    private Radio radio6 = new Radio();
+    private Radio radio7 = new Radio();
+    private Radio radio8 = new Radio();
+    private Radio radio9 = new Radio();
+    private Radio radio10 = new Radio();
+    private Radio radio11 = new Radio();
+    private Radio radio12 = new Radio();
+    private Radio radio13 = new Radio();
     private Radio radio14 = new Radio();
     private Radio radio15 = new Radio();
     private Radio radio16 = new Radio();
@@ -64,6 +73,15 @@ public class RulesAndSyllabusTwo {
     private Radio radio20 = new Radio();
     private Radio radio21 = new Radio();
     private Radio radio22 = new Radio();
+    private Radio radio23 = new Radio();
+    private Radio radio24 = new Radio();
+    private Radio radio25 = new Radio();
+    private Radio radio26 = new Radio();
+    private boolean[] quesB5a = new boolean[9];
+    private final TextArea questionB5b = new TextArea();
+    private Boolean[] quesB6a = new Boolean[5];
+    private Boolean[] quesB6b = new Boolean[3];
+    private Boolean[] quesB6c = new Boolean[4];
     private String courseTitle;
     private OverView overView;
     private RulesAndSyllabusOne rulesAndSyllabusOne;
@@ -75,6 +93,7 @@ public class RulesAndSyllabusTwo {
     public RulesAndSyllabusTwo(RulesAndSyllabusOne rulesAndSyllabusOne) {
         this.rulesAndSyllabusOne = rulesAndSyllabusOne;
         createUI();
+        getFormData();
     }
 
     public RulesAndSyllabusTwo(SubsidyRequirements oldSubsidyRequirements) {
@@ -92,89 +111,77 @@ public class RulesAndSyllabusTwo {
         mainForm.setWidth(810);
         mainForm.setLabelWidth(300);
 
-        Radio radio4 = new Radio();
+
         radio4.setBoxLabel("a 1st year unit");
         radio4.setValue(true);
         radio4.getBoxLabel();
 
-        Radio radio5 = new Radio();
-        radio5.setPagePosition(331,126);
+        radio5.setPagePosition(331, 126);
         radio5.setBoxLabel("a 2nd year unit");
 
-        Radio radio6 = new Radio();
-        radio6.setPagePosition(331,142);
+        radio6.setPagePosition(331, 142);
         radio6.setBoxLabel("a 3rd year unit");
 
-        Radio radio7 = new Radio();
-        radio7.setPagePosition(331,162);
+        radio7.setPagePosition(331, 162);
         radio7.setBoxLabel("a 4th year unit ");
 
-        Radio radio8 = new Radio();
-        radio8.setPagePosition(331,182);
+        radio8.setPagePosition(331, 182);
         radio8.setBoxLabel("a 5th year unit ");
 
-        Radio radio9 = new Radio();
-        radio9.setPagePosition(331,202);
+        radio9.setPagePosition(331, 202);
         radio9.setBoxLabel("a 6th year unit ");
 
-        Radio radio10 = new Radio();
-        radio10.setPagePosition(331,222);
+        radio10.setPagePosition(331, 222);
         radio10.setBoxLabel("an honours unit ");
 
-        Radio radio11 = new Radio();
-        radio11.setPagePosition(331,242);
+        radio11.setPagePosition(331, 242);
         radio11.setBoxLabel("a postgraduate diploma unit ");
 
-        Radio radio12 = new Radio();
-        radio12.setPagePosition(331,262);
+        radio12.setPagePosition(331, 262);
         radio12.setBoxLabel("a masters unit ");
 
-        Radio radio13 = new Radio();
         //radio12.setPagePosition(96,403);
         radio13.setBoxLabel("full year unit offered in semester 1 and 2 ");
         radio13.setValue(true);
 
-        radio14.setPagePosition(331,410);
+        radio14.setPagePosition(331, 410);
         radio14.setBoxLabel("half year unit offered in  ");
 
-        radio15.setPagePosition(477,410);
+        radio15.setPagePosition(477, 410);
         radio15.setBoxLabel("semester1 ");
 
-        radio16.setPagePosition(477,426);
+        radio16.setPagePosition(477, 426);
         radio16.setBoxLabel("semester 2 ");
 
-        radio17.setPagePosition(477,442);
+        radio17.setPagePosition(477, 442);
         radio17.setBoxLabel("or semester 1 and 2  ");
 
-        radio18.setPagePosition(331,458);
+        radio18.setPagePosition(331, 458);
         radio18.setBoxLabel("block unit offered in ");
 
-        radio19.setPagePosition(460,458);
+        radio19.setPagePosition(460, 458);
         radio19.setBoxLabel("block 1 ");
 
-        radio20.setPagePosition(460,474);
+        radio20.setPagePosition(460, 474);
         radio20.setBoxLabel("block 2 ");
 
-        radio21.setPagePosition(460,490);
+        radio21.setPagePosition(460, 490);
         radio21.setBoxLabel("block 3 ");
 
-        radio22.setPagePosition(460,506);
+        radio22.setPagePosition(460, 506);
         radio22.setBoxLabel("block 4");
 
-        Radio radio23 = new Radio();
-        radio23.setPagePosition(331,522);
+        radio23.setPagePosition(331, 522);
         radio23.setBoxLabel("attendance course/unit");
 
-        
-        radio24.setPagePosition(331,538);
+
+        radio24.setPagePosition(331, 538);
         radio24.setBoxLabel("other ");
 
-        Radio radio25 = new Radio();
         //radio12.setPagePosition(96,403);
         radio25.setBoxLabel("yes ");
         radio25.setValue(true);
 
-        Radio radio26 = new Radio();
         //radio12.setPagePosition(96,403);
         radio26.setBoxLabel("no ");
 
@@ -201,7 +208,7 @@ public class RulesAndSyllabusTwo {
         mainForm.add(qB5aPanel, formData);
         qB5aPanel.add(questionB5a, formData);
 
-        final TextArea questionB5b = new TextArea();
+
         questionB5b.setPreventScrollbars(false);
         questionB5b.setHeight(50);
         questionB5b.setFieldLabel("B.5.b. In which year/s of study is the course/unit to be taught? ");
@@ -239,7 +246,7 @@ public class RulesAndSyllabusTwo {
         qB6aPanel.setHeight(200);
         qB6aPanel.setWidth(830);
         qB6aPanel.setLabelWidth(300);
-                
+
         qB6aPanel.add(questionB6a1, formData);
         qB6aPanel.add(questionB6a2, formData);
         qB6aPanel.add(questionB6a3, formData);
@@ -269,31 +276,32 @@ public class RulesAndSyllabusTwo {
             questionB6b.disable();
         }
 
-        questionB6a1.addListener(Events.Change, new Listener<BaseEvent>(){
+        questionB6a1.addListener(Events.Change, new Listener<BaseEvent>() {
+
             public void handleEvent(BaseEvent be) {
-                if (radio24.getValue() == false){
+                if (radio24.getValue() == false) {
                     questionB6b.disable();
                 }
-                if (radio24.getValue() == true){
+                if (radio24.getValue() == true) {
                     questionB6b.enable();
                 }
-                if (radio14.getValue() == false){
+                if (radio14.getValue() == false) {
                     radio15.disable();
                     radio16.disable();
                     radio17.disable();
                 }
-                if (radio14.getValue() == true){
+                if (radio14.getValue() == true) {
                     radio15.enable();
                     radio16.enable();
                     radio17.enable();
                 }
-                if (radio18.getValue() == false){
+                if (radio18.getValue() == false) {
                     radio19.disable();
                     radio20.disable();
                     radio21.disable();
                     radio22.disable();
                 }
-                if (radio18.getValue() == true){
+                if (radio18.getValue() == true) {
                     radio19.enable();
                     radio20.enable();
                     radio21.enable();
@@ -301,7 +309,7 @@ public class RulesAndSyllabusTwo {
                 }
             }
         });
-       
+
         final RadioGroup questionB6c = new RadioGroup();
         questionB6c.setFieldLabel("B.6.c.Is the unit assessed ");
         questionB6c.add(radio25);
@@ -322,9 +330,28 @@ public class RulesAndSyllabusTwo {
             public void componentSelected(ButtonEvent ce) {
                 //replaceAll is used to replace spaces which give problems when trying to save to the database. spaces(" ")
                 //are replaced by ("--")
-                
-                qB5a = questionB5a.getValue().getBoxLabel().replaceAll(" ", "--");// deptField.getValue().getId();
-                if (qB5a == null) {
+
+                quesB5a[0] = radio4.getValue();
+                quesB5a[1] = radio5.getValue();
+                quesB5a[2] = radio6.getValue();
+                quesB5a[3] = radio7.getValue();
+                quesB5a[4] = radio8.getValue();
+                quesB5a[5] = radio9.getValue();
+                quesB5a[6] = radio10.getValue();
+                quesB5a[7] = radio11.getValue();
+                quesB5a[8] = radio12.getValue();
+                qB5a = "";
+                for (int i = 0; i < 9; i++) {
+                    switch (new Boolean(quesB5a[i]).toString().charAt(0)) {
+                        case 't':
+                            qB5a = qB5a + "1";
+                            break;
+                        case 'f':
+                            qB5a = qB5a + "0";
+                            break;
+                    }
+                }
+                if (qB5a.equals("000000000")) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.5.a", null);
                     return;
                 }
@@ -334,27 +361,69 @@ public class RulesAndSyllabusTwo {
                 if (qB5b == null) {
                     MessageBox.info("Missing answer", "Please make a selection for question B.5.b", null);
                     return;
-                }else{
+                } else {
                     qB5b.toString().replaceAll(" ", "--");
 
                 }
 
-                qB6a = questionB6a1.getValue().getBoxLabel().replaceAll(" ", "--");// deptField.getValue().getId();
-                if (qB6a == null) {
+                quesB6a[0] = radio13.getValue();
+                quesB6a[1] = radio14.getValue();
+                quesB6a[2] = radio15.getValue();
+                quesB6a[3] = radio16.getValue();
+                quesB6a[4] = radio17.getValue();
+                qB6a = "";
+                for (int i = 0; i < 5; i++) {
+                    switch (new Boolean(quesB6a[i]).toString().charAt(0)) {
+                        case 't':
+                            qB6a = qB6a + "1";
+                            break;
+                        case 'f':
+                            qB6a = qB6a + "0";
+                            break;
+                    }
+                }
+                if (qB6a.equals("00000")) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.6.a", null);
                     return;
                 }
 
-                qB6b = questionB6b.getValue();//.toString().replaceAll(" ", "--");// deptField.getValue().getId();
-                if (qB6b == null) {
+                quesB6b[0] = radio18.getValue();
+                quesB6b[1] = radio19.getValue();
+                quesB6b[2] = radio20.getValue();
+                qB6a = "";
+                for (int i = 0; i < 3; i++) {
+                    switch (new Boolean(quesB6b[i]).toString().charAt(0)) {
+                        case 't':
+                            qB6b = qB6b + "1";
+                            break;
+                        case 'f':
+                            qB6b = qB6b + "0";
+                            break;
+                    }
+                }
+                if (qB6b.equals("000")) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.6.b", null);
                     return;
-                }else{
+                } else {
                     qB6b.toString().replaceAll(" ", "--");
                 }
 
-                qB6c = questionB6c.getValue().getBoxLabel().replaceAll(" ", "--");// deptField.getValue().getId();
-                if (qB6c == null) {
+                quesB6c[0] = radio21.getValue();
+                quesB6c[1] = radio22.getValue();
+                quesB6c[2] = radio23.getValue();
+                quesB6c[3] = radio24.getValue();
+                qB6a = "";
+                for (int i = 0; i < 4; i++) {
+                    switch (new Boolean(quesB6c[i]).toString().charAt(0)) {
+                        case 't':
+                            qB6c = qB6c + "1";
+                            break;
+                        case 'f':
+                            qB6c = qB6c + "0";
+                            break;
+                    }
+                }
+                if (qB6c.equals("0000")) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.6.c", null);
                     return;
                 }
@@ -363,21 +432,20 @@ public class RulesAndSyllabusTwo {
 
                 storeDocumentInfo();
                 //data saved into a single string with each data varieable seperated by ("_")
-                
+
                 //rulesAndSyllabusTwoData = qB5a+"_"+qB5b+"_"+qB6a+"_"+qB6b+"_"+qB6c;
-               
+
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname="+"rulesandsyllabustwo"+"&formdata="+rulesAndSyllabusTwoData+"&docid="+Constants.docid;
+                        + "?module=wicid&action=saveFormData&formname=" + "rulesandsyllabustwo" + "&formdata=" + rulesAndSyllabusTwoData + "&docid=" + Constants.docid;
 
                 createDocument(url);
 
-                if(oldSubsidyRequirements == null){
+                if (oldSubsidyRequirements == null) {
                     SubsidyRequirements subsidyRequirements = new SubsidyRequirements(RulesAndSyllabusTwo.this);
                     subsidyRequirements.show();
                     rulesAndSyllabusTwoDialog.hide();
-                }
-                else{
+                } else {
                     oldSubsidyRequirements.show();
                     rulesAndSyllabusTwoDialog.hide();
                 }
@@ -386,14 +454,14 @@ public class RulesAndSyllabusTwo {
 
         backButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
-                @Override
-                public void componentSelected(ButtonEvent ce) {
-                    rulesAndSyllabusOne.setOldRulesAndSyllabusOne(RulesAndSyllabusTwo.this);
-                    rulesAndSyllabusOne.show();
-                    rulesAndSyllabusTwoDialog.hide();
-                    storeDocumentInfo();
-                }
-            });
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                rulesAndSyllabusOne.setOldRulesAndSyllabusOne(RulesAndSyllabusTwo.this);
+                rulesAndSyllabusOne.show();
+                rulesAndSyllabusTwoDialog.hide();
+                storeDocumentInfo();
+            }
+        });
 
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
@@ -414,6 +482,7 @@ public class RulesAndSyllabusTwo {
         rulesAndSyllabusTwoDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         rulesAndSyllabusTwoDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -435,8 +504,7 @@ public class RulesAndSyllabusTwo {
         rulesAndSyllabusTwoData = wicidxml.getXml();
     }
 
-    public void setDocumentInfo(){
-
+    public void setDocumentInfo() {
     }
 
     public void show() {
@@ -446,7 +514,7 @@ public class RulesAndSyllabusTwo {
     public void setOldRulesAndSyllabusTwo(SubsidyRequirements oldSubsidyRequirements) {
         this.oldSubsidyRequirements = oldSubsidyRequirements;
     }
-    
+
     public void setSelectedFolder(ModelData selectedFolder) {
         this.selectedFolder = selectedFolder;
         topicField.setValue((String) this.selectedFolder.get("id"));
@@ -489,5 +557,136 @@ public class RulesAndSyllabusTwo {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
 
+    }
+
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=rulesAndSyllabusTwo&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get rulesAndSyllabusTwo data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+
+                    String data = response.getText();
+
+                    String qB5a = Util.getTagText(data, "qB5a");
+                    if (qB5a != null) {
+                        for (int i = 0; i < 9; i++) {
+                            if (qB5a.charAt(i) == '0') {
+                                quesB5a[i] = false;
+                            }
+                            if (qB5a.charAt(i) == '1') {
+                                quesB5a[i] = true;
+                            }
+                            System.out.println(quesB5a[i]);
+                        }
+                        radio4.setValue(quesB5a[0]);
+                        radio5.setValue(quesB5a[1]);
+                        radio6.setValue(quesB5a[2]);
+                        radio7.setValue(quesB5a[3]);
+                        radio8.setValue(quesB5a[4]);
+                        radio9.setValue(quesB5a[5]);
+                        radio10.setValue(quesB5a[6]);
+                        radio11.setValue(quesB5a[7]);
+                        radio12.setValue(quesB5a[8]);
+                    } else {
+                        radio4.setValue(true);
+                        radio5.setValue(false);
+                        radio6.setValue(false);
+                        radio7.setValue(false);
+                        radio8.setValue(false);
+                        radio9.setValue(false);
+                        radio10.setValue(false);
+                        radio11.setValue(false);
+                        radio12.setValue(false);
+                    }
+                    String qB5b = Util.getTagText(data, "qB5b");
+                    questionB5b.setValue(qB5b);
+
+                    String qB6a = Util.getTagText(data, "qB6a");
+                    if (qB6a != null) {
+                        for (int i = 0; i < 5; i++) {
+                            if (qB6a.charAt(i) == '0') {
+                                quesB6a[i] = false;
+                            }
+                            if (qB6a.charAt(i) == '1') {
+                                quesB6a[i] = true;
+                            }
+                            System.out.println(quesB6a[i]);
+                        }
+                        radio13.setValue(quesB6a[0]);
+                        radio14.setValue(quesB6a[1]);
+                        radio15.setValue(quesB6a[2]);
+                        radio16.setValue(quesB6a[3]);
+                        radio17.setValue(quesB6a[4]);
+                    } else {
+                        radio13.setValue(true);
+                        radio14.setValue(false);
+                        radio15.setValue(false);
+                        radio16.setValue(false);
+                        radio17.setValue(false);
+                    }
+
+                    String qB6b = Util.getTagText(data, "qB6b");
+                    if (qB6b != null) {
+                        for (int i = 0; i < 3; i++) {
+                            if (qB6b.charAt(i) == '0') {
+                                quesB6b[i] = false;
+                            }
+                            if (qB6b.charAt(i) == '1') {
+                                quesB6b[i] = true;
+                            }
+                            System.out.println(quesB6b[i]);
+                        }
+                        radio18.setValue(quesB6b[0]);
+                        radio19.setValue(quesB6b[1]);
+                        radio20.setValue(quesB6b[2]);
+                    } else {
+                        radio18.setValue(true);
+                        radio19.setValue(false);
+                        radio20.setValue(false);
+                    }
+
+                    String qB6c = Util.getTagText(data, "qB6c");
+                    if (qB6c != null) {
+                        for (int i = 0; i < 4; i++) {
+                            if (qB6c.charAt(i) == '0') {
+                                quesB6c[i] = false;
+                            }
+                            if (qB6c.charAt(i) == '1') {
+                                quesB6c[i] = true;
+                            }
+                            System.out.println(quesB6c[i]);
+                        }
+                        radio21.setValue(quesB6c[0]);
+                        radio22.setValue(quesB6c[1]);
+                        radio23.setValue(quesB6c[2]);
+                        radio24.setValue(quesB6c[3]);
+                    } else {
+                        radio21.setValue(true);
+                        radio22.setValue(false);
+                        radio23.setValue(false);
+                        radio24.setValue(false);
+                    }
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get rulesAndSyllabusTwo data", null);
+        }
     }
 }

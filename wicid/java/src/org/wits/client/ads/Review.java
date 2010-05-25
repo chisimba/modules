@@ -19,6 +19,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -132,23 +133,24 @@ public class Review {
                 storeDocumentInfo();
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname="+"review"+"&formdata=" +reviewData+"&docid="+Constants.docid;
-                        //+ "&department=" + dept + "&telephone=" + telephone
-                        //+ "&topic=" + topic + "&title=" + title + "&mode=" + Constants.main.getMode();
+                        + "?module=wicid&action=saveFormData&formname=" + "review" + "&formdata=" + reviewData + "&docid=" + Constants.docid;
+                //+ "&department=" + dept + "&telephone=" + telephone
+                //+ "&topic=" + topic + "&title=" + title + "&mode=" + Constants.main.getMode();
 
 
                 createDocument(url);
-                if(oldContactDetails == null){
-                    
+                if (oldContactDetails == null) {
+
                     ContactDetails contactDetails = new ContactDetails(Review.this);
                     contactDetails.show();
                     newReviewDialog.hide();
-                }else{
-                    oldContactDetails.show();;
-                    newReviewDialog.hide();;
+                } else {
+                    oldContactDetails.show();
+                    ;
+                    newReviewDialog.hide();
+                    ;
                 }
             }
-
         });
 
         backButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
@@ -176,6 +178,7 @@ public class Review {
         newReviewDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         newReviewDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -189,26 +192,25 @@ public class Review {
 
     public void storeDocumentInfo() {
         WicidXML wicidxml = new WicidXML("review");
-        wicidxml.addElement("G1a", G1a.getValue());
-        wicidxml.addElement("G1b", G1b.getValue());
-        wicidxml.addElement("G2a", G2a.getValue());
-        wicidxml.addElement("G2b", G2b.getValue());
-        wicidxml.addElement("G3a", G3a.getValue());
-        wicidxml.addElement("G3b", G3b.getValue());
-        wicidxml.addElement("G4a", G4a.getValue());
-        wicidxml.addElement("G4b", G4b.getValue());
+        wicidxml.addElement("qG1a", G1a.getValue());
+        wicidxml.addElement("qG1b", G1b.getValue());
+        wicidxml.addElement("qG2a", G2a.getValue());
+        wicidxml.addElement("qG2b", G2b.getValue());
+        wicidxml.addElement("qG3a", G3a.getValue());
+        wicidxml.addElement("qG3b", G3b.getValue());
+        wicidxml.addElement("qG4a", G4a.getValue());
+        wicidxml.addElement("qG4b", G4b.getValue());
         reviewData = wicidxml.getXml();
     }
 
-    public void setDocumentInfo(){
-
+    public void setDocumentInfo() {
     }
 
     public void show() {
         newReviewDialog.show();
     }
 
-    public void setOldReview(ContactDetails oldContactDetails){
+    public void setOldReview(ContactDetails oldContactDetails) {
         this.oldContactDetails = oldContactDetails;
 
     }
@@ -231,16 +233,15 @@ public class Review {
                     if (resp[0].equals("")) {
                         /*if (oldOverView == null) {
 
-                            Constants.docid = resp[1];
-                            OverView overView = new OverView(NewCourseProposalDialog.this);
-                            overView.show();
-                            newDocumentDialog.hide();
+                        Constants.docid = resp[1];
+                        OverView overView = new OverView(NewCourseProposalDialog.this);
+                        overView.show();
+                        newDocumentDialog.hide();
                         } else {
-                            oldOverView.show();
-                            newDocumentDialog.hide();
+                        oldOverView.show();
+                        newDocumentDialog.hide();
 
                         }*/
-
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
@@ -250,5 +251,61 @@ public class Review {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
 
+    }
+
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=review&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get review data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+
+                    String data = response.getText();
+
+                    String qG1a = Util.getTagText(data, "qG1a");
+                    G1a.setValue(qG1a);
+
+                    String qG1b = Util.getTagText(data, "qG1b");
+                    G1b.setValue(qG1b);
+
+                    String qG2a = Util.getTagText(data, "qG2a");
+                    G2a.setValue(qG2a);
+
+                    String qG2b = Util.getTagText(data, "qG2b");
+                    G2b.setValue(qG2b);
+
+                    String qG3a = Util.getTagText(data, "qG3a");
+                    G3a.setValue(qG3a);
+
+                    String qG3b = Util.getTagText(data, "qG3b");
+                    G3b.setValue(qG3b);
+
+                    String qG4a = Util.getTagText(data, "qG4a");
+                    G4a.setValue(qG4a);
+
+                    String qG4b = Util.getTagText(data, "qG4b");
+                    G4b.setValue(qG4b);
+
+
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get review data", null);
+        }
     }
 }

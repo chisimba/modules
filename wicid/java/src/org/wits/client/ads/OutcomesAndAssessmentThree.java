@@ -23,6 +23,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -60,6 +61,7 @@ public class OutcomesAndAssessmentThree {
     public OutcomesAndAssessmentThree(OutcomesAndAssessmentTwo outcomesAndAssessmentTwo) {
         this.outcomesAndAssessmentTwo = outcomesAndAssessmentTwo;
         createUI();
+        getFormData();
     }
 
     public OutcomesAndAssessmentThree(Resources oldResources) {
@@ -183,6 +185,7 @@ public class OutcomesAndAssessmentThree {
         //function to ensure that all the fields are filled and the form is
         //completed before the user moves to the next form
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
 
@@ -248,6 +251,7 @@ public class OutcomesAndAssessmentThree {
         outcomesAndAssessmentThreeDialog.setHideOnButtonClick(true);
 
         outcomesAndAssessmentThreeDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -259,7 +263,7 @@ public class OutcomesAndAssessmentThree {
         //setDepartment();
     }
 
-    public void storeDocumentInfo(){
+    public void storeDocumentInfo() {
         WicidXML wicidxml = new WicidXML("outcomesAndAssessmentThree");
 
         wicidxml.addElement("numWeeks", numWeeks.getValue().toString());
@@ -280,8 +284,7 @@ public class OutcomesAndAssessmentThree {
         outcomesAndAssessmentThreeData = wicidxml.getXml();
     }
 
-    public void setDocumentInfo(){
-
+    public void setDocumentInfo() {
     }
 
     public void show() {
@@ -316,16 +319,15 @@ public class OutcomesAndAssessmentThree {
                     if (resp[0].equals("")) {
                         /*if (oldOverView == null) {
 
-                            Constants.docid = resp[1];
-                            OverView overView = new OverView(NewCourseProposalDialog.this);
-                            overView.show();
-                            newDocumentDialog.hide();
+                        Constants.docid = resp[1];
+                        OverView overView = new OverView(NewCourseProposalDialog.this);
+                        overView.show();
+                        newDocumentDialog.hide();
                         } else {
-                            oldOverView.show();
-                            newDocumentDialog.hide();
+                        oldOverView.show();
+                        newDocumentDialog.hide();
 
                         }*/
-
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
@@ -334,6 +336,79 @@ public class OutcomesAndAssessmentThree {
         } catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
+    }
 
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=outcomesAndAssessmentThree&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get outcomesAndAssessmentThree data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+
+                    String data = response.getText();
+
+                    String qD5a = Util.getTagText(data, "numWeeks");
+                    numWeeks.setValue(Integer.parseInt(qD5a));
+
+                    String qD5b = Util.getTagText(data, "hrsTeaching");
+                    hrsTeaching.setValue(Integer.parseInt(qD5b));
+
+                    String qD5c = Util.getTagText(data, "hrsTuts");
+                    hrsTuts.setValue(Integer.parseInt(qD5c));
+
+                    String qD5d = Util.getTagText(data, "hrsLabs");
+                    hrsLabs.setValue(Integer.parseInt(qD5d));
+
+                    String qD5e = Util.getTagText(data, "hrsOther");
+                    hrsOther.setValue(Integer.parseInt(qD5e));
+
+                    String qD5f = Util.getTagText(data, "contactTime");
+                    questionD5.setText(5, 1, qD5f);
+
+                    String qD5g = Util.getTagText(data, "hrsStudy");
+                    hrsStudy.setValue(Integer.parseInt(qD5g));
+
+                    String qD5h = Util.getTagText(data, "studyHours");
+                    questionD5.setText(7, 1, qD5h);
+
+                    String qD5i = Util.getTagText(data, "examsPerYr");
+                    examsPerYr.setValue(Integer.parseInt(qD5i));
+
+                    String qD5j = Util.getTagText(data, "examsLength");
+                    examsLength.setValue(Integer.parseInt(qD5j));
+
+                    String qD5k = Util.getTagText(data, "examTime");
+                    questionD5.setText(10, 1, qD5k);
+
+                    String qD5l = Util.getTagText(data, "hrsExamPrep");
+                    hrsExamPrep.setValue(Integer.parseInt(qD5l));
+
+                    String qD5m = Util.getTagText(data, "notionalStudyHours");
+                    questionD5.setText(12, 1, qD5m);
+
+                    String qD5n = Util.getTagText(data, "creditsSAQA");
+                    questionD5.setText(13, 1, qD5n);
+
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get outcomesAndAssessmentThree data", null);
+        }
     }
 }

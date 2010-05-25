@@ -31,6 +31,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 //import org.wits.client.ads.OverView;
 
@@ -57,12 +58,24 @@ public class RulesAndSyllabusOne {
     private RulesAndSyllabusTwo oldRulesAndSyllabusTwo;
     private String qB1 = "", qB2 = "", qB3a = "", qB3b = "", qB4a = "", qB4b = "", qB4c = "";
     public String rulesAndSyllabusOneData;
+    private final TextArea questionB1 = new TextArea();
+    private final TextArea questionB2 = new TextArea();
+    private final TextArea questionB3a = new TextArea();
+    private final TextArea questionB3b = new TextArea();
+    private Radio radio = new Radio();
+    private Radio radio2 = new Radio();
+    private Radio radio3 = new Radio();
+    private final RadioGroup questionB4a = new RadioGroup();
+    private final TextArea questionB4b = new TextArea();
+    private final TextArea questionB4c = new TextArea();
+    private Boolean[] quesB4a = new Boolean[3];
     //private NewCourseProposalDialog newCourseProposalDialog;
     //private String overViewData = overView.getOverViewData();
 
     public RulesAndSyllabusOne(OverView overViewDialog) {
         this.overView = overViewDialog;
         createUI();
+        getFormData();
     }
 
     public RulesAndSyllabusOne(RulesAndSyllabusTwo oldRulesAndSyllabusTwo) {
@@ -80,40 +93,40 @@ public class RulesAndSyllabusOne {
         mainForm.setWidth(650);
         mainForm.setLabelWidth(300);
 
-        Radio radio = new Radio();
+
         radio.setBoxLabel("a compulsory course/unit ");
         radio.setValue(true);
 
-        Radio radio2 = new Radio();
+
         radio2.setPagePosition(331, 345);
         radio2.setBoxLabel("an optional course/unit");
 
-        Radio radio3 = new Radio();
+
         radio3.setPagePosition(331, 361);
         radio3.setBoxLabel("both compulsory and optional as the course/unit is offered toward qualifications/programmes with differing curriculum structures ");
 
-        final TextArea questionB1 = new TextArea();
+
         questionB1.setPreventScrollbars(false);
         questionB1.setHeight(50);
         questionB1.setFieldLabel("B.1. How does this course/unit change the rules for the curriculum? ");
 
         mainForm.add(questionB1, formData);
 
-        final TextArea questionB2 = new TextArea();
+
         questionB2.setPreventScrollbars(false);
         questionB2.setHeight(50);
         questionB2.setFieldLabel("B.2. Describe the course/unit syllabus. ");
 
         mainForm.add(questionB2, formData);
 
-        final TextArea questionB3a = new TextArea();
+
         questionB3a.setPreventScrollbars(false);
         questionB3a.setHeight(50);
         questionB3a.setFieldLabel("B.3. a. What are the pre-requisites for the course/unit if any? ");
 
         mainForm.add(questionB3a, formData);
 
-        final TextArea questionB3b = new TextArea();
+
         questionB3b.setPreventScrollbars(false);
         questionB3b.setHeight(50);
         questionB3b.setFieldLabel("B.3.b. What are the co-requisites for the course/unit if any? ");
@@ -121,7 +134,7 @@ public class RulesAndSyllabusOne {
         mainForm.add(questionB3b, formData);
 
 
-        final RadioGroup questionB4a = new RadioGroup();
+
         questionB4a.setFieldLabel("B.4.a This is a");
         questionB4a.add(radio);
         questionB4a.add(radio2);
@@ -137,14 +150,14 @@ public class RulesAndSyllabusOne {
         mainForm.add(qA2Panel, formData);
         qA2Panel.add(questionB4a, formData);
 
-        final TextArea questionB4b = new TextArea();
+
         questionB4b.setPreventScrollbars(false);
         questionB4b.setHeight(50);
         questionB4b.setFieldLabel("B.4.b. If it is a compulsory course/unit, which course/unit is it replacing, or is the course/unit to be taken by students in addition to the current workload of courses/unit? ");
 
         mainForm.add(questionB4b, formData);
 
-        final TextArea questionB4c = new TextArea();
+
         questionB4c.setPreventScrollbars(false);
         questionB4c.setHeight(50);
         questionB4c.setFieldLabel("B.4.c. If it is both a compulsory and optional course/unit, provide details explaining for which qualifications/ programmes the course/unit would be optional and for which it would be compulsory. ");
@@ -158,7 +171,7 @@ public class RulesAndSyllabusOne {
         //dont forget to add constraints for radioGroups. need to find out how.
         //used to ensure that all the data is added into the required fields
         //before saving the content. Will not proceed unless all fields are entered
-        
+
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
@@ -169,7 +182,7 @@ public class RulesAndSyllabusOne {
                 if (qB1 == null) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.1.", null);
                     return;
-                }else{
+                } else {
                     qB1.toString().replaceAll(" ", "--");
 
                 }
@@ -178,7 +191,7 @@ public class RulesAndSyllabusOne {
                 if (qB2 == null) {
                     MessageBox.info("Missing selection", "Please make a selection for question B.2.", null);
                     return;
-                }else{
+                } else {
                     qB2.toString().replaceAll(" ", "--");
 
                 }
@@ -187,7 +200,7 @@ public class RulesAndSyllabusOne {
                 if (qB3a == null) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.3.a.", null);
                     return;
-                }else{
+                } else {
                     qB3a.toString().replaceAll(" ", "--");
 
                 }
@@ -196,12 +209,25 @@ public class RulesAndSyllabusOne {
                 if (qB3b == null) {
                     MessageBox.info("Missing department", "Provide your answer to question B.3.b", null);
                     return;
-                }else{
+                } else {
                     qB3b.toString().replaceAll(" ", "--");
 
                 }
 
-                qB4a = questionB4a.getValue().getBoxLabel().replaceAll(" ", "--");// deptField.getValue().getId();
+                quesB4a[0] = radio.getValue();
+                quesB4a[1] = radio2.getValue();
+                quesB4a[2] = radio3.getValue();
+                qB4a = "";
+                for (int i = 0; i < 3; i++) {
+                    switch (new Boolean(quesB4a[i]).toString().charAt(0)) {
+                        case 't':
+                            qB4a = qB4a + "1";
+                            break;
+                        case 'f':
+                            qB4a = qB4a + "0";
+                            break;
+                    }
+                }
                 if (qB4a == null) {
                     MessageBox.info("Missing department", "Provide your answer to question B.4.a", null);
                     return;
@@ -211,7 +237,7 @@ public class RulesAndSyllabusOne {
                 if (qB4b == null) {
                     MessageBox.info("Missing department", "Provide your answer to question B.4.b", null);
                     return;
-                }else{
+                } else {
                     qB4b.toString().replaceAll(" ", "--");
 
                 }
@@ -220,7 +246,7 @@ public class RulesAndSyllabusOne {
                 if (qB4c == null) {
                     MessageBox.info("Missing department", "Provide your answer to question B.4.c", null);
                     return;
-                }else{
+                } else {
                     qB4c.toString().replaceAll(" ", "--");
                 }
                 storeDocumentInfo();
@@ -231,9 +257,9 @@ public class RulesAndSyllabusOne {
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveformdata&formname="+"rulesandsyllabusone"+"&formdata=" + rulesAndSyllabusOneData+"&docid=" + Constants.docid;
+                        + "?module=wicid&action=saveformdata&formname=" + "rulesandsyllabusone" + "&formdata=" + rulesAndSyllabusOneData + "&docid=" + Constants.docid;
 
-                        createDocument(url);
+                createDocument(url);
 
                 if (oldRulesAndSyllabusTwo == null) {
                     RulesAndSyllabusTwo rulesAndSyllabusTwo = new RulesAndSyllabusTwo(RulesAndSyllabusOne.this);
@@ -284,6 +310,7 @@ public class RulesAndSyllabusOne {
         rulesAndSyllabusOneDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         rulesAndSyllabusOneDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -295,21 +322,20 @@ public class RulesAndSyllabusOne {
         //setDepartment();
     }
 
-    public void storeDocumentInfo(){
+    public void storeDocumentInfo() {
         WicidXML wicidxml = new WicidXML("rulesAndSyllabusOne");
         wicidxml.addElement("qB1", qB1);
-        wicidxml.addElement("qb2", qB2);
-        wicidxml.addElement("qb3a", qB3a);
-        wicidxml.addElement("qb3b", qB3b);
-        wicidxml.addElement("qb4a", qB4a);
-        wicidxml.addElement("qb4b", qB4b);
-        wicidxml.addElement("qb4c", qB4c);
+        wicidxml.addElement("qB2", qB2);
+        wicidxml.addElement("qB3a", qB3a);
+        wicidxml.addElement("qB3b", qB3b);
+        wicidxml.addElement("qB4a", qB4a);
+        wicidxml.addElement("qB4b", qB4b);
+        wicidxml.addElement("qB4c", qB4c);
         rulesAndSyllabusOneData = wicidxml.getXml();
 
     }
 
-    public void setDocumentInfo(){
-
+    public void setDocumentInfo() {
     }
 
     public void show() {
@@ -362,5 +388,78 @@ public class RulesAndSyllabusOne {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
 
+    }
+
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=rulesAndSyllabusOne&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get rulesAndSyllabusOne data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    /*
+                    <overview><qA1>asd</qA1><qA2>01</qA2><qA3>asd</qA3><qA4>asd</qA4><qA5>00100</qA5></overview>
+                     */
+
+                    String data = response.getText();
+
+                    String qB1 = Util.getTagText(data, "qB1");
+                    questionB1.setValue(qB1);
+
+                    String qB2 = Util.getTagText(data, "qB2");
+                    questionB2.setValue(qB2);
+
+                    String qB3a = Util.getTagText(data, "qB3a");
+                    questionB3a.setValue(qB3a);
+
+                    String qB3b = Util.getTagText(data, "qB3b");
+                    questionB3b.setValue(qB3b);
+
+                    String qB4a = Util.getTagText(data, "qB4a");
+                    if (qB4a != null) {
+                        for (int i = 0; i < 3; i++) {
+                            if (qB4a.charAt(i) == '0') {
+                                quesB4a[i] = false;
+                            }
+                            if (qB4a.charAt(i) == '1') {
+                                quesB4a[i] = true;
+                            }
+                            System.out.println(quesB4a[i]);
+                        }
+                        radio.setValue(quesB4a[0]);
+                        radio2.setValue(quesB4a[1]);
+                        radio3.setValue(quesB4a[2]);
+                    } else {
+                        radio.setValue(true);
+                        radio2.setValue(false);
+                        radio3.setValue(false);
+                    }
+
+                    String qB4b = Util.getTagText(data, "qB4b");
+                    questionB4b.setValue(qB4b);
+
+                    String qB4c = Util.getTagText(data, "qB4c");
+                    questionB4c.setValue(qB4c);
+
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get rulesAndSyllabusOne data", null);
+        }
     }
 }

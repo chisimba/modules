@@ -19,6 +19,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -45,6 +46,7 @@ public class ContactDetails {
     public ContactDetails(Review review) {
         this.review = review;
         createUI();
+        getFormData();
     }
 
     private void createUI() {
@@ -185,12 +187,12 @@ public class ContactDetails {
         qH3b = H3b.getValue().toString();
 
 
-        WicidXML wicidxml = new WicidXML("ContactDetails");
-        wicidxml.addElement("H1", qH1);
-        wicidxml.addElement("H2a", qH2a);
-        wicidxml.addElement("H2b", qH2b);
-        wicidxml.addElement("H3a", qH3a);
-        wicidxml.addElement("H3b", qH3b);
+        WicidXML wicidxml = new WicidXML("contactDetails");
+        wicidxml.addElement("qH1", qH1);
+        wicidxml.addElement("qH2a", qH2a);
+        wicidxml.addElement("qH2b", qH2b);
+        wicidxml.addElement("qH3a", qH3a);
+        wicidxml.addElement("qH3b", qH3b);
         contactDetailsData = wicidxml.getXml();
     }
 
@@ -236,6 +238,52 @@ public class ContactDetails {
             });
         } catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
+        }
+    }
+
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=contactDetails&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get contactDetails data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+
+                    String data = response.getText();
+
+                    String qH1 = Util.getTagText(data, "qH1");
+                    H1.setValue(qH1);
+
+                    String qH2a = Util.getTagText(data, "qH2a");
+                    H2a.setValue(qH2a);
+
+                    String qH2b = Util.getTagText(data, "qH2b");
+                    H2b.setValue(qH2b);
+
+                    String qH3a = Util.getTagText(data, "qH3a");
+                    H3a.setValue(qH3a);
+
+                    String qH3b = Util.getTagText(data, "qH3b");
+                    H3b.setValue(qH3b);
+
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get contactDetails data", null);
         }
     }
 }

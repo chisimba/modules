@@ -25,6 +25,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -41,22 +42,26 @@ public class SubsidyRequirements {
     private Button backButton = new Button("Back");
     private Button forwardButton = new Button("Forward to...");
     private TextArea questionC1 = new TextArea();
+    private RadioGroup questionC2a = new RadioGroup();
+    private RadioGroup questionC4a = new RadioGroup();
     private NumberField questionC3 = new NumberField();
     private MultiField questionC4b = new MultiField();
     private Radio radioC4a1 = new Radio();
     private Radio radioC4a2 = new Radio();
     private Radio radioC2a1 = new Radio();
+    private Radio radioC2a2 = new Radio();
     private TextArea questionC2b = new TextArea();
     private TextArea q4b1 = new TextArea();
     private TextArea q4b2 = new TextArea();
+    private Boolean[] quesC2a = new Boolean[2];
+    private Boolean[] quesC4a = new Boolean[2];
     private RulesAndSyllabusTwo rulesAndSyllabusTwo;
     private OutcomesAndAssessmentOne outcomesAndAssessmentOne;
     private OutcomesAndAssessmentOne oldOutcomesAndAssessmentOne;
     //private SubsidyRequirements oldSubsidyRequirements;
     private String subsidyRequirementsData;
     private String qC1, qC2a, qC2b, qC3, qC4a, qC4b1, qC4b2;
-    private RadioGroup questionC2a = new RadioGroup();
-    private RadioGroup questionC4a = new RadioGroup();
+    
 
     public SubsidyRequirements(RulesAndSyllabusTwo rulesAndSyllabusTwo) {
         this.rulesAndSyllabusTwo = rulesAndSyllabusTwo;
@@ -88,7 +93,7 @@ public class SubsidyRequirements {
         mainForm.add(questionC1, formData);
 
         radioC2a1.setBoxLabel("off-campus");
-        Radio radioC2a2 = new Radio();
+        
         radioC2a2.setBoxLabel("on-campus");
         radioC2a2.setValue(true);
         questionC2b.disable();
@@ -354,6 +359,7 @@ public class SubsidyRequirements {
         qC4b2 = q4b2.getValue();
 
         WicidXML wicidxml = new WicidXML("subsidyRequirements");
+        wicidxml.addElement("qC1", qC1);
         wicidxml.addElement("qC2a", qC2a);
         try {
             wicidxml.addElement("qC2b", qC2b);
@@ -372,10 +378,6 @@ public class SubsidyRequirements {
             wicidxml.addElement("qC4b2", "null");
         }
         subsidyRequirementsData = wicidxml.getXml();
-    }
-
-    public void setDocumentInfo(){
-
     }
 
     public void show() {
@@ -425,5 +427,78 @@ public class SubsidyRequirements {
             MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
         }
 
+    }
+
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=subsidyRequirements&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get subsidyRequirements data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    
+                    String data = response.getText();
+
+                    String qC1 = Util.getTagText(data, "qC1");
+                    questionC1.setValue(qC1);
+
+                    String qC2a = Util.getTagText(data, "qC2a");
+                    for (int i = 0; i < 2; i++) {
+                        if (qC2a.charAt(i) == '0') {
+                            quesC2a[i] = false;
+                        }
+                        if (qC2a.charAt(i) == '1') {
+                            quesC2a[i] = true;
+                        }
+                        System.out.println(quesC2a[i]);
+                    }
+                    radioC2a1.setValue(quesC2a[0]);
+                    radioC2a2.setValue(quesC2a[1]);
+
+                    String qC2b = Util.getTagText(data, "qC2b");
+                    questionC2b.setValue(qC2b);
+
+                    int qC3 = Integer.parseInt(Util.getTagText(data, "qC3"));
+                    questionC3.setValue(qC3);
+
+                    String qC4a = Util.getTagText(data, "qC4a");
+                    for (int i = 0; i < 2; i++) {
+                        if (qC4a.charAt(i) == '0') {
+                            quesC4a[i] = false;
+                        }
+                        if (qC4a.charAt(i) == '1') {
+                            quesC4a[i] = true;
+                        }
+                        System.out.println(quesC4a[i]);
+                    }
+                    radioC4a1.setValue(quesC4a[0]);
+                    radioC4a2.setValue(quesC4a[1]);
+
+                    String qC4b1 = Util.getTagText(data, "qC4b1");
+                    q4b1.setValue(qC4b1);
+
+                    String qC4b2 = Util.getTagText(data, "qC4b2");
+                    q4b2.setValue(qC4b2);
+
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get subsidyRequirements data", null);
+        }
     }
 }

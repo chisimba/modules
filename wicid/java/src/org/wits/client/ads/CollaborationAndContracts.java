@@ -21,6 +21,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
 
 /**
@@ -51,10 +52,13 @@ public class CollaborationAndContracts {
     private CollaborationAndContracts oldCollaborationAndContracts;
     private String collaborationAndContractsData;
     private String qF1a, qF2a, qF2b, qF3a, qF3b, qF4;
+    private Boolean[] quesF1a = new Boolean[2];
+    private Boolean[] quesF2a = new Boolean[2];
 
     public CollaborationAndContracts(Resources resources) {
         this.resources = resources;
         createUI();
+        getFormData();
     }
 
     public CollaborationAndContracts(Review review) {
@@ -180,7 +184,7 @@ public class CollaborationAndContracts {
                     review.show();
                     newCollaborationAndContractsDialog.hide();
 
-                }else{
+                } else {
                     oldReview.show();
                     newCollaborationAndContractsDialog.hide();
                 }
@@ -211,6 +215,7 @@ public class CollaborationAndContracts {
         newCollaborationAndContractsDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         newCollaborationAndContractsDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -228,7 +233,7 @@ public class CollaborationAndContracts {
         qF3a = F3a.getValue().toString();
         qF3b = F3b.getValue().toString();
 
-        WicidXML wicidxml = new WicidXML("CollaborationAndContracts");
+        WicidXML wicidxml = new WicidXML("collaborationAndContracts");
         wicidxml.addElement("F1a", F1a.getValue().toString());
         wicidxml.addElement("F1b", F1b.getValue());
         wicidxml.addElement("F2a", F2a.getValue().toString());
@@ -239,8 +244,7 @@ public class CollaborationAndContracts {
         collaborationAndContractsData = wicidxml.getXml();
     }
 
-    public void setDocumentInfo(){
-
+    public void setDocumentInfo() {
     }
 
     public void show() {
@@ -248,12 +252,12 @@ public class CollaborationAndContracts {
     }
 
     /*public void setOldReview(Review oldReview) {
-        this.oldReview = oldReview;
+    this.oldReview = oldReview;
     }*/
-
     public void setOldCollaborationAndContracts(Review oldReview) {
         this.oldReview = oldReview;
     }
+
     private void createDocument(String url) {
 
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
@@ -272,16 +276,15 @@ public class CollaborationAndContracts {
                     if (resp[0].equals("")) {
                         /*if (oldOverView == null) {
 
-                            Constants.docid = resp[1];
-                            OverView overView = new OverView(NewCourseProposalDialog.this);
-                            overView.show();
-                            newDocumentDialog.hide();
+                        Constants.docid = resp[1];
+                        OverView overView = new OverView(NewCourseProposalDialog.this);
+                        overView.show();
+                        newDocumentDialog.hide();
                         } else {
-                            oldOverView.show();
-                            newDocumentDialog.hide();
+                        oldOverView.show();
+                        newDocumentDialog.hide();
 
                         }*/
-
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
@@ -292,6 +295,85 @@ public class CollaborationAndContracts {
         }
     }
 
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=collaborationAndContracts&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 
+        try {
 
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get collaborationAndContracts data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+
+                    String data = response.getText();
+
+                    String qF1a = Util.getTagText(data, "qF1a");
+                    if (qF1a != null) {
+                        for (int i = 0; i < 2; i++) {
+                            if (qF1a.charAt(i) == '0') {
+                                quesF1a[i] = false;
+                            }
+                            if (qF1a.charAt(i) == '1') {
+                                quesF1a[i] = true;
+                            }
+                            System.out.println(quesF1a[i]);
+                        }
+                        radioYes1.setValue(quesF1a[0]);
+                        radioNo1.setValue(quesF1a[1]);
+                    } else {
+                        radioYes1.setValue(true);
+                        radioNo1.setValue(false);
+                    }
+
+                    String qF1b = Util.getTagText(data, "qF1b");
+                    F1b.setValue(qF1b);
+
+                    String qF2a = Util.getTagText(data, "qF2a");
+                    if (qF2a != null) {
+                        for (int i = 0; i < 2; i++) {
+                            if (qF2a.charAt(i) == '0') {
+                                quesF2a[i] = false;
+                            }
+                            if (qF2a.charAt(i) == '1') {
+                                quesF2a[i] = true;
+                            }
+                            System.out.println(quesF2a[i]);
+                        }
+                        radioYes2.setValue(quesF2a[0]);
+                        radioNo2.setValue(quesF2a[1]);
+                    } else {
+                        radioYes2.setValue(true);
+                        radioNo2.setValue(false);
+                    }
+
+                    String qF2b = Util.getTagText(data, "qF2b");
+                    F2b.setValue(qF2b);
+
+                    String qF3a = Util.getTagText(data, "qF3a");
+                    F3a.setValue(qF3a);
+
+                    String qF3b = Util.getTagText(data, "qF3b");
+                    F3b.setValue(qF3b);
+
+                    String qF4 = Util.getTagText(data, "qF4");
+                    F4.setValue(qF4);
+
+                    /*String resp[] = response.getText().split("|");
+
+                    if (resp[0].equals("")) {
+
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get collaborationAndContracts data", null);
+        }
+    }
 }
