@@ -77,11 +77,11 @@ public class RulesAndSyllabusTwo {
     private Radio radio24 = new Radio();
     private Radio radio25 = new Radio();
     private Radio radio26 = new Radio();
+    private final TextArea questionB6b = new TextArea();
     private boolean[] quesB5a = new boolean[9];
     private final TextArea questionB5b = new TextArea();
-    private Boolean[] quesB6a = new Boolean[5];
-    private Boolean[] quesB6b = new Boolean[3];
-    private Boolean[] quesB6c = new Boolean[4];
+    private boolean[] quesB6a = new boolean[12];
+    private boolean[] quesB6c = new boolean[2];
     private String courseTitle;
     private OverView overView;
     private RulesAndSyllabusOne rulesAndSyllabusOne;
@@ -228,16 +228,16 @@ public class RulesAndSyllabusTwo {
 
         final RadioGroup questionB6a2 = new RadioGroup();
         questionB6a2.setSelectionRequired(true);
-        questionB6a1.add(radio15);
-        questionB6a1.add(radio16);
-        questionB6a1.add(radio17);
+        questionB6a2.add(radio15);
+        questionB6a2.add(radio16);
+        questionB6a2.add(radio17);
 
         final RadioGroup questionB6a3 = new RadioGroup();
         questionB6a3.setSelectionRequired(true);
-        questionB6a1.add(radio19);
-        questionB6a1.add(radio20);
-        questionB6a1.add(radio21);
-        questionB6a1.add(radio22);
+        questionB6a3.add(radio19);
+        questionB6a3.add(radio20);
+        questionB6a3.add(radio21);
+        questionB6a3.add(radio22);
 
         qB6aPanel.setFrame(false);
         qB6aPanel.setBodyBorder(false);
@@ -265,7 +265,7 @@ public class RulesAndSyllabusTwo {
             radio22.disable();
         }
 
-        final TextArea questionB6b = new TextArea();
+
         questionB6b.setPreventScrollbars(false);
         questionB6b.setHeight(50);
         questionB6b.setWidth(50);
@@ -286,9 +286,13 @@ public class RulesAndSyllabusTwo {
                     questionB6b.enable();
                 }
                 if (radio14.getValue() == false) {
+                    radio15.setValue(false);
+                    radio16.setValue(false);
+                    radio17.setValue(false);
                     radio15.disable();
                     radio16.disable();
                     radio17.disable();
+
                 }
                 if (radio14.getValue() == true) {
                     radio15.enable();
@@ -296,6 +300,10 @@ public class RulesAndSyllabusTwo {
                     radio17.enable();
                 }
                 if (radio18.getValue() == false) {
+                    radio19.setValue(false);
+                    radio20.setValue(false);
+                    radio21.setValue(false);
+                    radio22.setValue(false);
                     radio19.disable();
                     radio20.disable();
                     radio21.disable();
@@ -371,8 +379,15 @@ public class RulesAndSyllabusTwo {
                 quesB6a[2] = radio15.getValue();
                 quesB6a[3] = radio16.getValue();
                 quesB6a[4] = radio17.getValue();
+                quesB6a[5] = radio18.getValue();
+                quesB6a[6] = radio19.getValue();
+                quesB6a[7] = radio20.getValue();
+                quesB6a[8] = radio21.getValue();
+                quesB6a[9] = radio22.getValue();
+                quesB6a[10] = radio23.getValue();
+                quesB6a[11] = radio24.getValue();
                 qB6a = "";
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 12; i++) {
                     switch (new Boolean(quesB6a[i]).toString().charAt(0)) {
                         case 't':
                             qB6a = qB6a + "1";
@@ -382,38 +397,25 @@ public class RulesAndSyllabusTwo {
                             break;
                     }
                 }
-                if (qB6a.equals("00000")) {
+                for (int i = 0; i < 12; i++) {
+                }
+                if (qB6a.equals("000000000000")) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.6.a", null);
                     return;
                 }
 
-                quesB6b[0] = radio18.getValue();
-                quesB6b[1] = radio19.getValue();
-                quesB6b[2] = radio20.getValue();
-                qB6a = "";
-                for (int i = 0; i < 3; i++) {
-                    switch (new Boolean(quesB6b[i]).toString().charAt(0)) {
-                        case 't':
-                            qB6b = qB6b + "1";
-                            break;
-                        case 'f':
-                            qB6b = qB6b + "0";
-                            break;
-                    }
-                }
-                if (qB6b.equals("000")) {
+                if ((radio24.getValue() == true) && (qB6b == null)) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.6.b", null);
                     return;
-                } else {
+                }
+                if ((radio24.getValue() == true) && (qB6b != null)) {
                     qB6b.toString().replaceAll(" ", "--");
                 }
 
-                quesB6c[0] = radio21.getValue();
-                quesB6c[1] = radio22.getValue();
-                quesB6c[2] = radio23.getValue();
-                quesB6c[3] = radio24.getValue();
-                qB6a = "";
-                for (int i = 0; i < 4; i++) {
+                quesB6c[0] = radio25.getValue();
+                quesB6c[1] = radio26.getValue();
+                qB6c = "";
+                for (int i = 0; i < 2; i++) {
                     switch (new Boolean(quesB6c[i]).toString().charAt(0)) {
                         case 't':
                             qB6c = qB6c + "1";
@@ -423,7 +425,7 @@ public class RulesAndSyllabusTwo {
                             break;
                     }
                 }
-                if (qB6c.equals("0000")) {
+                if (qB6c.equals("00")) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.6.c", null);
                     return;
                 }
@@ -496,15 +498,16 @@ public class RulesAndSyllabusTwo {
 
     public void storeDocumentInfo() {
         WicidXML wicidxml = new WicidXML("rulesAndSyllabusTwo");
-        wicidxml.addElement("qb5a", qB5a);
-        wicidxml.addElement("qb5b", qB5b);
-        wicidxml.addElement("qb6a", qB6a);
-        wicidxml.addElement("qb6b", qB6b);
-        wicidxml.addElement("qb6c", qB6c);
+        wicidxml.addElement("qB5a", qB5a);
+        wicidxml.addElement("qB5b", qB5b);
+        wicidxml.addElement("qB6a", qB6a);
+        try {
+            wicidxml.addElement("qB6b", qB6b);
+        } catch (NullPointerException npe) {
+            wicidxml.addElement("qB6b", "");
+        }
+        wicidxml.addElement("qB6c", qB6c);
         rulesAndSyllabusTwoData = wicidxml.getXml();
-    }
-
-    public void setDocumentInfo() {
     }
 
     public void show() {
@@ -585,7 +588,6 @@ public class RulesAndSyllabusTwo {
                             if (qB5a.charAt(i) == '1') {
                                 quesB5a[i] = true;
                             }
-                            System.out.println(quesB5a[i]);
                         }
                         radio4.setValue(quesB5a[0]);
                         radio5.setValue(quesB5a[1]);
@@ -609,71 +611,62 @@ public class RulesAndSyllabusTwo {
                     }
                     String qB5b = Util.getTagText(data, "qB5b");
                     questionB5b.setValue(qB5b);
-
+                    /*<rulesAndSyllabusTwo><qB5a>010000000</qB5a><qB5b>1.1</qB5b><qB6a></qB6a><qB6b>null000</qB6b><qB6c>null0000</qB6c></rulesAndSyllabusTwo>*/
                     String qB6a = Util.getTagText(data, "qB6a");
                     if (qB6a != null) {
-                        for (int i = 0; i < 5; i++) {
+                        for (int i = 0; i < 12; i++) {
                             if (qB6a.charAt(i) == '0') {
                                 quesB6a[i] = false;
                             }
                             if (qB6a.charAt(i) == '1') {
                                 quesB6a[i] = true;
                             }
-                            System.out.println(quesB6a[i]);
                         }
                         radio13.setValue(quesB6a[0]);
                         radio14.setValue(quesB6a[1]);
                         radio15.setValue(quesB6a[2]);
                         radio16.setValue(quesB6a[3]);
                         radio17.setValue(quesB6a[4]);
+                        radio18.setValue(quesB6a[5]);
+                        radio19.setValue(quesB6a[6]);
+                        radio20.setValue(quesB6a[7]);
+                        radio21.setValue(quesB6a[8]);
+                        radio22.setValue(quesB6a[9]);
+                        radio23.setValue(quesB6a[10]);
+                        radio24.setValue(quesB6a[11]);
                     } else {
                         radio13.setValue(true);
                         radio14.setValue(false);
                         radio15.setValue(false);
                         radio16.setValue(false);
                         radio17.setValue(false);
+                        radio18.setValue(false);
+                        radio19.setValue(false);
+                        radio20.setValue(false);
+                        radio21.setValue(false);
+                        radio22.setValue(false);
+                        radio23.setValue(false);
+                        radio24.setValue(false);
                     }
 
                     String qB6b = Util.getTagText(data, "qB6b");
-                    if (qB6b != null) {
-                        for (int i = 0; i < 3; i++) {
-                            if (qB6b.charAt(i) == '0') {
-                                quesB6b[i] = false;
-                            }
-                            if (qB6b.charAt(i) == '1') {
-                                quesB6b[i] = true;
-                            }
-                            System.out.println(quesB6b[i]);
-                        }
-                        radio18.setValue(quesB6b[0]);
-                        radio19.setValue(quesB6b[1]);
-                        radio20.setValue(quesB6b[2]);
-                    } else {
-                        radio18.setValue(true);
-                        radio19.setValue(false);
-                        radio20.setValue(false);
-                    }
+                    questionB6b.setValue(qB6b);
 
                     String qB6c = Util.getTagText(data, "qB6c");
                     if (qB6c != null) {
-                        for (int i = 0; i < 4; i++) {
+                        for (int i = 0; i < 2; i++) {
                             if (qB6c.charAt(i) == '0') {
                                 quesB6c[i] = false;
                             }
                             if (qB6c.charAt(i) == '1') {
                                 quesB6c[i] = true;
                             }
-                            System.out.println(quesB6c[i]);
                         }
-                        radio21.setValue(quesB6c[0]);
-                        radio22.setValue(quesB6c[1]);
-                        radio23.setValue(quesB6c[2]);
-                        radio24.setValue(quesB6c[3]);
+                        radio25.setValue(quesB6c[0]);
+                        radio26.setValue(quesB6c[1]);
                     } else {
-                        radio21.setValue(true);
-                        radio22.setValue(false);
-                        radio23.setValue(false);
-                        radio24.setValue(false);
+                        radio25.setValue(true);
+                        radio26.setValue(false);
                     }
                     /*String resp[] = response.getText().split("|");
 
