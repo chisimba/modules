@@ -441,7 +441,6 @@ public class OverView {
 
 
                     String qA2 = Util.getTagText(data, "qA2");
-                    System.out.println(qA2);
                     if (qA2 != null) {
                         for (int i = 0; i < 2; i++) {
                             if (qA2.charAt(i) == '0') {
@@ -450,7 +449,6 @@ public class OverView {
                             if (qA2.charAt(i) == '1') {
                                 quesA2[i] = true;
                             }
-                            System.out.println(quesA2[i]);
                         }
                         radio.setValue(quesA2[0]);
                         radio2.setValue(quesA2[1]);
@@ -466,7 +464,6 @@ public class OverView {
                     questionA4.setValue(qA4);
 
                     String qA5 = Util.getTagText(data, "qA5");
-                    System.out.println(qA5);
                     if (qA5 != null) {
                         for (int i = 0; i < 5; i++) {
                             if (qA5.charAt(i) == '0') {
@@ -475,7 +472,6 @@ public class OverView {
                             if (qA5.charAt(i) == '1') {
                                 quesA5[i] = true;
                             }
-                            System.out.println(quesA5[i]);
                         }
                         radio3.setValue(quesA5[0]);
                         radio4.setValue(quesA5[1]);
