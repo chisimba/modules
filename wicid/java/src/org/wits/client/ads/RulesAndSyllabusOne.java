@@ -431,7 +431,6 @@ public class RulesAndSyllabusOne {
                             if (qB4a.charAt(i) == '1') {
                                 quesB4a[i] = true;
                             }
-                            System.out.println(quesB4a[i]);
                         }
                         radio.setValue(quesB4a[0]);
                         radio2.setValue(quesB4a[1]);
