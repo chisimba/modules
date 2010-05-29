@@ -28,4 +28,8 @@ $ext.= $this->getJavaScriptFile('Ext.ux.grid.Search.js', 'learningcontent');
 $ext.= $this->getJavaScriptFile('getlogs.js', 'learningcontent');
 $this->appendArrayVar('headerParams', $ext);
 echo '<div id="lc-grid"></div>';
+
+
+$fileName = $this->objContextActivityStreamer->csvContextLogs($this->contextCode);
+echo "<a href='".$this->objConfig->getSitePath().$fileName."'>CSV File</a>";
 ?>

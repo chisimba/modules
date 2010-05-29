@@ -300,7 +300,93 @@ class db_learningcontent_activitystreamer extends dbtable
             'contextlogs' => $logArray
         ));
     }
+    /**
+     * Return comma separated values(CSV) for context logs
+     * @param string $contextcode Context Code
+     * @return csv of the logs
+     */
+    function csvContextLogs( $contextcode ) 
+    {
+        $where = "";
+        $logs = $this->getContextLogs( $contextcode, $where );
 
+        $logCount = (count($logs));
+        $str = '"id","userid","usernames","contextcode","modulecode","contextitemid","type","contextitemtitle","datecreated","description","starttime","endtime" ';
+        $csvFile = "logs.csv"; 
+        $Handle = fopen($csvFile, 'w');
+        fwrite($Handle, $str);
+        foreach ( $logs as $log ) {
+         if( !empty ( $log['endtime'] ) || $log['endtime'] != NULL ) {
+
+          $infoArray = array();
+          $infoArray['id'] = $log['id'];
+          $infoArray['userid'] = $log['userid'];
+          //Function has bug
+          //$userNames = $this->objUser->getTitle( $log['userid'] ).". ";
+          //Return empty till its fixed
+          $userNames = "";
+          $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
+          $infoArray['usernames'] = $userNames;
+          $infoArray['contextcode'] = $log['contextcode'];
+          $infoArray['modulecode'] = $log['modulecode'];
+          $infoArray['contextitemid'] = $log['contextitemid'];
+          //Get context item title (page or chapter)
+          $title = '';
+          $pageorchapter = '';
+          if ( $log['pageorchapter'] == 'page' ) {
+           $pageDetails = $this->getPage( $log['contextitemid'], $contextcode );
+           $pageInfo = $this->objContentPages->pageInfo( $pageDetails['titleid'] );
+           $infoArray['pageorchapter'] = $log['pageorchapter'];
+           $pageorchapter = $log['pageorchapter'];
+           $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
+           $title = $pageInfo['menutitle'];
+          } elseif ( $log['pageorchapter'] == 'chapter' ) {
+           $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
+           $infoArray['pageorchapter'] = $log['pageorchapter']; 
+           $pageorchapter = $log['pageorchapter'];
+           $infoArray['contextitemtitle'] = $chapterTitle;
+           $title = $chapterTitle;
+          } elseif ( $log['pageorchapter'] == 'viewPicture' )  {
+           $picdesc = $this->objFiles->getFileInfo($log['contextitemid']);
+           if(empty($picdesc['filedescription'])){
+             $picdescr = $picdesc["filename"];
+           }else{
+             $picdescr = $picdesc['filedescription'];    
+           }
+
+           $infoArray['pageorchapter'] = 'Picture';
+           $pageorchapter = 'Picture';
+           $infoArray['contextitemtitle'] = $picdescr;
+           $title = $picdescr;
+          } elseif ( $log['pageorchapter'] == 'viewFormula' )  {
+           $fmladesc = $this->objFiles->getFileInfo($log['contextitemid']);
+           if(empty($fmladesc['filedescription'])){
+             $fmladescr = $fmladesc["filename"];
+           }else{
+             $fmladescr = $fmladesc['filedescription'];    
+           }
+           $infoArray['pageorchapter'] = 'Formula';
+           $pageorchapter = 'Formula';
+           $infoArray['contextitemtitle'] = $fmladescr;
+           $title = $fmladescr;
+          } else {
+           $infoArray['pageorchapter'] = $log['pageorchapter'];
+           $pageorchapter = $log['pageorchapter'];
+           $infoArray['contextitemtitle'] = " ";
+           $title = "";
+          }
+          $infoArray['datecreated'] = $log['datecreated'];
+          $infoArray['description'] = $log['description'];
+          $infoArray['starttime'] = $log['starttime'];
+          $infoArray['endtime'] = $log['endtime'];
+          $logArray[] = $infoArray;
+          $str = '"'.$log['id'].'","'.$log['userid'].'","'.$userNames.'","'.$log['contextcode'].'","'.$log['modulecode'].'","'.$log['contextitemid'].'","'.$pageorchapter.'","'.$title.'","'.$log['datecreated'].'","'.$log['description'].'","'.$log['starttime'].'","'.$log['endtime'].'" ';
+          fwrite($Handle, $str);
+         }
+        }
+        fclose($Handle);
+        return $csvFile;
+    }
     /**
      * Method to delete a record
      * @param string $contextItemId Context Item Id
