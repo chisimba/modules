@@ -78,6 +78,8 @@ class learningcontent extends controller {
             $this->objContentTitles = $this->getObject('db_learningcontent_titles');
             $this->objContentInvolvement = $this->getObject('db_learningcontent_involvement');
             $this->objContextActivityStreamer = $this->getObject('db_learningcontent_activitystreamer');
+
+            $this->objDynamicBlocks = $this->getObject('dynamicblocks_learningcontent');
             //Load Module Catalogue Class
             $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 
@@ -192,10 +194,33 @@ class learningcontent extends controller {
                 $this->setVar('pageSuppressToolbar', TRUE);
                 $this->setVar('pageSuppressBanner', TRUE);
                 return $this->viewPage($this->getParam('id'),$this->getParam('imageId'));
+            case 'trackviewimage':
+                $trackPage = array();
+                $trackPage['contextItemId'] = $this->getParam('id');
+                $trackPage['prevpageid'] = $this->getParam('prevpageid');
+                $trackPage['prevchapterid'] = $this->getParam('prevchapterid');
+                $trackPage['contextCode'] = $this->contextCode;
+                $trackPage['module'] = $this->getParam('module');
+                $trackPage['datecreated'] = date('Y-m-d H:i:s');
+                $trackPage['pageorchapter'] = 'page';
+                $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewpage', 'learningcontent');
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                return $this->trackImageView($this->getParam('id'),$this->getParam('imageId'), $trackPage);
             case 'viewpicorformula':
                 $this->setPageTemplate(NULL);
                 $this->setLayoutTemplate(NULL);
                 return $this->viewImage($this->getParam('imageId'));                
+                break;
+            case 'getimageurl':
+                $this->setPageTemplate(NULL);
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressIM', TRUE);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressContainer', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                return $this->viewImage2($this->getParam('imageId'));
                 break;
             case 'imagewindowpopup':
                 $this->setPageTemplate(NULL);
@@ -819,7 +844,33 @@ class learningcontent extends controller {
     }
 
 
-
+    /**
+     * Method to track image view
+     * @param string $pageId Record Id of the Page
+     * @param string $imageId Selected Image Id
+     * @param array string $trackPage Contains data to help track user transactions
+     */
+    protected  function trackImageView($pageId='', $imageId='', $trackPage='') {
+        //Log in activity streamer only if logged in (Public courses dont need login)
+        if(!empty($this->userId) && !empty($trackPage)){
+	         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->sessionId);
+        if(!empty($trackPage['prevchapterid']))
+         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevchapterid'], $this->sessionId);
+        else
+         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevpageid'], $this->sessionId);
+        //Log when user leaves a page
+        if(!empty($recordId)) {
+            $ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
+            $str = 1;
+        }    
+        if ($ischapterlogged==FALSE) {
+            $datetimenow = date('Y-m-d H:i:s');
+            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $pageId, $this->contextCode,$trackPage['module'],$trackPage['datecreated'],$trackPage['pageorchapter'],$trackPage['description'], $datetimenow, Null);
+           $str = 2;
+         }
+        }
+        return $str;
+    }
     /**
      * Method to view a page
      * @param string $pageId Record Id of the Page

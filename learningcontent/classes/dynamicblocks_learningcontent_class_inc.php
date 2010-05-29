@@ -112,8 +112,108 @@ class dynamicblocks_learningcontent extends object
     {
         return $this->listChapters($contextCode);
     }
-
+    /**
+     * Method to return resizeable Image JS
+     * @param string $imageId Image Id
+     * @return javascript string
+     */
+    public function createResizeableImageJS($imageId=''){
+        $str = '<script type="text/javascript">
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+var ResizableExample'.$imageId.' = {
+    init : function(){
+        var custom'.$imageId.' = new Ext.Resizable(\'custom'.$imageId.'\', {
+            wrap:true,
+            pinned:true,
+            minWidth:50,
+            minHeight: 50,
+            preserveRatio: true,
+            handles: \'all\',
+            draggable:true,
+            dynamic:true
+        });
+        var custom'.$imageId.'El = custom'.$imageId.'.getEl();
+        // move to the body to prevent overlap on my blog
+        document.body.insertBefore(custom'.$imageId.'El.dom, document.body.firstChild);
+        
+        custom'.$imageId.'El.on(\'dblclick\', function(){
+            custom'.$imageId.'El.hide(true);
+        });
+        custom'.$imageId.'El.hide();
+        
+        Ext.get(\'showMe'.$imageId.'\').on(\'click\', function(){
+            custom'.$imageId.'El.center();
+            custom'.$imageId.'El.show(true);
+        });
+        
+        var dwrapped'.$imageId.' = new Ext.Resizable(\'dwrapped'.$imageId.'\', {
+            wrap:true,
+            pinned:true,
+            width:450,
+            height:150,
+            minWidth:200,
+            minHeight: 50,
+            dynamic: true
+        });
+        
+        var snap'.$imageId.' = new Ext.Resizable(\'snap'.$imageId.'\', {
+            pinned:true,
+            width:250,
+            height:100,
+            handles: \'e\',
+            widthIncrement:50,
+            minWidth: 50,
+            dynamic: true
+        });
+    }
+};
+Ext.EventManager.onDocumentReady(ResizableExample'.$imageId.'.init, ResizableExample'.$imageId.', true);
+</script>';
+        return $str;
+    }
+    /**
+     * Method to return resizeable Image JS
+     * @param $sqrImgPath Path to resizeable side square image
+     * @return javascript string
+     */
+    public function createResizeableImageCSS($imageId=Null, $sqrImgPath){
+        $str = '<style type="text/css">
+#basic'.$imageId.', #animated'.$imageId.' {
+    border:1px solid #c3daf9;
+    color:#1e4e8f;
+    font:bold 14px tahoma,verdana,helvetica;
+    text-align:center;
+    padding-top:20px;
 }
-
-
+#snap'.$imageId.' {
+    border:1px solid #c3daf9;
+    overflow:hidden;
+}
+#custom'.$imageId.' {
+    cursor:move;
+}
+#custom'.$imageId.'-rzwrap{
+    z-index: 100;
+}
+#custom'.$imageId.'-rzwrap .x-resizable-handle{
+    width:11px;
+    height:11px;
+    background:transparent url('.$sqrImgPath.') no-repeat;
+    margin:0px;
+}
+#custom'.$imageId.'-rzwrap .x-resizable-handle-east, #custom'.$imageId.'-rzwrap .x-resizable-handle-west{
+    top:45%;
+}
+#custom'.$imageId.'-rzwrap .x-resizable-handle-north, #custom'.$imageId.'-rzwrap .x-resizable-handle-south{
+    left:45%;
+}
+</style>';
+        return $str;
+    }
+}
 ?>

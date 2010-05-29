@@ -96,5 +96,5 @@ var logdata = new Ext.data.JsonStore({
     grid.render();
 
     // trigger the data store load
-    logdata.load({params:{start:0, limit:15}});
+    logdata.load({params:{start:0, limit:pageSize}});
 });

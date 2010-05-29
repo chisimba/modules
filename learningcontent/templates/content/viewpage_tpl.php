@@ -1,4 +1,6 @@
 <?php
+//Path to resizeable side square image
+$sqrImgPath = "core_modules/ext/resources/ext-3.0-rc2/resources/images/default/sizer/square.gif";
 $style = '
 <style type="text/css">
 
@@ -19,15 +21,25 @@ $style = '
    width: 250px;
    display: block;
    }
-
 </style>
-<script type="text/javascript">
-    jQuery(document).bind("close.facebox", function() {
-    alert("Facebox Closed");
-  }) 
-</script>
 ';
-$this->appendArrayVar('headerParams',$style);
+
+//Ext stuff
+//Common Javascript for the example
+$extjs_example = '<script language="JavaScript" src="'.$this->getResourceUri('example.js','learningcontent').'" type="text/javascript"></script>';
+//Common Styles for the example
+$ext_example = '<link rel="stylesheet" href="'.$this->getResourceUri('example.css', 'learningcontent').'" type="text/css" />';
+$this->appendArrayVar('headerParams', $ext_example);
+$this->appendArrayVar('bodyParams', $extjs_example);
+$objExtJs = $this->getObject('extjs', 'ext');
+$objExtJs->show();
+
+//$ext .= $this->getJavaScriptFile('resizeme.js', 'learningcontent');
+
+//Append stylesheet
+$ext .= $style;
+$this->appendArrayVar('headerParams', $ext);
+
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -228,14 +240,23 @@ if(!empty($pagepicture)){
    $objIcon->alt = $picdesc;
    $objIcon->title = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
    $picdesc = $objIcon->show()." ".$picdesc;
-   if($Name=='firefox'){
+   if($Name!='firefox'){
+    $imageDesc = $this->objFiles->getFileInfo($picid);
+    $imgPath = "usrfiles/";
+    $resize = $this->objDynamicBlocks->createResizeableImageCSS($picid, $sqrImgPath);
+    $resize .= $this->objDynamicBlocks->createResizeableImageJS($picid);
+    $this->appendArrayVar('headerParams', $resize);
+    $filePath = $imgPath.$imageDesc['path'];
+    $fileName = $imageDesc['filename'];
+    $customImgStr = '<img id="custom'.$picid.'" src="'.$filePath.'" width="200" height="152" style="position:absolute;left:0;top:0;"/>
+<div style="padding:8px;border:1px solid #c3daf9;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$picid.'">'.$fileName.'</button></div>';
     $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
     $picViewLink->link = $picdesc;
-    $hpics .= "<li>".$picViewLink->show()."</li>";
+    $hpics .= "<li>".$picViewLink->show().$customImgStr."</li>";
    }else{
     $link = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $picid));
-  		// Load the window popup class
-   	$objPop = $this->newObject('windowpop', 'htmlelements');
+    // Load the window popup class
+    $objPop = $this->newObject('windowpop', 'htmlelements');
     $objPop->set('location', $link);
     $objPop->set('linktext', $picdesc);
     $objPop->set('window_name','picture');
@@ -252,11 +273,11 @@ if(!empty($pagepicture)){
   $hpics .= "</ul></div>";
   if(!empty($hpics)){
    $objPHead = $this->newObject('htmlheading', 'htmlelements');
-	  $wordPicture = $this->objLanguage->languageText('mod_learningcontent_picture','learningcontent');
-  	$objPHead->type = 2;
-  	$objPHead->str = $wordPicture;  
-  	$hpics = $objPHead->show()."<p>".$hpics."</p>";
-  	$objTable->addCell($hpics, '25%', 'top', 'left');
+   $wordPicture = $this->objLanguage->languageText('mod_learningcontent_picture','learningcontent');
+   $objPHead->type = 2;
+   $objPHead->str = $wordPicture;  
+   $hpics = $objPHead->show()."<p>".$hpics."</p>";
+   $objTable->addCell($hpics, '25%', 'top', 'left');
   }
 }
 //Get the formula id if any
@@ -282,13 +303,22 @@ if(!empty($pageformula)){
    $fmladesc = $objIcon->show()." ".$fmladesc;
    
    if($Name=='firefox'){
+    $imageDesc = $this->objFiles->getFileInfo($fmlaid);
+    $imgPath = "usrfiles/";
+    $filePath = $imgPath.$imageDesc['path'];
+    $fileName = $imageDesc['filename'];
+    $resize = $this->objDynamicBlocks->createResizeableImageCSS($fmlaid, $sqrImgPath);
+    $resize .= $this->objDynamicBlocks->createResizeableImageJS($fmlaid);
+    $this->appendArrayVar('headerParams', $resize);
+    $customImgStr = '<img id="custom'.$fmlaid.'" src="'.$filePath.'" width="200" height="152" style="position:absolute;left:0;top:0;"/>
+<div style="padding:8px;border:1px solid #c3daf9;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$fmlaid.'">'.$fileName.'</button></div>';
     $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
     $fmlaViewLink->link = $fmladesc;
-    $hformula .= "<li>".$fmlaViewLink->show()."</li>";
+    $hformula .= "<li>".$fmlaViewLink->show().$customImgStr."</li>";
    }else{
     $fmlalink = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $fmlaid));
-  		// Load the window popup class
-   	$objPop = $this->newObject('windowpop', 'htmlelements');
+    //Load the window popup class
+    $objPop = $this->newObject('windowpop', 'htmlelements');
     $objPop->set('location', $fmlalink);
     $objPop->set('linktext', $fmladesc);
     $objPop->set('window_name','formula');
@@ -425,7 +455,7 @@ if($showcomment==1)
 
 
 if (!empty($imageId)) {
-    $alertBox = $this->getObject('alertbox', 'htmlelements');
+    $alertBox = $this->getObject('alertbox', 'learningcontent');
     $alertBox->putJs();
     echo "<script type='text/javascript'>
  var browser=navigator.appName;
@@ -434,7 +464,7 @@ if (!empty($imageId)) {
  }else{
 	 jQuery.facebox(function() {
 	  jQuery.get('" . str_replace('&amp;', '&', $this->uri(array(
-        'action' => 'viewpicorformula','imageId'=>$imageId
+        'action' => 'getimageurl','imageId'=>$imageId
     ))) . "', function(data) {
 	    jQuery.facebox(data);
 	  })

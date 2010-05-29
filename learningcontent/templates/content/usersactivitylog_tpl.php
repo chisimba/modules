@@ -3,7 +3,7 @@ $this->loadclass('link', 'htmlelements');
 $objSysConfig = $this->getObject('altconfig', 'config');
 $this->appendArrayVar('headerParams', '
 <script type="text/javascript">
-var pageSize = 15;
+var pageSize = 1;
 var uri = "' . str_replace('&amp;', '&', $this->uri(array(
     'module' => 'learningcontent',
     'action' => 'jsongetlogs'
