@@ -70,7 +70,8 @@ class db_learningcontent_activitystreamer extends dbtable
         //Load content pages
         $this->objContentTitles = $this->getObject('db_learningcontent_titles');
         $this->objContentChapter = $this->getObject('db_learningcontent_contextchapter');
-        $this->objContentPages = $this->getObject('db_learningcontent_pages');        
+        $this->objContentPages = $this->getObject('db_learningcontent_pages');
+        $this->objFiles = $this->getObject('dbfile','filemanager');        
     }
     
     /**
@@ -182,10 +183,14 @@ class db_learningcontent_activitystreamer extends dbtable
     {
         $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid' AND endtime is NULL";
         $results = $this->getAll($where);
-        if(empty($results[0]['endtime']))
+        if(!empty($results)){
+          if(empty($results[0]['endtime']))
             return $results[0]['id'];
           else 
             return FALSE;
+        } else {
+          return FALSE;
+        }
     }
     /**
     * Method to get a content page
@@ -250,16 +255,37 @@ class db_learningcontent_activitystreamer extends dbtable
           $infoArray['contextcode'] = $log['contextcode'];
           $infoArray['modulecode'] = $log['modulecode'];
           $infoArray['contextitemid'] = $log['contextitemid'];
-          $infoArray['pageorchapter'] = $log['pageorchapter'];
           //Get context item title (page or chapter)
           if ( $log['pageorchapter'] == 'page' ) {
            $pageDetails = $this->getPage( $log['contextitemid'], $contextcode );
            $pageInfo = $this->objContentPages->pageInfo( $pageDetails['titleid'] );
+           $infoArray['pageorchapter'] = $log['pageorchapter'];
            $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
           } elseif ( $log['pageorchapter'] == 'chapter' ) {
            $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
+           $infoArray['pageorchapter'] = $log['pageorchapter']; 
            $infoArray['contextitemtitle'] = $chapterTitle;
+          } elseif ( $log['pageorchapter'] == 'viewPicture' )  {
+           $picdesc = $this->objFiles->getFileInfo($log['contextitemid']);
+           if(empty($picdesc['filedescription'])){
+             $picdescr = $picdesc["filename"];
+           }else{
+             $picdescr = $picdesc['filedescription'];    
+           }
+
+           $infoArray['pageorchapter'] = 'Picture';
+           $infoArray['contextitemtitle'] = $picdescr;
+          } elseif ( $log['pageorchapter'] == 'viewFormula' )  {
+           $fmladesc = $this->objFiles->getFileInfo($log['contextitemid']);
+           if(empty($fmladesc['filedescription'])){
+             $fmladescr = $fmladesc["filename"];
+           }else{
+             $fmladescr = $fmladesc['filedescription'];    
+           }
+           $infoArray['pageorchapter'] = 'Formula';
+           $infoArray['contextitemtitle'] = $fmladescr;
           } else {
+           $infoArray['pageorchapter'] = $log['pageorchapter'];
            $infoArray['contextitemtitle'] = " ";
           }
           $infoArray['datecreated'] = $log['datecreated'];

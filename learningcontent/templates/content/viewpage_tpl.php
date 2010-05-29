@@ -251,7 +251,7 @@ if(!empty($pagepicture)){
     $filePath = $imgPath.$imageDesc['path'];
     $fileName = $imageDesc['filename'];
     $customImgStr = '<img id="custom'.$picid.'" src="'.$filePath.'" style="position:absolute;left:0;top:0;"/>
-<div style="padding:8px;border:1px solid #ffffff;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$picid.'">'.$fileName.'</button></div>';
+<div style="padding:8px;border:1px solid #ffffff;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$picid.'">'.$picdesc.'</button></div>';
     $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
     $picViewLink->link = $picdesc;
     //$hpics .= "<li>".$picViewLink->show()."</li>";
@@ -315,7 +315,7 @@ if(!empty($pageformula)){
     $resize .= $this->objDynamicBlocks->createResizeableImageJS($fmlaid,'viewFormula');
     $this->appendArrayVar('headerParams', $resize);
     $customImgStr = '<img id="custom'.$fmlaid.'" src="'.$filePath.'" style="position:absolute;left:0;top:0;"/>
-<div style="padding:8px;border:1px solid #ffffff;background:#ffffff;text-align:center;"><button id="showMe'.$fmlaid.'">'.$fileName.'</button></div>';
+<div style="padding:8px;border:1px solid #ffffff;background:#ffffff;text-align:center;"><button id="showMe'.$fmlaid.'">'.$fmladesc.'</button></div>';
     $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
     $fmlaViewLink->link = $fmladesc;
     //$hformula .= "<li>".$fmlaViewLink->show()."</li>";
