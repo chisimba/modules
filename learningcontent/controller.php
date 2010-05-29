@@ -196,13 +196,11 @@ class learningcontent extends controller {
                 return $this->viewPage($this->getParam('id'),$this->getParam('imageId'));
             case 'trackviewimage':
                 $trackPage = array();
-                $trackPage['contextItemId'] = $this->getParam('id');
-                $trackPage['prevpageid'] = $this->getParam('prevpageid');
-                $trackPage['prevchapterid'] = $this->getParam('prevchapterid');
                 $trackPage['contextCode'] = $this->contextCode;
+                $trackPage['action'] = $this->getParam('imagetype');
                 $trackPage['module'] = $this->getParam('module');
                 $trackPage['datecreated'] = date('Y-m-d H:i:s');
-                $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewpage', 'learningcontent');
+                $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewimage', 'learningcontent');
                 $this->setVar('pageSuppressToolbar', TRUE);
                 $this->setVar('pageSuppressBanner', TRUE);
                 return $this->trackImageView($this->getParam('imageId'), $trackPage);
@@ -862,7 +860,7 @@ class learningcontent extends controller {
         }
         if ($isimagelogged==FALSE) {
             $datetimenow = date('Y-m-d H:i:s');
-            $isimagelogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $imageId, $this->contextCode,$trackImage['module'],$trackImage['datecreated'],'viewimage',$trackImage['description'], $datetimenow, Null);
+            $isimagelogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $imageId, $this->contextCode,$trackImage['module'],$trackImage['datecreated'],$trackImage['action'],$trackImage['description'], $datetimenow, Null);
            $str = 2;
          }
         }

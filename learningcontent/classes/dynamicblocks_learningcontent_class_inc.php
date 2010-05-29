@@ -115,9 +115,10 @@ class dynamicblocks_learningcontent extends object
     /**
      * Method to return resizeable Image JS
      * @param string $imageId Image Id
+     * @param string $imageType Image Type - Picture or Formula
      * @return javascript string
      */
-    public function createResizeableImageJS($imageId=''){
+    public function createResizeableImageJS($imageId='',$imageType = ''){
         $str = '<script type="text/javascript">
                 /*!
                  * Ext JS Library 3.0.0

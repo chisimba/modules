@@ -246,12 +246,12 @@ if(!empty($pagepicture)){
     $imageDesc = $this->objFiles->getFileInfo($picid);
     $imgPath = "usrfiles/";
     $resize = $this->objDynamicBlocks->createResizeableImageCSS($picid, $sqrImgPath);
-    $resize .= $this->objDynamicBlocks->createResizeableImageJS($picid);
+    $resize .= $this->objDynamicBlocks->createResizeableImageJS($picid,'viewPicture');
     $this->appendArrayVar('headerParams', $resize);
     $filePath = $imgPath.$imageDesc['path'];
     $fileName = $imageDesc['filename'];
-    $customImgStr = '<img id="custom'.$picid.'" src="'.$filePath.'" width="200" height="152" style="position:absolute;left:0;top:0;"/>
-<div style="padding:8px;border:1px solid #c3daf9;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$picid.'">'.$fileName.'</button></div>';
+    $customImgStr = '<img id="custom'.$picid.'" src="'.$filePath.'" style="position:absolute;left:0;top:0;"/>
+<div style="padding:8px;border:1px solid #ffffff;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$picid.'">'.$fileName.'</button></div>';
     $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
     $picViewLink->link = $picdesc;
     //$hpics .= "<li>".$picViewLink->show()."</li>";
@@ -312,10 +312,10 @@ if(!empty($pageformula)){
     $filePath = $imgPath.$imageDesc['path'];
     $fileName = $imageDesc['filename'];
     $resize = $this->objDynamicBlocks->createResizeableImageCSS($fmlaid, $sqrImgPath);
-    $resize .= $this->objDynamicBlocks->createResizeableImageJS($fmlaid);
+    $resize .= $this->objDynamicBlocks->createResizeableImageJS($fmlaid,'viewFormula');
     $this->appendArrayVar('headerParams', $resize);
-    $customImgStr = '<img id="custom'.$fmlaid.'" src="'.$filePath.'" width="200" height="152" style="position:absolute;left:0;top:0;"/>
-<div style="padding:8px;border:1px solid #c3daf9;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$fmlaid.'">'.$fileName.'</button></div>';
+    $customImgStr = '<img id="custom'.$fmlaid.'" src="'.$filePath.'" style="position:absolute;left:0;top:0;"/>
+<div style="padding:8px;border:1px solid #ffffff;background:#ffffff;text-align:center;"><button id="showMe'.$fmlaid.'">'.$fileName.'</button></div>';
     $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
     $fmlaViewLink->link = $fmladesc;
     //$hformula .= "<li>".$fmlaViewLink->show()."</li>";
