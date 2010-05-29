@@ -142,6 +142,7 @@ class dynamicblocks_learningcontent extends object
                         document.body.insertBefore(custom'.$imageId.'El.dom, document.body.firstChild);
         
                         custom'.$imageId.'El.on(\'dblclick\', function(){
+alert("I ('.$imageId.') have been double clicked");
                             custom'.$imageId.'El.hide(true);
                         });
                         custom'.$imageId.'El.hide();

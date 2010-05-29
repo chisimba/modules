@@ -202,11 +202,10 @@ class learningcontent extends controller {
                 $trackPage['contextCode'] = $this->contextCode;
                 $trackPage['module'] = $this->getParam('module');
                 $trackPage['datecreated'] = date('Y-m-d H:i:s');
-                $trackPage['pageorchapter'] = 'page';
                 $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewpage', 'learningcontent');
                 $this->setVar('pageSuppressToolbar', TRUE);
                 $this->setVar('pageSuppressBanner', TRUE);
-                return $this->trackImageView($this->getParam('id'),$this->getParam('imageId'), $trackPage);
+                return $this->trackImageView($this->getParam('imageId'), $trackPage);
             case 'viewpicorformula':
                 $this->setPageTemplate(NULL);
                 $this->setLayoutTemplate(NULL);
@@ -850,22 +849,20 @@ class learningcontent extends controller {
      * @param string $imageId Selected Image Id
      * @param array string $trackPage Contains data to help track user transactions
      */
-    protected  function trackImageView($pageId='', $imageId='', $trackPage='') {
+    protected  function trackImageView($imageId='', $trackImage='') {
         //Log in activity streamer only if logged in (Public courses dont need login)
-        if(!empty($this->userId) && !empty($trackPage)){
-	         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->sessionId);
-        if(!empty($trackPage['prevchapterid']))
-         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevchapterid'], $this->sessionId);
-        else
-         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $trackPage['prevpageid'], $this->sessionId);
-        //Log when user leaves a page
+        if(!empty($this->userId) && !empty($trackImage)){
+	 $isimagelogged = $this->objContextActivityStreamer->getRecord($this->userId, $imageId, $this->sessionId);
+        if(!empty($recordId))
+         $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $imageId, $this->sessionId);
+        //Log when user leaves an Image
         if(!empty($recordId)) {
-            $ischapterlogged = $this->objContextActivityStreamer->updateSingle($recordId);
+            $isimagelogged = $this->objContextActivityStreamer->updateSingle($recordId);
             $str = 1;
-        }    
-        if ($ischapterlogged==FALSE) {
+        }
+        if ($isimagelogged==FALSE) {
             $datetimenow = date('Y-m-d H:i:s');
-            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $pageId, $this->contextCode,$trackPage['module'],$trackPage['datecreated'],$trackPage['pageorchapter'],$trackPage['description'], $datetimenow, Null);
+            $isimagelogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $imageId, $this->contextCode,$trackImage['module'],$trackImage['datecreated'],'viewimage',$trackImage['description'], $datetimenow, Null);
            $str = 2;
          }
         }
