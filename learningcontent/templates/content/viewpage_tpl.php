@@ -252,7 +252,8 @@ if(!empty($pagepicture)){
 <div style="padding:8px;border:1px solid #c3daf9;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$picid.'">'.$fileName.'</button></div>';
     $picViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$picid)));
     $picViewLink->link = $picdesc;
-    $hpics .= "<li>".$picViewLink->show().$customImgStr."</li>";
+    //$hpics .= "<li>".$picViewLink->show()."</li>";
+    $hpics .= "<li>".$customImgStr."</li>";
    }else{
     $link = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $picid));
     // Load the window popup class
@@ -314,7 +315,8 @@ if(!empty($pageformula)){
 <div style="padding:8px;border:1px solid #c3daf9;background:#ffffff;width:150px;text-align:center;"><button id="showMe'.$fmlaid.'">'.$fileName.'</button></div>';
     $fmlaViewLink = new link ($this->uri(array('action'=>'viewpageimage', 'id'=>$page['id'], 'imageId'=>$fmlaid)));
     $fmlaViewLink->link = $fmladesc;
-    $hformula .= "<li>".$fmlaViewLink->show().$customImgStr."</li>";
+    //$hformula .= "<li>".$fmlaViewLink->show()."</li>";
+    $hformula .= "<li>".$customImgStr."</li>";
    }else{
     $fmlalink = $this->uri(array('action' => 'imagewindowpopup', 'imageId' => $fmlaid));
     //Load the window popup class

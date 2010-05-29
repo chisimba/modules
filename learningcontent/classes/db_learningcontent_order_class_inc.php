@@ -665,7 +665,7 @@ class db_learningcontent_order extends dbtable
         INNER JOIN tbl_learningcontent_pages ON (tbl_learningcontent_pages.titleid = tbl_learningcontent_titles.id AND original=\'Y\') 
         WHERE contextcode =\''.$context.'\' AND lft < '.$leftValue.' AND chapterid=\''.$chapter.'\'
         ORDER BY lft DESC LIMIT 1';
-        
+        $prevLeftValue = Null;
         $results = $this->getArray($sql);
         if (count($results) == 0) {
             $page = $this->getArray("SELECT chaptertitle FROM tbl_learningcontent_chaptercontent WHERE chapterid = '$chapter'");
@@ -819,6 +819,7 @@ class db_learningcontent_order extends dbtable
     */
     public function getNextPage($context, $chapter, $leftValue='', $module='learningcontent')
     {
+        $prevLeftValue = Null;
         $page = $this->getNextPageSQL($context, $chapter, $leftValue);
         if ($page == '') {
             return '';
