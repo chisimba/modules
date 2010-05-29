@@ -178,6 +178,7 @@ class dynamicblocks_learningcontent extends object
     }
     /**
      * Method to return resizeable Image JS
+     * @param string $imageId Image Id
      * @param $sqrImgPath Path to resizeable side square image
      * @return javascript string
      */
