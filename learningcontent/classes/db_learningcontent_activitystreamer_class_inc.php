@@ -180,16 +180,12 @@ class db_learningcontent_activitystreamer extends dbtable
      */
     public function getRecordId($userId, $contextItemId, $sessionid)
     {
-        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid'";
-        $results = $this->getAll($where);        
-        if (isset($results[0]['id'])) {
-          if(empty($results[0]['endtime']))
+        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid' AND endtime is NULL";
+        $results = $this->getAll($where);
+        if(empty($results[0]['endtime']))
             return $results[0]['id'];
           else 
             return FALSE;
-        } else {
-            return FALSE;
-        }
     }
     /**
     * Method to get a content page

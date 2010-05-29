@@ -143,14 +143,29 @@ class dynamicblocks_learningcontent extends object
                         document.body.insertBefore(custom'.$imageId.'El.dom, document.body.firstChild);
         
                         custom'.$imageId.'El.on(\'dblclick\', function(){
-
+                        // DO Ajax
+                       jQuery.ajax({
+                        type: "GET", 
+                        url: "index.php", 
+                        data: "module=learningcontent&action=trackviewimage&imageId='.$imageId.'&imagetype='.$imageType.'", 
+                        success: function(msg){
+                        }
+                       });
                             custom'.$imageId.'El.hide(true);
                         });
                         custom'.$imageId.'El.hide();
                         
                         Ext.get(\'showMe'.$imageId.'\').on(\'click\', function(){
-                            custom'.$imageId.'El.center();
-                            custom'.$imageId.'El.show(true);
+                           // DO Ajax
+                           jQuery.ajax({
+                            type: "GET", 
+                            url: "index.php", 
+                            data: "module=learningcontent&action=trackviewimage&imageId='.$imageId.'&imagetype='.$imageType.'", 
+                            success: function(msg){
+                            }
+                           });
+                           custom'.$imageId.'El.center();
+                           custom'.$imageId.'El.show(true);
                         });        
                     }
                 };

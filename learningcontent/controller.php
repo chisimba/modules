@@ -201,8 +201,13 @@ class learningcontent extends controller {
                 $trackPage['module'] = $this->getParam('module');
                 $trackPage['datecreated'] = date('Y-m-d H:i:s');
                 $trackPage['description'] = $this->objLanguage->languageText('mod_learningcontent_viewimage', 'learningcontent');
+                $this->setPageTemplate(NULL);
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressIM', TRUE);
                 $this->setVar('pageSuppressToolbar', TRUE);
                 $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressContainer', TRUE);
+                $this->setVar('suppressFooter', TRUE);
                 return $this->trackImageView($this->getParam('imageId'), $trackPage);
             case 'viewpicorformula':
                 $this->setPageTemplate(NULL);
@@ -850,15 +855,15 @@ class learningcontent extends controller {
     protected  function trackImageView($imageId='', $trackImage='') {
         //Log in activity streamer only if logged in (Public courses dont need login)
         if(!empty($this->userId) && !empty($trackImage)){
-	 $isimagelogged = $this->objContextActivityStreamer->getRecord($this->userId, $imageId, $this->sessionId);
-        if(!empty($recordId))
+         $isimagelogged = FALSE;
+	 //$isimagelogged = $this->objContextActivityStreamer->getRecord($this->userId, $imageId, $this->sessionId);
+         //if(!empty($isimagelogged))
          $recordId = $this->objContextActivityStreamer->getRecordId($this->userId, $imageId, $this->sessionId);
         //Log when user leaves an Image
         if(!empty($recordId)) {
             $isimagelogged = $this->objContextActivityStreamer->updateSingle($recordId);
             $str = 1;
-        }
-        if ($isimagelogged==FALSE) {
+        } else {
             $datetimenow = date('Y-m-d H:i:s');
             $isimagelogged = $this->objContextActivityStreamer->addRecord($this->userId, $this->sessionId, $imageId, $this->contextCode,$trackImage['module'],$trackImage['datecreated'],$trackImage['action'],$trackImage['description'], $datetimenow, Null);
            $str = 2;
