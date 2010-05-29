@@ -37,6 +37,7 @@ $objExtJs->show();
 //$ext .= $this->getJavaScriptFile('resizeme.js', 'learningcontent');
 
 //Append stylesheet
+$ext = Null;
 $ext .= $style;
 $this->appendArrayVar('headerParams', $ext);
 
@@ -240,7 +241,8 @@ if(!empty($pagepicture)){
    $objIcon->alt = $picdesc;
    $objIcon->title = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
    $picdesc = $objIcon->show()." ".$picdesc;
-   if($Name=='firefox'){
+//   if($Name=='firefox'){
+   if($Name){
     $imageDesc = $this->objFiles->getFileInfo($picid);
     $imgPath = "usrfiles/";
     $resize = $this->objDynamicBlocks->createResizeableImageCSS($picid, $sqrImgPath);
@@ -303,7 +305,8 @@ if(!empty($pageformula)){
    $objIcon->title = $fmladesc;
    $fmladesc = $objIcon->show()." ".$fmladesc;
    
-   if($Name=='firefox'){
+//   if($Name=='firefox'){
+   if($Name){
     $imageDesc = $this->objFiles->getFileInfo($fmlaid);
     $imgPath = "usrfiles/";
     $filePath = $imgPath.$imageDesc['path'];
