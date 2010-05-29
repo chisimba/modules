@@ -149,27 +149,7 @@ class dynamicblocks_learningcontent extends object
                         Ext.get(\'showMe'.$imageId.'\').on(\'click\', function(){
                             custom'.$imageId.'El.center();
                             custom'.$imageId.'El.show(true);
-                        });
-        
-                        var dwrapped'.$imageId.' = new Ext.Resizable(\'dwrapped'.$imageId.'\', {
-                            wrap:true,
-                            pinned:true,
-                            width:450,
-                            height:150,
-                            minWidth:200,
-                            minHeight: 50,
-                            dynamic: true
-                        });
-                        
-                        var snap'.$imageId.' = new Ext.Resizable(\'snap'.$imageId.'\', {
-                            pinned:true,
-                            width:250,
-                            height:100,
-                            handles: \'e\',
-                            widthIncrement:50,
-                            minWidth: 50,
-                            dynamic: true
-                        });
+                        });        
                     }
                 };
                 Ext.EventManager.onDocumentReady(ResizableExample'.$imageId.'.init, ResizableExample'.$imageId.', true);
@@ -190,10 +170,6 @@ class dynamicblocks_learningcontent extends object
                   font:bold 14px tahoma,verdana,helvetica;
                   text-align:center;
                   padding-top:20px;
-                }
-                #snap'.$imageId.' {
-                  border:1px solid #c3daf9;
-                  overflow:hidden;
                 }
                 #custom'.$imageId.' {
                  cursor:move;

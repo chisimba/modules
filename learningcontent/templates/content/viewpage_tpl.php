@@ -240,7 +240,7 @@ if(!empty($pagepicture)){
    $objIcon->alt = $picdesc;
    $objIcon->title = $this->objLanguage->languageText('mod_learningcontent_clicktoview','learningcontent');
    $picdesc = $objIcon->show()." ".$picdesc;
-   if($Name!='firefox'){
+   if($Name=='firefox'){
     $imageDesc = $this->objFiles->getFileInfo($picid);
     $imgPath = "usrfiles/";
     $resize = $this->objDynamicBlocks->createResizeableImageCSS($picid, $sqrImgPath);
@@ -335,11 +335,11 @@ if(!empty($pageformula)){
  $hformula .= "</ol></div>";
  if(!empty($hformula)){
   $objFHead = $this->newObject('htmlheading', 'htmlelements');
-	 $wordFormula = $this->objLanguage->languageText('mod_learningcontent_formula','learningcontent');
-	 $objFHead->type = 2;
- 	$objFHead->str = $wordFormula; 
- 	$hformula = $objFHead->show()."<p>".$hformula."</p>";
- 	$objTable->addCell($hformula, '25%', 'top', 'left');
+  $wordFormula = $this->objLanguage->languageText('mod_learningcontent_formula','learningcontent');
+  $objFHead->type = 2;
+  $objFHead->str = $wordFormula; 
+  $hformula = $objFHead->show()."<p>".$hformula."</p>";
+  $objTable->addCell($hformula, '25%', 'top', 'left');
  }
 }
 
