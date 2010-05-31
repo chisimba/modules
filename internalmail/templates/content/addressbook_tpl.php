@@ -82,7 +82,7 @@ if ($arrBookList == FALSE && empty($arrContextList)) {
             $groupId = $this->objGroupAdmin->getLeafId(array(
                 $context
             ));
-            $arrContextUserList = $this->objGroupAdmin->getSubGroupUsers($groupId, array(
+            $arrContextUserList = $this->objGroupAdmin->getGroupUsers($groupId, array(
                 'userId',
                 'firstName',
                 'surname',

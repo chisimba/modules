@@ -1,5 +1,4 @@
 <?php
-
 $scripts = $this->getJavaScriptFile('jquery-ui-personalized-1.6rc6/jquery-1.3.1.js', 'jquery');
 $scripts .= $this->getJavaScriptFile('jquery-ui-personalized-1.6rc6/jquery-ui-personalized-1.6rc6.js', 'jquery');
 $scripts .= '<link type="text/css" href="'.$this->getResourceUri('jquery-ui-personalized-1.6rc6/theme/ui.all.css', 'jquery').'" rel="Stylesheet" />';
@@ -7,12 +6,6 @@ $this->appendArrayVar('headerParams', $scripts);
 
 $this->appendArrayVar('bodyOnLoad', 'loadRecipientList();');
 	
-
-
-
-
-
-
 
 // security check-must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
@@ -27,8 +20,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  */
 
 // set up scriptaculous
-//$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-//$this->objScriptaculous->show();
 
 $headerParams = $this->getJavascriptFile('compose.js', 'internalmail');
 $this->appendArrayVar('headerParams', $headerParams);
@@ -144,13 +135,10 @@ $action = $this->uri(array(
 $objIcon->title = $addressLabel;
 $objIcon->setIcon('addressbook');
 $objIcon->extra=' onclick="javascript:
-    $(\'form_composeform\').action=\''.$action.'\';
-    $(\'form_composeform\').submit();"';
+    $(\'#form_composeform\').attr(\'action\',\''.$action.'\');
+    $(\'#form_composeform\').submit();"';
 $addressIcon='<a href="#">'.$objIcon->show().'</a>';
-$str = ' onclick="javascript:
-    $(\'form_composeform\').action=\''.$action.'\';
-    $(\'form_composeform\').submit();"';
-error_log(var_export($str, true));
+
 // set up search fieldset
 $objTable = new htmltable();
 $objTable->cellpadding = '4';
@@ -238,8 +226,8 @@ $action = $this->uri(array(
 
 $objButton = new button('upload', $uploadLabel);
 $objButton->extra = ' onclick="javascript:
-    $(\'form_composeform\').action=\''.$action.'\';
-    $(\'form_composeform\').submit();"';
+    $(\'#form_composeform\').attr(\'action\',\''.$action.'\');
+    $(\'#form_composeform\').submit();"';
 $uploadButton = $objButton->show();
 
 $objTable = new htmltable();
@@ -273,8 +261,8 @@ if ($attachments != NULL) {
         $objIcon->setIcon('delete');
         $objIcon->extra = ' onclick="javascript:
             if(confirm(\''.$confirmLabel.'\')){
-                $(\'form_composeform\').action=\''.$deleteArray.'\';
-                $(\'form_composeform\').submit();
+               	$(\'#form_composeform\').attr(\'action\',\''.$deleteArray.'\');
+                $(\'#form_composeform\').submit();
             }"';
         $deleteIcon = '<a href="#">'.$objIcon->show() .'</a>';
         $objTable->startRow();
@@ -293,7 +281,7 @@ $objTabbedbox->addBoxContent($fileTable);
 $attachmentsTab = $objTabbedbox->show();
 
 $objTable = new htmltable();
-//    $objTable->cellspacing='2';
+
 $objTable->cellpadding = '4';
 $objTable->startRow();
 $objTable->addCell($attachmentsTab, '', '', '', '', '');
@@ -303,22 +291,12 @@ $attachmentsTable = $objTable->show();
 // set up buttons
 $objButton = new button('submitbutton', $sendLabel);
 $objButton->extra = ' onclick="SubmitForm()"';
-//$objButton->extra = 'onclick="$(\'form_composeform\').submit();"';
-/*$objButton->extra = ' onclick="javascript:
-    if($(\'input_recipient\').value!=\'\'){
-        $(\'form_composeform\').sendbutton.value=\'Send\';
-        $(\'form_composeform\').submit();
-    }else{
-        alert(\''.$requiredLabel.'\');
-        $(\'form_composeform\').surname.focus();
-    }"';*/
-//$objButton->setToSubmit();
+
 $buttons = '<br />'.$objButton->show();
 
 $objButton = new button('cancelbutton', $cancelLabel);
 $objButton->extra = ' onclick="javascript:
-    $(\'form_hiddenform\').cancelbutton.value=\'Cancel\';
-    $(\'form_hiddenform\').submit();"';
+	 $(\'#form_composeform\')[0].reset();"';
 $buttons.= '&#160;'.$objButton->show();
 
 // set up form
@@ -450,4 +428,3 @@ function submitSearchForm(frm)
 	</script>';
 	$this->appendArrayVar('headerParams', $str);
 ?>
-

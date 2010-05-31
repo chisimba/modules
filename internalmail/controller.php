@@ -188,9 +188,8 @@ class internalmail extends controller
                         $arrUserId = array_merge($arrRecipients, $arrUserId);  
                     }                 
                     foreach($arrUserId as $key => $userId) {
-                        $icon = $this->deleteIcon($userId);
-                        $name = $this->dbRouting->getName($userId);
-                        $toList.= '<span id="'.$userId.'">'.$name.$icon.'&nbsp;&nbsp;&nbsp;</span>';
+                        $username = $this->objUser->userName($userId);
+						$this->addRecipient($username);
                     }
                     $recipientList = implode('|', $arrUserId);
                 } else {
@@ -230,6 +229,7 @@ class internalmail extends controller
                 $subject = $this->getParam('subject');
                 $message = $this->getParam('message');
                 $arrContextList = $this->objGroups->usercontextcodes($this->userId);
+				
                 $arrBookList = $this->dbBooks->listBooks();
                 $this->setVarByRef('recipientList', $recipientList);
                 $this->setVarByRef('subject', $subject);
@@ -248,12 +248,14 @@ class internalmail extends controller
                 $groupId = $this->objGroupAdmin->getLeafId(array(
                     $contextCode
                 ));
-                $arrContextUserList = $this->objGroupAdmin->getSubGroupUsers($groupId, array(
+				
+                $arrContextUserList = $this->objGroupAdmin->getGroupUsers($groupId, array(
                     'userId',
                     'firstName',
                     'surname',
                     'username'
                 ));
+				
                 $this->setVarByRef('contextCode', $contextCode);
                 $this->setVarByRef('arrContextUserList', $arrContextUserList);
                 $bookId = $this->getParam('bookId', NULL);
@@ -313,12 +315,14 @@ class internalmail extends controller
                 $groupId = $this->objGroupAdmin->getLeafId(array(
                     $contextCode
                 ));
-                $arrContextUserList = $this->objGroupAdmin->getSubGroupUsers($groupId, array(
+				
+                $arrContextUserList = $this->objGroupAdmin->getGroupUsers($groupId, array(
                     'userId',
                     'firstName',
                     'surname',
                     'username'
                 ));
+				
                 $this->setVarByRef('contextCode', $contextCode);
                 $this->setVarByRef('arrContextUserList', $arrContextUserList);
                 $bookId = $this->getParam('bookId', NULL);
@@ -378,8 +382,7 @@ class internalmail extends controller
                 break;
 
             case 'sendemail':
-            	
-                $recipientList = $this->getRecipientListForDB();//$this->getParam('recipient');
+				$recipientList = $this->getRecipientListForDB();//$this->getParam('recipient');
                 $subject = $this->getParam('subject');
                 if ($subject == '') {
                     $subject = $this->noSubject;
@@ -692,6 +695,7 @@ class internalmail extends controller
 
             default:
                 // calls the default template
+				$this->setSession('recipientList', null);
                 $configs = $this->getSession('configs');
                 if ($configs == NULL) {
                     $configs = $this->dbConfiguration->getConfigs();
@@ -1074,8 +1078,9 @@ class internalmail extends controller
     		$reccipients = array();
     		$this->setSession('recipientList',$reccipients);   		
     	} 
-    	
-    	if($username != "" || !in_array($username,$reccipients))
+
+		//Check whether the user is not null and the user already exist on th list
+ 		if($username != "" && !in_array($username,$reccipients))
         {
         	//add the recipient to the session list
         	$reccipients[] = $username;
@@ -1110,7 +1115,6 @@ class internalmail extends controller
     public function formatRecipientList()
     {
     	$list = $this->getSession('recipientList');
-    	//var_dump($list);
     	if(count($list) > 0)
     	{
     		$objIcon = $this->getObject('geticon','htmlelements');
@@ -1177,7 +1181,7 @@ class internalmail extends controller
 		{
 			$arr[$this->objUser->fullname($user['userid'])] = $user['username'];//$user['userid'];
 		}
-
+			
 		return $arr;
 	}
 
