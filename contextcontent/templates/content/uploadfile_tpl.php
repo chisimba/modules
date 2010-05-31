@@ -31,7 +31,7 @@ $form = new form('uploadfileform', $this->uri(array('action'=>'uploadfile','chap
 $form->extra = 'enctype="multipart/form-data"';
 
 $objUpload = $this->newObject('uploadinput', 'filemanager');
-$objSelectFile->restrictFileList = array('htm','html','odt','doc','dcox','pdf');
+$objSelectFile->restrictFileList = array('htm','html','odt','doc','dcox','pdf','png','gif','jpg');
 
 $button = new button('submitform', $this->objLanguage->languageText('mod_contextcontent_createpage', 'contextcontent','Create page'));
 $button->setToSubmit();
@@ -60,7 +60,7 @@ $form2 = new form('createpagefromfileform', $this->uri(array('action'=>'createpa
 
 $objSelectFile2 = $this->newObject('selectfile', 'filemanager');
 $objSelectFile2->name = 'pagefile';
-$objSelectFile2->restrictFileList = array('htm','html','odt','doc','dcox','pdf');
+$objSelectFile2->restrictFileList = array('htm','html','odt','doc','dcox','pdf','png','gif','jpg');
 
 $button = new button('submitform', $this->objLanguage->languageText('mod_contextcontent_createpage', 'contextcontent','Create page'));
 $button->setToSubmit();
