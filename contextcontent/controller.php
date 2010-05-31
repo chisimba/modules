@@ -112,6 +112,14 @@ class contextcontent extends controller {
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig');
             $this->objContextComments = $this->getObject('db_contextcontent_comment', 'contextcontent');
+            $this->objAlertUtils=$this->getObject('alertutils');
+
+            $this->objAltConfig = $this->getObject('altconfig','config');
+            $this->objAltConfig = $this->getObject('altconfig','config');
+            $this->siteRoot=$this->objAltConfig->getsiteRoot();
+            $this->moduleUri=$this->objAltConfig->getModuleURI();
+
+
             $this->setVar('pageSuppressXML',TRUE);
         }
         catch(customException $e) {
@@ -238,6 +246,12 @@ class contextcontent extends controller {
                 return $this->addComment();
             case 'rsscall':
                 return $this->rssCall();
+            case 'addpagefromfile':
+                $chapter=$this->getParam('chapter');
+                return $this->addPageFromFile($chapter);
+            case 'uploadfile':
+                return $this->uploadFile();
+
             default:
             //return $this->home_debug();
                 return $this->showContextChapters();
@@ -355,10 +369,22 @@ class contextcontent extends controller {
                         'author' => $this->objUser->fullname(),
                         'description'=>$message));
             }
+            //send alerts
+            $contextinfo=$this->objContext->getContext($this->contextCode);
+            $alerts=explode("|", $contextinfo['alerts']);
+            $index;
+            foreach ($alerts as $alert) {
+                if($alert == 'e') {
+                    $this->objAlertUtils->sendEmailAlert($this->contextCode,$this->objContext->getTitle($this->contextCode));
+                }
 
+            }
             return $this->nextAction('viewchapter', array('message'=>'chaptercreated', 'id'=>$chapterId));
         }
+
+
     }
+
 
     /**
      * Method to save a newly created scorm chapter
@@ -643,16 +669,16 @@ class contextcontent extends controller {
         return 'addeditscormpage_tpl.php';
     }
     /**
-     * Method to save a newly added page
+     * Method to save a new page from file
      */
-    protected  function savePage() {
+    function savePageFromFile(
+            $menutitle,
+            $headerscripts,
+            $language,
+            $pagecontent,
+            $parent,
+            $chapter) {
 
-        $menutitle = stripslashes($this->getParam('menutitle'));
-        $headerscripts = stripslashes($this->getParam('headerscripts'));
-        $language = 'en';
-        $pagecontent = stripslashes($this->getParam('pagecontent'));
-        $parent = stripslashes($this->getParam('parentnode'));
-        $chapter = stripslashes($this->getParam('chapter'));
         $chapterTitle = $this->objContextChapters->getContextChapterTitle($chapter);
         $titleId = $this->objContentTitles->addTitle('', $menutitle, $pagecontent, $language, $headerscripts);
 
@@ -669,6 +695,55 @@ class contextcontent extends controller {
                     'contextcode' => $this->contextCode,
                     'author' => $this->objUser->fullname(),
                     'description'=>$message));
+        }
+        //send alerts
+        $contextinfo=$this->objContext->getContext($this->contextCode);
+        $alerts=explode("|", $contextinfo['alerts']);
+        $index;
+        foreach ($alerts as $alert) {
+            if($alert == 'e') {
+                $this->objAlertUtils->sendEmailAlert($this->contextCode,$this->objContext->getTitle($this->contextCode));
+            }
+
+        }
+        return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'pagesaved'));
+    }
+
+    protected  function savePage() {
+
+        $menutitle = stripslashes($this->getParam('menutitle'));
+        $headerscripts = stripslashes($this->getParam('headerscripts'));
+        $language = 'en';
+        $pagecontent = stripslashes($this->getParam('pagecontent'));
+        $parent = stripslashes($this->getParam('parentnode'));
+        $chapter = stripslashes($this->getParam('chapter'));
+
+        $chapterTitle = $this->objContextChapters->getContextChapterTitle($chapter);
+        $titleId = $this->objContentTitles->addTitle('', $menutitle, $pagecontent, $language, $headerscripts);
+
+
+        $pageId = $this->objContentOrder->addPageToContext($titleId, $parent, $this->contextCode, $chapter);
+
+        $this->setVar('mode', 'add');
+        $this->setVar('formaction', 'savepage');
+        //add to activity log
+        if($this->eventsEnabled) {
+            $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent')." ".$this->contextCode." ".$this->objLanguage->languageText('word_chapter', 'contextcontent').": ".$chapterTitle;
+            $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+                    'link'=> $this->uri(array()),
+                    'contextcode' => $this->contextCode,
+                    'author' => $this->objUser->fullname(),
+                    'description'=>$message));
+        }
+        //send alerts
+        $contextinfo=$this->objContext->getContext($this->contextCode);
+        $alerts=explode("|", $contextinfo['alerts']);
+        $index;
+        foreach ($alerts as $alert) {
+            if($alert == 'e') {
+                $this->objAlertUtils->sendEmailAlert($this->contextCode,$this->objContext->getTitle($this->contextCode));
+            }
+
         }
         return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'pagesaved'));
     }
@@ -1354,5 +1429,96 @@ class contextcontent extends controller {
         break;
 
     }
+
+    /**
+     * returns a template for uploading files used to create pages
+     * @return <type>
+     */
+    function addPageFromFile($chapter) {
+        $this->setVarByRef('chapterid',$chapter);
+        return "uploadfile_tpl.php";
+    }
+
+
+
+    function createpagefromfile() {
+        $id=$this->getParam("pagefile");
+        $file= $this->objFiles->getFile($id);
+        $chapterid=$this->getParam('chapterid');
+        $filename=$file['name'];
+        $filename = strtolower($filename) ;
+        $exts = split("[/\\.]", $filename) ;
+        $n = count($exts)-1;
+        $ext = $exts[$n];
+
+        $path=$this->siteRoot."/usrfiles/".    $file['path'];
+
+        $content='[FILEPREVIEW id="'.$file['fileid'].'" comment="" /]';
+
+        if($ext == 'pdf') {
+            $content='[PDF]'.$path.'[/PDF]';
+        }
+
+        $menutitle = $this->getParam('menutitle');
+        $headerscripts ='';
+        $language = 'en';
+        $pagecontent = $content;
+        $parent ='root';
+        $chapter = stripslashes($chapterid);
+
+        return $this->nextAction('savepage',
+                array(
+                'menutitle'=>$menutitle,
+                'headerscripts'=>$headerscripts,
+                'language'=>$language,
+                'pagecontent'=>$pagecontent,
+                'parent'=>$parent,
+                'chapter'=>$chapter));
+
+    }
+    /**
+     * handles the file upload
+     */
+    function uploadFile() {
+
+        $pageid=$this->getParam('id');
+        $context=$this->getParam('context');
+        $chapterid=$this->getParam('chapterid');
+
+        $objFileUpload = $this->getObject('uploadinput', 'filemanager');
+        $objFileUpload->enableOverwriteIncrement = TRUE;
+        $file = $objFileUpload->handleUpload('fileupload');
+        $filename=$file['name'];
+        $filename = strtolower($filename) ;
+        $exts = split("[/\\.]", $filename) ;
+        $n = count($exts)-1;
+        $ext = $exts[$n];
+
+        $path=$this->siteRoot."/usrfiles/".    $file['path'];
+
+        $content='[FILEPREVIEW id="'.$file['fileid'].'" comment="" /]';
+
+        if($ext == 'pdf') {
+            $content='[PDF]'.$path.'[/PDF]';
+        }
+
+        $menutitle = $this->getParam('menutitle');
+        $headerscripts ='';
+        $language = 'en';
+        $pagecontent = $content;
+        $parent ='root';
+        $chapter = stripslashes($chapterid);
+
+        return $this->nextAction('savepage',
+                array(
+                'menutitle'=>$menutitle,
+                'headerscripts'=>$headerscripts,
+                'language'=>$language,
+                'pagecontent'=>$pagecontent,
+                'parent'=>$parent,
+                'chapter'=>$chapter));
+
+    }
+
 }
 ?>
