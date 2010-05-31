@@ -26,7 +26,7 @@ if ($showNav) {
     }
     //]]>
 </script>
-<?php
+    <?php
 }
 
 $this->loadClass('link', 'htmlelements');
@@ -55,7 +55,7 @@ if (isset($currentChapter)) {
 
     $heading->str = $currentChapterTitle;
     $heading->type = 3;
-/*    
+    /*
     $form = new form ('searchform', $this->uri(array('action'=>'search')));
     $form->method = 'GET';
     
@@ -76,7 +76,7 @@ if (isset($currentChapter)) {
     
     $objFieldset->setLegend($label->show());
     $objFieldset->contents = $form->show();
-*/    
+    */
     $header = new htmlHeading();
     $header->str = ucwords($this->objLanguage->code2Txt('mod_contextcontent_name', 'contextcontent', NULL, '[-context-] Content'));
     $header->type = 2;
@@ -100,34 +100,38 @@ if (isset($currentChapter)) {
 
         $left .= '</div>';
     }  else if ($navigationType == 'bookmarks') {
-            $left .= '<div id="contentnav">';
-            $left .= $this->objContentOrder->getBookmarkedPages($this->contextCode, $currentChapter, $pageId);
+        $left .= '<div id="contentnav">';
+        $left .= $this->objContentOrder->getBookmarkedPages($this->contextCode, $currentChapter, $pageId);
 
-            if ($showNav) {
-                $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
-            }
-
-            $left .= '</div>';
-        }else {
-            $left .= '<div id="contentnav">';
-            $left .= $this->objContentOrder->getTwoLevelNav($this->contextCode, $currentChapter, $pageId);
-
-            if ($showNav) {
-                $left .= '<hr /><p><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a>';
-                $left .= '<br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
-            }
-
-            $left .= '</div>';
+        if ($showNav) {
+            $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
         }
+
+        $left .= '</div>';
+    }else {
+        $left .= '<div id="contentnav">';
+        $left .= $this->objContentOrder->getTwoLevelNav($this->contextCode, $currentChapter, $pageId);
+
+        if ($showNav) {
+            $left .= '<hr /><p><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a>';
+            $left .= '<br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
+        }
+
+        $left .= '</div>';
+    }
 
     if ($this->isValid('addpage')) {
         $addLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$currentChapter, 'id'=>$currentPage)));
         $addLink->link = 'Add a Page';
 
+
+        $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapter'=>$chapter['chapterid'])));
+        $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile', 'contextcontent', 'Create page from file');
+
         $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$chapter['id'])));
         $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
 
-        $left .= '<hr /><p>'.$addLink->show().'&nbsp;&nbsp;'.$addScormLink->show().'</p>';
+        $left .= '<hr /><p>'.$addLink->show().'&nbsp;&nbsp;'.$addPageFromFileLink->show().'&nbsp;&nbsp;'.$addScormLink->show().'</p>';
     }
 
     $returnLink = new link ($this->uri(NULL));
