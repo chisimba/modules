@@ -27,6 +27,11 @@ $objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_addanewchap
 $objIcon->title = $this->objLanguage->languageText('mod_contextcontent_addanewchapter','contextcontent');
 $addIcon = $objIcon->show();
 
+$objIcon->setIcon('add_multiple');
+$objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
+$objIcon->title =$this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
+$addPageFromFileIcon = $objIcon->show();
+
 $objIcon->setIcon('create_page');
 $objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
 $objIcon->title = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
@@ -54,7 +59,7 @@ $streamerimg ='<img  class="newcontentimg" src="'.$imgPath.'">';
 if ($this->isValid('addchapter')) {
     $link = new link ($this->uri(array('action'=>'addchapter')));
     $link->link = $addIcon;
-    
+
     $addChapter = $link->show();
 } else {
     $addChapter = '';
@@ -97,220 +102,229 @@ $chapterList = '<div id="allchapters">';
 
 $objWashout = $this->getObject('washout', 'utilities');
 
-foreach ($chapters as $chapter)
-{
+foreach ($chapters as $chapter) {
     $showChapter = TRUE;
-    
+
     if ($chapter['visibility'] == 'N') {
         $showChapter = FALSE;
     }
-    
+
     if ($this->isValid('viewhiddencontent')) {
         $showChapter = TRUE;
     }
-    
+
     if ($showChapter) {
-	$addedCounter++;
-	if ($chapter['scorm'] == 'Y') {
+        $addedCounter++;
+        if ($chapter['scorm'] == 'Y') {
 
-		// Get List of Pages in the Chapter
-		$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
+            // Get List of Pages in the Chapter
+            $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
 
-		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-		        $hasPages = FALSE;
-		        $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnopages','contextcontent').'"');
-		        $notVisibleCounter++;
-		} else {
-		        $hasPages = TRUE;
-		        $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle']);
-		}
+            if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
+                $hasPages = FALSE;
+                $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnopages','contextcontent').'"');
+                $notVisibleCounter++;
+            } else {
+                $hasPages = TRUE;
+                $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle']);
+            }
 
-		$editLink = new link($this->uri(array('action'=>'editscorm', 'id'=>$chapter['chapterid'])));
-		$editLink->link = $editIcon;
+            $editLink = new link($this->uri(array('action'=>'editscorm', 'id'=>$chapter['chapterid'])));
+            $editLink->link = $editIcon;
 
-		$deleteLink = new link($this->uri(array('action'=>'deletechapter', 'id'=>$chapter['chapterid'])));
-		$deleteLink->link = $deleteIcon;
+            $deleteLink = new link($this->uri(array('action'=>'deletechapter', 'id'=>$chapter['chapterid'])));
+            $deleteLink->link = $deleteIcon;
 
-		$addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
-		$addPageLink->link = $addPageIcon;
+            $addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
+            $addPageLink->link = $addPageIcon;
 
-		$chapterLink = new link($this->uri(array('action'=>'viewscorm', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
-		$chapterLink->link = $chapter['chaptertitle'];
-		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
-		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-       		if ($ischapterlogged == FALSE) {
-		         $content = '<h1 class="streamerimg"> '.$streamerimg." ".$chapterLink->show();;
-		        }else{
-		         $content = '<h1 class="chapterlink">'.$chapterLink->show();
-		        }
-		} else {
-       		if ($ischapterlogged == FALSE) {
-		         $content = '<h1 class="streamerimg">> '.$streamerimg." ".$chapterLink->show();;
-		        }else{
-		         $content = '<h1 class="chapterlink">'.$chapterLink->show();
-		        }
-		}
 
-		if ($this->isValid('editchapter')) {
-		        $content .= ' '.$editLink->show();
-		}
 
-		if ($this->isValid('deletechapter')) {
-		        $content .= ' '.$deleteLink->show();
-		}
+            $chapterLink = new link($this->uri(array('action'=>'viewscorm', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
+            $chapterLink->link = $chapter['chaptertitle'];
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
+            if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
+                if ($ischapterlogged == FALSE) {
+                    $content = '<h1 class="streamerimg"> '.$streamerimg." ".$chapterLink->show();
+                    ;
+                }else {
+                    $content = '<h1 class="chapterlink">'.$chapterLink->show();
+                }
+            } else {
+                if ($ischapterlogged == FALSE) {
+                    $content = '<h1 class="streamerimg">> '.$streamerimg." ".$chapterLink->show();
+                    ;
+                }else {
+                    $content = '<h1 class="chapterlink">'.$chapterLink->show();
+                }
+            }
 
-/*
+            if ($this->isValid('editchapter')) {
+                $content .= ' '.$editLink->show();
+            }
+
+            if ($this->isValid('deletechapter')) {
+                $content .= ' '.$deleteLink->show();
+            }
+
+            /*
 		if ($this->isValid('addpage')) {
 		        $content .= ' '.$addPageLink->show();
 		}
-*/
-		$content .= '</h1><hr />';
+            */
+            $content .= '</h1><hr />';
 
-	} else {
-		
-
-		// Get List of Pages in the Chapter
-		$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
-
-		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-		        $hasPages = FALSE;
-		        $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnopages','contextcontent').'"');
-		        $notVisibleCounter++;
-		} else {
-		        $hasPages = TRUE;
-		        $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle']);
-		}
-
-		$editLink = new link($this->uri(array('action'=>'editchapter', 'id'=>$chapter['chapterid'])));
-		$editLink->link = $editIcon;
-
-		$deleteLink = new link($this->uri(array('action'=>'deletechapter', 'id'=>$chapter['chapterid'])));
-		$deleteLink->link = $deleteIcon;
-
-		$addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
-		$addPageLink->link = $addPageIcon;
-
-		$chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
-		$chapterLink->link = $chapter['chaptertitle'];
-
-		$ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
-		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-       		if ($ischapterlogged == FALSE) {
-		         $content = '<h1> '.$streamerimg." ".$chapter['chaptertitle'];
-		        }else{
-		         $content = '<h1>'.$chapter['chaptertitle'];
-		        }
-
-		} else {
-       		if ($ischapterlogged == FALSE) {
-		         $content = '<h1> '.$streamerimg." ".$chapterLink->show();;
-		        }else{
-		         $content = '<h1>'.$chapterLink->show();
-		        }
-		}
-
-		if ($this->isValid('editchapter')) {
-		        $content .= ' '.$editLink->show();
-		}
-
-		if ($this->isValid('deletechapter')) {
-		        $content .= ' '.$deleteLink->show();
-		}
-
-		if ($this->isValid('addpage')) {
-		        $content .= ' '.$addPageLink->show();
-		}
+        } else {
 
 
-		if ($pdfHtmlDoc && trim($chapterPages) != '<ul class="htmlliststyle"></ul>') {
-		        
-		        $pdfLink = new link($this->uri(array('action'=>'viewprintchapter', 'id'=>$chapter['chapterid'])));
-		        $pdfLink->link = $pdfIcon;
-		        
-		        $content .= ' '.$pdfLink->show();
-		}
+            // Get List of Pages in the Chapter
+            $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
 
-		$content .= '</h1>';
+            if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
+                $hasPages = FALSE;
+                $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnopages','contextcontent').'"');
+                $notVisibleCounter++;
+            } else {
+                $hasPages = TRUE;
+                $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle']);
+            }
 
-		//print_r($chapter);
+            $editLink = new link($this->uri(array('action'=>'editchapter', 'id'=>$chapter['chapterid'])));
+            $editLink->link = $editIcon;
 
-		if ($this->isValid('viewhiddencontent') && $chapter['visibility'] != 'Y') {
-		        
-		        switch ($chapter['visibility'])
-		        {
-		        case 'I': $notice = $this->objLanguage->code2Txt('mod_contextcontent_studentcanonlyviewintro','contextcontent'); break;
-		        case 'N': $notice = $this->objLanguage->code2Txt('mod_contextcontent_chapternotvisibletostudents','contextcontent'); break;
-		        default: $notice = ''; break;
-		        }
-		        $content .= '<p class="warning"><strong>'.$this->objLanguage->languageText('mod_contextcontent_note','contextcontent').': </strong>'.$notice.'</p>';
-		}
+            $deleteLink = new link($this->uri(array('action'=>'deletechapter', 'id'=>$chapter['chapterid'])));
+            $deleteLink->link = $deleteIcon;
 
-		$content .= $objWashout->parseText($chapter['introduction']);
+            $addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
+            $addPageLink->link = $addPageIcon;
 
-		$chapterOptions = array();
+            $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapter'=>$chapter['chapterid'])));
+            $addPageFromFileLink->link = $addPageFromFileIcon;
 
-		if ($chapter['visibility'] == 'I' && !$this->isValid('viewhiddencontent')) {
-		        $content .= '<p class="warning">'.ucfirst($this->objLanguage->code2Txt('mod_contextcontent_studentscannotaccesscontent','contextcontent')).'.</p>';
-		        
-		        // Empty variable for use later on
-		        $chapterPages = '';
+            $chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
+            $chapterLink->link = $chapter['chaptertitle'];
 
-		} else {
-		        
-		        if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>' && $this->isValid('viewhiddencontent')) {
-		        $content .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentpages','contextcontent').'</div>';
-		        
-		        // Empty variable for use later on
-		        $chapterPages = '';
-		        
-		        } else if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-		        $content .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentpages','contextcontent').'</div>';
-		        
-		        // Empty variable for use later on
-		        $chapterPages = '';
-		        } else {		        
-		         $chapterOptions[] = '<div id="toc_'.$chapter['chapterid'].'"  style="display:none">'.$chapterPages.'</div><a href="#" onclick="Effect.toggle(\'toc_'.$chapter['chapterid'].'\', \'slide\'); return false;"><strong>'.$this->objLanguage->languageText('mod_contextcontent_showhidecontents','contextcontent').' ...</strong></a>';
-		        }
-		} 
-	       
-	        
-	        $addPageLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
-	        $addPageLink->link = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
-	        
-	        $moveUpLink = new link ($this->uri(array('action'=>'movechapterup', 'id'=>$chapter['contextchapterid'])));
-	        $moveUpLink->link = $this->objLanguage->languageText('mod_contextcontent_movechapterup','contextcontent');
-	        
-	        $moveDownLink = new link ($this->uri(array('action'=>'movechapterdown', 'id'=>$chapter['contextchapterid'])));
-	        $moveDownLink->link = $this->objLanguage->languageText('mod_contextcontent_movechapterdown','contextcontent');
-	        
-	        //$content .= '<br />';
-	        
-	        if ($this->isValid('addpage')) {
-	            //$content .= $addPageLink->show();
-	        }
-	        
-	        if (count($chapters) > 1 && $counter > 1 && $this->isValid('movechapterup')) {
-	            $chapterOptions[] = $moveUpLink->show();
-	        }
-	        
-	        if ($counter < count($chapters) && $this->isValid('movechapterdown')) {
-	            $chapterOptions[] = $moveDownLink->show();
-	        }
-	        
-	        if (count($chapterOptions) > 0) {
-	            
-	            $divider = '';
-	            foreach ($chapterOptions as $option)
-	            {
-	                $content .= $divider.$option;
-	                $divider = ' / ';
-	            }
-	            
-	        }
-	}       
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
+            if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
+                if ($ischapterlogged == FALSE) {
+                    $content = '<h1> '.$streamerimg." ".$chapter['chaptertitle'];
+                }else {
+                    $content = '<h1>'.$chapter['chaptertitle'];
+                }
+
+            } else {
+                if ($ischapterlogged == FALSE) {
+                    $content = '<h1> '.$streamerimg." ".$chapterLink->show();
+                    ;
+                }else {
+                    $content = '<h1>'.$chapterLink->show();
+                }
+            }
+
+            if ($this->isValid('editchapter')) {
+                $content .= ' '.$editLink->show();
+            }
+
+            if ($this->isValid('deletechapter')) {
+                $content .= ' '.$deleteLink->show();
+            }
+
+            if ($this->isValid('addpage')) {
+                $content .= ' '.$addPageLink->show();
+                $content .= ' '.$addPageFromFileLink->show();
+            }
+
+
+            if ($pdfHtmlDoc && trim($chapterPages) != '<ul class="htmlliststyle"></ul>') {
+
+                $pdfLink = new link($this->uri(array('action'=>'viewprintchapter', 'id'=>$chapter['chapterid'])));
+                $pdfLink->link = $pdfIcon;
+
+                $content .= ' '.$pdfLink->show();
+            }
+
+            $content .= '</h1>';
+
+            //print_r($chapter);
+
+            if ($this->isValid('viewhiddencontent') && $chapter['visibility'] != 'Y') {
+
+                switch ($chapter['visibility']) {
+                    case 'I': $notice = $this->objLanguage->code2Txt('mod_contextcontent_studentcanonlyviewintro','contextcontent');
+                        break;
+                    case 'N': $notice = $this->objLanguage->code2Txt('mod_contextcontent_chapternotvisibletostudents','contextcontent');
+                        break;
+                    default: $notice = '';
+                        break;
+                }
+                $content .= '<p class="warning"><strong>'.$this->objLanguage->languageText('mod_contextcontent_note','contextcontent').': </strong>'.$notice.'</p>';
+            }
+
+            $content .= $objWashout->parseText($chapter['introduction']);
+
+            $chapterOptions = array();
+
+            if ($chapter['visibility'] == 'I' && !$this->isValid('viewhiddencontent')) {
+                $content .= '<p class="warning">'.ucfirst($this->objLanguage->code2Txt('mod_contextcontent_studentscannotaccesscontent','contextcontent')).'.</p>';
+
+                // Empty variable for use later on
+                $chapterPages = '';
+
+            } else {
+
+                if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>' && $this->isValid('viewhiddencontent')) {
+                    $content .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentpages','contextcontent').'</div>';
+
+                    // Empty variable for use later on
+                    $chapterPages = '';
+
+                } else if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
+                    $content .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentpages','contextcontent').'</div>';
+
+                    // Empty variable for use later on
+                    $chapterPages = '';
+                } else {
+                    $chapterOptions[] = '<div id="toc_'.$chapter['chapterid'].'"  style="display:none">'.$chapterPages.'</div><a href="#" onclick="Effect.toggle(\'toc_'.$chapter['chapterid'].'\', \'slide\'); return false;"><strong>'.$this->objLanguage->languageText('mod_contextcontent_showhidecontents','contextcontent').' ...</strong></a>';
+                }
+            }
+
+
+            $addPageLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
+            $addPageLink->link = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
+
+            $moveUpLink = new link ($this->uri(array('action'=>'movechapterup', 'id'=>$chapter['contextchapterid'])));
+            $moveUpLink->link = $this->objLanguage->languageText('mod_contextcontent_movechapterup','contextcontent');
+
+            $moveDownLink = new link ($this->uri(array('action'=>'movechapterdown', 'id'=>$chapter['contextchapterid'])));
+            $moveDownLink->link = $this->objLanguage->languageText('mod_contextcontent_movechapterdown','contextcontent');
+
+            //$content .= '<br />';
+
+            if ($this->isValid('addpage')) {
+                //$content .= $addPageLink->show();
+            }
+
+            if (count($chapters) > 1 && $counter > 1 && $this->isValid('movechapterup')) {
+                $chapterOptions[] = $moveUpLink->show();
+            }
+
+            if ($counter < count($chapters) && $this->isValid('movechapterdown')) {
+                $chapterOptions[] = $moveDownLink->show();
+            }
+
+            if (count($chapterOptions) > 0) {
+
+                $divider = '';
+                foreach ($chapterOptions as $option) {
+                    $content .= $divider.$option;
+                    $divider = ' / ';
+                }
+
+            }
+        }
         $chapterList .= '<div class="chapterlisting">'.$content.'</div><hr />';
     }
-    
+
     $counter++;
 }
 
@@ -322,13 +336,13 @@ if (count($chapters) > 1) {
 
     $button = new button ('', 'Go');
     $button->setToSubmit();
-    
+
     if ($notVisibleCounter == $addedCounter) {
         $button->extra = ' disabled="disabled" ';
     }
-    
+
     $form->addToForm(' '.$button->show());
-    
+
     echo $form->show();
 }
 
@@ -337,16 +351,15 @@ echo $chapterList;
 if ($this->isValid('addchapter')) {
     $link = new link ($this->uri(array('action'=>'addchapter')));
     $link->link = $this->objLanguage->languageText('mod_contextcontent_addanewchapter','contextcontent');
-    
+
     echo $link->show();
 }
 
 
-if($this->objModuleCatalogue->checkIfRegistered('feed'))
-{
-	//creating the rss feeds link
+if($this->objModuleCatalogue->checkIfRegistered('feed')) {
+    //creating the rss feeds link
     $link = new link($this->uri(array(
-    		'action' => 'rss', 'title' => $this->objContext->getTitle(), 'rss_contextcode' => $this->contextCode)));
+            'action' => 'rss', 'title' => $this->objContext->getTitle(), 'rss_contextcode' => $this->contextCode)));
     $objIcon->setIcon('rss');
     $objIcon->alt = null;
     $objIcon->title = null;
@@ -354,11 +367,10 @@ if($this->objModuleCatalogue->checkIfRegistered('feed'))
     echo '<br/><br clear="left" />'.$objIcon->show().' '.$link->show();
 }
 
-if($this->objModuleCatalogue->checkIfRegistered('kbookmark') && $this->objUser->isLoggedIn())
-{
-	//creating the bookmark button
-	$this->bookmarkbutton = $this->getObject('bookmarkbutton', 'kbookmark');
-	$this->bookmarkbutton->bookmark_button($this->objContext->getTitle(), str_replace('&amp;', '&', $this->uri(array('action' => 'rsscall', 'rss_contextcode' => $this->contextCode))), '', '');
-	echo $this->bookmarkbutton->show();
+if($this->objModuleCatalogue->checkIfRegistered('kbookmark') && $this->objUser->isLoggedIn()) {
+    //creating the bookmark button
+    $this->bookmarkbutton = $this->getObject('bookmarkbutton', 'kbookmark');
+    $this->bookmarkbutton->bookmark_button($this->objContext->getTitle(), str_replace('&amp;', '&', $this->uri(array('action' => 'rsscall', 'rss_contextcode' => $this->contextCode))), '', '');
+    echo $this->bookmarkbutton->show();
 }
 ?>

@@ -5,6 +5,9 @@ $objHead = $this->newObject('htmlheading', 'htmlelements');
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
 
+$addPageFromFileLink = new link ($this->uri(array('action'=>'addpagefromfile', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
+$addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
+
 $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
 
@@ -23,7 +26,10 @@ $list = array();
 
 if ($this->isValid('addpage')) {
     $list[] = $addLink->show();
+    $list[] = $addPageFromFileLink->show();
     $list[] = $addScormLink->show();
+
+
 }
 
 if ($this->isValid('editpage')) {
@@ -39,18 +45,17 @@ if (count($list) == 0) {
 } else {
     $middle = '';
     $divider = '';
-    
-    foreach ($list as $item)
-    {
+
+    foreach ($list as $item) {
         $middle .= $divider.$item;
         $divider = ' / ';
     }
 }
 
 if ($this->isValid('movepageup')) {
-    
+
     $middle .= '<br />';
-    
+
     if ($isFirstPageOnLevel) {
         $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_contextcontent_isfirstpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent').'</span>';
     } else {
@@ -58,9 +63,9 @@ if ($this->isValid('movepageup')) {
         $link->link = $this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent');
         $middle .= $link->show();
     }
-    
+
     $middle .= ' / ';
-    
+
     if ($isLastPageOnLevel) {
         $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_contextcontent_islastpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent').'</span>';
     } else {
@@ -103,22 +108,21 @@ $this->loadClass('link', 'htmlelements');
 $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - '.$page['menutitle']));
 
 if (trim($page['headerscripts']) != '') {
-    
+
     // Explode into array
     $scripts = explode(',', $page['headerscripts']);
-    
+
     // Loop through array
-    foreach ($scripts as $script)
-    {
+    foreach ($scripts as $script) {
         // Check if valid
         if (trim($script) != '') {
-            
+
             // Get Path
             $fileInfo = $objFile->getFilePath($script);
-            
+
             // If Valid
             if ($fileInfo != FALSE) {
-                
+
                 // Check if Script or CSS, and display
                 if (substr($fileInfo, -2, 2) == 'js') {
                     $this->appendArrayVar('headerParams', '<script type="text/javascript" src="'.$fileInfo.'"></script>');
@@ -146,99 +150,93 @@ if (count($chapters) > 1 && $this->isValid('movetochapter')) {
     $hiddenInput = new hiddeninput('id', $page['id']);
 
     $dropdown = new dropdown('chapter');
-    foreach ($chapters as $chapterItem)
-    {
+    foreach ($chapters as $chapterItem) {
         $dropdown->addOption($chapterItem['chapterid'], $chapterItem['chaptertitle']);
     }
     $dropdown->setSelected($page['chapterid']);
-    
+
     $label = new label ($this->objLanguage->languageText('mod_contextcontent_movepagetoanotherchapter','contextcontent').': ', 'input_chapter');
-    
+
     $button = new button ('movepage', $this->objLanguage->languageText('mod_contextcontent_move','contextcontent'));
     $button->setToSubmit();
-    
+
     $form->addToForm($hiddenInput->show().$label->show().$dropdown->show().' '.$button->show());
-    
+
     $form = $form->show();
-    
+
 }
 
 if ($this->isValid('addpage')) {
-  $objTabs = $this->newObject('tabcontent', 'htmlelements');
-  $objTabs->setWidth('98%');
-  $objTabs->addTab("Lecturer View",$topTable->show().$content.'<hr />'.$table->show().$form);
-  $objTabs->addTab("Student View",$topTable->show().$content.'<hr />'.$table2->show());
-  echo $objTabs->show();
+    $objTabs = $this->newObject('tabcontent', 'htmlelements');
+    $objTabs->setWidth('98%');
+    $objTabs->addTab("Lecturer View",$topTable->show().$content.'<hr />'.$table->show().$form);
+    $objTabs->addTab("Student View",$topTable->show().$content.'<hr />'.$table2->show());
+    echo $objTabs->show();
 }
 else {
-  echo $topTable->show().$content.'<hr />'.$table->show().$form;
+    echo $topTable->show().$content.'<hr />'.$table->show().$form;
 }
 
 //Check if comments are allowed for this course
 $showcomment = $this->objContext->getField('showcomment', $contextCode = NULL);
 
-if($showcomment==1)
-{
-	$head = $this->objLanguage->languageText('mod_contextcontent_word_comment','contextcontent');
-	$objHead->type = 1;
-	$objHead->str = $head;
-	echo '<br/>'.$objHead->show().'<br/>';
+if($showcomment==1) {
+    $head = $this->objLanguage->languageText('mod_contextcontent_word_comment','contextcontent');
+    $objHead->type = 1;
+    $objHead->str = $head;
+    echo '<br/>'.$objHead->show().'<br/>';
 
-	$commentpost = $this->objContextComments->getPageComments($currentPage);
-	if (count($commentpost) < 1)
-	{
-		
-		echo $this->objLanguage->languageText('mod_contextcontent_nocomment','contextcontent').'<br/>';
-	}
-	else{
-		$cnt = 0;
-		$oddcolor = $this->objSysConfig->getValue('CONTEXTCONTENT_ODD', 'contextcontent');
-		$evencolor = $this->objSysConfig->getValue('CONTEXTCONTENT_EVEN', 'contextcontent');
+    $commentpost = $this->objContextComments->getPageComments($currentPage);
+    if (count($commentpost) < 1) {
 
-		foreach($commentpost as $comment)
-		{
-			$objOutput = '<strong>'.$this->objUser->fullname($comment['userid']).'</strong><br/>';
-			$objOutput .= '<i>'.$comment['datecreated'].'</i><br/>';
-			$objOutput .= $comment['comment'];
+        echo $this->objLanguage->languageText('mod_contextcontent_nocomment','contextcontent').'<br/>';
+    }
+    else {
+        $cnt = 0;
+        $oddcolor = $this->objSysConfig->getValue('CONTEXTCONTENT_ODD', 'contextcontent');
+        $evencolor = $this->objSysConfig->getValue('CONTEXTCONTENT_EVEN', 'contextcontent');
 
-			if($cnt%2 == 0)
-				{
-					echo '<div class="colorbox '.$evencolor.'box">'.$objOutput.'</div>';
-				}
-			else
-				{
-					echo '<div class="colorbox '.$oddcolor.'box">'.$objOutput.'</div>';
-				}
-			$cnt++;
-		}
-	}
-	$this->loadClass('textarea', 'htmlelements');
-	$cform = new form('contextcontent', $this->uri(array('action' => 'addcomment', 'pageid' => $currentPage)));
-	
-	//start a fieldset
-	$cfieldset = $this->getObject('fieldset', 'htmlelements');
-	$ct = $this->newObject('htmltable', 'htmlelements');
-	$ct->cellpadding = 5;
+        foreach($commentpost as $comment) {
+            $objOutput = '<strong>'.$this->objUser->fullname($comment['userid']).'</strong><br/>';
+            $objOutput .= '<i>'.$comment['datecreated'].'</i><br/>';
+            $objOutput .= $comment['comment'];
 
-	//Text
-	$ct->startRow();
-	$ctvlabel = new label($this->objLanguage->languageText('mod_contextcontent_writecomment', 'contextcontent').':','input_cvalue');
-	$ct->addCell($ctvlabel->show());
-	$ct->endRow();
+            if($cnt%2 == 0) {
+                echo '<div class="colorbox '.$evencolor.'box">'.$objOutput.'</div>';
+            }
+            else {
+                echo '<div class="colorbox '.$oddcolor.'box">'.$objOutput.'</div>';
+            }
+            $cnt++;
+        }
+    }
+    $this->loadClass('textarea', 'htmlelements');
+    $cform = new form('contextcontent', $this->uri(array('action' => 'addcomment', 'pageid' => $currentPage)));
 
-	//Textarea
-	$ct->startRow();
-	$ctv = new textarea('comment', '', 8, 70);
-	$ct->addCell($ctv->show());
-	$ct->endRow();
-	//end off the form and add the button
-	$this->objconvButton = new button($this->objLanguage->languageText('mod_contextcontent_submitcomment', 'contextcontent'));
-	$this->objconvButton->setValue($this->objLanguage->languageText('mod_contextcontent_submitcomment', 'contextcontent'));
-	$this->objconvButton->setToSubmit();
-	$cfieldset->addContent($ct->show());
-	$cform->addToForm($cfieldset->show());
-	$cform->addToForm($this->objconvButton->show());
-	echo '<br/>'.$cform->show();
+    //start a fieldset
+    $cfieldset = $this->getObject('fieldset', 'htmlelements');
+    $ct = $this->newObject('htmltable', 'htmlelements');
+    $ct->cellpadding = 5;
+
+    //Text
+    $ct->startRow();
+    $ctvlabel = new label($this->objLanguage->languageText('mod_contextcontent_writecomment', 'contextcontent').':','input_cvalue');
+    $ct->addCell($ctvlabel->show());
+    $ct->endRow();
+
+    //Textarea
+    $ct->startRow();
+    $ctv = new textarea('comment', '', 8, 70);
+    $ct->addCell($ctv->show());
+    $ct->endRow();
+    //end off the form and add the button
+    $this->objconvButton = new button($this->objLanguage->languageText('mod_contextcontent_submitcomment', 'contextcontent'));
+    $this->objconvButton->setValue($this->objLanguage->languageText('mod_contextcontent_submitcomment', 'contextcontent'));
+    $this->objconvButton->setToSubmit();
+    $cfieldset->addContent($ct->show());
+    $cform->addToForm($cfieldset->show());
+    $cform->addToForm($this->objconvButton->show());
+    echo '<br/>'.$cform->show();
 }
 
 /*
