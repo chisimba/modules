@@ -251,7 +251,8 @@ class contextcontent extends controller {
                 return $this->addPageFromFile($chapterid);
             case 'uploadfile':
                 return $this->uploadFile();
-
+            case 'createpagefromfile':
+                return $this->createpagefromfile();
             default:
             //return $this->home_debug();
                 return $this->showContextChapters();
@@ -1444,7 +1445,7 @@ class contextcontent extends controller {
         $id=$this->getParam("pagefile");
         $file= $this->objFiles->getFile($id);
         $chapterid=$this->getParam('chapterid');
- 
+
         $filename=$file['name'];
         $filename = strtolower($filename) ;
         $exts = split("[/\\.]", $filename) ;
