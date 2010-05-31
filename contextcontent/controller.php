@@ -1456,7 +1456,7 @@ class contextcontent extends controller {
 
         //   $content='[FILEPREVIEW id="'.$file['fileid'].'" comment="'.$filename.'" /]';
         $objFilePreview = $this->getObject('filepreview','filemanager');
-        $content = $objFilePreview->previewFile($file['fileid']);
+        $content = $objFilePreview->previewFile($id);
         if($ext == 'pdf') {
             $content='[PDF]'.$path.'[/PDF]';
         }
