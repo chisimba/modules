@@ -300,6 +300,85 @@ class db_learningcontent_activitystreamer extends dbtable
             'contextlogs' => $logArray
         ));
     }
+    /*Returns two datetime values by calculating time randomly from two datetime values. leaves date intact
+     * @param datetime $startdate Start datetime
+     * @param datetime $endate End datetime
+     */
+    public function calculateRandomTime( $startdate, $endate ) {
+        //Check if any image record exists where startime and endtime are within the page startime and endtime -- Can be done later
+        $newstartdate = 0;
+        $newenddate = 0;
+        $startdate = explode (" ", '2010-05-11 14:18:54');
+        $endate = explode (" ", '2010-05-11 14:21:08');
+
+        $startime = explode (":", $startdate['1']);
+        $endtime = explode (":", $endate['1']);
+        //Check if its the same hour
+        if ($startime[0] == $endtime[0]){
+          //Check if its the same minute -- Very easy
+          if ($startime[1] == $endtime[1]){
+            do {
+            $sec1 = rand($startime[2], $endtime[2]);
+            $sec2 = rand($startime[2], $endtime[2]);
+            } while ( $sec1 == $sec2 || $sec2 < $sec1 );
+            $newstartdate = $startdate['0']." ".$startime[0].":".$startime[1].":".$sec1;
+            $newenddate = $startdate['0']." ".$startime[0].":".$startime[1].":".$sec2;
+            //Calculate a random seconds value thats greater than startime and less than endtime
+            
+          }else{
+            //If endtime[1] is greater than startime[1]
+            //Generate random value between the two
+            do {
+            $min1 = rand($startime[1], $endtime[1]);
+            $min2 = rand($startime[1], $endtime[1]);
+            } while ($min2 < $min1);
+            if ( $min1 == $min2 ){
+              //Check if min1 is same as $startime[1]
+              if ( $min1 == $startime[1] ){
+               //Generate a random value that is between $startime[2] and 60
+                $sec1 = $startime[2];
+                do { $sec1 = rand($sec1, 60); $sec2 = rand($sec1, 60); } while ( $sec2 < $sec1 || $sec2 == 60 );
+                
+                $newstartdate = $startdate['0']." ".$startime[0].":".$min1.":".$sec1;
+                $newenddate = $startdate['0']." ".$startime[0].":".$min1.":".$sec1;
+              } elseif ( $min1 == $endtime[1] ){
+                //Get the start datetime
+                $sec1 = $endtime[2];
+                do { $sec1 = rand($sec1, 60); $sec2 = rand($sec1, 60); } while ( $sec2 < $sec1 || $sec2 == 60 );
+                $newstartdate = $endate['0']." ".$endtime[0].":".$min1.":".$sec1;
+                $newenddate = $endate['0']." ".$endtime[0].":".$min1.":".$sec2;
+              } 
+            } else {
+             //If min1 == $startime find seconds btwn $startime[2] and 60
+             if ( $min1 == $startime[1] && $min2 != $endtime[1] ) {
+              do { $sec1 = rand($startime[1], 60); } while ( $sec1 == $startime[1] || $sec1 == 60 );
+              //Then get min2 seconds by getting a random btwn 0 and 60
+              do { $sec2 = rand(0, 60); } while ( $sec2 == 60 );
+              $newstartdate = $endate['0']." ".$startime[0].":".$min1.":".$sec1;
+              $newenddate = $endate['0']." ".$endtime[0].":".$min2.":".$sec2;
+             } elseif ( $min1 != $startime[1] && $min2 != $endtime[1] ) {
+              //Get min1 seconds by getting a random btwn 0 and 60
+              do { $sec1 = rand(0, 60); } while ( $sec1 == 60 );
+              //Then get min2 seconds by getting a random btwn $sec1 and 60
+              do { $sec2 = rand(0, 60); } while ( $sec2 == 60 );
+              $newstartdate = $endate['0']." ".$startime[0].":".$min1.":".$sec1;
+              $newenddate = $endate['0']." ".$endtime[0].":".$min2.":".$sec2;
+             } else {
+              //If min2 == $endtime find seconds btwn $endtime[2] and 60
+              do { $sec2 = rand($endtime[1], 60); } while ( $sec2 == $endtime[1] || $sec2 == 60 );
+              //Then get min1 seconds by getting a random btwn 0 and 60
+              do { $sec1 = rand(0, 60); } while ( $sec1 == 60 );
+              $newstartdate = $endate['0']." ".$startime[0].":".$min1.":".$sec1;
+              $newenddate = $endate['0']." ".$endtime[0].":".$min2.":".$sec2;
+             }
+            }
+          }
+        }
+        if ($newstartdate != 0 || $newenddate != 0)
+         return array ("newstartdate"=>$newstartdate,"newenddate"=>$newenddate);
+        else return False;
+    }
+
     /**
      * Return comma separated values(CSV) for context logs
      * @param string $contextcode Context Code
@@ -328,6 +407,434 @@ class db_learningcontent_activitystreamer extends dbtable
           $title = '';
           $pageorchapter = '';
           if ( $log['pageorchapter'] == 'page' ) {
+           $pageDetails = $this->getPage( $log['contextitemid'], $contextcode );
+           $pageInfo = $this->objContentPages->pageInfo( $pageDetails['titleid'] );
+           $pageorchapter = $log['pageorchapter'];
+           $title = $pageInfo['menutitle'];
+          } elseif ( $log['pageorchapter'] == 'chapter' ) {
+           $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
+           $pageorchapter = $log['pageorchapter'];
+           $title = $chapterTitle;
+          } elseif ( $log['pageorchapter'] == 'viewPicture' )  {
+           $picdesc = $this->objFiles->getFileInfo($log['contextitemid']);
+           if(empty($picdesc['filedescription'])){
+             $picdescr = $picdesc["filename"];
+           }else{
+             $picdescr = $picdesc['filedescription'];    
+           }
+           $pageorchapter = 'Picture';
+           $title = $picdescr;
+          } elseif ( $log['pageorchapter'] == 'viewFormula' )  {
+           $fmladesc = $this->objFiles->getFileInfo($log['contextitemid']);
+           if(empty($fmladesc['filedescription'])){
+             $fmladescr = $fmladesc["filename"];
+           }else{
+             $fmladescr = $fmladesc['filedescription'];    
+           }
+           $title = $fmladescr;
+          } else {
+           $title = "";
+          }
+          $list = array($log['id'].','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.$pageorchapter.','.$title.','.$log['datecreated'].','.$log['description'].','.$log['starttime'].','.$log['endtime']);
+          foreach ($list as $line) {
+            fputcsv($Handle, split(',', $line));
+          }
+          //fwrite($Handle, $list);
+         }
+        }
+        fclose($Handle);
+        return $csvFile;
+    }
+    /**
+     * Return comma separated values(CSV) for context logs
+     * @param string $contextcode Context Code
+     * @return csv of the logs
+     */
+    function csvContextLogsFake( $contextcode ) 
+    {
+        //$where = "LIMIT 0 , 10";
+        $where = "";
+        $logs = $this->getContextLogs( $contextcode, $where );
+
+        $logCount = (count($logs));
+        $list = array();
+        $list = array('id,userid,usernames,contextcode,modulecode,contextitemid,type,contextitemtitle,datecreated,description,starttime,endtime');
+        $csvFile = "logs.csv"; 
+        $Handle = fopen($csvFile, 'w');
+        //fwrite($Handle, $list);
+        foreach ($list as $line) {
+            fputcsv($Handle, split(',', $line));
+        }
+        foreach ( $logs as $log ) {
+         if( !empty ( $log['endtime'] ) || $log['endtime'] != NULL ) {
+          //Return empty till its fixed
+          $userNames = "";
+          $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
+          //Get context item title (page or chapter)
+          $title = '';
+          $pageorchapter = '';
+          if ( $log['pageorchapter'] == 'page' ) {
+           //Imagine User viewed an image for 001
+           if ( $contextcode == '001' ) { 
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_21144_1269681692') {
+             //Enter record for each image
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_55386_1269604704');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_55386_1269604704'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_21144_1269681692') {
+             //Enter record for each image
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_72372_1269604822');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_72372_1269604822'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_81307_1269604319') {
+             //Enter record for each image
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_73767_1269605472');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_73767_1269605472'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_81307_1269604319') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_33707_1269605537');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_33707_1269605537'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_87618_1269604349') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_15142_1269605687');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_15142_1269605687'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_87618_1269604349') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_79322_1269605785');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_79322_1269605785'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_9301_1269604392') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_75938_1269606000');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_75938_1269606000'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_9301_1269604392') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_66832_1269606208');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_54504_1269604435') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_66832_1269606208');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_54504_1269604435') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_78425_1269606208');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_78425_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+           //End of Context 001
+           }
+           //Imagine User viewed an image for 002
+           if ( $contextcode == '002' ) { 
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_71805_1269777463') {
+             //Enter record for each image
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_55386_1269604704');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_55386_1269604704'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_33194_1269778206') {
+             //Enter record for each image
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_73767_1269605472');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_73767_1269605472'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_78476_1269778547') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_15142_1269605687');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_15142_1269605687'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_72980_1269779481') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_55386_1269604704
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_75938_1269606000');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_75938_1269606000'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_54504_1269604435') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_54504_1269604435
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_66832_1269606208');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+           //End of Context 002
+           }
+           //Imagine User viewed an image for 003
+           if ( $contextcode == '003' ) { 
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_89699_1269777596') {
+             //Enter record for each image
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_72372_1269604822');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_72372_1269604822'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_36433_1269778353') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_36433_1269778353
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_33707_1269605537');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_33707_1269605537'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_76029_1269779116') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_76029_1269779116
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_79322_1269605785');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_79322_1269605785'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_40204_1269779594') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_40204_1269779594
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_66832_1269606208');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+            //Start of Page
+            if ($log['contextitemid'] == 'gen11Srv30Nme41_74356_1269780005') {
+             //Enter record for each image
+             //Image 1 gen11Srv30Nme41_74356_1269780005
+             $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_78425_1269606208');
+             if(empty($picdesc['filedescription'])){
+               $picdescr = $picdesc["filename"];
+             }else{
+               $picdescr = $picdesc['filedescription'];    
+             }
+             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
+             if ( !empty ( $fakeDatetime ) ) {
+               $list = array('gen11Srv30Nme41_78425_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+              foreach ($list as $line) {
+               fputcsv($Handle, split(',', $line));
+              }
+             }
+            }
+           //End of Context 003
+           }
            $pageDetails = $this->getPage( $log['contextitemid'], $contextcode );
            $pageInfo = $this->objContentPages->pageInfo( $pageDetails['titleid'] );
            $pageorchapter = $log['pageorchapter'];

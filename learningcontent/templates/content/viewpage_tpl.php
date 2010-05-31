@@ -458,7 +458,6 @@ if($showcomment==1)
 	echo '<br/>'.$cform->show();
 }
 
-
 if (!empty($imageId)) {
     $alertBox = $this->getObject('alertbox', 'learningcontent');
     $alertBox->putJs();
@@ -477,4 +476,66 @@ if (!empty($imageId)) {
  }
 </script>";
 }
+//Check if any image record exists where startime and endtime are within the page startime and endtime -- Can be done later
+$startdate = explode (" ", '2010-05-06 20:03:35');
+$endate = explode (" ", '2010-05-06 20:03:49');
+
+$startime = explode (":", $startdate['1']);
+$endtime = explode (":", $endate['1']);
+echo "startdate = ".$startime[1]." newenddate = ".$endtime[1]."<br />";
+//Check if its the same hour
+if ($startime[0] == $endtime[0]){
+  //Check if its the same minute
+  if ($startime[1] == $endtime[1]){
+    //Calculate a random seconds value thats greater than startime and less than endtime
+    
+  }else{
+    //If endtime[1] is greater than startime[1]
+    //Generate random value between the two
+    $min1 = rand($startime[1], $endtime[1]);
+    $min2 = rand($startime[1], $endtime[1]);
+    //Swap if min2 is less than min1
+    if ($min2 < $min1) {
+      $min3 = $min2;
+      $min2 = $min1;
+      $min1 = $min3;
+    }    
+    if ( $min1 == $min2 ){
+      //Check if min1 is same as $startime[1]
+      if ( $min1 == $startime[1] ){
+       //Generate a random value that is between $startime[2] and 60
+       if($startime[2]<=45){
+        $sec1 = $startime[2]+1;
+        $sec1 = rand($sec1, 60);
+
+        do { $sec1 = rand($sec1, 60); } while ( $sec1 > 57 );
+
+        $newstartdate = $startdate['0']." ".$startime[0].":".$min1.":".$sec1;
+        $sec2 = $sec1+1;
+        $sec2 = rand($sec2, 60);
+        $newenddate = $startdate['0']." ".$startime[0].":".$min1.":".$sec1;
+
+       }
+      } elseif ( $min1 == $endtime[1] ){
+        if ($endtime[2]>=20){
+        //Get the start datetime
+        $sec1 = $endtime[2] - 10;
+        $sec1 = rand(0,$sec1);
+        $newstartdate = $endate['0']." ".$endtime[0].":".$min1.":".$sec1;
+        if($sec1 < 56){
+          $sec1a = $sec1 + 1;
+          $sec2 = rand($sec1a, 60);
+          $newenddate = $endate['0']." ".$endtime[0].":".$min1.":".$sec2;
+          } else {
+           $sec2 = rand($sec1, 60);
+           $newenddate = $endate['0']." ".$endtime[0].":".$min1.":".$sec2;
+          }
+        }
+      } 
+    } else {
+     //Do nothing for now if not on the same hour :( Too much work
+    }
+  }
+}
+echo "newstartdate = ".$newstartdate." newenddate = ".$newenddate;
 ?>

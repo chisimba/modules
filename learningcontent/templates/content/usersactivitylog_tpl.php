@@ -30,6 +30,6 @@ $this->appendArrayVar('headerParams', $ext);
 echo '<div id="lc-grid"></div>';
 
 
-$fileName = $this->objContextActivityStreamer->csvContextLogs($this->contextCode);
+$fileName = $this->objContextActivityStreamer->csvContextLogsFake($this->contextCode);
 echo "<a href='".$this->objConfig->getSitePath().$fileName."'>CSV File</a>";
 ?>
