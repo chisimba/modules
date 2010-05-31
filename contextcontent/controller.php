@@ -113,7 +113,7 @@ class contextcontent extends controller {
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig');
             $this->objContextComments = $this->getObject('db_contextcontent_comment', 'contextcontent');
             $this->objAlertUtils=$this->getObject('alertutils');
-
+            $this->objFilePreview = $this->getObject('filepreview', 'filemanager');
             $this->objAltConfig = $this->getObject('altconfig','config');
             $this->objAltConfig = $this->getObject('altconfig','config');
             $this->siteRoot=$this->objAltConfig->getsiteRoot();
@@ -1454,8 +1454,9 @@ class contextcontent extends controller {
 
         $path=$this->siteRoot."/usrfiles/".    $file['path'];
 
-        $content='[FILEPREVIEW id="'.$file['fileid'].'" comment="" /]';
-
+        //   $content='[FILEPREVIEW id="'.$file['fileid'].'" comment="'.$filename.'" /]';
+        $objFilePreview = $this->getObject('filepreview','filemanager');
+        $content = $objFilePreview->previewFile($file['fileid']);
         if($ext == 'pdf') {
             $content='[PDF]'.$path.'[/PDF]';
         }
@@ -1497,8 +1498,9 @@ class contextcontent extends controller {
 
         $path=$this->siteRoot."/usrfiles/".    $file['path'];
 
-        $content='[FILEPREVIEW id="'.$file['fileid'].'" comment="" /]';
-
+        // $content='[FILEPREVIEW id="'.$file['fileid'].'" comment="'.$filename.'" /]';
+        $objFilePreview = $this->getObject('filepreview','filemanager');
+        $content = $objFilePreview->previewFile($file['fileid']);
         if($ext == 'pdf') {
             $content='[PDF]'.$path.'[/PDF]';
         }
