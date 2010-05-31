@@ -57,6 +57,7 @@ $header->type = 4;
 
 $form2 = new form('createpagefromfileform', $this->uri(array('action'=>'createpagefromfile','chapterid'=>$chapterid)));
 
+
 $objSelectFile2 = $this->newObject('selectfile', 'filemanager');
 $objSelectFile2->name = 'pagefile';
 $objSelectFile2->restrictFileList = array('htm','html','odt','doc','dcox','pdf');
