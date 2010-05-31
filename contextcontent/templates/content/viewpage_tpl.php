@@ -5,7 +5,7 @@ $objHead = $this->newObject('htmlheading', 'htmlelements');
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
 
-$addPageFromFileLink = new link ($this->uri(array('action'=>'addpagefromfile', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
+$addPageFromFileLink = new link ($this->uri(array('action'=>'addpagefromfile', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapterid'=>$page['chapterid'])));
 $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
 
 $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));

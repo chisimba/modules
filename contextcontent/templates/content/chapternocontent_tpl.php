@@ -16,6 +16,10 @@ $objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_addapagetot
 $objIcon->title = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
 $addPageIcon = $objIcon->show();
 
+$objIcon->setIcon('add_multiple');
+$objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
+$objIcon->title =$this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
+$addPageFromFileIcon = $objIcon->show();
 
 $editLink = new link($this->uri(array('action'=>'editchapter', 'id'=>$chapter['chapterid'])));
 $editLink->link = $editIcon;
@@ -23,9 +27,12 @@ $editLink->link = $editIcon;
 $deleteLink = new link($this->uri(array('action'=>'deletechapter', 'id'=>$chapter['chapterid'])));
 $deleteLink->link = $deleteIcon;
 
-$addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
+$addPageLink = new link($this->uri(array('action'=>'addpage', 'chapterid'=>$chapter['chapterid'])));
 $addPageLink->link = $addPageIcon;
 
+
+$addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapterid'=>$chapter['chapterid'])));
+$addPageFromFileLink->link = $addPageFromFileIcon;
 
 
 $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
@@ -46,7 +53,7 @@ if ($this->isValid('deletechapter')) {
 }
 
 if ($this->isValid('addpage')) {
-    $con.= ' '.$addPageLink->show();
+    $con.= ' '.$addPageLink->show().' / '.$addPageFromFileLink->show();
 }
 $chapterlink->str=$con;
 echo  $chapterlink->show();
@@ -69,8 +76,12 @@ echo $objWashout->parseText($chapter['introduction']);
 $addPageLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
 $addPageLink->link = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
 
+$addPageFromFileLink = new link ($this->uri(array('action'=>'addpagefromfile', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapterid'=>$chapter['chapterid'])));
+$addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
+
+
 if ($this->isValid('addpage')) {
-    echo $addPageLink->show().' / ';
+     echo $addPageLink->show().' / '.$addPageFromFileLink->show().' / ';
 }
 
 $returnLink = new link ($this->uri(NULL));

@@ -247,8 +247,8 @@ class contextcontent extends controller {
             case 'rsscall':
                 return $this->rssCall();
             case 'addpagefromfile':
-                $chapter=$this->getParam('chapter');
-                return $this->addPageFromFile($chapter);
+                $chapterid=$this->getParam('chapterid');
+                return $this->addPageFromFile($chapterid);
             case 'uploadfile':
                 return $this->uploadFile();
 
@@ -1078,7 +1078,6 @@ class contextcontent extends controller {
                 return $this->nextAction(NULL, array('error'=>'chapterdoesnotexist'));
             } else {
                 $this->setVarByRef('chapter', $chapter);
-
                 $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
                 $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted.'));
                 return 'chapternocontent_tpl.php';
@@ -1434,8 +1433,8 @@ class contextcontent extends controller {
      * returns a template for uploading files used to create pages
      * @return <type>
      */
-    function addPageFromFile($chapter) {
-        $this->setVarByRef('chapterid',$chapter);
+    function addPageFromFile($chapterid) {
+        $this->setVarByRef('chapterid',$chapterid);
         return "uploadfile_tpl.php";
     }
 
@@ -1445,6 +1444,7 @@ class contextcontent extends controller {
         $id=$this->getParam("pagefile");
         $file= $this->objFiles->getFile($id);
         $chapterid=$this->getParam('chapterid');
+ 
         $filename=$file['name'];
         $filename = strtolower($filename) ;
         $exts = split("[/\\.]", $filename) ;

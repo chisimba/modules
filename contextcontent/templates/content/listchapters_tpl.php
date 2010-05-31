@@ -198,7 +198,7 @@ foreach ($chapters as $chapter) {
             $addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
             $addPageLink->link = $addPageIcon;
 
-            $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapter'=>$chapter['chapterid'])));
+            $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapterid'=>$chapter['chapterid'])));
             $addPageFromFileLink->link = $addPageFromFileIcon;
 
             $chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
