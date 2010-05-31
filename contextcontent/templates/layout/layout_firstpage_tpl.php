@@ -14,6 +14,7 @@ $siteRoot=$this->objAltConfig->getsiteRoot();
 $moduleUri=$this->objAltConfig->getModuleURI();
 $imgPath=$siteRoot."/".$moduleUri.'/contextcontent/resources/img/new.png';
 $streamerimg ='<img  class="newcontentimg" src="'.$imgPath.'">';
+
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 
@@ -52,63 +53,61 @@ $content .= '<h3>Chapters:</h3>';
 $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
 
 if (count($chapters) > 0) {
-    
+
     $content .= '<ol>';
-    
-    foreach ($chapters as $chapter)
-    {
+
+    foreach ($chapters as $chapter) {
         $showChapter = TRUE;
-        
+
         if ($chapter['visibility'] == 'N') {
             $showChapter = FALSE;
         }
-        
+
         if ($this->isValid('viewhiddencontent')) {
             $showChapter = TRUE;
         }
-        
+
         if ($showChapter) {
 
-            $bookmarkLink = new link("#{$chapter['chapterid']}"); 
+            $bookmarkLink = new link("#{$chapter['chapterid']}");
             $bookmarkLink->link ='';
             $bookmarkLink->title = $this->objLanguage->languageText('mod_contextcontent_scrolltohapter','contextcontent');
-            $contentimg='<img src="'.$contentImgPath.'">';
-            $newimg='<img src="'.$newImgPath.'">';
-      	     // Get List of Pages in the Chapter
-								    //$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');     
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode); 
+
+            // Get List of Pages in the Chapter
+            //$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);
             if($ischapterlogged == FALSE) {
-             $showImg=$newimg;
-            }else{
-               $showImg="";
+                $showImg=$streamerimg;
+            }else {
+                $showImg="";
             }
             //if ($chapter['pagecount'] == 0) {
             //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
             //} else {
 
-            	if ($chapter['scorm'] == 'Y') {
+            if ($chapter['scorm'] == 'Y') {
                 $link = new link ($this->uri(array('action'=>'viewscorm','mode'=>'chapter', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
                 $link->link = $chapter['chaptertitle'].$showImg;
                 $content .= '<li>'.$link->show();
-            }else{
+            }else {
                 $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
                 $link->link = $chapter['chaptertitle'].$showImg;
                 $content .= '<li>'.$link->show();
-													}
+            }
             //}
-            
+
             if (isset($showScrollLinks) && $showScrollLinks) {
                 $content .= " ".$bookmarkLink->show().'</li>';
-            }           
+            }
         }
-    }    
+    }
     $content .= '</ol>';
 }
 
 if ($this->isValid('addchapter')) {
     $link = new link ($this->uri(array('action'=>'addchapter')));
     $link->link = $this->objLanguage->languageText('mod_contextcontent_addanewchapter','contextcontent');
-    
+
     $content .=  '<br /><p>'.$link->show().'</p>';
 }
 
