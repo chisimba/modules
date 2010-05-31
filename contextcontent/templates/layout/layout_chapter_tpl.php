@@ -124,8 +124,7 @@ if (isset($currentChapter)) {
         $addLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$currentChapter, 'id'=>$currentPage)));
         $addLink->link = 'Add a Page';
 
-
-        $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapter'=>$chapter['chapterid'])));
+        $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapterid'=>$currentChapter)));
         $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile', 'contextcontent', 'Create page from file');
 
         $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$chapter['id'])));
