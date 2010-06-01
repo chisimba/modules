@@ -13,6 +13,7 @@
                     'ext' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'mode' => array('type' => 'text','length' => 10, 'notnull'=>TRUE),
                     'active' => array('type' => 'text','length' => 1, 'notnull'=>TRUE),
-                    'upload' => array('type' => 'text','length' => 1, 'notnull'=>TRUE)
+                    'upload' => array('type' => 'text','length' => 1, 'notnull'=>TRUE),
+                    'deleteDoc' => array('type' => 'text','length' => 1, 'notnull'=>TRUE, 'default'=>'N')
           );
 ?>

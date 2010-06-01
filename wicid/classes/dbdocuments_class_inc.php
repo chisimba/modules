@@ -41,12 +41,13 @@ class dbdocuments extends dbtable {
     public function getdocuments($mode="default") {
         $sql="select A.*, B.docid from tbl_wicid_documents as A
                   left outer join tbl_wicid_fileuploads as B on A.id = B.docid
-              where A.active = 'N'";// and mode ='$mode'";
+              where A.active = 'N'
+              and A.deleteDoc = 'N'";// and mode ='$mode'";
         if(!$this->objUser->isadmin()) {
             //$sql.=" and userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
-
+        
         $rows=$this->getArray($sql);
         $docs=array();
 
@@ -176,15 +177,19 @@ class dbdocuments extends dbtable {
         $ext='.na';
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         foreach ($ids as $id) {
+            if(strlen($id) > 0) {
+                $doc=$this->getDocument($id);
 
-            $doc=$this->getDocument($id);
-
-            //$filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].$ext;
-            //$filename= str_replace("//", "/", $filename);
-            $filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].'.'.$doc['ext'];
-            $filename= str_replace("//", "/", $newname);
-            //unlink($filename);
-            $this->delete('id',$id);
+                //$filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].$ext;
+                //$filename= str_replace("//", "/", $filename);
+                $filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].'.'.$doc['ext'];
+                $filename= str_replace("//", "/", $newname);
+                //unlink($filename);
+                // instead of deleting, set the delete field to Y
+                //$this->delete('id',$id);
+                $data = array('deleteDoc'=>'Y');
+                $res = $this->update('id', $id, $data);
+            }
         }
     }
     /**
