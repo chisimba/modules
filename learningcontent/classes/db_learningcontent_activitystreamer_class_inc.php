@@ -452,8 +452,8 @@ class db_learningcontent_activitystreamer extends dbtable
      */
     function csvContextLogsFake( $contextcode ) 
     {
-        //$where = "LIMIT 0 , 10";
-        $where = "";
+        //$where = "";
+        $where = "LIMIT 135, 20";
         $logs = $this->getContextLogs( $contextcode, $where );
 
         $logCount = (count($logs));
@@ -466,7 +466,7 @@ class db_learningcontent_activitystreamer extends dbtable
             fputcsv($Handle, split(',', $line));
         }
         foreach ( $logs as $log ) {
-         if( !empty ( $log['endtime'] ) || $log['endtime'] != NULL ) {
+         if( !empty ( $log['endtime'] ) || !$log['endtime'] = NULL ) {
           //Return empty till its fixed
           $userNames = "";
           $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
@@ -475,11 +475,12 @@ class db_learningcontent_activitystreamer extends dbtable
           $pageorchapter = '';
           if ( $log['pageorchapter'] == 'page' ) {
            //Imagine User viewed an image for 001
-           if ( $contextcode == '001' ) { 
+           if ( $contextcode == '001' ) {
             //Start of Page
             if ($log['contextitemid'] == 'gen11Srv30Nme41_21144_1269681692') {
              //Enter record for each image
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_55386_1269604704');
+//var_dump($picdesc);
              if(empty($picdesc['filedescription'])){
                $picdescr = $picdesc["filename"];
              }else{
@@ -492,8 +493,6 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_21144_1269681692') {
              //Enter record for each image
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_72372_1269604822');
              if(empty($picdesc['filedescription'])){
@@ -508,9 +507,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_81307_1269604319') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_81307_1269604319') {
              //Enter record for each image
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_73767_1269605472');
              if(empty($picdesc['filedescription'])){
@@ -525,8 +522,6 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_81307_1269604319') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_33707_1269605537');
@@ -542,9 +537,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_87618_1269604349') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_87618_1269604349') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_15142_1269605687');
@@ -560,8 +553,6 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_87618_1269604349') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_79322_1269605785');
@@ -577,9 +568,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_9301_1269604392') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_9301_1269604392') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_75938_1269606000');
@@ -595,8 +584,6 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_9301_1269604392') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_66832_1269606208');
@@ -612,9 +599,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_54504_1269604435') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_54504_1269604435') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_66832_1269606208');
@@ -630,8 +615,6 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_54504_1269604435') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_78425_1269606208');
@@ -649,9 +632,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
             }
            //End of Context 001
-           }
-           //Imagine User viewed an image for 002
-           if ( $contextcode == '002' ) { 
+           } elseif ( $contextcode == '002' ) { 
             //Start of Page
             if ($log['contextitemid'] == 'gen11Srv30Nme41_71805_1269777463') {
              //Enter record for each image
@@ -661,16 +642,15 @@ class db_learningcontent_activitystreamer extends dbtable
              }else{
                $picdescr = $picdesc['filedescription'];    
              }
-             $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
-             if ( !empty ( $fakeDatetime ) ) {
+             do { $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] ); } while ($fakeDatetime==false);
+var_dump($fakeDatetime);
+             if (  $fakeDatetime != false ) {
                $list = array('gen11Srv30Nme41_55386_1269604704'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_33194_1269778206') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_33194_1269778206') {
              //Enter record for each image
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_73767_1269605472');
              if(empty($picdesc['filedescription'])){
@@ -685,9 +665,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_78476_1269778547') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_78476_1269778547') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_15142_1269605687');
@@ -703,9 +681,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_72980_1269779481') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_72980_1269779481') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_55386_1269604704
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_75938_1269606000');
@@ -721,9 +697,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_54504_1269604435') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_54504_1269604435') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_54504_1269604435
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_66832_1269606208');
@@ -741,9 +715,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
             }
            //End of Context 002
-           }
-           //Imagine User viewed an image for 003
-           if ( $contextcode == '003' ) { 
+           } elseif ( $contextcode == '003' ) { 
             //Start of Page
             if ($log['contextitemid'] == 'gen11Srv30Nme41_89699_1269777596') {
              //Enter record for each image
@@ -760,9 +732,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_36433_1269778353') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_36433_1269778353') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_36433_1269778353
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_33707_1269605537');
@@ -778,9 +748,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_76029_1269779116') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_76029_1269779116') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_76029_1269779116
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_79322_1269605785');
@@ -796,9 +764,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_40204_1269779594') {
+            } elseif ($log['contextitemid'] == 'gen11Srv30Nme41_40204_1269779594') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_40204_1269779594
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_66832_1269606208');
@@ -814,9 +780,7 @@ class db_learningcontent_activitystreamer extends dbtable
                fputcsv($Handle, split(',', $line));
               }
              }
-            }
-            //Start of Page
-            if ($log['contextitemid'] == 'gen11Srv30Nme41_74356_1269780005') {
+            }elseif ($log['contextitemid'] == 'gen11Srv30Nme41_74356_1269780005') {
              //Enter record for each image
              //Image 1 gen11Srv30Nme41_74356_1269780005
              $picdesc = $this->objFiles->getFileInfo('gen11Srv30Nme41_78425_1269606208');
