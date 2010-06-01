@@ -356,8 +356,12 @@ public class OutcomesAndAssessmentThree {
                     String data = response.getText();
 
                     String qD5a = Util.getTagText(data, "numWeeks");
+                    try{
                     numWeeks.setValue(Integer.parseInt(qD5a));
-
+                    }
+                    catch (NumberFormatException nfe){
+                        MessageBox.info("Error", "NumberFormatException of a: "+nfe, null);
+                    }
                     String qD5b = Util.getTagText(data, "hrsTeaching");
                     hrsTeaching.setValue(Integer.parseInt(qD5b));
 
