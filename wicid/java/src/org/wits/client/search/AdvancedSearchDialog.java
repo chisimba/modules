@@ -99,16 +99,16 @@ public class AdvancedSearchDialog {
         mainForm.setBodyBorder(false);
         mainForm.setWidth(600);
 
-        panel = new ContentPanel();
+        /*panel = new ContentPanel();
          
         panel.setHeaderVisible(false);
         panel.setLayout(new RowLayout(Orientation.HORIZONTAL));
         panel.setSize(450, 45);
         panel.setFrame(true);
-        panel.setCollapsible(false);
+        panel.setCollapsible(false);*/
         
 
-        /*final DateField dateField = new DateField();
+        final DateField dateField = new DateField();
         dateField.setFieldLabel("Date From");
         dateField.setValue(new Date());
         dateField.getPropertyEditor().setFormat(fmt);
@@ -126,12 +126,12 @@ public class AdvancedSearchDialog {
         dateField2.setAllowBlank(true);
         dateField2.setWidth(200);
 
-        panel.add(dateField, new RowData(-1, 1, new Margins(4)));
+        /*panel.add(dateField, new RowData(-1, 1, new Margins(4)));
         panel.add(dateField2, new RowData(1, 1, new Margins(4, 0, 4, 0)));
         mainForm.add(panel, formData);*/
 
-        /*mainForm.add(dateField, formData);
-        mainForm.add(dateField2, formData);*/
+        mainForm.add(dateField, formData);
+        mainForm.add(dateField2, formData);
 
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
@@ -147,7 +147,7 @@ public class AdvancedSearchDialog {
         showModeField();
         showActiveField();
 
-        panel.add(firstnameField, formData);
+        /*panel.add(firstnameField, formData);
         //panel.add(lastnameField, new RowData(1, 1, new Margins(4, 0, 4, 0)));
         mainForm.add(panel, formData);
 
@@ -211,56 +211,56 @@ public class AdvancedSearchDialog {
         lastnameField.setFieldLabel("Last Name");
         lastnameField.setAllowBlank(false);
         lastnameField.setName("lastname");
-        //mainForm.add(lastnameField, formData);
+        mainForm.add(lastnameField, formData);
     }
 
     private void showDocNameField() {
         docnameField.setFieldLabel("Document Name");
         docnameField.setAllowBlank(false);
         docnameField.setName("docname");
-        //mainForm.add(docnameField, formData);
+        mainForm.add(docnameField, formData);
     }
 
     private void showRefnoField() {
         refno.setFieldLabel("Reference No");
         refno.setAllowBlank(false);
         refno.setName("refno");
-        //mainForm.add(refno, formData);
+        mainForm.add(refno, formData);
     }
 
     private void showTopicField() {
         topic.setFieldLabel("Topic");
         topic.setAllowBlank(false);
         topic.setName("topic");
-        //mainForm.add(topic, formData);
+        mainForm.add(topic, formData);
     }
 
     private void showDepartmentField() {
         department.setFieldLabel("Department");
         department.setAllowBlank(false);
         department.setName("department");
-        //mainForm.add(department, formData);
+        mainForm.add(department, formData);
     }
 
     private void showGroupidField() {
         groupid.setFieldLabel("Group ID");
         groupid.setAllowBlank(false);
         groupid.setName("groupid");
-        //mainForm.add(groupid, formData);
+        mainForm.add(groupid, formData);
     }
 
     private void showExtField() {
         ext.setFieldLabel("Ext");
         ext.setAllowBlank(false);
         ext.setName("ext");
-        //mainForm.add(ext, formData);
+        mainForm.add(ext, formData);
     }
 
     private void showModeField() {
         mode.setFieldLabel("Mode");
         mode.setAllowBlank(false);
         mode.setName("mode");
-        //mainForm.add(mode, formData);
+        mainForm.add(mode, formData);
     }
 
     private void showActiveField() {
@@ -272,7 +272,7 @@ public class AdvancedSearchDialog {
         radioGroup.add(activeYes);
         radioGroup.add(activeNo);
 
-        //mainForm.add(radioGroup, formData);
+        mainForm.add(radioGroup, formData);
     }
 
     private void getSearchValues() {
