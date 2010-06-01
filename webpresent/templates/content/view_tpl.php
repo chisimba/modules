@@ -66,9 +66,9 @@ $showDeleteLink = FALSE;
 if ($file['creatorid'] == $objUser->userId()) {
     $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
 
-    //$editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
 
-    //$heading->str .= ' '.$editLink;
+    $heading->str .= ' '.$editLink;
 
     $objIcon->setIcon('delete');
 
@@ -193,7 +193,7 @@ $rightCell .= '<p><strong>'.$this->objLanguage->languageText("mod_webpresent_upl
 // Output filter code for local and remote filter.
 $this->loadClass('textinput','htmlelements');
 $filterBox=new textinput('filter');
-$filterBox->size=60;
+$filterBox->size=38;
 
 $flashUrl = $this->uri(array('action'=>'getflash', 'id'=>$file['id']));
 
@@ -219,7 +219,7 @@ $snippetText = '<div style="border: 1px solid #000; width: 534px; height: 402px;
 ';
 
 $this->loadClass('textarea', 'htmlelements');
-$snippetBox=new textarea('snippet', $snippetText, 4, 80);
+$snippetBox=new textarea('snippet', $snippetText, 4, 43);
 $rightCell  .= "<p><strong>"
         . $this->objLanguage->languageText("mod_webpresent_snippet", "webpresent")
         . "</strong>:" . $snippetBox->show() . "<br />"
@@ -232,6 +232,9 @@ $rightCell  .= "<p><strong>"
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 
+/*
+ Removed by Nic Appleby -> not sure what the intended logic was here
+ 
 $objModule = $this->getObject('modules','modulecatalogue');
 //See if the mathml module is registered and set params
 $isRegistered = $objModule->checkIfRegistered('disqus');
@@ -240,10 +243,12 @@ if ($isRegistered) {
     $leftContents = $flashContent.'<br/>'.$disqus->addWidget();
     ;
 }
-//$this->objComments = &$this->getObject('commentapi', 'blogcomments');
+//$this->objComments = $this->getObject('commentapi', 'blogcomments');
 //$this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
 
-$leftContents="";
+*/
+
+$leftContents= $flashContent;
 $leftContents .= '<br /><p>'.$objBookMarks->addThis();
 $divider = ' &nbsp;';
 
