@@ -592,6 +592,7 @@ public class Main {
                         // folderStore.removeAll();
                         folderLoader.load();
                         tree.setExpanded(selectedFolder, true);
+                        refreshFileList();
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create file", null);
                     }
