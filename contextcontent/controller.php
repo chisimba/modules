@@ -331,7 +331,7 @@ class contextcontent extends controller {
     protected function addChapter() {
         $this->setVar('mode', 'add');
 
-        $this->setLayoutTemplate('layout_firstpage_tpl.php');
+        $this->setLayoutTemplate(Null);
 
         return 'addeditchapter_tpl.php';
     }
