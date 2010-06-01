@@ -452,8 +452,9 @@ class db_learningcontent_activitystreamer extends dbtable
      */
     function csvContextLogsFake( $contextcode ) 
     {
-        //$where = "";
-        $where = "LIMIT 135, 20";
+        $where = "";
+        //Use limit, script takes forever if rows exceed 30
+        //$where = "LIMIT 390, 20";
         $logs = $this->getContextLogs( $contextcode, $where );
 
         $logCount = (count($logs));
@@ -643,7 +644,6 @@ class db_learningcontent_activitystreamer extends dbtable
                $picdescr = $picdesc['filedescription'];    
              }
              do { $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] ); } while ($fakeDatetime==false);
-var_dump($fakeDatetime);
              if (  $fakeDatetime != false ) {
                $list = array('gen11Srv30Nme41_55386_1269604704'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
