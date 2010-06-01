@@ -230,7 +230,11 @@ public class NewCourseProposalDialog {
                         + "&topic=" + facultyField.getValue() + "&title=" + title + "&group=" + group;
 
                 createDocument(url);
-
+                //select documents panel
+                Constants.main.selectDocumentsTab();
+                // refresh the documentlist panel
+                String defaultParams = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                Constants.main.getDocumentListPanel().refreshDocumentList(defaultParams);
             }
         });
         mainForm.addButton(saveButton);
