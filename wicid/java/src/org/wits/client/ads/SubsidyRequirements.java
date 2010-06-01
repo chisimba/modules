@@ -61,11 +61,11 @@ public class SubsidyRequirements {
     //private SubsidyRequirements oldSubsidyRequirements;
     private String subsidyRequirementsData;
     private String qC1, qC2a, qC2b, qC3, qC4a, qC4b1, qC4b2;
-    
 
     public SubsidyRequirements(RulesAndSyllabusTwo rulesAndSyllabusTwo) {
         this.rulesAndSyllabusTwo = rulesAndSyllabusTwo;
         createUI();
+        getFormData();
     }
 
     public SubsidyRequirements(OutcomesAndAssessmentOne oldOutcomesAndAssessmentOne) {
@@ -93,7 +93,7 @@ public class SubsidyRequirements {
         mainForm.add(questionC1, formData);
 
         radioC2a1.setBoxLabel("off-campus");
-        
+
         radioC2a2.setBoxLabel("on-campus");
         radioC2a2.setValue(true);
         questionC2b.disable();
@@ -105,16 +105,16 @@ public class SubsidyRequirements {
         questionC2a.add(radioC2a2);
         mainForm.add(questionC2a, formData);
 
-        questionC2a.addListener(Events.Change, new Listener<BaseEvent>(){
+        questionC2a.addListener(Events.Change, new Listener<BaseEvent>() {
+
             public void handleEvent(BaseEvent be) {
-                if (radioC2a1.getValue() == false){
+                if (radioC2a1.getValue() == false) {
                     questionC2b.disable();
                 }
-                if (radioC2a1.getValue() == true){
+                if (radioC2a1.getValue() == true) {
                     questionC2b.enable();
                 }
             }
-
         });
 
 
@@ -135,22 +135,22 @@ public class SubsidyRequirements {
         radioC4a1.setBoxLabel("Yes");
         radioC4a2.setBoxLabel("No");
         radioC4a1.setValue(true);
-        
-        
+
+
         questionC4a.setFieldLabel("C.4.a. Is any other School/Entity involved in teaching this unit?");
         questionC4a.add(radioC4a1);
         questionC4a.add(radioC4a2);
 
-        questionC4a.addListener(Events.Change, new Listener<BaseEvent>(){
+        questionC4a.addListener(Events.Change, new Listener<BaseEvent>() {
+
             public void handleEvent(BaseEvent e) {
-                if (radioC4a1.getValue() == true){
+                if (radioC4a1.getValue() == true) {
                     questionC4b.enable();
                 }
-                if (radioC4a1.getValue() == false){
+                if (radioC4a1.getValue() == false) {
                     questionC4b.disable();
                 }
             }
-
         });
 
         mainForm.add(questionC4a, formData);
@@ -182,22 +182,59 @@ public class SubsidyRequirements {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                
+                quesC2a[0] = radioC2a1.getValue();
+                quesC2a[1] = radioC2a2.getValue();
+                qC2a = "";
+                for (int i = 0; i < 2; i++) {
+                    switch (new Boolean(quesC2a[i]).toString().charAt(0)) {
+                        case 't':
+                            qC2a = qC2a + "1";
+                            break;
+                        case 'f':
+                            qC2a = qC2a + "0";
+                            break;
+                    }
+                }
+
+                if (qC2a.equals("00")) {
+                    MessageBox.info("Missing answer", "Provide an answer to C.2.a", null);
+                    return;
+                }
+
                 if ((radioC2a1.getValue() == true) && (questionC2b.getValue() == null)) {
                     MessageBox.info("Missing answer", "Provide an answer to C.2.b", null);
                     return;
                 }
-                
+
                 if (questionC3.getValue() == null) {
                     MessageBox.info("Missing answer", "Provide an answer to C.3.", null);
                     return;
                 }
-                
+
+                quesC4a[0] = radioC4a1.getValue();
+                quesC4a[1] = radioC4a2.getValue();
+                qC4a = "";
+                for (int i = 0; i < 2; i++) {
+                    switch (new Boolean(quesC4a[i]).toString().charAt(0)) {
+                        case 't':
+                            qC4a = qC4a + "1";
+                            break;
+                        case 'f':
+                            qC4a = qC4a + "0";
+                            break;
+                    }
+                }
+
+                if (qC4a.equals("00")) {
+                    MessageBox.info("Missing answer", "Provide an answer to C.2.a", null);
+                    return;
+                }
+
                 if ((radioC4a1.getValue() == true) && (questionC4b.getValue() == null)) {
                     MessageBox.info("Missing answer", "Provide an answer to C.4.b.", null);
                     return;
                 }
-                
+
 
                 if (questionC3.getRawValue().length() != 6) {
                     MessageBox.info("Error", "The CESM category must be a 6 digit number", null);
@@ -212,16 +249,14 @@ public class SubsidyRequirements {
 
                     try {
                         q4b1No = (q4b1.getValue()).split("\r\n|\r|\n");
-                    }
-                    catch (NullPointerException npe) {
+                    } catch (NullPointerException npe) {
                         MessageBox.info("Missing answer", "Provide an answer to C.4.b (School/Entity)", null);
                         return;
                     }
 
                     try {
                         q4b2No = q4b2.getValue().split("\r\n|\r|\n");
-                    }
-                    catch (NullPointerException e) {
+                    } catch (NullPointerException e) {
                         MessageBox.info("Missing answer", "Provide an answer to C.4.b (percentage)", null);
                         return;
                     }
@@ -229,9 +264,7 @@ public class SubsidyRequirements {
                     if (q4b1No.length > q4b2No.length) {
                         MessageBox.info("Error", "Missing a percentage of a School or Entity", null);
                         return;
-                    }
-
-                    else if (q4b2No.length > q4b1No.length) {
+                    } else if (q4b2No.length > q4b1No.length) {
                         MessageBox.info("Error", "Missing a name of a School or Entity", null);
                         return;
                     }
@@ -269,15 +302,15 @@ public class SubsidyRequirements {
                         }
                     }
 
-               /*     if (total != 100) {
-                        MessageBox.info("Error", "The percentages must add up to 100", null);
-                        return;
+                    /*     if (total != 100) {
+                    MessageBox.info("Error", "The percentages must add up to 100", null);
+                    return;
                     }*/
                 }
-                
+
 
                 storeDocumentInfo();
-                
+
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
@@ -335,6 +368,7 @@ public class SubsidyRequirements {
         subsidyRequirementsDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         subsidyRequirementsDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -349,33 +383,32 @@ public class SubsidyRequirements {
     public void storeDocumentInfo() {
 
         qC1 = questionC1.getValue();
-        qC2a = questionC2a.getValue().getFieldLabel();
-        qC2b = questionC2b.getValue();
-       Number xqC3 = questionC3.getValue();
 
-        qC3=xqC3+"";
-        qC4a = questionC4a.getValue().getFieldLabel();
-        qC4b1 = q4b1.getValue();
-        qC4b2 = q4b2.getValue();
+        try {
+            qC2b = questionC2b.getValue();
+        } catch (NullPointerException npe) {
+            qC2b = "";
+        }
+
+        Number xqC3 = questionC3.getValue();
+        qC3 = xqC3 + "";
 
         WicidXML wicidxml = new WicidXML("subsidyRequirements");
         wicidxml.addElement("qC1", qC1);
         wicidxml.addElement("qC2a", qC2a);
         try {
             wicidxml.addElement("qC2b", qC2b);
-        }
-        catch (NullPointerException npe) {
-            wicidxml.addElement("qC2b", "null");
+        } catch (NullPointerException npe) {
+            wicidxml.addElement("qC2a", "");
         }
         wicidxml.addElement("qC3", qC3);
         wicidxml.addElement("qC4a", qC4a);
-        if (qC4a == "Yes"){
+        try {
             wicidxml.addElement("qC4b1", qC4b1);
             wicidxml.addElement("qC4b2", qC4b2);
-        }
-        else{
-            wicidxml.addElement("qC4b1", "null");
-            wicidxml.addElement("qC4b2", "null");
+        } catch (NullPointerException npe) {
+            wicidxml.addElement("qC4b1", "");
+            wicidxml.addElement("qC4b2", "");
         }
         subsidyRequirementsData = wicidxml.getXml();
     }
@@ -443,44 +476,55 @@ public class SubsidyRequirements {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    
+
                     String data = response.getText();
 
                     String qC1 = Util.getTagText(data, "qC1");
                     questionC1.setValue(qC1);
 
                     String qC2a = Util.getTagText(data, "qC2a");
-                    for (int i = 0; i < 2; i++) {
-                        if (qC2a.charAt(i) == '0') {
-                            quesC2a[i] = false;
+                    if (qC2a != null) {
+                        for (int i = 0; i < 2; i++) {
+                            if (qC2a.charAt(i) == '0') {
+                                quesC2a[i] = false;
+                            }
+                            if (qC2a.charAt(i) == '1') {
+                                quesC2a[i] = true;
+                            }
+                            System.out.println(quesC2a[i]);
                         }
-                        if (qC2a.charAt(i) == '1') {
-                            quesC2a[i] = true;
-                        }
-                        System.out.println(quesC2a[i]);
+                        radioC2a1.setValue(quesC2a[0]);
+                        radioC2a2.setValue(quesC2a[1]);
+                    } else {
+                        radioC2a1.setValue(true);
+                        radioC2a2.setValue(false);
                     }
-                    radioC2a1.setValue(quesC2a[0]);
-                    radioC2a2.setValue(quesC2a[1]);
-
                     String qC2b = Util.getTagText(data, "qC2b");
                     questionC2b.setValue(qC2b);
 
-                    int qC3 = Integer.parseInt(Util.getTagText(data, "qC3"));
-                    questionC3.setValue(qC3);
-
-                    String qC4a = Util.getTagText(data, "qC4a");
-                    for (int i = 0; i < 2; i++) {
-                        if (qC4a.charAt(i) == '0') {
-                            quesC4a[i] = false;
-                        }
-                        if (qC4a.charAt(i) == '1') {
-                            quesC4a[i] = true;
-                        }
-                        System.out.println(quesC4a[i]);
+                    try {
+                        int qC3 = Integer.parseInt(Util.getTagText(data, "qC3"));
+                        questionC3.setValue(qC3);
+                    } catch (NumberFormatException nfe) {
+                        questionC3.setValue(null);
                     }
-                    radioC4a1.setValue(quesC4a[0]);
-                    radioC4a2.setValue(quesC4a[1]);
-
+                    String qC4a = Util.getTagText(data, "qC4a");
+                    if (qC4a != null) {
+                        for (int i = 0; i < 2; i++) {
+                            if (qC4a.charAt(i) == '0') {
+                                quesC4a[i] = false;
+                            }
+                            if (qC4a.charAt(i) == '1') {
+                                quesC4a[i] = true;
+                            }
+                            System.out.println(quesC4a[i]);
+                        }
+                        radioC4a1.setValue(quesC4a[0]);
+                        radioC4a2.setValue(quesC4a[1]);
+                    } else {
+                        radioC4a1.setValue(true);
+                        radioC4a2.setValue(false);
+                    }
                     String qC4b1 = Util.getTagText(data, "qC4b1");
                     q4b1.setValue(qC4b1);
 
