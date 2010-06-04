@@ -285,6 +285,7 @@ public class Resources {
 
     public void storeDocumentInfo() {
 
+        qE1b = E1b.getValue();
         qE2a = E2a.getValue();
         qE2b = E2b.getValue();
         qE2c = E2c.getValue();

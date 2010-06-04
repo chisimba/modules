@@ -57,6 +57,7 @@ public class OutcomesAndAssessmentThree {
     private OutcomesAndAssessmentTwo oldOutComesAndAssessmentTwo;
     private OutcomesAndAssessmentThree oldOutcomesAndAssessmentThree;
     private String outcomesAndAssessmentThreeData;
+    private ClickEvent event;
 
     public OutcomesAndAssessmentThree(OutcomesAndAssessmentTwo outcomesAndAssessmentTwo) {
         this.outcomesAndAssessmentTwo = outcomesAndAssessmentTwo;
@@ -188,6 +189,8 @@ public class OutcomesAndAssessmentThree {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+
+                questionD5.fireEvent(event);
 
                 if (creSAQA == 0) {
                     MessageBox.info("Missing answer", "Please fill in the table", null);
@@ -356,49 +359,96 @@ public class OutcomesAndAssessmentThree {
                     String data = response.getText();
 
                     String qD5a = Util.getTagText(data, "numWeeks");
-                    try{
-                    numWeeks.setValue(Integer.parseInt(qD5a));
+                    System.out.println(qD5a);
+                    try {
+                        numWeeks.setValue(Double.parseDouble(qD5a));
+                    } catch (NullPointerException npe) {
+                        numWeeks.setValue(0);
                     }
-                    catch (NumberFormatException nfe){
-                        MessageBox.info("Error", "NumberFormatException of a: "+nfe, null);
-                    }
+
                     String qD5b = Util.getTagText(data, "hrsTeaching");
-                    hrsTeaching.setValue(Integer.parseInt(qD5b));
+                    System.out.println(qD5b);
+                    try {
+                        hrsTeaching.setValue(Double.parseDouble(qD5b));
+                    } catch (NullPointerException npe) {
+                        hrsTeaching.setValue(0);
+                    }
 
                     String qD5c = Util.getTagText(data, "hrsTuts");
-                    hrsTuts.setValue(Integer.parseInt(qD5c));
+                    System.out.println(qD5c);
+                    try {
+                        hrsTuts.setValue(Double.parseDouble(qD5c));
+                    } catch (NullPointerException npe) {
+                        hrsTuts.setValue(0);
+                    }
 
                     String qD5d = Util.getTagText(data, "hrsLabs");
-                    hrsLabs.setValue(Integer.parseInt(qD5d));
+                    System.out.println(qD5d);
+                    try {
+                        hrsLabs.setValue(Double.parseDouble(qD5d));
+                    } catch (NullPointerException npe) {
+                        hrsLabs.setValue(0);
+                    }
 
                     String qD5e = Util.getTagText(data, "hrsOther");
-                    hrsOther.setValue(Integer.parseInt(qD5e));
+                    System.out.println(qD5e);
+                    try {
+                        hrsOther.setValue(Double.parseDouble(qD5e));
+                    } catch (NullPointerException npe) {
+                        hrsOther.setValue(0);
+                    }
 
                     String qD5f = Util.getTagText(data, "contactTime");
+                    System.out.println(qD5f);
                     questionD5.setText(5, 1, qD5f);
 
+
                     String qD5g = Util.getTagText(data, "hrsStudy");
-                    hrsStudy.setValue(Integer.parseInt(qD5g));
+                    System.out.println(qD5g);
+                    try {
+                        hrsStudy.setValue(Double.parseDouble(qD5g));
+                    } catch (NullPointerException npe) {
+                        hrsStudy.setValue(0);
+                    }
 
                     String qD5h = Util.getTagText(data, "studyHours");
+                    System.out.println(qD5h);
                     questionD5.setText(7, 1, qD5h);
 
                     String qD5i = Util.getTagText(data, "examsPerYr");
-                    examsPerYr.setValue(Integer.parseInt(qD5i));
+                    System.out.println(qD5i);
+                    try {
+                        examsPerYr.setValue(Double.parseDouble(qD5i));
+                    } catch (NullPointerException npe) {
+                        examsPerYr.setValue(0);
+                    }
 
                     String qD5j = Util.getTagText(data, "examsLength");
-                    examsLength.setValue(Integer.parseInt(qD5j));
+                    System.out.println(qD5j);
+                    try {
+                        examsLength.setValue(Double.parseDouble(qD5j));
+                    } catch (NullPointerException npe) {
+                        examsLength.setValue(0);
+                    }
 
                     String qD5k = Util.getTagText(data, "examTime");
+                    System.out.println(qD5k);
                     questionD5.setText(10, 1, qD5k);
 
                     String qD5l = Util.getTagText(data, "hrsExamPrep");
-                    hrsExamPrep.setValue(Integer.parseInt(qD5l));
+                    System.out.println(qD5l);
+                    try {
+                        hrsExamPrep.setValue(Double.parseDouble(qD5l));
+                    } catch (NullPointerException npe) {
+                        hrsExamPrep.setValue(0);
+                    }
 
                     String qD5m = Util.getTagText(data, "notionalStudyHours");
+                    System.out.println(qD5m);
                     questionD5.setText(12, 1, qD5m);
 
                     String qD5n = Util.getTagText(data, "creditsSAQA");
+                    creSAQA = Double.parseDouble(qD5n);
                     questionD5.setText(13, 1, qD5n);
 
                     /*String resp[] = response.getText().split("|");

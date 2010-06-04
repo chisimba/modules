@@ -243,7 +243,7 @@ public class OutcomesAndAssessmentOne {
         qD2c = D2c.getValue();
         qD3 = questionD3.getValue().toString();
 
-        WicidXML wicidxml = new WicidXML("outcomesandassessment1");
+        WicidXML wicidxml = new WicidXML("outcomesAndAssessmentOne");
         wicidxml.addElement("qD1a", qD1a);
         wicidxml.addElement("aD1b", qD1b);
         try{
@@ -258,11 +258,6 @@ public class OutcomesAndAssessmentOne {
         wicidxml.addElement("qD3", qD3);
         outcomesAndAssessmentOneData = wicidxml.getXml();
     }
-
-    public void setDocumentInfo(){
-
-    }
-
     public void show() {
         outcomesAndAssessmentDialog.show();
     }
@@ -319,7 +314,7 @@ public class OutcomesAndAssessmentOne {
 
     private void getFormData() {
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=getFormData&formname=subsidyRequirements&docid=" + Constants.docid;
+                + "?module=wicid&action=getFormData&formname=outcomesAndAssessmentOne&docid=" + Constants.docid;
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 
         try {
@@ -327,7 +322,7 @@ public class OutcomesAndAssessmentOne {
             Request request = builder.sendRequest(null, new RequestCallback() {
 
                 public void onError(Request request, Throwable exception) {
-                    MessageBox.info("Error", "Error, cannot get subsidyRequirements data", null);
+                    MessageBox.info("Error", "Error, cannot get outcomesAndAssessmentOne data", null);
                 }
 
                 public void onResponseReceived(Request request, Response response) {
@@ -364,7 +359,7 @@ public class OutcomesAndAssessmentOne {
                 }
             });
         } catch (Exception e) {
-            MessageBox.info("Fatal Error", "Fatal Error: cannot get subsidyRequirements data", null);
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get outcomesAndAssessmentOne data", null);
         }
     }
 }

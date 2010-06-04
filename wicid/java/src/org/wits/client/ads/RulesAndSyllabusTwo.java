@@ -298,6 +298,7 @@ public class RulesAndSyllabusTwo {
                     radio15.enable();
                     radio16.enable();
                     radio17.enable();
+                    radio15.setValue(true);
                 }
                 if (radio18.getValue() == false) {
                     radio19.setValue(false);
@@ -314,6 +315,7 @@ public class RulesAndSyllabusTwo {
                     radio20.enable();
                     radio21.enable();
                     radio22.enable();
+                    radio19.setValue(true);
                 }
             }
         });
@@ -374,6 +376,18 @@ public class RulesAndSyllabusTwo {
 
                 }
 
+                if ((radio14.getValue() == true) && (questionB6a2.getValue() == null)) {
+                    MessageBox.info("Missing answer", "Provide your answer to question B.6.a " +
+                            "(select radio button 'semester 1', 'semester 2' or 'or semester 1 and 2')", null);
+                    return;
+                }
+
+                if ((radio18.getValue() == true) && (questionB6a3.getValue() == null)) {
+                    MessageBox.info("Missing answer", "Provide your answer to question B.6.a " +
+                            "(select radio button 'block 1', 'block 2', 'block 3' or 'block 4')", null);
+                    return;
+                }
+
                 quesB6a[0] = radio13.getValue();
                 quesB6a[1] = radio14.getValue();
                 quesB6a[2] = radio15.getValue();
@@ -397,8 +411,17 @@ public class RulesAndSyllabusTwo {
                             break;
                     }
                 }
-                for (int i = 0; i < 12; i++) {
+
+                if ((radio14.getValue() == true) && (questionB6a2.getValue() == null)) {
+                    MessageBox.info("Missing answer", "Provide your answer to question B.6.a (select radio button 'semester 1', 'semester 2' or 'or semester 1 and 2')", null);
+                    return;
                 }
+
+                if ((radio14.getValue() == true) && (questionB6a2.getValue() == null)) {
+                    MessageBox.info("Missing answer", "Provide your answer to question B.6.a (select radio button 'semester 1', 'semester 2' or 'or semester 1 and 2')", null);
+                    return;
+                }
+
                 if (qB6a.equals("000000000000")) {
                     MessageBox.info("Missing answer", "Provide your answer to question B.6.a", null);
                     return;

@@ -499,15 +499,16 @@ public class SubsidyRequirements {
                         radioC2a1.setValue(true);
                         radioC2a2.setValue(false);
                     }
+
                     String qC2b = Util.getTagText(data, "qC2b");
                     questionC2b.setValue(qC2b);
-
                     try {
                         int qC3 = Integer.parseInt(Util.getTagText(data, "qC3"));
                         questionC3.setValue(qC3);
                     } catch (NumberFormatException nfe) {
                         questionC3.setValue(null);
                     }
+
                     String qC4a = Util.getTagText(data, "qC4a");
                     if (qC4a != null) {
                         for (int i = 0; i < 2; i++) {
@@ -525,6 +526,7 @@ public class SubsidyRequirements {
                         radioC4a1.setValue(true);
                         radioC4a2.setValue(false);
                     }
+
                     String qC4b1 = Util.getTagText(data, "qC4b1");
                     q4b1.setValue(qC4b1);
 
