@@ -25,20 +25,30 @@ class dbformdata extends dbtable {
                 'userid'=>$this->userutils->getUserId()
         );
 
+
         $this->insert($data);//$formname, $formdata, $docid
 
         echo 'success';
-        //return $id;
+        
 
     }
 
+    function  exists($docid, $formname){
+        $sql="select * from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
+        $xmStr="";
+        $rows=$this->getArray($sql);
+        if(count($rows) > 1){
+            return TRUE;
+        }
+        return FALSE;
+    }
 
     public function  getFormData($formname, $docid){
 
         $sql="select * from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
         $xmStr="";
         $rows=$this->getArray($sql);
-        print_r($rows);
+        
         foreach($rows as $row){
             $xmlStr=$row['formname'];
         }
