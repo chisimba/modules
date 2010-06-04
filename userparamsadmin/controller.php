@@ -49,6 +49,9 @@ class userparamsadmin extends controller
             case 'edit':
                  $this->getForEdit('edit');
                  $this->setVar('mode', 'edit');
+                 if ($this->getParam('suppressall', FALSE)) {
+                     $this->setPageTemplate('page_template.php');
+                 }
                  return "edit_tpl.php";
                  break;
 
