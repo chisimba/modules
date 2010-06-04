@@ -264,6 +264,9 @@ class dbsections extends dbTable
                 $menuText = $this->getParam('menutext');
                 $access = $this->getParam('access');
                 $description = str_ireplace("<br />", " <br /> ",$this->getParam('introtext'));
+                if ($description==' <br /> '){
+                    $description='';
+                }
                 $published = $this->getParam('published');
                 $layout = $this->getParam('display');
                 $showdate = $this->getParam('showdate');
@@ -328,6 +331,9 @@ class dbsections extends dbTable
                 $menuText = $this->getParam('menutext');
                 $access = $this->getParam('access');
                 $description = str_ireplace("<br />", " <br /> ",$this->getParam('introtext'));
+                if ($description==' <br /> '){
+                    $description='';
+                }
                 $published = $this->getParam('published');
                 $layout = $this->getParam('display');
                 $showdate = $this->getParam('showdate');
@@ -571,6 +577,9 @@ class dbsections extends dbTable
             $menuText = $this->getParam('menutext');
             $access = $this->getParam('access');
             $description = str_ireplace("<br />", " <br /> ",$this->getParam('introtext'));
+            if ($description==' <br /> '){
+               $description='';
+            }
             $published = $this->getParam('published');
             $layout = $this->getParam('display');
             $showdate = $this->getParam('showdate');

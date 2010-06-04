@@ -145,6 +145,9 @@
             $access = $this->getParam('access');
             $created_by = $this->getParam('title_alias',null);
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            if ($introText==' <br /> '){
+               $introText='';
+            }
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
             $metakey = $this->getParam('keyword',null);
             $metadesc = $this->getParam('description',null);
@@ -223,6 +226,9 @@
             $created_by = $this->getParam('author_alias',null);
                         
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            if ($introText==' <br /> '){
+               $introText='';
+            }
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
             $metakey = $this->getParam('keyword',null);
             $metadesc = $this->getParam('description',null);
@@ -275,6 +281,9 @@
             $published = ($this->getParam('published') == '1') ? 1 : 0;
             $access = $this->getParam('access');
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            if ($introText==' <br /> '){
+               $introText='';
+            }
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
 
             $override_date = $this->getParam('overide_date',null);
