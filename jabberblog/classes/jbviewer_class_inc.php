@@ -88,9 +88,17 @@ class jbviewer extends object {
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
         $this->objTwtOps = $this->getObject ( 'twitoasterops', 'twitoaster');
         $this->objUserPic = $this->getObject('imageupload', 'useradmin');
+        $twttr = '<script src="http://platform.twitter.com/anywhere.js?id=Ga1VyPD18avD3OWSu2qYA&v=1"></script>';
+        $this->appendArrayVar('headerParams', $twttr);
     }
 
     public function renderSingle($msg) {
+        $hc = '<script type="text/javascript">
+                   twttr.anywhere(function(twitter) {
+	               twitter.hovercards();
+                   });
+               </script>';
+
         $this->loadClass ( 'htmlheading', 'htmlelements' );
         // Add in a comment heading
         $header = new htmlHeading ( );
@@ -148,13 +156,18 @@ class jbviewer extends object {
         $comment = $this->objComment->commentAddForm ( $msgid, 'jabberblog', 'tbl_jabberblog', $postuserid = NULL, $editor = TRUE, $featurebox = FALSE, $showtypes = FALSE, $captcha = FALSE, $comment = NULL, $useremail = NULL );
         $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
         $ret = $objFeaturebox->showContent ( "<span class='blog-head-date'>".'<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent']."</span>", nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment."<br />" );
-        $ret .= "<hr />";
+        $ret .= "<hr />".$hc;
 
         return $ret;
     }
 
     public function renderOutputForBrowser($msgs) {
         $ret = NULL;
+        $hc = '<script type="text/javascript">
+                   twttr.anywhere(function(twitter) {
+	               twitter.hovercards();
+                   });
+               </script>';
         foreach ( $msgs as $msg ) {
             $msgbody = $this->objWashout->parseText ( $msg ['msgbody'] );
             // run the parsers on the body
@@ -188,7 +201,7 @@ class jbviewer extends object {
             // alt featurebox
             $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
             $ret .= $objFeaturebox->showContent ( "<span class='blog-head-date'>".'<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")"." ".$tlink->show()."</span>", nl2br ( $msgbody ) . "<br /><br />" );
-            $ret .= "<hr />";
+            $ret .= "<hr />".$hc;
         }
         header ( "Content-Type: text/html;charset=utf-8" );
         return $ret;
