@@ -3,10 +3,10 @@ $this->loadclass('link', 'htmlelements');
 $objSysConfig = $this->getObject('altconfig', 'config');
 $this->appendArrayVar('headerParams', '
 <script type="text/javascript">
-var pageSize = 1;
+var pageSize = 30;
 var uri = "' . str_replace('&amp;', '&', $this->uri(array(
     'module' => 'learningcontent',
-    'action' => 'jsongetlogs'
+    'action' => 'jsongetlogs','limit' => '30'
 ))) . '"; 
 var title= "'.ucWords($this->objLanguage->code2Txt('mod_learningcontent_useractivitylogs','learningcontent'))." ".ucWords($this->objLanguage->code2Txt('mod_learningcontent_wordfor', 'learningcontent'))." ".$this->objContext->getTitle( $this->contextCode ).' ('.$this->contextCode.')";
 var lang = new Array();
