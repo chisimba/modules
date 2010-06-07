@@ -54,6 +54,7 @@ class mobilesecurity extends object {
      
 	
 	function init() {
+		$this->objLanguage = $this->getObject('language', 'language');
 		$this->objUser = $this->getObject('user', 'security');
 	}
 
@@ -68,12 +69,12 @@ class mobilesecurity extends object {
         $remember = $this->getParam( 'remember', 'off');
 
 		if($username == '' || $password == '') {
-            $error = 'Username and password required';
+            $error = $this->objLanguage->languageText('mod_uwcelearningmobile_wordloginrequired', 'uwcelearningmobile');
 			return $error;
         }
 
         if(strlen($username) > 255 || strlen($password) > 255) {
-            $error = 'Username and password too long';
+            $error = $this->objLanguage->languageText('mod_uwcelearningmobile_wordlogintoolong', 'uwcelearningmobile');
 			return $error;
         }
         if($remember == 'on') {
@@ -84,10 +85,16 @@ class mobilesecurity extends object {
         }
 
 		$isactive = $this->objUser->lookupData($username);
+		
+		if($isactive == false)
+        {
+            $error = $this->objLanguage->languageText('mod_uwcelearningmobile_wordusernotexist', 'uwcelearningmobile');
+            return $error;
+		}
 		if(($isactive['isactive']) != 1)
         {
-             $error = 'User is inactive, please contact site admin';
-             return $error;
+            $error = $this->objLanguage->languageText('mod_uwcelearningmobile_wordaccntinactive', 'uwcelearningmobile');
+            return $error;
 		}
 		
         if($this->objUser->authenticateUser ( $username, $password, $remember )) {
@@ -95,7 +102,7 @@ class mobilesecurity extends object {
 			return true;
         }
 		else{
-			$error = 'Incorrect combination of username/password';
+			$error = $this->objLanguage->languageText('mod_uwcelearningmobile_wordwronglogin', 'uwcelearningmobile');
 			return $error;
 		}
 		     

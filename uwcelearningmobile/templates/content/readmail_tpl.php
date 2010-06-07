@@ -24,7 +24,41 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$date = $this->objDate->formatDate($message['date_sent']);
 	$subject = $message['subject'];
 	$messagedata = nl2br($washer->parseText($message['message']));
+	//reply link
+	$array = array(
+        'date' => $this->objDate->formatDate($message['date_sent']) ,
+        'writer' => $from
+    );
+	$replyMessageLabel = $this->objLanguage->code2Txt('mod_internalmail_replymessage', 'internalmail', $array);
+    $replyMessage = $replyMessageLabel."\n";
+    $replyMessage.= $message['message']."\n";
+    $replyMessage.= '------------------'."\n";
+	//////////////////////////
+	$replylink = new link($this->uri(array(
+        'action' => 'compose',
+        'userId' => $message['sender_id'],
+        'subject' => 'RE: '.$message['subject'],
+        'message' => $replyMessage,
+        'emailId' => $message['id']
+    )) );
+	$replylink->link = $this->objLanguage->languageText('mod_internalmail_reply', 'internalmail');
+    	
+	//reply all link
 	
+	$arrUserId = explode('|', $message['recipient_list']);
+	if (!in_array($message['sender_id'], $arrUserId)) {
+        $arrUserId[] = $message['sender_id'];
+    }
+    $strUserId = implode('|', $arrUserId);
+	$replyalllink = new link($this->uri(array(
+        'action' => 'compose',
+        'userId' => $strUserId,
+        'subject' => 'RE: '.$message['subject'],
+        'message' => $replyMessage,
+        'emailId' => $message['id']
+    )));
+	$replyalllink->link = $this->objLanguage->languageText('mod_internalmail_replyall', 'internalmail');
+	//////////////////////////
     $objTable->startRow();
     $objTable->addCell('<b>'.$fromLabel.':</b>', '', '', '', '', '');
     $objTable->addCell($from, '', '', '', '', '');
@@ -44,10 +78,14 @@ if (!$GLOBALS['kewl_entry_point_run'])
     $objTable->startRow();
     $objTable->addCell('<b>'.$messageLabel.':</b><br /><br />'.$messagedata , '', '', '', '', 'colspan="2"');
     $objTable->endRow();
-
+	$objTable->startRow();
+    $objTable->addCell('<b>'.$replylink->show().'<b>', '', '', '', '', '');
+    $objTable->addCell('<b>'.$replyalllink->show().'<b>', '', '', '', '', '');
+	$objTable->endRow();
+	
 	$objFields->addContent($objTable->show());
 
-	echo '<br>'.$objFields->show();
+	echo $objFields->show();
 
 	$backLink = new link($this->URI(array('action' => 'internalmail')));
 	$backLink->link = 'Back to Internalmail';

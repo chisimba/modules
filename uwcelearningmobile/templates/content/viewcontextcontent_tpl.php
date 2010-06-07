@@ -10,7 +10,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
     
 	$objFields = new fieldset();
     $objFields->setLegend($chapter['chaptername']);
-	$objFields->addContent();
+	$objFields->addContent(substr(strip_tags($firstPage['pagecontent']), 0, 500).'...');
+	//var_dump($firstPage);
 	echo $objFields->show();
 	
 	$backLink = new link($this->URI(array('action' => 'contextcontent')));

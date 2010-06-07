@@ -9,20 +9,20 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('link','htmlelements');
 	$newImgPath = $this->getResourceUri('img/new.png', 'uwcelearningmobile');
 	
-	echo '<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile').': </b>'.$this->contextTitle;
+	echo '<b>'.ucWords($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile')).': </b>'.$this->contextTitle;
 
 	$objFields = new fieldset();
-	$objFields->setLegend('<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordnewewcontent', 'uwcelearningmobile').'</b>');
+	$objFields->setLegend('<b>'.ucWords($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordnewewcontent', 'uwcelearningmobile')).'</b>');
 	
 	if (!empty($content)) {
 		foreach($content as $con) {
 			$link = new link($this->URI(array('action' => 'viewcontextcontent', 'id' => $con['chapterid'])));
 			$link->link = $con['chaptertitle'];
-			$objFields->addContent($con['chaptertitle'].' <img src="'.$newImgPath.'" border="0" alt="New" title="New"><br>');
+			$objFields->addContent($link->show().' <img src="'.$newImgPath.'" border="0" alt="New" title="New"><br>');
         }	
 	}
 	else {
-		$objFields->addContent($this->objLanguage->languageText('mod_uwcelearningmobile_wordnocontent', 'uwcelearningmobile'));
+		$objFields->addContent($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordnocontent', 'uwcelearningmobile'));
 	}
 	echo $objFields->show();
 

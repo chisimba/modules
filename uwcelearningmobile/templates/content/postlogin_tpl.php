@@ -8,7 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	$this->loadClass('fieldset','htmlelements');
 	$this->loadClass('link','htmlelements');
 	$objFields = new fieldset();
-	$objFields->setLegend('<b>'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordmycourse', 'uwcelearningmobile').'</b>');
+	$objFields->setLegend('<b>'.ucWords($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordmycourse', 'uwcelearningmobile')).'</b>');
 	
 	if(!empty($usercontexts))
     {	
@@ -22,7 +22,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	}
 	else 
     {
-         $objFields->addContent($this->objLanguage->languageText('mod_uwcelearningmobile_wordnocourse', 'uwcelearningmobile'));
+         $objFields->addContent(ucWords($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordnocourse', 'uwcelearningmobile')));
     }
 	echo $objFields->show();
 	

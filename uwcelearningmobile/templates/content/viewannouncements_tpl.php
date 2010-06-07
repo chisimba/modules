@@ -18,6 +18,6 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	echo $objFields->show().'</br>';
 
 	$backLink = new link($this->URI(array('action' => 'announcements')));
-	$backLink->link = 'Back to Announcements';
+	$backLink->link = $this->objLanguage->code2Txt('mod_uwcelearningmobile_wordbacktoannouncement', 'uwcelearningmobile');
 	echo $this->homeAndBackLink.' - '.$backLink->show();
 ?>

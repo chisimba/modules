@@ -22,7 +22,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
     }
 	else 
     {
-         $objFields->addContent($this->objLanguage->languageText('mod_uwcelearningmobile_wordmynoann', 'uwcelearningmobile'));
+         $objFields->addContent($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordmynocontextann', 'uwcelearningmobile'));
     }
 
 	echo $objFields->show().'<br>';

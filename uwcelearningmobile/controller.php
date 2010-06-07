@@ -116,15 +116,14 @@ class uwcelearningmobile extends controller
 		$this->contextTitle = $this->dbContext->getField('title', $this->contextCode);
 
 		$homelink = new link($this->URI(null));
-		$homelink->link = "Home";
+		$homelink->link = $this->objLanguage->languageText('mod_uwcelearningmobile_wordhome', 'uwcelearningmobile');
 		$this->homeAndBackLink = $homelink->show();
 
 		if($this->contextCode != null)
 		{
 			$backlink = new link($this->URI(array('action' => 'context',
 											  'contextcode' => $this->contextCode)));
-			$backlink->link = "Back to Course";
-		
+			$backlink->link = $this->objLanguage->languageText('mod_uwcelearningmobile_wordbacktocontext', 'uwcelearningmobile');		
 			$this->homeAndBackLink .= ' - '.$backlink->show();
 		}
 		
@@ -149,7 +148,6 @@ class uwcelearningmobile extends controller
 			return $this->goToLogin();
 		}
 
-
 		if (in_array($action, $actions)) {
             return FALSE;
         } else {
@@ -160,7 +158,7 @@ class uwcelearningmobile extends controller
 
     public function dispatch($action='home')
     {	
-		$actions = array('', 'home', 'login', 'context', 'readmail', 'internalmail', 'filemanager', 'forum', 'viewforum', 'topic');
+		$actions = array('', 'home', 'login', 'context', 'readmail', 'internalmail', 'filemanager', 'forum', 'viewforum', 'topic', 'compose', 'sendmail');
 		
 		if ($this->contextCode == NULL && !in_array($action, $actions)) {
 			 $action = 'home';
@@ -596,13 +594,78 @@ class uwcelearningmobile extends controller
 		$id = $this->getParam('id');
 		$this->objContentOrder = $this->getObject('db_contextcontent_order', 'contextcontent');
 		$firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
-		//var_dump($firstPage);
-		$this->setVarByRef('chapter', $firstPage);
+		$this->setVarByRef('firstPage', $firstPage);
 		return 'viewcontextcontent_tpl.php';
 	}	
 
-	private function __homeAndBackLink(){
+	/**
+	* Method that called when the reply/reply all
+	* 
+	* @return template @type string 
+	*
+	**/
+	private function __compose(){
 		
+		$arrUserId = $this->getParam('userId');
+        $subject = $this->getParam('subject');
+        $message = $this->getParam('message');
+        $emailId = $this->getParam('emailId');
+		$this->dbRouting = $this->newObject('dbrouting', 'internalmail');
+		
+		$recipientList = '';
+        if (!empty($arrUserId)) {
+            if (!is_array($arrUserId)) {
+                $arrUserId = explode('|', $arrUserId);
+			}
+            $toList = '';
+			$i = 0;
+			
+            foreach($arrUserId as $key => $userId) {
+				if($userId != ""){
+					$i++;
+                	$name = $this->dbRouting->getName($userId);
+                	$toList.= '<span id="'.$userId.'">'.$name;
+					if($i!=count($arrUserId))
+					{
+						$toList.=',';
+					}
+					$toList.='&nbsp;</span>';				
+            	}
+			}
+            $recipientList = implode('|', $arrUserId);
+        }else {
+                    $toList = '';
+                    $recipientList = '';
+        }
+		$this->setVarByRef('toList', $toList);
+		$this->setVarByRef('recipientList', $recipientList);
+		$this->setVarByRef('userId', $userId);
+		$this->setVarByRef('subject', $subject);
+		$this->setVarByRef('message', $message);
+		$this->setVarByRef('emailId', $emailId);
+		return 'compose_tpl.php';
+	}
+
+	/**
+	*
+	*
+	**/
+	private function __sendmail(){
+
+		$this->dbEmail = $this->newObject('dbemail', 'internalmail');
+
+		$subject = $this->getParam('subject');
+        if ($subject == '') {
+            $subject = $this->noSubject;
+        }
+        $message = $this->getParam('message');
+
+		$recipientList = $this->getParam('userid');
+
+		if($recipientList){
+			$emailId = $this->dbEmail->sendMail($recipientList, $subject, $message, 0);
+		}
+		return $this->nextAction('internalmail');
 	}
 }
 ?>
