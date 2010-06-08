@@ -142,9 +142,9 @@ public class AdvancedSearchDialog {
         showRefnoField();
         showTopicField();
         showDepartmentField();
-        showGroupidField();
-        showExtField();
-        showModeField();
+        //showGroupidField();
+        //showExtField();
+        //showModeField();
         showActiveField();
 
         /*panel.add(firstnameField, formData);
@@ -188,7 +188,7 @@ public class AdvancedSearchDialog {
 
         newDocumentDialog.setBodyBorder(false);
         newDocumentDialog.setHeading("Advanced Search");
-        newDocumentDialog.setSize(800, 550);
+        newDocumentDialog.setSize(600, 400);
         newDocumentDialog.setHideOnButtonClick(true);
         newDocumentDialog.setButtons(Dialog.CLOSE);
         newDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
