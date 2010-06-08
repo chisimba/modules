@@ -51,6 +51,7 @@ import java.util.Date;
 import java.util.List;
 import org.wits.client.ads.OverView;
 import org.wits.client.util.WicidXML;
+import java.util.Date;
 
 /**
  *
@@ -67,6 +68,7 @@ public class EditDocumentDialog {
     private final TextField<String> deptField = new TextField<String>();
     private final TextField<String> telField = new TextField<String>();
     private final TextField<String> numberField = new TextField<String>();
+    private final TextField<String> ownerField = new TextField<String>();
     private Button saveButton = new Button("Save");
     private Button browseTopicsButton = new Button("Browse Facuties");
     private TopicListingFrame topicListingFrame;
@@ -131,8 +133,8 @@ public class EditDocumentDialog {
         groups.add(new Group("Administration"));
         groupStore.add(groups);
 
-        namesField.setText(document.getOwnerName());
-        mainForm.add(namesField, formData);
+        //namesField.setText(document.getOwnerName());
+        //mainForm.add(namesField, formData);
         groupField.setFieldLabel("Group");
         groupField.setName("groupField");
         groupField.setDisplayField("name");
@@ -152,6 +154,14 @@ public class EditDocumentDialog {
         mainForm.add(numberField, formData);
         topicField.setEnabled(false);
 
+        
+        ownerField.setFieldLabel("Owner");
+        ownerField.setAllowBlank(false);
+        ownerField.setEnabled(false);
+        ownerField.setValue(document.getOwnerName());
+        ownerField.setName("ownerfield");
+        mainForm.add(ownerField, formData);
+        
         deptField.setFieldLabel("Originating department");
         deptField.setAllowBlank(false);
         deptField.setValue(document.getDepartment());
@@ -360,7 +370,7 @@ public class EditDocumentDialog {
                 }
                 String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
                         + "module=wicid&action=updatedocument&dept=" + dept + "&topic=" + topic
-                        + "&title=" + title + "&group=" + group;
+                        + "&title=" + title + "&group=" + group + "&date=" + fmt.format(date) + "&docid=" + document.getId();
 
 
                 updateDocument(url);
@@ -407,7 +417,7 @@ public class EditDocumentDialog {
         editDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         editDocumentDialog.add(mainForm);
-        setDepartment();
+        //setDepartment();
 
         //defaultParams = "?module=wicid&action=getdocuments&mode=" + main.getMode();
         //myDocumentListPanel.refreshDocumentList(defaultParams);

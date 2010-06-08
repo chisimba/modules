@@ -36,6 +36,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Arrays;
 
 /**
  *
@@ -332,13 +333,13 @@ public class NewDocumentDialog {
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
                         wait.close();
-                        String responseTxt[] = response.getText().split("|");
+                        String responseTxt[] = response.getText().split(",");
                         newDocumentDialog.setVisible(false);
-                       MessageBox.info("Save", "Your document is saved. You can access it from the 'Documents' tab to make any changes", null);
-                       // showEditDialog(responseTxt[0], responseTxt[1]);
+                        // immediately give the reference number
+                        MessageBox.info("Reference Number", "The reference number is: " + responseTxt[0], null);
 
-
-
+                        //MessageBox.info("Save", "Your document is saved. You can access it from the 'Documents' tab to make any changes", null);
+                        // showEditDialog(responseTxt[0], responseTxt[1]);
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }

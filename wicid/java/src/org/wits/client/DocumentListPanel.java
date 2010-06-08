@@ -376,6 +376,7 @@ public class DocumentListPanel extends LayoutContainer {
         Document document = new Document();
         document.setDate((String) selectedRows.get(0).get("date"));
         document.setRefNo((String) selectedRows.get(0).get("RefNo"));
+        document.setOwnerName((String) selectedRows.get(0).get("Owner"));
         document.setDepartment((String) selectedRows.get(0).get("Department"));
         document.setTelephone((String) selectedRows.get(0).get("Telephone"));
         document.setTitle((String) selectedRows.get(0).get("Title"));

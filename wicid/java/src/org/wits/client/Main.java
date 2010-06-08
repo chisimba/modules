@@ -551,6 +551,7 @@ public class Main {
         removeFolderMenuItem.setEnabled(selectedFolder == null ? true : false);
         loader.load();
         view.refresh();
+        selectFileListTab();
     }
 
     private void setMode() {
