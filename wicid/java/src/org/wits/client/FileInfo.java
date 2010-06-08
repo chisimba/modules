@@ -50,7 +50,7 @@ public class FileInfo {
 
         fileInfoDialog.setOnEsc(true);
         fileInfoDialog.setHideOnButtonClick(true);
-        fileInfoDialog.setHeight(300);
+        fileInfoDialog.setHeight(350);
         fileInfoDialog.setTitle(filename);
         fileInfoDialog.show();
     }
