@@ -87,8 +87,9 @@ public class EditDocumentDialog {
     private OverView overView;
     private Button nextButton = new Button("Next");
     private boolean myResult;
-    private BorderLayoutData uploadWestData = new BorderLayoutData(LayoutRegion.WEST, 120);
-    private BorderLayoutData uploadCenterData = new BorderLayoutData(LayoutRegion.CENTER, 150);
+    private BorderLayoutData uploadEastData = new BorderLayoutData(LayoutRegion.EAST, 60);
+    private BorderLayoutData uploadWestData = new BorderLayoutData(LayoutRegion.WEST, 60);
+    private BorderLayoutData uploadCenterData = new BorderLayoutData(LayoutRegion.CENTER, 60);
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
@@ -100,7 +101,6 @@ public class EditDocumentDialog {
     }
 
     private void createUI() {
-        //String defaultParams;
         uploadWestData.setMargins(new Margins(0));
         uploadCenterData.setSplit(true);
         uploadCenterData.setMargins(new Margins(0, 0, 0, 5));
@@ -112,17 +112,8 @@ public class EditDocumentDialog {
 
         final DateField dateField = new DateField();
         dateField.setFieldLabel("Entry date");
-        /*String date[] = document.getDate().split("/");
-        try {
-        Calendar cal = new GregorianCalendar(Integer.parseInt(date[0]), Integer.parseInt(date[1])-1, Integer.parseInt(date[2]));
-        Date xdate = cal.getTime();
-        dateField.setValue(xdate);
-        } catch (Exception ex) {
-        ex.printStackTrace();
-        }*/
         dateField.getPropertyEditor().setFormat(fmt);
         dateField.setName("datefield");
-        //mainForm.add(dateField, formData);
         dateField.setEditable(false);
         dateField.setAllowBlank(false);
 
@@ -133,8 +124,6 @@ public class EditDocumentDialog {
         groups.add(new Group("Administration"));
         groupStore.add(groups);
 
-        //namesField.setText(document.getOwnerName());
-        //mainForm.add(namesField, formData);
         groupField.setFieldLabel("Group");
         groupField.setName("groupField");
         groupField.setDisplayField("name");
@@ -166,19 +155,15 @@ public class EditDocumentDialog {
         deptField.setAllowBlank(false);
         deptField.setValue(document.getDepartment());
         deptField.setName("deptfield");
-        //if (mode.equals("all")) {
         mainForm.add(deptField, formData);
-        // }
-
+        
         telField.setFieldLabel("Tel. Number");
         telField.setValue("edit mode");
         telField.setValue(document.getTelephone());
         telField.setAllowBlank(false);
         telField.setName("telfield");
-        //if (mode.equals("all")) {
         mainForm.add(telField, formData);
-        //}
-
+        
         titleField.setFieldLabel("Document title");
         titleField.setAllowBlank(false);
         titleField.setValue(document.getTitle());
@@ -257,62 +242,13 @@ public class EditDocumentDialog {
                 + document.getTopic() + "&docid=" + document.getId());
         uploadpanel.setEncoding(Encoding.MULTIPART);
         uploadpanel.setMethod(Method.POST);
-        uploadpanel.setSize(200, 100);
+        uploadpanel.setSize(200, 80);
         uploadpanel.setButtonAlign(HorizontalAlignment.CENTER);
 
         FileUploadField fileUploadField = new FileUploadField();
         fileUploadField.setName("filenamefield");
         fileUploadField.setFieldLabel("Upload file");
-
-        // uploadpanel.add(uploadFile);
-        uploadButton.setIconStyle("add16");
-        if (mode.equals("default")) {
-            uploadpanel.add(uploadButton, uploadWestData);
-
-            if (document.getAttachmentStatus().equals("Yes")) {
-                uploadIcon = new Button();
-                uploadIcon.setBorders(false);
-                //uploadpanel.setLayout(new RowLayout(Orientation.HORIZONTAL));
-                //uploadIcon.setScale(ButtonScale.SMALL);
-                uploadIcon.setIconStyle("attachment");
-                //uploadIcon.setWidth(50);
-                //uploadpanel.add(uploadButton, new RowData(-1, 1, new Margins(4)));
-                //uploadpanel.add(uploadIcon, new RowData(1, 1, new Margins(4)));
-                uploadpanel.add(uploadIcon, uploadCenterData);
-            }
-
-            mainForm.add(uploadpanel, formData);
-        }
-        uploadpanel.setButtonAlign(HorizontalAlignment.RIGHT);
-
-        uploadButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-
-                final Window w = new Window();
-                w.setHeading("Upload file");
-                w.setModal(true);
-                w.setSize(800, 300);
-                w.setMaximizable(true);
-                w.setToolTip("Upload file");
-                w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
-                        + "&docid=" + document.getId() + "&topic=" + document.getTopic());
-                w.show();
-                w.addWindowListener(new WindowListener() {
-
-                    @Override
-                    public void windowHide(WindowEvent we) {
-                        // check if the attachment exists in the database. if it uploaded
-                        // then the file uploaded fine and we can refresh the icon page
-                        // otherwise show error message
-                        checkAttachment(document.getId());
-                    }
-                });
-            }
-        });
-        // mainForm.add(uploadButton, formData);
-
+        
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
@@ -330,7 +266,7 @@ public class EditDocumentDialog {
                 } catch (Exception ex) {
                 }
 
-                String dept = deptField.getValue();// deptField.getValue().getId();
+                String dept = deptField.getValue();
                 if (dept == null) {
                     MessageBox.info("Missing department", "Provide originating department", null);
                     return;
@@ -339,6 +275,13 @@ public class EditDocumentDialog {
                     MessageBox.info("Missing department", "Provide department", null);
                     return;
                 }
+
+                String tel = telField.getValue();
+                if(tel == null) {
+                    MessageBox.info("Missing telephone", "Provide telephone", null);
+                    return;
+                }
+
                 String title = titleField.getValue();
                 if (title == null) {
                     MessageBox.info("Missing title", "Provide title", null);
@@ -370,7 +313,7 @@ public class EditDocumentDialog {
                 }
                 String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
                         + "module=wicid&action=updatedocument&dept=" + dept + "&topic=" + topic
-                        + "&title=" + title + "&group=" + group + "&date=" + fmt.format(date) + "&docid=" + document.getId();
+                        + "&title=" + title + "&tel=" + tel +  "&group=" + group + "&date=" + fmt.format(date) + "&docid=" + document.getId();
 
 
                 updateDocument(url);
@@ -381,15 +324,57 @@ public class EditDocumentDialog {
 
             }
         });
+
         if (mode.equals("apo")) {
             mainForm.addButton(nextButton);
         } else {
-            mainForm.addButton(saveButton);
+            uploadpanel.add(saveButton, uploadWestData);
         }
+        
+        uploadButton.setIconStyle("add16");
+        if (mode.equals("default")) {
+            uploadpanel.add(uploadButton, uploadCenterData);
+            if(document.getAttachmentStatus().length() > 3 ) {
+                if (document.getAttachmentStatus().substring(0,3).equals("Yes")) {
+                    uploadIcon = new Button();
+                    uploadIcon.setBorders(false);
+                    uploadIcon.setIconStyle("attachment");
+                    uploadpanel.add(uploadIcon, uploadEastData);
+                }
+            }
+            mainForm.add(uploadpanel, formData);
+        }
+        uploadpanel.setButtonAlign(HorizontalAlignment.RIGHT);
 
+        uploadButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+
+                final Window w = new Window();
+                w.setHeading("Upload file");
+                w.setModal(true);
+                w.setSize(800, 300);
+                w.setMaximizable(true);
+                w.setToolTip("Upload file");
+                w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
+                        + "&docid=" + document.getId() + "&topic=" + document.getTopic());
+                w.show();
+                w.addWindowListener(new WindowListener() {
+
+                    @Override
+                    public void windowHide(WindowEvent we) {
+                        // check if the attachment exists in the database. if it uploaded
+                        // then the file uploaded fine and we can refresh the icon page
+                        // otherwise show error message
+                        checkAttachment(document.getId());
+                    }
+                });
+            }
+        });
+
+        
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
-        //FormButtonBinding binding = new FormButtonBinding(mainForm);
-        //binding.addButton(saveButton);
         editDocumentDialog.setBodyBorder(false);
         if (mode.equals("apo")) {
             editDocumentDialog.setHeading("Edit Course Proposal");
@@ -417,11 +402,7 @@ public class EditDocumentDialog {
         editDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         editDocumentDialog.add(mainForm);
-        //setDepartment();
-
-        //defaultParams = "?module=wicid&action=getdocuments&mode=" + main.getMode();
-        //myDocumentListPanel.refreshDocumentList(defaultParams);
-    }
+        }
 
     public void storeDocumentInfo() {
         String originatingDepartment = deptField.getValue();
@@ -490,8 +471,6 @@ public class EditDocumentDialog {
 
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
-                        //main.getDocumentListPanel().
-                        // main.selectDocumentsTab();
                         if (main != null) {
                             main.refreshFileList();
                         }
