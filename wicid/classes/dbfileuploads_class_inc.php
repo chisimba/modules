@@ -112,10 +112,24 @@ class dbfileuploads extends dbtable {
     function searchfiles($filter, $advanced=false) {
         $objUserutils=$this->getObject('userutils');
         if(!$advanced) {
-            $sql="select * from tbl_wicid_fileuploads where filename like '%$filter%'";
+            $start = "1";
+            $length = "4";
+            $today = getdate();
 
-            $sql.=' order by date_uploaded DESC';
+            if((substr($filter, $start, $length) >= $today['year'] - 10) && (substr($filter, $start, $length) <= $today['year'])) {
+                $sql="  select A.*, B.*
+                        from tbl_wicid_documents as A
+                            join tbl_wicid_fileuploads as B on A.id = B.docid
+                        where A.refno like '%$filter%'
+                        order by A.date_created DESC";
+            }
+            else {
+                $sql="select *
+                      from tbl_wicid_fileuploads
+                      where filename like '%$filter%'";
 
+                $sql.=' order by date_uploaded DESC';
+            }
             $owner=$objUserutils->getUserId();
             $rows=$this->getArray($sql);
             $files=array();

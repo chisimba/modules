@@ -395,20 +395,10 @@ class wicid extends controller {
         $number=$this->getParam('number');
         $dept=$this->getParam('department');
         $title=$this->getParam('title');
-
+        $group=$this->getParam('group');
         $selectedfolder=$this->getParam('topic');
-        $refno=$number.$date;
         $telephone=$this->getParam('telephone');
-
-        $this->documents->addDocument(
-                $date,
-                $refno,
-                $dept,
-                $telephone,
-                $title,
-                "default",
-                $selectedfolder);
-
+        $data = array("dept"=>$dept, "telephone"=>$telephone,"title"=>$title, "group"=>$group,"date"=>$date);
     }
 
     /**

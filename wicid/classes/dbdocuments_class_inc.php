@@ -36,10 +36,15 @@ class dbdocuments extends dbtable {
         $this->objUser=$this->getObject('user','security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUploadTable = $this->getObject('dbfileuploads');
+        $this->objConfig = $this->getObject('altconfig', 'config');
         $this->userutils=$this->getObject('userutils');
+        $this->resourcePath=$this->objConfig->getModulePath();
+        $docRoot=$_SERVER['DOCUMENT_ROOT'];
+        $location = "http://" . $_SERVER['HTTP_HOST'];
+        $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
     }
     public function getdocuments($mode="default") {
-        $sql="select A.*, B.docid from tbl_wicid_documents as A
+        $sql="select A.*, B.docid, B.filename from tbl_wicid_documents as A
                   left outer join tbl_wicid_fileuploads as B on A.id = B.docid
               where A.active = 'N'
               and A.deleteDoc = 'N'";// and mode ='$mode'";
@@ -47,7 +52,7 @@ class dbdocuments extends dbtable {
             //$sql.=" and userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
-        
+
         $rows=$this->getArray($sql);
         $docs=array();
 
@@ -58,7 +63,8 @@ class dbdocuments extends dbtable {
                 $attachmentStatus = "No";
             }
             else {
-                $attachmentStatus = "Yes";
+                $f = $row['filename'];
+                $attachmentStatus ='Yes&nbsp;<img  src="'.$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($f).'-16x16.png">';
             }
             $docs[]=array(
                     'userid'=> $row['userid'],
@@ -114,7 +120,7 @@ class dbdocuments extends dbtable {
                 'active'=>$approved
         );
         $id=$this->insert($data);
-        echo $refno.'|'.$id;
+        echo $refno.','.$id;
         //echo "success|$id";
         return $id;
     }
@@ -213,6 +219,21 @@ class dbdocuments extends dbtable {
         $refno=date("Y")."-".((int)$res[0]['myrefno']+1);
 
         return $refno;
+    }
+
+    function findexts ($filename) {
+        $filename = strtolower($filename) ;
+        $exts = split("[/\\.]", $filename) ;
+        $n = count($exts)-1;
+        $ext = $exts[$n];
+
+        //check if icon for this exists, else return unknown
+        $filePath=$this->objConfig->getModulePath().'/wicid/resources/images/ext/'.$ext.'-16x16.png';
+        if(file_exists($filePath) ) {
+            return $ext;
+        }else {
+            return "unknown";
+        }
     }
 }
 ?>
