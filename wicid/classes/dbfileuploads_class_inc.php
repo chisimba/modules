@@ -117,7 +117,7 @@ class dbfileuploads extends dbtable {
             $today = getdate();
 
             if((substr($filter, $start, $length) >= $today['year'] - 10) && (substr($filter, $start, $length) <= $today['year'])) {
-                $sql="  select A.*, B.*
+                $sql="  select A.refno, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
                         from tbl_wicid_documents as A
                             join tbl_wicid_fileuploads as B on A.id = B.docid
                         where A.refno like '%$filter%'
@@ -141,9 +141,10 @@ class dbfileuploads extends dbtable {
                         'text'=>$row['filename'],
                         'id'=>$row['filepath'],
                         'docid'=>$row['docid'],
-                        'refno'=>$row['id'],
+                        'refno'=>$row['refno'],
                         'owner'=>$this->objUser->fullname($row['userid']),
-                        'lastmod'=>$lastmod,
+                        //'lastmod'=>$lastmod,
+                        'lastmod'=>$row['date_uploaded'],
                         'filesize'=>$size,
                         'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
                 );
