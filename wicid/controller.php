@@ -393,12 +393,14 @@ class wicid extends controller {
     function __updatedocument() {
         $date=$this->getParam('date');
         $number=$this->getParam('number');
-        $dept=$this->getParam('department');
+        $dept=$this->getParam('dept');
         $title=$this->getParam('title');
         $group=$this->getParam('group');
         $selectedfolder=$this->getParam('topic');
-        $telephone=$this->getParam('telephone');
-        $data = array("dept"=>$dept, "telephone"=>$telephone,"title"=>$title, "group"=>$group,"date"=>$date);
+        $telephone=$this->getParam('tel');
+        $id = $this->getParam('docid');
+        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date);
+        $this->documents->updateInfo($id, $data);
     }
 
     /**

@@ -207,9 +207,9 @@ class dbdocuments extends dbtable {
         return $this->getRow('id',$id);
     }
 
-    function updateDocument($id,$data) {
+    /*function updateDocument($id,$data) {
         $this->update('id',$id,$data);
-    }
+    }*/
 
     function checkRefNo() {
         $sql = "select max(SUBSTRING(refno, length(refno), 1)) as myrefno from .".$this->tablename;
@@ -234,6 +234,10 @@ class dbdocuments extends dbtable {
         }else {
             return "unknown";
         }
+    }
+
+    function updateInfo($id, $data) {
+        $this->update("id", $id, $data);
     }
 }
 ?>
