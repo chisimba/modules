@@ -69,4 +69,20 @@
 
         </data>
     </update>
+
+    <update>
+        <table>tbl_wicid_documents</table>
+        <version>0.030</version>
+        <description>Added the deleteDoc field</description>
+        <data>
+            <add>
+                <name>deleteDoc</name>
+                <type>text</type>
+                <length>1</length>
+                <notnull>TRUE</notnull>
+                <default>'N'</default>
+            </add>
+
+        </data>
+    </update>
 </updates>
