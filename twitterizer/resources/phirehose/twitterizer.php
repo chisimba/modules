@@ -53,5 +53,5 @@ class FilterTrackConsumer extends Phirehose
 
 // Start streaming
 $sc = new FilterTrackConsumer('paulscott56', 'pongid56', Phirehose::METHOD_FILTER);
-$sc->setTrack(array('#WC2010', '#wc2010', 'wc2010', 'WC2010', 'SWC2010', '#SWC2010', 'vuvuzela', '#vuvuzela'));
+$sc->setTrack(array('#worldcup', 'worldcup', '#WC2010', '#wc2010', 'wc2010', 'WC2010', 'SWC2010', '#SWC2010', 'vuvuzela', '#vuvuzela'));
 $sc->consume();
