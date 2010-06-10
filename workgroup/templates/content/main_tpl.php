@@ -13,7 +13,7 @@ $middleContent = '';
 
 // -------------------------------------------------------------------------
 
-//Join Discussion Forum 
+//Join Discussion Forum
 $pageText->type=3;
 $pageText->str=ucwords($objLanguage->code2Txt("mod_workgroup_forum",'workgroup'));
 $middleContent .= $pageText->show();
@@ -30,7 +30,7 @@ $middleContent .= '<h3 align="center">'.$forumLink->show().'</h3>';
 
 // -------------------------------------------------------------------------
 
-// Join fileshare.    
+// Join fileshare.
 $pageText->type=3;
 $pageText->str=ucwords($objLanguage->code2Txt("mod_workgroup_fileshare",'workgroup'));
 $middleContent .= $pageText->show();
@@ -48,9 +48,9 @@ $script = $this->getJavaScriptFile('workgroup.js');
 $this->appendArrayVar('headerParams', $script);
 $this->appendArrayVar('bodyOnLoad', "getWorkgroupFiles('".$this->workgroupId."')");
 $middleContent .= '<div id="browsefiles">'.$loading->show().'</div>';
-        
-        
-		
+
+
+
 
 // Logout
 $middleContent .= "<a href=\"".
@@ -68,39 +68,42 @@ $instantMessaging = $moduleCheck->checkIfRegistered('instantmessaging');
 
 if (!empty($lecturers)) {
     $pageText->str=ucwords($objLanguage->code2Txt('mod_workgroup_lecturers','workgroup'));
-    //$rightContent .= $pageText->show();
+    $rightContent .= $pageText->show();
 
     $table=$this->newObject('htmltable','htmlelements');
     $table->cellspacing='1';
-    $table->cellpadding='5';    
-    
+    $table->cellpadding='5';
+
     $oddOrEven = "odd";
+//    echo '<pre>';
+//    var_dump($lecturers);
+//    echo '</pre>';
     foreach ($lecturers as $lecturer) {
-        $table->startRow();    
-        $oddOrEven = ($oddOrEven=="even")? "odd":"even";	
+        $table->startRow();
+        $oddOrEven = ($oddOrEven=="even")? "odd":"even";
         $table->addCell($lecturer['fullname'], "null", "top", "left", $oddOrEven, null);
-        
+
         // Only show Instant Messaging if it is registered
         if ($instantMessaging) {
-            // Display IM button.        
+            // Display IM button.
 			$imPopup =& $this->getObject('popup','instantmessaging');
 			$imPopup->setup($lecturer['userid'], null, $objLanguage->languageText('phrase_sendinstantmessage'));
-			$option = $imPopup->show(); 
+			$option = $imPopup->show();
             $table->addCell($option, "null", "top", "left", $oddOrEven, null);
         }
         $table->endRow();
     }
-    
-    //$rightContent .= $table->show(); 
+
+    $rightContent .= $table->show();
 }
 
 // Display the members of the workgroup.
 if (empty($members)) {
     // If no members, output the heading
-    $pageText->type=3;        
+    $pageText->type=3;
     $pageText->str=$objLanguage->languageText('mod_workgroup_members','workgroup');
-    $rightContent .= $pageText->show();        
-    
+    $rightContent .= $pageText->show();
+
     // Check if user is a lecturer.
     $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
     if ($objContextCondition->isContextMember('Lecturers')) {
@@ -108,44 +111,44 @@ if (empty($members)) {
         $url = "<a href=\"$href\">".$objLanguage->languageText('word_here')."</a>";
         $rightContent .= $objLanguage->code2Txt('mod_workgroup_nomembers','workgroup',array('URL'=>$url));
     }
-} else {    
+} else {
     // else output the heading plus a link to send an instant message to the entire group
-    
+
     // Only show Instant Messaging if it is registered
     if ($instantMessaging) {
-	    // Send an instant message to all members.        
+	    // Send an instant message to all members.
 		$imPopup =& $this->getObject('popup','instantmessaging');
 		$imPopup->setup($workgroupId, 'workgroup', $objLanguage->languageText('phrase_sendinstantmessagetoall'));
-		$option = $imPopup->show(); 
+		$option = $imPopup->show();
         $pageText->str=$option.$objLanguage->languageText('mod_workgroup_members','workgroup');
     } else {
         $pageText->str=$objLanguage->languageText('mod_workgroup_members','workgroup');
     }
     $rightContent .= $pageText->show();
 
-    
+
     $tblclass=$this->newObject('htmltable','htmlelements');
     $tblclass->cellspacing='1';
-    $tblclass->cellpadding='5';    
-    
+    $tblclass->cellpadding='5';
+
     $oddOrEven = "odd";
     foreach ($members as $member) {
-        $tblclass->startRow();    
-        $oddOrEven = ($oddOrEven=="even")? "odd":"even";	
+        $tblclass->startRow();
+        $oddOrEven = ($oddOrEven=="even")? "odd":"even";
         $tblclass->addCell($member['fullname'], "null", "top", "left", $oddOrEven, null);
-        
+
         // Only show Instant Messaging if it is registered
         if ($instantMessaging) {
-            // Display IM button.        
+            // Display IM button.
 			$imPopup =& $this->getObject('popup','instantmessaging');
 			$imPopup->setup($member['userid'], null, $objLanguage->languageText('phrase_sendinstantmessage'));
-			$option = $imPopup->show(); 
+			$option = $imPopup->show();
             $tblclass->addCell($option, "null", "top", "left", $oddOrEven, null);
         }
         $tblclass->endRow();
     }
-    
-    $rightContent .= $tblclass->show(); 
+
+    $rightContent .= $tblclass->show();
 }
 
 // Check if user is a lecturer.

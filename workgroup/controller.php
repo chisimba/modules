@@ -31,10 +31,10 @@ class workgroup extends controller
         $this->objUser =& $this->getObject('user', 'security');
         $this->objFile =& $this->getObject('dbfile', 'filemanager');
         $this->objLanguage =& $this->getObject('language','language');
-		$this->objDbWorkgroup =& $this->getObject('dbworkgroup', 'workgroup'); 
-		$this->objDbFiles =& $this->getObject('dbworkgroupfiles', 'workgroup'); 
-		$this->objOps =& $this->getObject('workgroupops', 'workgroup'); 
-		$this->objDbWorkgroupUsers =& $this->getObject('dbworkgroupusers', 'workgroup'); 
+		$this->objDbWorkgroup =& $this->getObject('dbworkgroup', 'workgroup');
+		$this->objDbFiles =& $this->getObject('dbworkgroupfiles', 'workgroup');
+		$this->objOps =& $this->getObject('workgroupops', 'workgroup');
+		$this->objDbWorkgroupUsers =& $this->getObject('dbworkgroupusers', 'workgroup');
         //$this->objHelp=& $this->getObject('helplink','help');
         //$this->objHelp->rootModule="helloworld";
         //Get the activity logger class
@@ -44,7 +44,7 @@ class workgroup extends controller
         //Log this module call
         $this->objLog->log();
     }
-    
+
     /**
     * The dispatch funtion
     * @param string $action The action
@@ -53,30 +53,30 @@ class workgroup extends controller
     function dispatch($action=Null)
     {
 		//$this->setLayoutTemplate('layout_tpl.php');
-		
-		
+
+
         $this->objConfig = &$this->getObject('altconfig','config');
         //$systemType = $this->objConfig->getValue("SYSTEM_TYPE", "contextabstract");
         //$isAlumni = ($systemType == "alumni");
         //$this->setVar('isAlumni',$isAlumni);
         // Set the layout template.
-        
+
         $this->workgroupId = $this->objDbWorkgroup->getWorkgroupId();
-        $userId = $this->objUser->userId(); 
-		//$objfile = $this->objFile->userId();       
+        $userId = $this->objUser->userId();
+		//$objfile = $this->objFile->userId();
         $userInWorkGroup = $this->objDbWorkgroupUsers->memberOfWorkGroup($userId, $this->workgroupId);
-        
+
         if (is_null($this->workgroupId)) {
             $this->setLayoutTemplate("layout_tpl.php");
         } else {
             //$this->setLayoutTemplate("layout_tpl.php");
         }
-        
+
         // 1. ignore action at moment as we only do one thing - say hello
         // 2. load the data object (calls the magical getObject which finds the
         //    appropriate file, includes it, and either instantiates the object,
         //    or returns the existing instance if there is one. In this case we
-        //    are not actually getting a data object, just a helper to the 
+        //    are not actually getting a data object, just a helper to the
         //    controller.
         // 3. Pass variables to the template
         $this->setVarByRef('objUser', $this->objUser);
@@ -99,7 +99,7 @@ class workgroup extends controller
                 return "error_tpl.php";
             //}
 		} else {
-            // ... else 
+            // ... else
 			$contextTitle = $objDbContext->getTitle();
 			$this->setVarByRef('contextTitle', $contextTitle);
 		}
@@ -121,13 +121,13 @@ class workgroup extends controller
 				$fields['title'] = $this->getParam('title');
 				$fields['description'] = $this->getParam('description');
 				$fields['version'] = $this->getParam('version');
-				
-				
+
+
 				$this->objDbFiles->insertFile($fields);
 				return $this->nextAction(null,null);
 				break;
             /*	$this->objDbWorkgroup->uploadFile(
-				//$contextCode,	
+				//$contextCode,
 				$workgroupId,
 				$userId,
 				$_POST['path'],
@@ -139,11 +139,11 @@ class workgroup extends controller
 			//$objFile->getFileSize(($this->getParam('fileupload'));
 			//$objFile->getFilePath($this->getParam('nameofforminput'));
             //$this->setLayoutTemplate("layout_tpl.php");
-            
+
             //return 'upload_tpl.php';
 			return "main_tpl.php";*/
 			case 'ajaxgetfiles':
-				
+
 				echo $this->objOps->showFiles($this->getParam('workgroupid'));
 				//echo $this->getParam('workgroupid');
 				exit(0);
@@ -160,8 +160,8 @@ class workgroup extends controller
 				$fields['title'] = $this->getParam('title');
 				$fields['description'] = $this->getParam('description');
 				$fields['version'] = $this->getParam('version');
-				
-				
+
+
 				$this->objDbFiles->editWorkgroupFiles($this->getParam('fileid'), $fields);
 				return $this->nextAction(null,null);
 			case 'deletefile':
@@ -196,7 +196,7 @@ class workgroup extends controller
 		$link = new link ($this->uri(array(), 'workgroup'));
 		$link->link = $this->workgroupDescription;
 		$objBreadcrumbs->insertBreadCrumb(array($link->show()));
-	
+
 		// Get the groupAdminModel object.
 		$groups = $this->getObject("groupAdminModel", "groupadmin");
         //if ($isAlumni) {
@@ -208,9 +208,22 @@ class workgroup extends controller
 			$gid=$groups->getLeafId(array($contextCode,'Lecturers'));
 		//}
 		//$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstname' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
-		
+
 		//EDIT THIS ION MONDAY!!!!!!!!
-		$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstname' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
+		//$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstname' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
+        // Jeremy O'Connor: As the groupAdminModel::getGroupUsers method does not make use of the $fields parameter, nor the $filter parameter, the surname has to be constructed manually, as does the sorting of the result set.
+        $lecturers_ = $groups->getGroupUsers($gid, 'dummy', 'dummy');
+        $lecturers = array();
+        if (!empty($lecturers_)) {
+            foreach ($lecturers_ as $lecturer){
+//                echo '<pre>';
+//                var_dump($lecturer);
+//                echo '</pre>';
+                $lecturer['fullname'] = $lecturer['firstname'].' '.$lecturer['surname'];
+                $lecturers[$lecturer['surname'].$lecturer['firstname']] = $lecturer;
+            }
+        }
+        ksort($lecturers);
 		$this->setVar('lecturers',$lecturers);
 
         return "main_tpl.php";
