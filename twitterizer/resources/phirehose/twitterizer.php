@@ -1,6 +1,6 @@
 <?php
 require_once('lib/Phirehose.php');
-require_once('/var/www/cmysql/lib/pear/XML/RPC.php');
+require_once('/var/www/tweetgator/lib/pear/XML/RPC.php');
 /**
  * Example of using Phirehose to display a live filtered stream using track words 
  */
@@ -31,7 +31,7 @@ class FilterTrackConsumer extends Phirehose
                           new XML_RPC_VALUE(urldecode($data['user']['location']), 'string'),   
                       );
           $msg = new XML_RPC_Message('twitterizer.addTweet', $params);
-          $cli = new XML_RPC_Client('/cmysql/index.php?module=api', '127.0.0.1');
+          $cli = new XML_RPC_Client('/index.php?module=api', 'tweetgator.chisimba.com');
           $cli->setDebug(0);
           $resp = $cli->send($msg);
           if(!$resp) {
