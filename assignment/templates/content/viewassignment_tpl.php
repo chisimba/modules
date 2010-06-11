@@ -66,7 +66,15 @@ if ($assignment['format'] == '0') {
 } else {
     $table->addCell($this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
 }
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_emailalert', 'assignment', 'Email alert').'</strong>', 130);
+if ($assignment['email_alert'] == '0') {
+    $table->addCell($this->objLanguage->languageText('mod_assignment_emailalertoff', 'assignment', 'Off'));
+} else {
+    $table->addCell($this->objLanguage->languageText('mod_assignment_emailalerton', 'assignment', 'On'));
+}
+
 $table->endRow();
+
 
 echo $table->show();
 

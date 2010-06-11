@@ -33,8 +33,8 @@ function initRadioButtons(
             {
             xtype: 'radiogroup',
             items: [
-                {boxLabel: 'Online', name: 'type', inputValue: 1, checked: isOnline},
-                {boxLabel: 'Upload', name: 'type', inputValue: 0, checked: !isOnline}
+                {boxLabel: 'Online', name: 'type', inputValue: 0, checked: isOnline},
+                {boxLabel: 'Upload', name: 'type', inputValue: 1, checked: !isOnline}
 
             ]
         } ]
