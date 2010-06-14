@@ -13,11 +13,12 @@ import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.DateField;
-
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.Radio;
 import com.extjs.gxt.ui.client.widget.form.RadioGroup;
 import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.extjs.gxt.ui.client.widget.form.ComboBox.TriggerAction;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.google.gwt.core.client.GWT;
@@ -27,8 +28,13 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import java.util.Date;
+
 import org.wits.client.Constants;
+import org.wits.client.DocumentType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
 
 import com.extjs.gxt.ui.client.data.BaseListLoader;
 import com.extjs.gxt.ui.client.data.HttpProxy;
@@ -62,30 +68,26 @@ public class AdvancedSearchDialog {
     private final TextField<String> refno = new TextField<String>();
     private final TextField<String> topic = new TextField<String>();
     private final TextField<String> department = new TextField<String>();
-    private final TextField<String> telephone = new TextField<String>();
-    private final TextField<String> groupid = new TextField<String>();
-    private final TextField<String> ext = new TextField<String>();
-    private final TextField<String> mode = new TextField<String>();
+    private final DateField dateField = new DateField();
+    private final DateField dateField2 = new DateField();
+    final ComboBox<DocumentType> numberField = new ComboBox<DocumentType>();
     private RadioGroup radioGroup = new RadioGroup();
     Radio activeYes = new Radio();
     Radio activeNo = new Radio();
     private Button searchButton = new Button("Search");
+    
     private Date date = new Date();
     private Date date2 = new Date();
     private String myFirstName = "";
     private String myLastName = "";
     private String myDocName = "";
+    private String myDocType = "";
     private String myRefNo = "";
     private String myTopic = "";
     private String myDept = "";
-    private String myTelephone = "";
-    private String myGroupID = "";
-    private String myExt = "";
-    private String myMode = "";
     private String myActive = "";
     private String url = "";
     private ListView<ModelData> view = Constants.main.getView();
-    //private MenuItem removeFolderMenuItem = Constants.main.getRemoveFolderMenuItem();
     private ModelData selectedFolder = Constants.main.getSelectedFolder();
     private ContentPanel panel;
     
@@ -108,7 +110,6 @@ public class AdvancedSearchDialog {
         panel.setCollapsible(false);*/
         
 
-        final DateField dateField = new DateField();
         dateField.setFieldLabel("Date From");
         dateField.setValue(new Date());
         dateField.getPropertyEditor().setFormat(fmt);
@@ -117,7 +118,6 @@ public class AdvancedSearchDialog {
         dateField.setAllowBlank(true);
         dateField.setWidth(200);
         
-        final DateField dateField2 = new DateField();
         dateField2.setFieldLabel("Date To");
         dateField2.setValue(new Date());
         dateField2.getPropertyEditor().setFormat(fmt);
@@ -139,12 +139,10 @@ public class AdvancedSearchDialog {
         showFirstNameField();
         showLastNameField();
         showDocNameField();
+        showDocTypeField();
         showRefnoField();
         showTopicField();
         showDepartmentField();
-        //showGroupidField();
-        //showExtField();
-        //showModeField();
         showActiveField();
 
         /*panel.add(firstnameField, formData);
@@ -220,7 +218,27 @@ public class AdvancedSearchDialog {
         docnameField.setName("docname");
         mainForm.add(docnameField, formData);
     }
+    
+    private void showDocTypeField() {
+        ListStore<DocumentType> docTypeStore = new ListStore<DocumentType>();
+        List<DocumentType> types = new ArrayList<DocumentType>();
 
+        types.add(new DocumentType("S"));
+        types.add(new DocumentType("C"));
+        types.add(new DocumentType("A"));
+        docTypeStore.add(types);
+        
+        numberField.setFieldLabel("Number");
+        numberField.setName("numberfield");
+        numberField.setDisplayField("type");
+        numberField.setEmptyText("Select number ..");
+        numberField.setTriggerAction(TriggerAction.ALL);
+        numberField.setStore(docTypeStore);
+        numberField.setAllowBlank(false);
+        numberField.setEditable(false);
+        mainForm.add(numberField, formData);
+    }
+    
     private void showRefnoField() {
         refno.setFieldLabel("Reference No");
         refno.setAllowBlank(false);
@@ -242,27 +260,6 @@ public class AdvancedSearchDialog {
         mainForm.add(department, formData);
     }
 
-    private void showGroupidField() {
-        groupid.setFieldLabel("Group ID");
-        groupid.setAllowBlank(false);
-        groupid.setName("groupid");
-        mainForm.add(groupid, formData);
-    }
-
-    private void showExtField() {
-        ext.setFieldLabel("Ext");
-        ext.setAllowBlank(false);
-        ext.setName("ext");
-        mainForm.add(ext, formData);
-    }
-
-    private void showModeField() {
-        mode.setFieldLabel("Mode");
-        mode.setAllowBlank(false);
-        mode.setName("mode");
-        mainForm.add(mode, formData);
-    }
-
     private void showActiveField() {
         activeYes.setBoxLabel("Yes");
         activeYes.setValue(true);
@@ -276,16 +273,17 @@ public class AdvancedSearchDialog {
     }
 
     private void getSearchValues() {
+        date = dateField.getValue();
+        date2 = dateField2.getValue();
         myFirstName = firstnameField.getValue();
         myLastName = lastnameField.getValue();
         myDocName = docnameField.getValue();
+        if(numberField.getValue() != null) {
+            myDocType = numberField.getValue().getType();
+        }
         myRefNo = refno.getValue();
         myTopic = topic.getValue();
         myDept = department.getValue();
-        myTelephone = telephone.getValue();
-        myGroupID = groupid.getValue();
-        myExt = ext.getValue();
-        myMode = mode.getValue();
         myActive = activeYes.getValue() ? "Y" : "N";
     }
 
@@ -308,6 +306,9 @@ public class AdvancedSearchDialog {
         if (myDocName != null) {
             url += "&docname=" + myDocName;
         }
+        if (myDocType != null) {
+            url += "&doctype=" +myDocType;
+        }
         if (myRefNo != null) {
             url += "&refno=" + myRefNo;
         }
@@ -316,15 +317,6 @@ public class AdvancedSearchDialog {
         }
         if (myDept != null) {
             url += "&dept=" + myDept;
-        }
-        if (myTelephone != null) {
-            url += "&groupID=" + myGroupID;
-        }
-        if (myExt != null) {
-            url += "&ext=" + myExt;
-        }
-        if (myMode != null) {
-            url += "&mode=" + myMode;
         }
         if (myActive != null) {
             url += "&active=" + myActive;
