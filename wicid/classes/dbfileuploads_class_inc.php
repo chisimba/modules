@@ -78,6 +78,16 @@ class dbfileuploads extends dbtable {
         return $res;
     }
 
+    public function getNodeFiles($node) {
+        $sql="select A.refno, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
+              from tbl_wicid_documents as A
+                join tbl_wicid_fileuploads as B on A.id = B.docid
+              where B.filepath like '%$node%'
+              order by A.date_created DESC";
+        
+        return $this->getArray($sql);
+    }
+
     public function deleteFileRecord($id) {
         $this->delete('id', $id);
     }
@@ -117,10 +127,11 @@ class dbfileuploads extends dbtable {
             $today = getdate();
 
             if((substr($filter, $start, $length) >= $today['year'] - 10) && (substr($filter, $start, $length) <= $today['year'])) {
-                $sql="  select A.refno, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
+                $sql="  select A.refno, A.date_created, A.userid, A.groupid, B.date_uploaded, B.filename, B.filepath, B.docid
                         from tbl_wicid_documents as A
                             join tbl_wicid_fileuploads as B on A.id = B.docid
                         where A.refno like '%$filter%'
+                        and A.groupid = 'Public'
                         order by A.date_created DESC";
             }
             else {
@@ -234,6 +245,11 @@ class dbfileuploads extends dbtable {
             $first = false;
             $filter .= "docname like '%".$data['docname']."%'";
         }
+        if(strlen($data['doctype']) > 0) {
+            $filter .= $first?" where ":" and ";
+            $first = false;
+            $filter .= "refno like '%".$data['doctype']."%'";
+        }
         if(strlen($data['refno']) > 0) {
             $filter .= $first?" where ":" and ";
             $first = false;
@@ -249,21 +265,6 @@ class dbfileuploads extends dbtable {
             $first = false;
             $filter .= "department like '%".$data['dept']."%'";
         }
-        if(strlen($data['groupid']) > 0) {
-            $filter .= $first?" where ":" and ";
-            $first = false;
-            $filter .= "groupid like '%".$data['groupid']."%'";
-        }
-        if(strlen($data['ext']) > 0) {
-            $filter .= $first?" where ":" and ";
-            $first = false;
-            $filter .= "ext like '%".$data['ext']."%'";
-        }
-        if(strlen($data['mode']) > 0) {
-            $filter .= $first?" where ":" and ";
-            $first = false;
-            $filter .= "mode like '%".$data['mode']."%'";
-        }
         if(strlen($data['active']) > 0) {
             $filter .= $first?" where ":" and ";
             $first = false;
@@ -271,6 +272,7 @@ class dbfileuploads extends dbtable {
         }
 
         $sql = "select * from tbl_wicid_documents ".$filter;
+        $sql = $first?" where ":" and ". " groupid = 'Public'";
         $rows = $this->getArray($sql);
         
         $files=array();
@@ -283,7 +285,7 @@ class dbfileuploads extends dbtable {
                         'text'=>$row['filename'],
                         'id'=>$row['filepath'],
                         'docid'=>$row['docid'],
-                        'refno'=>$row['id'],
+                        'refno'=>$row['refno'],
                         'owner'=>$this->objUser->fullname($row['userid']),
                         'lastmod'=>$lastmod,
                         'filesize'=>$size,

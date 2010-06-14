@@ -55,10 +55,16 @@ class dbdocuments extends dbtable {
 
         $rows=$this->getArray($sql);
         $docs=array();
+        //print_r($rows);
 
         foreach ($rows as $row) {
             //$owner=$this->userutils->getUserId();
-            $owner=$this->objUser->fullname($row['userid']);
+            if(strlen(trim($row['contact_person'])) == 0) {
+                $owner=$this->objUser->fullname($row['userid']);
+            }else {
+                $owner = $row['contact_person'];
+            }
+
             if(trim(strlen($row['docid'])) == 0) {
                 $attachmentStatus = "No";
             }
@@ -96,6 +102,7 @@ class dbdocuments extends dbtable {
             $date,
             $refno,
             $department,
+            $contact,
             $telephone,
             $title,
             $groupid,
@@ -107,6 +114,13 @@ class dbdocuments extends dbtable {
 
 
         $userid=$this->userutils->getUserId();
+
+        // using this user id, get the full name and compare it with contact person!
+        $fullname = $this->objUser->fullname($userid);
+        if(strcmp($fullname, $contact) == 0) {
+            $contact = "";
+        }
+        
         $data=array(
                 'docname'=>$title,
                 'date_created'=>$date,
@@ -114,6 +128,7 @@ class dbdocuments extends dbtable {
                 'refno'=>$refno,
                 'groupid'=>$groupid,
                 'department'=>$department,
+                'contact_person'=>$contact,
                 'telephone'=>$telephone,
                 'topic'=>$path,
                 'mode'=>$mode,
@@ -211,14 +226,21 @@ class dbdocuments extends dbtable {
         $this->update('id',$id,$data);
     }*/
 
-    function checkRefNo() {
+    function checkRefNo($number) {
         $sql = "select max(SUBSTRING(refno, length(refno), 1)) as myrefno from .".$this->tablename;
         $sql .= " where refno like '%".date("Y")."%'";
+        $sql .= " and SUBSTRING(refno, 1, 1) = '$number'";
         $res = $this->getArray($sql);
 
         $refno=date("Y")."-".((int)$res[0]['myrefno']+1);
 
         return $refno;
+    }
+
+    function getRefNo($id) {
+        $res = $this->getRow("id", $id);
+        
+        return $res['refno'];
     }
 
     function findexts ($filename) {

@@ -235,7 +235,8 @@ class wicid extends controller {
      * @return <type>
      */
     public function __getFiles() {
-        return $this->objUtils->getFiles();
+        $node = $this->getParam('node');
+        return $this->objUtils->getFiles($node);
     }
 
     /**
@@ -372,22 +373,23 @@ class wicid extends controller {
         $number=$this->getParam('number');
         $dept=$this->getParam('department');
         $title=$this->getParam('title');
-
+        $number = $this->getParam('number');
         $selectedfolder=$this->getParam('topic');
         //check wat is the largest count for this year.
-        $res = $this->documents->checkRefNo();
+        $res = $this->documents->checkRefNo($number);
         $refno=$number.$res;
+        $contact = $this->getParam('contact');
         $telephone=$this->getParam('telephone');
         $group=$this->getParam('group');
         $this->documents->addDocument(
                 $date,
                 $refno,
                 $dept,
+                $contact,
                 $telephone,
                 $title,
                 $group,
                 $selectedfolder);
-
     }
 
     function __updatedocument() {
@@ -399,7 +401,7 @@ class wicid extends controller {
         $selectedfolder=$this->getParam('topic');
         $telephone=$this->getParam('tel');
         $id = $this->getParam('docid');
-        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date);
+        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date, "topic"=>$selectedfolder);
         $this->documents->updateInfo($id, $data);
     }
 
@@ -589,7 +591,7 @@ class wicid extends controller {
                     'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),
                     'userid'=>$this->objUtils->getUserId(),
                     'parent'=>"/",
-                    'refno'=>$this->objUtils->getRefNo(),
+                    'refno'=>$this->objUtils->getRefNo($docid),
                     'docid'=>$docid,
                     'filepath'=>$path);
 
@@ -643,12 +645,10 @@ class wicid extends controller {
         $lname = $this->getParam('lname');
         $topic = $this->getParam('topic');
         $docname = $this->getParam('docname');
+        $doctype = $this->getParam('doctype');
         $refno = $this->getParam('refno');
         $topic = $this->getParam('topic');
         $dept = $this->getParam('dept');
-        $groupid = $this->getParam('groupid');
-        $ext = $this->getParam('ext');
-        $mode = $this->getParam('mode');
         //$active = $this->getParam('');
 
         $data = array(
@@ -658,13 +658,13 @@ class wicid extends controller {
                 'lname'=>$lname,
                 'docname'=>$docname,
                 'topic'=>$topic,
-                'docname'=> $docname,
                 'refno'=> $refno,
                 'topic'=> $topic,
                 'dept'=> $dept,
                 'groupid'=>$groupid,
                 'ext'=> $ext,
-                'mode'=> $mode);
+                'mode'=> $mode,
+                'doctype'=> $doctype);
 
         return $this->objUploadTable->advancedSearch($data);//$this->documents->advancedSearch($data);
     }

@@ -8,6 +8,7 @@
                     'refno' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'topic' => array('type' => 'text', 'notnull'=>TRUE),
                     'department' => array('type' => 'text','length' => 128, 'notnull'=>TRUE),
+                    'contact_person' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'telephone' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'groupid' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'ext' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),

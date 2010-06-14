@@ -264,7 +264,35 @@ class userutils extends object {
         }
     }
 
-    function getFiles() {
+    function getFiles($node) {
+        $objFileUploads = $this->getObject('dbfileuploads');
+        $today = getdate();
+
+        $owner=$this->getUserId();
+        $rows=$objFileUploads->getNodeFiles($node);
+        $files=array();
+
+        foreach ($rows as $row) {
+            //$size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
+            $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
+            $files[] = array(
+                    'text'=>$row['filename'],
+                    'id'=>$row['filepath'],
+                    'docid'=>$row['docid'],
+                    'refno'=>$row['refno'],
+                    'owner'=>$this->objUser->fullname($row['userid']),
+                    //'lastmod'=>$lastmod,
+                    'lastmod'=>$row['date_uploaded'],
+                    //'filesize'=>$size,
+                    'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
+            );
+        }
+        echo json_encode(array("files"=>$files));
+
+        die();
+    }
+
+    /*function getFiles() {
         $this->objUser = $this->getObject("user", "security");
         $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $this->objUploadTable = $this->getObject('dbfileuploads');
@@ -305,7 +333,7 @@ class userutils extends object {
 
         echo json_encode(array("files"=>$nodes));
 
-    }
+    }*/
     /**
      * retrieves folders that this user has access to
      */
@@ -569,8 +597,11 @@ class userutils extends object {
         echo $state;
     }
 
-    function getRefNo() {
-        return "1234";
+    function getRefNo($id) {
+        $objDocuments = $this->getObject('dbdocuments', 'wicid');
+        $refNo = $objDocuments->getRefNo($id);
+        
+        return $refNo;
     }
 }
 ?>

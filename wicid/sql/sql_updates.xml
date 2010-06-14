@@ -85,4 +85,20 @@
 
         </data>
     </update>
+
+    <update>
+        <table>tbl_wicid_documents</table>
+        <version>0.034</version>
+        <description>Added the contact person field</description>
+        <data>
+            <add>
+                <name>contact_person</name>
+                <type>text</type>
+                <length>32</length>
+                <notnull>TRUE</notnull>
+            </add>
+
+        </data>
+    </update>
+
 </updates>
