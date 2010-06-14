@@ -145,7 +145,7 @@
             $access = $this->getParam('access');
             $created_by = $this->getParam('title_alias',null);
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
-            if ($introText==' <br /> '){
+            if (trim($introText)=='<br />'){
                $introText='';
             }
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
@@ -226,7 +226,7 @@
             $created_by = $this->getParam('author_alias',null);
                         
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
-            if ($introText==' <br /> '){
+            if (trim($introText)=='<br />'){
                $introText='';
             }
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
@@ -281,7 +281,7 @@
             $published = ($this->getParam('published') == '1') ? 1 : 0;
             $access = $this->getParam('access');
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
-            if ($introText==' <br /> '){
+            if (trim($introText)=='<br />'){
                $introText='';
             }
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
