@@ -53,6 +53,7 @@ public class NewDocumentDialog {
     private final TextField<String> titleField = new TextField<String>();
     private final TextField<String> deptField = new TextField<String>();
     private final TextField<String> telField = new TextField<String>();
+    private final TextField<String> contactField = new TextField<String>();
     private Button saveButton = new Button("Save");
     private Button browseTopicsButton = new Button("Browse Topics");
     private TopicListingFrame topicListingFrame;
@@ -61,6 +62,7 @@ public class NewDocumentDialog {
     private String number = "A";
     private String dept = "";
     private String title = "";
+    private String contact = "";
     private String telephone = "";
     private String topic = "";
     private String group = "";
@@ -107,6 +109,11 @@ public class NewDocumentDialog {
         deptField.setAllowBlank(false);
         deptField.setName("department");
         mainForm.add(deptField, formData);
+
+        contactField.setFieldLabel("Contact Person");
+        contactField.setAllowBlank(false);
+        contactField.setName("contact");
+        mainForm.add(contactField, formData);
 
         telField.setFieldLabel("Tel. Number");
         telField.setAllowBlank(false);
@@ -231,6 +238,17 @@ public class NewDocumentDialog {
                     MessageBox.info("Missing group", "Select group", null);
                     return;
                 }
+
+                contact = contactField.getValue();
+                if (contact == null) {
+                    MessageBox.info("Missing Contact Person", "Provide contact person", null);
+                    return;
+                }
+                if (contact.trim().equals("")) {
+                    MessageBox.info("Missing Contact Person", "Provide contact person", null);
+                    return;
+                }
+
                 telephone = telField.getValue();
                 if (telephone == null) {
                     MessageBox.info("Missing telephone", "Provide telephone", null);
@@ -248,7 +266,7 @@ public class NewDocumentDialog {
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                         + "?module=wicid&action=registerdocument&date=" + fmt.format(date)
-                        + "&number=" + number + "&department=" + dept + "&telephone=" + telephone
+                        + "&number=" + number + "&department=" + dept + "&contact=" + contact + "&telephone=" + telephone
                         + "&topic=" + topic + "&title=" + title + "&group=" + group;
                 createNewDocument(url);
                 //refresh the document list panel

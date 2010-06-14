@@ -19,10 +19,12 @@ import com.extjs.gxt.ui.client.data.XmlReader;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.KeyListener;
 import com.extjs.gxt.ui.client.event.MenuEvent;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.event.ComponentEvent;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.util.Format;
@@ -218,9 +220,10 @@ public class Main {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                if (newDocumentDialog == null) {
+                /*if (newDocumentDialog == null) {
                     newDocumentDialog = new NewDocumentDialog();
-                }
+                }*/
+                newDocumentDialog = new NewDocumentDialog();
                 newDocumentDialog.show();
             }
         });
@@ -283,6 +286,21 @@ public class Main {
         west.setTopComponent(toolBar);
         west.setHeading("Topic Index");
 
+        KeyListener keyListener = new KeyListener() {
+          public void componentKeyUp(ComponentEvent event) {
+            String filter = searchField.getValue();
+                if (filter != null) {
+                    if (filter.trim().length() > 2) {
+                        searchFiles(filter);
+                    } else {
+                        //MessageBox.info("3 Characters", "Type in atleast 3 characters to search for file", null);
+                    }
+                }
+          }
+
+        };
+
+        searchField.addKeyListener(keyListener);
 
         searchButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
