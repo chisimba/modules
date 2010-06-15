@@ -1,8 +1,7 @@
 <?php
 
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -18,7 +17,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
  * @category  Chisimba
  * @package   libraryforms
  * @author    Brenda Mayinga brendamayinga@ymail.com
-  */
+ */
 
 
 $objEditForm = $this->getObject('editform', 'libraryforms');
@@ -31,7 +30,7 @@ $tabcontent = $this->newObject('tabcontent', 'htmlelements');
 $objTable = $this->newObject('htmltable', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $objForm = new form('myform', $this->uri(array('action'=>'valform'),'htmlelements'));
- $this->objUser=$this->getObject('User','security');
+$this->objUser=$this->getObject('User','security');
 
 $objTable->startRow();
 $objTable->addCell($objEditForm->show(), '', '','','','colspan="4"');
