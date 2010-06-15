@@ -72,6 +72,11 @@ class db_learningcontent_activitystreamer extends dbtable
         $this->objContentChapter = $this->getObject('db_learningcontent_contextchapter');
         $this->objContentPages = $this->getObject('db_learningcontent_pages');
         $this->objFiles = $this->getObject('dbfile','filemanager');        
+        // Load Context Object
+        $this->objContext = $this->getObject('dbcontext', 'context');            
+
+        // Store Context Code
+        $this->contextCode = $this->objContext->getContextCode();
     }
     
     /**
@@ -252,7 +257,7 @@ class db_learningcontent_activitystreamer extends dbtable
           $userNames = "";
           $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
           $infoArray['usernames'] = $userNames;
-          $infoArray['contextcode'] = $log['contextcode'];
+          $infoArray['contextcode'] = $this->contextCode;
           $infoArray['modulecode'] = $log['modulecode'];
           $infoArray['contextitemid'] = $log['contextitemid'];
           //Get context item title (page or chapter)
@@ -435,13 +440,14 @@ class db_learningcontent_activitystreamer extends dbtable
           } else {
            $title = "";
           }
-          $list = array($log['id'].','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.$pageorchapter.','.$title.','.$log['datecreated'].','.$log['description'].','.$log['starttime'].','.$log['endtime']);
+          $list = array($log['id'].','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.$pageorchapter.','.$title.','.$log['datecreated'].','.$log['description'].','.$log['starttime'].','.$log['endtime']);
           foreach ($list as $line) {
             fputcsv($Handle, split(',', $line));
           }
           //fwrite($Handle, $list);
          }
         }
+var_dump($this->contextCode);
         fclose($Handle);
         return $csvFile;
     }
@@ -489,7 +495,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_55386_1269604704'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_55386_1269604704'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -503,7 +509,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_72372_1269604822'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_72372_1269604822'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -518,7 +524,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_73767_1269605472'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_73767_1269605472'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -533,7 +539,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_33707_1269605537'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_33707_1269605537'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -549,7 +555,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_15142_1269605687'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_15142_1269605687'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -564,7 +570,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_79322_1269605785'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_79322_1269605785'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -580,7 +586,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_75938_1269606000'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_75938_1269606000'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -595,7 +601,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -611,7 +617,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -626,7 +632,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_78425_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_78425_1269606208'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -645,7 +651,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              do { $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] ); } while ($fakeDatetime==false);
              if (  $fakeDatetime != false ) {
-               $list = array('gen11Srv30Nme41_55386_1269604704'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_55386_1269604704'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -660,7 +666,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_73767_1269605472'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_73767_1269605472'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -676,7 +682,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_15142_1269605687'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_15142_1269605687'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -692,7 +698,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_75938_1269606000'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_75938_1269606000'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -708,7 +714,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Picture'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Picture'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -727,7 +733,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_72372_1269604822'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_72372_1269604822'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -743,7 +749,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_33707_1269605537'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_33707_1269605537'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -759,7 +765,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_79322_1269605785'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_79322_1269605785'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -775,7 +781,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_66832_1269606208'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -791,7 +797,7 @@ class db_learningcontent_activitystreamer extends dbtable
              }
              $fakeDatetime = $this->calculateRandomTime( $log['starttime'], $log['endtime'] );
              if ( !empty ( $fakeDatetime ) ) {
-               $list = array('gen11Srv30Nme41_78425_1269606208'.','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
+               $list = array('gen11Srv30Nme41_78425_1269606208'.','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.'Formula'.','.$picdescr.','.$fakeDatetime["newstartdate"].','.'View Formula'.','.$fakeDatetime["newstartdate"].','.$fakeDatetime["newenddate"]);
               foreach ($list as $line) {
                fputcsv($Handle, split(',', $line));
               }
@@ -827,7 +833,7 @@ class db_learningcontent_activitystreamer extends dbtable
           } else {
            $title = "";
           }
-          $list = array($log['id'].','.$log['userid'].','.$userNames.','.$log['contextcode'].','.$log['modulecode'].','.$log['contextitemid'].','.$pageorchapter.','.$title.','.$log['datecreated'].','.$log['description'].','.$log['starttime'].','.$log['endtime']);
+          $list = array($log['id'].','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.$pageorchapter.','.$title.','.$log['datecreated'].','.$log['description'].','.$log['starttime'].','.$log['endtime']);
           foreach ($list as $line) {
             fputcsv($Handle, split(',', $line));
           }
