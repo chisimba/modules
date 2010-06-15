@@ -404,7 +404,8 @@ class db_learningcontent_activitystreamer extends dbtable
             fputcsv($Handle, split(',', $line));
         }
         foreach ( $logs as $log ) {
-         if( !empty ( $log['endtime'] ) || $log['endtime'] != NULL ) {
+         //Put $log['endtime'] to == null to return empty fields
+         if( !empty ( $log['endtime'] ) || $log['endtime'] == NULL ) {
           //Return empty till its fixed
           $userNames = "";
           $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
