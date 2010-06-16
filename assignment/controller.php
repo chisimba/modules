@@ -40,59 +40,56 @@ if (!
  * @name   $kewl_entry_point_run
  *
  */
-$GLOBALS['kewl_entry_point_run'])
-{
-        die("You cannot view this page directly");
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
 // end security check
 
 /**
-*
-* Controller class for Chisimba for the module assignment2
-*
-* @author Tohir Solomons
-* @package assignment2
-*
-*/
-class assignment extends controller
-{
+ *
+ * Controller class for Chisimba for the module assignment2
+ *
+ * @author Tohir Solomons
+ * @package assignment2
+ *
+ */
+class assignment extends controller {
 
     /**
-    *
-    * @var string $objConfig String object property for holding the
-    * configuration object
-    * @access public;
-    *
-    */
+     *
+     * @var string $objConfig String object property for holding the
+     * configuration object
+     * @access public;
+     *
+     */
     public $objConfig;
 
     /**
-    *
-    * @var string $objLanguage String object property for holding the
-    * language object
-    * @access public
-    *
-    */
+     *
+     * @var string $objLanguage String object property for holding the
+     * language object
+     * @access public
+     *
+     */
     public $objLanguage;
     /**
-    *
-    * @var string $objLog String object property for holding the
-    * logger object for logging user activity
-    * @access public
-    *
-    */
+     *
+     * @var string $objLog String object property for holding the
+     * logger object for logging user activity
+     * @access public
+     *
+     */
     public $objLog;
 
     public $contextCode;
 
     /**
-    *
-    * Intialiser for the assignment2 controller
-    * @access public
-    *
-    */
-    public function init()
-    {
+     *
+     * Intialiser for the assignment2 controller
+     * @access public
+     *
+     */
+    public function init() {
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
@@ -109,35 +106,33 @@ class assignment extends controller
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user','security');
         $this->objContext = $this->getObject('dbcontext','context');
-        if($this->objContext->isInContext()){
+        if($this->objContext->isInContext()) {
             $this->contextCode = $this->objContext->getContextCode();
             $this->context = $this->objContext->getTitle();
         }
         $this->objIcon= $this->newObject('geticon','htmlelements');
-    	$this->loadclass('link','htmlelements');
+        $this->loadclass('link','htmlelements');
         $this->objLink=new link();
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
-		//Load Module Catalogue Class
-		$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+        //Load Module Catalogue Class
+        $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
 
-		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+        $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
 
-		if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
-		{
-			$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-			$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
-			$this->eventsEnabled = TRUE;
-		} else {
-			$this->eventsEnabled = FALSE;
-		}
+        if($this->objModuleCatalogue->checkIfRegistered('activitystreamer')) {
+            $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+            $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+            $this->eventsEnabled = TRUE;
+        } else {
+            $this->eventsEnabled = FALSE;
+        }
     }
 
 
-    public function isValid($action)
-    {
+    public function isValid($action) {
         $restrictedActions = array ('add', 'edit', 'saveassignment', 'updateassignment', 'delete', 'markassignments', 'saveuploadmark', 'saveonlinemark');
 
         if (in_array($action, $restrictedActions)) {
@@ -158,8 +153,7 @@ class assignment extends controller
      * which renders the module output.
      *
      */
-    public function dispatch($action)
-    {
+    public function dispatch($action) {
         /*else {
             return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
         }
@@ -184,19 +178,18 @@ class assignment extends controller
     }
 
     /**
-    *
-    * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (__). If it __action
-    * is not a valid method it returns FALSE, if it is a valid method
-    * of this class it returns TRUE.
-    *
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return boolean TRUE|FALSE
-    *
-    */
-    function __validAction(& $action)
-    {
+     *
+     * Method to check if a given action is a valid method
+     * of this class preceded by double underscore (__). If it __action
+     * is not a valid method it returns FALSE, if it is a valid method
+     * of this class it returns TRUE.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return boolean TRUE|FALSE
+     *
+     */
+    function __validAction(& $action) {
         if (method_exists($this, "__".$action)) {
             return TRUE;
         } else {
@@ -205,17 +198,16 @@ class assignment extends controller
     }
 
     /**
-    *
-    * Method to convert the action parameter into the name of
-    * a method of this class.
-    *
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return stromg the name of the method
-    *
-    */
-    function __getMethod(& $action)
-    {
+     *
+     * Method to convert the action parameter into the name of
+     * a method of this class.
+     *
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return stromg the name of the method
+     *
+     */
+    function __getMethod(& $action) {
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {
@@ -227,22 +219,20 @@ class assignment extends controller
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
 
     /**
-    *
-    * Method corresponding to the view action. It fetches the stories
-    * into an array and passes it to a main_tpl content template.
-    * @access private
-    *
-    */
-    private function __home()
-    {
+     *
+     * Method corresponding to the view action. It fetches the stories
+     * into an array and passes it to a main_tpl content template.
+     * @access private
+     *
+     */
+    private function __home() {
 
         $assignments = $this->objAssignment->getAssignments($this->contextCode);
         $this->setVarByRef('assignments', $assignments);
 
         return 'assignment_home_tpl.php';
     }
-    private function __displaylist()
-    {
+    private function __displaylist() {
 
         $assignments = $this->objAssignment->getAssignments($this->contextCode);
         $this->setVarByRef('assignments', $assignments);
@@ -251,15 +241,13 @@ class assignment extends controller
     }
 
 
-    private function __add()
-    {
+    private function __add() {
         $this->setVar('mode', 'add');
 
         return 'addedit_assignment_tpl.php';
     }
 
-    private function __saveassignment()
-    {
+    private function __saveassignment() {
         $name = $this->getParam('name');
         $type = $this->getParam('type');
         $resubmit = $this->getParam('resubmit');
@@ -270,33 +258,32 @@ class assignment extends controller
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
         $emailAlert=$this->getParam('emailalert');
-        
+
         $result = $this->objAssignment->addAssignment($name, $this->contextCode, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type,$emailAlert);
 
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unabletosaveassignment'));
         } else {
-            	//add to activity streamer
-            	if($this->eventsEnabled)
-            	{
-            		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_assignment_addedassignment', 'assignment')." ".$this->contextCode;
-            	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-    																				'link'=> $this->uri(array()),
-    																				'contextcode' => $this->contextCode,
-    																				'author' => $this->objUser->fullname(),
-    																				'description'=>$message));
+            //add to activity streamer
+            if($this->eventsEnabled) {
+                $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_assignment_addedassignment', 'assignment')." ".$this->contextCode;
+                $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+                        'link'=> $this->uri(array()),
+                        'contextcode' => $this->contextCode,
+                        'author' => $this->objUser->fullname(),
+                        'description'=>$message));
 
-    				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-    																				'link'=> $this->uri(array()),
-    																				'contextcode' => null,
-    																				'author' => $this->objUser->fullname(),
-    																				'description'=>$message));
-            	}
+                $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+                        'link'=> $this->uri(array()),
+                        'contextcode' => null,
+                        'author' => $this->objUser->fullname(),
+                        'description'=>$message));
+            }
             return $this->nextAction('view', array('id'=>$result));
         }
     }
     // display notes in a pop up window
-    private function __showcomment(){
+    private function __showcomment() {
         $this->setLayoutTemplate('');
         $id = $this->getParam('id');
         $submissionId=$this->getParam('submissionid');
@@ -307,8 +294,7 @@ class assignment extends controller
         return 'onlineview_tpl.php';
     }
 
-    private function __view()
-    {
+    private function __view() {
         $id = $this->getParam('id');
 
         $assignment = $this->objAssignment->getAssignment($id);
@@ -326,8 +312,7 @@ class assignment extends controller
         return 'viewassignment_tpl.php';
     }
 
-    function __edit()
-    {
+    function __edit() {
         $id = $this->getParam('id');
 
         $assignment = $this->objAssignment->getAssignment($id);
@@ -347,8 +332,7 @@ class assignment extends controller
     }
 
 
-    function __updateassignment()
-    {
+    function __updateassignment() {
         $id = $this->getParam('id');
         $name = $this->getParam('name');
 
@@ -370,8 +354,7 @@ class assignment extends controller
         return $this->nextAction('view', array('id'=>$id, 'update'=>$result));
     }
 
-    function __uploadassignment()
-    {
+    function __uploadassignment() {
         $objFileUpload = $this->getObject('uploadinput', 'filemanager');
         $objFileUpload->enableOverwriteIncrement = TRUE;
         $results = $objFileUpload->handleUpload('fileupload');
@@ -394,8 +377,7 @@ class assignment extends controller
     }
 
 
-    function __submitassignment($fileId=null)
-    {
+    function __submitassignment($fileId=null) {
         if ($fileId == NULL) {
             $fileId = $this->getParam('assignment');
         }
@@ -405,16 +387,14 @@ class assignment extends controller
         return $this->nextAction('view', array('id'=>$this->getParam('id'), 'message'=>'assignmentsubmitted'));
     }
 
-    function __submitonlineassignment()
-    {
+    function __submitonlineassignment() {
         $result = $this->objAssignmentSubmit->submitAssignmentOnline($this->getParam('id'), $this->objUser->userId(), $this->getParam('text'));
 
         return $this->nextAction('view', array('id'=>$this->getParam('id'), 'message'=>'assignmentsubmitted'));
     }
 
 
-    function __viewsubmission()
-    {
+    function __viewsubmission() {
         $id = $this->getParam('id');
 
         $submission = $this->objAssignmentSubmit->getSubmission($id);
@@ -439,8 +419,7 @@ class assignment extends controller
         return 'viewsubmission_tpl.php';
     }
 
-    function __downloadfile()
-    {
+    function __downloadfile() {
         $id = $this->getParam('id');
         //$mode = $this->getParam('mode');
         $fileId = $this->getParam('fileid');
@@ -495,8 +474,7 @@ class assignment extends controller
 
     }
 
-    function __saveuploadmark()
-    {
+    function __saveuploadmark() {
         $id = $this->getParam('id');
         $mark = $this->getParam('mark');
         $comment = $this->getParam('commentinfo');
@@ -533,8 +511,7 @@ class assignment extends controller
     }
 
 
-    function __saveonlinemark()
-    {
+    function __saveonlinemark() {
         $id = $this->getParam('id');
         $mark = $this->getParam('mark');
         $comment = $this->getParam('commentinfo');
@@ -546,8 +523,7 @@ class assignment extends controller
         return $this->nextAction('view', array('id'=>$submission['assignmentid'], 'message'=>'assignmentmarked', 'assignment'=>$id));
     }
 
-    function __viewhtmlsubmission()
-    {
+    function __viewhtmlsubmission() {
         //die;
 //        echo '<pre>';
 //        var_dump($_GET);
@@ -569,8 +545,7 @@ class assignment extends controller
         include($filePath);
     }
 
-    function __delete()
-    {
+    function __delete() {
         $id = $this->getParam('id');
 
         $assignment = $this->objAssignment->getAssignment($id);
@@ -594,8 +569,7 @@ class assignment extends controller
         return 'deleteassignment_tpl.php';
     }
 
-    function __deleteconfirm()
-    {
+    function __deleteconfirm() {
         $id = $this->getParam('id');
 
         $assignment = $this->objAssignment->getAssignment($id);
@@ -620,8 +594,79 @@ class assignment extends controller
             return $this->nextAction($this->getParam('return'), array('id'=>$id, 'message'=>'deletecancelled'));
         }
     }
+    function __exportospreadsheet() {
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $downloadfolder=$objSysConfig->getValue('DOWNLOAD_FOLDER', 'assignment');
+        $this->objAltConfig = $this->getObject('altconfig','config');
+        $siteRoot=$this->objAltConfig->getsiteRoot();
+
+        $assignmentid=$this->getParam('assignmentid');
+        $assignment = $this->objAssignment->getAssignment($assignmentid);
+        $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignmentid);
+        $id = mktime().rand();
+        $filename=$assignmentid;//.'-'.$id;
+
+        $objMkDir = $this->getObject('mkdir', 'files');
+        $destinationDir = $this->objAltConfig->getcontentBasePath().'/assignment/submissions/export';
+        $objMkDir->mkdirs($destinationDir);
+        $exportfile=$destinationDir."/". $filename.".xls";
+
+        if(file_exists($exportfile)) {
+            unlink($exportfile);
+        }
+        $file = fopen($exportfile, "a");
+        $objDateTime = $this->getObject('dateandtime', 'utilities');
+        $objWashout = $this->getObject('washout', 'utilities');
+        $type=$submission['online'] == 0?"Online":"Upload";
+        $name=$assignment['name'];
+        $desc=strip_tags($assignment['description']);
+        $percOfYear=$assignment['percentage'].'%';
+
+        $openingDate=$objDateTime->formatDate($assignment['opening_date']);
+        $closingDate=$objDateTime->formatDate($assignment['closing_date']);
+        fputs($file, "Title, $name\r\n");
+        fputs($file, "Description, $desc\r\n");
+        fputs($file, "Percentage of year mark, $percOfYear\r\n");
+        fputs($file, "Opening Date, $openingDate\r\n");
+        fputs($file, "Closing Date, $closingDate\r\n");
+        fputs($file, "Type: $type\r\n");
+        fputs($file, "\r\n");
+
+        fputs($file, "\r\n");
+
+        fputs($file,'Student No,Name,Submision Date,Mark, Comment');
+        fputs($file, "\r\n");
+        foreach ($submissions as $submission) {
+
+            $date=$objDateTime->formatDate($submission['datesubmitted']);
+            $mark="";
+            $comment="";
+            $student=$this->objUser->fullname($submission['userid']);
+            $username=$this->objUser->username($submission['userid']);
+            if ($submission['mark'] == NULL) {
+                $mark=$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked');
+
+            } else {
+                $mark=$submission['mark'].'%';
+                $comment=$submission['commentinfo'];
+            }
+
+            $content=$username.','.$student.','. $date.','.$mark.', '.$comment."\r\n";
+
+            fputs($file,$content);
+        }
+
+        fclose($file);
 
 
+        $this->nextAction('downloadassignmentfile',array("filename"=>$filename));
+    }
+
+    function __downloadassignmentfile() {
+        $filename=$this->getParam('filename');
+        $this->setVarbyRef("filename",$filename);
+        return "downloadsubmissionsfile_tpl.php";
+    }
     /*------------- END: Set of methods to replace case selection ------------*/
 
 }

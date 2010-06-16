@@ -646,5 +646,60 @@ class functions_assignment extends object
 					*/
 					//return $objTable->show();
     }
+
+        /**
+     * allows the user to donwload the selected file
+     * @param <type> $filename
+     */
+    function downloadSubmissionsFile($filename) {
+
+        // Make sure we can't download files above the current directory location.
+        if(eregi("\.\.", $filename)) die("I'm sorry, you may not download that file.");
+        $file = str_replace("..", "", $filename);
+
+        // Make sure we can't download .ht control files.
+        if(eregi("\.ht.+", $filename)) die("I'm sorry, you may not download that file.");
+
+        // Combine the download path and the filename to create the full path to the file.
+        $file = $filename;
+        // Test to ensure that the file exists.
+       // if(!file_exists($file)) die("I'm sorry, the file doesn't seem to exist.");
+
+        // Extract the type of file which will be sent to the browser as a header
+        $type = filetype($file);
+
+        // Get a date and timestamp
+        $today = date("F j, Y, g:i a");
+        $time = time();
+
+        // Send file headers
+        header("Content-type: $type");
+        header("Content-Disposition: attachment;filename=".$this->getFileName( $filename));
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Send the file contents.
+        readfile($file);
+    }
+
+    /**
+     * returns filename with ext stripped
+     */
+    function getFileName($filepath) {
+        preg_match('/[^?]*/', $filepath, $matches);
+        $string = $matches[0];
+        //split the string by the literal dot in the filename
+        $pattern = preg_split('/\./', $string, -1, PREG_SPLIT_OFFSET_CAPTURE);
+        //get the last dot position
+        $lastdot = $pattern[count($pattern)-1][1];
+        //now extract the filename using the basename function
+        $filename = basename(substr($string, 0, $lastdot-1));
+        $exts = split("[/\\.]", $filepath) ;
+        $n = count($exts)-1;
+        $ext = $exts[$n];
+
+        return $filename.'.'.$ext;
+    }
+
  }//end of class
 ?>

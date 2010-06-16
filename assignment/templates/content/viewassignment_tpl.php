@@ -104,8 +104,7 @@ if ($this->isValid('markassignments')) {
         $table->endRow();
     } else {
 
-        foreach ($submissions as $submission)
-        {
+        foreach ($submissions as $submission) {
             $table->startRow();
 
             $link = new link ($this->uri(array('action'=>'viewsubmission', 'id'=>$submission['id'])));
@@ -148,11 +147,10 @@ if ($this->isValid('markassignments')) {
         $table->endHeaderRow();
 
         $objFile = $this->getObject('dbfile', 'filemanager');
-  /*
+        /*
   * Creating the link to view assignment results
-  */
-        foreach ($submissions as $submission)
-        {
+        */
+        foreach ($submissions as $submission) {
 
             $isMarked = date('Y-m-d H:i:s') > $assignment['closing_date'];
 
@@ -183,10 +181,10 @@ if ($this->isValid('markassignments')) {
                     //$table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
                 } else {
                     $table->addCell($submission['mark']);
-/*
+                    /*
 *The commented line prevents view of comments untill the assignment is opened for viewing the results
-*/
-                   // $table->addCell($objTrimStr->strTrim($submission['commentinfo'], 50));
+                    */
+                    // $table->addCell($objTrimStr->strTrim($submission['commentinfo'], 50));
                 }
             }
 
@@ -209,7 +207,7 @@ if ($this->isValid('markassignments')) {
         echo '<hr />'.$header->show();
 
         // Display by Assignment Type
-        if($assignment['closing_date'] < date('Y-m-d H:i')){
+        if($assignment['closing_date'] < date('Y-m-d H:i')) {
             echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_assignment_assignmentclosed', 'assignment', 'Assignment Closed').'</div>';
         } else if ($assignment['format'] == '0') { // Online Assignment
 
@@ -220,7 +218,8 @@ if ($this->isValid('markassignments')) {
             $htmlArea->width = '100%';
 
             $button = new button('submitform', $this->objLanguage->languageText('mod_assignment_submitassignment', 'assignment', 'Submit Assignment'));
-            $button->setToSubmit();;
+            $button->setToSubmit();
+            ;
 
             $form->addToForm($hiddenInput->show().$htmlArea->show().'<br />'.$button->show());
 
@@ -240,7 +239,8 @@ if ($this->isValid('markassignments')) {
             $objUpload->restrictFileList = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3');
 
             $button = new button('submitform', $this->objLanguage->languageText('mod_assignment_uploadassignment', 'assignment', 'Upload Assignment'));
-            $button->setToSubmit();;
+            $button->setToSubmit();
+            ;
 
             $form->addToForm($hiddenInput->show().$objUpload->show().'<br />'.$button->show());
 
@@ -262,7 +262,8 @@ if ($this->isValid('markassignments')) {
             $objSelectFile->restrictFileList = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3');
 
             $button = new button('submitform', 'Submit Assignment');
-            $button->setToSubmit();;
+            $button->setToSubmit();
+            ;
 
             $form->addToForm($hiddenInput->show().$objSelectFile->show().'<br />'.$button->show());
 
@@ -275,7 +276,14 @@ if ($this->isValid('markassignments')) {
 
 $backLink = new link ($this->uri(NULL));
 $backLink->link = $this->objLanguage->languageText('mod_assignment_backtolist', 'assignment', 'Back to List of Assignments');
+$exportStr="";
+if ($this->isValid('edit')) {
+
+    $exportLink = new link ($this->uri(array("action"=>"exportospreadsheet","assignmentid"=>$assignment['id'])));
+    $exportLink->link = $this->objLanguage->languageText('mod_assignment_export', 'assignment', 'Export to spreadsheet');
+    $exportStr=$exportLink->show();
+}
 echo '<br />';
-echo '<p>'.$backLink->show().'</p>';
+echo '<p>'.$backLink->show().'&nbsp;'.$exportStr.'</p>';
 
 ?>
