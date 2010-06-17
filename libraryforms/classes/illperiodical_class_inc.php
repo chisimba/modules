@@ -50,7 +50,6 @@ class ILLperiodical extends dbTable {
         //load the checkbox object
         $this->loadClass('checkbox', 'htmlelements');
 
-
         $strjs = '<script type="text/javascript">
         /***********************************************
         *                                              *
@@ -78,9 +77,6 @@ class ILLperiodical extends dbTable {
 		//]]>
 		</script>';
         $this->appendArrayVar('headerParams', $strjs);
-
-
-
     }
     private function buildForm() {
     //Load the required form elements that we need
@@ -321,14 +317,15 @@ class ILLperiodical extends dbTable {
         // Use the language object to label button
         // with the word save
         $objButton->setValue(' '.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
-        $objForm->addToForm($table->show());
-        // $objForm->addToForm($objButton->show());
 
-        $objCaptcha = $this->getObject('captcha', 'utilities');
-        $captcha = new textinput('request_captcha');
-        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_illperiodicalrequest_captcha');
+	$objForm->addToForm($table->show());
+	        // $objForm->addToForm($objButton->show());
 
-        $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="illperiodicalcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:illperiodicalredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
+		$objCaptcha = $this->getObject('captcha', 'utilities');
+ 	        $captcha = new textinput('request_captcha');
+	        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify 			Request'), 'input_request_captcha');
+ 	        
+          $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="illperiodicalcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:illperiodicalredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
 
         $objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
 		$objForm->addRule('illperiodicalrequest_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'),'required');
@@ -424,4 +421,4 @@ class ILLperiodical extends dbTable {
 
     }
 }
-?>
+

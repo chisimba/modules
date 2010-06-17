@@ -43,14 +43,21 @@ class feedbk extends object {
         //Load the label class
         $this->loadClass('label', 'htmlelements');
         //Load the button object
-        $this->loadClass('button', 'htmlelements');
-        $strjs = '<script type="text/javascript">
-		/***********************************************
+
+        $this->loadClass('button', 'htmlelements'); 
+
+$strjs = '<script type="text/javascript">
+		//<![CDATA[
+
+ 
+   
+	/***********************************************
         *                                              *
         *              FEEDBACK CLASS                  *
         *                                              *
         ***********************************************/
         //<![CDATA[
+
 		function init () {
 			$(\'input_feedbackredraw\').onclick = function () {
 				feedbackredraw();
@@ -92,7 +99,7 @@ class feedbk extends object {
         $nameLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentnamefeedbk","libraryforms"),"name");
         $objForm->addToForm($nameLabel->show()."<br />");
         $objForm->addToForm($objname->show() . "<br />");
-        $objForm->addRule('name',$this->objLanguage->languageText("mod_name_unrequired", 'libraryforms', 'Please enter a name .A name is Missing .'),'required');
+        $objForm->addRule('name',$this->objLanguage->languageText("mod_name_unrequired", 'libraryforms', 'Please enter a name .Name is Missing .'),'required');
 
 
         //Create a new textinput for the email
@@ -100,7 +107,7 @@ class feedbk extends object {
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail","libraryforms"),"email");
         $objForm->addToForm($emailLabel->show()."<br />");
         $objForm->addToForm($objemail->show() . "<br />");
-        $objForm->addRule('emaill',$this->objLanguage->languageText("mod_email_unrequired", 'libraryforms', 'Please enter a name .A name is Missing .'),'required');
+        $objForm->addRule('emaill',$this->objLanguage->languageText("mod_email_unrequired", 'libraryforms', 'Please enter a name .Email-Address is Missing .'),'required');
 
         //----------TEXTAREA--------------
         //Create a new textarea for the comment message
@@ -117,8 +124,14 @@ class feedbk extends object {
         $objButton->setToSubmit();
         // Use the language object to label button
         // with the word save
+
+  $objButton->setValue(' '.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
+ //$objForm->addToForm($objButton->show());
+
         $objButton->setValue(' '.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
         //$objForm->addToForm($objButton->show());
+
+
 
 $objCaptcha = $this->getObject('captcha', 'utilities');
 		$captcha = new textinput('request_captcha');
@@ -131,6 +144,7 @@ $objCaptcha = $this->getObject('captcha', 'utilities');
 		$objForm->addToForm($objButton->show());
 
         return $objForm->show();
+
     }
     function insertRecord($name,$emaill,$msg) {
         $id = $this->insert(array(

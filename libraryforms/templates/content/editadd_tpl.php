@@ -32,6 +32,7 @@ $this->loadClass('form', 'htmlelements');
 $objForm = new form('myform', $this->uri(array('action'=>'valform'),'htmlelements'));
 $this->objUser=$this->getObject('User','security');
 
+      
 $objTable->startRow();
 $objTable->addCell($objEditForm->show(), '', '','','','colspan="4"');
 //$table->addCell('&nbsp;', 3);
@@ -65,6 +66,7 @@ $tab->addBoxContent($objFeedbk->show());
 
 $tabcontent->addTab('Feedback Form', $tab->show());
 
+
 //captcha
 $table->startRow();
 $objCaptcha = $this->getObject('captcha', 'utilities');
@@ -75,6 +77,7 @@ $table->addCell($captchaLabel ->show(), 150, NULL, 'left');
 $content = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.'));
 $table->addCell($content, 150, NULL, 'left');
 $table->endRow();
+
 $table->startRow();
 $table->addCell(NULL, 150, NULL, 'left');
 $table->addCell('<div id="captchaDiv">'.$objCaptcha->show().'</div>', 150, NULL, 'left');
@@ -84,7 +87,6 @@ $table->startRow();
 $table->addCell(NULL, 150, NULL, 'left');
 $table->addCell($captcha->show().'<a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'library forms', 'Redraw').'</a>', 150, NULL, 'left');
 $table->endRow();
-
 
 
 /*//Get the CSS layout to make two column layout

@@ -53,14 +53,19 @@ class editform extends dbTable {
         $this->loadClass('label', 'htmlelements');
         //Load the button object
         $this->loadClass('button', 'htmlelements');
+
+      $strjs = '<script type="text/javascript">
+		//<![CDATA[
+
      
-        $strjs = '<script type="text/javascript">
+   
 		/***********************************************
         *                                              *
         *              EDITFORM CLASS                  *
         *                                              *
         ***********************************************/
         //<![CDATA[
+
 		function init () {
 			$(\'input_editformredraw\').onclick = function () {
 				editformredraw();
@@ -81,7 +86,11 @@ class editform extends dbTable {
 		//]]>
 		</script>';
 
+      
+
+
         $this->appendArrayVar('headerParams', $strjs);
+
 
 
 
@@ -110,7 +119,7 @@ class editform extends dbTable {
         $table->startRow();
         $table->addCell($surnameLabel->show(), '', 'center', 'left', '');
         $table->addCell($objsurname->show(), '', 'center', 'left', '');
-        $objForm->addRule('surname',$this->objLanguage->languageText("mod_surname_required", 'libraryforms', 'Please enter a surname. surname missing.'),'required');
+        $objForm->addRule('surname',$this->objLanguage->languageText("mod_surname_required", 'libraryforms', 'Please enter a surname. Surname missing.'),'required');
 
 
 
@@ -168,22 +177,46 @@ class editform extends dbTable {
         $objpostalcode = new textinput('postalcode');
         $codeLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpostalcode","libraryforms"),"postalcode");
 
+
+			 //Create a new textinput for email
+		$objemail = new textinput('email');
+		 $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail","libraryforms"),"emailaddress");
+		$table->startRow();
+		$table->addCell($emailLabel->show(), '', 'center', 'left', '');
+		$table->addCell($objemail->show(), '', 'center', 'left', '');
+
+	  
+	$objForm->addRule('email',$this->objLanguage->languageText("mod_email_unrequired", 'libraryforms', 'Please enter a email adress. email is Missing .'),'required');
+
         $table->addCell($codeLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpostalcode->show(), '', 'center', 'left', '');
         $objForm->addRule('postalcode',$this->objLanguage->languageText("mod_postalcode_required", 'libraryforms', 'Please enter a postal code. postal code is missing.'),'required');
+
 
         $table->endRow();
 
 
 
 
-        //Create a new textinput for physical
+	      //Create a new textinput for department
+			$objsuper = new textinput('supervisor');
+	
+		$superLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentsupervisor","libraryforms"),"supervisor");
+		  
+		$table->addCell($superLabel->show(), '', 'center', 'left', '');
+		$table->addCell($objsuper->show(), '', 'center', 'left', '');
+		$table->endRow();
+	$objForm->addRule('supervisor',$this->objLanguage->languageText("mod_hod_required", 'libraryforms', 'Please enter your superviser. A superviser or HOD is required.'),'required');
+
+    
+         //Create a new textinput for physical
         $objphysical = new textinput('physical');
         $pysicallLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenphysicaladdress","libraryforms"),"physicaladdress");
         $table->startRow();
         $table->addCell($pysicallLabel->show(),'', 'center', 'left', '');
         $table->addCell($objphysical->show(), '', 'center', 'left', '');
         $objForm->addRule('physical',$this->objLanguage->languageText("mod_physicaladdress_required", 'security', 'Please enter a physicaladdress. A physical address is missing.'),'required');
+
 
 
         //Create a new textinput for postalcode
@@ -215,18 +248,14 @@ class editform extends dbTable {
         $table->endRow();
 
         //Create a new textinput for cell
-        $objcell = new textinput('cell');
-        $cellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcell","libraryforms"),"cell");
+       
         $table->startRow();
+ 	$objcell = new textinput('cell');
+        $cellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcell","libraryforms"),"cell");
         $table->addCell($cellLabel->show(), '', 'center', 'left', '');
         $table->addCell($objcell->show(), '', 'center', 'left', '');
-
-        //$objForm->addRule('cell',$this->objLanguage->languageText("mod_cell_unrequired", 'security', 'Please enter a cell. A cell is missing.'),'required');
-        $objForm->addRule('cell','Must contain numbers only','Alphanumeric in nemeric text');
-
-
-
-        //Create a new textinput for f
+       
+        //Create a new textinput for fax
         $objfax= new textinput('fax');
 
         $faxLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");

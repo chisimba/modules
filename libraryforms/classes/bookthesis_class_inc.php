@@ -50,7 +50,10 @@ class bookthesis extends dbTable {
         //load the checkbox object
         $this->loadClass('checkbox', 'htmlelements');
 
-        $strjs = '<script type="text/javascript">
+
+    $strjs = '<script type="text/javascript">
+
+     
 		//<![CDATA[
         /***********************************************
         *                                              *
@@ -76,6 +79,8 @@ class bookthesis extends dbTable {
 		}
 		//]]>
 		</script>';
+
+
         $this->appendArrayVar('headerParams', $strjs);
 
     }
@@ -87,52 +92,50 @@ class bookthesis extends dbTable {
         $objForm = new form('comments', $this->getFormAction());
 
         //----------TEXT INPUT and Labels--------------
-
+        $table->startRow();
         $titleLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcomment","libraryforms"),"title2");
         $table->addCell($titleLabel ->show(), '', 'center', 'left', '');
-
-
-
-
-
         $objprint = new textinput('print');
+        $table->endRow();
 
-        $printLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttype","libraryforms"),"title2");
+        
         $table->startRow();
+	$printLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttype","libraryforms"),"title2");
         $table->addCell($printLabel ->show(), '', 'center', 'left', '');
         $table->addCell($objprint ->show(), '', 'center', 'left', '');
         $table->endRow();
 
-        $objaut = new textinput('aut');
-        $autLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentauthor2","libraryforms"),"aut");
+        
         $table->startRow();
+	$objaut = new textinput('aut');
+        $autLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentauthor2","libraryforms"),"aut");
         $table->addCell($autLabel ->show(), '', 'center', 'left', '');
         $table->addCell($objaut ->show(), '', 'center', 'left', '');
-        $objForm->addRule('aut',$this->objLanguage->languageText("mod_author_required", 'libraryforms', 'Please enter a author. author missing.'),'required');
-
+        $objForm->addRule('aut',$this->objLanguage->languageText("mod_author_required", 'libraryforms', 'Please enter a author. Author missing.'),'required');
         $table->endRow();
 
 
 
         //Create a new textinput for the title
-        $objtit = new textinput('titles');
-        $titLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttitle2","libraryforms"),"tit");
+        
         $table->startRow();
+	$objtit = new textinput('titles');
+        $titLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttitle2","libraryforms"),"tit");
         $table->addCell($titLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtit ->show(), '', 'center', 'left', '');
-        $objForm->addRule('titles',$this->objLanguage->languageText("mod_title_unrequired", 'libraryforms', 'Please enter a title. title missing.'),'required');
-
+        $objForm->addRule('titles',$this->objLanguage->languageText("mod_title_unrequired", 'libraryforms', 'Please enter a title. Title is missing.'),'required');
         $table->endRow();
 
 
         //Create a new textinput for postal
-        $objplace = new textinput('place');
+        
+        $table->startRow();
+	$objplace = new textinput('place');
         $placeLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commentplace","libraryforms"),"place");
-        $table->startRow();
         $table->addCell($placeLabel->show(), '', 'center', 'left', '');
         $table->addCell($objplace ->show(), '', 'center', 'left', '');
-        $objForm->addRule('place',$this->objLanguage->languageText("mod_place_required", 'libraryforms', 'Please enter a place. place missing.'),'required');
+        $objForm->addRule('place',$this->objLanguage->languageText("mod_place_required", 'libraryforms', 'Please enter a place. Place is missing.'),'required');
 
 
 
@@ -142,7 +145,7 @@ class bookthesis extends dbTable {
         // $table->startRow();
         $table->addCell($pubLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpub->show(), '', 'center', 'left', '');
-        $objForm->addRule('publisher',$this->objLanguage->languageText("mod_publisher_required", 'libraryforms', 'Please enter a publisher. publisher missing.'),'required');
+        $objForm->addRule('publisher',$this->objLanguage->languageText("mod_publisher_required", 'libraryforms', 'Please enter  publisher. Publisher missing.'),'required');
 
 
 
@@ -152,7 +155,7 @@ class bookthesis extends dbTable {
         //$table->startRow();
         $table->addCell($dateLabel->show(), '', 'center', 'left', '');
         $table->addCell($objdate->show(), '', 'center', 'left', '');
-        $objForm->addRule('year',$this->objLanguage->languageText("mod_year_required", 'libraryforms', 'Please enter year. year missing.'),'required');
+        $objForm->addRule('year',$this->objLanguage->languageText("mod_year_required", 'libraryforms', 'Please enter year. Year missing.'),'required');
 
         $table->endRow();
 
@@ -162,7 +165,7 @@ class bookthesis extends dbTable {
         $table->startRow();
         $table->addCell($editionLabel->show(), '', 'center', 'left', '');
         $table->addCell($objedition ->show(), '', 'center', 'left', '');
-        $objForm->addRule('edition',$this->objLanguage->languageText("mod_edition_required", 'libraryforms', 'Please enter a edition. edition missing.'),'required');
+        $objForm->addRule('edition',$this->objLanguage->languageText("mod_edition_required", 'libraryforms', 'Please enter a edition. Edition is missing.'),'required');
 
 
 
@@ -171,7 +174,7 @@ class bookthesis extends dbTable {
         $isbnLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentISBN","libraryforms"),"ISBN");
         $table->addCell($isbnLabel->show(), '', 'center', 'left', '');
         $table->addCell($objisbn->show(), '', 'center', 'left', '');
-        $objForm->addRule('ISBN',$this->objLanguage->languageText("mod_ISBN_required", 'libraryforms', 'Please enter ISBN. ISBN missing.'),'required');
+        $objForm->addRule('ISBN',$this->objLanguage->languageText("mod_ISBN_required", 'libraryforms', 'Please enter ISBN. ISBN is missing.'),'required');
 
 
         //create an istance for the Label
@@ -180,33 +183,43 @@ class bookthesis extends dbTable {
             ("mod_libraryforms_commentseries","libraryforms"),"series");
         $table->addCell($serieslLabel->show(), '', 'center', 'left', '');
         $table->addCell($objseries->show(), '', 'center', 'left', '');
+         $objForm->addRule('series',$this->objLanguage->languageText("mod_series_required", 'libraryforms', 'Please enter a series. Series missing.'),'required');
         $table->endRow();
-        $objForm->addRule('series',$this->objLanguage->languageText("mod_series_required", 'libraryforms', 'Please enter a series. A series missing.'),'required');
-
+        
+       /* new label
+	$table->startRow();
+	$label2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell","libraryforms"),"label2");
+	$table->addCell($label2Label->show(), "100%", 'NULL', 'NULL', '');	
+	$table->endRow();*/
 
 
         //create an istance for the Label
+       
+        $table->startRow();
         $objphoto = new textinput('photocopy');
         $photolLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commentphotocopy","libraryforms"),"photocopy");
-        $table->startRow();
         $table->addCell($photolLabel->show(), '', 'center', 'left', '');
         $table->addCell($objphoto->show(), '', 'center', 'left', '');
         $table->endRow();
 
+        /* show label two
+	 $table->startRow();
+	$label2Labell = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell2","libraryforms"),"label2");
+	$table->addCell($label2Labell->show(), '', '', '', '');	
+	 $table->endRow();*/
 
-        //create an istance for the Label
+      // title 
+        $table->startRow();
         $objtit2 = new textinput('titles');
         $tit2lLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commenttitle3","libraryforms"),"titles");
-        $table->startRow();
         $table->addCell($tit2lLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtit2 ->show(), '', 'center', 'left', '');
         $table->endRow();
-        $objForm->addRule('titles',$this->objLanguage->languageText("mod_titleboob_required", 'libraryforms', 'Please enter book title. A title missing.'),'required');
+        $objForm->addRule('titles',$this->objLanguage->languageText("mod_titleboob_required", 'libraryforms', 'Please enter book title. Title is missing.'),'required');
 
-
-        //create an istance for the Label
+         //create an istance for the Label
         $objpag = new textinput('pages');
         $pagLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commenttitlepages2","libraryforms"),"Pages");
@@ -216,20 +229,18 @@ class bookthesis extends dbTable {
         $table->endRow();
 
 
-        //create an istance for the Label
-        $objthes = new textinput('thesis');
+        //thesis
+       
+        $table->startRow();
+ 	$objthes = new textinput('thesis');
         $thesLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commenttheses","libraryforms"),"thesis");
-        $table->startRow();
         $table->addCell($thesLabel->show(), '', 'center', 'left', '');
         $table->addCell($objthes->show(), '', 'center', 'left', '');
-        $objForm->addRule('thesis',$this->objLanguage->languageText("mod_thesis_required", 'libraryforms', 'Please enter thesis type. A thesis missing.'),'required');
+        $objForm->addRule('thesis',$this->objLanguage->languageText("mod_thesis_required", 'libraryforms', 'Please enter thesis type.Thesis is missing.'),'required');
         $table->endRow();
 
-
-
-        //create an istance for the Label
-        //$objbookb = new textinput('box');
+        //listbox       
         $bookbLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commenttitlebox","libraryforms"),"box");
         $table->startRow();
@@ -237,7 +248,7 @@ class bookthesis extends dbTable {
 
         $objCheck = new checkbox('arrayList[]');
         $objCheck->setValue($userPerm['id']);
-        $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        //$objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $uwcbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentuwc","libraryforms"),"uwc");
         $table->addCell($objCheck->show(), '', 'center', 'left', '');
         $table->addCell($uwcbLabel->show(), '', 'center', 'left', '');
@@ -248,40 +259,36 @@ class bookthesis extends dbTable {
 
         $objCheck2 = new checkbox('arrayList[]');
         $objCheck2->setValue($userPerm['id']);
-        $objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        //$objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $bLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
         $table->addCell($objCheck2->show(), '', 'center', 'left', '');
         $table->addCell($bLabel->show(), '', 'center', 'left', '');
 
-
-
-
+	//Create a new textinput for email
+	$objcourse2 = new textinput('course');
+	$course2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcourse2","libraryforms"),"course");
+	$table->addCell($course2Label->show(), '', 'center', 'left', '');
+	$table->addCell($objcourse2->show(), '', 'center', 'left', '');
 
         $objCheck3 = new checkbox('arrayList[]');
         $objCheck3->setValue($userPerm['id']);
-        $objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        //$objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         //Create a new label for oversears
         $overLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentoverseas","libraryforms"),"overseas");
         $table->addCell($objCheck3->show(), '', 'center', 'left', '');
         $table->addCell($overLabel->show(), '', 'center', 'left', '');
         $table->endRow();
 
-
-
-
         //Create a new textinput for fax
 
-        $objCheck4 = new checkbox('arrayList[]');
+        
+        $table->startRow();
+	$objCheck4 = new checkbox('arrayList[]');
         $objCheck4->setValue($userPerm['id']);
         $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $faxbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
-        $table->startRow();
         $table->addCell($objCheck4->show(), '', 'center', 'left', '');
         $table->addCell($faxbLabel->show(), '', 'center', 'left', '');
-
-
-
-
 
         //Create a new label for ug
 
@@ -318,17 +325,16 @@ class bookthesis extends dbTable {
         $table->addCell($label2Label->show(), '100%', 'NULL', 'NULL', '');
         $table->endRow();
 
-        //$table->addCell($titlesLabel->show(), 150, NULL, 'right');
+        
 
         $label2Labell = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell2","libraryforms"),"label2");
         $table->startRow();
-        //$objForm->addToForm($label2Labell->show()."<br/>");
+        
         $table->addCell($label2Labell->show(), '', '', '', '');
         $table->endRow();
 
         $reqLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentrequest","libraryforms"),"request");
-        //$objForm->addToForm($reqLabel->show()."<br/>");
-        //$objForm->addToForm('<br/><br/>'.$strutill.'<br/><br/>');
+        
 
         $table->startRow();
         $table->addCell($reqLabel->show(), '', 'center', 'left', '');
@@ -514,4 +520,4 @@ class bookthesis extends dbTable {
 
     }
 }
-?>
+
