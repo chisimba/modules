@@ -68,7 +68,7 @@ $cform->addToForm($this->objCButton->show());
 $cform = $cform->show();
 
 $this->objIcon = $this->getObject('geticon', 'htmlelements');
-if(class_exists(Memcache)){
+if(class_exists('Memcache')){
 	$memcache = new Memcache;
 } else {
 	$arrRep = array('MCLINK'=>'<br/> <a href="http://php.net/memcache">http://php.net/memcache</a><br />');
