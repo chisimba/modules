@@ -87,7 +87,7 @@ public class DocumentListPanel extends LayoutContainer {
         columns.add(sm.getColumn());
         columns.add(new ColumnConfig("Owner", "Owner", 145));
         columns.add(new ColumnConfig("RefNo", "RefNo", 100));
-        columns.add(new ColumnConfig("Title", "Title", 100));
+        columns.add(new ColumnConfig("Title", "Title", 150));
         columns.add(new ColumnConfig("Topic", "Topic", 100));
         columns.add(new ColumnConfig("Date", "Date", 100));
         columns.add(new ColumnConfig("Attachment", "Attachment", 100));

@@ -111,10 +111,13 @@ public class Main {
     private Review newReviewForm;
     private ContactDetails newContactDetailsForm;
     private DocumentListPanel documentListPanel;
+    private FileListPanel fileListPanel;
     private TabPanel tab = new TabPanel();
     private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
     private TabItem viewTab = new TabItem("File List");
+    // grid view file list
+    private TabItem filesTab = new TabItem("File List");
     private NewCourseProposalDialog newCourseProposalDialog;
     private AdvancedSearchDialog advancedSearchDialog;
     private String mode = "default";
@@ -352,6 +355,7 @@ public class Main {
         });*/
 
         loader2.load();
+
         view = new ListView<ModelData>() {
 
             @Override
@@ -466,8 +470,8 @@ public class Main {
         viewFilesPanel.setTopComponent(viewFilesToolbar);
         viewFilesPanel.add(view);
         viewTab.add(viewFilesPanel);
+        //tab.add(viewTab);
 
-        tab.add(viewTab);
         determinePermissions();
         documentListPanel = new DocumentListPanel(this);
         documentListPanel.setHeight(500);
@@ -475,6 +479,13 @@ public class Main {
         docsTab.setHeight(Window.getClientHeight());
         docsTab.add(documentListPanel);
         tab.add(docsTab);
+
+        fileListPanel = new FileListPanel(this);
+        fileListPanel.setHeight(500);
+        filesTab.setIconStyle("docs");
+        filesTab.setHeight(Window.getClientHeight());
+        filesTab.add(fileListPanel);
+        tab.add(filesTab);
 
         center.add(tab);
 
@@ -511,8 +522,11 @@ public class Main {
     }-*/;
 
     public void refreshFileList() {
-
-        if (!selectedFolder.get("viewfiles").equals("true")) {
+        String fileListParams = "?module=wicid&action=getFiles&node=" + currentPath;
+        
+        selectFileListTab();
+        fileListPanel.refreshFileList(fileListParams);
+        /*if (!selectedFolder.get("viewfiles").equals("true")) {
             view.getStore().removeAll();
             view.refresh();
 
@@ -541,11 +555,11 @@ public class Main {
         store.sort("text", SortDir.ASC);
         removeFolderMenuItem.setEnabled(selectedFolder == null ? true : false);
         loader.load();
-        view.refresh();
+        view.refresh();*/
     }
 
     private void searchFiles(String filter) {
-        ModelType type2 = new ModelType();
+        /*ModelType type2 = new ModelType();
         type2.setRoot("files");
         type2.addField("id", "id");
         type2.addField("docid", "docid");
@@ -556,6 +570,8 @@ public class Main {
         type2.addField("filesize", "filesize");
         type2.addField("refno", "refno");
         type2.addField("group", "group");
+        
+        
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=searchfiles&filter=" + filter);
         HttpProxy<String> proxy = new HttpProxy<String>(builder);
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type2);
@@ -568,8 +584,11 @@ public class Main {
         store.sort("text", SortDir.ASC);
         removeFolderMenuItem.setEnabled(selectedFolder == null ? true : false);
         loader.load();
-        view.refresh();
+        view.refresh();*/
         selectFileListTab();
+        String searchParams = "?module=wicid&action=searchfiles&filter=" + filter;
+        fileListPanel.refreshFileList(searchParams);
+        
     }
 
     private void setMode() {
@@ -879,6 +898,7 @@ public class Main {
     }
 
     public void selectFileListTab() {
-        tab.setSelection(viewTab);
+        tab.setSelection(filesTab);
+        //tab.setSelection(viewTab);
     }
 }
