@@ -146,7 +146,7 @@ class dbfileuploads extends dbtable {
             $files=array();
 
             foreach ($rows as $row) {
-                $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
+                $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);echo $f;
                 $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
                 $files[] = array(
                         'text'=>$row['filename'],
@@ -157,7 +157,7 @@ class dbfileuploads extends dbtable {
                         //'lastmod'=>$lastmod,
                         'lastmod'=>$row['date_uploaded'],
                         'filesize'=>$size,
-                        'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
+                        'thumbnailpath'=>'<img  src="'.$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'-16x16.png">'
                 );
 
             }

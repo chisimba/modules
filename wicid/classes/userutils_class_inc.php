@@ -49,7 +49,7 @@ class userutils extends object {
         $replacewith="";
         $docRoot=$_SERVER['DOCUMENT_ROOT'];
         $location = "http://" . $_SERVER['HTTP_HOST'];
-        $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
+        $this->sitePath=$location.str_replace($docRoot,$replacewith,$this->resourcePath);
        $this->folderPermissions=$this->getObject('dbfolderpermissions');
         
     }
@@ -268,12 +268,24 @@ class userutils extends object {
         $objFileUploads = $this->getObject('dbfileuploads');
         $today = getdate();
 
+        $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $owner=$this->getUserId();
         $rows=$objFileUploads->getNodeFiles($node);
         $files=array();
 
+
         foreach ($rows as $row) {
-            //$size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
+            $d = $dir.$node;//$this->objConfig->getsiteRootPath();
+            $f = $d.$row['filepath'];
+            $start = strstr($f, ".");
+            $f = str_replace($start, ".na", $f);
+            if(file_exists($f)) {
+                $size = $this->formatBytes(filesize($f), 2);
+            }
+            else {
+                $size = "0 B";
+            }
+
             $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
             $files[] = array(
                     'text'=>$row['filename'],
@@ -283,8 +295,8 @@ class userutils extends object {
                     'owner'=>$this->objUser->fullname($row['userid']),
                     //'lastmod'=>$lastmod,
                     'lastmod'=>$row['date_uploaded'],
-                    //'filesize'=>$size,
-                    'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
+                    'filesize'=>$size,
+                    'thumbnailpath'=>'<img  src="'.$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'-16x16.png">'
             );
         }
         echo json_encode(array("files"=>$files));
