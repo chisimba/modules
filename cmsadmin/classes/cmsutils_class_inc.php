@@ -3989,8 +3989,6 @@
                 $memberReadAccess = $groupsList[$x]['read_access'];			
                 $memberWriteAccess = $groupsList[$x]['write_access'];			
 
-                $oddOrEven = ($rowcount == 0) ? "even" : "odd";
-
                 $canRead = (($memberReadAccess == 1) ? true : false);
                 $canWrite = (($memberWriteAccess == 1) ? true : false);
 
@@ -4013,8 +4011,7 @@
                 $memberName = $usersList[$x]['username'];
                 $memberReadAccess = $usersList[$x]['read_access'];
                 $memberWriteAccess = $usersList[$x]['write_access'];
-                $oddOrEven = ($rowcount == 0) ? "even" : "odd";
-
+                
                 $canRead = (($memberReadAccess == 1) ? true : false);
                 $canWrite = (($memberWriteAccess == 1) ? true : false);
                 
@@ -4161,10 +4158,9 @@
             // Members list dropdown
             $this->loadClass('dropdown', 'htmlelements');
             $lstMembers = new dropdown('list2[]');
-            //$lstMembers->name = 'list2[]';
-            $lstMembers->extra = ' style="width:100pt" MULTIPLE SIZE=10 onDblClick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true)"';
+            $lstMembers->extra = ' style="width:200pt" MULTIPLE SIZE=10 onDblClick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true)"';
             foreach ( $memberList as $user ) {
-                if (($user['firstname'] != '') && ($user['surname'] != '')){
+                if (array_key_exists('firstname', $user) && ($user['firstname'] != '') && ($user['surname'] != '')){
                     $fullName = $user['firstname'] . " " . $user['surname'];
                     $userPKId = $user['id'].'|user';
                 } else {
@@ -4172,15 +4168,15 @@
                     $userPKId = $user['id'].'|group';
                 }
                 $lstMembers->addOption( $userPKId, $fullName );
-            } 
+            }
             // Users list dropdown
             $lstUsers = new dropdown('list1[]');
-            $lstUsers->extra = ' style="width:100pt" MULTIPLE SIZE=10 onDblClick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
+            $lstUsers->extra = ' style="width:200pt" MULTIPLE SIZE=10 onDblClick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
 
 
             foreach ( $usersList as $user ) {
 
-                if (($user['firstname'] != '') && ($user['surname'] != '')){
+                if (array_key_exists('firstname', $user) && ($user['firstname'] != '') && ($user['surname'] != '')){
                     $fullName = $user['firstname'] . " " . $user['surname'];
                     $userPKId = $user['id'].'|user';
                 } else {
@@ -4188,7 +4184,7 @@
                     $userPKId = $user['id'].'|group';
                 }
                 $lstUsers->addOption( $userPKId, $fullName );
-            } 
+            }
 
             // Build the nonMember table.
             //$hdrUsers = $objLanguage->languageText('mod_cmsadmin_word_user','cmsadmin');
@@ -4332,7 +4328,7 @@
             $this->setVar( 'lnkContextHome', $lnkContextHome );
             $this->setVar( 'lnkBack', $lnkBack );
             $this->setVar( 'ttlEditGroup', $ttlEditGroup );
-            $this->setVar( 'fullPath', $fullPath );
+            //$this->setVar( 'fullPath', $fullPath );
             $this->setVar( 'confirm', $confirm );
 
 

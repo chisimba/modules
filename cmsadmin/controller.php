@@ -785,17 +785,17 @@ $this->_objJQuery->loadSimpleTreePlugin();
                 return 'cms_section_add_tpl.php';
 
                 case 'addpermissions':
-                $sectionid = $this->getParam('id');
+                    $sectionid = $this->getParam('id');
         
-                $this->addEditSectionPermissions($sectionid);
+                    $this->addEditSectionPermissions($sectionid);
 
-                $submitButton = $this->getParam('save_btn');
-                if ($submitButton == 'Save'){
-                    $this->getsections(null, null, 'permissions');
-                    return 'cms_permissions_list_tpl.php';
-                } else {
-                    return 'cms_permissions_add_tpl.php';
-                }
+                    $submitButton = $this->getParam('save_btn');
+                    if ($submitButton == 'Save'){
+                        $this->getsections(null, null, 'permissions');
+                        return 'cms_permissions_list_tpl.php';
+                    } else {
+                        return 'cms_permissions_add_tpl.php';
+                    }
 
                 case 'add_content_permissions':
                 $contentid = $this->getParam('id');
@@ -826,37 +826,38 @@ $this->_objJQuery->loadSimpleTreePlugin();
 
 
                 case 'add_section_members':
-                $sectionid = $this->getParam('id');
-                //Updating the permission members for SECTIONS
-                $this->processSectionPermissionsMemberForm($sectionid);
+                    $sectionid = $this->getParam('id');
+                    //Updating the permission members for SECTIONS
+                    $this->processSectionPermissionsMemberForm($sectionid);
 
-                //Taking User back to the Section Permissions Form
-                $this->addEditSectionPermissions($sectionid);
+                    //Taking User back to the Section Permissions Form
+                    $this->addEditSectionPermissions($sectionid);
 
-                return 'cms_permissions_add_tpl.php';
+                    return 'cms_permissions_add_tpl.php';
 
                 case 'view_permissions_section':
-                $returnSubView = $this->getParam('subview');
-                $sectionid = $this->getParam('cid');
+                    $returnSubView = $this->getParam('subview');
+                    $sectionid = $this->getParam('cid');
 
-                if ($returnSubView == 1){
-                    //Processing the subview permissions changes
-                    $this->addEditSectionPermissions($sectionid, $returnSubView);
-                    //$this->processSectionPermissionsMemberForm($sectionid);
+                    if ($returnSubView == 1){
+                        //Processing the subview permissions changes
+                        $this->addEditSectionPermissions($sectionid, $returnSubView);
+                        //$this->processSectionPermissionsMemberForm($sectionid);
 
-                }
+                    }
 
-                $this->viewPermissionsSections();
+                    $this->viewPermissionsSections();
 
-                return 'cms_permissions_view_tpl.php';
+                    return 'cms_permissions_view_tpl.php';
 
                 case 'addpermissions_content_user_group':
-                $this->addEditContentPermissionsUserGroup($sectionid);
+                    $this->addEditContentPermissionsUserGroup($sectionid);
 
-                return 'cms_permissions_content_add_user_group_tpl.php';				
+                    return 'cms_permissions_content_add_user_group_tpl.php';				
 
                 case 'addpermissions_user_group':
-                    $this->addEditSectionPermissionsUserGroup($sectionid);
+                    $sectionId = $this->getParam('id');
+                    $this->addEditSectionPermissionsUserGroup($sectionId);
                     return 'cms_permissions_add_user_group_tpl.php';
 
                 case 'createsection':
@@ -2218,17 +2219,12 @@ $this->_objJQuery->loadSimpleTreePlugin();
         * The method accepts two params that of the parent
         * and permissions ids. This is so you can have (n)levels
         *
+        public function addEditSectionPermissions($sectionid=null, $returnSubView = 0){
         * @param int $permissionsid
         * @param int $parentid
         * @return string form
         */
         public function addEditSectionPermissions($sectionid=null, $returnSubView = 0){
-            // Generation of Ajax Scripts
-            //$ajax = $this->getObject('xajax', 'ajaxwrapper');
-            //$ajax->setRequestURI($this->uri(array('action'=>'addsection'), 'cmsadmin'));
-            //$ajax->registerFunction(array($this, 'processsection')); // Register another function in this controller
-            //$ajax->processRequests(); // XAJAX method to be called
-            //$this->appendArrayVar('headerParams', $ajax->getJavascript()); // Send JS to header
             //Get form
             if (!isset($sectionid) ) {
                 $sectionid = $this->getParam('id');
@@ -2265,32 +2261,24 @@ $this->_objJQuery->loadSimpleTreePlugin();
                     $globalChkCounter = 0;
 
                     //Updating Groups Permissions
-                    for ($x = 0; $x < $groupsCount; $x++){
+                    for ($x = 0; $x < $groupsCount; $x++) {
                         $memberId = $groupsList[$x]['group_id'];
 
                         $chkReadValue = (($chkRead[$globalChkCounter] == 'on') ? 1 : 0);
                         $chkWriteValue = (($chkWrite[$globalChkCounter] == 'on') ? 1 : 0);
+                        
+                        $this->_objSecurity->setPermissionsGroup($sectionid, $memberId, $chkReadValue, $chkWriteValue);
 
-                        //echo "chkRead : ".$chkReadValue."<br/>";
-                        //echo "chkWrite : ".$chkWriteValue."<br/><br/>";
-
-                        if ($chkPropagate != 'on'){
-                            //Only updating permissions for current section
-                            $this->_objSecurity->setPermissionsGroup($sectionid, $memberId, $chkReadValue, $chkWriteValue);
-                        } else {
-                            //Updating permissions for current and all child items i.e. (Child Sections/Child Content)
-                            $this->_objSecurity->setPermissionsGroup($sectionid, $memberId, $chkReadValue, $chkWriteValue);
-
-                            //Updating Child Sections
+                        if ($chkPropagate == 'on'){
+                            // Updating Child Sections
                             $this->_objSecurity->setPermissionsGroupPropagate($sectionid, $memberId, $chkReadValue, $chkWriteValue);
-
-                            //Updating Child Content
-                            $this->_objSecurity->setContentPermissionsGroupPropagate($sectionid, $memberId, $chkReadValue, $chkWriteValue);
+                            // Updating Child Content
+                            $this->_objSecurity->setContentPermissionsGroupPropagate($sectionid, $memberId, $chkReadValue, $chkWriteValue);} else {
                         }
 
                         $globalChkCounter += 1;
 
-                    }	//End Loop
+                    }
 
 
                     //Updating User Permissions
@@ -2299,26 +2287,14 @@ $this->_objJQuery->loadSimpleTreePlugin();
 
                         $chkReadValue = (($chkRead[$globalChkCounter] == 'on') ? 1 : 0);
                         $chkWriteValue = (($chkWrite[$globalChkCounter] == 'on') ? 1 : 0);
-
-                        //echo "chkRead : ".$chkReadValue."<br/>";
-                        //echo "chkWrite : ".$chkWriteValue."<br/><br/>";
-
-
-                        if ($chkPropagate != 'on'){
-                            //Only updating permissions for current section
-                            $this->_objSecurity->setPermissionsUser($sectionid, $memberId, $chkReadValue, $chkWriteValue);
-
-                        } else {
-                            //Updating permissions for current and all child items i.e. (Child Sections/Child Content)
-                            $this->_objSecurity->setPermissionsUser($sectionid, $memberId, $chkReadValue, $chkWriteValue);
+                        
+                        $this->_objSecurity->setPermissionsUser($sectionid, $memberId, $chkReadValue, $chkWriteValue);
+                        if ($chkPropagate == 'on'){
                             $this->_objSecurity->setPermissionsUserPropagate($sectionid, $memberId, $chkReadValue, $chkWriteValue);
-
                             //Updating Child Content
                             $this->_objSecurity->setContentPermissionsUserPropagate($sectionid, $memberId, $chkReadValue, $chkWriteValue);
-
                         }
-
-
+                        
                         $globalChkCounter += 1;
 
                     } 
@@ -2338,7 +2314,7 @@ $this->_objJQuery->loadSimpleTreePlugin();
 
                         }
                         
-                        if ($userCount == 0){
+                        if ($usersCount == 0){
                             //Clearing the Permissions Section - User for the given section
                             $this->_objSecurity->deletePermissionsUserPropagate($sectionid);
         
@@ -2366,36 +2342,17 @@ $this->_objJQuery->loadSimpleTreePlugin();
                 }
                 
                 
-                if ($chkNoPublic == 'on'){
-                    if ($chkPropagate == 'on'){
-                        //Propagate
-                        $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, false);
-                        $this->_objSecurity->setSectionPermissionsPublicAccessPropagate($sectionid, false);
-                    } else {
-                        //Single
-                        $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, false);
-                    }
-                } else {
-                    if ($chkPropagate == 'on'){
-                        //Propagate
-                        $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, true);
-                        $this->_objSecurity->setSectionPermissionsPublicAccessPropagate($sectionid, true);
-                    } else {
-                        //Single
-                        $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, true);
-                    }
-                }
-
-                
+                $public = ($chkNoPublic == 'on')? false : true;
+                $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, $public);
+                if ($chkPropagate == 'on'){
+                    //Propagate
+                    $this->_objSecurity->setSectionPermissionsPublicAccessPropagate($sectionid, $public);
+                }            
             }
-
-            $addEditSectionPermissionsForm = $this->_objUtils->getAddEditPermissionsSectionForm($sectionid, $returnSubView);
-
+            
             //Get Edit Form
-
+            $addEditSectionPermissionsForm = $this->_objUtils->getAddEditPermissionsSectionForm($sectionid, $returnSubView);
             $this->setVarByRef('addEditSectionPermissionsForm', $addEditSectionPermissionsForm);
-            $this->setVarByRef('sectionid', $sectionid);
-            return $addEditSectionPermissionsForm;
         }
 
 
@@ -2433,13 +2390,6 @@ $this->_objJQuery->loadSimpleTreePlugin();
                  * @return string form
                  */
         public function addEditSectionPermissionsUserGroup($sectionid=null){
-            // Generation of Ajax Scripts
-            //$ajax = $this->getObject('xajax', 'ajaxwrapper');
-            //$ajax->setRequestURI($this->uri(array('action'=>'addsection'), 'cmsadmin'));
-            //$ajax->registerFunction(array($this, 'processsection')); // Register another function in this controller
-            //$ajax->processRequests(); // XAJAX method to be called
-            //$this->appendArrayVar('headerParams', $ajax->getJavascript()); // Send JS to header
-            //Get form
             if (!isset($sectionid) ) {
                 $sectionid = $this->getParam('id');
             }

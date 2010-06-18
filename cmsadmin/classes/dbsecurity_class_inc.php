@@ -538,18 +538,15 @@ return true;
      * @param $sectionid, $userid, bool $read_access, bool $write_access
      * @return boolean
      */
-        public function setPermissionsUser($sectionid = NULL, $userid, $read_access, $write_access)
+        public function setPermissionsUser($sectionid, $userid, $read_access, $write_access)
         {
             $this->_tableName = 'tbl_cms_section_user';
             $fields['read_access'] = $read_access;
             $fields['write_access'] = $write_access;
 
             $sql = "SELECT id FROM tbl_cms_section_user 
-                                            WHERE section_id = '$sectionid'
-                                            AND   user_id = '$userid'";
-
-            //echo $sql;
-            //exit;
+                    WHERE section_id = '$sectionid'
+                        AND user_id = '$userid'";
 
             $data = $this->getArray($sql);
 
@@ -562,7 +559,6 @@ return true;
                 //section user mapping not found
             }
             $this->_tableName = 'tbl_cms_sections';
-
         }
 
 
@@ -730,20 +726,6 @@ return true;
             return true;
         }	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * Method to SET the PERMISSIONS for a SECTIONS USER and all of it's child Content and subsections
      *
@@ -751,7 +733,7 @@ return true;
      * @param $sectionid, $userid, bool $read_access, bool $write_access
      * @return boolean
      */
-        public function setPermissionsUserPropagate($sectionid = NULL, $userid, $read_access, $write_access)
+        public function setPermissionsUserPropagate($sectionid, $userid, $read_access, $write_access)
         {
             //Get A List of all child sections
             $subSections = $this->getSubSectionsInSection($sectionid);
@@ -1006,14 +988,15 @@ return true;
 
                 return $secureSections;
             } else {
-                $secureSections = array();
+                //$secureSections = array();
                 $sections = $this->getAll("WHERE parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
-                foreach ($sections as $sec){
-                    if ($this->canUserReadSection($sec['id'])){
-                        array_push($secureSections, $sec);
-                    }
-                }
-                return $secureSections;
+                //foreach ($sections as $sec){
+                //    if ($this->canUserReadSection($sec['id'])){
+                //        array_push($secureSections, $sec);
+                //    }
+                //}
+                //return $secureSections;
+                return $sections;
             }
         }
 
@@ -1263,13 +1246,13 @@ return true;
 
         public function getAssignedSectionUsers($sectionid = null){
 
-            $sql = "SELECT su.id, su.user_id, su.read_access, su.write_access, u.username, u.firstname, u.surname 
-                                            FROM tbl_cms_section_user as su, tbl_users as u 
-                                            WHERE su.user_id = u.userid 
-                                            AND su.section_id = '$sectionid'
-                                            ORDER BY u.firstname ASC";
-            //echo $sql;
-            //exit;
+            $sql = "SELECT su.id, su.user_id, su.read_access, su.write_access,
+                        u.username, u.firstname, u.surname 
+                    FROM tbl_cms_section_user as su, tbl_users as u 
+                    WHERE su.user_id = u.userid
+                        AND su.section_id = '$sectionid'
+                    ORDER BY u.firstname ASC";
+            
             $userMembers = $this->getArray($sql);
             return $userMembers;
         }
@@ -1284,11 +1267,12 @@ return true;
      */
 
         public function getAssignedSectionGroups($sectionid = null){
-            $sql = "SELECT sg.id, sg.group_id, sg.read_access, sg.write_access, g.name, g.description 
-                                            FROM tbl_cms_section_group as sg, tbl_groupadmin_group as g
-                                            WHERE sg.group_id = g.id 
-                                            AND sg.section_id = '$sectionid'
-                                            ORDER BY g.name ASC";
+            $sql = "SELECT sg.id, sg.group_id, sg.read_access, sg.write_access,
+                        g.name, g.description 
+                    FROM tbl_cms_section_group as sg, tbl_groupadmin_group as g
+                    WHERE sg.group_id = g.id 
+                        AND sg.section_id = '$sectionid'
+                    ORDER BY g.name ASC";
 
             $groupMembers = $this->getArray($sql);
             return $groupMembers;
