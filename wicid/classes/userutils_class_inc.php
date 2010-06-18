@@ -276,7 +276,7 @@ class userutils extends object {
 
         foreach ($rows as $row) {
             $d = $dir.$node;//$this->objConfig->getsiteRootPath();
-            $f = $d.$row['filepath'];
+            $f = $d.$row['filepath'];echo $d.$row['filepath'];
             $start = strstr($f, ".");
             $f = str_replace($start, ".na", $f);
             if(file_exists($f)) {
