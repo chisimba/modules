@@ -133,7 +133,7 @@ class activitystreamsencoder extends object
      * @access public
      * @param object entry $entry
      */
-    function addEntry(ActivityStreamsEntry $entry) {
+    function addEntry(activitystreamsentry $entry) {
 			$this->entries[] = $entry;
     }
 	
@@ -166,7 +166,7 @@ class activitystreamsencoder extends object
 END;
         if (sizeof($this->entries))
             foreach($this->entries as $entry)
-            if ($entry instanceof ActivityStreamsEntry) $string .= (string) $entry;
+            if ($entry instanceof activitystreamsentry) $string .= (string) $entry;
 					
             $string .=  <<<END
 </feed>
