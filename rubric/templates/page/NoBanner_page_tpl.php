@@ -28,8 +28,6 @@ if (isset($headerParams)) {
 <link rel="stylesheet" type="text/css" href="<?php echo $objSkin->getSkinUrl(); ?>kewl_css.php">
 </head>
 <?php
-$objSkin->skinStartPage(); 
-
 if (isSet($bodyParams)) {
     echo "<body " . $bodyParams . ">";
 } else {
