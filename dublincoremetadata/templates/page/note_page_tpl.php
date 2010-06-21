@@ -14,8 +14,6 @@ if (isset($jsLoad)) {
 <link rel="stylesheet" type="text/css" href="<?php echo $this->objSkin->getSkinUrl(); ?>kewl_css.php">
 </head>
 <?php
-$objSkin->skinStartPage(); 
-
 if (isSet($bodyParams)) {
     echo "<body " . $bodyParams . ">";
 } else {
