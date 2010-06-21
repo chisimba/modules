@@ -59,6 +59,14 @@ $GLOBALS['kewl_entry_point_run']) {
 class pubsubhubbub extends object
 {
     /**
+     * Instance of the curlwrapper class of the utilities module.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objCurl;
+
+    /**
      * Instance of the dbsysconfig class of the sysconfig module.
      *
      * @access protected
@@ -73,6 +81,7 @@ class pubsubhubbub extends object
      */
     public function init()
     {
+        $this->objCurl      = $this->getObject('curlwrapper', 'utilities');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
@@ -96,12 +105,7 @@ class pubsubhubbub extends object
     public function publish($feed)
     {
         $params = array('hub.mode' => 'publish', 'hub.url' => $feed);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $this->getHub());
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_exec($curl);
-        curl_close($curl);
+        $this->objCurl->postCurl($this->getHub(), $params);
     }
 }
 
