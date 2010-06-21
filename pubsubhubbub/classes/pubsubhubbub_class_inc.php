@@ -86,6 +86,23 @@ class pubsubhubbub extends object
     {
         $this->objSysConfig->getValue('hub', 'pubsubhubbub');
     }
+
+    /**
+     * Notifies a hub that a new entry has been posted to the feed.
+     *
+     * @access public
+     * @param  string $feed The feed containing the new entry.
+     */
+    public function publish($feed)
+    {
+        $params = array('hub.mode' => 'publish', 'hub.url' => $feed);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->getHub());
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($curl);
+        curl_close($curl);
+    }
 }
 
 ?>
