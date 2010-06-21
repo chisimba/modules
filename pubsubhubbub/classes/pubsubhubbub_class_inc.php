@@ -100,12 +100,17 @@ class pubsubhubbub extends object
      * Notifies a hub that a new entry has been posted to the feed.
      *
      * @access public
-     * @param  string $feed The feed containing the new entry.
+     * @param  string  $feed The feed containing the new entry.
+     * @return boolean TRUE if the call was successful, FALSE otherwise.
      */
     public function publish($feed)
     {
-        $params = array('hub.mode' => 'publish', 'hub.url' => $feed);
-        $this->objCurl->postCurl($this->getHub(), $params);
+        $url          = $this->objSysConfig->getValue('hub', 'pubsubhubbub');
+        $params       = array('hub.mode' => 'publish', 'hub.url' => $feed);
+        $responseCode = $this->objCurl->postCurl($url, $params, TRUE);
+        $success      = ($responseCode == 204);
+
+        return $success;
     }
 }
 
