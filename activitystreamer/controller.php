@@ -111,5 +111,42 @@ class activitystreamer extends controller
 
     	 return 'activities_tpl.php';
     }
+    
+    private function __home()
+    {
+        $this->loadClass('activitystreamsencoder');
+        $this->loadClass('activitystreamsobject');
+        $this->loadClass('activitystreamsauthor');
+        $stream = $this->newObject('activitystreamsencoder'); 
+        //('http://samplecompany.com/tasks/activity/', 'Task activities at Sample Company');
+	    $stream->setId('http://samplecompany.com/tasks/activity/');
+	    $stream->setTitle('Task activities at FSIU');
+	    $stream->setDescription('some description');
+	    
+	    $object = $this->newObject('activitystreamsobject');
+	    $object->setProperty('id','http://samplecompany.com/tasks/23432/');
+	    $object->setProperty('title','Sample task.');
+	    $object->setProperty('content','...');
+	    $object->addObjectType('http://samplecompany.com/activity/schema/1.0/task');
+	    $object->addObjectType('http://activitystrea.ms/schema/1.0/note');
+	    $object->setProperty('link','http://samplecompany.com/tasks/23432/');
+	    
+	    $author = $this->newObject('activitystreamsauthor');
+	    $author->setProperty('name','Paul Scott');
+        $author->setProperty('uri','http://samplecompany.com/people/Paul+Scott/');
+        
+        $entry = $this->newObject('activitystreamsentry');
+        $entry->addVerb("http://samplecompany.com/activity/schema/1.0/complete");
+	    $entry->addVerb("http://activitystrea.ms/schema/1.0/update");
+	    $entry->title = "Paul Scott completed a task.";
+	    $entry->id = 'http://samplecompany.com/tasks/activity/23432/3242345/';
+	    $entry->addObject($object);
+	    $entry->setAuthor($author);
+	    
+	    $stream->addEntry($entry);
+	    
+	    header('Content type: text/xml');
+	    echo $stream;
+    }
 
 }
