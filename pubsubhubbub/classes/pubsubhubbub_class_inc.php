@@ -59,12 +59,32 @@ $GLOBALS['kewl_entry_point_run']) {
 class pubsubhubbub extends object
 {
     /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objSysConfig;
+
+    /**
      * Initialises some object properties.
      *
      * @access public
      */
     public function init()
     {
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    }
+
+    /**
+     * Returns the URL of the hub as specified in the module configuration.
+     *
+     * @access public
+     * @return string The URL of the hub.
+     */
+    public function getHub()
+    {
+        $this->objSysConfig->getValue('hub', 'pubsubhubbub');
     }
 }
 
