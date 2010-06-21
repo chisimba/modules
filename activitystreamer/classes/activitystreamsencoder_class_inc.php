@@ -57,6 +57,12 @@ class activitystreamsencoder extends object
      * @access public
      */
     public $objActDB;
+
+    /**
+     * Property to hold pubsubhubbub object.
+     * @access public
+     */
+    public $objPubSubHubbub;
     
     /**
      * Property to hold id object
@@ -81,6 +87,12 @@ class activitystreamsencoder extends object
      * @access public
      */
     public $description;
+
+    /**
+     * Property to hold the URL of the PubSubHubbub hub.
+     * @access private
+     */
+    private $hub;
     
     /**
      * Property to hold entries
@@ -95,6 +107,8 @@ class activitystreamsencoder extends object
     public function init()
     {
         $this->objActDB = $this->getObject('activitydb');
+        $this->objPubSubHubbub = $this->getObject('pubsubhubbub', 'pubsubhubbub');
+        $this->hub = $this->objPubSubHubbub->getHub();
     }
     
     /**
@@ -162,6 +176,7 @@ class activitystreamsencoder extends object
 	<link rel="alternate" type="text/html" href="{$this->link}" />
 	<id>{$this->id}</id>
 	<link rel="self" type="application/atom+xml" href="{$this->id}" />
+	<link rel="hub" href="{$this->hub}" />
    
 END;
         if (sizeof($this->entries))
