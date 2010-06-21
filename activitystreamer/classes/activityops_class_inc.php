@@ -52,6 +52,12 @@ $GLOBALS['kewl_entry_point_run'])
 class activityops extends object
 {
     /**
+     * Property to hold pubsubhubbub object.
+     * @access public
+     */
+    public $objPubSubHubbub;
+
+    /**
      * Constructor
      *
      */
@@ -60,6 +66,7 @@ class activityops extends object
     {
         $this->objFeeds = $this->getObject('feeder', 'feed');
         $this->objActDB = $this->getObject('activitydb');
+        $this->objPubSubHubbub = $this->getObject('pubsubhubbub', 'pubsubhubbub');
     }
     
     /**
@@ -72,6 +79,9 @@ class activityops extends object
     {
         //add to database
         $this->objActDB->insertPost($notification);
+
+        // Notify the hub of the new entry.
+        $this->objPubSubHubbub->publish($this->id);
         
         //send to somewhere with XMPP or something
         
