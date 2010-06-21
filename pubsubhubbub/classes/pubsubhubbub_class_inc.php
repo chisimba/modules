@@ -93,7 +93,7 @@ class pubsubhubbub extends object
      */
     public function getHub()
     {
-        $this->objSysConfig->getValue('hub', 'pubsubhubbub');
+        return $this->objSysConfig->getValue('hub', 'pubsubhubbub');
     }
 
     /**
