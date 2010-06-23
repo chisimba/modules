@@ -638,11 +638,11 @@ class db_contextcontent_order extends dbtable {
             }else {
                 $link = new link ($this->uri(Null, $module));
             }
-            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_backchapter','learningcontent','Back to Chapter').': '.htmlentities($page[0]['chaptertitle']);
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_backchapter','contextcontent','Back to Chapter').': '.htmlentities($page[0]['chaptertitle']);
         } else {
             $page = $results[0];
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_prevpage','learningcontent','Previous Page').': '.htmlentities($page['menutitle']);
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_prevpage','contextcontent','Previous Page').': '.htmlentities($page['menutitle']);
         }
         return $link->show();
     }
@@ -734,7 +734,7 @@ class db_contextcontent_order extends dbtable {
             return '';
         } else {
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = $this->objLanguage->languageText('mod_contextcontent_nextpage','learningcontent').': '.htmlentities($page['menutitle']).' &#187;';
+            $link->link = $this->objLanguage->languageText('mod_contextcontent_nextpage','contextcontent').': '.htmlentities($page['menutitle']).' &#187;';
             return $link->show();
         }
     }
