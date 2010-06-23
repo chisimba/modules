@@ -15,7 +15,7 @@ class gradebook2 extends controller {
     //user object - security and access rights validation
     public $objUser;
 
-    //language object - multilingularity
+    //language object
     public $objLanguage;
 
     //form object
@@ -35,8 +35,8 @@ class gradebook2 extends controller {
     }
 
     /**
-     * dispatch() function for the gradebook module:
-     * providing standard controlls for the module's logic and execution
+     * dispatch() function for the gradebook2 module:
+     * providing standard controls for the module's logic and execution
      */
     public function dispatch($action) {
         //get the parameter from the querystring
