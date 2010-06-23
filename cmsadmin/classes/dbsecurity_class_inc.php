@@ -213,9 +213,10 @@
             }
             
             // Check user permissions first
-            $userRecord = $this->_objContentUser->getRow('user_id', $userId);
-            if ($userRecord) {
-                if ($userRecord['write_access'] == 1) {
+            //$userRecord = $this->_objContentUser->getRow('user_id', $userId);
+            $userRecord = $this->_objContentUser->getAll("WHERE content_id = '$contentId' AND user_id = '$userId'");
+            if (isset($userRecord[0])) {
+                if ($userRecord[0]['write_access'] == 1) {
                     return TRUE;
                 } else {
                     return FALSE;
@@ -387,9 +388,10 @@
 
             
             // Check user permissions first
-            $userRecord = $this->_objSectionUser->getRow('user_id', $userId);
-            if ($userRecord) {
-                if ($userRecord['write_access'] == 1) {
+            //$userRecord = $this->_objSectionUser->getRow('user_id', $userId);
+            $userRecord = $this->_objSectionUser->getAll("WHERE section_id = '$sectionId' AND user_id = '$userId'");
+            if (isset($userRecord[0])) {
+                if ($userRecord[0]['write_access'] == 1) {
                     return TRUE;
                 } else {
                     return FALSE;

@@ -146,24 +146,20 @@ if (isset($subSections)) {
 	       $url = $this->uri(array('action' => 'sectionpublish', 'id' => $subsec['id'], 'mode' => 'publish', 'sectionid' => $sectionId));
 	       $icon = $this->_objUtils->getCheckIcon(FALSE);
 	    }
-	    $objLink = new link($url);
-	    $objLink->link = $icon;
-	    $visibleIcon = $objLink->show();
+	    
 	    
         //Create delete icon
 		if ($this->_objSecurity->canUserWriteSection($subsec['id'])){
-	        $delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $subSecId);
+	        $objLink = new link($url);
+			$objLink->link = $icon;
+			$visibleIcon = $objLink->show();$delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $subSecId);
 	        $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
 	        $delIcon = $objIcon->getDeleteIconWithConfirm($subSecId, $delArray, 'cmsadmin', $deletephrase);
+			$editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $subSecId)));
 		} else {
 			$delIcon = '';
-		}
-        //Create edit icon
-		
-		if ($this->_objSecurity->canUserWriteSection($subsec['id'])){
-	    	$editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $subSecId)));
-		} else {
 			$editIcon = '';
+			$visibleIcon = $icon;
 		}
        
         //Make title link to view section
@@ -222,24 +218,22 @@ if (!empty($pages)) {
 	       $url = $this->uri(array('action' => 'contentpublish', 'id' => $page['page_id'], 'mode' => 'publish', 'sectionid' => $sectionId));
 	       $icon = $this->_objUtils->getCheckIcon(FALSE);
 	    }
-	    $objLink = new link($url);
-	    $objLink->link = $icon;
-	    $visibleIcon = $objLink->show();
+	    
 
         //Create delete icon
 		if ($this->_objSecurity->canUserWriteContent($pageId)){
+			$objLink = new link($url);
+			$objLink->link = $icon;
+			$visibleIcon = $objLink->show();
 			$delArray = array('action' => 'trashcontent', 'confirm' => 'yes', 'id' => $pageId, 'sectionid' => $sectionId);
 			$deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelpage', 'cmsadmin');
 			$delIcon = $objIcon->getDeleteIconWithConfirm($pageId, $delArray, 'cmsadmin', $deletephrase);
+			$editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addcontent', 'id' => $pageId, 'parent' => $sectionId)));
 		} else {
 			$delIcon = '';
-		}		
-        
-		//Create edit icon
-		if ($this->_objSecurity->canUserWriteContent($pageId)){
-	    	$editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addcontent', 'id' => $pageId, 'parent' => $sectionId)));
-		} else {
 			$editIcon = '';
+			$visibleIcon = $icon;
+			
 		}		
 
    		//Create view icon
@@ -283,20 +277,25 @@ if (!empty($pages)) {
 		} else {
 			$objBlocksLinkDisplay = '';
 		}
-		 
+		
+		if ($this->_objSecurity->canUserWriteSection($sectionId)) {
+			$orderingLink = $this->_objContent->getOrderingLink($sectionId, $pageId);
+		} else {
+			$orderingLink = '';
+		}
         //Add sub sec data to table
-        $objPagesTable->startRow();
-        $objPagesTable->addCell($pageTitle, '', '', '', $class);
-        $objPagesTable->addCell($articleDate, '', '', '', $class);
-        $objPagesTable->addCell($visibleIcon, '', '', '', $class);
-        $objPagesTable->addCell($this->_objContent->getOrderingLink($sectionId, $pageId), '', '', '', $class);
+        $objPagesTable->startRow($class);
+        $objPagesTable->addCell($pageTitle);
+        $objPagesTable->addCell($articleDate);
+        $objPagesTable->addCell($visibleIcon);
+        $objPagesTable->addCell($orderingLink);
 		
 	    
 		
         if ($isRegistered) {
-            $objPagesTable->addCell('<nobr>'.$objBlocksLinkDisplay.$frontPageLink.$viewIcon.$editIcon.$delIcon.'</nobr>', '', '', '', $class);
+            $objPagesTable->addCell('<nobr>'.$objBlocksLinkDisplay.$frontPageLink.$viewIcon.$editIcon.$delIcon.'</nobr>');
         } else {
-            $objPagesTable->addCell('<nobr>'.$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
+            $objPagesTable->addCell('<nobr>'.$frontPageLink->show().$editIcon.$delIcon.'</nobr>');
         }
         $objPagesTable->endRow();
 
@@ -308,36 +307,20 @@ $tblPages = $objPagesTable->show();
 $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addsubsection','cmsadmin');
 
 if ($this->_objSecurity->canUserWriteSection($sectionId)){
-	$addSubSecIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)), 'create_folder');
-} else {
-	$addSubSecIcon = '';
-}
-
-//Create add page icon
-$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpage','cmsadmin');
-if ($this->_objSecurity->canUserWriteSection($sectionId)){
 	$addPageIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addcontent', 'parent' => $sectionId)), 'create_page');
-} else {
-	$addPageIcon = '';
-}
-
-//Create edit section icon
-if ($this->_objSecurity->canUserWriteSection($sectionId)){
+	$addSubSecIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)), 'create_folder');
 	$editSectionIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $sectionId)));
-} else {
-	$editSectionIcon = '';
-}
-
-//Create delete section icon
-if ($this->_objSecurity->canUserWriteSection($sectionId)){
+	
 	$delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $sectionId);
 	$deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
 	$delIcon = $objIcon->getDeleteIconWithConfirm($sectionId, $delArray, 'cmsadmin', $deletephrase);
+
 } else {
+	$addSubSecIcon = '';
+	$addPageIcon = '';
+	$editSectionIcon = '';
 	$delIcon = '';
 }
-
-
 
 //Get blocks icon
 $objBlockIcon = $this->newObject('geticon', 'htmlelements');
@@ -363,9 +346,6 @@ if ($this->_objSecurity->canUserWriteContent($pageId)){
 if (!$isRegistered) {
     $objBlocksLinkDisplay = '';
 }
-
-
-
 
 //Create add section link
 $objNewSectionLink = new link($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)));
@@ -442,5 +422,4 @@ if ($this->_objSecurity->canUserWriteSection($sectionId)){
 }
 
 echo $middleColumnContent;
-
 ?>
