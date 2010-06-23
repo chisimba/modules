@@ -275,13 +275,12 @@ class ILLperiodical extends dbTable {
         $table->addCell($objw->show(), '', 'center', 'left', '');
 
         //Create a new textinput for email
-        $objemail = new textinput('email');
+        $objemail = new textinput('email-periodical');
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"emailaddress");
 
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule(array('name'=>'email'), 'invalid email address',
-            'Enter valid email address');
+        $objForm->addRule('email-periodical', 'Not a valid Email', 'email');
 
         $table->endRow();
 
@@ -349,7 +348,7 @@ class ILLperiodical extends dbTable {
     }
 
     function insertRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
-        $id = $this->insert(array(
+        $id3 = $this->insert(array(
             //'userid' => $userid,
             'titleperiodical' => $titleperiodical,
             'volume' => $volume,
@@ -375,11 +374,11 @@ class ILLperiodical extends dbTable {
             'bstudentno' => $bstudentno,
             'bcourse' => $bcourse,*/
         ));
-        return $id;
+        return $id3;
     }
 
     function updateRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
-        $id = $this->update(array(
+        $id4 = $this->update(array(
             //'userid' => $userid,
             'titleperiodical' => $titleperiodical,
             'volume' => $volume,
@@ -401,7 +400,7 @@ class ILLperiodical extends dbTable {
             'course' => $course,
             //'department'=>$department,
         ));
-        return $id;
+        return $id4;
     }
 
     private function getFormAction() {

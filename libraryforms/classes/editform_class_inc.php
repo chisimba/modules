@@ -105,7 +105,7 @@ class editform extends dbTable {
         $table = $this->newObject('htmltable', 'htmlelements');
 
 
-        $titleLabel = new label($this->objLanguage->languageText('mod_libraryforms_commenttitleform','libraryforms'),'title');
+        $titleLabel = new label($this->objLanguage->languageText('mod_libraryforms_commenttitleform',"libraryforms"),'title');
         $title2Label = new label($this->objLanguage->languageText	("mod_libraryforms_commentsnamerequired","libraryforms"),"required");
 
         $table->startRow();
@@ -119,7 +119,7 @@ class editform extends dbTable {
         $table->startRow();
         $table->addCell($surnameLabel->show(), '', 'center', 'left', '');
         $table->addCell($objsurname->show(), '', 'center', 'left', '');
-        $objForm->addRule('surname',$this->objLanguage->languageText("mod_surname_required", 'libraryforms', 'Please enter a surname. Surname missing.'),'required');
+        $objForm->addRule('surname',$this->objLanguage->languageText("mod_surname_required", "libraryforms", 'Please enter a surname. Surname missing.'),'required');
 
 
 
@@ -130,7 +130,7 @@ class editform extends dbTable {
 
         $table->addCell($initailsLabel->show(), '', 'center', 'left', '');
         $table->addCell($objinitials->show(), '', 'center', 'left', '');
-        $objForm->addRule('initials',$this->objLanguage->languageText("mod_initials_required", 'libraryforms', 'Please enter a initials.initials is missing.'),'required');
+        $objForm->addRule('initials',$this->objLanguage->languageText("mod_initials_required", "libraryforms", 'Please enter a initials.initials is missing.'),'required');
         $table->endRow();
 
 
@@ -150,7 +150,7 @@ class editform extends dbTable {
         $table->addCell($titleLabel->show(),'' , 'center', 'left');
         $table->addCell($titlesDropdown->show());
         $table->endRow();
-        $objForm->addRule('select_title',$this->objLanguage->languageText("mod_title_required", 'libraryforms', 'Please select a title. A title missing.'),'required');
+        $objForm->addRule('select_title',$this->objLanguage->languageText("mod_title_required", "libraryforms", 'Please select a title. A title missing.'),'required');
 
 
         //Create a new textinput for the title
@@ -159,7 +159,7 @@ class editform extends dbTable {
 
         $table->addCell($studnoLabel->show(), '', 'center', 'left', '');
         $table->addCell($objstudno->show(), '', 'center', 'left', '');
-        $objForm->addRule('studentno',$this->objLanguage->languageText("mod_studentno_required", 'libraryforms', 'Please enter a student no. student no is missing .'),'required');
+        $objForm->addRule(array('name'=>'studentno','length'=>10), 'Your Studentno is too long','maxlength');
         $table->endRow();
 
 
@@ -170,63 +170,32 @@ class editform extends dbTable {
         $table->startRow();
         $table->addCell($postalLabel->show(),'', 'center', 'left', '');
         $table->addCell($objpostal->show(), '', 'center', 'left', '');
-        $objForm->addRule('postal',$this->objLanguage->languageText("mod_postaladdress_required", 'libraryforms', 'Please enter a postal address. A postal address is missing .'),'required');
+        $objForm->addRule('postal',$this->objLanguage->languageText("mod_postaladdress_required", "libraryforms", 'Please enter a postal address. A postal address is missing .'),'required');
 
 
         //Create a new textinput for postalcode
         $objpostalcode = new textinput('postalcode');
         $codeLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpostalcode","libraryforms"),"postalcode");
-
-
-			 //Create a new textinput for email
-		$objemail = new textinput('email');
-		 $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail","libraryforms"),"emailaddress");
-		$table->startRow();
-		$table->addCell($emailLabel->show(), '', 'center', 'left', '');
-		$table->addCell($objemail->show(), '', 'center', 'left', '');
-
-	  
-	$objForm->addRule('email',$this->objLanguage->languageText("mod_email_unrequired", 'libraryforms', 'Please enter a email adress. email is Missing .'),'required');
-
-        $table->addCell($codeLabel->show(), '', 'center', 'left', '');
+       	$table->addCell($codeLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpostalcode->show(), '', 'center', 'left', '');
-        $objForm->addRule('postalcode',$this->objLanguage->languageText("mod_postalcode_required", 'libraryforms', 'Please enter a postal code. postal code is missing.'),'required');
+       $objForm->addRule(array('name'=>'postalcode','length'=>4), 'Your code is too long','maxlength');
 
-
-        $table->endRow();
-
-
-
-
-	      //Create a new textinput for department
-			$objsuper = new textinput('supervisor');
-	
-		$superLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentsupervisor","libraryforms"),"supervisor");
-		  
-		$table->addCell($superLabel->show(), '', 'center', 'left', '');
-		$table->addCell($objsuper->show(), '', 'center', 'left', '');
-		$table->endRow();
-	$objForm->addRule('supervisor',$this->objLanguage->languageText("mod_hod_required", 'libraryforms', 'Please enter your superviser. A superviser or HOD is required.'),'required');
-
-    
          //Create a new textinput for physical
         $objphysical = new textinput('physical');
         $pysicallLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenphysicaladdress","libraryforms"),"physicaladdress");
         $table->startRow();
         $table->addCell($pysicallLabel->show(),'', 'center', 'left', '');
         $table->addCell($objphysical->show(), '', 'center', 'left', '');
-        $objForm->addRule('physical',$this->objLanguage->languageText("mod_physicaladdress_required", 'security', 'Please enter a physicaladdress. A physical address is missing.'),'required');
+        $objForm->addRule('physical',$this->objLanguage->languageText("mod_physicaladdress_required", "libraryforms", 'Please enter a physicaladdress. A physical address is missing.'),'required');
 
 
 
         //Create a new textinput for postalcode
-        $objpostalcode2 = new textinput('postalcode');
+        $objpostalcode2 = new textinput('postalcode2');
         $code2lLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpostalcode","libraryforms"),"postalcode");
-
-
         $table->addCell($code2lLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpostalcode2->show(), '', 'center', 'left', '');
-        $objForm->addRule('postalcode',$this->objLanguage->languageText("mod_postacode_unrequired", 'libraryforms', 'Please enter a postalcode. A postal code is missing.'),'required');
+        $objForm->addRule(array('name'=>'postalcode2','length'=>4), 'Your code is too long','maxlength');
 
         $table->endRow();
 
@@ -240,9 +209,7 @@ class editform extends dbTable {
 
         //Create a new textinput for tel2
         $objtelw = new textinput('telw');
-
         $telwLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttel2","libraryforms"),"telw");
-
         $table->addCell($telwLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtelw->show(), '', 'center', 'left', '');
         $table->endRow();
@@ -254,12 +221,13 @@ class editform extends dbTable {
         $cellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcell","libraryforms"),"cell");
         $table->addCell($cellLabel->show(), '', 'center', 'left', '');
         $table->addCell($objcell->show(), '', 'center', 'left', '');
+      // $objForm->addRule('monitor','Must contain letters of the alphabet and valid numbers','alphanumeric');
+
+
        
         //Create a new textinput for fax
         $objfax= new textinput('fax');
-
         $faxLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
-
         $table->addCell($faxLabel->show(), '', 'center', 'left', '');
         $table->addCell($objfax->show(), '', 'center', 'left', '');
         $table->endRow();
@@ -271,12 +239,9 @@ class editform extends dbTable {
         $table->startRow();
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        //if (!($this->objUrl->isValidFormedEmailAddress($email))
-        //	{
-        // $problems[] = 'emailnotvalid';
-        //}
+       $objForm->addRule('email', 'Not a valid Email', 'email');
 
-        $objForm->addRule('email',$this->objLanguage->languageText("mod_email_unrequired", 'libraryforms', 'Please enter a email adress. email is Missing .'),'required');
+      
 
         $table->endRow();
 
@@ -287,7 +252,7 @@ class editform extends dbTable {
         $table->addCell($courseLabel->show(), '', 'center', 'left', '');
         $table->addCell($objcourse->show(), '', 'center', 'left', '');
         $table->endRow();
-        $objForm->addRule('course',$this->objLanguage->languageText("mod_course_unrequired", 'libraryforms', 'Please enter a course.Course is missing.'),'required');
+        $objForm->addRule('course',$this->objLanguage->languageText("mod_course_unrequired", "libraryforms", 'Please enter a course.Course is missing.'),'required');
 
         //Create a new textinput for department
         $objdepartment = new textinput('department');
@@ -296,7 +261,7 @@ class editform extends dbTable {
         $table->startRow();
         $table->addCell($departmentLabel->show(), '', 'center', 'left', '');
         $table->addCell($objdepartment->show(), '', 'center', 'left', '');
-        $objForm->addRule('department',$this->objLanguage->languageText("mod_dept_required", 'libraryforms', 'Please enter a department. department is missing.'),'required')	;
+        $objForm->addRule('department',$this->objLanguage->languageText("mod_dept_required", "libraryforms", 'Please enter a department. department is missing.'),'required')	;
 
 
 
@@ -308,7 +273,7 @@ class editform extends dbTable {
         $table->addCell($superLabel->show(), '', 'center', 'left', '');
         $table->addCell($objsuper->show(), '', 'center', 'left', '');
         $table->endRow();
-        $objForm->addRule('supervisor',$this->objLanguage->languageText("mod_hod_required", 'libraryforms', 'Please enter your superviser. A superviser or HOD is required.'),'required');
+        $objForm->addRule('supervisor',$this->objLanguage->languageText("mod_hod_required", "libraryforms", 'Please enter your superviser. A superviser or HOD is required.'),'required');
 
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
@@ -354,7 +319,6 @@ class editform extends dbTable {
 
     function insertRecord($surname, $initials, $title, $studentno, $postaladdress, $physicaladdress, $postalcode, $postalcode2, $telnoh, $telnow, $cell, $fax, $emailaddress, $course, $department, $supervisor) {
         $id = $this->insert(array(
-            //'userid' => $userid,
             'surname' => $surname,
             'initials' => $initials,
             'title' => $title,
@@ -363,7 +327,6 @@ class editform extends dbTable {
             'physicaladdress' => $physicaladdress,
             'postalcode' => $postalcode,
             'postalcode2' => $postalcode2,
-            //'createdormodified' => date('Y-m-d, h:i:s') ,
             'telnoh' => $telnoh,
             'telnow' => $telnow,
             'cell' => $cell,
@@ -375,17 +338,12 @@ class editform extends dbTable {
         ));
         return $id;
 
-        //check if email is invalid and/or empty
-        if (!($this->objUrl->isValidFormedEmailAddress($email) ||$this->objUrl->isValidFormedEmailAddress($confirmemail))) {
-            $problems[] = 'emailnotvalid';
-        }
-    }
+         }
 
 
     function updateRecord($surname, $initials, $title, $studentno, $postaladdress, $physicaladdress, $postalcode, $postalcode2, $telnoh, $telnow, $cell, $fax, $emailaddress, $course, $department, $supervisor) {
         $id = $this->update(array(
-            // 'userid' => $userid,
-            'surname' => $surname,
+           'surname' => $surname,
             'initials' => $initials,
             'title' => $title,
             'studentno' => $studentno,
@@ -393,7 +351,6 @@ class editform extends dbTable {
             'physicaladdress' => $physicaladdress,
             'postalcode' => $postalcode,
             'postalcode2' => $postalcode2,
-            //'createdormodified' => date('Y-m-d, h:i:s') ,
             'telnoh' => $telnoh,
             'telnow' => $telnow,
             'cell' => $cell,

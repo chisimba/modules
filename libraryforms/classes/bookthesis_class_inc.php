@@ -45,11 +45,14 @@ class bookthesis extends dbTable {
         //$this->loadClass('textarea','htmlelements');
         //Load the label class
         $this->loadClass('label', 'htmlelements');
+         // load the icon
+	$objIcon =  $this->newObject('geticon', 'htmlelements');
         //Load the button object
         $this->loadClass('button', 'htmlelements');
         //load the checkbox object
         $this->loadClass('checkbox', 'htmlelements');
-
+        // load the htm
+	//$this->loadClass('htmltable', 'htmlelements');
 
     $strjs = '<script type="text/javascript">
 
@@ -88,6 +91,9 @@ class bookthesis extends dbTable {
     //Load the required form elements that we need
         $this->loadElements();
         $table = $this->newObject('htmltable', 'htmlelements');
+        
+        // get icon
+	$objIcon = $this->newObject('geticon', 'htmlelements');
         //Create the form
         $objForm = new form('comments', $this->getFormAction());
 
@@ -186,13 +192,6 @@ class bookthesis extends dbTable {
          $objForm->addRule('series',$this->objLanguage->languageText("mod_series_required", 'libraryforms', 'Please enter a series. Series missing.'),'required');
         $table->endRow();
         
-       /* new label
-	$table->startRow();
-	$label2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell","libraryforms"),"label2");
-	$table->addCell($label2Label->show(), "100%", 'NULL', 'NULL', '');	
-	$table->endRow();*/
-
-
         //create an istance for the Label
        
         $table->startRow();
@@ -203,11 +202,7 @@ class bookthesis extends dbTable {
         $table->addCell($objphoto->show(), '', 'center', 'left', '');
         $table->endRow();
 
-        /* show label two
-	 $table->startRow();
-	$label2Labell = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell2","libraryforms"),"label2");
-	$table->addCell($label2Labell->show(), '', '', '', '');	
-	 $table->endRow();*/
+      
 
       // title 
         $table->startRow();
@@ -229,8 +224,7 @@ class bookthesis extends dbTable {
         $table->endRow();
 
 
-        //thesis
-       
+        //thesis       
         $table->startRow();
  	$objthes = new textinput('thesis');
         $thesLabel = new label($this->objLanguage->languageText
@@ -240,6 +234,8 @@ class bookthesis extends dbTable {
         $objForm->addRule('thesis',$this->objLanguage->languageText("mod_thesis_required", 'libraryforms', 'Please enter thesis type.Thesis is missing.'),'required');
         $table->endRow();
 
+    
+
         //listbox       
         $bookbLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commenttitlebox","libraryforms"),"box");
@@ -248,7 +244,8 @@ class bookthesis extends dbTable {
 
         $objCheck = new checkbox('arrayList[]');
         $objCheck->setValue($userPerm['id']);
-        //$objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+      
         $uwcbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentuwc","libraryforms"),"uwc");
         $table->addCell($objCheck->show(), '', 'center', 'left', '');
         $table->addCell($uwcbLabel->show(), '', 'center', 'left', '');
@@ -259,12 +256,12 @@ class bookthesis extends dbTable {
 
         $objCheck2 = new checkbox('arrayList[]');
         $objCheck2->setValue($userPerm['id']);
-        //$objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        $objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $bLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
         $table->addCell($objCheck2->show(), '', 'center', 'left', '');
         $table->addCell($bLabel->show(), '', 'center', 'left', '');
 
-	//Create a new textinput for email
+	//Create a new textinput for cxourse
 	$objcourse2 = new textinput('course');
 	$course2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcourse2","libraryforms"),"course");
 	$table->addCell($course2Label->show(), '', 'center', 'left', '');
@@ -272,7 +269,7 @@ class bookthesis extends dbTable {
 
         $objCheck3 = new checkbox('arrayList[]');
         $objCheck3->setValue($userPerm['id']);
-        //$objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        $objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         //Create a new label for oversears
         $overLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentoverseas","libraryforms"),"overseas");
         $table->addCell($objCheck3->show(), '', 'center', 'left', '');
@@ -294,7 +291,7 @@ class bookthesis extends dbTable {
 
         $objCheck5 = new checkbox('arrayList[]');
         $objCheck5->setValue($userPerm['id']);
-        $objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+       $objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $pgbbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"pg");
         //$objForm->addToForm($pgbbLabel->show());
         $table->addCell($objCheck5->show(), '', 'center', 'left', '');
@@ -319,6 +316,19 @@ class bookthesis extends dbTable {
         $table->addCell($objCheck7->show(), '', 'center', 'left', '');
         $table->addCell($staffbLabel->show(), '', 'center', 'left', '');
         $table->endRow();
+
+          //publish, visible
+	        /*if($checkbox['published']){
+	          $url = $this->uri(array('action' => 'checkboxpublish', 'id' => $form['id'], 'mode' => 'unpublish'));
+ 	           $icon = $this->objUi->getCheckIcon(TRUE);
+	        }else{
+	           $url = $this->uri(array('action' => 'checkboxpublish', 'id' => $form['id'], 'mode' => 'publish'));
+	           $icon = $this->objUi->getCheckIcon(FALSE);
+	        }
+ 		$objLink = new link($url);
+	        $objLink->link = $icon;
+ 	        $visibleLink = $objLink->show();*/
+
 
         $label2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell","libraryforms"),"label2");
         $table->startRow();
@@ -375,14 +385,15 @@ class bookthesis extends dbTable {
 
 
         //Create a new textinput for email
-        $objemail = new textinput('email');
+        $objemail = new textinput('email-thesis');
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"emailaddress");
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
+         $objForm->addRule('email-thesis', 'Not a valid Email', 'email');
         $table->endRow();
 
 
-        //Create a new textinput for email
+        //Create a new textinput for entity
         $objentity = new textinput('entity');
         $entityLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcharge","libraryforms"),"entity");
         $table->startRow();
@@ -390,14 +401,14 @@ class bookthesis extends dbTable {
         $table->addCell($objentity->show(), '', 'center', 'left', '');
 
 
-        //Create a new textinput for email
+        //Create a new textinput for student no
         $objstud = new textinput('studentno');
         $studLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentno2","libraryforms"),"studentno");
         $table->addCell($studLabel->show(), '', 'center', 'left', '');
         $table->addCell($objstud->show(), '', 'center', 'left', '');
 
 
-        //Create a new textinput for email
+        //Create a new textinput for course
         $objcourse2 = new textinput('course');
         $course2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcourse2","libraryforms"),"course");
         $table->addCell($course2Label->show(), '', 'center', 'left', '');
@@ -435,14 +446,14 @@ class bookthesis extends dbTable {
      *
      * @param $id is the id taken from the tbl_phonebook
      */
-    public function listSingle($id) {
+    public function listSingle($id2) {
         $onerec = $this->getRow('id', $id);
         return $onerec;
     }
 
 
-    function insertRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname,$baddress, $bbcell, $bcell, $bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
-        $id = $this->insert(array(
+    function insertRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname,$baddress, $bbcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
+        $id2 = $this->insert(array(
             //'userid' => $userid,
             'bprint' => $bprint,
             'bauthor' => $bauthor,
@@ -468,12 +479,12 @@ class bookthesis extends dbTable {
             'bstudentno' => $bstudentno,
             'bcourse' => $bcourse,t
         ));
-        return $id;
+        return $id2;
     }
 
 
-    function UpdateRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname, $baddress, $bbcell, $bcell, $bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
-        $id = $this->update(array(
+    function UpdateRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname, $baddress, $bbcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
+        $id3 = $this->update(array(
             //'userid' => $userid,
             'bprint' => $bprint,
             'bauthor' => $bauthor,
@@ -500,7 +511,7 @@ class bookthesis extends dbTable {
             'bcourse' => $bcourse,
 
         ));
-        return $id;
+        return $id3;
     }
 
     private function getFormAction() {
