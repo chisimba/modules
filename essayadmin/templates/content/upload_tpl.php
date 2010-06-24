@@ -59,7 +59,8 @@ $objConfirm->timeout = 0;
 // set up language items
 $essayhead=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
 $btnupload=$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin');
-$uploadhead=$btnupload.' '.$essayhead;
+//$uploadhead=$btnupload.' '.$essayhead;
+$uploadhead=$this->objLanguage->languageText('mod_essayadmin_uploadessay','essayadmin');
 $head=$uploadhead;
 $markshead=' '.$this->objLanguage->languageText('mod_essayadmin_marks','essayadmin');
 $btnsubmit=$this->objLanguage->languageText('word_save');

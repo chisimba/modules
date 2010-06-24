@@ -26,10 +26,10 @@ $this->loadClass('form','htmlelements');
 // Set up language items
 $topicArea=$this->objLanguage->languageText('mod_essayadmin_topicarea', 'essayadmin');
 $description=$this->objLanguage->languageText('mod_essayadmin_description', 'essayadmin');
-$instructions=ucwords($this->objLanguage->code2Txt('mod_essayadmin_instructions','essayadmin'));
+$instructions=$this->objLanguage->code2Txt('mod_essayadmin_instructions','essayadmin');
 $closeDate=$this->objLanguage->languageText('mod_essayadmin_closedate','essayadmin');
-$bypass=$this->objLanguage->languageText('mod_essayadmin_bypass','essayadmin').' '.$closeDate;
-$force=ucwords($this->objLanguage->code2Txt('mod_essayadmin_force','essayadmin'));
+$bypass=$this->objLanguage->languageText('mod_essayadmin_bypass','essayadmin');
+$force=$this->objLanguage->code2Txt('mod_essayadmin_force','essayadmin');
 $save=$this->objLanguage->languageText('word_save');
 $reset=$this->objLanguage->languageText('word_reset');
 $exit=$this->objLanguage->languageText('word_cancel');

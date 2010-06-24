@@ -750,7 +750,7 @@ class essayadmin extends controller
         $head.=$this->objLanguage->languageText('mod_essayadmin_topic','essayadmin').':&nbsp;&nbsp;'.$topic[0]['name'];
         $subhead=$this->objLanguage->languageText('mod_essayadmin_essays','essayadmin');
         $descriptionLabel=$this->objLanguage->languageText('mod_essayadmin_description','essayadmin');
-        $instructionsLabel=ucwords($this->objLanguage->code2Txt('mod_essayadmin_instructions','essayadmin'));
+        $instructionsLabel=$this->objLanguage->code2Txt('mod_essayadmin_instructions','essayadmin');
         $duedate=$this->objLanguage->languageText('mod_essayadmin_closedate','essayadmin');
         $view=$this->objLanguage->languageText('word_view');
         $title1=$this->objLanguage->languageText('word_edit');

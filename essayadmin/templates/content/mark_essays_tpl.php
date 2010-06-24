@@ -31,10 +31,11 @@ $objLayer = new layer();
 $objPop = $this->newObject('windowpop','htmlelements');
 
 // Set up language items
-$studenthead=ucwords($this->objLanguage->languageText('mod_context_readonly'));
+$studentno = ucfirst($this->objLanguage->code2Txt('mod_essayadmin_studentno','essayadmin'));
+$studenthead=ucfirst($this->objLanguage->code2Txt('mod_essayadmin_student','essayadmin'));
 $topichead=$this->objLanguage->languageText('mod_essayadmin_topic','essayadmin');
-$essayhead=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
-$essayhead.=' '.$this->objLanguage->languageText('mod_essayadmin_title','essayadmin');
+$essayhead=$this->objLanguage->languageText('mod_essayadmin_essaytitle','essayadmin');
+//$essayhead.=' '.$this->objLanguage->languageText('mod_essayadmin_title','essayadmin');
 $submithead=$this->objLanguage->languageText('mod_essayadmin_datesubmitted','essayadmin');
 $markhead=$this->objLanguage->languageText('mod_essayadmin_mark','essayadmin').' (%)';
 $btnexit=$this->objLanguage->languageText('word_exit');
@@ -66,7 +67,7 @@ $this->setVarByRef('heading',$head);
 
 
 $tableHd=array();
-$tableHd[]=$this->objLanguage->languageText('mod_essayadmin_studentno','essayadmin');
+$tableHd[]=$studentno;
 $tableHd[]=$studenthead;
 $tableHd[]=$essayhead;
 $tableHd[]=$submithead;
@@ -251,6 +252,7 @@ $fileUploader->overwriteExistingFile = TRUE;
 // Upload. Returns result as an array
 $results = $fileUploader->uploadFile('fileupload1'); // This corresponds with the name of the input -
 //<input type="file"  name="fileupload1" />;
+
 
 //$fd = fopen($filename, "wb");
 //$out = fwrite ($fd, $this->objZip->file());
