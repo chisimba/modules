@@ -309,6 +309,7 @@ class essay extends controller
 
                 return $this->nextAction('uploadessay',array('bookid'=>$bookId,'msg'=>$msg/*,'id'=>$topic*/));
             break;
+
             case 'download':
                 $template='download_tpl.php';
                 $this->setPageTemplate('download_page_tpl.php');
@@ -509,7 +510,7 @@ class essay extends controller
         $head.=$this->objLanguage->languageText('mod_essay_topic', 'essay').':&nbsp;&nbsp;'.$topic[0]['name'];
         $subhead=$this->objLanguage->languageText('mod_essay_essays','essay');
         $descriptionLabel=$this->objLanguage->languageText('mod_essay_description', 'essay');
-        $instructionsLabel=ucwords($this->objLanguage->code2Txt('mod_essay_instructions','essay',array('readonlys'=>'students')));
+        $instructionsLabel=$this->objLanguage->code2Txt('mod_essay_instructions','essay'); //array('readonlys'=>'students')
         $duedate=$this->objLanguage->languageText('mod_essay_closedate', 'essay');
         $view=$this->objLanguage->languageText('word_view');
         $title=$view.' '.$this->objLanguage->languageText('mod_essay_notes', 'essay');
