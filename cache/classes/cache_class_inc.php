@@ -61,12 +61,42 @@ $GLOBALS['kewl_entry_point_run']) {
 class cache extends object
 {
     /**
+     * Is APC enabled?
+     *
+     * @access protected
+     * @var    boolean
+     */
+    protected $apc;
+
+    /**
+     * Is Memcache enabled?
+     *
+     * @access protected
+     * @var    boolean
+     */
+    protected $memcache;
+
+    /**
+     * The system configuration.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objAltConfig;
+
+    /**
      * Initialises object properties.
      *
      * @access public
      */
     public function init()
     {
+        // Initialise objects.
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+
+        // Set boolean flags.
+        $this->apc      = extension_loaded('apc') && $this->objAltConfig->getenable_apc() == 'TRUE';
+        $this->memcache = extension_loaded('memcache') && $this->objAltConfig->getenable_memcache() == 'TRUE';
     }
 
     /**
@@ -78,9 +108,9 @@ class cache extends object
      */
     public function __get($key)
     {
-        if ($this->objMemcache) {
+        if ($this->memcache) {
             $value = chisimbacache::getMem()->get($key);
-        } elseif ($this->objAPC) {
+        } elseif ($this->apc) {
             $value = apc_fetch($key);
         } else {
             $value = FALSE;
@@ -98,9 +128,9 @@ class cache extends object
      */
     public function __set($key, $value)
     {
-        if ($this->objMemcache) {
+        if ($this->memcache) {
             chisimbacache::getMem()->set($key, $value);
-        } elseif ($this->objAPC) {
+        } elseif ($this->apc) {
             apc_store($key, $value);
         }
     }
