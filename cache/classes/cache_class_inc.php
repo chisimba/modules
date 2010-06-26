@@ -69,6 +69,14 @@ class cache extends object
     protected $apc;
 
     /**
+     * The local cache.
+     *
+     * @access protected
+     * @var    array
+     */
+    protected $cache;
+
+    /**
      * Is Memcache enabled?
      *
      * @access protected
@@ -91,7 +99,8 @@ class cache extends object
      */
     public function init()
     {
-        // Initialise objects.
+        // Initialise arrays and objects.
+        $this->objCache     = array();
         $this->objAltConfig = $this->getObject('altconfig', 'config');
 
         // Set boolean flags.
@@ -108,7 +117,9 @@ class cache extends object
      */
     public function __get($key)
     {
-        if ($this->memcache) {
+        if (array_key_exists($key, $this->cache)) {
+            $value = $this->cache[$key];
+        } elseif ($this->memcache) {
             $value = chisimbacache::getMem()->get($key);
         } elseif ($this->apc) {
             $value = apc_fetch($key);
@@ -128,6 +139,10 @@ class cache extends object
      */
     public function __set($key, $value)
     {
+        // Update the local cache.
+        $this->cache[$key] = $value;
+
+        // Update the foreign cache.
         if ($this->memcache) {
             chisimbacache::getMem()->set($key, $value);
         } elseif ($this->apc) {
