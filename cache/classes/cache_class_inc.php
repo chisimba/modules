@@ -78,6 +78,15 @@ class cache extends object
      */
     public function __get($key)
     {
+        if ($this->objMemcache) {
+            $value = chisimbacache::getMem()->get($key);
+        } elseif ($this->objAPC) {
+            $value = apc_fetch($key);
+        } else {
+            $value = FALSE;
+        }
+
+        return $value;
     }
 
     /**
@@ -89,6 +98,11 @@ class cache extends object
      */
     public function __set($key, $value)
     {
+        if ($this->objMemcache) {
+            chisimbacache::getMem()->set($key, $value);
+        } elseif ($this->objAPC) {
+            apc_store($key, $value);
+        }
     }
 }
 
