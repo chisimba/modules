@@ -1,24 +1,24 @@
 <?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
-	die("You cannot view this page directly");
+    die("You cannot view this page directly");
 }
 // end security check
 class activitystreamer extends controller
 {
-	
-	public function init()
-	{
-		try {
-			
-		}
-		catch(customException $e) {
-			echo customException::cleanUp();
-			die();
-		}
-	}
-	
-	 /**
+    
+    public function init()
+    {
+        try {
+            
+        }
+        catch(customException $e) {
+            echo customException::cleanUp();
+            die();
+        }
+    }
+    
+     /**
      *
      * The standard dispatch method for
      *
@@ -79,9 +79,9 @@ class activitystreamer extends controller
      */
     protected function __jsonlistactivities()
     {
-    	$objUtils = $this->getObject('activityutilities','activitystreamer');
-    	echo $objUtils->jsonListActivity($this->getParam('start'), $this->getParam('limit'));
-    	exit(0);
+        $objUtils = $this->getObject('activityutilities','activitystreamer');
+        echo $objUtils->jsonListActivity($this->getParam('start'), $this->getParam('limit'));
+        exit(0);
     }
      /**
      * Method to list all the context chapters and pages
@@ -90,9 +90,9 @@ class activitystreamer extends controller
      */
     protected function __jsoncourseactivities()
     {
-    	$objUtils = $this->getObject('activityutilities','activitystreamer');
-    	echo $objUtils->jsonCourseActivies($this->getParam('start'), $this->getParam('limit'));
-    	exit(0);
+        $objUtils = $this->getObject('activityutilities','activitystreamer');
+        echo $objUtils->jsonCourseActivies($this->getParam('start'), $this->getParam('limit'));
+        exit(0);
     }
      /**
      * Method to list all the context chapters and pages
@@ -101,15 +101,15 @@ class activitystreamer extends controller
      */
     public function __showactivities()
     {
-    	 $objUtils = $this->getObject('activityutilities','activitystreamer');
-    	 $objActivities = $this->getObject('block_browseactivities','activitystreamer');
+         $objUtils = $this->getObject('activityutilities','activitystreamer');
+         $objActivities = $this->getObject('block_browseactivities','activitystreamer');
       $objBlocks = $this->getObject('blocks','blocks');
       $this->setVar('pageSuppressToolbar', TRUE);
       $this->setVar('pageSuppressBanner', TRUE);
       $this->setVar('pageSuppressSearch', TRUE);
       $this->setVar('suppressFooter', TRUE);
 
-    	 return 'activities_tpl.php';
+         return 'activities_tpl.php';
     }
     
     private function __home()
@@ -119,34 +119,34 @@ class activitystreamer extends controller
         $this->loadClass('activitystreamsauthor');
         $stream = $this->newObject('activitystreamsencoder'); 
         //('http://samplecompany.com/tasks/activity/', 'Task activities at Sample Company');
-	    $stream->setId('http://samplecompany.com/tasks/activity/');
-	    $stream->setTitle('Task activities at FSIU');
-	    $stream->setDescription('some description');
-	    
-	    $object = $this->newObject('activitystreamsobject');
-	    $object->setProperty('id','http://samplecompany.com/tasks/23432/');
-	    $object->setProperty('title','Sample task.');
-	    $object->setProperty('content','...');
-	    $object->addObjectType('http://samplecompany.com/activity/schema/1.0/task');
-	    $object->addObjectType('http://activitystrea.ms/schema/1.0/note');
-	    $object->setProperty('link','http://samplecompany.com/tasks/23432/');
-	    
-	    $author = $this->newObject('activitystreamsauthor');
-	    $author->setProperty('name','Paul Scott');
+        $stream->setId('http://samplecompany.com/tasks/activity/');
+        $stream->setTitle('Task activities at FSIU');
+        $stream->setDescription('some description');
+        
+        $object = $this->newObject('activitystreamsobject');
+        $object->setProperty('id','http://samplecompany.com/tasks/23432/');
+        $object->setProperty('title','Sample task.');
+        $object->setProperty('content','...');
+        $object->addObjectType('http://samplecompany.com/activity/schema/1.0/task');
+        $object->addObjectType('http://activitystrea.ms/schema/1.0/note');
+        $object->setProperty('link','http://samplecompany.com/tasks/23432/');
+        
+        $author = $this->newObject('activitystreamsauthor');
+        $author->setProperty('name','Paul Scott');
         $author->setProperty('uri','http://samplecompany.com/people/Paul+Scott/');
         
         $entry = $this->newObject('activitystreamsentry');
         $entry->addVerb("http://samplecompany.com/activity/schema/1.0/complete");
-	    $entry->addVerb("http://activitystrea.ms/schema/1.0/update");
-	    $entry->title = "Paul Scott completed a task.";
-	    $entry->id = 'http://samplecompany.com/tasks/activity/23432/3242345/';
-	    $entry->addObject($object);
-	    $entry->setAuthor($author);
-	    
-	    $stream->addEntry($entry);
-	    
-	    header('Content type: text/xml');
-	    echo $stream;
+        $entry->addVerb("http://activitystrea.ms/schema/1.0/update");
+        $entry->title = "Paul Scott completed a task.";
+        $entry->id = 'http://samplecompany.com/tasks/activity/23432/3242345/';
+        $entry->addObject($object);
+        $entry->setAuthor($author);
+        
+        $stream->addEntry($entry);
+        
+        header('Content type: text/xml');
+        echo $stream;
     }
 
 }
