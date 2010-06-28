@@ -6,11 +6,18 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 class activitystreamer extends controller
 {
+    /**
+     * The system configurat
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objAltConfig;
     
     public function init()
     {
         try {
-            
+            $this->objAltConfig = $this->getObject('altconfig', 'config');
         }
         catch(customException $e) {
             echo customException::cleanUp();
