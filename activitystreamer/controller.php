@@ -126,7 +126,10 @@ class activitystreamer extends controller
         $this->loadClass('activitystreamsauthor');
         $stream = $this->newObject('activitystreamsencoder'); 
         //('http://samplecompany.com/tasks/activity/', 'Task activities at Sample Company');
-        $stream->setId('http://samplecompany.com/tasks/activity/');
+
+        $id = $this->objAltConfig->getsiteRoot().'index.php?comp=activitystreamer';
+        $stream->setId($id);
+
         $stream->setTitle('Task activities at FSIU');
         $stream->setDescription('some description');
         
