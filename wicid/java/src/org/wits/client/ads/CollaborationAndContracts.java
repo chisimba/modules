@@ -2,7 +2,10 @@ package org.wits.client.ads;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
+import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
@@ -46,12 +49,13 @@ public class CollaborationAndContracts {
     private final TextArea F4 = new TextArea();
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private Resources resources;
     private Review review;
     private Review oldReview;
     private CollaborationAndContracts oldCollaborationAndContracts;
     private String collaborationAndContractsData;
-    private String qF1a, qF2a, qF2b, qF3a, qF3b, qF4;
+    private String qF1a, qF1b, qF2a, qF2b, qF3a, qF3b, qF4;
     private Boolean[] quesF1a = new Boolean[2];
     private Boolean[] quesF2a = new Boolean[2];
 
@@ -70,8 +74,8 @@ public class CollaborationAndContracts {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setWidth(700);
-        mainForm.setLabelWidth(400);
+        mainForm.setWidth(680);
+        mainForm.setLabelWidth(250);
 
         radioNo1.setBoxLabel("No");
         radioYes1.setBoxLabel("Yes");
@@ -90,6 +94,18 @@ public class CollaborationAndContracts {
         F1b.setHeight(50);
         F1b.setName("F1b");
 
+        F1a.addListener(Events.Change, new Listener<BaseEvent>() {
+
+            public void handleEvent(BaseEvent be) {
+                if (radioYes1.getValue() == false) {
+                    F1b.disable();
+                }
+                if (radioYes1.getValue() == true) {
+                    F1b.enable();
+                }
+            }
+        });
+
         F2a.setFieldLabel("F.2.a Are other Schools or Faculties involved in and/or have an interest in the course/unit?");
         F2a.add(radioYes2);
         F2a.add(radioNo2);
@@ -99,6 +115,18 @@ public class CollaborationAndContracts {
         F2b.setPreventScrollbars(false);
         F2b.setHeight(50);
         F2b.setName("F2b");
+
+        F2a.addListener(Events.Change, new Listener<BaseEvent>() {
+
+            public void handleEvent(BaseEvent be) {
+                if (radioYes2.getValue() == false) {
+                    F2b.disable();
+                }
+                if (radioYes2.getValue() == true) {
+                    F2b.enable();
+                }
+            }
+        });
 
         F3a.setFieldLabel("F.3.a Does the course/unit provide service learning?");
         F3a.setAllowBlank(false);
@@ -134,15 +162,37 @@ public class CollaborationAndContracts {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                quesF1a[0] = radioYes1.getValue();
+                quesF1a[1] = radioNo1.getValue();
+                qF1a = "";
+                for (int i = 0; i < 2; i++) {
+                    switch (new Boolean(quesF1a[i]).toString().charAt(0)) {
+                        case 't':
+                            qF1a = qF1a + "1";
+                            break;
+                        case 'f':
+                            qF1a = qF1a + "0";
+                            break;
+                    }
+                }
 
                 if (F1a.getValue() == null) {
                     MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
                     return;
                 }
 
-                if (F1a.getValue() == null) {
-                    MessageBox.info("Missing Selection", "Please make a selection to question F1a", null);
-                    return;
+                quesF2a[0] = radioYes2.getValue();
+                quesF2a[1] = radioNo2.getValue();
+                qF2a = "";
+                for (int i = 0; i < 2; i++) {
+                    switch (new Boolean(quesF2a[i]).toString().charAt(0)) {
+                        case 't':
+                            qF2a = qF2a + "1";
+                            break;
+                        case 'f':
+                            qF2a = qF2a + "0";
+                            break;
+                    }
                 }
 
                 if (F2a.getValue() == null) {
@@ -202,13 +252,24 @@ public class CollaborationAndContracts {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+                storeDocumentInfo();
+            }
+        });
+
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         newCollaborationAndContractsDialog.setBodyBorder(false);
         newCollaborationAndContractsDialog.setHeading("Section F: Collaboration and Contracts");
-        newCollaborationAndContractsDialog.setWidth(800);
+        newCollaborationAndContractsDialog.setWidth(690);
         //newCollaborationAndContractsDialog.setHeight(450);
         newCollaborationAndContractsDialog.setHideOnButtonClick(true);
         newCollaborationAndContractsDialog.setButtons(Dialog.CLOSE);
@@ -227,20 +288,20 @@ public class CollaborationAndContracts {
     }
 
     public void storeDocumentInfo() {
-        qF1a = F1a.getValue().getBoxLabel().toString();
-        qF2a = F2a.getValue().getBoxLabel().toString();
-        qF2b = F2b.getValue().toString();
-        qF3a = F3a.getValue().toString();
-        qF3b = F3b.getValue().toString();
+        qF1b = F1b.getValue();
+        qF2b = F2b.getValue();
+        qF3a = F3a.getValue();
+        qF3b = F3b.getValue();
+        qF4 = F4.getValue();
 
-        WicidXML wicidxml = new WicidXML("collaborationAndContracts");
-        wicidxml.addElement("F1a", F1a.getValue().toString());
-        wicidxml.addElement("F1b", F1b.getValue());
-        wicidxml.addElement("F2a", F2a.getValue().toString());
-        wicidxml.addElement("F2b", F2b.getValue());
-        wicidxml.addElement("F3a", F3a.getValue());
-        wicidxml.addElement("F3b", F3b.getValue());
-        wicidxml.addElement("F4", F4.getValue());
+        WicidXML wicidxml = new WicidXML("collaborationandcontracts");
+        wicidxml.addElement("qF1a", qF1a);
+        wicidxml.addElement("qF1b", qF1b);
+        wicidxml.addElement("qF2a", qF2a);
+        wicidxml.addElement("qF2b", qF2b);
+        wicidxml.addElement("qF3a", qF3a);
+        wicidxml.addElement("qF3b", qF3b);
+        wicidxml.addElement("qF4", qF4);
         collaborationAndContractsData = wicidxml.getXml();
     }
 
@@ -321,7 +382,6 @@ public class CollaborationAndContracts {
                             if (qF1a.charAt(i) == '1') {
                                 quesF1a[i] = true;
                             }
-                            System.out.println(quesF1a[i]);
                         }
                         radioYes1.setValue(quesF1a[0]);
                         radioNo1.setValue(quesF1a[1]);
@@ -342,7 +402,6 @@ public class CollaborationAndContracts {
                             if (qF2a.charAt(i) == '1') {
                                 quesF2a[i] = true;
                             }
-                            System.out.println(quesF2a[i]);
                         }
                         radioYes2.setValue(quesF2a[0]);
                         radioNo2.setValue(quesF2a[1]);

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.wits.client.ads;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
@@ -219,7 +215,6 @@ public class NewCourseProposalDialog {
                     MessageBox.info("Missing faculty", "Please select faculty", null);
                     return;
                 }
-                storeDocumentInfo();
                 String number = "C";
                 String group = "Administration";
 
@@ -238,7 +233,6 @@ public class NewCourseProposalDialog {
             }
         });
         mainForm.addButton(saveButton);
-        mainForm.addButton(saveButton);
 
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         //FormButtonBinding binding = new FormButtonBinding(mainForm);
@@ -255,7 +249,7 @@ public class NewCourseProposalDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                storeDocumentInfo();
+                
             }
         });
 
@@ -267,21 +261,6 @@ public class NewCourseProposalDialog {
 
     public void show() {
         newCourseProposalDialog.show();
-    }
-
-    public void storeDocumentInfo() {
-        String faculty = facultyField.getValue();
-
-        WicidXML wicidxml = new WicidXML("data");
-        wicidxml.addElement("dept", dept);
-        wicidxml.addElement("telnumber", telephone);
-        wicidxml.addElement("title", title);
-        wicidxml.addElement("faculty", faculty);
-        newCourseProposalDialogData = wicidxml.getXml();
-
-    }
-
-    public void setDocumentInfo() {
     }
 
     public void setOldOverView(OverView oldOverView) {

@@ -46,6 +46,7 @@ public class Resources {
     private final TextField<String> E5b = new TextField<String>();*/
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private String title = "";
     private OutcomesAndAssessmentThree outcomesAndAssessmentThree;
     // private OutcomesAndAssessmentTwo outcomesAndAssessmentTwo;
@@ -79,8 +80,8 @@ public class Resources {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setWidth(800);
-        mainForm.setLabelWidth(400);
+        mainForm.setWidth(700);
+        mainForm.setLabelWidth(300);
 
         E1a.setFieldLabel("E.1.a Is there currently adequate teaching capacity with regard to the introduction of the course/unit?");
         E1a.setAllowBlank(false);
@@ -258,14 +259,24 @@ public class Resources {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+                storeDocumentInfo();
+            }
+        });
 
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         newResourcesDialog.setBodyBorder(false);
         newResourcesDialog.setHeading("Section E: Resources");
-        newResourcesDialog.setWidth(800);
+        newResourcesDialog.setWidth(700);
         //newResourcesDialog.setHeight(450);
         newResourcesDialog.setHideOnButtonClick(true);
         newResourcesDialog.setButtons(Dialog.CLOSE);

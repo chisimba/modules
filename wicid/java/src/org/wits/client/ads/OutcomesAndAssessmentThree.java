@@ -3,7 +3,10 @@ package org.wits.client.ads;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.Dialog;
@@ -78,7 +81,7 @@ public class OutcomesAndAssessmentThree {
         mainForm.setWidth(800);
         mainForm.setLabelWidth(250);
 
-        Label qD5Label = new Label("D.5. Specify the notional study hours expected for"
+        Label qD5Label = new Label("D.5. Specify the notional study hours expected for "
                 + "the duration of the course/unit using the spreadsheet provided");
         mainForm.add(qD5Label, formData);
 
@@ -146,36 +149,23 @@ public class OutcomesAndAssessmentThree {
         questionD5.setWidget(9, 1, examsLength);
         questionD5.setWidget(11, 1, hrsExamPrep);
 
+        Listener<BaseEvent> change = new Listener<BaseEvent>() {
 
-        questionD5.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                int conTime = (hrsTeaching.getValue().intValue() + hrsTuts.getValue().intValue() + hrsLabs.getValue().intValue() + hrsOther.getValue().intValue()) * numWeeks.getValue().intValue();
-                contactTime = Integer.toString(conTime);
-
-                int stdyHours = conTime + (conTime * hrsStudy.getValue().intValue());
-                studyHours = Integer.toString(stdyHours);
-
-                int exTime = examsLength.getValue().intValue() * examsPerYr.getValue().intValue();
-                examTime = Integer.toString(exTime);
-
-                int notStudyHrs = stdyHours + exTime + hrsExamPrep.getValue().intValue();
-                notionalStudyHours = Integer.toString(notStudyHrs);
-
-
-                creSAQA = notStudyHrs / 10;
-                creditsSAQA = Double.toString(creSAQA);
-
-
-                questionD5.setText(5, 1, contactTime);
-                questionD5.setText(7, 1, studyHours);
-                questionD5.setText(10, 1, examTime);
-                questionD5.setText(12, 1, notionalStudyHours);
-                questionD5.setText(13, 1, creditsSAQA);
-
+            public void handleEvent(BaseEvent be) {
+                calculate();
             }
-        });
+        };
+
+        numWeeks.addListener(Events.Change, change);
+        hrsTeaching.addListener(Events.Change, change);
+        hrsTuts.addListener(Events.Change, change);
+        hrsLabs.addListener(Events.Change, change);
+        hrsOther.addListener(Events.Change, change);
+        hrsStudy.addListener(Events.Change, change);
+        examsPerYr.addListener(Events.Change, change);
+        examsLength.addListener(Events.Change, change);
+        hrsExamPrep.addListener(Events.Change, change);
+        
 
         mainForm.add(questionD5, formData);
 
@@ -190,8 +180,6 @@ public class OutcomesAndAssessmentThree {
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                questionD5.fireEvent(event);
-
                 if (creSAQA == 0) {
                     MessageBox.info("Missing answer", "Please fill in the table", null);
                     return;
@@ -201,7 +189,8 @@ public class OutcomesAndAssessmentThree {
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname=" + "outcomesandassessmentthree" + "&formdata=" + outcomesAndAssessmentThreeData + "&docid=" + Constants.docid;
+                        + "?module=wicid&action=saveFormData&formname=outcomesandassessmentthree&formdata="
+                        + outcomesAndAssessmentThreeData + "&docid=" + Constants.docid;
 
                 createDocument(url);
                 if (oldResources == null) {
@@ -239,8 +228,8 @@ public class OutcomesAndAssessmentThree {
         });
 
         mainForm.addButton(backButton);
-        mainForm.addButton(forwardButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
 
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
@@ -267,7 +256,22 @@ public class OutcomesAndAssessmentThree {
     }
 
     public void storeDocumentInfo() {
-        WicidXML wicidxml = new WicidXML("outcomesAndAssessmentThree");
+        WicidXML wicidxml = new WicidXML("outcomesandassessmentthree");
+
+        int conTime = (hrsTeaching.getValue().intValue() + hrsTuts.getValue().intValue() + hrsLabs.getValue().intValue() + hrsOther.getValue().intValue()) * numWeeks.getValue().intValue();
+        contactTime = Integer.toString(conTime);
+
+        int stdyHours = conTime + (conTime * hrsStudy.getValue().intValue());
+        studyHours = Integer.toString(stdyHours);
+
+        int exTime = examsLength.getValue().intValue() * examsPerYr.getValue().intValue();
+        examTime = Integer.toString(exTime);
+
+        int notStudyHrs = stdyHours + exTime + hrsExamPrep.getValue().intValue();
+        notionalStudyHours = Integer.toString(notStudyHrs);
+
+        creSAQA = notStudyHrs / 10;
+        creditsSAQA = Double.toString(creSAQA);
 
         wicidxml.addElement("numWeeks", numWeeks.getValue().toString());
         wicidxml.addElement("hrsTeaching", hrsTeaching.getValue().toString());
@@ -287,7 +291,29 @@ public class OutcomesAndAssessmentThree {
         outcomesAndAssessmentThreeData = wicidxml.getXml();
     }
 
-    public void setDocumentInfo() {
+    public void calculate() {
+        int conTime = (hrsTeaching.getValue().intValue() + hrsTuts.getValue().intValue() + hrsLabs.getValue().intValue() + hrsOther.getValue().intValue()) * numWeeks.getValue().intValue();
+        contactTime = Integer.toString(conTime);
+
+        int stdyHours = conTime + (conTime * hrsStudy.getValue().intValue());
+        studyHours = Integer.toString(stdyHours);
+
+        int exTime = examsLength.getValue().intValue() * examsPerYr.getValue().intValue();
+        examTime = Integer.toString(exTime);
+
+        int notStudyHrs = stdyHours + exTime + hrsExamPrep.getValue().intValue();
+        notionalStudyHours = Integer.toString(notStudyHrs);
+
+
+        creSAQA = notStudyHrs / 10;
+        creditsSAQA = Double.toString(creSAQA);
+
+
+        questionD5.setText(5, 1, contactTime);
+        questionD5.setText(7, 1, studyHours);
+        questionD5.setText(10, 1, examTime);
+        questionD5.setText(12, 1, notionalStudyHours);
+        questionD5.setText(13, 1, creditsSAQA);
     }
 
     public void show() {
@@ -343,7 +369,7 @@ public class OutcomesAndAssessmentThree {
 
     private void getFormData() {
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=getFormData&formname=outcomesAndAssessmentThree&docid=" + Constants.docid;
+                + "?module=wicid&action=getFormData&formname=outcomesandassessmentthree&docid=" + Constants.docid;
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 
         try {
@@ -359,7 +385,6 @@ public class OutcomesAndAssessmentThree {
                     String data = response.getText();
 
                     String qD5a = Util.getTagText(data, "numWeeks");
-                    System.out.println(qD5a);
                     try {
                         numWeeks.setValue(Double.parseDouble(qD5a));
                     } catch (NullPointerException npe) {
@@ -367,7 +392,6 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5b = Util.getTagText(data, "hrsTeaching");
-                    System.out.println(qD5b);
                     try {
                         hrsTeaching.setValue(Double.parseDouble(qD5b));
                     } catch (NullPointerException npe) {
@@ -375,7 +399,6 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5c = Util.getTagText(data, "hrsTuts");
-                    System.out.println(qD5c);
                     try {
                         hrsTuts.setValue(Double.parseDouble(qD5c));
                     } catch (NullPointerException npe) {
@@ -383,7 +406,6 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5d = Util.getTagText(data, "hrsLabs");
-                    System.out.println(qD5d);
                     try {
                         hrsLabs.setValue(Double.parseDouble(qD5d));
                     } catch (NullPointerException npe) {
@@ -391,7 +413,6 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5e = Util.getTagText(data, "hrsOther");
-                    System.out.println(qD5e);
                     try {
                         hrsOther.setValue(Double.parseDouble(qD5e));
                     } catch (NullPointerException npe) {
@@ -399,12 +420,9 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5f = Util.getTagText(data, "contactTime");
-                    System.out.println(qD5f);
                     questionD5.setText(5, 1, qD5f);
 
-
                     String qD5g = Util.getTagText(data, "hrsStudy");
-                    System.out.println(qD5g);
                     try {
                         hrsStudy.setValue(Double.parseDouble(qD5g));
                     } catch (NullPointerException npe) {
@@ -412,11 +430,9 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5h = Util.getTagText(data, "studyHours");
-                    System.out.println(qD5h);
                     questionD5.setText(7, 1, qD5h);
 
                     String qD5i = Util.getTagText(data, "examsPerYr");
-                    System.out.println(qD5i);
                     try {
                         examsPerYr.setValue(Double.parseDouble(qD5i));
                     } catch (NullPointerException npe) {
@@ -424,7 +440,6 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5j = Util.getTagText(data, "examsLength");
-                    System.out.println(qD5j);
                     try {
                         examsLength.setValue(Double.parseDouble(qD5j));
                     } catch (NullPointerException npe) {
@@ -432,11 +447,9 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5k = Util.getTagText(data, "examTime");
-                    System.out.println(qD5k);
                     questionD5.setText(10, 1, qD5k);
 
                     String qD5l = Util.getTagText(data, "hrsExamPrep");
-                    System.out.println(qD5l);
                     try {
                         hrsExamPrep.setValue(Double.parseDouble(qD5l));
                     } catch (NullPointerException npe) {
@@ -444,21 +457,15 @@ public class OutcomesAndAssessmentThree {
                     }
 
                     String qD5m = Util.getTagText(data, "notionalStudyHours");
-                    System.out.println(qD5m);
                     questionD5.setText(12, 1, qD5m);
 
-                    String qD5n = Util.getTagText(data, "creditsSAQA");
-                    creSAQA = Double.parseDouble(qD5n);
-                    questionD5.setText(13, 1, qD5n);
-
-                    /*String resp[] = response.getText().split("|");
-
-                    if (resp[0].equals("")) {
-
-                    } else {
-                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
-                    }*/
-
+                    try {
+                        String qD5n = Util.getTagText(data, "creditsSAQA");
+                        creSAQA = Double.parseDouble(qD5n);
+                        questionD5.setText(13, 1, qD5n);
+                    } catch (NullPointerException npe) {
+                        questionD5.setText(13, 1, "0");
+                    }
                 }
             });
         } catch (Exception e) {

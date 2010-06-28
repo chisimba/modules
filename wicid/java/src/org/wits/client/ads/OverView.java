@@ -2,10 +2,6 @@
  * class to create an instance of the overview section of the main document. It will
  * initially serve as a test to ensure that the implemented stuff works
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.wits.client.ads;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
@@ -108,7 +104,7 @@ public class OverView {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setHeight(570);
+        mainForm.setHeight(500);
         mainForm.setWidth(780);
         mainForm.setLabelWidth(200);
 
@@ -124,20 +120,21 @@ public class OverView {
         radio.getValueAttribute();
 
         radio2.setBoxLabel("change to the outcomes or credit value of a course/unit");
+        radio2.setPagePosition(221, 123);
 
         //radio3.setPosition(5, 10);
         radio3.setBoxLabel("linked to other recent course/unit proposal/s, or proposal/s currently in development ");
 
-        radio4.setPagePosition(231, 430);
+        radio4.setPagePosition(221, 415);
         radio4.setBoxLabel("linked to other recent course/unit amendment/s, or amendment/s currently in development");
 
-        radio5.setPagePosition(231, 450);
+        radio5.setPagePosition(221, 435);
         radio5.setBoxLabel("linked to a new qualification/ programme proposal, or one currently in development");
 
-        radio6.setPagePosition(231, 470);
+        radio6.setPagePosition(221, 455);
         radio6.setBoxLabel("linked to a recent qualification/ programme amendment, or one currently in development");
 
-        radio7.setPagePosition(231, 490);
+        radio7.setPagePosition(221, 475);
         radio7.setBoxLabel("not linked to any other recent academic developments, nor those currently in development ");
 
         if ((quesA2 == null) || (quesA5 == null)) {
@@ -171,6 +168,7 @@ public class OverView {
         questionA2.setFieldLabel("A.2. This is a");
         questionA2.add(radio);
         questionA2.add(radio2);
+        questionA2.setHeight(40);
         mainForm.add(questionA2, formData);
 
         questionA3.setPreventScrollbars(false);
@@ -190,20 +188,10 @@ public class OverView {
         questionA5.add(radio5);
         questionA5.add(radio6);
         questionA5.add(radio7);
-
-        q5Panel.setFrame(false);
-        q5Panel.setBodyBorder(false);
-        //q5Panel.setPosition(200, 600);
-        q5Panel.setHeight(200);
-        q5Panel.setWidth(700);
-        q5Panel.setLabelWidth(200);
-        mainForm.add(q5Panel, formData);
-        q5Panel.add(questionA5, formData);
-
+        mainForm.add(questionA5, formData);
 
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0));
-
 
         //dont forget to add constraints for radioGroups. need to find out how.
         //used to ensure that all the data is added into the required fields
@@ -310,8 +298,8 @@ public class OverView {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                newCourseProposalDialog.setOldOverView(OverView.this);
-                newCourseProposalDialog.show();
+                editDocumentDialog.setOldOverView(OverView.this);
+                editDocumentDialog.show();
                 overViewDialog.hide();
                 storeDocumentInfo();
             }
@@ -329,18 +317,14 @@ public class OverView {
 
 
         mainForm.addButton(backButton);
-        mainForm.setButtonAlign(HorizontalAlignment.LEFT);
-
-
         mainForm.addButton(saveButton);
-        mainForm.setButtonAlign(HorizontalAlignment.LEFT);
-
         mainForm.addButton(forwardButton);
+        mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         overViewDialog.setBodyBorder(false);
         overViewDialog.setHeading("Section A: Overview");
-        overViewDialog.setWidth(800);
-        overViewDialog.setHeight(650);
+        overViewDialog.setWidth(790);
+        overViewDialog.setHeight(580);
         overViewDialog.setHideOnButtonClick(true);
         overViewDialog.setButtons(Dialog.CLOSE);
         overViewDialog.setButtonAlign(HorizontalAlignment.LEFT);
@@ -413,8 +397,10 @@ public class OverView {
     }
 
     private void getFormData() {
+        
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                 + "?module=wicid&action=getFormData&formname=overview&docid=" + Constants.docid;
+        
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 
         try {
@@ -426,13 +412,11 @@ public class OverView {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    /*
-                    <overview><qA1>asd</qA1><qA2>01</qA2><qA3>asd</qA3><qA4>asd</qA4><qA5>00100</qA5></overview>
-                     */
-
                     String data = response.getText();
+                   
 
                     String qA1 = Util.getTagText(data, "qA1");
+                    
                     if (qA1 == null) {
                         questionA1.setValue(editDocumentDialog.getTitleField().getValue());
                     } else {
@@ -441,6 +425,7 @@ public class OverView {
 
 
                     String qA2 = Util.getTagText(data, "qA2");
+                    
                     if (qA2 != null) {
                         for (int i = 0; i < 2; i++) {
                             if (qA2.charAt(i) == '0') {
@@ -485,18 +470,16 @@ public class OverView {
                         radio6.setValue(false);
                         radio7.setValue(false);
                     }
-                        /*String resp[] = response.getText().split("|");
+                    /*String resp[] = response.getText().split("|");
 
-                        if (resp[0].equals("")) {
+                    if (resp[0].equals("")) {
 
-                        } else {
-                        MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
-                        }*/
-                    }
+                    } else {
+                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
+                    }*/
                 }
-                )
-            ;
-            }  catch (Exception e) {
+            });
+        } catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot get overview data", null);
         }
     }

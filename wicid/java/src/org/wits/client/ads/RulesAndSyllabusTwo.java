@@ -53,6 +53,7 @@ public class RulesAndSyllabusTwo {
     private DateTimeFormat fmt = DateTimeFormat.getFormat("y/M/d");
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private TextArea topicField = new TextArea();
     private Radio radio4 = new Radio();
     private Radio radio5 = new Radio();
@@ -107,7 +108,7 @@ public class RulesAndSyllabusTwo {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setHeight(650);
+        mainForm.setHeight(610);
         mainForm.setWidth(810);
         mainForm.setLabelWidth(300);
 
@@ -116,66 +117,65 @@ public class RulesAndSyllabusTwo {
         radio4.setValue(true);
         radio4.getBoxLabel();
 
-        radio5.setPagePosition(331, 126);
+        radio5.setPagePosition(321, 97);
         radio5.setBoxLabel("a 2nd year unit");
 
-        radio6.setPagePosition(331, 142);
+        radio6.setPagePosition(321, 117);
         radio6.setBoxLabel("a 3rd year unit");
 
-        radio7.setPagePosition(331, 162);
+        radio7.setPagePosition(321, 137);
         radio7.setBoxLabel("a 4th year unit ");
 
-        radio8.setPagePosition(331, 182);
+        radio8.setPagePosition(321, 157);
         radio8.setBoxLabel("a 5th year unit ");
 
-        radio9.setPagePosition(331, 202);
+        radio9.setPagePosition(321, 177);
         radio9.setBoxLabel("a 6th year unit ");
 
-        radio10.setPagePosition(331, 222);
+        radio10.setPagePosition(321, 197);
         radio10.setBoxLabel("an honours unit ");
 
-        radio11.setPagePosition(331, 242);
+        radio11.setPagePosition(321, 217);
         radio11.setBoxLabel("a postgraduate diploma unit ");
 
-        radio12.setPagePosition(331, 262);
+        radio12.setPagePosition(321, 237);
         radio12.setBoxLabel("a masters unit ");
 
         //radio12.setPagePosition(96,403);
         radio13.setBoxLabel("full year unit offered in semester 1 and 2 ");
         radio13.setValue(true);
 
-        radio14.setPagePosition(331, 410);
+        radio14.setPagePosition(321, 347);
         radio14.setBoxLabel("half year unit offered in  ");
 
-        radio15.setPagePosition(477, 410);
+        radio15.setPagePosition(477, 347);
         radio15.setBoxLabel("semester1 ");
 
-        radio16.setPagePosition(477, 426);
+        radio16.setPagePosition(477, 367);
         radio16.setBoxLabel("semester 2 ");
 
-        radio17.setPagePosition(477, 442);
+        radio17.setPagePosition(477, 387);
         radio17.setBoxLabel("or semester 1 and 2  ");
 
-        radio18.setPagePosition(331, 458);
+        radio18.setPagePosition(321, 407);
         radio18.setBoxLabel("block unit offered in ");
 
-        radio19.setPagePosition(460, 458);
+        radio19.setPagePosition(460, 407);
         radio19.setBoxLabel("block 1 ");
 
-        radio20.setPagePosition(460, 474);
+        radio20.setPagePosition(460, 427);
         radio20.setBoxLabel("block 2 ");
 
-        radio21.setPagePosition(460, 490);
+        radio21.setPagePosition(460, 447);
         radio21.setBoxLabel("block 3 ");
 
-        radio22.setPagePosition(460, 506);
+        radio22.setPagePosition(460, 467);
         radio22.setBoxLabel("block 4");
 
-        radio23.setPagePosition(331, 522);
+        radio23.setPagePosition(321, 487);
         radio23.setBoxLabel("attendance course/unit");
 
-
-        radio24.setPagePosition(331, 538);
+        radio24.setPagePosition(321, 507);
         radio24.setBoxLabel("other ");
 
         //radio12.setPagePosition(96,403);
@@ -187,6 +187,7 @@ public class RulesAndSyllabusTwo {
 
         final RadioGroup questionB5a = new RadioGroup();
         questionB5a.setFieldLabel("B.5.a. At what level is the course/unit taught?");
+        questionB5a.setHeight(190);
         questionB5a.add(radio4);
         questionB5a.add(radio5);
         questionB5a.add(radio6);
@@ -196,18 +197,7 @@ public class RulesAndSyllabusTwo {
         questionB5a.add(radio10);
         questionB5a.add(radio11);
         questionB5a.add(radio12);
-
-
-        qB5aPanel.setFrame(false);
-        qB5aPanel.setBodyBorder(false);
-        //q5Panel.setPosition(200, 600);
-        qB5aPanel.isHeaderVisible();
-        qB5aPanel.setHeight(230);
-        qB5aPanel.setWidth(700);
-        qB5aPanel.setLabelWidth(300);
-        mainForm.add(qB5aPanel, formData);
-        qB5aPanel.add(questionB5a, formData);
-
+        mainForm.add(questionB5a, formData);
 
         questionB5b.setPreventScrollbars(false);
         questionB5b.setHeight(50);
@@ -220,38 +210,30 @@ public class RulesAndSyllabusTwo {
         final RadioGroup questionB6a1 = new RadioGroup();
         questionB6a1.setFieldLabel("B.6.a. This is a ");
         questionB6a1.setSelectionRequired(true);
+        questionB6a1.setHeight(150);
         questionB6a1.add(radio13);
         questionB6a1.add(radio14);
         questionB6a1.add(radio18);
         questionB6a1.add(radio23);
         questionB6a1.add(radio24);
+        mainForm.add(questionB6a1, formData);
 
         final RadioGroup questionB6a2 = new RadioGroup();
         questionB6a2.setSelectionRequired(true);
+        questionB6a2.setLabelSeparator(" ");
         questionB6a2.add(radio15);
         questionB6a2.add(radio16);
         questionB6a2.add(radio17);
+        mainForm.add(questionB6a2, formData);
 
         final RadioGroup questionB6a3 = new RadioGroup();
         questionB6a3.setSelectionRequired(true);
+        questionB6a3.setLabelSeparator(" ");
         questionB6a3.add(radio19);
         questionB6a3.add(radio20);
         questionB6a3.add(radio21);
         questionB6a3.add(radio22);
-
-        qB6aPanel.setFrame(false);
-        qB6aPanel.setBodyBorder(false);
-        //q5Panel.setPosition(200, 600);
-        qB6aPanel.isHeaderVisible();
-        qB6aPanel.setHeight(200);
-        qB6aPanel.setWidth(830);
-        qB6aPanel.setLabelWidth(300);
-
-        qB6aPanel.add(questionB6a1, formData);
-        qB6aPanel.add(questionB6a2, formData);
-        qB6aPanel.add(questionB6a3, formData);
-
-        mainForm.add(qB6aPanel, formData);
+        mainForm.add(questionB6a3, formData);
 
         if (radio14.getValue() == false) {
             radio15.disable();
@@ -488,14 +470,25 @@ public class RulesAndSyllabusTwo {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+                storeDocumentInfo();
+            }
+        });
+
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.RIGHT);
 
         rulesAndSyllabusTwoDialog.setBodyBorder(false);
         rulesAndSyllabusTwoDialog.setHeading("Section B: Rules and Syllabus Book- Page Two");
-        rulesAndSyllabusTwoDialog.setWidth(830);
-        rulesAndSyllabusTwoDialog.setHeight(720);
+        rulesAndSyllabusTwoDialog.setWidth(825);
+        rulesAndSyllabusTwoDialog.setHeight(680);
         rulesAndSyllabusTwoDialog.setHideOnButtonClick(true);
         rulesAndSyllabusTwoDialog.setButtons(Dialog.CLOSE);
         rulesAndSyllabusTwoDialog.setButtonAlign(HorizontalAlignment.LEFT);

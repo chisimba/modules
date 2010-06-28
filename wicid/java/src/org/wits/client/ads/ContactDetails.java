@@ -38,6 +38,7 @@ public class ContactDetails {
     private final TextArea H3b = new TextArea();
     private Button saveButton = new Button("Finish");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private Review review;
     private ContactDetails oldContactDetails;
     private String contactDetailsData;
@@ -53,8 +54,8 @@ public class ContactDetails {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setWidth(700);
-        mainForm.setLabelWidth(400);
+        mainForm.setWidth(690);
+        mainForm.setLabelWidth(250);
 
         H1.setFieldLabel("H.1 Name of academic proposing the course/unit");
         H1.setAllowBlank(false);
@@ -64,26 +65,26 @@ public class ContactDetails {
 
         H2a.setFieldLabel("H.2.a Name of the School which will be the home for the course/unit");
         H2a.setAllowBlank(false);
-        H1.setPreventScrollbars(false);
-        H1.setHeight(50);
+        H2a.setPreventScrollbars(false);
+        H2a.setHeight(50);
         H2a.setName("H2a");
 
         H2b.setFieldLabel("H.2.b School approval signature (Head of School or appropriate School committee chair) and date");
         H2b.setAllowBlank(false);
-        H1.setPreventScrollbars(false);
-        H1.setHeight(50);
+        H2b.setPreventScrollbars(false);
+        H2b.setHeight(50);
         H2b.setName("H2b");
 
         H3a.setFieldLabel("H.3.a Telephone contact numbers");
         H3a.setAllowBlank(false);
-        H1.setPreventScrollbars(false);
-        H1.setHeight(50);
+        H3a.setPreventScrollbars(false);
+        H3a.setHeight(50);
         H3a.setName("H3a");
 
         H3b.setFieldLabel("H.3.b Email addresses");
         H3b.setAllowBlank(false);
-        H1.setPreventScrollbars(false);
-        H1.setHeight(50);
+        H3b.setPreventScrollbars(false);
+        H3b.setHeight(50);
         H3b.setName("H3b");
 
         mainForm.add(H1, formData);
@@ -101,12 +102,18 @@ public class ContactDetails {
             @Override
             public void componentSelected(ButtonEvent ce) {
 
+                qH1 = H1.getValue();
+                qH2a = H2a.getValue();
+                qH2b = H2b.getValue();
+                qH3a = H3a.getValue();
+                qH3b = H3b.getValue();
+
                 if (qH1 == null) {
                     MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
                     return;
 
                 }
-                
+
                 if (qH2a == null) {
                     MessageBox.info("Missing answer", "Please enter an answer for question H.1.", null);
                     return;
@@ -135,12 +142,13 @@ public class ContactDetails {
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname=" + "contactdetails" + "&formdata=" + contactDetailsData + "&docid=" + Constants.docid;
+                        + "?module=wicid&action=saveFormData&formname=contactdetails&formdata="
+                        + contactDetailsData + "&docid=" + Constants.docid;
 
                 createDocument(url);
 
                 newContactDetailsDialog.hide();
-                MessageBox.info("Message", "You have successfully cpmpleted the application, Thank you", null);
+                MessageBox.info("Message", "You have successfully completed the application, Thank you", null);
 
             }
         });
@@ -156,19 +164,31 @@ public class ContactDetails {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+                storeDocumentInfo();
+            }
+        });
+
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         newContactDetailsDialog.setBodyBorder(false);
         newContactDetailsDialog.setHeading("Section H: Contact and Details");
-        newContactDetailsDialog.setWidth(800);
+        newContactDetailsDialog.setWidth(700);
         //newContactDetailsDialog.setHeight(450);
         newContactDetailsDialog.setHideOnButtonClick(true);
         newContactDetailsDialog.setButtons(Dialog.CLOSE);
         newContactDetailsDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         newContactDetailsDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -180,14 +200,7 @@ public class ContactDetails {
     }
 
     public void storeDocumentInfo() {
-        qH1 = H1.getValue().toString();
-        qH2a = H2a.getValue().toString();
-        qH2b = H2b.getValue().toString();
-        qH3a = H3a.getValue().toString();
-        qH3b = H3b.getValue().toString();
-
-
-        WicidXML wicidxml = new WicidXML("contactDetails");
+        WicidXML wicidxml = new WicidXML("contactdetails");
         wicidxml.addElement("qH1", qH1);
         wicidxml.addElement("qH2a", qH2a);
         wicidxml.addElement("qH2b", qH2b);
@@ -196,8 +209,7 @@ public class ContactDetails {
         contactDetailsData = wicidxml.getXml();
     }
 
-    public void setDocumentInfo(){
-
+    public void setDocumentInfo() {
     }
 
     public void show() {
@@ -272,14 +284,6 @@ public class ContactDetails {
 
                     String qH3b = Util.getTagText(data, "qH3b");
                     H3b.setValue(qH3b);
-
-                    /*String resp[] = response.getText().split("|");
-
-                    if (resp[0].equals("")) {
-
-                    } else {
-                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
-                    }*/
                 }
             });
         } catch (Exception e) {

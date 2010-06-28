@@ -30,6 +30,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.extjs.gxt.ui.client.widget.form.LabelField;
 import org.wits.client.Constants;
 import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
@@ -51,6 +52,7 @@ public class RulesAndSyllabusOne {
     private DateTimeFormat fmt = DateTimeFormat.getFormat("y/M/d");
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private TextArea topicField = new TextArea();
     private String courseTitle;
     private OverView overView;
@@ -89,29 +91,29 @@ public class RulesAndSyllabusOne {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setHeight(530);
-        mainForm.setWidth(650);
+        mainForm.setHeight(540);
+        mainForm.setWidth(680);
         mainForm.setLabelWidth(300);
-
 
         radio.setBoxLabel("a compulsory course/unit ");
         radio.setValue(true);
 
-
-        radio2.setPagePosition(331, 345);
+        radio2.setPagePosition(321, 312);
         radio2.setBoxLabel("an optional course/unit");
 
-
-        radio3.setPagePosition(331, 361);
-        radio3.setBoxLabel("both compulsory and optional as the course/unit is offered toward qualifications/programmes with differing curriculum structures ");
-
+        radio3.setPagePosition(321, 332);
+        radio3.setBoxLabel("both compulsory and optional as the course/unit is offered ");
+        LabelField radio3Label = new LabelField();
+        radio3Label.setText("toward qualifications/programmes with differing curriculum structures ");
+        radio3Label.setWidth(500);
+        radio3Label.enableEvents(true);
+        //radio3Label.
 
         questionB1.setPreventScrollbars(false);
         questionB1.setHeight(50);
         questionB1.setFieldLabel("B.1. How does this course/unit change the rules for the curriculum? ");
 
         mainForm.add(questionB1, formData);
-
 
         questionB2.setPreventScrollbars(false);
         questionB2.setHeight(50);
@@ -133,22 +135,15 @@ public class RulesAndSyllabusOne {
 
         mainForm.add(questionB3b, formData);
 
-
-
         questionB4a.setFieldLabel("B.4.a This is a");
+        questionB4a.setHeight(55);
+        questionB4a.setWidth(100);
         questionB4a.add(radio);
         questionB4a.add(radio2);
         questionB4a.add(radio3);
-        //mainForm.add(questionA2, formData);
-
-        qA2Panel.setFrame(false);
-        qA2Panel.setBodyBorder(false);
-        //q5Panel.setPosition(200, 600);
-        qA2Panel.setHeight(110);
-        qA2Panel.setWidth(700);
-        qA2Panel.setLabelWidth(300);
-        mainForm.add(qA2Panel, formData);
-        qA2Panel.add(questionB4a, formData);
+        
+        mainForm.add(questionB4a, formData);
+        mainForm.add(radio3Label, formData);
 
 
         questionB4b.setPreventScrollbars(false);
@@ -283,8 +278,19 @@ public class RulesAndSyllabusOne {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+                storeDocumentInfo();
+            }
+        });
+
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.RIGHT);
 
         //mainForm.setButtonAlign(HorizontalAlignment.RIGHT);
@@ -294,8 +300,8 @@ public class RulesAndSyllabusOne {
 
         rulesAndSyllabusOneDialog.setBodyBorder(false);
         rulesAndSyllabusOneDialog.setHeading("Section B: Rules and Syllabus Book- Page One");
-        rulesAndSyllabusOneDialog.setWidth(700);
-        rulesAndSyllabusOneDialog.setHeight(600);
+        rulesAndSyllabusOneDialog.setWidth(690);
+        rulesAndSyllabusOneDialog.setHeight(610);
         rulesAndSyllabusOneDialog.setHideOnButtonClick(true);
         rulesAndSyllabusOneDialog.setButtons(Dialog.CLOSE);
         rulesAndSyllabusOneDialog.setButtonAlign(HorizontalAlignment.LEFT);
@@ -323,7 +329,7 @@ public class RulesAndSyllabusOne {
     }
 
     public void storeDocumentInfo() {
-        WicidXML wicidxml = new WicidXML("rulesAndSyllabusOne");
+        WicidXML wicidxml = new WicidXML("rulesandsyllabusone");
         wicidxml.addElement("qB1", qB1);
         wicidxml.addElement("qB2", qB2);
         wicidxml.addElement("qB3a", qB3a);
@@ -391,8 +397,10 @@ public class RulesAndSyllabusOne {
     }
 
     private void getFormData() {
+
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=getFormData&formname=rulesAndSyllabusOne&docid=" + Constants.docid;
+                + "?module=wicid&action=getFormData&formname=rulesandsyllabusone&docid=" + Constants.docid;
+
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 
         try {

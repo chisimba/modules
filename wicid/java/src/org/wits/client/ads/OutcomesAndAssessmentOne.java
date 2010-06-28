@@ -24,11 +24,10 @@ import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.extjs.gxt.ui.client.widget.form.LabelField;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Widget;
 import org.wits.client.Constants;
 import org.wits.client.util.Util;
 import org.wits.client.util.WicidXML;
-
-
 
 /**
  *
@@ -42,6 +41,7 @@ public class OutcomesAndAssessmentOne {
     private FormData formData = new FormData("-20");
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private SimpleComboBox<String> questionD1a = new SimpleComboBox<String>();
     private SimpleComboBox<String> questionD1b = new SimpleComboBox<String>();
     private SubsidyRequirements subsidyRequirements;
@@ -50,11 +50,10 @@ public class OutcomesAndAssessmentOne {
     private TextArea questionD3 = new TextArea();
     //private OutcomesAndAssessmentTwo outcomesAndAssessmentTwo;
     private OutcomesAndAssessmentTwo oldOutcomesAndAssessmentTwo;
-    private String outcomesAndAssessmentOneData, qD1a, qD1b, qD2a,qD2b,qD2c, qD3;
+    private String outcomesAndAssessmentOneData, qD1a, qD1b, qD2a, qD2b, qD2c, qD3;
     private TextArea D2a = new TextArea();
     private TextArea D2b = new TextArea();
     private TextArea D2c = new TextArea();
-
 
     public OutcomesAndAssessmentOne(SubsidyRequirements subsidyRequirements) {
         this.subsidyRequirements = subsidyRequirements;
@@ -82,7 +81,6 @@ public class OutcomesAndAssessmentOne {
         questionD1a.add("NQF 7");
         questionD1a.add("NQF 8");
         questionD1a.setTriggerAction(ComboBox.TriggerAction.ALL);
-        // questionD1a.setStore(store);
         questionD1a.setEditable(false);
         questionD1a.setAllowBlank(false);
         questionD1a.setForceSelection(true);
@@ -91,23 +89,22 @@ public class OutcomesAndAssessmentOne {
 
         questionD1b.setFieldLabel("D.1.b. On which NEW NQF (National Qualifications "
                 + "Framework) level (e.g. NQF 5, 6, 7, 8, 9 & 10) is the course/unit positioned?");
-        questionD1b.setEditable(false);
-        questionD1b.setTriggerAction(ComboBox.TriggerAction.ALL);
         questionD1b.add("NQF 5");
         questionD1b.add("NQF 6");
         questionD1b.add("NQF 7");
         questionD1b.add("NQF 8");
         questionD1b.add("NQF 9");
         questionD1b.add("NQF 10");
+        questionD1b.setTriggerAction(ComboBox.TriggerAction.ALL);
+        questionD1b.setEditable(false);
         questionD1b.setAllowBlank(false);
+        questionD1b.setForceSelection(true);
         mainForm.add(questionD1b, formData);
-
-
 
         Label questionD2Label = new Label("D.2. Specify the course/unit oucomes, assessment "
                 + "criteria and methods of assessment using the table provided.");
         mainForm.add(questionD2Label, formData);
-                
+
         questionD2.setPixelSize(500, 80);
         questionD2.setBorderWidth(1);
         questionD2.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_CENTER);
@@ -132,7 +129,7 @@ public class OutcomesAndAssessmentOne {
                 + "to the acheivement of the overall qualification/programme outcomes?");
         mainForm.add(questionD3, formData);
 
-        
+
 
 
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
@@ -160,24 +157,24 @@ public class OutcomesAndAssessmentOne {
                     return;
                 }
 
-                if ((D2a.getValue() == null)&&(D2b.getValue() == null)&&(D2c.getValue() == null)){
+                if ((D2a.getValue() == null) && (D2b.getValue() == null) && (D2c.getValue() == null)) {
                     MessageBox.info("Missing answer", "Fill in the table for question D.2", null);
                     return;
                 }
 
-                if ((D2a.getValue() == null)||(D2b.getValue() == null)||(D2c.getValue() == null)){
+                if ((D2a.getValue() == null) || (D2b.getValue() == null) || (D2c.getValue() == null)) {
                     MessageBox.info("Missing answer", "Missing an answer for question D.2", null);
                     return;
                 }
-                
+
                 if (questionD3.getValue() == null) {
                     MessageBox.info("Missing answer", "Provide an answer to question D.3", null);
                     return;
                 }
-                
+
 
                 storeDocumentInfo();
-                
+
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                         + "?module=wicid&action=saveFormData&formname=" + "outcomesandassessmentone" + "&formdata=" + outcomesAndAssessmentOneData + "&docid=" + Constants.docid;
@@ -209,8 +206,19 @@ public class OutcomesAndAssessmentOne {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+                storeDocumentInfo();
+            }
+        });
+
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         outcomesAndAssessmentDialog.setBodyBorder(false);
@@ -223,6 +231,7 @@ public class OutcomesAndAssessmentOne {
         outcomesAndAssessmentDialog.setHideOnButtonClick(true);
 
         outcomesAndAssessmentDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 storeDocumentInfo();
@@ -236,33 +245,35 @@ public class OutcomesAndAssessmentOne {
 
     public void storeDocumentInfo() {
         //outcomesAndAssessmentOneData, qD1a, qD1b, q2, qD3
-        qD1a = questionD1a.getValue().toString();
-        qD1b = questionD1b.getValue().toString();
-        qD2a = D2a.getValue();
-        qD2b = D2b.getValue();
-        qD2c = D2c.getValue();
+        qD1a = questionD1a.getValue().getValue();
+        qD1b = questionD1b.getValue().getValue();
+        qD2a = ((TextArea) questionD2.getWidget(1, 0)).getValue();
+        qD2b = ((TextArea) questionD2.getWidget(1, 0)).getValue();
+        qD2c = ((TextArea) questionD2.getWidget(1, 0)).getValue();
         qD3 = questionD3.getValue().toString();
 
-        WicidXML wicidxml = new WicidXML("outcomesAndAssessmentOne");
+        WicidXML wicidxml = new WicidXML("outcomesandassessmentone");
         wicidxml.addElement("qD1a", qD1a);
-        wicidxml.addElement("aD1b", qD1b);
-        try{
-            wicidxml.addElement("q2a", qD2a);
-            wicidxml.addElement("q2b", qD2b);
-            wicidxml.addElement("q2c", qD2c);
-        }
-        catch (NullPointerException npe){
-            
+        wicidxml.addElement("qD1b", qD1b);
+        try {
+            wicidxml.addElement("qD2a", qD2a);
+            wicidxml.addElement("qD2b", qD2b);
+            wicidxml.addElement("qD2c", qD2c);
+        } catch (NullPointerException npe) {
+            wicidxml.addElement("qD2a", "qD2a");
+            wicidxml.addElement("qD2b", "qD2b");
+            wicidxml.addElement("qD2c", "qD2c");
         }
 
         wicidxml.addElement("qD3", qD3);
         outcomesAndAssessmentOneData = wicidxml.getXml();
     }
+
     public void show() {
         outcomesAndAssessmentDialog.show();
     }
 
-    public void setOldOutComesAndAssessmentOne(OutcomesAndAssessmentTwo oldOutcomesAndAssessmentTwo){
+    public void setOldOutComesAndAssessmentOne(OutcomesAndAssessmentTwo oldOutcomesAndAssessmentTwo) {
         this.oldOutcomesAndAssessmentTwo = oldOutcomesAndAssessmentTwo;
 
     }
@@ -292,16 +303,15 @@ public class OutcomesAndAssessmentOne {
                     if (resp[0].equals("")) {
                         /*if (oldOverView == null) {
 
-                            Constants.docid = resp[1];
-                            OverView overView = new OverView(NewCourseProposalDialog.this);
-                            overView.show();
-                            newDocumentDialog.hide();
+                        Constants.docid = resp[1];
+                        OverView overView = new OverView(NewCourseProposalDialog.this);
+                        overView.show();
+                        newDocumentDialog.hide();
                         } else {
-                            oldOverView.show();
-                            newDocumentDialog.hide();
+                        oldOverView.show();
+                        newDocumentDialog.hide();
 
                         }*/
-
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot create document", null);
                     }
@@ -314,7 +324,7 @@ public class OutcomesAndAssessmentOne {
 
     private void getFormData() {
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=getFormData&formname=outcomesAndAssessmentOne&docid=" + Constants.docid;
+                + "?module=wicid&action=getFormData&formname=outcomesandassessmentone&docid=" + Constants.docid;
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 
         try {
@@ -326,6 +336,8 @@ public class OutcomesAndAssessmentOne {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
+                    /*<outcomesandassessmentone><qD1a>NQF 6</qD1a><aD1b>NQF 6</aD1b><q2a>2</q2a><q2b>2</q2b>
+                    <q2c>2</q2c><qD3>1</qD3></outcomesandassessmentone>*/
 
                     String data = response.getText();
 
@@ -344,18 +356,12 @@ public class OutcomesAndAssessmentOne {
                     String qD2c = Util.getTagText(data, "qD2c");
                     D2c.setValue(qD2c);
 
+                    questionD2.setWidget(1, 0, D2a);
+                    questionD2.setWidget(1, 1, D2b);
+                    questionD2.setWidget(1, 2, D2c);
+
                     String qD3 = Util.getTagText(data, "qD3");
                     questionD3.setValue(qD3);
-
-
-                    /*String resp[] = response.getText().split("|");
-
-                    if (resp[0].equals("")) {
-
-                    } else {
-                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
-                    }*/
-
                 }
             });
         } catch (Exception e) {

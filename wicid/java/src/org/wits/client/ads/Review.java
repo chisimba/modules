@@ -41,16 +41,18 @@ public class Review {
     private final TextArea G4b = new TextArea();
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
+    private Button forwardButton = new Button("Forward to...");
     private CollaborationAndContracts collaborationAndContracts;
     private ContactDetails contactDetails;
     private CollaborationAndContracts oldCollaborationAndContracts;
     private Review oldReview;
     private ContactDetails oldContactDetails;
-    private String reviewData;
+    private String reviewData, qG1a, qG1b, qG2a, qG2b, qG3a, qG3b, qG4a, qG4b;
 
     public Review(CollaborationAndContracts collaborationAndContracts) {
         this.collaborationAndContracts = collaborationAndContracts;
         createUI();
+        getFormData();
     }
 
     public Review(ContactDetails contactDetails) {
@@ -62,8 +64,8 @@ public class Review {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setWidth(700);
-        mainForm.setLabelWidth(400);
+        mainForm.setWidth(690);
+        mainForm.setLabelWidth(250);
 
         G1a.setFieldLabel("G.1.a How will the course/unit syllabus be reviewed?");
         G1a.setAllowBlank(false);
@@ -130,14 +132,54 @@ public class Review {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                qG1a = G1a.getValue();
+                qG1b = G1b.getValue();
+                qG2a = G2a.getValue();
+                qG2b = G2b.getValue();
+                qG3a = G3a.getValue();
+                qG3b = G3b.getValue();
+                qG4a = G4a.getValue();
+                qG4b = G4b.getValue();
+
+                if (qG1a == null) {
+                    MessageBox.info("Missing answer", "Provide an answer to G.1.a", null);
+                    return;
+                }
+                if (qG1b == null) {
+                    MessageBox.info("Missing answer", "Provide an answer to G.1.b", null);
+                    return;
+                }
+                if (qG2a == null) {
+                    MessageBox.info("Missing answer", "Provide an answer to G.2.a", null);
+                    return;
+                }
+                if (qG2b == null) {
+                    MessageBox.info("Missing answer", "Provide an answer to G.2.b", null);
+                    return;
+                }
+                if (qG3a == null) {
+                    MessageBox.info("Missing answer", "Provide an answer to G.3.a", null);
+                    return;
+                }
+                if (qG3b == null) {
+                    MessageBox.info("Missing answer", "Provide an answer to G.3.b", null);
+                    return;
+                }
+                if (qG4a == null) {
+                    MessageBox.info("Missing answer", "Provide an answer to G.4.a", null);
+                    return;
+                }
+                if (qG4b == null) {
+                    MessageBox.info("Missing answer", "Provide an answer to G.4.b", null);
+                    return;
+                }
+
                 storeDocumentInfo();
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname=" + "review" + "&formdata=" + reviewData + "&docid=" + Constants.docid;
-                //+ "&department=" + dept + "&telephone=" + telephone
-                //+ "&topic=" + topic + "&title=" + title + "&mode=" + Constants.main.getMode();
-
-
+                        + "?module=wicid&action=saveFormData&formname=review&formdata="
+                        + reviewData + "&docid=" + Constants.docid;
+                
                 createDocument(url);
                 if (oldContactDetails == null) {
 
@@ -165,13 +207,24 @@ public class Review {
             }
         });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+                storeDocumentInfo();
+            }
+        });
+
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         newReviewDialog.setBodyBorder(false);
         newReviewDialog.setHeading("Section G: Review");
-        newReviewDialog.setWidth(800);
+        newReviewDialog.setWidth(700);
         //newReviewDialog.setHeight(450);
         newReviewDialog.setHideOnButtonClick(true);
         newReviewDialog.setButtons(Dialog.CLOSE);
@@ -192,14 +245,14 @@ public class Review {
 
     public void storeDocumentInfo() {
         WicidXML wicidxml = new WicidXML("review");
-        wicidxml.addElement("qG1a", G1a.getValue());
-        wicidxml.addElement("qG1b", G1b.getValue());
-        wicidxml.addElement("qG2a", G2a.getValue());
-        wicidxml.addElement("qG2b", G2b.getValue());
-        wicidxml.addElement("qG3a", G3a.getValue());
-        wicidxml.addElement("qG3b", G3b.getValue());
-        wicidxml.addElement("qG4a", G4a.getValue());
-        wicidxml.addElement("qG4b", G4b.getValue());
+        wicidxml.addElement("qG1a", qG1a);
+        wicidxml.addElement("qG1b", qG1b);
+        wicidxml.addElement("qG2a", qG2a);
+        wicidxml.addElement("qG2b", qG2b);
+        wicidxml.addElement("qG3a", qG3a);
+        wicidxml.addElement("qG3b", qG3b);
+        wicidxml.addElement("qG4a", qG4a);
+        wicidxml.addElement("qG4b", qG4b);
         reviewData = wicidxml.getXml();
     }
 
@@ -293,15 +346,6 @@ public class Review {
 
                     String qG4b = Util.getTagText(data, "qG4b");
                     G4b.setValue(qG4b);
-
-
-                    /*String resp[] = response.getText().split("|");
-
-                    if (resp[0].equals("")) {
-
-                    } else {
-                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
-                    }*/
                 }
             });
         } catch (Exception e) {

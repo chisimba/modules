@@ -80,7 +80,7 @@ public class SubsidyRequirements {
 
         mainForm.setFrame(false);
         mainForm.setBodyBorder(false);
-        mainForm.setHeight(500);
+        mainForm.setHeight(480);
         mainForm.setWidth(740);
         mainForm.setLabelWidth(250);
 
@@ -308,13 +308,12 @@ public class SubsidyRequirements {
                     }*/
                 }
 
-
                 storeDocumentInfo();
-
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=saveFormData&formname=" + "sudsidyrequirements" + "&formdata=" + subsidyRequirementsData + "&docid=" + Constants.docid;
+                        + "?module=wicid&action=saveFormData&formname=sudsidyrequirements&formdata="
+                        + subsidyRequirementsData + "&docid=" + Constants.docid;
 
                 createDocument(url);
                 if (oldOutcomesAndAssessmentOne == null) {
@@ -354,15 +353,15 @@ public class SubsidyRequirements {
         });
 
         mainForm.addButton(backButton);
-        mainForm.addButton(forwardButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
 
         subsidyRequirementsDialog.setBodyBorder(false);
         subsidyRequirementsDialog.setHeading("Section C: Subsidy Requirements");
         subsidyRequirementsDialog.setWidth(750);
-        subsidyRequirementsDialog.setHeight(570);
+        subsidyRequirementsDialog.setHeight(550);
         subsidyRequirementsDialog.setHideOnButtonClick(true);
         subsidyRequirementsDialog.setButtons(Dialog.CLOSE);
         subsidyRequirementsDialog.setButtonAlign(HorizontalAlignment.LEFT);
@@ -383,23 +382,19 @@ public class SubsidyRequirements {
     public void storeDocumentInfo() {
 
         qC1 = questionC1.getValue();
-
-        try {
-            qC2b = questionC2b.getValue();
-        } catch (NullPointerException npe) {
-            qC2b = "";
-        }
-
-        Number xqC3 = questionC3.getValue();
+        qC2b = questionC2b.getValue();
+        int xqC3 = questionC3.getValue().intValue();
         qC3 = xqC3 + "";
+        qC4b1 = q4b1.getValue();
+        qC4b2 = q4b2.getValue();
 
-        WicidXML wicidxml = new WicidXML("subsidyRequirements");
+        WicidXML wicidxml = new WicidXML("subsidyrequirements");
         wicidxml.addElement("qC1", qC1);
         wicidxml.addElement("qC2a", qC2a);
-        try {
-            wicidxml.addElement("qC2b", qC2b);
-        } catch (NullPointerException npe) {
-            wicidxml.addElement("qC2a", "");
+        try{
+        wicidxml.addElement("qC2b", qC2b);
+        } catch (NullPointerException npe){
+            wicidxml.addElement("qC2b", "");
         }
         wicidxml.addElement("qC3", qC3);
         wicidxml.addElement("qC4a", qC4a);
@@ -463,8 +458,10 @@ public class SubsidyRequirements {
     }
 
     private void getFormData() {
+
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=getFormData&formname=subsidyRequirements&docid=" + Constants.docid;
+                + "?module=wicid&action=getFormData&formname=sudsidyrequirements&docid=" + Constants.docid;
+
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
 
         try {
@@ -477,12 +474,14 @@ public class SubsidyRequirements {
 
                 public void onResponseReceived(Request request, Response response) {
 
-                    String data = response.getText();
+                    /*<subsidyRequirements><qC1>1</qC1><qC2a>01</qC2a><qC2b>1</qC2b><qC3>111111.0</qC3><qC4a>01</qC4a><qC4b1></qC4b1><qC4b2></qC4b2></subsidyRequirements>*/
 
-                    String qC1 = Util.getTagText(data, "qC1");
+                    String data = response.getText();                    
+
+                    String qC1 = Util.getTagText(data, "qC1");                    
                     questionC1.setValue(qC1);
 
-                    String qC2a = Util.getTagText(data, "qC2a");
+                    String qC2a = Util.getTagText(data, "qC2a");                    
                     if (qC2a != null) {
                         for (int i = 0; i < 2; i++) {
                             if (qC2a.charAt(i) == '0') {
@@ -491,7 +490,6 @@ public class SubsidyRequirements {
                             if (qC2a.charAt(i) == '1') {
                                 quesC2a[i] = true;
                             }
-                            System.out.println(quesC2a[i]);
                         }
                         radioC2a1.setValue(quesC2a[0]);
                         radioC2a2.setValue(quesC2a[1]);
@@ -518,7 +516,6 @@ public class SubsidyRequirements {
                             if (qC4a.charAt(i) == '1') {
                                 quesC4a[i] = true;
                             }
-                            System.out.println(quesC4a[i]);
                         }
                         radioC4a1.setValue(quesC4a[0]);
                         radioC4a2.setValue(quesC4a[1]);
@@ -526,20 +523,13 @@ public class SubsidyRequirements {
                         radioC4a1.setValue(true);
                         radioC4a2.setValue(false);
                     }
-
+/*<subsidyrequirements><qC1>1</qC1><qC2a>10</qC2a><qC2b>1</qC2b><qC3>111111</qC3>
+ <qC4a>10</qC4a><qC4b1></qC4b1><qC4b2></qC4b2></subsidyrequirements>*/
                     String qC4b1 = Util.getTagText(data, "qC4b1");
                     q4b1.setValue(qC4b1);
 
                     String qC4b2 = Util.getTagText(data, "qC4b2");
                     q4b2.setValue(qC4b2);
-
-                    /*String resp[] = response.getText().split("|");
-
-                    if (resp[0].equals("")) {
-
-                    } else {
-                    MessageBox.info("Error", "Error occured on the server. Cannot get overview data", null);
-                    }*/
 
                 }
             });

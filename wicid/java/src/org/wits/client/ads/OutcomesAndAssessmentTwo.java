@@ -232,8 +232,8 @@ public class OutcomesAndAssessmentTwo {
         });
 
         mainForm.addButton(backButton);
-        mainForm.addButton(forwardButton);
         mainForm.addButton(saveButton);
+        mainForm.addButton(forwardButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         outcomesAndAssessmentTwoDialog.setBodyBorder(false);
