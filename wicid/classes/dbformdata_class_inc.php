@@ -25,31 +25,48 @@ class dbformdata extends dbtable {
                 'userid'=>$this->userutils->getUserId()
         );
 
+        if ($this->exists($docid,$formname)) {
+            print_r("exists");
+                $existingdata=$this->getAll("where formname='$formname' and docid='$docid'");
 
-        $this->insert($data);//$formname, $formdata, $docid
+            if(count($existingdata) > 0) {
+                print_r("count > 0");
+                $updatedata=array(
+
+                        'formdata'=>$formdata,
+                        'userid'=>$this->userutils->getUserId() 
+
+                );
+                $this->update('id',$existingdata[0]['id'], $updatedata);
+                print_r("updated");
+            }
+        }
+        else
+            $this->insert($data);//$formname, $formdata, $docid
 
         echo 'success';
-        
-
     }
 
-    function  exists($docid, $formname){
+    function  exists($docid, $formname) {
         $sql="select * from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
         $xmStr="";
         $rows=$this->getArray($sql);
-        if(count($rows) > 1){
+        if(count($rows) > 0) {
             return TRUE;
         }
-        return FALSE;
+        else 
+            return FALSE;
+        
     }
 
-    public function  getFormData($formname, $docid){
+    public function  getFormData($formname, $docid) {
 
         $sql="select * from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
         $xmStr="";
         $rows=$this->getArray($sql);
-        
-        foreach($rows as $row){
+
+        foreach($rows as $row) {
+            print_r($row);
             $xmlStr=$row['formname'];
         }
 
