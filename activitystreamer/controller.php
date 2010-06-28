@@ -7,7 +7,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class activitystreamer extends controller
 {
     /**
-     * The system configurat
+     * The system configuration.
      *
      * @access protected
      * @var    object
