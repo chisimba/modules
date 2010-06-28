@@ -52,6 +52,14 @@ $GLOBALS['kewl_entry_point_run'])
 class activityops extends object
 {
     /**
+     * The system configuration.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objAltConfig;
+
+    /**
      * Property to hold pubsubhubbub object.
      * @access public
      */
@@ -64,8 +72,9 @@ class activityops extends object
     
     public function init()
     {
-        $this->objFeeds = $this->getObject('feeder', 'feed');
         $this->objActDB = $this->getObject('activitydb');
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $this->objFeeds = $this->getObject('feeder', 'feed');
         $this->objPubSubHubbub = $this->getObject('pubsubhubbub', 'pubsubhubbub');
     }
     
@@ -81,7 +90,8 @@ class activityops extends object
         $this->objActDB->insertPost($notification);
 
         // Notify the hub of the new entry.
-        $this->objPubSubHubbub->publish($this->id);
+        $id = $this->objAltConfig->getsiteRoot().'index.php?module=activitystreamer';
+        $this->objPubSubHubbub->publish($id);
         
         //send to somewhere with XMPP or something
         
