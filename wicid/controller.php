@@ -352,8 +352,8 @@ class wicid extends controller {
      */
     public function __determinepermissions() {
         $mode=$this->objSysConfig->getValue('MODE', 'wicid');
-        echo "admin=true,mode=$mode";
-        // echo $this->objUser->isAdmin()?"true":"false";
+        //echo "admin=true,mode=$mode";
+        echo $this->objUser->isAdmin()?"true":"false";
     }
 
 
@@ -500,7 +500,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return false;
+        return true;
     }
 
     function __registeracademicpresenters() {

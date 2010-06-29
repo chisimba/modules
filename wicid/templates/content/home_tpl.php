@@ -22,5 +22,5 @@ $surface = '<div id="onecolumn">
 	    </div>
 	   </div>
 	  </div>';
-echo $content;
+echo $surface;
 ?>

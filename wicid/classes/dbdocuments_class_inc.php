@@ -49,7 +49,7 @@ class dbdocuments extends dbtable {
               where A.active = 'N'
               and A.deleteDoc = 'N'";// and mode ='$mode'";
         if(!$this->objUser->isadmin()) {
-            //$sql.=" and userid = '".$this->objUser->userid()."'";
+            $sql.=" and userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
 
