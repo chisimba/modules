@@ -120,7 +120,7 @@ public class Main {
     private TabItem filesTab = new TabItem("File List");
     private NewCourseProposalDialog newCourseProposalDialog;
     private AdvancedSearchDialog advancedSearchDialog;
-    private String mode = "default";
+    private String mode = "apo";
     private boolean admin = false;
     private TextField<String> searchField = new TextField<String>();
     private Button searchButton = new Button("Search");

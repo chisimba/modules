@@ -241,6 +241,7 @@ public class DocumentListPanel extends LayoutContainer {
 
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
+                       
                         refreshDocumentList(defaultParams);
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot delete document", null);
@@ -253,6 +254,7 @@ public class DocumentListPanel extends LayoutContainer {
     }
 
     public void refreshDocumentList(String params) {
+         params+="&userid=1";
         // defines the xml structure
         ModelType type = new ModelType();
         type.setRoot("documents");

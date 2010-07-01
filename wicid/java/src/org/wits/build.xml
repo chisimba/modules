@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="Wicid" default="build" basedir=".">
   <!-- Configure path to GWT SDK -->
-  <property name="gwt.sdk" location="/home/nguni/Downloads/gwt-2.0.3" />
-  <property file="/home/nguni/NetBeansProjects/Wicid/src/org/wits/gwt.properties"/>
+  <property name="gwt.sdk" location="/home/a00670063/gwt-2.0.3" />
+  <property file="/home/a00670063/project/Wicid/src/org/wits/gwt.properties"/>
   <path id="project.class.path">
     <pathelement location="war/WEB-INF/classes"/>
     <pathelement location="${gwt.sdk}/gwt-user.jar"/>

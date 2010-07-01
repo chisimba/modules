@@ -5,6 +5,13 @@ import java.util.List;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
+import com.extjs.gxt.ui.client.Style.SelectionMode;
+import com.extjs.gxt.ui.client.data.BaseListLoader;
+import com.extjs.gxt.ui.client.data.HttpProxy;
+import com.extjs.gxt.ui.client.data.JsonLoadResultReader;
+import com.extjs.gxt.ui.client.data.ListLoadResult;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 
@@ -23,7 +30,6 @@ import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
-//import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.http.client.Request;
@@ -49,25 +55,25 @@ public class ForwardTo {
     private FormData formData = new FormData("-20");
     //private FormData formData = new FormData();
     private String email;
+    private String selectedUserid;
     private BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
     private BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 80);
-    private ListStore<User> userStore = new ListStore<User>();
+    private ListStore<ModelData> userStore;
+    private BaseListLoader<ListLoadResult<ModelData>> loader;
+    private Grid<ModelData> emailGrid;
+    private ColumnModel cm;
 
     public ForwardTo() {
         creatUI();
     }
 
     public void creatUI() {
-        /* mainForm.setFrame(false);
-        mainForm.setBodyBorder(false);
-        mainForm.setWidth(480);
-         */
-
         centerData.setMargins(new Margins(0));
 
         forwardTo.setWidth(300);
         forwardTo.setHeight(25);
         forwardTo.setAllowBlank(false);
+        forwardTo.setReadOnly(true);
 
         //mainForm.add(forwardTo, centerData);
 
@@ -76,9 +82,7 @@ public class ForwardTo {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-
                 searchDialog();
-
             }
         });
 
@@ -98,19 +102,26 @@ public class ForwardTo {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                email = forwardTo.getValue().toString();
+                RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() +
+                        Constants.MAIN_URL_PATTERN + "?module=wicid&action=changecurrentuser&userid=" +
+                        selectedUserid + "&docid=" + Constants.docid);
+                try {
 
-                if (forwardTo.getValue() == null) {
-                    MessageBox.info("Error", "Please provide a person to forward to.", null);
-                    return;
+                    Request request = builder.sendRequest(null, new RequestCallback() {
+
+                        public void onError(Request request, Throwable exception) {
+                            MessageBox.info("Error", "Error, cannot change currentuser", null);
+                        }
+
+                        public void onResponseReceived(Request request, Response response) {
+                            MessageBox.info("Done", "The current user for document "+Constants.docid+" has been changed.", null);
+                        }
+                    });
+                } catch (Exception e) {
+                    MessageBox.info("Fatal Error", "Fatal Error: cannot change currentuser", null);
                 }
 
-                String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                        + "?module=wicid&action=forwardto&link=" + "link" + "&email=" + email + "&docid=" + Constants.docid;
-                MessageBox.info("Message", url, null);
-                sendEmail(url);
-
-                forwardToDialog.close();
+                forwardToDialog.hide();
             }
         });
         panel.add(forwardButton);
@@ -139,7 +150,6 @@ public class ForwardTo {
 
         searchForm.setHeight(280);
 
-
         final TextField inputField = new TextField();
         inputField.setEmptyText("Enter partial email");
         inputField.setSize(250, 25);
@@ -151,6 +161,7 @@ public class ForwardTo {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 String value = inputField.getValue().toString();
+                search(value);
             }
         });
 
@@ -174,15 +185,13 @@ public class ForwardTo {
         configs.add(column);
 
         column = new ColumnConfig();
-        column.setId("email");
+        column.setId("emailaddress");
         column.setHeader("Email Address");
-        column.setAlignment(HorizontalAlignment.RIGHT);
+        column.setAlignment(HorizontalAlignment.LEFT);
         column.setWidth(200);
         configs.add(column);
 
-        //userStore.add(getUsers());
-
-        ColumnModel cm = new ColumnModel(configs);
+        cm = new ColumnModel(configs);
 
         ContentPanel cp = new ContentPanel();
         cp.setBodyBorder(false);
@@ -193,11 +202,30 @@ public class ForwardTo {
         cp.setSize(600, 150);
         cp.setScrollMode(Scroll.AUTO);
 
-        Grid<User> emailGrid = new Grid<User>(userStore, cm);
+        ModelType type = new ModelType();
+        type.setRoot("users");
+        type.addField("userid", "userid");
+        type.addField("firstname", "firstname");
+        type.addField("surname", "surname");
+        type.addField("emailaddress", "emailaddress");
+
+        // use a http proxy to get the data
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + "?module=wicid&action=searchusers");
+        HttpProxy<String> proxy = new HttpProxy<String>(builder);
+
+        // need a loader, proxy, and reader
+        JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type);
+        loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
+                reader);
+
+        userStore = new ListStore<ModelData>(loader);
+
+        emailGrid = new Grid<ModelData>(userStore, cm);
         emailGrid.setStyleAttribute("borderTop", "none");
-        emailGrid.setAutoExpandColumn("name");
+        emailGrid.setAutoExpandColumn("firstname");
         emailGrid.setBorders(true);
         emailGrid.setStripeRows(true);
+        emailGrid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         cp.add(emailGrid);
 
         searchForm.add(cp, formData);
@@ -209,7 +237,9 @@ public class ForwardTo {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                forwardTo.setRawValue(inputField.getValue().toString());
+                email = emailGrid.getSelectionModel().getSelectedItem().get("emailaddress");
+                selectedUserid = emailGrid.getSelectionModel().getSelectedItem().get("userid");
+                forwardTo.setRawValue(email);
                 searchDialog.hide();
             }
         });
@@ -218,11 +248,23 @@ public class ForwardTo {
         searchForm.setHeading("Enter email address:");
 
         searchDialog.add(searchForm);
-        searchDialog.show();
+        searchDialog.setVisible(true);
     }
 
     private void sendEmail(String url) {
+        /*email = forwardTo.getValue().toString();
 
+        if (forwardTo.getValue() == null) {
+        MessageBox.info("Error", "Please provide a person to forward to.", null);
+        return;
+        }
+
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+        + "?module=wicid&action=forwardto&link=" + "link" + "&email=" + email + "&docid=" + Constants.docid;
+        MessageBox.info("Message", url, null);
+        sendEmail(url);
+
+        forwardToDialog.close();*/
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 
         try {
@@ -234,7 +276,6 @@ public class ForwardTo {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-
                 }
             });
         } catch (Exception e) {
@@ -243,11 +284,11 @@ public class ForwardTo {
 
     }
 
-    private List<User> getUsers() {
-        List<User> users = new ArrayList<User>();
-        users.add(new User("Jane", "Smith", "janesmith@wits.ac.za"));
-        users.add(new User("Jacqueline", "Gil", "jacqueline.gil@students.wits.ac.za"));
-        return users;
+    /*  private List<User> getUsers() {
+    List<User> users = new ArrayList<User>();
+    users.add(new User("Jane", "Smith", "janesmith@wits.ac.za"));
+    users.add(new User("Jacqueline", "Gil", "jacqueline.gil@students.wits.ac.za"));
+    return users;
     }
 
     /**
@@ -258,35 +299,27 @@ public class ForwardTo {
     }-*/;
 
     private void search(String val) {
-        String url = Constants.MAIN_URL_PATTERN + "/?module=wicid&action=search&value=" + val;
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
+        // defines the xml structure
+        ModelType type = new ModelType();
+        type.setRoot("users");
+        type.addField("userid", "userid");
+        type.addField("firstname", "firstname");
+        type.addField("surname", "surname");
+        type.addField("emailaddress", "emailaddress");
 
-        try {
+        // use a http proxy to get the data
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=searchusers&filter=" + val);
+        HttpProxy<String> proxy = new HttpProxy<String>(builder);
 
-            Request request = builder.sendRequest(null, new RequestCallback() {
+        // need a loader, proxy, and reader
+        JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type);
 
-                public void onError(Request request, Throwable exception) {
-                    MessageBox.info("Error", "Error, cannot create new document", null);
-                }
+        loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
+                reader);
 
-                public void onResponseReceived(Request request, Response response) {
-                      if (200 == response.getStatusCode()) {
-                        JsArray<JSonUser> users = asArrayOfUser(response.getText());
-                        List<User> userlist = new ArrayList<User>();
+        userStore = new ListStore<ModelData>(loader);
 
-                        for (int i = 0; i < users.length(); i++) {
-                            JSonUser jSonUser = users.get(i);
-                            User user = new User(jSonUser.getFirstName(), jSonUser.getSurname(), jSonUser.getEmail());
-                            userlist.add(user);
-                        }
-                        userStore.add(userlist);
-//                        userStore.
-                    }
-                }
-            });
-        } catch (Exception e) {
-            MessageBox.info("Fatal Error", "Fatal Error: cannot create new document", null);
-        }
-
+        emailGrid.reconfigure(userStore, cm);
+        loader.load();
     }
 }

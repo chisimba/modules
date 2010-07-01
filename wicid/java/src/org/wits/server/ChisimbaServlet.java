@@ -26,7 +26,7 @@ public class ChisimbaServlet extends HttpServlet {
 
 
         String result = "";
-        PostMethod post = new PostMethod("http://localhost/chisimba/?");
+        PostMethod post = new PostMethod("http://localhost/chisimba/app/?");
         HttpClient httpClient = new HttpClient();
         try {
 

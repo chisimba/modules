@@ -47,11 +47,11 @@ import com.google.gwt.user.client.ui.Grid;
 import com.extjs.gxt.ui.client.event.WindowListener;
 import java.util.ArrayList;
 
-import java.util.Date;
 import java.util.List;
 import org.wits.client.ads.OverView;
-import org.wits.client.util.WicidXML;
+import org.wits.client.util.Util;
 import java.util.Date;
+import org.wits.client.ads.ForwardTo;
 
 /**
  *
@@ -71,6 +71,7 @@ public class EditDocumentDialog {
     private final TextField<String> ownerField = new TextField<String>();
     private Button saveButton = new Button("Save");
     private Button browseTopicsButton = new Button("Browse Facuties");
+    private Button forwardButton = new Button("Forward to...");
     private TopicListingFrame topicListingFrame;
     private TextArea topicField = new TextArea();
     private Dialog topicListingDialog = new Dialog();
@@ -83,21 +84,29 @@ public class EditDocumentDialog {
     private String mode;
     private Main main;
     private LabelField uploadFile = new LabelField();
+    private DateField dateField = new DateField();
     private Grid upload = new Grid(2, 1);
-    private OverView overView;
+    private OverView oldOverView, overView;
     private Button nextButton = new Button("Next");
     private boolean myResult;
     private BorderLayoutData uploadEastData = new BorderLayoutData(LayoutRegion.EAST, 60);
     private BorderLayoutData uploadWestData = new BorderLayoutData(LayoutRegion.WEST, 60);
     private BorderLayoutData uploadCenterData = new BorderLayoutData(LayoutRegion.CENTER, 60);
+    private List<Group> groups = new ArrayList<Group>();
+    private String editDocumentDialogData;
+    //private Overview oldOverview;
 
     public EditDocumentDialog(Document document, String mode, Main main) {
         this.document = document;
         this.mode = mode;
         this.main = main;
-        Constants.docid=document.getId();
+        Constants.docid = document.getId();
         createUI();
+    }
 
+    public EditDocumentDialog(OverView oldOverView) {
+        this.oldOverView = oldOverView;
+        createUI();
     }
 
     private void createUI() {
@@ -110,7 +119,6 @@ public class EditDocumentDialog {
         mainForm.setWidth(480);
 
 
-        final DateField dateField = new DateField();
         dateField.setFieldLabel("Entry date");
         dateField.getPropertyEditor().setFormat(fmt);
         dateField.setName("datefield");
@@ -118,7 +126,7 @@ public class EditDocumentDialog {
         dateField.setAllowBlank(false);
 
         ListStore<Group> groupStore = new ListStore<Group>();
-        List<Group> groups = new ArrayList<Group>();
+
         groups.add(new Group("Public"));
         groups.add(new Group("Council"));
         groups.add(new Group("Administration"));
@@ -134,7 +142,6 @@ public class EditDocumentDialog {
         groupField.setAllowBlank(false);
         groupField.setEditable(false);
 
-
         numberField.setFieldLabel("Reference Number");
         numberField.setAllowBlank(false);
         numberField.setEnabled(false);
@@ -143,27 +150,26 @@ public class EditDocumentDialog {
         mainForm.add(numberField, formData);
         topicField.setEnabled(false);
 
-        
         ownerField.setFieldLabel("Owner");
         ownerField.setAllowBlank(false);
         ownerField.setEnabled(false);
         ownerField.setValue(document.getOwnerName());
         ownerField.setName("ownerfield");
         mainForm.add(ownerField, formData);
-        
+
         deptField.setFieldLabel("Originating department");
         deptField.setAllowBlank(false);
         deptField.setValue(document.getDepartment());
         deptField.setName("deptfield");
         mainForm.add(deptField, formData);
-        
+
         telField.setFieldLabel("Tel. Number");
         telField.setValue("edit mode");
         telField.setValue(document.getTelephone());
         telField.setAllowBlank(false);
         telField.setName("telfield");
         mainForm.add(telField, formData);
-        
+
         titleField.setFieldLabel("Document title");
         titleField.setAllowBlank(false);
         titleField.setValue(document.getTitle());
@@ -216,8 +222,10 @@ public class EditDocumentDialog {
                 overView = new OverView(EditDocumentDialog.this);
                 overView.show();
                 editDocumentDialog.setVisible(false);
+                editDocumentDialog.hide();
             }
         });
+
         Radio publicOpt = new Radio();
         publicOpt.setBoxLabel("Public");
         publicOpt.setValue(true);
@@ -248,7 +256,7 @@ public class EditDocumentDialog {
         FileUploadField fileUploadField = new FileUploadField();
         fileUploadField.setName("filenamefield");
         fileUploadField.setFieldLabel("Upload file");
-        
+
         saveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
@@ -258,14 +266,7 @@ public class EditDocumentDialog {
                     uploadpanel.submit();
 
                 }
-                Date date = new Date();
-                try {
-                    if (dateField.getDatePicker() != null) {
-                        date = dateField.getDatePicker().getValue();
-                    }
-                } catch (Exception ex) {
-                }
-
+                
                 String dept = deptField.getValue();
                 if (dept == null) {
                     MessageBox.info("Missing department", "Provide originating department", null);
@@ -277,7 +278,7 @@ public class EditDocumentDialog {
                 }
 
                 String tel = telField.getValue();
-                if(tel == null) {
+                if (tel == null) {
                     MessageBox.info("Missing telephone", "Provide telephone", null);
                     return;
                 }
@@ -311,31 +312,35 @@ public class EditDocumentDialog {
                     MessageBox.info("Missing group", "Select group", null);
                     return;
                 }
-                String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
-                        + "module=wicid&action=updatedocument&dept=" + dept + "&topic=" + topic
-                        + "&title=" + title + "&tel=" + tel +  "&group=" + group + "&date=" + fmt.format(date) + "&docid=" + document.getId();
-
-
-                updateDocument(url);
                 storeDocumentInfo();
-
-
+                String url = storeDocumentInfo();
+                updateDocument(url);
                 editDocumentDialog.hide();
+            }
+        });
 
+        forwardButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                ForwardTo forwardToDialog = new ForwardTo();
+                forwardToDialog.show();
+                storeDocumentInfo();
             }
         });
 
         if (mode.equals("apo")) {
             mainForm.addButton(nextButton);
+            mainForm.addButton(forwardButton);
         } else {
             uploadpanel.add(saveButton, uploadWestData);
         }
-        
+
         uploadButton.setIconStyle("add16");
         if (mode.equals("default")) {
             uploadpanel.add(uploadButton, uploadCenterData);
-            if(document.getAttachmentStatus().length() > 3 ) {
-                if (document.getAttachmentStatus().substring(0,3).equals("Yes")) {
+            if (document.getAttachmentStatus().length() > 3) {
+                if (document.getAttachmentStatus().substring(0, 3).equals("Yes")) {
                     uploadIcon = new Button();
                     uploadIcon.setBorders(false);
                     uploadIcon.setIconStyle("attachment");
@@ -373,7 +378,6 @@ public class EditDocumentDialog {
             }
         });
 
-        
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         editDocumentDialog.setBodyBorder(false);
         if (mode.equals("apo")) {
@@ -394,6 +398,7 @@ public class EditDocumentDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                storeDocumentInfo();
                 if (main != null) {
                     main.refreshFileList();
                 }
@@ -402,28 +407,37 @@ public class EditDocumentDialog {
         editDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
 
         editDocumentDialog.add(mainForm);
-        }
+    }
 
-    public void storeDocumentInfo() {
-        String originatingDepartment = deptField.getValue();
-        String telNumber = telField.getValue();
-        String docTitle = titleField.getValue();
+    public String storeDocumentInfo() {
+
+        String dept = deptField.getValue();
+        String tel = telField.getValue();
+        String title = titleField.getValue();
         String group = groupField.getValue().toString();
-        String faculty = topicField.getValue();
-        String fileUpload = uploadFile.getValue().toString();
+        String topic = topicField.getValue();
+        Date date = new Date();
+                try {
+                    if (dateField.getDatePicker() != null) {
+                        date = dateField.getDatePicker().getValue();
+                    }
+                } catch (Exception ex) {
+                }
 
-        WicidXML wicidxml = new WicidXML("data");
-        wicidxml.addElement("originatingdepartment", originatingDepartment);
-        wicidxml.addElement("telnumber", telNumber);
-        wicidxml.addElement("doctitle", docTitle);
-        wicidxml.addElement("group", group);
-        wicidxml.addElement("faculty", faculty);
-        wicidxml.addElement("fileupload", fileUpload);
-        String data = wicidxml.getXml();
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
+                        + "module=wicid&action=registerdocument&dept=" + dept + "&topic=" + topic
+                        + "&title=" + title + "&tel=" + tel + "&group=" + group + "&date="
+                        + fmt.format(date) + "&docid=" + document.getId();
+
+        return url;
     }
 
     public void show() {
         editDocumentDialog.show();
+    }
+
+    public void setOldOverView(OverView oldOverView) {
+        this.oldOverView = oldOverView;
     }
 
     public TextField<String> getTitleField() {
@@ -530,6 +544,53 @@ public class EditDocumentDialog {
             });
         } catch (RequestException e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot check document attachment", null);
+        }
+    }
+
+    private void getFormData() {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getFormData&formname=editDocumentDialog&docid=" + Constants.docid;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get editDocumentDialog data", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+
+                    String data = response.getText();
+
+                    String origDept = Util.getTagText(data, "originatingDepartment");
+
+                    if (origDept != null) {
+                        deptField.setValue(origDept);
+
+                        String telNumber = Util.getTagText(data, "telNumber");
+                        telField.setValue(telNumber);
+
+                        String docTitle = Util.getTagText(data, "docTitle");
+                        titleField.setValue(docTitle);
+
+                        String group = Util.getTagText(data, "group");
+                        groupField.setValue(new Group(group));
+
+                        String faculty = Util.getTagText(data, "faculty");
+                        topicField.setValue(faculty);
+                    } else {
+                        deptField.setValue(document.getDepartment());
+                        telField.setValue(document.getTelephone());
+                        titleField.setValue(document.getTitle());
+                        groupField.setValue(new Group(document.getGroup()));
+                        topicField.setValue(document.getTopic());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get editDocumentDialog data", null);
         }
     }
 }
