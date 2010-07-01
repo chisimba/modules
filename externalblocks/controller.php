@@ -3,7 +3,8 @@
  * 
  * External blocks
  * 
- * Render blocks from this site so they may be used by an external site, such as another Chisimba site, or any site capable of sending an Ajax request.
+ * Render blocks from this site so they may be used by an external site, such
+ * as another Chisimba site, or any site capable of sending an Ajax request.
  * 
  * PHP version 5
  * 
@@ -66,8 +67,21 @@ class externalblocks extends controller
     * 
     */
     public $objLanguage;
-
+    /**
+    *
+    * @var string object $objBlock The block to be provided externally
+    * @access public
+    *
+    */
     public $objBlock;
+
+    /**
+    *
+    * @var string object $objRender The class to render the block
+    * @access public
+    *
+    */
+    public $objRender;
 
     /**
     * 
@@ -76,6 +90,7 @@ class externalblocks extends controller
     * 
     */
     public function init() {
+        $this->objRender = $this->getObject ( 'renderblocks', 'externalblocks' );
         $this->objBlock = $this->getObject ( 'blocks', 'blocks' );
         $this->objLanguage = $this->getObject('language', 'language');
     }
@@ -106,16 +121,18 @@ class externalblocks extends controller
         return $this->$method();
     }
     
-    
-    /*------------- BEGIN: Set of methods to replace case selection ------------*/
-
+    /**
+     *
+     * Method to get the block requested for display on the remote
+     * server via an Ajax call. Note the use of a blank page template.
+     *
+     * @return string The populated template
+     *
+     */
     public function __getForAjax()
     {
         $this->setPageTemplate('page_template.php');
-
-        $block = "thirdtest";
-        $module = "dynamiccanvas";
-        $str = $this->objBlock->showBlock($block, $module);
+        $str = $this->objRender->getBlock();
         $this->setVarByRef( 'str', $str);
         return 'extblock_tpl.php';
     }
@@ -178,33 +195,18 @@ class externalblocks extends controller
         }
     }
     
-    /*------------- END: Set of methods to replace case selection ------------*/
-    
-
-
     /**
     *
-    * This is a method to determine if the user has to 
-    * be logged in or not. Note that this is an example, 
-    * and if you use it view will be visible to non-logged in 
-    * users. Delete it if you do not want to allow annonymous access.
-    * It overides that in the parent class
+    * Set requriresLogin to false since the  external request will not
+    * be a login session on the same server except in rare circumstances
+    * such as testing during development.
     *
-    * @return boolean TRUE|FALSE
+    * @return boolean FALSE
     *
     */
     public function requiresLogin()
     {
-        $action=$this->getParam('action','NULL');
-        switch ($action)
-        {
-            case 'view':
-                return FALSE;
-                break;
-            default:
-                return TRUE;
-                break;
-        }
-     }
+        return FALSE;
+    }
 }
 ?>

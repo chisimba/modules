@@ -3,7 +3,8 @@
  *
  * External blocks
  *
- * Render blocks from this site so they may be used by an external site, such as another Chisimba site, or any site capable of sending an Ajax request.
+ * Render blocks from this site so they may be used by an external site, such
+ * as another Chisimba site, or any site capable of sending an Ajax request.
  *
  * PHP version 5
  *
@@ -48,24 +49,62 @@ $GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* Database accesss class for Chisimba for the module externalblocks
+* Render blocks
+*
+* Render external blocks based on supplied criteria
 *
 * @author Derek Keats
 * @package externalblocks
 *
 */
-class dbexternalblocks extends dbtable
+class renderblocks extends object
 {
 
     /**
     *
-    * Intialiser for the externalblocks database connector
+    * Intialiser for the renderblocks class
+    * 
     * @access public
+    * @return VOID
     *
     */
     public function init()
     {
-        //Set the parent table here
+        $this->objBlock = $this->getObject ( 'blocks', 'blocks' );
+    }
+
+
+    /**
+     *
+     * Get a block in response to an external request
+     *
+     * @return string A rendered block with no surrounding HTML page
+     *
+     */
+    public function getBlock()
+    {
+        $blockName = $this->getParam('bn', FALSE);
+        $owningModule = $this->getParam('om', FALSE);
+        $blockType = $this->getParam('bt', NULL);
+        $titleLength = $this->getParam('tl', 20);
+        $wrapStr = $this->getParam('ws', TRUE);
+        $showToggle = $this->getParam('stg', TRUE);
+        $hidden = $this->getParam('hd', 'default');
+        $showTitle = $this->getParam('st', TRUE);
+        $cssClass = $this->getParam('cls', 'featurebox');
+        $cssId = $this->getParam('cid', '');
+        if ($blockName && $owningModule) {
+              $blockContent = $this->objBlock->showBlock(
+              $blockName, $owningModule, $blockType,
+              $titleLength, $wrapStr, $showToggle,
+              $hidden, $showTitle, $cssClass, $cssId
+            );
+        } else {
+            $blockContent = '<div class="featurebox"><div class="error">'
+            . $blockName . "||" . $owningModule
+            . '</div></div>';
+        }
+        return $blockContent;
     }
 
 }
