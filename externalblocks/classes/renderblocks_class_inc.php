@@ -94,7 +94,7 @@ class renderblocks extends object
         $cssClass = $this->getParam('cls', 'featurebox');
         $cssId = $this->getParam('cid', '');
         if ($blockName && $owningModule) {
-              $blockContent = $this->objBlock->showBlock(
+              $blockContent = $this->objBlock->showBlockExternal(
               $blockName, $owningModule, $blockType,
               $titleLength, $wrapStr, $showToggle,
               $hidden, $showTitle, $cssClass, $cssId
