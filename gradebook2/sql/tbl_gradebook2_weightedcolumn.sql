@@ -20,22 +20,22 @@ $tablename = 'tbl_gradebook2_weightedcolumn';
     'id' => array(
        'type' => 'text',
        'length' => 32,
-       'notnull' => true
+       'notnull' => TRUE
        ),
    'userid' => array(
        'type' => 'text',
        'length' => 32,
-       'notnull' => true
+       'notnull' => TRUE
        ),
    'column_name' => array(
        'type' => 'text',
        'length' => 64,
-       'notnull' => true
+       'notnull' => TRUE
        ),
    'display_name' => array(
        'type' => 'text',
        'length' => 64,
-       'notnull' => true
+       'notnull' => TRUE
        ),
    'secondary_name' => array(
        'type' => 'text',
@@ -46,8 +46,8 @@ $tablename = 'tbl_gradebook2_weightedcolumn';
        'type' => 'date',
        'notnull' => true
        ),
-   'creation_date' => array(
-       'type' => 'datetime',
+   'creationdate' => array(
+       'type' => 'timestamp',
        'notnull' => true
        ),
    'include_weighted_grade' => array(
