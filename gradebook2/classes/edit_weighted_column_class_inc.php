@@ -27,6 +27,8 @@ class edit_weighted_column extends object
         $this->loadElements();
         //Create the form
         $objForm = new form('weighted_column', $this->getFormAction());
+        //Set Display type to show label on the left
+        $objForm->setDisplayType(2);
         //----------TEXT INPUT 1--------------
         //Create a new textinput for the column name
         $objColumname = new textinput('column_name');
