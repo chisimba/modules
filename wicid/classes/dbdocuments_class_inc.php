@@ -43,7 +43,7 @@ class dbdocuments extends dbtable {
         $location = "http://" . $_SERVER['HTTP_HOST'];
         $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
     }
-    public function getdocuments($mode="default") {
+    public function getdocuments($mode="default",$userid) {
         $sql="select A.*, B.docid, B.filename from tbl_wicid_documents as A
                   left outer join tbl_wicid_fileuploads as B on A.id = B.docid
               where A.active = 'N'
@@ -52,6 +52,9 @@ class dbdocuments extends dbtable {
             $sql.=" and userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
+
+       // echo $sql;
+       // die();
 
         $rows=$this->getArray($sql);
         $docs=array();
@@ -260,6 +263,32 @@ class dbdocuments extends dbtable {
 
     function updateInfo($id, $data) {
         $this->update("id", $id, $data);
+    }
+
+    function changeCurrentUser($userid, $docid) {
+        $sql= "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
+        $this->sendEmailAlert($userid);
+        return $this->getArray($sql);
+    }
+
+    function sendEmailAlert($useridto) {
+        $toNames=$this->objUser->fullname($useridto);
+        $toEmail=$this->objUser->email($useridto);
+
+        $linkUrl = $this->uri(array('action'=>'home'));
+        $objMailer = $this->getObject('email', 'mail');
+        $body="xyz has forwarded you document titled xrf. To access it, click
+            on link below
+            ".$linkUrl->href;
+        $subject="hi";
+        $objMailer->setValue('to',array($toEmail));
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullname());
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', strip_tags($body));
+        $objMailer->setValue('AltBody', strip_tags($body));
+
+        $objMailer->send();
     }
 }
 ?>

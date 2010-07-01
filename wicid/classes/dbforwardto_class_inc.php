@@ -8,10 +8,10 @@ class dbforwardto extends dbtable {
 
     public function init() {
         parent::init($this->tablename);
-  
+
     }
 
-    public function forwardTo($link, $email,$docid){
+    public function forwardTo($link, $email,$docid) {
         $this->objUser=$this->getObject('user','security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUploadTable = $this->getObject('dbfileuploads');
@@ -24,10 +24,32 @@ class dbforwardto extends dbtable {
         );
 
         $id=$this->insert($data);
-
         echo 'success';
         return $id;
     }
+
+
+    public function  getUsers($filter) {
+        $sql="select userid,firstname,surname,emailaddress from tbl_users where
+            firstName like '%".$filter."%' or surname like '%".$filter."%'";
+        $rows=$this->getArray($sql);
+
+        $users=array();
+        foreach ($rows as $row) {
+            $users[]=array(
+                    'userid'=>$row['userid'],
+                    'firstname'=> $row['firstname'],
+                    'surname'=>$row['surname'],
+                    'emailaddress'=>$row['emailaddress']
+            );
+        }
+        echo json_encode(array("users"=>$users));
+        return $users;
+    }
+
+
+
+
 }
 
 ?>
