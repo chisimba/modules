@@ -459,10 +459,11 @@ class wicid extends controller {
         $filter=$this->getParam("filter");
         $this->objUploadTable->searchfiles($filter);
     }
-
+    
     function __getdocuments() {
         $mode=$this->getParam("mode");
-        $this->documents->getdocuments($mode);
+        $userid=$this->getParam("userid");
+        $this->documents->getdocuments($mode,$userid);
     }
 
     /**
@@ -676,11 +677,25 @@ class wicid extends controller {
     function  __getFormData() {
         $formname=$this->getParam("formname");
         $docid=$this->getParam("docid");
-   
+
         echo $this->objformdata->getFormData($formname,$docid);
 
     }
     public function __checkdocattach() {
         echo $this->objUploadTable->checkAttachment($this->getParam('docids'));
+    }
+
+    public function __searchusers(){
+       /* $firstname=$this->getParam("firstname");
+        $surname=$this->getParam("surname");
+        $this->forwardto->getEmails($firstname,$surname);*/
+        $filter=$this->getParam('filter');
+        $this->forwardto->getUsers($filter);
+    }
+
+    public function __changecurrentuser(){
+        $userid=$this->getParam('userid');
+        $docid=$this->getParam('docid');
+        $this->documents->changeCurrentUser($userid, $docid);
     }
 }
