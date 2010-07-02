@@ -11,59 +11,16 @@
             </add>
         </data>
     </update>
-     <update>
-        <table>tbl_assignment</table>
-        <version>0.341</version>
-        <description>Added assesment type - Is it a reflection based assignment? </description>
-        <data>
-            <add>
-                <name>assesment_type</name>
-                <type>text</type>
-                <notnull>1</notnull>
-                <default>0</default>
-            </add>
-        </data>
-    </update>
-    <update>
-        <table>tbl_assignment_submit</table>
-        <version>0.314</version>
-        <description>Change mark to cater for decimals - currently integer</description>
-        <data>
-            <change>
-                <mark>
-                    <definition>
-                        <type>decimal</type>
-                    </definition>
-                </mark>
-            </change>
-        </data>
-    </update>
-    <update>
-        <table>tbl_assignment</table>
-        <version>0.349</version>
-            <description>Change assesment_type to length 1</description>
-        <data>
-            <change>
-                <assesment_type>
-                    <definition>
-                        <type>text</type>
-                        <length>1</length>
-                    </definition>
-                </assesment_type>
-            </change>
-        </data>
-    </update>
 
-     <update>
+        <update>
         <table>tbl_assignment</table>
-        <version>0.362</version>
-        <description>Added email alert option </description>
+        <version>0.312</version>
+        <description>Added workgroup_id</description>
         <data>
             <add>
-                <name>email_alert</name>
+                <name>workgroupid</name>
                 <type>text</type>
-                <length>1</length>
-                <default>1</default>
+                <length>32</length>
             </add>
         </data>
     </update>

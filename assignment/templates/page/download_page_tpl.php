@@ -1,4 +1,4 @@
-<?php
+<?
 /*
 * Download page for assignment.
 * @package assignment
