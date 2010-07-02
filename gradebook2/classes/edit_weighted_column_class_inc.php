@@ -73,19 +73,29 @@ class edit_weighted_column extends object
         //Add Grading period option
         $objGradingPeriod->addOption('2008/2009', '2008/2009');
         //Create a new label for the text labels
-        $gradingPeriodLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradingperiod","gradebook2"),"grading_period");
+        $gradingPeriodLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradingperiod","gradebook2"),"grading_period"));
         $objForm->addToForm($objGradingPeriod->show() . "<br />");
         $objForm->addToForm($gradingPeriodLabel->show());
         //----------RADIO BUTTON 1--------------
         //Create a new radio button for the weighted grade
         $objWeightedGrade = new radio('weighted_grade');
         //Add Grading period options
-        $objWeightedGrade->addOption('TRUE', $this->objLanguage->languageText("mod_gradebook2_allgradecolumns","gradebook2");
-        $objWeightedGrade->addOption('FALSE', $this->objLanguage->languageText("mod_gradebook2_selectedcolumns","gradebook2");
+        $objWeightedGrade->addOption('TRUE', $this->objLanguage->languageText("mod_gradebook2_allgradecolumns","gradebook2"));
+        $objWeightedGrade->addOption('FALSE', $this->objLanguage->languageText("mod_gradebook2_selectedcolumns","gradebook2"));
         //Create a new label for the text labels
         $weightedGradeLabel = new label($this->objLanguage->languageText("mod_gradebook2_includeweighted","gradebook2"),"weighted_grade");
         $objForm->addToForm($objWeightedGrade->show() . "<br />");
         $objForm->addToForm($weightedGradeLabel->show());
+        //----------RADIO BUTTON 2--------------
+        //Create a new radio button for the running total
+        $objRunningTotal = new radio('running_total');
+        //Add running total options
+        $objRunningTotal->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
+        $objRunningTotal->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        //Create a new label for the text labels
+        $runningTotalLabel = new label($this->objLanguage->languageText("mod_gradebook2_includeweighted","gradebook2"),"weighted_grade");
+        $objForm->addToForm($objRunningTotal->show() . "<br />");
+        $objForm->addToForm($runningTotalLabel->show());
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
