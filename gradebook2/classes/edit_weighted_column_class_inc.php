@@ -96,6 +96,7 @@ class edit_weighted_column extends object
         $runningTotalLabel = new label($this->objLanguage->languageText("mod_gradebook2_includeweighted","gradebook2"),"weighted_grade");
         $objForm->addToForm($objRunningTotal->show() . "<br />");
         $objForm->addToForm($runningTotalLabel->show());
+        $objForm->addToForm($this->objLanguage->languageText("mod_gradebook2_runningtotal","gradebook2"));
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
