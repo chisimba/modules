@@ -54,8 +54,11 @@ $GLOBALS['kewl_entry_point_run'])
 * @package myblockview
 *
 */
-class dbmyblockview extends dbtable
+class mytemplates extends object
 {
+
+    public $templateDir;
+    public $objUser;
 
     /**
     *
@@ -65,8 +68,57 @@ class dbmyblockview extends dbtable
     */
     public function init()
     {
-        //Set the parent table here
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objConfig=$this->newObject('altconfig','config');
     }
 
+    /**
+     *
+     * 
+     *
+     */
+    public function getMyTemplate()
+    {
+        $templateName = $this->getParam('template', FALSE);
+        if ($templateName) {
+            if ($templateDir = $this->getPersonalTemplateDir($templateName)) {
+                $templateFile = $templateDir . 'template.txt';
+                $pageContent = file_get_contents($templateFile);
+                return $pageContent;
+            }
+        }
+        return FALSE;
+    }
+
+    /**
+     *
+     * Get the default personal template directory for the logged-in user
+     *
+     * @return string The user template directory
+     * @access private
+     *
+     */
+    private function getPersonalTemplateDir($templateName)
+    {
+        try {
+            if ($this->objUser->isLoggedIn()) {
+                // Check for cached value
+                if (isset($this->templateDir)) {
+                    $templateDir = $this->templateDir;
+                } else {
+                    $templateDir = $this->objConfig->getSiteRootPath()
+                      . 'usrfiles/users/' . $this->objUser->userId()
+                      . '/templates/' . $templateName . "/";
+                    $this->templateDir = $templateDir;
+                }
+            } else {
+                $templateDir = FALSE;
+            }
+            return $templateDir;
+        } catch(Exception $e) {
+            throw customException($e->message());
+            exit();
+        }
+    }
 }
 ?>

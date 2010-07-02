@@ -96,7 +96,7 @@ class myblockview extends controller
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
         // Create an instance of the database class
-        $this->objDbmyblockview = & $this->getObject('dbmyblockview', 'myblockview');
+        $this->objTemplate = & $this->getObject('mytemplates', 'myblockview');
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -117,10 +117,6 @@ class myblockview extends controller
     {
         //Get action from query string and set default to view
         $action=$this->getParam('action', 'view');
-        // retrieve the mode (edit/add/translate) from the querystring
-        $mode = $this->getParam("mode", null);
-        // retrieve the sort order from the querystring
-        $order = $this->getParam("order", null);
         /*
         * Convert the action into a method (alternative to 
         * using case selections)
@@ -145,74 +141,11 @@ class myblockview extends controller
     */
     private function __view()
     {
-        $str="<h1>WORKING HERE</h1>";
-        $this->setVarByRef('str', $str);
-        return "dump_tpl.php";
+        $pageContent = $this->objTemplate->getMyTemplate();
+        $this->setVarByRef('pageContent', $pageContent);
+        $this->setLayoutTemplate('myblockview_layout.php');
+        return "my_tpl.php";
     }
-    
-    /**
-    * 
-    * Method corresponding to the edit action. It sets the mode to 
-    * edit and returns the edit template.
-    * @access private
-    * 
-    */
-    private function __edit()
-    {
-        $this->setvar('mode', "edit");
-        return 'editform_tpl.php';
-    }
-
-    /**
-    * 
-    * Method corresponding to the add action. It sets the mode to 
-    * add and returns the edit content template.
-    * @access private
-    * 
-    */
-    private function __add()
-    {
-        $this->setvar('mode', 'add');
-        return 'editform_tpl.php';
-    }
-    
-   
-    /**
-    * 
-    * Method corresponding to the save action. It gets the mode from 
-    * the querystring to and saves the data then sets nextAction to be 
-    * null, which returns the {yourmodulename} module in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __save()
-    {
-        $mode = $this->getParam("mode", NULL);
-        $this->objDbmyblockview->save($mode);
-        return $this->nextAction(NULL);
-    }
-    
-    /**
-    * 
-    * Method corresponding to the delete action. It requires a 
-    * confirmation, and then delets the item, and then sets 
-    * nextAction to be null, which returns the {yourmodulename} module 
-    * in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __delete()
-    {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
-        }
-    }
-    
     
     /**
     * 
@@ -278,26 +211,15 @@ class myblockview extends controller
     /**
     *
     * This is a method to determine if the user has to 
-    * be logged in or not. Note that this is an example, 
-    * and if you use it view will be visible to non-logged in 
-    * users. Delete it if you do not want to allow annonymous access.
-    * It overides that in the parent class
+    * be logged in or not. A person's block view is assumed to
+    * be public.
     *
     * @return boolean TRUE|FALSE
     *
     */
     public function requiresLogin()
     {
-        $action=$this->getParam('action','NULL');
-        switch ($action)
-        {
-            case 'view':
-                return FALSE;
-                break;
-            default:
-                return TRUE;
-                break;
-        }
-     }
+       return FALSE;
+    }
 }
 ?>
