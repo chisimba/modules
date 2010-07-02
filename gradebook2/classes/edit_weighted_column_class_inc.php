@@ -111,13 +111,23 @@ class edit_weighted_column extends object
         //----------RADIO BUTTON 4--------------
         //Create a new radio button allowing Show/view in the grade center
         $objShowinGradeCenter = new radio('showin_grade_center');
-        //Add grade center calculation options
+        //Add show in grade center options
         $objShowinGradeCenter->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
         $objShowinGradeCenter->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
         //Create a new label for the text labels
-        $showinGradeCenterLabel = new label($this->objLanguage->languageText("mod_gradebook2_showingradecenter","gradebook2"),"grade_center_calc");
+        $showinGradeCenterLabel = new label($this->objLanguage->languageText("mod_gradebook2_showingradecenter","gradebook2"),"showin_grade_center");
         $objForm->addToForm($objShowinGradeCenter->show() . "<br />");
         $objForm->addToForm($showinGradeCenterLabel->show());
+        //----------RADIO BUTTON 5--------------
+        //Create a new radio button to show statistics in grade center
+        $objShowstatsGradeCenter = new radio('showstats_grade_center');
+        //Add show statistics in grade center options
+        $objShowstatsGradeCenter->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
+        $objShowstatsGradeCenter->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        //Create a new label for the text labels
+        $showstatsGradeCenterLabel = new label($this->objLanguage->languageText("mod_gradebook2_showstats","gradebook2"),"showstats_grade_center");
+        $objForm->addToForm($objShowstatsGradeCenter->show() . "<br />");
+        $objForm->addToForm($showstatsGradeCenterLabel->show());
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
