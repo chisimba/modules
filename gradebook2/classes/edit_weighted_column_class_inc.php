@@ -76,7 +76,16 @@ class edit_weighted_column extends object
         $gradingPeriodLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradingperiod","gradebook2"),"grading_period");
         $objForm->addToForm($objGradingPeriod->show() . "<br />");
         $objForm->addToForm($gradingPeriodLabel->show());
-        
+        //----------RADIO BUTTON 1--------------
+        //Create a new radio button for the weighted grade
+        $objWeightedGrade = new radio('weighted_grade');
+        //Add Grading period options
+        $objWeightedGrade->addOption('TRUE', $this->objLanguage->languageText("mod_gradebook2_allgradecolumns","gradebook2");
+        $objWeightedGrade->addOption('FALSE', $this->objLanguage->languageText("mod_gradebook2_selectedcolumns","gradebook2");
+        //Create a new label for the text labels
+        $weightedGradeLabel = new label($this->objLanguage->languageText("mod_gradebook2_includeweighted","gradebook2"),"weighted_grade");
+        $objForm->addToForm($objWeightedGrade->show() . "<br />");
+        $objForm->addToForm($weightedGradeLabel->show());
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
