@@ -109,7 +109,7 @@ class edit_weighted_column extends object
         $objForm->addToForm($objGradeCenterCalc->show() . "<br />");
         $objForm->addToForm($gradeCenterCalcLabel->show());
         //----------RADIO BUTTON 4--------------
-        //Create a new radio button for the grade center calculations
+        //Create a new radio button allowing Show/view in the grade center
         $objShowinGradeCenter = new radio('showin_grade_center');
         //Add grade center calculation options
         $objShowinGradeCenter->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
