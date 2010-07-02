@@ -108,6 +108,16 @@ class edit_weighted_column extends object
         $objForm->addToForm($this->objLanguage->languageText("mod_gradebook2_gradecenterdesc","gradebook2"));
         $objForm->addToForm($objGradeCenterCalc->show() . "<br />");
         $objForm->addToForm($gradeCenterCalcLabel->show());
+        //----------RADIO BUTTON 4--------------
+        //Create a new radio button for the grade center calculations
+        $objShowinGradeCenter = new radio('showin_grade_center');
+        //Add grade center calculation options
+        $objShowinGradeCenter->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
+        $objShowinGradeCenter->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        //Create a new label for the text labels
+        $showinGradeCenterLabel = new label($this->objLanguage->languageText("mod_gradebook2_showingradecenter","gradebook2"),"grade_center_calc");
+        $objForm->addToForm($objShowinGradeCenter->show() . "<br />");
+        $objForm->addToForm($showinGradeCenterLabel->show());
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
