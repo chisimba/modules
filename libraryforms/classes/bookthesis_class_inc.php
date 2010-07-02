@@ -117,7 +117,7 @@ class bookthesis extends dbTable {
         $autLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentauthor2","libraryforms"),"aut");
         $table->addCell($autLabel ->show(), '', 'center', 'left', '');
         $table->addCell($objaut ->show(), '', 'center', 'left', '');
-        $objForm->addRule('aut',$this->objLanguage->languageText("mod_author_required", 'libraryforms', 'Please enter a author. Author missing.'),'required');
+        $objForm->addRule('aut',$this->objLanguage->languageText("mod_author_required", 'libraryforms', 'Please enter a     author. Author missing.'),'required');
         $table->endRow();
 
 
@@ -125,7 +125,7 @@ class bookthesis extends dbTable {
         //Create a new textinput for the title
         
         $table->startRow();
-	$objtit = new textinput('titles');
+	$objtit = new textinput('thesis_titles');
         $titLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttitle2","libraryforms"),"tit");
         $table->addCell($titLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtit ->show(), '', 'center', 'left', '');
@@ -136,22 +136,22 @@ class bookthesis extends dbTable {
         //Create a new textinput for postal
         
         $table->startRow();
-	$objplace = new textinput('place');
+	$objplace = new textinput('thesis_place');
         $placeLabel = new label($this->objLanguage->languageText
-            ("mod_libraryforms_commentplace","libraryforms"),"place");
+            ("mod_libraryforms_commentplace","libraryforms"),"thesis_place");
         $table->addCell($placeLabel->show(), '', 'center', 'left', '');
         $table->addCell($objplace ->show(), '', 'center', 'left', '');
-        $objForm->addRule('place',$this->objLanguage->languageText("mod_place_required", 'libraryforms', 'Please enter a place. Place is missing.'),'required');
+        $objForm->addRule('thesis_place',$this->objLanguage->languageText("mod_place_required", 'libraryforms', 'Please enter a 		place. Place is missing.'),'required');
 
 
 
         //Create a new textinput for postalcode
-        $objpub = new textinput('publisher');
-        $pubLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpublisher","libraryforms"),"pub");
+        $objpub = new textinput('thesis_publisher');
+        $pubLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpublisher","libraryforms"),"thesis_publisher");
         // $table->startRow();
         $table->addCell($pubLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpub->show(), '', 'center', 'left', '');
-        $objForm->addRule('publisher',$this->objLanguage->languageText("mod_publisher_required", 'libraryforms', 'Please enter  publisher. Publisher missing.'),'required');
+        $objForm->addRule('thesis_publisher',$this->objLanguage->languageText("mod_publisher_required", 'libraryforms', 'Please enter  publisher. Publisher missing.'),'required');
 
 
 
@@ -171,7 +171,7 @@ class bookthesis extends dbTable {
         $table->startRow();
         $table->addCell($editionLabel->show(), '', 'center', 'left', '');
         $table->addCell($objedition ->show(), '', 'center', 'left', '');
-        $objForm->addRule('edition',$this->objLanguage->languageText("mod_edition_required", 'libraryforms', 'Please enter a edition. Edition is missing.'),'required');
+        $objForm->addRule('edition',$this->objLanguage->languageText("mod_edition_required", 'libraryforms', 'Please enter a 		edition. Edition is missing.'),'required');
 
 
 
@@ -180,7 +180,7 @@ class bookthesis extends dbTable {
         $isbnLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentISBN","libraryforms"),"ISBN");
         $table->addCell($isbnLabel->show(), '', 'center', 'left', '');
         $table->addCell($objisbn->show(), '', 'center', 'left', '');
-        $objForm->addRule('ISBN',$this->objLanguage->languageText("mod_ISBN_required", 'libraryforms', 'Please enter ISBN. ISBN is missing.'),'required');
+        $objForm->addRule('ISBN',$this->objLanguage->languageText("mod_ISBN_required", 'libraryforms', 'Please enter ISBN. 		ISBN is missing.'),'required');
 
 
         //create an istance for the Label
@@ -189,7 +189,7 @@ class bookthesis extends dbTable {
             ("mod_libraryforms_commentseries","libraryforms"),"series");
         $table->addCell($serieslLabel->show(), '', 'center', 'left', '');
         $table->addCell($objseries->show(), '', 'center', 'left', '');
-         $objForm->addRule('series',$this->objLanguage->languageText("mod_series_required", 'libraryforms', 'Please enter a series. Series missing.'),'required');
+         $objForm->addRule('series',$this->objLanguage->languageText("mod_series_required", 'libraryforms', 'Please enter a 		series. Series missing.'),'required');
         $table->endRow();
         
         //create an istance for the Label
@@ -261,11 +261,6 @@ class bookthesis extends dbTable {
         $table->addCell($objCheck2->show(), '', 'center', 'left', '');
         $table->addCell($bLabel->show(), '', 'center', 'left', '');
 
-	//Create a new textinput for cxourse
-	$objcourse2 = new textinput('course');
-	$course2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcourse2","libraryforms"),"course");
-	$table->addCell($course2Label->show(), '', 'center', 'left', '');
-	$table->addCell($objcourse2->show(), '', 'center', 'left', '');
 
         $objCheck3 = new checkbox('arrayList[]');
         $objCheck3->setValue($userPerm['id']);
@@ -317,19 +312,6 @@ class bookthesis extends dbTable {
         $table->addCell($staffbLabel->show(), '', 'center', 'left', '');
         $table->endRow();
 
-          //publish, visible
-	        /*if($checkbox['published']){
-	          $url = $this->uri(array('action' => 'checkboxpublish', 'id' => $form['id'], 'mode' => 'unpublish'));
- 	           $icon = $this->objUi->getCheckIcon(TRUE);
-	        }else{
-	           $url = $this->uri(array('action' => 'checkboxpublish', 'id' => $form['id'], 'mode' => 'publish'));
-	           $icon = $this->objUi->getCheckIcon(FALSE);
-	        }
- 		$objLink = new link($url);
-	        $objLink->link = $icon;
- 	        $visibleLink = $objLink->show();*/
-
-
         $label2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell","libraryforms"),"label2");
         $table->startRow();
         $table->addCell($label2Label->show(), '100%', 'NULL', 'NULL', '');
@@ -350,34 +332,35 @@ class bookthesis extends dbTable {
         $table->addCell($reqLabel->show(), '', 'center', 'left', '');
         $table->endRow();
 
-        $objprof = new textinput('prof');
-        $profLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentprof","libraryforms"),"prof");
+        $objprof = new textinput('thesis_prof');
+        $profLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentprof","libraryforms"),"thesis_prof");
         $table->startRow();
         $table->addCell($profLabel->show(), '', 'center', 'left', '');
         $table->addCell($objprof->show(), '', 'center', 'left', '');
         $table->endRow();
 
-        $objadd = new textinput('address');
-        $addLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentaddress","libraryforms"),"address");
+        $objadd = new textinput('thesis_address');
+        $addLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentaddress","libraryforms"),"thesis_address");
         $table->startRow();
         $table->addCell($addLabel->show(), '', 'center', 'left', '');
         $table->addCell($objadd->show(), '', 'center', 'left', '');
         $table->endRow();
 
-        $objcell = new textinput('cell');
-        $cellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcell","libraryforms"),"cell");
+        $objcell = new textinput('thesis_cell');
+        $cellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcell","libraryforms"),"thesis_cell");
         $table->startRow();
         $table->addCell($cellLabel->show(), '', 'center', 'left', '');
         $table->addCell($objcell->show(), '', 'center', 'left', '');
+	$objForm->addRule('thesis_cell','cell Must contain valid numbers','numeric');
 
-        $objtel = new textinput('tel');
-        $telLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttele","libraryforms"),"cell");
+        $objtel = new textinput('thesis_tel');
+        $telLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttele","libraryforms"),"thesis_tel");
         $table->addCell($telLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtel->show(), '', 'center', 'left', '');
 
 
-        $objw = new textinput('w');
-        $wLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentW","libraryforms"),"w");
+        $objw = new textinput('thesis_w');
+        $wLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentW","libraryforms"),"thesis_w");
 
         $table->addCell($wLabel->show(), '', 'center', 'left', '');
         $table->addCell($objw->show(), '', 'center', 'left', '');
@@ -385,11 +368,11 @@ class bookthesis extends dbTable {
 
 
         //Create a new textinput for email
-        $objemail = new textinput('email-thesis');
+        $objemail = new textinput('email_thesis');
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"emailaddress");
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-         $objForm->addRule('email-thesis', 'Not a valid Email', 'email');
+        $objForm->addRule('email_thesis', 'Not a valid Email-Address', 'email');
         $table->endRow();
 
 
@@ -402,18 +385,20 @@ class bookthesis extends dbTable {
 
 
         //Create a new textinput for student no
-        $objstud = new textinput('studentno');
+        $objstud = new textinput('thesis_studentno');
         $studLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentno2","libraryforms"),"studentno");
         $table->addCell($studLabel->show(), '', 'center', 'left', '');
         $table->addCell($objstud->show(), '', 'center', 'left', '');
+        $objForm->addRule(array('name'=>'thesis_studentno','length'=>15), 'Your surname is too long',
+	'maxlength');
 
 
         //Create a new textinput for course
-        $objcourse2 = new textinput('course');
+        $objcourse2 = new textinput('thesis_course');
         $course2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcourse2","libraryforms"),"course");
         $table->addCell($course2Label->show(), '', 'center', 'left', '');
         $table->addCell($objcourse2->show(), '', 'center', 'left', '');
-
+         $objForm->addRule('thesis_course',$this->objLanguage->languageText("mod_thesiscourse_required", 'libraryforms', 'Please course. course missing.'),'required');
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
@@ -446,14 +431,14 @@ class bookthesis extends dbTable {
      *
      * @param $id is the id taken from the tbl_phonebook
      */
-    public function listSingle($id2) {
+    public function listSingle($id) {
         $onerec = $this->getRow('id', $id);
         return $onerec;
     }
 
 
     function insertRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname,$baddress, $bbcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
-        $id2 = $this->insert(array(
+        $id = $this->insert(array(
             //'userid' => $userid,
             'bprint' => $bprint,
             'bauthor' => $bauthor,
@@ -479,12 +464,12 @@ class bookthesis extends dbTable {
             'bstudentno' => $bstudentno,
             'bcourse' => $bcourse,t
         ));
-        return $id2;
+        return $id;
     }
 
 
     function UpdateRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname, $baddress, $bbcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
-        $id3 = $this->update(array(
+        $id = $this->update(array(
             //'userid' => $userid,
             'bprint' => $bprint,
             'bauthor' => $bauthor,
@@ -511,7 +496,7 @@ class bookthesis extends dbTable {
             'bcourse' => $bcourse,
 
         ));
-        return $id3;
+        return $id;
     }
 
     private function getFormAction() {

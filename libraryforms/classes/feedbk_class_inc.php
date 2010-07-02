@@ -86,9 +86,6 @@ $strjs = '<script type="text/javascript">
         $this->appendArrayVar('headerParams', $strjs);
     }
 
- 
-
-
     private function buildForm() {
     //Load the required form elements in the form
         $this->loadElements();
@@ -101,14 +98,14 @@ $strjs = '<script type="text/javascript">
 
         $titlefeedbkLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttitlefeedback","libraryforms"),"Channel your feedback to inform our future planning");
         $objForm->addToForm($titlefeedbkLabel->show()."<br />");
-        // $objForm->addToForm($objTitlefeedbk->show() . "<br />");
+        
 
         //Create a new textinput for the name
-        $objname = new textinput('studentname');
+        $objname = new textinput('feedback_name');
         $nameLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentnamefeedbk","libraryforms"),"name");
         $objForm->addToForm($nameLabel->show()."<br />");
         $objForm->addToForm($objname->show() . "<br />");
-        $objForm->addRule('studentname',$this->objLanguage->languageText("mod_name_unrequired", 'libraryforms', 'Please enter a name .Name is Missing .'),'required');
+        $objForm->addRule('student_name',$this->objLanguage->languageText("mod_librarynames_required", 'libraryforms', 'Please enter a name .Name is Missing .'),'required');
 
 
         //Create a new textinput for the email
@@ -150,20 +147,17 @@ $objCaptcha = $this->getObject('captcha', 'utilities');
 		$strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="feedbackcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:feedbackredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
                
 		$objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
-		$objForm->addRule('feedbackrequest_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'),'required');
+		$objForm->addRule('request_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'),'required');
 		$objForm->addToForm($objButton->show());
 
         return $objForm->show();
 
     }
 
-
-
-
-    function insertRecord($name,$emaill,$msg) {
+    function insertmsgRecord($name,$emaill,$msg) {
         $id = $this->insert(array(
             'name' => $name,
-            'email' => $emaill,
+            'emaill' => $emaill,
             'msg' => $msg));
         return $id;
     }

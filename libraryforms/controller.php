@@ -42,7 +42,7 @@ class libraryforms extends controller {
     }//end of function
 
     public function dispatch($action) {
-    //var_dump($action);die;
+   // var_dump($action);die;
         if($action=='add') {
             $this->saveRecord();
         }
@@ -84,7 +84,11 @@ class libraryforms extends controller {
         else
         // add info into database
   $pid = $this->dbAddDistances->insertRecord($surname, $initials, $title, $studentno, $postaladdress, $physicaladdress, $postalcode, $postalcode2, $telnoh, $telnow, $cell, $fax,$emailaddress, $course, $department, $supervisor);
-   
+   // send email notification
+
+$this->sendEmailNotification($title="email notification for distance user",$subject="distance user email",$message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.$cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
+
+
         if($pid!=null) {
             var_dump('Saved Successfully');
             die;
@@ -135,9 +139,13 @@ class libraryforms extends controller {
         }
         else {
         //insert into DB
-  $id2= $this->dbAddBookthesis->insertBookthesisRecord($bprint,$bauthor,$btitle,$bplace,$bpublisher,$bdate,$bedition,$bisbn,$bseries,$bcopy,$btitlepages,$bpages,$bthesis,$bname,$baddress,$bcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum,$bstudentno, $bcourse);
-           
-
+  $id= $this->dbAddBookthesis->insertBookthesisRecord($bprint,$bauthor,$btitle,$bplace,$bpublisher,$bdate,$bedition,$bisbn,$bseries,$bcopy,$btitlepages,$bpages,$bthesis,$bname,$baddress,$bcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum,$bstudentno, $bcourse);
+ // after inserting into db send email notification
+$this->sendEmailNotification($title="email notification for thesis books",$subject="book thesis mail",$message= $bprint.' '.
+	$bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.$bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '.
+	$btitlepages.' '.$bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.$btel.' '.$btelw.' '.
+	$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse);
+	
         if($pid2!=null) {
             var_dump('Saved Successfully');
             die;
@@ -184,9 +192,11 @@ class libraryforms extends controller {
 
         else
         //insert the data into DB
-            $id3=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof,$address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course);
+            $id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof,$address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course);
 
-        if($pid3!=null) {
+$this->sendEmailNotification($title="email for periodical books",$subject="periodical thesis mail",$message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.$author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.$tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
+
+             if($pid3!=null) {
             var_dump('Saved Successfully');
             die;
         }
@@ -211,30 +221,27 @@ class libraryforms extends controller {
             $msg = 'badcaptcha';
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            //return 'form_tpl.php';
             return 'editadd_tpl.php';
         }
         else
         //insert the data into DB
-            $id4=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
-
- //send email notification
-     // Specify who the mail is coming from.
-        $this->objMail->from = $emaill;
-        $this->objMail->fromName = $name;
-         // Give the mail a subject and a body.
-        $this->objMail->subject = 'Feedback Message';
-        $this->objMail->body = $msg;
-
-        // Send to a single address.
-        $this->objMail->to = 'library@uwc.ac.za';
-
-        // Send to multiple addresses.
-        $this->objMail->to = array('library@uwc.ac.za', 'arieluwc@uwc.ac.za','shiluvam@gmail.com');
-
-        // Send the mail.
-        $this->objMail->send();
-    }
+            $id=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
+	    $this->sendEmailNotification($title="feeb back email",$subject="channel your feed back",$message=$msg);
 }
+     function sendEmailNotification($title,$subject,$message){
+        $objMail = $this->getObject('email', 'mail');
+        $list=array("library@uwc.ac.za","arieluwc@uwc.ac.za","pmalinga@uwc.ac.za");
+     	$objMail->setValue('to',$list);
+        $objMail->setValue('from', "noreply@uwc.ac.za");
+        $objMail->setValue('fromName', "");
+        $objMail->setValue('subject', $title);
+        $objMail->setValue('body', $message);
+        $objMail->setValue('AltBody', $message);
+        $objMail->send();
+
+    }
+       
+    }
+
 //}
 

@@ -221,7 +221,7 @@ class editform extends dbTable {
         $cellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcell","libraryforms"),"cell");
         $table->addCell($cellLabel->show(), '', 'center', 'left', '');
         $table->addCell($objcell->show(), '', 'center', 'left', '');
-      // $objForm->addRule('monitor','Must contain letters of the alphabet and valid numbers','alphanumeric');
+       $objForm->addRule('cell','Cell Must contain valid numbers','numeric');
 
 
        
@@ -293,7 +293,7 @@ class editform extends dbTable {
         $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="editformcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:editformredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
 
         $objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
-        $objForm->addRule('editformrequest_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'),'required');
+        $objForm->addRule('editformrequest_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'security', 'Captcha cant be empty.Captcha is missing.'),'required');
         $objForm->addToForm($objButton->show());
 
 
