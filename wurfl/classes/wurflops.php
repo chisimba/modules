@@ -59,12 +59,36 @@ $GLOBALS['kewl_entry_point_run']) {
 class wurflops extends object
 {
     /**
+     * The WURFL device object.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objDevice;
+
+    /**
      * Initialises object properties.
      *
      * @access public
      */
     public function init()
     {
+        include_once $this->getResourcePath('WURFL/Application.php', 'wurfl');
+
+        $config = new WURFL_Configuration_InMemoryConfig();
+        $config->wurflFile($this->getResourcePath('wurfl-2.0.18.xml'));
+        $config->wurflPatch($this->getResourcePath('web_browsers_patch.xml'));
+        $config->persistence("memcache", array("host"=> "127.0.0.1", "port"=>"11211"));
+
+        $factory = new WURFL_WURFLManagerFactory($config);
+        $manager = $factory->create();
+
+        $this->objDevice = $manager->getDeviceForHttpRequest();
+    }
+
+    public function __get($name)
+    {
+        return $this->objDevice->getCapability($name);
     }
 }
 
