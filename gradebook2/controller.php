@@ -45,7 +45,27 @@ class gradebook2 extends controller {
         $method = $this->__getMethod($action);
         //Return the template determined by the method resulting from action
         return $this->$method();
-
+    }
+    private function __validAction(& $action)
+    {
+        if (method_exists($this, "__".$action)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    function __getMethod(& $action)
+    {
+        if ($this->__validAction($action)) {
+            return "__" . $action;
+        } else {
+            return "__actionError";
+        }
+    }
+    private function __actionError()
+    {
+        $this->setVar('str', "<h3>". $this->objLanguage->languageText("phrase_unrecognizedaction").": " . $action . "</h3>");
+        return 'dump_tpl.php';
     }
 }
 ?>
