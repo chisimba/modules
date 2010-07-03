@@ -83,12 +83,30 @@ class wurflops extends object
         $factory = new WURFL_WURFLManagerFactory($config);
         $manager = $factory->create();
 
-        $this->objDevice = $manager->getDeviceForHttpRequest();
+        $this->objDevice = $manager->getDeviceForHttpRequest($_SERVER);
     }
 
+    /**
+     * Returns the value of a single capability according to the name provided.
+     *
+     * @access public
+     * @param  string $name The name of the capability.
+     * @return string The value of the capability.
+     */
     public function __get($name)
     {
         return $this->objDevice->getCapability($name);
+    }
+
+    /**
+     * Returns an object of all the capabilities of the device.
+     *
+     * @access public
+     * @return object Instance of stdClass with all the capabilities set as properties.
+     */
+    public function getAllCapabilities()
+    {
+        return (object) $this->objDevice->getAllCapabilities();
     }
 }
 
