@@ -67,5 +67,14 @@ class gradebook2 extends controller {
         $this->setVar('str', "<h3>". $this->objLanguage->languageText("phrase_unrecognizedaction").": " . $action . "</h3>");
         return 'dump_tpl.php';
     }
+    /**
+     * Method to add a weighted column
+     */
+    private function __addcolumn()
+    {
+        $this->setVar('mode', 'add');
+        
+        return 'editaddweightedcolumn_tpl.php';
+    }
 }
 ?>
