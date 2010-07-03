@@ -75,7 +75,7 @@ class edit_weighted_column extends object
         //Add Grading period option
         $objGradingPeriod->addOption('2008/2009', '2008/2009');
         //Create a new label for the text labels
-        $gradingPeriodLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradingperiod","gradebook2"),"grading_period"));
+        $gradingPeriodLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradingperiod","gradebook2"),"grading_period");
         $objForm->addToForm($objGradingPeriod->show() . "<br />");
         $objForm->addToForm($gradingPeriodLabel->show());
         //----------RADIO BUTTON 1--------------
