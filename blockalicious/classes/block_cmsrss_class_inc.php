@@ -19,7 +19,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 class block_cmsrss extends object {
 	
-	public $title;
+    public $title;
     public $objLanguage;
     public $messageForBlock;
     
@@ -94,10 +94,8 @@ class block_cmsrss extends object {
                
                 
         $this->messageForBlock = $leftCol;
- 
- 
-        
-    	
+        $this->expose=TRUE;
+   	
     }
     /** Method to output a block with all the type of rss feeds
     */

@@ -37,6 +37,7 @@ class block_cmslatest extends object
             $titlesArr=array();
         }
     	$this->messageForBlock = "";
+        $this->expose = TRUE;
     	if (count($titlesArr, 1) == 0 ) {
     	    $this->messageForBlock = $this->objLanguage->languageText("mod_blockalicious_cmslatest_norecords", "blockalicious");
     	} else {
@@ -51,7 +52,7 @@ class block_cmslatest extends object
     	}
             //Set the title - 
             $this->title = $this->objLanguage->languageText("mod_blockalicious_cmslatest_title", "blockalicious");
-        }
+    }
         
     /**
     * Method to output a block with information on how help works

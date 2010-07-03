@@ -92,6 +92,7 @@ class block_lastten extends object
         $this->blogPosts = &$this->getObject('blogposts', 'blog');
         $this->display = $this->blogPosts->showLastTenPosts(5);
         $this->title = $this->objLanguage->languageText("mod_blog_block_latestblogs", "blog");
+        $this->expose=TRUE;
     }
     /**
      * Standard block show method.

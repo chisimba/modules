@@ -93,6 +93,7 @@ class block_lastsix extends object
         $this->objUser = $this->getObject('user', 'security');
         $this->title = $this->objLanguage->languageText("mod_blog_block_intheblog", "blog");
         $this->objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+        $this->expose=TRUE;
     }
     /**
      * Standard block show method.

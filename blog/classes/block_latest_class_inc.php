@@ -101,6 +101,7 @@ class block_latest extends object
         $this->quickBlog = $this->blogOps->quickPost($userid, FALSE);
         $this->objLastBlog = NULL;
         $this->title = $this->objLanguage->languageText("mod_blog_block_quickpost", "blog");
+        $this->expose=TRUE;
     }
     /**
      * Standard block show method.

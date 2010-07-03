@@ -100,6 +100,7 @@ class block_randblog extends object
         $this->objSysConfig = $this->getObject( 'dbsysconfig', 'sysconfig' );
         $this->objblogPosts = $this->getObject('blogposts');
         $this->title = $this->objLanguage->languageText("mod_blog_block_latestblogs", "blog");
+        $this->expose=TRUE;
     }
     /**
      * Standard block show method.
