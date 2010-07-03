@@ -3,6 +3,8 @@ class edit_weighted_column extends object
 {
     public function init()
     {
+        // language object.
+        $this->objLanguage = $this->getObject('language', 'language');
     }
     private function loadElements()
     {
@@ -142,9 +144,17 @@ class edit_weighted_column extends object
     }
     private function getFormAction()
     {
+        $action = $this->getParam("action", "addcolumn");
+        if ($action == "editcolumn") {
+            $formAction = $this->uri(array("action" => "updatecolumn"), "gradebook2");
+        } else {
+            $formAction = $this->uri(array("action" => "addcolumn"), "gradebook2");
+        }
+        return $formAction;
     }
     public function show()
     {
+        return $this->buildForm();
     }
 }
 ?>
