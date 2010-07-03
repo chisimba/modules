@@ -41,6 +41,11 @@ class gradebook2 extends controller {
     public function dispatch($action) {
         //get the parameter from the querystring
         $action = $this->getParam("action", NULL);
+        //Convert the action into a method 
+        $method = $this->__getMethod($action);
+        //Return the template determined by the method resulting from action
+        return $this->$method();
+
     }
 }
 ?>
