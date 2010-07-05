@@ -41,6 +41,14 @@ class edit_weighted_column extends object
         $objTable->width = '100%';
         $objTable->attributes = " align='center' border='0'";
         $objTable->cellspacing = '5';
+        //Add Heading: Column Information
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 3;
+        $objHeading->str = "(1) ".$this->objLanguage->languageText("mod_gradebook2_columninfo","gradebook2");
+        //Create new table row to contain heading: Column Information
+        $objTable->startRow();
+        $objTable->addCell($objHeading->show(), Null, 'top', 'left', '', 'colspan="2"');
+        $objTable->endRow();
         //----------TEXT INPUT 1--------------
         //Create a new textinput for the column name
         $objColumname = new textinput('column_name');
@@ -95,6 +103,14 @@ class edit_weighted_column extends object
         $objTable->addCell($secondarydisplayLabel->show(), 180, 'top', 'left');
         $objTable->addCell($objSecondaryDisplay->show(), Null, 'top', 'left');
         $objTable->endRow();
+        //Add Heading: Dates
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 3;
+        $objHeading->str = "(2) ".$this->objLanguage->languageText("mod_gradebook2_wordates","gradebook2");
+        //Create new table row to contain heading: Dates
+        $objTable->startRow();
+        $objTable->addCell($objHeading->show(), Null, 'top', 'left', '', 'colspan="2"');
+        $objTable->endRow();
         //----------DROP DOWN 3--------------
         //Create a new dropdown for the grading period
         $objGradingPeriod = new dropdown('grading_period');
@@ -106,6 +122,14 @@ class edit_weighted_column extends object
         $objTable->startRow();
         $objTable->addCell($gradingPeriodLabel->show(), 180, 'top', 'left');
         $objTable->addCell($objGradingPeriod->show(), Null, 'top', 'left');
+        $objTable->endRow();
+        //Add Heading: Select Columns
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 3;
+        $objHeading->str = "(3) ".$this->objLanguage->languageText("mod_gradebook2_selectcolumns","gradebook2");
+        //Create new table row to contain heading: Select Columns
+        $objTable->startRow();
+        $objTable->addCell($objHeading->show(), Null, 'top', 'left', '', 'colspan="2"');
         $objTable->endRow();
         //----------RADIO BUTTON 1--------------
         //Create a new radio button for the weighted grade
@@ -131,11 +155,19 @@ class edit_weighted_column extends object
         //Create new table row to contain the runningtotal lable and textinput
         $objTable->startRow();
         $objTable->addCell($runningTotalLabel->show(), 180, 'top', 'left');
-        $objTable->addCell($objRunningTotal->show().'<br />* '.$this->objLanguage->languageText("mod_gradebook2_runningtotal","gradebook2"), Null, 'top', 'left');
+        $objTable->addCell($objRunningTotal->show().'<br /> '.$this->objLanguage->languageText("mod_gradebook2_runningtotal","gradebook2"), Null, 'top', 'left');
         $objTable->endRow();
         //Create new table row to contain the gradecenter description
         $objTable->startRow();
         $objTable->addCell($this->objLanguage->languageText("mod_gradebook2_gradecenterdesc","gradebook2"), Null, 'top', 'left', '', 'colspan="2"');
+        $objTable->endRow();
+        //Add Heading: Options
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 3;
+        $objHeading->str = "(4) ".$this->objLanguage->languageText("mod_gradebook2_wordoptions","gradebook2");
+        //Create new table row to contain heading: Select Columns
+        $objTable->startRow();
+        $objTable->addCell($objHeading->show(), Null, 'top', 'left', '', 'colspan="2"');
         $objTable->endRow();
         //Create new table to contain grade center options
         $objSubTable = new htmltable();
@@ -186,6 +218,14 @@ class edit_weighted_column extends object
         $objTable->startRow();
         $objTable->addCell($objSubTable->show(), Null, 'top', 'right', '', 'colspan="2"');
         $objTable->endRow();
+        //Add Heading: Submit
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 3;
+        $objHeading->str = "(5) ".$this->objLanguage->languageText("mod_gradebook2_submit","gradebook2");
+        //Create new table row to contain heading: Select Columns
+        $objTable->startRow();
+        $objTable->addCell($objHeading->show(), Null, 'top', 'left', '', 'colspan="2"');
+        $objTable->endRow();
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
@@ -209,7 +249,7 @@ class edit_weighted_column extends object
         $objTable->startRow();
         $objTable->addCell($this->objLanguage->languageText("mod_gradebook2_submitorcancel", "gradebook2"), Null, 'top', 'left', '', 'colspan="2"');
         $objTable->endRow();
-        //Create new table row to contain the submit button
+        //Create new table row to contain the submit and cancel buttons
         $objTable->startRow();
         $objTable->addCell($objCancel->show()."&nbsp;&nbsp;&nbsp;".$objButton->showSexy(), Null, 'top', 'right', '', 'colspan="2"');
         $objTable->endRow();
