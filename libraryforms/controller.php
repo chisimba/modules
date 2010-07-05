@@ -42,7 +42,7 @@ class libraryforms extends controller {
     }//end of function
 
     public function dispatch($action) {
-   // var_dump($action);die;
+//var_dump($action);die;
         if($action=='add') {
             $this->saveRecord();
         }
@@ -53,9 +53,10 @@ class libraryforms extends controller {
 
     function saveRecord() {
         if (!$_POST) { // Check that user has submitted a page
-            return $this->nextAction(NULL);
+           return $this->nextAction(NULL);
+
         }
-        $captcha = $this->getParam('request_captcha');
+        
         $surname = $this->getParam('surname');
         $initials = $this->getParam('initials');
         $title= $this->getParam('title');
@@ -72,6 +73,7 @@ class libraryforms extends controller {
         $course= $this->getParam('course');
         $department = $this->getParam('department');
         $supervisor = $this->getParam('supervisor');
+	$captcha = $this->getParam('editformrequest_captcha');
 
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
@@ -102,10 +104,11 @@ $this->sendEmailNotification($title="email notification for distance user",$subj
 
     function saveBookthesisRecord() {
         if (!$_POST) { // Check that user has submitted a page
+	
             return $this->nextAction(NULL);
         }
         //  getting parametters to save into database
-        $captcha = $this->getParam('request_captcha');
+       
         $bprint = $this->getParam('print');
         $bauthor= $this->getParam('author');
         $btitle = $this->getParam('title');
@@ -129,6 +132,7 @@ $this->sendEmailNotification($title="email notification for distance user",$subj
         $bentitynum = $this->getParam('entitynum');
         $bstudentno = $this->getParam('studentno');
         $bcourse = $this->getParam('course');
+ 	$captcha = $this->getParam('thesis_captcha');
 
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
@@ -140,13 +144,14 @@ $this->sendEmailNotification($title="email notification for distance user",$subj
         else {
         //insert into DB
   $id= $this->dbAddBookthesis->insertBookthesisRecord($bprint,$bauthor,$btitle,$bplace,$bpublisher,$bdate,$bedition,$bisbn,$bseries,$bcopy,$btitlepages,$bpages,$bthesis,$bname,$baddress,$bcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum,$bstudentno, $bcourse);
+  
  // after inserting into db send email notification
 $this->sendEmailNotification($title="email notification for thesis books",$subject="book thesis mail",$message= $bprint.' '.
 	$bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.$bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '.
 	$btitlepages.' '.$bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.$btel.' '.$btelw.' '.
 	$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse);
 	
-        if($pid2!=null) {
+        if($pid!=null) {
             var_dump('Saved Successfully');
             die;
         }
@@ -160,10 +165,11 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
 
     function saveperiodicalRecord() {
         if (!$_POST) { // Check that user has submitted a page
+        
             return $this->nextAction(NULL);
         }
         //for the book periodicalform
-        $captcha = $this->getParam('request_captcha');
+      
         $titleperiodical = $this->getParam('print');
         $volume= $this->getParam('author');
         $part= $this->getParam('title');
@@ -181,6 +187,7 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
         $bentitynum = $this->getParam('entitynum');
         $bstudentno = $this->getParam('studentno');
         $bcourse = $this->getParam('course');
+        $captcha = $this->getParam('periodical_captcha');
 
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
@@ -196,7 +203,7 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
 
 $this->sendEmailNotification($title="email for periodical books",$subject="periodical thesis mail",$message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.$author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.$tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
 
-             if($pid3!=null) {
+             if($pid!=null) {
             var_dump('Saved Successfully');
             die;
         }
@@ -212,10 +219,11 @@ $this->sendEmailNotification($title="email for periodical books",$subject="perio
             return $this->nextAction(NULL);
         }
         //getting pararameters for the feed back form
-        $captcha = $this->getParam('request_captcha');
+       
         $name = $this->getParam('name');
         $emaill = $this->getParam('emaill');
-        $msg = $this->getParam('mag');
+        $msg = $this->getParam('msg');
+         $captcha = $this->getParam('feedback_captcha');
 
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
             $msg = 'badcaptcha';

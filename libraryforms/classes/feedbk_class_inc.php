@@ -91,7 +91,7 @@ $strjs = '<script type="text/javascript">
         $this->loadElements();
 
         //Create the form
-        $objForm = new form('comments', $this->getFormAction());
+        $objForm = new form('feedback', $this->getFormAction());
 
         //----------TEXT INPUT and Labels--------------
         //Create a new textinput for the title
@@ -105,15 +105,15 @@ $strjs = '<script type="text/javascript">
         $nameLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentnamefeedbk","libraryforms"),"name");
         $objForm->addToForm($nameLabel->show()."<br />");
         $objForm->addToForm($objname->show() . "<br />");
-        $objForm->addRule('student_name',$this->objLanguage->languageText("mod_librarynames_required", 'libraryforms', 'Please enter a name .Name is Missing .'),'required');
+        $objForm->addRule('feedback_name',$this->objLanguage->languageText("mod_librarynames_required", "libraryforms", 'Please enter a name .Name is Missing .'),'required');
 
 
         //Create a new textinput for the email
-        $objemail = new textinput('email_feedbk');
+        $objemail = new textinput('email');
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail","libraryforms"),"email");
         $objForm->addToForm($emailLabel->show()."<br />");
         $objForm->addToForm($objemail->show() . "<br />");
-        $objForm->addRule('email_feedbk', 'Not a valid Email', 'email');
+        $objForm->addRule('email', 'Not a valid Email', 'email');
 
         //----------TEXTAREA--------------
         //Create a new textarea for the comment message
@@ -122,6 +122,18 @@ $strjs = '<script type="text/javascript">
             ("mod_libraryforms_commentmsgbox","libraryforms"),"message");
         $objForm->addToForm($msgLabel->show()."<br/>");
         $objForm->addToForm($objmsg->show() . "<br />");
+
+
+
+		$objCaptcha = $this->getObject('captcha', 'utilities');
+		$captcha = new textinput('feedback_captcha');
+		$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_feedback_captcha');
+		
+		$strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="feedbackcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:feedbackredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
+               
+		$objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
+		$objForm->addRule('feedback_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'),'required');
+
 
 
         //----------SUBMIT BUTTON--------------
@@ -133,22 +145,7 @@ $strjs = '<script type="text/javascript">
         // with the word save
 
   $objButton->setValue(' '.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
- //$objForm->addToForm($objButton->show());
-
-        $objButton->setValue(' '.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
-        //$objForm->addToForm($objButton->show());
-
-
-
-$objCaptcha = $this->getObject('captcha', 'utilities');
-		$captcha = new textinput('request_captcha');
-		$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_request_captcha');
-		
-		$strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="feedbackcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:feedbackredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
-               
-		$objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
-		$objForm->addRule('request_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'),'required');
-		$objForm->addToForm($objButton->show());
+   $objForm->addToForm($objButton->show());
 
         return $objForm->show();
 

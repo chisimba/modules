@@ -83,7 +83,7 @@ class ILLperiodical extends dbTable {
         $this->loadElements();
         $table = $this->newObject('htmltable', 'htmlelements');
         //Create the form
-        $objForm = new form('comments', $this->getFormAction());
+        $objForm = new form('periodical', $this->getFormAction());
 
         //----------TEXT INPUT and Labels--------------
 
@@ -110,48 +110,48 @@ class ILLperiodical extends dbTable {
 
 
         //Create a new textinput for postal
-        $objvolume = new textinput('volume');
+        $objvolume = new textinput('period_volume');
         $volumeLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commentvolume","libraryforms"),"volume");
         $table->startRow();
         $table->addCell($volumeLabel->show(), '', 'center', 'left', '');
         $table->addCell($objvolume->show(), '', 'center', 'left', '');
-        $objForm->addRule('volume',$this->objLanguage->languageText("mod_volume2_required", 'libraryforms', 'Please enter a volume.Volume is missing.'),'required');
+        $objForm->addRule('period_volume',$this->objLanguage->languageText("mod_volume2_required", "libraryforms", 'Please enter a volume.Volume is missing.'),'required');
 
         //Create a new textinput for part
-        $objpart = new textinput('part');
+        $objpart = new textinput('period_part');
         $partLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpart","libraryforms"),"part");
         $table->addCell($partLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpart->show(), '', 'center', 'left', '');
-        $objForm->addRule('part',$this->objLanguage->languageText("mod_part2_required", 'libraryforms', 'Please enter a part.part is missing.'),'required');
+        $objForm->addRule('period_part',$this->objLanguage->languageText("mod_part2_required", "libraryforms", 'Please enter a part.part is missing.'),'required');
 
 
         //Create a new textinput for year
-        $objyear = new textinput('year');
+        $objyear = new textinput('period_year');
         $yearlLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentyear","libraryforms"),"year");
         $table->addCell($yearlLabel->show(), '', 'center', 'left', '');
         $table->addCell($objyear->show(), '', 'center', 'left', '');
-        $objForm->addRule('year',$this->objLanguage->languageText("mod_year2_required", 'libraryforms', 'Please enter a year.year is missing.'),'required');
+        $objForm->addRule('period_year',$this->objLanguage->languageText("mod_year2_required", "libraryforms", 'Please enter a year.year is missing.'),'required');
 
 
         //Create a new textinput for pages
-        $objpages = new textinput('pages');
+        $objpages = new textinput('period_pages');
         $pageslLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpages","libraryforms"),"pages");
         $table->addCell($pageslLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpages->show(), '', 'center', 'left', '');
-        $objForm->addRule('pages',$this->objLanguage->languageText("mod_pages_required", 'libraryforms', 'Please enter a page.page is missing.'),'required');
+        $objForm->addRule('period_pages',$this->objLanguage->languageText("mod_pages_required", "libraryforms", 'Please enter a page.page is missing.'),'required');
         $table->endRow();
 
 
 
         //Create a new textinput for author
-        $objauthor = new textinput('author');
+        $objauthor = new textinput('period_author');
         $authorLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentauthor","libraryforms"),"author");
         $table->startRow();
         $table->addCell($authorLabel->show(), '', 'center', 'left', '');
         $table->addCell($objauthor->show(), '', 'center', 'left', '');
         $table->endRow();
-        $objForm->addRule('author',$this->objLanguage->languageText("mod_author_required", 'libraryforms', 'Please enter an author. author is missing.'),'required');
+        $objForm->addRule('period_author',$this->objLanguage->languageText("mod_author_required", "libraryforms", 'Please enter an author. author is missing.'),'required');
 
 
         //create an istance for the Label
@@ -168,7 +168,7 @@ class ILLperiodical extends dbTable {
         $localLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
         $table->addCell($objCheck->show(), '', 'center', 'left', '');
         $table->addCell($localLabel->show(), '', 'center', 'left', '');
-        $objForm->addRule('id',$this->objLanguage->languageText("mod_part_required", 'libraryforms', 'Please select the check box. checkbox not ticked.'),'required');
+        $objForm->addRule('id',$this->objLanguage->languageText("mod_part_required", "libraryforms", 'Please select the check box. checkbox not ticked.'),'required');
 
 
 
@@ -280,7 +280,7 @@ class ILLperiodical extends dbTable {
 
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule('email_periodical', 'Not a valid Email', 'email');
+        $objForm->addRule('email_periodical', 'Not a valid Email', 'email_periodical');
 
         $table->endRow();
 
@@ -294,7 +294,7 @@ class ILLperiodical extends dbTable {
 
         //Create a new textinput for email
         $objstud = new textinput('periodical_student');
-        $studLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentno","libraryforms"),"studentno");
+        $studLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentno","libraryforms"),"periodical_student");
         $table->addCell($studLabel->show(), '', 'center', 'left', '');
         $table->addCell($objstud->show(), '', 'center', 'left', '');
         $objForm->addRule(array('name'=>'periodical_student','length'=>10), 'Your Studentno is too long','maxlength');
@@ -306,7 +306,7 @@ class ILLperiodical extends dbTable {
         $courseLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcourse2","libraryforms"),"periodical_course");
         $table->addCell($courseLabel->show(), '', 'center', 'left', '');
         $table->addCell($objcourse->show(), '', 'center', 'left', '');
-        $objForm->addRule('periodical_course',$this->objLanguage->languageText("mod_course_required", 'libraryforms', 'Please enter an course. course is missing.'),'required');
+        $objForm->addRule('periodical_course',$this->objLanguage->languageText("mod_course_required", "libraryforms", 'Please enter an course. course is missing.'),'required');
         $table->endRow();
 
         //----------SUBMIT BUTTON--------------
@@ -322,13 +322,13 @@ class ILLperiodical extends dbTable {
 	        // $objForm->addToForm($objButton->show());
 
 		$objCaptcha = $this->getObject('captcha', 'utilities');
- 	        $captcha = new textinput('request_captcha');
-	        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify 			Request'), 'input_request_captcha');
+ 	        $captcha = new textinput('periodical_captcha');
+	        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify 			Request'), 'input_periodical_captcha');
  	        
           $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="illperiodicalcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:illperiodicalredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
 
         $objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
-		$objForm->addRule('illperiodicalrequest_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'security', 'Captcha cant be empty.Captcha is missing.'),'required');
+		$objForm->addRule('periodical_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'security', 'Captcha cant be empty.Captcha is missing.'),'required');
         $objForm->addToForm($objButton->show());
 
 
@@ -340,16 +340,14 @@ class ILLperiodical extends dbTable {
         $userrec = $this->getAll("WHERE userid = '$userId'");
         return $userrec;
     }
-    /**
-     *
-     */
+   
     public function listSingle($id) {
         $onerec = $this->getRow('id', $id);
         return $onerec;
     }
 
     function insertRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
-        $id3 = $this->insert(array(
+        $id = $this->insert(array(
             //'userid' => $userid,
             'titleperiodical' => $titleperiodical,
             'volume' => $volume,
@@ -375,11 +373,11 @@ class ILLperiodical extends dbTable {
             'bstudentno' => $bstudentno,
             'bcourse' => $bcourse,*/
         ));
-        return $id3;
+        return $id;
     }
 
     function updateRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
-        $id4 = $this->update(array(
+        $id = $this->update(array(
             //'userid' => $userid,
             'titleperiodical' => $titleperiodical,
             'volume' => $volume,
@@ -401,7 +399,7 @@ class ILLperiodical extends dbTable {
             'course' => $course,
             //'department'=>$department,
         ));
-        return $id4;
+        return $id;
     }
 
     private function getFormAction() {

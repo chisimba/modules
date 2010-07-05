@@ -100,7 +100,7 @@ class editform extends dbTable {
         $this->loadElements();
 
         //Create the form
-        $objForm = new form('comments', $this->getFormAction());
+        $objForm = new form('distanceform', $this->getFormAction());
         $objForm = new form('myform',$this->uri(array('action'=>'valform','htmlelements')));
         $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -234,7 +234,7 @@ class editform extends dbTable {
 
 
         //Create a new textinput for email
-        $objemail = new textinput('email');
+        $objemail = new textinput('emailaddress');
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail","libraryforms"),"emailaddress");
         $table->startRow();
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
@@ -287,7 +287,7 @@ class editform extends dbTable {
 
 
         $objCaptcha = $this->getObject('captcha', 'utilities');
-        $captcha = new textinput('request_captcha');
+        $captcha = new textinput('editformrequest_captcha');
         $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_editformrequest_captcha');
 
         $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="editformcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:editformredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
@@ -295,7 +295,6 @@ class editform extends dbTable {
         $objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
         $objForm->addRule('editformrequest_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'security', 'Captcha cant be empty.Captcha is missing.'),'required');
         $objForm->addToForm($objButton->show());
-
 
         return $objForm->show();
     }
