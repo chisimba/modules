@@ -1,8 +1,8 @@
 <?php
 /**
- * Short description for file.
+ * random blog posts block
  *
- * Long description (if any) ...
+ * Block to handle a random post in a block to be added to main UI
  *
  * PHP version 5
  *

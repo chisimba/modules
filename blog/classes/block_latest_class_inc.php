@@ -1,8 +1,8 @@
 <?php
 /**
- * Short description for file.
+ * Latest blog posts block
  *
- * Long description (if any) ...
+ * Class to show latest n posts in a block for addition to the main UI
  *
  * PHP version 5
  *

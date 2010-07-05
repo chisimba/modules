@@ -1,8 +1,8 @@
 <?php
 /**
- * Latest 6 blog posts block
+ * Latest n blog posts by tag block
  *
- * Class to show latest 6 posts in a block for addition to the main UI
+ * Class to show latest n posts by tag in a block for addition to the main UI
  *
  * PHP version 5
  *
@@ -23,7 +23,7 @@
  * @package    blog
  * @subpackage blocks
  * @author     Paul Scott <pscott@uwc.ac.za>
- * @copyright  2006-2007 AVOIR
+ * @copyright  2006-2010 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://avoir.uwc.ac.za
  * @see        References to other sections (if any)...
@@ -44,12 +44,12 @@ $GLOBALS['kewl_entry_point_run']) {
  * A block to return the last 10 blog posts
  *
  * @category  Chisimba
- * @author    Megan Watson
+ * @author    Paul Scott <pscott@uwc.ac.za>
  * @version   0.1
  * @copyright 2006-2007 AVOIR
  *
  */
-class block_lastsix extends object
+class block_lastbytag extends object
 {
     /**
      * The title of the block
@@ -88,12 +88,13 @@ class block_lastsix extends object
      */
     public function init() 
     {
-        $this->objLanguage = &$this->getObject('language', 'language');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objDbBlog = $this->getObject('dbblog');
         $this->objUser = $this->getObject('user', 'security');
-        $this->title = $this->objLanguage->languageText("mod_blog_block_intheblog", "blog");
+        $this->title = $this->objLanguage->languageText("mod_blog_block_intheblogbytag", "blog");
         $this->objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
-        $this->expose=TRUE;
+        $this->expose = TRUE;
     }
     /**
      * Standard block show method.
@@ -112,7 +113,8 @@ class block_lastsix extends object
 
     public function getLastData($num=6)
     {
-        $data = $this->objDbBlog->getLastPosts($num);
+        $tag = $this->objSysConfig->getValue('blog_blockposttag', 'blog');
+        $data = $this->objDbBlog->getNumPostsByTag($num, $tag);
         $ret="";
             if (!empty($data)) {
                 $count=1;

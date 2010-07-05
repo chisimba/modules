@@ -1017,6 +1017,7 @@ class dbblog extends dbTable
         $count = $this->getRecordCount("WHERE meta_value = '$tag' AND userid = '$userid' and module = 'blog'");
         return $count;
     }
+    
     /**
      * Method to return an array of posts associated with a tag
      *
@@ -1043,6 +1044,34 @@ class dbblog extends dbTable
         //print_r($posts); die();
         return $posts;
     }
+    
+    /**
+     * Method to return an array of posts associated with a tag
+     *
+     * @param  string $userid
+     * @param  string $tag
+     * @return array
+     */
+    public function getNumPostsByTag($num, $tag)
+    {
+        //first do a lookup and see what the post(s) id is/are
+        $tag = addslashes($tag);
+        $this->_changeTable("tbl_tags");
+        $poststoget = $this->getAll("WHERE meta_value = '$tag' AND module = 'blog' ORDER BY puid DESC LIMIT {$num}");
+        //print_r($poststoget);
+        foreach($poststoget as $gettables) {
+            $ptg[] = $gettables['item_id'];
+        }
+        //print_r($ptg); die();
+        //now get the posts and return them
+        $this->_changeTable("tbl_blog_posts");
+        foreach($ptg as $pos) {
+            $posts[] = $this->getAll("WHERE id = '$pos'");
+        }
+        //print_r($posts); die();
+        return $posts;
+    }
+    
     /**
      * Method to add a RSS feed to the database
      *
