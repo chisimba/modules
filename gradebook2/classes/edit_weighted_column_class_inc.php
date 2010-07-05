@@ -22,7 +22,8 @@ class edit_weighted_column extends object
         $this->loadClass('dropdown', 'htmlelements'); 
         //Load the button class
         $this->loadClass('button', 'htmlelements'); 
-        
+        //Load the table class
+        $this->loadClass("htmltable", 'htmlelements'); 
     }
     private function buildForm()
     {
@@ -35,28 +36,41 @@ class edit_weighted_column extends object
         $objHeading->type = 1;
         $objHeading->str = $this->objLanguage->languageText("mod_gradebook2_addweightedcolumn","gradebook2");
         $objForm->addToForm($objHeading->show());
-        //Set Display type to show label on the left
-        $objForm->setDisplayType(3);
+        //Create new table
+        $objTable = new htmltable();
+        $objTable->width = '100%';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '5';
         //----------TEXT INPUT 1--------------
         //Create a new textinput for the column name
         $objColumname = new textinput('column_name');
         //Create a new label for the text labels
         $columnameLabel = new label($this->objLanguage->languageText("mod_gradebook2_columname","gradebook2"),"column_name");
-        $objForm->addToForm($columnameLabel->show());
-        $objForm->addToForm($objColumname->show() . "<br />");
+        //Create new table row to contain the columname lable and textinput
+        $objTable->startRow();
+        $objTable->addCell($columnameLabel->show(), 180, 'top', 'left');
+        $objTable->addCell($objColumname->show(), Null, 'top', 'left');
+        $objTable->endRow();
+
         //----------TEXT INPUT 2--------------
         //Create a new textinput for the display name
         $objDisplayname = new textinput('display_name');
         //Create a new label for the text labels
         $displaynameLabel = new label($this->objLanguage->languageText("mod_gradebook2_displayname","gradebook2"),"display_name");
-        $objForm->addToForm($displaynameLabel->show());
-        $objForm->addToForm($objDisplayname->show() . "<br />");
+        //Create new table row to contain the displayname lable and textinput
+        $objTable->startRow();
+        $objTable->addCell($displaynameLabel->show(), 180, 'top', 'left');
+        $objTable->addCell($objDisplayname->show(), Null, 'top', 'left');
+        $objTable->endRow();
         //----------TEXTAREA--------------
         //Create a new textarea for the description text
         $objDescriptiontxt = new textarea('description');
         $descriptionLabel = new label($this->objLanguage->languageText("mod_gradebook2_description","gradebook2"),"description");
-        $objForm->addToForm($descriptionLabel->show() . "<br />");
-        $objForm->addToForm($objDescriptiontxt->show() . "<br />");
+        //Create new table row to contain the description lable and textinput
+        $objTable->startRow();
+        $objTable->addCell($descriptionLabel->show(), 180, 'top', 'left');
+        $objTable->addCell($objDescriptiontxt->show(), Null, 'top', 'left');
+        $objTable->endRow();
         //----------DROP DOWN 1--------------
         //Create a new dropdown for the primary display
         $objPrimaryDisplay = new dropdown('primary_display');
@@ -64,8 +78,11 @@ class edit_weighted_column extends object
         $objPrimaryDisplay->addOption('%', $this->objLanguage->languageText("mod_gradebook2_percentage","gradebook2"));
         //Create a new label for the text labels
         $primarydisplayLabel = new label($this->objLanguage->languageText("mod_gradebook2_primarydisplay","gradebook2"),"primary_display");
-        $objForm->addToForm($primarydisplayLabel->show());
-        $objForm->addToForm($objPrimaryDisplay->show() . "<br />");
+        //Create new table row to contain the primarydisplay lable and textinput
+        $objTable->startRow();
+        $objTable->addCell($primarydisplayLabel->show(), 180, 'top', 'left');
+        $objTable->addCell($objPrimaryDisplay->show(), Null, 'top', 'left');
+        $objTable->endRow();
         //----------DROP DOWN 2--------------
         //Create a new dropdown for the secondary display
         $objSecondaryDisplay = new dropdown('secondary_display');
@@ -73,8 +90,11 @@ class edit_weighted_column extends object
         $objSecondaryDisplay->addOption('%', $this->objLanguage->languageText("mod_gradebook2_percentage","gradebook2"));
         //Create a new label for the text labels
         $secondarydisplayLabel = new label($this->objLanguage->languageText("mod_gradebook2_secondarydisplay","gradebook2"),"secondary_display");
-        $objForm->addToForm($secondarydisplayLabel->show());
-        $objForm->addToForm($objSecondaryDisplay->show() . "<br />");
+        //Create new table row to contain the secondarydisplay lable and textinput
+        $objTable->startRow();
+        $objTable->addCell($secondarydisplayLabel->show(), 180, 'top', 'left');
+        $objTable->addCell($objSecondaryDisplay->show(), Null, 'top', 'left');
+        $objTable->endRow();
         //----------DROP DOWN 3--------------
         //Create a new dropdown for the grading period
         $objGradingPeriod = new dropdown('grading_period');
@@ -82,8 +102,11 @@ class edit_weighted_column extends object
         $objGradingPeriod->addOption('2008/2009', '2008/2009');
         //Create a new label for the text labels
         $gradingPeriodLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradingperiod","gradebook2"),"grading_period");
-        $objForm->addToForm($gradingPeriodLabel->show());
-        $objForm->addToForm($objGradingPeriod->show() . "<br />");
+        //Create new table row to contain the gradingperiod lable and textinput
+        $objTable->startRow();
+        $objTable->addCell($gradingPeriodLabel->show(), 180, 'top', 'left');
+        $objTable->addCell($objGradingPeriod->show(), Null, 'top', 'left');
+        $objTable->endRow();
         //----------RADIO BUTTON 1--------------
         //Create a new radio button for the weighted grade
         $objWeightedGrade = new radio('weighted_grade');
@@ -92,8 +115,11 @@ class edit_weighted_column extends object
         $objWeightedGrade->addOption('FALSE', $this->objLanguage->languageText("mod_gradebook2_selectedcolumns","gradebook2"));
         //Create a new label for the text labels
         $weightedGradeLabel = new label($this->objLanguage->languageText("mod_gradebook2_includeweighted","gradebook2"),"weighted_grade");
-        $objForm->addToForm($weightedGradeLabel->show());
-        $objForm->addToForm($objWeightedGrade->show() . "<br />");
+        //Create new table row to contain the gradingperiod lable and textinput
+        $objTable->startRow();
+        $objTable->addCell($weightedGradeLabel->show(), 180, 'top', 'left');
+        $objTable->addCell($objWeightedGrade->show(), Null, 'top', 'left');
+        $objTable->endRow();
         //----------RADIO BUTTON 2--------------
         //Create a new radio button for the running total
         $objRunningTotal = new radio('running_total');
@@ -101,10 +127,21 @@ class edit_weighted_column extends object
         $objRunningTotal->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
         $objRunningTotal->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
         //Create a new label for the text labels
-        $runningTotalLabel = new label($this->objLanguage->languageText("mod_gradebook2_includeweighted","gradebook2"),"weighted_grade");
-        $objForm->addToForm($runningTotalLabel->show());
-        $objForm->addToForm($objRunningTotal->show() . "<br />");
-        $objForm->addToForm($this->objLanguage->languageText("mod_gradebook2_runningtotal","gradebook2"));
+        $runningTotalLabel = new label($this->objLanguage->languageText("mod_gradebook2_calcrunningtotal","gradebook2"),"weighted_grade");
+        //Create new table row to contain the runningtotal lable and textinput
+        $objTable->startRow();
+        $objTable->addCell($runningTotalLabel->show(), 180, 'top', 'left');
+        $objTable->addCell($objRunningTotal->show().'<br />* '.$this->objLanguage->languageText("mod_gradebook2_runningtotal","gradebook2"), Null, 'top', 'left');
+        $objTable->endRow();
+        //Create new table row to contain the gradecenter description
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText("mod_gradebook2_gradecenterdesc","gradebook2"), Null, 'top', 'left', '', 'colspan="2"');
+        $objTable->endRow();
+        //Create new table to contain grade center options
+        $objSubTable = new htmltable();
+        $objSubTable->width = '100%';
+        $objSubTable->attributes = " align='center' border='0'";
+        $objSubTable->cellspacing = '5';
         //----------RADIO BUTTON 3--------------
         //Create a new radio button for the grade center calculations
         $objGradeCenterCalc = new radio('grade_center_calc');
@@ -113,9 +150,11 @@ class edit_weighted_column extends object
         $objGradeCenterCalc->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
         //Create a new label for the text labels
         $gradeCenterCalcLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradecentercalc","gradebook2"),"grade_center_calc");
-        $objForm->addToForm($this->objLanguage->languageText("mod_gradebook2_gradecenterdesc","gradebook2"));
-        $objForm->addToForm($gradeCenterCalcLabel->show());
-        $objForm->addToForm($objGradeCenterCalc->show() . "<br />");
+        //Create new table row to contain the runningtotal lable and textinput
+        $objSubTable->startRow();
+        $objSubTable->addCell($gradeCenterCalcLabel->show(), '420', 'top', 'left');
+        $objSubTable->addCell($objGradeCenterCalc->show(), Null, 'bottom', 'left');
+        $objSubTable->endRow();
         //----------RADIO BUTTON 4--------------
         //Create a new radio button allowing Show/view in the grade center
         $objShowinGradeCenter = new radio('showin_grade_center');
@@ -124,8 +163,12 @@ class edit_weighted_column extends object
         $objShowinGradeCenter->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
         //Create a new label for the text labels
         $showinGradeCenterLabel = new label($this->objLanguage->languageText("mod_gradebook2_showingradecenter","gradebook2"),"showin_grade_center");
-        $objForm->addToForm($showinGradeCenterLabel->show());
-        $objForm->addToForm($objShowinGradeCenter->show() . "<br />");
+        //Create new table row to contain the show-in-grade-center lable and textinput
+        $objSubTable->startRow();
+        $objSubTable->addCell($showinGradeCenterLabel->show(), '420', 'top', 'left');
+        $objSubTable->addCell($objShowinGradeCenter->show(), Null, 'top', 'left');
+        $objSubTable->endRow();
+
         //----------RADIO BUTTON 5--------------
         //Create a new radio button to show statistics in grade center
         $objShowstatsGradeCenter = new radio('showstats_grade_center');
@@ -134,8 +177,15 @@ class edit_weighted_column extends object
         $objShowstatsGradeCenter->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
         //Create a new label for the text labels
         $showstatsGradeCenterLabel = new label($this->objLanguage->languageText("mod_gradebook2_showstats","gradebook2"),"showstats_grade_center");
-        $objForm->addToForm($showstatsGradeCenterLabel->show());
-        $objForm->addToForm($objShowstatsGradeCenter->show() . "<br />");
+        //Create new table row to contain the show-stats-in-grade-center lable and textinput
+        $objSubTable->startRow();
+        $objSubTable->addCell($showstatsGradeCenterLabel->show(), '420', 'top', 'left');
+        $objSubTable->addCell($objShowstatsGradeCenter->show(), Null, 'top', 'left');
+        $objSubTable->endRow();
+        //Create new table row to contain the sub table
+        $objTable->startRow();
+        $objTable->addCell($objSubTable->show(), Null, 'top', 'right', '', 'colspan="2"');
+        $objTable->endRow();
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
@@ -144,8 +194,12 @@ class edit_weighted_column extends object
         // Use the language object to label button 
         // with the word save
         $objButton->setValue(' '.$this->objLanguage->languageText("mod_gradebook2_submit", "gradebook2").' ');
-        $objForm->addToForm($objButton->show());
-        
+        //Create new table row to contain the submit button
+        $objTable->startRow();
+        $objTable->addCell($objButton->show(), Null, 'top', 'right', '', 'colspan="2"');
+        $objTable->endRow();
+        //Add table to form
+        $objForm->addToForm($objTable->show());        
         return $objForm->show();
     }
     private function getFormAction()
