@@ -64,6 +64,7 @@ class gradebook2 extends controller {
     }
     private function __actionError()
     {
+        $action = $this->getParam("action", NULL);
         $this->setVar('str', "<h3>". $this->objLanguage->languageText("phrase_unrecognizedaction").": " . $action . "</h3>");
         return 'dump_tpl.php';
     }
