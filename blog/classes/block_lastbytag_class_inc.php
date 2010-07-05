@@ -113,26 +113,28 @@ class block_lastbytag extends object
 
     public function getLastData($num=6)
     {
-        $tag = $this->objSysConfig->getValue('blog_blockposttag', 'blog');
+        $tag = $this->sysConfig->getValue('blog_blockposttag', 'blog');
         $data = $this->objDbBlog->getNumPostsByTag($num, $tag);
         $ret="";
             if (!empty($data)) {
+                //$data = $data[0];
                 $count=1;
                 $ret="<table width='100%'>";
+                // var_dump($data); die;
                 foreach($data as $item) {
                     $linkuri = $this->uri(array(
                         'action' => 'viewsingle',
-                        'postid' => $item['id'],
-                        'userid' => $item['userid']
+                        'postid' => $item[0]['id'],
+                        'userid' => $item[0]['userid']
                     ));
-                    $link = new href($linkuri, stripslashes($item['post_title']));
+                    $link = new href($linkuri, stripslashes($item[0]['post_title']));
                     $posterName = '<div class="blogpreviewuser">'
-                      . $this->objUser->fullname($item['userid'])
+                      . $this->objUser->fullname($item[0]['userid'])
                       . '</div>';
-                    $fixedTime = strtotime($item['post_date']);
+                    $fixedTime = strtotime($item[0]['post_date']);
                     $fixedTime = date('Y-m-d H:i:s', $fixedTime);
                     $postDate = $this->objHumanizeDate->getDifference($fixedTime);
-                    $postExcerpt = $item['post_excerpt'];
+                    $postExcerpt = $item[0]['post_excerpt'];
                     if ($count == 1) {
                         $before="<tr>";
                         $after="";

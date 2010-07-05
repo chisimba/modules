@@ -1062,13 +1062,20 @@ class dbblog extends dbTable
         foreach($poststoget as $gettables) {
             $ptg[] = $gettables['item_id'];
         }
+        if(empty($ptg)) 
+        {
+            $ptg = array();
+        }
         //print_r($ptg); die();
         //now get the posts and return them
         $this->_changeTable("tbl_blog_posts");
         foreach($ptg as $pos) {
             $posts[] = $this->getAll("WHERE id = '$pos'");
         }
-        //print_r($posts); die();
+        if(empty($posts))
+        {
+            $posts = NULL;
+        }
         return $posts;
     }
     
