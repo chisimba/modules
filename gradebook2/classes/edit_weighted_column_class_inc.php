@@ -22,6 +22,7 @@ class edit_weighted_column extends object
         $this->loadClass('dropdown', 'htmlelements'); 
         //Load the button class
         $this->loadClass('button', 'htmlelements'); 
+        
     }
     private function buildForm()
     {
@@ -35,7 +36,7 @@ class edit_weighted_column extends object
         $objHeading->str = $this->objLanguage->languageText("mod_gradebook2_addweightedcolumn","gradebook2");
         $objForm->addToForm($objHeading->show());
         //Set Display type to show label on the left
-        $objForm->setDisplayType(2);
+        $objForm->setDisplayType(3);
         //----------TEXT INPUT 1--------------
         //Create a new textinput for the column name
         $objColumname = new textinput('column_name');
