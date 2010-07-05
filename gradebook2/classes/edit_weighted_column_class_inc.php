@@ -191,12 +191,27 @@ class edit_weighted_column extends object
         $objButton = new button('save');
         // Set the button type to submit
         $objButton->setToSubmit();
-        // Use the language object to label button 
-        // with the word save
+        // Use the language object to label button with the word save
         $objButton->setValue(' '.$this->objLanguage->languageText("mod_gradebook2_submit", "gradebook2").' ');
+        //----------CANCEL BUTTON--------------
+        $objCancel = &$this->getObject("link", "htmlelements");
+        $objCancel->link($this->uri(array(
+            'module' => 'gradebook2',
+            'action' => 'home'
+        )));
+        //Create cancel button
+        $objCancelBtn = new button('cancel');
+        // Use the language object to label button with the word save
+        $objCancelBtn->setValue(' '.$this->objLanguage->languageText("mod_gradebook2_wordcancel", "gradebook2").' ');
+        $objCancel->link = $objCancelBtn->showSexy();
+
+        //Create new table row to contain the submit/cancel instructions
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText("mod_gradebook2_submitorcancel", "gradebook2"), Null, 'top', 'left', '', 'colspan="2"');
+        $objTable->endRow();
         //Create new table row to contain the submit button
         $objTable->startRow();
-        $objTable->addCell($objButton->show(), Null, 'top', 'right', '', 'colspan="2"');
+        $objTable->addCell($objCancel->show()."&nbsp;&nbsp;&nbsp;".$objButton->showSexy(), Null, 'top', 'right', '', 'colspan="2"');
         $objTable->endRow();
         //Add table to form
         $objForm->addToForm($objTable->show());        
