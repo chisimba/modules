@@ -54,44 +54,44 @@ class dbgradebook2_weightedcolumn extends dbTable
     /**
      * Insert a record
      * @param string $learnerId The learner ID
-     * @param array $gradeArr Contains data for every column
+     * @param array $colArr Contains data for every column
      */
-    function insertSingle($gradeArr) 
+    function insertSingle($colArr) 
     {
         $userId = $this->objUser->userId();
         $id = $this->insert(array(
-            'userid' => $gradeArr['userid'],
-            'column_name' => $gradeArr['column_name'],
-            'display_name' => $gradeArr['display_name'],
-            'secondary_name' => $gradeArr['secondary_name'],
-            'grading_period' => $gradeArr['grading_period'],
-            'creationdate' => $gradeArr['creationdate'],
-            'include_weighted_grade' => $gradeArr['include_weighted_grade'],
-            'running_total' => $gradeArr['running_total'],
-            'show_grade_center_calc' => $gradeArr['show_grade_center_calc'],
-            'show_my_grades' => $gradeArr['show_my_grades'],
-            'show_statistics' => $gradeArr['show_statistics']
+            'userid' => $colArr['userid'],
+            'column_name' => $colArr['column_name'],
+            'display_name' => $colArr['display_name'],
+            'secondary_name' => $colArr['secondary_name'],
+            'grading_period' => $colArr['grading_period'],
+            'creationdate' => $colArr['creationdate'],
+            'include_weighted_grade' => $colArr['include_weighted_grade'],
+            'running_total' => $colArr['running_total'],
+            'show_grade_center_calc' => $colArr['show_grade_center_calc'],
+            'show_my_grades' => $colArr['show_my_grades'],
+            'show_statistics' => $colArr['show_statistics']
         ));
         return $id;
     }
     /**
      * Update a record
      * @param string $id ID
-     * @param array $gradeArr Contains data for every column
+     * @param array $colArr Contains data for every column
      */
-    function updateSingle($id, $totalGrade) 
+    function updateSingle($id, $colArr) 
     {
         $this->update("id", $id, array(
-            'column_name' => $gradeArr['column_name'],
-            'display_name' => $gradeArr['display_name'],
-            'secondary_name' => $gradeArr['secondary_name'],
-            'grading_period' => $gradeArr['grading_period'],
-            'creationdate' => $gradeArr['creationdate'],
-            'include_weighted_grade' => $gradeArr['include_weighted_grade'],
-            'running_total' => $gradeArr['running_total'],
-            'show_grade_center_calc' => $gradeArr['show_grade_center_calc'],
-            'show_my_grades' => $gradeArr['show_my_grades'],
-            'show_statistics' => $gradeArr['show_statistics']
+            'column_name' => $colArr['column_name'],
+            'display_name' => $colArr['display_name'],
+            'secondary_name' => $colArr['secondary_name'],
+            'grading_period' => $colArr['grading_period'],
+            'creationdate' => $colArr['creationdate'],
+            'include_weighted_grade' => $colArr['include_weighted_grade'],
+            'running_total' => $colArr['running_total'],
+            'show_grade_center_calc' => $colArr['show_grade_center_calc'],
+            'show_my_grades' => $colArr['show_my_grades'],
+            'show_statistics' => $colArr['show_statistics']
         ));
     }
     /**
