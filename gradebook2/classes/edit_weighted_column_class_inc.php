@@ -263,7 +263,7 @@ class edit_weighted_column extends object
         if ($action == "editcolumn") {
             $formAction = $this->uri(array("action" => "updatecolumn"), "gradebook2");
         } else {
-            $formAction = $this->uri(array("action" => "addcolumn"), "gradebook2");
+            $formAction = $this->uri(array("action" => "savenewcolumn"), "gradebook2");
         }
         return $formAction;
     }

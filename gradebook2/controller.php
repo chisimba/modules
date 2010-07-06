@@ -77,5 +77,22 @@ class gradebook2 extends controller {
         
         return 'editaddweightedcolumn_tpl.php';
     }
+    /**
+     * Method to edit an existing weighted column
+     */
+    private function __editcolumn()
+    {
+        $this->setVar('mode', 'edit');
+        
+        return 'editaddweightedcolumn_tpl.php';
+    }
+    /**
+     * Method to save a new weighted column
+     */
+    private function __savenewcolumn()
+    {
+            $id = $this->objDbCategoryList->insertSingle($this->getParam('category', NULL));
+            return $this->nextAction('main', NULL);
+    }
 }
 ?>
