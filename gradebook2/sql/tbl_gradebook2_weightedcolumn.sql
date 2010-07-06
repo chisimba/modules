@@ -37,6 +37,15 @@ $tablename = 'tbl_gradebook2_weightedcolumn';
        'length' => 64,
        'notnull' => TRUE
        ),
+   'description' => array(
+       'type' => 'text'
+       'notnull' => TRUE
+       ),
+   'primary_name' => array(
+       'type' => 'text',
+       'length' => 64,
+       'notnull' => true
+       ),
    'secondary_name' => array(
        'type' => 'text',
        'length' => 64,
@@ -58,10 +67,6 @@ $tablename = 'tbl_gradebook2_weightedcolumn';
        'type' => 'decimal'
        ),
    'show_grade_center_calc' => array(
-       'type' => 'boolean',
-       'notnull' => true
-       ),
-   'show_my_grades' => array(
        'type' => 'boolean',
        'notnull' => true
        ),

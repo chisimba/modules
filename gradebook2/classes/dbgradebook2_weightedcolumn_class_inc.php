@@ -69,7 +69,6 @@ class dbgradebook2_weightedcolumn extends dbTable
             'include_weighted_grade' => $colArr['include_weighted_grade'],
             'running_total' => $colArr['running_total'],
             'show_grade_center_calc' => $colArr['show_grade_center_calc'],
-            'show_my_grades' => $colArr['show_my_grades'],
             'show_statistics' => $colArr['show_statistics']
         ));
         return $id;

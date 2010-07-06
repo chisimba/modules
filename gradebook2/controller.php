@@ -91,7 +91,20 @@ class gradebook2 extends controller {
      */
     private function __savenewcolumn()
     {
-            $id = $this->objDbCategoryList->insertSingle($this->getParam('category', NULL));
+            //Array to contain data that needs to be saved
+            $colArr = array();
+            $colArr['column_name'] = $this->getParam('column_name', NULL);
+            $colArr['display_name'] = $this->getParam('display_name', NULL);
+            $colArr['description'] = $this->getParam('description', NULL);
+            $colArr['primary_display'] = $this->getParam('primary_display', NULL);
+            $colArr['secondary_name'] = $this->getParam('secondary_display', NULL);
+            $colArr['grading_period'] = $this->getParam('grading_period', NULL);
+            $colArr['creationdate'] = $this->getParam('category', NULL);
+            $colArr['include_weighted_grade'] = $this->getParam('weighted_grade', NULL);
+            $colArr['running_total'] = $this->getParam('running_total', NULL);
+            $colArr['show_grade_center_calc'] = $this->getParam('grade_center_calc', NULL);
+            $colArr['show_statistics'] = $this->getParam('showstats_grade_center', NULL);
+            $id = $this->objDbCategoryList->insertSingle($colArr);
             return $this->nextAction('main', NULL);
     }
 }
