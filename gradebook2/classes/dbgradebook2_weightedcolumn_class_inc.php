@@ -63,6 +63,7 @@ class dbgradebook2_weightedcolumn extends dbTable
             'userid' => $colArr['userid'],
             'column_name' => $colArr['column_name'],
             'display_name' => $colArr['display_name'],
+            'description' => $colArr['description'],
             'secondary_name' => $colArr['secondary_name'],
             'grading_period' => $colArr['grading_period'],
             'creationdate' => $colArr['creationdate'],
