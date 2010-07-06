@@ -54,25 +54,44 @@ class dbgradebook2_weightedcolumn extends dbTable
     /**
      * Insert a record
      * @param string $learnerId The learner ID
-     * @param string $totalGrade Total grade
+     * @param array $gradeArr Contains data for every column
      */
-    function insertSingle($learnerId,$totalGrade) 
+    function insertSingle($gradeArr) 
     {
+        $userId = $this->objUser->userId();
         $id = $this->insert(array(
-            'learnerid' => $learnerId,
-            'totalgrade' => $totalGrade
+            'userid' => $gradeArr['userid'],
+            'column_name' => $gradeArr['column_name'],
+            'display_name' => $gradeArr['display_name'],
+            'secondary_name' => $gradeArr['secondary_name'],
+            'grading_period' => $gradeArr['grading_period'],
+            'creationdate' => $gradeArr['creationdate'],
+            'include_weighted_grade' => $gradeArr['include_weighted_grade'],
+            'running_total' => $gradeArr['running_total'],
+            'show_grade_center_calc' => $gradeArr['show_grade_center_calc'],
+            'show_my_grades' => $gradeArr['show_my_grades'],
+            'show_statistics' => $gradeArr['show_statistics']
         ));
         return $id;
     }
     /**
      * Update a record
      * @param string $id ID
-     * @param string $totalgrade totalgrade
+     * @param array $gradeArr Contains data for every column
      */
     function updateSingle($id, $totalGrade) 
     {
         $this->update("id", $id, array(
-            'totalgrade' => $totalGrade
+            'column_name' => $gradeArr['column_name'],
+            'display_name' => $gradeArr['display_name'],
+            'secondary_name' => $gradeArr['secondary_name'],
+            'grading_period' => $gradeArr['grading_period'],
+            'creationdate' => $gradeArr['creationdate'],
+            'include_weighted_grade' => $gradeArr['include_weighted_grade'],
+            'running_total' => $gradeArr['running_total'],
+            'show_grade_center_calc' => $gradeArr['show_grade_center_calc'],
+            'show_my_grades' => $gradeArr['show_my_grades'],
+            'show_statistics' => $gradeArr['show_statistics']
         ));
     }
     /**
