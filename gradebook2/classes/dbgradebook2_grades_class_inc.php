@@ -69,10 +69,10 @@ class dbgradebook2_grades extends dbTable
      * @param string $id ID
      * @param string $totalgrade totalgrade
      */
-    function updateSingle($id, $totalgrade) 
+    function updateSingle($id, $totalGrade) 
     {
         $this->update("id", $id, array(
-            'totalgrade' => $totalgrade
+            'totalgrade' => $totalGrade
         ));
     }
     /**
