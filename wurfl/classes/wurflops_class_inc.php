@@ -83,18 +83,34 @@ class wurflops extends object
     {
         $this->objAltConfig = $this->getObject('altconfig', 'config');
 
+        $params = array();
+        if (extension_loaded('memcache') && $this->objAltConfig->getenable_memcache() == 'TRUE') {
+            $provider = 'memcache';
+            $servers = chisimbacache::getServers();
+            $params['host'] = $servers[0]['ip'];
+            $params['port'] = $servers[0]['port'];
+        } elseif (extension_loaded('apc') && $this->objAltConfig->getenable_apc() == 'TRUE') {
+            $provider = 'apc';
+        } elseif (in_array($this->objEngine->pdsn['phptype'], array('mysql', 'mysqli'))) {
+            $provider = 'mysql';
+            $params['host'] = $this->objEngine->pdsn['hostspec'];
+            $params['user'] = $this->objEngine->pdsn['username'];
+            $params['pass'] = $this->objEngine->pdsn['password'];
+            $params['db'] = $this->objEngine->pdsn['database'];
+        } else {
+            $provider = 'file';
+            $params['dir'] = $this->objAltConfig->getcontentBasePath() . 'wurfl';
+            if (!file_exists($params['dir'])) {
+                mkdir($params['dir']);
+            }
+        }
+
         include_once $this->getResourcePath('WURFL/Application.php', 'wurfl');
 
         $config = new WURFL_Configuration_InMemoryConfig();
         $config->wurflFile($this->getResourcePath('wurfl-2.0.18.xml'));
         $config->wurflPatch($this->getResourcePath('web_browsers_patch.xml'));
-
-        if (extension_loaded('memcache') && $this->objAltConfig->getenable_memcache() == 'TRUE') {
-            $servers = chisimbacache::getServers();
-            $config->persistence('memcache', array('host'=>$servers[0]['ip'], 'port'=>$servers[0]['port']));
-        } elseif (extension_loaded('apc') && $this->objAltConfig->getenable_apc() == 'TRUE') {
-            $config->persistence('apc');
-        }
+        $config->persistence($provider, (array) $params);
 
         $factory = new WURFL_WURFLManagerFactory($config);
         $manager = $factory->create();
