@@ -41,16 +41,16 @@ class WURFL_Xml_PersistenceProvider_PersistenceProviderManager {
 		
 		switch ($provider) {
 			case WURFL_Constants::MEMCACHE :
-				self::$_persistenceProvider = new WURFL_Xml_PersistenceProvider_MemcachePersistenceProvider ( $persistenceParams );
+				self::$_persistenceProvider = new WURFL_Xml_PersistenceProvider_MemcachePersistenceProvider ( $persistenceParams['params'] );
 				break;
 			case WURFL_Constants::APC :
-				self::$_persistenceProvider = new WURFL_Xml_PersistenceProvider_APCPersistenceProvider ( $persistenceParams );
+				self::$_persistenceProvider = new WURFL_Xml_PersistenceProvider_APCPersistenceProvider ( $persistenceParams['params'] );
 				break;
 			case WURFL_Constants::MYSQL :
-				self::$_persistenceProvider = new WURFL_Xml_PersistenceProvider_MysqlPersistenceProvider ( $persistenceParams );
+				self::$_persistenceProvider = new WURFL_Xml_PersistenceProvider_MysqlPersistenceProvider ( $persistenceParams['params'] );
 				break;
 			default :
-				self::$_persistenceProvider = new WURFL_Xml_PersistenceProvider_FilePersistenceProvider ( $persistenceParams );
+				self::$_persistenceProvider = new WURFL_Xml_PersistenceProvider_FilePersistenceProvider ( $persistenceParams['params'] );
 				break;
 		}
 	}
