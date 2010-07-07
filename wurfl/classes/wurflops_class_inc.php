@@ -122,23 +122,18 @@ class wurflops extends object
      * Returns the value of a single capability according to the name provided.
      *
      * @access public
-     * @param  string $name The name of the capability.
-     * @return string The value of the capability.
+     * @param  string $name The name of the capability or "all" for an object of all capabilities.
+     * @return mixed  String value of the capability or an object dictionary of all capabilities.
      */
     public function __get($name)
     {
-        return $this->objDevice->getCapability($name);
-    }
+        if ($name == 'all') {
+            $value = $this->objDevice->getAllCapabilities();
+        } else {
+            $value = $this->objDevice->getCapability($name);
+        }
 
-    /**
-     * Returns an object of all the capabilities of the device.
-     *
-     * @access public
-     * @return object Instance of stdClass with all the capabilities set as properties.
-     */
-    public function getAllCapabilities()
-    {
-        return (object) $this->objDevice->getAllCapabilities();
+        return $value;
     }
 }
 
