@@ -59,6 +59,14 @@ $GLOBALS['kewl_entry_point_run']) {
 class wurflops extends object
 {
     /**
+     * The system configuration.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objAltConfig;
+
+    /**
      * The WURFL device object.
      *
      * @access protected
@@ -73,12 +81,20 @@ class wurflops extends object
      */
     public function init()
     {
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+
         include_once $this->getResourcePath('WURFL/Application.php', 'wurfl');
 
         $config = new WURFL_Configuration_InMemoryConfig();
         $config->wurflFile($this->getResourcePath('wurfl-2.0.18.xml'));
         $config->wurflPatch($this->getResourcePath('web_browsers_patch.xml'));
-        $config->persistence('memcache', array('host'=> '127.0.0.1', 'port'=>'11211'));
+
+        if (extension_loaded('memcache') && $this->objAltConfig->getenable_memcache() == 'TRUE') {
+            $servers = chisimbacache::getServers();
+            $config->persistence('memcache', array('host'=>$servers[0]['ip'], 'port'=>$servers[0]['port']));
+        } elseif (extension_loaded('apc') && $this->objAltConfig->getenable_apc() == 'TRUE') {
+            $config->persistence('apc');
+        }
 
         $factory = new WURFL_WURFLManagerFactory($config);
         $manager = $factory->create();
