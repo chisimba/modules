@@ -89,14 +89,14 @@ class wurflops extends object
             $servers = chisimbacache::getServers();
             $params['host'] = $servers[0]['ip'];
             $params['port'] = $servers[0]['port'];
-        } elseif (extension_loaded('apc') && $this->objAltConfig->getenable_apc() == 'TRUE') {
+        /*} elseif (extension_loaded('apc') && $this->objAltConfig->getenable_apc() == 'TRUE') {
             $provider = 'apc';
         } elseif (in_array($this->objEngine->pdsn['phptype'], array('mysql', 'mysqli'))) {
             $provider = 'mysql';
             $params['host'] = $this->objEngine->pdsn['hostspec'];
             $params['user'] = $this->objEngine->pdsn['username'];
             $params['pass'] = $this->objEngine->pdsn['password'];
-            $params['db'] = $this->objEngine->pdsn['database'];
+            $params['db'] = $this->objEngine->pdsn['database'];*/
         } else {
             $provider = 'file';
             $params['dir'] = $this->objAltConfig->getcontentBasePath() . 'wurfl';
