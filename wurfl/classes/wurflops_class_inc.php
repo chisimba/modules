@@ -128,7 +128,7 @@ class wurflops extends object
     public function __get($name)
     {
         if ($name == 'all') {
-            $value = $this->objDevice->getAllCapabilities();
+            $value = (object) $this->objDevice->getAllCapabilities();
         } else {
             $value = $this->objDevice->getCapability($name);
         }
