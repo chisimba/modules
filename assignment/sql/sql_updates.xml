@@ -14,11 +14,11 @@
 
         <update>
         <table>tbl_assignment</table>
-        <version>0.312</version>
+        <version>0.403</version>
         <description>Added workgroup_id</description>
         <data>
             <add>
-                <name>workgroupid</name>
+                <name>workgroup_id</name>
                 <type>text</type>
                 <length>32</length>
             </add>
