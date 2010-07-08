@@ -38,7 +38,7 @@ class WURFL_Cache_CacheProviderFactory  {
 	public static function getCacheProvider($cacheConfig=null) {
 		$cacheConfig = is_null($cacheConfig) ? WURFL_Configuration_ConfigHolder::getWURFLConfig()->cache : $cacheConfig;
 		$provider = isset($cacheConfig["provider"]) ? $cacheConfig["provider"] : null;
-		$cache = $cacheConfig["params"];
+		$cache = isset($cacheConfig["params"]) ? $cacheConfig["params"] : null;
 		
 		switch ($provider) {
 			case WURFL_Constants::FILE:
