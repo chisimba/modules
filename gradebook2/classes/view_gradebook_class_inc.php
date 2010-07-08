@@ -55,19 +55,11 @@ class view_gradebook extends object
         $objTable->startRow();
         $objTable->addCell($objHeading->show(), Null, 'top', 'left', '', 'colspan="6"');
         $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText("mod_gradebook2_gradecenter","gradebook2"), Null, 'top', 'left');
+        $objTable->endRow();
 
         return $objTable->show();
-    }
-    private function getFormAction()
-    {
-        $action = $this->getParam("action", "addcolumn");
-        $id = $this->getParam("id", Null);
-        if ($action == "editcolumn") {
-            $formAction = $this->uri(array("action" => "savecolumn", "id" => $id), "gradebook2");
-        } else {
-            $formAction = $this->uri(array("action" => "savecolumn"), "gradebook2");
-        }
-        return $formAction;
     }
     public function show()
     {
