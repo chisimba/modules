@@ -352,8 +352,8 @@ class wicid extends controller {
      */
     public function __determinepermissions() {
         $mode=$this->objSysConfig->getValue('MODE', 'wicid');
-        //echo "admin=true,mode=$mode";
-        echo $this->objUser->isAdmin()?"true":"false";
+        echo "admin=true,mode=$mode";
+       // echo $this->objUser->isAdmin()?"true":"false";
     }
 
 
@@ -381,6 +381,7 @@ class wicid extends controller {
         $contact = $this->getParam('contact');
         $telephone=$this->getParam('telephone');
         $group=$this->getParam('group');
+        $status=$this->getParam('status');
         $this->documents->addDocument(
                 $date,
                 $refno,
@@ -389,7 +390,8 @@ class wicid extends controller {
                 $telephone,
                 $title,
                 $group,
-                $selectedfolder);
+                $selectedfolder,
+                $status);
     }
 
     function __updatedocument() {
@@ -401,7 +403,8 @@ class wicid extends controller {
         $selectedfolder=$this->getParam('topic');
         $telephone=$this->getParam('tel');
         $id = $this->getParam('docid');
-        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date, "topic"=>$selectedfolder);
+        $status = $this->getParam('status');
+        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date, "topic"=>$selectedfolder, "status"=>$status);
         $this->documents->updateInfo($id, $data);
     }
 
@@ -501,7 +504,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return true;
+        return FALSE;
     }
 
     function __registeracademicpresenters() {
@@ -697,5 +700,39 @@ class wicid extends controller {
         $userid=$this->getParam('userid');
         $docid=$this->getParam('docid');
         $this->documents->changeCurrentUser($userid, $docid);
+    }
+
+    public function __retrievedocument(){
+        $userid=$this->getParam('userid');
+        $docid = $this->getParam('docid');
+        $this->documents->retrieveDocument($userid,$docid);
+    }
+
+    public function __checkusers() {
+        $docid = $this->getParam('docid');
+        $this->documents->checkUsers($docid);
+    }
+
+    public function __getstatus(){
+        $docid = $this->getParam('docid');
+        $this->documents->getStatus($docid);
+    }
+
+    public function __setstatus(){
+        $docid = $this->getParam('docid');
+        $status= $this->getParam('status');
+        $this->documents->setStatus($docid, $status);
+    }
+
+    public function __setcommentdata(){
+        $docid = $this->getParam('docid');
+        $commentdata= $this->getParam('commentdata');
+        $this->objformdata->setCommentData($docid, $commentdata);
+    }
+
+    public function __getcommentdata(){
+        $docid = $this->getParam('docid');
+        $formname = $this->getparam('formname');
+        $this->objformdata->getCommentData($docid);
     }
 }
