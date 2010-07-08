@@ -60,7 +60,7 @@ class dbgradebook2_weightedcolumn extends dbTable
     {
         $userId = $this->objUser->userId();
         $id = $this->insert(array(
-            'userid' => $colArr['userid'],
+            'userid' => $userId,
             'column_name' => $colArr['column_name'],
             'display_name' => $colArr['display_name'],
             'description' => $colArr['description'],

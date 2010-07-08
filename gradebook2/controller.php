@@ -32,6 +32,8 @@ class gradebook2 extends controller {
         $this->objLanguage = & $this->getObject('language', 'language');
         $this->objForm = & $this->getObject('form','htmlelements');
         $this->objHeading =& $this->getObject('htmlheading','htmlelements');
+        //Load DB Table weightedcolumn class
+        $this->objWeightedColumn =& $this->getObject('dbgradebook2_weightedcolumn','gradebook2');
     }
 
     /**
@@ -104,7 +106,8 @@ class gradebook2 extends controller {
             $colArr['running_total'] = $this->getParam('running_total', NULL);
             $colArr['show_grade_center_calc'] = $this->getParam('grade_center_calc', NULL);
             $colArr['show_statistics'] = $this->getParam('showstats_grade_center', NULL);
-            $id = $this->objDbCategoryList->insertSingle($colArr);
+            $id = $this->objWeightedColumn->insertSingle($colArr);
+var_dump($colArr.$id);exit;
             return $this->nextAction('main', NULL);
     }
 }

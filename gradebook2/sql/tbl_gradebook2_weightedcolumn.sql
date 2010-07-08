@@ -38,7 +38,7 @@ $tablename = 'tbl_gradebook2_weightedcolumn';
        'notnull' => TRUE
        ),
    'description' => array(
-       'type' => 'text'
+       'type' => 'text',
        'notnull' => TRUE
        ),
    'primary_name' => array(
