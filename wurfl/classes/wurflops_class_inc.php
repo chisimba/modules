@@ -28,6 +28,7 @@
  * @version   $Id$
  * @link      http://avoir.uwc.ac.za/
  * @see       http://wurfl.sourceforge.net/
+ * @see       http://dev.wurflpro.com/projects/wurfl-api/browser/php/core/trunk
  */
 
 // security check - must be included in all scripts
@@ -55,6 +56,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @version   $Id$
  * @link      http://avoir.uwc.ac.za/
  * @see       http://wurfl.sourceforge.net/
+ * @see       http://dev.wurflpro.com/projects/wurfl-api/browser/php/core/trunk
  */
 class wurflops extends object
 {
