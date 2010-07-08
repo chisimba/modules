@@ -21,12 +21,12 @@ class dbgradebook2_grades extends dbTable
     }
     /**
      * Return all records
-     * @param string $learnerid The Learner ID
+     * @param string $learnerId The Learner ID
      * @return array The entries
      */
-    function listAll($learnerid) 
+    function listAll($learnerId) 
     {
-        return $this->getAll("WHERE learnerid='" . $learnerid . "'");
+        return $this->getAll("WHERE learnerid='" . $learnerId . "'");
     }
     /**
      * Return a single record
