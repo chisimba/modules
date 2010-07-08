@@ -85,13 +85,12 @@ class gradebook2 extends controller {
     private function __editcolumn()
     {
         $this->setVar('mode', 'edit');
-        
         return 'editaddweightedcolumn_tpl.php';
     }
     /**
      * Method to save a new weighted column
      */
-    private function __savenewcolumn()
+    private function __savecolumn()
     {
             //Array to contain data that needs to be saved
             $colArr = array();
@@ -104,9 +103,16 @@ class gradebook2 extends controller {
             $colArr['include_weighted_grade'] = $this->getParam('weighted_grade', NULL);
             $colArr['running_total'] = $this->getParam('running_total', NULL);
             $colArr['show_grade_center_calc'] = $this->getParam('grade_center_calc', NULL);
+            $colArr['show_in_mygrades'] = $this->getParam('show_in_mygrades', NULL);
             $colArr['show_statistics'] = $this->getParam('showstats_grade_center', NULL);
-            $id = $this->objWeightedColumn->insertSingle($colArr);
-            return $this->nextAction('main', NULL);
+            $id =  $this->getParam('id', NULL);
+            //$id has value if its an edit
+            if(empty($id)){
+              $id = $this->objWeightedColumn->insertSingle($colArr);
+            } else {
+              $id = $this->objWeightedColumn->updateSingle($id, $colArr);
+            }
+            return $this->nextAction('editcolumn', array('id' => $id, 'status' => 'newcolumn'));
     }
 }
 ?>

@@ -71,6 +71,7 @@ class dbgradebook2_weightedcolumn extends dbTable
             'include_weighted_grade' => $colArr['include_weighted_grade'],
             'running_total' => $colArr['running_total'],
             'show_grade_center_calc' => $colArr['show_grade_center_calc'],
+            'show_in_mygrades' => $colArr['show_in_mygrades'],
             'show_statistics' => $colArr['show_statistics']
         ));
         return $id;
@@ -85,15 +86,17 @@ class dbgradebook2_weightedcolumn extends dbTable
         $this->update("id", $id, array(
             'column_name' => $colArr['column_name'],
             'display_name' => $colArr['display_name'],
-            'secondary_name' => $colArr['secondary_name'],
+            'description' => $colArr['description'],
+            'primary_display' => $colArr['primary_display'],
+            'secondary_display' => $colArr['secondary_display'],
             'grading_period' => $colArr['grading_period'],
-            'creationdate' => $colArr['creationdate'],
             'include_weighted_grade' => $colArr['include_weighted_grade'],
             'running_total' => $colArr['running_total'],
             'show_grade_center_calc' => $colArr['show_grade_center_calc'],
-            'show_my_grades' => $colArr['show_my_grades'],
+            'show_in_mygrades' => $colArr['show_in_mygrades'],
             'show_statistics' => $colArr['show_statistics']
         ));
+        return $id;
     }
     /**
      * Delete a record

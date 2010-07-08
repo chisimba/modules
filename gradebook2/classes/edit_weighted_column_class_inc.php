@@ -24,6 +24,8 @@ class edit_weighted_column extends object
         $this->loadClass('button', 'htmlelements'); 
         //Load the table class
         $this->loadClass("htmltable", 'htmlelements'); 
+        //Load DB Table weightedcolumn class
+        $this->objWeightedColumn =& $this->getObject('dbgradebook2_weightedcolumn','gradebook2');
     }
     private function buildForm()
     {
@@ -31,6 +33,15 @@ class edit_weighted_column extends object
         $this->loadElements();
         //Create the form
         $objForm = new form('weighted_column', $this->getFormAction());
+        //Get params column id and status if edit
+        $id = $this->getParam('id', NULL);
+        $status = $this->getParam('status', NULL);
+        $action = $this->getParam('action', NULL);
+        //Get column values if action is edit
+        if (!empty($id)) {
+          $colVals = $this->objWeightedColumn->listSingle($id);
+          $colVals = $colVals[0];
+        }
         //Add Heading
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
         $objHeading->type = 1;
@@ -51,7 +62,11 @@ class edit_weighted_column extends object
         $objTable->endRow();
         //----------TEXT INPUT 1--------------
         //Create a new textinput for the column name
-        $objColumname = new textinput('column_name');
+        if(empty($colVals['column_name'])){
+          $objColumname = new textinput('column_name');
+        } else {
+          $objColumname = new textinput('column_name', $colVals['column_name']);
+        }
         //Create a new label for the text labels
         $columnameLabel = new label($this->objLanguage->languageText("mod_gradebook2_columname","gradebook2"),"column_name");
         //Create new table row to contain the columname lable and textinput
@@ -63,6 +78,11 @@ class edit_weighted_column extends object
         //----------TEXT INPUT 2--------------
         //Create a new textinput for the display name
         $objDisplayname = new textinput('display_name');
+        if(empty($colVals["display_name"])){
+          $objDisplayname = new textinput('display_name');
+        } else {
+          $objDisplayname = new textinput('display_name', $colVals["display_name"]);
+        }
         //Create a new label for the text labels
         $displaynameLabel = new label($this->objLanguage->languageText("mod_gradebook2_displayname","gradebook2"),"display_name");
         //Create new table row to contain the displayname lable and textinput
@@ -72,7 +92,11 @@ class edit_weighted_column extends object
         $objTable->endRow();
         //----------TEXTAREA--------------
         //Create a new textarea for the description text
-        $objDescriptiontxt = new textarea('description');
+        if(empty($colVals["description"])){
+          $objDescriptiontxt = new textarea('description');
+        } else {
+          $objDescriptiontxt = new textarea('description', $colVals["description"]);
+        }
         $descriptionLabel = new label($this->objLanguage->languageText("mod_gradebook2_description","gradebook2"),"description");
         //Create new table row to contain the description lable and textinput
         $objTable->startRow();
@@ -84,6 +108,10 @@ class edit_weighted_column extends object
         $objPrimaryDisplay = new dropdown('primary_display');
         //Add percentage option
         $objPrimaryDisplay->addOption('%', $this->objLanguage->languageText("mod_gradebook2_percentage","gradebook2"));
+        //Set Selected if edit
+        if(!empty($colVals["primary_display"])){
+          $objPrimaryDisplay->setSelected($colVals["primary_display"]);
+        }
         //Create a new label for the text labels
         $primarydisplayLabel = new label($this->objLanguage->languageText("mod_gradebook2_primarydisplay","gradebook2"),"primary_display");
         //Create new table row to contain the primarydisplay lable and textinput
@@ -96,6 +124,10 @@ class edit_weighted_column extends object
         $objSecondaryDisplay = new dropdown('secondary_display');
         //Add percentage option
         $objSecondaryDisplay->addOption('%', $this->objLanguage->languageText("mod_gradebook2_percentage","gradebook2"));
+        //Set Selected if edit
+        if(!empty($colVals["secondary_display"])){
+          $objSecondaryDisplay->setSelected($colVals["secondary_display"]);
+        }
         //Create a new label for the text labels
         $secondarydisplayLabel = new label($this->objLanguage->languageText("mod_gradebook2_secondarydisplay","gradebook2"),"secondary_display");
         //Create new table row to contain the secondarydisplay lable and textinput
@@ -116,6 +148,10 @@ class edit_weighted_column extends object
         $objGradingPeriod = new dropdown('grading_period');
         //Add Grading period option
         $objGradingPeriod->addOption('2008/2009', '2008/2009');
+        //Set Selected if edit
+        if(!empty($colVals["grading_period"])){
+          $objGradingPeriod->setSelected($colVals["grading_period"]);
+        }
         //Create a new label for the text labels
         $gradingPeriodLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradingperiod","gradebook2"),"grading_period");
         //Create new table row to contain the gradingperiod lable and textinput
@@ -135,8 +171,12 @@ class edit_weighted_column extends object
         //Create a new radio button for the weighted grade
         $objWeightedGrade = new radio('weighted_grade');
         //Add Grading period options
-        $objWeightedGrade->addOption('TRUE', $this->objLanguage->languageText("mod_gradebook2_allgradecolumns","gradebook2"));
-        $objWeightedGrade->addOption('FALSE', $this->objLanguage->languageText("mod_gradebook2_selectedcolumns","gradebook2"));
+        $objWeightedGrade->addOption('1', $this->objLanguage->languageText("mod_gradebook2_allgradecolumns","gradebook2"));
+        $objWeightedGrade->addOption('0', $this->objLanguage->languageText("mod_gradebook2_selectedcolumns","gradebook2"));
+        //Set Selected if edit
+        if(!empty($colVals["include_weighted_grade"])){
+          $objWeightedGrade->setSelected($colVals["include_weighted_grade"]);
+        }
         //Create a new label for the text labels
         $weightedGradeLabel = new label($this->objLanguage->languageText("mod_gradebook2_includeweighted","gradebook2"),"weighted_grade");
         //Create new table row to contain the gradingperiod lable and textinput
@@ -148,8 +188,12 @@ class edit_weighted_column extends object
         //Create a new radio button for the running total
         $objRunningTotal = new radio('running_total');
         //Add running total options
-        $objRunningTotal->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
-        $objRunningTotal->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        $objRunningTotal->addOption('1', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
+        $objRunningTotal->addOption('0', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        //Set Selected if edit
+        if(!empty($colVals["running_total"])){
+          $objRunningTotal->setSelected($colVals["running_total"]);
+        }
         //Create a new label for the text labels
         $runningTotalLabel = new label($this->objLanguage->languageText("mod_gradebook2_calcrunningtotal","gradebook2"),"weighted_grade");
         //Create new table row to contain the runningtotal lable and textinput
@@ -178,8 +222,12 @@ class edit_weighted_column extends object
         //Create a new radio button for the grade center calculations
         $objGradeCenterCalc = new radio('grade_center_calc');
         //Add grade center calculation options
-        $objGradeCenterCalc->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
-        $objGradeCenterCalc->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        $objGradeCenterCalc->addOption('1', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
+        $objGradeCenterCalc->addOption('0', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        //Set Selected if edit
+        if(!empty($colVals["show_grade_center_calc"])){
+          $objGradeCenterCalc->setSelected($colVals["show_grade_center_calc"]);
+        }
         //Create a new label for the text labels
         $gradeCenterCalcLabel = new label($this->objLanguage->languageText("mod_gradebook2_gradecentercalc","gradebook2"),"grade_center_calc");
         //Create new table row to contain the runningtotal lable and textinput
@@ -188,25 +236,33 @@ class edit_weighted_column extends object
         $objSubTable->addCell($objGradeCenterCalc->show(), Null, 'bottom', 'left');
         $objSubTable->endRow();
         //----------RADIO BUTTON 4--------------
-        //Create a new radio button allowing Show/view in the grade center
-        $objShowinGradeCenter = new radio('showin_grade_center');
+        //Create a new radio button allowing Show/view in my grades
+        $objShowinMyGrades = new radio('show_in_mygrades');
         //Add show in grade center options
-        $objShowinGradeCenter->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
-        $objShowinGradeCenter->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        $objShowinMyGrades->addOption('1', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
+        $objShowinMyGrades->addOption('0', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        //Set Selected if edit
+        if(!empty($colVals["show_in_mygrades"])){
+          $objShowinMyGrades->setSelected($colVals["show_in_mygrades"]);
+        }
         //Create a new label for the text labels
-        $showinGradeCenterLabel = new label($this->objLanguage->languageText("mod_gradebook2_showingradecenter","gradebook2"),"showin_grade_center");
+        $showinMyGradesLabel = new label($this->objLanguage->languageText("mod_gradebook2_showingradecenter","gradebook2"),"showin_grade_center");
         //Create new table row to contain the show-in-grade-center lable and textinput
         $objSubTable->startRow();
-        $objSubTable->addCell($showinGradeCenterLabel->show(), '420', 'top', 'left');
-        $objSubTable->addCell($objShowinGradeCenter->show(), Null, 'top', 'left');
+        $objSubTable->addCell($showinMyGradesLabel->show(), '420', 'top', 'left');
+        $objSubTable->addCell($objShowinMyGrades->show(), Null, 'top', 'left');
         $objSubTable->endRow();
 
         //----------RADIO BUTTON 5--------------
         //Create a new radio button to show statistics in grade center
         $objShowstatsGradeCenter = new radio('showstats_grade_center');
         //Add show statistics in grade center options
-        $objShowstatsGradeCenter->addOption('YES', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
-        $objShowstatsGradeCenter->addOption('NO', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        $objShowstatsGradeCenter->addOption('1', $this->objLanguage->languageText("mod_gradebook2_wordyes","gradebook2"));
+        $objShowstatsGradeCenter->addOption('0', $this->objLanguage->languageText("mod_gradebook2_wordno","gradebook2"));
+        //Set Selected if edit
+        if(!empty($colVals["show_statistics"])){
+          $objShowstatsGradeCenter->setSelected($colVals["show_statistics"]);
+        }
         //Create a new label for the text labels
         $showstatsGradeCenterLabel = new label($this->objLanguage->languageText("mod_gradebook2_showstats","gradebook2"),"showstats_grade_center");
         //Create new table row to contain the show-stats-in-grade-center lable and textinput
@@ -260,10 +316,11 @@ class edit_weighted_column extends object
     private function getFormAction()
     {
         $action = $this->getParam("action", "addcolumn");
+        $id = $this->getParam("id", Null);
         if ($action == "editcolumn") {
-            $formAction = $this->uri(array("action" => "updatecolumn"), "gradebook2");
+            $formAction = $this->uri(array("action" => "savecolumn", "id" => $id), "gradebook2");
         } else {
-            $formAction = $this->uri(array("action" => "savenewcolumn"), "gradebook2");
+            $formAction = $this->uri(array("action" => "savecolumn"), "gradebook2");
         }
         return $formAction;
     }

@@ -64,9 +64,13 @@ $tablename = 'tbl_gradebook2_weightedcolumn';
        'notnull' => true
        ),
    'running_total' => array(
-       'type' => 'decimal'
+       'type' => 'boolean'
        ),
    'show_grade_center_calc' => array(
+       'type' => 'boolean',
+       'notnull' => true
+       ),
+   'show_in_mygrades' => array(
        'type' => 'boolean',
        'notnull' => true
        ),
