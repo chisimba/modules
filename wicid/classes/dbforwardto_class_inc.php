@@ -31,7 +31,7 @@ class dbforwardto extends dbtable {
 
     public function  getUsers($filter) {
         $sql="select userid,firstname,surname,emailaddress from tbl_users where
-            firstName like '%".$filter."%' or surname like '%".$filter."%'";
+            firstName like '%".$filter."%' or surname like '%".$filter."%' or emailaddress like'%".$filter."%'";
         $rows=$this->getArray($sql);
 
         $users=array();
