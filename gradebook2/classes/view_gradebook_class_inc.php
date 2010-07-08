@@ -17,6 +17,24 @@ class view_gradebook extends object
     }
     private function buildForm()
     {
+        $this->appendArrayVar('headerParams', '
+        <script type="text/javascript">
+        var pageSize = 30;
+        var uri = "' . str_replace('&amp;', '&', $this->uri(array(
+            'module' => 'gradebook2',
+            'action' => 'jsongetgrades','limit' => '30'
+        ))) . '"; 
+        var title= "'.ucWords($this->objLanguage->code2Txt('mod_gradebook2_useractivitylogs','gradebook2'))." ".ucWords($this->objLanguage->code2Txt('mod_gradebook2_wordfor', 'gradebook2'))." ".$this->objContext->getTitle( $this->contextCode ).' ('.$this->contextCode.')";
+        var lang = new Array();
+        lang["nologstodisplay"] =   "' . ucWords($this->objLanguage->code2Txt('mod_learningcontent_nologstodisplay', 'learningcontent')) . '";
+        lang["displayingpage"] =   "' . $this->objLanguage->code2Txt('mod_learningcontent_displayingpage', 'learningcontent') . '";
+        lang["wordof"] =   "' . $this->objLanguage->code2Txt('mod_learningcontent_wordof', 'learningcontent') . '";
+        var baseuri = "' . $objSysConfig->getsiteRoot() . 'index.php";
+         </script>');
+        //Ext stuff
+        $objExtJs = $this->getObject('extjs', 'ext');
+        $objExtJs->show();
+
         //Get params column id and status if edit
         $id = $this->getParam('id', NULL);
         $action = $this->getParam('action', NULL);
