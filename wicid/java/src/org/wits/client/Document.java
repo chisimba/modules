@@ -59,6 +59,14 @@ public class Document extends BaseModel {
         return get("department");
     }
 
+    public void setStatus(String status) {
+        set("status", status);
+    }
+
+    public String getStatus() {
+        return get("status");
+    }
+
     public void setTelephone(String telephone) {
         set("telephone", telephone);
     }

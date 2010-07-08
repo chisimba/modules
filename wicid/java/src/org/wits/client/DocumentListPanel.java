@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package org.wits.client;
+
 import java.util.Arrays;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
@@ -21,6 +22,7 @@ import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 
@@ -63,19 +65,23 @@ public class DocumentListPanel extends LayoutContainer {
     private Button editButton = new Button("Edit");
     private Button approveButton = new Button("Approve");
     private Button refreshButton = new Button("Refresh");
+    private Button commentButton = new Button("Comment");
     private List<ModelData> selectedRows;
     private CheckBoxSelectionModel<ModelData> sm;
     private boolean removeUsersDone = false;
     private ListStore<ModelData> store;
     private Menu contextMenu = new Menu();
+    private Menu submenuMenu = new Menu();
     private Main main;
     private String defaultParams = "";
+    private int status;
 
     public DocumentListPanel(Main main) {
         super();
         this.main = main;
         editButton.setEnabled(false);
         approveButton.setEnabled(false);
+//        checkStatus();
     }
 
     @Override
@@ -91,6 +97,7 @@ public class DocumentListPanel extends LayoutContainer {
         columns.add(new ColumnConfig("Topic", "Topic", 100));
         columns.add(new ColumnConfig("Date", "Date", 100));
         columns.add(new ColumnConfig("Attachment", "Attachment", 100));
+        columns.add(new ColumnConfig("Status", "Status", 100));
         CellEditor checkBoxEditor = new CellEditor(new CheckBox());
 
         // create the column model
@@ -107,7 +114,8 @@ public class DocumentListPanel extends LayoutContainer {
         type.addField("Topic", "topic");
         type.addField("Date", "date");
         type.addField("Attachment", "attachmentstatus");
-        
+        type.addField("Status", "Status");
+
 
         // use a http proxy to get the data
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + "?module=wicid&action=getdocuments");
@@ -136,6 +144,9 @@ public class DocumentListPanel extends LayoutContainer {
                         selectedRows = md.getSelection();
                         approveButton.setEnabled(selectedRows.size() > 0);
                         editButton.setEnabled(selectedRows.size() > 0);
+                        for (ModelData row : selectedRows) {
+                            status = (Integer) row.get("Status");
+                        }
                     }
                 });
 
@@ -221,6 +232,59 @@ public class DocumentListPanel extends LayoutContainer {
         }
     }
 
+    private void submitDocument(int status) {
+        final int statusF = status;
+        final String statusS = "";
+
+        switch (statusF) {
+            case 0:
+                statusS.equals("Creation");
+            case 1:
+                statusS.equals("APO");
+            case 2:
+                statusS.equals("Subfaculty");
+            case 3:
+                statusS.equals("Faculty");
+            case 4:
+                statusS.equals("Senate");
+        }
+
+        Dialog submitDialog = new Dialog();
+        submitDialog.addText("Are you sure you want to submit to " + statusS + "?");
+        submitDialog.setButtons(Dialog.YESNO);
+        submitDialog.getButtonById(Dialog.YES).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                String url =
+                        GWT.getHostPageBaseURL()
+                        + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + Constants.docid + "&status=" + statusF;
+                RequestBuilder builder =
+                        new RequestBuilder(RequestBuilder.GET, url);
+
+                try {
+                    Request request = builder.sendRequest(null, new RequestCallback() {
+
+                        public void onError(Request request, Throwable exception) {
+                            MessageBox.info("Error", "Error, cannot change status", null);
+                        }
+
+                        public void onResponseReceived(Request request, Response response) {
+                            if (200 == response.getStatusCode()) {
+                                MessageBox.info("Done", "The document has been submitted to " + statusS, null);
+                                refreshDocumentList(defaultParams);
+                            } else {
+                                MessageBox.info("Error", "Error occured on the server. Cannot set status", null);
+                            }
+                        }
+                    });
+                } catch (RequestException e) {
+                    MessageBox.info("Fatal Error", "Fatal Error: cannot delete document", null);
+                }
+            }
+        });
+    }
+
     private void deleteDocs() {
         String ids = "";
         for (ModelData row : selectedRows) {
@@ -241,7 +305,7 @@ public class DocumentListPanel extends LayoutContainer {
 
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
-                       
+
                         refreshDocumentList(defaultParams);
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot delete document", null);
@@ -254,7 +318,7 @@ public class DocumentListPanel extends LayoutContainer {
     }
 
     public void refreshDocumentList(String params) {
-         params+="&userid=1";
+        params += "&userid=1";
         // defines the xml structure
         ModelType type = new ModelType();
         type.setRoot("documents");
@@ -269,6 +333,7 @@ public class DocumentListPanel extends LayoutContainer {
         type.addField("Telephone", "telephone");
         type.addField("Date", "date");
         type.addField("Attachment", "attachmentstatus");
+        type.addField("Status", "status");
 
         // use a http proxy to get the data
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + params);
@@ -301,10 +366,9 @@ public class DocumentListPanel extends LayoutContainer {
 
                     boolean status = false;
                     status = checkAttachments(attachments);
-                    if(status) {
+                    if (status) {
                         approveDocs();
-                    }
-                    else {
+                    } else {
                         MessageBox.info("Approve Documents", "Only documents that have attachemnts can be approved. Please try again!", null);
                     }
                 }
@@ -342,6 +406,7 @@ public class DocumentListPanel extends LayoutContainer {
                 }
             }
         });
+
         MenuItem approveMenuItem = new MenuItem("Approve");
         approveMenuItem.setIconStyle("accept");
         approveMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
@@ -355,8 +420,15 @@ public class DocumentListPanel extends LayoutContainer {
             }
         });
 
+        System.out.println(status);
+        submitSelections(status);
+
+        MenuItem submitMenuItem = new MenuItem("Submit");
+        submitMenuItem.setIconStyle("yes");
+        submitMenuItem.setSubMenu(submenuMenu);
+
         MenuItem deleteMenuItem = new MenuItem("Delete");
-        deleteMenuItem.setIconStyle("delete");
+        //deleteMenuItem.setIconStyle("yes");
         deleteMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
             public void componentSelected(MenuEvent ce) {
@@ -370,7 +442,73 @@ public class DocumentListPanel extends LayoutContainer {
         contextMenu.add(editMenuItem);
         contextMenu.add(approveMenuItem);
         contextMenu.add(new SeparatorMenuItem());
+        //contextMenu.add(submenuMenu);
+        contextMenu.add(submitMenuItem);
+        contextMenu.add(new SeparatorMenuItem());
         contextMenu.add(deleteMenuItem);
+    }
+
+    private void submitSelections(int status) {
+        final int itemOne = status - 1;
+        final int itemTwo = status + 1;
+        final String status1 = "", status2 = "";
+
+        if (itemOne >= 0) {
+            switch (itemOne) {
+                case 0:
+                    status1.equals("Creation");
+                case 1:
+                    status1.equals("APO");
+                case 2:
+                    status1.equals("Subfaculty");
+                case 3:
+                    status1.equals("Faculty");
+                case 4:
+                    status1.equals("Senate");
+            }
+
+            MenuItem submitOneMenuItem = new MenuItem(status1);
+            submitOneMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
+
+                public void componentSelected(MenuEvent ce) {
+                    if (selectedRows.size() < 1) {
+                        MessageBox.info("No documents", "Please, select document(s) to submit", null);
+                    } else {
+                        submitDocument(itemOne);
+                    }
+                }
+            });
+            submenuMenu.add(submitOneMenuItem);
+        }
+
+        if (itemTwo <= 4) {
+            switch (itemTwo) {
+                case 0:
+                    status2.equals("Creation");
+                case 1:
+                    status2.equals("APO");
+                case 2:
+                    status2.equals("Subfaculty");
+                case 3:
+                    status2.equals("Faculty");
+                case 4:
+                    status2.equals("Senate");
+            }
+
+            MenuItem submitTwoMenuItem = new MenuItem(status2);
+            submitTwoMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
+
+                public void componentSelected(MenuEvent ce) {
+                    if (selectedRows.size() < 1) {
+                        MessageBox.info("No documents", "Please, select document(s) to submit", null);
+                    } else {
+                        submitDocument(itemTwo);
+                    }
+                }
+            });
+            submenuMenu.add(submitTwoMenuItem);
+            System.out.println(itemOne+"\n"+itemTwo+"\n"+status1+"\n"+status2);
+        }
     }
 
     private void showEditDialog() {
@@ -386,9 +524,10 @@ public class DocumentListPanel extends LayoutContainer {
         document.setGroup((String) selectedRows.get(0).get("group"));
         document.setTopic((String) selectedRows.get(0).get("Topic"));
         document.setAttachmentStatus((String) selectedRows.get(0).get("Attachment"));
-        String mode=Constants.main.getMode();
+        document.setStatus((String) selectedRows.get(0).get("status"));
+        String mode = Constants.main.getMode();
 
-        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, mode,null);
+        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, mode, null);
         editDocumentDialog.show();
     }
 
@@ -417,8 +556,8 @@ public class DocumentListPanel extends LayoutContainer {
                             if (jSonDocument.getAttachmentStatus() != null) {
                                 if (jSonDocument.getAttachmentStatus().equals("Y")) {
                                     MessageBox.info("Complete", "This document cannot be edited because it has all the required information.", null);
-                                
-                                return;
+
+                                    return;
                                 }
                             }
                             if (jSonDocument.getOwner().equals("true")) {
@@ -432,7 +571,7 @@ public class DocumentListPanel extends LayoutContainer {
                                 document.setTelephone(jSonDocument.getTelephone());
                                 document.setId(docId);
 
-                                EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, "limited",main);
+                                EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, "limited", main);
                                 editDocumentDialog.show();
                             } else {
                                 MessageBox.info("Not owner", "Sorry, not owner, cannot edit the document", null);
@@ -459,12 +598,62 @@ public class DocumentListPanel extends LayoutContainer {
     private boolean checkAttachments(String attachments) {
         String[] attach = attachments.split(",");
 
-        for(String a : attach) {
-            if(a.equals("No")) {
+        for (String a : attach) {
+            if (a.equals("No")) {
                 return false;
             }
         }
 
         return true;
     }
+
+    /*  private int checkStatus() {
+    System.out.println("checkStatus()");
+    final String statusS = "";
+
+    String ids = "";
+    for (ModelData row : selectedRows) {
+    ids += row.get("docid") + ",";
+    }
+
+    RequestBuilder builder =
+    new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()+Constants.MAIN_URL_PATTERN +
+    "?module=wicid&action=getstatus&docid=" + ids);
+
+    try {
+    Request request = builder.sendRequest(null, new RequestCallback() {
+
+    public void onError(Request request, Throwable exception) {
+    MessageBox.info("Error", "Error, Cannot retrieve document details", null);
+    }
+
+    public void onResponseReceived(Request request, Response response) {
+    try {
+    String data = response.getText();
+    System.out.println(data);
+    int status = Integer.parseInt(data);
+    System.out.println(status);
+    switch (status) {
+    case 0:
+    statusS.equals("Creation");
+    case 1:
+    statusS.equals("APO");
+    case 2:
+    statusS.equals("Subfaculty");
+    case 3:
+    statusS.equals("Faculty");
+    case 4:
+    statusS.equals("Senate");
+    }
+    } catch (NumberFormatException nfe) {
+    MessageBox.info("Error", "Error, status is not an integer", null);
+    }
+
+    }
+    });
+    } catch (RequestException e) {
+    MessageBox.info("Fatal Error", "Fatal Error: Cannot retrieve document details", null);
+    }
+    return status;
+    }*/
 }
