@@ -54,9 +54,10 @@ class dbgradebook2_grades extends dbTable
     /**
      * Insert a record
      * @param string $learnerId The learner ID
+     * @param string $columnId The Column Id
      * @param string $totalGrade Total grade
      */
-    function insertSingle($learnerId,$totalGrade) 
+    function insertSingle($learnerId,$columnId,$totalGrade) 
     {
         $id = $this->insert(array(
             'learnerid' => $learnerId,
