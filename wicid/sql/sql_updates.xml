@@ -101,4 +101,46 @@
         </data>
     </update>
 
+    <update>
+        <table>tbl_wicid_documents</table>
+        <version>0.038</version>
+        <description>Added the currentuserid field</description>
+        <data>
+            <add>
+                <name>currentuserid</name>
+                <type>text</type>
+                <length>10</length>
+            </add>
+
+        </data>
+    </update>
+
+    <update>
+        <table>tbl_wicid_documents</table>
+        <version>0.038</version>
+        <description>Added the status column</description>
+        <data>
+            <add>
+                <name>status</name>
+                <type>int</type>
+                <notnull>TRUE</notnull>
+            </add>
+
+        </data>
+    </update>
+
+    <update>
+        <table>tbl_wicid_formdata</table>
+        <version>0.040</version>
+        <description>Added the commentdata column</description>
+        <data>
+            <add>
+                <name>commentdata</name>
+                <type>text</type>
+                <notnull>TRUE</notnull>
+            </add>
+
+        </data>
+    </update>
+
 </updates>
