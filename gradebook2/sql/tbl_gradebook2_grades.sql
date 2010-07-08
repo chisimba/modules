@@ -22,6 +22,11 @@ $tablename = 'tbl_gradebook2_grades';
        'length' => 32,
        'notnull' => 1
        ),
+   'columnid' => array(
+       'type' => 'text',
+       'length' => 32,
+       'notnull' => TRUE
+       ),
    'learnerid' => array(
        'type' => 'text',
        'length' => 32,
