@@ -52,6 +52,7 @@ import org.wits.client.ads.OverView;
 import org.wits.client.util.Util;
 import java.util.Date;
 import org.wits.client.ads.ForwardTo;
+import org.wits.client.ads.CommentDialog;
 
 /**
  *
@@ -70,8 +71,11 @@ public class EditDocumentDialog {
     private final TextField<String> numberField = new TextField<String>();
     private final TextField<String> ownerField = new TextField<String>();
     private Button saveButton = new Button("Save");
+    private Button nextButton = new Button("Next");
     private Button browseTopicsButton = new Button("Browse Facuties");
     private Button forwardButton = new Button("Forward to...");
+    private Button retrieveButton = new Button("Retrieve Doc");
+    private Button commentButton = new Button("Comment");
     private TopicListingFrame topicListingFrame;
     private TextArea topicField = new TextArea();
     private Dialog topicListingDialog = new Dialog();
@@ -87,13 +91,13 @@ public class EditDocumentDialog {
     private DateField dateField = new DateField();
     private Grid upload = new Grid(2, 1);
     private OverView oldOverView, overView;
-    private Button nextButton = new Button("Next");
     private boolean myResult;
     private BorderLayoutData uploadEastData = new BorderLayoutData(LayoutRegion.EAST, 60);
     private BorderLayoutData uploadWestData = new BorderLayoutData(LayoutRegion.WEST, 60);
     private BorderLayoutData uploadCenterData = new BorderLayoutData(LayoutRegion.CENTER, 60);
     private List<Group> groups = new ArrayList<Group>();
     private String editDocumentDialogData;
+    private String[] users;
     //private Overview oldOverview;
 
     public EditDocumentDialog(Document document, String mode, Main main) {
@@ -266,7 +270,7 @@ public class EditDocumentDialog {
                     uploadpanel.submit();
 
                 }
-                
+
                 String dept = deptField.getValue();
                 if (dept == null) {
                     MessageBox.info("Missing department", "Provide originating department", null);
@@ -329,9 +333,62 @@ public class EditDocumentDialog {
             }
         });
 
+        retrieveButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                final Dialog retrieveDocumentDialog = new Dialog();
+                retrieveDocumentDialog.setHeading("Retrive Document");
+                retrieveDocumentDialog.setButtons(Dialog.YESNO);
+
+                retrieveDocumentDialog.getButtonById(Dialog.YES).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+                    @Override
+                    public void componentSelected(ButtonEvent ce) {
+                        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
+                                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=retrievedocument&userid=" + users[0] + "&docid=" + Constants.docid);
+                        try {
+
+                            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                                public void onError(Request request, Throwable exception) {
+                                    MessageBox.info("Error", "Error, cannot retrieve document", null);
+                                }
+
+                                public void onResponseReceived(Request request, Response response) {
+                                    MessageBox.info("Done", "The document has been retrieved", null);
+                                }
+                            });
+                        } catch (Exception e) {
+                            MessageBox.info("Fatal Error", "Fatal Error: cannot retrieve document", null);
+                        }
+                    }
+                });
+
+                retrieveDocumentDialog.getButtonById(Dialog.NO).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+                    @Override
+                    public void componentSelected(ButtonEvent ce) {
+                        retrieveDocumentDialog.hide();
+                    }
+                });
+
+                retrieveDocumentDialog.show();
+            }
+        });
+
         if (mode.equals("apo")) {
             mainForm.addButton(nextButton);
             mainForm.addButton(forwardButton);
+            getUsers();/*
+            System.out.println(users[0]);
+            System.out.println(users[1]);
+            try {
+                if ((!users[0].equals(users[1])) || (!users[1].equals(null))) {
+                    */mainForm.addButton(retrieveButton);/*
+                }
+            } catch (NullPointerException npe) {
+            }*/
         } else {
             uploadpanel.add(saveButton, uploadWestData);
         }
@@ -378,6 +435,15 @@ public class EditDocumentDialog {
             }
         });
 
+        commentButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                CommentDialog commentDialog = new CommentDialog();
+                commentDialog.show();
+            }
+        });
+
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
         editDocumentDialog.setBodyBorder(false);
         if (mode.equals("apo")) {
@@ -417,17 +483,17 @@ public class EditDocumentDialog {
         String group = groupField.getValue().toString();
         String topic = topicField.getValue();
         Date date = new Date();
-                try {
-                    if (dateField.getDatePicker() != null) {
-                        date = dateField.getDatePicker().getValue();
-                    }
-                } catch (Exception ex) {
-                }
+        try {
+            if (dateField.getDatePicker() != null) {
+                date = dateField.getDatePicker().getValue();
+            }
+        } catch (Exception ex) {
+        }
 
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
-                        + "module=wicid&action=registerdocument&dept=" + dept + "&topic=" + topic
-                        + "&title=" + title + "&tel=" + tel + "&group=" + group + "&date="
-                        + fmt.format(date) + "&docid=" + document.getId();
+                + "module=wicid&action=registerdocument&dept=" + dept + "&topic=" + topic
+                + "&title=" + title + "&tel=" + tel + "&group=" + group + "&date="
+                + fmt.format(date) + "&docid=" + document.getId();
 
         return url;
     }
@@ -545,6 +611,33 @@ public class EditDocumentDialog {
         } catch (RequestException e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot check document attachment", null);
         }
+    }
+
+    private String[] getUsers() {
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=checkusers&docid=" + Constants.docid);
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get users", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    String data = response.getText();
+                    System.out.println(data);
+
+                    users = data.split(" ");
+                    System.out.println("getUsers(0)" + users[0]);
+                    System.out.println("getUsers(1)" + users[1]);
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get users", null);
+        }
+
+        return users;
     }
 
     private void getFormData() {
