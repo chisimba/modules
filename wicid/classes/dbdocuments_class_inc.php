@@ -49,7 +49,7 @@ class dbdocuments extends dbtable {
               where A.active = 'N'
               and A.deleteDoc = 'N'";// and mode ='$mode'";
         if(!$this->objUser->isadmin()) {
-            $sql.=" and userid = '".$this->objUser->userid()."'";
+        //    $sql.=" and A.userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
 
@@ -86,7 +86,8 @@ class dbdocuments extends dbtable {
                     'department'=> $row['department'],
                     'telephone'=> $row['telephone'],
                     'date'=> $row['date_created'],
-                    'attachmentstatus'=> $attachmentStatus
+                    'attachmentstatus'=> $attachmentStatus,
+                    'status'=> $row['status']
             );
         }
         echo json_encode(array("documents"=>$docs));
@@ -111,7 +112,8 @@ class dbdocuments extends dbtable {
             $groupid,
             $path,
             $mode="default",
-            $approved="N"
+            $approved="N",
+            $status="0"
 
     ) {
 
@@ -135,7 +137,8 @@ class dbdocuments extends dbtable {
                 'telephone'=>$telephone,
                 'topic'=>$path,
                 'mode'=>$mode,
-                'active'=>$approved
+                'active'=>$approved,
+                'status'=>$status
         );
         $id=$this->insert($data);
         echo $refno.','.$id;
@@ -289,6 +292,44 @@ class dbdocuments extends dbtable {
         $objMailer->setValue('AltBody', strip_tags($body));
 
         $objMailer->send();
+    }
+
+    function retrieveDocument($userid, $docid){
+        $sql= "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
+        $this->sendEmailAlert($userid);
+        return $this->getArray($sql);
+
+    }
+
+    function checkUsers($docid) {
+        $sql="select userid, currentuserid from tbl_wicid_documents where id='$docid'";
+        $userid="";
+        $currentuserid="";
+        $rows=$this->getArray($sql);
+
+        foreach($rows as $row) {
+            $userid=$row['userid'];
+            $currentuserid=$row['currentuserid'];
+        }
+        echo $userid.' '.$currentuserid;
+        return $userid;$currentuserid;
+    }
+
+    function getStatus($docid){
+        $sql = "select status from tbl_wicid_documents where id='$docid'";
+        $rows=$this->getArray($sql);
+
+        foreach($rows as $row) {
+            $status=$row['status'];
+        }
+        echo $status;
+        return $status;
+    }
+
+    function setStatus($docid, $status){
+        echo $status;
+        $sql = "update tbl_wicid_documents set status='$status' where id = '$docid'";
+        echo $sql;
     }
 }
 ?>
