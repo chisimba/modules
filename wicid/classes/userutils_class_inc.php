@@ -358,7 +358,6 @@ class userutils extends object {
         $cdir = str_replace("//", "/", $cdir);
 
         $d = dir($cdir);
-
         while ($f = $d->read()) {
 
             if ($f == '.' || $f == '..' || substr($f, 0, 1) == '.'
