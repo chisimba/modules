@@ -67,8 +67,10 @@ class edit_weighted_column extends object
         } else {
           $objColumname = new textinput('column_name', $colVals['column_name']);
         }
+        //Add form rule for required field
+        $objForm->addRule('column_name', $this->objLanguage->languageText('mod_gradebook2_colnamerequired',"gradebook2")."!", 'required');
         //Create a new label for the text labels
-        $columnameLabel = new label($this->objLanguage->languageText("mod_gradebook2_columname","gradebook2"),"column_name");
+        $columnameLabel = new label("* ".$this->objLanguage->languageText("mod_gradebook2_columname","gradebook2"),"column_name");
         //Create new table row to contain the columname lable and textinput
         $objTable->startRow();
         $objTable->addCell($columnameLabel->show(), 180, 'top', 'left');
@@ -83,8 +85,10 @@ class edit_weighted_column extends object
         } else {
           $objDisplayname = new textinput('display_name', $colVals["display_name"]);
         }
+        //Add form rule for required field
+        $objForm->addRule('display_name', $this->objLanguage->languageText('mod_gradebook2_displaynamerequired',"gradebook2")."!", 'required');
         //Create a new label for the text labels
-        $displaynameLabel = new label($this->objLanguage->languageText("mod_gradebook2_displayname","gradebook2"),"display_name");
+        $displaynameLabel = new label("* ".$this->objLanguage->languageText("mod_gradebook2_displayname","gradebook2"),"display_name");
         //Create new table row to contain the displayname lable and textinput
         $objTable->startRow();
         $objTable->addCell($displaynameLabel->show(), 180, 'top', 'left');
@@ -97,7 +101,9 @@ class edit_weighted_column extends object
         } else {
           $objDescriptiontxt = new textarea('description', $colVals["description"]);
         }
-        $descriptionLabel = new label($this->objLanguage->languageText("mod_gradebook2_description","gradebook2"),"description");
+        //Add form rule for required field
+        $objForm->addRule('description', $this->objLanguage->languageText('mod_gradebook2_descriptionrequired',"gradebook2")."!", 'required');
+        $descriptionLabel = new label("* ".$this->objLanguage->languageText("mod_gradebook2_description","gradebook2"),"description");
         //Create new table row to contain the description lable and textinput
         $objTable->startRow();
         $objTable->addCell($descriptionLabel->show(), 180, 'top', 'left');
@@ -303,7 +309,7 @@ class edit_weighted_column extends object
 
         //Create new table row to contain the submit/cancel instructions
         $objTable->startRow();
-        $objTable->addCell($this->objLanguage->languageText("mod_gradebook2_submitorcancel", "gradebook2"), Null, 'top', 'left', '', 'colspan="2"');
+        $objTable->addCell($this->objLanguage->languageText("mod_gradebook2_submitorcancel", "gradebook2")."<br /> * ".$this->objLanguage->languageText("mod_gradebook2_requiredfield", "gradebook2"), Null, 'top', 'left', '', 'colspan="2"');
         $objTable->endRow();
         //Create new table row to contain the submit and cancel buttons
         $objTable->startRow();
