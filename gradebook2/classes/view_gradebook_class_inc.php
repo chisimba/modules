@@ -24,7 +24,7 @@ class view_gradebook extends object
             'module' => 'gradebook2',
             'action' => 'jsongetgrades','limit' => '30'
         ))) . '"; 
-        var title= "'.ucWords($this->objLanguage->code2Txt('mod_gradebook2_useractivitylogs','gradebook2'))." ".ucWords($this->objLanguage->code2Txt('mod_gradebook2_wordfor', 'gradebook2'))." ".$this->objContext->getTitle( $this->contextCode ).' ('.$this->contextCode.')";
+        var title= "'.ucWords($this->objLanguage->code2Txt('mod_gradebook2_gradecenter','gradebook2'))." ".ucWords($this->objLanguage->code2Txt('mod_gradebook2_wordfor', 'gradebook2'))." ".$this->objContext->getTitle( $this->contextCode ).' ('.$this->contextCode.')";
         var lang = new Array();
         lang["nologstodisplay"] =   "' . ucWords($this->objLanguage->code2Txt('mod_learningcontent_nologstodisplay', 'learningcontent')) . '";
         lang["displayingpage"] =   "' . $this->objLanguage->code2Txt('mod_learningcontent_displayingpage', 'learningcontent') . '";
@@ -43,23 +43,17 @@ class view_gradebook extends object
           $colVals = $this->objWeightedColumn->listSingle($id);
           $colVals = $colVals[0];
         }
-        //Add Heading
-        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
-        $objHeading->type = 1;
-        $objHeading->str = $this->objLanguage->languageText("mod_gradebook2_addweightedcolumn","gradebook2");
-        $objForm->addToForm($objHeading->show());
         //Create new table
         $objTable = new htmltable();
         $objTable->width = '100%';
         $objTable->attributes = " align='center' border='0'";
         $objTable->cellspacing = '5';
-        //Add Heading: Column Information
+        //Add Heading
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
-        $objHeading->type = 3;
-        $objHeading->str = "(1) ".$this->objLanguage->languageText("mod_gradebook2_columninfo","gradebook2");
-        //Create new table row to contain heading: Column Information
+        $objHeading->type = 1;
+        $objHeading->str = $this->objLanguage->languageText("mod_gradebook2_gradecenter","gradebook2");
         $objTable->startRow();
-        $objTable->addCell($objHeading->show(), Null, 'top', 'left', '', 'colspan="2"');
+        $objTable->addCell($objHeading->show(), Null, 'top', 'left', '', 'colspan="6"');
         $objTable->endRow();
 
         return $objTable->show();
