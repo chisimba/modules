@@ -41,12 +41,12 @@ $tablename = 'tbl_gradebook2_weightedcolumn';
        'type' => 'text',
        'notnull' => TRUE
        ),
-   'primary_name' => array(
+   'primary_display' => array(
        'type' => 'text',
        'length' => 64,
        'notnull' => true
        ),
-   'secondary_name' => array(
+   'secondary_display' => array(
        'type' => 'text',
        'length' => 64,
        'notnull' => true

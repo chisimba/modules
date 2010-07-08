@@ -99,15 +99,13 @@ class gradebook2 extends controller {
             $colArr['display_name'] = $this->getParam('display_name', NULL);
             $colArr['description'] = $this->getParam('description', NULL);
             $colArr['primary_display'] = $this->getParam('primary_display', NULL);
-            $colArr['secondary_name'] = $this->getParam('secondary_display', NULL);
+            $colArr['secondary_display'] = $this->getParam('secondary_display', NULL);
             $colArr['grading_period'] = $this->getParam('grading_period', NULL);
-            $colArr['creationdate'] = $this->getParam('category', NULL);
             $colArr['include_weighted_grade'] = $this->getParam('weighted_grade', NULL);
             $colArr['running_total'] = $this->getParam('running_total', NULL);
             $colArr['show_grade_center_calc'] = $this->getParam('grade_center_calc', NULL);
             $colArr['show_statistics'] = $this->getParam('showstats_grade_center', NULL);
             $id = $this->objWeightedColumn->insertSingle($colArr);
-var_dump($colArr.$id);exit;
             return $this->nextAction('main', NULL);
     }
 }
