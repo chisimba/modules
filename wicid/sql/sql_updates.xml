@@ -122,7 +122,7 @@
         <data>
             <add>
                 <name>status</name>
-                <type>int</type>
+                <type>text</type>
                 <notnull>TRUE</notnull>
             </add>
 

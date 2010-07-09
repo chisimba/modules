@@ -352,8 +352,9 @@ class wicid extends controller {
      */
     public function __determinepermissions() {
         $mode=$this->objSysConfig->getValue('MODE', 'wicid');
-        echo "admin=true,mode=$mode";
-       // echo $this->objUser->isAdmin()?"true":"false";
+       echo "admin=true,mode=$mode";
+      //  echo $this->objUser->isAdmin()?"admin=true,mode=$mode":"admin=false,mode=$mode";
+
     }
 
 
@@ -379,9 +380,28 @@ class wicid extends controller {
         $res = $this->documents->checkRefNo($number);
         $refno=$number.$res;
         $contact = $this->getParam('contact');
+        if($contact == null || $contact == ''){
+            $contact=$this->objUser->fullname();
+        }
         $telephone=$this->getParam('telephone');
         $group=$this->getParam('group');
         $status=$this->getParam('status');
+        if($status == '' || $status == NULL){
+            $status="0";
+        }
+        /**
+         * $date,
+            $refno,
+            $department,
+            $contact,
+            $telephone,
+            $title,
+            $groupid,
+            $path,
+            $mode="default",
+            $approved="N",
+            $status="0"
+         */
         $this->documents->addDocument(
                 $date,
                 $refno,
@@ -391,6 +411,8 @@ class wicid extends controller {
                 $title,
                 $group,
                 $selectedfolder,
+                $mode="default",
+                "N",
                 $status);
     }
 
@@ -504,7 +526,8 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return FALSE;
+        return false;
+
     }
 
     function __registeracademicpresenters() {

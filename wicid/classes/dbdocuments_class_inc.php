@@ -17,7 +17,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   wicid (document management system)
+ * @package   wicid (docume3nt management system)
  * @author    Nguni Phakela, david wafula
  * @copyright 2010
 
@@ -49,6 +49,7 @@ class dbdocuments extends dbtable {
               where A.active = 'N'
               and A.deleteDoc = 'N'";// and mode ='$mode'";
         if(!$this->objUser->isadmin()) {
+
         //    $sql.=" and A.userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
@@ -279,11 +280,12 @@ class dbdocuments extends dbtable {
         $toEmail=$this->objUser->email($useridto);
 
         $linkUrl = $this->uri(array('action'=>'home'));
+        $linkUrl->link="Link";
         $objMailer = $this->getObject('email', 'mail');
-        $body="xyz has forwarded you document titled xrf. To access it, click
-            on link below
-            ".$linkUrl->href;
+        $body="xyz has forwarded you document titled xrf. To access it, click on link below
+        ".$linkUrl->href;
         $subject="hi";
+       
         $objMailer->setValue('to',array($toEmail));
         $objMailer->setValue('from', $this->objUser->email());
         $objMailer->setValue('fromName', $this->objUser->fullname());
