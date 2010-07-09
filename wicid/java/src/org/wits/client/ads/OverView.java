@@ -50,6 +50,7 @@ public class OverView {
     private Button saveButton = new Button("Next");
     private Button backButton = new Button("Back");
     private Button forwardButton = new Button("Forward to...");
+    private Button commentButton = new Button("Comments");
     private TextArea topicField = new TextArea();
     private String qA1 = "", qA3 = "", qA2 = "", qA4 = "", qA5 = "";
     private TextField<String> questionA1 = new TextField<String>();
@@ -315,10 +316,19 @@ public class OverView {
             }
         });
 
+        commentButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                CommentDialog commentDialog = new CommentDialog("overview");
+                commentDialog.show();
+            }
+        });
 
         mainForm.addButton(backButton);
         mainForm.addButton(saveButton);
         mainForm.addButton(forwardButton);
+        mainForm.addButton(commentButton);
         mainForm.setButtonAlign(HorizontalAlignment.LEFT);
 
         overViewDialog.setBodyBorder(false);

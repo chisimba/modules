@@ -12,6 +12,7 @@ import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -27,59 +28,96 @@ import org.wits.client.Constants;
 public class CommentDialog {
 
     private Dialog commentDialog = new Dialog();
-    private Button commentButton = new Button("Done");
     private FormPanel panel = new FormPanel();
     private FormData formData = new FormData("-20");
-    private String currentUserId;
+    private Button commentButton = new Button("Done");
+    private TextArea comments = new TextArea();
+    private String currentUserId, formname;
 
-    public CommentDialog() {
+    public CommentDialog(String formName) {
         createUI();
+        formname = formName;
+        getComments(formname);
     }
 
     public void createUI() {
-        panel.setWidth(300);
-        panel.setHeight(25);
+        comments.setEmptyText("Enter any comments here");
+        comments.setSize(285, 270);
+        commentDialog.add(comments, formData);
 
-        commentButton.setSize(80, 25);
-        commentButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+        commentDialog.setButtons(Dialog.OKCANCEL);
+        commentDialog.getButtonById(Dialog.OK).addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() +
-                        Constants.MAIN_URL_PATTERN + "?module=wicid&action=setCommentData&docid=" +
-                        Constants.docid+"&currentuserid="+currentUserId);
-                try {
-
-                    Request request = builder.sendRequest(null, new RequestCallback() {
-
-                        public void onError(Request request, Throwable exception) {
-                            MessageBox.info("Error", "Error, cannot change currentuser", null);
-                        }
-
-                        public void onResponseReceived(Request request, Response response) {
-                            MessageBox.info("Done", "The current user for document "+Constants.docid+" has been changed.", null);
-                        }
-                    });
-                } catch (Exception e) {
-                    MessageBox.info("Fatal Error", "Fatal Error: cannot change currentuser", null);
-                }
-
+                addComment(formname);
                 commentDialog.hide();
             }
         });
-        panel.add(commentButton);
+
+        commentDialog.getButtonById(Dialog.CANCEL).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                commentDialog.hide();
+            }
+        });
 
         commentDialog.setBodyBorder(false);
-        commentDialog.setHeading("Forward to...");
-        commentDialog.setHeight(180);
-        commentDialog.setWidth(412);
-        commentDialog.setButtons(Dialog.CLOSE);
-        commentDialog.setButtonAlign(HorizontalAlignment.LEFT);
+        commentDialog.setHeading("Comments");
+        commentDialog.setHeight(300);
+        commentDialog.setWidth(300);
+        commentDialog.setButtonAlign(HorizontalAlignment.CENTER);
         commentDialog.setHideOnButtonClick(true);
-        commentDialog.add(panel, formData);
+        //commentDialog.add(panel, formData);
     }
 
     public void show() {
         commentDialog.show();
+    }
+
+    public void addComment(String formname) {
+        String commentdata = comments.getValue();
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=addcommentdata&docid=" + Constants.docid+"&formname="+formname+"&commentdata="+commentdata;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot change currentuser", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    MessageBox.info("Done", "Your comments have been added", null);
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot change currentuser", null);
+        }
+    }
+
+    public void getComments(String formname) {
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getcommentdata&docid=" + Constants.docid+"&formname="+formname;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot change currentuser", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    System.out.println(response.getText());
+                    comments.setValue(response.getText());
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot change currentuser", null);
+        }
     }
 }
