@@ -724,15 +724,16 @@ class wicid extends controller {
         $this->documents->setStatus($docid, $status);
     }
 
-    public function __setcommentdata(){
+    public function __addcommentdata(){
         $docid = $this->getParam('docid');
-        $commentdata= $this->getParam('commentdata');
-        $this->objformdata->setCommentData($docid, $commentdata);
+        $formname= $this->getParam('formname');
+        $commentdata=  $this->getParam('commentdata');
+        $this->objformdata->addCommentData($docid, $formname, $commentdata);
     }
 
     public function __getcommentdata(){
         $docid = $this->getParam('docid');
         $formname = $this->getparam('formname');
-        $this->objformdata->getCommentData($docid);
+        $this->objformdata->getCommentData($docid, $formname);
     }
 }
