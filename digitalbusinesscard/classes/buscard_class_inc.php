@@ -285,7 +285,7 @@ class buscard extends object
 
     /**
     *
-    * Method to show the Digital Business cars in
+    * Method to show the Digital Business cards in
     * a block
     *
     * @param string $userId The userid of the user to lookup
