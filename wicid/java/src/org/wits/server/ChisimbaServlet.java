@@ -9,7 +9,6 @@ import java.util.Enumeration;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 
 public class ChisimbaServlet extends HttpServlet {

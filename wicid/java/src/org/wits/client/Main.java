@@ -6,7 +6,6 @@ package org.wits.client;
 
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.Style.SortDir;
 import com.extjs.gxt.ui.client.data.BaseListLoader;
 import com.extjs.gxt.ui.client.data.BaseTreeLoader;
 import com.extjs.gxt.ui.client.data.HttpProxy;
@@ -67,7 +66,6 @@ import org.wits.client.ads.RulesAndSyllabusOne;
 import org.wits.client.ads.RulesAndSyllabusTwo;
 import org.wits.client.search.AdvancedSearchDialog;
 
-
 /**
  * Main entry point.
  *
@@ -115,9 +113,9 @@ public class Main {
     private TabPanel tab = new TabPanel();
     private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
-    private TabItem viewTab = new TabItem("File List");
+   // private TabItem viewTab = new TabItem("File List");
     // grid view file list
-    private TabItem filesTab = new TabItem("File List");
+    private TabItem filesTab = new TabItem("Files");
     private NewCourseProposalDialog newCourseProposalDialog;
     private AdvancedSearchDialog advancedSearchDialog;
     private String mode = "apo";
@@ -136,7 +134,7 @@ public class Main {
     }
 
     public LayoutContainer createGUI() {
-        
+
         LayoutContainer container = new LayoutContainer();
         container.setWidth(Window.getClientWidth());
         container.setHeight(Window.getClientHeight());
@@ -224,7 +222,7 @@ public class Main {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 /*if (newDocumentDialog == null) {
-                    newDocumentDialog = new NewDocumentDialog();
+                newDocumentDialog = new NewDocumentDialog();
                 }*/
                 newDocumentDialog = new NewDocumentDialog();
                 newDocumentDialog.show();
@@ -290,8 +288,9 @@ public class Main {
         west.setHeading("Topic Index");
 
         KeyListener keyListener = new KeyListener() {
-          public void componentKeyUp(ComponentEvent event) {
-            String filter = searchField.getValue();
+
+            public void componentKeyUp(ComponentEvent event) {
+                String filter = searchField.getValue();
                 if (filter != null) {
                     if (filter.trim().length() > 2) {
                         searchFiles(filter);
@@ -299,8 +298,7 @@ public class Main {
                         //MessageBox.info("3 Characters", "Type in atleast 3 characters to search for file", null);
                     }
                 }
-          }
-
+            }
         };
 
         searchField.addKeyListener(keyListener);
@@ -345,13 +343,13 @@ public class Main {
         });
 
         /*test.addSelectionListener(new SelectionListener<ButtonEvent>(){
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                if(testDialog == null) {
-                    testDialog = new test();
-                }
-                testDialog.show();
-            }
+        @Override
+        public void componentSelected(ButtonEvent ce) {
+        if(testDialog == null) {
+        testDialog = new test();
+        }
+        testDialog.show();
+        }
         });*/
 
         loader2.load();
@@ -435,10 +433,10 @@ public class Main {
         editMenuItem.setEnabled(false);
         editMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
-            public void componentSelected(MenuEvent ce) {
-                String docId = (String) selectedFile.get("docid");
-                documentListPanel.showEditDialog(docId);
-            }
+        public void componentSelected(MenuEvent ce) {
+        String docId = (String) selectedFile.get("docid");
+        documentListPanel.showEditDialog(docId);
+        }
         });*/
         viewContextMenu.add(downloadFileMenuItem);
         viewContextMenu.add(viewMenuItem);
@@ -461,7 +459,7 @@ public class Main {
         });
         refreshViewFilesButton.setIconStyle("refresh");
         viewFilesToolbar.add(refreshViewFilesButton);
-        viewTab.setHeight("800");
+        //viewTab.setHeight("800");
         view.setHeight("800");
         ContentPanel viewFilesPanel = new ContentPanel();
         viewFilesPanel.setFrame(false);
@@ -469,16 +467,11 @@ public class Main {
         viewFilesPanel.setLayout(new FitLayout());
         viewFilesPanel.setTopComponent(viewFilesToolbar);
         viewFilesPanel.add(view);
-        viewTab.add(viewFilesPanel);
+        //viewTab.add(viewFilesPanel);
         //tab.add(viewTab);
 
         determinePermissions();
-        documentListPanel = new DocumentListPanel(this);
-        documentListPanel.setHeight(500);
-        docsTab.setIconStyle("docs");
-        docsTab.setHeight(Window.getClientHeight());
-        docsTab.add(documentListPanel);
-        tab.add(docsTab);
+
 
         fileListPanel = new FileListPanel(this);
         fileListPanel.setHeight(500);
@@ -488,6 +481,14 @@ public class Main {
         tab.add(filesTab);
 
         center.add(tab);
+        documentListPanel = new DocumentListPanel(this);
+        documentListPanel.setHeight(500);
+        docsTab.setIconStyle("docs");
+        docsTab.setHeight(Window.getClientHeight());
+        docsTab.add(documentListPanel);
+        tab.add(docsTab);
+
+
 
 
 
@@ -495,9 +496,9 @@ public class Main {
         centerData.setMargins(new Margins(5));
         container.add(center, centerData);
 
-        
+
         loadFolderList(getFoldersParams + "&mode=" + getMode());
-        
+
 
         return container;
     }
@@ -523,14 +524,14 @@ public class Main {
 
     public void refreshFileList() {
         String fileListParams = "?module=wicid&action=getFiles&node=" + currentPath;
-        
+
         selectFileListTab();
         fileListPanel.refreshFileList(fileListParams);
         /*if (!selectedFolder.get("viewfiles").equals("true")) {
-            view.getStore().removeAll();
-            view.refresh();
+        view.getStore().removeAll();
+        view.refresh();
 
-            return;
+        return;
         }
         ModelType type2 = new ModelType();
         type2.setRoot("files");
@@ -547,7 +548,7 @@ public class Main {
         HttpProxy<String> proxy = new HttpProxy<String>(builder);
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type2);
         final BaseListLoader<ListLoadResult<ModelData>> loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
-                reader);
+        reader);
         ListStore<ModelData> store = new ListStore<ModelData>(loader);
         view.setStore(store);
         loader.setSortDir(SortDir.ASC);
@@ -576,7 +577,7 @@ public class Main {
         HttpProxy<String> proxy = new HttpProxy<String>(builder);
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type2);
         final BaseListLoader<ListLoadResult<ModelData>> loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
-                reader);
+        reader);
         ListStore<ModelData> store = new ListStore<ModelData>(loader);
         view.setStore(store);
         loader.setSortDir(SortDir.ASC);
@@ -588,7 +589,7 @@ public class Main {
         selectFileListTab();
         String searchParams = "?module=wicid&action=searchfiles&filter=" + filter;
         fileListPanel.refreshFileList(searchParams);
-        
+
     }
 
     private void setMode() {

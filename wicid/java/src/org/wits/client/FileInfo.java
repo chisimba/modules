@@ -45,7 +45,7 @@ public class FileInfo {
                 + "<b>Group:</b> " + group + "<br/><br/>"
                 + "<b>Last modified:</b> " + lastMod + "<br/><br/>"
                 + "<b>File size:</b>" + fileSize + "<br/><br/>"
-                + "<img src=\"" + thumbnail + "\">");
+                + thumbnail );
         fileInfoDialog.setWidth(300);
 
         fileInfoDialog.setOnEsc(true);

@@ -299,7 +299,7 @@ public class OverView {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                editDocumentDialog.setOldOverView(OverView.this);
+//                editDocumentDialog.setOldOverView(OverView.this);
                 editDocumentDialog.show();
                 overViewDialog.hide();
                 storeDocumentInfo();

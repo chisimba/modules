@@ -4,7 +4,6 @@
  */
 package org.wits.client;
 
-import java.util.Arrays;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.data.BaseListLoader;
