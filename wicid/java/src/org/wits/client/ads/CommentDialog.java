@@ -20,6 +20,8 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.util.Util;
+import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -32,12 +34,12 @@ public class CommentDialog {
     private FormData formData = new FormData("-20");
     private Button commentButton = new Button("Done");
     private TextArea comments = new TextArea();
-    private String currentUserId, formname;
+    private String currentUserId, formname, commentData, data;
 
     public CommentDialog(String formName) {
         createUI();
         formname = formName;
-        getComments(formname);
+        getComments();
     }
 
     public void createUI() {
@@ -51,7 +53,7 @@ public class CommentDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                addComment(formname);
+                addCommentInfo(formname);
                 commentDialog.hide();
             }
         });
@@ -77,10 +79,16 @@ public class CommentDialog {
         commentDialog.show();
     }
 
-    public void addComment(String formname) {
-        String commentdata = comments.getValue();
+    public void addCommentInfo(String formname) {
+        WicidXML wicidxml = new WicidXML(formname);
+        wicidxml.addElement("comments", comments.getValue());
+        commentData = data+wicidxml.getXml();
+        storeCommentInfo();
+    }
+
+    public void storeCommentInfo() {
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=addcommentdata&docid=" + Constants.docid+"&formname="+formname+"&commentdata="+commentdata;
+                + "?module=wicid&action=saveFormData&docid=" + Constants.docid + "&formname=" + formname + "&formdata=" + commentData;
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
         try {
 
@@ -99,10 +107,13 @@ public class CommentDialog {
         }
     }
 
-    public void getComments(String formname) {
-        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=getcommentdata&docid=" + Constants.docid+"&formname="+formname;
+    public String getComments() {
+
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=getFormData&formname="
+                +formname + "&docid=" + Constants.docid;
+
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
+
         try {
 
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -112,12 +123,21 @@ public class CommentDialog {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    System.out.println(response.getText());
-                    comments.setValue(response.getText());
+                    data = response.getText();
+                    System.out.println(data);
+
+                    String comment = Util.getTagText(data, "comments");
+
+                    if (comment == null) {
+                        comments.setValue("");
+                    } else {
+                        comments.setValue(comment);
+                    }
                 }
             });
         } catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot change currentuser", null);
         }
+        return data;
     }
 }
