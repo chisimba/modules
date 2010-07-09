@@ -73,21 +73,31 @@ class dbformdata extends dbtable {
         return $xmlStr;
     }
 
-    public function getCommentData(){
-        $sql="select * from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
-        $xmStr="";
+    public function getCommentData($docid, $formname){
+        $sql="select commentdata from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
+        $commentdata="";
         $rows=$this->getArray($sql);
 
         foreach($rows as $row) {
-            $xmlStr=$row['commentdata'];
+            $commentdata=$row['commentdata'];
         }
 
-        return $xmlStr;
+        return $commentdata;
     }
 
-    public function setCommentData(){
-        $sql = "update tbl_wicid_formdata set commentdata='$commentdata' where docid = '$docid'";
-        echo $sql;
+    public function addCommentData($docid, $formname, $commentdata){
+        $sql="select commentdata from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
+        $comments="";
+        $rows=$this->getArray($sql);
+
+        foreach($rows as $row) {
+            $comments=$row['commentdata'];
+        }
+
+        $comments.="\n".$commentdata;
+
+        $sql= "update tbl_wicid_documents set commentdata = '$comments' where id = '$docid' and formname = '$formname'";;
+        echo $comments;
     }
 }
 ?>
