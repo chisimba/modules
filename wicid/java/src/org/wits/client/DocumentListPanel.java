@@ -145,7 +145,7 @@ public class DocumentListPanel extends LayoutContainer {
                         approveButton.setEnabled(selectedRows.size() > 0);
                         editButton.setEnabled(selectedRows.size() > 0);
                         for (ModelData row : selectedRows) {
-                            status = (Integer) row.get("Status");
+                            status = Integer.parseInt(row.get("Status").toString());
                         }
                     }
                 });

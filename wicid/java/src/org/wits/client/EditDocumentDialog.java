@@ -75,7 +75,6 @@ public class EditDocumentDialog {
     private Button browseTopicsButton = new Button("Browse Facuties");
     private Button forwardButton = new Button("Forward to...");
     private Button retrieveButton = new Button("Retrieve Doc");
-    private Button commentButton = new Button("Comment");
     private TopicListingFrame topicListingFrame;
     private TextArea topicField = new TextArea();
     private Dialog topicListingDialog = new Dialog();
@@ -432,15 +431,6 @@ public class EditDocumentDialog {
                         checkAttachment(document.getId());
                     }
                 });
-            }
-        });
-
-        commentButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                CommentDialog commentDialog = new CommentDialog();
-                commentDialog.show();
             }
         });
 
