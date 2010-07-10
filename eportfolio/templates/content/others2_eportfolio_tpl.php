@@ -59,7 +59,7 @@ $categorytypepage = '';
 $groupname = $this->_objGroupAdmin->getName($groupId);
 //Get the subgroups which represent the various parts of the eportfolio ie a goal item, an activity item
 $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
-$objHeading->align = center;
+$objHeading->align = 'center';
 $objHeading->type = 2;
 //Get Owner Details
 $fullOwnername = $this->objUserAdmin->getUserDetails($ownerId);
@@ -87,7 +87,7 @@ $form = new form("add", $this->uri(array(
 //Save button
 //$button = new button("submit", $objLanguage->languageText("word_save")); //word_save
 //$button->setToSubmit();
-$objHeading->align = left;
+$objHeading->align = 'left';
 $objinfoTitles->type = 1;
 $objaddressTitles->type = 1;
 $objcontactTitles->type = 1;
@@ -896,7 +896,7 @@ $this->objTab = $this->newObject('tabber', 'htmlelements');
 $namesLabel = $userTable->show();
 $addressLabel = $addressTable->show();
 $contactLabel = $contactTable->show();
-$demographicsLabel = $addressTab . $demographicsTable->show();
+$demographicsLabel = $demographicsTable->show();
 $emailLabel = $emailTable->show();
 $activityLabel = $activityTable->show();
 $this->objTab->init();
