@@ -111,7 +111,7 @@ if (class_exists('groupops', false)) {
                                 //Select View
                                 $iconSelect = $this->getObject('geticon', 'htmlelements');
                                 $iconSelect->setIcon('view');
-                                $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname[firstname] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
+                                $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio') . ' ' . $fullname['firstname'] . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
                                 $mnglink = new link($this->uri(array(
                                     'module' => 'eportfolio',
                                     'action' => 'view_others_eportfolio',
@@ -124,7 +124,7 @@ if (class_exists('groupops', false)) {
                                 $textinput = new textinput("groupId", $key);
                                 $epTable->startRow();
                                 $epTable->addCell($linkManage, '', '', 'left', '', '');
-                                $epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname[surname], '', '', 'left', '', '');
+                                $epTable->addCell($fullname['title'] . ' ' . $fullname['firstname'] . ' ' . $fullname['surname'], '', '', 'left', '', '');
                                 $epTable->addCell($userSubGrp['group_define_name'], '', '', 'left', '', '');
                                 $epTable->endRow();
                                 $groupexists = $groupexists+1;
