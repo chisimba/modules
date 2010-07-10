@@ -20,6 +20,11 @@ class eportfolio extends controller
      * @var groupadminmodel Object reference.
      */
     var $_objGroupAdmin;
+    /**
+     * @var groupId The group Id.
+     */
+    public $groupId;
+
     /*
     * @var object $objFSContext : The File System Object for the context
     */
@@ -1447,7 +1452,7 @@ class eportfolio extends controller
             $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             $this->setSession('showconfirmation', TRUE);
             $myId = $this->getParam('id', null);
-            if (empty($myId)) $myId = $this->getSession('groupId', $groupId);
+            if (empty($myId)) $myId = $this->getSession('groupId');
             $this->setSession('groupId', $myId);
             return $this->groupsHome($myId);
             break;
@@ -1553,7 +1558,7 @@ private function prepareContextUsersArray()
     $filter = " ORDER BY surname ";
     // Guests
     //$gid=$this->_objGroupAdmin->getLeafId(array($contextCode,'Guest'));
-    $groupId = $this->getSession('groupId', $groupId);
+    $groupId = $this->getSession('groupId');
     $guests = $this->_objGroupAdmin->getGroupUsers($groupId, array(
         'userid',
         'firstName',
@@ -1579,7 +1584,7 @@ private function prepareContextUsersArray()
  */
 private function updateUserRoles() 
 {
-    $groupId = $this->getSession('groupId', $groupId);
+    $groupId = $this->getSession('groupId');
     $changedItems = $_POST['changedItems'];
     $changedItems = explode(',', $changedItems);
     array_shift($changedItems);
