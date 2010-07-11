@@ -158,6 +158,15 @@ class eportfolio extends controller
                 $assertionId = $this->getParam("assertionId");
                 $this->setVarByRef("assertionId", $assertionId);
                 return "viewassertion_tpl.php";
+            case "singleinterest":
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $interestId = $this->getParam("interestId");
+                $this->setVarByRef("interestId", $interestId);
+                return "viewinterest_tpl.php";
             case "rubricviewtable":
                 $this->setLayoutTemplate(NULL);
                 $this->setVar('pageSuppressToolbar', TRUE);

@@ -1793,66 +1793,66 @@ class getall_Eportfolio extends object
         $assertionList = $this->objDbAssertionList->listSingle($id);
         $assertionList = $assertionList[0];
         //Create a table object
-        $assertTable = &$this->newObject("htmltable", "htmlelements");
-        $assertTable->border = 1;
-        $assertTable->attributes = "rules=none frame=box";
-        $assertTable->cellspacing = '3';
-        $assertTable->cellpadding = '3';
-        $assertTable->width = "100%";
+        $epartTable = &$this->newObject("htmltable", "htmlelements");
+        $epartTable->border = 1;
+        $epartTable->attributes = "rules=none frame=box";
+        $epartTable->cellspacing = '3';
+        $epartTable->cellpadding = '3';
+        $epartTable->width = "100%";
         //Title
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
         $objHeading->type = 1;
         $objHeading->str = $this->objLanguage->languageText("mod_eportfolio_assertion", 'eportfolio');
         //Title
-        $assertTable->startRow();
-        $assertTable->addCell($objHeading->show());
-        $assertTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($objHeading->show());
+        $epartTable->endRow();
         //Name of authority
-        $assertTable->startRow();
-        $assertTable->addCell("<b>" . $this->objLanguage->languageText("word_name") . "</b>");
-        $assertTable->endRow();
-        $assertTable->startRow();
-        $assertTable->addCell($this->objUser->fullName($assertionList["userid"]));
-        $assertTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("word_name") . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($this->objUser->fullName($assertionList["userid"]));
+        $epartTable->endRow();
         //Language
-        $assertTable->startRow();
-        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordlanguage", 'eportfolio') . "</b>");
-        $assertTable->endRow();
-        $assertTable->startRow();
-        $assertTable->addCell($assertionList["language"]);
-        $assertTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordlanguage", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($assertionList["language"]);
+        $epartTable->endRow();
         //Rationale Title
-        $assertTable->startRow();
-        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . "</b>");
-        $assertTable->endRow();
-        $assertTable->startRow();
-        $assertTable->addCell($assertionList["rationale"]);
-        $assertTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($assertionList["rationale"]);
+        $epartTable->endRow();
         //Creation Date
-        $assertTable->startRow();
-        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
-        $assertTable->endRow();
-        $assertTable->startRow();
-        $assertTable->addCell($assertionList["creation_date"]);
-        $assertTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($assertionList["creation_date"]);
+        $epartTable->endRow();
         //Short description
-        $assertTable->startRow();
-        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
-        $assertTable->endRow();
-        $assertTable->startRow();
-        $assertTable->addCell($assertionList["shortdescription"]);
-        $assertTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($assertionList["shortdescription"]);
+        $epartTable->endRow();
         //Long Description
-        $assertTable->startRow();
-        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>");
-        $assertTable->endRow();
-        $assertTable->startRow();
-        $assertTable->addCell($assertionList["longdescription"]);
-        $assertTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($assertionList["longdescription"]);
+        $epartTable->endRow();
         //Spacer
-        $assertTable->startRow();
-        $assertTable->addCell("&nbsp;");
-        $assertTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell("&nbsp;");
+        $epartTable->endRow();
         //row for comments
         $mycomments = $this->objDbComment->listAll($id);
         if (!empty($mycomments)) {
@@ -1863,15 +1863,95 @@ class getall_Eportfolio extends object
                 if (!empty($comment["postdate"])) {
                     $commentime = " : " . $comment["postdate"];
                 }
-                $assertTable->startRow();
-                $assertTable->addCell("<b>" . $commentor . $commentime . "</b>");
-                $assertTable->endRow();
-                $assertTable->startRow();
-                $assertTable->addCell($comment["comment"]);
-                $assertTable->endRow();
+                $epartTable->startRow();
+                $epartTable->addCell("<b>" . $commentor . $commentime . "</b>");
+                $epartTable->endRow();
+                $epartTable->startRow();
+                $epartTable->addCell($comment["comment"]);
+                $epartTable->endRow();
             }
         }
-        return $assertTable->show();
+        return $epartTable->show();
+    }
+    public function viewSingleInterest($id) 
+    {
+        $interestList = $this->objDbInterestList->listSingle($id);
+        $interestList = $interestList[0];
+        //Create a table object
+        $epartTable = &$this->newObject("htmltable", "htmlelements");
+        $epartTable->border = 1;
+        $epartTable->attributes = "rules=none frame=box";
+        $epartTable->cellspacing = '3';
+        $epartTable->cellpadding = '3';
+        $epartTable->width = "100%";
+        //Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordInterest", 'eportfolio');
+        //Title
+        $epartTable->startRow();
+        $epartTable->addCell($objHeading->show());
+        $epartTable->endRow();
+        //Name of authority
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("word_name") . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($this->objUser->fullName($interestList["userid"]));
+        $epartTable->endRow();
+        //Language
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        //Get type name
+        $cattype = $this->objDbCategorytypeList->listSingle($interestList['type']);
+        $epartTable->addCell($cattype[0]['type']);
+        $epartTable->endRow();
+        //Creation Date
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($interestList["creation_date"]);
+        $epartTable->endRow();
+        //Short description
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($interestList["shortdescription"]);
+        $epartTable->endRow();
+        //Long Description
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($interestList["longdescription"]);
+        $epartTable->endRow();
+        //Spacer
+        $epartTable->startRow();
+        $epartTable->addCell("&nbsp;");
+        $epartTable->endRow();
+        //row for comments
+        $mycomments = $this->objDbComment->listAll($id);
+        if (!empty($mycomments)) {
+            foreach($mycomments as $comment) {
+                //$this->objUser
+                $commentor = $this->objUser->fullName($comment["commentoruserid"]);
+                $commentime = "";
+                if (!empty($comment["postdate"])) {
+                    $commentime = " : " . $comment["postdate"];
+                }
+                $epartTable->startRow();
+                $epartTable->addCell("<b>" . $commentor . $commentime . "</b>");
+                $epartTable->endRow();
+                $epartTable->startRow();
+                $epartTable->addCell($comment["comment"]);
+                $epartTable->endRow();
+            }
+        }
+        return $epartTable->show();
     }
     /**
     * This method returns the form used to display an eportfolio

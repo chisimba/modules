@@ -1122,17 +1122,39 @@ $interestTable->startRow();
 $interestTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $interestTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
 $interestTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+$interestTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
+$interestTable->addCell("&nbsp;");
 $interestTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($interestList)) {
     foreach($interestList as $item) {
+        //Show the view Icon
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+        $this->objIcon->setIcon('comment_view');
+        $commentIcon = $this->objIcon->show();
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+          'action' => 'singleinterest',
+          'interestId' => $item['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
+
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         $interestTable->startRow();
         $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
         $interestTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
         $interestTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+        $interestTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
         $iconEdit->setIcon('edit');
