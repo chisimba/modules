@@ -134,9 +134,11 @@ class eportfolio extends controller
             case "postcomment":
                 $id = $this->objDbComment->insertSingle($this->getParam('eportfoliopartid', NULL) , $this->getParam('newcomment', NULL) , $isapproved = '0');
                 // After processing return to view main
-                $this->setVarByRef("reflectId", $reflectId);
-                return $this->nextAction('singlereflection', array(
-                    'reflectId' => $this->getParam('eportfoliopartid', NULL)
+                $prevaction = $this->getParam('prevaction', NULL);
+                $eportpartidvarname = $this->getParam('eportpartidvarname', NULL);
+                //$this->setVarByRef("reflectId", $reflectId);
+                return $this->nextAction($prevaction, array(
+                    $eportpartidvarname => $this->getParam('eportfoliopartid', NULL)
                 ));
             case "singlereflection":
                 $this->setLayoutTemplate(NULL);
@@ -147,6 +149,15 @@ class eportfolio extends controller
                 $reflectId = $this->getParam("reflectId");
                 $this->setVarByRef("reflectId", $reflectId);
                 return "viewreflection_tpl.php";
+            case "singleassertion":
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $assertionId = $this->getParam("assertionId");
+                $this->setVarByRef("assertionId", $assertionId);
+                return "viewassertion_tpl.php";
             case "rubricviewtable":
                 $this->setLayoutTemplate(NULL);
                 $this->setVar('pageSuppressToolbar', TRUE);

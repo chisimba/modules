@@ -1788,5 +1788,90 @@ class getall_Eportfolio extends object
         }
         return $reflecTable->show();
     }
+    public function viewSingleAssertion($id) 
+    {
+        $assertionList = $this->objDbAssertionList->listSingle($id);
+        $assertionList = $assertionList[0];
+        //Create a table object
+        $assertTable = &$this->newObject("htmltable", "htmlelements");
+        $assertTable->border = 1;
+        $assertTable->attributes = "rules=none frame=box";
+        $assertTable->cellspacing = '3';
+        $assertTable->cellpadding = '3';
+        $assertTable->width = "100%";
+        //Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $this->objLanguage->languageText("mod_eportfolio_assertion", 'eportfolio');
+        //Title
+        $assertTable->startRow();
+        $assertTable->addCell($objHeading->show());
+        $assertTable->endRow();
+        //Name of authority
+        $assertTable->startRow();
+        $assertTable->addCell("<b>" . $this->objLanguage->languageText("word_name") . "</b>");
+        $assertTable->endRow();
+        $assertTable->startRow();
+        $assertTable->addCell($this->objUser->fullName($assertionList["userid"]));
+        $assertTable->endRow();
+        //Language
+        $assertTable->startRow();
+        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordlanguage", 'eportfolio') . "</b>");
+        $assertTable->endRow();
+        $assertTable->startRow();
+        $assertTable->addCell($assertionList["language"]);
+        $assertTable->endRow();
+        //Rationale Title
+        $assertTable->startRow();
+        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . "</b>");
+        $assertTable->endRow();
+        $assertTable->startRow();
+        $assertTable->addCell($assertionList["rationale"]);
+        $assertTable->endRow();
+        //Creation Date
+        $assertTable->startRow();
+        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
+        $assertTable->endRow();
+        $assertTable->startRow();
+        $assertTable->addCell($assertionList["creation_date"]);
+        $assertTable->endRow();
+        //Short description
+        $assertTable->startRow();
+        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+        $assertTable->endRow();
+        $assertTable->startRow();
+        $assertTable->addCell($assertionList["shortdescription"]);
+        $assertTable->endRow();
+        //Long Description
+        $assertTable->startRow();
+        $assertTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>");
+        $assertTable->endRow();
+        $assertTable->startRow();
+        $assertTable->addCell($assertionList["longdescription"]);
+        $assertTable->endRow();
+        //Spacer
+        $assertTable->startRow();
+        $assertTable->addCell("&nbsp;");
+        $assertTable->endRow();
+        //row for comments
+        $mycomments = $this->objDbComment->listAll($id);
+        if (!empty($mycomments)) {
+            foreach($mycomments as $comment) {
+                //$this->objUser
+                $commentor = $this->objUser->fullName($comment["commentoruserid"]);
+                $commentime = "";
+                if (!empty($comment["postdate"])) {
+                    $commentime = " : " . $comment["postdate"];
+                }
+                $assertTable->startRow();
+                $assertTable->addCell("<b>" . $commentor . $commentime . "</b>");
+                $assertTable->endRow();
+                $assertTable->startRow();
+                $assertTable->addCell($comment["comment"]);
+                $assertTable->endRow();
+            }
+        }
+        return $assertTable->show();
+    }
 }
 ?>

@@ -6,14 +6,14 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass("button", "htmlelements");
 $this->loadClass("htmltable", 'htmlelements');
 //reflectId
-$singleView = $this->objGetall->viewSingleReflection($reflectId);
+$singleView = $this->objGetall->viewSingleAssertion($assertionId);
 echo $singleView;
 $form = new form("add", $this->uri(array(
     'module' => 'eportfolio',
     'action' => 'postcomment',
-    'prevaction' => 'singlereflection',
-    'eportpartidvarname' => 'reflectId',
-    'eportfoliopartid' => $reflectId
+    'prevaction' => 'singleassertion',
+    'eportpartidvarname' => 'assertionId',
+    'eportfoliopartid' => $assertionId
 )));
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objHeading->type = 3;
