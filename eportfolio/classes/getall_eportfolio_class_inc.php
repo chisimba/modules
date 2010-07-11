@@ -1928,5 +1928,15 @@ class getall_Eportfolio extends object
         $form->addToForm($epTable->show());
         return $form->show();
     }
+    public function getCloseBtn() {
+        //Get Object
+        $this->objIcon = &$this->newObject('geticon', 'htmlelements');
+        $objLayer3 = $this->newObject('layer', 'htmlelements');
+        $this->objIcon->setIcon('close');
+        $this->objIcon->extra = " onclick='javascript:window.close()'";
+        $objLayer3->align = 'center';
+        $objLayer3->str = $this->objIcon->show();
+        return $objLayer3->show();
+    }
 }
 ?>
