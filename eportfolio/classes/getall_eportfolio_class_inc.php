@@ -1873,5 +1873,60 @@ class getall_Eportfolio extends object
         }
         return $assertTable->show();
     }
+    /**
+    * This method returns the form used to display an eportfolio
+    * part
+    * @param string $prevaction The previous action
+    * @param string $eportpartidvarname The variable name holding
+    * the eportfolioid for the previous action
+    * @param string $eportfoliopartid The id for the part to be viewed
+    * @author Megan Watson - added functions from kinky
+    * @returns string $surname
+    */
+    public function viewPartForm( $prevaction, $eportpartidvarname, $eportfoliopartid ){
+        // Load classes.
+        $this->loadClass("form", "htmlelements");
+        $this->loadClass("textinput", "htmlelements");
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass("button", "htmlelements");
+        $this->loadClass("htmltable", 'htmlelements');
+
+        $form = new form("add", $this->uri(array(
+            'module' => 'eportfolio',
+            'action' => 'postcomment',
+            'prevaction' => $prevaction,
+            'eportpartidvarname' => $eportpartidvarname,
+            'eportfoliopartid' => $eportfoliopartid
+        )));
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 3;
+        $objHeading->str = $this->objLanguage->languageText("mod_eportfolio_postcomment", 'eportfolio');
+        //table object
+        $epTable = &$this->newObject("htmltable", "htmlelements");
+        $epTable->width = '100%';
+        //$epTable->attributes = " align='left' border='0'";
+        $epTable->cellspacing = '5';
+        //row for author comments
+        $epTable->startRow();
+        $epTable->addCell($objHeading->show());
+        $epTable->endRow();
+        //new comment text field
+        $textinput = new textarea("newcomment", '');
+        $form->addRule('newcomment', 'Please type a comment', 'required');
+        $epTable->startRow();
+        $epTable->addCell($textinput->show());
+        $epTable->endRow();
+        //Submit button
+        $button = new button("submit", $this->objLanguage->languageText("word_submit", "system"));
+        $button->setToSubmit();
+        $epTable->startRow();
+        $epTable->addCell($button->show());
+        $epTable->endRow();
+        $epTable->startRow();
+        $epTable->addCell("&nbsp;");
+        $epTable->endRow();
+        $form->addToForm($epTable->show());
+        return $form->show();
+    }
 }
 ?>
