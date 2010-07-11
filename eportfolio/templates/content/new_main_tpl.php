@@ -1443,6 +1443,8 @@ if (!$hasAccess) {
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . "</b>");
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
     $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . "</b>");
+    $assertionstable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
+    $assertionstable->addCell("&nbsp;");
     $assertionstable->endRow();
     // Step through the list of addresses.
     $class = NULL;
@@ -1498,10 +1500,31 @@ if (!$hasAccess) {
                 'action' => 'deleteassertion',
                 'id' => $item["id"]
             )) , $objLanguage->languageText('mod_eportfolio_suredelete', 'eportfolio'));
+            //Show the view Icon
+            $this->objIcon = $this->newObject('geticon', 'htmlelements');
+            $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+            $this->objIcon->setIcon('comment_view');
+            $commentIcon = $this->objIcon->show();
+            $objPopup = new windowpop();
+            $objPopup->set('location', $this->uri(array(
+             'action' => 'singleassertion',
+             'assertionId' => $item['id']
+            ) , 'eportfolio'));
+            $objPopup->set('linktext', $commentIcon);
+            $objPopup->set('width', '600');
+            $objPopup->set('height', '350');
+            $objPopup->set('left', '200');
+            $objPopup->set('top', '200');
+            $objPopup->set('scrollbars', 'yes');
+            $objPopup->set('resizable', 'yes');
+            $objPopup->putJs(); // you only need to do this once per page
+
             //echo $objConfirm->show();
             $assertionstable->addCell($linkstudManage . "<br> " . $linklecManage, "", NULL, NULL, $class, '');
+            $assertionstable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
             $assertionstable->addCell($linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
             $assertionstable->endRow();
+
             //Check if assertion group exists and add in contextgroups
             $contextCode = $item["id"];
             $groupName = $item['rationale'];
