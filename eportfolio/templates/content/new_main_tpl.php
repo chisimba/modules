@@ -771,13 +771,34 @@ $transcriptTable->addCell($objLink->show() , '', '', '', '', 'colspan="2"');
 $transcriptTable->endRow();
 $transcriptTable->startRow();
 $transcriptTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+$transcriptTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
 $transcriptTable->endRow();
 // Step through the list of addresses.
 if (!empty($transcriptlist)) {
     foreach($transcriptlist as $item) {
+        //Show the view Icon
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+        $this->objIcon->setIcon('comment_view');
+        $commentIcon = $this->objIcon->show();
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+          'action' => 'singletranscript',
+          'transId' => $item['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
+
         // Display each field for activities
         $transcriptTable->startRow();
         $transcriptTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+        $transcriptTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
         $iconEdit->setIcon('edit');

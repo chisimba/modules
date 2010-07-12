@@ -194,6 +194,15 @@ class eportfolio extends controller
                 $qualiId = $this->getParam("qualiId");
                 $this->setVarByRef("qualiId", $qualiId);
                 return "viewqualification_tpl.php";
+            case "singletranscript":
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $transId = $this->getParam("transId");
+                $this->setVarByRef("transId", $transId);
+                return "viewtranscript_tpl.php";
             case "rubricviewtable":
                 $this->setLayoutTemplate(NULL);
                 $this->setVar('pageSuppressToolbar', TRUE);
