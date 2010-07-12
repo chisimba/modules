@@ -59,7 +59,7 @@ $objTable->endRow();
 // display context
 $objTable->startRow();
 $objTable->addCell($objWashout->parseText("<b>" . $label = $objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . ":</b>") , null, "top", "right", null, null, null);
-$objTable->addCell($objWashout->parseText($this->objDate->formatDate($activityFinish)) , null, "top", "left", null, null, null);
+$objTable->addCell($objWashout->parseText($this->objDate->formatDateOnly($activityFinish)) , null, "top", "left", null, null, null);
 $objTable->endRow();
 //display short description
 // Spacer

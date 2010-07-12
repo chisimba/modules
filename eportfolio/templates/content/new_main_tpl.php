@@ -521,7 +521,7 @@ $activityTable->cellspacing = '3';
 $activityTable->width = "100%";
 // Add the table heading.
 $activityTable->startRow();
-$activityTable->addCell($objLink->show() , '', '', '', '', 'colspan="6"');
+$activityTable->addCell($objLink->show() , '', '', '', '', 'colspan="7"');
 $activityTable->endRow();
 $activityTable->startRow();
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contexttitle", 'eportfolio') . "</b>");
@@ -529,6 +529,8 @@ $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activ
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>");
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>");
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+$activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
+$activityTable->addCell("&nbsp;");
 $activityTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
@@ -543,6 +545,25 @@ if (!empty($activitylist)) {
         } else {
             $mycontextTitle = $item['contextid'];
         }
+        //Show the view Icon
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+        $this->objIcon->setIcon('comment_view');
+        $commentIcon = $this->objIcon->show();
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+          'action' => 'singleactivity',
+          'atyId' => $item['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
+
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         $activityTable->startRow();
@@ -551,6 +572,7 @@ if (!empty($activitylist)) {
         $activityTable->addCell($this->objDate->formatDateOnly($item['start']) , "", NULL, NULL, $class, '');
         $activityTable->addCell($this->objDate->formatDateOnly($item['finish']) , "", NULL, NULL, $class, '');
         $activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+        $activityTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
         $iconEdit->setIcon('edit');

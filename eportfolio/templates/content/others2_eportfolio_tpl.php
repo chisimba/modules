@@ -361,6 +361,8 @@ $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activ
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>");
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>");
 $activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+$activityTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
+$activityTable->addCell("&nbsp;");
 $activityTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
@@ -386,6 +388,25 @@ if (!empty($activitylist)) {
             }
             if ($actvCheck == 1) {
                 $actcount = 1;
+                //Show the view Icon
+                $this->objIcon = $this->newObject('geticon', 'htmlelements');
+                $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+                $this->objIcon->setIcon('comment_view');
+                $commentIcon = $this->objIcon->show();
+                $objPopup = new windowpop();
+                $objPopup->set('location', $this->uri(array(
+                  'action' => 'singleactivity',
+                  'atyId' => $item['id']
+                ) , 'eportfolio'));
+                $objPopup->set('linktext', $commentIcon);
+                $objPopup->set('width', '600');
+                $objPopup->set('height', '350');
+                $objPopup->set('left', '200');
+                $objPopup->set('top', '200');
+                $objPopup->set('scrollbars', 'yes');
+                $objPopup->set('resizable', 'yes');
+                $objPopup->putJs(); // you only need to do this once per page
+
                 // Display each field for activities
                 $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
                 $activityTable->startRow();
@@ -394,6 +415,7 @@ if (!empty($activitylist)) {
                 $activityTable->addCell($this->objDate->formatDateOnly($item['start']) , "", NULL, NULL, $class, '');
                 $activityTable->addCell($this->objDate->formatDateOnly($item['finish']) , "", NULL, NULL, $class, '');
                 $activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                $activityTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $activityTable->endRow();
             }
         }

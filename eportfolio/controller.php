@@ -212,6 +212,15 @@ class eportfolio extends controller
                 $affiId = $this->getParam("affiId");
                 $this->setVarByRef("affiId", $affiId);
                 return "viewaffiliation_tpl.php";
+            case "singleactivity":
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $atyId = $this->getParam("atyId");
+                $this->setVarByRef("atyId", $atyId);
+                return "viewactivity_tpl.php";
             case "rubricviewtable":
                 $this->setLayoutTemplate(NULL);
                 $this->setVar('pageSuppressToolbar', TRUE);
