@@ -203,6 +203,15 @@ class eportfolio extends controller
                 $transId = $this->getParam("transId");
                 $this->setVarByRef("transId", $transId);
                 return "viewtranscript_tpl.php";
+            case "singleaffiliation":
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $affiId = $this->getParam("affiId");
+                $this->setVarByRef("affiId", $affiId);
+                return "viewaffiliation_tpl.php";
             case "rubricviewtable":
                 $this->setLayoutTemplate(NULL);
                 $this->setVar('pageSuppressToolbar', TRUE);

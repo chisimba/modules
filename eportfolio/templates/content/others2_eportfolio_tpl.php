@@ -292,7 +292,7 @@ if (!empty($demographicsList)) {
             }
             if ($demoCheck == 1) {
                 $democount = 1;
-                $datetime = explode("-", $this->objDate->formatDate($demographicsItem['birth']));
+                $datetime = explode("-", $this->objDate->formatDateOnly($demographicsItem['birth']));
                 $demographicsTable->startRow();
                 $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
                 $demographicsTable->addCell($datetime[0], "", NULL, NULL, NULL, '');
@@ -391,8 +391,8 @@ if (!empty($activitylist)) {
                 $activityTable->startRow();
                 $activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, '');
                 $activityTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-                $activityTable->addCell($this->objDate->formatDate($item['start']) , "", NULL, NULL, $class, '');
-                $activityTable->addCell($this->objDate->formatDate($item['finish']) , "", NULL, NULL, $class, '');
+                $activityTable->addCell($this->objDate->formatDateOnly($item['start']) , "", NULL, NULL, $class, '');
+                $activityTable->addCell($this->objDate->formatDateOnly($item['finish']) , "", NULL, NULL, $class, '');
                 $activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                 $activityTable->endRow();
             }
@@ -424,6 +424,7 @@ $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_ro
 $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . "</b>");
 $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>");
 $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>");
+$affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
 $affiliationTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
@@ -444,13 +445,33 @@ if (!empty($affiliationList)) {
             //Do justice on the checkbox
             if ($affiliationCheck == 1) {
                 $affcount = 1;
+                //Show the view Icon
+                $this->objIcon = $this->newObject('geticon', 'htmlelements');
+                $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+                $this->objIcon->setIcon('comment_view');
+                $commentIcon = $this->objIcon->show();
+                $objPopup = new windowpop();
+                $objPopup->set('location', $this->uri(array(
+                  'action' => 'singleaffiliation',
+                  'affiId' => $affiliationItem['id']
+                ) , 'eportfolio'));
+                $objPopup->set('linktext', $commentIcon);
+                $objPopup->set('width', '600');
+                $objPopup->set('height', '350');
+                $objPopup->set('left', '200');
+                $objPopup->set('top', '200');
+                $objPopup->set('scrollbars', 'yes');
+                $objPopup->set('resizable', 'yes');
+                $objPopup->putJs(); // you only need to do this once per page
+
                 $affiliationTable->startRow();
                 $affiliationTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
                 $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, $class, '');
                 $affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, $class, '');
                 $affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, $class, '');
-                $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['start']) , "", NULL, NULL, $class, '');
-                $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']) , "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($this->objDate->formatDateOnly($affiliationItem['start']) , "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($this->objDate->formatDateOnly($affiliationItem['finish']) , "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
                 $affiliationTable->endRow();
             }
         }
@@ -587,7 +608,7 @@ if (!empty($qclList)) {
                 $qclTable->addCell($qclItem['qcl_title'], "", NULL, NULL, $class, '');
                 $qclTable->addCell($qclItem['organisation'], "", NULL, NULL, $class, '');
                 $qclTable->addCell($qclItem['qcl_level'], "", NULL, NULL, $class, '');
-                $qclTable->addCell($this->objDate->formatDate($qclItem['award_date']) , "", NULL, NULL, $class, '');
+                $qclTable->addCell($this->objDate->formatDateOnly($qclItem['award_date']) , "", NULL, NULL, $class, '');
                 $qclTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
                 $qclTable->endRow();
             }
@@ -724,7 +745,7 @@ if (!empty($competencyList)) {
 
                 $competencyTable->startRow();
                 $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-                $competencyTable->addCell($this->objDate->formatDate($item['award_date']) , "", NULL, NULL, $class, '');
+                $competencyTable->addCell($this->objDate->formatDateOnly($item['award_date']) , "", NULL, NULL, $class, '');
                 $competencyTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                 $competencyTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $competencyTable->endRow();
@@ -795,7 +816,7 @@ if (!empty($interestList)) {
                 $intcount = 1;
                 $interestTable->startRow();
                 $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-                $interestTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+                $interestTable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
                 $interestTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                 $interestTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $interestTable->endRow();
@@ -864,7 +885,7 @@ if (!empty($reflectionList)) {
                 // Display each field for activities
                 $reflectionTable->startRow();
                 $reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-                $reflectionTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+                $reflectionTable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
                 $reflectionTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                 $reflectionTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
                 $reflectionTable->endRow();
@@ -944,7 +965,7 @@ if (!$hasAccess) {
                             $assertionstable->startRow();
                             $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
                             $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-                            $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                            $assertionstable->addCell($this->objDate->formatDateOnly($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
                             $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
                             $assertionstable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                             $assertionstable->endRow();
@@ -1015,7 +1036,7 @@ if (!$hasAccess) {
                     // Display each field for activities
                     $assertionstable->startRow();
                     $assertionstable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-                    $assertionstable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
                     $assertionstable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                     $assertionstable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                     $assertionstable->endRow();

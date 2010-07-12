@@ -458,7 +458,7 @@ if (!empty($demographicsList)) {
     foreach($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
-        $datetime = explode("-", $this->objDate->formatDate($demographicsItem['birth']));
+        $datetime = explode("-", $this->objDate->formatDateOnly($demographicsItem['birth']));
         $demographicsTable->startRow();
         $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($datetime[0], "", NULL, NULL, NULL, '');
@@ -548,8 +548,8 @@ if (!empty($activitylist)) {
         $activityTable->startRow();
         $activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, '');
         $activityTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-        $activityTable->addCell($this->objDate->formatDate($item['start']) , "", NULL, NULL, $class, '');
-        $activityTable->addCell($this->objDate->formatDate($item['finish']) , "", NULL, NULL, $class, '');
+        $activityTable->addCell($this->objDate->formatDateOnly($item['start']) , "", NULL, NULL, $class, '');
+        $activityTable->addCell($this->objDate->formatDateOnly($item['finish']) , "", NULL, NULL, $class, '');
         $activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
@@ -628,12 +628,33 @@ $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_ro
 $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . "</b>");
 $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>");
 $affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>");
+$affiliationTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
+$affiliationTable->addCell("&nbsp;");
 $affiliationTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($affiliationList)) {
     $i = 0;
     foreach($affiliationList as $affiliationItem) {
+        //Show the view Icon
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+        $this->objIcon->setIcon('comment_view');
+        $commentIcon = $this->objIcon->show();
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+          'action' => 'singleaffiliation',
+          'affiId' => $affiliationItem['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
+
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
         $affiliationTable->startRow();
@@ -641,8 +662,9 @@ if (!empty($affiliationList)) {
         $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, $class, '');
         $affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, $class, '');
         $affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, $class, '');
-        $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['start']) , "", NULL, NULL, $class, '');
-        $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']) , "", NULL, NULL, $class, '');
+        $affiliationTable->addCell($this->objDate->formatDateOnly($affiliationItem['start']) , "", NULL, NULL, $class, '');
+        $affiliationTable->addCell($this->objDate->formatDateOnly($affiliationItem['finish']) , "", NULL, NULL, $class, '');
+        $affiliationTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
         $iconEdit->setIcon('edit');
@@ -908,7 +930,7 @@ if (!empty($qclList)) {
         $qclTable->addCell($qclItem['qcl_title'], "", NULL, NULL, $class, '');
         $qclTable->addCell($qclItem['organisation'], "", NULL, NULL, $class, '');
         $qclTable->addCell($qclItem['qcl_level'], "", NULL, NULL, $class, '');
-        $qclTable->addCell($this->objDate->formatDate($qclItem['award_date']) , "", NULL, NULL, $class, '');
+        $qclTable->addCell($this->objDate->formatDateOnly($qclItem['award_date']) , "", NULL, NULL, $class, '');
         //$qclTable->addCell($qclItem['shortdescription'], "", NULL, NULL, $class, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
@@ -1129,7 +1151,7 @@ if (!empty($competencyList)) {
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         $competencyTable->startRow();
         $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-        $competencyTable->addCell($this->objDate->formatDate($item['award_date']) , "", NULL, NULL, $class, '');
+        $competencyTable->addCell($this->objDate->formatDateOnly($item['award_date']) , "", NULL, NULL, $class, '');
         $competencyTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         $competencyTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
         // Show the edit link
@@ -1235,7 +1257,7 @@ if (!empty($interestList)) {
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         $interestTable->startRow();
         $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-        $interestTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+        $interestTable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
         $interestTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         $interestTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
         // Show the edit link
@@ -1321,7 +1343,7 @@ if (!empty($reflectionList)) {
         // Display each field for activities
         $reflectionTable->startRow();
         $reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-        $reflectionTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+        $reflectionTable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
         $reflectionTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         //Show the view Icon
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -1441,7 +1463,7 @@ if (!$hasAccess) {
                     $assertionstable->startRow();
                     $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
                     $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-                    $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($this->objDate->formatDateOnly($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
                     $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
                     // Show the view link
                     //Display Icon
@@ -1492,7 +1514,7 @@ if (!$hasAccess) {
                         $assertionstable->startRow();
                         $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
                         $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-                        $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                        $assertionstable->addCell($this->objDate->formatDateOnly($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
                         $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
                         // Show the view link
                         //Display Icon
@@ -1558,7 +1580,7 @@ if (!$hasAccess) {
             // Display each field for activities
             $assertionstable->startRow();
             $assertionstable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-            $assertionstable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+            $assertionstable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
             $assertionstable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
             // Show the edit link
             $iconEdit = $this->getObject('geticon', 'htmlelements');
