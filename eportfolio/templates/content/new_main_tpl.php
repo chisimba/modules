@@ -1038,17 +1038,38 @@ $competencyTable->startRow();
 $competencyTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
 $competencyTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . "</b>");
 $competencyTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+$competencyTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
+$competencyTable->addCell("&nbsp;");
 $competencyTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($competencyList)) {
     foreach($competencyList as $item) {
+        //Show the view Icon
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+        $this->objIcon->setIcon('comment_view');
+        $commentIcon = $this->objIcon->show();
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+          'action' => 'singlecompetency',
+          'competencyId' => $item['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         $competencyTable->startRow();
         $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
         $competencyTable->addCell($this->objDate->formatDate($item['award_date']) , "", NULL, NULL, $class, '');
         $competencyTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+        $competencyTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon', 'htmlelements');
         $iconEdit->setIcon('edit');
