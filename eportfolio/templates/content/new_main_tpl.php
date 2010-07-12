@@ -937,7 +937,9 @@ $goalsTable->cellspacing = '12';
 $goalsTable->width = "60%";
 // Add the table heading.
 $goalsTable->startRow();
-$goalsTable->addCell($objLink->show() , '', '', '', '', 'colspan="2"');
+$goalsTable->addCell($objLink->show());
+$goalsTable->addCell($objLanguage->languageText("mod_eportfolio_display", 'eportfolio'));
+$goalsTable->addCell("&nbsp;");
 $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
@@ -961,6 +963,25 @@ if (!empty($goalsList)) {
     $i = 0;
     echo "<ul>";
     foreach($goalsList as $item) {
+        //Show the view Icon
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+        $this->objIcon->setIcon('comment_view');
+        $commentIcon = $this->objIcon->show();
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+          'action' => 'singlegoal',
+          'goalId' => $item['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
+
         // Display each field for activities
         $goalsTable->startRow();
         $goalsTable->addCell("<li>" . $item['shortdescription'] . "</li>", "", NULL, NULL, $class, '');
@@ -989,6 +1010,7 @@ if (!empty($goalsList)) {
             'action' => 'deletegoals',
             'id' => $item["id"]
         )) , $objLanguage->languageText('mod_eportfolio_suredelete', 'eportfolio'));
+        $goalsTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
         $goalsTable->addCell($linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
         $goalsTable->endRow();
     }

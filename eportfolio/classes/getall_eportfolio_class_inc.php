@@ -2028,7 +2028,108 @@ class getall_Eportfolio extends object
         }
         return $epartTable->show();
     }
-    /**
+    public function viewSingleGoal($id) 
+    {
+        $goalList = $this->objDbGoalsList->listSingle($id);
+        $goalList = $goalList[0];
+        //Create a table object
+        $epartTable = &$this->newObject("htmltable", "htmlelements");
+        $epartTable->border = 1;
+        $epartTable->attributes = "rules=none frame=box";
+        $epartTable->cellspacing = '3';
+        $epartTable->cellpadding = '3';
+        $epartTable->width = "100%";
+        //Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordGoal", 'eportfolio');
+        //Title
+        $epartTable->startRow();
+        $epartTable->addCell($objHeading->show());
+        $epartTable->endRow();
+        //Type title
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        //Get type name
+        $epartTable->startRow();
+        $cattype = $this->objDbCategorytypeList->listSingle($goalList['type']);
+        $epartTable->addCell($cattype[0]['type']);
+        $epartTable->endRow();
+        //Show parent goal if any
+        if (!empty ( $goalList['parentid'] )) {
+          //parent goal
+          $epartTable->startRow();
+          $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
+          $epartTable->endRow();
+          $epartTable->startRow();
+          //Get parent goal and display it
+          $epartTable->startRow();
+          $pargoal = $this->objDbGoalsList->listSingle($goalList['parentid']);
+          $epartTable->addCell($pargoal[0]['shortdescription']);
+          $epartTable->endRow();
+        }
+        //Start Date
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($goalList["start"]);
+        $epartTable->endRow();
+        //Status
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordstatus", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($goalList["status"]);
+        $epartTable->endRow();
+        //Status Date
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_statusDate", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($goalList["status_date"]);
+        $epartTable->endRow();
+        //Short description
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($goalList["shortdescription"]);
+        $epartTable->endRow();
+        //Long Description
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($goalList["longdescription"]);
+        $epartTable->endRow();
+        //Spacer
+        $epartTable->startRow();
+        $epartTable->addCell("&nbsp;");
+        $epartTable->endRow();
+        //row for comments
+        $mycomments = $this->objDbComment->listAll($id);
+        if (!empty($mycomments)) {
+            foreach($mycomments as $comment) {
+                //$this->objUser
+                $commentor = $this->objUser->fullName($comment["commentoruserid"]);
+                $commentime = "";
+                if (!empty($comment["postdate"])) {
+                    $commentime = " : " . $comment["postdate"];
+                }
+                $epartTable->startRow();
+                $epartTable->addCell("<b>" . $commentor . $commentime . "</b>");
+                $epartTable->endRow();
+                $epartTable->startRow();
+                $epartTable->addCell($comment["comment"]);
+                $epartTable->endRow();
+            }
+        }
+        return $epartTable->show();
+    } 
+   /**
     * This method returns the form used to display an eportfolio
     * part
     * @param string $prevaction The previous action

@@ -570,7 +570,9 @@ $goalsTable->border = 0;
 $goalsTable->cellspacing = '12';
 $goalsTable->width = "60%";
 $goalsTable->startRow();
-$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>", '', '', '', '', 'colspan="2"');
+$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>");
+$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
+$goalsTable->addCell("&nbsp;");
 $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
@@ -589,9 +591,30 @@ if (!empty($goalsList)) {
             //Do justice on the checkbox
             if ($goalsCheck == 1) {
                 $goacount = 1;
+
+                //Show the view Icon
+                $this->objIcon = $this->newObject('geticon', 'htmlelements');
+                $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+                $this->objIcon->setIcon('comment_view');
+                $commentIcon = $this->objIcon->show();
+                $objPopup = new windowpop();
+                $objPopup->set('location', $this->uri(array(
+                  'action' => 'singlegoal',
+                  'goalId' => $item['id']
+                ) , 'eportfolio'));
+                $objPopup->set('linktext', $commentIcon);
+                $objPopup->set('width', '600');
+                $objPopup->set('height', '350');
+                $objPopup->set('left', '200');
+                $objPopup->set('top', '200');
+                $objPopup->set('scrollbars', 'yes');
+                $objPopup->set('resizable', 'yes');
+                $objPopup->putJs(); // you only need to do this once per page
+
                 // Display each field for activities
                 $goalsTable->startRow();
                 $goalsTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+                $goalsTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $goalsTable->endRow();
             }
         }
