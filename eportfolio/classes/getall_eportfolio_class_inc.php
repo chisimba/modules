@@ -2129,6 +2129,101 @@ class getall_Eportfolio extends object
         }
         return $epartTable->show();
     } 
+    public function viewSingleQuali($id) 
+    {
+        $qualiList = $this->objDbQclList->listSingle($id);
+        $qualiList = $qualiList[0];
+        //Create a table object
+        $epartTable = &$this->newObject("htmltable", "htmlelements");
+        $epartTable->border = 1;
+        $epartTable->attributes = "rules=none frame=box";
+        $epartTable->cellspacing = '3';
+        $epartTable->cellpadding = '3';
+        $epartTable->width = "100%";
+        //Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $this->objLanguage->languageText("mod_eportfolio_qualification", 'eportfolio');
+        //Title
+        $epartTable->startRow();
+        $epartTable->addCell($objHeading->show());
+        $epartTable->endRow();
+        //Type title
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        //Get type name
+        $epartTable->startRow();
+        $cattype = $this->objDbCategorytypeList->listSingle($qualiList['qcl_type']);
+        $epartTable->addCell($cattype[0]['type']);
+        $epartTable->endRow();
+        //Qualification Title
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_wordtitle", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($qualiList["qcl_title"]);
+        $epartTable->endRow();
+        //Organisation
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($qualiList["organisation"]);
+        $epartTable->endRow();
+        //QCL Level
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_level", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($qualiList["qcl_level"]);
+        $epartTable->endRow();
+        //QCL Award Date
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($qualiList["award_date"]);
+        $epartTable->endRow();
+        //Short description
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($qualiList["shortdescription"]);
+        $epartTable->endRow();
+        //Long Description
+        $epartTable->startRow();
+        $epartTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . "</b>");
+        $epartTable->endRow();
+        $epartTable->startRow();
+        $epartTable->addCell($qualiList["longdescription"]);
+        $epartTable->endRow();
+        //Spacer
+        $epartTable->startRow();
+        $epartTable->addCell("&nbsp;");
+        $epartTable->endRow();
+        //row for comments
+        $mycomments = $this->objDbComment->listAll($id);
+        if (!empty($mycomments)) {
+            foreach($mycomments as $comment) {
+                //$this->objUser
+                $commentor = $this->objUser->fullName($comment["commentoruserid"]);
+                $commentime = "";
+                if (!empty($comment["postdate"])) {
+                    $commentime = " : " . $comment["postdate"];
+                }
+                $epartTable->startRow();
+                $epartTable->addCell("<b>" . $commentor . $commentime . "</b>");
+                $epartTable->endRow();
+                $epartTable->startRow();
+                $epartTable->addCell($comment["comment"]);
+                $epartTable->endRow();
+            }
+        }
+        return $epartTable->show();
+    }
    /**
     * This method returns the form used to display an eportfolio
     * part

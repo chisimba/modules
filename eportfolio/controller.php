@@ -185,6 +185,15 @@ class eportfolio extends controller
                 $competencyId = $this->getParam("competencyId");
                 $this->setVarByRef("competencyId", $competencyId);
                 return "viewcompetency_tpl.php";
+            case "singlequali":
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $qualiId = $this->getParam("qualiId");
+                $this->setVarByRef("qualiId", $qualiId);
+                return "viewqualification_tpl.php";
             case "rubricviewtable":
                 $this->setLayoutTemplate(NULL);
                 $this->setVar('pageSuppressToolbar', TRUE);

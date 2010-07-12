@@ -854,12 +854,32 @@ $qclTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_wordtitle"
 $qclTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . "</b>");
 $qclTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_level", 'eportfolio') . "</b>");
 $qclTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . "</b>");
-//$qclTable->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio')."</b>");
+$qclTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
+$qclTable->addCell("&nbsp;");
 $qclTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($qclList)) {
     foreach($qclList as $qclItem) {
+        //Show the view Icon
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->title = $this->objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+        $this->objIcon->setIcon('comment_view');
+        $commentIcon = $this->objIcon->show();
+        $objPopup = new windowpop();
+        $objPopup->set('location', $this->uri(array(
+          'action' => 'singlequali',
+          'qualiId' => $qclItem['id']
+        ) , 'eportfolio'));
+        $objPopup->set('linktext', $commentIcon);
+        $objPopup->set('width', '600');
+        $objPopup->set('height', '350');
+        $objPopup->set('left', '200');
+        $objPopup->set('top', '200');
+        $objPopup->set('scrollbars', 'yes');
+        $objPopup->set('resizable', 'yes');
+        $objPopup->putJs(); // you only need to do this once per page
+
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($qclItem['qcl_type']);
         $qclTable->startRow();
@@ -880,7 +900,6 @@ if (!empty($qclList)) {
             'action' => 'editqcl',
             'id' => $qclItem["id"]
         )));
-        //if( $this->isValid( 'edit' ))
         $objLink->link = $iconEdit->show();
         $linkEdit = $objLink->show();
         // Show the delete link
@@ -895,7 +914,7 @@ if (!empty($qclList)) {
             'action' => 'deleteqcl',
             'id' => $qclItem["id"]
         )) , $objLanguage->languageText('mod_eportfolio_suredelete', 'eportfolio'));
-        //echo $objConfirm->show();
+        $qclTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
         $qclTable->addCell($linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
         $qclTable->endRow();
     }
