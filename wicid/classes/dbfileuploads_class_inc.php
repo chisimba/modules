@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class interfaces with db to store a list of files uploaded
  *  PHP version 5
@@ -23,68 +24,89 @@
 
  */
 class dbfileuploads extends dbtable {
+
     var $tablename = "tbl_wicid_fileuploads";
     var $userid;
 
     public function init() {
         parent::init($this->tablename);
-        $this->objUser=$this->getObject('user','security');
+        $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->objAltConfig = $this->getObject('altconfig','config');
-        $this->objUserutils=$this->getObject('userutils');
-        $this->resourcePath=$this->objAltConfig->getModulePath();
-        $replacewith="";
-        $docRoot=$_SERVER['DOCUMENT_ROOT'];
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $this->objUserutils = $this->getObject('userutils');
+        $this->resourcePath = $this->objAltConfig->getModulePath();
+        $replacewith = "";
+        $docRoot = $_SERVER['DOCUMENT_ROOT'];
         $location = "http://" . $_SERVER['HTTP_HOST'];
-        $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
+        $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
     }
 
     public function setUserId($userid) {
         $this->userid = $userid;
     }
+
     public function saveFileInfo($data) {
-        $result = $this->insert($data);
+        $result = NULL;
+        if ($this->fileExists($data['docid'])) {
+            $result = $this->update('docid', $data['docid'], $data);
+        } else {
+            $result = $this->insert($data);
+        }
         return $result;
     }
 
+    public function fileExists($docid) {
+
+        $sql =
+                "select id from  " . $this->tablename . " where docid='$docid'";
+        $res = $this->getArray($sql);
+        if (count($res) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function getFileTypes() {
-        $sql = "select distinct filetype from ".$this->tablename. " where userid = '".$this->userid."'";
+        $sql = "select distinct filetype from " . $this->tablename . " where userid = '" . $this->userid . "'";
         $res = $this->getArray($sql);
 
         return $res;
     }
 
     public function getDocs($filetype) {
-        $sql = "select * from ".$this->tablename." where filetype = '".$filetype."'". " and userid = '".$this->userid."'";
+        $sql = "select * from " . $this->tablename . " where filetype = '" . $filetype . "'" . " and userid = '" . $this->userid . "'";
         $res = $this->getArray($sql);
 
         return $res;
     }
+
     /**
      * gets the instances of this file, to avoid duplication, overwriting
      * @param <type> $filename
      * @param <type> $path
      * @return <type>
      */
-    public function getFileInstances($filename,$path) {
-        $sql = "select  id from ".$this->tablename." where parent = '".$filename."' and filepath = '".$path."'";
+    public function getFileInstances($filename, $path) {
+        $sql = "select  id from " . $this->tablename . " where parent = '" . $filename . "' and filepath = '" . $path . "'";
         $res = $this->getArray($sql);
         return $res;
     }
+
     public function getAllFiles() {
-        $sql = "select * from ".$this->tablename." where userid = '".$this->userid."' order by date_uploaded desc, filename limit 10";
+        $sql = "select * from " . $this->tablename . " where userid = '" . $this->userid . "' order by date_uploaded desc, filename limit 10";
         $res = $this->getArray($sql);
 
         return $res;
     }
 
     public function getNodeFiles($node) {
-        $sql="select A.refno, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
+        $sql = "select A.refno, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
               from tbl_wicid_documents as A
                 join tbl_wicid_fileuploads as B on A.id = B.docid
-              where B.filepath like '%$node%'
+              where B.filepath like '%$node%' and A.active ='Y' 
               order by A.date_created DESC";
-        
+
         return $this->getArray($sql);
     }
 
@@ -104,8 +126,8 @@ class dbfileuploads extends dbtable {
      * @return <type>
      */
     public function getFileInfo($filename, $filepath) {
-        $filepath=  str_replace("//", "/", $filepath);
-        $sql="select * from $this->tablename  fls,tbl_wicid_documents docs
+        $filepath = str_replace("//", "/", $filepath);
+        $sql = "select * from $this->tablename  fls,tbl_wicid_documents docs
                 where fls.filename = '$filename' and fls.filepath = '$filepath'
                 and fls.docid=docs.id and docs.active='Y'";
 
@@ -113,69 +135,68 @@ class dbfileuploads extends dbtable {
         return $data;
     }
 
-    function deleteNAFile($filepath,$filename){
-        $sql=
-        "delete from tbl_wicid_fileuploads where filename ='$filename' and filepath='$filepath'";
+    function deleteNAFile($filepath, $filename) {
+        $sql =
+                "delete from tbl_wicid_fileuploads where filename ='$filename' and filepath='$filepath'";
         $this->getArray($sql);
-
     }
+
     function searchfiles($filter, $advanced=false) {
-        $objUserutils=$this->getObject('userutils');
-        if(!$advanced) {
+        $objUserutils = $this->getObject('userutils');
+        if (!$advanced) {
             $start = "1";
             $length = "4";
             $today = getdate();
 
-            if((substr($filter, $start, $length) >= $today['year'] - 10) && (substr($filter, $start, $length) <= $today['year'])) {
-                $sql="  select A.refno, A.date_created, A.userid, A.groupid, B.date_uploaded, B.filename, B.filepath, B.docid
+            if ((substr($filter, $start, $length) >= $today['year'] - 10) && (substr($filter, $start, $length) <= $today['year'])) {
+                $sql = "  select A.refno, A.date_created, A.userid, A.groupid, B.date_uploaded, B.filename, B.filepath, B.docid
                         from tbl_wicid_documents as A
                             join tbl_wicid_fileuploads as B on A.id = B.docid
                         where A.refno like '%$filter%'
                         and A.groupid = 'Public'
                         order by A.date_created DESC";
-            }
-            else {
-                $sql="select *
+            } else {
+                $sql = "select *
                       from tbl_wicid_fileuploads
                       where filename like '%$filter%'";
 
                 $sql.=' order by date_uploaded DESC';
             }
-            $owner=$objUserutils->getUserId();
-            $rows=$this->getArray($sql);
-            $files=array();
+            $owner = $objUserutils->getUserId();
+            $rows = $this->getArray($sql);
+            $files = array();
 
             foreach ($rows as $row) {
-                $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);echo $f;
-                $isowner=$this->objUser->userid() == $file['userid']?"true":"false";
+                $size = $this->formatBytes(filesize($dir . $node . '/' . $f), 2);
+                echo $f;
+                $isowner = $this->objUser->userid() == $file['userid'] ? "true" : "false";
                 $files[] = array(
-                        'text'=>$row['filename'],
-                        'id'=>$row['filepath'],
-                        'docid'=>$row['docid'],
-                        'refno'=>$row['refno'],
-                        'owner'=>$this->objUser->fullname($row['userid']),
-                        //'lastmod'=>$lastmod,
-                        'lastmod'=>$row['date_uploaded'],
-                        'filesize'=>$size,
-                        'thumbnailpath'=>'<img  src="'.$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'-16x16.png">'
+                    'text' => $row['filename'],
+                    'id' => $row['filepath'],
+                    'docid' => $row['docid'],
+                    'refno' => $row['refno'],
+                    'owner' => $this->objUser->fullname($row['userid']),
+                    //'lastmod'=>$lastmod,
+                    'lastmod' => $row['date_uploaded'],
+                    'filesize' => $size,
+                    'thumbnailpath' => '<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '-16x16.png">'
                 );
-
             }
 
-            echo json_encode(array("files"=>$files));
+            echo json_encode(array("files" => $files));
 
             die();
-        }
-        else {
+        } else {
             $sql = "select * from $this->tablename where docid = '$filter'";
             return $this->getArray($sql);
         }
     }
+
     // from php manual page
     function formatBytes($val, $digits = 3, $mode = "SI", $bB = "B") { //$mode == "SI"|"IEC", $bB == "b"|"B"
         $si = array("", "K", "M", "G", "T", "P", "E", "Z", "Y");
         $iec = array("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi", "Yi");
-        switch(strtoupper($mode)) {
+        switch (strtoupper($mode)) {
             case "SI" : $factor = 1000;
                 $symbols = $si;
                 break;
@@ -186,17 +207,19 @@ class dbfileuploads extends dbtable {
                 $symbols = $si;
                 break;
         }
-        switch($bB) {
+        switch ($bB) {
             case "b" : $val *= 8;
                 break;
             default : $bB = "B";
                 break;
         }
-        for($i=0;$i<count($symbols)-1 && $val>=$factor;$i++)
+        for ($i = 0; $i < count($symbols) - 1 && $val >= $factor; $i++)
             $val /= $factor;
         $p = strpos($val, ".");
-        if($p !== false && $p > $digits) $val = round($val);
-        elseif($p !== false) $val = round($val, $digits-$p);
+        if ($p !== false && $p > $digits)
+            $val = round($val);
+        elseif ($p !== false)
+            $val = round($val, $digits - $p);
         return round($val, $digits) . " " . $symbols[$i] . $bB;
     }
 
@@ -205,96 +228,96 @@ class dbfileuploads extends dbtable {
      * @param <type> $filename
      * @return <type>
      */
-    function findexts ($filename) {
-        $filename = strtolower($filename) ;
-        $exts = split("[/\\.]", $filename) ;
-        $n = count($exts)-1;
+    function findexts($filename) {
+        $filename = strtolower($filename);
+        $exts = split("[/\\.]", $filename);
+        $n = count($exts) - 1;
         $ext = $exts[$n];
 
         //check if icon for this exists, else return unknown
-        $filePath=$this->objConfig->getModulePath().'/wicid/resources/images/ext/'.$ext.'.png';
-        if(file_exists($filePath) ) {
+        $filePath = $this->objConfig->getModulePath() . '/wicid/resources/images/ext/' . $ext . '.png';
+        if (file_exists($filePath)) {
             return $ext;
-        }else {
+        } else {
             return "unknown";
         }
     }
 
     public function advancedSearch($data) {
         $first = true;
-        
-        if(strlen($data['startDate']) > 0) {
-            $filter .= $first?" where ":" and ";
-            $first = false;
-            $filter .= "date_created >= '" . strftime('%Y-%m-%d', strtotime($data['startDate']))."'";
-        }
-        if(strlen($data['endDate']) > 0) {
-            $filter .= $first?" where ":" and ";
-            $first = false;
-            $filter .= "date_created <= '".strftime('%Y-%m-%d', strtotime($data['endDate']))."'";
-        }
-        /*if(strlen($data['fname']) > 0) {
-            $this->users->getsurname();
-            $filter .=
-        }
-        if(strlen($data['lname']) > 0) {
 
-        }*/
-        if(strlen($data['docname']) > 0) {
-            $filter .= $first?" where ":" and ";
+        if (strlen($data['startDate']) > 0) {
+            $filter .= $first ? " where " : " and ";
             $first = false;
-            $filter .= "docname like '%".$data['docname']."%'";
+            $filter .= "date_created >= '" . strftime('%Y-%m-%d', strtotime($data['startDate'])) . "'";
         }
-        if(strlen($data['doctype']) > 0) {
-            $filter .= $first?" where ":" and ";
+        if (strlen($data['endDate']) > 0) {
+            $filter .= $first ? " where " : " and ";
             $first = false;
-            $filter .= "refno like '%".$data['doctype']."%'";
+            $filter .= "date_created <= '" . strftime('%Y-%m-%d', strtotime($data['endDate'])) . "'";
         }
-        if(strlen($data['refno']) > 0) {
-            $filter .= $first?" where ":" and ";
+        /* if(strlen($data['fname']) > 0) {
+          $this->users->getsurname();
+          $filter .=
+          }
+          if(strlen($data['lname']) > 0) {
+
+          } */
+        if (strlen($data['docname']) > 0) {
+            $filter .= $first ? " where " : " and ";
             $first = false;
-            $filter .= "refno like '%".$data['refno']."%'";
+            $filter .= "docname like '%" . $data['docname'] . "%'";
         }
-        if(strlen($data['topic']) > 0) {
-            $filter .= $first?" where ":" and ";
+        if (strlen($data['doctype']) > 0) {
+            $filter .= $first ? " where " : " and ";
             $first = false;
-            $filter .= "topic like '%".$data['topic']."%'";
+            $filter .= "refno like '%" . $data['doctype'] . "%'";
         }
-        if(strlen($data['dept']) > 0) {
-            $filter .= $first?" where ":" and ";
+        if (strlen($data['refno']) > 0) {
+            $filter .= $first ? " where " : " and ";
             $first = false;
-            $filter .= "department like '%".$data['dept']."%'";
+            $filter .= "refno like '%" . $data['refno'] . "%'";
         }
-        if(strlen($data['active']) > 0) {
-            $filter .= $first?" where ":" and ";
+        if (strlen($data['topic']) > 0) {
+            $filter .= $first ? " where " : " and ";
             $first = false;
-            $filter .= "active = '".$data['active']."'";
+            $filter .= "topic like '%" . $data['topic'] . "%'";
+        }
+        if (strlen($data['dept']) > 0) {
+            $filter .= $first ? " where " : " and ";
+            $first = false;
+            $filter .= "department like '%" . $data['dept'] . "%'";
+        }
+        if (strlen($data['active']) > 0) {
+            $filter .= $first ? " where " : " and ";
+            $first = false;
+            $filter .= "active = '" . $data['active'] . "'";
         }
 
-        $sql = "select * from tbl_wicid_documents ".$filter;
-        $sql = $first?" where ":" and ". " groupid = 'Public'";
+        $sql = "select * from tbl_wicid_documents " . $filter;
+        $sql = $first ? " where " : " and " . " groupid = 'Public'";
         $rows = $this->getArray($sql);
-        
-        $files=array();
 
-        foreach($rows as $docrow) {
+        $files = array();
+
+        foreach ($rows as $docrow) {
             $fileData = $this->searchfiles($docrow['id'], true);
-            foreach($fileData as $row) {
-                $size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
+            foreach ($fileData as $row) {
+                $size = $this->formatBytes(filesize($dir . $node . '/' . $f), 2);
                 $files[] = array(
-                        'text'=>$row['filename'],
-                        'id'=>$row['filepath'],
-                        'docid'=>$row['docid'],
-                        'refno'=>$row['refno'],
-                        'owner'=>$this->objUser->fullname($row['userid']),
-                        'lastmod'=>$lastmod,
-                        'filesize'=>$size,
-                        'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($row['filename']).'.png'
+                    'text' => $row['filename'],
+                    'id' => $row['filepath'],
+                    'docid' => $row['docid'],
+                    'refno' => $row['refno'],
+                    'owner' => $this->objUser->fullname($row['userid']),
+                    'lastmod' => $lastmod,
+                    'filesize' => $size,
+                    'thumbnailpath' => $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '.png'
                 );
             }
         }
 
-        echo json_encode(array("files"=>$files));
+        echo json_encode(array("files" => $files));
     }
 
     /**
@@ -303,13 +326,13 @@ class dbfileuploads extends dbtable {
      * @return <type>
      */
     function checkAttachment($ids) {
-        $docids=explode(",", $ids);
+        $docids = explode(",", $ids);
         $count = count($docids);
-        for($i=0;$i<$count;$i++) {
-            if(strlen(trim($docids[$i])) > 0) {
-                $filter = "where docid = '".$docids[$i]."'";
+        for ($i = 0; $i < $count; $i++) {
+            if (strlen(trim($docids[$i])) > 0) {
+                $filter = "where docid = '" . $docids[$i] . "'";
                 $res = $this->getAll($filter);
-                if(count($res) == 0) {
+                if (count($res) == 0) {
                     return "false";
                 }
             }
@@ -317,5 +340,6 @@ class dbfileuploads extends dbtable {
 
         return "true";
     }
+
 }
 ?>

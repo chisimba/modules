@@ -623,15 +623,6 @@ class wicid extends controller {
                     'filepath'=>$path);
 
             $result = $this->objUploadTable->saveFileInfo($data);
-            //update the latest ext
-/*$myFile = "/dwaf/testFile.txt";
-$fh = fopen($myFile, 'w') or die("can't open file");
-fwrite($fh,$filename);
-fclose($fh);*/
-           // $this->documents->updateDocument($docid,array('ext'=>$ext,'upload'=>'Y'));
-
-
-
             return $this->nextAction('ajaxuploadresults', array('id'=>$generatedid, 'fileid'=>$id, 'filename'=>$filename));
         }
     }
