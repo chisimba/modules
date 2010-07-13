@@ -55,7 +55,7 @@ $table->addCell('<strong>'.$this->objLanguage->languageText('word_description', 
 $table->addCell($objWashout->parseText($assignment['description']), NULL, NULL, NULL, NULL, ' colspan="3"');
 $table->endRow();
 $table->startRow();
-$table->addCell('<strong>'.ucwords($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]')).'</strong>', 130);
+$table->addCell('<strong>'.ucwords($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]')).':</strong>', 130);
 $table->addCell($this->objUser->fullName($assignment['userid']));
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark').'</strong>', 130);
 $table->addCell($assignment['mark']);
@@ -63,7 +63,7 @@ $table->endRow();
 $table->startRow();
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_openingdate', 'assignment', 'Opening Date').'</strong>', 130);
 $table->addCell($objDateTime->formatDate($assignment['opening_date']));
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_percentyrmark', 'assignment', 'Percentage of year mark').'</strong>', 200, NULL, NULL, 'nowrap');
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_percentyrmark', 'assignment', 'Percentage of year mark').':</strong>', 200, NULL, NULL, 'nowrap');
 $table->addCell($assignment['percentage'].'%');
 $table->endRow();
 $table->startRow();

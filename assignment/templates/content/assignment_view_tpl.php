@@ -1,16 +1,15 @@
 <?php
 /**
-* @package assignment
-*/
+ * @package assignment
+ */
 
 /**
-* Template to view the assignment.
-* Students can submit their assignments.
-* @param array $data The details of the assignment.
-*/
+ * Template to view the assignment.
+ * Students can submit their assignments.
+ * @param array $data The details of the assignment.
+ */
 
 $this->setLayoutTemplate('assignment_layout_tpl.php');
-
 // set up html elements
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('htmlheading','htmlelements');
@@ -59,7 +58,7 @@ $objTable = new htmltable();
 $objTable->cellpadding=5;
 $objTable->width='99%';
 
-if(!empty($data)){
+if(!empty($data)) {
     // Display the assignment
     $objTable->startRow();
     $objTable->addCell('<b>'.$nameLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$data[0]['name'],'45%');
@@ -71,9 +70,9 @@ if(!empty($data)){
     $objTable->addCell('<b>'.$percentLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$data[0]['percentage'].' %');
     $objTable->endRow();
 
-    if($data[0]['resubmit']){
+    if($data[0]['resubmit']) {
         $resubmit = $yesLabel;
-    }else{
+    }else {
         $resubmit = $noLabel;
     }
     $objTable->startRow();
@@ -91,10 +90,10 @@ if(!empty($data)){
 
     $objLayer = new layer();
     $objLayer->cssClass = 'odd';
-    
-    
 
-	$objLayer->str = $objTable->show();
+
+
+    $objLayer->str = $objTable->show();
     $str = $objLayer->show();
 
     // Section for submitting the assignment by upload or online if user is a student
@@ -102,36 +101,36 @@ if(!empty($data)){
     $objHead->type = 4;
     $objHead->str = $submitLabel.' '.$assignmentLabel;
     $str .= $objHead->show();
-	
-	
-	$this->objButton = new button('submit',$btnupload);
-	$returnUrl = $this->uri(array('action' => 'upload','id'=>$data[0]['id'])); 
-	$this->objButton->setOnClick("window.location='$returnUrl'");
-	$this->objButton->setToSubmit();
-	$btn1= $this->objButton->show();
-	
-	$str .= $btn1;
-	
-    // Determine format of submission: upload or online
-    if($data[0]['format']){
-       
 
-        if(!empty($data[0]['fileid'])){
+
+    $this->objButton = new button('submit',$btnupload);
+    $returnUrl = $this->uri(array('action' => 'upload','id'=>$data[0]['id']));
+    $this->objButton->setOnClick("window.location='$returnUrl'");
+    $this->objButton->setToSubmit();
+    $btn1= $this->objButton->show();
+
+    $str .= $btn1;
+
+    // Determine format of submission: upload or online
+    if($data[0]['format']) {
+
+
+        if(!empty($data[0]['fileid'])) {
             $objInput = new textinput('fileid', $data[0]['fileid']);
             $objInput->fldType = 'hidden';
             $inputStr .= $objInput->show();
         }
-    }else{
+    }else {
         $dOnline = '';
         // Complete assignment online, display assignment if multiple submissions
-        if(!empty($data[0]['online'])){
+        if(!empty($data[0]['online'])) {
             $dOnline = $data[0]['online'];
         }
 
         $inputStr = '<b>'.$completeLabel.':</b>';
 
         $type = $this->getParam('editor', 'ww');
-        if($type == 'plaintext'){
+        if($type == 'plaintext') {
             // Hidden element for the editor type
             $objInput = new textinput('editor', 'ww', 'hidden');
             $objText = new textarea('text', $dOnline, 15, 80);
@@ -139,7 +138,7 @@ if(!empty($data)){
             $objLink = new link("javascript:submitform('changeeditor')");
             $objLink->link = $lnWysiwyg;
             $inputStr .= '<br/>'.$objLink->show().$objInput->show();
-        }else{
+        }else {
             // Hidden element for the editor type
             $objInput = new textinput('editor', 'plaintext', 'hidden');
             $objEditor = $this->newObject('htmlarea', 'htmlelements');
@@ -162,14 +161,14 @@ if(!empty($data)){
     $objInput = new textinput('jokes', 'submit', 'hidden');
     $hidden .= $objInput->show();
 
-    if(!empty($data[0]['submitid'])){
+    if(!empty($data[0]['submitid'])) {
         $objInput = new textinput('submitid', $data[0]['submitid']);
         $objInput->fldType = 'hidden';
         $hidden .= $objInput->show();
     }
 
     // submit buttons and form
-   
+
     $objButton = new button('save', $submitLabel);
     $objButton->setToSubmit();
     $btns = $objButton->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -177,19 +176,19 @@ if(!empty($data)){
     $objButton = new button('exit', $exitLabel);
     $objButton->setToSubmit();
     $btns .= $objButton->show();
-	
 
-    $objForm = new form('submit', $this->uri(array('action' => 'onlinesubmit','workgroupid'=>$workgroupid)));    // pass workgroup_id to the form
+
+    $objForm = new form('submit', $this->uri(array('action' => 'onlinesubmit')));
     $objForm->extra = " ENCTYPE='multipart/form-data'";
     $objForm->addToForm($inputStr);
     $objForm->addToForm($hidden);
-    
-		if(!$data[0]['format']){
-			$objForm->addToForm('<br />'.$btns);
-		}else{
 
-		}
-    
+    if(!$data[0]['format']) {
+        $objForm->addToForm('<br />'.$btns);
+    }else {
+
+    }
+
     $layerStr = $objForm->show();
 
     $objLayer1 = new layer();

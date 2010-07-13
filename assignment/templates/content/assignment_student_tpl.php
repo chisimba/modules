@@ -108,25 +108,6 @@ if($this->rubric){
         $rightLinks .= '<p>'.$rubricLink.'</p>';
     }
 }
-////////////
-
-if($this->assignment){
-    $objIcon->setIcon('assignment');
-    $objIcon->title = $openLabel.' '.$essayLabel;
-    $objLink = new link($this->uri(array(''),'assignment'));
-    $objLink->link = $objIcon->show();
-    $objLink->title = $bookLabel;
-    $assignmentLink = '<br />'.$objLink->show();
-    $objLink->link = $assignmentLabel;
-    $assignmentLink .= '&nbsp;&nbsp;'.$objLink->show();
-    $leftLinks .= $assignmentLink;
-}
-
-///////////////
-
-
-
-
 
 $objTable = new htmltable();
 
@@ -424,7 +405,7 @@ if(!empty($assignData)){
         if($noLink){
             $name = $line['name'];
         }else{
-            $objLink = new link($this->uri(array('action'=>'view', 'id'=>$line['id'],'workgroupid'=>$workgroupid)));
+            $objLink = new link($this->uri(array('action'=>'view', 'id'=>$line['id'])));
             $objLink->title = $viewLabel.' '.$line['name'];
             $objLink->link = $line['name'];
             $name = $objLink->show();

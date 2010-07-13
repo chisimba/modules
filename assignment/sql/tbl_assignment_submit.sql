@@ -36,8 +36,7 @@ $fields = array(
 		'type' => 'timestamp'
 		),
 	'mark' => array(
-		'type' => 'integer',
-		'lenght'=> 11,
+		'type' => 'decimal',
 		),
 	'commentinfo' => array(
 		'type' => 'clob'
