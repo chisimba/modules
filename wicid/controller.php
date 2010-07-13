@@ -526,7 +526,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return false;
+        return true;
 
     }
 
@@ -624,7 +624,14 @@ class wicid extends controller {
 
             $result = $this->objUploadTable->saveFileInfo($data);
             //update the latest ext
-            $this->documents->updateDocument($docid,array('ext'=>$ext,'upload'=>'Y'));
+/*$myFile = "/dwaf/testFile.txt";
+$fh = fopen($myFile, 'w') or die("can't open file");
+fwrite($fh,$filename);
+fclose($fh);*/
+           // $this->documents->updateDocument($docid,array('ext'=>$ext,'upload'=>'Y'));
+
+
+
             return $this->nextAction('ajaxuploadresults', array('id'=>$generatedid, 'fileid'=>$id, 'filename'=>$filename));
         }
     }
