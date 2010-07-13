@@ -1,69 +1,93 @@
 <?php
 //Read mail tamplate
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
-	    die("You cannot view this page directly");
+if (!$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
-	$this->loadClass('fieldset','htmlelements');
-	$this->loadClass('htmltable', 'htmlelements');
-	$this->loadClass('link', 'htmlelements');
-	$this->loadClass('textinput', 'htmlelements');
-	$this->loadClass('textarea', 'htmlelements');
-	$washer = $this->getObject('washout', 'utilities');
-	$objTable = new htmltable();
-	$objFields = new fieldset();
-	$objFields->setLegend('<b>'.$this->objLanguage->languageText('mod_internalmail_compose', 'internalmail').'</b>');
-	
-	$composeform = new form('uwcelearningmobile', $this->uri(array(
-	    'action' => 'sendmail',
-		'userid' => $recipientList
-	)));
+$this->loadClass('fieldset','htmlelements');
+$this->loadClass('htmltable', 'htmlelements');
+$this->loadClass('link', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+$this->loadClass('textarea', 'htmlelements');
+$washer = $this->getObject('washout', 'utilities');
+$this->loadClass('htmlheading', 'htmlelements');
 
-	$reFields = new fieldset();
-	$reFields->setLegend('<b>'.$this->objLanguage->languageText('word_to', 'system').':</b>');
-	$reFields->addContent($toList);
-	$objFields->addContent($reFields->show());
+$objHead = new htmlheading();
+$objHead->str = '&nbsp;'.$this->objLanguage->languageText('mod_internalmail_compose', 'internalmail');
+$objHead->type=4;
 
-	$txtsubject = new textinput('subject');
-	if (isset($subject)) {
-	    $txtsubject->value = $subject;
-	}
+echo $objHead->show();
 
-	$txtmessage = new textarea('message', $message, '', '');
-	
-	$objTable->startRow();
-    $objTable->addCell($this->objLanguage->languageText('word_subject', 'system').':', '', '', '', '', '');
-	$objTable->endRow();
-	
-	$objTable->startRow();
-    $objTable->addCell($txtsubject->show(), '', '', '', '', '');
-	$objTable->endRow();
+$objTable = new htmltable();
+$objFields = new fieldset();
+$objFields->setLegend('');
 
-	$objTable->startRow();
-    $objTable->addCell($this->objLanguage->languageText('word_message', 'system').':', '', '', '', '', '');
-	$objTable->endRow();
+$composeform = new form('uwcelearningmobile', $this->uri(array(
+    'action' => 'sendmail'
+)));
 
-	$objTable->startRow();
-    $objTable->addCell($txtmessage->show(), '', '', '', '', '');
-	$objTable->endRow();
-	
-	$objconvButton = new button($this->objLanguage->languageText('word_send', 'system'));
-	$objconvButton->setValue($this->objLanguage->languageText('word_send', 'system'));
-	$objconvButton->setToSubmit();
+$reFields = new fieldset();
+$reFields->setLegend('<b>'.$this->objLanguage->languageText('word_to', 'system').':</b>');
+if(is_array($recipientList) && !empty($recipientList)) {
+    foreach($recipientList as $list) {
+        $userId = $this->objUser->getUserId($list);
+        $name = $this->dbRouting->getName($userId);
+        $rmlink = new link($this->URI(array('action' => 'rmrecipient', 'username' => $list)));
+        $rmlink->link = 'Remove';
+        $toList.= '<p><span id="'.$userId.'">'.$name.' - '.$rmlink->show();
+        $toList.='&nbsp;</span></p>';
+    }
+}
+else {
+    $toList = '<i>No Recipients</i>';
+}
+$reFields->addContent($toList);
 
-	$objTable->startRow();
-    $objTable->addCell($objconvButton->show(), '', '', '', '', '');
-	$objTable->endRow();
+//Set up add reciepient link
+$addLink = new link($this->URI(array('action' => 'calladdrecipient')));
+$addLink->link = 'Add Recipient';
+$reFields->addContent('<p>'.$addLink->show().'</p>');
 
-	$objFields->addContent($objTable->show());
-	
-	$composeform->addToForm($objFields->show());
-		
-	$cform = $composeform->show();
-	echo $cform;
+$objFields->addContent($reFields->show());
 
-	$backLink = new link($this->URI(array('action' => 'internalmail')));
-	$backLink->link = $this->objLanguage->languageText('mod_uwcelearningmobile_wordbacktomail', 'uwcelearningmobile');
-	echo '<br/>'.$this->homeAndBackLink.' - '.$backLink->show().'</br>';
+$txtsubject = new textinput('subject');
+if (isset($subject)) {
+    $txtsubject->value = $subject;
+}
+
+$txtmessage = new textarea('message', $message, '', '');
+$txtmessage->setRows(8);
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_subject', 'system').':', '', '', '', '', '');
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell($txtsubject->show(), '', '', '', '', '');
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_message', 'system').':', '', '', '', '', '');
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell($txtmessage->show(), '', '', '', '', '');
+$objTable->endRow();
+
+//--- Create a submit button
+$objButton = '<input type="submit" value="'.$this->objLanguage->languageText("word_send").'" />';
+
+$objTable->startRow();
+$objTable->addCell('<p>'.$objButton.'</p>', '', '', '', '', '');
+$objTable->endRow();
+
+$objFields->addContent($objTable->show());
+
+$composeform->addToForm($objFields->show());
+
+$cform = $composeform->show();
+echo $cform;
+
+$backLink = new link($this->URI(array('action' => 'internalmail')));
+$backLink->link = $this->objLanguage->languageText('mod_uwcelearningmobile_wordbacktomail', 'uwcelearningmobile');
+echo $this->homeAndBackLink.' - '.$backLink->show();
 ?>
