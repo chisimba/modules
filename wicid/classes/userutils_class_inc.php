@@ -271,8 +271,8 @@ class userutils extends object {
         foreach ($rows as $row) {
             //$size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
             $isowner = $this->objUser->userid() == $file['userid'] ? "true" : "false";
-            $size = $this->formatBytes(filesize($dir . $node . '/' . $f), 2);
-            $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
+            $size = "0";//$this->formatBytes(filesize($dir . $node . '/' . $f), 2);
+           // $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
             $files[] = array(
                 'text' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '-16x16.png">&nbsp;' . $row['filename'],
                 'actualfilename' => $row['filename'],
