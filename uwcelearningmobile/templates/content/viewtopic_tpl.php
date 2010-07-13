@@ -140,7 +140,7 @@ if(!empty($posts)) {
     $replyform->addToForm($objTable->show());
 
     if($topic['topicstatus'] != 'CLOSE') {
-        $objFields->addContent('<br/><strong>'.$this->objLanguage->languageText('mod_forum_typeofreply', 'forum').'</strong><br/><br/>');
+        $objFields->addContent('<br/><strong>'.$this->objLanguage->languageText('mod_forum_replytotopic', 'forum').'</strong><br/><br/>');
         $objFields->addContent($replyform->show());
     }
 
