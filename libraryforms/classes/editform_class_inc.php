@@ -86,10 +86,7 @@ class editform extends dbTable {
 		//]]>
 		</script>';
 
-      
-
-
-        $this->appendArrayVar('headerParams', $strjs);
+              $this->appendArrayVar('headerParams', $strjs);
 
 
 
@@ -121,9 +118,6 @@ class editform extends dbTable {
         $table->addCell($objsurname->show(), '', 'center', 'left', '');
         $objForm->addRule('surname',$this->objLanguage->languageText("mod_surname_required", "libraryforms", 'Please enter a surname. Surname missing.'),'required');
 
-
-
-
         //Create a new textinput for the surname
         $objinitials = new textinput('initials');
         $initailsLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentinitials","libraryforms"),"initials");
@@ -152,7 +146,6 @@ class editform extends dbTable {
         $table->endRow();
         $objForm->addRule('select_title',$this->objLanguage->languageText("mod_title_required", "libraryforms", 'Please select a title. A title missing.'),'required');
 
-
         //Create a new textinput for the title
         $objstudno = new textinput('studentno');
         $studnoLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudno","libraryforms"),"stud no");
@@ -161,8 +154,6 @@ class editform extends dbTable {
         $table->addCell($objstudno->show(), '', 'center', 'left', '');
         $objForm->addRule(array('name'=>'studentno','length'=>10), 'Your Studentno is too long','maxlength');
         $table->endRow();
-
-
 
         //Create a new textinput for postal
         $objpostal = new textinput('postal');
@@ -239,10 +230,7 @@ class editform extends dbTable {
         $table->startRow();
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-       $objForm->addRule('email', 'Not a valid Email', 'email');
-
-      
-
+        $objForm->addRule('email', 'Not a valid Email', 'emailaddress');
         $table->endRow();
 
         //Create a new textinput for course
@@ -257,19 +245,14 @@ class editform extends dbTable {
         //Create a new textinput for department
         $objdepartment = new textinput('department');
         $departmentLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentdepartment","libraryforms"),"department");
-
         $table->startRow();
         $table->addCell($departmentLabel->show(), '', 'center', 'left', '');
         $table->addCell($objdepartment->show(), '', 'center', 'left', '');
         $objForm->addRule('department',$this->objLanguage->languageText("mod_dept_required", "libraryforms", 'Please enter a department. department is missing.'),'required')	;
 
-
-
         //Create a new textinput for department
         $objsuper = new textinput('supervisor');
-
         $superLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentsupervisor","libraryforms"),"supervisor");
-
         $table->addCell($superLabel->show(), '', 'center', 'left', '');
         $table->addCell($objsuper->show(), '', 'center', 'left', '');
         $table->endRow();

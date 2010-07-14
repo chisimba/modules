@@ -89,7 +89,7 @@ $table->addCell($captcha->show().'<a href="javascript:redraw();">'.$this->objLan
 $table->endRow();
 
 
-/*//Get the CSS layout to make two column layout
+/*Get the CSS layout to make two column layout
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 //Add some text to the left column
 $cssLayout->setLeftColumnContent("Place holder text");

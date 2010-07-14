@@ -109,11 +109,11 @@ $strjs = '<script type="text/javascript">
 
 
         //Create a new textinput for the email
-        $objemail = new textinput('email');
-        $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail","libraryforms"),"email");
+        $objemail = new textinput('fbkemail');
+        $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail","libraryforms"),"fbkemail");
         $objForm->addToForm($emailLabel->show()."<br />");
         $objForm->addToForm($objemail->show() . "<br />");
-        $objForm->addRule('email', 'Not a valid Email', 'email');
+        $objForm->addRule('email', 'Not a valid Email', 'fbkemail');
 
         //----------TEXTAREA--------------
         //Create a new textarea for the comment message
@@ -122,8 +122,7 @@ $strjs = '<script type="text/javascript">
             ("mod_libraryforms_commentmsgbox","libraryforms"),"message");
         $objForm->addToForm($msgLabel->show()."<br/>");
         $objForm->addToForm($objmsg->show() . "<br />");
-
-
+ $objForm->addRule('msgbox',$this->objLanguage->languageText("mod_libraryforms_commentmsgbox", "libraryforms", 'Message here .Message missing.'),'required');
 
 		$objCaptcha = $this->getObject('captcha', 'utilities');
 		$captcha = new textinput('feedback_captcha');

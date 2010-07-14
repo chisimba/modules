@@ -160,7 +160,6 @@ class bookthesis extends dbTable {
         $table->addCell($dateLabel->show(), '', 'center', 'left', '');
         $table->addCell($objdate->show(), '', 'center', 'left', '');
         $objForm->addRule('year',$this->objLanguage->languageText("mod_year_required", "libraryforms", 'Please enter year. Year missing.'),'required');
-
         $table->endRow();
 
         //Create a new textinput for edition
@@ -249,9 +248,8 @@ class bookthesis extends dbTable {
         $table->addCell($uwcbLabel->show(), '', 'center', 'left', '');
         $objForm->addRule('arrayList[]',$this->objLanguage->languageText("mod_surname_required", "libraryforms", 'Please enter a title. please tick one of the box.'),'required');
 
-        //Create a new label for oversears
-        //Create a new label for pg
-
+        //
+        // create checkbox local only
         $objCheck2 = new checkbox('arrayList[]');
         $objCheck2->setValue($userPerm['id']);
         $objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
@@ -274,7 +272,7 @@ class bookthesis extends dbTable {
         $table->startRow();
 	$objCheck4 = new checkbox('arrayList[]');
         $objCheck4->setValue($userPerm['id']);
-        $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+       // $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $faxbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
         $table->addCell($objCheck4->show(), '', 'center', 'left', '');
         $table->addCell($faxbLabel->show(), '', 'center', 'left', '');
@@ -283,7 +281,7 @@ class bookthesis extends dbTable {
 
         $objCheck5 = new checkbox('arrayList[]');
         $objCheck5->setValue($userPerm['id']);
-       $objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+       //$objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $pgbbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"pg");
         //$objForm->addToForm($pgbbLabel->show());
         $table->addCell($objCheck5->show(), '', 'center', 'left', '');
@@ -295,14 +293,14 @@ class bookthesis extends dbTable {
 
         $objCheck6 = new checkbox('arrayList[]');
         $objCheck6->setValue($userPerm['id']);
-        $objCheck6->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+       // $objCheck6->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $ugbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentug","libraryforms"),"ug");
         $table->addCell($objCheck6->show(), '', 'center', 'left', '');
         $table->addCell($ugbLabel->show(), '', 'center', 'left', '');
 
         $objCheck7= new checkbox('arrayList[]');
         $objCheck7->setValue($userPerm['id']);
-        $objCheck7->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        //$objCheck7->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $staffbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstaff","libraryforms"),"staff");
         $table->addCell($objCheck7->show(), '', 'center', 'left', '');
         $table->addCell($staffbLabel->show(), '', 'center', 'left', '');
@@ -363,11 +361,11 @@ class bookthesis extends dbTable {
 
 
         //Create a new textinput for email
-        $objemail = new textinput('email_thesis');
-        $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"emailaddress");
+        $objemail = new textinput('thesisemail');
+        $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"thesisemail");
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule('email_thesis', 'Not a valid Email-Address', 'email');
+        $objForm->addRule('email', 'Not a valid Email', 'thesisemail');
         $table->endRow();
 
 
@@ -404,7 +402,7 @@ class bookthesis extends dbTable {
         $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="bookthesiscaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:bookthesisredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
 
         $objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
-		$objForm->addRule('thesis_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'),'required');
+	$objForm->addRule('thesis_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'),'required');
 
  //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form

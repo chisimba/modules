@@ -25,12 +25,14 @@ class libraryforms extends controller {
 
 
     public $objLanguage;
-   // public $objUser;
     protected $objMail;
 
     public function init() {
+
     //Instantiate the language object
         $this->objLanguage = $this->getObject('language', 'language');
+
+       // Instantiate the class\\
         $this->dbAddDistances = $this->getObject('editform', 'libraryforms');
         $this->dbAddBookthesis =$this->getObject('bookthesis','libraryforms');
         $this->dbAddillperiodical=$this->getObject('illperiodical','libraryforms');
@@ -41,8 +43,9 @@ class libraryforms extends controller {
 
     }//end of function
 
-    public function dispatch($action) {
-//var_dump($action);die;
+   public function dispatch($action) {
+     
+	//var_dump($action);die;
         if($action=='add') {
             $this->saveRecord();
         }
@@ -56,7 +59,7 @@ class libraryforms extends controller {
            return $this->nextAction(NULL);
 
         }
-        
+        //get parametters for the distance form
         $surname = $this->getParam('surname');
         $initials = $this->getParam('initials');
         $title= $this->getParam('title');
@@ -75,7 +78,7 @@ class libraryforms extends controller {
         $supervisor = $this->getParam('supervisor');
 	$captcha = $this->getParam('editformrequest_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+       if (md5(strtoupper($captcha)) != $this->getParam('editformrequest_captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
@@ -83,31 +86,31 @@ class libraryforms extends controller {
             return 'editadd_tpl.php';
         }
 
-        else
+        else{
         // add info into database
   $pid = $this->dbAddDistances->insertRecord($surname, $initials, $title, $studentno, $postaladdress, $physicaladdress, $postalcode, $postalcode2, $telnoh, $telnow, $cell, $fax,$emailaddress, $course, $department, $supervisor);
    // send email notification
 
 $this->sendEmailNotification($title="email notification for distance user",$subject="distance user email",$message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.$cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
-
+ }
 
         if($pid!=null) {
             var_dump('Saved Successfully');
             die;
         }
         else {
-            var_dump('Not Saved Successfully');
+            var_dump('Sorry Saved Successfully');
             die;
         }
 
-    }
+    }// end of function
 
     function saveBookthesisRecord() {
         if (!$_POST) { // Check that user has submitted a page
 	
             return $this->nextAction(NULL);
         }
-        //  getting parametters to save into database
+        //get parametters
        
         $bprint = $this->getParam('print');
         $bauthor= $this->getParam('author');
@@ -134,7 +137,7 @@ $this->sendEmailNotification($title="email notification for distance user",$subj
         $bcourse = $this->getParam('course');
  	$captcha = $this->getParam('thesis_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+        if (md5(strtoupper($captcha)) != $this->getParam('thesis_captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
@@ -151,16 +154,19 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
 	$btitlepages.' '.$bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.$btel.' '.$btelw.' '.
 	$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse);
 	
+}
+
         if($pid!=null) {
             var_dump('Saved Successfully');
             die;
         }
         else {
-            var_dump('Not Saved Successfully');
+            var_dump('Sorry Saved Successfully');
             die;
         }
-            }
-    }
+        
+}// end of function
+   
 
 
     function saveperiodicalRecord() {
@@ -168,7 +174,7 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
         
             return $this->nextAction(NULL);
         }
-        //for the book periodicalform
+       //get parametters
       
         $titleperiodical = $this->getParam('print');
         $volume= $this->getParam('author');
@@ -180,7 +186,6 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
         $prof= $this->getParam('isbn');
         $address = $this->getParam('series');
         $cell = $this->getParam('copy');
-        // $fax = $this->getParam('titlepages');
         $tell = $this->getParam('pages');
         $tellw = $this->getParam('thesis');
         $emailaddress = $this->getParam('email');
@@ -189,7 +194,7 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
         $bcourse = $this->getParam('course');
         $captcha = $this->getParam('periodical_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+        if (md5(strtoupper($captcha)) != $this->getParam('periodical_captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
@@ -197,45 +202,46 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
             return 'editadd_tpl.php';
         }
 
-        else
+        else{
         //insert the data into DB
-            $id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof,$address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course);
+ $id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof,$address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course);
 
 $this->sendEmailNotification($title="email for periodical books",$subject="periodical thesis mail",$message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.$author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.$tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
-
+}
              if($pid!=null) {
-            var_dump('Saved Successfully');
-            die;
+            	var_dump('Saved Successfully');
+            	die;
         }
         else {
-            var_dump('Not Saved Successfully');
-            die;
+            	var_dump('Sorry Saved Successfully');
+           	 die;
         }
-    }
+    }// end if function
 
     function submitmsg() {
 
         if (!$_POST) { // Check that user has submitted a page
             return $this->nextAction(NULL);
         }
-        //getting pararameters for the feed back form
+        //get parametters
        
         $name = $this->getParam('name');
         $emaill = $this->getParam('emaill');
         $msg = $this->getParam('msg');
          $captcha = $this->getParam('feedback_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+        if (md5(strtoupper($captcha)) != $this->getParam('feedback_captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
         }
-        else
+     else{
         //insert the data into DB
             $id=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
 	    $this->sendEmailNotification($title="feeb back email",$subject="channel your feed back",$message=$msg);
-}
+	}
+   }
      function sendEmailNotification($title,$subject,$message){
         $objMail = $this->getObject('email', 'mail');
         $list=array("library@uwc.ac.za","arieluwc@uwc.ac.za","pmalinga@uwc.ac.za");
@@ -249,7 +255,6 @@ $this->sendEmailNotification($title="email for periodical books",$subject="perio
 
     }
        
-    }
-
-//}
+}
+   
 

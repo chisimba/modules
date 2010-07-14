@@ -79,13 +79,14 @@ class ILLperiodical extends dbTable {
         $this->appendArrayVar('headerParams', $strjs);
     }
     private function buildForm() {
-    //Load the required form elements that we need
+ 
+      //Load the required form elements that we need
         $this->loadElements();
         $table = $this->newObject('htmltable', 'htmlelements');
         //Create the form
         $objForm = new form('periodical', $this->getFormAction());
 
-        //----------TEXT INPUT and Labels--------------
+        //---------text inputs and Labels--------------\\
 
         $titleLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentperiodicalrequest","libraryforms"),"title2");
         $objForm->addToForm($titleLabel->show()."<br/>");
@@ -151,10 +152,10 @@ class ILLperiodical extends dbTable {
         $table->addCell($authorLabel->show(), '', 'center', 'left', '');
         $table->addCell($objauthor->show(), '', 'center', 'left', '');
         $table->endRow();
-        $objForm->addRule('period_author',$this->objLanguage->languageText("mod_author_required", "libraryforms", 'Please enter an author. author is missing.'),'required');
+        $objForm->addRule('period_author',$this->objLanguage->languageText("mod_author2_required", "libraryforms", 'Please enter an author. author is missing.'),'required');
 
 
-        //create an istance for the Label
+        //create an istance for the label
         $labellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel","libraryforms"),"label");
         $table->startRow();
         $table->addCell($labellLabel->show(), '', 'center', 'left', '');
@@ -163,7 +164,8 @@ class ILLperiodical extends dbTable {
 
         $objCheck = new checkbox('arrayList[]');
         $objCheck->setValue($userPerm['id']);
-        $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        
+	//$objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         //Create a new label for oversears
         $localLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
         $table->addCell($objCheck->show(), '', 'center', 'left', '');
@@ -185,7 +187,7 @@ class ILLperiodical extends dbTable {
 
         $objCheck3 = new checkbox('arrayList[]');
         $objCheck3->setValue($userPerm['id']);
-        $objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        //$objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
 
         $faxLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
         $table->addCell($objCheck3->show(), '', 'center', 'left', '');
@@ -194,7 +196,7 @@ class ILLperiodical extends dbTable {
         //Create a new textinput for fax
         $objCheck4 = new checkbox('arrayList[]');
         $objCheck4->setValue($userPerm['id']);
-        $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+       // $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         //Create a new label for pg
         $uwcLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentuwc","libraryforms"),"uwc");
         $table->addCell($objCheck4->show(), '', 'center', 'left', '');
@@ -203,7 +205,7 @@ class ILLperiodical extends dbTable {
 
         $objCheck5 = new checkbox('arrayList[]');
         $objCheck5->setValue($userPerm['id']);
-        $objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+       // $objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
 
         //Create a new label for ug
         $pgLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"pg");
@@ -216,14 +218,14 @@ class ILLperiodical extends dbTable {
 
         $objCheck6 = new checkbox('arrayList[]');
         $objCheck6->setValue($userPerm['id']);
-        $objCheck6->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        //$objCheck6->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $ugLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentug","libraryforms"),"ug");
         $table->addCell($objCheck6->show(), '', 'center', 'left', '');
         $table->addCell($ugLabel->show(), '', 'center', 'left', '');
 
         $objCheck7 = new checkbox('arrayList[]');
         $objCheck7->setValue($userPerm['id']);
-        $objCheck7->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+       // $objCheck7->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $staffLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstaff","libraryforms"),"staff");
         $table->addCell($objCheck7->show(), '', 'center', 'left', '');
         $table->addCell($staffLabel->show(), '', 'center', 'left', '');
@@ -275,24 +277,24 @@ class ILLperiodical extends dbTable {
         $table->addCell($objw->show(), '', 'center', 'left', '');
 
         //Create a new textinput for email
-        $objemail = new textinput('email_periodical');
-        $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"email_periodical");
+        $objemail = new textinput('periodicalemaill');
+        $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"email");
 
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule('email_periodical', 'Not a valid Email', 'email_periodical');
+        $objForm->addRule('email', 'Not a valid Email', 'periodicalemail');
 
         $table->endRow();
 
 
 
-        //Create a new textinput for email
+        //Create a new textinput for entity
         $objentity = new textinput('periodical_entity');
         $entityLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcharge","libraryforms"),"periodical_entity");
         $table->addCell($entityLabel->show(), '', 'center', 'left', '');
         $table->addCell($objentity->show(), '', 'center', 'left', '');
 
-        //Create a new textinput for email
+        //Create a new textinput for student no
         $objstud = new textinput('periodical_student');
         $studLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentno","libraryforms"),"periodical_student");
         $table->addCell($studLabel->show(), '', 'center', 'left', '');
@@ -301,7 +303,7 @@ class ILLperiodical extends dbTable {
         $table->endRow();
 
 
-        //Create a new textinput for email
+        //Create a new textinput for course
         $objcourse = new textinput('periodical_course');
         $courseLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentcourse2","libraryforms"),"periodical_course");
         $table->addCell($courseLabel->show(), '', 'center', 'left', '');
@@ -321,17 +323,15 @@ class ILLperiodical extends dbTable {
 	$objForm->addToForm($table->show());
 	        // $objForm->addToForm($objButton->show());
 
-		$objCaptcha = $this->getObject('captcha', 'utilities');
- 	        $captcha = new textinput('periodical_captcha');
-	        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify 			Request'), 'input_periodical_captcha');
+	$objCaptcha = $this->getObject('captcha', 'utilities');
+ 	$captcha = new textinput('periodical_captcha');
+	$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify 			Request'), 'input_periodical_captcha');
  	        
-          $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="illperiodicalcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:illperiodicalredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
+        $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="illperiodicalcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:illperiodicalredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
 
         $objForm->addToForm('<br/><br/>'.$strutil.'<br/><br/>');
-		$objForm->addRule('periodical_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'security', 'Captcha cant be empty.Captcha is missing.'),'required');
+	$objForm->addRule('periodical_captcha',$this->objLanguage->languageText("mod_request_captcha_unrequired", 'security', 'Captcha cant be empty.Captcha is missing.'),'required');
         $objForm->addToForm($objButton->show());
-
-
         return $objForm->show();
 
     }
@@ -348,7 +348,7 @@ class ILLperiodical extends dbTable {
 
     function insertRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
         $id = $this->insert(array(
-            //'userid' => $userid,
+       
             'titleperiodical' => $titleperiodical,
             'volume' => $volume,
             'part' => $part,
@@ -362,42 +362,34 @@ class ILLperiodical extends dbTable {
             'tell' => $tell,
             'tellw' => $tellw,
             'emailaddress' => $emailaddress,
-            //'address' => $address,
             'entitynum' => $entitynum,
             'studentno' => $studentno,
             'course' => $course,
-            // 'department'=>$department,
-            /*'btelw' => $btelw,
-            'bemailaddress' => $bemailaddress,
-            'bentitynum' => $bentitynum,
-            'bstudentno' => $bstudentno,
-            'bcourse' => $bcourse,*/
+            
         ));
         return $id;
     }
 
     function updateRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
         $id = $this->update(array(
-            //'userid' => $userid,
-            'titleperiodical' => $titleperiodical,
+   
+           'titleperiodical' => $titleperiodical,
             'volume' => $volume,
             'part' => $part,
             'year' => $year,
             'pages' => $pages,
             'author' =>$author,
             'titlearticle' => $titlearticle,
-            //'createdormodified' => date('Y-m-d, h:i:s') ,
             'prof' => $prof,
             'address' => $address,
             'fax' => $fax,
             'tell' => $tell,
             'tellw' => $tellw,
             'emailaddress' => $emailaddress,
-            //'address' => $address,
             'entitynum' => $entitynum,
             'studentno' => $studentno,
             'course' => $course,
-            //'department'=>$department,
+           
         ));
         return $id;
     }
