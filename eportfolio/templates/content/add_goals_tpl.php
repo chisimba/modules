@@ -84,10 +84,12 @@ $row = array(
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = $this->objPopupcal->show('start', 'yes', 'no', "");
+$startField = &$this->getObject('datepicker', 'htmlelements');
+$startField->setName('start');
+$startField->setDateFormat("YYYY-MM-DD");
 $form->addRule('start', 'Please enter the start date', 'required');
 $row = array(
-    $startField
+    $startField->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
