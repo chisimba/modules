@@ -91,13 +91,17 @@ $row = array(
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = &$this->getObject('datepicker', 'htmlelements');
-$startField->setName('start');
-$startField->setDateFormat("YYYY-MM-DD");
-$strtdate->setDefaultDate($start);
+$startDateField = &$this->getObject('datepicker', 'htmlelements');
+$startDateField->setName('start');
+$startDateField->setDateFormat("YYYY-MM-DD");
+
+//Remove the time
+$start = explode(" ", $start);
+
+$startDateField->setDefaultDate($start[0]);
 $form->addRule('start', 'Please enter the start date', 'required');
 $row = array(
-    $startField
+    $startDateField->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
@@ -141,13 +145,15 @@ $row = array(
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = &$this->getObject('datepicker', 'htmlelements');
-$startField->setName('status_date');
-$startField->setDateFormat("YYYY-MM-DD");
-$strtdate->setDefaultDate($status_date);
+$statusDateField = &$this->getObject('datepicker', 'htmlelements');
+$statusDateField->setName('status_date');
+$statusDateField->setDateFormat("YYYY-MM-DD");
+//Remove the time
+$status_date = explode(" ", $status_date);
+$statusDateField->setDefaultDate($status_date[0]);
 $form->addRule('status_date', 'Please enter the status date', 'required');
 $row = array(
-    $startField
+    $statusDateField->show()
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
