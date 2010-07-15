@@ -33,9 +33,10 @@ $objTable->addCell($row[0], 140, 'top', 'right');
 $row = array(
     $objUser->fullName()
 );
-/*
+
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
+/*
 //parent goal label
 $row = array(
 "<b>" . $label = $objLanguage->languageText("mod_eportfolio_parent", 'eportfolio') . ":</b>"
