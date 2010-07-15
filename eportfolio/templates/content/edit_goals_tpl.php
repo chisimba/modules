@@ -141,7 +141,10 @@ $row = array(
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
-$startField = $this->objPopupcal->show('status_date', 'yes', 'no', $status_date);
+$startField = &$this->getObject('datepicker', 'htmlelements');
+$startField->setName('status_date');
+$startField->setDateFormat("YYYY-MM-DD");
+$strtdate->setDefaultDate($status_date);
 $form->addRule('status_date', 'Please enter the status date', 'required');
 $row = array(
     $startField
