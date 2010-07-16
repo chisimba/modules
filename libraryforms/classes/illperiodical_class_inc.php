@@ -282,7 +282,7 @@ class ILLperiodical extends dbTable {
 
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule('email', 'Not a valid Email', 'periodicalemail');
+        $objForm->addRule('periodicalemail', 'Not a valid Email', 'email');
 
         $table->endRow();
 

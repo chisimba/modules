@@ -230,7 +230,7 @@ class editform extends dbTable {
         $table->startRow();
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule('email', 'Not a valid Email', 'emailaddress');
+        $objForm->addRule('emailaddress', 'Not a valid Email', 'email');
         $table->endRow();
 
         //Create a new textinput for course

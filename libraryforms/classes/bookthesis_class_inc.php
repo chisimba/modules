@@ -365,7 +365,7 @@ class bookthesis extends dbTable {
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"thesisemail");
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule('email', 'Not a valid Email', 'thesisemail');
+        $objForm->addRule('thesisemail', 'Not a valid Email', 'email');
         $table->endRow();
 
 

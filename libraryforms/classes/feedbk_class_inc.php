@@ -113,7 +113,7 @@ $strjs = '<script type="text/javascript">
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail","libraryforms"),"fbkemail");
         $objForm->addToForm($emailLabel->show()."<br />");
         $objForm->addToForm($objemail->show() . "<br />");
-        $objForm->addRule('email', 'Not a valid Email', 'fbkemail');
+        $objForm->addRule('fbkemail', 'Not a valid Email', 'email');
 
         //----------TEXTAREA--------------
         //Create a new textarea for the comment message
