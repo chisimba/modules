@@ -28,7 +28,7 @@ class forum extends controller
     * @access protected
     *
     */
-    protected $forumtype; 
+    protected $forumtype;
 
     /**
     *
@@ -38,7 +38,7 @@ class forum extends controller
     *
     */
     protected $contextCode;
-    
+
     /**
     *
     * @var string the value of the workgroup if in a workgroup
@@ -968,10 +968,11 @@ class forum extends controller
 
     /**
     * Method to save a reply to a topic
+
     */
     public function saveReply()
     {
-      
+
         $tempPostId=$_POST['temporaryId'];
         $this->saveTempAttachmentIfAny($tempPostId);
         if ($_POST['replytype'] == 'reply') {
@@ -1534,7 +1535,7 @@ class forum extends controller
         $link = new link ($this->uri(array('action'=>'statistics', 'id'=>$forum_id)));
         $link->link = $this->objLanguage->languageText('mod_forum_forumstatistics', 'forum');
         $forumLinksFieldset->addContent($link->show());
-        if ($this->objUser->isCourseAdmin(NULL, $this->contextCode) && $this->forumtype != 'workgroup' && $this->isLoggedIn) {
+        if ($this->objUser->isCourseAdmin($this->contextCode) && $this->forumtype != 'workgroup' && $this->isLoggedIn) {
             $showSettings = $forumLinksFieldset->show();
         } else if ($this->forumtype != 'workgroup') {
             $link2 = new link ($this->uri(array('type'=>'context')));
@@ -1805,6 +1806,7 @@ class forum extends controller
         }
         if ($forum['forum_workgroup'] == NULL ) {
             $this->forumtype = 'context';
+
             $this->setVarByRef('forumtype', $this->forumtype);
             $this->objPost->forumtype = $this->forumtype;
         }
@@ -1947,6 +1949,7 @@ class forum extends controller
         if ($post['status'] == 'CLOSE') {
             $repliesAllowed = FALSE;
         }
+
         // Get Forum Details
         $forum = $this->objForum->getForum($post['forum_id']);
         // Turn off replies if Topic is Locked
@@ -2147,6 +2150,6 @@ class forum extends controller
             return $this->nextAction('viewtopic', array('id'=>$post['topic_id'], 'post'=>$_POST['id'], 'message'=>'postdeletecancelled'));
         }
     }
-    
-} 
+
+}
 ?>
