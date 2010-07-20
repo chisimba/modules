@@ -275,6 +275,9 @@ class announcements extends controller
     */
     private function __home()
     {
+
+        //use own template here
+         $this->setLayoutTemplate(NULL);
         $numAnnouncements = $this->objAnnouncements->getNumAnnouncements($this->userContext);
         
         $this->setVarByRef('numAnnouncements', $numAnnouncements);
@@ -311,10 +314,10 @@ class announcements extends controller
             $this->setVar('mode', 'fixup');
             $this->setVar('lecturerContext', $this->lecturerContext);
             $this->setVar('isAdmin', $this->isAdmin);
-            $this->setVar('enteredtitle', $title);
-            $this->setVar('enteredmessage', $message);
-            $this->setVar('enteredrecipienttarget', $recipienttarget);
-            $this->setVar('enteredcontexts', $contexts);
+            $this->setVar("message", $message);
+            $this->setVarByRef("title", $title);
+            $this->setVarByRef("errormessage", "Title/content required");
+
             return 'addedit_tpl.php';
         } else if ($mode == 'add' || $mode == 'fixup' || $mode == 'save') {
 

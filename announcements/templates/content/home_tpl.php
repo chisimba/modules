@@ -12,6 +12,7 @@ $addLink->link = $objIcon->show();
 $allAnn = "";
 $courseAnn ="";
 
+$content="";
 if ($this->objContext->getContextCode() != '') {
     $numContextAnnouncements = $this->objAnnouncements->getNumContextAnnouncements($this->objContext->getContextCode());
     
@@ -43,7 +44,7 @@ if ($this->objContext->getContextCode() != '') {
     $courseAnn .= $objPagination->show();
     $courseAnn = "\n<div class='outerwrapper'>$courseAnn</div>\n";
     // Course announcements rendered here.
-    echo $courseAnn;
+    $content.= $courseAnn;
 }
 
 // All announcements below.
@@ -71,10 +72,25 @@ $allAnn .= $objPagination->show();
 $allAnn  = "\n<div class='outerwrapper'>$allAnn </div>\n";
 $addLink = new link ($this->uri(array('action'=>'add')));
 $addLink->link = $this->objLanguage->languageText('mod_announcements_postnewannouncement', 'announcements', 'Post New Announcement');
-echo $allAnn;
+$content.= $allAnn;
 
 // Add new announcement link
 if ($isAdmin || count($lecturerContext) > 0) {
-    echo "<div class='adminadd'></div><div class='adminaddlink'>" . $addLink->show() . "</div>";
+    $content.= "<div class='adminadd'></div><div class='adminaddlink'>" . $addLink->show() . "</div>";
 }
+
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(2);
+
+$toolbar = $this->getObject('contextsidebar', 'context');
+
+// Initialize left column
+$leftSideColumn = $toolbar->show();
+$this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+//$leftSideColumn=$this->objFeatureBox->show($blocktitle, $leftSideColumn);
+$cssLayout->setLeftColumnContent($leftSideColumn);
+$cssLayout->setMiddleColumnContent($content);
+//$cssLayout->setRightColumnContent($this->objAnnouncementsTools->getRightBlocks());
+
+echo $cssLayout->show();
 ?>
