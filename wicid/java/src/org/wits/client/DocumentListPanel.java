@@ -4,7 +4,6 @@
  */
 package org.wits.client;
 
-
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.data.BaseListLoader;
 import com.extjs.gxt.ui.client.data.HttpProxy;
@@ -18,6 +17,7 @@ import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.MenuEvent;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
+import com.extjs.gxt.ui.client.event.SelectionChangedListener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
@@ -28,12 +28,17 @@ import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.button.ButtonBar;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
+import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.SimpleComboBox;
 import com.extjs.gxt.ui.client.widget.grid.CellEditor;
 import com.extjs.gxt.ui.client.widget.grid.CheckBoxSelectionModel;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
+import com.extjs.gxt.ui.client.widget.grid.RowEditor;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
@@ -61,25 +66,28 @@ public class DocumentListPanel extends LayoutContainer {
     private BaseListLoader<ListLoadResult<ModelData>> loader;
     private EditorGrid<ModelData> grid;
     private ColumnModel cm;
+    private FormData formData = new FormData("-20");
     private Button editButton = new Button("Edit");
     private Button approveButton = new Button("Approve");
     private Button refreshButton = new Button("Refresh");
     private Button commentButton = new Button("Comment");
+    private Button submitButton = new Button("Submit");
     private List<ModelData> selectedRows;
     private CheckBoxSelectionModel<ModelData> sm;
     private boolean removeUsersDone = false;
     private ListStore<ModelData> store;
     private Menu contextMenu = new Menu();
-    private Menu submenuMenu = new Menu();
     private Main main;
     private String defaultParams = "";
     private int status;
+    private SimpleComboBox submitCombo = new SimpleComboBox();
 
     public DocumentListPanel(Main main) {
         super();
         this.main = main;
         editButton.setEnabled(false);
         approveButton.setEnabled(false);
+        submitButton.setEnabled(false);
 //        checkStatus();
     }
 
@@ -91,12 +99,13 @@ public class DocumentListPanel extends LayoutContainer {
         sm = new CheckBoxSelectionModel<ModelData>();
         columns.add(sm.getColumn());
         columns.add(new ColumnConfig("Owner", "Owner", 145));
-        columns.add(new ColumnConfig("RefNo", "RefNo", 100));
+        columns.add(new ColumnConfig("RefNo", "RefNo", 50));
         columns.add(new ColumnConfig("Title", "Title", 150));
         columns.add(new ColumnConfig("Topic", "Topic", 100));
-        columns.add(new ColumnConfig("Date", "Date", 100));
-        columns.add(new ColumnConfig("Attachment", "Attachment", 100));
-        columns.add(new ColumnConfig("Status", "Status", 100));
+        columns.add(new ColumnConfig("Date", "Date", 70));
+        columns.add(new ColumnConfig("Attachment", "Attachment", 70));
+        columns.add(new ColumnConfig("Status", "Status", 50));
+        columns.add(new ColumnConfig("currentuserid", "currentuserid", 100));
         CellEditor checkBoxEditor = new CellEditor(new CheckBox());
 
         // create the column model
@@ -113,7 +122,8 @@ public class DocumentListPanel extends LayoutContainer {
         type.addField("Topic", "topic");
         type.addField("Date", "date");
         type.addField("Attachment", "attachmentstatus");
-        type.addField("Status", "Status");
+        type.addField("Status", "status");
+        type.addField("currentuserid", "currentuserid");
 
 
         // use a http proxy to get the data
@@ -125,7 +135,9 @@ public class DocumentListPanel extends LayoutContainer {
         loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
                 reader);
 
+
         store = new ListStore<ModelData>(loader);
+
         grid = new EditorGrid<ModelData>(store, cm);
         grid.setBorders(true);
         grid.setLoadMask(true);
@@ -143,12 +155,34 @@ public class DocumentListPanel extends LayoutContainer {
                         selectedRows = md.getSelection();
                         approveButton.setEnabled(selectedRows.size() > 0);
                         editButton.setEnabled(selectedRows.size() > 0);
+                        submitButton.setEnabled(selectedRows.size() > 0);
                         for (ModelData row : selectedRows) {
                             status = Integer.parseInt(row.get("Status").toString());
                         }
                     }
                 });
 
+        for (int i = 0; i < grid.getStore().getCount(); i++) {
+            ModelData record = grid.getStore().getAt(i);
+            final String statusS = "";
+            int statusTemp = Integer.parseInt(record.get("currentuserid").toString());
+            System.out.println(statusTemp);
+            switch (statusTemp) {
+                case 0:
+                    statusS.equals("Creation");
+                case 1:
+                    statusS.equals("APO");
+                case 2:
+                    statusS.equals("Subfaculty");
+                case 3:
+                    statusS.equals("Faculty");
+                case 4:
+                    statusS.equals("Senate");
+            }
+            record.set("status", statusS);
+            grid.getStore().commitChanges();
+
+        }
 
         ContentPanel panel = new ContentPanel();
         panel.setFrame(true);
@@ -175,6 +209,15 @@ public class DocumentListPanel extends LayoutContainer {
             }
         });
 
+        submitButton.setIconStyle("accept");
+        submitButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                submitDocument();
+            }
+        });
+
         refreshButton.setIconStyle("refresh");
         refreshButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
@@ -185,6 +228,7 @@ public class DocumentListPanel extends LayoutContainer {
         });
         toolbar.add(editButton);
         toolbar.add(approveButton);
+        toolbar.add(submitButton);
         toolbar.add(refreshButton);
         panel.setTopComponent(toolbar);
         panel.setFrame(false);
@@ -231,11 +275,10 @@ public class DocumentListPanel extends LayoutContainer {
         }
     }
 
-    private void submitDocument(int status) {
-        final int statusF = status;
+    private void submitDocument() {
         final String statusS = "";
 
-        switch (statusF) {
+        switch (status) {
             case 0:
                 statusS.equals("Creation");
             case 1:
@@ -248,16 +291,24 @@ public class DocumentListPanel extends LayoutContainer {
                 statusS.equals("Senate");
         }
 
-        Dialog submitDialog = new Dialog();
-        submitDialog.addText("Are you sure you want to submit to " + statusS + "?");
-        submitDialog.setButtons(Dialog.YESNO);
-        submitDialog.getButtonById(Dialog.YES).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+
+        FormPanel submitForm = new FormPanel();
+        submitForm.setFrame(false);
+        submitForm.setBodyBorder(false);
+        submitForm.setHeight(150);
+        submitForm.setWidth(500);
+        submitForm.setLabelWidth(200);
+
+        final Dialog submitDialog = new Dialog();
+        submitDialog.setButtons(Dialog.OKCANCEL);
+        submitDialog.getButtonById(Dialog.OK).addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
                 String url =
                         GWT.getHostPageBaseURL()
-                        + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + Constants.docid + "&status=" + statusF;
+                        + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + Constants.docid + "&status=" + status;
                 RequestBuilder builder =
                         new RequestBuilder(RequestBuilder.GET, url);
 
@@ -282,6 +333,44 @@ public class DocumentListPanel extends LayoutContainer {
                 }
             }
         });
+
+        submitDialog.getButtonById(Dialog.CANCEL).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                submitDialog.hide();
+            }
+        });
+
+        submitCombo.setFieldLabel("Subit this document to");
+        submitCombo.setEmptyText("Select who you want ot forward to");
+        submitCombo.add("Creator");
+        submitCombo.add("APO");
+        submitCombo.add("SubFaculty");
+        submitCombo.add("Faculty");
+        submitCombo.add("Senate");
+        submitCombo.setTriggerAction(ComboBox.TriggerAction.ALL);
+        submitCombo.setEditable(false);
+        submitCombo.setAllowBlank(false);
+        submitCombo.setForceSelection(true);
+        submitCombo.addSelectionChangedListener(new SelectionChangedListener() {
+
+            @Override
+            public void selectionChanged(SelectionChangedEvent se) {
+                status = submitCombo.getSelectedIndex();
+            }
+        });
+        submitForm.add(submitCombo, formData);
+
+        submitDialog.setBodyBorder(false);
+        submitDialog.setHeading("Submitting");
+        submitDialog.setWidth(500);
+        submitDialog.setHeight(150);
+        submitDialog.setHideOnButtonClick(true);
+        submitDialog.setButtonAlign(HorizontalAlignment.CENTER);
+
+        submitDialog.add(submitForm);
+        submitDialog.show();
     }
 
     private void deleteDocs() {
@@ -333,6 +422,7 @@ public class DocumentListPanel extends LayoutContainer {
         type.addField("Date", "date");
         type.addField("Attachment", "attachmentstatus");
         type.addField("Status", "status");
+        type.addField("currentuserid", "currentuserid");
 
         // use a http proxy to get the data
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + params);
@@ -419,13 +509,16 @@ public class DocumentListPanel extends LayoutContainer {
             }
         });
 
-        System.out.println(status);
-        submitSelections(status);
+
 
         MenuItem submitMenuItem = new MenuItem("Submit");
-        submitMenuItem.setIconStyle("yes");
-        submitMenuItem.setSubMenu(submenuMenu);
+        submitMenuItem.setIconStyle("approve");
+        submitMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
+            public void componentSelected(MenuEvent ce) {
+                submitDocument();
+            }
+        });
         MenuItem deleteMenuItem = new MenuItem("Delete");
         //deleteMenuItem.setIconStyle("yes");
         deleteMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
@@ -440,74 +533,9 @@ public class DocumentListPanel extends LayoutContainer {
         });
         contextMenu.add(editMenuItem);
         contextMenu.add(approveMenuItem);
-        contextMenu.add(new SeparatorMenuItem());
-        //contextMenu.add(submenuMenu);
         contextMenu.add(submitMenuItem);
         contextMenu.add(new SeparatorMenuItem());
         contextMenu.add(deleteMenuItem);
-    }
-
-    private void submitSelections(int status) {
-        final int itemOne = status - 1;
-        final int itemTwo = status + 1;
-        final String status1 = "", status2 = "";
-
-        if (itemOne >= 0) {
-            switch (itemOne) {
-                case 0:
-                    status1.equals("Creation");
-                case 1:
-                    status1.equals("APO");
-                case 2:
-                    status1.equals("Subfaculty");
-                case 3:
-                    status1.equals("Faculty");
-                case 4:
-                    status1.equals("Senate");
-            }
-
-            MenuItem submitOneMenuItem = new MenuItem(status1);
-            submitOneMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
-
-                public void componentSelected(MenuEvent ce) {
-                    if (selectedRows.size() < 1) {
-                        MessageBox.info("No documents", "Please, select document(s) to submit", null);
-                    } else {
-                        submitDocument(itemOne);
-                    }
-                }
-            });
-            submenuMenu.add(submitOneMenuItem);
-        }
-
-        if (itemTwo <= 4) {
-            switch (itemTwo) {
-                case 0:
-                    status2.equals("Creation");
-                case 1:
-                    status2.equals("APO");
-                case 2:
-                    status2.equals("Subfaculty");
-                case 3:
-                    status2.equals("Faculty");
-                case 4:
-                    status2.equals("Senate");
-            }
-
-            MenuItem submitTwoMenuItem = new MenuItem(status2);
-            submitTwoMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
-
-                public void componentSelected(MenuEvent ce) {
-                    if (selectedRows.size() < 1) {
-                        MessageBox.info("No documents", "Please, select document(s) to submit", null);
-                    } else {
-                        submitDocument(itemTwo);
-                    }
-                }
-            });
-            submenuMenu.add(submitTwoMenuItem);
-            System.out.println(itemOne+"\n"+itemTwo+"\n"+status1+"\n"+status2);
-        }
     }
 
     private void showEditDialog() {
