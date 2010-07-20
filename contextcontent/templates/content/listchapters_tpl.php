@@ -75,8 +75,6 @@ if($this->objModuleCatalogue->checkIfRegistered('scorm') && $this->isValid('addc
 } else {
     $addScormChapter = '';
 }
-
-
 echo '<h1>'.$this->objLanguage->languageText("mod_contextcontent_contextpagesfor",'contextcontent')." ".$this->objContext->getTitle().' '.$addChapter.' '.$addScormChapter.'</h1>';
 
 $counter = 1;

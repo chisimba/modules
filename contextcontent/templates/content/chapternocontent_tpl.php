@@ -76,7 +76,7 @@ echo $objWashout->parseText($chapter['introduction']);
 $addPageLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
 $addPageLink->link = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
 
-$addPageFromFileLink = new link ($this->uri(array('action'=>'addpagefromfile', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapterid'=>$chapter['chapterid'])));
+$addPageFromFileLink = new link ($this->uri(array('action'=>'addpagefromfile', 'context'=>$this->contextCode, 'chapterid'=>$chapter['chapterid'])));
 $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
 
 
