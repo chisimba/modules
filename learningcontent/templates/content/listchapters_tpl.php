@@ -78,7 +78,7 @@ if ($this->isValid('addchapter')) {
 } else {
     $addChapter = '';
 }
-if ($this->isValid('addchapter')) {
+if($this->objModuleCatalogue->checkIfRegistered('scorm') && $this->isValid('addchapter')) {
     $link = new link ($this->uri(array('action'=>'addscorm')));
     $link->link = $addScormIcon;
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
