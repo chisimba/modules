@@ -88,7 +88,8 @@ class dbdocuments extends dbtable {
                     'telephone'=> $row['telephone'],
                     'date'=> $row['date_created'],
                     'attachmentstatus'=> $attachmentStatus,
-                    'status'=> $row['status']
+                    'status'=> $row['status'],
+                    'currentuserid'=>$row['currentuserid']
             );
         }
         echo json_encode(array("documents"=>$docs));
@@ -114,7 +115,8 @@ class dbdocuments extends dbtable {
             $path,
             $mode="default",
             $approved="N",
-            $status="0"
+            $status="0",
+            $currentuserid
 
     ) {
 
@@ -139,7 +141,8 @@ class dbdocuments extends dbtable {
                 'topic'=>$path,
                 'mode'=>$mode,
                 'active'=>$approved,
-                'status'=>$status
+                'status'=>$status,
+                'curentuserid'=>$currentuserid
         );
         $id=$this->insert($data);
         echo $refno.','.$id;
