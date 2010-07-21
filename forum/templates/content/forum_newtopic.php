@@ -128,7 +128,7 @@ $addTable->endRow();
 
 
 // Show Sticky Topic
-if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
+if ($this->objUser->isCourseAdmin($this->contextCode)) {
     $addTable->startRow();
     $addTable->addCell($this->objLanguage->languageText('mod_forum_stickytopic', 'forum', 'Sticky Topic').':');
 

@@ -40,7 +40,7 @@ $headerString = $link->show().' &gt; '.stripslashes($post['post_title']);
 
 $header->str=$headerString;
 
-if ($this->objUser->isCourseAdmin(NULL, $this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
+if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
     $objIcon->setIcon('moderate');
     $objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
     $objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
@@ -183,11 +183,11 @@ echo '<p align="center">';
 // echo $replylink->show().' / ';
 // }
 
-if ((!$forumlocked && $this->objUser->isCourseAdmin(NULL, $this->contextCode)) || $forumtype == 'workgroup') {
+if ((!$forumlocked && $this->objUser->isCourseAdmin($this->contextCode)) || $forumtype == 'workgroup') {
     echo $newtopiclink->show().' / ';
 }
 
-if ($this->objUser->isCourseAdmin(NULL, $this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
+if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
     echo $moderateTopicLink->show().' / ';
 }
 
