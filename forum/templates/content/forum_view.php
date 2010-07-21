@@ -60,7 +60,7 @@ if ($forum['forumlocked'] != 'Y') {
         $header->str .=  ' '.$newTopicLink->show();
 
     // Else check if user is lecturer or admin
-    } else if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
+    } else if ($this->objUser->isCourseAdmin($this->contextCode)) {
        $header->str .=  ' '.$newTopicLink->show();
     }
 }
@@ -312,7 +312,7 @@ if ($forum['forumlocked'] != 'Y') {
         echo '<p>'.$link->show().'</p>';
 
     // Else check if user is lecturer or admin
-    } else if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
+    } else if ($this->objUser->isCourseAdmin($this->contextCode)) {
         echo '<p>'.$link->show().'</p>';
     }
 }

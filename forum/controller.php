@@ -517,7 +517,7 @@ class forum extends controller
                 $returnTemplate = 'forum_newtopic.php';
 
             // Else check if user is lecturer or admin
-            } else if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
+            } else if ($this->objUser->isCourseAdmin($this->contextCode)) {
                 $returnTemplate = 'forum_newtopic.php';
             } else {
                 $returnTemplate = 'forum_studentaccess.php';
@@ -701,7 +701,7 @@ class forum extends controller
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
-                if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
+                if ($this->objUser->isCourseAdmin($this->contextCode)) {
                     $this->objPost->showModeration = TRUE;
                 }
             }
@@ -770,7 +770,7 @@ class forum extends controller
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
-                if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
+                if ($this->objUser->isCourseAdmin($this->contextCode)) {
                     $this->objPost->showModeration = TRUE;
                 }
             }
@@ -872,7 +872,7 @@ class forum extends controller
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
-                if ($this->objUser->isCourseAdmin(NULL, $this->contextCode)) {
+                if ($this->objUser->isCourseAdmin($this->contextCode)) {
                     $this->objPost->showModeration = TRUE;
                 }
             }
@@ -1661,6 +1661,7 @@ class forum extends controller
         // Check if a delete request is confirmed
         if ($_POST['delete'] != '1') {
             $returnArray = array('id'=>$_POST['id'], 'message'=>'deletecancelled');
+
             // Attempt to get default option for tangents and add to array to preserve user's work.
             if (isset($_POST['tangentoption'])) {
                 $returnArray['option'] = $_POST['tangentoption'];
