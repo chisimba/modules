@@ -4,7 +4,7 @@ class vowfmlogininterface extends object {
 
     function init() {
         $this->objLanguage = $this->getObject('language', 'language');
-        $this->objHelp= $this->getObject('help','help');
+        $this->objHelp = $this->getObject('help', 'help');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('checkbox', 'htmlelements');
@@ -42,12 +42,14 @@ class vowfmlogininterface extends object {
         $objButton->setToSubmit();
         $content.='&nbsp;' . $objButton->show();
 
-        $objRElement = new checkbox("remember");
-        $objRElement->setCSS("transparentbgnb noborder");
-        $objRElement->label = $this->objLanguage->languageText("phrase_rememberme", "security");
-        $rem =$objRElement->show().' '. $objRElement->label . ' | '  ;
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $registerModule = $objSysConfig->getValue('REGISTRATION_MODULE', 'security');
+        $registerModule = !empty($registerModule) ? $registerModule : 'userregistration';
 
-        $content.='&nbsp;&nbsp;' . $rem;
+        $registerLink = new link($this->uri(array('action' => 'showregister'), $registerModule));
+        $registerLink->link = $this->objLanguage->languageText('word_register');
+
+        $content.='&nbsp;&nbsp;' . $registerLink->show();
 
         $helpText = strtoupper($this->objLanguage->languageText('word_help', 'system'));
         $helpIcon = $this->objHelp->show('register', 'useradmin', $helpText);
