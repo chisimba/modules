@@ -434,7 +434,7 @@ class forum extends controller
         }
 
         // Check if user has access to workgroup forum
-        if ($forum['forum_workgroup'] != NULL && !$this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])) {
+        if ($forum['forum_workgroup'] != NULL && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
             return $this->nextAction('noaccess', array('id'=>$forum['forum_workgroup']));
         }
 
@@ -711,6 +711,7 @@ class forum extends controller
             }
             // Check if Topic is locked
             if ($post['status'] =='CLOSE') {
+
                 $this->objPost->repliesAllowed = FALSE;
                 $this->objPost->editingPostsAllowed=FALSE;
             }
@@ -1764,11 +1765,14 @@ class forum extends controller
         // Get the Workgroup
         $this->workgroupId = $this->objWorkGroup->getWorkgroupId();
         $this->workgroupDescription = $this->objWorkGroup->getDescription($this->workgroupId);
-        if ($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $this->workgroupId)) {
+        //echo $this->objUser->isContextLecturer($this->userId, $this->contextCode)?'T':'F';
+        if ($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $this->workgroupId)||$this->objUser->isContextLecturer($this->userId, $this->contextCode)) {
             $this->forumtype = 'workgroup';
         } else {
             $this->forumtype = 'context';
         }
+        //echo '['.$this->forumtype.']';
+        //die;
     }
 
 
@@ -1798,7 +1802,7 @@ class forum extends controller
     */
     public function checkWorkgroupAccessOrRedirect($forum)
     {
-        if ($forum['forum_workgroup'] != NULL && !$this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])) {
+        if ($forum['forum_workgroup'] != NULL && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
             return $this->nextAction('noaccess', array('id'=>$forum['forum_workgroup']));
         } else {
             $this->forumtype = 'workgroup';
@@ -1884,6 +1888,7 @@ class forum extends controller
     */
     public function viewTopicMindMap($topic_id)
     {
+
         // Store View as a Preference
         $this->setSession('forumdisplay', 'viewtopicmindmap');
         // Update Views
@@ -2041,6 +2046,7 @@ class forum extends controller
                 $forum = $objForumPassThrough->getContextFromPost($this->getParam('id')); break;
             default:
                 $forum = ''; break;
+
         }
         if ($forum != '' && $forum != FALSE) {
             $this->contextObject->joinContext($forum);
