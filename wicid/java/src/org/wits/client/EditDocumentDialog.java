@@ -130,9 +130,8 @@ public class EditDocumentDialog {
 
         ListStore<Group> groupStore = new ListStore<Group>();
 
+        groups.add(new Group("Draft"));
         groups.add(new Group("Public"));
-        groups.add(new Group("Council"));
-        groups.add(new Group("Administration"));
         groupStore.add(groups);
 
         groupField.setFieldLabel("Group");
@@ -620,7 +619,7 @@ public class EditDocumentDialog {
 
                     users = data.split(" ");
                     System.out.println("getUsers(0)" + users[0]);
-                    System.out.println("getUsers(1)" + users[1]);
+   //                 System.out.println("getUsers(1)" + users[1]);
                 }
             });
         } catch (Exception e) {
