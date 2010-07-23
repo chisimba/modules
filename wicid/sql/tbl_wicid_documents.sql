@@ -15,8 +15,6 @@
                     'mode' => array('type' => 'text','length' => 10, 'notnull'=>TRUE),
                     'active' => array('type' => 'text','length' => 1, 'notnull'=>TRUE),
                     'upload' => array('type' => 'text','length' => 1, 'notnull'=>TRUE),
-                    'deleteDoc' => array('type' => 'text','length' => 1, 'notnull'=>TRUE, 'default'=>'N'),
-                    'currentuserid' => array('type'=> 'text','length'=>10),
-                    'status' => array('type' => 'text','length'=>1, 'notnull' =>TRUE)
+                    'deleteDoc' => array('type' => 'text','length' => 1, 'notnull'=>TRUE, 'default'=>'N')
 ?>
           );

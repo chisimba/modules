@@ -117,26 +117,28 @@
 
     <update>
         <table>tbl_wicid_documents</table>
-        <version>0.038</version>
+        <version>0.043</version>
         <description>Added the status column</description>
         <data>
             <add>
                 <name>status</name>
                 <type>text</type>
+                <length>1</length>
                 <notnull>TRUE</notnull>
             </add>
 
         </data>
     </update>
 
-    <update>
-        <table>tbl_wicid_formdata</table>
-        <version>0.040</version>
-        <description>Added the commentdata column</description>
+<update>
+        <table>tbl_wicid_documents</table>
+        <version>0.043</version>
+        <description>Added the version column</description>
         <data>
             <add>
-                <name>commentdata</name>
+                <name>version</name>
                 <type>text</type>
+                <length>2</length>
                 <notnull>TRUE</notnull>
             </add>
 
