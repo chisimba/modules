@@ -117,11 +117,11 @@ class dbdocuments extends dbtable {
             $approved="N",
             $status="0",
             $currentuserid
-
     ) {
 
 
         $userid=$this->userutils->getUserId();
+        $currentuserid=$userid;
 
         // using this user id, get the full name and compare it with contact person!
         $fullname = $this->objUser->fullname($userid);
@@ -142,7 +142,7 @@ class dbdocuments extends dbtable {
                 'mode'=>$mode,
                 'active'=>$approved,
                 'status'=>$status,
-                'curentuserid'=>$currentuserid
+                'currentuserid'=>$currentuserid
         );
         $id=$this->insert($data);
         echo $refno.','.$id;
@@ -320,7 +320,7 @@ class dbdocuments extends dbtable {
         return $userid;$currentuserid;
     }
 
-    function getStatus($docid){
+ /*   function getStatus($docid){
         $sql = "select status from tbl_wicid_documents where id='$docid'";
         $rows=$this->getArray($sql);
 
@@ -330,11 +330,10 @@ class dbdocuments extends dbtable {
         echo $status;
         return $status;
     }
-
+*/
     function setStatus($docid, $status){
-        echo $status;
-        $sql = "update tbl_wicid_documents set status='$status' where id = '$docid'";
-        echo $sql;
+        $sql = "update tbl_wicid_documents set status ='$status' where id = '$docid'";
+        return $this->getArray($sql);
     }
 }
 ?>
