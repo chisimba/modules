@@ -215,8 +215,8 @@ public class NewCourseProposalDialog {
                     MessageBox.info("Missing faculty", "Please select faculty", null);
                     return;
                 }
-                String number = "C";
-                String group = "Administration";
+                String number = "S";
+                String group = "Draft";
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
