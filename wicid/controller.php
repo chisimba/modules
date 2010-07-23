@@ -412,8 +412,9 @@ class wicid extends controller {
                 $group,
                 $selectedfolder,
                 $mode="default",
-                "N",
-                $status);
+                $approved="N",
+                $status="0",
+                $currentuserid);
     }
 
     function __updatedocument() {
@@ -526,7 +527,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return true;
+        return false;
 
     }
 
