@@ -36,7 +36,6 @@ import com.extjs.gxt.ui.client.widget.grid.CheckBoxSelectionModel;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
-import com.extjs.gxt.ui.client.widget.grid.RowEditor;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
@@ -78,9 +77,9 @@ public class DocumentListPanel extends LayoutContainer {
     private ListStore<ModelData> store;
     private Menu contextMenu = new Menu();
     private Main main;
-    private String defaultParams = "";
+    private String defaultParams = "", statusS;
     private int status;
-    private SimpleComboBox submitCombo = new SimpleComboBox();
+    private SimpleComboBox<String> submitCombo = new SimpleComboBox<String>();
 
     public DocumentListPanel(Main main) {
         super();
@@ -105,7 +104,7 @@ public class DocumentListPanel extends LayoutContainer {
         columns.add(new ColumnConfig("Date", "Date", 70));
         columns.add(new ColumnConfig("Attachment", "Attachment", 70));
         columns.add(new ColumnConfig("Status", "Status", 50));
-        columns.add(new ColumnConfig("currentuserid", "currentuserid", 100));
+        columns.add(new ColumnConfig("currentuserid", "Current User", 100));
         CellEditor checkBoxEditor = new CellEditor(new CheckBox());
 
         // create the column model
@@ -276,74 +275,19 @@ public class DocumentListPanel extends LayoutContainer {
     }
 
     private void submitDocument() {
-        final String statusS = "";
-
-        switch (status) {
-            case 0:
-                statusS.equals("Creation");
-            case 1:
-                statusS.equals("APO");
-            case 2:
-                statusS.equals("Subfaculty");
-            case 3:
-                statusS.equals("Faculty");
-            case 4:
-                statusS.equals("Senate");
-        }
-
-
 
         FormPanel submitForm = new FormPanel();
         submitForm.setFrame(false);
         submitForm.setBodyBorder(false);
         submitForm.setHeight(150);
-        submitForm.setWidth(500);
-        submitForm.setLabelWidth(200);
+        submitForm.setWidth(400);
+        submitForm.setLabelWidth(130);
 
         final Dialog submitDialog = new Dialog();
         submitDialog.setButtons(Dialog.OKCANCEL);
-        submitDialog.getButtonById(Dialog.OK).addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                String url =
-                        GWT.getHostPageBaseURL()
-                        + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + Constants.docid + "&status=" + status;
-                RequestBuilder builder =
-                        new RequestBuilder(RequestBuilder.GET, url);
-
-                try {
-                    Request request = builder.sendRequest(null, new RequestCallback() {
-
-                        public void onError(Request request, Throwable exception) {
-                            MessageBox.info("Error", "Error, cannot change status", null);
-                        }
-
-                        public void onResponseReceived(Request request, Response response) {
-                            if (200 == response.getStatusCode()) {
-                                MessageBox.info("Done", "The document has been submitted to " + statusS, null);
-                                refreshDocumentList(defaultParams);
-                            } else {
-                                MessageBox.info("Error", "Error occured on the server. Cannot set status", null);
-                            }
-                        }
-                    });
-                } catch (RequestException e) {
-                    MessageBox.info("Fatal Error", "Fatal Error: cannot delete document", null);
-                }
-            }
-        });
-
-        submitDialog.getButtonById(Dialog.CANCEL).addSelectionListener(new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                submitDialog.hide();
-            }
-        });
 
         submitCombo.setFieldLabel("Subit this document to");
-        submitCombo.setEmptyText("Select who you want ot forward to");
+        submitCombo.setEmptyText("Select who you want to submit to");
         submitCombo.add("Creator");
         submitCombo.add("APO");
         submitCombo.add("SubFaculty");
@@ -364,10 +308,63 @@ public class DocumentListPanel extends LayoutContainer {
 
         submitDialog.setBodyBorder(false);
         submitDialog.setHeading("Submitting");
-        submitDialog.setWidth(500);
+        submitDialog.setWidth(400);
         submitDialog.setHeight(150);
         submitDialog.setHideOnButtonClick(true);
         submitDialog.setButtonAlign(HorizontalAlignment.CENTER);
+
+        submitDialog.getButtonById(Dialog.OK).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+
+                status = submitCombo.getSelectedIndex();
+                statusS = submitCombo.getValue().getValue();
+
+                String id = "";
+                for (ModelData row : selectedRows) {
+                    id = row.get("docid");
+                }
+
+                if (status > -1) {
+                    String url =
+                            GWT.getHostPageBaseURL()
+                            + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + id + "&status=" + status;
+                    RequestBuilder builder =
+                            new RequestBuilder(RequestBuilder.GET, url);
+
+                    try {
+                        Request request = builder.sendRequest(null, new RequestCallback() {
+
+                            public void onError(Request request, Throwable exception) {
+                                MessageBox.info("Error", "Error, cannot change status", null);
+                            }
+
+                            public void onResponseReceived(Request request, Response response) {
+                                if (200 == response.getStatusCode()) {
+                                    MessageBox.info("Done", "The document has been submitted to " + statusS, null);
+                                    refreshDocumentList(defaultParams);
+                                } else {
+                                    MessageBox.info("Error", "Error occured on the server. Cannot set status", null);
+                                }
+                            }
+                        });
+                    } catch (RequestException e) {
+                        MessageBox.info("Fatal Error", "Fatal Error: cannot delete document", null);
+                    }
+                } else {
+                    MessageBox.info("Error", "Pleave select a party to submit to.", null);
+                }
+            }
+        });
+
+        submitDialog.getButtonById(Dialog.CANCEL).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                submitDialog.hide();
+            }
+        });
 
         submitDialog.add(submitForm);
         submitDialog.show();
@@ -512,7 +509,7 @@ public class DocumentListPanel extends LayoutContainer {
 
 
         MenuItem submitMenuItem = new MenuItem("Submit");
-        submitMenuItem.setIconStyle("approve");
+        submitMenuItem.setIconStyle("accept");
         submitMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
             public void componentSelected(MenuEvent ce) {
@@ -520,7 +517,7 @@ public class DocumentListPanel extends LayoutContainer {
             }
         });
         MenuItem deleteMenuItem = new MenuItem("Delete");
-        //deleteMenuItem.setIconStyle("yes");
+        deleteMenuItem.setIconStyle("delete");
         deleteMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
             public void componentSelected(MenuEvent ce) {
