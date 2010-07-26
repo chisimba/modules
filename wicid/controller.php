@@ -377,8 +377,8 @@ class wicid extends controller {
         $number = $this->getParam('number');
         $selectedfolder=$this->getParam('topic');
         //check wat is the largest count for this year.
-        $res = $this->documents->checkRefNo($number);
-        $refno=$number.$res;
+        $ref_version = $this->documents->checkRefNo($number);
+        $refno=$number.date("Y");//."-".($res;
         $contact = $this->getParam('contact');
         if($contact == null || $contact == ''){
             $contact=$this->objUser->fullname();
@@ -414,7 +414,8 @@ class wicid extends controller {
                 $mode="default",
                 $approved="N",
                 $status="0",
-                $currentuserid);
+                $currentuserid,
+                $ref_version);
     }
 
     function __updatedocument() {
@@ -428,6 +429,23 @@ class wicid extends controller {
         $id = $this->getParam('docid');
         $status = $this->getParam('status');
         $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date, "topic"=>$selectedfolder, "status"=>$status);
+        $this->documents->updateInfo($id, $data);
+    }
+    
+    
+    /*
+     * use for editing course proposals main information, in apo mode
+     * 
+     */
+    function __editdocument() {
+        $dept=$this->getParam('dept');
+        $title=$this->getParam('title');
+        $group=$this->getParam('group');
+        $selectedfolder=$this->getParam('topic');
+        $tel=$this->getParam('tel');
+        $id = $this->getParam('docid');
+        
+        $data = array("department"=>$dept, "docname"=>$title, "telephone"=>$tel,"groupid"=>$group, "topic"=>$selectedfolder);
         $this->documents->updateInfo($id, $data);
     }
 
@@ -492,6 +510,13 @@ class wicid extends controller {
         $this->documents->getdocuments($mode,$userid);
     }
 
+    function __getrejecteddocuments() {
+        $mode=$this->getParam("mode");
+        $userid=$this->getParam("userid");
+        $rejected = "Y";
+        $this->documents->getdocuments($mode,$userid, $rejected);
+    }
+
     /**
      * we get document details and format then in special json that allows
      * us to use GWT objects
@@ -522,13 +547,17 @@ class wicid extends controller {
         $this->documents->approveDocs($docids);
     }
 
+    function __rejectDocs() {
+        $docids=$this->getParam('docids');
+        $this->documents->rejectDocs($docids);
+    }
+
     function __deleteDocs() {
         $docids=$this->getParam('docids');
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
         return false;
-
     }
 
     function __registeracademicpresenters() {

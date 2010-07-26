@@ -117,7 +117,7 @@
 
     <update>
         <table>tbl_wicid_documents</table>
-        <version>0.043</version>
+        <version>0.044</version>
         <description>Added the status column</description>
         <data>
             <add>
@@ -132,7 +132,7 @@
 
 <update>
         <table>tbl_wicid_documents</table>
-        <version>0.043</version>
+        <version>0.044</version>
         <description>Added the version column</description>
         <data>
             <add>
@@ -140,6 +140,34 @@
                 <type>text</type>
                 <length>2</length>
                 <notnull>TRUE</notnull>
+            </add>
+
+        </data>
+    </update>
+    <update>
+        <table>tbl_wicid_documents</table>
+        <version>0.045</version>
+        <description>Added the reference version column</description>
+        <data>
+            <add>
+                <name>ref_version</name>
+                <type>integer</type>
+                <notnull>TRUE</notnull>
+            </add>
+        </data>
+    </update>
+
+    <update>
+        <table>tbl_wicid_documents</table>
+        <version>0.047</version>
+        <description>Added the rejectDoc field</description>
+        <data>
+            <add>
+                <name>rejectDoc</name>
+                <type>text</type>
+                <length>1</length>
+                <notnull>TRUE</notnull>
+                <default>N</default>
             </add>
 
         </data>

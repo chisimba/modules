@@ -43,11 +43,21 @@ class dbdocuments extends dbtable {
         $location = "http://" . $_SERVER['HTTP_HOST'];
         $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
     }
-    public function getdocuments($mode="default",$userid) {
-        $sql="select A.*, B.docid, B.filename from tbl_wicid_documents as A
+    public function getdocuments($mode="default",$userid, $rejected = "N") {
+        if(strcmp($rejected,'Y') == 0) {
+            $sql="select A.*, B.docid, B.filename from tbl_wicid_documents as A
+                      left outer join tbl_wicid_fileuploads as B on A.id = B.docid
+                  where A.active = 'N'
+                  and A.deleteDoc = 'N'
+                  and A.rejectDoc = 'Y'";// and mode ='$mode'";
+        }
+        else {
+            $sql="select A.*, B.docid, B.filename from tbl_wicid_documents as A
                   left outer join tbl_wicid_fileuploads as B on A.id = B.docid
               where A.active = 'N'
-              and A.deleteDoc = 'N'";// and mode ='$mode'";
+              and A.deleteDoc = 'N'
+              and A.rejectDoc = 'N'";
+        }
         if(!$this->objUser->isadmin()) {
 
         //    $sql.=" and A.userid = '".$this->objUser->userid()."'";
@@ -79,7 +89,7 @@ class dbdocuments extends dbtable {
             $docs[]=array(
                     'userid'=> $row['userid'],
                     'owner'=>$owner,
-                    'refno'=> $row['refno'],
+                    'refno'=> $row['refno']."-".$row['ref_version'],
                     'title'=> $row['docname'],
                     'group'=> $row['groupid'],
                     'docid'=> $row['id'],
@@ -95,6 +105,7 @@ class dbdocuments extends dbtable {
         echo json_encode(array("documents"=>$docs));
         die();
     }
+
     /**
      * adds new document record
      * @param <type> $date
@@ -116,7 +127,8 @@ class dbdocuments extends dbtable {
             $mode="default",
             $approved="N",
             $status="0",
-            $currentuserid
+            $currentuserid,
+            $ref_version
     ) {
 
 
@@ -142,10 +154,12 @@ class dbdocuments extends dbtable {
                 'mode'=>$mode,
                 'active'=>$approved,
                 'status'=>$status,
-                'currentuserid'=>$currentuserid
+                'currentuserid'=>$currentuserid,
+                'ref_version' => $ref_version,
+                'version' => $ref_version
         );
         $id=$this->insert($data);
-        echo $refno.','.$id;
+        echo $refno."-".$ref_version.','.$id;
         //echo "success|$id";
         return $id;
     }
@@ -202,6 +216,23 @@ class dbdocuments extends dbtable {
      * sets active to Y to docs with supplied id
      * @param <type> $docids
      */
+    function rejectDocs($docids) {
+
+        $ids=explode(",", $docids);
+        $ext='.na';
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        foreach ($ids as $id) {
+            if(strlen($id) > 0) {
+                $data = array('rejectDoc'=>'Y');
+                $res = $this->update('id', $id, $data);
+            }
+        }
+    }
+
+    /**
+     * sets active to Y to docs with supplied id
+     * @param <type> $docids
+     */
     function deleteDocs($docids) {
 
         $ids=explode(",", $docids);
@@ -237,14 +268,12 @@ class dbdocuments extends dbtable {
     }*/
 
     function checkRefNo($number) {
-        $sql = "select max(SUBSTRING(refno, length(refno), 1)) as myrefno from .".$this->tablename;
+        $sql = "select max(ref_version) as myrefno from .".$this->tablename;
         $sql .= " where refno like '%".date("Y")."%'";
         $sql .= " and SUBSTRING(refno, 1, 1) = '$number'";
         $res = $this->getArray($sql);
 
-        $refno=date("Y")."-".((int)$res[0]['myrefno']+1);
-
-        return $refno;
+        return (int)$res[0]['myrefno']+1;
     }
 
     function getRefNo($id) {
