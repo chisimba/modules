@@ -274,6 +274,37 @@ public class DocumentListPanel extends LayoutContainer {
         }
     }
 
+    private void rejectDocs() {
+        String ids = "";
+        for (ModelData row : selectedRows) {
+            ids += row.get("docid") + ",";
+        }
+        String url =
+                GWT.getHostPageBaseURL()
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=rejectdocs&docids=" + ids;
+        RequestBuilder builder =
+                new RequestBuilder(RequestBuilder.GET, url);
+
+        try {
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot reject document", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    if (200 == response.getStatusCode()) {
+                        refreshDocumentList(defaultParams);
+                    } else {
+                        MessageBox.info("Error", "Error occured on the server. Cannot reject document", null);
+                    }
+                }
+            });
+        } catch (RequestException e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot reject document", null);
+        }
+    }
+
     private void submitDocument() {
 
         FormPanel submitForm = new FormPanel();
@@ -370,6 +401,7 @@ public class DocumentListPanel extends LayoutContainer {
         submitDialog.show();
     }
 
+
     private void deleteDocs() {
         String ids = "";
         for (ModelData row : selectedRows) {
@@ -464,6 +496,22 @@ public class DocumentListPanel extends LayoutContainer {
 
     }
 
+    private void confirmRejection() {
+        final Listener<MessageBoxEvent> l = new Listener<MessageBoxEvent>() {
+
+            public void handleEvent(MessageBoxEvent ce) {
+                Button btn = ce.getButtonClicked();
+                if (btn.getText().equalsIgnoreCase("Yes")) {
+                    rejectDocs();
+                }
+            }
+        };
+        MessageBox.confirm("Confirm", "Are you sure you want to reject the selected documents?", l);
+
+    }
+
+
+
     private void confirmDelete() {
         final Listener<MessageBoxEvent> l = new Listener<MessageBoxEvent>() {
 
@@ -507,6 +555,19 @@ public class DocumentListPanel extends LayoutContainer {
         });
 
 
+        MenuItem rejectMenuItem = new MenuItem("Reject");
+        rejectMenuItem.setIconStyle("delete");
+        rejectMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
+
+            public void componentSelected(MenuEvent ce) {
+                if (selectedRows.size() < 1) {
+                    MessageBox.info("No documents", "Please, select document(s) to reject", null);
+                } else {
+                    confirmRejection();
+                }
+            }
+        });
+
 
         MenuItem submitMenuItem = new MenuItem("Submit");
         submitMenuItem.setIconStyle("accept");
@@ -516,6 +577,7 @@ public class DocumentListPanel extends LayoutContainer {
                 submitDocument();
             }
         });
+
         MenuItem deleteMenuItem = new MenuItem("Delete");
         deleteMenuItem.setIconStyle("delete");
         deleteMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
@@ -532,6 +594,7 @@ public class DocumentListPanel extends LayoutContainer {
         contextMenu.add(approveMenuItem);
         contextMenu.add(submitMenuItem);
         contextMenu.add(new SeparatorMenuItem());
+        contextMenu.add(rejectMenuItem);
         contextMenu.add(deleteMenuItem);
     }
 

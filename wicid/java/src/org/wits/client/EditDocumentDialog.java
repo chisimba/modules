@@ -221,6 +221,8 @@ public class EditDocumentDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                updateCourseProposalInfo();
+                Constants.main.refreshDocumentList();
                 overView = new OverView(EditDocumentDialog.this);
                 overView.show();
                 editDocumentDialog.setVisible(false);
@@ -600,6 +602,70 @@ public class EditDocumentDialog {
         } catch (RequestException e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot check document attachment", null);
         }
+    }
+    
+    public void updateCourseProposalInfo() {
+        String dept = deptField.getValue();
+        String tel = telField.getValue();
+        String title = titleField.getValue();
+        String group = groupField.getValue().getName();
+        String topic = topicField.getValue();
+
+        // Department
+        if (dept == null) {
+            MessageBox.info("Missing department", "Provide originating department", null);
+            return;
+        }
+        if (dept.trim().equals("")) {
+            MessageBox.info("Missing department", "Provide department", null);
+            return;
+        }
+
+        // Telephone
+        if(tel == null) {
+            MessageBox.info("Missing telephone", "Provide telephone", null);
+            return;
+        }
+        if(tel.trim().equals("")) {
+            MessageBox.info("Missing telephone", "Provide telephone", null);
+            return;
+        }
+
+        // Document Title
+        if (title == null) {
+            MessageBox.info("Missing title", "Provide Document title", null);
+            return;
+        }
+        if (title.trim().equals("")) {
+            MessageBox.info("Missing title", "Provide Document title", null);
+            return;
+        }
+        
+        // Group
+        if (group == null) {
+            MessageBox.info("Missing group", "Select group", null);
+            return;
+        }
+        if (group.trim().equals("")) {
+            MessageBox.info("Missing group", "Select group", null);
+            return;
+        }
+
+        // Topic
+        if (topic == null) {
+            MessageBox.info("Missing topic", "Provide topic", null);
+            return;
+        }
+        if (topic.trim().equals("")) {
+            MessageBox.info("Missing topic", "Provide topic", null);
+            return;
+        }
+
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
+                + "module=wicid&action=editdocument&dept=" + dept + "&topic=" + topic
+                + "&title=" + title + "&tel=" + tel +  "&group=" + group + "&docid=" + document.getId();
+
+        updateDocument(url);
     }
 
     private String[] getUsers() {

@@ -110,10 +110,12 @@ public class Main {
     private ContactDetails newContactDetailsForm;
     private DocumentListPanel documentListPanel;
     private FileListPanel fileListPanel;
+    private RejectedDocsPanel RejectedDocsPanel;
     private TabPanel tab = new TabPanel();
     private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
    // private TabItem viewTab = new TabItem("File List");
+    private TabItem rejectedDocsTab = new TabItem("Rejected Documents");
     // grid view file list
     private TabItem filesTab = new TabItem("Files");
     private NewCourseProposalDialog newCourseProposalDialog;
@@ -479,6 +481,13 @@ public class Main {
         filesTab.setHeight(Window.getClientHeight());
         filesTab.add(fileListPanel);
         tab.add(filesTab);
+
+        RejectedDocsPanel = new RejectedDocsPanel(this);
+        fileListPanel.setHeight(500);
+        rejectedDocsTab.setIconStyle("docs");
+        rejectedDocsTab.setHeight(Window.getClientHeight());
+        rejectedDocsTab.add(RejectedDocsPanel);
+        tab.add(rejectedDocsTab);
 
         center.add(tab);
         documentListPanel = new DocumentListPanel(this);
@@ -876,6 +885,11 @@ public class Main {
 
     public DocumentListPanel getDocumentListPanel() {
         return this.documentListPanel;
+    }
+
+    public void refreshDocumentList() {
+        String documentListParams = "?module=wicid&action=getdocuments&mode=" + getMode();
+        this.documentListPanel.refreshDocumentList(documentListParams);
     }
 
     public TabPanel getTab() {
