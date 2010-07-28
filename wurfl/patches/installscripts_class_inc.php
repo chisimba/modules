@@ -1,6 +1,6 @@
 <?php
 
-class wurfl_installscripts
+class wurfl_installscripts extends object
 {
     public function postinstall()
     {
