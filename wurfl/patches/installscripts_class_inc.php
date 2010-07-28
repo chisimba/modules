@@ -11,7 +11,7 @@ class wurfl_installscripts extends object
 
     public function postinstall()
     {
-        $resources = $this->objAltConfig->getModulePath() . '/wurfl/resources/';
+        $resources = $this->objAltConfig->getModulePath() . 'wurfl/resources/';
         $zip = new ZipArchive();
 
         if ($zip->open($resources . 'wurfl-2.0.18.xml.zip') === TRUE) {
