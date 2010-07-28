@@ -52,7 +52,7 @@ $tab->tabbedbox();
 $tab->addTabLabel($this->objLanguage->languageText("category_resource_two","libraryforms"));
 $tab->addBoxContent($objBookThesis->show());
 
-$tabcontent->addTab('Book/ Thesis only Form', $tab->show());
+$tabcontent->addTab('Book / Thesis only Form', $tab->show());
 
 $tab->tabbedbox();
 $tab->addTabLabel($this->objLanguage->languageText("category_resource_three","libraryforms"));

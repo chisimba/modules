@@ -51,8 +51,8 @@ class bookthesis extends dbTable {
         $this->loadClass('button', 'htmlelements');
         //load the checkbox object
         $this->loadClass('checkbox', 'htmlelements');
-        // load the htm
-	//$this->loadClass('htmltable', 'htmlelements');
+        // load the fieldset
+	$this->loadClass('fieldset', 'htmlelements');
 
     $strjs = '<script type="text/javascript">
 
@@ -231,99 +231,7 @@ class bookthesis extends dbTable {
         $objForm->addRule('thesis',$this->objLanguage->languageText("mod_thesis_required", "libraryforms", 'Please enter thesis type.Thesis is missing.'),'required');
         $table->endRow();
 
-    
-
-        //listbox       
-        $bookbLabel = new label($this->objLanguage->languageText
-            ("mod_libraryforms_commenttitlebox","libraryforms"),"box");
-        $table->startRow();
-        $table->addCell($bookbLabel->show(), '', 'center', 'left', '');
-
-        $objCheck = new checkbox('arrayList[]');
-        $objCheck->setValue($userPerm['id']);
-        $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-      
-        $uwcbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentuwc","libraryforms"),"uwc");
-        $table->addCell($objCheck->show(), '', 'center', 'left', '');
-        $table->addCell($uwcbLabel->show(), '', 'center', 'left', '');
-        $objForm->addRule('arrayList[]',$this->objLanguage->languageText("mod_surname_required", "libraryforms", 'Please enter a title. please tick one of the box.'),'required');
-
-        //
-        // create checkbox local only
-        $objCheck2 = new checkbox('arrayList[]');
-        $objCheck2->setValue($userPerm['id']);
-        $objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $bLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
-        $table->addCell($objCheck2->show(), '', 'center', 'left', '');
-        $table->addCell($bLabel->show(), '', 'center', 'left', '');
-
-
-        $objCheck3 = new checkbox('arrayList[]');
-        $objCheck3->setValue($userPerm['id']);
-        $objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        //Create a new label for oversears
-        $overLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentoverseas","libraryforms"),"overseas");
-        $table->addCell($objCheck3->show(), '', 'center', 'left', '');
-        $table->addCell($overLabel->show(), '', 'center', 'left', '');
-        $table->endRow();
-
-        //Create a new textinput for fax
-       
-        $table->startRow();
-	$objCheck4 = new checkbox('arrayList[]');
-        $objCheck4->setValue($userPerm['id']);
-       // $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $faxbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
-        $table->addCell($objCheck4->show(), '', 'center', 'left', '');
-        $table->addCell($faxbLabel->show(), '', 'center', 'left', '');
-
-        //Create a new label for ug
-
-        $objCheck5 = new checkbox('arrayList[]');
-        $objCheck5->setValue($userPerm['id']);
-       //$objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $pgbbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"pg");
-        //$objForm->addToForm($pgbbLabel->show());
-        $table->addCell($objCheck5->show(), '', 'center', 'left', '');
-        $table->addCell($pgbbLabel->show(), '', 'center', 'left', '');
-
-
-
-        //Create a new label for staff
-
-        $objCheck6 = new checkbox('arrayList[]');
-        $objCheck6->setValue($userPerm['id']);
-       // $objCheck6->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $ugbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentug","libraryforms"),"ug");
-        $table->addCell($objCheck6->show(), '', 'center', 'left', '');
-        $table->addCell($ugbLabel->show(), '', 'center', 'left', '');
-
-        $objCheck7= new checkbox('arrayList[]');
-        $objCheck7->setValue($userPerm['id']);
-        //$objCheck7->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $staffbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstaff","libraryforms"),"staff");
-        $table->addCell($objCheck7->show(), '', 'center', 'left', '');
-        $table->addCell($staffbLabel->show(), '', 'center', 'left', '');
-        $table->endRow();
-
-        $label2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell","libraryforms"),"label2");
-        $table->startRow();
-        $table->addCell($label2Label->show(), '100%', 'NULL', 'NULL', '');
-        $table->endRow();
-       
-
-        $label2Labell = new label($this->objLanguage->languageText("mod_libraryforms_commentlabell2","libraryforms"),"label2");
-        $table->startRow();
-        
-        $table->addCell($label2Labell->show(), '', '', '', '');
-        $table->endRow();
-
-        $reqLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentrequest","libraryforms"),"request");
-        
-
-        $table->startRow();
-        $table->addCell($reqLabel->show(), '', 'center', 'left', '');
-        $table->endRow();
+          
 
         $objprof = new textinput('thesis_prof');
         $profLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentprof","libraryforms"),"thesis_prof");
@@ -393,6 +301,109 @@ class bookthesis extends dbTable {
         $table->addCell($objcourse2->show(), '', 'center', 'left', '');
          $objForm->addRule('thesis_course',$this->objLanguage->languageText("mod_thesiscourse_required", "libraryforms", 'Please course. course missing.'),'required');
        
+      //create label for heading
+        $table->startRow();
+        $label1 = new label($this->objLanguage->languageText
+            ("mod_libraryforms_commentlabell","libraryforms"),"label1");
+        $table->startRow();
+        $table->addCell($label1->show(), '', 'center', 'left', '');
+        $table->endRow();
+        
+     // create label for heading 2
+
+       $table->startRow();
+        $label2 = new label($this->objLanguage->languageText
+            ("mod_libraryforms_commentlabell2","libraryforms"),"label2");
+        $table->startRow();
+        $table->addCell($label2->show(), '', 'center', 'left', '');
+        $table->endRow();
+
+        // create label for the box heading
+	$bookbLabel = new label($this->objLanguage->languageText
+            ("mod_libraryforms_commenttitlebox","libraryforms"),"box");
+        $table->startRow();
+        $table->addCell($bookbLabel->show(), '', 'center', 'left', '');
+        $table->endRow();
+              
+         
+        $table->startRow();
+        $objCheck = new checkbox('arrayList[]');
+        $objCheck->setValue($userPerm['id']);
+        $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+      
+        $uwcbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentuwc","libraryforms"),"uwc");
+        $table->addCell($objCheck->show(), '', 'center', 'left', '');
+        $table->addCell($uwcbLabel->show(), '', 'center', 'left', '');
+        $objForm->addRule('arrayList[]',$this->objLanguage->languageText("mod_surname_required", "libraryforms", 'Please enter a title. please tick one of the box.'),'required');
+
+        //
+        // create checkbox local only
+        $objCheck2 = new checkbox('arrayList[]');
+        $objCheck2->setValue($userPerm['id']);
+        $objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        $bLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
+        $table->addCell($objCheck2->show(), '', 'center', 'left', '');
+        $table->addCell($bLabel->show(), '', 'center', 'left', '');
+
+
+        $objCheck3 = new checkbox('arrayList[]');
+        $objCheck3->setValue($userPerm['id']);
+        $objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        //Create a new label for oversears
+        $overLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentoverseas","libraryforms"),"overseas");
+        $table->addCell($objCheck3->show(), '', 'center', 'left', '');
+        $table->addCell($overLabel->show(), '', 'center', 'left', '');
+        $table->endRow();
+
+        //Create a new textinput for fax
+       
+        $table->startRow();
+	$objCheck4 = new checkbox('arrayList[]');
+        $objCheck4->setValue($userPerm['id']);
+       // $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        $faxbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
+        $table->addCell($objCheck4->show(), '', 'center', 'left', '');
+        $table->addCell($faxbLabel->show(), '', 'center', 'left', '');
+
+        //Create a new label for ug
+
+        $objCheck5 = new checkbox('arrayList[]');
+        $objCheck5->setValue($userPerm['id']);
+       //$objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        $pgbbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"pg");
+        //$objForm->addToForm($pgbbLabel->show());
+        $table->addCell($objCheck5->show(), '', 'center', 'left', '');
+        $table->addCell($pgbbLabel->show(), '', 'center', 'left', '');
+
+
+
+        //Create a new label for staff
+
+        $objCheck6 = new checkbox('arrayList[]');
+        $objCheck6->setValue($userPerm['id']);
+       // $objCheck6->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        $ugbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentug","libraryforms"),"ug");
+        $table->addCell($objCheck6->show(), '', 'center', 'left', '');
+        $table->addCell($ugbLabel->show(), '', 'center', 'left', '');
+
+        $objCheck7= new checkbox('arrayList[]');
+        $objCheck7->setValue($userPerm['id']);
+        //$objCheck7->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+        $staffbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstaff","libraryforms"),"staff");
+        $table->addCell($objCheck7->show(), '', 'center', 'left', '');
+        $table->addCell($staffbLabel->show(), '', 'center', 'left', '');
+        $table->endRow();
+
+
+
+
+
+
+
+
+
+
+
 
         $objForm->addToForm($table->show());
         $objCaptcha = $this->getObject('captcha', 'utilities');
