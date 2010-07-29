@@ -301,6 +301,7 @@ class dbdocuments extends dbtable {
         $this->update("id", $id, $data);
     }
 
+     
     function changeCurrentUser($userid, $docid) {
         $sql= "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
         $this->sendEmailAlert($userid);

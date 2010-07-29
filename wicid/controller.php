@@ -145,6 +145,7 @@ class wicid extends controller {
      *
     */
     public function __doupload() {
+        
         $path = $this->getParam('path');
         $docname=$this->getParam('docname');
         $docid=$this->getParam('docid');
@@ -653,6 +654,7 @@ class wicid extends controller {
                     'filepath'=>$path);
 
             $result = $this->objUploadTable->saveFileInfo($data);
+            $this->documents->updateInfo($docid, array("ext" => $ext));
             return $this->nextAction('ajaxuploadresults', array('id'=>$generatedid, 'fileid'=>$id, 'filename'=>$filename));
         }
     }

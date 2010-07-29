@@ -74,7 +74,7 @@ class userutils extends object {
     public function searchFiles($url) {
         $script = "
                 var url = '" . $url . "';
-
+                
                 showButtons();
                 showSearchForm(url);
         ";
@@ -131,7 +131,6 @@ class userutils extends object {
     }
 
     public function saveFile($path, $docname, $docid) {
-          
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $filepath = $dir . $path;
         $filepath = str_replace("//", "/", $filepath);
@@ -167,11 +166,7 @@ class userutils extends object {
                 'refno' => '1234',
                 'docid' => $docid,
                 'filepath' => $path);
-            
-          
-
             $result = $this->objUploadTable->saveFileInfo($data);
-           
 
             return "success";
         }
@@ -276,8 +271,8 @@ class userutils extends object {
         foreach ($rows as $row) {
             //$size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
             $isowner = $this->objUser->userid() == $file['userid'] ? "true" : "false";
-            $size = "0"; //$this->formatBytes(filesize($dir . $node . '/' . $f), 2);
-            // $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
+            $size = $this->formatBytes(filesize($dir . $node . '/' . $f), 2);
+            $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
             $files[] = array(
                 'text' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '-16x16.png">&nbsp;' . $row['filename'],
                 'actualfilename' => $row['filename'],
@@ -363,10 +358,10 @@ class userutils extends object {
         $cdir = str_replace("//", "/", $cdir);
 
         $d = dir($cdir);
+
         while ($f = $d->read()) {
 
             if ($f == '.' || $f == '..' || substr($f, 0, 1) == '.'
-
                 )continue;
 
             $lastmod = date('M j, Y, g:i a', filemtime($dir . $node . '/' . $f));
@@ -442,7 +437,6 @@ class userutils extends object {
      * @param <type> $filename
      */
     function downloadFile($filename) {
-       
         //check if user has access to the parent folder before accessing it
 
         $download_path = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
