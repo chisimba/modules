@@ -110,7 +110,7 @@ public class Main {
     private ContactDetails newContactDetailsForm;
     private DocumentListPanel documentListPanel;
     private FileListPanel fileListPanel;
-    private RejectedDocsPanel RejectedDocsPanel;
+    private RejectedDocsPanel rejectedDocsPanel;
     private TabPanel tab = new TabPanel();
     private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
@@ -481,14 +481,7 @@ public class Main {
         filesTab.setHeight(Window.getClientHeight());
         filesTab.add(fileListPanel);
         tab.add(filesTab);
-
-        RejectedDocsPanel = new RejectedDocsPanel(this);
-        fileListPanel.setHeight(500);
-        rejectedDocsTab.setIconStyle("docs");
-        rejectedDocsTab.setHeight(Window.getClientHeight());
-        rejectedDocsTab.add(RejectedDocsPanel);
-        tab.add(rejectedDocsTab);
-
+        
         center.add(tab);
         documentListPanel = new DocumentListPanel(this);
         documentListPanel.setHeight(500);
@@ -497,7 +490,12 @@ public class Main {
         docsTab.add(documentListPanel);
         tab.add(docsTab);
 
-
+        rejectedDocsPanel = new RejectedDocsPanel(this);
+        fileListPanel.setHeight(500);
+        rejectedDocsTab.setIconStyle("docs");
+        rejectedDocsTab.setHeight(Window.getClientHeight());
+        rejectedDocsTab.add(rejectedDocsPanel);
+        tab.add(rejectedDocsTab);
 
 
 
@@ -892,6 +890,11 @@ public class Main {
         this.documentListPanel.refreshDocumentList(documentListParams);
     }
 
+    public void refreshRejectedDocs() {
+        String rejectedDocsParams = "?module=wicid&action=getrejecteddocuments&mode=" + getMode();
+        Constants.main.rejectedDocsPanel.refreshDocumentList(rejectedDocsParams);
+    }
+
     public TabPanel getTab() {
         return tab;
     }
@@ -915,5 +918,9 @@ public class Main {
     public void selectFileListTab() {
         tab.setSelection(filesTab);
         //tab.setSelection(viewTab);
+    }
+
+    public void selectRejectedDocsTab() {
+        tab.setSelection(rejectedDocsTab);
     }
 }
