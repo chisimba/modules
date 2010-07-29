@@ -295,6 +295,7 @@ public class DocumentListPanel extends LayoutContainer {
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
                         refreshDocumentList(defaultParams);
+                        showRejectedDocs();
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot reject document", null);
                     }
@@ -692,6 +693,11 @@ public class DocumentListPanel extends LayoutContainer {
         }
 
         return true;
+    }
+
+    public void showRejectedDocs() {
+        Constants.main.selectRejectedDocsTab();
+        Constants.main.refreshRejectedDocs();
     }
 
     /*  private int checkStatus() {
