@@ -130,7 +130,7 @@
         </data>
     </update>
 
-<update>
+    <update>
         <table>tbl_wicid_documents</table>
         <version>0.044</version>
         <description>Added the version column</description>
@@ -168,6 +168,21 @@
                 <length>1</length>
                 <notnull>TRUE</notnull>
                 <default>N</default>
+            </add>
+
+        </data>
+    </update>
+
+    <update>
+        <table>tbl_wicid_formdata</table>
+        <version>0.048</version>
+        <description>Added the version column</description>
+        <data>
+            <add>
+                <name>version</name>
+                <type>text</type>
+                <length>2</length>
+                <notnull>TRUE</notnull>
             </add>
 
         </data>
