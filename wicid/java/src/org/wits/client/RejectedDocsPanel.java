@@ -81,6 +81,7 @@ public class RejectedDocsPanel extends LayoutContainer {
     @Override
     protected void onRender(Element parent, int index) {
         super.onRender(parent, index);
+        defaultParams = "?module=wicid&action=getrejecteddocuments&mode=" + main.getMode();
 
         List<ColumnConfig> columns = new ArrayList<ColumnConfig>();
         sm = new CheckBoxSelectionModel<ModelData>();
@@ -141,7 +142,19 @@ public class RejectedDocsPanel extends LayoutContainer {
         ContentPanel panel = new ContentPanel();
         panel.setFrame(true);
         panel.setButtonAlign(HorizontalAlignment.CENTER);
-        
+        ToolBar toolbar = new ButtonBar();
+
+        refreshButton.setIconStyle("refresh");
+        refreshButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                refreshDocumentList(defaultParams);
+            }
+        });
+        toolbar.add(refreshButton);
+        panel.setTopComponent(toolbar);
+
         panel.setFrame(false);
         panel.setBodyBorder(false);
         panel.setLayout(new FitLayout());
@@ -151,7 +164,6 @@ public class RejectedDocsPanel extends LayoutContainer {
         panel.setHeight(Window.getClientHeight());
 
         add(panel);
-        defaultParams = "?module=wicid&action=getrejecteddocuments&mode=" + main.getMode();
         refreshDocumentList(defaultParams);
     }
 
