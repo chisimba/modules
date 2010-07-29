@@ -64,7 +64,7 @@ $tab->tabbedbox();
 $tab->addTabLabel($this->objLanguage->languageText("category_resource_four","libraryforms"));
 $tab->addBoxContent($objFeedbk->show());
 
-$tabcontent->addTab('Feedback Form', $tab->show());
+$tabcontent->addTab('FeedbackForm', $tab->show());
 
 
 //captcha
