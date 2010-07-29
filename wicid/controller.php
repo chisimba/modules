@@ -558,7 +558,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return false;
+        return true;
     }
 
     function __registeracademicpresenters() {
