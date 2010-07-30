@@ -354,8 +354,12 @@ class dbdocuments extends dbtable {
 
     function increaseVersion($docid, $version) {
         $versionNew = (int) $version + 1;
-        $sql = "insert version ='$versionNew' into tbl_wicid_documents where id = '$docid' & version = '$version'";
         echo $version . " -> " . $versionNew;
+        //$sql = "insert version ='$versionNew' into tbl_wicid_documents where id = '$docid' and version = '$version'";
+        $sql = "select * from tbl_wicid_documents where id = '$docid' and version = '$version'";
+        $data = $this->getArray($sql);
+        $data = array('version'=>$versionNew);
+        $this->insert($data);
         return $versionNew;
     }
 
