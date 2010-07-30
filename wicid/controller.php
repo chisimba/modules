@@ -390,6 +390,7 @@ class wicid extends controller {
         if($status == '' || $status == NULL){
             $status="0";
         }
+        $version=  $this->getParam('version');
         /**
          * $date,
             $refno,
@@ -416,6 +417,7 @@ class wicid extends controller {
                 $approved="N",
                 $status="0",
                 $currentuserid,
+                $version,
                 $ref_version);
     }
 
@@ -429,7 +431,9 @@ class wicid extends controller {
         $telephone=$this->getParam('tel');
         $id = $this->getParam('docid');
         $status = $this->getParam('status');
-        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date, "topic"=>$selectedfolder, "status"=>$status);
+        $currentuserid = $this->getParam('currentuserid');
+        $version = $this->getParam('version');
+        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date, "topic"=>$selectedfolder, "status"=>$status, "currentuserid"=>$currentuserid, "version" =>$version);
         $this->documents->updateInfo($id, $data);
     }
     
@@ -558,7 +562,7 @@ class wicid extends controller {
         $this->documents->deleteDocs($docids);
     }
     function requiresLogin() {
-        return true;
+        return false;
     }
 
     function __registeracademicpresenters() {
@@ -752,7 +756,8 @@ class wicid extends controller {
     public function __changecurrentuser(){
         $userid=$this->getParam('userid');
         $docid=$this->getParam('docid');
-        $this->documents->changeCurrentUser($userid, $docid);
+        $version=  $this->getParam('version');
+        $this->documents->changeCurrentUser($userid, $docid, $version);
     }
 
     public function __retrievedocument(){
@@ -788,5 +793,16 @@ class wicid extends controller {
         $docid = $this->getParam('docid');
         $formname = $this->getparam('formname');
         $this->objformdata->getCommentData($docid, $formname);
+    }
+
+    public function __increaseversion(){
+        $docid = $this->getParam('docid');
+        $version = $this->getParam('version');
+        $this->documents->increaseVersion($docid, $version);
+    }
+
+    public function __getversion(){
+        $docid = $this->getParam('docid');
+        $this->documents->getVersion($docid);
     }
 }
