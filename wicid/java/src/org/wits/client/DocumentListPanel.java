@@ -31,6 +31,7 @@ import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.SimpleComboBox;
+import com.extjs.gxt.ui.client.widget.form.SimpleComboValue;
 import com.extjs.gxt.ui.client.widget.grid.CellEditor;
 import com.extjs.gxt.ui.client.widget.grid.CheckBoxSelectionModel;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
@@ -79,7 +80,9 @@ public class DocumentListPanel extends LayoutContainer {
     private Main main;
     private String defaultParams = "", statusS;
     private int status;
+    static int version;
     private SimpleComboBox<String> submitCombo = new SimpleComboBox<String>();
+    private String mode = Constants.main.getMode();
 
     public DocumentListPanel(Main main) {
         super();
@@ -102,9 +105,10 @@ public class DocumentListPanel extends LayoutContainer {
         columns.add(new ColumnConfig("Title", "Title", 150));
         columns.add(new ColumnConfig("Topic", "Topic", 100));
         columns.add(new ColumnConfig("Date", "Date", 70));
-        columns.add(new ColumnConfig("Attachment", "Attachment", 70));
-        columns.add(new ColumnConfig("Status", "Status", 50));
-        columns.add(new ColumnConfig("currentuserid", "Current User", 100));
+        columns.add(new ColumnConfig("Attachment", "Attachment", 65));
+        columns.add(new ColumnConfig("Status", "Status", 45));
+        columns.add(new ColumnConfig("currentuserid", "Current User", 75));
+        columns.add(new ColumnConfig("version", "V", 20));
         CellEditor checkBoxEditor = new CellEditor(new CheckBox());
 
         // create the column model
@@ -123,6 +127,7 @@ public class DocumentListPanel extends LayoutContainer {
         type.addField("Attachment", "attachmentstatus");
         type.addField("Status", "status");
         type.addField("currentuserid", "currentuserid");
+        type.addField("version", "version");
 
 
         // use a http proxy to get the data
@@ -147,6 +152,33 @@ public class DocumentListPanel extends LayoutContainer {
         grid.setSelectionModel(sm);
         addContextMenu();
         grid.setContextMenu(contextMenu);
+
+        //int noRows =
+      /*
+        
+        for (int i = 0; i < 1; i++) {
+        ModelData record = store.getModels().get(i);
+        System.out.println(record.toString());
+        String temp = record.get("currentuserid");
+        int statusTemp = 0;
+        System.out.println(temp);
+        switch (statusTemp) {
+        case 0:
+        statusS = "Creator";
+        case 1:
+        statusS = "APO";
+        case 2:
+        statusS = "Subfaculty";
+        case 3:
+        statusS = "Faculty";
+        case 4:
+        statusS = "Senate";
+        }
+        System.out.println(statusS);
+        record.set("currentuserid", statusS);
+        grid.getStore().commitChanges();
+        }
+         */
         grid.getSelectionModel().addListener(Events.SelectionChange,
                 new Listener<SelectionChangedEvent<ModelData>>() {
 
@@ -154,34 +186,16 @@ public class DocumentListPanel extends LayoutContainer {
                         selectedRows = md.getSelection();
                         approveButton.setEnabled(selectedRows.size() > 0);
                         editButton.setEnabled(selectedRows.size() > 0);
-                        submitButton.setEnabled(selectedRows.size() > 0);
+                        if (mode.equalsIgnoreCase("APO")) {
+                            submitButton.setEnabled(selectedRows.size() > 0);
+                        }
                         for (ModelData row : selectedRows) {
                             status = Integer.parseInt(row.get("Status").toString());
                         }
                     }
                 });
 
-        for (int i = 0; i < grid.getStore().getCount(); i++) {
-            ModelData record = grid.getStore().getAt(i);
-            final String statusS = "";
-            int statusTemp = Integer.parseInt(record.get("currentuserid").toString());
-            System.out.println(statusTemp);
-            switch (statusTemp) {
-                case 0:
-                    statusS.equals("Creation");
-                case 1:
-                    statusS.equals("APO");
-                case 2:
-                    statusS.equals("Subfaculty");
-                case 3:
-                    statusS.equals("Faculty");
-                case 4:
-                    statusS.equals("Senate");
-            }
-            record.set("status", statusS);
-            grid.getStore().commitChanges();
 
-        }
 
         ContentPanel panel = new ContentPanel();
         panel.setFrame(true);
@@ -306,7 +320,50 @@ public class DocumentListPanel extends LayoutContainer {
         }
     }
 
+    public static int getVersion() {
+
+
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=getversion&docids=" + Constants.docid;
+        RequestBuilder builder =
+                new RequestBuilder(RequestBuilder.GET, url);
+
+        try {
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot getversion", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    if (200 == response.getStatusCode()) {
+                        version = Integer.parseInt(response.getText());
+                    } else {
+                        MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
+                    }
+                }
+            });
+        } catch (RequestException e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot reject document", null);
+        }
+
+        return version;
+    }
+
     private void submitDocument() {
+        String currentStatusS = "";
+        switch (status) {
+            case 0:
+                currentStatusS.equals("Creation");
+            case 1:
+                currentStatusS.equals("APO");
+            case 2:
+                currentStatusS.equals("Subfaculty");
+            case 3:
+                currentStatusS.equals("Faculty");
+            case 4:
+                currentStatusS.equals("Senate");
+        }
 
         FormPanel submitForm = new FormPanel();
         submitForm.setFrame(false);
@@ -318,17 +375,38 @@ public class DocumentListPanel extends LayoutContainer {
         final Dialog submitDialog = new Dialog();
         submitDialog.setButtons(Dialog.OKCANCEL);
 
+        /*        SimpleComboValue<String> SCvalues = new SimpleComboValue<String>(){};
+        SCvalues.set("APO", "APO");
+        SCvalues.set("Subfaculty", "Subfaculty");
+        SCvalues.set("Faculty", "Faculty");
+        SCvalues.set("Senate", "Senate");
+        SCvalues.remove(currentStatusS);
+        
+        ListStore<SimpleComboValue<String>> submitStore = new ListStore<SimpleComboValue<String>>();
+        submitStore.add(SCvalues);
+         */
         submitCombo.setFieldLabel("Subit this document to");
         submitCombo.setEmptyText("Select who you want to submit to");
+
+        /*    for (int i = 0; i<submitStore.getCount()+1; i++){
+        submitCombo.add(submitStore.getAt(i).getValue());
+        }
+         */
         submitCombo.add("Creator");
         submitCombo.add("APO");
         submitCombo.add("SubFaculty");
         submitCombo.add("Faculty");
         submitCombo.add("Senate");
+        ListStore<SimpleComboValue<String>> submitStore = submitCombo.getStore();
+        submitStore.remove(submitStore.getAt(status));
+        submitStore.commitChanges();
+        submitCombo.setStore(submitStore);
         submitCombo.setTriggerAction(ComboBox.TriggerAction.ALL);
         submitCombo.setEditable(false);
         submitCombo.setAllowBlank(false);
         submitCombo.setForceSelection(true);
+
+
         submitCombo.addSelectionChangedListener(new SelectionChangedListener() {
 
             @Override
@@ -350,8 +428,22 @@ public class DocumentListPanel extends LayoutContainer {
             @Override
             public void componentSelected(ButtonEvent ce) {
 
-                status = submitCombo.getSelectedIndex();
                 statusS = submitCombo.getValue().getValue();
+                if (statusS.equalsIgnoreCase("creator")) {
+                    status = 0;
+                }
+                if (statusS.equalsIgnoreCase("apo")) {
+                    status = 1;
+                }
+                if (statusS.equalsIgnoreCase("subfaculty")) {
+                    status = 2;
+                }
+                if (statusS.equalsIgnoreCase("faculty")) {
+                    status = 3;
+                }
+                if (statusS.equalsIgnoreCase("senate")){
+                    status = 4;
+                }
 
                 String id = "";
                 for (ModelData row : selectedRows) {
@@ -375,6 +467,7 @@ public class DocumentListPanel extends LayoutContainer {
                             public void onResponseReceived(Request request, Response response) {
                                 if (200 == response.getStatusCode()) {
                                     MessageBox.info("Done", "The document has been submitted to " + statusS, null);
+                                    org.wits.client.ads.ForwardTo.increaseVersion();
                                     refreshDocumentList(defaultParams);
                                 } else {
                                     MessageBox.info("Error", "Error occured on the server. Cannot set status", null);
@@ -387,6 +480,7 @@ public class DocumentListPanel extends LayoutContainer {
                 } else {
                     MessageBox.info("Error", "Pleave select a party to submit to.", null);
                 }
+
             }
         });
 
@@ -401,7 +495,6 @@ public class DocumentListPanel extends LayoutContainer {
         submitDialog.add(submitForm);
         submitDialog.show();
     }
-
 
     private void deleteDocs() {
         String ids = "";
@@ -453,6 +546,7 @@ public class DocumentListPanel extends LayoutContainer {
         type.addField("Attachment", "attachmentstatus");
         type.addField("Status", "status");
         type.addField("currentuserid", "currentuserid");
+        type.addField("version", "version");
 
         // use a http proxy to get the data
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + params);
@@ -510,8 +604,6 @@ public class DocumentListPanel extends LayoutContainer {
         MessageBox.confirm("Confirm", "Are you sure you want to reject the selected documents?", l);
 
     }
-
-
 
     private void confirmDelete() {
         final Listener<MessageBoxEvent> l = new Listener<MessageBoxEvent>() {
@@ -572,12 +664,17 @@ public class DocumentListPanel extends LayoutContainer {
 
         MenuItem submitMenuItem = new MenuItem("Submit");
         submitMenuItem.setIconStyle("accept");
+        submitMenuItem.setEnabled(false);
         submitMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
             public void componentSelected(MenuEvent ce) {
                 submitDocument();
             }
         });
+
+        if (mode.equalsIgnoreCase("APO")) {
+            submitMenuItem.setEnabled(true);
+        }
 
         MenuItem deleteMenuItem = new MenuItem("Delete");
         deleteMenuItem.setIconStyle("delete");
@@ -613,7 +710,7 @@ public class DocumentListPanel extends LayoutContainer {
         document.setTopic((String) selectedRows.get(0).get("Topic"));
         document.setAttachmentStatus((String) selectedRows.get(0).get("Attachment"));
         document.setStatus((String) selectedRows.get(0).get("status"));
-        String mode = Constants.main.getMode();
+
 
         EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, mode, null);
         editDocumentDialog.show();
@@ -701,7 +798,6 @@ public class DocumentListPanel extends LayoutContainer {
     }
 
     /*  private int checkStatus() {
-    System.out.println("checkStatus()");
     final String statusS = "";
 
     String ids = "";
@@ -723,9 +819,7 @@ public class DocumentListPanel extends LayoutContainer {
     public void onResponseReceived(Request request, Response response) {
     try {
     String data = response.getText();
-    System.out.println(data);
     int status = Integer.parseInt(data);
-    System.out.println(status);
     switch (status) {
     case 0:
     statusS.equals("Creation");
