@@ -381,8 +381,6 @@ public class EditDocumentDialog {
             mainForm.addButton(nextButton);
             mainForm.addButton(forwardButton);
             getUsers();/*
-            System.out.println(users[0]);
-            System.out.println(users[1]);
             try {
                 if ((!users[0].equals(users[1])) || (!users[1].equals(null))) {
                     */mainForm.addButton(retrieveButton);/*
@@ -681,11 +679,8 @@ public class EditDocumentDialog {
 
                 public void onResponseReceived(Request request, Response response) {
                     String data = response.getText();
-                    System.out.println(data);
 
                     users = data.split(" ");
-                    System.out.println("getUsers(0)" + users[0]);
-   //                 System.out.println("getUsers(1)" + users[1]);
                 }
             });
         } catch (Exception e) {
