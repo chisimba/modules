@@ -337,7 +337,8 @@ public class DocumentListPanel extends LayoutContainer {
 
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
-                        version = Integer.parseInt(response.getText());
+                        System.out.println(response.getText());
+                       // version = Integer.parseInt(response.getText());
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
                     }
