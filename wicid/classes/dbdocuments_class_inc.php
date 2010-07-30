@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class interfaces with db to store a list of files uploaded
  *  PHP version 5
@@ -22,87 +23,89 @@
  * @copyright 2010
 
  */
-
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+
 class dbdocuments extends dbtable {
+
     var $tablename = "tbl_wicid_documents";
     var $userid;
 
     public function init() {
         parent::init($this->tablename);
-        $this->objUser=$this->getObject('user','security');
+        $this->objUser = $this->getObject('user', 'security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUploadTable = $this->getObject('dbfileuploads');
         $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->userutils=$this->getObject('userutils');
-        $this->resourcePath=$this->objConfig->getModulePath();
-        $docRoot=$_SERVER['DOCUMENT_ROOT'];
+        $this->userutils = $this->getObject('userutils');
+        $this->resourcePath = $this->objConfig->getModulePath();
+        $docRoot = $_SERVER['DOCUMENT_ROOT'];
         $location = "http://" . $_SERVER['HTTP_HOST'];
-        $this->sitePath=$location.'/'. str_replace($docRoot,$replacewith,$this->resourcePath);
+        $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
     }
-    public function getdocuments($mode="default",$userid, $rejected = "N") {
-        if(strcmp($rejected,'Y') == 0) {
-            $sql="select A.*, B.docid, B.filename from tbl_wicid_documents as A
+
+    public function getdocuments($mode="default", $userid, $rejected = "N") {
+        if (strcmp($rejected, 'Y') == 0) {
+            $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
                       left outer join tbl_wicid_fileuploads as B on A.id = B.docid
                   where A.active = 'N'
                   and A.deleteDoc = 'N'
-                  and A.rejectDoc = 'Y'";// and mode ='$mode'";
-        }
-        else {
-            $sql="select A.*, B.docid, B.filename from tbl_wicid_documents as A
+                  and A.rejectDoc = 'Y'"; // and mode ='$mode'";
+        } else {
+            $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
                   left outer join tbl_wicid_fileuploads as B on A.id = B.docid
               where A.active = 'N'
               and A.deleteDoc = 'N'
               and A.rejectDoc = 'N'";
         }
-        if(!$this->objUser->isadmin()) {
+        if (!$this->objUser->isadmin()) {
 
-        //    $sql.=" and A.userid = '".$this->objUser->userid()."'";
+            //    $sql.=" and A.userid = '".$this->objUser->userid()."'";
         }
         $sql.=' order by date_created DESC';
 
-       // echo $sql;
-       // die();
+        // echo $sql;
+        // die();
 
-        $rows=$this->getArray($sql);
-        $docs=array();
+        $rows = $this->getArray($sql);
+        $docs = array();
         //print_r($rows);
 
         foreach ($rows as $row) {
             //$owner=$this->userutils->getUserId();
-            if(strlen(trim($row['contact_person'])) == 0) {
-                $owner=$this->objUser->fullname($row['userid']);
-            }else {
+            if (strlen(trim($row['contact_person'])) == 0) {
+                $owner = $this->objUser->fullname($row['userid']);
+            } else {
                 $owner = $row['contact_person'];
             }
 
-            if(trim(strlen($row['docid'])) == 0) {
+            if (trim(strlen($row['docid'])) == 0) {
                 $attachmentStatus = "No";
-            }
-            else {
+            } else {
                 $f = $row['filename'];
-                $attachmentStatus ='Yes&nbsp;<img  src="'.$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($f).'-16x16.png">';
+                $attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
             }
-            $docs[]=array(
-                    'userid'=> $row['userid'],
-                    'owner'=>$owner,
-                    'refno'=> $row['refno']."-".$row['ref_version'],
-                    'title'=> $row['docname'],
-                    'group'=> $row['groupid'],
-                    'docid'=> $row['id'],
-                    'topic'=> $row['topic'],
-                    'department'=> $row['department'],
-                    'telephone'=> $row['telephone'],
-                    'date'=> $row['date_created'],
-                    'attachmentstatus'=> $attachmentStatus,
-                    'status'=> $row['status'],
-                    'currentuserid'=>$row['currentuserid']
+            $docs[] = array(
+                'userid' => $row['userid'],
+                'owner' => $owner,
+                'refno' => $row['refno'] . "-" . $row['ref_version'],
+                'title' => $row['docname'],
+                'group' => $row['groupid'],
+                'docid' => $row['id'],
+                'topic' => $row['topic'],
+                'department' => $row['department'],
+                'telephone' => $row['telephone'],
+                'date' => $row['date_created'],
+                'attachmentstatus' => $attachmentStatus,
+                'status' => $row['status'],
+                'currentuserid' => $row['currentuserid'],
+                'version' => $row['version'],
+                'ref_version' => $row['ref_version']
             );
         }
-        echo json_encode(array("documents"=>$docs));
+        echo json_encode(array("documents" => $docs));
         die();
     }
 
@@ -116,98 +119,85 @@ class dbdocuments extends dbtable {
      * @param <type> $path
      */
     public function addDocument(
-            $date,
-            $refno,
-            $department,
-            $contact,
-            $telephone,
-            $title,
-            $groupid,
-            $path,
-            $mode="default",
-            $approved="N",
-            $status="0",
-            $currentuserid,
-            $ref_version
+    $date, $refno, $department, $contact, $telephone, $title, $groupid, $path, $mode="default", $approved="N", $status="0", $currentuserid, $version, $ref_version
     ) {
 
 
-        $userid=$this->userutils->getUserId();
-        $currentuserid=$userid;
+        $userid = $this->userutils->getUserId();
+        $currentuserid = $userid;
 
         // using this user id, get the full name and compare it with contact person!
         $fullname = $this->objUser->fullname($userid);
-        if(strcmp($fullname, $contact) == 0) {
+        if (strcmp($fullname, $contact) == 0) {
             $contact = "";
         }
-        
-        $data=array(
-                'docname'=>$title,
-                'date_created'=>$date,
-                'userid'=>$userid,
-                'refno'=>$refno,
-                'groupid'=>$groupid,
-                'department'=>$department,
-                'contact_person'=>$contact,
-                'telephone'=>$telephone,
-                'topic'=>$path,
-                'mode'=>$mode,
-                'active'=>$approved,
-                'status'=>$status,
-                'currentuserid'=>$currentuserid,
-                'ref_version' => $ref_version,
-                'version' => $ref_version
+
+        $data = array(
+            'docname' => $title,
+            'date_created' => $date,
+            'userid' => $userid,
+            'refno' => $refno,
+            'groupid' => $groupid,
+            'department' => $department,
+            'contact_person' => $contact,
+            'telephone' => $telephone,
+            'topic' => $path,
+            'mode' => $mode,
+            'active' => $approved,
+            'status' => $status,
+            'currentuserid' => $currentuserid,
+            'ref_version' => $ref_version,
+            'version' => $ref_version
         );
-        $id=$this->insert($data);
-        echo $refno."-".$ref_version.','.$id;
+        $id = $this->insert($data);
+        echo $refno . "-" . $ref_version . ',' . $id;
         //echo "success|$id";
         return $id;
     }
-
 
     /**
      * sets active to Y to docs with supplied id
      * @param <type> $docids
      */
     function approveDocs($docids) {
-        $data=array('active'=>'Y');
-        $ids=explode(",", $docids);
-        $userid=$this->userutils->getUserId();
-        $ext='.na';
+        $data = array('active' => 'Y');
+        $ids = explode(",", $docids);
+        $userid = $this->userutils->getUserId();
+        $ext = '.na';
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         foreach ($ids as $id) {
-            $this->update('id',$id,$data);
-            $doc=$this->getDocument($id);
+            $this->update('id', $id, $data);
+            $doc = $this->getDocument($id);
             //print_r($doc);
 
-            $filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].$ext;
-            $filename= str_replace("//", "/", $filename);
-            $newname=$dir.'/'.$doc['topic'].'/'. $doc['docname'].'.'.$doc['ext'];
-            $newname= str_replace("//", "/", $newname);
+            $filename = $dir . '/' . $doc['topic'] . '/' . $doc['docname'] . $ext;
+            $filename = str_replace("//", "/", $filename);
+            $newname = $dir . '/' . $doc['topic'] . '/' . $doc['docname'] . '.' . $doc['ext'];
+            $newname = str_replace("//", "/", $newname);
 
             /*  $fh = fopen("/dwaf/wicidtest/log.txt", 'w') or die("can't open file ".$doc['docname']);
-            $stringData = "renaming on approve $filename\n$newname\n===================";
-            fwrite($fh, $stringData);
-            fclose($fh);
-            */
-            if(!file_exists($filename)) {
+              $stringData = "renaming on approve $filename\n$newname\n===================";
+              fwrite($fh, $stringData);
+              fclose($fh);
+             */
+            if (!file_exists($filename)) {
 
-                $fh = fopen($filename, 'w') or die("can't open file ".$doc['docname']);
+                $fh = fopen($filename, 'w') or die("can't open file " . $doc['docname']);
                 $stringData = "\n";
                 fwrite($fh, $stringData);
                 fclose($fh);
                 $data = array(
-                        'filename'=>$doc['docname'].$ext,
-                        'filetype'=>'txt',
-                        'date_uploaded'=>strftime('%Y-%m-%d %H:%M:%S',mktime()),
-                        'userid'=>$userid,
-                        'parent'=>$doc['topic'],
-                        'docid'=>$id,
-                        'refno'=>$this->userutils->getRefNo(),
-                        'filepath'=>$doc['topic'].'/'.$doc['docname'].$ext);
+                    'filename' => $doc['docname'] . $ext,
+                    'filetype' => 'txt',
+                    'date_uploaded' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                    'userid' => $userid,
+                    'parent' => $doc['topic'],
+                    'docid' => $id,
+                    'refno' => $this->userutils->getRefNo(),
+                    'filepath' => $doc['topic'] . '/' . $doc['docname'] . $ext);
                 $result = $this->objUploadTable->saveFileInfo($data);
-            }else {
-                rename($filename,$newname);
+            } else {
+                rename($filename, $newname);
             }
         }
     }
@@ -218,12 +208,12 @@ class dbdocuments extends dbtable {
      */
     function rejectDocs($docids) {
 
-        $ids=explode(",", $docids);
-        $ext='.na';
+        $ids = explode(",", $docids);
+        $ext = '.na';
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         foreach ($ids as $id) {
-            if(strlen($id) > 0) {
-                $data = array('rejectDoc'=>'Y');
+            if (strlen($id) > 0) {
+                $data = array('rejectDoc' => 'Y');
                 $res = $this->update('id', $id, $data);
             }
         }
@@ -235,64 +225,61 @@ class dbdocuments extends dbtable {
      */
     function deleteDocs($docids) {
 
-        $ids=explode(",", $docids);
-        $ext='.na';
+        $ids = explode(",", $docids);
+        $ext = '.na';
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         foreach ($ids as $id) {
-            if(strlen($id) > 0) {
-                $doc=$this->getDocument($id);
+            if (strlen($id) > 0) {
+                $doc = $this->getDocument($id);
 
                 //$filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].$ext;
                 //$filename= str_replace("//", "/", $filename);
-                $filename=$dir.'/'.$doc['topic'].'/'. $doc['docname'].'.'.$doc['ext'];
-                $filename= str_replace("//", "/", $newname);
+                $filename = $dir . '/' . $doc['topic'] . '/' . $doc['docname'] . '.' . $doc['ext'];
+                $filename = str_replace("//", "/", $newname);
                 //unlink($filename);
                 // instead of deleting, set the delete field to Y
                 //$this->delete('id',$id);
-                $data = array('deleteDoc'=>'Y');
+                $data = array('deleteDoc' => 'Y');
                 $res = $this->update('id', $id, $data);
             }
         }
     }
+
     /**
      * get a documet with specified id
      * @param <type> $id
      * @return <type>
      */
     function getDocument($id) {
-        return $this->getRow('id',$id);
+        return $this->getRow('id', $id);
     }
 
-    /*function updateDocument($id,$data) {
-        $this->update('id',$id,$data);
-    }*/
-
     function checkRefNo($number) {
-        $sql = "select max(ref_version) as myrefno from .".$this->tablename;
-        $sql .= " where refno like '%".date("Y")."%'";
+        $sql = "select max(ref_version) as myrefno from ." . $this->tablename;
+        $sql .= " where refno like '%" . date("Y") . "%'";
         $sql .= " and SUBSTRING(refno, 1, 1) = '$number'";
         $res = $this->getArray($sql);
 
-        return (int)$res[0]['myrefno']+1;
+        return (int) $res[0]['myrefno'] + 1;
     }
 
     function getRefNo($id) {
         $res = $this->getRow("id", $id);
-        
+
         return $res['refno'];
     }
 
-    function findexts ($filename) {
-        $filename = strtolower($filename) ;
-        $exts = split("[/\\.]", $filename) ;
-        $n = count($exts)-1;
+    function findexts($filename) {
+        $filename = strtolower($filename);
+        $exts = split("[/\\.]", $filename);
+        $n = count($exts) - 1;
         $ext = $exts[$n];
 
         //check if icon for this exists, else return unknown
-        $filePath=$this->objConfig->getModulePath().'/wicid/resources/images/ext/'.$ext.'-16x16.png';
-        if(file_exists($filePath) ) {
+        $filePath = $this->objConfig->getModulePath() . '/wicid/resources/images/ext/' . $ext . '-16x16.png';
+        if (file_exists($filePath)) {
             return $ext;
-        }else {
+        } else {
             return "unknown";
         }
     }
@@ -301,25 +288,24 @@ class dbdocuments extends dbtable {
         $this->update("id", $id, $data);
     }
 
-     
     function changeCurrentUser($userid, $docid) {
-        $sql= "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
+        $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
         $this->sendEmailAlert($userid);
         return $this->getArray($sql);
     }
 
     function sendEmailAlert($useridto) {
-        $toNames=$this->objUser->fullname($useridto);
-        $toEmail=$this->objUser->email($useridto);
+        $toNames = $this->objUser->fullname($useridto);
+        $toEmail = $this->objUser->email($useridto);
 
-        $linkUrl = $this->uri(array('action'=>'home'));
-        $linkUrl->link="Link";
+        $linkUrl = $this->uri(array('action' => 'home'));
+        $linkUrl->link = "Link";
         $objMailer = $this->getObject('email', 'mail');
-        $body="xyz has forwarded you document titled xrf. To access it, click on link below
-        ".$linkUrl->href;
-        $subject="hi";
-       
-        $objMailer->setValue('to',array($toEmail));
+        $body = "xyz has forwarded you document titled xrf. To access it, click on link below
+        " . $linkUrl->href;
+        $subject = "hi";
+
+        $objMailer->setValue('to', array($toEmail));
         $objMailer->setValue('from', $this->objUser->email());
         $objMailer->setValue('fromName', $this->objUser->fullname());
         $objMailer->setValue('subject', $subject);
@@ -329,41 +315,56 @@ class dbdocuments extends dbtable {
         $objMailer->send();
     }
 
-    function retrieveDocument($userid, $docid){
-        $sql= "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
+    function retrieveDocument($userid, $docid) {
+        $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
         $this->sendEmailAlert($userid);
         return $this->getArray($sql);
-
     }
 
     function checkUsers($docid) {
-        $sql="select userid, currentuserid from tbl_wicid_documents where id='$docid'";
-        $userid="";
-        $currentuserid="";
-        $rows=$this->getArray($sql);
+        $sql = "select userid, currentuserid from tbl_wicid_documents where id='$docid'";
+        $userid = "";
+        $currentuserid = "";
+        $rows = $this->getArray($sql);
 
-        foreach($rows as $row) {
-            $userid=$row['userid'];
-            $currentuserid=$row['currentuserid'];
+        foreach ($rows as $row) {
+            $userid = $row['userid'];
+            $currentuserid = $row['currentuserid'];
         }
-        echo $userid.' '.$currentuserid;
-        return $userid;$currentuserid;
+        echo $userid . ' ' . $currentuserid;
+        return $userid;
+        $currentuserid;
     }
 
- /*   function getStatus($docid){
+    function getStatus($docid) {
         $sql = "select status from tbl_wicid_documents where id='$docid'";
-        $rows=$this->getArray($sql);
+        $rows = $this->getArray($sql);
 
-        foreach($rows as $row) {
-            $status=$row['status'];
+        foreach ($rows as $row) {
+            $status = $row['status'];
         }
         echo $status;
         return $status;
     }
-*/
-    function setStatus($docid, $status){
+
+    function setStatus($docid, $status) {
         $sql = "update tbl_wicid_documents set status ='$status' where id = '$docid'";
         return $this->getArray($sql);
     }
+
+    function increaseVersion($docid, $version) {
+        $versionNew = (int) $version + 1;
+        $sql = "insert version ='$versionNew' into tbl_wicid_documents where id = '$docid' & version = '$version'";
+        echo $version . " -> " . $versionNew;
+        return $versionNew;
+    }
+
+    function getVersion($docid) {
+        $sql = "select version from tbl_wicid_documents where id='$docid'";
+        $version = $this->getArray($sql);
+        echo $version;
+        return $version;
+    }
+
 }
 ?>
