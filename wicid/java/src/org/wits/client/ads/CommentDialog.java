@@ -124,7 +124,6 @@ public class CommentDialog {
 
                 public void onResponseReceived(Request request, Response response) {
                     data = response.getText();
-                    System.out.println(data);
 
                     String comment = Util.getTagText(data, "comments");
 
