@@ -11,7 +11,7 @@ $newImgPath = $this->getResourceUri('img/new.png', 'uwcelearningmobile');
 echo '<b>'.ucWords($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordcourse', 'uwcelearningmobile')).': </b>'.$this->contextTitle;
 
 $objFields = new fieldset();
-$objFields->setLegend('<b>'.ucWords($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordnewewcontent', 'uwcelearningmobile')).'</b>');
+$objFields->setLegend('<b>'.ucWords($this->objLanguage->code2Txt('mod_uwcelearningmobile_wordnewcontent', 'uwcelearningmobile')).'</b>');
 
 if (!empty($content)) {
     foreach($content as $con) {
