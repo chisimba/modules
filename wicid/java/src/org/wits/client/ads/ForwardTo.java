@@ -102,24 +102,8 @@ public class ForwardTo {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() +
-                        Constants.MAIN_URL_PATTERN + "?module=wicid&action=changecurrentuser&userid=" +
-                        selectedUserid + "&docid=" + Constants.docid);
-                try {
-
-                    Request request = builder.sendRequest(null, new RequestCallback() {
-
-                        public void onError(Request request, Throwable exception) {
-                            MessageBox.info("Error", "Error, cannot change currentuser", null);
-                        }
-
-                        public void onResponseReceived(Request request, Response response) {
-                            MessageBox.info("Done", "The current user for document "+Constants.docid+" has been changed.", null);
-                        }
-                    });
-                } catch (Exception e) {
-                    MessageBox.info("Fatal Error", "Fatal Error: cannot change currentuser", null);
-                }
+                changeCurrentUser();
+                increaseVersion();
 
                 forwardToDialog.hide();
             }
@@ -134,6 +118,49 @@ public class ForwardTo {
         forwardToDialog.setButtonAlign(HorizontalAlignment.LEFT);
         forwardToDialog.setHideOnButtonClick(true);
         forwardToDialog.add(panel, formData);
+    }
+
+    public void changeCurrentUser() {
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=changecurrentuser&userid="
+                + selectedUserid + "&docid=" + Constants.docid);
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot change currentuser", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    MessageBox.info("Done", "The current user for document " + Constants.docid + " has been changed.", null);
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot change currentuser", null);
+        }
+    }
+
+    public static void increaseVersion() {
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + Constants.docid+"&version="+org.wits.client.DocumentListPanel.getVersion());
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get latest version", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    String data = response.getText();
+                    System.out.println(data);
+                    MessageBox.info("Done", "The version for document " + Constants.docid + " has been changed to v"+data, null);
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get version", null);
+        }
     }
 
     public void show() {
