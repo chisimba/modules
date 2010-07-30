@@ -105,8 +105,8 @@ public class NewCourseProposalDialog {
         telField.setFieldLabel("Tel. Number");
         telField.setAllowBlank(true);
         telField.setName("telfield");
-    //    telField.setAllowDecimals(false);
-      //  telField.setAllowNegative(false);
+        //    telField.setAllowDecimals(false);
+        //  telField.setAllowNegative(false);
         mainForm.add(telField, formData);
 
         titleField.setFieldLabel("Course title");
@@ -177,7 +177,12 @@ public class NewCourseProposalDialog {
 
                 dept = deptField.getValue();// deptField.getValue().getId();
                 title = titleField.getValue();
-                telephone = telField.getValue().toString();
+
+                try {
+                    telephone = telField.getValue().toString();
+                } catch (NullPointerException npe) {
+                    MessageBox.info("Missing telephone number", "Provide a telephone number.", null);
+                }
 
                 try {
                     if (dateField.getDatePicker() != null) {
@@ -217,12 +222,13 @@ public class NewCourseProposalDialog {
                 }
                 String number = "S";
                 String group = "Draft";
+                String version = "1";
 
                 String url =
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                         + "?module=wicid&action=registerdocument&date=" + fmt.format(date)
                         + "&number=" + number + "&department=" + dept + "&telephone=" + telephone
-                        + "&topic=" + facultyField.getValue() + "&title=" + title + "&group=" + group;
+                        + "&topic=" + facultyField.getValue() + "&title=" + title + "&group=" + group+"&version="+version;
 
                 createDocument(url);
                 //select documents panel
@@ -249,7 +255,6 @@ public class NewCourseProposalDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                
             }
         });
 
@@ -311,8 +316,8 @@ public class NewCourseProposalDialog {
 
                 public void onResponseReceived(Request request, Response response) {
 
-                      newCourseProposalDialog.setVisible(false);
-                       MessageBox.info("Save", "Your course proposal information is saved.\nYou can continue filling the rest of the forms by accessing it from the 'Documents' tab to make any changes", null);
+                    newCourseProposalDialog.setVisible(false);
+                    MessageBox.info("Save", "Your course proposal information is saved.\nYou can continue filling the rest of the forms by accessing it from the 'Documents' tab to make any changes", null);
 
                 }
             });
