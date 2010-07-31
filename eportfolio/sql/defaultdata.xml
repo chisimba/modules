@@ -280,8 +280,8 @@
         <visible>1</visible>
         <position>1</position>
         <isBlock>1</isBlock>
-        <blockName>address</blockName>
-        <blockModule>affiliation</blockModule>
+        <blockName>affiliation</blockName>
+        <blockModule>eportfolio</blockModule>
         <content></content>
         <dateLastUpdated>2010-07-30</dateLastUpdated>
         <updatedBy>1</updatedBy>
