@@ -448,7 +448,6 @@ class db_learningcontent_activitystreamer extends dbtable
           //fwrite($Handle, $list);
          }
         }
-var_dump($this->contextCode);
         fclose($Handle);
         return $csvFile;
     }
