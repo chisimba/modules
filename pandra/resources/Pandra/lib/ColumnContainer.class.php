@@ -13,7 +13,7 @@
  * @author Michael Pearson <pandra-support@phpgrease.net>
  * @copyright 2010 phpgrease.net
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version 0.2
+ * @version 0.2.1
  * @package pandra
  * @abstract
  */
@@ -242,14 +242,14 @@ abstract class PandraColumnContainer implements ArrayAccess, Iterator, Countable
      * @return void
      */
     public function delete() {
-        $this->setDelete(TRUE);
+        $this->_delete = $this->_modified = TRUE;
         foreach ($this->_columns as &$column) {
             $column->delete();
         }
     }
 
     /**
-     * mutator, marks this column for deletion and sets modified
+     * mutator, marks this column for deletion
      * @param bool $delete
      */
     protected function setDelete($delete) {
@@ -537,9 +537,9 @@ abstract class PandraColumnContainer implements ArrayAccess, Iterator, Countable
         }
 
         if (!$foundKey) {
-            $this->_columns[$columnName] =
-                    new PandraColumn($this->typeConvert($columnName, self::CONTEXT_BIN, $typeDef));
 
+            $this->_columns[$columnName] =
+                    new PandraColumn($this->typeConvert($columnName, self::CONTEXT_BIN), $typeDef);
             $this->_columns[$columnName]->setParent($this, FALSE);
         }
 
@@ -576,7 +576,7 @@ abstract class PandraColumnContainer implements ArrayAccess, Iterator, Countable
             $columnMatch->graphContext(get_class($this));
             return $columnMatch;
 
-        // Extract matching named columns based on clause
+            // Extract matching named columns based on clause
         } elseif ($columnMatch instanceof PandraClause) {
             $matches = array();
 

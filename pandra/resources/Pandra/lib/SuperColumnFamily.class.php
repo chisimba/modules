@@ -20,7 +20,7 @@
  * @author Michael Pearson <pandra-support@phpgrease.net>
  * @copyright 2010 phpgrease.net
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version 0.2
+ * @version 0.2.1
  * @package pandra
  */
 
@@ -117,7 +117,7 @@ class PandraSuperColumnFamily extends PandraColumnFamily implements PandraColumn
                         $this->getKeyID(),
                         $columnPath,
                         NULL,
-                        PandraCore::getConsistency($consistencyLevel));
+                        $consistencyLevel);
                 if (!$ok) $this->registerError(PandraCore::$lastError);
 
             } else {
@@ -171,7 +171,7 @@ class PandraSuperColumnFamily extends PandraColumnFamily implements PandraColumn
                         array(
                                 'column_family' => $this->getName())),
                         $predicate,
-                        PandraCore::getConsistency($consistencyLevel));
+                        $consistencyLevel);
 
                 // otherwise by defined columns (slice query)
             } else {
@@ -185,7 +185,7 @@ class PandraSuperColumnFamily extends PandraColumnFamily implements PandraColumn
                         array(
                                 'column_family' => $this->getName())),
                         $predicate,
-                        PandraCore::getConsistency($consistencyLevel));
+                        $consistencyLevel);
 
                 $result = $result[$keyID];
             }

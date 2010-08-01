@@ -9,7 +9,7 @@
  * @author Michael Pearson <pandra-support@phpgrease.net>
  * @copyright 2010 phpgrease.net
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version 0.2
+ * @version 0.2.1
  * @package pandra
  */
 class PandraColumn extends cassandra_Column implements PandraContainerChild, PandraColumnPathable {
@@ -548,8 +548,7 @@ class PandraColumn extends cassandra_Column implements PandraContainerChild, Pan
      * mutator, marks this column for deletion and sets modified
      */
     public function delete() {
-        $this->_delete = TRUE;
-        $this->_modified = TRUE;
+        $this->_delete = $this->_modified = TRUE;
     }
 
     /**
