@@ -42,10 +42,11 @@ foreach ($competitions as $competition) {
 }
 $centerContent="";
 $featurednewsstories=$viewer->getNews('featurednews');
+ $objTrim = $this->getObject('trimstr', 'strings');
 foreach ($featurednewsstories as $featurednewsstory) {
     $title=$featurednewsstory['storytitle'];
     $link=new link($this->uri(array("action"=>"viewstory","storyid"=>$featurednewsstory['id'])));
-    $link->link=$featurednewsstory['storytext'];
+    $link->link=$objTrim->strTrim($featurednewsstory['storytext'], 400);
     $content=$link->show();
     $block="featurednews".$index++;
     $hidden='default';
