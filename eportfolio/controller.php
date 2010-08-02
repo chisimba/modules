@@ -36,6 +36,14 @@ class eportfolio extends controller
     public $objUser;
     public $userPid;
     public $isAdmin;
+    public $TRUE;
+    public $FALSE;
+    /**
+     *  The eportfolioblocks DB blocks object
+     *
+     * @var object
+     */
+    public $objEPBlocks;
     /**
      * Constructor
      */
@@ -110,6 +118,8 @@ class eportfolio extends controller
         $this->objDbRubricCells = &$this->getObject('dbrubriccells', 'rubric');
         $this->objDbRubricAssessments = &$this->getObject('dbrubricassessments', 'rubric');
         $this->objRubricFunctions = &$this->getObject('functions_rubric', 'rubric');
+        //Load eportfolio blocks class
+        $this->objEPBlocks = $this->getObject('eportfolioblocks');
         // Create an array of words to abstract
         $this->abstractionArray = array(
             'Lecturers' => ucwords($this->objLanguage->code2Txt('word_lecturers')) ,
@@ -122,6 +132,14 @@ class eportfolio extends controller
         );
         $this->_arrSubGroups['Group 2']['id'] = NULL;
         $this->_arrSubGroups['Group 2']['members'] = array();
+        //Check the DB in use and set the appropriate value for TRUE & FALSE
+        if($this->objEPBlocks->dbType == "pgsql") {
+            $this->TRUE = 't';
+            $this->FALSE = 'f';
+        } else {
+            $this->TRUE = 1;
+            $this->FALSE = 0;
+        }
     }
     public function dispatch($action) 
     {
@@ -131,7 +149,105 @@ class eportfolio extends controller
         $this->setVarByRef('user', $this->user);
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
-
+                case 'admin':
+                    if (!$this->objUser->isAdmin()) {
+                        return 'new_main_tpl.php';
+                    } else {
+                        return 'eportfolio_setup_tpl.php';
+                    }
+                case 'editblock':
+                    if (!$this->objUser->isAdmin()) {
+                        return 'new_main_tpl.php';
+                    } else {
+                        $this->setVar('heading',$this->objLanguage->languageText('mod_prelogin_editblock','prelogin'));
+                        $block = $this->objEPBlocks->getRow('id',$this->getParam('id'));
+                        $this->setVar('blockName',$block['title']);
+                        $this->setVar('blockContent',$block['content']);
+                        $this->setVar('location',$block['side']);
+                        $this->setVar('block',array('module'=> $block['blockmodule'],'name'=>$block['blockname']));
+                        $this->setVar('id',$block['id']);
+                        $bType = ($block['isblock'] == $this->TRUE)? 'block' : 'nonblock';
+                        $this->setVar('bType',$bType);
+                        return 'eportfolio_setup_tpl.php';
+                    }
+                case 'addblock':
+                    if (!$this->objUser->isAdmin()) {
+                        return 'new_main_tpl.php';
+                    } else {
+                        $this->setVar('heading',$this->objLanguage->languageText('mod_prelogin_addblock','prelogin'));
+                        return 'eportfolio_setup_tpl.php';
+                    }
+                case 'submitblock':
+                    if (!$this->objUser->isAdmin()) {
+                        return 'new_main_tpl.php';
+                    } else {
+                        $title = $this->getParam('title');
+                        if($title == '') {
+                            $title = 'untitled';
+                        }
+                        $side = $this->getParam('side');
+                        $bType = ($this->getParam('type') == 'block')? $this->TRUE : $this->FALSE;
+                        $content = htmlentities($this->getParam('content'),ENT_QUOTES);
+                        //var_dump($content); die();
+                        $block = $this->getParam('moduleblock');
+                        if ($block) {
+                            $arrBlock = explode('|',$block);
+                            $blockModule = $arrBlock[0];
+                            $blockName = $arrBlock[1];
+                        } else {
+                            $blockModule = '';
+                            $blockName = '';
+                        }
+                        $data = array('title'=>$title,'side'=>$side,'content'=>$content,'isblock'=>$bType,'blockname'=>$blockName,'blockmodule'=>$blockModule);
+                        if ($id = $this->getParam('id')) {
+                            $result = $this->objEPBlocks->updateBlock($id,$data);
+                        } else {
+                            $result = $this->objEPBlocks->insertBlock($data);
+                        }
+                        //echo $result;
+                        return $this->nextAction('admin',array('change'=>'2'));
+                    }
+                //move a block up
+                case 'moveup':
+                    if (!$this->objUser->isAdmin()) {
+                        return 'new_main_tpl.php';
+                    } else {
+                        $this->objEPBlocks->moveRecUp($this->getParam('id'));
+                        return $this->nextAction('admin',array('change'=>'2'));
+                    }
+                //move a block down
+                case 'movedown':
+                    if (!$this->objUser->isAdmin()) {
+                        return 'new_main_tpl.php';
+                    } else {
+                        $this->objEPBlocks->moveRecDown($this->getParam('id'));
+                        return $this->nextAction('admin',array('change'=>'2'));
+                    }
+                //delete a block record
+                case 'delete':
+                    if (!$this->objUser->isAdmin()) {
+                        return 'new_main_tpl.php';
+                    } else {
+                        $this->objEPBlocks->delete('id',$this->getParam('id'));
+                        return $this->nextAction('admin',array('change'=>'2'));
+                    }
+            case 'update':
+                 if (!$this->objUser->isAdmin()) {
+                     return 'new_main_tpl.php';
+                 } else {
+                     $vibe = array();
+                     $blocks = $this->objEPBlocks->getAll();
+                     if (isset($blocks)) {
+                      foreach($blocks as $block) {
+                       ($this->getParam($block['id'].'_vis')=='on')? $vis = $this->TRUE : $vis = $this->FALSE;
+                       //var_dump($block);var_dump($vis);
+                       if ($block['visible'] !== $vis) {
+                           $this->objEPBlocks->updateVisibility($block['id'],$vis);
+                       }
+                      }
+                     }
+                     return $this->nextAction('admin',array('change'=>'2'));
+            }
             case "postcomment":
                 $id = $this->objDbComment->insertSingle($this->getParam('eportfoliopartid', NULL) , $this->getParam('newcomment', NULL) , $isapproved = '0');
                 // After processing return to view main
