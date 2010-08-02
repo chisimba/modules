@@ -46,7 +46,8 @@ $featurednewsstories=$viewer->getNews('featurednews');
 foreach ($featurednewsstories as $featurednewsstory) {
     $title=$featurednewsstory['storytitle'];
     $link=new link($this->uri(array("action"=>"viewstory","storyid"=>$featurednewsstory['id'])));
-    $link->link=$objTrim->strTrim($featurednewsstory['storytext'], 400);
+    
+    $link->link=$objTrim->strTrim($featurednewsstory['storytext'], 2400)." ...";
     $content=$link->show();
     $block="featurednews".$index++;
     $hidden='default';
