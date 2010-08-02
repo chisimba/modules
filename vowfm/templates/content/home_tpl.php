@@ -43,7 +43,11 @@ foreach ($competitions as $competition) {
 $centerContent="";
 $featurednewsstories=$viewer->getNews('featurednews');
  $objTrim = $this->getObject('trimstr', 'strings');
+ $index=0;
 foreach ($featurednewsstories as $featurednewsstory) {
+    if($index > 2){
+        break;
+    }
     $title=$featurednewsstory['storytitle'];
     $link=new link($this->uri(array("action"=>"viewstory","storyid"=>$featurednewsstory['id'])));
     
@@ -62,6 +66,7 @@ foreach ($featurednewsstories as $featurednewsstory) {
             $showToggle,
             $showTitle,
             $cssClass,'');
+    $index++;
 }
 
 $centerContent.=$viewer->getBottomBlocks();
