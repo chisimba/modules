@@ -198,183 +198,197 @@
     <tbl_eportfolio_blocks>
         <id>init_1</id>
         <title>Identification</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
         <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>identification</blockName>
-        <blockModule>eportfolio</blockModule>
+        <isblock>1</isblock>
+        <blockname>identification</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>1</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_2</id>
         <title>Address</title>
-        <side>middle</side>
+        <side>identity</side>
         <visible>1</visible>
         <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>address</blockName>
-        <blockModule>eportfolio</blockModule>
+        <isblock>1</isblock>
+        <blockname>address</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>2</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_3</id>
         <title>Contact</title>
-        <side>middle</side>
+        <side>identity</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>contact</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>2</position>
+        <isblock>1</isblock>
+        <blockname>contact</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>3</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_4</id>
         <title>Email</title>
-        <side>middle</side>
+        <side>identity</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>email</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>3</position>
+        <isblock>1</isblock>
+        <blockname>email</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>4</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_5</id>
         <title>Demographics</title>
-        <side>middle</side>
+        <side>identity</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>demographics</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>4</position>
+        <isblock>1</isblock>
+        <blockname>demographics</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>5</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_6</id>
         <title>Activities</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>activities</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>2</position>
+        <isblock>1</isblock>
+        <blockname>activities</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>6</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_7</id>
         <title>Affiliation</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>affiliation</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>3</position>
+        <isblock>1</isblock>
+        <blockname>affiliation</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>7</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_8</id>
         <title>Transcripts</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>transcripts</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>4</position>
+        <isblock>1</isblock>
+        <blockname>transcripts</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>8</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_9</id>
         <title>Qualifications</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>qualifications</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>5</position>
+        <isblock>1</isblock>
+        <blockname>qualifications</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>9</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_10</id>
         <title>Goals</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>goals</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>6</position>
+        <isblock>1</isblock>
+        <blockname>goals</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>10</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_11</id>
         <title>Competencies</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>competencies</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>7</position>
+        <isblock>1</isblock>
+        <blockname>competencies</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>11</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_12</id>
         <title>Interests</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>interests</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>8</position>
+        <isblock>1</isblock>
+        <blockname>interests</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>12</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_13</id>
         <title>Reflections</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>reflections</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>9</position>
+        <isblock>1</isblock>
+        <blockname>reflections</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>13</puid>
     </tbl_eportfolio_blocks>
     <tbl_eportfolio_blocks>
         <id>init_14</id>
         <title>Assertions</title>
-        <side>middle</side>
+        <side>main</side>
         <visible>1</visible>
-        <position>1</position>
-        <isBlock>1</isBlock>
-        <blockName>assertions</blockName>
-        <blockModule>eportfolio</blockModule>
+        <position>10</position>
+        <isblock>1</isblock>
+        <blockname>assertions</blockname>
+        <blockmodule>eportfolio</blockmodule>
         <content></content>
-        <dateLastUpdated>2010-07-30</dateLastUpdated>
-        <updatedBy>1</updatedBy>
+        <datelastupdated>2010-07-30</datelastupdated>
+        <updatedby>1</updatedby>
+        <puid>14</puid>
     </tbl_eportfolio_blocks>
 </defaultdata>
