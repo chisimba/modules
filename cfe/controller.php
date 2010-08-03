@@ -114,6 +114,22 @@ class cfe extends controller {
               return "short_courses_tpl.php";
     }
 
+
+ function __preStartUp() {
+              return "pre_start_up_tpl.php";
+    }
+function __startUp() {
+              return "start_up_tpl.php";
+    }
+function __development() {
+              return "development_tpl.php";
+    }
+function __growth() {
+              return "growth_tpl.php";
+    }
+function __courseSchedule() {
+              return "course_schedule_tpl.php";
+    }
   function __createYourVenture() {
               return "create_your_venture_tpl.php";
     }
@@ -160,6 +176,63 @@ function __events() {
     }
 function __successStories() {
               return "support_success_stories_tpl.php";
+    }
+
+function __outreach() {
+              return "outreach_tpl.php";
+}
+function __trainTheTrainer() {
+              return "outreach_train_the_trainer_tpl.php";
+    }
+function __witsStudentEvents() {
+              return "outreach_wits_student_events_tpl.php";
+    }
+function __gewEvents() {
+              return "outreach_gew_events_tpl.php";
+    }
+function __TtTSchedule() {
+              return "outreach_TtT_schedule_tpl.php";
+}
+
+function __capacityBuilding() {
+              return "capacity_building_tpl.php";
+    }
+function __thought() {
+              return "capacity_building_thought_tpl.php";
+    }
+function __advisor() {
+              return "capacity_building_advisor_tpl.php";
+    }
+function __symposia() {
+              return "capacity_building_symposia_tpl.php";
+    }
+function __thoughtSchedule() {
+              return "capacity_building_thought_schedule_tpl.php";
+    }
+function __download() {
+              return "capacity_building_download_tpl.php";
+    }
+function __symposiaSchedule() {
+              return "capacity_building_symposia_schedule_tpl.php";
+    }
+
+
+function __donorsAndSponsors() {
+              return "donors_and_sponsors_tpl.php";
+    }
+function __currentPartners() {
+              return "donors_current_partners_tpl.php";
+    }
+function __enterpriseDevelopment() {
+              return "donors_enterprise_development_tpl.php";
+    }
+
+function __contactUs() {
+              return "contact_us_tpl.php";
+    }
+
+function __siteMap() {
+              return "site_map_tpl.php";
     }
   
 
