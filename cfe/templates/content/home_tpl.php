@@ -32,7 +32,23 @@ if (!
     die("You cannot view this page directly");
 }
 
+// Make the banner as a layer
+//$bannerLayer = $this->newObject('layer', 'htmlelements');
+//$bannerLayer->id = "bannerLayer";
+
+// Make the banner bar as a layer
+//$bannerBar = $this->newObject('layer', 'htmlelements');
+//$bannerBar->id = "bannerBar";
+
+// Make the body
+$body = $this->newObject('body', 'cfe');
+// Make the footer
+//$footer = $this->newObject('footer', 'cfe');
 
 
-echo '<div id="rightcolumn">homepage content here</div>';
+// Echo out the bannerLayer, banner bar, the body and the footerLayer in sequence:
+//echo $bannerLayer->show();
+//echo $bannerBar->show();
+echo $body->show();
+//echo $footer->show();
 ?>
