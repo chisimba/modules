@@ -76,7 +76,7 @@ class footer extends object
 	public function setContent()
 	{
 
-		$footer = '<!-- BOTTOM BANNERS --><div id="bottom_banners"><img src="http://146.141.208.61/chisimba1/packages/cfe/resources//bottom_banners.jpg" border="0" usemap="#Map">
+		$footer = '<!-- BOTTOM BANNERS --><div id="bottom_banners"><img src="http://146.141.208.43/chisimba1/packages/cfe/resources//bottom_banners.jpg" border="0" usemap="#Map">
 <map name="Map">
 
 <area shape="rect" coords="209,13,302,59" href="http://www.aabschools.com" target="_blank">

@@ -24,7 +24,7 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 
 
-class support extends object
+class outreach_ttt_schedule extends object
 {
     /**
     * Constructor
@@ -33,7 +33,7 @@ class support extends object
     	{
 		//create objects
 		$this->pageContent = $this->newObject('csslayout', 'htmlelements');
-		//$this->objCreateYourVenture = $this->newObject('short_courses_create_your_venture', 'cfe');
+		$this->objCreateYourVenture = $this->newObject('short_courses_create_your_venture', 'cfe');
 
 		//create a layout
 		$this->buildBody();
@@ -46,7 +46,7 @@ class support extends object
 
 	private function buildBody()
 	{
-                $right_col = $this->newObject('support_right_column', 'cfe');
+                $right_col = $this->newObject('outreach_right_column', 'cfe');
 	
 		//set the layout to two columns
 		$this->pageContent->setNumColumns(2);
@@ -63,9 +63,9 @@ class support extends object
      */
 	private function buildContent()
 	{
-		$content = '<div id="advPage"><h3> SUPPORT  </h3>
+		$content = '<div id="advPage"><h3> TtT SCHEDULE 2010  </h3>
 
-                <div id="advPageCont"> <h4> Support programme</h4> 
+                <div id="advPageCont"> <h4> TtT</h4> 
 
 
 
