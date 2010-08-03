@@ -34,7 +34,7 @@ class short_courses_grow_your_venture extends object
 		//create objects
 		$this->pageContent = $this->newObject('csslayout', 'htmlelements');
 		$this->objCreateYourVenture = $this->newObject('short_courses_create_your_venture', 'cfe');
- $objDbUtils=$this->getObject("dbutil");
+ 		$this->objDbUtils=$this->getObject("dbutil");
 
 		//create a layout
 		$this->buildBody();
@@ -64,8 +64,7 @@ class short_courses_grow_your_venture extends object
      */
 	private function buildContent()
 	{
-
-          $data=$objDbUtil->getStory("growyourventure");
+          $data=$this->objDbUtil->getNews("shortcourses");
           if(count($data) > 0){ 
             return  '<div id="growyourventure">'.$data[0][0].'</div>';
 
