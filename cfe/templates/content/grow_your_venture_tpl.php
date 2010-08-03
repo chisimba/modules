@@ -32,8 +32,6 @@ if (!
     die("You cannot view this page directly");
 }
 
-$growYourVenture = $this->newObject('short_courses_grow_your_venture', 'cfe');
 
-echo $growYourVenture->show();
-
+echo $this->viewer->getStory("grow your venture");
 ?>

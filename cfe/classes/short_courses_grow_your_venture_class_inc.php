@@ -33,7 +33,6 @@ class short_courses_grow_your_venture extends object
     	{
 		//create objects
 		$this->pageContent = $this->newObject('csslayout', 'htmlelements');
-		$this->objCreateYourVenture = $this->newObject('short_courses_create_your_venture', 'cfe');
  		$this->objDbUtils=$this->getObject("dbutil");
 
 		//create a layout

@@ -103,7 +103,7 @@ class short_courses_content extends object
                 }
 
                 // Add to Navigation
-                $str .= $this->generateItem($option['action'], $option['module'], $option['text'], $isDefault);
+   //             $str .= $this->generateItem($option['action'], $option['module'], $option['text'], $isDefault);
             }
         }
 

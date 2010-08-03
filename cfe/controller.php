@@ -38,15 +38,18 @@ class cfe extends controller {
     function init() {
     //Instantiate the language object
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->viewer=$this->getObject("viewer");
     }
 
 
     public function dispatch($action) {
-    /*
+   
+        /*
     * Convert the action into a method (alternative to
     * using case selections)
     */
         $method = $this->getMethod($action);
+       
     /*
     * Return the template determined by the method resulting
     * from action
