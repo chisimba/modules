@@ -73,6 +73,14 @@ class cfe extends controller {
         }
     }
 
+	/*function getMethod(& $action) {
+     
+
+		return '__'.$action;
+
+ 
+        }*/
+
     /**
      *
      * Method to check if a given action is a valid method
@@ -101,8 +109,69 @@ class cfe extends controller {
     function __home() {
               return "home_tpl.php";
     }
+	
+   function __shortCourses() {
+              return "short_courses_tpl.php";
+    }
+
+  function __createYourVenture() {
+              return "create_your_venture_tpl.php";
+    }
+  function __findYourVenture() {
+              return "find_your_venture_tpl.php";
+    }
+  function __startYourVenture() {
+              return "start_your_venture_tpl.php";
+    }
+  function __planYourVenture() {
+              return "plan_your_venture_tpl.php";
+    }
+  function __buildYourVenture() {
+              return "build_your_venture_tpl.php";
+    }
+
+  function __growYourVenture() {
+              return "grow_your_venture_tpl.php";
+    }
+  function __masterclass() {
+              return "masterclass_tpl.php";
+    }
+
+function __support() {
+              return "support_tpl.php";
+    }
+function __news() {
+              return "support_news_tpl.php";
+    }
+function __mentoring() {
+              return "support_mentoring_tpl.php";
+    }
+function __internship() {
+              return "support_internship_tpl.php";
+    }
+function __peerSupport() {
+              return "support_peer_support_tpl.php";
+    }
+function __bussinessClinic() {
+              return "support_bussiness_clinic_tpl.php";
+    }
+function __events() {
+              return "support_events_tpl.php";
+    }
+function __successStories() {
+              return "support_success_stories_tpl.php";
+    }
+  
+
+  function __research() {
+              return "research_tpl.php";
+    }
+  
 
 
+function __aboutCfe() {
+              return "aboutCfe_tpl.php";
+    }
     function requiresLogin(){
         return false;
     }
