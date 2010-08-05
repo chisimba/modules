@@ -44,7 +44,6 @@ class feedbk extends dbTable {
         //Load the label class
         $this->loadClass('label', 'htmlelements');
         //Load the button object
-
         $this->loadClass('button', 'htmlelements'); 
 	
 
@@ -105,7 +104,7 @@ $strjs = '<script type="text/javascript">
         $nameLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentnamefeedbk","libraryforms"),"name");
         $objForm->addToForm($nameLabel->show()."<br />");
         $objForm->addToForm($objname->show() . "<br />"."<br />");
-        $objForm->addRule('feedback_name',$this->objLanguage->languageText("mod_librarynames_required", "libraryforms", 'Please enter a name .Name is Missing .'),'required');
+        $objForm->addRule('feedback_name',$this->objLanguage->languageText("mod_libraryforms_commentnamerequired", "libraryforms", ''),'required');
 
 
         //Create a new textinput for the email
@@ -123,7 +122,7 @@ $strjs = '<script type="text/javascript">
         $objForm->addToForm($msgLabel->show()."<br/>");
         $objForm->addToForm($objmsg->show() . "<br />");
  $objForm->addRule('msgbox',$this->objLanguage->languageText
-("mod_libraryforms_commentmsgbox", "libraryforms", 'Message here .Message missing.'),'required');
+("mod_libraryform_commentmessage", "libraryforms", ''),'required');
 
 	$objCaptcha = $this->getObject('captcha', 'utilities');
 	$captcha = new textinput('feedback_captcha');
@@ -160,11 +159,11 @@ $strjs = '<script type="text/javascript">
     }
 
     private function getFormAction() {
-        $action = $this->getParam("action", "add");
+        $action = $this->getParam("action", "addfeedbk");
         if ($action == "edit") {
             $formAction = $this->uri(array("action" => "update"), "libraryforms");
         } else {
-            $formAction = $this->uri(array("action" => "add"), "libraryforms");
+            $formAction = $this->uri(array("action" => "addfeedbk"), "libraryforms");
         }
         return $formAction;
     }

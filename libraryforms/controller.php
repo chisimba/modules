@@ -45,9 +45,24 @@ class libraryforms extends controller {
 
    public function dispatch($action) {
      
-	//var_dump($action);die;
-        if($action=='add') {
+//var_dump($action);die;
+        if($action=='addeditform') {
             $this->saveRecord();
+	 }
+else 
+	if($action=='addthesis')
+        {
+            $this-> saveBookthesisRecord(); 
+	}
+else 
+        if($action=='addperiodical')
+        {
+          $this->saveperiodicalRecord();
+        }
+   else 
+        if ($action=='addfeedbk') 
+	{          
+	    $this->submitmsg(); 
         }
 
         return "editadd_tpl.php";
@@ -82,8 +97,7 @@ class libraryforms extends controller {
             $msg = 'badcaptcha';
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            //return 'form_tpl.php';
-            return 'editadd_tpl.php';
+            return 'confirm_tpl.php';
         }
 
         else{
@@ -142,7 +156,7 @@ $this->sendEmailNotification($title="email notification for distance user",$subj
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             //return 'form_tpl.php';
-            return 'editadd_tpl.php';
+            return 'confirm_tpl.php';
         }
         else {
         //insert into DB
@@ -199,7 +213,7 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             //return 'form_tpl.php';
-            return 'editadd_tpl.php';
+            return 'confirm_tpl.php';
         }
 
         else{
@@ -234,7 +248,7 @@ $this->sendEmailNotification($title="email for periodical books",$subject="perio
             $msg = 'badcaptcha';
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            return 'editadd_tpl.php';
+            return 'confirm_tpl.php';
         }
      else{
         //insert the data into DB
