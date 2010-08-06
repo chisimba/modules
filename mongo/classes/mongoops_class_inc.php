@@ -173,7 +173,7 @@ class mongoops extends object
      * @param  string $database   The name of the database containing the collection.
      * @return object Instance of the MongoCursor class.
      */
-    public function find($query=array(), $fields=array(), $collection=NULL, $database=NULL)
+    public function find(array $query=array(), array $fields=array(), $collection=NULL, $database=NULL)
     {
         return $this->getCollection($collection, $database)->find($query, $fields);
     }
@@ -187,7 +187,7 @@ class mongoops extends object
      * @param  string  $database   The database containing the collection.
      * @return boolean The results of the insert.
      */
-    public function insert($data, $collection=NULL, $database=NULL)
+    public function insert(array $data, $collection=NULL, $database=NULL)
     {
         return $this->getCollection($collection, $database)->insert($data);
     }
