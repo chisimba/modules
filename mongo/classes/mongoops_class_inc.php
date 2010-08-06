@@ -164,6 +164,21 @@ class mongoops extends object
     }
 
     /**
+     * Runs a query on a collection.
+     *
+     * @access public
+     * @param  array  $query      The query to run.
+     * @param  array  $fields     The fields to return.
+     * @param  string $collection The name of the collection to run the query on.
+     * @param  string $database   The name of the database containing the collection.
+     * @return object Instance of the MongoCursor class.
+     */
+    public function find($query=array(), $fields=array(), $collection=NULL, $database=NULL)
+    {
+        return $this->getCollection($collection, $database)->find($query, $fields);
+    }
+
+    /**
      * Inserts data into the collection.
      *
      * @access public
