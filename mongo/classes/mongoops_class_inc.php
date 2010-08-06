@@ -59,21 +59,144 @@ $GLOBALS['kewl_entry_point_run']) {
 class mongoops extends object
 {
     /**
-     * Instance of the dbsysconfig class of the sysconfig module.
+     * The name of the collection to default to.
      *
-     * @access protected
+     * @access private
+     * @var    string
+     */
+    private $collection;
+
+    /**
+     * Cache of MongoCollection objects.
+     *
+     * @access private
+     * @var    array
+     */
+    private $collectionCache;
+
+    /**
+     * The name of the database to default to.
+     *
+     * @access private
+     * @var    string
+     */
+    private $database;
+
+    /**
+     * Cache of MongoDB objects.
+     *
+     * @access private
+     * @var    array
+     */
+    private $databaseCache;
+
+    /**
+     * Instance of the Mongo class.
+     *
+     * @access private
      * @var    object
      */
-    protected $objSysConfig;
+    private $objMongo;
+
+    /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objSysConfig;
+
+    /**
+     * Retrieves the MongoCollection object according to the specified collection and database names.
+     *
+     * @access private
+     * @param  string $collection The name of the collection.
+     * @param  string $database   The name of the database.
+     * @return object The corresponding instance of the MongoCollection class.
+     */
+    private function getCollection($collection=NULL, $database=NULL)
+    {
+        // Use the default if the collection name has not been specified.
+        if ($collection === NULL) {
+            $collection = $this->collection;
+        }
+
+        // Use the default if the database name has not been specified.
+        if ($database === NULL) {
+            $database = $this->database;
+        }
+
+        // Ensure the Mongo connection has been initialised.
+        if (!is_object($this->objMongo)) {
+            $this->objMongo = new Mongo($this->objSysConfig->getValue('server', 'mongo'));
+        }
+
+        // Retrieve the MongoDB object from cache or create it.
+        if (array_key_exists($database, $this->databaseCache)) {
+            $objDatabase = $this->databaseCache[$database];
+        } else {
+            $objDatabase = $this->objMongo->$database;
+            $this->databaseCache[$database] = $objDatabase;
+            $this->collectionCache[$database] = array();
+        }
+
+        // Retrieve the MongoCollection object from cache or create it.
+        if (array_key_exists($collection, $this->collectionCache[$database])) {
+            $objCollection = $this->collectionCache[$database][$collection];
+        } else {
+            $objCollection = $objDatabase->$collection;
+            $this->collectionCache[$database][$collection] = $objCollection;
+        }
+
+        return $objCollection;
+    }
 
     /*
-     * Initialises some object properties.
+     * Initialises some of the object's properties.
      *
      * @access public
      */
     public function init()
     {
+        $this->collectionCache = array();
+        $this->databaseCache = array();
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    }
+
+    /**
+     * Inserts data into the collection.
+     *
+     * @access public
+     * @param  array   $data       The data to insert.
+     * @param  string  $collection The collection to insert the data into.
+     * @param  string  $database   The database containing the collection.
+     * @return boolean The results of the insert.
+     */
+    public function insert($data, $collection=NULL, $database=NULL)
+    {
+        return $this->getCollection($collection, $database)->insert($data);
+    }
+
+    /**
+     * Sets the name of the default collection.
+     *
+     * @access public
+     * @param  string $collection The name of the default collection.
+     */
+    public function setCollection($collection)
+    {
+        $this->collection = $collection;
+    }
+
+    /**
+     * Sets the name of the default database.
+     *
+     * @access public
+     * @param  string $database The name of the default database.
+     */
+    public function setDatabase($database)
+    {
+        $this->database = $database;
     }
 }
 
