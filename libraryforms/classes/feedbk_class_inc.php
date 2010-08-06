@@ -143,18 +143,16 @@ $strjs = '<script type="text/javascript">
         // Use the language object to label button
         // with the word save
 
-  $objButton->setValue(' '.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
+  $objButton->setValue(''.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
    $objForm->addToForm($objButton->show());
 
         return $objForm->show();
+       
 
     }
 
     function insertmsgRecord($name,$emaill,$msg) {
-        $id = $this->insert(array(
-            'name' => $name,
-            'emaill' => $emaill,
-            'msg' => $msg));
+        $id = $this->insert(array('name' => $name,'emaill' => $emaill,'msg' => $msg));
         return $id;
     }
 

@@ -100,10 +100,21 @@ class bookthesis extends dbTable {
         //----------TEXT INPUT and Labels--------------
         
   	 $titleLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcomment","libraryforms"),"title2");
-   	 $objForm->addToForm($titleLabel->show()."<br/>");
+   	 $objForm->addToForm($titleLabel->show()."<br/>"."<br/>");
     
   	$printLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttype","libraryforms"),"titleL");
-   	$objForm->addToForm($printLabel->show()."<br/>");
+   	$objForm->addToForm($printLabel->show()."<br/>"."<br/>");
+
+ 
+        $label1 = new label($this->objLanguage->languageText
+            ("mod_libraryforms_commentlabell","libraryforms"),"label1");
+        $objForm->addToForm($label1->show()."<br/>"."<br/>");
+        
+
+         
+        $label2 = new label($this->objLanguage->languageText
+            ("mod_libraryforms_commentlabell2","libraryforms"),"label2");
+       $objForm->addToForm($label2->show()."<br/>"."<br/>");
 
   
 
@@ -296,23 +307,6 @@ class bookthesis extends dbTable {
         $table->addCell($objcourse2->show(), '', 'center', 'left', '');
         $objForm->addRule('thesis_course',$this->objLanguage->languageText("mod_thesiscourse_required", "libraryforms"),'required');
        
-      //create label for heading
-        $table->startRow();
-        $label1 = new label($this->objLanguage->languageText
-            ("mod_libraryforms_commentlabell","libraryforms"),"label1");
-        $table->startRow();
-        $table->addCell($label1->show(), '', 'center', 'left', '');
-        $table->endRow();
-        
-     // create label for heading 2
-
-       $table->startRow();
-        $label2 = new label($this->objLanguage->languageText
-            ("mod_libraryforms_commentlabell2","libraryforms"),"label2");
-        $table->startRow();
-        $table->addCell($label2->show(), '', 'center', 'left', '');
-        $table->endRow();
-
         // create label for the box heading
 	$bookbLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commenttitlebox","libraryforms"),"box");

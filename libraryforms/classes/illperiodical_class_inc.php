@@ -89,15 +89,16 @@ class ILLperiodical extends dbTable {
         //---------text inputs and Labels--------------\\
 
         $titleLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentperiodicalrequest","libraryforms"),"title2");
-        $objForm->addToForm($titleLabel->show()."<br/>");
+        $objForm->addToForm($titleLabel->show()."<br/>"."<br/>");
 
         $title2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentcommtnt2","libraryforms"),"title2");
-        $objForm->addToForm($title2Label->show()."<br/>");
-
-
+        $objForm->addToForm($title2Label->show()."<br/>"."<br/>");
 
         $printLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentprint","libraryforms"),"print");
-        $objForm->addToForm($printLabel->show()."<br/>");
+        $objForm->addToForm($printLabel->show()."<br/>"."<br/>");
+ 
+        $label2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel2","libraryforms"),"label2");
+        $objForm->addToForm($label2Label->show()."<br/>"."<br/>");
 
 
         //Create a new textinput for the title
@@ -107,8 +108,6 @@ class ILLperiodical extends dbTable {
         $table->addCell($periodicalLabel->show(), '', 'center', 'left', '');
         $table->addCell($objperiodical->show(), '', 'center', 'left', '');
         $table->endRow();
-
-
 
         //Create a new textinput for postal
         $objvolume = new textinput('period_volume');
@@ -153,19 +152,6 @@ class ILLperiodical extends dbTable {
         $table->addCell($objauthor->show(), '', 'center', 'left', '');
         $table->endRow();
         $objForm->addRule('period_author',$this->objLanguage->languageText("mod_author2_required", "libraryforms"),'required');
-
-
-        //create an istance for the label
-        $labellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel","libraryforms"),"label");
-        $table->startRow();
-        $table->addCell($labellLabel->show(), '', 'center', 'left', '');
-        $table->endRow();
-
-
-        $label2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel2","libraryforms"),"label2");
-        $table->startRow();
-        $table->addCell($label2Label->show(), '', 'center', 'left', '');
-        $table->endRow();
 
         $reqLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentrequest","libraryforms"),"request");
         $table->startRow();
@@ -241,13 +227,18 @@ class ILLperiodical extends dbTable {
         $objForm->addRule('periodical_course',$this->objLanguage->languageText("mod_course_required", "libraryforms"),'required');
         $table->endRow();
 
+
+         //create an istance for the label
+        $labellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel","libraryforms"),"label");
+        $table->startRow();
+        $table->addCell($labellLabel->show(), '', 'center', 'left', '');
+        $table->endRow();
+
   	$table->startRow();
         $objCheck = new checkbox('arrayList[]');
         $objCheck->setValue($userPerm['id']);
         
-	//$objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        //Create a new label for oversears
-        $localLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
+	$localLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
         $table->addCell($objCheck->show(), '', 'center', 'left', '');
         $table->addCell($localLabel->show(), '', 'center', 'left', '');
         $objForm->addRule('id',$this->objLanguage->languageText("mod_part_required", "libraryforms", 'Please select the check box. checkbox not ticked.'),'required');
@@ -267,8 +258,6 @@ class ILLperiodical extends dbTable {
 
         $objCheck3 = new checkbox('arrayList[]');
         $objCheck3->setValue($userPerm['id']);
-        //$objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-
         $faxLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
         $table->addCell($objCheck3->show(), '', 'center', 'left', '');
         $table->addCell($faxLabel->show(), '', 'center', 'left', '');
@@ -276,7 +265,7 @@ class ILLperiodical extends dbTable {
         //Create a new textinput for fax
         $objCheck4 = new checkbox('arrayList[]');
         $objCheck4->setValue($userPerm['id']);
-       // $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+       
         //Create a new label for pg
         $uwcLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentuwc","libraryforms"),"uwc");
         $table->addCell($objCheck4->show(), '', 'center', 'left', '');
@@ -285,7 +274,7 @@ class ILLperiodical extends dbTable {
 
         $objCheck5 = new checkbox('arrayList[]');
         $objCheck5->setValue($userPerm['id']);
-       // $objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+      
 
         //Create a new label for ug
         $pgLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"pg");
@@ -298,25 +287,16 @@ class ILLperiodical extends dbTable {
 
         $objCheck6 = new checkbox('arrayList[]');
         $objCheck6->setValue($userPerm['id']);
-        //$objCheck6->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $ugLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentug","libraryforms"),"ug");
         $table->addCell($objCheck6->show(), '', 'center', 'left', '');
         $table->addCell($ugLabel->show(), '', 'center', 'left', '');
 
         $objCheck7 = new checkbox('arrayList[]');
         $objCheck7->setValue($userPerm['id']);
-       // $objCheck7->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
         $staffLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstaff","libraryforms"),"staff");
         $table->addCell($objCheck7->show(), '', 'center', 'left', '');
         $table->addCell($staffLabel->show(), '', 'center', 'left', '');
         $table->endRow();
-
-
-
-
-
-
-
 
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form

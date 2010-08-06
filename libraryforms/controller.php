@@ -69,7 +69,7 @@ else
     }
 
 
-    function saveRecord() {
+ function saveRecord() {
         if (!$_POST) { // Check that user has submitted a page
            return $this->nextAction(NULL);
 
