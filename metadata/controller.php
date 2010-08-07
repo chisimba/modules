@@ -60,7 +60,8 @@ class metadata extends controller
     public $objSysConfig;
     public $objUser;
     public $objConfig;
-    public $ObjExif;
+    public $objExif;
+    public $objMarc;
 
     /**
      * Initialises the instance variables.
@@ -78,6 +79,7 @@ class metadata extends controller
             $this->objUser       = $this->getObject('user', 'security');
             $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
             $this->objExif       = $this->getObject('exifmeta');
+            $this->objMarc       = $this->getObject('marcmeta');
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
                 $this->objActStream = $this->getObject('activityops','activitystreamer');
@@ -110,11 +112,19 @@ class metadata extends controller
                 break;
 
             case 'exif' :
-                // $image = "/var/www/test.jpg";
+                $image = "/var/www/test.jpg";
                 // $this->objExif->getImageType($image);
                 // var_dump($this->objExif->readHeaders($image));
                 // var_dump($this->objExif->readHeadersByKey($image, "IFD0"));
-                // echo $this->objExif->getExifThumb($image, 200, 200);
+                echo $this->objExif->getExifThumb($image, 200, 200);
+                break;
+                
+            case 'marc' :
+                $ccl_query = "au='scott'";
+                $recs = $this->objMarc->doQuery($ccl_query);
+                foreach($recs as $rec) {
+                    print $rec."<br />";
+                }
                 break;
 
             default:
