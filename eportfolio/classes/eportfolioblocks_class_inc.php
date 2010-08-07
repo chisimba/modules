@@ -251,5 +251,29 @@ class eportfolioBlocks extends dbTable {
             customException::cleanUp();
         }
     }
+    /*
+    *Function to return all visible Block Names
+    *
+    *return array
+    *@access private
+    *
+    */
+    public function getAllVisibleBlockName() {
+        //Get Visible MAIN blocks
+        $mainBlocks = $this->getVisibleBlocks('main');
+        //Get Visible IDENTIFICATION blocks
+        $identityBlocks = $this->getVisibleBlocks('identity');
+        //Array to store blockname
+        $blockname=array();
+        foreach ($mainBlocks as $mainBlock){
+            $blockname[] = $mainBlock["blockname"];
+            if($mainBlock["blockname"]=='identification'){
+                foreach ($identityBlocks as $identityBlock){
+                    $blockname[] = $identityBlock["blockname"];
+                }        
+            }
+        }
+        return $blockname;
+    }
 }
 ?>
