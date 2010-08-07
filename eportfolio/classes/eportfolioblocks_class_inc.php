@@ -71,10 +71,14 @@ class eportfolioBlocks extends dbTable {
      * Extra Functionality, adds eportfolio default blocks
      * if non-existent for logged in user
      *
-     * @param string $column left|right
+     * @param string $column main|identity
+     * @param string $userId user Id
      * @return array The block data from the table
      */
-    public function getVisibleBlocks($column) {
+    public function getVisibleBlocks($column, $userId=Null) {
+        //Use logged in user Id if empty/Null
+        if(empty($userId))
+          $userId = $this->objUser->userId();
         //Check if blocks exist for this user
         $hasBlocks = $this->getBlocks($column);
         if(empty($hasBlocks)){
@@ -102,7 +106,7 @@ class eportfolioBlocks extends dbTable {
             }
         }
         try {
-            return $this->getAll("WHERE userid = '".$this->objUser->userId()."' AND side = '$column' AND visible = '{$this->TRUE}' ORDER BY position ASC");
+            return $this->getAll("WHERE userid = '".$userId."' AND side = '$column' AND visible = '{$this->TRUE}' ORDER BY position ASC");
         } catch (customException $e) {
             customException::cleanUp();
         }
