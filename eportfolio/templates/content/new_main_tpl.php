@@ -2029,63 +2029,6 @@ foreach ($mainBlocks as $mainBlock) {
         ));
     }
 }
-
-/*
-//Activity Title
-$this->objmainTab->tabId = "maintab002";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordActivity", 'eportfolio') ,
-    'content' => $activityTable->show()
-));
-//Affiliation Title
-$this->objmainTab->tabId = "maintab003";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAffiliation", 'eportfolio') ,
-    'content' => $affiliationTable->show()
-));
-//Transcript Title
-$this->objmainTab->tabId = "maintab004";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordTranscripts", 'eportfolio') ,
-    'content' => $transcriptTable->show()
-));
-//Qcl Title
-$this->objmainTab->tabId = "maintab004";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordQualification", 'eportfolio') ,
-    'content' => $qclTable->show()
-));
-//Goals Title
-$this->objmainTab->tabId = "maintab006";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordGoals", 'eportfolio') ,
-    'content' => $goalsTable->show()
-));
-//Competency Title
-$this->objmainTab->tabId = "maintab007";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordCompetency", 'eportfolio') ,
-    'content' => $competencyTable->show()
-));
-//interest Title
-$this->objmainTab->tabId = "maintab008";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInterests", 'eportfolio') ,
-    'content' => $interestTable->show()
-));
-//reflection Title
-$this->objmainTab->tabId = "maintab009";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordReflections", 'eportfolio') ,
-    'content' => $reflectionTable->show()
-));
-//assertions Title
-$this->objmainTab->tabId = "maintab009";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAssertion", 'eportfolio') ,
-    'content' => $assertionstable->show()
-));
-*/
 //Category
 if ($hasAccess) {
     //Category
