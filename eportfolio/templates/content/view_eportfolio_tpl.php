@@ -30,12 +30,58 @@ echo "<div>" . $objHeading->show() . "</div>";
 //display user's names
 // Spacer
 $objTable->startRow();
-$objTable->addCell($identification . $demographics . $address . $contacts . $emails . $affiliation . $goals . $interests, 340, 'top', 'left');
-$objTable->addCell($qualification . $transcripts . $activity . $competency . $reflections . $assertions, Null, 'top', 'right');
+//Get Visible MAIN blocks
+$mainBlocks = $this->objEPBlocks->getVisibleBlocks('main');
+//Get Visible IDENTIFICATION blocks
+$identityBlocks = $this->objEPBlocks->getVisibleBlocks('identity');
+//Array to store blockname
+$blockname=array();
+foreach ($mainBlocks as $mainBlock){
+    $blockname[] = $mainBlock["blockname"];
+    if($mainBlock["blockname"]=='identification'){
+        foreach ($identityBlocks as $identityBlock){
+            $blockname[] = $identityBlock["blockname"];
+        }        
+    }
+}
+$str = "";
+foreach ($blockname as $block){
+    if ("identification" == $block)
+        $str .= $identification;
+    elseif ("demographics" == $block)
+        $str .= $demographics;
+    elseif ("address" == $block)
+        $str .= $address;
+    elseif ("contact" == $block)
+        $str .= $contact;
+    elseif ("email" == $block)
+        $str .= $email;
+    elseif ("affiliation" == $block)
+        $str .= $affiliation;
+    elseif ("goals" == $block)
+        $str .= $goals;
+    elseif ("interests" == $blockname)
+        $str .= $interests;
+    elseif ("qualifications" == $block)
+        $str .= $qualifications;
+    elseif ("transcripts" == $block)
+        $str .= $transcripts;
+    elseif ("activities" == $block)
+        $str .= $activities;
+    elseif ("competencies" == $block)
+        $str .= $competencies;
+    elseif ("competencies" == $block)
+        $str .= $competencies;
+    elseif ("reflections" == $block)
+        $str .= $reflections;
+    elseif ("assertions" == $block)
+        $str .= $assertions;
+}
+$objTable->addCell($str, Null, 'top', 'right');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell('&nbsp;');
-$objTable->addCell($linkManage, Null, 'top', 'right');
+//$objTable->addCell('&nbsp;');
+$objTable->addCell($linkManage, Null, 'top', 'left');
 $objTable->endRow();
 echo $objTable->show();
 ?>
