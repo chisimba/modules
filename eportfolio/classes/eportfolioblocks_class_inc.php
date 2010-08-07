@@ -68,6 +68,8 @@ class eportfolioBlocks extends dbTable {
 
     /**
      * Method to retrieve the visible blocks
+     * Extra Functionality, adds eportfolio default blocks
+     * if non-existent for logged in user
      *
      * @param string $column left|right
      * @return array The block data from the table
