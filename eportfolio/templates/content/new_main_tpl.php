@@ -1902,48 +1902,135 @@ if ($hasAccess) {
     
 }
 //End View categorytype
+
 //Information Title
 $objinfoTitles->str = $objUser->getSurname() . $objLanguage->languageText("phrase_eportfolio_userinformation", 'eportfolio');
 $this->objmainTab = $this->newObject('tabber', 'htmlelements');
 $this->objTab = $this->newObject('tabber', 'htmlelements');
-//Names tab
 $this->objTab->init();
-$this->objTab->tabId = "minitab001";
-$this->objTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("word_name") ,
-    'content' => $userTable->show()
-));
-//Address Tab
-$this->objTab->tabId = "minitab002";
-$this->objTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAddress", 'eportfolio') ,
-    'content' => $addressTable->show()
-));
-//Contact Tab
-$this->objTab->tabId = "minitab002";
-$this->objTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordContact", 'eportfolio') ,
-    'content' => $contactTable->show()
-));
-//Email Tab
-$this->objTab->tabId = "minitab002";
-$this->objTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordEmail", 'eportfolio') ,
-    'content' => $emailTable->show()
-));
-//Demographics Tab
-$this->objTab->tabId = "minitab002";
-$this->objTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordDemographics", 'eportfolio') ,
-    'content' => $demographicsTable->show()
-));
-$infotabs = $this->objTab->show();
 $this->objmainTab->init();
-$this->objmainTab->tabId = "maintab001";
-$this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInformation", 'eportfolio') ,
-    'content' => $infotabs
-));
+
+//For each tab, check if made visible and order as per the eportfolio blocks
+
+//Get Visible MAIN blocks
+$mainBlocks = $this->objEPBlocks->getVisibleBlocks('main');
+//Step through each Block
+foreach ($mainBlocks as $mainBlock) {
+    if ($mainBlock["title"]=='Identification') {
+        //Names tab (Visible By Default)
+        $this->objTab->tabId = "minitab001";
+        $this->objTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("word_name") ,
+            'content' => $userTable->show()
+        ));
+        //Get Visible IDENTIFICATION blocks
+        $identityBlocks = $this->objEPBlocks->getVisibleBlocks('identity');
+        //Step through each Block
+        foreach ($identityBlocks as $identityBlock) {
+            if  ($identityBlock["title"]=='Address') {
+                //Address Tab
+                $this->objTab->tabId = "identitytab001";
+                $this->objTab->addTab(array(
+                    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAddress", 'eportfolio') ,
+                    'content' => $addressTable->show()
+                ));
+            } elseif  ($identityBlock["title"]=='Contact') {
+                //Contact Tab
+                $this->objTab->tabId = "identitytab002";
+                $this->objTab->addTab(array(
+                    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordContact", 'eportfolio') ,
+                    'content' => $contactTable->show()
+                ));
+            } elseif  ($identityBlock["title"]=='Email') {
+                //Email Tab
+                $this->objTab->tabId = "identitytab003";
+                $this->objTab->addTab(array(
+                    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordEmail", 'eportfolio') ,
+                    'content' => $emailTable->show()
+                ));
+            } elseif  ($identityBlock["title"]=='Demographics') {
+                //Demographics Tab
+                $this->objTab->tabId = "identitytab004";
+                $this->objTab->addTab(array(
+                    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordDemographics", 'eportfolio') ,
+                    'content' => $demographicsTable->show()
+                ));
+            }
+        }
+        $infotabs = $this->objTab->show();
+        //Identification Tab
+        $this->objmainTab->tabId = "maintab001";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInformation", 'eportfolio') ,
+            'content' => $infotabs
+        ));
+    } elseif  ($mainBlock["title"]=='Activities') {
+        //Activity Title
+        $this->objmainTab->tabId = "maintab002";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordActivity", 'eportfolio') ,
+            'content' => $activityTable->show()
+        ));        
+    } elseif  ($mainBlock["title"]=='Affiliation') {
+        //Affiliation Title
+        $this->objmainTab->tabId = "maintab003";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAffiliation", 'eportfolio') ,
+            'content' => $affiliationTable->show()
+        ));        
+    } elseif  ($mainBlock["title"]=='Transcripts') {
+        //Transcripts Title
+        $this->objmainTab->tabId = "maintab004";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordTranscripts", 'eportfolio') ,
+            'content' => $transcriptTable->show()
+        ));
+    } elseif  ($mainBlock["title"]=='Qualifications') {
+        //Qualifications Title
+        $this->objmainTab->tabId = "maintab005";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordQualification", 'eportfolio') ,
+            'content' => $qclTable->show()
+        ));
+    } elseif  ($mainBlock["title"]=='Goals') {
+        //Goals Title
+        $this->objmainTab->tabId = "maintab006";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordGoals", 'eportfolio') ,
+            'content' => $goalsTable->show()
+        ));
+    } elseif  ($mainBlock["title"]=='Competencies') {
+        //Competencies Title
+        $this->objmainTab->tabId = "maintab007";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordCompetency", 'eportfolio') ,
+            'content' => $competencyTable->show()
+        ));
+    } elseif  ($mainBlock["title"]=='Interests') {
+        //Interests Title
+        $this->objmainTab->tabId = "maintab008";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordInterests", 'eportfolio') ,
+            'content' => $interestTable->show()
+        ));
+    } elseif  ($mainBlock["title"]=='Reflections') {
+        //Reflections Title
+        $this->objmainTab->tabId = "maintab009";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordReflections", 'eportfolio') ,
+            'content' => $reflectionTable->show()
+        ));
+    } elseif  ($mainBlock["title"]=='Assertions') {
+        //Assertions Title
+        $this->objmainTab->tabId = "maintab010";
+        $this->objmainTab->addTab(array(
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAssertion", 'eportfolio') ,
+            'content' => $assertionstable->show()
+        ));
+    }
+}
+
+/*
 //Activity Title
 $this->objmainTab->tabId = "maintab002";
 $this->objmainTab->addTab(array(
@@ -1998,6 +2085,7 @@ $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordAssertion", 'eportfolio') ,
     'content' => $assertionstable->show()
 ));
+*/
 //Category
 if ($hasAccess) {
     //Category

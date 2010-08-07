@@ -10,6 +10,7 @@ $homelink = new link($this->uri(array(
 $homelink->link = $this->objLanguage->languageText("mod_eportfolio_eportfoliohome", "eportfolio", "ePortfolio Home");
 $homeManage = $homelink->show();
 $pageLink.= "<li>&nbsp;&nbsp;&nbsp;" . $homeManage . "</li>";
+//Configure
 $configlink = new link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'configureviews'
@@ -17,6 +18,17 @@ $configlink = new link($this->uri(array(
 $configlink->link = $this->objLanguage->languageText("mod_eportfolio_configure", "eportfolio", "Configure") . " " . $this->objLanguage->languageText("mod_eportfolio_wordGroup", "eportfolio", "Group") . " " . $this->objLanguage->languageText("mod_eportfolio_views", "eportfolio", "Views");
 $configManage = $configlink->show();
 $pageLink.= "<li>&nbsp;&nbsp;&nbsp;" . $configManage . "</li>";
+
+//Setup (Hide/Show Tabs) ePortfolio
+$setuplink = new link($this->uri(array(
+    'module' => 'eportfolio',
+    'action' => 'admin'
+)));
+$setuplink->link = $this->objLanguage->languageText("mod_eportfolio_hideshow", "eportfolio", "Hide/Show Tabs");
+$setupeP = $setuplink->show();
+$pageLink.= "<li>&nbsp;&nbsp;&nbsp;" . $setupeP . "</li>";
+
+//Manage ePortfolio View
 $mngviewlink = new link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'myview'

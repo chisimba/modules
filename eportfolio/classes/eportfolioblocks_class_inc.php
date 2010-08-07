@@ -73,8 +73,34 @@ class eportfolioBlocks extends dbTable {
      * @return array The block data from the table
      */
     public function getVisibleBlocks($column) {
+        //Check if blocks exist for this user
+        $hasBlocks = $this->getBlocks($column);
+        if(empty($hasBlocks)){
+            if ($column=='main'){
+                //Create a simple array to hold the block names
+                $mainBlocks = array('identification', 'activities', 'affiliation', 'transcripts', 'qualifications', 'goals', 'competencies', 'interests', 'reflections', 'assertions');
+                foreach($mainBlocks as $mainBlock){
+                    //Create array to hold block data
+                    $blockData = array('title'=>ucfirst(strtolower($mainBlock)), 'side'=>$column,  'isblock'=>TRUE, 'blockname'=>$mainBlock, 'blockmodule'=>'eportfolio');
+                    $this->insertBlock($blockData);
+                }
+                //Insert for Identity blocks as well
+                //Check if blocks exist for this user
+                $column='identity';
+                $hasBlocks = $this->getBlocks($column);
+                if(empty($hasBlocks)){
+                    //Create a simple array to hold the block names
+                     $mainBlocks = array('address', 'contact', 'email', 'demographics');
+                    foreach($mainBlocks as $mainBlock){
+                        //Create array to hold block data
+                        $blockData = array('title'=>ucfirst(strtolower($mainBlock)), 'side'=>$column,  'isblock'=>TRUE, 'blockname'=>$mainBlock, 'blockmodule'=>'eportfolio');
+                        $this->insertBlock($blockData);
+                    }
+                }
+            }
+        }
         try {
-            return $this->getAll("WHERE side = '$column' AND visible = '{$this->TRUE}' ORDER BY position ASC");
+            return $this->getAll("WHERE userid = '".$this->objUser->userId()."' AND side = '$column' AND visible = '{$this->TRUE}' ORDER BY position ASC");
         } catch (customException $e) {
             customException::cleanUp();
         }
@@ -88,7 +114,7 @@ class eportfolioBlocks extends dbTable {
      */
     public function getBlocks($column) {
         try {
-            return $this->getAll("WHERE side = '$column' ORDER BY position ASC");
+            return $this->getAll("WHERE userid = '".$this->objUser->userId()."' AND side = '$column' ORDER BY position ASC");
         } catch (customException $e) {
             customException::cleanUp();
         }
@@ -118,7 +144,7 @@ class eportfolioBlocks extends dbTable {
 
     private function getNextPos($column) {
         try {
-            $ret = $this->getArray("SELECT MAX(position) FROM tbl_eportfolio_blocks WHERE side = '{$column}'");
+            $ret = $this->getArray("SELECT MAX(position) FROM tbl_eportfolio_blocks WHERE userid = '".$this->objUser->userId()."' AND side = '{$column}'");
             $r = current($ret);
             $pos = current($r) + 1;
             return $pos;
@@ -138,7 +164,13 @@ class eportfolioBlocks extends dbTable {
             $arrData['visible'] = $this->TRUE;
             $arrData['datelastupdated'] = $this->now();
             $arrData['updatedby'] = $this->objUser->userId();
+            $arrData['title'] = $arrData['title'];
+            $arrData['side'] = $arrData['side'];
+            $arrData['isblock'] = $arrData['isblock'];
+            $arrData['blockname'] = $arrData['blockname'];
+            $arrData['blockmodule'] = $arrData['blockmodule'];
             $arrData['position'] = $this->getNextPos($arrData['side']);
+            $arrData['userid'] = $this->objUser->userId();
             //var_dump($arrData);
             return $this->insert($arrData);
         } catch (customException $e) {
@@ -172,8 +204,8 @@ class eportfolioBlocks extends dbTable {
     function moveRecUp($id) {
         try {
             $rec = $this->getRow('id',$id);
-            if ($rec['position'] > 1) {
-                $sql = "SELECT MAX(position) AS above FROM tbl_eportfolio_blocks WHERE side = '{$rec['side']}' AND position < '{$rec['position']}'";
+            if ($rec['position'] >= 1) {
+                $sql = "SELECT MAX(position) AS above FROM tbl_eportfolio_blocks WHERE userid = '".$this->objUser->userId()."' AND side = '{$rec['side']}' AND position < '{$rec['position']}'";
                 $pPos = $this->getArray($sql);
                 $pPos = current($pPos);
                 if ($pPos['above']!=null) {
@@ -184,7 +216,6 @@ class eportfolioBlocks extends dbTable {
                     $this->update('id',$id,$rec);
                     $this->update('id',$previous['id'],$previous);
                 }
-
             }
         } catch (customException $e) {
                 customException::cleanUp();
@@ -200,7 +231,7 @@ class eportfolioBlocks extends dbTable {
     function moveRecDown($id) {
         try {
             $rec = $this->getRow('id',$id);
-            $pPos = $this->getArray("SELECT min(position) AS below FROM tbl_eportfolio_blocks WHERE side = '{$rec['side']}' AND position > '{$rec['position']}'");
+            $pPos = $this->getArray("SELECT min(position) AS below FROM tbl_eportfolio_blocks WHERE userid = '".$this->objUser->userId()."' AND side = '{$rec['side']}' AND position > '{$rec['position']}'");
             $pPos = current($pPos);
             if ($pPos['below']!=null) {
                 $next = $this->getAll("WHERE side = '{$rec['side']}' AND position = '{$pPos['below']}'");

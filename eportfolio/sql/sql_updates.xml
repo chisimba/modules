@@ -190,4 +190,16 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_eportfolio_blocks</table>
+        <version>4.259</version>
+        <description>Added a field to store userId</description>
+        <data>
+            <add>
+                <name>userid</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
 </updates>

@@ -150,11 +150,8 @@ class eportfolio extends controller
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
                 case 'admin':
-                    if (!$this->objUser->isAdmin()) {
-                        return 'new_main_tpl.php';
-                    } else {
-                        return 'eportfolio_setup_tpl.php';
-                    }
+                    $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+                    return 'eportfolio_setup_tpl.php';                    
                 case 'editblock':
                     if (!$this->objUser->isAdmin()) {
                         return 'new_main_tpl.php';
