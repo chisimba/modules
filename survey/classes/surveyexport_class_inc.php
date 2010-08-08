@@ -28,7 +28,7 @@ class surveyexport extends object
 
         foreach ($questions as $question) {
             $answers[$question['id']] = $this->objAnswer->listRows($question['id']);
-            $headings[]               = $question['question_text'];
+            $headings[]               = preg_replace('/\s+/', ' ', trim($question['question_text']));
             $values[$question['id']]  = $this->objQuestionRow->listQuestionRows($question['id']);
         }
 
