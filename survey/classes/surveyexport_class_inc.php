@@ -65,6 +65,14 @@ class surveyexport extends object
     private $objAnswer;
 
     /**
+     * Instance of the dbitem class of the survey module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objItem;
+
+    /**
      * Instance of the dbquestion class of the survey module.
      *
      * @access private
@@ -96,6 +104,7 @@ class surveyexport extends object
     public function init()
     {
         $this->objAnswer      = $this->getObject('dbanswer');
+        $this->objItem        = $this->getObject('dbitem');
         $this->objQuestion    = $this->getObject('dbquestion');
         $this->objQuestionRow = $this->getObject('dbquestionrow');
         $this->objResponse    = $this->getObject('dbresponse');
@@ -114,6 +123,7 @@ class surveyexport extends object
 
         $answers   = array();
         $headings  = array('Response ID');
+        $items     = array();
         $output    = fopen('php://output', 'w');
         $questions = $this->objQuestion->listQuestions($surveyId);
         $responses = $this->objResponse->listResponses($surveyId);
@@ -122,6 +132,7 @@ class surveyexport extends object
         foreach ($questions as $question) {
             $answers[$question['id']] = $this->objAnswer->listRows($question['id']);
             $headings[]               = preg_replace('/\s+/', ' ', trim($question['question_text']));
+            $items[$question['id']]   = $this->objItem->getResults($question['id']);
             $values[$question['id']]  = $this->objQuestionRow->listQuestionRows($question['id']);
         }
 
@@ -142,6 +153,17 @@ class surveyexport extends object
                            foreach ($values[$question['id']] as $value) {
                                if ($value['row_order'] == $answer['answer_given']) {
                                    $row[]      = $value['row_text'];
+                                   $valueFound = TRUE;
+
+                                   break;
+                               }
+                           }
+                       }
+
+                       if (!$valueFound && is_array($items[$question['id']])) {
+                           foreach ($items[$question['id']] as $item) {
+                               if ($item['response_id'] == $response['id'] && $item['answer_id'] == $answer['id']) {
+                                   $row[]      = $item['item_value'];
                                    $valueFound = TRUE;
 
                                    break;
