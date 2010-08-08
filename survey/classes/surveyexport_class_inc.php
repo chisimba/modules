@@ -18,7 +18,7 @@ class surveyexport extends object
     public function CSV($surveyId)
     {
         $answers   = array();
-        $headings  = array();
+        $headings  = array('Response ID');
         $output    = fopen('php://output', 'w');
         $questions = $this->objQuestion->listQuestions($surveyId);
         $responses = $this->objResponse->listResponses($surveyId);
@@ -33,24 +33,37 @@ class surveyexport extends object
         fputcsv($output, $headings);
 
         foreach ($responses as $response) {
-            $row = array();
+            $row = array($response['id']);
 
             foreach ($questions as $question) {
+               $answerFound = FALSE;
+
                foreach ($answers[$question['id']] as $answer) {
                    if ($answer['response_id'] == $response['id']) {
+                       $answerFound = TRUE;
+                       $valueFound  = FALSE;
+
                        if (array_key_exists($question['id'], $values)) {
                            foreach ($values[$question['id']] as $value) {
                                if ($value['row_order'] == $answer['answer_given']) {
-                                   $row[] = $value['row_text'];
+                                   $row[]      = $value['row_text'];
+                                   $valueFound = TRUE;
+
                                    break;
                                }
                            }
-                       } else {
+                       }
+
+                       if (!$valueFound) {
                            $row[] = $answer['answer_given'];
                        }
 
                        break;
                    } 
+               }
+
+               if (!$answerFound) {
+                   $row[] = 'N/A';
                }
             }
 
