@@ -44,7 +44,7 @@ class survey extends controller {
     public $isAdmin;
 
     /**
-     * Instance of the dbexport class of the survey module.
+     * Instance of the surveyexport class of the survey module.
      *
      * @access private
      * @var    object
@@ -93,7 +93,7 @@ class survey extends controller {
         $this->session = $this->newObject ( 'surveysession' );
         $this->validate = $this->newObject ( 'validate' );
         $this->questions = $this->newObject ( 'questions' );
-        $this->objExport = $this->getObject('dbexport');
+        $this->objExport = $this->getObject('surveyexport');
 
         //Get the activity logger class
         $this->objLog = $this->getObject ( 'logactivity', 'logger' );
@@ -974,9 +974,9 @@ class survey extends controller {
                 }
                 break;
 
-            case 'exporttocsv':
+            case 'exportcsv':
                 $surveyId = $this->getParam('survey_id');
-                $this->objExport->createCSV($surveyId);
+                $this->objExport->CSV($surveyId);
                 break;
 
             default :
