@@ -128,7 +128,7 @@ class surveyexport extends object
         fputcsv($output, $headings);
 
         foreach ($responses as $response) {
-            $row = array($response['id']);
+            $row = array($response['respondent_number']);
 
             foreach ($questions as $question) {
                $answerFound = FALSE;
