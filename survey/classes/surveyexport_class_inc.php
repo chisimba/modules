@@ -45,7 +45,7 @@ class surveyexport extends object
                        $answerFound = TRUE;
                        $valueFound  = FALSE;
 
-                       if (array_key_exists($question['id'], $values)) {
+                       if (is_array($values[$question['id']])) {
                            foreach ($values[$question['id']] as $value) {
                                if ($value['row_order'] == $answer['answer_given']) {
                                    $row[]      = $value['row_text'];
