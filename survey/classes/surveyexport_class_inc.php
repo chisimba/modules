@@ -15,7 +15,7 @@ class surveyexport extends object
         $this->objResponse    = $this->getObject('dbresponse');
     }
 
-    public function getCSV($surveyId)
+    public function CSV($surveyId)
     {
         $answers   = array();
         $headings  = array();
@@ -42,12 +42,13 @@ class surveyexport extends object
                            foreach ($values[$question['id']] as $value) {
                                if ($value['row_order'] == $answer['answer_given']) {
                                    $row[] = $value['row_text'];
-                                    break;
+                                   break;
                                }
                            }
                        } else {
                            $row[] = $answer['answer_given'];
                        }
+
                        break;
                    } 
                }
