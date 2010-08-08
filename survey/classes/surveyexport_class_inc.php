@@ -56,11 +56,43 @@ $GLOBALS['kewl_entry_point_run']) {
  */
 class surveyexport extends object
 {
+    /**
+     * Instance of the dbanswer class of the survey module.
+     *
+     * @access private
+     * @var    object
+     */
     private $objAnswer;
+
+    /**
+     * Instance of the dbquestion class of the survey module.
+     *
+     * @access private
+     * @var    object
+     */
     private $objQuestion;
+
+    /**
+     * Instance of the dbquestionrow class of the survey module.
+     *
+     * @access private
+     * @var    object
+     */
     private $objQuestionRow;
+
+    /**
+     * Instance of the dbresponse class of the survey module.
+     *
+     * @access private
+     * @var    object
+     */
     private $objResponse;
 
+    /**
+     * Initialises the object properties.
+     *
+     * @access public
+     */
     public function init()
     {
         $this->objAnswer      = $this->getObject('dbanswer');
@@ -69,6 +101,12 @@ class surveyexport extends object
         $this->objResponse    = $this->getObject('dbresponse');
     }
 
+    /**
+     * Exports a survey to CSV format.
+     *
+     * @access public
+     * @param  string $surveyId The id of the survey to export.
+     */
     public function CSV($surveyId)
     {
         header("Content-Disposition: filename=$surveyId.csv");
