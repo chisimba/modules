@@ -17,6 +17,7 @@ class surveyexport extends object
 
     public function CSV($surveyId)
     {
+        header("Content-Disposition: filename=$surveyId.csv");
         header('Content-Type: text/csv; charset=UTF-8');
 
         $answers   = array();
