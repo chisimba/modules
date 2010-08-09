@@ -61,6 +61,7 @@ class dbgradebook2_grades extends dbTable
     {
         $id = $this->insert(array(
             'learnerid' => $learnerId,
+            'columnid' => $columnId,
             'totalgrade' => $totalGrade
         ));
         return $id;
