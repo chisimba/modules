@@ -32,6 +32,11 @@ $tablename = 'tbl_gradebook2_weightedcolumn';
        'length' => 64,
        'notnull' => TRUE
        ),
+    'contextcode' => array(
+        'type' => 'text',
+        'length' => 255,
+        'notnull' => TRUE
+        ),
    'display_name' => array(
        'type' => 'text',
        'length' => 64,

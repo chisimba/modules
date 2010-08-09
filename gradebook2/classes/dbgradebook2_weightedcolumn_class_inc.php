@@ -18,6 +18,12 @@ class dbgradebook2_weightedcolumn extends dbTable
     {
         parent::init('tbl_gradebook2_weightedcolumn');
         $this->objUser = &$this->getObject('user', 'security');
+        $this->objDBGrades = &$this->getObject('dbgradebook2_grades', 'gradebook2');
+        // Load Context Object
+        $this->objContext = $this->getObject('dbcontext', 'context');
+
+        // Store Context Code
+        $this->contextCode = $this->objContext->getContextCode();
     }
     /**
      * Return all records
@@ -52,6 +58,22 @@ class dbgradebook2_weightedcolumn extends dbTable
         }
     }
     /**
+     * Return all context records
+     * @return array The values
+     */
+    function getContextGrades($contextcode=Null, $where = Null)
+    {
+        if (empty($contextcode))
+            $contextcode = $this->contextCode;
+        $sql = "SELECT * FROM tbl_gradebook2_weightedcolumn where contextcode='".$contextcode."'".$where;
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $data;
+        } else {
+            return FALSE;
+        }
+    }
+    /**
      * Insert a record
      * @param string $learnerId The learner ID
      * @param array $colArr Contains data for every column
@@ -62,6 +84,7 @@ class dbgradebook2_weightedcolumn extends dbTable
         $id = $this->insert(array(
             'userid' => $userId,
             'column_name' => $colArr['column_name'],
+            'contextcode' => $colArr['contextcode'],
             'display_name' => $colArr['display_name'],
             'description' => $colArr['description'],
             'primary_display' => $colArr['primary_display'],
@@ -85,6 +108,7 @@ class dbgradebook2_weightedcolumn extends dbTable
     {
         $this->update("id", $id, array(
             'column_name' => $colArr['column_name'],
+            'contextcode' => $colArr['contextcode'],
             'display_name' => $colArr['display_name'],
             'description' => $colArr['description'],
             'primary_display' => $colArr['primary_display'],
@@ -105,6 +129,26 @@ class dbgradebook2_weightedcolumn extends dbTable
     function deleteSingle($id) 
     {
         $this->delete("id", $id);
+    }
+    /**
+     * Return json for context logs
+     * @param string $contextcode Context Code
+     * @return json The Context Grades
+     */
+    function jsonContextGrades( $contextcode = Null, $start, $limit ) 
+    {
+        if (empty($contextcode))
+            $contextcode = $this->contextCode;
+        if ( !empty($start) && !empty($limit) ) 
+         $where = " LIMIT " . $start . " , " . $limit;
+        else
+         $where = "";
+        $contextGrades = $this->getContextGrades( $contextcode, $where );
+
+        $gradeCount = (count($contextGrades));
+        $gradeArray = array();
+        foreach ( $contextGrades as $contextGrade ) {
+        }
     }
 }
 ?>
