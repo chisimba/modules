@@ -4,6 +4,9 @@
  */
 package org.wits.client;
 
+//import com.google.gwt.user.client.Element;
+//import com.google.gwt.user.client.Event;
+//import com.extjs.gxt.ui.client.GXT;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.data.BaseListLoader;
 import com.extjs.gxt.ui.client.data.HttpProxy;
@@ -13,6 +16,9 @@ import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.DomEvent;
+import com.extjs.gxt.ui.client.event.EditorEvent;
+import com.extjs.gxt.ui.client.event.GridEvent;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.MenuEvent;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
@@ -20,6 +26,7 @@ import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
 import com.extjs.gxt.ui.client.event.SelectionChangedListener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.store.Record;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
@@ -37,6 +44,8 @@ import com.extjs.gxt.ui.client.widget.grid.CheckBoxSelectionModel;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
+import com.extjs.gxt.ui.client.widget.grid.AggregationRowConfig;
+import com.extjs.gxt.ui.client.widget.grid.CellSelectionModel;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
@@ -83,6 +92,12 @@ public class DocumentListPanel extends LayoutContainer {
     static int version;
     private SimpleComboBox<String> submitCombo = new SimpleComboBox<String>();
     private String mode = Constants.main.getMode();
+    private boolean editing;
+    private CellEditor activeEditor;
+    private CellEditor ed;
+    private Record activeRecord;
+    private Listener<DomEvent> editorListener;
+    private Listener<GridEvent> gridListener;
 
     public DocumentListPanel(Main main) {
         super();
@@ -153,8 +168,16 @@ public class DocumentListPanel extends LayoutContainer {
         addContextMenu();
         grid.setContextMenu(contextMenu);
 
+        /*   try {
+        AggregationRowConfig<ModelData> row = new AggregationRowConfig<ModelData>();
+        grid.getColumnModel().addAggregationRow(row);//.getAt(6).get("status").toString();
+        String temp = row.getModel().get("status");
+        System.out.println(temp);
+        } catch (NullPointerException npe) {
+        System.out.println("npe");
+        }
         //int noRows =
-      /*
+        /*
         
         for (int i = 0; i < 1; i++) {
         ModelData record = store.getModels().get(i);
@@ -255,6 +278,7 @@ public class DocumentListPanel extends LayoutContainer {
         add(panel);
         defaultParams = "?module=wicid&action=getdocuments&mode=" + main.getMode();
         refreshDocumentList(defaultParams);
+
     }
 
     private void approveDocs() {
@@ -338,7 +362,7 @@ public class DocumentListPanel extends LayoutContainer {
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
                         System.out.println(response.getText());
-                       // version = Integer.parseInt(response.getText());
+                        // version = Integer.parseInt(response.getText());
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
                     }
@@ -442,7 +466,7 @@ public class DocumentListPanel extends LayoutContainer {
                 if (statusS.equalsIgnoreCase("faculty")) {
                     status = 3;
                 }
-                if (statusS.equalsIgnoreCase("senate")){
+                if (statusS.equalsIgnoreCase("senate")) {
                     status = 4;
                 }
 
@@ -497,16 +521,101 @@ public class DocumentListPanel extends LayoutContainer {
         submitDialog.show();
     }
 
+    public void stopEditing() {
+        stopEditing(false);
+    }
+
+    public void stopEditing(boolean cancel) {
+        if (activeEditor != null) {
+            if (cancel) {
+                activeEditor.cancelEdit();
+            } else {
+                activeEditor.completeEdit();
+            }
+        }
+        activeEditor = null;
+    }
+
+
+    public void startEditing(int row, int col) {
+        stopEditing();
+        if (cm.isCellEditable(col)) {
+            grid.getView().ensureVisible(row, col, false);
+            ModelData m = store.getAt(row);
+            activeRecord = store.getRecord(m);
+
+            String field = cm.getDataIndex(col);
+            GridEvent e = new GridEvent(grid);
+            e.setModel(m);
+            e.setProperty(field);
+            e.setRowIndex(row);
+            e.setColIndex(col);
+            if (fireEvent(Events.BeforeEdit, e)) {
+                editing = true;
+                ed = cm.getEditor(col);
+                ed.row = row;
+                ed.col = col;
+
+                if (!ed.isRendered()) {
+                    ed.render((Element)grid.getView().getEditorParent());
+                }
+
+                if (editorListener == null) {
+                    editorListener = new Listener<DomEvent>() {
+
+                        public void handleEvent(DomEvent e) {
+                            if (e.getType() == Events.Complete) {
+                                EditorEvent ee = (EditorEvent) e;
+                                onEditComplete((CellEditor) ee.getEditor(), ee.getValue(), ee.getStartValue());
+                            } else if (e.getType() == Events.SpecialKey) {
+                            //    ((CellSelectionModel) sm).onEditorKey(e);
+                            }
+                        }
+                    };
+                }
+            }
+            ed.addListener(Events.Complete, editorListener);
+            ed.addListener(Events.SpecialKey, editorListener);
+
+            activeEditor = ed;
+
+            ed.startEdit((Element) grid.getView().getCell(row, col), m.get(field));
+        }
+    }
+
+    protected void onEditComplete (CellEditor ed, Object value, Object startValue){
+        editing = false;
+        activeEditor = null;
+        ed.removeListener(Events.SpecialKey, editorListener);
+        Record r = activeRecord;
+        String field = cm.getDataIndex(ed.col);
+
+        if ((value == null && startValue !=null)|| !value.equals(startValue)){
+            GridEvent ge = new GridEvent(grid);
+            ge.setRecord(r);
+            ge.setProperty(field);
+            ge.setValue(value);
+            ge.setStartValue(startValue);
+            ge.setRowIndex(ed.row);
+            ge.setColIndex(ed.col);
+
+            if (fireEvent(Events.ValidateEdit, ge)){
+                r.set(ge.getProperty(), ge.getValue());
+                fireEvent(Events.AfterEdit, ge);
+            }
+        }
+        grid.getView().focusCell(ed.row, ed.col, true);
+    }
+
     private void deleteDocs() {
         String ids = "";
+
         for (ModelData row : selectedRows) {
             ids += row.get("docid") + ",";
         }
-        String url =
-                GWT.getHostPageBaseURL()
-                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=deletedocs&docids=" + ids;
-        RequestBuilder builder =
-                new RequestBuilder(RequestBuilder.GET, url);
+        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                + "?module=wicid&action=deletedocs&docids=" + ids;
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 
         try {
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -517,7 +626,6 @@ public class DocumentListPanel extends LayoutContainer {
 
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
-
                         refreshDocumentList(defaultParams);
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot delete document", null);
@@ -571,15 +679,18 @@ public class DocumentListPanel extends LayoutContainer {
 
             public void handleEvent(MessageBoxEvent ce) {
                 Button btn = ce.getButtonClicked();
+
                 if (btn.getText().equalsIgnoreCase("Yes")) {
                     // check if the document has an attachment
                     String attachments = "";
+
                     for (ModelData row : selectedRows) {
                         attachments += row.get("Attachment") + ",";
                     }
 
                     boolean status = false;
                     status = checkAttachments(attachments);
+
                     if (status) {
                         approveDocs();
                     } else {
@@ -672,7 +783,6 @@ public class DocumentListPanel extends LayoutContainer {
                 submitDocument();
             }
         });
-
         if (mode.equalsIgnoreCase("APO")) {
             submitMenuItem.setEnabled(true);
         }
@@ -734,7 +844,6 @@ public class DocumentListPanel extends LayoutContainer {
                     if (200 == response.getStatusCode()) {
                         JsArray<JSonDocument> doc = asArrayOfDocument(response.getText());
                         Document document = new Document();
-
                         if (doc.length() > 0) {
 
                             JSonDocument jSonDocument = doc.get(0);
@@ -783,7 +892,6 @@ public class DocumentListPanel extends LayoutContainer {
 
     private boolean checkAttachments(String attachments) {
         String[] attach = attachments.split(",");
-
         for (String a : attach) {
             if (a.equals("No")) {
                 return false;
