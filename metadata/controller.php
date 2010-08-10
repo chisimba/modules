@@ -62,6 +62,7 @@ class metadata extends controller
     public $objConfig;
     public $objExif;
     public $objMarc;
+    public $objRdf;
 
     /**
      * Initialises the instance variables.
@@ -80,6 +81,12 @@ class metadata extends controller
             $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
             $this->objExif       = $this->getObject('exifmeta');
             $this->objMarc       = $this->getObject('marcmeta');
+            $this->objRdf        = $this->getObject ('rdf', 'rdfgen');
+			
+			// Define the paths we will be needing
+			define ( "RDFAPI_INCLUDE_DIR", $this->getResourcePath ('api/', 'rdfgen'));
+			include (RDFAPI_INCLUDE_DIR . "RdfAPI.php");
+			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
                 $this->objActStream = $this->getObject('activityops','activitystreamer');
@@ -126,6 +133,18 @@ class metadata extends controller
                     print $rec."<br />";
                 }
                 break;
+                
+            case 'dublincore' :
+				$params = array ('url' => 'http://www.example.com/somepage.html', 'creator' => "Paul Scott", 'date' => date ( 'r' ), 'contributor' => 'some dude', 
+				                 'coverage' => 'testing', 'description' => 'A test document', 'example data' => 'test', 'format' => 'html', 'identifier' => '', 
+				                 'language' => 'en', 'publisher' => 'me', 'relation' => '', 'rights' => 'cc-by-sa', 'source' => 'me', 'subject' => 'testing', 
+				                 'title' => 'test doc', 'type' => 'dynamic' );
+				
+				$message = $this->objRdf->generateDC ( $params );
+				$this->appendArrayVar ( 'headerParams', "<!--" . $message . "-->" );
+				$this->setVarByRef ( 'message', $message );
+				var_dump($message);
+				break;
 
             default:
                 $this->nextAction('');
