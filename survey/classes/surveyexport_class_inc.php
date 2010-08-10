@@ -172,7 +172,7 @@ class surveyexport extends object
                        }
 
                        if (!$valueFound) {
-                           $row[] = $answer['answer_given'];
+                           $row[] = '';
                        }
 
                        break;
