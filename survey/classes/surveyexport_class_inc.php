@@ -146,34 +146,27 @@ class surveyexport extends object
 
                foreach ($answers[$question['id']] as $answer) {
                    if ($answer['response_id'] == $response['id']) {
-                       $answerFound = TRUE;
-                       $valueFound  = FALSE;
+                       $answerFound    = TRUE;
+                       $matchingValues = array();
 
-                       if (is_array($values[$question['id']])) {
-                           foreach ($values[$question['id']] as $value) {
-                               if ($value['row_order'] == $answer['answer_given']) {
-                                   $row[]      = $value['row_text'];
-                                   $valueFound = TRUE;
-
-                                   break;
-                               }
-                           }
-                       }
-
-                       if (!$valueFound && is_array($items[$question['id']])) {
+                       if (is_array($items[$question['id']])) {
                            foreach ($items[$question['id']] as $item) {
                                if ($item['response_id'] == $response['id'] && $item['answer_id'] == $answer['id']) {
-                                   $row[]      = $item['item_value'];
-                                   $valueFound = TRUE;
-
-                                   break;
+                                   if (is_array($values[$question['id']])) {
+                                       foreach ($values[$question['id']] as $value) {
+                                           if ($value['row_order'] == substr($item['item_name'], 6)) {
+                                               $matchingValues[] = $value['row_text'];
+                                               break;
+                                           }
+                                       }
+                                   } else {
+                                       $matchingValues[] = $item['item_value'];
+                                   }
                                }
                            }
                        }
 
-                       if (!$valueFound) {
-                           $row[] = '';
-                       }
+                       $row[] = implode('|', $matchingValues);
 
                        break;
                    } 
