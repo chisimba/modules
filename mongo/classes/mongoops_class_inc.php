@@ -158,9 +158,13 @@ class mongoops extends object
      */
     public function init()
     {
-        $this->collectionCache = array();
-        $this->databaseCache = array();
+        // Objects from other classes.
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+
+        // Local properties.
+        $this->collectionCache = array();
+        $this->database        = $this->objSysConfig->getValue('database', 'mongo');
+        $this->databaseCache   = array();
     }
 
     /**
