@@ -18,6 +18,7 @@ class dbgradebook2_weightedcolumn extends dbTable
     {
         parent::init('tbl_gradebook2_weightedcolumn');
         $this->objUser = &$this->getObject('user', 'security');
+        // Load Context Object
         $this->objDBGrades = &$this->getObject('dbgradebook2_grades', 'gradebook2');
         // Load Context Object
         $this->objContext = $this->getObject('dbcontext', 'context');
@@ -58,6 +59,26 @@ class dbgradebook2_weightedcolumn extends dbTable
         }
     }
     /**
+     * Method to get a field from the
+     * current table
+     *
+     * @param  $fiedname    string : the name of the field
+     * @param  $Id int    : the Id
+     * @return string       | bool : The field value or FALSE when not found
+     * @access public
+     */
+    public function getField($fieldname, $Id) {
+        $line = $this->getRow ( 'id', $Id );
+
+        $fieldname = strtolower ( $fieldname );
+
+        if ($line [$fieldname]) {
+            return $line [$fieldname];
+        } else {
+            return FALSE;
+        }
+    }
+    /**
      * Return all context records
      * @return array The values
      */
@@ -81,10 +102,14 @@ class dbgradebook2_weightedcolumn extends dbTable
     function insertSingle($colArr) 
     {
         $userId = $this->objUser->userId();
+        //Set contextcode
+        $contextcode = $colArr['contextcode'];
+        if (empty($contextcode))
+            $contextcode = $this->contextCode;
         $id = $this->insert(array(
             'userid' => $userId,
             'column_name' => $colArr['column_name'],
-            'contextcode' => $colArr['contextcode'],
+            'contextcode' => $contextcode,
             'display_name' => $colArr['display_name'],
             'description' => $colArr['description'],
             'primary_display' => $colArr['primary_display'],
@@ -148,6 +173,22 @@ class dbgradebook2_weightedcolumn extends dbTable
         $gradeCount = (count($contextGrades));
         $gradeArray = array();
         foreach ( $contextGrades as $contextGrade ) {
+          $gdArray = array();
+          //Get Column name
+          $columname = $this->objDBGrades->getField('columnid', $colArr['id']);
+          $gdArray['column_name'] = $colArr['column_name'];
+          $gdArray['contextcode'] = $contextGrade['contextcode'];
+          $gdArray['display_name'] = $contextGrade['display_name'];
+          $gdArray['description'] = $contextGrade['description'];
+          $gdArray['primary_display'] = $contextGrade['primary_display'];
+          $gdArray['secondary_display'] = $contextGrade['secondary_display'];
+          $gdArray['grading_period'] = $contextGrade['grading_period'];
+          $gdArray['include_weighted_grade'] = $contextGrade['include_weighted_grade'];
+          $gdArray['running_total'] = $contextGrade['running_total'];
+          $gdArray['show_grade_center_calc'] = $contextGrade['show_grade_center_calc'];
+          $gdArray['show_in_mygrades'] = $contextGrade['show_in_mygrades'];
+          $gdArray['show_statistics'] = $contextGrade['show_statistics'];
+          $gradeArray[] = $gdArray;
         }
     }
 }

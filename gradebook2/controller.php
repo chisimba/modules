@@ -34,6 +34,10 @@ class gradebook2 extends controller {
         $this->objHeading =& $this->getObject('htmlheading','htmlelements');
         //Load DB Table weightedcolumn class
         $this->objWeightedColumn =& $this->getObject('dbgradebook2_weightedcolumn','gradebook2');
+        // Load Context Object
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        // Store Context Code
+        $this->contextCode = $this->objContext->getContextCode();
     }
 
     /**
@@ -95,6 +99,7 @@ class gradebook2 extends controller {
             //Array to contain data that needs to be saved
             $colArr = array();
             $colArr['column_name'] = $this->getParam('column_name', NULL);
+            $colArr['contextcode'] = $this->contextCode;
             $colArr['display_name'] = $this->getParam('display_name', NULL);
             $colArr['description'] = $this->getParam('description', NULL);
             $colArr['primary_display'] = $this->getParam('primary_display', NULL);

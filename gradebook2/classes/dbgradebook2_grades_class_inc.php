@@ -11,10 +11,18 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  */
 class dbgradebook2_grades extends dbTable
 {
-    /**
-     * Constructor method to define the table
-     */
-    function init() 
+  /**
+   * Constructor method to define the table
+   */ 
+
+  /**
+   * The user Object
+   *
+   * @var object $objUser
+   */
+   public $objUser;
+
+   function init() 
     {
         parent::init('tbl_gradebook2_grades');
         $this->objUser = &$this->getObject('user', 'security');
@@ -36,6 +44,26 @@ class dbgradebook2_grades extends dbTable
     function listSingle($id) 
     {
         return $this->getAll("WHERE id='" . $id . "'");
+    }
+    /**
+     * Method to get a field from the
+     * current table
+     *
+     * @param  $fiedname    string : the name of the field
+     * @param  $Id int    : the Id
+     * @return string       | bool : The field value or FALSE when not found
+     * @access public
+     */
+    public function getField($fieldname, $Id) {
+        $line = $this->getRow ( 'id', $Id );
+
+        $fieldname = strtolower ( $fieldname );
+
+        if ($line [$fieldname]) {
+            return $line [$fieldname];
+        } else {
+            return FALSE;
+        }
     }
     /**
      * Return all records
