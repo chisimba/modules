@@ -114,7 +114,7 @@ class rdfgen extends controller {
 				$params = array ('url' => 'http://www.example.com/somepage.html', 'creator' => "Paul Scott", 'date' => date ( 'r' ), 'contributor' => 'some dude', 'coverage' => 'testing', 'description' => 'A test document', 'example data' => 'test', 'format' => 'html', 'identifier' => '', 'language' => 'en', 'publisher' => 'me', 'relation' => '', 'rights' => 'cc-by-sa', 'source' => 'me', 'subject' => 'testing', 'title' => 'test doc', 'type' => 'dynamic' );
 				
 				$message = $this->objRdf->generateDC ( $params );
-				$this->appendArrayVar ( 'headerParams', "<!--" . $message . "-->" );
+				$this->appendArrayVar ( 'headerParams', "<!--" . file_get_contents($message) . "-->" );
 				$this->setVarByRef ( 'message', $message );
 				return 'view_tpl.php';
 				break;
