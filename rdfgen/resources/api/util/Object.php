@@ -16,7 +16,7 @@
  * @package utility
  *
  **/
- class Object {
+ class RDFObject {
 
   /**
    * Serializes a object into a string
