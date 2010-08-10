@@ -38,6 +38,7 @@ class libraryforms extends controller {
         $this->dbAddillperiodical=$this->getObject('illperiodical','libraryforms');
         $this->dbfeedback=$this->getObject('feedbk','libraryforms');
         $this->objUser=$this->getObject('User','security');
+	// Get a local reference to the mail
         $this->objMail = $this->getObject('email', 'mail');
 
 
@@ -49,22 +50,21 @@ class libraryforms extends controller {
         if($action=='addeditform') {
             $this->saveRecord();
 	 }
-else 
+	else 
 	if($action=='addthesis')
         {
             $this-> saveBookthesisRecord(); 
 	}
-else 
+	else 
         if($action=='addperiodical')
         {
           $this->saveperiodicalRecord();
         }
-   else 
+   	else 
         if ($action=='addfeedbk') 
 	{          
 	    $this->submitmsg(); 
         }
-
         return "editadd_tpl.php";
     }
 
@@ -160,10 +160,11 @@ $this->sendEmailNotification($title="email notification for distance user",$subj
         }
         else {
         //insert into DB
-  $id= $this->dbAddBookthesis->insertBookthesisRecord($bprint,$bauthor,$btitle,$bplace,$bpublisher,$bdate,$bedition,$bisbn,$bseries,$bcopy,$btitlepages,$bpages,$bthesis,$bname,$baddress,$bcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum,$bstudentno, $bcourse);
+ 	$id= $this->dbAddBookthesis->insertBookthesisRecord($bprint,$bauthor,$btitle,$bplace,$bpublisher,$bdate,$bedition,$bisbn,$bseries,$bcopy,$btitlepages,$bpages,$bthesis,$bname,$baddress,$bcell,$bfax,$btel,$btelw,$bemailaddress,
+$bentitynum,$bstudentno, $bcourse);
   
  // after inserting into db send email notification
-$this->sendEmailNotification($title="email notification for thesis books",$subject="book thesis mail",$message= $bprint.' '.
+	$this->sendEmailNotification($title="email notification for thesis books",$subject="book thesis mail",$message= 	$bprint.' '.
 	$bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.$bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '.
 	$btitlepages.' '.$bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.$btel.' '.$btelw.' '.
 	$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse);
@@ -180,10 +181,7 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
         }
         
 }// end of function
-   
-
-
-    function saveperiodicalRecord() {
+       function saveperiodicalRecord() {
         if (!$_POST) { // Check that user has submitted a page
         
             return $this->nextAction(NULL);
@@ -218,9 +216,9 @@ $this->sendEmailNotification($title="email notification for thesis books",$subje
 
         else{
         //insert the data into DB
- $id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof,$address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course);
+ 	$id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, 	$titlearticle, $prof,$address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course);
 
-$this->sendEmailNotification($title="email for periodical books",$subject="periodical thesis mail",$message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.$author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.$tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
+	$this->sendEmailNotification($title="email for periodical books",$subject="periodical thesis mail",$message= 		$titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.$author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.$tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
 }
              if($pid!=null) {
             	var_dump('Saved Successfully');
@@ -253,19 +251,25 @@ $this->sendEmailNotification($title="email for periodical books",$subject="perio
      else{
         //insert the data into DB
             $id=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
-	    $this->sendEmailNotification($title="feeb back email",$subject="channel your feed back",$message=$msg);
+	    $this->sendEmailNotification($title="feed back email",$subject="channel your feed back",$message= $msg.'');
 	}
    }
-     function sendEmailNotification($title,$subject,$message){
+public function sendEmailNotification($title,$subject,$message){
+        //Get local refence to mail object
         $objMail = $this->getObject('email', 'mail');
-        $list=array("library@uwc.ac.za","arieluwc@uwc.ac.za","pmalinga@uwc.ac.za");
-     	$objMail->setValue('to',$list);
-        $objMail->setValue('from', "noreply@uwc.ac.za");
-        $objMail->setValue('fromName', "");
-        $objMail->setValue('subject', $title);
-        $objMail->setValue('body', $message);
-        $objMail->setValue('AltBody', $message);
-        $objMail->send();
+        //send to multiple addressed   
+        $list=array("library@uwc.ac.za","arieluwc@uwc.ac.za");
+        $objMail->to=$list;
+	// specify whom the email is coming from
+        $objMail->from= "no-reply@uwc.ac.za";
+        $objMail->from= "no-reply";
+        //Give email subject and body
+        //$objMail->subject=$emaill;
+        $objMail->subject=$title;
+        $objMail->body=$message;
+        $objMail->AltBody=$message;
+        // send email
+        $this->$objMail->send();
 
     }
        
