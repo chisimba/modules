@@ -114,13 +114,13 @@ public class Main {
     private TabPanel tab = new TabPanel();
     private String getFoldersParams = Constants.MAIN_URL_PATTERN + "?module=wicid&action=getfolders";
     private TabItem docsTab = new TabItem("Documents");
-   // private TabItem viewTab = new TabItem("File List");
+    // private TabItem viewTab = new TabItem("File List");
     private TabItem rejectedDocsTab = new TabItem("Rejected Documents");
     // grid view file list
     private TabItem filesTab = new TabItem("Files");
     private NewCourseProposalDialog newCourseProposalDialog;
     private AdvancedSearchDialog advancedSearchDialog;
-    private String mode = "apo";
+    private String mode = "default";
     private boolean admin = false;
     private TextField<String> searchField = new TextField<String>();
     private Button searchButton = new Button("Search");
@@ -481,7 +481,9 @@ public class Main {
         filesTab.setHeight(Window.getClientHeight());
         filesTab.add(fileListPanel);
         tab.add(filesTab);
-        
+
+
+
         center.add(tab);
         documentListPanel = new DocumentListPanel(this);
         documentListPanel.setHeight(500);
@@ -497,6 +499,7 @@ public class Main {
         rejectedDocsTab.add(rejectedDocsPanel);
         tab.add(rejectedDocsTab);
 
+      
 
 
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER, (Window.getClientWidth() / 4) * 3, 100, Window.getClientWidth());

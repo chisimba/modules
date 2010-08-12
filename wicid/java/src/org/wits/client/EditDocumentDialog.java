@@ -52,7 +52,6 @@ import org.wits.client.ads.OverView;
 import org.wits.client.util.Util;
 import java.util.Date;
 import org.wits.client.ads.ForwardTo;
-import org.wits.client.ads.CommentDialog;
 
 /**
  *
@@ -414,7 +413,7 @@ public class EditDocumentDialog {
                 final Window w = new Window();
                 w.setHeading("Upload file");
                 w.setModal(true);
-                w.setSize(800, 300);
+                w.setSize(800, 450);
                 w.setMaximizable(true);
                 w.setToolTip("Upload file");
                 w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()

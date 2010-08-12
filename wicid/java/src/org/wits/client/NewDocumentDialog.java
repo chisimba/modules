@@ -36,7 +36,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Arrays;
 
 /**
  *
@@ -282,7 +281,7 @@ public class NewDocumentDialog {
         newDocumentDialog.setBodyBorder(false);
         newDocumentDialog.setHeading("New Document");
         newDocumentDialog.setWidth(500);
-        newDocumentDialog.setHeight(450);
+        newDocumentDialog.setHeight(500);
         newDocumentDialog.setHideOnButtonClick(true);
         newDocumentDialog.setButtons(Dialog.CLOSE);
         newDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);

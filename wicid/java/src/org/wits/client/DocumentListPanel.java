@@ -44,8 +44,6 @@ import com.extjs.gxt.ui.client.widget.grid.CheckBoxSelectionModel;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
-import com.extjs.gxt.ui.client.widget.grid.AggregationRowConfig;
-import com.extjs.gxt.ui.client.widget.grid.CellSelectionModel;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
@@ -536,7 +534,6 @@ public class DocumentListPanel extends LayoutContainer {
         activeEditor = null;
     }
 
-
     public void startEditing(int row, int col) {
         stopEditing();
         if (cm.isCellEditable(col)) {
@@ -557,7 +554,7 @@ public class DocumentListPanel extends LayoutContainer {
                 ed.col = col;
 
                 if (!ed.isRendered()) {
-                    ed.render((Element)grid.getView().getEditorParent());
+                    ed.render((Element) grid.getView().getEditorParent());
                 }
 
                 if (editorListener == null) {
@@ -568,7 +565,7 @@ public class DocumentListPanel extends LayoutContainer {
                                 EditorEvent ee = (EditorEvent) e;
                                 onEditComplete((CellEditor) ee.getEditor(), ee.getValue(), ee.getStartValue());
                             } else if (e.getType() == Events.SpecialKey) {
-                            //    ((CellSelectionModel) sm).onEditorKey(e);
+                                //    ((CellSelectionModel) sm).onEditorKey(e);
                             }
                         }
                     };
@@ -583,14 +580,14 @@ public class DocumentListPanel extends LayoutContainer {
         }
     }
 
-    protected void onEditComplete (CellEditor ed, Object value, Object startValue){
+    protected void onEditComplete(CellEditor ed, Object value, Object startValue) {
         editing = false;
         activeEditor = null;
         ed.removeListener(Events.SpecialKey, editorListener);
         Record r = activeRecord;
         String field = cm.getDataIndex(ed.col);
 
-        if ((value == null && startValue !=null)|| !value.equals(startValue)){
+        if ((value == null && startValue != null) || !value.equals(startValue)) {
             GridEvent ge = new GridEvent(grid);
             ge.setRecord(r);
             ge.setProperty(field);
@@ -599,7 +596,7 @@ public class DocumentListPanel extends LayoutContainer {
             ge.setRowIndex(ed.row);
             ge.setColIndex(ed.col);
 
-            if (fireEvent(Events.ValidateEdit, ge)){
+            if (fireEvent(Events.ValidateEdit, ge)) {
                 r.set(ge.getProperty(), ge.getValue());
                 fireEvent(Events.AfterEdit, ge);
             }
@@ -801,7 +798,9 @@ public class DocumentListPanel extends LayoutContainer {
         });
         contextMenu.add(editMenuItem);
         contextMenu.add(approveMenuItem);
-        contextMenu.add(submitMenuItem);
+        if (mode.equals("apo")) {
+            contextMenu.add(submitMenuItem);
+        }
         contextMenu.add(new SeparatorMenuItem());
         contextMenu.add(rejectMenuItem);
         contextMenu.add(deleteMenuItem);
@@ -866,7 +865,7 @@ public class DocumentListPanel extends LayoutContainer {
                                 document.setTelephone(jSonDocument.getTelephone());
                                 document.setId(docId);
 
-                                EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, "limited", main);
+                                EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, Constants.main.getMode(), main);
                                 editDocumentDialog.show();
                             } else {
                                 MessageBox.info("Not owner", "Sorry, not owner, cannot edit the document", null);
