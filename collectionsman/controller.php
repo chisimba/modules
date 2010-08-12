@@ -118,8 +118,14 @@ class collectionsman extends controller
             case 'main' :
                 $this->objMongodb->setDatabase('test');
                 $this->objMongodb->setCollection('coll1');
-                $this->objMongodb->insert(array('string' => 'some shit'), 'coll1', 'test');
-                
+                $num = 300000;
+                while($num <= 1000) {
+                    $this->objMongodb->insert(array('string' => 'something '.$num), 'coll1', 'test');
+                    echo $num."<br />";
+                    $num++;
+                }
+                $q = $this->objMongodb->find(array(3010), array('string'), 'coll1', 'test');
+                var_dump($q->getNext());
                 echo "This is the collections manager";
                 break;
 
