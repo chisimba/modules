@@ -100,15 +100,20 @@ class editform extends dbTable {
         $objForm = new form('distanceform', $this->getFormAction());
         $objForm = new form('myform',$this->uri(array('action'=>'valform','htmlelements')));
         $table = $this->newObject('htmltable', 'htmlelements');
-
-
-        $titleLabel = new label($this->objLanguage->languageText('mod_libraryforms_commenttitleform',"libraryforms"),'title');
-        $title2Label = new label($this->objLanguage->languageText	("mod_libraryforms_commentsnamerequired","libraryforms"),"required");
-
-        $table->startRow();
-        $table->addCell($titleLabel->show(), '', 'center', 'left', '');
-        $table->addCell($title2Label->show(), '', 'center', 'left', '');
-        $table->endRow();
+	//*****//	
+	$this->loadClass('htmlheading', 'htmlelements');
+	$pageHeading = new htmlheading();
+	$pageHeading->type = 3;
+	$pageHeading->str = $this->objLanguage->languageText("mod_libraryforms_commenttitleform","libraryforms","title");
+	$objForm->addToForm($pageHeading->show()."<br/>");
+       
+        $header = new htmlheading();
+	$header->type = 4;
+	$header->str = $this->objLanguage->languageText("mod_libraryforms_commentsnamerequired","libraryforms","heading2");
+	if($mode!='fixerror'){
+   	$objForm->addToForm($header->show()."<br/>");
+    	//'<br /><span style="color:red;font-size:12px;">'.$header.'</span>';
+       }
 
         //Create a new textinput for the surname
         $objsurname = new textinput('surname');
@@ -140,6 +145,7 @@ class editform extends dbTable {
         if ($mode == 'addfixup') {
             $titlesDropdown->setSelected($this->getParam('select_title'));
         }
+        
         $table->startRow();
         $table->addCell($titleLabel->show(),'' , 'center', 'left');
         $table->addCell($titlesDropdown->show());
