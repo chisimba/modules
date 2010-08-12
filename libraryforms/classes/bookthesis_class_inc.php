@@ -99,9 +99,13 @@ class bookthesis extends dbTable {
 
         //----------TEXT INPUT and Labels--------------
         
-  	 $titleLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcomment","libraryforms"),"title2");
-   	 $objForm->addToForm($titleLabel->show()."<br/>"."<br/>");
-    
+       //*****//	
+	$this->loadClass('htmlheading', 'htmlelements');
+	$Heading = new htmlheading();
+	$Heading->type = 2;
+	$Heading->str = $this->objLanguage->languageText("mod_libraryforms_commentcomment","libraryforms","title2");
+	$objForm->addToForm($Heading->show()."<br/>");
+  	
   	$printLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttype","libraryforms"),"titleL");
    	$objForm->addToForm($printLabel->show()."<br/>"."<br/>");
 

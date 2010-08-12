@@ -94,10 +94,12 @@ $strjs = '<script type="text/javascript">
 
         //----------TEXT INPUT and Labels--------------
         //Create a new textinput for the title
-
-        $titlefeedbkLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttitlefeedback","libraryforms"),"Channel your feedback to inform our future planning");
-        $objForm->addToForm($titlefeedbkLabel->show()."<br />"."<br />");
-        
+           
+	$this->loadClass('htmlheading', 'htmlelements');
+	$fdbkHeading = new htmlheading();
+	$fdbkHeading->type = 2;
+	$fdbkHeading->str = $this->objLanguage->languageText("mod_libraryforms_commenttitlefeedback","libraryforms","fdbk");
+	$objForm->addToForm($fdbkHeading->show()."<br/>");
 
         //Create a new textinput for the name
         $objname = new textinput('feedback_name');

@@ -103,7 +103,7 @@ class editform extends dbTable {
 	//*****//	
 	$this->loadClass('htmlheading', 'htmlelements');
 	$pageHeading = new htmlheading();
-	$pageHeading->type = 3;
+	$pageHeading->type = 2;
 	$pageHeading->str = $this->objLanguage->languageText("mod_libraryforms_commenttitleform","libraryforms","title");
 	$objForm->addToForm($pageHeading->show()."<br/>");
        
