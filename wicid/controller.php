@@ -450,7 +450,7 @@ class wicid extends controller {
         $tel=$this->getParam('tel');
         $id = $this->getParam('docid');
         
-        $data = array("department"=>$dept, "docname"=>$title, "telephone"=>$tel,"groupid"=>$group, "topic"=>$selectedfolder);
+        $data = array("department"=>$dept, "docname"=>$title, "telephone"=>$tel,"groupid"=>$group, "topic"=>$selectedfolder,"status"=>"0","version"=>"0");
         $this->documents->updateInfo($id, $data);
     }
 
