@@ -1,76 +1,124 @@
 <?php
+
 class vowfmtoolbar extends object {
 
     function init() {
-        $this->objAltConfig = $this->getObject('altconfig','config');
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
+        $this->menuDropDown = $this->newObject('dropdown', 'htmlelements');
     }
 
     function show() {
-        //$siteRoot=$this->objAltConfig->getsiteRoot();
-        // $skinUri=$this->objAltConfig->getskinRoot();
-        //  $imgPath=$siteRoot."/".$skinUri.'/vowfm/images/spacer.gif';
-
-        $menu='
-
-
-<div class="rbroundbox">
-<div class="rbtop"><div></div></div>
-<div class="rbcontent">
-
-   <div id="myslidemenu" class="jqueryslidemenu">
-<ul>
-<li><a href="#">Music</a></li>
-<li><a href="#">DJs & Shows</a>
-  <ul>
-  <li class="level2"><a href="#">Show Lineup</a></li>
-  <li><a href="#">DJ pages</a></li>
-  <li><a href="#">DJ contact</a></li>
+        $menu = '
+    <div class="rbroundbox">
+    <div class="rbtop"><div></div></div>
+    <div class="rbcontent">
+  ' . $this->createMenu() . '
   
-  </ul>
-</li>
-<li><a href="#">Competitions</a>
-<ul>
-  <li><a href="#">Current</a></li>
-  <li><a href="#">Past</a>
-  <li><a href="#">Upcoming</a>
-  <li><a href="#">Rules</a>
-  </ul>
-
-
-</li>
-<li><a href="#">Events and News</a>
-  <ul>
-  <li><a href="#">Upcoming Events</a></li>
-  <li><a href="#">Events Guide</a>
-  <li><a href="#">Submit an Event</a>
-  <li><a href="#">Event Gallaries</a>
-  </li>
-  </ul>
-</li>
-<li><a href="#">Videos</a></li>
-<li><a href="#">Advertise</a></li>
-<li><a href="#">Contact Us</a></li>
-<li><a href="#">Jobs</a>
-
-  <ul>
-  <li><a href="#">VOW</a></li>
-  <li><a href="#">Student Jobs</a>
-  <li><a href="#">Services</a>
-  
-  </li>
-  </ul>
-
-</li>
-</ul>
-<br style="clear: left" />
-</div>
-
-
-</div><!-- /rbcontent -->
-<div class="rbbot"><div></div></div>
-</div><!-- /rbroundbox -->';
-        return  $menu;
+    </div><!-- /rbcontent -->
+    <div class="rbbot"><div></div></div>
+    </div><!-- /rbroundbox -->';
+        return $menu;
     }
+
+    function createMenu() {
+        $objUser = $this->getObject('user', 'security');
+        $userIsLoggedIn = $objUser->isLoggedIn();
+
+        $menuOptions = array(
+            array('action' => 'logoff', 'text' => 'Logout', 'actioncheck' => array(), 'module' => 'security', 'status' => 'loggedin'),
+        );
+
+        $usedDefault = FALSE;
+        $str = '';
+
+        foreach ($menuOptions as $option) {
+            // First Step, Check whether item will be added to menu
+            // 1) Check Items to be Added whether user is logged in or not
+            if ($option['status'] == 'both') {
+                $okToAdd = TRUE;
+
+                // 2) Check Items to be added only if user is not logged in
+            } else if ($option['status'] == 'login' && !$userIsLoggedIn) {
+                $okToAdd = TRUE;
+
+                // 3) Check Items to be added only if user IS logged in
+            } else if ($option['status'] == 'loggedin' && $userIsLoggedIn) {
+                $okToAdd = TRUE;
+
+                // 4) Check if User is Admin
+            } else if ($option['status'] == 'admin' && $objUser->isAdmin() && $userIsLoggedIn) {
+                $okToAdd = TRUE;
+            } else {
+                $okToAdd = FALSE; // ELSE FALSE
+            }
+
+            // IF Ok To Add
+            if ($okToAdd) {
+
+                // Do a check if current action matches possible actions
+                if (count($option['actioncheck']) == 0) {
+                    $actionCheck = TRUE; // No Actions, set TRUE, to enable all actions and fo module check
+                } else {
+                    $actionCheck = in_array($this->getParam('action'), $option['actioncheck']);
+                }
+
+                // Check whether Module of Link Matches Current Module
+                $moduleCheck = ($this->getParam('module') == $option['module']) ? TRUE : FALSE;
+
+                // If Module And Action Matches, item will be set as current action
+                $isDefault = ($actionCheck && $moduleCheck) ? TRUE : FALSE;
+
+                if ($isDefault) {
+                    $usedDefault = TRUE;
+                }
+
+                // Add to Navigation
+                $str .= $this->generateItem($option['action'], $option['module'], $option['text'], $isDefault);
+            }
+        }
+
+        // Check whether Navigation has Current/Highlighted item
+        // Invert Result for Home Link
+        $usedDefault = $usedDefault ? FALSE : TRUE;
+
+        // Add all links
+        $tbar =
+                $this->generateItem(NULL, 'vowfm', 'Home', $usedDefault) .
+                $this->generateItem(NULL, 'vowfm', 'Music', $usedDefault) .
+                $this->generateItem(NULL, 'vowfm', 'DJs and Shows', $usedDefault) .
+                $this->generateItem(NULL, 'vowfm', 'Competitions', $usedDefault) .
+                $this->generateItem(NULL, 'vowfm', 'Events and News', $usedDefault) .
+                $this->generateItem(NULL, 'vowfm', 'Videos', $usedDefault) .
+                $this->generateItem(NULL, 'vowfm', 'Advertise', $usedDefault) .
+                $this->generateItem(NULL, 'vowfm', 'Contact Us', $usedDefault) .
+                $this->generateItem(NULL, 'vowfm', 'Jobs', $usedDefault);
+
+
+        // Return Toolbar
+        return '<div id="nav"><ul>' . $tbar . $str . '</ul></div>';
+    }
+
+    private function generateItem($action='', $module='vowfm', $text, $isActive=FALSE) {
+        switch ($module) {
+            case 'vowfm' : $isRegistered = TRUE;
+                break;
+            default: $isRegistered = $this->objModules->checkIfRegistered($module);
+                break;
+        }
+
+        if ($isRegistered) {
+            $link = new link($this->uri(array('action' => $action), $module));
+            $link->link = $text;
+
+            $isActive = $isActive ? ' id="current"' : '';
+
+            return '<li' . $isActive . '>' . $link->show() . '</li>';
+        } else {
+            return '';
+        }
+    }
+
 }
 
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *  PHP version 5
@@ -25,9 +26,10 @@
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
-if(!$GLOBALS['kewl_entry_point_run']) {
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+
 // end of security
 
 class vowfm extends controller {
@@ -39,15 +41,16 @@ class vowfm extends controller {
         $this->setVar('SUPPRESS_PROTOTYPE', true); //Can't stop prototype in the public space as this might impact blocks
         $this->setVar('SUPPRESS_JQUERY', true);
         $this->setVar('JQUERY_VERSION', '1.3.2');
-
+        $this->objDbNews = $this->getObject("dbnewsstories", "news");
     }
+
     /**
      * Method to override login for certain actions
      * @param <type> $action
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('login','storyadmin');
+        $required = array('login', 'storyadmin');
 
 
         if (in_array($action, $required)) {
@@ -57,8 +60,6 @@ class vowfm extends controller {
         }
     }
 
-
-
     /**
      * Standard Dispatch Function for Controller
      * @param <type> $action
@@ -67,14 +68,14 @@ class vowfm extends controller {
     public function dispatch($action) {
 
         /*
-        * Convert the action into a method (alternative to
-        * using case selections)
-        */
+         * Convert the action into a method (alternative to
+         * using case selections)
+         */
         $method = $this->getMethod($action);
         /*
-        * Return the template determined by the method resulting
-        * from action
-        */
+         * Return the template determined by the method resulting
+         * from action
+         */
         return $this->$method();
     }
 
@@ -90,7 +91,7 @@ class vowfm extends controller {
      */
     function getMethod(& $action) {
         if ($this->validAction($action)) {
-            return '__'.$action;
+            return '__' . $action;
         } else {
             return '__home';
         }
@@ -109,7 +110,7 @@ class vowfm extends controller {
      *
      */
     function validAction(& $action) {
-        if (method_exists($this, '__'.$action)) {
+        if (method_exists($this, '__' . $action)) {
             return TRUE;
         } else {
             return FALSE;
@@ -123,6 +124,12 @@ class vowfm extends controller {
         return 'home_tpl.php';
     }
 
+    function __viewstory() {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVarByRef("storyid", $this->getParam("storyid"));
+        return "viewstory_tpl.php";
+    }
 
 }
+
 ?>

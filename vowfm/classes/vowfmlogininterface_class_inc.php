@@ -11,6 +11,10 @@ class vowfmlogininterface extends object {
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
+                $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->siteRoot = $this->objAltConfig->getsiteRoot();
+        $this->skinUri = $this->objAltConfig->getskinRoot();
     }
 
     function show() {
@@ -29,6 +33,7 @@ class vowfmlogininterface extends object {
         //Add validation for username
         $objForm->addRule('username', $this->objLanguage->languageText("mod_login_unrequired", 'security', 'Please enter a username. A username is required in order to login.'), 'required');
 
+
         //Add the username box to the form
         $content.= $usernameLabel->show() . '&nbsp;' . $usernameField->show();
         $passwordField = new textinput('password', '', 'password', '15');
@@ -42,27 +47,30 @@ class vowfmlogininterface extends object {
         $objButton->setToSubmit();
         $content.='&nbsp;' . $objButton->show();
 
-        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $registerModule = $objSysConfig->getValue('REGISTRATION_MODULE', 'security');
-        $registerModule = !empty($registerModule) ? $registerModule : 'userregistration';
+        /*      $objRElement = new checkbox("remember");
+          $objRElement->setCSS("transparentbgnb noborder");
+          $objRElement->label = $this->objLanguage->languageText("phrase_rememberme", "security");
+          $rem = $objRElement->show() . ' ' . $objRElement->label . ' | ';
+         */
 
-        $registerLink = new link($this->uri(array('action' => 'showregister'), $registerModule));
-        $registerLink->link = $this->objLanguage->languageText('word_register');
+        $facebookimg = '<img align="top" src="' . $this->siteRoot . '/' . $this->skinUri . '/vowfm/canvases/_default/images/FaceBook_32x32.png">';
+        $facebooklink = '<a href="' . $this->objSysConfig->getValue('FACEBOOK_URL', 'vowfm') . '">Follow us ' . $facebookimg . '</a>';
 
-        $content.='&nbsp;&nbsp;' . $registerLink->show();
 
         $helpText = strtoupper($this->objLanguage->languageText('word_help', 'system'));
         $helpIcon = $this->objHelp->show('register', 'useradmin', $helpText);
         $resetLink = new Link($this->uri(array('action' => 'needpassword'), 'security'));
         $resetLink->link = $this->objLanguage->languageText('mod_security_forgotpassword');
         // the help link
-        $p = '&nbsp;' . $resetLink->show() . '&nbsp;' . $helpIcon;
+        $p = '&nbsp;' . $helpIcon;
 
         $content.='&nbsp;' . $p;
+        $content.='&nbsp;&nbsp;|&nbsp;&nbsp;' . $facebooklink;
         $objForm->addToForm($content);
 
         return $objForm->show();
     }
 
 }
+
 ?>
