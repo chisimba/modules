@@ -55,6 +55,10 @@ class vowfmlogininterface extends object {
 
         $facebookimg = '<img align="top" src="' . $this->siteRoot . '/' . $this->skinUri . '/vowfm/canvases/_default/images/FaceBook_32x32.png">';
         $facebooklink = '<a href="' . $this->objSysConfig->getValue('FACEBOOK_URL', 'vowfm') . '">Follow us ' . $facebookimg . '</a>';
+        $twitterimg = '<img align="top" src="' . $this->siteRoot . '/' . $this->skinUri . '/vowfm/canvases/_default/images/Twitter_32x32.png">';
+        $twitterlink = '<a href="' . $this->objSysConfig->getValue('TWITTER_URL', 'vowfm') . '">' . $twitterimg . '</a>';
+        $feedimg = '<img align="top" src="' . $this->siteRoot . '/' . $this->skinUri . '/vowfm/canvases/_default/images/Feed_32x32.png">';
+        $feedlink = '<a href="' . $this->objSysConfig->getValue('FEEd_URL', 'vowfm') . '">' . $feedimg . '</a>';
 
 
         $helpText = strtoupper($this->objLanguage->languageText('word_help', 'system'));
@@ -65,7 +69,7 @@ class vowfmlogininterface extends object {
         $p = '&nbsp;' . $helpIcon;
 
         $content.='&nbsp;' . $p;
-        $content.='&nbsp;&nbsp;|&nbsp;&nbsp;' . $facebooklink;
+        $content.='&nbsp;&nbsp;|&nbsp;&nbsp;' . $facebooklink.'&nbsp;'.$twitterlink.'&nbsp;'.$feedlink;
         $objForm->addToForm($content);
 
         return $objForm->show();
