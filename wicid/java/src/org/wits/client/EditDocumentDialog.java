@@ -265,9 +265,7 @@ public class EditDocumentDialog {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 if (uploadpanel.isValid()) {
-
                     uploadpanel.submit();
-
                 }
 
                 String dept = deptField.getValue();
@@ -318,6 +316,7 @@ public class EditDocumentDialog {
                 storeDocumentInfo();
                 String url = storeDocumentInfo();
                 updateDocument(url);
+                Constants.main.refreshDocumentList();
                 editDocumentDialog.hide();
             }
         });
@@ -479,7 +478,7 @@ public class EditDocumentDialog {
         }
 
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
-                + "module=wicid&action=registerdocument&dept=" + dept + "&topic=" + topic
+                + "module=wicid&action=updatedocument&dept=" + dept + "&topic=" + topic
                 + "&title=" + title + "&tel=" + tel + "&group=" + group + "&date="
                 + fmt.format(date) + "&docid=" + document.getId();
 
@@ -659,7 +658,7 @@ public class EditDocumentDialog {
         }
 
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
-                + "module=wicid&action=editdocument&dept=" + dept + "&topic=" + topic
+                + "module=wicid&action=editdocument&department=" + dept + "&topic=" + topic
                 + "&title=" + title + "&tel=" + tel +  "&group=" + group + "&docid=" + document.getId();
 
         updateDocument(url);
