@@ -430,9 +430,9 @@ class wicid extends controller {
         $selectedfolder=$this->getParam('topic');
         $telephone=$this->getParam('tel');
         $id = $this->getParam('docid');
-        $status = $this->getParam('status');
+        $status = $this->getParam('status',"0");
         $currentuserid = $this->getParam('currentuserid');
-        $version = $this->getParam('version');
+        $version = $this->getParam('version',"0");
         $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date, "topic"=>$selectedfolder, "status"=>$status, "currentuserid"=>$currentuserid, "version" =>$version);
         $this->documents->updateInfo($id, $data);
     }
@@ -450,7 +450,7 @@ class wicid extends controller {
         $tel=$this->getParam('tel');
         $id = $this->getParam('docid');
         
-        $data = array("department"=>$dept, "docname"=>$title, "telephone"=>$tel,"groupid"=>$group, "topic"=>$selectedfolder,"status"=>"0","version"=>"0");
+        $data = array("department"=>$dept, "docname"=>$title, "telephone"=>$tel,"groupid"=>$group, "topic"=>$selectedfolder);
         $this->documents->updateInfo($id, $data);
     }
 
