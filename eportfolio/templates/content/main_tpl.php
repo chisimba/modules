@@ -2203,7 +2203,7 @@ $objgoalsTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_
 $goalspage.= $featureBox->show($objgoalsTitles->show() , $goalsTable->show() , '6', 'default', TRUE);
 $this->objmainTab->tabId = FALSE;
 $this->objmainTab->addTab(array(
-    'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordGoals", 'eportfolio') ,
+    'name' => $objLanguage->languageText("mod_eportfolio_goals", 'eportfolio') ,
     'content' => $goalspage
 ));
 //Competency Title

@@ -15,7 +15,7 @@ $configlink = new link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'configureviews'
 )));
-$configlink->link = $this->objLanguage->languageText("mod_eportfolio_configure", "eportfolio", "Configure") . " " . $this->objLanguage->languageText("mod_eportfolio_wordGroup", "eportfolio", "Group") . " " . $this->objLanguage->languageText("mod_eportfolio_views", "eportfolio", "Views");
+$configlink->link = $this->objLanguage->languageText("mod_eportfolio_configuregroupviews", "eportfolio", "Configure Group Views");
 $configManage = $configlink->show();
 $pageLink.= "<li>&nbsp;&nbsp;&nbsp;" . $configManage . "</li>";
 

@@ -1173,7 +1173,7 @@ foreach ($mainBlocks as $mainBlock) {
         //Goals Title
         $this->objmainTab->tabId = "maintab006";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordGoals", 'eportfolio') ,
+            'name' => $this->objLanguage->code2Txt("mod_eportfolio_goals", 'eportfolio') ,
             'content' => $goalsTable->show()
         ));
     } elseif  ($mainBlock["title"]=='Competencies') {
