@@ -71,6 +71,15 @@ class blogposts extends object
      * @access public
      */
     public $objConfig;
+
+    /**
+     * Instance of the tweetbutton class of the twitter module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objTweetButton;
+
     /**
      * Standard init function called by the constructor call of Object
      *
@@ -83,6 +92,7 @@ class blogposts extends object
             $this->objCC = $this->getObject('displaylicense', 'creativecommons');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objDbBlog = $this->getObject('dbblog');
+            $this->objTweetButton = $this->getObject('tweetbutton', 'twitter');
             $this->loadClass('href', 'htmlelements');
             $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
