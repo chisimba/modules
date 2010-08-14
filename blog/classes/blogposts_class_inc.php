@@ -192,15 +192,26 @@ class blogposts extends object
                         'postid' => $post['id'],
                         'userid' => $post['userid']
                     	));
+                $related = $this->sysConfig->getValue('retweet_related', 'blog');
                 $status = $this->sysConfig->getValue('retweet_status', 'blog');
                 $style = $this->sysConfig->getValue('retweet_style', 'blog'); 
+                $text = $this->sysConfig->getValue('retweet_text', 'blog');
+                $type = $this->sysConfig->getValue('retweet_type', 'blog');
+                $via = $this->sysConfig->getValue('retweet_via', 'blog');
                 if($status == NULL){
                     $status = "Interesting read ";
                 }
                 if($style == NULL) {
                     $style = 'retweet vert';
                 }
-                $rt = $this->objJqTwitter->retweetCounter($url, $status, $style);
+                if ($type == 'jquery') {
+                    $rt = $this->objJqTwitter->retweetCounter($url, $status, $style);
+                } else {
+                    if (strpos($style, 'vert') !== FALSE) {
+                        $style = 'vertical';
+                    }
+                    $rt = $this->objTweetButton->getButton($text, $style, $via, $related);
+                }
                 $post['post_content'] = $cleanpost; 
                 if($cleanPost  == 'true'){
                     $post['post_content'] = $this->cleanPost($post['post_content']);
