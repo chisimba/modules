@@ -52,7 +52,7 @@ $categorypage = '';
 $categorytypepage = '';
 $objHeading->type = 1;
 $objHeading->align = 'center';
-$objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
+$objHeading->str = $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio');
 echo $objHeading->show();
 echo "</br>";
 //Link to print pdf
@@ -106,7 +106,7 @@ $linkImportManage = $mngImportlink->show();
 //echo "</br>";
 $objHeading->type = 2;
 $objHeading->align = 'center';
-$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage . '    ' . $linkviewManage . '    ' . $linkExportManage . '    ' . $linkImportManage . '</font>';
+$objHeading->str = $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage . '    ' . $linkviewManage . '    ' . $linkExportManage . '    ' . $linkImportManage;
 echo $objHeading->show();
 $objHeading->align = 'left';
 $objinfoTitles->type = 1;

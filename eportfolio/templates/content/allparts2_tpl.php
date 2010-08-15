@@ -58,7 +58,7 @@ $groupname = $this->_objGroupAdmin->getName($groupId);
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objHeading->align = 'center';
 $objHeading->type = 2;
-$objHeading->str = '<font color="#FF8800">' . $objUser->getSurname() . ', ' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $groupname . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . '</font>';
+$objHeading->str =  $objUser->getSurname() . ', ' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $groupname . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio');
 echo $objHeading->show();
 echo "</br>";
 //Link to epms home

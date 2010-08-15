@@ -40,12 +40,6 @@ $hasAccess|= $this->objUser->isContextLecturer();
 $myContexts = $this->objContextUser->getUserContext($this->userId);
 $this->viewAssessments = $this->newObject('viewassessments_Eportfolio', 'eportfolio');
 $featureBox = &$this->newObject('featurebox', 'navigation');
-/*
-$objHeading->type = 1;
-$objHeading->align = 'center';
-$objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
-echo $objHeading->show();
-echo "</br>";*/
 //Link to print pdf
 $iconPdf = $this->getObject('geticon', 'htmlelements');
 $iconPdf->setIcon('pdf');
@@ -97,7 +91,7 @@ $linkImportManage = $mngImportlink->show();
 //echo "</br>";
 $objHeading->type = 2;
 $objHeading->align = 'center';
-$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '</font>';
+$objHeading->str = $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
 echo $objHeading->show();
 //Create Group 1 and Group 2 for user eportfolio
 if (class_exists('groupops', false)) {
