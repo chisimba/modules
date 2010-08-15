@@ -35,6 +35,16 @@ class tweetstore extends controller
                     header('HTTP/1.1 403 Forbidden');
                 }
                 break;
+            default:
+                $data = $this->objMongo->find();
+                $json = $this->objJson->encode($data);
+                header('Content-Type: application/json; charset=UTF-8');
+                echo $json;
         }
+    }
+
+    public function requiresLogin($action)
+    {
+        return FALSE;
     }
 }
