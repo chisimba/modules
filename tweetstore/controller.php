@@ -31,6 +31,8 @@ class tweetstore extends controller
                     $json = file_get_contents('php://input');
                     $data = $this->objJson($json);
                     $this->objMongo->insert($data);
+                } else {
+                    header('HTTP/1.1 403 Forbidden');
                 }
                 break;
         }
