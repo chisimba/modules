@@ -1682,7 +1682,9 @@ class eportfolio extends controller
 }
 private function showUserDetailsForm() 
 {
-    //    return 'main_tpl.php';
+    //Get Visible MAIN blocks
+    $mainBlocks = $this->objEPBlocks->getVisibleBlocks('main');
+    $this->setVarByRef('mainBlocks', $mainBlocks);
     return "new_main_tpl.php";
 }
 /**
