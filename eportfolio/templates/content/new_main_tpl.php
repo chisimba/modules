@@ -1906,8 +1906,6 @@ $this->objmainTab->init();
 
 //For each tab, check if made visible and order as per the eportfolio blocks
 
-//Get Visible MAIN blocks
-$mainBlocks = $this->objEPBlocks->getVisibleBlocks('main');
 //Step through each Block
 foreach ($mainBlocks as $mainBlock) {
     if ($mainBlock["title"]=='Identification') {
