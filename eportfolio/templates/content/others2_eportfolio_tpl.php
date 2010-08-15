@@ -65,7 +65,7 @@ $objHeading->type = 2;
 $fullOwnername = $this->objUserAdmin->getUserDetails($ownerId);
 //store Id
 $userId = $fullOwnername['userid'];
-$objHeading->str = '<font color="#F38C0B">' .$objLanguage->languageText("mod_eportfolio_youreviewing", 'eportfolio') .'&nbsp;'. $objUser->fullName($userId) . '&nbsp;' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '</font>';
+$objHeading->str = $objLanguage->languageText("mod_eportfolio_youreviewing", 'eportfolio') .'&nbsp;'. $objUser->fullName($userId) . '&nbsp;' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
 echo $objHeading->show();
 echo "</br>";
 //Link to epms home
