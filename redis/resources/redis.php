@@ -337,7 +337,7 @@ class php_redis
 			$commands = implode("\r\n", $commands);
 		}
 
-		$command .= $commands . "\r\n";
+		$command = $commands . "\r\n";
 
 		for ( $written = 0; $written < strlen($command); $written += $fwrite )
 		{
