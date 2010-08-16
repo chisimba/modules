@@ -105,8 +105,8 @@ class dbtriplestore extends dbTable
      * @return boolean TRUE on success, FALSE on failure.
      */
     public function delete($id)
-    {
-        // Attempt to delete the triple from the triplestore.
+    {	
+	    // Attempt to delete the triple from the triplestore.
         $result = parent::delete('id', $id);
 
         // Return the result of the delete.
@@ -257,8 +257,7 @@ class dbtriplestore extends dbTable
         if ($groupBy !== NULL) {
             $stmt .= " GROUP BY $groupBy";
         }
-
-        // Retrieve all the triples out of the triplestore.
+		// Retrieve all the triples out of the triplestore.
         $triples = $this->getArray($stmt);
 
         return $triples;
@@ -291,6 +290,19 @@ class dbtriplestore extends dbTable
             }
             fclose($handle);
         }
+    }
+
+
+	 /**
+     * Imports a XML file into the triplestore.
+     *
+     * @access public
+     * @param  string $file      The name and path to the CSV file.
+     * @param  string $subject   The name of the column containing the subjects.
+     */
+    public function importXML($file, $subject)
+    {
+		//TOdo
     }
 
     /**

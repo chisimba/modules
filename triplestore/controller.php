@@ -82,6 +82,7 @@ class triplestore extends controller
     {
         $this->objTriplestore = $this->getObject('dbtriplestore', 'triplestore');
         $this->objLanguage = $this->getObject('language', 'language');
+		$this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -107,10 +108,10 @@ class triplestore extends controller
         echo json_encode($nestedTriples);
     }
 
-    public function dispatch()
+    public function dispatch($action)
     {
-        // Get action from query string and set default to view.
-        $action=$this->getParam('action', 'view');
+	    // Get action from query string and set default to view.
+        //$action=$this->getParam('action', 'view');
         // Convert the action into a method.
         $method = $this->__getMethod($action);
         // Return the template determined by the action.
@@ -132,7 +133,7 @@ class triplestore extends controller
                 $filters[$filterType] = $filter;
             }
         }
-        $format = $this->getParam('format', 'nested');
+        $format = $this->getParam('format', 'flat');
         switch ($format) {
             case 'nested':
                 $triples = $this->objTriplestore->getNestedTriples($filters);
@@ -231,17 +232,18 @@ class triplestore extends controller
         $mode = $this->getParam("mode", NULL);
         $subject = $this->getParam('subject', NULL);
         $predicate = $this->getParam('predicate', NULL);
-        $tripobject = $this->getParam('tripobject', NULL);
+        $tripobject = $this->getParam('object', NULL);
+		
         if ($mode=="edit") {
             $id = $this->getParam('id', NULL);
-            die("EDIT");
-            // Update the existing record
-            //@todo
+            $this->objTriplestore->update($id, $subject, $predicate, $tripobject);
         } else {
             $this->objTriplestore->insert($subject, $predicate, $tripobject);
         }
-        return $this->nextAction('add');
-    }
+		$extjs['success'] = true;
+        echo json_encode($extjs);
+        exit(0);
+	}
 
     /**
     *
@@ -269,8 +271,9 @@ class triplestore extends controller
             $object = $value;
         }
         $this->objTriplestore->update($key, $subject, $predicate, $object);
-        echo $value;
-        exit;
+        $extjs['success'] = true;
+        echo json_encode($extjs);
+        exit(0);
     }
 
     /**
@@ -326,7 +329,7 @@ class triplestore extends controller
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {
-            return "__actionError";
+            return "__home";
         }
     }
 
@@ -350,6 +353,191 @@ class triplestore extends controller
                 break;
         }
     }
-}
 
+	/**
+     * Default Action for triplestore module
+     * @access private
+     */
+    private function __home() {
+    
+       return 'triplestore_tpl.php';
+    }
+
+
+	/**
+	* Method to upload the csv or xml files to the triplestore
+    * 
+    * @access private
+    * @return json formatted string
+	*/
+	private function __upload(){
+
+		$filetype = $this->getParam('filetype');
+		$this->objUpload = $this->getObject('upload', 'filemanager');
+		$this->objUpload->setUploadFolder("users/".$this->objUser->userId());
+		// Upload File
+        $results = $this->objUpload->uploadFiles();
+		$filename = $_FILES['path1']['name'];
+		$fileid = $results[$filename]['fileid'];
+		error_log(var_export($results, true));
+		// Use it
+		$fileurl = $results[$filename]['fullpath'];
+		$subject = 'me';
+
+		if($filetype == 'csv'){
+			$delimiter = $this->getParam('delimiter', ',');
+			$this->objTriplestore->importCSV($fileurl, $subject, $delimiter);
+		}
+		else{
+			$this->objTriplestore->importXML($fileurl, $subject);
+		}
+			
+		// Delete it
+		$this->objFiles = $this->getObject('dbfile', 'filemanager');
+		$this->objFiles->deleteFile($fileid, False);
+
+		// Respond to the client
+		$extjs['success'] = true;
+		header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($extjs);
+        exit(0);
+	}
+		
+	/**
+	* Method to get the tree array with the following format
+	*[{     text: 'A leaf Node'
+	*	},{
+	*	    text: 'A folder Node',
+	*	    children: [{
+	*	        text: 'A child Node'
+	*	     }]
+	*}]		
+    * @access private
+    * @return json formatted string
+	*/
+	private function __gettree(){
+		$filters = array();
+		$triples = $this->objTriplestore->getTriples($filters, null, 'subject');
+		$allarr = array();
+        if (count($triples) > 0) {
+            foreach ($triples as $triple) {
+            	$arr = array();
+				$arr['id'] = 'subject|'.$triple['id'];
+                $arr['text'] = $triple['subject'];
+                $arr['iconCls'] = 'add';
+
+				$filters = array();
+				$filters['subject'] = $triple['subject'];
+				$predicates = $this->objTriplestore->getTriples($filters, null, 'predicate');
+				
+				$allpre = array();
+				if (count($predicates) > 0) {
+					foreach ($predicates as $predicate) {
+						$prearr = array();
+            			$prearr['id'] = 'predicate|'.$predicate['id'];
+                		$prearr['text'] = $predicate['predicate'];
+						$prearr['leaf'] = true;	
+                		$prearr['iconCls'] = 'add';	
+						$allpre[] = $prearr;
+					}
+					$arr['children'] = $allpre;
+					}
+				$allarr[] = $arr;
+				}                
+            }	        	
+		header('Content-Type: application/json; charset=UTF-8');	
+        echo json_encode($allarr);
+	}
+		
+	/**
+	* Method to get the triples of the selected subject or predicate
+    * 
+    * @access private
+    * @return json formatted string
+	*/
+	private function __getdata(){
+	
+		$id = $this->getParam('node');
+		$ids = explode("|",$id);
+		$id = $ids[1];
+		$data = $ids[0];
+		$i = $this->objTriplestore->getTriples(array('id' => $id));
+		$arr = array();
+		if($data == 'predicate'){
+			$arr['subject'] = $i[0]['subject'];
+			$arr['predicate'] = $i[0]['predicate'];
+		}else if($data == 'subject'){
+			$arr['subject'] = $i[0]['subject'];
+		}
+
+		$filters = array();
+		$filterTypes = array('id', 'userid', 'subject', 'predicate', 'object');
+		foreach ($filterTypes as $filterType) {
+			$filter = $arr[$filterType];
+			if ($filter) {
+				$filters[$filterType] = $filter;
+			}
+		}
+		$triples = $this->objTriplestore->getTriples($filters);
+		$allarr = array();
+		if (count($triples) > 0) {
+			foreach ($triples as $triple) {
+			    $arr = array();
+				$arr['id'] = $triple['id'];
+			    $arr['subject'] = $triple['subject'];
+			    $arr['predicate'] = $triple['predicate'];
+			    $arr['object'] = $triple['object'];
+			    $allarr[] = $arr;
+			}
+		}		
+		$arr = array();
+		$arr['data'] = $allarr;
+		header('Content-Type: application/json; charset=UTF-8');
+		echo json_encode($arr);
+	}
+
+	/**
+	* Method to remove a seleted triple
+    * 
+    * @access private
+    * @return json formatted string
+	*/
+	private function __removeTriples()
+	{
+		$id = $this->getParam('id');
+		$ids = explode("|",$id);
+		foreach($ids as $id){
+			$i = $this->objTriplestore->getTriples(array('id' => $id));
+			$arr = array();
+			if($i){
+				$result = $this->objTriplestore->delete($id);
+				$result != null ? $arr['success'] = true : $arr['success'] = false; 
+			}else{
+				$arr['success'] = false;
+			}
+		}
+		header('Content-Type: application/json; charset=UTF-8');
+   		echo json_encode($arr);
+		exit;
+	}
+
+	/**
+	* Method to get a single triple
+    * 
+    * @access private
+    * @return json formatted string
+	*/
+	private function __getsingletriples(){
+
+	$id = $this->getParam('id');
+	$filters = array();
+	$filters['id'] = $id;
+	$data = $this->objTriplestore->getTriples($filters);
+	$arr['success'] = true;
+	$arr['data'] = $data[0];
+	header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode($arr);
+	exit;
+	}
+}
 ?>
