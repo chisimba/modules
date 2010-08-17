@@ -1355,102 +1355,83 @@ $this->_objJQuery->loadSimpleTreePlugin();
                 return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
 
                 case 'addblock':
-                $blockCat = $this->getParam('blockcat', FALSE);
-                $sectionId = $this->getParam('sectionid', NULL);
-                $pageId = $this->getParam('pageid', NULL);
-                $closePage = $this->getParam('closePage', FALSE);
-                $blockForm  = $this->_objBlocks->getPositionBlockForm($pageId, $sectionId, $blockCat);
-
-                $this->setVarByRef('closePage', $closePage);
-                $this->setVarByRef('blockForm', $blockForm);
-                return 'cms_blocks_tpl.php';
-
                 case 'positionblock':
-                $blockCat = $this->getParam('blockcat', FALSE);
-                $sectionId = $this->getParam('sectionid', NULL);
-                $pageId = $this->getParam('pageid', NULL);
-                $closePage = $this->getParam('closePage', FALSE);
-                $blockForm  = $this->_objBlocks->getPositionBlockForm($pageId, $sectionId, $blockCat);
+                    $blockCat = $this->getParam('blockcat', FALSE);
+                    $sectionId = $this->getParam('sectionid');
+                    $pageId = $this->getParam('pageid');
+                    $closePage = $this->getParam('closePage', FALSE);
+                    $blockForm  = $this->_objBlocks->getPositionBlockForm($pageId, $sectionId, $blockCat);
 
-                $this->setVarByRef('closePage', $closePage);
-                $this->setVarByRef('blockForm', $blockForm);
-                return 'cms_blocks_tpl.php';
+                    $this->setVar('closePage', $closePage);
+                    $this->setVar('blockForm', $blockForm);
+                    return 'cms_blocks_tpl.php';
 
                 case 'saveblock':
-                $blockCat = $this->getParam('blockcat', NULL);
-                //Get the page id of the page to add the block to
-                $pageId = $this->getParam('pageid', NULL);
-                //Get the section id of the page to add the block to
-                $sectionId = $this->getParam('sectionid', NULL);
-
-                if ($blockCat == 'frontpage') {
-                    //Get blocks on the frontpage
-                    $currentBlocks = $this->_objBlocks->getBlocksForFrontPage();
-                } else if ($blockCat == 'content') {
-                    //Get all blocks already on the page
-                    $currentBlocks = $this->_objBlocks->getBlocksForPage($pageId);
-                } else {
-                    //Get all blocks already on the section
-                    $currentBlocks = $this->_objBlocks->getBlocksForSection($sectionId);
-                }
-
-                //Get all available blocks
-                $blocks = $this->_objBlocks->getBlockEntries();
-
-                foreach($blocks as $block) {
-                    $exists = FALSE;
-                    $blockName = $block['blockname'];
-                    $blockId = $block['id'];
-
-                    //Charl Mert : Added Positioning
-                    $position = $this->getParam('position_'.$blockId, '1');
-
-                    if(!empty($currentBlocks)) {
-                        foreach($currentBlocks as $cb) {
-                            if($cb['blockid'] == $blockId) {
-                                $exists = TRUE;
+                    $blockCat = $this->getParam('blockcat');
+                    //Get the page id of the page to add the block to
+                    $pageId = $this->getParam('pageid');
+                    //Get the section id of the page to add the block to
+                    $sectionId = $this->getParam('sectionid');
+                    $frontpage = 0;
+                
+                    if ($this->objModule->checkIfRegistered('textblock')) {
+                        $objTextBlock = $this->newObject('dbtextblock', 'textblock');
+                    	$blocks = $objTextBlock->getAll("ORDER BY title");
+                        foreach ($blocks as $block) {
+                            switch ($blockCat) {
+                                	
+                                    case 'content':
+                                		$record = $this->_objBlocks->getAll("WHERE pageid = '$pageId' AND blockid = '{$block['id']}'
+                                								AND frontpage_block = '0'");
+                                        $ordering = $this->_objBlocks->getOrdering($pageId, NULL, 'content');
+                                		$uriArray = array('blockcat' => 'content', 'pageid' => $pageId);
+                                        break;
+                                    
+                                	case 'frontpage':
+                                		$record = $this->_objBlocks->getAll("WHERE frontpage_block = '1' AND blockid = '{$block['id']}'");
+                                		$frontpage = 1;
+                                        $ordering = $this->_objBlocks->getOrdering(NULL, NULL, 'frontpage');
+                                        $uriArray = array('blockcat' => 'frontpage');
+                                        break;
+                                    
+                                	default:
+                                		$record = $this->_objBlocks->getAll("WHERE sectionid = '$sectionId' AND blockid = '{$block['id']}'
+                                								AND frontpage_block = '0'");
+                                        $ordering = $this->_objBlocks->getOrdering(NULL, $sectionId, 'section');
+                                        $uriArray = array('blockcat' => 'section', 'sectionid' => $sectionId);
+                                		break;
+                                }
+                                
+                            if ($this->getParam($block['id']) == 'on') {
+                                $position = $this->getParam('position_'.$block['id'], '1');
+                                
+                                if (!empty($record)) {
+                                    $record[0]['leftside_blocks'] = $position;
+                                    $this->_objBlocks->update('id', $record[0]['id'], $record[0]);
+                                
+                                } else {
+                                    $newArr = array(
+                                        'pageid' => $pageId ,
+                                        'blockid' => $block['id'],
+                                        'sectionid' => $sectionId,
+                                        'frontpage_block' => $frontpage,
+                                        'leftside_blocks' => $position,
+                                        'ordering' => $ordering
+                                    );
+                                    $this->_objBlocks->insert($newArr);
+                                }
+                                
+                            } else {
+                                if (!empty($record)) {
+                                    $this->_objBlocks->delete('id', $record[0]['id']);
+                                }
                             }
+                        
                         }
                     }
-                    //var_dump($blockId . ' check: [' . $this->getParam($blockId) . '] <br/>');
-                    //Deleting all blocks that match the given category
-                    $this->_objBlocks->deleteAllBlocks($pageId, $sectionId, $blockId, $blockCat);
 
-                    //Get all blocks to be added
-                    if($this->getParam($blockId) == 'on') {
-                        //Check if it already exists before adding it
-                        //if(!$exists) {
-                            $this->_objBlocks->editPosition($pageId, $sectionId, $blockId, $blockCat, $position);
-                        //}
-                        //If block isn't in list to be added check if it exists and delete it    
-                    } else {
-                    //var_dump('deleting pageId[' . $pageId . '] => blockId[' . $blockId . '] => blockCat[' . $blockCat . '] => check: [' . $this->getParam($blockId) . '] <br/>');
-
-                        //if($this->getParam($blockId) != 'on') {
-                            //$this->_objBlocks->deleteBlockExplicit($pageId, $sectionId, $blockId, $blockCat);
-                        //}
-                    }
-                }
-
-                $loadPosition = $this->getParam('loadposition', '');
-
-                if ($loadPosition = '1'){
-                    $action = 'positionblock';
-                } else {
-                    $action = 'addblock';
-                }
-
-                if ($blockCat == 'frontpage') {
-                    return $this->nextAction($action, array('blockcat' => 'frontpage'), 'cmsadmin');
-                } else if ($blockCat == 'content') {
-                    //Get all blocks already on the page
-                    return $this->nextAction($action, array('blockcat' => 'content', 'pageid' => $pageId), 'cmsadmin');
-                } else {
-                    //Get all blocks already on the section
-                    return $this->nextAction($action, array('blockcat' => 'section', 'sectionid' => $sectionId), 'cmsadmin');
-                }
-
-
+                    return $this->nextAction('positionblock', $uriArray);
+                
                 case 'changeblocksorder':
                 //Get block entry details
                 $id = $this->getParam('id');

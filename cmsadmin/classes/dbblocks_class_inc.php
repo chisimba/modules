@@ -54,8 +54,8 @@ class dbblocks extends dbTable
         {
             try {         
                 parent::init('tbl_cms_blocks');
-                $this->_objUser = & $this->getObject('user', 'security');
-                $this->_objLanguage = & $this->newObject('language', 'language');
+                $this->_objUser = $this->getObject('user', 'security');
+                $this->_objLanguage = $this->newObject('language', 'language');
            } catch (Exception $e){
        		    throw customException($e->getMessage());
         	    exit();
@@ -349,9 +349,9 @@ class dbblocks extends dbTable
         {
             //$left = (isset($left) && !empty($left)) ? $left : 0;
             
-            $sql = "SELECT cb.*, cb.id as cb_id, mb.moduleid, mb.blockname 
-                FROM tbl_cms_blocks AS cb, tbl_module_blocks AS mb
-                WHERE (cb.blockid = mb.id) AND frontpage_block = 0 
+            $sql = "SELECT cb.*, cb.id as cb_id
+                FROM tbl_cms_blocks AS cb
+                WHERE frontpage_block = 0 
                 AND leftside_blocks = '{$left}' AND (pageid = '{$pageId}'";
                 
             if(!empty($sectionId)){
@@ -374,10 +374,9 @@ class dbblocks extends dbTable
         {
             //$left = (isset($left) && !empty($left)) ? $left : 0;
             
-            $sql = "SELECT cb.*, cb.id as cb_id, mb.moduleid, mb.blockname 
-                FROM tbl_cms_blocks AS cb, tbl_module_blocks AS mb
-                WHERE (cb.blockid = mb.id) AND frontpage_block = 0 
-                AND (pageid = '{$pageId}'";
+            $sql = "SELECT cb.*, cb.id as cb_id
+                FROM tbl_cms_blocks AS cb
+                WHERE frontpage_block = 0 AND (pageid = '{$pageId}'";
                 
             if(!empty($sectionId)){
                 $sql .= " OR sectionid = '{$sectionId}' ";
@@ -400,8 +399,8 @@ class dbblocks extends dbTable
         {   
             $left = (isset($left) && !empty($left)) ? $left : 0;
             
-            $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
-                WHERE (blockid = tbl_module_blocks.id) AND sectionid = '{$sectionId}' 
+            $sql = "SELECT tbl_cms_blocks.* FROM tbl_cms_blocks
+                WHERE sectionid = '{$sectionId}' 
                 AND frontpage_block = 0  AND leftside_blocks = '{$left}' 
                 "/*GROUP BY blockid*/." ORDER BY ordering";
             
@@ -419,8 +418,8 @@ class dbblocks extends dbTable
         {   
             $left = (isset($left) && !empty($left)) ? $left : 0;
             
-            $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
-                WHERE (blockid = tbl_module_blocks.id) AND sectionid = '{$sectionId}' 
+            $sql = "SELECT tbl_cms_blocks.* FROM tbl_cms_blocks 
+                WHERE sectionid = '{$sectionId}' 
                 AND frontpage_block = 0
                 "/*GROUP BY blockid*/." ORDER BY ordering";
             
@@ -438,11 +437,9 @@ class dbblocks extends dbTable
             //$left = (isset($left) && !empty($left)) ? $left : 0;
             
             $sql = "SELECT tbl_cms_blocks.id, tbl_cms_blocks.pageid, tbl_cms_blocks.blockid, tbl_cms_blocks.sectionid,
-                        tbl_cms_blocks.frontpage_block, tbl_cms_blocks.leftside_blocks, tbl_cms_blocks.ordering,
-                        tbl_module_blocks.moduleid, tbl_module_blocks.blockname 
-                    FROM tbl_cms_blocks, tbl_module_blocks 
-                    WHERE (tbl_cms_blocks.blockid = tbl_module_blocks.id) 
-                        AND tbl_cms_blocks.frontpage_block = '1' 
+                        tbl_cms_blocks.frontpage_block, tbl_cms_blocks.leftside_blocks, tbl_cms_blocks.ordering 
+                    FROM tbl_cms_blocks
+                    WHERE tbl_cms_blocks.frontpage_block = '1' 
                         AND tbl_cms_blocks.leftside_blocks = '{$left}' 
                     "/*GROUP BY tbl_cms_blocks.blockid*/." ORDER BY tbl_cms_blocks.ordering";
             
@@ -461,11 +458,9 @@ class dbblocks extends dbTable
             //$left = (isset($left) && !empty($left)) ? $left : 0;
             
             $sql = "SELECT tbl_cms_blocks.id, tbl_cms_blocks.pageid, tbl_cms_blocks.blockid, tbl_cms_blocks.sectionid,
-                        tbl_cms_blocks.frontpage_block, tbl_cms_blocks.leftside_blocks, tbl_cms_blocks.ordering,
-                        tbl_module_blocks.moduleid, tbl_module_blocks.blockname 
-                    FROM tbl_cms_blocks, tbl_module_blocks 
-                    WHERE (tbl_cms_blocks.blockid = tbl_module_blocks.id) 
-                        AND tbl_cms_blocks.frontpage_block = '1' 
+                        tbl_cms_blocks.frontpage_block, tbl_cms_blocks.leftside_blocks, tbl_cms_blocks.ordering
+                    FROM tbl_cms_blocks
+                    WHERE tbl_cms_blocks.frontpage_block = '1' 
                     "/*GROUP BY tbl_cms_blocks.blockid*/." ORDER BY tbl_cms_blocks.ordering";
             
             return $this->getArray($sql);
@@ -769,90 +764,43 @@ class dbblocks extends dbTable
          * @access public
          * @author Warren Windvogel, Charl Mert
           */
-        public function getPositionBlockForm($pageid, $sectionid, $blockCat)
-        {
-
-            //Including Module TextBlcok integration here
-            $objModule =$this->newObject('modules', 'modulecatalogue');
+        public function getPositionBlockForm($pageid, $sectionid, $blockCat) {
+            //Including Module TextBlock integration here
+            $objModule = $this->newObject('modules', 'modulecatalogue');
             if ($objModule->checkIfRegistered('textblock')) {
-                $objTextBlock =$this->newObject('dbtextblock', 'textblock');
+                $objTextBlock = $this->newObject('dbtextblock', 'textblock');
             } else {
                 $objTextBlock = false;
             }
 
-
             //Load the checkbox class
             $this->loadClass('checkbox', 'htmlelements');
 
-            //Create heading
-            $objH =& $this->newObject('htmlheading', 'htmlelements');
-            $objH->type = '3';
-
             //Create the form
-            $objForm =& $this->newObject('form', 'htmlelements');
+            $objForm = $this->newObject('form', 'htmlelements');
             $objForm->name = 'addblockform';
             $objForm->id = 'addblockform';
 
-            if ($blockCat == 'frontpage') {
-                //Set heading
-                //$objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforfrontpage', 'cmsadmin');
-                //Set form action
-                $objForm->setAction($this->uri(array('action' => 'saveblock', 'blockcat' => $blockCat), 'cmsadmin'));
-                //Get blocks currently attached to item
-                $currentBlocks = $this->getPositionBlocksForFrontPage();
-            } else if ($blockCat == 'content') {
-                //Set heading
-                //$objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforcontent', 'cmsadmin');
-                //Set form action
-                $objForm->setAction($this->uri(array('action' => 'saveblock', 'pageid' => $pageid, 'blockcat' => $blockCat), 'cmsadmin'));
-                //Get blocks currently attached to item
-                $currentBlocks = $this->getPositionBlocksForPage($pageid);
-            } else {
-                //Set heading
-                //$objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforsection', 'cmsadmin');
-                //Set form action
-                $objForm->setAction($this->uri(array('action' => 'saveblock', 'sectionid' => $sectionid, 'blockcat' => $blockCat), 'cmsadmin'));
+            switch ($blockCat) {
+				case 'frontpage':
+					$objForm->setAction($this->uri(array('action' => 'saveblock', 'blockcat' => $blockCat), 'cmsadmin'));
+					break;
+				case 'content':
+					$objForm->setAction($this->uri(array('action' => 'saveblock', 'pageid' => $pageid, 'blockcat' => $blockCat), 'cmsadmin'));
+					break;
+				default:
+					$objForm->setAction($this->uri(array('action' => 'saveblock', 'sectionid' => $sectionid, 'blockcat' => $blockCat), 'cmsadmin'));
 
-                $hidden = new hiddeninput('sectionId', $sectionid);
-                $objForm->addToForm($hidden);
+					$hidden = new hiddeninput('sectionId', $sectionid);
+					$objForm->addToForm($hidden);
 
-                $hidden = new hiddeninput('blockcat', $blockCat);
-                $objForm->addToForm($hidden);
-
-                //Get blocks currently attached to item
-                $currentBlocks = $this->getPositionBlocksForSection($sectionid);
+					$hidden = new hiddeninput('blockcat', $blockCat);
+					$objForm->addToForm($hidden);
+					break;
             }
-    
-            /*
-            //Create table to store form elements
-            $objTable =& $this->newObject('htmltable', 'htmlelements');
-            $objTable->cellspacing = '2';
-            $objTable->cellpadding = '2';
-            $objTable->border = '1';
-            $objTable->width = '70%';
-            //Create header cell
-            $objTable->startHeaderRow();
-            $objTable->addHeaderCell($this->_objLanguage->languageText('phrase_blockname'));
-            $objTable->addHeaderCell($this->_objLanguage->languageText('word_order'));
-            $objTable->endHeaderRow();
-
-            //Get current blocks on page
-            
-
-            if(!empty($currentBlocks)) {
-                foreach($currentBlocks as $tbk) {
-                    $tb = $this->getBlock($tbk['blockid']);
-                    //Add entry to table for changing order
-                    $objTable->startRow();
-                    $objTable->addCell($tb['blockname']);
-                    $objTable->addCell($this->getOrderingLink($tbk['id'], $blockCat));
-                    $objTable->endRow();
-                }
-            }
-            */
 
             //Create table to store form elements
-            $tbl_blocks =& $this->newObject('htmltable', 'htmlelements');
+            $tbl_blocks = $this->newObject('htmltable', 'htmlelements');
             $tbl_blocks->cellspacing = '2';
             $tbl_blocks->cellpadding = '2';
             $tbl_blocks->border = '1';
@@ -861,83 +809,72 @@ class dbblocks extends dbTable
             $boxes = "";
 
             //Get all entries in blocks table
-            $blocks = $this->getBlockEntries();
+            if ($objTextBlock) {
+				$blocks = $objTextBlock->getAll("ORDER BY title");
+			}
             foreach($blocks as $block) {
-                $blockName = $block['blockname'];
-		if ($objTextBlock) {
-                    $txtBlock = $objTextBlock->getBlock($block['id']);
-                    if ($txtBlock['title'] != '') {
-                        $blockName = $txtBlock['title'];
-                    }
-		}
-
+                $blockName = $block['title'];
                 $blockId = $block['id'];
-
-                $checked = FALSE;
-                if(!empty($currentBlocks)) {
-                    foreach($currentBlocks as $blk) {
-                        if($blk['blockid'] == $blockId) {
-                            $checked = TRUE;
-                        }
-                    }
-                }
-                $checkbox = new checkbox($blockId, $blockName, $checked);
-
-                $position = new dropdown('position_'.$blockId);
+				
+				$position = new dropdown('position_'.$blockId);
                 $position->addOption('0', $this->_objLanguage->languageText('word_right'));
                 $position->addOption('1', $this->_objLanguage->languageText('word_left'));
-
-                //Setting the Default Option
-                foreach ($currentBlocks as $active) {
-                    if (isset($active['blockid'])){
-                        $activeId = $active['blockid'];
-                    }
-
-                    if (isset($active['leftside_blocks'])){
-                        $activePosition = $active['leftside_blocks'];
-                    }
-
-                    if ($activeId == $blockId){
-                        $position->setSelected($activePosition);
-                    }
-                }
+                
+				switch ($blockCat) {
+					case 'content':
+						$record = $this->getAll("WHERE pageid = '$pageid' AND blockid = '$blockId'
+												AND frontpage_block = '0'");
+						break;
+					case 'frontpage':
+						$record = $this->getAll("WHERE frontpage_block = '1' AND blockid = '$blockId'");
+						break;
+					default:
+						$record = $this->getAll("WHERE sectionid = '$sectionid' AND blockid = '$blockId'
+												AND frontpage_block = '0'");
+						break;
+				}
+				
+				$checked = (!empty($record));
+				if ($checked) {
+					$position->setSelected($record[0]['leftside_blocks']);
+				}
+                
+                $checkbox = new checkbox($blockId, $blockName, $checked);
 
                 $tbl_blocks->startRow();
                 $tbl_blocks->addCell($checkbox->show());
                 $tbl_blocks->addCell($blockName);
 
-                if ($blockCat == 'frontpage') {
+                if ($blockCat == 'frontpage' || $blockCat == 'content') {
                     $tbl_blocks->addCell($position->show());
-
-                } else if ($blockCat == 'content') {
-                    $tbl_blocks->addCell($position->show());
-                } else {
-                    //Using Default Left block because content renders in 2 column layout
                 }
 
                 $tbl_blocks->endRow();
             }
 
-            //Create submit button
-            $objButton =& $this->newObject('button', 'htmlelements');
-            $objButton->setToSubmit();
-            $objButton->value = $this->_objLanguage->languageText('word_save');
+            $objButton = $this->newObject('button', 'htmlelements');
+			$objButton->setOnClick("javascript:window.close()");
+			$objButton->value = $this->_objLanguage->languageText('word_close');
+			$objButton->name = 'close';
+			$closeButton = $objButton->show();
+            
+			$objButton = $this->newObject('button', 'htmlelements');
+			$objButton->value = $this->_objLanguage->languageText('word_save');
             $objButton->id = 'submit';
             $objButton->name = 'submit';
-
+			$objButton->setToSubmit();
+            
             $hidden = new hiddeninput('loadposition', '1');
 
             $objForm->addToForm($tbl_blocks->show());
             $objForm->addToForm($hidden->show());
-            $objForm->addToForm('<br/>'.'&nbsp;'.'<br/>'.$objButton->show());
+            $objForm->addToForm('<br/>'.$objButton->show()." $closeButton");
 
-            $middleColumnContent = "";
-            $middleColumnContent .= $objH->show();
-            //$middleColumnContent .= $objTable->show();
-            $middleColumnContent .= '<br/>'.'&nbsp;'.'<br/>';
-            $objH->str = $this->_objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
-            $middleColumnContent .= $objH->show();
-            $middleColumnContent .= $objForm->show();
+            //Create heading
+            $objH = $this->newObject('htmlheading', 'htmlelements');
+            $objH->type = '3';
+			$objH->str = $this->_objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
+            $middleColumnContent = $objH->show().$objForm->show();
 
             return $middleColumnContent;
         }
