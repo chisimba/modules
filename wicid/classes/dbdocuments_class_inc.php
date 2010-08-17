@@ -108,9 +108,8 @@ class dbdocuments extends dbtable {
             }
 
             $currentuserid = $row['currentuserid'];
-            $sql2 = "select username from tbl_users where userid='$currentuserid'";
-            $currentuser = $this->getArray($sql2);
-
+            $fullname = $this->objUser->fullname($currentuserid);
+            
             $docs[] = array(
                 'userid' => $row['userid'],
                 'owner' => $owner,
@@ -124,7 +123,7 @@ class dbdocuments extends dbtable {
                 'date' => $row['date_created'],
                 'attachmentstatus' => $attachmentStatus,
                 'status' => $status,
-                'currentuserid' => $currentuser,
+                'currentuserid' => $fullname,
                 'version' => $row['version'],
                 'ref_version' => $row['ref_version']
             );
