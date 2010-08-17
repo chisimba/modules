@@ -63,6 +63,31 @@ class textblock extends controller
                 $this->setVar('start', $start+1);
                 $this->setVar('end', $end);
                 return "main_tpl.php";
+			
+			case 'xxx_patch_tables_0856_xxx':
+				log_debug('executing preinstall code for textblock module version: 0.855');
+				if ($this->objModules->checkIfRegistered('cms')) {
+					$count = 1;
+					$objCMSBlocks = $this->getObject('dbblocks', 'cmsadmin');
+					$textBlocks = $this->getAll();
+					foreach ($textBlocks as $tBlock) {
+						$moduleBlock = $this->objModuleBlocks->getRow('blockname', $tBlock['blockid']);
+						if ($moduleBlock) {
+							$cmsBlocks = $objCMSBlocks->getAll("WHERE blockid = '{$moduleBlock['id']}'");
+							foreach ($cmsBlocks as $cmsBlock) {
+								if ($cmsBlock['blockid'] != $tBlock['id']) {
+									log_debug("TEXTBLOCK: Changed block $count: {$tBlock['blockid']}");
+									$count++;
+								}
+								$cmsBlock['blockid'] = $tBlock['id'];
+								$objCMSBlocks->update('id', $cmsBlock['id'], $cmsBlock);
+							}		
+						}
+					}
+					$this->objModuleBlocks->delete('moduleid', 'textblock');
+				}
+				echo "Changed $count records";
+				break;
 
             case 'edit':
                 $this->getForEdit('edit');
