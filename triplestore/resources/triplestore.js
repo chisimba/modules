@@ -18,7 +18,9 @@ var winadd;
 var winupdt;
 var Tree = Ext.tree;
 var maintree;
-var loadingMask = new Ext.LoadMask(Ext.getBody(), {msg:"Please wait..."});
+var loadingMask = new Ext.LoadMask(Ext.getBody(), {
+    msg:"Please wait..."
+});
 var txtfield = new Ext.form.TextField({
     id: 'txtfield',
     width: 30,
@@ -26,23 +28,22 @@ var txtfield = new Ext.form.TextField({
     name: 'delimiter',
     allowBlank: false,
     value: ',',
-	enableKeyEvents: true
+    enableKeyEvents: true
 });
 
-
 Ext.apply(Ext.form.VTypes, {
-		extension : function(val, field) {
-				if (field != '') {
-				var str = val.substring(val.length - 3, val.length);
-				if(str == 'csv' || str == 'xml'){
-					return true;
-				}
-				return false;
-			}
-			return true;
-		},
-		extensionText : 'Invalid File Extension'
-	});
+    extension : function(val, field) {
+        if (field != '') {
+            var str = val.substring(val.length - 3, val.length);
+            if(str == 'csv' || str == 'xml'){
+                return true;
+            }
+            return false;
+        }
+        return true;
+    },
+    extensionText : 'Invalid File Extension'
+});
 
 //Uploading form
 var uploadform = new Ext.form.FormPanel({
@@ -68,9 +69,9 @@ var uploadform = new Ext.form.FormPanel({
             inputValue: 'csv',
             checked: true,
             handler: function () {
-				var f = uploadform.findById('txtfield');
+                var f = uploadform.findById('txtfield');
 				
-				f.container.up('div.x-form-item').hide();  
+                f.container.up('div.x-form-item').hide();
             }
         },
         {
@@ -80,8 +81,8 @@ var uploadform = new Ext.form.FormPanel({
             boxLabel: 'xml',
             inputValue: 'xml',
             handler: function () {
-               var f = uploadform.findById('txtfield');
-			   f.container.up('div.x-form-item').show();
+                var f = uploadform.findById('txtfield');
+                f.container.up('div.x-form-item').show();
             }
         }
         ]
@@ -89,7 +90,7 @@ var uploadform = new Ext.form.FormPanel({
     txtfield,
     {
         xtype: 'fileuploadfield',
-		vtype: 'extension',
+        vtype: 'extension',
         id: 'form-file',
         emptyText: 'Select a file',
         fieldLabel: 'File',
@@ -100,7 +101,7 @@ var uploadform = new Ext.form.FormPanel({
     buttons: [{
         text: 'Upload File',
         handler: function () {
-		loadingMask.show();
+            loadingMask.show();
             if (uploadform.url)
             {
                 uploadform.getForm().getEl().dom.action = uploadform.url;
@@ -108,12 +109,12 @@ var uploadform = new Ext.form.FormPanel({
             uploadform.getForm().submit({
                 success: function (fp, o) {
                     winup.hide();
-					reload();
-					loadingMask.hide();
-				},
-			   failure: function(xhr,params) {
-						loadingMask.hide();
-            	}
+                    reload();
+                    loadingMask.hide();
+                },
+                failure: function(xhr,params) {
+                    loadingMask.hide();
+                }
             });
         }
     }]
@@ -121,16 +122,16 @@ var uploadform = new Ext.form.FormPanel({
 });
 function hideField(field)
 {
-	field.disable();// for validation
-	field.hide();
-	field.getEl().up('.x-form-item').setDisplayed(false); // hide label
+    field.disable();// for validation
+    field.hide();
+    field.getEl().up('.x-form-item').setDisplayed(false); // hide label
 }
 
 function showField(field)
 {
-	field.enable();
-	field.show();
-	field.getEl().up('.x-form-item').setDisplayed(true);// show label
+    field.enable();
+    field.show();
+    field.getEl().up('.x-form-item').setDisplayed(true);// show label
 }
 
 var addform = new Ext.FormPanel({
@@ -161,7 +162,7 @@ var addform = new Ext.FormPanel({
     buttons: [{
         text: 'Add Triplestore',
         handler: function () {
-			loadingMask.show();
+            loadingMask.show();
             if (addform.url)
             {
                 addform.getForm().getEl().dom.action = addform.url;
@@ -169,17 +170,16 @@ var addform = new Ext.FormPanel({
             addform.getForm().submit({
                 success: function (fp, o) {
                     winadd.hide();
-					reload();
-					loadingMask.hide();
-				},
-				failure: function(xhr,params) {
-					loadingMask.hide();
-            	}
+                    reload();
+                    loadingMask.hide();
+                },
+                failure: function(xhr,params) {
+                    loadingMask.hide();
+                }
             });
         }
     }]
 });
-
 
 var updtform = new Ext.FormPanel({
     frame: true,
@@ -208,27 +208,25 @@ var updtform = new Ext.FormPanel({
     buttons: [{
         text: 'Update Triplestore',
         handler: function () {
-				loadingMask.show();
-                updtform.getForm().getEl().dom.action = uri + '?module=triplestore&action=save&mode=edit&id='+selectedid;
-                updtform.getForm().submit({
+            loadingMask.show();
+            updtform.getForm().getEl().dom.action = uri + '?module=triplestore&action=save&mode=edit&id='+selectedid;
+            updtform.getForm().submit({
                 success: function (fp, o) {
                     winupdt.hide();
-					reload();
-					loadingMask.hide();		
+                    reload();
+                    loadingMask.hide();
                 },
-				failure: function(xhr,params) {
-						loadingMask.hide();
-            	}
+                failure: function(xhr,params) {
+                    loadingMask.hide();
+                }
             });
         }
     }]
 });
 
-
-
 var addButton = new Ext.Button({
     text: 'Add',
-	tooltip: 'Add Triplestore',
+    tooltip: 'Add Triplestore',
     iconCls: 'sexy-add',
     handler: function () {
         winadd = new Ext.Window({
@@ -243,11 +241,9 @@ var addButton = new Ext.Button({
     }
 });
 
-
-
 var upButton = new Ext.Button({
     text: 'Upload',
-	tooltip: 'Upload csv/xml',
+    tooltip: 'Upload csv/xml',
     iconCls: 'sexy-upload',
     handler: function () {
         winup = new Ext.Window({
@@ -262,92 +258,84 @@ var upButton = new Ext.Button({
     }
 });
 
-
-
 var dltButton = new Ext.Button({
     text: 'Delete',
-	tooltip: 'Delete Triplestore',
+    tooltip: 'Delete Triplestore',
     iconCls: 'sexy-delete',
     disabled: true,
     handler: function () {
-		Ext.MessageBox.confirm('Delete Triplestore', "Are you sure you want to remove the selected Triplestore(s)?", 
-		function(btn, text){
-	        if (btn == 'yes')
-	        {
+        Ext.MessageBox.confirm('Delete Triplestore', "Are you sure you want to remove the selected Triplestore(s)?",
+            function(btn, text){
+                if (btn == 'yes')
+                {
 
-			  loadingMask.show();
-            	//get the selected files
-            	var selArr = maingrid.getSelectionModel().getSelections();
+                    loadingMask.show();
+                    //get the selected files
+                    var selArr = maingrid.getSelectionModel().getSelections();
 
-            	//get the selected id's
-            	var idString = "";
+                    //get the selected id's
+                    var idString = "";
 
-           	 	Ext.each( selArr, function( r )
-            	{
-                	idString = r.id +'|'+ idString ;
-            	});
-	        	// execute an XHR to send id of the triplestore you want to delete to the server
-				Ext.Ajax.request({
-            		url: baseuri,
-            		method: 'POST',
-            		params: {
-                		module: 'triplestore',
-                		action: 'removeTriples',
-                		id: idString
-            		},
-            		success: function(obj) {
-						reload();
-						loadingMask.hide();
-            		},
-           			failure: function(xhr,params) {
-						loadingMask.hide();
-            		}
-        		});
-		}
-    });
-	}
-});
-
-
-
-var updButton = new Ext.Button({
-    text: 'Update',
-	tooltip: 'Update Triplestore',
-    iconCls: 'sexy-pencil',
-    disabled: true,
-    handler: function () {
-	winupdt = new Ext.Window({
-        layout: 'fit',
-        width: 300,
-        autoHeight: true,
-        closeAction: 'hide',
-        plain: true,
-        items: [updtform]
-    });
-    winupdt.show(this);
-	updtform.getForm().doAction('load',{
-						url:baseuri,
-						params: {
-							module: 'triplestore',
-							action: 'getsingletriples',
-							id:	selectedid
-							},
-						waitMsg:'Loading...',
-						success: function(form, action) {
-						},
-		            	failure:function(form, action) {
-						}
-						});
+                    Ext.each( selArr, function( r )
+                    {
+                        idString = r.id +'|'+ idString ;
+                    });
+                    // execute an XHR to send id of the triplestore you want to delete to the server
+                    Ext.Ajax.request({
+                        url: baseuri,
+                        method: 'POST',
+                        params: {
+                            module: 'triplestore',
+                            action: 'removeTriples',
+                            id: idString
+                        },
+                        success: function(obj) {
+                            reload();
+                            loadingMask.hide();
+                        },
+                        failure: function(xhr,params) {
+                            loadingMask.hide();
+                        }
+                    });
+                }
+            });
     }
 });
 
-
+var updButton = new Ext.Button({
+    text: 'Update',
+    tooltip: 'Update Triplestore',
+    iconCls: 'sexy-pencil',
+    disabled: true,
+    handler: function () {
+        winupdt = new Ext.Window({
+            layout: 'fit',
+            width: 300,
+            autoHeight: true,
+            closeAction: 'hide',
+            plain: true,
+            items: [updtform]
+        });
+        winupdt.show(this);
+        updtform.getForm().doAction('load',{
+            url:baseuri,
+            params: {
+                module: 'triplestore',
+                action: 'getsingletriples',
+                id:	selectedid
+            },
+            waitMsg:'Loading...',
+            success: function(form, action) {
+            },
+            failure:function(form, action) {
+            }
+        });
+    }
+});
 
 var toolBar = new Ext.Toolbar({
     items: [addButton, upButton, updButton, dltButton]
 });
-
-
 
 maintree = new Tree.TreePanel({
     id: 'tree',
@@ -379,28 +367,20 @@ maintree = new Tree.TreePanel({
     }
 });
 
-
-
 // add a tree sorter in folder mode
 new Tree.TreeSorter(maintree, {
     folderSort: true
 });
 
-
-
 // set the root node
 var root = new Tree.AsyncTreeNode({
-	iconCls: 'sexy-add',
+    iconCls: 'sexy-add',
     text: 'Triple Store',
     id: 'subject|root',
-	expanded:true
+    expanded:true
 });
 
-
-
 maintree.setRootNode(root);
-
-
 
 root.expand(false, true);
 
@@ -420,9 +400,7 @@ var datastore = new Ext.data.JsonStore({
     })
 });
 
-
 var fm = Ext.form;
-
 
 var westpanel = new Ext.Panel({
     id: 'left-panel',
@@ -439,28 +417,28 @@ var westpanel = new Ext.Panel({
 
 
 var sm2 = new Ext.grid.CheckboxSelectionModel({
-        listeners: {
-            selectionchange: function(sm) {
-                if(sm.getCount() == 1){
-					dltButton.enable();
-					updButton.enable();
-				}
-				else{
-					dltButton.enable();
-					updButton.disable();
-				}
+    listeners: {
+        selectionchange: function(sm) {
+            if(sm.getCount() == 1){
+                dltButton.enable();
+                updButton.enable();
+            }
+            else{
+                dltButton.enable();
+                updButton.disable();
             }
         }
+    }
 });
 
 
 var pageNavigation = new Ext.PagingToolbar({
-        pageSize: 25,
-        store: datastore,
-        displayInfo: true,
-        displayMsg: 'Displaying triplestore {0} - {1} of {2}',
-        emptyMsg: "No Triplestore to display",
-        items:[]
+    pageSize: 25,
+    store: datastore,
+    displayInfo: true,
+    displayMsg: 'Displaying triplestore {0} - {1} of {2}',
+    emptyMsg: "No Triplestore to display",
+    items:[]
 });	
 
 
@@ -476,66 +454,65 @@ var maingrid = new Ext.grid.EditorGridPanel({
         emptyText: 'No Triplestore found'
     },
     cm: new Ext.grid.ColumnModel([
-	{
-		id: 'subject',
-		header: "Subject",
-		dataIndex: 'subject',
-		width: 250,
-		sortable: true,
-		editor: new fm.TextField({
-		    allowBlank: false
-		})
-	},
+    {
+        id: 'subject',
+        header: "Subject",
+        dataIndex: 'subject',
+        width: 250,
+        sortable: true,
+        editor: new fm.TextField({
+            allowBlank: false
+        })
+    },
 
-	{
-		id: 'predicate',
-		header: "Predicate",
-		dataIndex: 'predicate',
-		width: 250,
-		sortable: true,
-		editor: new fm.TextField({
-		    allowBlank: false
-		})
-	},
+    {
+        id: 'predicate',
+        header: "Predicate",
+        dataIndex: 'predicate',
+        width: 250,
+        sortable: true,
+        editor: new fm.TextField({
+            allowBlank: false
+        })
+    },
 
-	{
-		id: 'object',
-		header: "Object",
-		dataIndex: 'object',
-		width: 200,
-		sortable: true,
-		editor: new fm.TextField({
-		    allowBlank: false
-		})
-	}
-	]),
-	// paging bar on the bottom
+    {
+        id: 'object',
+        header: "Object",
+        dataIndex: 'object',
+        width: 200,
+        sortable: true,
+        editor: new fm.TextField({
+            allowBlank: false
+        })
+    }
+    ]),
+    // paging bar on the bottom
     bbar: pageNavigation
-	});
+});
 
 
-	maingrid.on('afteredit', afterEdit, this );
+maingrid.on('afteredit', afterEdit, this );
 
 
-	function afterEdit(e) {
-		// execute an XHR to send/commit data to the server, in callback do (if successful):
-		Ext.Ajax.request({
-            url: baseuri,
-            method: 'POST',
-            params: {
-                module: 'triplestore',
-                action: 'saveinline',
-                id: e.field+"|"+e.record.id,
-				value: e.value
-            },
-            success: function(response) {
-			   e.record.commit();
-            },
-            failure: function(xhr,params) {
-			}
-     });
-};
-
+function afterEdit(e){
+    // execute an XHR to send/commit data to the server, in callback do (if successful):
+    Ext.Ajax.request({
+        url: baseuri,
+        method: 'POST',
+        params: {
+            module: 'triplestore',
+            action: 'saveinline',
+            id: e.field+"|"+e.record.id,
+            value: e.value
+        },
+        success: function(response) {
+            e.record.commit();
+        },
+        failure: function(xhr,params) {
+        }
+    });
+}
 
 var main = new Ext.Panel({
     id: 'main',
@@ -548,24 +525,29 @@ var main = new Ext.Panel({
     items: [maingrid, westpanel]
 });
 
-
 maingrid.getSelectionModel().on('rowselect',
-	 function(sm, ri, record)
-		{	
-			selectedid = record.data.id;
-});
-
+    function(sm, ri, record)
+    {
+        selectedid = record.data.id;
+    });
 
 function reload(){
-	loadingMask.show();
-	maintree.root.reload();
-	datastore.load({params:{node: selectedfolder}});
-	loadingMask.hide();
+    loadingMask.show();
+    maintree.root.reload();
+    datastore.load({
+        params:{
+            node: selectedfolder
+        }
+    });
+loadingMask.hide();
 }
-
 
 Ext.onReady(function () {
     //render mainpanel
     main.render();
-	datastore.load({params:{node: selectedfolder}});
+    datastore.load({
+        params:{
+            node: selectedfolder
+        }
+    });
 });
