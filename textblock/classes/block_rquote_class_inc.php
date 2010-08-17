@@ -32,10 +32,10 @@ class block_rquote extends object
     */
     public function init()
     {
-        $this->objLanguage = & $this->getObject("language", "language");
-        $this->title=$this->objLanguage->languageText("mod_quotes_rquotetitle","quotes");
+        $this->objLanguage = $this->getObject("language", "language");
+        $this->title = $this->objLanguage->languageText("mod_quotes_rquotetitle","quotes");
         //Create an instance of the database class for this module
-        $this->objDbquotes = & $this->getObject("dbquotes");
+        $this->objDbquotes = $this->getObject("dbquotes");
     }
 
     /**
