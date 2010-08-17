@@ -10,13 +10,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 /**
 * Model class for the table tbl_textblock
 *
-* @author Derek Keats
+* @author Charl Mert
 *
 * $Id: dbtextblock_class_inc.php,v 1.1 2006/09/14 08:19:14 dkeats
 *
 */
-class dbtextblock extends dbTable
-{
+class dbtextblock extends dbTable {
 
     /**
     * Constructor method to define the table
@@ -25,38 +24,26 @@ class dbtextblock extends dbTable
         parent::init('tbl_textblock');
 
 		$this->objBlock = $this->getObject('dbblocksdata', 'blocks');
+		$this->objUser = $this->getObject('user', 'security');
     }
 
     /**
     * Method to return the block row
     * @param string $blockId the blockId as per tbl_module_blocks.id.
     */
-    public function getBlock($blockId)
-    {   
+    public function getBlock($blockId) {   
 		$blockArr = $this->objBlock->getBlock($blockId);;
 		$txtBlockId = trim($blockArr['blockname']);
-		$result = $this->getAll(" WHERE blockid = '$txtBlockId'");
-		return $result[0];
+		return $this->getRow('blockid', $txtBlockId);
     }
 
     /**
     * Save method for editing a record in this table
     * @param string $mode: edit if coming from edit, add if coming from add
     */
-    public function saveRecord($mode, $userId)
-    {   try
-        {
-            $id=$this->getParam('id', NULL);
-            $blockid = $this->getParam('blockid', NULL);
-            $title = $this->getParam('title', NULL);
-            $blocktext = $this->getParam('blocktext', NULL);
-			$objUser = $this->getObject("user", "security");
-			$showTitle = $this->getParam('show_title', '1');
-
-			$showTitle = ($showTitle == 'on')? '1' : '0';
-
-            $cssId = $this->getParam('css_id', NULL);
-            $cssClass = $this->getParam('css_class', NULL);
+    public function saveRecord($id, $mode, $blockid, $title, $blocktext, $cssId, $cssClass, $showTitle) {
+		try {
+            
             // if edit use update
             if ($mode=="edit") {
                 $this->update("id", $id, array(
@@ -65,12 +52,12 @@ class dbtextblock extends dbTable
                 'blocktext' => $blocktext,
                 'datemodified' => $this->now(),
                 'modified' => $this->now(),
-                'modifierid' => $objUser->userId(),
+                'modifierid' => $this->objUser->userId(),
                 'css_id' => $cssId,
                 'css_class' => $cssClass,
                 'show_title' => $showTitle));
 
-            }//if
+            }
             // if add use insert
             if ($mode=="add") {
                 $this->insert(array(
@@ -78,19 +65,17 @@ class dbtextblock extends dbTable
                 'title' => $title,
                 'blocktext' => $blocktext,
                 'datecreated' => $this->now(),
-                'creatorid' => $objUser->userId(),
+                'creatorid' => $this->objUser->userId(),
                 'modified' => $this->now(),
                 'css_id' => $cssId,
                 'css_class' => $cssClass,
                 'show_title' => $showTitle));
 
-            }//if
-        } catch (customException $e)
-        {
+            }
+        } catch (customException $e) {
         	echo customException::cleanUp($e);
         	die();
         }
-    }//function
+    }
 
-} //end of class
-?>
+}
