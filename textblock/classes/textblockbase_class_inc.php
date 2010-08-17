@@ -29,7 +29,7 @@ class textblockbase extends object
     	//Create an instance of the textblock DBtable object
         $this->objDb = $this->getObject("dbtextblock", "textblock");
         //Create an instance of the language object
-        $this->objLanguage = &$this->getObject("language", "language");
+        $this->objLanguage = $this->getObject("language", "language");
     }
     
     /**
@@ -38,9 +38,9 @@ class textblockbase extends object
     * @access public
     *
     */
-    public function setData($textItem)
+    public function setData($id)
     {
-        $ar = $this->objDb->getRow("blockid", $textItem);
+        $ar = $this->objDb->getRow("id", $id);
         if (count($ar) > 0 ) {
             $this->showTitle = $ar['show_title'];
             if ($this->showTitle=="1") {
@@ -70,10 +70,18 @@ class textblockbase extends object
             }
             $this->blockContents = $ret;
         } else {
-            $this->title = $textItem;
+            $this->title = $id;
             $this->blockContents = $this->objLanguage->languageText("mod_textblock_nocontent", "textblock");
         }
         return TRUE;
+    }
+	
+	/**
+    * Method to output a block with text content
+    */
+    function show()
+	{
+        return $this->blockContents;
     }
 }
 ?>
