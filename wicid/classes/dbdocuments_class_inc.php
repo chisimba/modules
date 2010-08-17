@@ -87,6 +87,30 @@ class dbdocuments extends dbtable {
                 $f = $row['filename'];
                 $attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
             }
+
+            $statusS = $row['status'];
+            switch ($statusS) {
+                case 0:
+                    $status = "Creator";
+                    break;
+                case 1:
+                    $status = "APO";
+                    break;
+                case 2:
+                    $status = "Subfaculty";
+                    break;
+                case 3:
+                    $status = "Faculty";
+                    break;
+                case 4:
+                    $status = "Senate";
+                    break;
+            }
+
+            $currentuserid = $row['currentuserid'];
+            $sql2 = "select username from tbl_users where userid='$currentuserid'";
+            $currentuser = $this->getArray($sql2);
+
             $docs[] = array(
                 'userid' => $row['userid'],
                 'owner' => $owner,
@@ -99,8 +123,8 @@ class dbdocuments extends dbtable {
                 'telephone' => $row['telephone'],
                 'date' => $row['date_created'],
                 'attachmentstatus' => $attachmentStatus,
-                'status' => $row['status'],
-                'currentuserid' => $row['currentuserid'],
+                'status' => $status,
+                'currentuserid' => $currentuser,
                 'version' => $row['version'],
                 'ref_version' => $row['ref_version']
             );
@@ -358,7 +382,7 @@ class dbdocuments extends dbtable {
         //$sql = "insert version ='$versionNew' into tbl_wicid_documents where id = '$docid' and version = '$version'";
         $sql = "select * from tbl_wicid_documents where id = '$docid' and version = '$version'";
         $data = $this->getArray($sql);
-        $data = array('version'=>$versionNew);
+        $data = array('version' => $versionNew);
         $this->insert($data);
         return $versionNew;
     }
