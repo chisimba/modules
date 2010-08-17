@@ -113,14 +113,14 @@ public class DocumentListPanel extends LayoutContainer {
         List<ColumnConfig> columns = new ArrayList<ColumnConfig>();
         sm = new CheckBoxSelectionModel<ModelData>();
         columns.add(sm.getColumn());
-        columns.add(new ColumnConfig("Owner", "Owner", 145));
+        columns.add(new ColumnConfig("Owner", "Owner", 150));
         columns.add(new ColumnConfig("RefNo", "RefNo", 50));
         columns.add(new ColumnConfig("Title", "Title", 150));
         columns.add(new ColumnConfig("Topic", "Topic", 100));
         columns.add(new ColumnConfig("Date", "Date", 70));
         columns.add(new ColumnConfig("Attachment", "Attachment", 65));
-        columns.add(new ColumnConfig("Status", "Status", 45));
-        columns.add(new ColumnConfig("currentuserid", "Current User", 75));
+        columns.add(new ColumnConfig("Status", "Status", 70));
+        columns.add(new ColumnConfig("currentuserid", "Current User", 100));
         columns.add(new ColumnConfig("version", "V", 20));
         CellEditor checkBoxEditor = new CellEditor(new CheckBox());
 
@@ -144,14 +144,14 @@ public class DocumentListPanel extends LayoutContainer {
 
 
         // use a http proxy to get the data
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL() + "?module=wicid&action=getdocuments");
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
+                + "?module=wicid&action=getdocuments");
         HttpProxy<String> proxy = new HttpProxy<String>(builder);
 
         // need a loader, proxy, and reader
         JsonLoadResultReader<ListLoadResult<ModelData>> reader = new JsonLoadResultReader<ListLoadResult<ModelData>>(type);
         loader = new BaseListLoader<ListLoadResult<ModelData>>(proxy,
                 reader);
-
 
         store = new ListStore<ModelData>(loader);
 
@@ -166,40 +166,6 @@ public class DocumentListPanel extends LayoutContainer {
         addContextMenu();
         grid.setContextMenu(contextMenu);
 
-        /*   try {
-        AggregationRowConfig<ModelData> row = new AggregationRowConfig<ModelData>();
-        grid.getColumnModel().addAggregationRow(row);//.getAt(6).get("status").toString();
-        String temp = row.getModel().get("status");
-        System.out.println(temp);
-        } catch (NullPointerException npe) {
-        System.out.println("npe");
-        }
-        //int noRows =
-        /*
-        
-        for (int i = 0; i < 1; i++) {
-        ModelData record = store.getModels().get(i);
-        System.out.println(record.toString());
-        String temp = record.get("currentuserid");
-        int statusTemp = 0;
-        System.out.println(temp);
-        switch (statusTemp) {
-        case 0:
-        statusS = "Creator";
-        case 1:
-        statusS = "APO";
-        case 2:
-        statusS = "Subfaculty";
-        case 3:
-        statusS = "Faculty";
-        case 4:
-        statusS = "Senate";
-        }
-        System.out.println(statusS);
-        record.set("currentuserid", statusS);
-        grid.getStore().commitChanges();
-        }
-         */
         grid.getSelectionModel().addListener(Events.SelectionChange,
                 new Listener<SelectionChangedEvent<ModelData>>() {
 
@@ -210,13 +176,9 @@ public class DocumentListPanel extends LayoutContainer {
                         if (mode.equalsIgnoreCase("APO")) {
                             submitButton.setEnabled(selectedRows.size() > 0);
                         }
-                        for (ModelData row : selectedRows) {
-                            status = Integer.parseInt(row.get("Status").toString());
-                        }
+                        status = getStatus();
                     }
                 });
-
-
 
         ContentPanel panel = new ContentPanel();
         panel.setFrame(true);
@@ -375,6 +337,7 @@ public class DocumentListPanel extends LayoutContainer {
 
     private void submitDocument() {
         String currentStatusS = "";
+        status = getStatus();
         switch (status) {
             case 0:
                 currentStatusS.equals("Creation");
@@ -398,23 +361,9 @@ public class DocumentListPanel extends LayoutContainer {
         final Dialog submitDialog = new Dialog();
         submitDialog.setButtons(Dialog.OKCANCEL);
 
-        /*        SimpleComboValue<String> SCvalues = new SimpleComboValue<String>(){};
-        SCvalues.set("APO", "APO");
-        SCvalues.set("Subfaculty", "Subfaculty");
-        SCvalues.set("Faculty", "Faculty");
-        SCvalues.set("Senate", "Senate");
-        SCvalues.remove(currentStatusS);
-        
-        ListStore<SimpleComboValue<String>> submitStore = new ListStore<SimpleComboValue<String>>();
-        submitStore.add(SCvalues);
-         */
         submitCombo.setFieldLabel("Subit this document to");
         submitCombo.setEmptyText("Select who you want to submit to");
 
-        /*    for (int i = 0; i<submitStore.getCount()+1; i++){
-        submitCombo.add(submitStore.getAt(i).getValue());
-        }
-         */
         submitCombo.add("Creator");
         submitCombo.add("APO");
         submitCombo.add("SubFaculty");
@@ -503,7 +452,6 @@ public class DocumentListPanel extends LayoutContainer {
                 } else {
                     MessageBox.info("Error", "Pleave select a party to submit to.", null);
                 }
-
             }
         });
 
@@ -903,6 +851,24 @@ public class DocumentListPanel extends LayoutContainer {
     public void showRejectedDocs() {
         Constants.main.selectRejectedDocsTab();
         Constants.main.refreshRejectedDocs();
+    }
+
+    public int getStatus() {
+        for (ModelData row : selectedRows) {
+            String statusTable = row.get("Status");
+            if (statusTable.equals("Creator")) {
+                status = 0;
+            } else if (statusTable.equals("APO")) {
+                status = 1;
+            } else if (statusTable.equals("Subfaculty")) {
+                status = 2;
+            } else if (statusTable.equals("Facluty")) {
+                status = 3;
+            } else if (statusTable.equals("Senate")) {
+                status = 4;
+            }
+        }
+        return status;
     }
 
     /*  private int checkStatus() {
