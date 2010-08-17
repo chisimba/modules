@@ -21,7 +21,7 @@ $objForm->setAction($formAction);
 //Set the displayType to 3 for freeform
 $objForm->displayType=3;
 // Create an instance of the css layout class
-$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
+$cssLayout = $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 
 
@@ -56,10 +56,10 @@ if (isset($id)) {
     $objElement->setValue($id);
 }
 //Set the field type to hidden for the primary key
-$objElement->fldType="hidden";
+$objElement->fldType = "hidden";
 //Add the hidden PK field to the form
 $objForm->addToForm($objElement->show());
-//------------------------------------------------------------------------
+/*------------------------------------------------------------------------
 //Create an element for the input of blockid
 $objElement = new textinput ("blockid");
 //Set the value of the element to $blockid
@@ -70,6 +70,7 @@ if (isset($blockid)) {
 $wsiLabel = new label($this->objLanguage->languageText('mod_textblock_field_blockid','textblock'), "input_blockid");
 //Add the $blocktext element to the form
 $objForm->addToForm($wsiLabel->show()."<br />".$objElement->show()."<br /><br />");
+*/
 //------------------------------------------------------------------------
 //Create an element for the input of title
 $objElement = new textinput ("title");

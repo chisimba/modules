@@ -8,14 +8,11 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 /**
 *
-* Controller class for the table tbl_quotes
+* Controller class for the text blocks module
 *
-* @author Administrative User
-*
-*
+* @author Charl Mert, Nic Appleby
 * @version $Id$
-* @version $Id: controller.php,v 1.3 2006/09/14 Abdurahim Ported to PHP5
-* @copyright 2005 GNU GPL
+* @copyright 2010 GNU GPL
 *
 */
 class textblock extends controller
@@ -40,7 +37,7 @@ class textblock extends controller
         $this->objLanguage = $this->getObject("language", "language");
         
         //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
+        $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
     }
@@ -53,52 +50,65 @@ class textblock extends controller
         switch ($this->action) {
             case null:
             case "view":
-		  $pageNr = $this->getParam('pagenum', '1');
-		  $records = 20;
-		  $start = (($pageNr * $records) - $records);
-		  $end = $pageNr * $records;
-                  $ar = $this->objDb->getAll(" LIMIT $start, $end");
-                  $this->setVarByRef('ar', $ar);
-                  return "main_tpl.php";
-                  break;
+				$pageNr = $this->getParam('pagenum', '1');
+				$records = 10;
+				$start = (($pageNr * $records) - $records);
+				$end = $pageNr * $records;
+				$total = $this->objDb->getRecordCount();
+				$end = ($end > $total)? $total : $end;
+                $ar = $this->objDb->getAll("ORDER BY title LIMIT $start, $end");
+                $this->setVar('ar', $ar);
+                $this->setVar('total', $total);
+                $this->setVar('page', $pageNr);
+                $this->setVar('start', $start+1);
+                $this->setVar('end', $end);
+                return "main_tpl.php";
+
             case 'edit':
-                 $this->getForEdit('edit');
-                 $this->setVar('mode', 'edit');
-                 return "edit_tpl.php";
-                 break;
+                $this->getForEdit('edit');
+                $this->setVar('mode', 'edit');
+                return "edit_tpl.php";
 
             case 'delete':
                 // retrieve the confirmation code from the querystring
-                $confirm=$this->getParam("confirm", "no");
-                if ($confirm=="yes") {
-                    $this->objDb->delete("id", $this->getParam('id', Null));
-                    return $this->nextAction('view',null);
+                $confirm = $this->getParam("confirm", "no");
+                if ($confirm == "yes") {
+                    $this->objDb->delete("id", $this->getParam('id', NULL));
+                    return $this->nextAction('view', NULL);
                 }
                 break;
 				
             case 'add':
                 $this->setVar('mode', 'add');
                 return "edit_tpl.php";
-                break;
 
             case 'save':
-            	$objUser = $this->getObject("user", "security");
-                $this->objDb->saveRecord($this->getParam('mode', Null), $objUser->userId());
-                return $this->nextAction('view',null);
-                break;
+            	$id = $this->getParam('id');
+				$blockid = $this->getParam('blockid');
+				$title = $this->getParam('title');
+				$blocktext = $this->getParam('blocktext');
+				$showTitle = $this->getParam('show_title');
+
+				$showTitle = ($showTitle == 'on')? '1' : '0';
+	
+				$cssId = $this->getParam('css_id');
+				$cssClass = $this->getParam('css_class');
+                $mode = $this->getParam('mode');
+				
+				$this->objDb->saveRecord($id, $mode, $blockid, $title, $blocktext, $cssId, $cssClass, $showTitle);
+                return $this->nextAction('view');
 
             default:
                 $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown").": ".$action);
                 return 'dump_tpl.php';
 
-        }//switch
-    } // dispatch
+        }
+    }
     
     /**
     * Override the default requirement for login
     */
-    public function requiresLogin()
-    {
+    public function requiresLogin() {
         return TRUE;  
     }
     
@@ -108,8 +118,7 @@ class textblock extends controller
     * the vars for the edit template.
     *    @param string $mode The edit or add mode @values edit | add
     */
-    public function getForEdit($mode)
-    {
+    public function getForEdit($mode) {
         $this->setvar('mode', $mode);
         // retrieve the PK value from the querystring
         $keyvalue=$this->getParam("id", NULL);
@@ -118,6 +127,6 @@ class textblock extends controller
         }
         // Get the data for edit
         $this->setVar('ar', $this->objDb->getRow('id', $keyvalue));
-    }//getForedit
+    }
 }
 ?>
