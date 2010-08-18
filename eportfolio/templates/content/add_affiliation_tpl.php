@@ -154,7 +154,7 @@ $longdescription = '';
 $editor->setContent($longdescription);
 //$objTable->addCell($editor->showFCKEditor(), NULL, "top", "center", NULL, "colspan=\"2\"");
 $row = array(
-    $editor->showFCKEditor()
+    $editor->show()
 );
 //$form->addRule('longdescription', 'Please enter the long description','required');
 $objTable->addCell($row[0], NULL, 'top', 'left');

@@ -110,7 +110,7 @@ if (!$hasAccess) {
     $longdescription = '';
     $editor->setContent($longdescription);
     $row = array(
-        $editor->showFCKEditor()
+        $editor->show()
     );
     $objTable->addCell($row[0], Null, 'top', 'left');
     $objTable->endRow();

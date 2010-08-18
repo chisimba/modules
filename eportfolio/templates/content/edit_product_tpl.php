@@ -180,7 +180,7 @@ $editor->height = '300px';
 $editor->width = '450px';
 $editor->setContent($longdescription);
 $row = array(
-    $editor->showFCKEditor()
+    $editor->show()
 );
 $objTable->addRow($row, NULL);
 //Save button
