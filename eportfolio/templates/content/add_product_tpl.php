@@ -169,7 +169,7 @@ $row = array(
 $objTable->addRow($row, NULL);
 //Add the WYSWYG editor
 $editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'longdescription';
+$editor->setName = 'longdescription';
 $editor->height = '300px';
 $editor->width = '450px';
 $longdescription = '';

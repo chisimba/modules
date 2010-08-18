@@ -1904,10 +1904,6 @@ $this->objTab = $this->newObject('tabber', 'htmlelements');
 $this->objTab->init();
 $this->objmainTab->init();
 
-//Get Visible MAIN blocks
-if(empty($mainBlocks))
-    $mainBlocks = $this->objEPBlocks->getVisibleBlocks('main');
-
 //For each tab, check if made visible and order as per the eportfolio blocks
 
 //Step through each Block
