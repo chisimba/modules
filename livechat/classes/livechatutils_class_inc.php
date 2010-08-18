@@ -33,10 +33,10 @@ class livechatutils extends object {
     <resources>
         <j2se version="1.5+"/>
         <jar href="LiveChat.jar" main="true"/>
-        <jar href="lib/smack.jar"/>
-        <jar href="lib/smackx.jar"/>
+        <jar href="smack.jar"/>
+        <jar href="smackx.jar"/>
     </resources>
-    <applet-desc height="400" main-class="livechat.gui.CompactChatFrame" name="LiveChat" width="250">
+    <applet-desc height="300" main-class="livechat.gui.CompactChatFrame" name="LiveChat" width="250">
         <param name="serverHost" value="' . $this->objSysConfig->getValue('SERVER_HOST', 'livechat') . '"/>
         <param name="serverPort" value="' . $this->objSysConfig->getValue('SERVER_PORT', 'livechat') . '"/>
         <param name="username" value="' . $this->objUser->username() . '"/>
