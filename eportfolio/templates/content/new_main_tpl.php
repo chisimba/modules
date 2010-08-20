@@ -720,7 +720,7 @@ $addlink = new link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'add_affiliation'
 )));
-$addlink->link = $objLanguage->languageText("mod_eportfolio_addaffiliation", 'eportfolio');
+$addlink->link = $objLanguage->languageText("mod_eportfolio_addAffiliation", 'eportfolio');
 $affiliationTable->startRow();
 $affiliationTable->addCell($addlink->show() , '', '', '', '', 'colspan="8"');
 $affiliationTable->endRow();
