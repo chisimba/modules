@@ -14,18 +14,18 @@
     <resources>
         <j2se version="1.5+"/>
         <jar href="LiveChat.jar" main="true"/>
-        <jar href="lib/smack.jar"/>
-        <jar href="lib/smackx.jar"/>
+        <jar href="smack.jar"/>
+        <jar href="smackx.jar"/>
     </resources>
-    <applet-desc height="400" main-class="livechat.gui.CompactChatFrame" name="LiveChat" width="250">
+    <applet-desc height="300" main-class="livechat.gui.CompactChatFrame" name="LiveChat" width="250">
         <param name="serverHost" value="localhost"/>
         <param name="serverPort" value="5222"/>
         <param name="username" value="student1"/>
-        <param name="roomname" value="011"/>
+        <param name="roomname" value="local004"/>
         <param name="email" value="student1.elearn.wits@gmail.com"/>
         <param name="names" value="student 1 student 1"/>
         <param name="isinstructor" value="no"/>
-        <param name="roomdesc" value="local prod test 11"/>
+        <param name="roomdesc" value="Local prod test 4"/>
     </applet-desc>
 </jnlp>
           
