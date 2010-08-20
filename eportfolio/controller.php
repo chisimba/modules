@@ -230,6 +230,7 @@ class eportfolio extends controller
                     }
             case 'update':
                     $vibe = array();
+                    //Get all blocks
                     $blocks = $this->objEPBlocks->getAll();
                     if (isset($blocks)) {
                       foreach($blocks as $block) {
