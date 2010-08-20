@@ -1906,8 +1906,7 @@ $this->objmainTab->init();
 
 //Get Visible MAIN blocks if mainBlocks is empty
 if(empty($mainBlocks))
- $mainBlocks = $this->objEPBlocks->getVisibleBlocks('main');
-
+ $mainBlocks = $this->objEPBlocks->getVisibleBlocks('main', $this->userId);
 //For each tab, check if made visible and order as per the eportfolio blocks
 
 //Step through each Block

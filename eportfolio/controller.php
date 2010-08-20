@@ -151,7 +151,7 @@ class eportfolio extends controller
         switch ($action) {
                 case 'admin':
                     $this->setLayoutTemplate('eportfolio_layout_tpl.php');
-                    return 'eportfolio_setup_tpl.php';                    
+                    return 'eportfolio_setup_tpl.php';
                 case 'editblock':
                     if (!$this->objUser->isAdmin()) {
                         return 'new_main_tpl.php';
@@ -229,22 +229,17 @@ class eportfolio extends controller
                         return $this->nextAction('admin',array('change'=>'2'));
                     }
             case 'update':
-                 if (!$this->objUser->isAdmin()) {
-                     return 'new_main_tpl.php';
-                 } else {
-                     $vibe = array();
-                     $blocks = $this->objEPBlocks->getAll();
-                     if (isset($blocks)) {
+                    $vibe = array();
+                    $blocks = $this->objEPBlocks->getAll();
+                    if (isset($blocks)) {
                       foreach($blocks as $block) {
                        ($this->getParam($block['id'].'_vis')=='on')? $vis = $this->TRUE : $vis = $this->FALSE;
-                       //var_dump($block);var_dump($vis);
                        if ($block['visible'] !== $vis) {
                            $this->objEPBlocks->updateVisibility($block['id'],$vis);
                        }
                       }
-                     }
+                    }
                      return $this->nextAction('admin',array('change'=>'2'));
-            }
             case "postcomment":
                 $id = $this->objDbComment->insertSingle($this->getParam('eportfoliopartid', NULL) , $this->getParam('newcomment', NULL) , $isapproved = '0');
                 // After processing return to view main
