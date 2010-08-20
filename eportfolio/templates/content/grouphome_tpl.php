@@ -90,7 +90,7 @@ if ($this->isValid('removeallusers') && count($grpMembers) > 0) {
 $objTable->addCell("<i>" . $this->objLanguage->languageText('word_userid') . "</i>", 100, 'bottom', '', 'heading', '');
 $objTable->addCell("<i>" . $this->objLanguage->languageText('mod_security_staffstudentnumber', 'security', 'Staff/Student Number') . "</i>", 100, 'bottom', '', 'heading', '');
 $objTable->addCell("<i>" . $this->objLanguage->languageText('word_title') . "</i>", 30, 'bottom', '', 'heading', '');
-$objTable->addCell("<i>" . $this->objLanguage->languageText('phrase_firstName') . "</i>", '20%', 'bottom', '', 'heading', '');
+$objTable->addCell("<i>" . $this->objLanguage->languageText('phrase_firstname') . "</i>", '20%', 'bottom', '', 'heading', '');
 $objTable->addCell("<i>" . $this->objLanguage->languageText('word_surname') . "</i>", '20%', 'bottom', '', 'heading', '');
 $objTable->addCell("<i>" . $this->objLanguage->languageText('phrase_emailaddress') . "</i>", '', 'bottom', '', 'heading', '');
 if ($this->isValid('removeuser') && count($grpMembers) > 0) {
@@ -172,7 +172,7 @@ if ($this->isValid('addusers')) {
     $table->startRow();
     $searchLabel = new label($this->objLanguage->languageText('mod_contextgroups_searchby', 'contextgroups') . ': ', 'input_field');
     $searchdropdown = new dropdown('field');
-    $searchdropdown->addOption('firstname', $this->objLanguage->languageText('phrase_firstName'));
+    $searchdropdown->addOption('firstname', $this->objLanguage->languageText('phrase_firstname'));
     $searchdropdown->addOption('surname', $this->objLanguage->languageText('word_surname'));
     $searchdropdown->addOption('userid', $this->objLanguage->languageText('word_userid'));
     $searchdropdown->setSelected($field);
