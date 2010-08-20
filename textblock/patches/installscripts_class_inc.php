@@ -10,8 +10,8 @@ class textblock_installscripts extends dbTable {
     public function preinstall($version = NULL) {
 		switch ($version) {
 			
-			case '0.856':
-				log_debug('executing preinstall code for textblock module version: 0.856');
+			case '0.858':
+				log_debug('executing preinstall code for textblock module version: 0.858');
 				if ($this->objModules->checkIfRegistered('cms')) {
 					$count = 1;
 					$objCMSBlocks = $this->getObject('dbblocks', 'cmsadmin');
