@@ -1220,7 +1220,6 @@ class eportfolio extends controller
             break;
 
         case "addreflectionconfirm":
-var_dump($this->getParam('longdescription', NULL));exit;
             $id = $this->objDbReflectionList->insertSingle($this->getParam('language', NULL) , $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
             return $this->nextAction('main', NULL);
             break;
