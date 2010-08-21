@@ -123,7 +123,14 @@ class membaseops extends object
      */
     public function increment($key)
     {
-        return $this->objMemcache->increment($key);
+        $value = $this->objMemcache->increment($key);
+
+        if ($value === FALSE) {
+            $value = 1;
+            $this->objMemcache->set($key, 1);
+        }
+
+        return $value;
     }
 
     /**
