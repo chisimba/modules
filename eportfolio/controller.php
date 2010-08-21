@@ -1670,6 +1670,11 @@ class eportfolio extends controller
         return "manage_views_tpl.php";
         break;
 
+    case "main":
+        $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+        return $this->showUserDetailsForm();
+        break;
+
     default:
         $this->setLayoutTemplate('eportfolio_layout_tpl.php');
         return $this->showUserDetailsForm();
