@@ -92,7 +92,7 @@ class urlshortenerops extends object
      */
     public function getLong($short)
     {
-        $long = $this->objMemcache->get($short);
+        $long = $this->objMembase->get($short);
 
         return $long;
     }
@@ -106,14 +106,14 @@ class urlshortenerops extends object
      */
     public function getShort($long)
     {
-        $short = $this->objMemcache->get($long);
+        $short = $this->objMembase->get($long);
 
         if ($short === FALSE) {
-            $next = $this->objMemcache->increment('_next');
+            $next = $this->objMembase->increment('_next');
             $short = $this->objAltConfig->getsiteRoot().base_convert($next, 10, 36);
 
-            $this->objMemcache->set($short, $long);
-            $this->objMemcache->set($long, $short);
+            $this->objMembase->set($short, $long);
+            $this->objMembase->set($long, $short);
         }
 
         return $short;

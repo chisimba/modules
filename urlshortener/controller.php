@@ -32,6 +32,10 @@ class urlshortener extends controller
                     header('Location: ' . $long);
                 }
             default:
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $this->url = $url;
+                    $this->short = $this->objOps->getShort($url);
+                }
                 return 'urlshortener_tpl.php';
         }
     }
